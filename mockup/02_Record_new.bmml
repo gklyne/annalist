@@ -1,0 +1,17 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="879" measuredH="634" mockupW="862" mockupH="616">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="17" y="18" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/symbols.bmml#Record_template</src>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="772" y="251" w="-1" h="-1" measuredW="107" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16167531</color>
+        <href>03_Record_new%26bm%3B03_Record_new.bmml%26bm%3B03_Record_new.bmml%26bm%3B03_Record_new.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22755%2C233%2C862%2C260%22%20href%3D%2203_Record_new.bmml%22%20alt%3D%2203_Record_new%22%20id%3D%221%22/%3E</map>
+        <text>Modify%20content</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

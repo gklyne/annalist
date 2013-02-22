@@ -1,0 +1,21 @@
+#   First record
+ 1, 01_Home,            Home_temlate,       Initial screen
+ 2, 02_record_new,      Record_template,    Empty new Note record (default)
+ 3, 03_record_new,      Record_template,    Populated Note record
+ 4, 04_home,            Home_template,      New record shows in list
+ 5, 05_record_edit,     Record_template,    Edit now Note record
+ 6, 06_record_edit,     Record_template,    Add content to record
+
+#   Add field to record
+11, 11_Home,            Home_temlate,       Home with edited record
+12, 12_Record_addf,     Record_template,    Re-display new record
+13, 13_Record_addf,     Record_template,    Add field: new blank field
+14, 14_Record_addf,     Record_template,    Enter data into new field
+15, 15_Home,            Home_temlate,       Save updated record
+
+#   Create new record type
+
+#   Create new record view
+
+#   Create new list view
+

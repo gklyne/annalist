@@ -1,0 +1,33 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="735" measuredH="430" mockupW="700" mockupH="415">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="35" y="15" w="700" h="415" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Annalist%0Ahttp%3A//annalist.net/</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::SubTitle" x="70" y="101" w="169" h="-1" measuredW="65" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Notes</text>
+      </controlProperties>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::DataGrid" x="73" y="143" w="624" h="215" measuredW="227" measuredH="51" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Id%2C%20Title%0AHello%2C%20Getting%20started%20with%20Annalist</text>
+      </controlProperties>
+    </control>
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::SubTitle" x="528" y="106" w="169" h="-1" measuredW="83" measuredH="17" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <align>right</align>
+        <size>14</size>
+        <text>Not%20logged%20in</text>
+      </controlProperties>
+    </control>
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::LinkBar" x="70" y="373" w="-1" h="-1" measuredW="427" measuredH="19" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <hrefs>New_record%26bm%3BNew_record.bmml%26bm%3BNew_record.bmml%26bm%3BNew_record.bmml%2C%2C%2C%2C%2C</hrefs>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2235%2C360%2C103%2C373%22%20href%3D%22New_record.bmml%22%20alt%3D%22New_record%22%20id%3D%2210%22/%3E%0A</map>
+        <text>New%20record%2C%20Edit%20record%2C%20Delete%20record%2C%20View%2C%20Customize%2C%20Login</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

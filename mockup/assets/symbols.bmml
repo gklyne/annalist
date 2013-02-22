@@ -1,0 +1,182 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="897" measuredH="696" mockupW="837" mockupH="676">
+  <controls>
+    <control controlID="0" controlTypeID="__group__" x="60" y="20" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <controlName>Home_template</controlName>
+      </controlProperties>
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="0" y="0" w="837" h="616" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="0">
+          <controlProperties>
+            <text>Annalist%20-%20Notes%0Ahttp%3A//annalist.net/Notes/Summary</text>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::SubTitle" x="31" y="84" w="169" h="-1" measuredW="65" measuredH="27" zOrder="1" locked="false" isInGroup="0">
+          <controlProperties>
+            <align>left</align>
+            <text>Notes</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::DataGrid" x="31" y="166" w="774" h="382" measuredW="227" measuredH="51" zOrder="2" locked="false" isInGroup="0">
+          <controlProperties>
+            <text>Id%2C%20Title%0AHello%2C%20Getting%20started%20with%20Annalist</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::SubTitle" x="595" y="89" w="169" h="-1" measuredW="83" measuredH="17" zOrder="3" locked="false" isInGroup="0">
+          <controlProperties>
+            <align>right</align>
+            <size>14</size>
+            <text>Not%20logged%20in</text>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::LinkBar" x="31" y="563" w="-1" h="-1" measuredW="250" measuredH="19" zOrder="4" locked="false" isInGroup="0">
+          <controlProperties>
+            <hrefs>New_record%26bm%3BNew_record.bmml%26bm%3BNew_record.bmml%26bm%3BNew_record.bmml%2C%2C</hrefs>
+            <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2231%2C565%2C99%2C578%22%20href%3D%22New_record.bmml%22%20alt%3D%22New_record%22%20id%3D%224%22/%3E%0A</map>
+            <text>New%20record%2C%20Edit%20record%2C%20Delete%20record</text>
+          </controlProperties>
+        </control>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::Link" x="742" y="563" w="-1" h="-1" measuredW="63" measuredH="19" zOrder="5" locked="false" isInGroup="0">
+          <controlProperties>
+            <text>Customize</text>
+          </controlProperties>
+        </control>
+        <control controlID="6" controlTypeID="com.balsamiq.mockups::Link" x="773" y="88" w="-1" h="-1" measuredW="32" measuredH="19" zOrder="6" locked="false" isInGroup="0">
+          <controlProperties>
+            <text>Login</text>
+          </controlProperties>
+        </control>
+        <control controlID="7" controlTypeID="com.balsamiq.mockups::ComboBox" x="686" y="119" w="119" h="-1" measuredW="45" measuredH="24" zOrder="7" locked="false" isInGroup="0">
+          <controlProperties>
+            <text>All</text>
+          </controlProperties>
+        </control>
+        <control controlID="8" controlTypeID="com.balsamiq.mockups::Label" x="647" y="120" w="33" h="-1" measuredW="31" measuredH="22" zOrder="8" locked="false" isInGroup="0">
+          <controlProperties>
+            <size>14</size>
+            <text>View</text>
+          </controlProperties>
+        </control>
+        <control controlID="9" controlTypeID="com.balsamiq.mockups::TextInput" x="31" y="118" w="219" h="-1" measuredW="139" measuredH="27" zOrder="9" locked="false" isInGroup="0">
+          <controlProperties>
+            <text>%28Type%20text%20to%20search%29</text>
+          </controlProperties>
+        </control>
+        <control controlID="10" controlTypeID="com.balsamiq.mockups::Icon" x="257" y="119" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="10" locked="false" isInGroup="0">
+          <controlProperties>
+            <icon>SearchIcon%7Csmall</icon>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="1" controlTypeID="__group__" x="60" y="80" w="837" h="616" measuredW="837" measuredH="616" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <controlName>Record_template</controlName>
+      </controlProperties>
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="0" y="0" w="837" h="616" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="1">
+          <controlProperties>
+            <text>Annalist%20-%20New%20Note%0Ahttp%3A//annalist.net/Notes/New</text>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::SubTitle" x="31" y="84" w="169" h="-1" measuredW="65" measuredH="27" zOrder="1" locked="false" isInGroup="1">
+          <controlProperties>
+            <align>left</align>
+            <text>Notes</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::SubTitle" x="595" y="89" w="169" h="-1" measuredW="83" measuredH="17" zOrder="2" locked="false" isInGroup="1">
+          <controlProperties>
+            <align>right</align>
+            <size>14</size>
+            <text>Not%20logged%20in</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::Link" x="742" y="561" w="-1" h="-1" measuredW="63" measuredH="19" zOrder="3" locked="false" isInGroup="1">
+          <controlProperties>
+            <text>Customize</text>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::Link" x="773" y="88" w="-1" h="-1" measuredW="32" measuredH="19" zOrder="4" locked="false" isInGroup="1">
+          <controlProperties>
+            <text>Login</text>
+          </controlProperties>
+        </control>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::ComboBox" x="686" y="119" w="119" h="-1" measuredW="60" measuredH="25" zOrder="5" locked="false" isInGroup="1">
+          <controlProperties>
+            <size>14</size>
+            <text>Note</text>
+          </controlProperties>
+        </control>
+        <control controlID="6" controlTypeID="com.balsamiq.mockups::Label" x="644" y="121" w="33" h="-1" measuredW="31" measuredH="22" zOrder="6" locked="false" isInGroup="1">
+          <controlProperties>
+            <size>14</size>
+            <text>View</text>
+          </controlProperties>
+        </control>
+        <control controlID="7" controlTypeID="com.balsamiq.mockups::TextArea" x="93" y="188" w="712" h="197" measuredW="200" measuredH="140" zOrder="7" locked="false" isInGroup="1">
+          <controlProperties>
+            <size>14</size>
+            <text>%28Enter%20description%20here%29</text>
+          </controlProperties>
+        </control>
+        <control controlID="8" controlTypeID="com.balsamiq.mockups::Label" x="31" y="122" w="-1" h="-1" measuredW="12" measuredH="21" zOrder="8" locked="false" isInGroup="1">
+          <controlProperties>
+            <text>Id</text>
+          </controlProperties>
+        </control>
+        <control controlID="9" controlTypeID="com.balsamiq.mockups::Label" x="31" y="193" w="-1" h="-1" measuredW="35" measuredH="21" zOrder="9" locked="false" isInGroup="1">
+          <controlProperties>
+            <text>Notes</text>
+          </controlProperties>
+        </control>
+        <control controlID="10" controlTypeID="com.balsamiq.mockups::Label" x="31" y="155" w="-1" h="-1" measuredW="26" measuredH="21" zOrder="10" locked="false" isInGroup="1">
+          <controlProperties>
+            <text>Title</text>
+          </controlProperties>
+        </control>
+        <control controlID="11" controlTypeID="com.balsamiq.mockups::TextInput" x="93" y="152" w="712" h="-1" measuredW="120" measuredH="28" zOrder="11" locked="false" isInGroup="1">
+          <controlProperties>
+            <borderColor>0</borderColor>
+            <color>16777215</color>
+            <size>14</size>
+            <text>%28Enter%20title%20here%29</text>
+          </controlProperties>
+        </control>
+        <control controlID="12" controlTypeID="com.balsamiq.mockups::TextInput" x="93" y="119" w="116" h="-1" measuredW="81" measuredH="28" zOrder="12" locked="false" isInGroup="1">
+          <controlProperties>
+            <size>14</size>
+            <text>00001234</text>
+          </controlProperties>
+        </control>
+        <control controlID="13" controlTypeID="com.balsamiq.mockups::Button" x="677" y="400" w="-1" h="-1" measuredW="52" measuredH="27" zOrder="13" locked="false" isInGroup="1">
+          <controlProperties>
+            <text>Save</text>
+          </controlProperties>
+        </control>
+        <control controlID="14" controlTypeID="com.balsamiq.mockups::Button" x="741" y="400" w="-1" h="-1" measuredW="64" measuredH="27" zOrder="14" locked="false" isInGroup="1">
+          <controlProperties>
+            <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22741%2C460%2C805%2C487%22%20href%3D%2200_Home.bmml%22%20alt%3D%2200_Home%22%20id%3D%2214%22/%3E</map>
+            <text>Cancel</text>
+          </controlProperties>
+        </control>
+        <control controlID="15" controlTypeID="com.balsamiq.mockups::Label" x="224" y="122" w="-1" h="-1" measuredW="42" measuredH="22" zOrder="15" locked="false" isInGroup="1">
+          <controlProperties>
+            <size>14</size>
+            <text>Types%3A</text>
+          </controlProperties>
+        </control>
+        <control controlID="16" controlTypeID="com.balsamiq.mockups::Label" x="270" y="122" w="257" h="-1" measuredW="84" measuredH="22" zOrder="16" locked="false" isInGroup="1">
+          <controlProperties>
+            <size>14</size>
+            <text>Record%2C%20Note</text>
+          </controlProperties>
+        </control>
+        <control controlID="17" controlTypeID="com.balsamiq.mockups::LinkBar" x="93" y="561" w="-1" h="-1" measuredW="304" measuredH="19" zOrder="17" locked="false" isInGroup="1">
+          <controlProperties>
+            <text>New%20field%2C%20Delete%20field%2C%20New%20type%2C%20Delete%20type</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+  </controls>
+</mockup>
