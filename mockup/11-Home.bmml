@@ -7,6 +7,7 @@
           <hrefs>%2C12_Record_addf%26bm%3B12_Record_addf.bmml%26bm%3B12_Record_addf.bmml%26bm%3B12_Record_addf.bmml%2C</hrefs>
         </override>
         <override controlID="2">
+          <selectedIndex>1</selectedIndex>
           <text>Id%2C%20Title%0AHello%2C%20Getting%20started%20with%20Annalist%0AFirst%2C%20My%20first%20note</text>
         </override>
         <src>./assets/symbols.bmml#Home_template</src>

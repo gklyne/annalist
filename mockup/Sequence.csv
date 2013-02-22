@@ -9,9 +9,11 @@
 #   Add field to record
 11, 11_Home,            Home_temlate,       Home with edited record
 12, 12_Record_addf,     Record_template,    Re-display new record
-13, 13_Record_addf,     Record_template,    Add field: new blank field
-14, 14_Record_addf,     Record_template,    Enter data into new field
-15, 15_Home,            Home_temlate,       Save updated record
+13, 13_Field_new,       Field_template,     New field definition form
+14, 14_Field_new,       Field_template,     New field details entered
+15, 15_Record_addf,     Record_template,    Add field: new blank field
+16, 16_Record_addf,     Record_template,    Enter data into new field
+17, 17_Home,            Home_temlate,       Save updated record
 
 #   Create new record type
 
