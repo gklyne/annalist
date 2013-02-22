@@ -238,7 +238,7 @@
             <text>Title</text>
           </controlProperties>
         </control>
-        <control controlID="10" controlTypeID="com.balsamiq.mockups::TextInput" x="93" y="196" w="712" h="-1" measuredW="179" measuredH="28" zOrder="10" locked="false" isInGroup="2">
+        <control controlID="10" controlTypeID="com.balsamiq.mockups::TextInput" x="93" y="198" w="712" h="-1" measuredW="129" measuredH="28" zOrder="10" locked="false" isInGroup="2">
           <controlProperties>
             <borderColor>0</borderColor>
             <color>16777215</color>
@@ -252,13 +252,15 @@
             <text>%28Field%20label%29</text>
           </controlProperties>
         </control>
-        <control controlID="12" controlTypeID="com.balsamiq.mockups::Button" x="677" y="372" w="-1" h="-1" measuredW="52" measuredH="27" zOrder="12" locked="false" isInGroup="2">
+        <control controlID="12" controlTypeID="com.balsamiq.mockups::Button" x="677" y="372" w="-1" h="-1" measuredW="54" measuredH="27" zOrder="12" locked="false" isInGroup="2">
           <controlProperties>
+            <size>14</size>
             <text>Save</text>
           </controlProperties>
         </control>
-        <control controlID="13" controlTypeID="com.balsamiq.mockups::Button" x="741" y="372" w="-1" h="-1" measuredW="64" measuredH="27" zOrder="13" locked="false" isInGroup="2">
+        <control controlID="13" controlTypeID="com.balsamiq.mockups::Button" x="741" y="372" w="-1" h="-1" measuredW="67" measuredH="27" zOrder="13" locked="false" isInGroup="2">
           <controlProperties>
+            <size>14</size>
             <text>Cancel</text>
           </controlProperties>
         </control>
@@ -277,6 +279,18 @@
           <controlProperties>
             <size>14</size>
             <text>%28field%20id%29</text>
+          </controlProperties>
+        </control>
+        <control controlID="17" controlTypeID="com.balsamiq.mockups::CheckBox" x="539" y="373" w="-1" h="-1" measuredW="125" measuredH="23" zOrder="17" locked="false" isInGroup="2">
+          <controlProperties>
+            <size>14</size>
+            <state>selected</state>
+            <text>Add%20field%20to%20view</text>
+          </controlProperties>
+        </control>
+        <control controlID="19" controlTypeID="com.balsamiq.mockups::Link" x="93" y="376" w="-1" h="-1" measuredW="109" measuredH="19" zOrder="18" locked="false" isInGroup="2">
+          <controlProperties>
+            <text>Size%20and%20position...</text>
           </controlProperties>
         </control>
       </groupChildrenDescriptors>
