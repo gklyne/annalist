@@ -16,8 +16,24 @@
 17, 17_Home,            Home_temlate,       Save updated record
 
 #   Create new record type
+21, 21_Home,            Home_temlate,       Select "Customize"
+22, 22_Customize,       Customize_template,	Options, select new record type
+23, 23_Record_type,		Type_template,		Blank record type details
+24, 24_Record_type,		Type_template,		Filled-in record type details; save
+25, 25_Customize,       Customize_template,	Shows new record type; close
+
+#   Create record with new type
+31, 31_Home,            Home_temlate,       Select "New record"
+32, 32_Record_new,      Record_template,    New record; "add type"
+33, 33_Record_addt,     Record_template,	Select new type
+34, 34_record_new,      Record_template,    Populated record
+35, 35_home,            Home_template,      New record in list
 
 #   Create new record view
 
 #   Create new list view
 
+#   View layout (size and position link)
+
+
+@@TODO URIs for fields

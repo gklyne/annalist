@@ -31,6 +31,7 @@
         <control controlID="4" controlTypeID="com.balsamiq.mockups::LinkBar" x="31" y="563" w="-1" h="-1" measuredW="250" measuredH="19" zOrder="4" locked="false" isInGroup="0">
           <controlProperties>
             <hrefs>New_record%26bm%3BNew_record.bmml%26bm%3BNew_record.bmml%26bm%3BNew_record.bmml%2C%2C</hrefs>
+            <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2231%2C565%2C99%2C578%22%20href%3D%22New_record.bmml%22%20alt%3D%22New_record%22%20id%3D%224%22/%3E%0A</map>
             <text>New%20record%2C%20Edit%20record%2C%20Delete%20record</text>
           </controlProperties>
         </control>
