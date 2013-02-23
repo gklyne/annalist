@@ -1,12 +1,13 @@
-<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="857" measuredH="637" mockupW="837" mockupH="616">
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="857" measuredH="633" mockupW="837" mockupH="616">
   <controls>
-    <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="20" y="21" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="20" y="17" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
         <override controlID="4">
           <hrefs>%2C%2C</hrefs>
           <text>New%20record%2C%20Edit%20record%2C%20Delete%20record</text>
         </override>
         <override controlID="2">
+          <selectedIndex>1</selectedIndex>
           <text>Id%2C%20Title%0AHello%2C%20Getting%20started%20with%20Annalist%0AFirst%2C%20My%20first%20note</text>
         </override>
         <src>./assets/symbols.bmml#Home_template</src>

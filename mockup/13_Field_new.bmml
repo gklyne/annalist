@@ -1,21 +1,18 @@
-<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="884" measuredH="633" mockupW="862" mockupH="616">
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="875" measuredH="654" mockupW="837" mockupH="616">
   <controls>
-    <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="22" y="17" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="38" y="38" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
         <override controlID="0">
-          <text>Annalist%20-%20New%20Field%20in%20view%20%22Notes%22%0Ahttp%3A//annalist.net/_annalist/Fields/Notes/New</text>
-        </override>
-        <override controlID="17">
-          <state>selected</state>
+          <text>Annalist%20-%20Sandbox%20customize%20Notes/Fields%20%28new%29%0Ahttp%3A//annalist.net/Sandbox/_annalist/Notes/Fields/New</text>
         </override>
         <src>./assets/symbols.bmml#Field_template</src>
       </controlProperties>
     </control>
-    <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="777" y="429" w="-1" h="-1" measuredW="107" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="760" y="355" w="-1" h="-1" measuredW="107" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
       <controlProperties>
         <color>16167531</color>
         <href>14_Field_new%26bm%3B14_Field_new.bmml%26bm%3B14_Field_new.bmml%26bm%3B14_Field_new.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22755%2C412%2C862%2C439%22%20href%3D%2214_Field_new.bmml%22%20alt%3D%2214_Field_new%22%20id%3D%221%22/%3E</map>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22722%2C317%2C829%2C344%22%20href%3D%2214_Field_new.bmml%22%20alt%3D%2214_Field_new%22%20id%3D%221%22/%3E</map>
         <text>Modify%20content</text>
       </controlProperties>
     </control>

@@ -1,0 +1,9 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="240" measuredH="60" mockupW="200" mockupH="21">
+  <controls>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Component" x="40" y="39" w="200" h="21" measuredW="200" measuredH="21" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/symbols.bmml#Checkbox-right</src>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

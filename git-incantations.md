@@ -8,11 +8,13 @@ I have not yet created branches for releases or feature development
 I'm taking a view that these can be created as required.
 Some developments may take place on a local branch and be pushed straight back to "develop".
 
+
 ## Some git incantations ##
 
 See: http://nvie.com/posts/a-successful-git-branching-model/
 
 Some content in this file has been adapted from that note.
+
 
 ### Create the develop branch ###
 
@@ -21,7 +23,11 @@ See: http://www.linux-pages.com/2011/05/how-to-create-a-brand-new-git-tracking-b
     git push origin master:develop
     git branch --track develop origin/develop
 
-Also, to delete remote branch:
+I found that pulling to an existing github repository did not set the tracking status for the new develop branch: I also had to use the following command suggested by git to pull changes on the new develop branch:
+
+    git branch --set-upstream develop origin/develop
+
+To delete the remote branch:
 
     $ git push origin --delete <branchName>
 
@@ -90,8 +96,17 @@ Finishing a release branch
     $ git branch -d release-1.2
     Deleted branch release-1.2 (was ff452fe).
 
+
 ## Recovery actions
 
-Undo last commit (see http://stackoverflow.com/questions/927358/undo-last-git-commit):
+### Undo last commit
+
+See: http://stackoverflow.com/questions/927358/undo-last-git-commit):
 
     git reset --soft HEAD^
+
+### Transfer uncommitted changes to new branch
+
+    git stash
+    git checkout -b <branch>
+    git stash pop

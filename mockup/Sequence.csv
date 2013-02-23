@@ -1,39 +1,55 @@
+#   frame id            frame template        description -> action
+
 #   First record
- 1, 01_Home,            Home_temlate,       Initial screen
- 2, 02_record_new,      Record_template,    Empty new Note record (default)
- 3, 03_record_new,      Record_template,    Populated Note record
- 4, 04_home,            Home_template,      New record shows in list
- 5, 05_record_edit,     Record_template,    Edit now Note record
- 6, 06_record_edit,     Record_template,    Add content to record
+ 1, 01_Home,            Home_template,        Initial screen -> new record
+ 2, 02_record_new,      Record_new_template,  Empty Note record -> modify
+ 3, 03_record_new,      Record_new_template,  Populated Note record -> save
+ 4, 04_home,            Home_template,        New record shows in list -> edit record
+ 5, 05_record_edit,     Record_edit_template, Previous Note record displayed -> modify
+ 6, 06_record_edit,     Record_edit_template, Updated record content -> save
 
 #   Add field to record
-11, 11_Home,            Home_temlate,       Home with edited record
-12, 12_Record_addf,     Record_template,    Re-display new record
-13, 13_Field_new,       Field_template,     New field definition form
-14, 14_Field_new,       Field_template,     New field details entered
-15, 15_Record_addf,     Record_template,    Add field: new blank field
-16, 16_Record_addf,     Record_template,    Enter data into new field
-17, 17_Home,            Home_temlate,       Save updated record
+11, 11_Home,            Home_temlate,         Home with new record selected -> edit record
+12, 12_Record_addf,     Record_edit_template, Re-display new record -> new field
+13, 13_Field_new,       Field_template,       New field definition form -> modify
+14, 14_Field_new,       Field_template,       New field details entered -> save
+15, 15_Record_addf,     Record_edit_template, Record displays new empty field -> modify
+16, 16_Record_addf,     Record_edit_template, Updated new field -> save
+17, 17_Home,            Home_template,        List of records
+
+#   Build a book catalogue
 
 #   Create new record type
-21, 21_Home,            Home_temlate,       Select "Customize"
-22, 22_Customize,       Customize_template,	Options, select new record type
-23, 23_Record_type,		Type_template,		Blank record type details
-24, 24_Record_type,		Type_template,		Filled-in record type details; save
-25, 25_Customize,       Customize_template,	Shows new record type; close
-
-#   Create record with new type
-31, 31_Home,            Home_temlate,       Select "New record"
-32, 32_Record_new,      Record_template,    New record; "add type"
-33, 33_Record_addt,     Record_template,	Select new type
-34, 34_record_new,      Record_template,    Populated record
-35, 35_home,            Home_template,      New record in list
-
-#   Create new record view
+21, 21_Home,            Home_template,        -> "Customize"
+22, 22_Customize,       Customize_template,   -> new type
+23, 23_Record_type,     Type_template,        Blank record type details -> (like field)
+24, 24_Record_type,     Type_template,        Filled-in record type details -> save
+25, 25_Customize,       Customize_template,   Shows new record type -> close
 
 #   Create new list view
+31, 31_Home,            Home_temlate,         Select "Customize"
+32, 32_Customize,       Customize_template,   Options, select new list view
+33, 33_View_list,       View_list_template,   Blank view list details
+34, 34_View_list,       View_list_template,   Filled-in details; save
+35, 35_Customize,       Customize_template,   Shows new list view
+
+#   Create new record view
+31, 31_Customize,       Customize_template,   Select new record view
+32, 32_View_record,     View_list_template,   Blank list view details
+33, 33_Record_type,     Type_template,        Filled-in list view details; save
+34, 34_Customize,       Customize_template,   Shows new list view; close
 
 #   View layout (size and position link)
+
+#   Create record with new type in new list view
+31, 31_Home,            Home_temlate,         Select "New record"
+32, 32_Record_addt,     Record_new_template,  New record; "add type"
+33, 33_Record_addt,     Record_new_template,  Select new type
+34, 34_record_addt,     Record_template,      Populated record
+35, 35_home,            Home_template,        New record in list
+
+
+
 
 
 @@TODO URIs for fields

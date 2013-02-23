@@ -1,27 +1,24 @@
-<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="854" measuredH="634" mockupW="837" mockupH="616">
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="877" measuredH="656" mockupW="837" mockupH="616">
   <controls>
-    <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="17" y="18" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Component" x="40" y="40" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22677%2C400%2C729%2C427%22%20href%3D%2211-Home.bmml%22%20alt%3D%2211-Home%22%20id%3D%2213%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%22741%2C400%2C805%2C427%22%20href%3D%2204_Home.bmml%22%20alt%3D%2204_Home%22%20id%3D%2214%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%22677%2C400%2C729%2C427%22%20href%3D%2211-Home.bmml%22%20alt%3D%2211-Home%22%20id%3D%2213%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%22741%2C400%2C805%2C427%22%20href%3D%2204_Home.bmml%22%20alt%3D%2204_Home%22%20id%3D%2214%22/%3E</map>
-        <override controlID="17">
-          <hrefs>%2C%2C%2C%2C</hrefs>
-        </override>
-        <override controlID="7">
-          <text>This%20is%20the%20first%20record%20to%20be%20added%20to%20a%20new%20Annalist%20installation.%0A%20%0AAnd%20now%20the%20note%20is%20being%20updated.%0A%20%0Al0rem%20ipsum%20dolor%20sit%20amet%2C%20consectetuer%20adipisc50%20g%20elit.%20Ut%20nec%20lacus%20a%20neque%20pulvinar%20pulvinar.%20A100liquam%20sagittis%2C%20purus%20in%20fermentum%20ornare%2C%20orci%20150igula%20vulputate%20sapien%2C%20a%20rutrum%20nisl%20mi%20eu%20mi.%20Su200spendisse%20potenti.%20Aliquam%20eros.%20Nullam%20eros%20neque250%2C%20cursus%20eu%2C%20commodo%20in%2C%20vulputate%20nec%2C%20ipsum.%20Dui300s%20et%20est%20a%20ante%20convallis%20consequat.%20Sed%20et%20nisl.%20350Praesent%20vulputate%20erat%20quis%20magna.%20Aenean%20nisl%20me400tus%2C%20euismod%20at%2C%20viverra%20nec%2C%20tristique%20eget%2C%20nisi450.%20Phasellus%20in%20nunc%20at%20quam%20tristique%20ornare.%20Quis500</text>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2293%2C400%2C147%2C427%22%20href%3D%2211_Home.bmml%22%20alt%3D%2211_Home%22%20id%3D%2213%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%2293%2C400%2C147%2C427%22%20href%3D%2211_Home.bmml%22%20alt%3D%2211_Home%22%20id%3D%2213%22/%3E</map>
+        <override controlID="0">
+          <text>Annalist%20-%20Sandbox/Note/First%0Ahttp%3A//annalist.net/Sandbox/Note/First</text>
         </override>
         <override controlID="11">
           <text>My%20first%20note</text>
         </override>
-        <override controlID="12">
+        <override controlID="20">
           <text>First</text>
         </override>
         <override controlID="13">
-          <href>11-Home%26bm%3B11-Home.bmml%26bm%3B11-Home.bmml%26bm%3B11-Home.bmml</href>
+          <href>11_Home%26bm%3B11_Home.bmml%26bm%3B11_Home.bmml%26bm%3B11_Home.bmml</href>
         </override>
-        <override controlID="14">
-          <href>04_Home%26bm%3B04_Home.bmml%26bm%3B04_Home.bmml%26bm%3B04_Home.bmml</href>
+        <override controlID="7">
+          <text>This%20is%20the%20first%20record%20to%20be%20added%20to%20a%20new%20Annalist%20installation.%0A%20%0AAnd%20now%20the%20note%20is%20being%20updated.%0A%20%0Al0rem%20ipsum%20dolor%20sit%20amet%2C%20consectetuer%20adipisc50%20g%20elit.%20Ut%20nec%20lacus%20a%20neque%20pulvinar%20pulvinar.%20A100liquam%20sagittis%2C%20purus%20in%20fermentum%20ornare%2C%20orci%20150igula%20vulputate%20sapien%2C%20a%20rutrum%20nisl%20mi%20eu%20mi.%20Su200spendisse%20potenti.%20Aliquam%20eros.%20Nullam%20eros%20neque250%2C%20cursus%20eu%2C%20commodo%20in%2C%20vulputate%20nec%2C%20ipsum.%20Dui300s%20et%20est%20a%20ante%20convallis%20consequat.%20Sed%20et%20nisl.%20350Praesent%20vulputate%20erat%20quis%20magna.%20Aenean%20nisl%20me400tus%2C%20euismod%20at%2C%20viverra%20nec%2C%20tristique%20eget%2C%20nisi450.%20Phasellus%20in%20nunc%20at%20quam%20tristique%20ornare.%20Quis500</text>
         </override>
-        <src>./assets/symbols.bmml#Record_template</src>
+        <src>./assets/symbols.bmml#Record_edit_template</src>
       </controlProperties>
     </control>
   </controls>
