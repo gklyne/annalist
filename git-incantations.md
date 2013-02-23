@@ -10,18 +10,13 @@ Some developments may take place on a local branch and be pushed straight back t
 
 ## Some git incantations ##
 
-See:
+See: http://nvie.com/posts/a-successful-git-branching-model/
 
-* http://nvie.com/posts/a-successful-git-branching-model/
-
+Some content in this file has been adapted from that note.
 
 ### Create the develop branch ###
 
-See:
-
-* http://www.linux-pages.com/2011/05/how-to-create-a-brand-new-git-tracking-branch-from-scratch/ 
-
-Commands:
+See: http://www.linux-pages.com/2011/05/how-to-create-a-brand-new-git-tracking-branch-from-scratch/ 
 
     git push origin master:develop
     git branch --track develop origin/develop
@@ -63,7 +58,9 @@ The --no-ff flag causes the merge to always create a new commit object, even if 
 
 ### Release branches ###
 
-May branch off from: develop Must merge back into: develop and master Branch naming convention: release-*
+May branch off from: develop 
+Must merge back into: develop and master 
+Branch naming convention: release-*
 
 Creating a release branch
 
