@@ -1,0 +1,33 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="857" measuredH="637" mockupW="837" mockupH="616">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="20" y="21" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22677%2C372%2C731%2C399%22%20href%3D%2225_Customize.bmml%22%20alt%3D%2225_Customize%22%20id%3D%228%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%22677%2C372%2C731%2C399%22%20href%3D%2225_Customize.bmml%22%20alt%3D%2225_Customize%22%20id%3D%228%22/%3E</map>
+        <override controlID="8">
+          <href>25_Customize%26bm%3B25_Customize.bmml%26bm%3B25_Customize.bmml%26bm%3B25_Customize.bmml</href>
+        </override>
+        <override controlID="11">
+          <text>Book</text>
+        </override>
+        <override controlID="4">
+          <text>This%20record%20type%20is%20for%20information%20about%20a%20book%20in%20a%20collection.</text>
+        </override>
+        <override controlID="13">
+          <text>http%3A//annalist.net/Sandbox/Type/Book</text>
+        </override>
+        <override controlID="7">
+          <text>Book</text>
+        </override>
+        <src>./assets/symbols.bmml#Type_template</src>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::StickyNote" x="406" y="322" w="252" h="246" measuredW="109" measuredH="123" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>false</bold>
+        <italic>true</italic>
+        <size>14</size>
+        <text>Note%3A%20unlike%20conventional%20databases%2C%20there%20is%20no%20list%20of%20fields%20associated%20wit%20a%20record%20type.%20%20The%20type%20is%20simply%20a%20%28machine%20readable%29%20label%20that%20signals%20the%20kind%20of%20object%20the%20record%20will%20be%20used%20to%20describe.%0A%20%0ASpecific%20fields%20are%20associated%20with%20views%2C%20which%20may%20themselves%20be%20associated%20with%20record%20types.%20%20%20But%20new%20views%2C%20and%20new%20fields%2C%20may%20be%20added%20at%20any%20time.</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

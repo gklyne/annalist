@@ -1,0 +1,21 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="853" measuredH="634" mockupW="837" mockupH="616">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="16" y="18" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <override controlID="4:1">
+          <selectedIndex>0</selectedIndex>
+          <text>Book%0ANote</text>
+        </override>
+        <src>./assets/symbols.bmml#Customize_template</src>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="678" y="452" w="164" h="-1" measuredW="131" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16167531</color>
+        <href>26_Customize%26bm%3B26_Customize.bmml%26bm%3B26_Customize.bmml%26bm%3B26_Customize.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22662%2C434%2C826%2C461%22%20href%3D%2226_Customize.bmml%22%20alt%3D%2226_Customize%22%20id%3D%221%22/%3E</map>
+        <text>Similarly%20for%20Author</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

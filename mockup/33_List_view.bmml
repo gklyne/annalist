@@ -1,0 +1,28 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="855" measuredH="635" mockupW="837" mockupH="616">
+  <controls>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="18" y="19" w="837" h="616" measuredW="450" measuredH="400" zOrder="0" locked="true" isInGroup="-1">
+      <controlProperties>
+        <text>Annalist%20-%20New%20list%20view%20in%20collection%20%22Sandbox%22%0Ahttp%3A//annalist.net/Sandbox/_annalist/Lists/New</text>
+      </controlProperties>
+    </control>
+    <control controlID="14" controlTypeID="com.balsamiq.mockups::StickyNote" x="457" y="103" w="238" h="105" measuredW="109" measuredH="123" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <text>Assuming%20for%20now%20that%20search%20box%20and%20view%20selector%20are%20inserted%20automatically%20for%20all%20list%20views</text>
+      </controlProperties>
+    </control>
+    <control controlID="55" controlTypeID="com.balsamiq.mockups::Component" x="49" y="103" w="774" h="471" measuredW="774" measuredH="471" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/symbols.bmml#List_template</src>
+      </controlProperties>
+    </control>
+    <control controlID="56" controlTypeID="com.balsamiq.mockups::PointyButton" x="731" y="142" w="-1" h="-1" measuredW="107" measuredH="27" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16167531</color>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22713%2C123%2C820%2C150%22%20href%3D%2224_Type_new.bmml%22%20alt%3D%2224_Type_new%22%20id%3D%2256%22/%3E</map>
+        <menuIcon>false</menuIcon>
+        <text>Modify%20content</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
