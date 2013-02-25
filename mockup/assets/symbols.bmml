@@ -901,7 +901,7 @@
             <text>%28Select%20field%20id%29</text>
           </controlProperties>
         </control>
-        <control controlID="19" controlTypeID="com.balsamiq.mockups::Button" x="254" y="407" w="-1" h="-1" measuredW="77" measuredH="27" zOrder="19" locked="false" isInGroup="11">
+        <control controlID="19" controlTypeID="com.balsamiq.mockups::Button" x="407" y="407" w="-1" h="-1" measuredW="77" measuredH="27" zOrder="19" locked="false" isInGroup="11">
           <controlProperties>
             <size>14</size>
             <text>Add%20field</text>
@@ -913,9 +913,9 @@
             <text>List%0AList%0AGrid</text>
           </controlProperties>
         </control>
-        <control controlID="21" controlTypeID="com.balsamiq.mockups::Label" x="31" y="376" w="62" h="-1" measuredW="42" measuredH="22" zOrder="21" locked="false" isInGroup="11">
+        <control controlID="21" controlTypeID="com.balsamiq.mockups::Label" x="31" y="376" w="62" h="-1" measuredW="40" measuredH="22" zOrder="21" locked="false" isInGroup="11">
           <controlProperties>
-            <bold>true</bold>
+            <bold>false</bold>
             <size>14</size>
             <text>Field%201</text>
           </controlProperties>
@@ -932,7 +932,7 @@
             <text>Field%202</text>
           </controlProperties>
         </control>
-        <control controlID="24" controlTypeID="com.balsamiq.mockups::Button" x="344" y="407" w="-1" h="-1" measuredW="104" measuredH="27" zOrder="24" locked="false" isInGroup="11">
+        <control controlID="24" controlTypeID="com.balsamiq.mockups::Button" x="497" y="407" w="-1" h="-1" measuredW="104" measuredH="27" zOrder="24" locked="false" isInGroup="11">
           <controlProperties>
             <size>14</size>
             <text>Remove%20field</text>
@@ -942,6 +942,42 @@
           <controlProperties>
             <size>14</size>
             <text>Display%20type</text>
+          </controlProperties>
+        </control>
+        <control controlID="26" controlTypeID="com.balsamiq.mockups::TextInput" x="282" y="373" w="88" h="-1" measuredW="45" measuredH="28" zOrder="26" locked="false" isInGroup="11">
+          <controlProperties>
+            <size>14</size>
+            <text>20%25</text>
+          </controlProperties>
+        </control>
+        <control controlID="27" controlTypeID="com.balsamiq.mockups::Label" x="239" y="376" w="43" h="-1" measuredW="36" measuredH="22" zOrder="27" locked="false" isInGroup="11">
+          <controlProperties>
+            <size>14</size>
+            <text>Width</text>
+          </controlProperties>
+        </control>
+        <control controlID="28" controlTypeID="com.balsamiq.mockups::TextInput" x="282" y="406" w="88" h="-1" measuredW="55" measuredH="28" zOrder="28" locked="false" isInGroup="11">
+          <controlProperties>
+            <bold>true</bold>
+            <size>14</size>
+            <text>%2880%25%29</text>
+          </controlProperties>
+        </control>
+        <control controlID="29" controlTypeID="com.balsamiq.mockups::Label" x="239" y="409" w="43" h="-1" measuredW="36" measuredH="22" zOrder="29" locked="false" isInGroup="11">
+          <controlProperties>
+            <bold>false</bold>
+            <size>14</size>
+            <text>Width</text>
+          </controlProperties>
+        </control>
+        <control controlID="30" controlTypeID="com.balsamiq.mockups::Icon" x="371" y="375" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="30" locked="false" isInGroup="11">
+          <controlProperties>
+            <icon>UpDownFillTriangleIcon%7Csmall</icon>
+          </controlProperties>
+        </control>
+        <control controlID="31" controlTypeID="com.balsamiq.mockups::Icon" x="371" y="408" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="31" locked="false" isInGroup="11">
+          <controlProperties>
+            <icon>UpDownFillTriangleIcon%7Csmall</icon>
           </controlProperties>
         </control>
       </groupChildrenDescriptors>
