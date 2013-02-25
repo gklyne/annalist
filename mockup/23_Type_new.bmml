@@ -5,11 +5,11 @@
         <src>./assets/symbols.bmml#Type_template</src>
       </controlProperties>
     </control>
-    <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="741" y="161" w="-1" h="-1" measuredW="107" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="741" y="145" w="-1" h="-1" measuredW="107" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
       <controlProperties>
         <color>16167531</color>
         <href>24_Type_new%26bm%3B24_Type_new.bmml%26bm%3B24_Type_new.bmml%26bm%3B24_Type_new.bmml</href>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22721%2C140%2C828%2C167%22%20href%3D%2224_Type_new.bmml%22%20alt%3D%2224_Type_new%22%20id%3D%221%22/%3E</map>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22721%2C124%2C828%2C151%22%20href%3D%2224_Type_new.bmml%22%20alt%3D%2224_Type_new%22%20id%3D%221%22/%3E</map>
         <text>Modify%20content</text>
       </controlProperties>
     </control>
