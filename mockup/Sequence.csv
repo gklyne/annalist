@@ -9,7 +9,7 @@
  6, 06_record_edit,     Record_edit_template,   Updated record content -> save
 
 #   Add field to record
-11, 11_Home,            Home_temlate,           Home with new record selected -> edit record
+11, 11_Home,            Home_template,          Home with new record selected -> edit record
 12, 12_Record_addf,     Record_edit_template,   Re-display new record -> new field
 13, 13_Field_new,       Field_template,         New field definition form -> modify
 14, 14_Field_new,       Field_template,         New field details entered -> save
@@ -27,30 +27,30 @@
 25, 25_Customize,       Customize_template,     Shows new record type -> close
 
 #   Create new list view
-31, 31_Home,            Home_temlate,           -> "Customize"
+31, 31_Home,            Home_template,          -> "Customize"
 32, 32_Customize,       Customize_template,     -> new list view
 33, 33_List_view,       List_template,          Blank view list details -> modify
 34, 34_List_view,       List_template,          Filled-in details -> save
 35, 35_Customize,       Customize_template,     Shows new list view
 
 #   Create new record view
-41, 41_Home,            Home_temlate,           -> "Customize"
+41, 41_Home,            Home_template,          -> "Customize"
 42, 42_Customize,       Customize_template,     -> new record view
-43, 43_Record_view,     View_template,          Blank view details -> modify
-44, 44_Record_view,     View_template,          Filled-in view details -> save
-45, 45_Customize,       Customize_template,     Shows new view -> close
-
-#   View layout (size and position link)
-
-
+43, 43_Record_view,     View_template,          Blank view details -> add field
+44, 44_Field_new,       Field_template,         New field definition form -> modify
+45, 45_Field_new,       Field_template,         New field details entered -> save
+46, 46_Record_view,     View_template,          New field shown -> add another field
+47, 47_Record_view,     View_template,          Two fields shown -> save
+48, 48_Customize,       Customize_template,     Shows new view -> close
 
 #   Create record with new type in new list view
-61, 61_Home,            Home_temlate,         Select "New record"
-62, 62_Record_addt,     Record_new_template,  New record; "add type"
-63, 63_Record_addt,     Record_new_template,  Select new type
-64, 64_record_addt,     Record_template,      Populated record
-65, 65_home,            Home_template,        New record in list
+#   Add new field to link to external page
+61, 61_Home,            Home_template,          -> New record
+62, 62_Record_new,      Record_new_template,    Empty Note record -> modify
+63, 63_Record_new,      Record_new_template,    Populated Note record -> new field
+64, 64_Field_new,       Field_template,         New field definition form -> modify
+65, 64_Field_new,       Field_template,         New link field -> save
+66, 66_Record_addf,     Record_edit_template,   Record displays new empty field -> modify
+67, 67_Record_addf,     Record_edit_template,   Updated new field with link -> save
+68, 68_home,            Home_template,          New record in list
 
-
-
-@@TODO URIs for fields

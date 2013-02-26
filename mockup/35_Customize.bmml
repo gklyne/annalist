@@ -2,13 +2,13 @@
   <controls>
     <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="16" y="18" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
-        <override controlID="5:1">
-          <selectedIndex>0</selectedIndex>
-          <text>Books%0ANotes</text>
-        </override>
         <override controlID="4:1">
           <selectedIndex>0</selectedIndex>
           <text>Author%0ABook%0ANote</text>
+        </override>
+        <override controlID="5:1">
+          <selectedIndex>0</selectedIndex>
+          <text>Books%0ANotes</text>
         </override>
         <src>./assets/symbols.bmml#Customize_template</src>
       </controlProperties>
