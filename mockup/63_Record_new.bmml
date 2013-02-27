@@ -1,0 +1,48 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="874" measuredH="654" mockupW="837" mockupH="616">
+  <controls>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="756" y="308" w="-1" h="-1" measuredW="107" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16167531</color>
+        <text>Modify%20content</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Component" x="37" y="38" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <override controlID="0" x="0" y="0" w="837" h="616">
+          <text>Annalist%20-%20Sandbox/Book%20%28new%29%0Ahttp%3A//annalist.net/Sandbox/Book/New</text>
+        </override>
+        <override controlID="1" x="31" y="84" w="169" h="-1">
+          <text>New%20Book</text>
+        </override>
+        <override controlID="2" x="595" y="89" w="169" h="-1"/>
+        <override controlID="4" x="773" y="88" w="-1" h="-1"/>
+        <override controlID="7" x="93" y="189" w="712" h="31">
+          <italic>true</italic>
+          <text>%28Book%20title%29</text>
+        </override>
+        <override controlID="8" x="31" y="122" w="-1" h="-1"/>
+        <override controlID="9" x="31" y="193" w="-1" h="-1">
+          <text>Title</text>
+        </override>
+        <override controlID="10" x="31" y="155" w="-1" h="-1">
+          <text>Author</text>
+        </override>
+        <override controlID="12" x="93" y="119" w="116" h="-1">
+          <text>00001235</text>
+        </override>
+        <override controlID="13" x="93" y="230" w="-1" h="-1"/>
+        <override controlID="14" x="160" y="230" w="-1" h="-1"/>
+        <override controlID="15" x="647" y="121" w="-1" h="-1"/>
+        <override controlID="18" x="686" y="120" w="119" h="-1">
+          <text>Book</text>
+        </override>
+        <override controlID="11" x="93" y="152" w="712" h="-1">
+          <italic>true</italic>
+          <text>%28Book%20author%29</text>
+        </override>
+        <override controlID="19" x="716" y="230" w="-1" h="-1"/>
+        <src>./assets/symbols.bmml#Record_new_template</src>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

@@ -1,0 +1,20 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="857" measuredH="637" mockupW="837" mockupH="616">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="20" y="21" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22117%2C565%2C182%2C578%22%20href%3D%2212_Record_addf.bmml%22%20alt%3D%2212_Record_addf%22%20id%3D%224%22/%3E%0A%3Carea%20shape%3D%22rect%22%20coords%3D%22117%2C565%2C182%2C578%22%20href%3D%2212_Record_addf.bmml%22%20alt%3D%2212_Record_addf%22%20id%3D%224%22/%3E%0A%3Carea%20shape%3D%22rect%22%20coords%3D%22117%2C565%2C182%2C578%22%20href%3D%2212_Record_addf.bmml%22%20alt%3D%2212_Record_addf%22%20id%3D%224%22/%3E%0A</map>
+        <override controlID="2">
+          <selectedIndex>1</selectedIndex>
+          <text>Id%2C%20Title%0AHello%2C%20Getting%20started%20with%20Annalist%0AFirst%2C%20My%20first%20note</text>
+        </override>
+        <override controlID="4">
+          <text>New%20record%2C%20Edit%20record%2C%20Delete%20record</text>
+        </override>
+        <override controlID="7">
+          <text>Notes%0ABooks%0ANotes</text>
+        </override>
+        <src>./assets/symbols.bmml#Home_template</src>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

@@ -46,12 +46,13 @@
 
 #   Create record with new type in new list view
 #   Add new field to link to external page
-61, 61_Home,            Home_template,          -> New record
-62, 62_Record_new,      Record_new_template,    Empty Note record -> modify
-63, 63_Record_new,      Record_new_template,    Populated Note record -> new field
-64, 64_Field_new,       Field_template,         New field definition form -> modify
-65, 64_Field_new,       Field_template,         New link field -> save
-66, 66_Record_addf,     Record_edit_template,   Record displays new empty field -> modify
-67, 67_Record_addf,     Record_edit_template,   Updated new field with link -> save
-68, 68_home,            Home_template,          New record in list
+61, 61_Home,            Home_template,          -> Select Books view
+62, 62_Home,            Home_template,          -> New record
+63, 63_Record_new,      Record_new_template,    Empty Note record -> modify
+64, 64_Record_new,      Record_new_template,    Populated Note record -> new field
+65, 65_Field_new,       Field_template,         New field definition form -> modify
+66, 66_Field_new,       Field_template,         New link field -> save
+67, 67_Record_addf,     Record_edit_template,   Record displays new empty field -> modify
+68, 68_Record_addf,     Record_edit_template,   Updated new field with link -> save
+69, 69_home,            Home_template,          New record in list
 
