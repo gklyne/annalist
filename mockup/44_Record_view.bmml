@@ -1,0 +1,21 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="860" measuredH="632" mockupW="837" mockupH="616">
+  <controls>
+    <control controlID="104" controlTypeID="com.balsamiq.mockups::Component" x="23" y="16" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <override controlID="15">
+          <text>Layout</text>
+        </override>
+        <override controlID="11">
+          <text>Book</text>
+        </override>
+        <override controlID="4">
+          <text>Book%20in%20my%20collection</text>
+        </override>
+        <override controlID="7">
+          <text>Book</text>
+        </override>
+        <src>./assets/symbols.bmml#View_template</src>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

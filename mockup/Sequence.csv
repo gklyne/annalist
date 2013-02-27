@@ -36,12 +36,13 @@
 #   Create new record view
 41, 41_Home,            Home_template,          -> "Customize"
 42, 42_Customize,       Customize_template,     -> new record view
-43, 43_Record_view,     View_template,          Blank view details -> add field
-44, 44_Field_new,       Field_template,         New field definition form -> modify
-45, 45_Field_new,       Field_template,         New field details entered -> save
-46, 46_Record_view,     View_template,          New field shown -> add another field
-47, 47_Record_view,     View_template,          Two fields shown -> save
-48, 48_Customize,       Customize_template,     Shows new view -> close
+43, 43_Record_view,     View_template,          Blank view details -> modify
+44, 44_Record_view,     View_template,          Record view details -> add field
+45, 45_Field_new,       Field_template,         New field definition form -> modify
+46, 46_Field_new,       Field_template,         New field details entered -> save
+47, 47_Record_view,     View_template,          New field shown -> add another field
+48, 48_Record_view,     View_template,          Two fields shown -> save
+49, 49_Customize,       Customize_template,     Shows new view -> close
 
 #   Create record with new type in new list view
 #   Add new field to link to external page
