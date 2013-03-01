@@ -2,38 +2,42 @@
   <controls>
     <control controlID="84" controlTypeID="com.balsamiq.mockups::Component" x="18" y="19" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
-        <override controlID="16">
-          <text>Book</text>
-        </override>
-        <override controlID="18">
-          <text>Author</text>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2293%2C528%2C147%2C555%22%20href%3D%2235_Customize.bmml%22%20alt%3D%2235_Customize%22%20id%3D%228%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%2293%2C528%2C147%2C555%22%20href%3D%2235_Customize.bmml%22%20alt%3D%2235_Customize%22%20id%3D%228%22/%3E</map>
+        <override controlID="0">
+          <text>Annalist%20-%20List%20%22Books%22%20in%20collection%20%22Sandbox%22%0Ahttp%3A//annalist.net/Sandbox/_annalist/List/Books</text>
         </override>
         <override controlID="4">
           <text>A%20list%20of%20books%20in%20my%20personal%20collection.</text>
         </override>
-        <override controlID="22">
-          <text>Title</text>
-        </override>
         <override controlID="7">
           <text>My%20book%20collection</text>
         </override>
-        <override controlID="0">
-          <text>Annalist%20-%20List%20%22Books%22%20in%20collection%20%22Sandbox%22%0Ahttp%3A//annalist.net/Sandbox/_annalist/List/Books</text>
-        </override>
-        <override controlID="25">
-          <text>Display%20type</text>
+        <override controlID="8">
+          <href>35_Customize%26bm%3B35_Customize.bmml%26bm%3B35_Customize.bmml%26bm%3B35_Customize.bmml</href>
         </override>
         <override controlID="11">
           <text>Books</text>
-        </override>
-        <override controlID="20">
-          <text>List</text>
         </override>
         <override controlID="13">
           <text>Type%20%3D%20Book</text>
         </override>
         <override controlID="15">
           <text>Book</text>
+        </override>
+        <override controlID="16">
+          <text>Book</text>
+        </override>
+        <override controlID="18">
+          <text>Author</text>
+        </override>
+        <override controlID="20">
+          <text>List</text>
+        </override>
+        <override controlID="22">
+          <text>Title</text>
+        </override>
+        <override controlID="25">
+          <text>Display%20type</text>
         </override>
         <src>./assets/symbols.bmml#List_template</src>
       </controlProperties>

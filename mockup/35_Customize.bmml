@@ -2,13 +2,17 @@
   <controls>
     <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="16" y="18" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
-        <override controlID="4:1">
-          <selectedIndex>0</selectedIndex>
-          <text>Author%0ABook%0ANote</text>
-        </override>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22504%2C135%2C688%2C532%22%20href%3D%2243_Record_view.bmml%22%20alt%3D%2243_Record_view%22%20id%3D%226%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%22504%2C398%2C630%2C425%22%20href%3D%2243_Record_view.bmml%22%20alt%3D%2243_Record_view%22%20id%3D%222%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%22504%2C135%2C688%2C532%22%20href%3D%2243_Record_view.bmml%22%20alt%3D%2243_Record_view%22%20id%3D%226%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%22504%2C398%2C630%2C425%22%20href%3D%2243_Record_view.bmml%22%20alt%3D%2243_Record_view%22%20id%3D%222%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%22504%2C135%2C688%2C532%22%20href%3D%2243_Record_view.bmml%22%20alt%3D%2243_Record_view%22%20id%3D%226%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%22504%2C398%2C630%2C425%22%20href%3D%2243_Record_view.bmml%22%20alt%3D%2243_Record_view%22%20id%3D%222%22/%3E</map>
         <override controlID="5:1">
           <selectedIndex>0</selectedIndex>
           <text>Books%0ANotes</text>
+        </override>
+        <override controlID="6:2">
+          <href>43_Record_view%26bm%3B43_Record_view.bmml%26bm%3B43_Record_view.bmml%26bm%3B43_Record_view.bmml</href>
+        </override>
+        <override controlID="4:1">
+          <selectedIndex>0</selectedIndex>
+          <text>Author%0ABook%0ANote</text>
         </override>
         <src>./assets/symbols.bmml#Customize_template</src>
       </controlProperties>

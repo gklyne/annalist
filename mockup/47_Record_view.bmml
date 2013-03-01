@@ -2,8 +2,8 @@
   <controls>
     <control controlID="104" controlTypeID="com.balsamiq.mockups::Component" x="23" y="16" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
-        <override controlID="15">
-          <text>Layout</text>
+        <override controlID="7">
+          <text>Book</text>
         </override>
         <override controlID="11">
           <text>Book</text>
@@ -14,8 +14,8 @@
         <override controlID="14">
           <text/>
         </override>
-        <override controlID="7">
-          <text>Book</text>
+        <override controlID="15">
+          <text>Layout</text>
         </override>
         <src>./assets/symbols.bmml#View_template</src>
       </controlProperties>
@@ -33,6 +33,8 @@
     <control controlID="107" controlTypeID="com.balsamiq.mockups::PointyButton" x="738" y="413" w="-1" h="-1" measuredW="114" measuredH="27" zOrder="3" locked="false" isInGroup="-1">
       <controlProperties>
         <color>16167531</color>
+        <href>48_Record_view%26bm%3B48_Record_view.bmml%26bm%3B48_Record_view.bmml%26bm%3B48_Record_view.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22715%2C397%2C829%2C424%22%20href%3D%2248_Record_view.bmml%22%20alt%3D%2248_Record_view%22%20id%3D%22107%22/%3E</map>
         <text>Add%20%20more%20fields</text>
       </controlProperties>
     </control>

@@ -2,17 +2,24 @@
   <controls>
     <control controlID="104" controlTypeID="com.balsamiq.mockups::Component" x="23" y="16" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
-        <override controlID="15">
-          <text>Layout</text>
-        </override>
-        <override controlID="11">
-          <text>Book</text>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22609%2C528%2C695%2C555%22%20href%3D%2245_Field_new.bmml%22%20alt%3D%2245_Field_new%22%20id%3D%2212%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%22609%2C528%2C695%2C555%22%20href%3D%2245_Field_new.bmml%22%20alt%3D%2245_Field_new%22%20id%3D%2212%22/%3E</map>
+        <override controlID="1">
+          <text>New%20View%20in%20collection%20%22Sandbox%22</text>
         </override>
         <override controlID="4">
           <text>Book%20in%20my%20collection</text>
         </override>
         <override controlID="7">
           <text>Book</text>
+        </override>
+        <override controlID="11">
+          <text>Book</text>
+        </override>
+        <override controlID="12">
+          <href>45_Field_new%26bm%3B45_Field_new.bmml%26bm%3B45_Field_new.bmml%26bm%3B45_Field_new.bmml</href>
+        </override>
+        <override controlID="15">
+          <text>Layout</text>
         </override>
         <src>./assets/symbols.bmml#View_template</src>
       </controlProperties>

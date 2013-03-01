@@ -2,7 +2,7 @@
   <controls>
     <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="19" y="21" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2293%2C407%2C147%2C434%22%20href%3D%2247_Record_view.bmml%22%20alt%3D%2247_Record_view%22%20id%3D%2212%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%2293%2C407%2C147%2C434%22%20href%3D%2247_Record_view.bmml%22%20alt%3D%2247_Record_view%22%20id%3D%2212%22/%3E</map>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2293%2C407%2C147%2C434%22%20href%3D%2267_Record_edit.bmml%22%20alt%3D%2267_Record_edit%22%20id%3D%2212%22/%3E%3Carea%20shape%3D%22rect%22%20coords%3D%2293%2C407%2C147%2C434%22%20href%3D%2267_Record_edit.bmml%22%20alt%3D%2267_Record_edit%22%20id%3D%2212%22/%3E</map>
         <override controlID="0" x="0" y="0" w="837" h="616">
           <text>Annalist%20-%20Sandbox%20customize%20Book/Fields%20%28new%29%0Ahttp%3A//annalist.net/Sandbox/_annalist/Book/Fields/New</text>
         </override>
@@ -13,32 +13,32 @@
         <override controlID="4" x="771" y="87" w="-1" h="-1"/>
         <override controlID="5" x="606" y="127" w="71" h="-1"/>
         <override controlID="6" x="93" y="232" w="712" h="126">
-          <text>Name%20of%20book%20author</text>
+          <text>Link%20to%20page%20with%20more%20information%20about%20this%20book%2C%20such%20as%20the%20author%27s%20home%20page%20or%20Amazon%20page.</text>
         </override>
         <override controlID="7" x="31" y="164" w="-1" h="-1"/>
         <override controlID="8" x="31" y="235" w="-1" h="-1"/>
         <override controlID="9" x="31" y="199" w="-1" h="-1"/>
         <override controlID="10" x="93" y="196" w="712" h="-1">
-          <text>Book%20author</text>
+          <text>URI%20of%20page%20with%20more%20information%20about%20this%20book</text>
         </override>
         <override controlID="11" x="93" y="161" w="712" h="-1">
-          <text>Author</text>
+          <text>See%20also</text>
         </override>
         <override controlID="12" x="93" y="407" w="-1" h="-1">
-          <href>47_Record_view%26bm%3B47_Record_view.bmml%26bm%3B47_Record_view.bmml%26bm%3B47_Record_view.bmml</href>
+          <href>67_Record_edit%26bm%3B67_Record_edit.bmml%26bm%3B67_Record_edit.bmml%26bm%3B67_Record_edit.bmml</href>
         </override>
         <override controlID="13" x="157" y="407" w="-1" h="-1"/>
         <override controlID="14" x="686" y="125" w="119" h="-1">
-          <text>Text</text>
+          <text>Link</text>
         </override>
         <override controlID="15" x="31" y="128" w="-1" h="-1"/>
         <override controlID="16" x="93" y="125" w="116" h="-1">
-          <text>author</text>
+          <text>seeAlso%09</text>
         </override>
         <override controlID="20" x="665" y="407" w="-1" h="-1"/>
         <override controlID="21" x="31" y="370" w="-1" h="-1"/>
         <override controlID="22" x="93" y="367" w="712" h="-1">
-          <text>http%3A//annalist.net/Sandbox/Book/author</text>
+          <text>http%3A//annalist.net/Sandbox/Book/seeAlso</text>
         </override>
         <src>./assets/symbols.bmml#Field_template</src>
       </controlProperties>

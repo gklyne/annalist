@@ -2,10 +2,21 @@
   <controls>
     <control controlID="104" controlTypeID="com.balsamiq.mockups::Component" x="23" y="16" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
+        <override controlID="1">
+          <text>New%20View%20in%20collection%20%22Sandbox%22</text>
+        </override>
         <override controlID="15">
           <text>Layout</text>
         </override>
         <src>./assets/symbols.bmml#View_template</src>
+      </controlProperties>
+    </control>
+    <control controlID="105" controlTypeID="com.balsamiq.mockups::PointyButton" x="741" y="273" w="-1" h="-1" measuredW="107" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16167531</color>
+        <href>44_Record_view%26bm%3B44_Record_view.bmml%26bm%3B44_Record_view.bmml%26bm%3B44_Record_view.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22718%2C257%2C825%2C284%22%20href%3D%2244_Record_view.bmml%22%20alt%3D%2244_Record_view%22%20id%3D%22105%22/%3E</map>
+        <text>Modify%20content</text>
       </controlProperties>
     </control>
   </controls>

@@ -1,0 +1,70 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="855" measuredH="636" mockupW="837" mockupH="616">
+  <controls>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Component" x="18" y="20" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <override controlID="0" x="0" y="0" w="837" h="616">
+          <text>Annalist%20-%20Book%2000001235%0Ahttp%3A//annalist.net/Sandbox/Book/00001235</text>
+        </override>
+        <override controlID="1" x="31" y="84" w="169" h="-1">
+          <text>Book</text>
+        </override>
+        <override controlID="2" x="595" y="89" w="169" h="-1"/>
+        <override controlID="4" x="773" y="88" w="-1" h="-1"/>
+        <override controlID="7" x="93" y="193" w="712" h="29">
+          <text>The%20Art%20of%20Computer%20Programming%3A%20%3A%20Fundamental%20Algorithms%20v.1</text>
+          <verticalScrollbar>false</verticalScrollbar>
+        </override>
+        <override controlID="8" x="31" y="122" w="-1" h="-1"/>
+        <override controlID="9" x="31" y="193" w="-1" h="-1">
+          <text>Title</text>
+        </override>
+        <override controlID="10" x="31" y="155" w="-1" h="-1">
+          <text>Author</text>
+        </override>
+        <override controlID="11" x="93" y="152" w="712" h="-1">
+          <text>Donald%20E.%20Knuth</text>
+        </override>
+        <override controlID="13" x="93" y="272" w="-1" h="-1"/>
+        <override controlID="15" x="647" y="121" w="-1" h="-1"/>
+        <override controlID="18" x="686" y="120" w="119" h="-1">
+          <text>Book</text>
+        </override>
+        <override controlID="19" x="716" y="272" w="-1" h="-1"/>
+        <override controlID="20" x="93" y="121" w="-1" h="-1">
+          <text>00001235</text>
+        </override>
+        <override controlID="14" x="160" y="272" w="-1" h="-1"/>
+        <src>./assets/symbols.bmml#Record_edit_template</src>
+      </controlProperties>
+    </control>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::Label" x="49" y="257" w="-1" h="-1" measuredW="56" measuredH="22" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <text>See%20also</text>
+      </controlProperties>
+    </control>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::TextInput" x="111" y="254" w="552" h="-1" measuredW="342" measuredH="28" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderColor>0</borderColor>
+        <color>16777215</color>
+        <italic>true</italic>
+        <size>14</size>
+        <text>%28URI%20of%20page%20with%20more%20information%20about%20this%20book%29</text>
+      </controlProperties>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::Button" x="678" y="254" w="144" h="29" measuredW="144" measuredH="27" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <text>Browse%20%28WebDAV%29...</text>
+      </controlProperties>
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::PointyButton" x="683" y="342" w="-1" h="-1" measuredW="154" measuredH="27" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16167531</color>
+        <href>68_Record_edit%26bm%3B68_Record_edit.bmml%26bm%3B68_Record_edit.bmml%26bm%3B68_Record_edit.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22665%2C322%2C819%2C349%22%20href%3D%2268_Record_edit.bmml%22%20alt%3D%2268_Record_edit%22%20id%3D%228%22/%3E</map>
+        <text>Fill%20in%20new%20field%20content</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

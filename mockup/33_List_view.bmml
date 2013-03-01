@@ -14,6 +14,8 @@
     <control controlID="56" controlTypeID="com.balsamiq.mockups::PointyButton" x="743" y="395" w="-1" h="-1" measuredW="107" measuredH="27" zOrder="2" locked="false" isInGroup="-1">
       <controlProperties>
         <color>16167531</color>
+        <href>34_List_view%26bm%3B34_List_view.bmml%26bm%3B34_List_view.bmml%26bm%3B34_List_view.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22720%2C379%2C827%2C406%22%20href%3D%2234_List_view.bmml%22%20alt%3D%2234_List_view%22%20id%3D%2256%22/%3E</map>
         <menuIcon>false</menuIcon>
         <text>Modify%20content</text>
       </controlProperties>

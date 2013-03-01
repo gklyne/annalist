@@ -1,4 +1,4 @@
-<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="867" measuredH="637" mockupW="848" mockupH="616">
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="856" measuredH="637" mockupW="837" mockupH="616">
   <controls>
     <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="19" y="21" w="837" h="616" measuredW="837" measuredH="616" zOrder="0" locked="false" isInGroup="-1">
       <controlProperties>
@@ -8,6 +8,7 @@
         <override controlID="1" x="31" y="84" w="438" h="-1">
           <text>Field%20in%20view%20%22Book%22</text>
         </override>
+        <override controlID="2" x="595" y="89" w="169" h="-1"/>
         <override controlID="4" x="771" y="87" w="-1" h="-1"/>
         <override controlID="5" x="606" y="127" w="71" h="-1"/>
         <override controlID="6" x="93" y="232" w="712" h="126"/>
@@ -18,21 +19,20 @@
         <override controlID="11" x="93" y="161" w="712" h="-1"/>
         <override controlID="12" x="93" y="407" w="-1" h="-1"/>
         <override controlID="13" x="157" y="407" w="-1" h="-1"/>
-        <override controlID="14" x="686" y="125" w="119" h="-1"/>
         <override controlID="15" x="31" y="128" w="-1" h="-1"/>
         <override controlID="16" x="93" y="125" w="116" h="-1"/>
-        <override controlID="2" x="595" y="89" w="169" h="-1"/>
         <override controlID="20" x="665" y="407" w="-1" h="-1"/>
         <override controlID="21" x="31" y="370" w="-1" h="-1"/>
+        <override controlID="14" x="686" y="125" w="119" h="-1"/>
         <override controlID="22" x="93" y="367" w="712" h="-1"/>
-        <override controlID="-1"/>
         <src>./assets/symbols.bmml#Field_template</src>
       </controlProperties>
     </control>
-    <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="760" y="355" w="-1" h="-1" measuredW="107" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="733" y="325" w="-1" h="-1" measuredW="107" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
       <controlProperties>
         <color>16167531</color>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22741%2C334%2C848%2C361%22%20href%3D%2214_Field_new.bmml%22%20alt%3D%2214_Field_new%22%20id%3D%221%22/%3E</map>
+        <href>46_Field_new%26bm%3B46_Field_new.bmml%26bm%3B46_Field_new.bmml%26bm%3B46_Field_new.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22714%2C304%2C821%2C331%22%20href%3D%2246_Field_new.bmml%22%20alt%3D%2246_Field_new%22%20id%3D%221%22/%3E</map>
         <text>Modify%20content</text>
       </controlProperties>
     </control>
