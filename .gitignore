@@ -71,4 +71,7 @@ Thumbs.db
 *.bak
 *~
 
+# Libre office lock files
+.~*
+
 # Project files
