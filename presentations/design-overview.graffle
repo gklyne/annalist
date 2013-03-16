@@ -59,6 +59,97 @@
 			<key>Head</key>
 			<dict>
 				<key>ID</key>
+				<integer>19</integer>
+			</dict>
+			<key>ID</key>
+			<integer>41</integer>
+			<key>OrthogonalBarAutomatic</key>
+			<true/>
+			<key>OrthogonalBarPoint</key>
+			<string>{0, 0}</string>
+			<key>OrthogonalBarPosition</key>
+			<real>2.2733004093170166</real>
+			<key>Points</key>
+			<array>
+				<string>{99.212628263854967, 185.77425928290597}</string>
+				<string>{127.55922826385498, 191.33858156204224}</string>
+				<string>{155.40540215920561, 198.4251625941628}</string>
+			</array>
+			<key>Style</key>
+			<dict>
+				<key>stroke</key>
+				<dict>
+					<key>HeadArrow</key>
+					<string>FilledArrow</string>
+					<key>Legacy</key>
+					<true/>
+					<key>LineType</key>
+					<integer>2</integer>
+					<key>TailArrow</key>
+					<string>0</string>
+				</dict>
+			</dict>
+			<key>Tail</key>
+			<dict>
+				<key>ID</key>
+				<integer>40</integer>
+				<key>Info</key>
+				<integer>7</integer>
+			</dict>
+		</dict>
+		<dict>
+			<key>Bounds</key>
+			<string>{{14.17322826385498, 170.86616897583008}, {85.039400000000001, 55.905483245849609}}</string>
+			<key>Class</key>
+			<string>ShapedGraphic</string>
+			<key>ID</key>
+			<integer>40</integer>
+			<key>Magnets</key>
+			<array>
+				<string>{-0.73960000000000004, -1.1093999999999999}</string>
+				<string>{-0.42163699999999998, -1.26491}</string>
+				<string>{0, -1.3333299999999999}</string>
+				<string>{0.42163699999999998, -1.26491}</string>
+				<string>{0.73960000000000004, -1.1093999999999999}</string>
+				<string>{1.07521, -0.78848399999999996}</string>
+				<string>{1.20824, -0.56384699999999999}</string>
+				<string>{1.3074399999999999, -0.26148900000000003}</string>
+				<string>{1.3303799999999999, 0.0886932}</string>
+				<string>{1.26491, 0.42163699999999998}</string>
+				<string>{1.00403, 0.87732900000000003}</string>
+				<string>{0.59216000000000002, 1.19462}</string>
+				<string>{-0.014058899999999999, 1.3332599999999999}</string>
+				<string>{-0.48380499999999999, 1.2424599999999999}</string>
+				<string>{-0.80599200000000004, 1.0621499999999999}</string>
+				<string>{-1.1925699999999999, 0.59628499999999995}</string>
+				<string>{-1.3074399999999999, 0.26148900000000003}</string>
+				<string>{-1.3267199999999999, -0.13267100000000001}</string>
+				<string>{-1.23797, -0.49518699999999999}</string>
+				<string>{-1.0923099999999999, -0.76461599999999996}</string>
+			</array>
+			<key>Shape</key>
+			<string>DocumentShape</string>
+			<key>Style</key>
+			<dict/>
+			<key>Text</key>
+			<dict>
+				<key>Text</key>
+				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
+\cocoascreenfonts1{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\fs24 \cf0 Apache configuration}</string>
+				<key>VerticalPad</key>
+				<integer>0</integer>
+			</dict>
+		</dict>
+		<dict>
+			<key>Class</key>
+			<string>LineGraphic</string>
+			<key>Head</key>
+			<dict>
+				<key>ID</key>
 				<integer>38</integer>
 				<key>Info</key>
 				<integer>2</integer>
@@ -130,7 +221,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{14.173228740692139, 113.385826587677}, {113.38582611083984, 57.259841918945312}}</string>
+			<string>{{85.039369106292725, 56.69291353225708}, {113.38582611083984, 57.259841918945312}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FontInfo</key>
@@ -191,11 +282,11 @@ Other applications}</string>
 			<key>OrthogonalBarPoint</key>
 			<string>{0, 0}</string>
 			<key>OrthogonalBarPosition</key>
-			<real>8.2234725952148438</real>
+			<real>1.9897639751434326</real>
 			<key>Points</key>
 			<array>
-				<string>{127.55905485153198, 142.01574754714966}</string>
-				<string>{155.90599952316285, 141.7322826385498}</string>
+				<string>{141.73228216171265, 113.95275545120239}</string>
+				<string>{184.25245462036133, 141.7322826385498}</string>
 				<string>{193.70072054641861, 170.07872611083985}</string>
 			</array>
 			<key>Style</key>
@@ -861,7 +952,7 @@ Other applications}</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{21.259842395782471, 106.29921197891235}, {113.38582611083984, 57.259841918945312}}</string>
+			<string>{{92.125982761383057, 49.606298923492432}, {113.38582611083984, 57.259841918945312}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FontInfo</key>
@@ -952,7 +1043,7 @@ Other applications}</string>
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2013-03-06 22:14:32 +0000</string>
+	<string>2013-03-16 16:45:56 +0000</string>
 	<key>Modifier</key>
 	<string>Graham Klyne</string>
 	<key>NotesVisible</key>
@@ -983,7 +1074,7 @@ Other applications}</string>
 		<key>NSPaperSize</key>
 		<array>
 			<string>size</string>
-			<string>{595.28997802734375, 841.8900146484375}</string>
+			<string>{594.99999713897705, 842}</string>
 		</array>
 		<key>NSPrintReverseOrientation</key>
 		<array>
