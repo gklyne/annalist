@@ -9,30 +9,25 @@ Could collection/record be Atom feed/entry?
 
 Collection service document (cacheable):
 
-    an:access _accessRef_ ;             # exactly 1
-    an:query _queryRef_ ;               # exactly 1
+    an:access _accessRef_ ;             # exactly 1 (use this to create .htaccess on collection)
+    an:query _queryRef_ ;               # exactly 1 (all records in collection)
     an:metadata _metaRef_ ;             # exactly 1
     an:defaultView _listRef_ ;          # exactly 1
     an:listView _listRef_ ;             # 1..
     an:recordView _viewRef_ ;           # 0..
     an:recordType _typeRef_ ;           # 0..
+    an:record _recordRef_ ;             # 0..
+    an:attachment _ref_ ;               # 0..
     .
-
-# Metadata, collected and managed by system; not user-editable:
-
-    view template
-    creator
-    creation data
-    modification (who, when)
-    (other provenance?)
 
 
 # Record (frame)
 
-    an:access _accessRef_ ;             # 0..1
+    a an:Record
+    rdf:type _typeRef_ ;                # 0..   (or rdf:type?)
+    an:access _accessRef_ ;             # 0..1  @@@ how can HTTP server honour this?
     an:metadata _metaRef_ ;             # 1..1
     an:defaultView _viewRef_ ;          # 1..1 ??
-    an:recordType _typeRef_ ;           # 0..   (or rdf:type?)
     an:fieldRef _ref_ ;                 # 0..   (actual properties are subproperties)
     an:fieldVal _val_ ;                 # 0..   (actual properties are subproperties)
     .
@@ -40,42 +35,67 @@ Collection service document (cacheable):
 
 # Attachment (blob)
 
-(Dereferencing returns the blob of whatever type.  I think this is subsumed by Record fields.)
+    a an:attachment
+    an:access _accessRef_ ;             # 0..1
+    an:metadata _metaRef_ ;             # 1..1
+    an:valueRef _attachRef_ ;           # 1..1
 
-How to add a blob to a collection; need to distinguish from records?  Use separate blob-store URI?  Access control?
+How to add a blob to a collection; need to distinguish from records?  Use separate blob-store URI?
 
 
 # Views
 
 ## List view
 
-Parameterized by collection
+Used with a supplied collection URI.
 
 List view:
 
     a an:ListView, an:Record ;
+    rdfs:label _label_ ;                # 1..1
+    rdfs:comment _explanation_ ;        # 1..1
     an:viewRows  _rowcount_ ;           # 0..1
     an:viewWidth _widthId_ ;            # 0..1
-    an:viewSelector ??? ;               # 1..1
+    an:recordQuery ??? ;                # 1..1
+    an:recordView _viewRef_ ;           # 1..1
     an:listField                        # 1..
       [ an:fieldProperty _propUri_ ; an:listFieldPos _posId_ ] ;
     an:searchService _UriTemplate_ ;    # 0..1
+    .
 
 Grid view:
 
     a an:GridView, an:Record ;
+    rdfs:label _label_ ;                # 1..1
+    rdfs:comment _explanation_ ;        # 1..1
     an:viewRows  _rowcount_ ;           # 0..1
     an:viewWidth _widthId_ ;            # 0..1
     an:cellWidth _widthId_ ;            # 0..1
-    an:viewSelector ??? ;               # 1..1
+    an:recordQuery ??? ;                # 1..1
+    an:recordView _viewRef_ ;           # 1..1
     an:searchService _UriTemplate_ ;    # 0..1
     an:gridField                        # 1..
       [ an:fieldProperty _propUri_ ; an:gridFieldPos _posId_ ] ;
+    .
 
 
 ## Record view
 
-Parameterized by record
+Used with a supplied record URI.
+
+    a an:RecordView, an:Record ;
+    rdfs:label _label_ ;                # 1..1
+    rdfs:comment _explanation_ ;        # 1..1
+    an:viewWidth _widthId_ ;            # 0..1
+    an:viewField                        # 1..
+      [ a an:ViewField ;
+        an:fieldid _id-string_ ;
+        rdfs:label _label_ ;
+        an:placeholder _placeholder-text_ ;
+        rdfs:comment _explanation_ ;
+        an:fieldPos _posId_ ;
+        an:fieldProperty _propUri_ ] ;
+    .
 
 
 # Access control
@@ -117,14 +137,27 @@ I thought about roles as part of the interface, but feel these are part of the a
 
 Should an authorization request return alternate possible obligations?  If so, there should be some way to learn about their differences
 
+@@ how is all this going to work with resources served directly by the HTTP server?
+
+@@ need to figure out how the access control model can be reflected in the HTTP server model.
+
 
 # (Queries: by type, property/value, keyword, sparql, owl)
 
     a an:QueryDescription 
-    an:queryByType _UriTemplate_ ;      # exactly 1 with {type}
-    an:queryByProp _UriTemplate_ ;      # 0..1 with {prop} {val}
-    an:queryByKeyword _UriTemplate_ ;   # 0..1
+    an:queryByType _UriTemplate_ ;      # 1..1, with {coll} {type}
+    an:queryByProp _UriTemplate_ ;      # 0..1, with {coll} {prop} {val}
+    an:queryByKeyword _UriTemplate_ ;   # 0..1, with {coll} {keyword}
     an:queryBySparql _sparqlSdRef_ ;    # 0.. (see SPARQL service description; convention for collection?)
     an:quertByOwl _owlSdRef_ ;          # 0.. (model on SPARQL SD?)
     .
+
+
+# Metadata, collected and managed by system; not user-editable:
+
+    view template
+    creator
+    creation data
+    modification (who, when)
+    (other provenance?)
 
