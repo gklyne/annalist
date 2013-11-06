@@ -19,6 +19,9 @@ $ANNALIST_ROOT/
       access/
         default-access
         (more details to work through - keep it simple for starters)
+      bridge/
+        bridge-description (incl path mapping in collection)
+         :
     record-type/
       record-id
        :
