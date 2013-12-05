@@ -1,0 +1,22 @@
+# Explorations
+
+## OAuth testing:
+
+1. Apply OAuth/OpenID connect authorization to http://localhost:8000/rovserver/ (using Google auth service)
+
+2. Create credentials for roverlay command utilityt and require those for activating the service.
+
+3. Revise service so that user sees only their own ROs when listed, and can apply access control to use of ROs by others.
+
+4. Create separate service endpoint to handle authorization requests (using UMA elements where appropriate).
+
+
+See also:
+
+https://github.com/omab/python-social-auth
+http://python-social-auth.readthedocs.org/en/latest/index.html
+https://github.com/jcleblanc/openid-connect/tree/master/paypal-python
+https://github.com/rohe/pyoidc
+https://developers.google.com/api-client-library/python/guide/aaa_oauth
+
+

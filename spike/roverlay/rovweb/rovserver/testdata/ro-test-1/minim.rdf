@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY rdf     "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY rdfs    "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY owl     "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd     "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml     "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfg    "http://www.w3.org/2004/03/trix/rdfg-1/" >
+    <!ENTITY ore     "http://www.openarchives.org/ore/terms/" >
+    <!ENTITY ao      "http://purl.org/ao/" >
+    <!ENTITY dcterms "http://purl.org/dc/terms/" >
+    <!ENTITY foaf    "http://xmlns.com/foaf/0.1/" >
+    <!ENTITY ro      "http://purl.org/wf4ever/ro#" >
+    <!ENTITY wfprov  "http://purl.org/wf4ever/wfprov#" >
+    <!ENTITY wfdesc  "http://purl.org/wf4ever/wfdesc#" >
+    <!ENTITY minim   "http://purl.org/minim/minim#" >
+]>
+
+<rdf:RDF xmlns="."
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:rdfg="http://www.w3.org/2004/03/trix/rdfg-1/"
+     xmlns:ore="http://www.openarchives.org/ore/terms/"
+     xmlns:ao="http://purl.org/ao/"
+     xmlns:dcterms="http://purl.org/dc/terms/"
+     xmlns:foaf="http://xmlns.com/foaf/0.1/"
+     xmlns:ro="http://purl.org/wf4ever/ro#"
+     xmlns:wfprov="http://purl.org/wf4ever/wfprov#"
+     xmlns:wfdesc="http://purl.org/wf4ever/wfdesc#"
+     xmlns:minim="&minim;"
+>
+
+  <!-- Constraint for complete test RO -->
+
+  <rdf:Description rdf:about=".">
+    <minim:hasConstraint>
+      <minim:Constraint rdf:about="#test">
+        <minim:forPurpose>test RO</minim:forPurpose>
+        <minim:toModel rdf:resource="#testROcomplete" />
+      </minim:Constraint>
+    </minim:hasConstraint>
+  </rdf:Description>
+
+  <!-- Model for complete test RO -->
+
+  <minim:Model rdf:about="#testROcomplete">
+    <rdfs:label>Test RO complete</rdfs:label>
+    <rdfs:comment>
+      This model checks all expected files in the test RO are present
+    </rdfs:comment>
+       
+    <minim:hasMustRequirement>
+      <minim:Requirement rdf:about="#isPresent/README-ro-test-1">
+        <rdfs:label>aggregates README-ro-test-1</rdfs:label>
+        <minim:isDerivedBy>
+          <minim:DataRequirementRule>
+            <minim:aggregates rdf:resource="README-ro-test-1" />
+          </minim:DataRequirementRule>
+        </minim:isDerivedBy>
+      </minim:Requirement>
+    </minim:hasMustRequirement>
+
+    <minim:hasShouldRequirement>
+      <minim:Requirement rdf:about="#isPresent/minim.rdf">
+        <rdfs:label>aggregates minim.rdf</rdfs:label>
+        <minim:isDerivedBy>
+          <minim:DataRequirementRule>
+            <minim:aggregates rdf:resource="minim.rdf" />
+          </minim:DataRequirementRule>
+        </minim:isDerivedBy>
+      </minim:Requirement>
+    </minim:hasShouldRequirement>
+
+    <minim:hasShouldRequirement>
+      <minim:Requirement rdf:about="#isPresent/subdir1/subdir1-file.txt">
+        <rdfs:label>aggregates subdir1/subdir1-file.txt</rdfs:label>
+        <minim:isDerivedBy>
+          <minim:DataRequirementRule>
+            <minim:aggregates rdf:resource="subdir1/subdir1-file.txt" />
+          </minim:DataRequirementRule>
+        </minim:isDerivedBy>
+      </minim:Requirement>
+    </minim:hasShouldRequirement>
+
+    <minim:hasShouldRequirement>
+      <minim:Requirement rdf:about="#isPresent/subdir2/subdir2-file.txt">
+        <rdfs:label>aggregates subdir2/subdir2-file.txt</rdfs:label>
+        <minim:isDerivedBy>
+          <minim:DataRequirementRule>
+            <minim:aggregates rdf:resource="subdir2/subdir2-file.txt" />
+          </minim:DataRequirementRule>
+        </minim:isDerivedBy>
+      </minim:Requirement>
+    </minim:hasShouldRequirement>
+
+  </minim:Model>
+
+</rdf:RDF>

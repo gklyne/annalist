@@ -23,6 +23,11 @@
 /.pydevproject
 /.project
 
+# ----------
+# Oxygen (?)
+# (or some XML tool)
+catalog-v001.xml
+
 # ---------
 # Mercurial
 
@@ -71,11 +76,9 @@ Thumbs.db
 *.bak
 *~
 
-# Libre office lock files
-.~*
-
 # Project files
-annalist.sublime-*
-
-
-
+/pyenv
+/anenv
+/src/build
+/src/dist
+/src/*.egg-info
