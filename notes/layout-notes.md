@@ -9,3 +9,21 @@ The basic capabilities, then, are `span1` to `span12` and `offset0` to `offset11
 
 UI "widgets" will be defined to use some given number (1-12) of columns, with optional offset from the preceding widget.
 
+
+Web page layout and styling
+===========================
+
+http://960.gs/
+http://www.designinfluences.com/fluid960gs/
+http://www.gridsystemgenerator.com/
+less
+http://lessframework.com/
+http://blueprintcss.org/
+http://bluetrip.org/
+http://elasticss.com/
+http://twitter.github.com/bootstrap/ (**)
+http://foundation.zurb.com (**)
+
+(**) favourites?
+
+Re-evaluate Haystack (**gone)

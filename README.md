@@ -11,6 +11,19 @@ Goals
 * Sharable data: use textual, easy to read file formats that can be shared by web, email, file transfer, version management system, memory stick, etc.
 * Remixable data: records that can be first class participants in a wider ecosystem of linked data, with links in and links out.
 
+Installation
+------------
+
+    cd _workspase_base_
+    git clone https://github.com/gklyne/annalist.git
+    cd annalist
+
+    virtualenv anenv
+    pip install rdflib
+    pip install rdflib-sparql
+    pip install django
+    pip install httplib2
+
 Technical elements
 ------------------
 

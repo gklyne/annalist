@@ -18,6 +18,24 @@ AUTH* Notes for Annalist
   - https://svn.gluu.info/repository/oauth2ApacheHTTPD/
 
 
+## UMA and related links
+
+Auth* - see http://tools.ietf.org/html/draft-hardjono-oauth-umacore-07, etc.
+- http://en.wikipedia.org/wiki/User-Managed_Access
+- http://smartjisc.wordpress.com/2012/06/30/puma-building-a-requester-application/#more-603
+- http://smartjisc.wordpress.com/2012/04/20/puma-building-a-host-application/#more-600
+- http://kantarainitiative.org/confluence/display/uma/Home
+- https://bitbucket.org/smartproject
+
+- http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-13
+- http://tools.ietf.org/html/draft-ietf-oauth-jwt-bearer-06
+
+- http://ox.gluu.org/doku.php?id=start
+- https://svn.gluu.info/repository/openxdi/
+- http://ox.gluu.org/doku.php?id=oxd:concept
+- https://svn.gluu.info/repository/oauth2ApacheHTTPD/
+
+
 # Authentication model
 
 Goal: confirmed URI; could be OpenId or Persona?
