@@ -4,7 +4,7 @@
 
 1. Apply OAuth/OpenID connect authorization to http://localhost:8000/rovserver/ (using Google auth service)
 
-2. Create credentials for roverlay command utilityt and require those for activating the service.
+2. Create credentials for roverlay command utility and require those for activating the service.
 
 3. Revise service so that user sees only their own ROs when listed, and can apply access control to use of ROs by others.
 

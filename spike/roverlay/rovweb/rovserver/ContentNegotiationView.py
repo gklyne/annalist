@@ -84,6 +84,16 @@ class ContentNegotiationView(generic.View):
                 }
             })
 
+    def error401values(self):
+        return self.errorvalues(401, "Unauthorized", 
+            "Resource %(request_uri)s requires authentication for access"
+            )
+
+    def error403values(self):
+        return self.errorvalues(401, "Forbidden", 
+            "Forbidden %(method)s access to resource %(request_uri)s"
+            )
+
     def error404values(self):
         return self.errorvalues(404, "Not found", 
             "Resource %(request_uri)s not found"

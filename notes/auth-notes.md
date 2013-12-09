@@ -36,6 +36,15 @@ Auth* - see http://tools.ietf.org/html/draft-hardjono-oauth-umacore-07, etc.
 - https://svn.gluu.info/repository/oauth2ApacheHTTPD/
 
 
+## Library software links
+
+https://github.com/omab/python-social-auth
+http://python-social-auth.readthedocs.org/en/latest/index.html
+https://github.com/jcleblanc/openid-connect/tree/master/paypal-python
+https://github.com/rohe/pyoidc
+https://developers.google.com/api-client-library/python/guide/aaa_oauth
+
+
 # Authentication model
 
 Goal: confirmed URI; could be OpenId or Persona?
@@ -60,10 +69,6 @@ Oauth.  The above flow appears to be very similar to what is provided by Oauth2,
 => collection as security realm
 
 https://github.com/litl/rauth seems to be the favoured Python implementation of Oauth 2 (and 1?)
-
-## OAUTH2 resources
-
-"Ryan Boyd’s Getting Started with OAuth 2.0 (O’Reilly) for a readable, detailed explanation of OAuth 2.0."
 
 ## UMA notes
 

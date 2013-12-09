@@ -1,12 +1,13 @@
 # Create your views here.
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
-__copyright__   = "Copyright 2011-2013, University of Oxford"
+__copyright__   = "Copyright 2011-2013, Graham Klyne and University of Oxford"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import random
 import logging
 import rdflib
+import os.path
 
 from django.http import HttpResponse
 from django.template import RequestContext, loader
@@ -18,6 +19,8 @@ from miscutils.ro_namespaces import RDF, RO, ORE, AO
 
 from rovserver.ContentNegotiationView import ContentNegotiationView
 from rovserver.models import ResearchObject, AggregatedResource
+
+from oauth2client.client import flow_from_clientsecrets
 
 # Logger for this module
 log = logging.getLogger(__name__)
@@ -32,18 +35,55 @@ RDF_serialize_formats = (
 
 # Used to optimize HTTP redirects.
 # In particular to avoid multiple hits on sites like purl.org.
-# This is not persistent, so restartingthe servoce will flush any saved URI mappings.
+# This is not persistent, so restartingthe service will flush any saved URI mappings.
 HTTP_REDIRECTS = {}
 
 class RovServerHomeView(ContentNegotiationView):
     """
     View class to handle requests to the rovserver home URI
     """
+    def __init__(self):
+        super(RovServerHomeView, self).__init__()
+        self.oauthflow = None
+        return
 
     def error(self, values):
         template = loader.get_template('rovserver_error.html')
         context  = RequestContext(self.request, values)
         return HttpResponse(template.render(context), status=values['status'])
+
+    # Authentication and authorization
+    def authenticate(self):
+        """
+        Return None if required authentication is present, otherwise
+        an appropriate 401 Unauthorized response.
+
+        self.userid is set to a URI that identifies the authenticated user
+
+        self.useraccount, self.userfullname may be set to user account name
+        and user full name strings if information is available.
+        """
+        # Assemble file name for client secrets
+        # Note: secret file is help outside the software build area
+        configbase = os.path.join(os.path.expanduser("~"), ".roverlay/")
+        if not self.oauthflow():
+            clientsecrets_filename = os.path.join(configbase, "oauth2_client_secrets.json")
+            self.oauthflow = flow_from_clientsecrets(
+                clientsecrets_filename,
+                scope="openid profile email offline_access",
+                redirecturi=self.get_request_uri()
+                )
+
+        return None
+
+    def authorize(self, scope):
+        """
+        Return None if user is authorized to perform the requested operation,
+        otherwise appropriate 403 Forbidden response.
+
+        @@TODO interface details; scope at least will be needed
+        """
+        return None
 
     # GET
 
@@ -64,6 +104,7 @@ class RovServerHomeView(ContentNegotiationView):
         self.request = request      # For clarity: generic.View does this anyway
         resultdata = {'rouris': ResearchObject.objects.all()}
         return (
+            self.authenticate() or 
             self.render_uri_list(resultdata) or
             self.render_html(resultdata) or 
             self.error(self.error406values())
@@ -129,7 +170,9 @@ class RovServerHomeView(ContentNegotiationView):
 
     def post(self, request):
         self.request = request      # For clarity: generic.View does this anyway
-        return ( self.post_uri_list({}) or 
+        return (
+            self.authenticate() or 
+            self.post_uri_list({}) or 
             self.error(self.error415values()) )
 
 
