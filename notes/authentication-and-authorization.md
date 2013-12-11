@@ -13,7 +13,7 @@ Sequence diagram definition - use with https://www.websequencediagrams.com/
 
     title Approval Flow
     
-    Owner->Browser: (invokes)
+    User->Browser: (invokes)
     Browser->Client: (invokes)
     note right of Client:
       Client extablishes need
@@ -31,15 +31,15 @@ Sequence diagram definition - use with https://www.websequencediagrams.com/
     end note
 
     opt Browser is not logged in at IDP
-        IDP->Browser: request owner credentials
-        Browser->Owner: request cowner redentials
-        Owner->Browser: owner credentials
-        Browser->IDP: owner credentials
+        IDP->Browser: request user credentials
+        Browser->User: request user redentials
+        User->Browser: user credentials
+        Browser->IDP: user credentials
     end
     opt No existing record of approval of requested scope
         IDP->Browser: request approval
-        Browser->Owner: request approval
-        Owner->Browser: approval
+        Browser->User: request approval
+        User->Browser: approval
         Browser->IDP: approval
     end
     IDP->Browser: (redirects to client+approval token)
@@ -61,7 +61,7 @@ This flow is activated when the client needs to obtain specific access
 permissions to a resource.  Unlike standard OAuth2 flows, this phase is 
 separated from the authentication flow, so the access permissions may be
 managed separately from the authentication and approval;  also, this 
-phase does not depend on the owner being present at a browser to give
+phase does not depend on the user being present at a browser to give
 approval.
 
 The client may the same or a different program to that which obtained 
@@ -72,7 +72,7 @@ passed by some unspecified means.
 
     title Authorization flow
 
-    Owner->Browser: (invokes)
+    User->Browser: (invokes)
     Browser->Client: (invokes)
     note right of Client:
       Client has established
@@ -101,7 +101,7 @@ This flow should be the same as the corresponding phase of the OAuth2 flows.
 
     title Resource access flow
 
-    Owner->Browser: (invokes)
+    User->Browser: (invokes)
     Browser->Client: (invokes)
     note right of Client:
       Client needs to access resource,
@@ -120,5 +120,100 @@ This flow should be the same as the corresponding phase of the OAuth2 flows.
 
     Client->Resource svc: request + access token
     Resource svc->Client: (data or response)
+
+
+# On-the-fly authorization flow
+
+This sequence applies when access authorization is requested on-the-fly as a resource is accessed.  As such, it works only when the user is accessing the resource via a browser.
+
+![On-the-fly authorization flow sequence diagram](figures/on-the-fly-auth-flow.png "On-the-fly authorization flow")
+
+Sequence diagram definition - use with https://www.websequencediagrams.com/
+
+    title On-the-fly approval flow
+
+    participant User
+    participant Browser
+    participant CS
+    participant CS-Login
+    participant RS
+    participant AS
+
+    note over CS, RS, AS
+      CS = Client application service
+      RS = Resource access service
+      AS = Authorization service
+    end note
+
+    User->Browser: (invokes)
+    Browser->CS: (invokes)
+
+    CS->RS: (access with available access token (AT), if any)
+    opt Credentials OK
+      RS->CS: 2xx
+      CS->Browser: success+result
+      Browser->User: result
+    end
+
+    opt No credentials
+      RS->CS: 401 Authorization Required
+      opt Client service has no authorization grant
+        CS->Browser: Redirect to CS-Login
+        Browser->CS-Login: (access)
+        CS-Login->Browser: User ID form
+        Browser->User: (display)
+        User->Browser: User ID
+        Browser->CS-Login: User ID
+        opt User ID not already registered with CS
+          CS-Login->Browser: User AS selection form
+          Browser->User: (display)
+          User->Browser: User AS selection
+          Browser->CS-Login: User AS selection
+          note over CS, CS-Login
+            Save user registration details
+          end note
+        end
+        CS-Login->Browser: Redirect to AS
+        Browser->AS: (access)
+        opt Browser not currently authenticated with AS
+          AS->Browser: User authentication request
+          Browser->User: (display)
+          User->Browser: AS credentials
+          Browser->AS: AS credentials
+        end
+        AS->Browser: User permission request
+        Browser->User: (display)
+        User->Browser: Permission
+        Browser->AS: Permission
+        AS->Browser: Redirect to CS with Authorization grant (AG)
+      end
+      Browser->CS: (access)
+      CS->AS: Access token request (supplies AG)
+      AS->CS: Access token (AT)
+    end
+
+    opt Credentials expired
+      RS->CS: 401 Authorization Required
+      opt Client service has refresh token
+        CS->AS: Access token request (supplies refresh token)
+        AS->CS: Access token (AT)
+      end
+    end
+
+    opt New access token obtained
+      CS->RS: (retry access with new access token (AT))
+      opt Credentials OK
+        RS->CS: 2xx
+        CS->Browser: success+result
+        Browser->User: result
+      end
+    end
+
+    opt Credentials not OK
+      RS->CS: 403 Forbidden
+      CS->Browser: error response
+      Browser->User: (display)
+    end
+
 
 
