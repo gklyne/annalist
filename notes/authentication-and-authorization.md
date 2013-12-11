@@ -1,5 +1,204 @@
+# On-the-fly authorization flow
+
+This sequence applies when access authorization is requested on-the-fly as a resource is accessed.  As such, it works only when the user is accessing the resource via a browser.  This is built on a standard OAuth2 flow combining authentication with authorization.
+
+![On-the-fly authorization flow sequence diagram](figures/on-the-fly-auth-flow.png "On-the-fly authorization flow")
+
+Sequence diagram definition - use with https://www.websequencediagrams.com/
+
+    title On-the-fly authorization flow
+
+    participant User
+    participant Browser
+    participant CS
+    participant CS-Login
+    participant RS
+    participant AS
+    participant TS
+
+    note over CS, RS, AS, TS
+      CS = Client application service
+      RS = Resource access service
+      AS = Authorization service
+      TS = Token service
+    end note
+
+    User->Browser: (invokes)
+    Browser->CS: (access)
+
+    CS->RS: (access with available access token (AT), if any)
+    opt Credentials OK
+      RS->CS: 2xx
+      CS->Browser: success+result
+      Browser->User: display
+    end
+
+    opt No credentials or credentials expired
+      RS->CS: 401 Authorization Required
+
+      opt No credentials
+        opt Client service has no authorization grant
+          CS->Browser: Redirect to CS-Login
+          Browser->CS-Login: (access)
+          CS-Login->Browser: User ID form
+          Browser->User: (display)
+          User->Browser: User ID
+          Browser->CS-Login: User ID
+          opt User ID not already registered with CS
+            CS-Login->Browser: User AS selection form
+            Browser->User: (display)
+            User->Browser: User AS selection
+            Browser->CS-Login: User AS selection
+            note over CS, CS-Login
+              Save user registration details
+            end note
+          end
+          CS-Login->Browser: Redirect to AS
+          Browser->AS: (access)
+          opt Browser not currently authenticated with AS
+            AS->Browser: User authentication request
+            Browser->User: (display)
+            User->Browser: AS credentials
+            Browser->AS: AS credentials
+          end
+          AS->Browser: User permission request
+          Browser->User: (display)
+          User->Browser: Permission
+          Browser->AS: Permission
+          AS->Browser: Redirect to CS with Authorization grant (AG)
+        end
+        Browser->CS: (access)
+        CS->TS: Access token request (supplies AG)
+        TS->CS: Access token (AT)
+      end
+
+      opt Credentials expired and Client Service has refresh token (RT)
+        CS->TS: Refresh request (supplies RT)
+        TS->CS: Access token (AT)
+      end
+
+      opt New access token obtained
+        CS->RS: (retry with new access token (AT))
+        opt Credentials OK
+          RS->CS: 2xx
+          CS->Browser: success+result
+        end
+        opt Credentials not OK
+          RS->CS: 403 Forbidden
+          CS->Browser: error response
+        end
+      end
+
+      opt No new access token
+        CS->Browser: error response
+      end
+
+    Browser->User: (display)
+    end
+
+
+# Pre-authorization flow
+
+This sequence applies when access authorization is established in advance of access to a resource.  The first part of the flow works only when the user is accessing the service using a browser.  The second part maty be cobnducted wityhout the user present.  This is built on a standard OAuth2 flow combining authentication with authorization.
+
+![Pre-authorization flow sequence diagram](figures/pre-authorization-flow.png "Pre-authorization flow")
+
+Sequence diagram definition - use with https://www.websequencediagrams.com/
+
+    title Pre-authorization flow
+
+    participant User
+    participant Browser
+    participant CS-Auth
+    participant CS-Login
+    participant CS
+    participant RS
+    participant AS
+    participant TS
+
+    note over CS-Auth, CS, RS, AS, TS
+      CS-Auth = Client pre-authorization service
+      CS = Client application service
+      RS = Resource access service
+      AS = Authorization service
+      TS = Token service
+    end note
+
+    User->Browser: (invokes)
+    Browser->CS-Auth: (access)
+
+    CS-Auth->Browser: Redirect to CS-Login
+    Browser->CS-Login: (access)
+    CS-Login->Browser: User ID form
+    Browser->User: (display)
+    User->Browser: User ID
+    Browser->CS-Login: User ID
+    opt User ID not already registered with CS
+      CS-Login->Browser: User AS selection form
+      Browser->User: (display)
+      User->Browser: User AS selection
+      Browser->CS-Login: User AS selection
+      note over CS-Auth, CS-Login
+        Save user registration details
+      end note
+    end
+    CS-Login->Browser: Redirect to AS
+    Browser->AS: (access)
+    opt Browser not currently authenticated with AS
+      AS->Browser: User authentication request
+      Browser->User: (display)
+      User->Browser: AS credentials
+      Browser->AS: AS credentials
+    end
+    AS->Browser: User permission request form
+    Browser->User: (display)
+    User->Browser: Permission
+    Browser->AS: Permission
+    AS->Browser: Redirect to CS-Auth with Authorization Grant (AG)
+    Browser->CS-Auth: (access)
+    CS-Auth->CS: AG (and client secret)
+
+    note over CS-Login, CS-Auth, CS, RS, AS
+      CS may be a non-browser application.
+      Access proceeds without requiring the user's presence
+    end note
+
+    CS->RS: (access with available access token (AT), if any)
+    opt Credentials OK
+      RS->CS: 2xx
+    end
+
+    opt No credentials or credentials expired
+      RS->CS: 401 Authorization Required
+
+      opt No credentials (AT) and have Authorization  Grant (AG)
+        CS->TS: Access token request (supplies AG)
+        TS->CS: Access token (AT)
+      end
+
+      opt Credentials expired and have refesh token
+        CS->TS: Access token request (supplies refresh token)
+        TS->CS: Access token (AT)
+      end
+
+      CS->RS: (retry access with access token (AT))
+
+      opt Credentials OK
+        RS->CS: 2xx
+      end
+
+      opt Credentials not OK
+        RS->CS: 403 Forbidden
+      end
+
+    end
+
+
+----
 
 # Approval flow
+
+@@TODO: review or remove?
 
 This flow is activated when the client needs to establish the identity and approval of a user for obtaining subsequent authorization tokens.  The identity determination uses OpenID connect mechanisms, but does not result in grant of any specific permissions as these are handled separately by the authorization flow.
 
@@ -56,6 +255,8 @@ Sequence diagram definition - use with https://www.websequencediagrams.com/
 
 
 # Authorization flow
+
+@@TODO Review or remove
 
 This flow is activated when the client needs to obtain specific access 
 permissions to a resource.  Unlike standard OAuth2 flows, this phase is 
@@ -120,100 +321,3 @@ This flow should be the same as the corresponding phase of the OAuth2 flows.
 
     Client->Resource svc: request + access token
     Resource svc->Client: (data or response)
-
-
-# On-the-fly authorization flow
-
-This sequence applies when access authorization is requested on-the-fly as a resource is accessed.  As such, it works only when the user is accessing the resource via a browser.
-
-![On-the-fly authorization flow sequence diagram](figures/on-the-fly-auth-flow.png "On-the-fly authorization flow")
-
-Sequence diagram definition - use with https://www.websequencediagrams.com/
-
-    title On-the-fly approval flow
-
-    participant User
-    participant Browser
-    participant CS
-    participant CS-Login
-    participant RS
-    participant AS
-
-    note over CS, RS, AS
-      CS = Client application service
-      RS = Resource access service
-      AS = Authorization service
-    end note
-
-    User->Browser: (invokes)
-    Browser->CS: (invokes)
-
-    CS->RS: (access with available access token (AT), if any)
-    opt Credentials OK
-      RS->CS: 2xx
-      CS->Browser: success+result
-      Browser->User: result
-    end
-
-    opt No credentials
-      RS->CS: 401 Authorization Required
-      opt Client service has no authorization grant
-        CS->Browser: Redirect to CS-Login
-        Browser->CS-Login: (access)
-        CS-Login->Browser: User ID form
-        Browser->User: (display)
-        User->Browser: User ID
-        Browser->CS-Login: User ID
-        opt User ID not already registered with CS
-          CS-Login->Browser: User AS selection form
-          Browser->User: (display)
-          User->Browser: User AS selection
-          Browser->CS-Login: User AS selection
-          note over CS, CS-Login
-            Save user registration details
-          end note
-        end
-        CS-Login->Browser: Redirect to AS
-        Browser->AS: (access)
-        opt Browser not currently authenticated with AS
-          AS->Browser: User authentication request
-          Browser->User: (display)
-          User->Browser: AS credentials
-          Browser->AS: AS credentials
-        end
-        AS->Browser: User permission request
-        Browser->User: (display)
-        User->Browser: Permission
-        Browser->AS: Permission
-        AS->Browser: Redirect to CS with Authorization grant (AG)
-      end
-      Browser->CS: (access)
-      CS->AS: Access token request (supplies AG)
-      AS->CS: Access token (AT)
-    end
-
-    opt Credentials expired
-      RS->CS: 401 Authorization Required
-      opt Client service has refresh token
-        CS->AS: Access token request (supplies refresh token)
-        AS->CS: Access token (AT)
-      end
-    end
-
-    opt New access token obtained
-      CS->RS: (retry access with new access token (AT))
-      opt Credentials OK
-        RS->CS: 2xx
-        CS->Browser: success+result
-        Browser->User: result
-      end
-    end
-
-    opt Credentials not OK
-      RS->CS: 403 Forbidden
-      CS->Browser: error response
-      Browser->User: (display)
-    end
-
-
-
