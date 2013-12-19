@@ -23,6 +23,7 @@ Installation
     pip install rdflib-sparql
     pip install django
     pip install httplib2
+    pip install oauth2client
 
 Technical elements
 ------------------

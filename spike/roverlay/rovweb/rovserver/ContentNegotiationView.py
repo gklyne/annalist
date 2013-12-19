@@ -1,3 +1,4 @@
+# View class with logic for content negotiation, and more
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, University of Oxford"

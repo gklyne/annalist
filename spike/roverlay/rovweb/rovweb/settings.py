@@ -143,6 +143,13 @@ INSTALLED_APPS = (
     'rovserver',
 )
 
+# Customize authentication backends
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',    # default
+    'rovserver.SelfAuthenticatingBackend.SelfAuthenticatingBackend'
+    )
+
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.

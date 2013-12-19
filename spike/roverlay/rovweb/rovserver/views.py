@@ -1,4 +1,4 @@
-# Create your views here.
+# Views for roveraly server
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, Graham Klyne and University of Oxford"
@@ -6,21 +6,28 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import random
 import logging
+import uuid
 import rdflib
 import os.path
 
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
+
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 
 from miscutils.HttpSession   import HTTP_Error, HTTP_Session
 from miscutils.ro_namespaces import RDF, RO, ORE, AO
 
 from rovserver.ContentNegotiationView import ContentNegotiationView
-from rovserver.models import ResearchObject, AggregatedResource
+from rovserver.models import ResearchObject, AggregatedResource, FlowModel, CredentialsModel
 
+from oauth2client import xsrfutil
 from oauth2client.client import flow_from_clientsecrets
+from oauth2client.django_orm import Storage
 
 # Logger for this module
 log = logging.getLogger(__name__)
@@ -38,13 +45,147 @@ RDF_serialize_formats = (
 # This is not persistent, so restartingthe service will flush any saved URI mappings.
 HTTP_REDIRECTS = {}
 
+# Per-instance generated secret key for CSRF protection via OAuth2 state value.
+# Regenerated each time this service is started.
+FLOW_SECRET_KEY = str(uuid.uuid1())
+
+CONFIG_BASE = "/etc/roverlay/"
+CONFIG_BASE = os.path.join(os.path.expanduser("~"), ".roverlay/")
+
+# @@TODO: generate this dynamically
+PROVIDER_LIST = (
+    { "Google": "google_oauth2_client_secrets.json"
+    })
+
+class RovServerLoginUserView(ContentNegotiationView):
+    """
+    View class to handle login: form to gather user id and other login information.
+
+    The login page solicits a user id (and, in due course, an identity provider)
+
+    The login page supports the following request parameters:
+
+    continuation={uri}
+    - a URI that is retrieved, with a suitable authorization grant as a parameter, 
+      when appropriate permission has been confirmed by an authenticated user.
+    scope={string}
+    - requested or required access scope
+    """
+    # @@TODO: use Django form API
+    def get(self, request):
+        # Retrieve request parameters
+        continuation = request.GET.get("continuation", "/")
+        scope        = request.GET.get("scope",        "openid profile email")
+        # data populate form
+        logindata = (
+            # @@TODO: avoid duplication with urls.py
+            { "logincomplete":  "/rovserver/login/complete/"
+            , "continuation":   request.GET.get("continuation", "/rovserver/")
+            , "userid":         request.GET.get("userid", "")
+            , "providers":      PROVIDER_LIST.keys()
+            , "provider":       PROVIDER_LIST.keys()[0]
+            , "scope":          scope
+            })
+        # Render form & return control to browser
+        template = loader.get_template('login.html')
+        context  = RequestContext(self.request, logindata)
+        return HttpResponse(template.render(context))
+
+class RovServerLoginAuthView(ContentNegotiationView):
+    """
+    View class initiate an OAuth2 authorization (or similar) flow
+
+    It saves the supplied user id in a session value, and redirects the user to the 
+    identity provider, which in due course returns control to the application along 
+    with a suitable authorization grant.
+
+    The login form provides the following values:
+
+    userid={string}
+    - a user identifying string that will be associated with the external service
+      login credentials.
+    provider={string}
+    - a string that identifiues a provioder selectred to proviode authentication/
+      authorization for the indicated user.  This string is an index to PROVIDER_LIST,
+      which in turn contains filenames for client secrets to user when using the 
+      indicated identity provider.
+    logincomplete={uri}
+    - a URI that is retrieved, with a suitable authorization grant as a parameter, 
+      when appropriate permission has been confirmed by an authenticated user.
+      Communicated via a hidden form value.
+    continuation={uri}
+    - a URI that is retrieved, with a suitable authorization grant as a parameter, 
+      when appropriate permission has been confirmed by an authenticated user.
+      Communicated via a hidden form value.
+    scope={string}
+    - Requested or required access scope, communicated via a hidden form value.
+    """
+
+    def post(self, request):
+        # Retrieve request parameters
+        userid        = request.POST.get("userid",        "")
+        provider      = request.POST.get("provider",      "Google")
+        logincomplete = request.POST.get("logincomplete", "/rovserver/login/complete/")
+        continuation  = request.POST.get("continuation",  "/rovserver/")
+        scope         = request.POST.get("scope",         "")
+        if scope == "":
+            scope = "openid profile email offline_access"
+        # Access or create flow object for this session
+        if request.POST["login"] == "Login":
+            clientsecrets_filename = os.path.join(
+                CONFIG_BASE, "providers/", PROVIDER_LIST[provider]
+                )
+            flow = flow_from_clientsecrets(
+                clientsecrets_filename,
+                scope=scope,
+                redirect_uri=request.build_absolute_uri(logincomplete)
+                )
+            flow.params['state']        = xsrfutil.generate_token(FLOW_SECRET_KEY, request.user)
+            flow.params['provider']     = provider
+            flow.params['userid']       = userid
+            # flow.params['scope']        = scope
+            flow.params['continuation'] = continuation
+            #user = User.objects.create_user(userid)
+            user = authenticate(username=userid)
+            assert user
+            login(request, user)
+            flowmodel = FlowModel(id=user, flow=flow)
+            flowmodel.save()
+            auth_uri = flow.step1_get_authorize_url()
+            return HttpResponseRedirect(auth_uri)
+        # Login cancelled: redirect to continuation
+        return HttpResponseRedirect(continuation)
+
+class RovServerLoginCompleteView(ContentNegotiationView):
+    """
+    View class used to complete login process with authorization grant provided by
+    authorization server.
+    """
+    def get(self, request):
+        # Look for authorization grant
+        flowmodel  = FlowModel.objects.get(id=request.user)
+        flow       = flowmodel.flow
+        credential = flow.step2_exchange(request.REQUEST)
+        storage    = Storage(CredentialsModel, 'id', request.user, 'credential')
+        storage.put(credential)
+        print "Continuing to ... "+flow.params['continuation']
+        return HttpResponseRedirect(flow.params['continuation'])
+
+class RovServerLogoutUserView(ContentNegotiationView):
+    """
+    View class to handle logout
+    """
+    def get(self, request):
+        logout(request)
+        return HttpResponseRedirect("/rovserver/")
+
 class RovServerHomeView(ContentNegotiationView):
     """
     View class to handle requests to the rovserver home URI
     """
     def __init__(self):
         super(RovServerHomeView, self).__init__()
-        self.oauthflow = None
+        self.credential = None
         return
 
     def error(self, values):
@@ -56,25 +197,26 @@ class RovServerHomeView(ContentNegotiationView):
     def authenticate(self):
         """
         Return None if required authentication is present, otherwise
-        an appropriate 401 Unauthorized response.
+        an appropriate login redirection response.
 
-        self.userid is set to a URI that identifies the authenticated user
+        self.credential is set to credential that can me used to access resource
 
-        self.useraccount, self.userfullname may be set to user account name
-        and user full name strings if information is available.
+        # self.userid is set to a URI that identifies the authenticated user
+
+        # self.useraccount, self.userfullname may be set to user account name
+        # and user full name strings if information is available.
         """
-        # Assemble file name for client secrets
-        # Note: secret file is help outside the software build area
-        configbase = os.path.join(os.path.expanduser("~"), ".roverlay/")
-        if not self.oauthflow():
-            clientsecrets_filename = os.path.join(configbase, "oauth2_client_secrets.json")
-            self.oauthflow = flow_from_clientsecrets(
-                clientsecrets_filename,
-                scope="openid profile email offline_access",
-                redirecturi=self.get_request_uri()
-                )
-
-        return None
+        if self.request.user.is_authenticated():
+            storage         = Storage(CredentialsModel, 'id', self.request.user, 'credential')
+            self.credential = storage.get()
+            if ( self.credential is not None and 
+                 not self.credential.invalid ):
+                # @@TODO retrieve authentication details using credentials provided
+                # Will need to use OpenId Connect service endpoint
+                return None         # Valid credential present: proceed...
+        # Initiate login sequence to 
+        # @@TODO: avoid duplication with urls.py
+        return HttpResponseRedirect("login/")
 
     def authorize(self, scope):
         """
@@ -102,11 +244,12 @@ class RovServerHomeView(ContentNegotiationView):
 
     def get(self, request):
         self.request = request      # For clarity: generic.View does this anyway
-        resultdata = {'rouris': ResearchObject.objects.all()}
+        def resultdata():
+            return {'rouris': ResearchObject.objects.all()}
         return (
             self.authenticate() or 
-            self.render_uri_list(resultdata) or
-            self.render_html(resultdata) or 
+            self.render_uri_list(resultdata()) or
+            self.render_html(resultdata()) or 
             self.error(self.error406values())
             )
 
