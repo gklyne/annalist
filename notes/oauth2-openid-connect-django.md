@@ -3,7 +3,7 @@
 
 ## Background
 
-This note records some investigations I've been conducting into authentication and authorization mechanisms for a research data management system I'm developing.  The system aims to allow access to underlying data using standard web requests (i.e. no database or special API used), so I'm looking for an authorization and authentication framework using standard web mechanisms.  In particular, I don't want to be locked into the minutiae of a particular web application framework.
+This note records some investigations I've been conducting into authentication and authorization mechanisms for a research data management system I'm developing.  The system aims to allow access to underlying data using standard web requests (i.e. no database or special API used), so I'm looking for an authorization and authentication framework using standard web mechanisms.  In particular, I don't want to be locked into the minutiae of a particular web application framework when serving raw data.
 
 I also don't want to maintain a local username/password database, for reasons well-articulated by @timbray (cf. [http://www.tbray.org/ongoing/When/201x/2013/07/30/On-Federation](), [http://www.tbray.org/ongoing/When/201x/2013/08/14/FC2-Single-Point-of-Failure](), etc.)
 
@@ -12,16 +12,16 @@ I also don't want to maintain a local username/password database, for reasons we
 
 OAuth2 is primarily (or initially) an *authorization* system.  But to do this reliably, it must authenticate the user who is doing the authorizing; i.e. it must embody some form of authentication.  Thus, it should be possible for the authorization granted to be just to know the identity (or an identityfing label) of the person doing the authorizing.  Which sounds rather like a form of authentication.
 
-This is just what OpenID Connect (OIDC) ([http://openid.net/specs/openid-connect-core-1_0.html]()) does: it uses the OAuth2 protocol as the basis of an authentication service.  In particular, an OAuth2 scope value of `openid` requests an ID Token (in the form of a JWT) to be returned.  Among other possible values, the ID Token contains _issuer_ and _subject_ identifiers, which, taken together, constitute a unique opaque identifier for the authenticated user.  Additional information (name, email, etc.) may be made available (in response to a subsequent request when usong the OIDC "authorization flow", or directly when using the "implicit flow").
+This is just what OpenID Connect (OIDC) ([http://openid.net/specs/openid-connect-core-1_0.html]()) does: it uses the OAuth2 protocol as the basis of an authentication service.  In particular, an OAuth2 scope value of `openid` requests an ID Token (in the form of a [JWT](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token)) to be returned.  Among other possible values, the ID Token contains _issuer_ and _subject_ identifiers, which, taken together, constitute a unique opaque identifier for the authenticated user.  Additional information (name, email, etc.) may be made available (in response to a subsequent request when using the OIDC _authorization flow_, or directly when using the _implicit flow_).
 
 
 ## Django sessions and authentication
 
-Django is a Python web application framework, which supplies a range of WSGI "middleware" options to assist with authentication; key elements in this are session management and authentication.
+[Django](https://www.djangoproject.com/) is a Python web application framework, which supplies a range of WSGI "middleware" options to assist with authentication; key elements in this are [session management](https://docs.djangoproject.com/en/dev/topics/http/sessions/) and [authentication](https://docs.djangoproject.com/en/dev/topics/auth/default/).
 
 Session management provides a way to save information between requests from the same source within some time interval.  This allows information to be saved so that a user is not required to authenticate every individual request.
 
-Authentication is centred on the notion of a `User` that is associated with each incoming request; a `User` object presents known information about an authenticated user associated with each request.  The built-in authentication uses locally stored usernames and passwords when authenticating a user.  But the goal of my investigations is to avoid keeping passwords.  Django does allow alternative authentication "back ends" to be used, but (as far as I can tell) the authentication model requires all credential information to be available prior to invoking the authentication function.
+Authentication is centred on the notion of a `User` that is associated with each incoming request; a `User` object presents known information about an authenticated user associated with each request.  The built-in authentication uses locally stored usernames and passwords when authenticating a user.  But a goal of my investigations is to avoid keeping passwords.  Django does allow alternative authentication "back ends" to be used, but (as far as I can tell) the authentication model requires all credential information to be available prior to invoking the authentication function.
 
 There is some example code for using OAuth2 authorization with Django (cf. [`oauth2client` Django sample code](http://code.google.com/p/google-api-python-client/source/browse/#hg%2Fsamples%2Fdjango_sample), but this code appears to require the user to be authenticated prior to invoking the OAuth2 flow; i.e. it appears to be intended for authorization of access for an already-authenticated user, rather than for handling the authentication itself.
 
@@ -32,7 +32,7 @@ These notes describe my initial implementation attempts to use OpenID Connect (O
 
 For this, I used an existing Django-based web application, `roverlay`.  I chose this for my experiments because (a) it already existed, (b) it is a fairly simple application, and (c) it provides both a browser-facing web page elements and application-facing REST APIs.  The function of the application is not important here, but further details are available at [https://github.com/wf4ever/ro-manager/blob/master/src/roverlay/README.md]().
 
-Code for the implementation is at [https://github.com/gklyne/annalist/blob/develop/spike/roverlay/rovweb/rovserver/SelfAuthenticatingBackend.py]().  (Note that the client secrets file used is not in the code tree, but is found in "~/.roverlay/providers/".)  This is not production-quality code, just something I'm hacking together to build an understanding of how the various pieces interact, which will in turn inform future designs.
+Code for the implementation is [available in GitHub](https://github.com/gklyne/annalist/blob/develop/spike/roverlay/rovweb/rovserver/SelfAuthenticatingBackend.py).  (Note that the client secrets file used is not in the code tree, but is found in "~/.roverlay/providers/".)  This is not production-quality code, just something I'm hacking together to build an understanding of how the various pieces interact, which will in turn inform future designs.
 
 
 ### Overall flow and views used
