@@ -32,7 +32,7 @@ These notes describe my initial implementation attempts to use OpenID Connect (O
 
 For this, I used an existing Django-based web application, `roverlay`.  I chose this for my experiments because (a) it already existed, (b) it is a fairly simple application, and (c) it provides both a browser-facing web page elements and application-facing REST APIs.  The function of the application is not important here, but further details are available at [https://github.com/wf4ever/ro-manager/blob/master/src/roverlay/README.md]().
 
-Code for the implementation is [available in GitHub](https://github.com/gklyne/annalist/blob/develop/spike/roverlay/rovweb/rovserver/SelfAuthenticatingBackend.py).  (Note that the client secrets file used is not in the code tree, but is found in "~/.roverlay/providers/".)  This is not production-quality code, just something I'm hacking together to build an understanding of how the various pieces interact, which will in turn inform future designs.
+Code for the implementation is [available in GitHub](https://github.com/gklyne/annalist/blob/develop/spike/roverlay/rovweb/rovserver/).  (Note that the client secrets file used is not in the code tree, but is found in "~/.roverlay/providers/".)  This is not production-quality code, just something I'm hacking together to build an understanding of how the various pieces interact, which will in turn inform future designs.
 
 
 ### Overall flow and views used
