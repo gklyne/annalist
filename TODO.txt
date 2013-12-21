@@ -2,9 +2,16 @@
 
 ## OAuth testing:
 
-1. Apply OAuth/OpenID connect authorization to http://localhost:8000/rovserver/ (using Google auth service)
+1. Apply OAuth/OpenID Connect authentication to http://localhost:8000/rovserver/ (using Google auth service)
+   / Initial authentication proof of concept
+   - retrive additional info
+   - try implicit flow
+   - try alternative implementation using Django session directly
 
 2. Create credentials for roverlay command utility and require those for activating the service.
+   - need design for credential access/storage
+   -- consider: command client generates unique code per user, and uses that to initiate auth via the service.  On first attempt, it fails as user isn't authorized;  tell user to browse to endpoint to authorize the user.
+   -- or: register an app with app name and userid, returns secret token to plug in to app.  This is similar to Google's mechanism for deaing with non-browser apps.  App logs in with app name and token, uses service with credentials of registered user.  Use is responsible for protecting credentials, but can only expose their own data.
 
 3. Revise service so that user sees only their own ROs when listed, and can apply access control to use of ROs by others.
 
