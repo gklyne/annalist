@@ -5,8 +5,11 @@
 1. Apply OAuth/OpenID Connect authentication to http://localhost:8000/rovserver/ (using Google auth service)
    / Initial authentication proof of concept
    - retrive additional info
-   - try implicit flow
+     + email accessible through id_token member of credentials value, but not clear what else]
+     + not sure if this is secure; I think it *should* be, as it's obtained by HTTPS to AP endpoint
+     + awaiting feedback from Q to Google group
    - try alternative implementation using Django session directly
+   - try implicit flow
 
 2. Create credentials for roverlay command utility and require those for activating the service.
    - need design for credential access/storage
@@ -26,4 +29,14 @@ https://github.com/jcleblanc/openid-connect/tree/master/paypal-python
 https://github.com/rohe/pyoidc
 https://developers.google.com/api-client-library/python/guide/aaa_oauth
 
+
+## Dynamic form interface
+
+
+
+## Authorization
+
+* Assume use of annalist form data under control of suitable authority
+* Focus on for of authorization data
+* Back-fit to form interface for creation of data; figure what seeding is needed
 

@@ -78,6 +78,13 @@ This approach works, and it has the advantage that the various elements of the O
 > Rather than storing the `oauth2client` `flow` object in the Django database keyed by user, try storing it in the session object.  This will mean that the flow can be initiated before there is an authenticated Django user.  The User object can then be created and registered as authenticated at the completion of the OAuth2 flow.
 
 
+## oauth2client and OIDC id_token
+
+Examination of the source code shows that the aut2client extracts and decodes the id_token returned in the `flow.step2_exchange` process ([here](https://code.google.com/p/google-api-python-client/source/browse/oauth2client/client.py#1293) and [here](_extract_id_token)), but does not validate it as specified in the OpenID Connect protocol, [section 3.1.3.7](http://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation).  Note that this allows that when the token has been received by TLS communucation directly with the authorization server, the JWT signature checking is not required.
+
+Also unclear in the oauth2client documentaion is how a calling program is expected to obtain the id_token returned.  The value is returned as `credential.id_token`, where `credential` is the returned credential value from `flow.step2_exchange`.
+
+
 ## Reflections and notes
 
 The Google OIDC diagnostics were generally very helpful, in many cases providing immediate feedback on problems with the OAuth2 requests.  An exception to this was a report copncerning lack of an application name.  It wasn't immediately clear to me that this was a problem with the application registratyion as opposed to the OAuth2 request.  Otherwise, I found the diganostics provided were useful and to the point.
