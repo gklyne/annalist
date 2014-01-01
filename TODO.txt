@@ -8,6 +8,7 @@
      + email accessible through id_token member of credentials value, but not clear what else]
      + not sure if this is secure; I think it *should* be, as it's obtained by HTTPS to AP endpoint
      + awaiting feedback from Q to Google group
+     + access https://www.googleapis.com/plus/v1/people/me/openIdConnect with credentials
    - try alternative implementation using Django session directly
    - try implicit flow
 
