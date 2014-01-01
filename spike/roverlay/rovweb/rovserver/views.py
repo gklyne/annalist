@@ -168,6 +168,8 @@ class RovServerLoginCompleteView(ContentNegotiationView):
         credential = flow.step2_exchange(request.REQUEST)
         storage    = Storage(CredentialsModel, 'id', request.user, 'credential')
         storage.put(credential)
+        print "credential: "+repr(credential.to_json())
+        print "id_token:   "+repr(credential.id_token)
         print "Continuing to ... "+flow.params['continuation']
         return HttpResponseRedirect(flow.params['continuation'])
 
