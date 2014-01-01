@@ -6,13 +6,17 @@ Free-form web data platform - "Data management for little guys"
 Goals
 -----
 
-* Easy data: out-of-box data acquisition and modification.
+A kind of "Linked data wiki".
+
+* Easy data: out-of-box data acquisition and modification
 * Flexible data: new record types and fields can be added as-required.
 * Sharable data: use textual, easy to read file formats that can be shared by web, email, file transfer, version management system, memory stick, etc.
 * Remixable data: records that can be first class participants in a wider ecosystem of linked data, with links in and links out.
 
 Installation
 ------------
+
+(Not final: these notes have been created as work-in-progress to capture anticipated dependencies)
 
     cd _workspase_base_
     git clone https://github.com/gklyne/annalist.git

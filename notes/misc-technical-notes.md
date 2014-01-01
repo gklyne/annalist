@@ -126,5 +126,6 @@ on locally installable (but web-connected) facilities for individuals and small 
 - http://code.google.com/p/chromiumembedded/
 - http://code.google.com/p/cefpython/
 
+- http://www.w3.org/2011/gld/wiki/Main_Page (check out data cube vocab for spreadsheet bridge)
 
 
