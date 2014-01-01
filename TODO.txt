@@ -4,7 +4,7 @@
 
 1. Apply OAuth/OpenID Connect authentication to http://localhost:8000/rovserver/ (using Google auth service)
    / Initial authentication proof of concept
-   - retrive additional info
+   / retrive additional info
      + email accessible through id_token member of credentials value, but not clear what else]
      + not sure if this is secure; I think it *should* be, as it's obtained by HTTPS to AP endpoint
      + awaiting feedback from Q to Google group

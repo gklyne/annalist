@@ -9,6 +9,13 @@ import logging
 import uuid
 import rdflib
 import os.path
+import json
+
+import httplib2
+
+from oauth2client import xsrfutil
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.django_orm import Storage
 
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -24,10 +31,6 @@ from miscutils.ro_namespaces import RDF, RO, ORE, AO
 
 from rovserver.ContentNegotiationView import ContentNegotiationView
 from rovserver.models import ResearchObject, AggregatedResource, FlowModel, CredentialsModel
-
-from oauth2client import xsrfutil
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.django_orm import Storage
 
 # Logger for this module
 log = logging.getLogger(__name__)
@@ -55,6 +58,11 @@ CONFIG_BASE = os.path.join(os.path.expanduser("~"), ".roverlay/")
 # @@TODO: generate this dynamically
 PROVIDER_LIST = (
     { "Google": "google_oauth2_client_secrets.json"
+    })
+
+# @@TODO: generate this dynamically, from client secrets?
+PROVIDER_PROFILE_URI = (
+    { "Google": "https://www.googleapis.com/plus/v1/people/me/openIdConnect"
     })
 
 class RovServerLoginUserView(ContentNegotiationView):
@@ -166,11 +174,30 @@ class RovServerLoginCompleteView(ContentNegotiationView):
         flowmodel  = FlowModel.objects.get(id=request.user)
         flow       = flowmodel.flow
         credential = flow.step2_exchange(request.REQUEST)
+        # Use access token to retrieve profile information
+        profile_uri = PROVIDER_PROFILE_URI[flow.params['provider']]
+        http = httplib2.Http()
+        http = credential.authorize(http)
+        (resp, data) = http.request(profile_uri, method="GET")
+        status   = resp.status
+        reason   = resp.reason
+        assert status == 200, "status: %03d, reason %s"%(status, reason)
+        # Extract and save user profile details
+        profile = json.loads(data)
+        request.user.first_name = profile['given_name']
+        request.user.last_name  = profile['family_name']
+        request.user.email      = profile['email']
+        request.user.save()
+        flow.params['name']  = profile['name']
+        flow.params['email'] = profile['email']
+        flowmodel.save()
+        # Save credentials
         storage    = Storage(CredentialsModel, 'id', request.user, 'credential')
         storage.put(credential)
         print "credential: "+repr(credential.to_json())
         print "id_token:   "+repr(credential.id_token)
         print "Continuing to ... "+flow.params['continuation']
+        print "profile data: "+repr(profile)
         return HttpResponseRedirect(flow.params['continuation'])
 
 class RovServerLogoutUserView(ContentNegotiationView):
