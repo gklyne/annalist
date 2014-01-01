@@ -84,9 +84,9 @@ Examination of the source code shows that the aut2client extracts and decodes th
 
 Also unclear in the oauth2client documentaion is how a calling program is expected to obtain the id_token returned.  The value is returned as `credential.id_token`, where `credential` is the returned credential value from `flow.step2_exchange`.
 
-### Google profile access
+### Google user profile access
 
-To access user p[rofile details (other than email address) from Google, an additional request is made using the access token provided via the initial OUath2 exchange.  A get request to [https://www.googleapis.com/plus/v1/people/me/openIdConnect](), using authorization credentials from the access token, returns a JSON result with user profiloe details.
+To access user profile details (other than email address) from Google, an additional request is made using the access token provided via the initial OUath2 exchange.  A get request to [https://www.googleapis.com/plus/v1/people/me/openIdConnect](), using authorization credentials from the access token, returns a JSON result with user profiloe details.
 
 For this to work, the client application registered with Google (via [https://cloud.google.com/console]()) must be permitted to use the [Google+ API](https://developers.google.com/+/api/), as shown:
 
