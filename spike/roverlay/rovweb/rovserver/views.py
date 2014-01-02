@@ -30,7 +30,7 @@ from miscutils.HttpSession   import HTTP_Error, HTTP_Session
 from miscutils.ro_namespaces import RDF, RO, ORE, AO
 
 from rovserver.ContentNegotiationView import ContentNegotiationView
-from rovserver.models import ResearchObject, AggregatedResource, FlowModel, CredentialsModel
+from rovserver.models import ResearchObject, AggregatedResource, CredentialsModel
 
 # Logger for this module
 log = logging.getLogger(__name__)
@@ -140,6 +140,7 @@ class RovServerLoginAuthView(ContentNegotiationView):
             scope = "openid profile email offline_access"
         # Access or create flow object for this session
         if request.POST["login"] == "Login":
+            # Create and initialize flow object
             clientsecrets_filename = os.path.join(
                 CONFIG_BASE, "providers/", PROVIDER_LIST[provider]
                 )
@@ -153,15 +154,13 @@ class RovServerLoginAuthView(ContentNegotiationView):
             flow.params['userid']       = userid
             # flow.params['scope']        = scope
             flow.params['continuation'] = continuation
-            #user = User.objects.create_user(userid)
-            user = authenticate(username=userid)
-            assert user
-            login(request, user)
-            flowmodel = FlowModel(id=user, flow=flow)
-            flowmodel.save()
+            # Save flow object in Django session
+            request.session['oauth2flow'] = flow
+            # Initiate OAuth2 dance
             auth_uri = flow.step1_get_authorize_url()
             return HttpResponseRedirect(auth_uri)
         # Login cancelled: redirect to continuation
+        # (which may just redisplay the login page)
         return HttpResponseRedirect(continuation)
 
 class RovServerLoginCompleteView(ContentNegotiationView):
@@ -171,33 +170,23 @@ class RovServerLoginCompleteView(ContentNegotiationView):
     """
     def get(self, request):
         # Look for authorization grant
-        flowmodel  = FlowModel.objects.get(id=request.user)
-        flow       = flowmodel.flow
-        credential = flow.step2_exchange(request.REQUEST)
-        # Use access token to retrieve profile information
-        profile_uri = PROVIDER_PROFILE_URI[flow.params['provider']]
-        http = httplib2.Http()
-        http = credential.authorize(http)
-        (resp, data) = http.request(profile_uri, method="GET")
-        status   = resp.status
-        reason   = resp.reason
-        assert status == 200, "status: %03d, reason %s"%(status, reason)
-        # Extract and save user profile details
-        profile = json.loads(data)
-        request.user.first_name = profile['given_name']
-        request.user.last_name  = profile['family_name']
-        request.user.email      = profile['email']
-        request.user.save()
-        flow.params['name']  = profile['name']
-        flow.params['email'] = profile['email']
-        flowmodel.save()
+        flow       = request.session['oauth2flow']
+        credential = flow.step2_exchange(request.REQUEST) # Raises FlowExchangeError if a problem occurs
+        user = authenticate(
+            username=flow.params['userid'], password=credential, 
+            profile_uri=PROVIDER_PROFILE_URI[flow.params['provider']]
+            )
+        assert user
+        login(request, user)
         # Save credentials
         storage    = Storage(CredentialsModel, 'id', request.user, 'credential')
         storage.put(credential)
         print "credential: "+repr(credential.to_json())
         print "id_token:   "+repr(credential.id_token)
-        print "Continuing to ... "+flow.params['continuation']
-        print "profile data: "+repr(profile)
+        print "user.username:   "+user.username
+        print "user.first_name: "+user.first_name
+        print "user.last_name:  "+user.last_name
+        print "user.email:      "+user.email
         return HttpResponseRedirect(flow.params['continuation'])
 
 class RovServerLogoutUserView(ContentNegotiationView):
@@ -238,12 +227,9 @@ class RovServerHomeView(ContentNegotiationView):
         if self.request.user.is_authenticated():
             storage         = Storage(CredentialsModel, 'id', self.request.user, 'credential')
             self.credential = storage.get()
-            if ( self.credential is not None and 
-                 not self.credential.invalid ):
-                # @@TODO retrieve authentication details using credentials provided
-                # Will need to use OpenId Connect service endpoint
+            if not ( (self.credential is None) or self.credential.invalid ):
                 return None         # Valid credential present: proceed...
-        # Initiate login sequence to 
+        # Initiate OAuth/OIDC login sequence 
         # @@TODO: avoid duplication with urls.py
         return HttpResponseRedirect("login/")
 

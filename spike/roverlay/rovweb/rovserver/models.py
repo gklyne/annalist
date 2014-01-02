@@ -28,9 +28,9 @@ class AggregatedResource(models.Model):
 
 # See: https://developers.google.com/api-client-library/python/guide/django
 
-class FlowModel(models.Model):
-  id = models.ForeignKey(User, primary_key=True)
-  flow = FlowField()
+# class FlowModel(models.Model):
+#   id = models.ForeignKey(User, primary_key=True)
+#   flow = FlowField()
 
 class CredentialsModel(models.Model):
   id = models.ForeignKey(User, primary_key=True)
