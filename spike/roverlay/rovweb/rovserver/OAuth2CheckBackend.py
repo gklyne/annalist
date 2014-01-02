@@ -3,7 +3,7 @@ Authentication backend using Credential object returned by oauth2client flow exc
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
-__copyright__   = "Copyright 2011-2013, Graham Klyne and University of Oxford"
+__copyright__   = "Copyright 2011-2013, Graham Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import json
