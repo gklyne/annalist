@@ -96,7 +96,7 @@ To access user p[rofile details (other than email address) from Google, an addit
 
 For this to work, the client application registered with Google (via [https://cloud.google.com/console]()) must be permitted to use the [Google+ API](https://developers.google.com/+/api/), as shown:
 
-![figures/Google-APIs-screenshot.png](Screenshot showing Google+ API enabled for project)
+![Screenshot showing Google+ API enabled for project](figures/Google-APIs-screenshot.png)
 
 
 ## Reflections and notes
