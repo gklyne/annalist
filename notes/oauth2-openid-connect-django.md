@@ -79,7 +79,7 @@ Using default settings with Django 1.6 and later, this falls foul of the fact th
 
 > Question about above for Google APIs group, re `Flow` object serialization in session?
 
-Using the saved `Flow` object, OAuth2 credentials are checked when the flow redirects back to the DJango application, and a new backend ([`OAuth2CheckBackend`](@@URI-TBD)) uses the OAuth2 credentials and OIDC user profile to create and associate Django User prifile with the session.
+Using the saved `Flow` object, OAuth2 credentials are checked when the flow redirects back to the DJango application, and a new backend ([`OAuth2CheckBackend`](https://github.com/gklyne/annalist/blob/develop/spike/roverlay/rovweb/rovserver/OAuth2CheckBackend.py)) uses the OAuth2 credentials and OIDC user profile to create and associate Django User prifile with the session.
 
 A side effect of the way this is implemented is that multiple Django users can be created and authenticated using the same OAuth2/OIDC credentials.  I'm not sure if this is helpful or not.
 
