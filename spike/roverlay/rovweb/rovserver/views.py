@@ -32,6 +32,8 @@ from miscutils.ro_namespaces import RDF, RO, ORE, AO
 from rovserver.ContentNegotiationView import ContentNegotiationView
 from rovserver.models import ResearchObject, AggregatedResource, CredentialsModel
 
+from OAuth2CheckBackend import flow_to_dict, dict_to_flow
+
 # Logger for this module
 log = logging.getLogger(__name__)
 
@@ -155,7 +157,7 @@ class RovServerLoginAuthView(ContentNegotiationView):
             # flow.params['scope']        = scope
             flow.params['continuation'] = continuation
             # Save flow object in Django session
-            request.session['oauth2flow'] = flow
+            request.session['oauth2flow'] = flow_to_dict(flow)
             # Initiate OAuth2 dance
             auth_uri = flow.step1_get_authorize_url()
             return HttpResponseRedirect(auth_uri)
@@ -170,7 +172,7 @@ class RovServerLoginCompleteView(ContentNegotiationView):
     """
     def get(self, request):
         # Look for authorization grant
-        flow       = request.session['oauth2flow']
+        flow       = dict_to_flow(request.session['oauth2flow'])
         credential = flow.step2_exchange(request.REQUEST) # Raises FlowExchangeError if a problem occurs
         user = authenticate(
             username=flow.params['userid'], password=credential, 

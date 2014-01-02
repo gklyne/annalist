@@ -87,6 +87,8 @@ Using the saved `Flow` object, OAuth2 credentials are checked when the flow redi
 
 A side effect of the way this is implemented is that multiple Django users can be created and authenticated using the same OAuth2/OIDC credentials.  I'm not sure if this is helpful or not.
 
+UPDATE: after the initial implementation, I created a couple of additional functions to save a `Flow` object as a dictionary, and reconstruct a `Flow` from the saved dictionary.  By saving the dictionary object in the Django session, I am able to revert to using the default (JSON) session serialization option.  The additional functions have been added to the [`OAuth2CheckBackend`](https://github.com/gklyne/annalist/blob/develop/spike/roverlay/rovweb/rovserver/OAuth2CheckBackend.py) module.
+
 
 ## oauth2client and OIDC id_token
 

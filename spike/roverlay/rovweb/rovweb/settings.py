@@ -149,9 +149,9 @@ AUTHENTICATION_BACKENDS = (
     'rovserver.OAuth2CheckBackend.OAuth2CheckBackend'
     )
 
-SESSION_SERIALIZER = (
-    "django.contrib.sessions.serializers.PickleSerializer"
-    )
+# SESSION_SERIALIZER = (
+#     "django.contrib.sessions.serializers.PickleSerializer"
+#     )
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

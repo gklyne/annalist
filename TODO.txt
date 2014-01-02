@@ -9,8 +9,9 @@
      + not sure if this is secure; I think it *should* be, as it's obtained by HTTPS to AP endpoint
      + awaiting feedback from Q to Google group
      + access https://www.googleapis.com/plus/v1/people/me/openIdConnect with credentials
-   - try alternative implementation using Django session directly
-   - try implicit flow
+   / try alternative implementation using Django session directly
+   x try implicit flow
+   - look to alternative serialization of Flow object
 
 2. Create credentials for roverlay command utility and require those for activating the service.
    - need design for credential access/storage
@@ -38,6 +39,6 @@ https://developers.google.com/api-client-library/python/guide/aaa_oauth
 ## Authorization
 
 * Assume use of annalist form data under control of suitable authority
-* Focus on for of authorization data
+* Focus on form of authorization data
 * Back-fit to form interface for creation of data; figure what seeding is needed
 
