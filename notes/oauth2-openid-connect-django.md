@@ -1,5 +1,9 @@
 # Oauth2, OpenID Connect and Django
 
+See also:
+
+* [auth-notes.md]()
+* [authentication-and-authorization.md]()
 
 ## Background
 
@@ -92,7 +96,7 @@ Also unclear in the oauth2client documentaion is how a calling program is expect
 
 ### Google profile access
 
-To access user p[rofile details (other than email address) from Google, an additional request is made using the access token provided via the initial OUath2 exchange.  A get request to [https://www.googleapis.com/plus/v1/people/me/openIdConnect](), using authorization credentials from the access token, returns a JSON result with user profiloe details.
+To access user profile details (other than email address) from Google, an additional request is made using the access token provided via the initial OUath2 exchange.  A get request to [https://www.googleapis.com/plus/v1/people/me/openIdConnect](), using authorization credentials from the access token, returns a JSON result with user profiloe details.
 
 For this to work, the client application registered with Google (via [https://cloud.google.com/console]()) must be permitted to use the [Google+ API](https://developers.google.com/+/api/), as shown:
 
@@ -108,4 +112,44 @@ An important part of the development of an OIDC client is registraton of the cli
 OAuth2 redirection endpoints have to be pre-registered with the authorization/authentication provider (AP) - this means that the flow cannot be invoked to return directly to an arbitrary requested resource at the client.  Instead, I use a "login complete" URI that performs the final redirect to the originally requested resource.
 
 The first time I ran a successful OAuth2 flow, I found the redirect from the AP back to my client caused the browser "NoScript" plugin to throw an ABE violation (Application Boundary Enforcement).  This was using a client running as `http://localhost...`.  I'm not sure if this is a special case or a more general potential problem.  I only got the process to complete by disabling NoScript's ABE feature, which suggests a problem with either OAuth2 (a potential security hole?) or with NoScript.  See also [http://noscript.net/abe/web-authors.html](), which suggests web sites should publish exceptions.
+
+
+## Specifications and links
+
+OAUTH2 and OpenID Connect
+
+- http://tools.ietf.org/html/rfc6749
+- http://openid.net/connect/
+
+JSON tokens
+
+- http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-13
+- http://tools.ietf.org/html/draft-ietf-oauth-jwt-bearer-06
+
+UMA and related
+
+- see http://tools.ietf.org/html/draft-hardjono-oauth-umacore-07, etc.
+- http://en.wikipedia.org/wiki/User-Managed_Access
+- http://smartjisc.wordpress.com/2012/06/30/puma-building-a-requester-application/#more-603
+- http://smartjisc.wordpress.com/2012/04/20/puma-building-a-host-application/#more-600
+- http://kantarainitiative.org/confluence/display/uma/Home
+- https://bitbucket.org/smartproject
+
+- http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-13
+- http://tools.ietf.org/html/draft-ietf-oauth-jwt-bearer-06
+
+- http://ox.gluu.org/doku.php?id=start
+- https://svn.gluu.info/repository/openxdi/
+- http://ox.gluu.org/doku.php?id=oxd:concept
+- https://svn.gluu.info/repository/oauth2ApacheHTTPD/
+
+Software libraries:
+
+- https://developers.google.com/api-client-library/python/guide/aaa_oauth
+- https://github.com/gklyne/annalist/blob/develop/notes/oauth2-openid-connect-django.md
+- https://github.com/omab/python-social-auth
+- http://python-social-auth.readthedocs.org/en/latest/index.html
+- https://github.com/jcleblanc/openid-connect/tree/master/paypal-python
+- https://github.com/rohe/pyoidc
+
 

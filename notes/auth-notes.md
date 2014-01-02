@@ -1,5 +1,11 @@
 AUTH* Notes for Annalist
 
+See also:
+
+* [authentication-and-authorization.md]()
+* [oauth2-openid-connect-django.md]()
+
+
 # Specifications and links
 
 * OAUTH2
