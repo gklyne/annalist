@@ -73,9 +73,15 @@ This approach works, and it has the advantage that the various elements of the O
 
 ### OAuth2 and Django - take 2
 
-@@TODO - second attempt
+An alternative way to incorporate OIDC into Django saves the OAuth2 `Flow` object directly into the Dango session, and defers creation and authentication of the Django `User` object until the OAth2 flow returns control to the client application.  This means that the OAuth2 flow can be initiated before there is an authenticated Django user.  The User object can then be created and registered as authenticated at the completion of the OAuth2 flow.
 
-> Rather than storing the `oauth2client` `flow` object in the Django database keyed by user, try storing it in the session object.  This will mean that the flow can be initiated before there is an authenticated Django user.  The User object can then be created and registered as authenticated at the completion of the OAuth2 flow.
+Using default settings with Django 1.6 and later, this falls foul of the fact that the `Flow` object cannot be serialized to JSON.  Setting the session serialization mechanism to use Python pickling solves the roblem, but comes with a number of security health warnings (potential for arbitrary code execution). I think the risk here is mitigated by the fact that the pickled data is stored locally and never passed outside the DFjango application. But a safer form of serialization would probably be better.
+
+> Question about above for Google APIs group, re `Flow` object serialization in session?
+
+Using the saved `Flow` object, OAuth2 credentials are checked when the flow redirects back to the DJango application, and a new backend ([`OAuth2CheckBackend`](@@URI-TBD)) uses the OAuth2 credentials and OIDC user profile to create and associate Django User prifile with the session.
+
+A side effect of the way this is implemented is that multiple Django users can be created and authenticated using the same OAuth2/OIDC credentials.  I'm not sure if this is helpful or not.
 
 
 ## oauth2client and OIDC id_token
@@ -84,9 +90,9 @@ Examination of the source code shows that the aut2client extracts and decodes th
 
 Also unclear in the oauth2client documentaion is how a calling program is expected to obtain the id_token returned.  The value is returned as `credential.id_token`, where `credential` is the returned credential value from `flow.step2_exchange`.
 
-### Google user profile access
+### Google profile access
 
-To access user profile details (other than email address) from Google, an additional request is made using the access token provided via the initial OUath2 exchange.  A get request to [https://www.googleapis.com/plus/v1/people/me/openIdConnect](), using authorization credentials from the access token, returns a JSON result with user profiloe details.
+To access user p[rofile details (other than email address) from Google, an additional request is made using the access token provided via the initial OUath2 exchange.  A get request to [https://www.googleapis.com/plus/v1/people/me/openIdConnect](), using authorization credentials from the access token, returns a JSON result with user profiloe details.
 
 For this to work, the client application registered with Google (via [https://cloud.google.com/console]()) must be permitted to use the [Google+ API](https://developers.google.com/+/api/), as shown:
 
