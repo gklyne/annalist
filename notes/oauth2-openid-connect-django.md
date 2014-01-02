@@ -2,8 +2,8 @@
 
 See also:
 
-* [./auth-notes.md]()
-* [./authentication-and-authorization.md]()
+* [auth-notes.md](./auth-notes.md)
+* [authentication-and-authorization.md](./authentication-and-authorization.md)
 
 ## Background
 
