@@ -1,6 +1,10 @@
 Annalist directory layout
 -------------------------
 
+See also:
+
+- [URI_structure.md](./notes/URI_structure.md)
+
 $ANNALIST_ROOT/
   collection/
     _annalist_config/
