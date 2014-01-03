@@ -65,6 +65,7 @@ catalog-v001.xml
 *.log
 *.sql
 *.sqlite
+*.sqlite3
 
 # OS generated files
 .DS_Store*
