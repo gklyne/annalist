@@ -17,9 +17,9 @@ import django
 import sys
 
 DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
-SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
-BASE_DIR = os.path.dirname(SITE_ROOT)
-SRC_DIR = os.path.dirname(BASE_DIR)
+SITE_ROOT   = os.path.dirname(os.path.realpath(__file__))
+BASE_DIR    = os.path.dirname(SITE_ROOT)
+SRC_DIR     = os.path.dirname(BASE_DIR)
 
 sys.path.insert(0, SRC_DIR)
 
@@ -46,6 +46,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'annalist',
+    'oauth2',
 )
 
 MIDDLEWARE_CLASSES = (

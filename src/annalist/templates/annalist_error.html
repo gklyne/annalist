@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Annalist error{% endblock %}
+
+{% block heading %}Annalist error{% endblock %}
+
+{% block content %}
+    <h2>{{status}}: {{reason}}</h2>
+    <p>
+      {{message}}
+    </p>
+{% endblock %}

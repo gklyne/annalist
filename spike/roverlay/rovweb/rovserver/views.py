@@ -219,7 +219,7 @@ class RovServerHomeView(ContentNegotiationView):
         Return None if required authentication is present, otherwise
         an appropriate login redirection response.
 
-        self.credential is set to credential that can me used to access resource
+        self.credential is set to credential that can be used to access resource
 
         # self.userid is set to a URI that identifies the authenticated user
 
