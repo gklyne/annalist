@@ -63,6 +63,11 @@ ROOT_URLCONF = 'annalist_site.urls'
 
 WSGI_APPLICATION = 'annalist_site.wsgi.application'
 
+# Customize authentication backends
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',    # default
+    'oauth2.OAuth2CheckBackend.OAuth2CheckBackend'
+    )
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
@@ -93,6 +98,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Directory to look for provider-specific client secrets and OAuth2 service details
+CONFIG_BASE = "/etc/annalist/"
+CONFIG_BASE = os.path.join(os.path.expanduser("~"), ".annalist/")
+
 # Log key path values
 
 import logging
@@ -102,6 +111,7 @@ log.info("DJANGO_ROOT: "+DJANGO_ROOT)
 log.info("SITE_ROOT:   "+SITE_ROOT)
 log.info("BASE_DIR:    "+BASE_DIR)
 log.info("SRC_DIR:     "+SRC_DIR)
+log.info("CONFIG_BASE: "+CONFIG_BASE)
 log.info("DB PATH:     "+DATABASES['default']['NAME'])
 log.debug("Python path: "+repr(sys.path))
 

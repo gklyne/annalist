@@ -19,8 +19,13 @@ class OAuth2CheckBackend(object):
 
     username is a local user id that keys the local user database
     password is a Credential object obtained via the OAuth2 dance
-    profile_uri is a URI from which user profile imnformation is retrieved
+    profile_uri is a URI from which user profile information is retrieved
+
+    NOTE: once a local user id has been associated with an email address, 
+    it can subsequently be aurthenticated by an OpenID provider that
+    authenticates the same email address.
     """
+    # @@TODO: figure how to return failure diagnostics - use exception?
     def authenticate(self, username=None, password=None, profile_uri=None):
         if username and password and not password.invalid:
             save_required = False
@@ -30,9 +35,10 @@ class OAuth2CheckBackend(object):
                 # Create a new user. Note that we can set password
                 # to anything, because it won't be checked.
                 user = User(username=username, password='Not specified')
-                user.is_staff = True
+                user.is_staff     = True
                 user.is_superuser = False
-                save_required = True
+                user.email        = ""
+                save_required     = True
             if profile_uri:
                 # Use access token to retrieve profile information
                 http = httplib2.Http()
@@ -42,14 +48,34 @@ class OAuth2CheckBackend(object):
                 reason   = resp.reason
                 assert status == 200, "status: %03d, reason %s"%(status, reason)
                 if status == 200:
-                    # Extract and save user profile details
                     profile = json.loads(data)
-                    user.first_name = profile['given_name']
-                    user.last_name  = profile['family_name']
-                    user.email      = profile['email']
-                    save_required = True
-            if save_required: user.save()
+                    if user.email == "" or user.email == profile['email']:
+                        # Extract and save user profile details
+                        user.first_name = profile['given_name']
+                        user.last_name  = profile['family_name']
+                        user.email      = profile['email']
+                        save_required = True
+                    else:
+                        # Attempted to login local userid with different account
+                        user = None
+            elif password.id_token:
+                # No userinfo endpoint: Load email address from id_token
+                if password.id_token['email']:
+                    if user.email == "" or user.email == password.id_token['email']:
+                        user.first_name = ""
+                        user.last_name  = ""
+                        user.email      = password.id_token['email']
+                        save_required = True
+                    else:
+                        # Attempted to login local userid with different account
+                        user = None
+            else:
+                # Can't locate at least an email for this user
+                user = None
+            if user and save_required:
+                user.save()
             return user
+        # No username or credentials provided
         return None
 
     # @@TODO: remove this method?

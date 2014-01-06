@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h2>User profile</h2>
+      <table>
+        <tr>
+            <td>User ID</td><td>{{user.username}}</td>
+        </tr>
+        <tr>
+            <td>Name</td><td>{{user.first_name}} {{user.last_name}}</td>
+        </tr>
+        <tr>
+            <td>email</td><td>{{user.email}}</td>
+        </tr>
+      </table>
+    </p>
+{% endblock %}

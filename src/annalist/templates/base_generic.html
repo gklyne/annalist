@@ -1,11 +1,19 @@
 <html>
 
 <head>
-    <title>{% block title %}Annalist data notebook{% endblock %}</title>
+    <title>{% block title %}Annalist linked data journal{% endblock %}</title>
 </head>
 
 <body>
-<h1>{% block heading %}Annalist data notebook{% endblock %}</h1>
+
+{% block topmenu %}
+    <div>
+        <a href="{% url 'AnnalistHomeView' %}">Home</a>
+        <a href="{% url 'AnnalistProfileView' %}">Profile</a>
+    </div>
+{% endblock %}
+
+<h1>{% block heading %}Annalist linked data journal{% endblock %}</h1>
 
 {% block content %}
     <h2>Content heading</h2>
@@ -14,9 +22,11 @@
     </p>
 {% endblock %}
 
-<p>
+<hr/>
+
+<div class="footer">
     <a href="{% url 'LogoutUserView' %}">Logout</a>
-</p>
+</div>
 
 </body>
 

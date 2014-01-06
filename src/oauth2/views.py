@@ -9,11 +9,16 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 # @@TODO: refactor all OAuth2 details from views to this module
 # @@TODO: define a view decorator to apply OAuth2 authentication requirement
 
+import os
 import json
 import copy
 import uuid
 import urllib
 from urlparse import urlparse, urljoin
+from importlib import import_module
+
+import logging
+log = logging.getLogger(__name__)
 
 import httplib2
 
@@ -31,24 +36,19 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
+settings = import_module(os.environ["DJANGO_SETTINGS_MODULE"])
+
 from utils.http_errors import error400values
 
-import logging
-log = logging.getLogger(__name__)
+from models import CredentialsModel
 
 # Per-instance generated secret key for CSRF protection via OAuth2 state value.
 # Regenerated each time this service is started.
 FLOW_SECRET_KEY = str(uuid.uuid1())
 
-# @@TODO: generate this dynamically
-PROVIDER_LIST = (
-    { "Google": "google_oauth2_client_secrets.json"
-    })
+PROVIDER_LIST = None
 
-# @@TODO: generate this dynamically, from client secrets?
-PROVIDER_PROFILE_URI = (
-    { "Google": "https://www.googleapis.com/plus/v1/people/me/openIdConnect"
-    })
+CLIENT_SECRETS = None
 
 SCOPE_DEFAULT = "openid profile email"
 
@@ -56,6 +56,21 @@ OAuth2WebServerFlow_strip = (
     "step1_get_authorize_url",
     "step2_exchange"
     )
+
+def collect_client_secrets():
+    global CLIENT_SECRETS, PROVIDER_LIST
+    if CLIENT_SECRETS is None:
+        CLIENT_SECRETS = {}
+        PROVIDER_LIST  = {}
+        clientsecrets_dirname = os.path.join(settings.CONFIG_BASE, "providers/")
+        clientsecrets_files   = os.listdir(clientsecrets_dirname)
+        for f in clientsecrets_files:
+            p = os.path.join(clientsecrets_dirname,f)
+            j = json.load(open(p, "r"))
+            n = j['web']['provider']
+            CLIENT_SECRETS[n] = j['web']
+            PROVIDER_LIST[n]  = p
+    return
 
 def object_to_dict(obj, strip):
     """Utility function that creates dictionary representation of an object.
@@ -106,6 +121,8 @@ def authentication_required(
     Decorator for view handler function that activates OAuth2 authentication flow
     if the current request is not already associated with an authenticated user.
     """
+    # @@NOTE: not tested; the mis of static and dynamic parameters required makes
+    #         the in-line form easier to use than a decorator.
     def decorator(func):
         def guard(view, values):
             return (
@@ -117,6 +134,12 @@ def authentication_required(
             )
         return guard
     return decorator
+
+def HttpResponseRedirectWithQuery(redirect_uri, query_params):
+    nq = "?"
+    for pname in query_params.keys():
+        redirect_uri += nq + pname + "=" + urllib.quote(query_params[pname])
+    return HttpResponseRedirect(redirect_uri)
 
 # Authentication and authorization
 def confirm_authentication(view, 
@@ -146,9 +169,12 @@ def confirm_authentication(view,
     view.request.session['login_done_uri']   = login_done_uri
     view.request.session['continuation_uri'] = continuation_uri
     view.request.session['oauth2_scope']     = scope
-    query_params = ("?continuation=%s&scope=%s"%
-        (urllib.quote(continuation_uri), urllib.quote(scope)))
-    return HttpResponseRedirect(login_form_uri+query_params)
+    query_params = (
+        { "continuation": continuation_uri
+        , "scope":        scope
+        })
+    return HttpResponseRedirectWithQuery(login_form_uri, query_params)
+
 
 class LoginUserView(generic.View):
     """
@@ -165,21 +191,20 @@ class LoginUserView(generic.View):
     - requested or required access scope
     """
 
-    # @@TODO: use Django form API?
     def get(self, request):
+        collect_client_secrets()
         # Retrieve request parameters
         continuation = request.GET.get("continuation", "/no-login-continuation/")
         scope        = request.GET.get("scope",        SCOPE_DEFAULT)
-        loginpath    = urlparse(request.path).path
         logindata = (
-            # @@TODO: avoid duplication with urls.py - how to make values available?
             { "login_post":     request.session['login_post_uri']
             , "login_done":     request.session['login_done_uri']
             , "continuation":   continuation
             , "userid":         request.GET.get("userid", "")
             , "providers":      PROVIDER_LIST.keys()
-            , "provider":       PROVIDER_LIST.keys()[0]
             , "scope":          scope
+            # Default provider
+            , "provider":       PROVIDER_LIST.keys()[0]
             })
         # Render form & return control to browser
         template = loader.get_template('login.html')
@@ -218,7 +243,6 @@ class LoginPostView(generic.View):
     """
 
     def post(self, request):
-        loginpath    = urlparse(request.path).path
         # Retrieve request parameters
         userid        = request.POST.get("userid",        "")
         provider      = request.POST.get("provider",      "Google")
@@ -227,9 +251,10 @@ class LoginPostView(generic.View):
         scope         = request.POST.get("scope",         SCOPE_DEFAULT) 
         # Access or create flow object for this session
         if request.POST["login"] == "Login":
+            collect_client_secrets()
             # Create and initialize flow object
             clientsecrets_filename = os.path.join(
-                CONFIG_BASE, "providers/", PROVIDER_LIST[provider]
+                settings.CONFIG_BASE, "providers/", PROVIDER_LIST[provider]
                 )
             flow = flow_from_clientsecrets(
                 clientsecrets_filename,
@@ -262,19 +287,19 @@ class LoginDoneView(generic.View):
         credential = flow.step2_exchange(request.REQUEST) # Raises FlowExchangeError if a problem occurs
         user = authenticate(
             username=flow.params['userid'], password=credential, 
-            profile_uri=PROVIDER_PROFILE_URI[flow.params['provider']]
+            profile_uri=CLIENT_SECRETS[flow.params['provider']]['profile_uri']
             )
-        assert user
-        login(request, user)
-        # Save credentials
-        storage    = Storage(CredentialsModel, 'id', request.user, 'credential')
-        storage.put(credential)
-        log.info("LoginDoneView: credential:      "+repr(credential.to_json()))
-        log.info("LoginDoneView: id_token:        "+repr(credential.id_token))
-        log.info("LoginDoneView: user.username:   "+user.username)
-        log.info("LoginDoneView: user.first_name: "+user.first_name)
-        log.info("LoginDoneView: user.last_name:  "+user.last_name)
-        log.info("LoginDoneView: user.email:      "+user.email)
+        if user:
+            login(request, user)
+            # Save credentials
+            storage    = Storage(CredentialsModel, 'id', request.user, 'credential')
+            storage.put(credential)
+            log.debug("LoginDoneView: credential:      "+repr(credential.to_json()))
+            log.info("LoginDoneView: id_token:        "+repr(credential.id_token))
+            log.info("LoginDoneView: user.username:   "+user.username)
+            log.info("LoginDoneView: user.first_name: "+user.first_name)
+            log.info("LoginDoneView: user.last_name:  "+user.last_name)
+            log.info("LoginDoneView: user.email:      "+user.email)
         return HttpResponseRedirect(flow.params['continuation'])
 
 class LogoutUserView(generic.View):

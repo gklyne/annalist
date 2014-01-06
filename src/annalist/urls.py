@@ -12,7 +12,8 @@ import annalist.views
 import oauth2.views
 
 urlpatterns = patterns('',
-    url(r'^$',            annalist.views.AnnalistHomeView.as_view(), name='AnnalistHomeView'),
+    url(r'^$',            annalist.views.AnnalistHomeView.as_view(),    name='AnnalistHomeView'),
+    url(r'^profile/$',    annalist.views.AnnalistProfileView.as_view(), name='AnnalistProfileView'),
     )
 
 urlpatterns += patterns('',

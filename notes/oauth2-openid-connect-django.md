@@ -122,6 +122,7 @@ OAUTH2 and OpenID Connect
 
 - http://tools.ietf.org/html/rfc6749
 - http://openid.net/connect/
+- http://openid.net/2013/07/30/openid-connect-server-in-a-nutshell/
 
 JSON tokens
 

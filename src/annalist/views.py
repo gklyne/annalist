@@ -26,19 +26,22 @@ import oauth2.views
 
 from utils.ContentNegotiationView import ContentNegotiationView
 
+LOGIN_URIS = None
+
 # Create your views here.
 
-class AnnalistHomeView(ContentNegotiationView):
+class AnnalistGenericView(ContentNegotiationView):
     """
-    View class to handle requests to the rovserver home URI
+    Common base class for Annalist views
     """
+
     def __init__(self):
-        super(AnnalistHomeView, self).__init__()
+        super(AnnalistGenericView, self).__init__()
         self.credential = None
         return
 
     def error(self, values):
-        template = loader.get_template('rovserver_error.html')
+        template = loader.get_template('annalist_error.html')
         context  = RequestContext(self.request, values)
         return HttpResponse(template.render(context), status=values['status'])
 
@@ -50,12 +53,18 @@ class AnnalistHomeView(ContentNegotiationView):
 
         self.credential is set to credential that can be used to access resource
         """
-        # @@TODO: use decorator instead
+        # Cache copy of URIs to use with OAuth2 login
+        global LOGIN_URIS
+        if LOGIN_URIS is None:
+            LOGIN_URIS = (
+                { "login_form_uri": reverse('LoginUserView')
+                , "login_post_uri": reverse('LoginPostView')
+                , "login_done_uri": reverse('LoginDoneView')
+                })
+        # Initiate OAuth2 login sequence, if neded
         return oauth2.views.confirm_authentication(self, 
-            login_form_uri=reverse('LoginUserView'),
-            login_post_uri=reverse('LoginPostView'), 
-            login_done_uri=reverse('LoginDoneView'), 
-            continuation_uri=self.get_request_uri()
+            continuation_uri=self.get_request_uri(),
+            **LOGIN_URIS
             )
 
     def authorize(self, scope):
@@ -66,6 +75,14 @@ class AnnalistHomeView(ContentNegotiationView):
         @@TODO interface details; scope at least will be needed
         """
         return None
+
+class AnnalistHomeView(AnnalistGenericView):
+    """
+    View class to handle requests to the rovserver home URI
+    """
+    def __init__(self):
+        super(AnnalistHomeView, self).__init__()
+        return
 
     # GET
 
@@ -78,6 +95,32 @@ class AnnalistHomeView(ContentNegotiationView):
     def get(self, request):
         def resultdata():
             return { 'collections': { 'foo': 'foo-colllection', 'bar': 'bar-colllection' } }
+        return (
+            self.authenticate() or 
+            self.render_html(resultdata()) or 
+            self.error(self.error406values())
+            )
+
+
+class AnnalistProfileView(AnnalistGenericView):
+    """
+    View class to handle requests to the rovserver user profile URI
+    """
+    def __init__(self):
+        super(AnnalistProfileView, self).__init__()
+        return
+
+    # GET
+
+    @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
+    def render_html(self, resultdata):
+        template = loader.get_template('annalist_profile.html')
+        context  = RequestContext(self.request, resultdata)
+        return HttpResponse(template.render(context))
+
+    def get(self, request):
+        def resultdata():
+            return { 'user': request.user }
         return (
             self.authenticate() or 
             self.render_html(resultdata()) or 

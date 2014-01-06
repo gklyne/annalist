@@ -1,13 +1,9 @@
 {% extends "base_generic.html" %}
 
-{% block title %}Annalist data journal{% endblock %}
-
-{% block heading %}Annalist data journal{% endblock %}
-
 {% block content %}
     <h2>Collections</h2>
       <ul>
-      {% for c in colllections %}
+      {% for c in collections %}
       <li><a href="{{c}}">{{c}}</a></li>
       {% endfor %}
       </ul>
