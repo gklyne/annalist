@@ -98,6 +98,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = (
+    BASE_DIR+"/static/",
+    SRC_DIR+"/annalist/static/",
+)
+
+
 # Directory to look for provider-specific client secrets and OAuth2 service details
 CONFIG_BASE = "/etc/annalist/"
 CONFIG_BASE = os.path.join(os.path.expanduser("~"), ".annalist/")

@@ -24,7 +24,7 @@ import httplib2
 
 from oauth2client.client import OAuth2WebServerFlow
 from oauth2client import xsrfutil
-from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 from oauth2client.django_orm import Storage
 
 from django.http import HttpResponse
@@ -139,7 +139,19 @@ def HttpResponseRedirectWithQuery(redirect_uri, query_params):
     nq = "?"
     for pname in query_params.keys():
         redirect_uri += nq + pname + "=" + urllib.quote(query_params[pname])
+        nq = "&"
+    log.info("redirect_uri: "+redirect_uri)
     return HttpResponseRedirect(redirect_uri)
+
+def HttpResponseRedirectLoginWithMessage(request, message):
+    login_form_uri = request.session['login_form_uri']
+    log.info("login_form_uri: "+login_form_uri)
+    query_params = (
+        { "continuation": request.session['continuation_uri']
+        , "scope":        request.session['oauth2_scope']
+        , "message":      message
+        })
+    return HttpResponseRedirectWithQuery(login_form_uri, query_params)
 
 # Authentication and authorization
 def confirm_authentication(view, 
@@ -165,6 +177,7 @@ def confirm_authentication(view,
     if not continuation_uri:
         continuation_uri = view.request.path
     # Redirect to initiate login sequence 
+    view.request.session['login_form_uri']   = login_form_uri
     view.request.session['login_post_uri']   = login_post_uri
     view.request.session['login_done_uri']   = login_done_uri
     view.request.session['continuation_uri'] = continuation_uri
@@ -172,9 +185,9 @@ def confirm_authentication(view,
     query_params = (
         { "continuation": continuation_uri
         , "scope":        scope
+        , "message":      ""
         })
     return HttpResponseRedirectWithQuery(login_form_uri, query_params)
-
 
 class LoginUserView(generic.View):
     """
@@ -196,6 +209,14 @@ class LoginUserView(generic.View):
         # Retrieve request parameters
         continuation = request.GET.get("continuation", "/no-login-continuation/")
         scope        = request.GET.get("scope",        SCOPE_DEFAULT)
+        message      = request.GET.get("message",      "")
+        # Check required values in session - if missing, restart sequence from original URI
+        # This is intended to avoid problems if this view is invoked out of sequence
+        login_post_uri = request.session.get('login_post_uri', None)
+        login_done_uri = request.session.get('login_done_uri', None)
+        if (login_post_uri is None) or (login_done_uri is None):
+            return HttpResponseRedirect(continuation)
+        # Display login form
         logindata = (
             { "login_post":     request.session['login_post_uri']
             , "login_done":     request.session['login_done_uri']
@@ -203,6 +224,7 @@ class LoginUserView(generic.View):
             , "userid":         request.GET.get("userid", "")
             , "providers":      PROVIDER_LIST.keys()
             , "scope":          scope
+            , "message":        message
             # Default provider
             , "provider":       PROVIDER_LIST.keys()[0]
             })
@@ -283,23 +305,45 @@ class LoginDoneView(generic.View):
 
     def get(self, request):
         # Look for authorization grant
-        flow       = dict_to_flow(request.session['oauth2flow'])
-        credential = flow.step2_exchange(request.REQUEST) # Raises FlowExchangeError if a problem occurs
-        user = authenticate(
-            username=flow.params['userid'], password=credential, 
-            profile_uri=CLIENT_SECRETS[flow.params['provider']]['profile_uri']
-            )
-        if user:
-            login(request, user)
-            # Save credentials
-            storage    = Storage(CredentialsModel, 'id', request.user, 'credential')
-            storage.put(credential)
-            log.debug("LoginDoneView: credential:      "+repr(credential.to_json()))
-            log.info("LoginDoneView: id_token:        "+repr(credential.id_token))
-            log.info("LoginDoneView: user.username:   "+user.username)
-            log.info("LoginDoneView: user.first_name: "+user.first_name)
-            log.info("LoginDoneView: user.last_name:  "+user.last_name)
-            log.info("LoginDoneView: user.email:      "+user.email)
+        flow   = dict_to_flow(request.session['oauth2flow'])
+        userid = flow.params['userid']
+        if not userid:
+            log.info("No User ID specified")
+            return HttpResponseRedirectLoginWithMessage(request, "No User ID specified")
+        # Save copy of current user details, if defined
+        try:
+            olduser = User.objects.get(username=userid)
+        except User.DoesNotExist:
+            olduser = None
+        # Get authenticated user details
+        try:
+            credential = flow.step2_exchange(request.REQUEST) # Raises FlowExchangeError if a problem occurs
+            authuser = authenticate(
+                username=userid, password=credential, 
+                profile_uri=CLIENT_SECRETS[flow.params['provider']]['profile_uri']
+                )
+        except FlowExchangeError, e:
+            return HttpResponseRedirectLoginWithMessage(request, str(e))
+        # Check authenticated details match any previous values
+        if not authuser.email:
+            return HttpResponseRedirectLoginWithMessage(request, 
+                "No email address associated with authenticated user %s"%(userid))
+        if olduser:
+            if authuser.email != olduser.email:
+                return HttpResponseRedirectLoginWithMessage(request, 
+                    "Authenticated user %s email address mismatch (%s, %s)"%
+                        (userid, authuser.email, olduser.email))
+        # Complete the login and save details
+        authuser.save()
+        login(request, authuser)
+        storage    = Storage(CredentialsModel, 'id', request.user, 'credential')
+        storage.put(credential)
+        log.debug("LoginDoneView: credential:      "+repr(credential.to_json()))
+        log.info("LoginDoneView: id_token:        "+repr(credential.id_token))
+        log.info("LoginDoneView: user.username:   "+authuser.username)
+        log.info("LoginDoneView: user.first_name: "+authuser.first_name)
+        log.info("LoginDoneView: user.last_name:  "+authuser.last_name)
+        log.info("LoginDoneView: user.email:      "+authuser.email)
         return HttpResponseRedirect(flow.params['continuation'])
 
 class LogoutUserView(generic.View):

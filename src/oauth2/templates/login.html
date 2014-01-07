@@ -5,6 +5,9 @@
 {% block heading %}Login using external service{% endblock %}
 
 {% block content %}
+    {% if message %}
+    <h4 class="error">Login failed: {{message}}</h4>
+    {% endif %}
     <h2>Enter login options</h2>
     <form method="POST" action="{{login_post}}">
       {% csrf_token %}
