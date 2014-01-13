@@ -108,6 +108,11 @@ STATICFILES_DIRS = (
 CONFIG_BASE = "/etc/annalist/"
 CONFIG_BASE = os.path.join(os.path.expanduser("~"), ".annalist/")
 
+# Directory for Annalist data files
+
+SITE_BASE = "/var/annalist"
+SITE_BASE = os.path.join(os.path.expanduser("~"), "annalist_data")
+
 # Log key path values
 
 import logging

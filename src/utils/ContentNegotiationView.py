@@ -22,14 +22,13 @@ class ContentNegotiationView(generic.View):
         Decorator to use associated function to render the indicated content types 
         """
         def decorator(func):
-            def guard(self, values):
+            def guard(self, *values):
                 accept_header = self.request.META.get('HTTP_ACCEPT', "*/*")
                 accept_types  = [ a.split(';')[0].strip().lower() 
                                   for a in accept_header.split(',') ]
                 for t in types:
                     if t in accept_types:
-                        values['accept_type'] = t
-                        return func(self, values)
+                        return func(self, *values)
                 return None
             return guard
         return decorator
@@ -40,10 +39,10 @@ class ContentNegotiationView(generic.View):
         Decorator to use associated function when supplied with the indicated content types 
         """
         def decorator(func):
-            def guard(self, values):
+            def guard(self, *values):
                 content_type = self.request.META.get('CONTENT_TYPE', "application/octet-stream")
                 if content_type.split(';')[0].strip().lower() in types:
-                    return func(self, values)
+                    return func(self, *values)
                 return None
             return guard
         return decorator

@@ -16,7 +16,6 @@ import httplib2
 
 from django.contrib.auth.models import User
 
-
 class OAuth2CheckBackend(object):
     """
     Authenticate using credential object from OAuth2 exchange
@@ -41,6 +40,14 @@ class OAuth2CheckBackend(object):
                 user = User.objects.get(username=username)
                 log.info("Found user record for %s"%(username))
             except User.DoesNotExist:
+                # NOTE: when a new User record is created, it is important
+                # that it is saved to the local Django database before
+                # returning it to the caller, to ensure that a suitable
+                # primary key value is created.  The authentication return
+                # path makes further changes to the User record which cause
+                # the Django ORM to force an update rather than insert of the
+                # new record, which in turn generates an error if no primary
+                # key is defined.
                 log.info("Create new user record for %s"%(username))
                 user = User(username=username, password='Not specified')
                 user.is_staff     = True

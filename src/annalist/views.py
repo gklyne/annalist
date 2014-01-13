@@ -76,9 +76,15 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return None
 
+    @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
+    def render_html(self, resultdata, template_name):
+        template = loader.get_template(template_name)
+        context  = RequestContext(self.request, resultdata)
+        return HttpResponse(template.render(context))
+
 class AnnalistHomeView(AnnalistGenericView):
     """
-    View class to handle requests to the rovserver home URI
+    View class to handle requests to the Annalist home URI
     """
     def __init__(self):
         super(AnnalistHomeView, self).__init__()
@@ -104,7 +110,7 @@ class AnnalistHomeView(AnnalistGenericView):
 
 class AnnalistProfileView(AnnalistGenericView):
     """
-    View class to handle requests to the rovserver user profile URI
+    View class to handle requests to the Annalist user profile URI
     """
     def __init__(self):
         super(AnnalistProfileView, self).__init__()

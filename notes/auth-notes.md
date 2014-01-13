@@ -23,6 +23,10 @@ See also:
   - http://ox.gluu.org/doku.php?id=oxd:concept
   - https://svn.gluu.info/repository/oauth2ApacheHTTPD/
 
+## Providers
+
+* http://support.orcid.org/knowledgebase/articles/119676-tokens-through-3-legged-oauth-authorization
+* ...
 
 ## UMA and related links
 
