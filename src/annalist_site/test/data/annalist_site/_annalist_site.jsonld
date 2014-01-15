@@ -1,0 +1,3 @@
+{ 
+    "rdfs:comment": "Annalist site metadata.  Details TBD.  Note that location-sensitive data should not be included here as it shoukld be possible to move the site data to a new location.  It's possible that this will be redundant"
+}

@@ -13,17 +13,18 @@
    x try implicit flow
    / look to alternative serialization of Flow object
 
-2. Create credentials for roverlay command utility and require those for activating the service.
-   - need design for credential access/storage
-   -- consider: command client generates unique code per user, and uses that to initiate auth via the service.  On first attempt, it fails as user isn't authorized;  tell user to browse to endpoint to authorize the user.
-   -- or: register an app with app name and userid, returns secret token to plug in to app.  This is similar to Google's mechanism for deaing with non-browser apps.  App logs in with app name and token, uses service with credentials of registered user.  Use is responsible for protecting credentials, but can only expose their own data.
-   -- or: use publioc key encryption of credentials, store in shared space, so only the offline client can access the credential.
-   -- or: ... review what UMA does.
+Skip {
+  2. Create credentials for roverlay command utility and require those for activating the service.
+     - need design for credential access/storage
+     -- consider: command client generates unique code per user, and uses that to initiate auth via the service.  On first attempt, it fails as user isn't authorized;  tell user to browse to endpoint to authorize the user.
+     -- or: register an app with app name and userid, returns secret token to plug in to app.  This is similar to Google's mechanism for deaing with non-browser apps.  App logs in with app name and token, uses service with credentials of registered user.  Use is responsible for protecting credentials, but can only expose their own data.
+     -- or: use publioc key encryption of credentials, store in shared space, so only the offline client can access the credential.
+     -- or: ... review what UMA does.
 
-3. Revise service so that user sees only their own ROs when listed, and can apply access control to use of ROs by others.
+  3. Revise service so that user sees only their own ROs when listed, and can apply access control to use of ROs by others.
 
-4. Create separate service endpoint to handle authorization requests (using UMA elements where appropriate).
-
+  4. Create separate service endpoint to handle authorization requests (using UMA elements where appropriate).
+}
 
 See also:
 
@@ -42,11 +43,23 @@ See also:
 - [URI_structure.md](./notes/URI_structure.md)
 
 1. Front page/initial display
-2. Configuration
-3. Display/select collections
-4. Colllection configuration
-5. Collection initial display
-6 ...
+   - form elements to create new collection
+   - include supporting logic in Collection module
+   - form elements to delete collection
+   - test cases
+2. Collection initial display
+   - determine base configuration/metadata needed
+   - include supporting logic in Collection module
+   - form elements to add/delete types/views/lists/...
+   - test cases
+3. Collection configuration
+4. ...
+
+AnalistGenericView:
+- Generic renderers, all driven by a supplied dictionary:
+  - HTML
+  - JSON-LD
+  - uri-list
 
 
 ## Dynamic form interface

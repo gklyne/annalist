@@ -6,30 +6,41 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import os
+import os.path
+
 import logging
 log = logging.getLogger(__name__)
 
 from django.conf import settings
 
-import annalist.util
-
-from utils.ContentNegotiationView import ContentNegotiationView
-from annalist.views               import AnnalistGenericView
+from annalist.collection    import Collection
+from annalist.views         import AnnalistGenericView
 
 class Site(object):
 
     def __init__(self, sitebaseuri, sitebasedir):
+        """
+        Initialize a Site object
+
+        sitebaseuri     the base URI of the site
+        sitebasedir     the base dictionary for site information
+        """
         self._baseuri = sitebaseuri if sitebaseuri.endswith("/") else sitebaseuri+"/"
         self._basedir = sitebasedir if sitebasedir.endswith("/") else sitebasedir+"/"
         return
 
     def collections(self):
         """
-        Generator enumerates and returns collections that are part of a site.
+        Generator enumerates and returns collection IDs that are part of a site.
         """
-        # @@TODO: more serious enumeration
-        for c in ["foo", "bar"]:
-            yield c
+        site_files   = os.listdir(self._basedir)
+        for f in site_files:
+            p = os.path.join(self._basedir,f)
+            if os.path.isdir(p):
+                p2 = os.path.join(p, settings.COLL_META_DIR)
+                if os.path.isdir(p2):
+                    yield f
         return
 
     def collections_dict(self):
@@ -41,7 +52,7 @@ class Site(object):
             coll[c] = self._baseuri+c+"/"
         return coll
 
-    def addCollection(self, coll_id, coll_meta):
+    def add_collection(self, coll_id, coll_meta):
         """
         Add a new collection to the current site
 
@@ -52,10 +63,7 @@ class Site(object):
 
         returns a Collection object for the newly created collection.
         """
-        if not annalist.util.valid_id(coll_id):
-            raise ValueError("Invalid colllection identifier: %s"%(coll_id))
         c = Collection.create(coll_id, coll_meta, self._baseuri, self._basedir)
-        # @@TODO save copy for local cache?
         return c
 
 

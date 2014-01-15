@@ -7,7 +7,8 @@ See also:
 
 $ANNALIST_ROOT/
   collection/
-    _annalist_config/
+    _annalist_collection.jsonld
+    _annalist_collection/
       records/
         record-type
          :
@@ -26,7 +27,7 @@ $ANNALIST_ROOT/
       bridge/
         bridge-description (incl path mapping in collection)
          :
-    record-type/
+    record-type-id/
       record-id
        :
      :

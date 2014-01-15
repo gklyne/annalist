@@ -22,6 +22,8 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse
 
+from django.conf import settings
+
 import oauth2.views
 
 from utils.ContentNegotiationView import ContentNegotiationView
@@ -45,6 +47,13 @@ class AnnalistGenericView(ContentNegotiationView):
         context  = RequestContext(self.request, values)
         return HttpResponse(template.render(context), status=values['status'])
 
+    def get_base_dir(self):
+        """
+        Utility function returns base directory for Annalist site,
+        without trailing "/"
+        """
+        return settings.SITE_BASE
+
     # Authentication and authorization
     def authenticate(self):
         """
@@ -53,6 +62,7 @@ class AnnalistGenericView(ContentNegotiationView):
 
         self.credential is set to credential that can be used to access resource
         """
+        # @@TODO: move logic to oauth2 app
         # Cache copy of URIs to use with OAuth2 login
         global LOGIN_URIS
         if LOGIN_URIS is None:

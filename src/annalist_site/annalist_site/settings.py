@@ -16,10 +16,10 @@ import os
 import django
 import sys
 
-DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
-SITE_ROOT   = os.path.dirname(os.path.realpath(__file__))
-BASE_DIR    = os.path.dirname(SITE_ROOT)
-SRC_DIR     = os.path.dirname(BASE_DIR)
+DJANGO_ROOT     = os.path.dirname(os.path.realpath(django.__file__))
+SETTINGS_DIR    = os.path.dirname(os.path.realpath(__file__))
+DATA_DIR        = os.path.dirname(SETTINGS_DIR)
+SRC_DIR         = os.path.dirname(DATA_DIR)
 
 sys.path.insert(0, SRC_DIR)
 
@@ -75,7 +75,7 @@ AUTHENTICATION_BACKENDS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(DATA_DIR, 'db.sqlite3'),
     }
 }
 
@@ -99,7 +99,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    BASE_DIR+"/static/",
+    DATA_DIR+"/static/",
     SRC_DIR+"/annalist/static/",
 )
 
@@ -108,21 +108,36 @@ STATICFILES_DIRS = (
 CONFIG_BASE = "/etc/annalist/"
 CONFIG_BASE = os.path.join(os.path.expanduser("~"), ".annalist/")
 
-# Directory for Annalist data files
+# Annalist configuration and metadata files
 
-SITE_BASE = "/var/annalist"
-SITE_BASE = os.path.join(os.path.expanduser("~"), "annalist_data")
+SITE_DIR       = "annalist_site"
+SITE_META_FILE = "_annalist_site.jsonld"
+
+COLL_META_DIR  = "_annalist_collection"
+COLL_META_FILE = "_annalist_collection.jsonld"
+
+COLL_TYPE_DIR = COLL_META_DIR + "/types"
+COLL_VIEW_DIR = COLL_META_DIR + "/views"
+COLL_LIST_DIR = COLL_META_DIR + "/lists"
+COLL_DATA_DIR = "data"
+# and more...
+
+SITE_BASE = "/var/" + SITE_DIR
+SITE_BASE = os.path.join(os.path.expanduser("~"), "" + SITE_DIR)
+# @@TODO: use diffent variable name, and provide for dynamic selection when testing
+SITE_BASE = SRC_DIR+"/annalist_site/test/data/" + SITE_DIR
 
 # Log key path values
 
 import logging
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
-log.info("DJANGO_ROOT: "+DJANGO_ROOT)
-log.info("SITE_ROOT:   "+SITE_ROOT)
-log.info("BASE_DIR:    "+BASE_DIR)
-log.info("SRC_DIR:     "+SRC_DIR)
-log.info("CONFIG_BASE: "+CONFIG_BASE)
-log.info("DB PATH:     "+DATABASES['default']['NAME'])
-log.debug("Python path: "+repr(sys.path))
+log.info("DJANGO_ROOT:   "+DJANGO_ROOT)
+log.info("SETTINGS_DIR:  "+SETTINGS_DIR)
+log.info("DATA_DIR:      "+DATA_DIR)
+log.info("SRC_DIR:       "+SRC_DIR)
+log.info("CONFIG_BASE:   "+CONFIG_BASE)
+log.info("SITE_BASE:     "+SITE_BASE)
+log.info("DB PATH:       "+DATABASES['default']['NAME'])
+log.debug("Python path:   "+repr(sys.path))
 

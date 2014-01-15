@@ -1,0 +1,7 @@
+{ 
+    "@id": "./",
+    "annal:coll_id": "coll2",
+    "rdfs:label": "Collection coll2"
+    "rdfs:comment": "Annalist collection metadata.  Details TBD.  Note that location-sensitive references should be relative to the collection base."
+}
+
