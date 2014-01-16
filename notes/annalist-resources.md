@@ -2,8 +2,6 @@
 
 Metadata: provenance, access control, ...?
 
-Could collection/record be Atom feed/entry?
-
 
 # Collection
 

@@ -12,16 +12,16 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, University of Oxford"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+# @@TODO: separate into common and enviroment-specific settins; 
+#         cf. http://www.deploydjango.com/django_project_structure/
+
 import os
 import django
 import sys
 
 DJANGO_ROOT     = os.path.dirname(os.path.realpath(django.__file__))
 SETTINGS_DIR    = os.path.dirname(os.path.realpath(__file__))
-DATA_DIR        = os.path.dirname(SETTINGS_DIR)
-SRC_DIR         = os.path.dirname(DATA_DIR)
-
-sys.path.insert(0, SRC_DIR)
+SITE_ROOT       = os.path.dirname(SETTINGS_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -35,7 +35,6 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -75,7 +74,7 @@ AUTHENTICATION_BACKENDS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(DATA_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(SITE_ROOT, 'db.sqlite3'),
     }
 }
 
@@ -99,8 +98,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    DATA_DIR+"/static/",
-    SRC_DIR+"/annalist/static/",
+    SITE_ROOT+"/static/",
+    SITE_ROOT+"/annalist/static/",
 )
 
 
@@ -109,23 +108,69 @@ CONFIG_BASE = "/etc/annalist/"
 CONFIG_BASE = os.path.join(os.path.expanduser("~"), ".annalist/")
 
 # Annalist configuration and metadata files
+#
+# Directory layout:
+#
+#   $BASE_DATA_DIR
+#     annalist-site/
+#       _annalist-site/
+#         site_meta.json_ld
+#       <collection-id>/
+#         _annalist_collection/
+#           coll_meta.jsonld
+#           types/
+#             <type-id>/
+#               type_meta.jsonld
+#              :
+#           views/
+#             <view-id>/
+#               view_meta.jsonld
+#              :
+#           lists/
+#             <list-id>/
+#               list_meta.jsonld
+#              :
+#           bridges/
+#             (bridge-description (incl path mapping in collection) - @@TBD)
+#              :
+#           user-groups/  @@TBD
+#             group-description
+#              :
+#           access/  @@TBD
+#             default-access
+#             (more details to work through - keep it simple for starters)
+#         <type-id>/
+#           <entity-id>/
+#             entity-data.jsonld
+#             entity-prov.jsonld
+#            :
+#          :
+#        :
+
+# Pick one!
+BASE_DATA_DIR  = "/var"
+BASE_DATA_DIR  = os.path.expanduser("~")
+BASE_DATA_DIR  = SITE_ROOT+"/annalist_site/test/data/"
 
 SITE_DIR       = "annalist_site"
-SITE_META_FILE = "_annalist_site.jsonld"
+SITE_META_DIR  = "_annalist_site"
+SITE_META_FILE = "site_meta.jsonld"
+SITE_BASE      = BASE_DATA_DIR + "/" + SITE_DIR
 
 COLL_META_DIR  = "_annalist_collection"
-COLL_META_FILE = "_annalist_collection.jsonld"
+COLL_META_FILE = "coll_meta.jsonld"
 
-COLL_TYPE_DIR = COLL_META_DIR + "/types"
-COLL_VIEW_DIR = COLL_META_DIR + "/views"
-COLL_LIST_DIR = COLL_META_DIR + "/lists"
-COLL_DATA_DIR = "data"
+TYPE_META_DIR  = COLL_META_DIR + "/types"
+TYPE_META_FILE = TYPE_META_DIR + "%(type_id)s/type_meta.lsonld"
+
+VIEW_META_DIR  = COLL_META_DIR + "/views"
+VIEW_META_FILE = VIEW_META_DIR + "%(view_id)s/view_meta.lsonld"
+
+LIST_META_DIR  = COLL_META_DIR + "/lists"
+LIST_META_FILE = LIST_META_DIR + "%(list_id)s/list_meta.lsonld"
+
 # and more...
 
-SITE_BASE = "/var/" + SITE_DIR
-SITE_BASE = os.path.join(os.path.expanduser("~"), "" + SITE_DIR)
-# @@TODO: use diffent variable name, and provide for dynamic selection when testing
-SITE_BASE = SRC_DIR+"/annalist_site/test/data/" + SITE_DIR
 
 # Log key path values
 
@@ -134,8 +179,7 @@ log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 log.info("DJANGO_ROOT:   "+DJANGO_ROOT)
 log.info("SETTINGS_DIR:  "+SETTINGS_DIR)
-log.info("DATA_DIR:      "+DATA_DIR)
-log.info("SRC_DIR:       "+SRC_DIR)
+log.info("SITE_ROOT:     "+SITE_ROOT)
 log.info("CONFIG_BASE:   "+CONFIG_BASE)
 log.info("SITE_BASE:     "+SITE_BASE)
 log.info("DB PATH:       "+DATABASES['default']['NAME'])

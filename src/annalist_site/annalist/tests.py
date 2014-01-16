@@ -26,7 +26,13 @@ import annalist.util
 
 # See http://stackoverflow.com/questions/2380527/django-doctests-in-views-py
 
+def init_annalist_tests():
+    log.info("init_annalist_tests")
+    # @@TODO: make copy of test site data and update settings module?
+    return
+
 def load_tests(loader, tests, ignore):
+    init_annalist_tests()
     tests.addTests(doctest.DocTestSuite(annalist.util))
     return tests
 

@@ -1,19 +1,45 @@
+@@NOTE: needs review in light of code; or just fold into code and delete this.
 
 Annalist directory layout
 -------------------------
 
-See settings.py
+$ANNALIST_ROOT/
+  collection/
+    _annalist_collection.jsonld
+    _annalist_collection/
+      records/
+        record-type
+         :
+      views/
+        view-type
+         :
+      lists/
+        list-type
+         :
+      user-groups/
+        group-description
+         :
+      access/
+        default-access
+        (more details to work through - keep it simple for starters)
+      bridge/
+        bridge-description (incl path mapping in collection)
+         :
+    record-type-id/
+      record-id
+       :
+     :
+   :
+
 
 Questions:
 
-* Primary type or multiple types for each entity?
+* Primary type or multiple types?
 * How to represent groups within a collection?  Just use multiple associations in a record?
 
 
 Annalist URI structure
 ----------------------
-
-@@NOTE: needs review in light of code; or just fold into code and delete this.
 
 *   $ANNALIST_ROOT/
  
