@@ -43,11 +43,14 @@ See also:
 - [URI_structure.md](./notes/URI_structure.md)
 
 1. Front page/initial display
+   - refactor settings.py to support different environments (dev, test, production)
+   - testing framework to create copy of site data for testing
    - form elements to create new collection
    - include supporting logic in Collection module
    - form elements to delete collection
    - test cases
    - rework authentication/authorization to allow unauthenticated access for public data 
+   - move util.py to utils package, and rename
 2. Collection initial display
    - determine base configuration/metadata needed
    - include supporting logic in Collection module
@@ -61,6 +64,8 @@ AnalistGenericView:
   - HTML
   - JSON-LD
   - uri-list
+
+Deployment: look into using Vagrant and/or Puppet
 
 
 ## Dynamic form interface
