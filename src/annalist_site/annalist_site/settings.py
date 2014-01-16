@@ -21,7 +21,7 @@ import sys
 
 DJANGO_ROOT     = os.path.dirname(os.path.realpath(django.__file__))
 SETTINGS_DIR    = os.path.dirname(os.path.realpath(__file__))
-SITE_ROOT       = os.path.dirname(SETTINGS_DIR)
+SITE_SRC_ROOT   = os.path.dirname(SETTINGS_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -74,7 +74,7 @@ AUTHENTICATION_BACKENDS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(SITE_ROOT, 'db.sqlite3'),
+        'NAME': os.path.join(SITE_SRC_ROOT, 'db.sqlite3'),
     }
 }
 
@@ -98,8 +98,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    SITE_ROOT+"/static/",
-    SITE_ROOT+"/annalist/static/",
+    SITE_SRC_ROOT+"/static/",
+    SITE_SRC_ROOT+"/annalist/static/",
 )
 
 
@@ -150,18 +150,25 @@ CONFIG_BASE = os.path.join(os.path.expanduser("~"), ".annalist/")
 # Pick one!
 BASE_DATA_DIR  = "/var"
 BASE_DATA_DIR  = os.path.expanduser("~")
-BASE_DATA_DIR  = SITE_ROOT+"/annalist_site/test/data/"
+BASE_DATA_DIR  = SITE_SRC_ROOT+"/test/data"
 
 SITE_DIR       = "annalist_site"
+SITE_PATH      = BASE_DATA_DIR + "/" + SITE_DIR
 SITE_META_DIR  = "_annalist_site"
+SITE_META_PATH = SITE_PATH + "/" + SITE_META_DIR
 SITE_META_FILE = "site_meta.jsonld"
-SITE_BASE      = BASE_DATA_DIR + "/" + SITE_DIR
+
+SITE_COLL_DIR  = "%(coll_id)s"
+SITE_COLL_PATH = SITE_PATH + "/" + SITE_COLL_DIR
 
 COLL_META_DIR  = "_annalist_collection"
+COLL_META_PATH = SITE_COLL_PATH + "/" + COLL_META_DIR
 COLL_META_FILE = "coll_meta.jsonld"
 
-TYPE_META_DIR  = COLL_META_DIR + "/types"
-TYPE_META_FILE = TYPE_META_DIR + "%(type_id)s/type_meta.lsonld"
+COLL_TYPE_DIR  = "types"
+TYPE_META_DIR  = "%(type_id)s"
+TYPE_META_PATH = SITE_COLL_PATH + "/" + COLL_TYPE_DIR + "/" + TYPE_META_DIR
+TYPE_META_FILE = "type_meta.lsonld"
 
 VIEW_META_DIR  = COLL_META_DIR + "/views"
 VIEW_META_FILE = VIEW_META_DIR + "%(view_id)s/view_meta.lsonld"
@@ -177,11 +184,11 @@ LIST_META_FILE = LIST_META_DIR + "%(list_id)s/list_meta.lsonld"
 import logging
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
-log.info("DJANGO_ROOT:   "+DJANGO_ROOT)
-log.info("SETTINGS_DIR:  "+SETTINGS_DIR)
-log.info("SITE_ROOT:     "+SITE_ROOT)
-log.info("CONFIG_BASE:   "+CONFIG_BASE)
-log.info("SITE_BASE:     "+SITE_BASE)
-log.info("DB PATH:       "+DATABASES['default']['NAME'])
+log.info("DJANGO_ROOT:    "+DJANGO_ROOT)
+log.info("SETTINGS_DIR:   "+SETTINGS_DIR)
+log.info("SITE_SRC_ROOT:  "+SITE_SRC_ROOT)
+log.info("CONFIG_BASE:    "+CONFIG_BASE)
+log.info("SITE_META_PATH: "+SITE_PATH)
+log.info("DB PATH:        "+DATABASES['default']['NAME'])
 log.debug("Python path:   "+repr(sys.path))
 

@@ -47,6 +47,7 @@ See also:
    - include supporting logic in Collection module
    - form elements to delete collection
    - test cases
+   - rework authentication/authorization to allow unauthenticated access for public data 
 2. Collection initial display
    - determine base configuration/metadata needed
    - include supporting logic in Collection module

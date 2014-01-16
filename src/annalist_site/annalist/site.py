@@ -26,6 +26,7 @@ class Site(object):
         sitebaseuri     the base URI of the site
         sitebasedir     the base dictionary for site information
         """
+        log.info("Site init: %s"%(sitebasedir))
         self._baseuri = sitebaseuri if sitebaseuri.endswith("/") else sitebaseuri+"/"
         self._basedir = sitebasedir if sitebasedir.endswith("/") else sitebasedir+"/"
         return
@@ -83,9 +84,10 @@ class SiteView(AnnalistGenericView):
         a list of defined collections.
         """
         def resultdata():
-            site = Site(self.get_request_uri(), settings.SITE_BASE)
+            site = Site(self.get_request_uri(), settings.SITE_PATH)
             return { "collections":  site.collections_dict() }
         return (
+            self.authenticate() or 
             self.render_html(resultdata(), 'annalist_site.html') or 
             self.error(self.error406values())
             )

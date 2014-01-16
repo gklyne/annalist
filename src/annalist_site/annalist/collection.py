@@ -21,8 +21,8 @@ from annalist.views         import AnnalistGenericView
 
 class Collection(object):
 
-    @static
-    def create(cls, coll_id, coll_meta, sitebaseuri, sitebasedir):
+    @staticmethod
+    def create(coll_id, coll_meta, sitebaseuri, sitebasedir):
         """
         Class method creates a new collection, saving its details to disk
         """

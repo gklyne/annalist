@@ -92,31 +92,6 @@ class AnnalistGenericView(ContentNegotiationView):
         context  = RequestContext(self.request, resultdata)
         return HttpResponse(template.render(context))
 
-class AnnalistHomeView(AnnalistGenericView):
-    """
-    View class to handle requests to the Annalist home URI
-    """
-    def __init__(self):
-        super(AnnalistHomeView, self).__init__()
-        return
-
-    # GET
-
-    @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
-    def render_html(self, resultdata):
-        template = loader.get_template('annalist_home.html')
-        context  = RequestContext(self.request, resultdata)
-        return HttpResponse(template.render(context))
-
-    def get(self, request):
-        def resultdata():
-            return { 'collections': { 'foo': 'foo-colllection', 'bar': 'bar-colllection' } }
-        return (
-            self.authenticate() or 
-            self.render_html(resultdata()) or 
-            self.error(self.error406values())
-            )
-
 
 class AnnalistProfileView(AnnalistGenericView):
     """
