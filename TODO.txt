@@ -1,50 +1,9 @@
 # Explorations
 
-## OAuth testing:
-
-1. Apply OAuth/OpenID Connect authentication to http://localhost:8000/rovserver/ (using Google auth service)
-   / Initial authentication proof of concept
-   / retrive additional info
-     + email accessible through id_token member of credentials value, but not clear what else]
-     + not sure if this is secure; I think it *should* be, as it's obtained by HTTPS to AP endpoint
-     + awaiting feedback from Q to Google group
-     + access https://www.googleapis.com/plus/v1/people/me/openIdConnect with credentials
-   / try alternative implementation using Django session directly
-   x try implicit flow
-   / look to alternative serialization of Flow object
-
-Skip {
-  2. Create credentials for roverlay command utility and require those for activating the service.
-     - need design for credential access/storage
-     -- consider: command client generates unique code per user, and uses that to initiate auth via the service.  On first attempt, it fails as user isn't authorized;  tell user to browse to endpoint to authorize the user.
-     -- or: register an app with app name and userid, returns secret token to plug in to app.  This is similar to Google's mechanism for deaing with non-browser apps.  App logs in with app name and token, uses service with credentials of registered user.  Use is responsible for protecting credentials, but can only expose their own data.
-     -- or: use publioc key encryption of credentials, store in shared space, so only the offline client can access the credential.
-     -- or: ... review what UMA does.
-
-  3. Revise service so that user sees only their own ROs when listed, and can apply access control to use of ROs by others.
-
-  4. Create separate service endpoint to handle authorization requests (using UMA elements where appropriate).
-}
-
-See also:
-
-https://github.com/omab/python-social-auth
-http://python-social-auth.readthedocs.org/en/latest/index.html
-https://github.com/jcleblanc/openid-connect/tree/master/paypal-python
-https://github.com/rohe/pyoidc
-https://developers.google.com/api-client-library/python/guide/aaa_oauth
-
 
 ## Web application
 
-See also:
-
-- [directory_layout.md](./notes/directory_layout.md)
-- [URI_structure.md](./notes/URI_structure.md)
-
 1. Front page/initial display
-   - refactor settings.py to support different environments (dev, test, production)
-   - testing framework to create copy of site data for testing
    - form elements to create new collection
    - include supporting logic in Collection module
    - form elements to delete collection

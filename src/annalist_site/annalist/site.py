@@ -8,6 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import os.path
+import collections
 
 import logging
 log = logging.getLogger(__name__)
@@ -51,9 +52,9 @@ class Site(object):
         """
         Return a dictionary of collection URIs indexed by collledtion id
         """
-        coll = {}
+        coll = collections.OrderedDict()
         for c in self.collections():
-            coll[c] = self._baseuri+c+"/"
+            coll[c] = { "uri": self._baseuri+c+"/", "dir": self._basedir+c+"/" }
         return coll
 
     def add_collection(self, coll_id, coll_meta):

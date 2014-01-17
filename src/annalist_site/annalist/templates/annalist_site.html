@@ -3,8 +3,8 @@
 {% block content %}
     <h2>Collections</h2>
       <ul>
-      {% for c, u in collections.items %}
-      <li><a href="{{u}}">{{c}}: {{u}}</a></li>
+      {% for c, v in collections.items %}
+      <li><a href="{{v.uri}}">{{c}}: {{v.dir}}</a></li>
       {% endfor %}
       </ul>
     </p>

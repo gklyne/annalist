@@ -13,3 +13,18 @@
 
 * https://factoryboy.readthedocs.org/
 
+## Auth
+
+* https://github.com/omab/python-social-auth
+* http://python-social-auth.readthedocs.org/en/latest/index.html
+* https://github.com/jcleblanc/openid-connect/tree/master/paypal-python
+* https://github.com/rohe/pyoidc
+* https://developers.google.com/api-client-library/python/guide/aaa_oauth
+
+See also:
+
+* [oauth2-openid-connect-django.md](./oauth2-openid-connect-django.md)
+* [authentication-and-authorization.md](./authentication-and-authorization.md)
+* [oauth2-openid-connect-django.md](./oauth2-openid-connect-django.md)
+* [auth-notes.md](./auth-notes.md)
+
