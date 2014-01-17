@@ -1,0 +1,7 @@
+# requirements/personal.txt - requirements for test deployment
+# See: http://www.deploydjango.com/django_project_structure/
+-r common.txt
+# django-coverage==1.2.2
+# django-nose==0.1.3
+# mock==0.8.0
+# nosexcover==1.0.7

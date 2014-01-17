@@ -1,0 +1,3 @@
+# requirements/personal.txt - requirements for personal (same-host) deployment
+# See: http://www.deploydjango.com/django_project_structure/
+-r common.txt

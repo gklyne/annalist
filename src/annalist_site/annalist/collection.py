@@ -15,6 +15,7 @@ log = logging.getLogger(__name__)
 from django.conf import settings
 
 from annalist               import util
+from annalist               import layout
 
 # from annalist.recordtype    import RecordType
 from annalist.views         import AnnalistGenericView

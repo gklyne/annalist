@@ -16,6 +16,9 @@ from django.conf import settings
 
 from annalist.collection    import Collection
 from annalist.views         import AnnalistGenericView
+from annalist.layout        import Layout
+
+dir_layout = Layout(settings.BASE_DATA_DIR)
 
 class Site(object):
 
@@ -39,7 +42,7 @@ class Site(object):
         for f in site_files:
             p = os.path.join(self._basedir,f)
             if os.path.isdir(p):
-                p2 = os.path.join(p, settings.COLL_META_DIR)
+                p2 = os.path.join(p, dir_layout.COLL_META_DIR)
                 if os.path.isdir(p2):
                     yield f
         return
@@ -84,7 +87,7 @@ class SiteView(AnnalistGenericView):
         a list of defined collections.
         """
         def resultdata():
-            site = Site(self.get_request_uri(), settings.SITE_PATH)
+            site = Site(self.get_request_uri(), dir_layout.SITE_PATH)
             return { "collections":  site.collections_dict() }
         return (
             self.authenticate() or 
