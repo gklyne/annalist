@@ -10,26 +10,44 @@
 <body>
 
 {% block topmenu %}
-    <div>
-        <a href="{% url 'AnnalistSiteView' %}">Home</a>
-        <a href="{% url 'AnnalistProfileView' %}">Profile</a>
+    <div class="menu-top">
+        <span class="menu-left">
+            <a href="{% url 'AnnalistSiteView' %}">Home</a>
+        </span>
+        <span class="menu-right">
+        {% if not suppress_user %}
+            {% if user.is_authenticated %}
+                <a href="{% url 'AnnalistProfileView' %}">Profile</a>
+                <a href="{% url 'LogoutUserView' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'AnnalistProfileView' %}">Login</a>
+            {% endif %}
+        {% endif %}
+        </span>
     </div>
 {% endblock %}
 
-<h1>{% block heading %}Annalist linked data journal{% endblock %}</h1>
+    <div class="heading">
+        {% block heading %}
+            Annalist linked data journal
+        {% endblock %}
+    </div>
+
 
 {% block content %}
-    <h2>Content heading</h2>
-    <p>
-      No content here
-    </p>
+    <div class="content-head">
+        Content heading
+    </div>
+    <div class="content-body">
+        Placeholder for content to be provided by selected view
+    </div>
 {% endblock %}
 
-<hr/>
-
-<div class="footer">
-    <a href="{% url 'LogoutUserView' %}">Logout</a>
-</div>
+    <div class="footer">
+    {% block footer %}
+        Powered by <a href="https://github.com/gklyne/annalist">Annalist</a>    
+    {% endblock %}
+    </div>
 
 </body>
 

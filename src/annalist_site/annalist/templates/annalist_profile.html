@@ -1,7 +1,10 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h2>User profile</h2>
+    <div class="content-head">
+        User profile
+    </div>
+    <div class="content-body">
       <table>
         <tr>
             <td>User ID</td><td>{{user.username}}</td>
@@ -13,5 +16,5 @@
             <td>email</td><td>{{user.email}}</td>
         </tr>
       </table>
-    </p>
+    </div>
 {% endblock %}

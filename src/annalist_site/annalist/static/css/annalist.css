@@ -7,6 +7,123 @@
 
  */
 
+
+body {
+    margin:         0px;
+}
+
+body > div {
+    padding-left:   5px;
+    padding-right:  5px;    
+}
+
+.menu-top {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size:  medium;
+    padding-bottom: 0.5em;
+    background-color: #E0F5FF;
+    padding-left:   5px;
+    padding-right:  5px;    
+}
+
+.menu-left {
+    position:   relative;
+    left:       0px;
+    top:        0px;
+}
+
+.menu-right {
+    float:      right;
+    /*
+    position:   relative;
+    right:      0px;
+    top:        0px;
+    */
+}
+
+.heading {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size:  x-large;
+}
+
+.footer {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size:  small;    
+    padding-top: 0.5em;
+    background-color: #E0F5FF;
+}
+
+.content-head {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size:   large;
+}
+
+.content-body {
+    font-family: Georgia, serif;
+    font-size:  medium;
+}
+
+form, form table {
+    background-color: #F0F0FF;
+}
+
+form table {
+    margin:         8px;
+    border-style:   none;
+    border-width:   1px;    
+}
+
+table {
+    margin:         8px;
+    border-style:   solid;
+    border-width:   1px;
+    border-color:   #D8D8D8;
+    /* background-color: #E0FFE0; */
+}
+
+td {
+    /*
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: medium;  
+    */
+    font-family: Georgia, serif;
+    font-size:  medium;
+    padding:    0.2em;
+}
+
+th {
+    font-family: Georgia, serif;
+    font-size:  medium;
+    padding:    0.2em;
+    text-align: left;
+    font-weight: bold;
+}
+
 .error {
+    color: red;
+}
+
+.alert {
+    color: green;
+    font-size: large;
+    vertical-align: middle;
+}
+
+.instruction {
+    padding-top: 0.5em;
+    padding-left: 2em;
+    padding-bottom: 0.5em;
+    font-style: italic;
+}
+
+.error-head {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: x-large;
+    color: red;
+}
+
+.error-message {
+    font-family: Georgia, serif;
+    font-size: medium;
     color: red;
 }

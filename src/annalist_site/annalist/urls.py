@@ -9,13 +9,17 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 from django.conf.urls import patterns, url
 
 import annalist.views
+import annalist.profileview
+import annalist.confirmview
 import annalist.site
 import oauth2.views
 
 urlpatterns = patterns('',
-    url(r'^$',            annalist.site.SiteView.as_view(),             name='AnnalistSiteView'),
-    # url(r'^site/$',       annalist.views.AnnalistHomeView.as_view(),    name='AnnalistHomeView'),
-    url(r'^profile/$',    annalist.views.AnnalistProfileView.as_view(), name='AnnalistProfileView'),
+    url(r'^$',              annalist.views.AnnalistHomeView.as_view(),    name='AnnalistHomeView'),
+    url(r'^site/$',         annalist.site.SiteView.as_view(),             name='AnnalistSiteView'),
+    url(r'^site_action/$',  annalist.site.SiteActionView.as_view(),       name='AnnalistSiteActionView'),
+    url(r'^profile/$',      annalist.profileview.ProfileView.as_view(),   name='AnnalistProfileView'),
+    url(r'^confirm/$',      annalist.confirmview.ConfirmView.as_view(),   name='AnnalistConfirmView'),
     )
 
 urlpatterns += patterns('',

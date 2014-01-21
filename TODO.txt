@@ -4,9 +4,9 @@
 ## Web application
 
 1. Front page/initial display
-   - form elements to create new collection
+   / form elements to create new collection
+   / form elements to delete collection
    - include supporting logic in Collection module
-   - form elements to delete collection
    - test cases
    - rework authentication/authorization to allow unauthenticated access for public data 
    - move util.py to utils package, and rename

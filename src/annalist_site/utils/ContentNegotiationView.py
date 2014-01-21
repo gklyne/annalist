@@ -88,9 +88,47 @@ class ContentNegotiationView(generic.View):
                 }
             })
 
+    # def error401values(self):
+    #     return self.errorvalues(401, "Unauthorized", 
+    #         "Resource %(request_uri)s requires authentication for access"
+    #         )
+
+    # def error403values(self):
+    #     return self.errorvalues(401, "Forbidden", 
+    #         "Forbidden %(method)s access to resource %(request_uri)s"
+    #         )
+
+    # def error404values(self):
+    #     return self.errorvalues(404, "Not found", 
+    #         "Resource %(request_uri)s not found"
+    #         )
+
+    # def error405values(self):
+    #     return self.errorvalues(405, "Method not allowed", 
+    #         "Method %(method)s is not recognized for %(request_uri)s"
+    #         )
+
+    # def error406values(self):
+    #     return self.errorvalues(406, "Not acceptable", 
+    #         "%(method)s returning %(accept_types)s not supported for %(request_uri)s"
+    #         )
+
+    # def error415values(self):
+    #     return self.errorvalues(415, "Unsupported Media Type", 
+    #         "%(method)s with %(content_type)s not supported for %(request_uri)s"
+    #         )
+
+    def error400values(self, message="Bad request to %(request_uri)s"):
+        return self.errorvalues(400, "Bad request", message)
+
     def error401values(self):
-        return self.errorvalues(401, "Unauthorized", 
+        return self.errorvalues(401, "Unauthorized",
             "Resource %(request_uri)s requires authentication for access"
+            )
+
+    def error402values(self):
+        return self.errorvalues(402, "Payment required",
+            "Resource %(request_uri)s: payment required"
             )
 
     def error403values(self):
@@ -113,9 +151,88 @@ class ContentNegotiationView(generic.View):
             "%(method)s returning %(accept_types)s not supported for %(request_uri)s"
             )
 
+    def error407values(self):
+        return self.errorvalues(407, "Proxy authentication required", 
+            "Resource %(request_uri)s: Proxy authentication required"
+            )
+
+    def error408values(self):
+        return self.errorvalues(408, "Request timeout", 
+            "Resource %(request_uri)s: Request timeout"
+            )
+
+    def error409values(self):
+        return self.errorvalues(409, "Requedst timeout", 
+            "Resource %(request_uri)s: Requedst timeout"
+            )
+
+    def error410values(self):
+        return self.errorvalues(410, "Gone", 
+            "Resource %(request_uri)s: Gone"
+            )
+
+    def error411values(self):
+        return self.errorvalues(411, "Length required", 
+            "Resource %(request_uri)s: Length required"
+            )
+
+    def error412values(self):
+        return self.errorvalues(412, "Precondition failed", 
+            "Resource %(request_uri)s: Precondition failed"
+            )
+
+    def error413values(self):
+        return self.errorvalues(413, "Request entity too large", 
+            "Resource %(request_uri)s: Request entity too large"
+            )
+
+    def error414values(self):
+        return self.errorvalues(414, "Request URI too long", 
+            "Resource %(request_uri)s: Request URI too long"
+            )
+
     def error415values(self):
         return self.errorvalues(415, "Unsupported Media Type", 
             "%(method)s with %(content_type)s not supported for %(request_uri)s"
             )
+
+    def error416values(self):
+        return self.errorvalues(416, "Requested range not satisfiable", 
+            "Resource %(request_uri)s: Requested range not satisfiable"
+            )
+
+    def error417values(self):
+        return self.errorvalues(417, "Expectation failed", 
+            "Resource %(request_uri)s: Expectation failed"
+            )
+
+    def error426values(self):
+        return self.errorvalues(426, "Upgrade required", 
+            "Resource %(request_uri)s: Upgrade required"
+            )
+
+    def error428values(self):
+        return self.errorvalues(428, "Precondition required", 
+            "Resource %(request_uri)s: Precondition required"
+            )
+
+    def error429values(self):
+        return self.errorvalues(429, "Too many requests", 
+            "Resource %(request_uri)s: Too many requests"
+            )
+
+    def error431values(self):
+        return self.errorvalues(431, "Request header fields too large", 
+            "Resource %(request_uri)s: Request header fields too large"
+            )
+
+    def error451values(self):
+        return self.errorvalues(451, "Unavailable for legal reasons", 
+            "Resource %(request_uri)s: Unavailable for legal reasons"
+            )
+
+
+
+
 
 # End.

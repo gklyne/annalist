@@ -1,11 +1,39 @@
 {% extends "base_generic.html" %}
 
+{% block title %}{{ title }}{% endblock %}
+
+{% block heading %}{{ title }} - site data{% endblock %}
+
 {% block content %}
-    <h2>Collections</h2>
-      <ul>
-      {% for c, v in collections.items %}
-      <li><a href="{{v.uri}}">{{c}}: {{v.dir}}</a></li>
-      {% endfor %}
-      </ul>
-    </p>
+    <div class="content-head">
+        Collections
+    </div>
+    <div class="content-body">
+        <form method="POST" action="">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Label</th>
+                </tr>
+                {% for c, v in collections.items %}
+                    <tr>
+                        <td><a href="{{v.uri}}">{{c}}</a></td>
+                        <td>{{v.title}}</td>
+                        <td><input type="checkbox" name="select" value="{{c}}" /></td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><input type="submit" value="Remove selected" name="remove"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" size="16" name="new_id" value=""/></td>
+                    <td><input type="text" size="64" name="new_label" value=""/></td>
+                    <td><input type="submit" value="New collection" name="new"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
 {% endblock %}

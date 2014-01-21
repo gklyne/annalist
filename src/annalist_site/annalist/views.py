@@ -11,16 +11,17 @@ import json
 import random
 import logging
 import uuid
+import copy
 
 import rdflib
 import httplib2
 
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django.template import RequestContext, loader
-from django.views import generic
-from django.views.decorators.csrf import csrf_exempt
-from django.core.urlresolvers import reverse
+from django.http                    import HttpResponse
+from django.http                    import HttpResponseRedirect
+from django.template                import RequestContext, loader
+from django.views                   import generic
+from django.views.decorators.csrf   import csrf_exempt
+from django.core.urlresolvers       import resolve, reverse
 
 from django.conf import settings
 
@@ -80,10 +81,19 @@ class AnnalistGenericView(ContentNegotiationView):
     def authorize(self, scope):
         """
         Return None if user is authorized to perform the requested operation,
-        otherwise appropriate 403 Forbidden response.
+        otherwise appropriate 403 Forbidden response.  May be called with or 
+        without an authenticated user.
 
-        @@TODO interface details; scope at least will be needed
+        scope       indication of the operation  requested to be performed.
+                    e.g. "VIEW", "CREATE", "UPDATE", "DELETE", ...
+
+        @@TODO interface details; scope at least will be needed.  
+
+        For now, require authentication for anything other than VIEW scope.
         """
+        if scope != "VIEW":
+            if not self.request.user.is_authenticated():
+                return self.error(self.error403values())
         return None
 
     @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
@@ -92,33 +102,32 @@ class AnnalistGenericView(ContentNegotiationView):
         context  = RequestContext(self.request, resultdata)
         return HttpResponse(template.render(context))
 
+    def get(self, request):
+        return self.error(self.error405values())
 
-class AnnalistProfileView(AnnalistGenericView):
+    def head(self, request):
+        return self.error(self.error405values())
+
+    def put(self, request):
+        return self.error(self.error405values())
+
+    def post(self, request):
+        return self.error(self.error405values())
+
+    def delete(self, request):
+        return self.error(self.error405values())
+
+
+class AnnalistHomeView(AnnalistGenericView):
     """
-    View class to handle requests to the Annalist user profile URI
+    View class for home view
     """
     def __init__(self):
-        super(AnnalistProfileView, self).__init__()
+        super(AnnalistHomeView, self).__init__()
         return
 
-    # GET
-
-    @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
-    def render_html(self, resultdata):
-        template = loader.get_template('annalist_profile.html')
-        context  = RequestContext(self.request, resultdata)
-        return HttpResponse(template.render(context))
-
     def get(self, request):
-        def resultdata():
-            return { 'user': request.user }
-        return (
-            self.authenticate() or 
-            self.render_html(resultdata()) or 
-            self.error(self.error406values())
-            )
+        return HttpResponseRedirect(reverse("AnnalistSiteView"))
+
 
 # End.
-
-
-

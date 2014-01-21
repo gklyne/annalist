@@ -225,6 +225,7 @@ class LoginUserView(generic.View):
             , "providers":      PROVIDER_LIST.keys()
             , "scope":          scope
             , "message":        message
+            , "suppress_user":  True
             # Default provider
             , "provider":       PROVIDER_LIST.keys()[0]
             })
@@ -272,7 +273,7 @@ class LoginPostView(generic.View):
         continuation  = request.POST.get("continuation",  "/no_continuation_in_form_response/")
         scope         = request.POST.get("scope",         SCOPE_DEFAULT) 
         # Access or create flow object for this session
-        if request.POST["login"] == "Login":
+        if request.POST.get("login", None) == "Login":
             collect_client_secrets()
             # Create and initialize flow object
             clientsecrets_filename = os.path.join(

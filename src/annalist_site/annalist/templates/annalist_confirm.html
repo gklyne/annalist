@@ -1,0 +1,31 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block heading %}{{ title }} - confirm action{% endblock %}
+
+{% load static %}
+{% static "images/icons/warning_32.png" as warning_icon %}
+
+{% block content %}
+    <div class="content-head">
+        Confirm requested action
+    </div>
+    <div class="content-body">
+        <form method="POST" action="{% url 'AnnalistConfirmView' %}">
+            {% csrf_token %}
+            <div class="alert">
+                <img class="alert" src="{% static 'images/icons/warning_32.png' %}"/>
+                <span class="alert">{{action_description}}: Are you sure?</span>
+            </div>
+            <div class="instruction">
+                Click "Confirm" to continue, or "Cancel" to abort operation
+            </div>
+            <input type="submit" name="confirm" value="Confirm"/>
+            <input type="submit" name="cancel" value="Cancel"/>
+            <input type="hidden" name="complete_action" value="{{complete_action}}"/>
+            <input type="hidden" name="action_params"   value="{{action_params}}"/>
+            <input type="hidden" name="cancel_action"   value="{{cancel_action}}"/>
+        </form>
+    </div>
+{% endblock %}

@@ -6,14 +6,20 @@
 
 {% block content %}
     {% if message %}
-    <h4 class="error">Login failed: {{message}}</h4>
+    <div class="error-head">
+      Login failed
+    </div>
+    <div class="error-message">
+      {{message}}
+    </div>
     {% endif %}
-    <h2>Enter login options</h2>
+    <div class="content-head">Enter login options</div>
     <form method="POST" action="{{login_post}}">
       {% csrf_token %}
       <table border="0">
         <tr>
-          <td>User ID:</td><td> <input type="text" name="userid" /></td>
+          <td>User ID:</td>
+          <td><input type="text" name="userid" /></td>
         </tr>
         <tr>
           <td>Login service:</td>

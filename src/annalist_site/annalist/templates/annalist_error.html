@@ -5,8 +5,10 @@
 {% block heading %}Annalist error{% endblock %}
 
 {% block content %}
-    <h2>{{status}}: {{reason}}</h2>
-    <p>
+    <div class="error-head">
+        {{status}}: {{reason}}
+    </div>
+    <div class="error-message">
       {{message}}
-    </p>
+    </div>
 {% endblock %}

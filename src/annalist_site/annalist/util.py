@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 import re
 import os.path
 import urlparse
+import json
 
 def valid_id(id):
     """
@@ -95,6 +96,38 @@ def slug_from_uri(uri):
     'bar'
     """
     return slug_from_path(urlparse.urlsplit(uri).path)
+
+def read_data(base_dir, path, data_dir, data_file):
+    """
+    Read (meta)data record and return as dictionary, or `None` if no data
+    resource is present.
+
+    base_dir    is the fully qualified base directory for the site or collection
+                from which data is to be read
+    path        is a relative path or list of path segments within the site or 
+                resource for the site or collection from which data is to be read.
+                This value may be absent.
+    data_dir    is a subdirectory from which data is to be read; also used as sentinel
+                to indicate presence of the desired data: if it does not exist as a
+                directory, None is returned.
+    data_file   is a file name for the data resource to be read.  If the file does not 
+                exist or has malformed content, an exception is raised.
+    """
+    log.info("read_data %s, %r, %s, %s"%(base_dir, path, data_dir, data_file))
+    if path:
+        if isinstance(path, (list, tuple)):
+            p = os.path.join(base_dir, *path)
+        else:
+            p = os.path.join(base_dir, path)
+    else:
+        p = base_dir
+    if os.path.isdir(p):
+        p2 = os.path.join(p, data_dir)
+        if os.path.isdir(p2):
+            p3 = os.path.join(p2, data_file)
+            with open(p3, "r") as f:
+                return json.load(f)
+    return None
 
 if __name__ == "__main__":
     import doctest

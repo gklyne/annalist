@@ -1,11 +1,5 @@
 """
 Annalist directory/site layout
-
-These started out as static values in the settings module, but have
-been made late-bound because the static definitions created awkward 
-dependencies between configuration specific and generic settings 
-modules, and also to allow the same definitions to be used for site 
-directories, site URIs and possibly multiple sites.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -14,7 +8,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import logging
 log = logging.getLogger(__name__)
-
 
 # Annalist configuration and metadata files
 #
@@ -56,38 +49,32 @@ log = logging.getLogger(__name__)
 #          :
 #        :
 
-class Layout(object):
+SITE_DIR        = "annalist_site"
 
-    def __init__(self, base):
+# Path values in the following are relative to the base directory of the site (.../$SITE_DIR)
 
-        self.BASE_DATA_DIR  = base
+SITE_META_DIR   = "_annalist_site"
+SITE_META_PATH  = SITE_META_DIR
+SITE_META_FILE  = "site_meta.jsonld"
 
-        self.SITE_DIR       = "annalist_site"
-        self.SITE_PATH      = self.BASE_DATA_DIR + "/" + self.SITE_DIR
-        self.SITE_META_DIR  = "_annalist_site"
-        self.SITE_META_PATH = self.SITE_PATH + "/" + self.SITE_META_DIR
-        self.SITE_META_FILE = "site_meta.jsonld"
+SITE_COLL_DIR   = "%(coll_id)s"
+SITE_COLL_PATH  = SITE_COLL_DIR
 
-        self.SITE_COLL_DIR  = "%(coll_id)s"
-        self.SITE_COLL_PATH = self.SITE_PATH + "/" + self.SITE_COLL_DIR
+COLL_META_DIR   = "_annalist_collection"
+COLL_META_PATH  = SITE_COLL_PATH + "/" + COLL_META_DIR
+COLL_META_FILE  = "coll_meta.jsonld"
 
-        self.COLL_META_DIR  = "_annalist_collection"
-        self.COLL_META_PATH = self.SITE_COLL_PATH + "/" + self.COLL_META_DIR
-        self.COLL_META_FILE = "coll_meta.jsonld"
+COLL_TYPE_DIR   = "types"
+TYPE_META_DIR   = "%(type_id)s"
+TYPE_META_PATH  = SITE_COLL_PATH + "/" + COLL_TYPE_DIR + "/" + TYPE_META_DIR
+TYPE_META_FILE  = "type_meta.lsonld"
 
-        self.COLL_TYPE_DIR  = "types"
-        self.TYPE_META_DIR  = "%(type_id)s"
-        self.TYPE_META_PATH = self.SITE_COLL_PATH + "/" + self.COLL_TYPE_DIR + "/" + self.TYPE_META_DIR
-        self.TYPE_META_FILE = "type_meta.lsonld"
+VIEW_META_DIR   = COLL_META_DIR + "/views"
+VIEW_META_FILE  = VIEW_META_DIR + "%(view_id)s/view_meta.lsonld"
 
-        self.VIEW_META_DIR  = self.COLL_META_DIR + "/views"
-        self.VIEW_META_FILE = self.VIEW_META_DIR + "%(view_id)s/view_meta.lsonld"
+LIST_META_DIR   = COLL_META_DIR + "/lists"
+LIST_META_FILE  = LIST_META_DIR + "%(list_id)s/list_meta.lsonld"
 
-        self.LIST_META_DIR  = self.COLL_META_DIR + "/lists"
-        self.LIST_META_FILE = self.LIST_META_DIR + "%(list_id)s/list_meta.lsonld"
-
-        # and more...
-
-        return
+# and more...
 
 # End.

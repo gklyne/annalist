@@ -18,7 +18,7 @@ from annalist               import util
 from annalist               import layout
 
 # from annalist.recordtype    import RecordType
-from annalist.views         import AnnalistGenericView
+# from annalist.views         import AnnalistGenericView
 
 class Collection(object):
 
@@ -105,26 +105,26 @@ class Collection(object):
     #     #@@@ create type description
     #     return c
 
-class CollectionView(AnnalistGenericView):
-    """
-    View class to handle requests to an Annalist collection URI
-    """
-    def __init__(self):
-        super(CollectionView, self).__init__()
-        return
+# class CollectionView(AnnalistGenericView):
+#     """
+#     View class to handle requests to an Annalist collection URI
+#     """
+#     def __init__(self):
+#         super(CollectionView, self).__init__()
+#         return
 
-    # GET
+#     # GET
 
-    def get(self, request):
-        """
-        Create a rendering of the current collection.
-        """
-        def resultdata():
-            coll = Collection(self.get_request_uri(), self.get_base_dir())
-            return coll.get_values()
-        return (
-            self.render_html(resultdata(), 'annalist_collection.html') or 
-            self.error(self.error406values())
-            )
+#     def get(self, request):
+#         """
+#         Create a rendering of the current collection.
+#         """
+#         def resultdata():
+#             coll = Collection(self.get_request_uri(), self.get_base_dir())
+#             return coll.get_values()
+#         return (
+#             self.render_html(resultdata(), 'annalist_collection.html') or 
+#             self.error(self.error406values())
+#             )
 
 # End.
