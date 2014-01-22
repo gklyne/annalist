@@ -9,6 +9,12 @@
 
 <body>
 
+<div class="heading">
+    {% block heading %}
+        Annalist linked data journal
+    {% endblock %}
+</div>
+
 {% block topmenu %}
     <div class="menu-top">
         <span class="menu-left">
@@ -27,12 +33,16 @@
     </div>
 {% endblock %}
 
-    <div class="heading">
-        {% block heading %}
-            Annalist linked data journal
-        {% endblock %}
+{% if error_message %}
+    <hr/>
+    <div class="error-head">
+        {{error_head}}
     </div>
-
+    <div class="error-message">
+        {{error_message}}
+    </div>
+    <hr/>
+{% endif %}
 
 {% block content %}
     <div class="content-head">

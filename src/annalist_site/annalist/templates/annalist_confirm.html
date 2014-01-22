@@ -1,11 +1,14 @@
 {% extends "base_generic.html" %}
 
-{% block title %}{{ title }}{% endblock %}
-
-{% block heading %}{{ title }} - confirm action{% endblock %}
-
 {% load static %}
-{% static "images/icons/warning_32.png" as warning_icon %}
+
+{%if title %}
+    {% block title %}{{ title }}{% endblock %}
+{% endif %}
+
+{%if title %}
+    {% block heading %}{{ title }}{% endblock %}
+{% endif %}
 
 {% block content %}
     <div class="content-head">

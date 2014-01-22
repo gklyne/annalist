@@ -13,6 +13,9 @@ import logging
 import uuid
 import copy
 
+import logging
+log = logging.getLogger(__name__)
+
 # import rdflib
 # import httplib2
 

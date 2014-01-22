@@ -13,6 +13,9 @@ import logging
 import uuid
 import copy
 
+import logging
+log = logging.getLogger(__name__)
+
 import rdflib
 import httplib2
 
@@ -28,6 +31,7 @@ from django.conf import settings
 import oauth2.views
 
 from utils.ContentNegotiationView import ContentNegotiationView
+from annalist                     import message
 
 LOGIN_URIS = None
 
@@ -48,7 +52,16 @@ class AnnalistGenericView(ContentNegotiationView):
         context  = RequestContext(self.request, values)
         return HttpResponse(template.render(context), status=values['status'])
 
-    def get_base_dir(self):
+    def redirect_error(self, viewname, error_message=None, error_head=message.INPUT_ERROR):
+        """
+        Redirect to a specified view with an error message for display
+
+        (see templates/base_generic.html for display details)
+        """
+        redirect_uri = reverse(viewname)+"?error_head=%s&error_message=%s"%(error_head, error_message)
+        return HttpResponseRedirect(redirect_uri)
+
+    def get_base_dir_zzz(self):
         """
         Utility function returns base directory for Annalist site,
         without trailing "/"
@@ -98,9 +111,14 @@ class AnnalistGenericView(ContentNegotiationView):
 
     @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
     def render_html(self, resultdata, template_name):
-        template = loader.get_template(template_name)
-        context  = RequestContext(self.request, resultdata)
+        resultdata["error_head"]    = self.request.GET.get("error_head",      message.INPUT_ERROR) 
+        resultdata["error_message"] = self.request.GET.get("error_message",  None)
+        template  = loader.get_template(template_name)
+        context   = RequestContext(self.request, resultdata)
+        log.info("render_html - data: %r"%(resultdata))
         return HttpResponse(template.render(context))
+
+    # Default view methods return 405 Forbidden
 
     def get(self, request):
         return self.error(self.error405values())
@@ -116,7 +134,6 @@ class AnnalistGenericView(ContentNegotiationView):
 
     def delete(self, request):
         return self.error(self.error405values())
-
 
 class AnnalistHomeView(AnnalistGenericView):
     """

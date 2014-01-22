@@ -20,7 +20,8 @@ body > div {
 .menu-top {
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size:  medium;
-    padding-bottom: 0.5em;
+    padding-top: 0.2em;
+    padding-bottom: 0.3em;
     background-color: #E0F5FF;
     padding-left:   5px;
     padding-right:  5px;    
@@ -49,7 +50,8 @@ body > div {
 .footer {
     font-family: Verdana, Geneva, sans-serif;
     font-size:  small;    
-    padding-top: 0.5em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
     background-color: #E0F5FF;
 }
 

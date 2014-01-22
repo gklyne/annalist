@@ -16,14 +16,18 @@ import traceback
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf              import settings
-from django.core.urlresolvers import resolve, reverse
+from django.http                import HttpResponse
+from django.http                import HttpResponseRedirect
+from django.conf                import settings
+from django.core.urlresolvers   import resolve, reverse
 
+from annalist               import message
 from annalist               import layout as site_layout
 from annalist.collection    import Collection
 from annalist.views         import AnnalistGenericView
 from annalist.confirmview   import ConfirmView
-from annalist.util          import read_data
+from annalist.util          import valid_id, read_data
+
 
 class Site(object):
 
@@ -67,7 +71,7 @@ class Site(object):
         Return dictionary of site data
         """
         site_data = read_data(self._basedir, [], site_layout.SITE_META_DIR, site_layout.SITE_META_FILE)
-        site_data["title"]       = site_data.get("rdfs:label", "Annalist linked data journal")
+        site_data["title"]       = site_data.get("rdfs:label", message.SITE_NAME_DEFAULT)
         site_data["collections"] = self.collections_dict()
         return site_data
 
@@ -93,6 +97,10 @@ class SiteView(AnnalistGenericView):
         super(SiteView, self).__init__()
         return
 
+    def site_data(self):
+        site = Site(self.get_request_uri(), os.path.join(settings.BASE_DATA_DIR, site_layout.SITE_DIR))
+        return site.site_data()
+
     # GET
 
     def get(self, request):
@@ -100,13 +108,10 @@ class SiteView(AnnalistGenericView):
         Create a rendering of the current site home page, containing (among other things)
         a list of defined collections.
         """
-        def resultdata():
-            site = Site(self.get_request_uri(), os.path.join(settings.BASE_DATA_DIR, site_layout.SITE_DIR))
-            return site.site_data()
         return (
             # self.authenticate() or 
             self.authorize("GET") or 
-            self.render_html(resultdata(), 'annalist_site.html') or 
+            self.render_html(self.site_data(), 'annalist_site.html') or 
             self.error(self.error406values())
             )
 
@@ -123,22 +128,31 @@ class SiteView(AnnalistGenericView):
             if collections:
                 # Get user to confirm action before actually doing it
                 return ConfirmView.render_form(request,
-                    action_description= "Remove collections %s"%(", ".join(collections)),
+                    action_description= message.REMOVE_COLLECTIONS%(", ".join(collections)),
                     action_params=      request.POST,
                     complete_action=    'AnnalistSiteActionView',
-                    cancel_action=      'AnnalistSiteView'
+                    cancel_action=      'AnnalistSiteView',
+                    title=              self.site_data()["title"]
                     )
             else:
                 return HttpResponseRedirect(request.get_request_uri())
         if request.POST.get("new", None):
             # Create new collection with name and label supplied
+            new_id    = request.POST["new_id"]
+            new_label = request.POST["new_label"]
+            log.info("New collection %s: %s"%(new_id, new_label))
+            if not new_id:
+                return self.redirect_error("AnnalistSiteView", message.MISSING_COLLECTION_ID)
+            if not valid_id(new_id):
+                return self.redirect_error("AnnalistSiteView", message.INVALID_COLLECTION_ID%(new_id))
+            # Create new collection with name and label supplied
             # @@TODO
-            pass
+            return HttpResponseRedirect(reverse("AnnalistSiteView"))
         return self.error(self.error400values())
 
 class SiteActionView(AnnalistGenericView):
     """
-    View class to completion of confirmed action from site view
+    View class to perform completion of confirmed action requested from site view
     """
     def __init__(self):
         super(SiteActionView, self).__init__()
@@ -152,11 +166,7 @@ class SiteActionView(AnnalistGenericView):
         """
         log.info("site.post: %r"%(request.POST))
         if request.POST.get("remove", None):
-            log.info("Complete remove....")
-            # @@TODO
-        elif request.POST.get("new", None):
-            log.info("Complete new....")
-            # Create new collection with name and label supplied
+            log.info("Complete remove %r"%(request.POST.getlist("select")))
             # @@TODO
         else:
             return self.error(self.error400values())
