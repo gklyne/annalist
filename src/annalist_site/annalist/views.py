@@ -30,8 +30,9 @@ from django.conf import settings
 
 import oauth2.views
 
-from annalist                     import message
-from utils.ContentNegotiationView import ContentNegotiationView
+from annalist                       import message
+from annalist                       import layout
+from utils.ContentNegotiationView   import ContentNegotiationView
 
 LOGIN_URIS = None
 
@@ -44,6 +45,8 @@ class AnnalistGenericView(ContentNegotiationView):
 
     def __init__(self):
         super(AnnalistGenericView, self).__init__()
+        self._sitebaseuri = reverse("AnnalistHomeView") 
+        self._sitebasedir = os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR)
         ## self.credential = None
         return
 

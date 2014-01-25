@@ -44,27 +44,12 @@ class Site(object):
         self._basedir = sitebasedir if sitebasedir.endswith("/") else sitebasedir+"/"
         return
 
-    def collections(self):
-        """
-        Generator enumerates and returns collection descriptions that are part of a site.
-        """
-        site_files   = os.listdir(self._basedir)
-        for f in site_files:
-            p = util.entity_path(self._basedir, [f, layout.COLL_META_DIR], layout.COLL_META_FILE)
-            d = util.read_entity(p)
-            if d:
-                d["id"]    = f
-                d["uri"]   = urlparse.urljoin(self._baseuri, f)
-                d["title"] = d.get("rdfs:label", "Collection "+f)
-                yield d
-        return
-
     def collections_dict(self):
         """
-        Return a dictionary of collection URIs indexed by collection id
+        Return an ordered dictionary of collection URIs indexed by collection id
         """
         coll = collections.OrderedDict()
-        for c in self.collections():
+        for c in Collection.collections(self):
             coll[c["id"]] = c
         return coll
 
@@ -91,8 +76,19 @@ class Site(object):
 
         returns a Collection object for the newly created collection.
         """
-        c = Collection.create(coll_id, coll_meta, self._baseuri, self._basedir)
+        c = Collection.create(coll_id, coll_meta, self)
         return c
+
+    def remove_collection(self, coll_id):
+        """
+        Remove a collection from the site data.
+
+        coll_id     identifier for the collection to remove.
+
+        Returns a non-False status code if the collection is not removed.
+        """
+        log.info("remove_collection: %s"%(coll_id))
+        return Collection.remove(coll_id, self)
 
 class SiteView(AnnalistGenericView):
     """
@@ -100,9 +96,7 @@ class SiteView(AnnalistGenericView):
     """
     def __init__(self):
         super(SiteView, self).__init__()
-        self._site      = Site(
-            reverse("AnnalistHomeView"), 
-            os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR))
+        self._site      = Site(self._sitebaseuri, self._sitebasedir)
         self._site_data = None
         return
 
@@ -166,6 +160,7 @@ class SiteActionView(AnnalistGenericView):
     """
     def __init__(self):
         super(SiteActionView, self).__init__()
+        self._site = Site(self._sitebaseuri, self._sitebasedir)
         return
 
     # POST
@@ -174,10 +169,14 @@ class SiteActionView(AnnalistGenericView):
         """
         Process options to complete action to add or remove a collection
         """
+        log.warning("@@TODO: Delete collection: POST <site-uri> should be DELETE <collection-uri>")
         log.info("site.post: %r"%(request.POST))
         if request.POST.get("remove", None):
             log.info("Complete remove %r"%(request.POST.getlist("select")))
-            # @@TODO
+            for coll_id in request.POST.getlist("select"):
+                err = self._site.remove_collection(coll_id)
+                if err:
+                    return self.redirect_error("AnnalistSiteView", str(err))
         else:
             return self.error(self.error400values())
         return HttpResponseRedirect(reverse("AnnalistSiteView"))

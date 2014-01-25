@@ -8,6 +8,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import os.path
+import urlparse
+import shutil
 
 import logging
 log = logging.getLogger(__name__)
@@ -16,6 +18,7 @@ from django.conf import settings
 
 from annalist               import util
 from annalist               import layout
+from annalist.exceptions    import Annalist_Error
 from annalist.identifiers   import ANNAL
 
 # from annalist.recordtype    import RecordType
@@ -23,42 +26,96 @@ from annalist.identifiers   import ANNAL
 
 class Collection(object):
 
+    # @@TODO: currently association of a collection with a site is by physical location
+    #         which means a collection cannot exist in more than one site.  Later developments
+    #         may want to review this.
+
     @staticmethod
-    def create(coll_id, coll_meta, sitebaseuri, sitebasedir):
+    def collections(site):
         """
-        Class method creates a new collection, saving its details to disk
+        Generator enumerates and returns collection descriptions that are part of a site.
+
+        site            Site object containing collections to enumerate.
+        """
+        site_files   = os.listdir(site._basedir)
+        for f in site_files:
+            p = util.entity_path(site._basedir, [f, layout.COLL_META_DIR], layout.COLL_META_FILE)
+            d = util.read_entity(p)
+            if d:
+                d["id"]    = f
+                d["uri"]   = urlparse.urljoin(site._baseuri, f)
+                d["title"] = d.get("rdfs:label", "Collection "+f)
+                yield d
+        return
+
+    @staticmethod
+    def exists(coll_id, site):
+        """
+        Method tests for existence of identified collection in site.
+
+        site            Site object containing collections to test.
+
+        Returns True if the collection exists, as determined by existence of the 
+        collection description metadata file.
+        """
+        log.info("Colllection.exists: id %s"%(coll_id))
+        p = util.entity_path(site._basedir, [coll_id, layout.COLL_META_DIR], layout.COLL_META_FILE)
+        return (p != None) and os.path.isfile(p)
+
+    @staticmethod
+    def create(coll_id, coll_meta, site):
+        """
+        Method creates a new collection in a site, saving its details to disk
+
+        coll_id         identifier for new collection
+        coll_meta       description metadata about the new collection
+        site            Site object that will hold the created collection.
         """
         log.info("Colllection.create: id %s, meta %r"%(coll_id, coll_meta))
-        baseuri = sitebaseuri+coll_id
-        basedir = sitebasedir+coll_id
-        c = Collection(baseuri, basedir)
-        c.set_id(coll_id)
+        c = Collection(coll_id, site)
         c.set_values(coll_meta)
         c.save()
         return c
 
-    def __init__(self, baseuri, basedir):
+    @staticmethod
+    def remove(coll_id, site):
+        """
+        Method removes a collection, deleting its details and data from disk
+
+        coll_id     the collection identifier of the collection
+        site        Site object for site where collection currently resides
+
+        Returns None on sucess, of a status value indicating a reason for value.
+        """
+        log.info("Colllection.remove: id %s"%(coll_id))
+        if Collection.exists(coll_id, site):
+            c = Collection(coll_id, site)
+            d = c._basedir
+            if d.startswith(site._basedir):
+                shutil.rmtree(d)
+            else:
+                raise Annalist_Error("Collection %s unexpected base dir %s"%(coll_id, d))
+        else:
+            return Annalist_Error("Collection %s not found"%(coll_id))
+        return None
+
+    def __init__(self, coll_id, site):
         """
         Initialize a new Collection object.  A collectiion Id and values must be 
         set before the collection can be used.
 
-        baseuri     the base URI of the site
-        basedir     the base dictionary for site information
-        """
-        self._baseuri = baseuri if baseuri.endswith("/") else baseuri+"/"
-        self._basedir = basedir if basedir.endswith("/") else basedir+"/"
-        self._id      = None
-        self._values  = None
-        log.info("Colllection.__init__: base URI %s, base dir %s"%(self._baseuri, self._basedir))
-        return
-
-    def set_id(self, coll_id):
-        """
-        Set or update identifier (slug) for a collection
+        coll_id     the collection identifier for the collection
+        site        Site object in which holds the collection
         """
         if not util.valid_id(coll_id):
             raise ValueError("Invalid colllection identifier: %s"%(coll_id))
-        self._id = coll_id
+        baseuri = site._baseuri+coll_id
+        basedir = site._basedir+coll_id
+        self._baseuri = baseuri if baseuri.endswith("/") else baseuri+"/"
+        self._basedir = basedir if basedir.endswith("/") else basedir+"/"
+        self._id      = coll_id
+        self._values  = None
+        log.info("Colllection.__init__: base URI %s, base dir %s"%(self._baseuri, self._basedir))
         return
 
     def get_id(self):
@@ -145,5 +202,9 @@ class Collection(object):
 #             self.render_html(resultdata(), 'annalist_collection.html') or 
 #             self.error(self.error406values())
 #             )
+
+#     # POST
+
+#     # DELETE
 
 # End.
