@@ -73,8 +73,7 @@ class ContentNegotiationView(generic.View):
             </body>
             </html>
             """ % values
-        # @@TODO: with Django 1.6, can also set reason string
-        return HttpResponse(responsebody, status=values['status'])
+        return HttpResponse(responsebody, status=values['status'], reason=values['reason'])
 
     def errorvalues(self, status, reason, message):
         return (

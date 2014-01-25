@@ -22,11 +22,12 @@ from django.conf                import settings
 from django.core.urlresolvers   import resolve, reverse
 
 from annalist               import message
-from annalist               import layout as site_layout
+from annalist               import layout
+from annalist.exceptions    import Annalist_Error, EntityNotFound_Error
 from annalist.collection    import Collection
 from annalist.views         import AnnalistGenericView
 from annalist.confirmview   import ConfirmView
-from annalist.util          import valid_id, read_data
+from annalist               import util
 
 
 class Site(object):
@@ -49,7 +50,8 @@ class Site(object):
         """
         site_files   = os.listdir(self._basedir)
         for f in site_files:
-            d = read_data(self._basedir, f, site_layout.COLL_META_DIR, site_layout.COLL_META_FILE)
+            p = util.entity_path(self._basedir, [f, layout.COLL_META_DIR], layout.COLL_META_FILE)
+            d = util.read_entity(p)
             if d:
                 d["id"]    = f
                 d["uri"]   = urlparse.urljoin(self._baseuri, f)
@@ -70,7 +72,10 @@ class Site(object):
         """
         Return dictionary of site data
         """
-        site_data = read_data(self._basedir, [], site_layout.SITE_META_DIR, site_layout.SITE_META_FILE)
+        p = util.entity_path(self._basedir, layout.SITE_META_DIR, layout.SITE_META_FILE)
+        if not (p and os.path.exists(p)):
+            raise EntityNotFound_Error(p)
+        site_data = util.read_entity(p)
         site_data["title"]       = site_data.get("rdfs:label", message.SITE_NAME_DEFAULT)
         site_data["collections"] = self.collections_dict()
         return site_data
@@ -95,11 +100,16 @@ class SiteView(AnnalistGenericView):
     """
     def __init__(self):
         super(SiteView, self).__init__()
+        self._site      = Site(
+            reverse("AnnalistHomeView"), 
+            os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR))
+        self._site_data = None
         return
 
     def site_data(self):
-        site = Site(self.get_request_uri(), os.path.join(settings.BASE_DATA_DIR, site_layout.SITE_DIR))
-        return site.site_data()
+        if not self._site_data:
+            self._site_data = self._site.site_data()
+        return self._site_data
 
     # GET
 
@@ -135,7 +145,7 @@ class SiteView(AnnalistGenericView):
                     title=              self.site_data()["title"]
                     )
             else:
-                return HttpResponseRedirect(request.get_request_uri())
+                return HttpResponseRedirect(reverse("AnnalistSiteView"))
         if request.POST.get("new", None):
             # Create new collection with name and label supplied
             new_id    = request.POST["new_id"]
@@ -143,11 +153,11 @@ class SiteView(AnnalistGenericView):
             log.info("New collection %s: %s"%(new_id, new_label))
             if not new_id:
                 return self.redirect_error("AnnalistSiteView", message.MISSING_COLLECTION_ID)
-            if not valid_id(new_id):
+            if not util.valid_id(new_id):
                 return self.redirect_error("AnnalistSiteView", message.INVALID_COLLECTION_ID%(new_id))
             # Create new collection with name and label supplied
-            # @@TODO
-            return HttpResponseRedirect(reverse("AnnalistSiteView"))
+            self._site.add_collection(new_id, request.POST)
+            return self.redirect_info("AnnalistSiteView", message.CREATED_COLLECTION_ID%(new_id))
         return self.error(self.error400values())
 
 class SiteActionView(AnnalistGenericView):

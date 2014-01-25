@@ -118,6 +118,18 @@ th {
     font-style: italic;
 }
 
+.info-head {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: x-large;
+    color: green;
+}
+
+.info-message {
+    font-family: Georgia, serif;
+    font-size: medium;
+    color: green;
+}
+
 .error-head {
     font-family: Verdana, Geneva, sans-serif;
     font-size: x-large;
@@ -129,3 +141,4 @@ th {
     font-size: medium;
     color: red;
 }
+

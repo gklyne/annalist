@@ -10,9 +10,15 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
+import os
 import os.path
+import errno
 import urlparse
 import json
+
+from django.conf import settings
+
+from annalist.identifiers import ANNAL
 
 def valid_id(id):
     """
@@ -97,37 +103,102 @@ def slug_from_uri(uri):
     """
     return slug_from_path(urlparse.urlsplit(uri).path)
 
-def read_data(base_dir, path, data_dir, data_file):
+def ensure_dir(dirname):
     """
-    Read (meta)data record and return as dictionary, or `None` if no data
-    resource is present.
+    Ensure that a named directory exists; if it does not, attempt to create it.
+    """
+    try:
+        os.makedirs(dirname)
+    except OSError, e:
+        if e.errno != errno.EEXIST:
+            raise
+    return
+
+def entity_dir_path(base_dir, path, filename):
+    """
+    Assemble full entity description directory and file names from supplied components.
 
     base_dir    is the fully qualified base directory for the site or collection
                 from which data is to be read
     path        is a relative path or list of path segments within the site or 
                 resource for the site or collection from which data is to be read.
                 This value may be absent.
-    data_dir    is a subdirectory from which data is to be read; also used as sentinel
-                to indicate presence of the desired data: if it does not exist as a
-                directory, None is returned.
-    data_file   is a file name for the data resource to be read.  If the file does not 
-                exist or has malformed content, an exception is raised.
+    filename    is a file name for the data resource to be read.
+
+    Returns a pair containing the full directory and path names for the entity file.
     """
-    log.info("read_data %s, %r, %s, %s"%(base_dir, path, data_dir, data_file))
+    log.info("entity_dir_path %s, %r, %s"%(base_dir, path, filename))
     if path:
         if isinstance(path, (list, tuple)):
-            p = os.path.join(base_dir, *path)
+            d = os.path.join(base_dir, *path)
         else:
-            p = os.path.join(base_dir, path)
+            d = os.path.join(base_dir, path)
     else:
-        p = base_dir
-    if os.path.isdir(p):
-        p2 = os.path.join(p, data_dir)
-        if os.path.isdir(p2):
-            p3 = os.path.join(p2, data_file)
-            with open(p3, "r") as f:
-                return json.load(f)
+        d = base_dir
+    return (d, os.path.join(d, filename))
+
+def entity_path(base_dir, path, filename):
+    """
+    Assemble full entity description file names from supplied components.
+
+    base_dir    is the fully qualified base directory for the site or collection
+                from which data is to be read
+    path        is a relative path or list of path segments within the site or 
+                resource for the site or collection from which data is to be read.
+                This value may be absent.
+    filename    is a file name for the data resource to be read.
+
+    Returns the full path name for the entity file if the intermediate directories 
+    all exist, otherwise None if any directories are missing.  No test is made for 
+    existence of the filename.
+    """
+    (d, p) = entity_dir_path(base_dir, path, filename)
+    if d and os.path.isdir(d):
+        return p
     return None
+
+def read_entity(filename):
+    """
+    Read metadata or entity record and return as dictionary, or `None` if no data
+    resource is present.
+
+    filename    a full path name to the entity description to read.  If the file 
+                does not exist or has malformed content, an exception is raised.
+                If the supplied filename is None then None is returned.
+
+    returns a dictionary value with data from the named file, and possibly some 
+    additional details.
+    """
+    log.info("read_entity %s"%(filename))
+    if filename:
+        with open(filename, "r") as f:
+            return json.load(f)
+    return None
+
+def write_entity(filename, ref, values, entityid=None, entitytype=None):
+    """
+    Write a description of an entity to a named file.
+
+    filename    name of file to receive contents
+    ref         reference to entity described (may be relative)
+    entityid    local identifier (slug) for the described identity
+    entitytype  primary type identifier of the described entity
+    values      a dictionary value that populates the entity description
+
+    @@TODO: think about capturing provenance metadata too.
+    """
+    values = values.copy()
+    values["@id"] = ref
+    if entityid:
+        values[ANNAL.CURIE.id]   = entityid
+    if entitytype:
+        values[ANNAL.CURIE.type] = entitytype
+    # Next is partial protection against code errors
+    fullpath = os.path.join(settings.SITE_SRC_ROOT, filename)
+    assert fullpath.startswith(settings.SITE_SRC_ROOT), "Attempt to create entity file outside Annalist site tree"
+    with open(fullpath, "wt") as entity_io:
+        json.dump(values, entity_io)
+    return fullpath
 
 if __name__ == "__main__":
     import doctest

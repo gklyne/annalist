@@ -16,6 +16,7 @@ from django.conf import settings
 
 from annalist               import util
 from annalist               import layout
+from annalist.identifiers   import ANNAL
 
 # from annalist.recordtype    import RecordType
 # from annalist.views         import AnnalistGenericView
@@ -27,6 +28,7 @@ class Collection(object):
         """
         Class method creates a new collection, saving its details to disk
         """
+        log.info("Colllection.create: id %s, meta %r"%(coll_id, coll_meta))
         baseuri = sitebaseuri+coll_id
         basedir = sitebasedir+coll_id
         c = Collection(baseuri, basedir)
@@ -37,16 +39,17 @@ class Collection(object):
 
     def __init__(self, baseuri, basedir):
         """
-        Initialize a Collection object
+        Initialize a new Collection object.  A collectiion Id and values must be 
+        set before the collection can be used.
 
         baseuri     the base URI of the site
         basedir     the base dictionary for site information
-        coll_meta   a dictionary providing additional metadata about the collection
         """
         self._baseuri = baseuri if baseuri.endswith("/") else baseuri+"/"
         self._basedir = basedir if basedir.endswith("/") else basedir+"/"
-        self._id      = util.slug_from_uri(self._baseuri[:-1])
-        self._values  = {}
+        self._id      = None
+        self._values  = None
+        log.info("Colllection.__init__: base URI %s, base dir %s"%(self._baseuri, self._basedir))
         return
 
     def set_id(self, coll_id):
@@ -69,8 +72,24 @@ class Collection(object):
         return
 
     def get_values(self):
-        return self._values.copy().update({ '_id': self._id })
+        """
+        Return collection metadata values
+        """
+        return self._values
 
+    def save(self):
+        if not self._id:
+            raise ValueError("Collection.save without defined collection id")
+        if not self._values:
+            raise ValueError("Collection.save without defined collection metadata")
+        (coll_meta_dir,coll_meta_file) = util.entity_dir_path(
+            self._basedir, layout.COLL_META_DIR, layout.COLL_META_FILE)
+        util.ensure_dir(coll_meta_dir)
+        util.write_entity(coll_meta_file, "../", self._values, 
+            entityid=self._id, entitytype=ANNAL.CURIE.Collection)
+        return
+
+    # @@TODO...
     def record_types(self):
         """
         Generator enumerates and returns record types that may be stored

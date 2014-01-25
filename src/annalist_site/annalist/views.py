@@ -30,8 +30,8 @@ from django.conf import settings
 
 import oauth2.views
 
-from utils.ContentNegotiationView import ContentNegotiationView
 from annalist                     import message
+from utils.ContentNegotiationView import ContentNegotiationView
 
 LOGIN_URIS = None
 
@@ -44,13 +44,28 @@ class AnnalistGenericView(ContentNegotiationView):
 
     def __init__(self):
         super(AnnalistGenericView, self).__init__()
-        self.credential = None
+        ## self.credential = None
         return
 
     def error(self, values):
+        """
+        Construct HTTP error response.
+
+        This is an application-specific override of a method defined 
+        in ContentNegotiationView.
+        """
         template = loader.get_template('annalist_error.html')
         context  = RequestContext(self.request, values)
-        return HttpResponse(template.render(context), status=values['status'])
+        return HttpResponse(template.render(context), status=values['status'], reason=values['reason'])
+
+    def redirect_info(self, viewname, info_message=None, info_head=message.ACTION_COMPLETED):
+        """
+        Redirect to a specified view with an information/confirmation message for display
+
+        (see templates/base_generic.html for display details)
+        """
+        redirect_uri = reverse(viewname)+"?info_head=%s&info_message=%s"%(info_head, info_message)
+        return HttpResponseRedirect(redirect_uri)
 
     def redirect_error(self, viewname, error_message=None, error_head=message.INPUT_ERROR):
         """
@@ -111,7 +126,16 @@ class AnnalistGenericView(ContentNegotiationView):
 
     @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
     def render_html(self, resultdata, template_name):
-        resultdata["error_head"]    = self.request.GET.get("error_head",      message.INPUT_ERROR) 
+        """
+        Construct an HTML response based on supplied data and template name.
+
+        Also contains logic to interpolate message values from the incoming URI,
+        for error and confirmation message displays.  These additional message
+        displays are commonly handled by the "base_generic.html" underlay template.
+        """
+        resultdata["info_head"]     = self.request.GET.get("info_head",      message.ACTION_COMPLETED) 
+        resultdata["info_message"]  = self.request.GET.get("info_message",   None)
+        resultdata["error_head"]    = self.request.GET.get("error_head",     message.INPUT_ERROR) 
         resultdata["error_message"] = self.request.GET.get("error_message",  None)
         template  = loader.get_template(template_name)
         context   = RequestContext(self.request, resultdata)

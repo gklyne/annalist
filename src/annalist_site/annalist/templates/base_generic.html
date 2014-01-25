@@ -44,6 +44,17 @@
     <hr/>
 {% endif %}
 
+{% if info_message %}
+    <hr/>
+    <div class="info-head">
+        {{info_head}}
+    </div>
+    <div class="info-message">
+        {{info_message}}
+    </div>
+    <hr/>
+{% endif %}
+
 {% block content %}
     <div class="content-head">
         Content heading
