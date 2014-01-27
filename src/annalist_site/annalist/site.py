@@ -114,7 +114,7 @@ class SiteView(AnnalistGenericView):
         """
         return (
             # self.authenticate() or 
-            self.authorize("GET") or 
+            self.authorize("VIEW") or 
             self.render_html(self.site_data(), 'annalist_site.html') or 
             self.error(self.error406values())
             )
@@ -131,15 +131,21 @@ class SiteView(AnnalistGenericView):
             log.info("collections: "+repr(collections))
             if collections:
                 # Get user to confirm action before actually doing it
-                return ConfirmView.render_form(request,
-                    action_description= message.REMOVE_COLLECTIONS%(", ".join(collections)),
-                    action_params=      request.POST,
-                    complete_action=    'AnnalistSiteActionView',
-                    cancel_action=      'AnnalistSiteView',
-                    title=              self.site_data()["title"]
+                return (
+                    self.authorize("DELETE") or
+                    ConfirmView.render_form(request,
+                        action_description= message.REMOVE_COLLECTIONS%(", ".join(collections)),
+                        action_params=      request.POST,
+                        complete_action=    'AnnalistSiteActionView',
+                        cancel_action=      'AnnalistSiteView',
+                        title=              self.site_data()["title"]
+                        )
                     )
             else:
-                return HttpResponseRedirect(reverse("AnnalistSiteView"))
+                return self.redirect_info(
+                    "AnnalistSiteView", message.NO_COLLECTIONS_SELECTED,
+                    info_head=message.NO_ACTION_PERFORMED
+                    )
         if request.POST.get("new", None):
             # Create new collection with name and label supplied
             new_id    = request.POST["new_id"]
@@ -150,6 +156,9 @@ class SiteView(AnnalistGenericView):
             if not util.valid_id(new_id):
                 return self.redirect_error("AnnalistSiteView", message.INVALID_COLLECTION_ID%(new_id))
             # Create new collection with name and label supplied
+            auth_required = self.authorize("CREATE")
+            if auth_required:
+                return auth_required
             self._site.add_collection(new_id, request.POST)
             return self.redirect_info("AnnalistSiteView", message.CREATED_COLLECTION_ID%(new_id))
         return self.error(self.error400values())
@@ -173,10 +182,18 @@ class SiteActionView(AnnalistGenericView):
         log.info("site.post: %r"%(request.POST))
         if request.POST.get("remove", None):
             log.info("Complete remove %r"%(request.POST.getlist("select")))
-            for coll_id in request.POST.getlist("select"):
+            auth_required = self.authorize("DELETE")
+            if auth_required:
+                return auth_required
+            coll_ids = request.POST.getlist("select")
+            for coll_id in coll_ids:
                 err = self._site.remove_collection(coll_id)
                 if err:
                     return self.redirect_error("AnnalistSiteView", str(err))
+            return self.redirect_info(
+                "AnnalistSiteView", 
+                message.COLLECTIONS_REMOVED%(", ".join(coll_ids))
+                )
         else:
             return self.error(self.error400values())
         return HttpResponseRedirect(reverse("AnnalistSiteView"))

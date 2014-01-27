@@ -112,19 +112,19 @@ class AnnalistGenericView(ContentNegotiationView):
     def authorize(self, scope):
         """
         Return None if user is authorized to perform the requested operation,
-        otherwise appropriate 403 Forbidden response.  May be called with or 
-        without an authenticated user.
+        otherwise appropriate 401 Authorization Required or 403 Forbidden response.
+        May be called with or without an authenticated user.
 
         scope       indication of the operation  requested to be performed.
                     e.g. "VIEW", "CREATE", "UPDATE", "DELETE", ...
 
-        @@TODO interface details; scope at least will be needed.  
+        @@TODO proper authorization framework
 
         For now, require authentication for anything other than VIEW scope.
         """
         if scope != "VIEW":
             if not self.request.user.is_authenticated():
-                return self.error(self.error403values())
+                return self.error(self.error401values())
         return None
 
     @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
@@ -140,9 +140,12 @@ class AnnalistGenericView(ContentNegotiationView):
         resultdata["info_message"]  = self.request.GET.get("info_message",   None)
         resultdata["error_head"]    = self.request.GET.get("error_head",     message.INPUT_ERROR) 
         resultdata["error_message"] = self.request.GET.get("error_message",  None)
+        resultdata["auth_create"]   = self.authorize("CREATE") is None
+        resultdata["auth_update"]   = self.authorize("UPDATE") is None
+        resultdata["auth_delete"]   = self.authorize("DELETE") is None
         template  = loader.get_template(template_name)
         context   = RequestContext(self.request, resultdata)
-        log.info("render_html - data: %r"%(resultdata))
+        log.debug("render_html - data: %r"%(resultdata))
         return HttpResponse(template.render(context))
 
     # Default view methods return 405 Forbidden

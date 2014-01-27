@@ -11,10 +11,13 @@ log = logging.getLogger(__name__)
 
 SITE_NAME_DEFAULT       = "Annalist linked data journal"
 ACTION_COMPLETED        = "Action completed"
+NO_ACTION_PERFORMED     = "No action performed"
 INPUT_ERROR             = "Problem with input value"
 MISSING_COLLECTION_ID   = "Missing identifier for new collection"
 INVALID_COLLECTION_ID   = "Invalid identifier for new collection: '%s'"
-REMOVE_COLLECTIONS      = "Remove collections %s"
 CREATED_COLLECTION_ID   = "Created new collection: '%s'"
+REMOVE_COLLECTIONS      = "Remove collection(s): %s"
+NO_COLLECTIONS_SELECTED = "No collections selected for removal"
+COLLECTIONS_REMOVED     = "The following collections were removed: %s"
 
 # End.

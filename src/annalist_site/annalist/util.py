@@ -127,7 +127,7 @@ def entity_dir_path(base_dir, path, filename):
 
     Returns a pair containing the full directory and path names for the entity file.
     """
-    log.info("entity_dir_path %s, %r, %s"%(base_dir, path, filename))
+    log.debug("entity_dir_path %s, %r, %s"%(base_dir, path, filename))
     if path:
         if isinstance(path, (list, tuple)):
             d = os.path.join(base_dir, *path)
@@ -187,6 +187,7 @@ def write_entity(filename, ref, values, entityid=None, entitytype=None):
 
     @@TODO: think about capturing provenance metadata too.
     """
+    log.info("write_entity: filename %s, id %s, type %s"%(filename, entityid, entitytype))
     values = values.copy()
     values["@id"] = ref
     if entityid:

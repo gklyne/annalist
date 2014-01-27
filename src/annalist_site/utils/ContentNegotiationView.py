@@ -122,7 +122,7 @@ class ContentNegotiationView(generic.View):
 
     def error401values(self):
         return self.errorvalues(401, "Unauthorized",
-            "Resource %(request_uri)s requires authentication for access"
+            "Resource %(request_uri)s requires authentication for %(method)s access"
             )
 
     def error402values(self):
@@ -131,7 +131,7 @@ class ContentNegotiationView(generic.View):
             )
 
     def error403values(self):
-        return self.errorvalues(401, "Forbidden", 
+        return self.errorvalues(403, "Forbidden", 
             "Forbidden %(method)s access to resource %(request_uri)s"
             )
 

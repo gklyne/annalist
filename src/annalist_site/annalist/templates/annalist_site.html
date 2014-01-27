@@ -9,7 +9,7 @@
         Collections
     </div>
     <div class="content-body">
-        <form method="POST" action="">
+        <form method="POST" action="./">
             {% csrf_token %}
             <table>
                 <tr>
@@ -20,19 +20,25 @@
                     <tr>
                         <td><a href="{{v.uri}}">{{c}}</a></td>
                         <td>{{v.title}}</td>
+                        {% if auth_delete %}
                         <td><input type="checkbox" name="select" value="{{c}}" /></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td><input type="submit" value="Remove selected" name="remove"></td>
-                </tr>
-                <tr>
-                    <td><input type="text" size="16" name="new_id" value=""/></td>
-                    <td><input type="text" size="64" name="new_label" value=""/></td>
-                    <td><input type="submit" value="New collection" name="new"></td>
-                </tr>
+                {% if auth_delete %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td><input type="submit" value="Remove selected" name="remove"></td>
+                    </tr>
+                {% endif %}
+                {% if auth_create %}
+                    <tr>
+                        <td><input type="text" size="16" name="new_id" value=""/></td>
+                        <td><input type="text" size="64" name="new_label" value=""/></td>
+                        <td><input type="submit" value="New collection" name="new"></td>
+                    </tr>
+                {% endif %}
             </table>
         </form>
     </div>
