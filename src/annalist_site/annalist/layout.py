@@ -6,6 +6,8 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import os.path
+
 import logging
 log = logging.getLogger(__name__)
 
@@ -76,5 +78,20 @@ LIST_META_DIR   = COLL_META_DIR + "/lists"
 LIST_META_FILE  = LIST_META_DIR + "%(list_id)s/list_meta.lsonld"
 
 # and more...
+
+class Layout(object):
+    """
+    A dynamically created layout value with paths that are dynamnically constructed 
+    using a supplied base directory.
+    """
+
+    def __init__(self, base_data_dir):
+        """
+        Dynamically initialize a layout value
+        """
+        self.BASE_DIR  = base_data_dir
+        self.SITE_DIR  = SITE_DIR
+        self.SITE_PATH = os.path.join(base_data_dir, SITE_DIR)
+        return
 
 # End.

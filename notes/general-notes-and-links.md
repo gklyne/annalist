@@ -11,7 +11,7 @@
 
 ## Testing
 
-* https://factoryboy.readthedocs.org/
+* https://factoryboy.readthedocs.org/ (model mock)
 
 ## Auth
 

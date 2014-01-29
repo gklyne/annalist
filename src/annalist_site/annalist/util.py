@@ -126,6 +126,19 @@ def entity_dir_path(base_dir, path, filename):
     filename    is a file name for the data resource to be read.
 
     Returns a pair containing the full directory and path names for the entity file.
+
+    >>> entity_dir_path("/base/dir/","sub","file.ext")
+    ('/base/dir/sub', '/base/dir/sub/file.ext')
+    >>> entity_dir_path("/base/dir/",["sub"],"file.ext")
+    ('/base/dir/sub', '/base/dir/sub/file.ext')
+    >>> entity_dir_path("/base/dir/",[],"file.ext")
+    ('/base/dir/', '/base/dir/file.ext')
+    >>> entity_dir_path("/base/dir/",["sub1","sub2"],"file.ext")
+    ('/base/dir/sub1/sub2', '/base/dir/sub1/sub2/file.ext')
+    >>> entity_dir_path("/base/dir",["sub"],"file.ext")
+    ('/base/dir/sub', '/base/dir/sub/file.ext')
+    >>> entity_dir_path("/base/dir",[],"file.ext")
+    ('/base/dir', '/base/dir/file.ext')
     """
     log.debug("entity_dir_path %s, %r, %s"%(base_dir, path, filename))
     if path:
@@ -151,6 +164,11 @@ def entity_path(base_dir, path, filename):
     Returns the full path name for the entity file if the intermediate directories 
     all exist, otherwise None if any directories are missing.  No test is made for 
     existence of the filename.
+
+    >>> entity_path('.',[],"file.ext")
+    './file.ext'
+    >>> entity_path('.',["nopath"],"file.ext") is None
+    True
     """
     (d, p) = entity_dir_path(base_dir, path, filename)
     if d and os.path.isdir(d):
@@ -169,7 +187,7 @@ def read_entity(filename):
     returns a dictionary value with data from the named file, and possibly some 
     additional details.
     """
-    log.info("read_entity %s"%(filename))
+    log.debug("read_entity %s"%(filename))
     if filename:
         with open(filename, "r") as f:
             return json.load(f)

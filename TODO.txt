@@ -8,7 +8,7 @@
    / form elements to delete collection
    / include supporting logic in Collection module
    / rework authentication/authorization to allow unauthenticated access for public data 
-   - test cases for site, collection, site views
+   - test cases for site, collection, site views; refecactor tests to separate directory, modules
    - move util.py to utils package, and rename
 2. Collection initial display
    - determine base configuration/metadata needed

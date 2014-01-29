@@ -6,6 +6,7 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import os
 import os.path
 import json
 import random
@@ -13,11 +14,15 @@ import logging
 import uuid
 import copy
 
+#import rdflib
+import httplib2
+
+# Needed when importing django.views.generic - default to development settings
+if 'DJANGO_SETTINGS_MODULE' not in os.environ:
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'annalist_site.settings.devel'
+
 import logging
 log = logging.getLogger(__name__)
-
-import rdflib
-import httplib2
 
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect

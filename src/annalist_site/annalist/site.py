@@ -39,7 +39,7 @@ class Site(object):
         sitebaseuri     the base URI of the site
         sitebasedir     the base dictionary for site information
         """
-        log.info("Site init: %s"%(sitebasedir))
+        log.debug("Site init: %s"%(sitebasedir))
         self._baseuri = sitebaseuri if sitebaseuri.endswith("/") else sitebaseuri+"/"
         self._basedir = sitebasedir if sitebasedir.endswith("/") else sitebasedir+"/"
         return
