@@ -205,7 +205,7 @@ def write_entity(filename, ref, values, entityid=None, entitytype=None):
 
     @@TODO: think about capturing provenance metadata too.
     """
-    log.info("write_entity: filename %s, id %s, type %s"%(filename, entityid, entitytype))
+    log.debug("write_entity: filename %s, id %s, type %s"%(filename, entityid, entitytype))
     values = values.copy()
     values["@id"] = ref
     if entityid:

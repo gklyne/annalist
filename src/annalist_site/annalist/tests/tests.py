@@ -32,8 +32,8 @@ def createSiteData(src, tgt):
     tgt     target directory in which the site data is created
     """
     # Confirm existence of target directory
-    log.info("createSiteData: src %s"%(src))
-    log.info("createSiteData: tgt %s"%(tgt))
+    log.debug("createSiteData: src %s"%(src))
+    log.debug("createSiteData: tgt %s"%(tgt))
     assert os.path.exists(src), "Check source directory (%s)"%(src)
     assert tgt.startswith(TestBaseDir)
     shutil.rmtree(tgt, ignore_errors=True)
@@ -43,12 +43,12 @@ def createSiteData(src, tgt):
     return tgt
 
 def init_annalist_test_site():
-    log.info("init_annalist_test_site")
+    log.debug("init_annalist_test_site")
     createSiteData(settings.SITE_SRC_ROOT+"/test/init/"+test_layout.SITE_DIR, TestBaseDir)
     return
 
 def load_tests(loader, tests, ignore):
-    log.info("load_tests")
+    log.debug("load_tests")
     #init_annalist_test_site()
     # See http://stackoverflow.com/questions/2380527/django-doctests-in-views-py
     tests.addTests(doctest.DocTestSuite(annalist.util))

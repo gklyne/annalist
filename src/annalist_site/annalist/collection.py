@@ -58,7 +58,7 @@ class Collection(object):
         Returns True if the collection exists, as determined by existence of the 
         collection description metadata file.
         """
-        log.info("Colllection.exists: id %s"%(coll_id))
+        log.debug("Colllection.exists: id %s"%(coll_id))
         p = util.entity_path(site._basedir, [coll_id, layout.COLL_META_DIR], layout.COLL_META_FILE)
         return (p != None) and os.path.isfile(p)
 
@@ -71,7 +71,7 @@ class Collection(object):
         coll_meta       description metadata about the new collection
         site            Site object that will hold the created collection.
         """
-        log.info("Colllection.create: id %s, meta %r"%(coll_id, coll_meta))
+        log.debug("Colllection.create: id %s, meta %r"%(coll_id, coll_meta))
         c = Collection(coll_id, site)
         c.set_values(coll_meta)
         c.save()
@@ -87,7 +87,7 @@ class Collection(object):
 
         Returns None on sucess, of a status value indicating a reason for value.
         """
-        log.info("Colllection.remove: id %s"%(coll_id))
+        log.debug("Colllection.remove: id %s"%(coll_id))
         if Collection.exists(coll_id, site):
             c = Collection(coll_id, site)
             d = c._basedir
@@ -115,7 +115,7 @@ class Collection(object):
         self._basedir = basedir if basedir.endswith("/") else basedir+"/"
         self._id      = coll_id
         self._values  = None
-        log.info("Colllection.__init__: base URI %s, base dir %s"%(self._baseuri, self._basedir))
+        log.debug("Colllection.__init__: base URI %s, base dir %s"%(self._baseuri, self._basedir))
         return
 
     def get_id(self):

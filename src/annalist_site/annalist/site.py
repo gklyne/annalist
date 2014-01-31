@@ -87,7 +87,7 @@ class Site(object):
 
         Returns a non-False status code if the collection is not removed.
         """
-        log.info("remove_collection: %s"%(coll_id))
+        log.debug("remove_collection: %s"%(coll_id))
         return Collection.remove(coll_id, self)
 
 class SiteView(AnnalistGenericView):

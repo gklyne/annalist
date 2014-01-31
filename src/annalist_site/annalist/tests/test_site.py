@@ -60,6 +60,7 @@ class SiteTest(TestCase):
     def tearDown(self):
         return
 
+    @unittest.skip("Skip placeholder")
     def test_SiteTest(self):
         self.assertEqual(Site.__name__, "Site", "Check Site class name")
         return
@@ -105,9 +106,31 @@ class SiteViewTest(TestCase):
     Tests for Site views
     """
 
+    def setUp(self):
+        init_annalist_test_site()
+        self.testsite = Site("http://example.com/testsite", TestBaseDir)
+        return
+
+    def tearDown(self):
+        return
+
     def test_SiteViewTest(self):
         self.assertEqual(SiteView.__name__, "SiteView", "Check SiteView class name")
         return
+
+    def test_get(self):
+        self.assertTrue(False, "@@TODO test_get")
+        return
+
+    def test_post_add(self):
+        self.assertTrue(False, "@@TODO test_post_add")
+        return
+
+    def test_post_remove(self):
+        self.assertTrue(False, "@@TODO test_post_remove")
+        return
+
+
 
 
 class SiteActionView(TestCase):
@@ -116,8 +139,21 @@ class SiteActionView(TestCase):
     requested from the site view)
     """
 
+    def setUp(self):
+        init_annalist_test_site()
+        self.testsite = Site("http://example.com/testsite", TestBaseDir)
+        return
+
+    def tearDown(self):
+        return
+
     def test_SiteActionViewTest(self):
         self.assertEqual(SiteActionView.__name__, "SiteActionView", "Check SiteActionView class name")
         return
+
+    def test_post_confirmed_remove(self):
+        self.assertTrue(False, "@@TODO test_post_confirmed_remove")
+        return
+
 
 # End.
