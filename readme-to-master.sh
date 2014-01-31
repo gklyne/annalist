@@ -2,7 +2,7 @@
 #
 # Transfer README.md file in develop branch to master branch
 
-if [[ "$1"=="" ]]; then
+if [[ "$1" == "" ]]; then
 
     echo "No commit message provided"
     exit 1
