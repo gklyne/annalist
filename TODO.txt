@@ -1,5 +1,31 @@
 # Explorations
 
+* Choose web server
+  * probably Apache, considering nginx, but deferred until suitable OAuth2/OpenID-connect plugin is available
+  * until then, using DJango for everything while ideas are fleshed out
+* Authentication mechanism
+  * Going with OAuth2/OpenID-Connect for now
+  * Currently workingwith Google as IDP; loooking for alternatives
+  * Considering OAuth2-Shibboleth bridge for uni deployment (have link somewhere in notes)
+* Access control model
+  * TBD; expect to use elements from UMA in due course
+  * For now have very simple authorization function that requires authentication for up-dates, otherwise open.
+* Define on-disk structure
+    * Directories
+    * Files
+    * See https://github.com/gklyne/annalist/blob/develop/src/annalist_site/annalist/layout.py
+    * @@NOTE: need to wean off direct directory access and use HTTP
+* Define data access internal API details for web site
+  * First cut in progress
+  * @@NOTE: remember to use simple GET semantics where possible; may need to revisist and simplify
+* Define UI generation details
+* Implement data access API details
+  * Mostly straight HTTP GET, etc
+* Implement UI generation details
+  * The main challenge.
+  * Follow mockups per https://github.com/gklyne/annalist/tree/develop/mockup
+* Create core UI definitions
+
 
 ## Web application
 
@@ -8,8 +34,8 @@
    / form elements to delete collection
    / include supporting logic in Collection module
    / rework authentication/authorization to allow unauthenticated access for public data 
-   - test cases for site, collection, site views; refecactor tests to separate directory, modules
-   - move util.py to utils package, and rename
+   > test cases for site, collection, site views; refactor tests to separate directory, modules
+   - move util.py to utils package, and rename?
 2. Collection initial display
    - determine base configuration/metadata needed
    - include supporting logic in Collection module
@@ -30,16 +56,14 @@ AnalistGenericView:
   - HTML
   - JSON-LD
   - uri-list
+- but serve native format directly.  Note that it should be possible to take an Annbalist sirte directory and dump it onto any regular HTTP server to publish thje raw data.  Web site should still be able to work with that.
 
-Deployment: look into using Vagrant and/or Puppet
+Deployment: look into using Vagrant and/or Puppet/Chef/...
 
 
 ## Dynamic form interface
 
-
-
-
-
+(To be planned)
 
 
 ## Authorization

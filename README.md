@@ -6,7 +6,7 @@ Free-form web data platform - "Data management for little guys"
 Goals
 -----
 
-A kind of "Linked data wiki".
+Think of a kind of "Linked data journal" or "Linked data wiki".  (The name "annalist" derives from ["a person who writes annals"](http://www.oxforddictionaries.com/definition/english/annalist).)
 
 * Easy data: out-of-box data acquisition and modification
 * Flexible data: new record types and fields can be added as-required.
@@ -32,12 +32,15 @@ Installation
 Technical elements
 ------------------
 
+Note: active development is taking place on the "develop" branch in git - see [https://github.com/gklyne/annalist/tree/develop]())
+
 * Standard web server
 * Access control with 3rd party IDP authentication
-* Data storage model
-    * File format RDF-based (JSON-LD?)
-    * Records, Attachments, Collections, Groups
-    * Directory structure
+* File based data storage model
+    * File format RDF-based. Have settled on JSON-LD for initial work.
+    * Records/Entities, Attachments (blobs), Collections, Groups
+    * Directory based organization
+    * Separate indexing as and when required.
 * User interface
     * Self-maintained configuration data
     * Grid-based flexible layout engine (e.g. Bootstrap)
@@ -49,14 +52,4 @@ Technical elements
 TODO
 ----
 
-* Choose web server
-* Authentication mechanism
-* Access control model
-* Define on-disk structure
-    * Directories
-    * Files
-* Define data access API details
-* Define UI generation details
-* Implement data access API details
-* Implement UI generation details
-* Create core UI definitions
+See: [https://github.com/gklyne/annalist/blob/develop/TODO.txt]()
