@@ -2,6 +2,10 @@
 #- http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
 #- (excluding vnd. tree types)
 
+# NOTE:
+# For some reason, this file raises a syntax error when used with Python 2.6 on Linux.
+# 2.7 os OK, though.
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, University of Oxford"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
