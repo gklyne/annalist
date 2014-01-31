@@ -3,6 +3,7 @@ annalist
 
 Free-form web data platform - "Data management for little guys"
 
+
 Goals
 -----
 
@@ -21,7 +22,7 @@ The work on Annalist is in its very early stages, but I'm committed to open deve
 Installation
 ------------
 
-These instructions are my attempt to capture the steps tio geha development copy of Annalist running.  The project and instructions are currently work-in-progress, so they may break.
+These instructions are my attempt to capture the steps to get a development copy of Annalist running.  The project and instructions are currently work-in-progress, so they may break.
 
     # Clone git repository
     cd _workspase_base_
@@ -55,7 +56,7 @@ These instructions are my attempt to capture the steps tio geha development copy
     # Start the web application
     python manage.py runserver
 
-Now point a local browser at [http://localhost:8000/annalist]().  Clicking on the login link should display a login screen with "Google" offered as a login service.  Enter a user ID and click "Login" to invoke an OAuth2 authentication sequence with Google.
+Now point a local browser at [http://localhost:8000/annalist](http://localhost:8000/annalist).  Clicking on the login link should display a login screen with "Google" offered as a login service.  Enter a user ID and click "Login" to invoke an OAuth2 authentication sequence with Google.
 
 (Note: if using the "NoScript" browser plugin, this will trigger an XSS warning, and separately an ABE warning.  Hopefully, NoScript will fix this.  Meanwhile I added accounts.google.com as an exception from XSS sanitization, and disabled ABE checking, in NoScript.)
 
@@ -65,7 +66,7 @@ Google profile access
 
 Annalist uses OAuth2/OpenID Connect authentication to control access to data resources.  This is currently tested with Google's OAuth2 services.  For this to work, the client application must be registered with Google (via [https://cloud.google.com/console]()) and must be permitted to use the [Google+ API](https://developers.google.com/+/api/), as shown:
 
-![Screenshot showing Google+ API enabled for project](figures/Google-APIs-screenshot.png)
+![Screenshot showing Google+ API enabled for project](https://raw.github.com/gklyne/annalist/develop/notes/figures/Google-APIs-screenshot.png)
 
 * Create new project
 * Under `APIs & Auth > APIs`, enable Google+ and disable all others
@@ -80,12 +81,10 @@ Annalist uses OAuth2/OpenID Connect authentication to control access to data res
 To access user profile details (other than email address) from Google, an additional request is made using the access token provided via the initial OUath2 exchange.  A get request to [https://www.googleapis.com/plus/v1/people/me/openIdConnect](), using authorization credentials from the access token, returns a JSON result with user profile details.
 
 
-
-
 Technical elements
 ------------------
 
-Note: active development is taking place on the "develop" branch in git - see [https://github.com/gklyne/annalist/tree/develop]())
+Note: active development is taking place on the "develop" branch in git - see [https://github.com/gklyne/annalist/tree/develop](https://github.com/gklyne/annalist/tree/develop))
 
 * Standard web server
 * Access control with 3rd party IDP authentication
@@ -99,8 +98,10 @@ Note: active development is taking place on the "develop" branch in git - see [h
     * Grid-based flexible layout engine (e.g. Bootstrap)
 * Bridges for other data sources
     * Spreadsheet
+    * JSON?
     * XML?
     * _others_
+
 
 TODO
 ----
