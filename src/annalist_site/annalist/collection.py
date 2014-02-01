@@ -29,6 +29,10 @@ class Collection(object):
     # @@TODO: currently association of a collection with a site is by physical location
     #         which means a collection cannot exist in more than one site.  Later developments
     #         may want to review this.
+    #
+    # @@TODO: refactor logic between site and collection, to localize knowledge of structures
+    #         e.g. site method enumerates possibile directories, 
+    #         collection tests and returns value
 
     @staticmethod
     def collections(site):

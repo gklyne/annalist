@@ -6,6 +6,11 @@
 
 from common import *
 
+# Override authentication backend to use local datrabase only
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    )
+
 SETTINGS_MODULE = __name__
 BASE_DATA_DIR   = SITE_SRC_ROOT+"/test/data"
 CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")

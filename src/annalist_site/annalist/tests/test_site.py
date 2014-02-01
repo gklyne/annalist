@@ -12,9 +12,13 @@ import unittest
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf        import settings
-from django.test        import TestCase
-from django.test.client import Client
+from django.conf                import settings
+from django.db                  import models
+from django.contrib.auth.models import User
+from django.test                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
+from django.test.client         import Client
+
+from bs4                        import BeautifulSoup
 
 from miscutils.MockHttpResources import MockHttpFileResources, MockHttpDictResources
 
@@ -109,23 +113,111 @@ class SiteViewTest(TestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site("http://example.com/testsite", TestBaseDir)
+        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
+        self.user.save()
         return
 
     def tearDown(self):
         return
 
+    @unittest.skip("Skip placeholder")
     def test_SiteViewTest(self):
         self.assertEqual(SiteView.__name__, "SiteView", "Check SiteView class name")
         return
 
     def test_get(self):
-        self.assertTrue(False, "@@TODO test_get")
+        c = Client()
+        r = c.get("/annalist/site/")
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "<title>Annalist data journal test site</title>")
         return
 
+    def test_get_no_login(self):
+        c = Client()
+        r = c.get("/annalist/site/")
+        s = BeautifulSoup(r.content)
+        self.assertEqual(s.html.title.string, "Annalist data journal test site")
+        self.assertEqual(s.find(class_="menu-left").a.string,   "Home")
+        self.assertEqual(s.find(class_="menu-left").a['href'],  "/annalist/site/")
+        self.assertEqual(s.find(class_="menu-right").a.string,  "Login")
+        self.assertEqual(s.find(class_="menu-right").a['href'], "/annalist/profile/")
+        # print "*****"
+        # #print s.table.tbody.prettify()
+        # print s.table.tbody.find_all("tr")
+        # print "*****"
+        trows = s.table.tbody.find_all("tr")
+        self.assertEqual(len(trows), 4)
+        self.assertEqual(trows[1].td.a.string,  "coll1")
+        self.assertEqual(trows[1].td.a['href'], "/annalist/coll1")
+        self.assertEqual(trows[2].td.a.string,  "coll2")
+        self.assertEqual(trows[2].td.a['href'], "/annalist/coll2")
+        self.assertEqual(trows[3].td.a.string,  "coll3")
+        self.assertEqual(trows[3].td.a['href'], "/annalist/coll3")
+        return
+
+    def test_get_with_login(self):
+        c = Client()
+        loggedin = c.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
+        r = c.get("/annalist/site/")
+        s = BeautifulSoup(r.content)
+        # title and top menu
+        self.assertEqual(s.html.title.string, "Annalist data journal test site")
+        ml = s.find(class_="menu-left").find_all("a")
+        self.assertEqual(ml[0].string,   "Home")
+        self.assertEqual(ml[0]['href'],  "/annalist/site/")
+        mr = s.find(class_="menu-right").find_all("a")
+        self.assertEqual(mr[0].string,  "Profile")
+        self.assertEqual(mr[0]['href'], "/annalist/profile/")
+        self.assertEqual(mr[1].string,  "Logout")
+        self.assertEqual(mr[1]['href'], "/annalist/logout/")
+        # Displayed colllections and check-buttons
+        trows = s.table.tbody.find_all("tr")
+        self.assertEqual(len(trows), 6)
+
+        tcols1 = trows[1].find_all("td")
+        self.assertEqual(tcols1[0].a.string,       "coll1")
+        self.assertEqual(tcols1[0].a['href'],      "/annalist/coll1")
+        self.assertEqual(tcols1[2].input['type'],  "checkbox")
+        self.assertEqual(tcols1[2].input['name'],  "select")
+        self.assertEqual(tcols1[2].input['value'], "coll1")
+
+        tcols2 = trows[2].find_all("td")
+        self.assertEqual(tcols2[0].a.string,       "coll2")
+        self.assertEqual(tcols2[0].a['href'],      "/annalist/coll2")
+        self.assertEqual(tcols2[2].input['type'],  "checkbox")
+        self.assertEqual(tcols2[2].input['name'],  "select")
+        self.assertEqual(tcols2[2].input['value'], "coll2")
+
+        tcols3 = trows[3].find_all("td")
+        self.assertEqual(tcols3[0].a.string,       "coll3")
+        self.assertEqual(tcols3[0].a['href'],      "/annalist/coll3")
+        self.assertEqual(tcols3[2].input['type'],  "checkbox")
+        self.assertEqual(tcols3[2].input['name'],  "select")
+        self.assertEqual(tcols3[2].input['value'], "coll3")
+
+        # Remove/new collection buttons
+        btn_remove = trows[4].find_all("td")[2]
+        self.assertEqual(btn_remove.input["type"],  "submit")
+        self.assertEqual(btn_remove.input["name"],  "remove")
+        field_id = trows[5].find_all("td")[0]
+        self.assertEqual(field_id.input["type"],  "text")
+        self.assertEqual(field_id.input["name"],  "new_id")
+        field_id = trows[5].find_all("td")[1]
+        self.assertEqual(field_id.input["type"],  "text")
+        self.assertEqual(field_id.input["name"],  "new_label")
+        btn_new = trows[5].find_all("td")[2]
+        self.assertEqual(btn_new.input["type"],  "submit")
+        self.assertEqual(btn_new.input["name"],  "new")
+        return
+
+    @unittest.skip("Skip TODO")
     def test_post_add(self):
         self.assertTrue(False, "@@TODO test_post_add")
         return
 
+    @unittest.skip("Skip TODO")
     def test_post_remove(self):
         self.assertTrue(False, "@@TODO test_post_remove")
         return
@@ -147,10 +239,12 @@ class SiteActionView(TestCase):
     def tearDown(self):
         return
 
+    @unittest.skip("Skip TODO")
     def test_SiteActionViewTest(self):
         self.assertEqual(SiteActionView.__name__, "SiteActionView", "Check SiteActionView class name")
         return
 
+    @unittest.skip("Skip TODO")
     def test_post_confirmed_remove(self):
         self.assertTrue(False, "@@TODO test_post_confirmed_remove")
         return
