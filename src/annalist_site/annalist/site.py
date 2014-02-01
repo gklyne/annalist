@@ -48,9 +48,7 @@ class Site(object):
         """
         Return an ordered dictionary of collection URIs indexed by collection id
         """
-        coll = {}
-        for c in Collection.collections(self):
-            coll[c["id"]] = c
+        coll = [ (c["id"], c) for c in Collection.collections(self) ]
         return collections.OrderedDict(sorted(coll))
 
     def site_data(self):
