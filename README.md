@@ -7,7 +7,7 @@ Free-form web data platform - "Data management for little guys"
 Goals
 -----
 
-Think of a kind of "Linked data journal" or "Linked data wiki".  (The name "annalist" derives from ["a person who writes annals"](http://www.oxforddictionaries.com/definition/english/annalist).)
+A "Linked data journal" or "Linked data wiki", supporting collection, organization and sharing of structured and semi-structured data.  The name "annalist" derives from ["a person who writes annals"](http://www.oxforddictionaries.com/definition/english/annalist).
 
 * Easy data: out-of-box data acquisition and modification
 * Flexible data: new record types and fields can be added as-required.
@@ -32,7 +32,7 @@ These instructions are my attempt to capture the steps to get a development copy
 
     # Create Pythoin virtualenv for testing Annalist
     virtualenv -p python2.7 anenv
-    . anenv/bin/activate
+    source anenv/bin/activate
     pip install -r src/annalist_site/requirements/devel.txt 
     cd src/annalist_site/
 
@@ -51,7 +51,7 @@ These instructions are my attempt to capture the steps to get a development copy
     # Initialize the web application data
     python manage.py dbsync
     mkdir devel
-    cp -rfv test/init/annalist_site/ devel
+    cp -rfv test/init/annalist_site/ devel/annalist_site
 
     # Start the web application
     python manage.py runserver
@@ -64,7 +64,7 @@ Now point a local browser at [http://localhost:8000/annalist](http://localhost:8
 Google profile access
 ---------------------
 
-Annalist uses OAuth2/OpenID Connect authentication to control access to data resources.  This is currently tested with Google's OAuth2 services.  For this to work, the client application must be registered with Google (via [https://cloud.google.com/console]()) and must be permitted to use the [Google+ API](https://developers.google.com/+/api/), as shown:
+Annalist uses OAuth2/OpenID Connect authentication to control access to data resources.  This is currently tested with Google's OAuth2 services.  For this to work, the client application must be registered with Google (via [https://cloud.google.com/console](https://cloud.google.com/console)) and must be permitted to use the [Google+ API](https://developers.google.com/+/api/), as shown:
 
 ![Screenshot showing Google+ API enabled for project](https://raw.github.com/gklyne/annalist/develop/notes/figures/Google-APIs-screenshot.png)
 
@@ -75,10 +75,13 @@ Annalist uses OAuth2/OpenID Connect authentication to control access to data res
   * Authorized redirect URI is `http://localhost:8000/annalist/login_done/` (don't omit the trailing "/")
   * No authorized Javascript origins (yet)
   * Then click button "Create client ID"
-* Under `APIs & Auth > Consent screen`, fill in a name for the appliucation
+* Under `APIs & Auth > Consent screen`, fill in a name for the application
 * The window now displays client id and client secret values.  The button "Download JSON" can be used to download a file that can be used to populate the file `~/.annalist/providers/google_oauth2_client_secrets.json`, but note that Annalist also uses additional field(s) not populated by the Google console.
 
-To access user profile details (other than email address) from Google, an additional request is made using the access token provided via the initial OUath2 exchange.  A get request to [https://www.googleapis.com/plus/v1/people/me/openIdConnect](), using authorization credentials from the access token, returns a JSON result with user profile details.
+    mkdir -p ~/.annalist/providers
+    cp src/annalist_site/oauth2/google_oauth2_client_secrets.json.example ~/.annalist/providers/
+    mv ~/.annalist/providers/google_oauth2_client_secrets.json.example ~/.annalist/providers/google_oauth2_client_secrets.json
+    # Now edit the file to include client id and secret values provided by Google
 
 
 Technical elements
