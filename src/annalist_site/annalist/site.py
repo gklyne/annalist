@@ -29,6 +29,7 @@ from annalist.views         import AnnalistGenericView
 from annalist.confirmview   import ConfirmView
 from annalist               import util
 
+# @@TODO: align form variable names with stored collection metadata
 
 class Site(object):
 
@@ -157,7 +158,11 @@ class SiteView(AnnalistGenericView):
             auth_required = self.authorize("CREATE")
             if auth_required:
                 return auth_required
-            self._site.add_collection(new_id, request.POST)
+            coll_meta = (
+                { 'rdfs:label':    new_label
+                , 'rdfs:comment':  ""
+                })
+            self._site.add_collection(new_id, coll_meta)
             return self.redirect_info("AnnalistSiteView", message.CREATED_COLLECTION_ID%(new_id))
         return self.error(self.error400values())
 
