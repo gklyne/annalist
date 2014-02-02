@@ -78,10 +78,10 @@ Annalist uses OAuth2/OpenID Connect authentication to control access to data res
 * Under `APIs & Auth > Consent screen`, fill in a name for the application
 * The window now displays client id and client secret values.  The button "Download JSON" can be used to download a file that can be used to populate the file `~/.annalist/providers/google_oauth2_client_secrets.json`, but note that Annalist also uses additional field(s) not populated by the Google console.
 
-    mkdir -p ~/.annalist/providers
-    cp src/annalist_site/oauth2/google_oauth2_client_secrets.json.example ~/.annalist/providers/
-    mv ~/.annalist/providers/google_oauth2_client_secrets.json.example ~/.annalist/providers/google_oauth2_client_secrets.json
-    # Now edit the file to include client id and secret values provided by Google
+        mkdir -p ~/.annalist/providers
+        cp src/annalist_site/oauth2/google_oauth2_client_secrets.json.example ~/.annalist/providers/
+        mv ~/.annalist/providers/google_oauth2_client_secrets.json.example ~/.annalist/providers/google_oauth2_client_secrets.json
+        # Now edit the file to include client id and secret values provided by Google
 
 
 Technical elements
