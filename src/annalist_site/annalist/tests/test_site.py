@@ -133,6 +133,14 @@ class SiteViewTest(TestCase):
         self.assertContains(r, "<title>Annalist data journal test site</title>")
         return
 
+    def test_get_home(self):
+        c = Client()
+        r = c.get("/annalist/")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r["location"], "http://testserver/annalist/site/")
+        return
+
     def test_get_no_login(self):
         c = Client()
         r = c.get("/annalist/site/")
