@@ -7,7 +7,6 @@ __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
-import re
 import unittest
 
 import logging
@@ -24,10 +23,11 @@ from bs4                        import BeautifulSoup
 
 from miscutils.MockHttpResources import MockHttpFileResources, MockHttpDictResources
 
-from annalist.site      import Site, SiteView
-from annalist.layout    import Layout
+from annalist.site              import Site, SiteView
+from annalist.layout            import Layout
 
-from tests              import TestBaseDir, dict_to_str, init_annalist_test_site
+from tests                      import TestBaseDir, dict_to_str, init_annalist_test_site
+from AnnalistTestCase           import AnnalistTestCase
 
 # Test assertion summary from http://docs.python.org/2/library/unittest.html#test-cases
 #
@@ -138,19 +138,10 @@ class SiteTest(TestCase):
         return
 
 
-class SiteViewTest(TestCase):
+class SiteViewTest(AnnalistTestCase):
     """
     Tests for Site views
     """
-
-    def assertMatch(self, string, pattern, msg=None):
-        """
-        Throw an exception if the regular expresson pattern is matched
-        """
-        m = re.search(pattern, string)
-        if not m or not m.group(0):
-            raise self.failureException(
-                (msg or "'%s' does not match /%s/"%(string, pattern)))
 
     def setUp(self):
         init_annalist_test_site()
@@ -362,20 +353,11 @@ class SiteViewTest(TestCase):
         self.assertContains(r, """<input type="hidden" name="cancel_action"   value="/annalist/site/"/>""", html=True)
         return
 
-class SiteActionView(TestCase):
+class SiteActionView(AnnalistTestCase):
     """
     Tests for Site action views (completion of confirmed actions
     requested from the site view)
     """
-
-    def assertMatch(self, string, pattern, msg=None):
-        """
-        Throw an exception if the regular expresson pattern is matched
-        """
-        m = re.search(pattern, string)
-        if not m or not m.group(0):
-            raise self.failureException(
-                (msg or "'%s' does not match /%s/"%(string, pattern)))
 
     def setUp(self):
         init_annalist_test_site()
