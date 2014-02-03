@@ -124,10 +124,9 @@ class SiteView(AnnalistGenericView):
         """
         Process options to add or remove a collection in an Annalist site
         """
-        log.info("site.post: %r"%(request.POST.lists()))
+        log.debug("site.post: %r"%(request.POST.lists()))
         if request.POST.get("remove", None):
             collections = request.POST.getlist("select", [])
-            log.info("collections: "+repr(collections))
             if collections:
                 # Get user to confirm action before actually doing it
                 return (
@@ -149,7 +148,7 @@ class SiteView(AnnalistGenericView):
             # Create new collection with name and label supplied
             new_id    = request.POST["new_id"]
             new_label = request.POST["new_label"]
-            log.info("New collection %s: %s"%(new_id, new_label))
+            log.debug("New collection %s: %s"%(new_id, new_label))
             if not new_id:
                 return self.redirect_error("AnnalistSiteView", message.MISSING_COLLECTION_ID)
             if not util.valid_id(new_id):
@@ -176,15 +175,16 @@ class SiteActionView(AnnalistGenericView):
         return
 
     # POST
+    # @@TODO: Delete collection: POST <site-action-uri> should be DELETE <collection-uri>
+    #         use secondary request here when DELETE <collection-uri>?
 
     def post(self, request):
         """
         Process options to complete action to add or remove a collection
         """
-        log.warning("@@TODO: Delete collection: POST <site-uri> should be DELETE <collection-uri>")
-        log.info("siteactionview.post: %r"%(request.POST))
+        log.debug("siteactionview.post: %r"%(request.POST))
         if request.POST.get("remove", None):
-            log.info("Complete remove %r"%(request.POST.getlist("select")))
+            log.debug("Complete remove %r"%(request.POST.getlist("select")))
             auth_required = self.authorize("DELETE")
             if auth_required:
                 return auth_required

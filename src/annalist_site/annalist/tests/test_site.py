@@ -98,7 +98,6 @@ class SiteTest(TestCase):
     def tearDown(self):
         return
 
-    @unittest.skip("Skip placeholder")
     def test_SiteTest(self):
         self.assertEqual(Site.__name__, "Site", "Check Site class name")
         return
@@ -163,7 +162,6 @@ class SiteViewTest(TestCase):
     def tearDown(self):
         return
 
-    @unittest.skip("Skip placeholder")
     def test_SiteViewTest(self):
         self.assertEqual(SiteView.__name__, "SiteView", "Check SiteView class name")
         return
@@ -349,12 +347,12 @@ class SiteViewTest(TestCase):
         r = c.post("/annalist/site/", form_data)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
+        self.assertTemplateUsed(r, "annalist_confirm.html")
         # print "********"
         # # print repr(r.__dict__)
         # # print repr(r.context)
         # # print r.content
         # print "********"
-        self.assertTemplateUsed(r, "annalist_confirm.html")
         # Returns confirmation form: check
         self.assertContains(r, """<form method="POST" action="/annalist/confirm/">""", status_code=200)
         self.assertContains(r, """<input type="submit" name="confirm" value="Confirm"/>""", html=True)
@@ -362,18 +360,41 @@ class SiteViewTest(TestCase):
         self.assertContains(r, """<input type="hidden" name="complete_action" value="/annalist/site_action/"/>""", html=True)
         self.assertContains(r, """<input type="hidden" name="action_params"   value="{&quot;new_label&quot;: [&quot;&quot;], &quot;new_id&quot;: [&quot;&quot;], &quot;select&quot;: [&quot;coll1&quot;, &quot;coll3&quot;], &quot;remove&quot;: [&quot;Remove selected&quot;]}"/>""", html=True)
         self.assertContains(r, """<input type="hidden" name="cancel_action"   value="/annalist/site/"/>""", html=True)
-        # Cancel confirmation
-        conf_data = (
-            { "cancel":           "Cancel"
-            , "complete_action":  "/annalist/site_action/"
-            , "action_params":    """{"new_label": [""], "new_id": [""], "select": ["coll1", "coll3"], "remove": ["Remove selected"]}"""
-            , "cancel_action":    "/annalist/site/"
-            })
-        r = c.post("/annalist/confirm/", conf_data)
-        self.assertEqual(r.status_code,     302)
-        self.assertEqual(r.reason_phrase,   "FOUND")
-        self.assertEqual(r.content,         "")
-        self.assertEqual(r['location'],     "http://testserver/annalist/site/")
+        return
+
+class SiteActionView(TestCase):
+    """
+    Tests for Site action views (completion of confirmed actions
+    requested from the site view)
+    """
+
+    def assertMatch(self, string, pattern, msg=None):
+        """
+        Throw an exception if the regular expresson pattern is matched
+        """
+        m = re.search(pattern, string)
+        if not m or not m.group(0):
+            raise self.failureException(
+                (msg or "'%s' does not match /%s/"%(string, pattern)))
+
+    def setUp(self):
+        init_annalist_test_site()
+        self.testsite = Site("http://example.com/testsite", TestBaseDir)
+        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
+        self.user.save()
+        return
+
+    def tearDown(self):
+        return
+
+    def test_SiteActionViewTest(self):
+        self.assertEqual(SiteActionView.__name__, "SiteActionView", "Check SiteActionView class name")
+        return
+
+    def test_post_confirmed_remove(self):
+        c = Client()
+        loggedin = c.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
         # Submit positive confirmation
         conf_data = (
             { "confirm":          "Confirm"
@@ -396,30 +417,30 @@ class SiteViewTest(TestCase):
         self.assertEqual(colls[id]["title"],    init_collections[id]["title"])
         return
 
-
-class SiteActionView(TestCase):
-    """
-    Tests for Site action views (completion of confirmed actions
-    requested from the site view)
-    """
-
-    def setUp(self):
-        init_annalist_test_site()
-        self.testsite = Site("http://example.com/testsite", TestBaseDir)
+    def test_post_cancelled_remove(self):
+        c = Client()
+        loggedin = c.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
+        # Cancel in confirmation form response
+        conf_data = (
+            { "cancel":           "Cancel"
+            , "complete_action":  "/annalist/site_action/"
+            , "action_params":    """{"new_label": [""], "new_id": [""], "select": ["coll1", "coll3"], "remove": ["Remove selected"]}"""
+            , "cancel_action":    "/annalist/site/"
+            })
+        r = c.post("/annalist/confirm/", conf_data)
+        self.assertEqual(r.status_code,     302)
+        self.assertEqual(r.reason_phrase,   "FOUND")
+        self.assertEqual(r.content,         "")
+        self.assertEqual(r['location'],     "http://testserver/annalist/site/")
+        # Confirm no collections deleted
+        r = c.get("/annalist/site/")
+        colls = r.context['collections']
+        self.assertEqual(len(colls), 3)
+        for id in init_collections:
+            self.assertEqual(colls[id]["annal:id"], id)
+            self.assertEqual(colls[id]["uri"],      init_collections[id]["uri"])
+            self.assertEqual(colls[id]["title"],    init_collections[id]["title"])
         return
-
-    def tearDown(self):
-        return
-
-    @unittest.skip("Skip TODO")
-    def test_SiteActionViewTest(self):
-        self.assertEqual(SiteActionView.__name__, "SiteActionView", "Check SiteActionView class name")
-        return
-
-    @unittest.skip("Skip TODO")
-    def test_post_confirmed_remove(self):
-        self.assertTrue(False, "@@TODO test_post_confirmed_remove")
-        return
-
 
 # End.

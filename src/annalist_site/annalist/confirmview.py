@@ -88,7 +88,7 @@ class ConfirmView(AnnalistGenericView):
             })
         template = loader.get_template('annalist_confirm.html')
         context  = RequestContext(request, form_data)
-        log.info("confirmview form data: %r"%(form_data))
+        log.debug("confirmview form data: %r"%(form_data))
         return HttpResponse(template.render(context))
 
     # POST
@@ -104,7 +104,7 @@ class ConfirmView(AnnalistGenericView):
         If the operation is canceled, then this function returns an HTTP redirect to 
         the "cancel_action" continuation URI.
         """
-        log.info("confirmview.post: %r"%(request.POST))
+        log.debug("confirmview.post: %r"%(request.POST))
         params         = querydict_loads(request.POST["action_params"])
         action_request = copy.copy(request)
         if request.POST.get("confirm", None):
