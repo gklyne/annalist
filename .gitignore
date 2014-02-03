@@ -75,3 +75,11 @@ Thumbs.db
 .~*
 
 # Project files
+annalist.sublime*
+/pyenv
+/anenv
+/src/annalist_site/devel
+/src/annalist_site/test/data
+/src/build
+/src/dist
+/src/*.egg-info
