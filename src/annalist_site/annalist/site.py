@@ -124,7 +124,7 @@ class SiteView(AnnalistGenericView):
         """
         Process options to add or remove a collection in an Annalist site
         """
-        log.info("site.post: %r"%(request.POST))
+        log.info("site.post: %r"%(request.POST.lists()))
         if request.POST.get("remove", None):
             collections = request.POST.getlist("select", [])
             log.info("collections: "+repr(collections))
@@ -182,7 +182,7 @@ class SiteActionView(AnnalistGenericView):
         Process options to complete action to add or remove a collection
         """
         log.warning("@@TODO: Delete collection: POST <site-uri> should be DELETE <collection-uri>")
-        log.info("site.post: %r"%(request.POST))
+        log.info("siteactionview.post: %r"%(request.POST))
         if request.POST.get("remove", None):
             log.info("Complete remove %r"%(request.POST.getlist("select")))
             auth_required = self.authorize("DELETE")

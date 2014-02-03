@@ -7,6 +7,7 @@ __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
+import re
 import unittest
 
 import logging
@@ -143,6 +144,15 @@ class SiteViewTest(TestCase):
     Tests for Site views
     """
 
+    def assertMatch(self, string, pattern, msg=None):
+        """
+        Throw an exception if the regular expresson pattern is matched
+        """
+        m = re.search(pattern, string)
+        if not m or not m.group(0):
+            raise self.failureException(
+                (msg or "'%s' does not match /%s/"%(string, pattern)))
+
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site("http://example.com/testsite", TestBaseDir)
@@ -168,6 +178,25 @@ class SiteViewTest(TestCase):
         self.assertContains(r, "<title>Annalist data journal test site</title>")
         return
 
+    def test_get_error(self):
+        c = Client()
+        r = c.get("/annalist/site/?error_head=Error&error_message=Error%20presented")
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # self.assertEqual(r.content, "???")
+        self.assertContains(r, """<div class="error-head">Error</div>""", html=True)
+        self.assertContains(r, """<div class="error-message">Error presented</div>""", html=True)
+        return
+
+    def test_get_info(self):
+        c = Client()
+        r = c.get("/annalist/site/?info_head=Information&info_message=Information%20presented")
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, """<div class="info-head">Information</div>""", html=True)
+        self.assertContains(r, """<div class="info-message">Information presented</div>""", html=True)
+        return
+
     def test_get_home(self):
         c = Client()
         r = c.get("/annalist/")
@@ -183,6 +212,7 @@ class SiteViewTest(TestCase):
         self.assertFalse(r.context["auth_update"])
         self.assertFalse(r.context["auth_delete"])
         colls = r.context['collections']
+        self.assertEqual(len(colls), 3)
         for id in init_collections:
             self.assertEqual(colls[id]["annal:id"], id)
             self.assertEqual(colls[id]["uri"],      init_collections[id]["uri"])
@@ -220,6 +250,7 @@ class SiteViewTest(TestCase):
         self.assertTrue(r.context["auth_update"])
         self.assertTrue(r.context["auth_delete"])
         colls = r.context['collections']
+        self.assertEqual(len(colls), 3)
         for id in init_collections:
             self.assertEqual(colls[id]["annal:id"], id)
             self.assertEqual(colls[id]["uri"],      init_collections[id]["uri"])
@@ -278,12 +309,11 @@ class SiteViewTest(TestCase):
         c = Client()
         loggedin = c.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        form_data = QueryDict("").copy()
-        form_data["new"]       = "New collection"
-        form_data["new_id"]    = "testnew"
-        form_data["new_label"] = "Label for new collection"
-        form_data["select"]    = "coll1"
-        form_data["select"]    = "coll3"
+        form_data = (
+            { "new":        "New collection"
+            , "new_id":     "testnew"
+            , "new_label":  "Label for new collection"
+            })
         r = c.post("/annalist/site/", form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -307,15 +337,63 @@ class SiteViewTest(TestCase):
         return
 
     def test_post_remove(self):
-        self.assertTrue(False, "@@TODO test_post_remove")
-        # INFO:annalist.site:site.post: <QueryDict: {u'new_label': [u''], u'csrfmiddlewaretoken': [u'y9NzIms0uYbY3auNDXaDWsEGUmol20WX'], u'new_id': [u''], u'remove': [u'Remove selected'], u'select': [u'testnew']}>
-        # INFO:annalist.site:collections: [u'testnew']
-        # INFO:annalist.confirmview:confirmview form data: {'suppress_user': True, 'action_params': '{"new_label": [""], "csrfmiddlewaretoken": ["y9NzIms0uYbY3auNDXaDWsEGUmol20WX"], "new_id": [""], "select": ["testnew"], "remove": ["Remove selected"]}', 'action_description': u'Remove collection(s): testnew', 'title': 'Annalist data journal test site', 'complete_action': '/annalist/site_action/', 'cancel_action': '/annalist/site/'}
-        # [02/Feb/2014 16:16:32] "POST /annalist/site/ HTTP/1.1" 200 1822
-        # INFO:annalist.site:site.post: <QueryDict: {u'new_label': [u''], u'csrfmiddlewaretoken': [u'y9NzIms0uYbY3auNDXaDWsEGUmol20WX'], u'new_id': [u''], u'select': [u'testnew'], u'remove': [u'Remove selected']}>
-        # INFO:annalist.site:Complete remove [u'testnew']
-        # [02/Feb/2014 16:16:37] "POST /annalist/confirm/ HTTP/1.1" 302 0
-        # [02/Feb/2014 16:16:37] "GET /annalist/site/?info_head=Action%20completed&info_message=The%20following%20collections%20were%20removed:%20testnew HTTP/1.1" 200 2908
+        c = Client()
+        loggedin = c.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
+        form_data = (
+            { "remove":     "Remove selected"
+            , "new_id":     ""
+            , "new_label":  ""
+            , "select":     ["coll1", "coll3"]
+            })
+        r = c.post("/annalist/site/", form_data)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # print "********"
+        # # print repr(r.__dict__)
+        # # print repr(r.context)
+        # # print r.content
+        # print "********"
+        self.assertTemplateUsed(r, "annalist_confirm.html")
+        # Returns confirmation form: check
+        self.assertContains(r, """<form method="POST" action="/annalist/confirm/">""", status_code=200)
+        self.assertContains(r, """<input type="submit" name="confirm" value="Confirm"/>""", html=True)
+        self.assertContains(r, """<input type="submit" name="cancel" value="Cancel"/>""", html=True)
+        self.assertContains(r, """<input type="hidden" name="complete_action" value="/annalist/site_action/"/>""", html=True)
+        self.assertContains(r, """<input type="hidden" name="action_params"   value="{&quot;new_label&quot;: [&quot;&quot;], &quot;new_id&quot;: [&quot;&quot;], &quot;select&quot;: [&quot;coll1&quot;, &quot;coll3&quot;], &quot;remove&quot;: [&quot;Remove selected&quot;]}"/>""", html=True)
+        self.assertContains(r, """<input type="hidden" name="cancel_action"   value="/annalist/site/"/>""", html=True)
+        # Cancel confirmation
+        conf_data = (
+            { "cancel":           "Cancel"
+            , "complete_action":  "/annalist/site_action/"
+            , "action_params":    """{"new_label": [""], "new_id": [""], "select": ["coll1", "coll3"], "remove": ["Remove selected"]}"""
+            , "cancel_action":    "/annalist/site/"
+            })
+        r = c.post("/annalist/confirm/", conf_data)
+        self.assertEqual(r.status_code,     302)
+        self.assertEqual(r.reason_phrase,   "FOUND")
+        self.assertEqual(r.content,         "")
+        self.assertEqual(r['location'],     "http://testserver/annalist/site/")
+        # Submit positive confirmation
+        conf_data = (
+            { "confirm":          "Confirm"
+            , "complete_action":  "/annalist/site_action/"
+            , "action_params":    """{"new_label": [""], "new_id": [""], "select": ["coll1", "coll3"], "remove": ["Remove selected"]}"""
+            , "cancel_action":    "/annalist/site/"
+            })
+        r = c.post("/annalist/confirm/", conf_data)
+        self.assertEqual(r.status_code,     302)
+        self.assertEqual(r.reason_phrase,   "FOUND")
+        self.assertEqual(r.content,         "")
+        self.assertMatch(r['location'],     r"^http://testserver/annalist/site/\?info_head=.*&info_message=.*coll1,.*coll3.*$")
+        # Confirm collections deleted
+        r = c.get("/annalist/site/")
+        colls = r.context['collections']
+        self.assertEqual(len(colls), 1)
+        id = "coll2"
+        self.assertEqual(colls[id]["annal:id"], id)
+        self.assertEqual(colls[id]["uri"],      init_collections[id]["uri"])
+        self.assertEqual(colls[id]["title"],    init_collections[id]["title"])
         return
 
 

@@ -104,6 +104,7 @@ class ConfirmView(AnnalistGenericView):
         If the operation is canceled, then this function returns an HTTP redirect to 
         the "cancel_action" continuation URI.
         """
+        log.info("confirmview.post: %r"%(request.POST))
         params         = querydict_loads(request.POST["action_params"])
         action_request = copy.copy(request)
         if request.POST.get("confirm", None):
