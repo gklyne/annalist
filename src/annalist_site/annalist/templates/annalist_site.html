@@ -5,41 +5,65 @@
 {% block heading %}{{ title }}{% endblock %}
 
 {% block content %}
-    <div class="content-head">
-        Collections
+
+    <div class="row">
+        <div class="large-12 columns">
+            <h3>Collections</h3>
+        </div>
     </div>
-    <div class="content-body">
-        <form method="POST" action="./">
-            {% csrf_token %}
-            <table>
-                <tr>
-                    <th>Id</th>
-                    <th>Label</th>
-                </tr>
+
+    <div class="row">
+        <div class="large-12 columns">
+            <form method="POST" action="./">
+                {% csrf_token %}
+                <div class="row headings">
+                    <div class="small-3 columns">
+                        Id
+                    </div>
+                    <div class="small-7 columns">
+                        Label
+                    </div>
+                    <div class="small-2 columns">
+                    </div>
+                </div>
                 {% for c, v in collections.items %}
-                    <tr>
-                        <td><a href="{{v.uri}}">{{c}}</a></td>
-                        <td>{{v.title}}</td>
+                <div class="row">
+                    <div class="small-3 columns">
+                        <a href="{{v.uri}}">{{c}}</a>
+                    </div>
+                    <div class="small-7 columns">
+                        {{v.title}}
+                    </div>
+                    <div class="small-2 columns">
                         {% if auth_delete %}
-                        <td><input type="checkbox" name="select" value="{{c}}" /></td>
+                        <input type="checkbox" name="select" value="{{c}}" class="right" />
                         {% endif %}
-                    </tr>
+                    </div>
+                </div>
                 {% endfor %}
                 {% if auth_delete %}
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td><input type="submit" value="Remove selected" name="remove"></td>
-                    </tr>
+                <div class="row">
+                    <div class="small-3 columns right">
+                        <input type="submit" value="Remove selected" name="remove" class="right" />
+                    </div>
+                </div>
                 {% endif %}
                 {% if auth_create %}
-                    <tr>
-                        <td><input type="text" size="16" name="new_id" value=""/></td>
-                        <td><input type="text" size="64" name="new_label" value=""/></td>
-                        <td><input type="submit" value="New collection" name="new"></td>
-                    </tr>
+                <div class="row">
+                    <div class="small-3 columns">
+                        <input type="text" size="16" name="new_id" value=""/>
+                    </div>
+                    <div class="small-7 columns">
+                        <input type="text" size="64" name="new_label" value=""/>
+                    </div>
+                    {% if auth_delete %}
+                    <div class="small-2 columns">
+                        <input type="submit" value="New" name="new" class="right" />
+                    </div>
+                    {% endif %}
+                </div>
                 {% endif %}
-            </table>
-        </form>
+            </form>
+        </div>
     </div>
 {% endblock %}

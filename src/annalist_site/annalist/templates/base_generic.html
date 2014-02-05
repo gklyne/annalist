@@ -1,75 +1,172 @@
-<html>
+<!doctype html>
+<html class="no-js" lang="en">
 
 {% load static %}
 
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'foundation/css/foundation.css' %}" />
+    <script src="{% static 'foundation/js/vendor/modernizr.js' %}"></script>
     <title>{% block title %}Annalist linked data journal{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/annalist.css' %}">
 </head>
 
 <body>
 
-<div class="heading">
-    {% block heading %}
-        Annalist linked data journal
-    {% endblock %}
-</div>
+    <!--
+    <div class="row">
+        <div class="large-12 columns">
+    -->
+            <h2 class="page-heading">{% block heading %}Annalist linked data journal{% endblock %}</h2>
+    <!--
+        </div>
+    </div>
+    -->
 
-{% block topmenu %}
-    <div class="menu-top">
-        <span class="menu-left">
-            <a href="{% url 'AnnalistSiteView' %}">Home</a>
-        </span>
-        <span class="menu-right">
-        {% if not suppress_user %}
-            {% if user.is_authenticated %}
-                <a href="{% url 'AnnalistProfileView' %}">Profile</a>
-                <a href="{% url 'LogoutUserView' %}">Logout</a>
-            {% else %}
-                <a href="{% url 'AnnalistProfileView' %}">Login</a>
-            {% endif %}
-        {% endif %}
-        </span>
+    <!--
+    <div class="row">
+        <div class="large-12 columns">
+    -->
+        {% block topmenu %}
+            <nav class="top-bar" data-topbar>
+              <ul class="title-area">
+                <li class="name">
+                  <h1><a href="{% url 'AnnalistSiteView' %}">Home</a></h1>
+                </li>
+                <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+              </ul>
+              <section class="top-bar-section">
+                <!-- Left Nav Section - - >
+                <ul class="left">
+                  <li><a href="#">Left Nav Button</a></li>
+                </ul>
+                -->
+                <!-- Right Nav Section -->
+                <ul class="right">
+                    {% if not suppress_user %}
+                        {% if user.is_authenticated %}
+                            <li class="active"><a href="{% url 'AnnalistProfileView' %}">Profile</a></li>
+                            <li class="active"><a href="{% url 'LogoutUserView' %}">Logout</a></li>
+                        {% else %}
+                            <li class="active"><a href="{% url 'AnnalistProfileView' %}">Login</a></li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+              </section>
+            </nav>
+        {% endblock %}
+    <!--
+        </div>
     </div>
-{% endblock %}
-
-{% if error_message %}
-    <hr/>
-    <div class="error-head">
-        {{error_head}}
-    </div>
-    <div class="error-message">
-        {{error_message}}
-    </div>
-    <hr/>
-{% endif %}
+    -->
 
 {% if info_message %}
-    <hr/>
-    <div class="info-head">
-        {{info_head}}
+    <!--
+    <div class="row">
+        <div class="large-12 columns">
+    -->
+            <div data-alert class="alert-box radius">
+                <h3>{{info_head}}</h3>
+                {{info_message}}
+                <a href="#" class="close">&times;</a>
+            </div>
+    <!--
+        </div>
     </div>
-    <div class="info-message">
-        {{info_message}}
+    -->
+{% endif %}
+
+{% if done_message %}
+    <!--
+    <div class="row">
+        <div class="large-12 columns">
+    -->
+            <div data-alert class="alert-box success radius">
+                <h3>{{done_head}}</h3>
+                {{done_message}}
+                <a href="#" class="close">&times;</a>
+    <!--
+        </div>
     </div>
-    <hr/>
+    -->
+    </div>
+{% endif %}
+
+{% if error_message %}
+    <!--
+    <div class="row">
+        <div class="large-12 columns">
+    -->
+            <div data-alert class="alert-box warning radius">
+                <h3>{{error_head}}</h3>
+                {{error_message}}
+                <a href="#" class="close">&times;</a>
+            </div>
+    <!--
+        </div>
+    </div>
+    -->
 {% endif %}
 
 {% block content %}
+<!--
     <div class="content-head">
         Content heading
     </div>
     <div class="content-body">
         Placeholder for content to be provided by selected view
     </div>
+-->
 {% endblock %}
 
+<!--
     <div class="footer">
-    {% block footer %}
+    { % block footer %}
         Powered by <a href="https://github.com/gklyne/annalist">Annalist</a>    
-    {% endblock %}
+    { % endblock %}
     </div>
+-->
+
+    <div class="footer-bar">
+        <div class="row">
+            <div class="medium-6 medium-push-6 columns">
+                <ul class="links">
+                    <li>
+                        <a href="/annalist/site/?info_head=About&amp;info_message=About%20page%20TBD">About</a>
+                    </li><!--
+                <li><a href="/annalist/blog">Blog</a></li>
+                <li><a href="/annalist/news">News<span class="show-for-medium-up"> &amp; Events</span></a></li>
+                -->
+                    <li>
+                        <a href="/annalist/site/?info_head=Contact&amp;info_message=Contact%20page%20TBD">Contact</a>
+                    </li>
+                    <li>
+                        <a href="/annalist/site/?info_head=Sitemap&amp;info_message=About%20page%20TBD">Sitemap</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="medium-6 medium-pull-6 columns">
+                <p class="copyright">
+                {% block footer %}
+                    <a href="/annalist/" class="logo regular"><img src="{% static 'images/annalist_45_39_px.png' %}"></a>
+                    Powered&nbsp;by&nbsp;<a href="https://github.com/gklyne/annalist">Annalist</a>
+                {% endblock %}
+                </p>
+            </div>
+        </div>
+    </div>
+   
+    <script src="{% static 'foundation/js/vendor/jquery.js' %}"></script>
+    <script src="{% static 'foundation/js/foundation.min.js' %}"></script>
+    <script>
+        $(document).foundation();
+    </script>
 
 </body>
 
 </html>
+
+
+
+
