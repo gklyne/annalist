@@ -416,7 +416,7 @@ class SiteActionView(TestCase):
         self.assertEqual(colls[id]["uri"],      init_collections[id]["uri"])
         self.assertEqual(colls[id]["title"],    init_collections[id]["title"])
         return
-
+ 
     def test_post_cancelled_remove(self):
         c = Client()
         loggedin = c.login(username="testuser", password="testpassword")
