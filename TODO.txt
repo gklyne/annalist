@@ -35,6 +35,7 @@
    / include supporting logic in Collection module
    / rework authentication/authorization to allow unauthenticated access for public data 
    / test cases for site, site views; refactor tests to separate directory, modules
+   / adopt responsive CSS framework (Foundation)
 2. Collection initial display
    - determine base configuration/metadata needed
    - include supporting logic in Collection module

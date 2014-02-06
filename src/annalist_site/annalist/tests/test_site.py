@@ -173,8 +173,8 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # self.assertEqual(r.content, "???")
-        self.assertContains(r, """<div class="error-head">Error</div>""", html=True)
-        self.assertContains(r, """<div class="error-message">Error presented</div>""", html=True)
+        self.assertContains(r, """<h3>Error</h3>""", html=True)
+        self.assertContains(r, """<p>Error presented</p>""", html=True)
         return
 
     def test_get_info(self):
@@ -182,8 +182,8 @@ class SiteViewTest(AnnalistTestCase):
         r = c.get("/annalist/site/?info_head=Information&info_message=Information%20presented")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, """<div class="info-head">Information</div>""", html=True)
-        self.assertContains(r, """<div class="info-message">Information presented</div>""", html=True)
+        self.assertContains(r, """<h3>Information</h3>""", html=True)
+        self.assertContains(r, """<p>Information presented</p>""", html=True)
         return
 
     def test_get_home(self):
@@ -211,22 +211,24 @@ class SiteViewTest(AnnalistTestCase):
         # (See: http://stackoverflow.com/questions/2257958/)
         s = BeautifulSoup(r.content)
         self.assertEqual(s.html.title.string, "Annalist data journal test site")
-        self.assertEqual(s.find(class_="menu-left").a.string,   "Home")
-        self.assertEqual(s.find(class_="menu-left").a['href'],  "/annalist/site/")
-        self.assertEqual(s.find(class_="menu-right").a.string,  "Login")
-        self.assertEqual(s.find(class_="menu-right").a['href'], "/annalist/profile/")
+        homelink = s.find(class_="title-area").find(class_="name").h1.a
+        self.assertEqual(homelink.string,   "Home")
+        self.assertEqual(homelink['href'],  "/annalist/site/")
+        menuitems = s.find(class_="top-bar-section").find(class_="right").find_all("li")
+        self.assertEqual(menuitems[0].a.string,  "Login")
+        self.assertEqual(menuitems[0].a['href'], "/annalist/profile/")
         # print "*****"
         # #print s.table.tbody.prettify()
         # print s.table.tbody.find_all("tr")
         # print "*****"
-        trows = s.table.tbody.find_all("tr")
+        trows = s.form.find_all("div", class_="row")
         self.assertEqual(len(trows), 4)
-        self.assertEqual(trows[1].td.a.string,  "coll1")
-        self.assertEqual(trows[1].td.a['href'], "/annalist/coll1")
-        self.assertEqual(trows[2].td.a.string,  "coll2")
-        self.assertEqual(trows[2].td.a['href'], "/annalist/coll2")
-        self.assertEqual(trows[3].td.a.string,  "coll3")
-        self.assertEqual(trows[3].td.a['href'], "/annalist/coll3")
+        self.assertEqual(trows[1].div.p.a.string,  "coll1")
+        self.assertEqual(trows[1].div.p.a['href'], "/annalist/coll1")
+        self.assertEqual(trows[2].div.p.a.string,  "coll2")
+        self.assertEqual(trows[2].div.p.a['href'], "/annalist/coll2")
+        self.assertEqual(trows[3].div.p.a.string,  "coll3")
+        self.assertEqual(trows[3].div.p.a['href'], "/annalist/coll3")
         return
 
     def test_get_with_login(self):
@@ -250,46 +252,49 @@ class SiteViewTest(AnnalistTestCase):
         s = BeautifulSoup(r.content)
         # title and top menu
         self.assertEqual(s.html.title.string, "Annalist data journal test site")
-        ml = s.find(class_="menu-left").find_all("a")
-        self.assertEqual(ml[0].string,   "Home")
-        self.assertEqual(ml[0]['href'],  "/annalist/site/")
-        mr = s.find(class_="menu-right").find_all("a")
-        self.assertEqual(mr[0].string,  "Profile")
-        self.assertEqual(mr[0]['href'], "/annalist/profile/")
-        self.assertEqual(mr[1].string,  "Logout")
-        self.assertEqual(mr[1]['href'], "/annalist/logout/")
+        homelink = s.find(class_="title-area").find(class_="name").h1.a
+        self.assertEqual(homelink.string,   "Home")
+        self.assertEqual(homelink['href'],  "/annalist/site/")
+        menuitems = s.find(class_="top-bar-section").find(class_="right").find_all("li")
+        self.assertEqual(menuitems[0].a.string,  "Profile")
+        self.assertEqual(menuitems[0].a['href'], "/annalist/profile/")
+        self.assertEqual(menuitems[1].a.string,  "Logout")
+        self.assertEqual(menuitems[1].a['href'], "/annalist/logout/")
         # Displayed colllections and check-buttons
-        trows = s.table.tbody.find_all("tr")
+        trows = s.form.find_all("div", class_="row")
         self.assertEqual(len(trows), 6)
-        tcols1 = trows[1].find_all("td")
+        tcols1 = trows[1].find_all("div")
         self.assertEqual(tcols1[0].a.string,       "coll1")
         self.assertEqual(tcols1[0].a['href'],      "/annalist/coll1")
         self.assertEqual(tcols1[2].input['type'],  "checkbox")
         self.assertEqual(tcols1[2].input['name'],  "select")
         self.assertEqual(tcols1[2].input['value'], "coll1")
-        tcols2 = trows[2].find_all("td")
+        tcols2 = trows[2].find_all("div")
         self.assertEqual(tcols2[0].a.string,       "coll2")
         self.assertEqual(tcols2[0].a['href'],      "/annalist/coll2")
         self.assertEqual(tcols2[2].input['type'],  "checkbox")
         self.assertEqual(tcols2[2].input['name'],  "select")
         self.assertEqual(tcols2[2].input['value'], "coll2")
-        tcols3 = trows[3].find_all("td")
+        tcols3 = trows[3].find_all("div")
         self.assertEqual(tcols3[0].a.string,       "coll3")
         self.assertEqual(tcols3[0].a['href'],      "/annalist/coll3")
         self.assertEqual(tcols3[2].input['type'],  "checkbox")
         self.assertEqual(tcols3[2].input['name'],  "select")
         self.assertEqual(tcols3[2].input['value'], "coll3")
         # Remove/new collection buttons
-        btn_remove = trows[4].find_all("td")[2]
+        btn_remove = trows[4].find("div", class_="right")
         self.assertEqual(btn_remove.input["type"],  "submit")
         self.assertEqual(btn_remove.input["name"],  "remove")
-        field_id = trows[5].find_all("td")[0]
+        # print "**********"
+        # print trows[5].prettify()
+        # print "**********"
+        field_id = trows[5].find_all("div")[0]
         self.assertEqual(field_id.input["type"],  "text")
         self.assertEqual(field_id.input["name"],  "new_id")
-        field_id = trows[5].find_all("td")[1]
+        field_id = trows[5].find_all("div")[1]
         self.assertEqual(field_id.input["type"],  "text")
         self.assertEqual(field_id.input["name"],  "new_label")
-        btn_new = trows[5].find_all("td")[2]
+        btn_new = trows[5].find_all("div")[2]
         self.assertEqual(btn_new.input["type"],  "submit")
         self.assertEqual(btn_new.input["name"],  "new")
         return
@@ -342,7 +347,7 @@ class SiteViewTest(AnnalistTestCase):
         # print "********"
         # # print repr(r.__dict__)
         # # print repr(r.context)
-        # # print r.content
+        # print r.content
         # print "********"
         # Returns confirmation form: check
         self.assertContains(r, """<form method="POST" action="/annalist/confirm/">""", status_code=200)

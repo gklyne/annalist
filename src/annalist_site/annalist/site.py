@@ -45,11 +45,24 @@ class Site(object):
         self._basedir = sitebasedir if sitebasedir.endswith("/") else sitebasedir+"/"
         return
 
+    def collections(self):
+        """
+        Generator enumerates and returns collection descriptions that are part of a site.
+
+        Yielded values are collection objects.
+        """
+        site_files   = os.listdir(self._basedir)
+        for f in site_files:
+            c = Collection.load(f, self._baseuri, self._basedir)
+            if c:
+                yield c
+        return
+
     def collections_dict(self):
         """
         Return an ordered dictionary of collection URIs indexed by collection id
         """
-        coll = [ (c["id"], c) for c in Collection.collections(self) ]
+        coll = [ (c.get_id(), c) for c in self.collections() ]
         return collections.OrderedDict(sorted(coll))
 
     def site_data(self):
@@ -75,7 +88,7 @@ class Site(object):
 
         returns a Collection object for the newly created collection.
         """
-        c = Collection.create(coll_id, coll_meta, self)
+        c = Collection.create(coll_id, coll_meta, self._baseuri, self._basedir)
         return c
 
     def remove_collection(self, coll_id):
@@ -87,7 +100,7 @@ class Site(object):
         Returns a non-False status code if the collection is not removed.
         """
         log.debug("remove_collection: %s"%(coll_id))
-        return Collection.remove(coll_id, self)
+        return Collection.remove(coll_id, self._basedir)
 
 class SiteView(AnnalistGenericView):
     """

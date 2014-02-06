@@ -1,5 +1,14 @@
 """
 Annalist collection
+
+A collection is represented by:
+- an ID (slug)
+- a URI
+- a name/label
+- a description
+- a set of record types
+- a set of list views
+- a set of record views
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -29,73 +38,78 @@ class Collection(object):
     # @@TODO: currently association of a collection with a site is by physical location
     #         which means a collection cannot exist in more than one site.  Later developments
     #         may want to review this.
-    #
-    # @@TODO: refactor logic between site and collection, to localize knowledge of structures
-    #         e.g. site method enumerates possibile directories, 
-    #         collection tests and returns value
 
     @staticmethod
-    def collections(site):
-        """
-        Generator enumerates and returns collection descriptions that are part of a site.
-
-        site            Site object containing collections to enumerate.
-        """
-        site_files   = os.listdir(site._basedir)
-        for f in site_files:
-            p = util.entity_path(site._basedir, [f, layout.COLL_META_DIR], layout.COLL_META_FILE)
-            d = util.read_entity(p)
-            if d:
-                d["id"]    = f
-                d["uri"]   = urlparse.urljoin(site._baseuri, f)
-                d["title"] = d.get("rdfs:label", "Collection "+f)
-                yield d
-        return
-
-    @staticmethod
-    def exists(coll_id, site):
-        """
-        Method tests for existence of identified collection in site.
-
-        site            Site object containing collections to test.
-
-        Returns True if the collection exists, as determined by existence of the 
-        collection description metadata file.
-        """
-        log.debug("Colllection.exists: id %s"%(coll_id))
-        p = util.entity_path(site._basedir, [coll_id, layout.COLL_META_DIR], layout.COLL_META_FILE)
-        return (p != None) and os.path.isfile(p)
-
-    @staticmethod
-    def create(coll_id, coll_meta, site):
+    def create(coll_id, coll_meta, baseuri, basedir):
         """
         Method creates a new collection in a site, saving its details to disk
 
-        coll_id         identifier for new collection
-        coll_meta       description metadata about the new collection
-        site            Site object that will hold the created collection.
+        coll_id     identifier for new collection
+        coll_meta   description metadata about the new collection
+        baseuri     is the base URI from which the collection is accessed
+        basedir     is the base directory containing the subdirectory containing
+                    the collection data
         """
         log.debug("Colllection.create: id %s, meta %r"%(coll_id, coll_meta))
-        c = Collection(coll_id, site)
+        c = Collection(coll_id, baseuri, basedir)
         c.set_values(coll_meta)
         c.save()
         return c
 
     @staticmethod
-    def remove(coll_id, site):
+    def load(colldir, baseuri, basedir):
+        """
+        Return a collection at a location specified by a base directory and subdirectory,
+        or None if there is not collection there.
+
+        colldir     is the name of the subdirectory containing the collection data
+        baseuri     is the base URI from which the collection is accessed
+        basedir     is the base directory containing the subdirectory containing
+                    the collection data
+        """
+        p = util.entity_path(basedir, [colldir, layout.COLL_META_DIR], layout.COLL_META_FILE)
+        d = util.read_entity(p)
+        if d:
+            # @@TODO do we really want this ad hoc stuff in addition to the saved metadata?
+            d["id"]    = colldir
+            d["uri"]   = urlparse.urljoin(baseuri, colldir)
+            d["title"] = d.get("rdfs:label", "Collection "+colldir)
+            c = Collection(colldir, baseuri, basedir)
+            c.set_values(d)
+            return c
+        return None
+
+    @staticmethod
+    def exists(coll_id, basedir):
+        """
+        Method tests for existence of identified collection in a given base directory.
+
+        coll_id     is the collection identifier whose exostence is tested
+        basedir     is the base directory containing the subdirectory containing
+                    the collection data
+
+        Returns True if the collection exists, as determined by existence of the 
+        collection description metadata file.
+        """
+        log.debug("Collection.exists: id %s"%(coll_id))
+        p = util.entity_path(basedir, [coll_id, layout.COLL_META_DIR], layout.COLL_META_FILE)
+        return (p != None) and os.path.isfile(p)
+
+    @staticmethod
+    def remove(coll_id, basedir):
         """
         Method removes a collection, deleting its details and data from disk
 
         coll_id     the collection identifier of the collection
-        site        Site object for site where collection currently resides
+        basedir     is the base directory containing the subdirectory containing
+                    the collection data
 
         Returns None on sucess, of a status value indicating a reason for value.
         """
         log.debug("Colllection.remove: id %s"%(coll_id))
-        if Collection.exists(coll_id, site):
-            c = Collection(coll_id, site)
-            d = c._basedir
-            if d.startswith(site._basedir):
+        if Collection.exists(coll_id, basedir):
+            d = os.path.join(basedir, coll_id)
+            if d.startswith(basedir):   # Double check...
                 shutil.rmtree(d)
             else:
                 raise Annalist_Error("Collection %s unexpected base dir %s"%(coll_id, d))
@@ -103,23 +117,23 @@ class Collection(object):
             return Annalist_Error("Collection %s not found"%(coll_id))
         return None
 
-    def __init__(self, coll_id, site):
+    def __init__(self, coll_id, baseuri, basedir):
         """
         Initialize a new Collection object.  A collectiion Id and values must be 
         set before the collection can be used.
 
         coll_id     the collection identifier for the collection
-        site        Site object in which holds the collection
+        baseuri     is the base URI from which the collection is accessed
+        basedir     is the base directory containing the subdirectory containing
+                    the collection data
         """
         if not util.valid_id(coll_id):
             raise ValueError("Invalid colllection identifier: %s"%(coll_id))
-        baseuri = site._baseuri+coll_id
-        basedir = site._basedir+coll_id
-        self._baseuri = baseuri if baseuri.endswith("/") else baseuri+"/"
-        self._basedir = basedir if basedir.endswith("/") else basedir+"/"
         self._id      = coll_id
+        self._baseuri = baseuri + coll_id + "/"
+        self._basedir = basedir + coll_id + "/"
         self._values  = None
-        log.debug("Colllection.__init__: base URI %s, base dir %s"%(self._baseuri, self._basedir))
+        log.debug("Collection.__init__: base URI %s, base dir %s"%(self._baseuri, self._basedir))
         return
 
     def get_id(self):
@@ -137,6 +151,24 @@ class Collection(object):
         Return collection metadata values
         """
         return self._values
+
+    def items(self):
+        """
+        Return collection metadata value fields
+        """
+        return self._values.items()
+
+    def __getitem__(self, k):
+        """
+        Allow direct indexing to access collection metadata value fields
+        """
+        return self._values[k]
+
+    def __setitem__(self, k, v):
+        """
+        Allow direct indexing to update collection metadata value fields
+        """
+        self._values[k] = v
 
     def save(self):
         if not self._id:
