@@ -9,12 +9,12 @@
 
 
 body {
-    margin:         0px;
+    margin:         0;
 }
 
 body > div {
-    padding-left:   5px;
-    padding-right:  5px;    
+    padding-left:   0.9375rem;
+    padding-right:  0.9375rem;    
 }
 
 .top {
@@ -30,110 +30,26 @@ body > div {
 }
 
 div.row.headings {
-    padding-bottom: 6px;
+    padding-bottom: 0.5rem;
     font-weight: bold;
 }
 
 div.columns > input {
-    margin: 3px 0;
-    padding: 3px 0;
+    margin: 0.25rem 0;
+    padding: 0.25rem 0;
 }
 
 h2.page-heading {
-    padding: 0 15px;
+    padding: 0 0.9375rem;
 }
 
-/* 
-
-.menu-top {
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    font-size:  medium;
-    padding-top: 0.2em;
-    padding-bottom: 0.3em;
-    background-color: #E0F5FF;
-    padding-left:   5px;
-    padding-right:  5px;    
+div.alert-box p {
+    margin-bottom: 0.25rem;
 }
 
-.menu-left {
-    position:   relative;
-    left:       0px;
-    top:        0px;
+div.column p , div.columns p {
+    margin-bottom: 0;
 }
-
-.menu-right {
-    float:      right;
-    / *
-    position:   relative;
-    right:      0px;
-    top:        0px;
-    * /
-}
-
-.heading {
-    font-family: Verdana, Geneva, sans-serif;
-    font-size:  x-large;
-}
-
-.footer {
-    font-family: Verdana, Geneva, sans-serif;
-    font-size:  small;    
-    padding-top: 0.3em;
-    padding-bottom: 0.3em;
-    background-color: #E0F5FF;
-}
-
-*/
-
-/*
-
-.content-head {
-    font-family: Verdana, Geneva, sans-serif;
-    font-size:   large;
-}
-
-.content-body {
-    font-family: Georgia, serif;
-    font-size:  medium;
-}
-
-form, form table {
-    background-color: #F0F0FF;
-}
-
-form table {
-    margin:         8px;
-    border-style:   none;
-    border-width:   1px;    
-}
-
-table {
-    margin:         8px;
-    border-style:   solid;
-    border-width:   1px;
-    border-color:   #D8D8D8;
-    / * background-color: #E0FFE0; * /
-}
-
-td {
-    / *
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    font-size: medium;  
-    * /
-    font-family: Georgia, serif;
-    font-size:  medium;
-    padding:    0.2em;
-}
-
-th {
-    font-family: Georgia, serif;
-    font-size:  medium;
-    padding:    0.2em;
-    text-align: left;
-    font-weight: bold;
-}
-
-*/
 
 .error {
     color: red;
@@ -146,54 +62,27 @@ th {
 }
 
 .instruction {
-    padding-top: 0.5em;
-    padding-left: 2em;
-    padding-bottom: 0.5em;
+    padding-top: 0.5rem;
+    padding-left: 2rem;
+    padding-bottom: 0.5rem;
     font-style: italic;
 }
 
-/*
-
-.info-head {
-    font-family: Verdana, Geneva, sans-serif;
-    font-size: x-large;
-    color: green;
-}
-
-.info-message {
-    font-family: Georgia, serif;
-    font-size: medium;
-    color: green;
-}
-
-.error-head {
-    font-family: Verdana, Geneva, sans-serif;
-    font-size: x-large;
-    color: red;
-}
-
-.error-message {
-    font-family: Georgia, serif;
-    font-size: medium;
-    color: red;
-}
-
-*/
-
-/* Derived from Foundation / ZURB examples */
+/* Adapted from Foundation / ZURB examples */
 
 .footer-bar {
-  background: #333333;
-  padding: 9px 0 9px; }
+    margin-top: 0.75rem;
+    background: #333333;  
+    padding: 0.75rem 0; }
 
 .footer-bar a.logo {
-  color: #858585;
-  font-weight: normal;
-  padding: 0px 12px 0px 0;
-  font-size: 0.88889rem;
-  display: inline-block;
-  vertical-align: bottom;
-  }
+    display: inline-block;
+    padding: 0 1rem 0 0;
+    font-size: 0.88889rem;
+    font-weight: normal;
+    vertical-align: bottom;
+    color: #858585;
+    }
 
 .footer-bar ul.links {
   margin: 0;
@@ -201,29 +90,21 @@ th {
 
   .footer-bar ul.links li {
     display: block;
-    float: left;
-    margin-right: 6px;
+    float: left; /* Remove this and items display vertically */
+    margin-right: 1.25rem;
     /* text-transform: uppercase; */
     font-weight: 700;
     font-size: 0.77778rem; }
 
-    .footer-bar ul.links li a {
-      color: #666666;
-      padding: 3px 12px 3px 0; }
-
-      .footer-bar ul.links li a:hover {
-        color: #777777; }
+  .footer-bar a {
+    color: #666666; }
+    .footer-bar a:hover {
+      color: #777777; }
 
   .footer-bar p.copyright {
     margin: 0 0;
     font-size: 0.66667rem;
     color: #666666; 
     }
-
-    .footer-bar p.copyright a {
-      color: #666666; }
-
-      .footer-bar p.copyright a:hover {
-        color: #777777; }
 
 

@@ -16,31 +16,34 @@
         <div class="large-12 columns">
             <form method="POST" action="./">
                 {% csrf_token %}
+
                 <div class="row headings">
                     <div class="small-3 columns">
-                        Id
+                        <p>Id</p>
                     </div>
                     <div class="small-7 columns">
-                        Label
+                        <p>Label</p>
                     </div>
                     <div class="small-2 columns">
                     </div>
                 </div>
+
                 {% for c, v in collections.items %}
                 <div class="row">
                     <div class="small-3 columns">
-                        <a href="{{v.uri}}">{{c}}</a>
+                        <p><a href="{{v.uri}}">{{c}}</a></p>
                     </div>
                     <div class="small-7 columns">
-                        {{v.title}}
+                        <p>{{v.title}}</p>
                     </div>
                     <div class="small-2 columns">
                         {% if auth_delete %}
-                        <input type="checkbox" name="select" value="{{c}}" class="right" />
+                        <p><input type="checkbox" name="select" value="{{c}}" class="right" /></p>
                         {% endif %}
                     </div>
                 </div>
                 {% endfor %}
+
                 {% if auth_delete %}
                 <div class="row">
                     <div class="small-3 columns right">
@@ -48,6 +51,7 @@
                     </div>
                 </div>
                 {% endif %}
+
                 {% if auth_create %}
                 <div class="row">
                     <div class="small-3 columns">
@@ -63,6 +67,7 @@
                     {% endif %}
                 </div>
                 {% endif %}
+
             </form>
         </div>
     </div>
