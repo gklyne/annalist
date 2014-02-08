@@ -51,10 +51,10 @@ class Site(EntityRoot):
 
         Yielded values are collection objects.
         """
-        log.debug("site.collections: basedir: %s"%(self._basedir))
-        site_files = os.listdir(self._basedir)
+        log.debug("site.collections: basedir: %s"%(self._entitydir))
+        site_files = os.listdir(self._entitydir)
         for f in site_files:
-            c = Collection.load(f, self._baseuri, self._basedir)
+            c = Collection.load(f, self._entityuri, self._entitydir)
             if c:
                 yield c
         return
@@ -70,7 +70,7 @@ class Site(EntityRoot):
         """
         Return dictionary of site data
         """
-        p = util.entity_path(self._basedir, [], layout.SITE_META_FILE)
+        p = util.entity_path(self._entitydir, [], layout.SITE_META_FILE)
         if not (p and os.path.exists(p)):
             raise EntityNotFound_Error(p)
         site_data = util.read_entity(p)
@@ -89,7 +89,7 @@ class Site(EntityRoot):
 
         returns a Collection object for the newly created collection.
         """
-        c = Collection.create(coll_id, coll_meta, self._baseuri, self._basedir)
+        c = Collection.create(coll_id, coll_meta, self._entityuri, self._entitydir)
         return c
 
     def remove_collection(self, coll_id):
@@ -101,7 +101,7 @@ class Site(EntityRoot):
         Returns a non-False status code if the collection is not removed.
         """
         log.debug("remove_collection: %s"%(coll_id))
-        return Collection.remove(coll_id, self._basedir)
+        return Collection.remove(coll_id, self._entitydir)
 
 class SiteView(AnnalistGenericView):
     """
