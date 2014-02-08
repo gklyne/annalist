@@ -132,13 +132,13 @@ def entity_dir_path(base_dir, path, filename):
     >>> entity_dir_path("/base/dir/",["sub"],"file.ext")
     ('/base/dir/sub', '/base/dir/sub/file.ext')
     >>> entity_dir_path("/base/dir/",[],"file.ext")
-    ('/base/dir/', '/base/dir/file.ext')
+    ('/base/dir', '/base/dir/file.ext')
     >>> entity_dir_path("/base/dir/",["sub1","sub2"],"file.ext")
     ('/base/dir/sub1/sub2', '/base/dir/sub1/sub2/file.ext')
     >>> entity_dir_path("/base/dir",["sub"],"file.ext")
     ('/base/dir/sub', '/base/dir/sub/file.ext')
-    >>> entity_dir_path("/base/dir",[],"file.ext")
-    ('/base/dir', '/base/dir/file.ext')
+    >>> entity_dir_path("/base/dir",[],"sub/file.ext")
+    ('/base/dir/sub', '/base/dir/sub/file.ext')
     """
     log.debug("entity_dir_path %s, %r, %s"%(base_dir, path, filename))
     if path:
@@ -148,7 +148,10 @@ def entity_dir_path(base_dir, path, filename):
             d = os.path.join(base_dir, path)
     else:
         d = base_dir
-    return (d, os.path.join(d, filename))
+    p = os.path.join(d, filename)
+    d = os.path.dirname(p)
+    # if not d.endswith("/"): d += "/"
+    return (d, p)
 
 def entity_path(base_dir, path, filename):
     """

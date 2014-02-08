@@ -37,6 +37,7 @@
    / test cases for site, site views; refactor tests to separate directory, modules
    / adopt responsive CSS framework (Foundation)
 2. Collection initial display
+   - refactor metadata field access to common superclass
    - determine base configuration/metadata needed
    - include supporting logic in Collection module
    - form elements to add/delete types/views/lists/...

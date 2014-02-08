@@ -24,7 +24,6 @@ from bs4                        import BeautifulSoup
 from miscutils.MockHttpResources import MockHttpFileResources, MockHttpDictResources
 
 from annalist.site              import Site, SiteView
-from annalist.layout            import Layout
 
 from tests                      import TestBaseDir, dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase

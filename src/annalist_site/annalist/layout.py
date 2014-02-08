@@ -18,21 +18,24 @@ log = logging.getLogger(__name__)
 #   $BASE_DATA_DIR
 #     annalist-site/
 #       _annalist-site/
-#         site_meta.json_ld
+#           site_meta.json_ld
+#           site_prov.json_ld
 #       <collection-id>/
 #         _annalist_collection/
-#           coll_meta.jsonld
+#             coll_meta.jsonld
+#             coll_prov.jsonld
 #           types/
 #             <type-id>/
 #               type_meta.jsonld
+#               type_prov.jsonld
 #              :
 #           views/
-#             <view-id>/
 #               view_meta.jsonld
+#               view_prov.jsonld
 #              :
 #           lists/
-#             <list-id>/
 #               list_meta.jsonld
+#               list_prov.jsonld
 #              :
 #           bridges/
 #             (bridge-description (incl path mapping in collection) - @@TBD)
@@ -55,33 +58,43 @@ SITE_DIR        = "annalist_site"
 
 # Path values in the following are relative to the base directory of the site (.../$SITE_DIR)
 
-SITE_META_DIR   = "_annalist_site"
-SITE_META_PATH  = SITE_META_DIR
-SITE_META_FILE  = "site_meta.jsonld"
+SITE_META_FILE  = "_annalist_site/site_meta.jsonld"
+SITE_META_PATH  = SITE_META_FILE
+SITE_PROV_FILE  = "_annalist_site/site_prov.jsonld"
 
 SITE_COLL_DIR   = "%(coll_id)s"
-SITE_COLL_PATH  = SITE_COLL_DIR
-
-COLL_META_DIR   = "_annalist_collection"
-COLL_META_PATH  = SITE_COLL_PATH + "/" + COLL_META_DIR
-COLL_META_FILE  = "coll_meta.jsonld"
+COLL_META_FILE  = "_annalist_collection/coll_meta.jsonld"
+COLL_META_PATH  = SITE_COLL_DIR + "/" + COLL_META_FILE
+COLL_PROV_FILE  = "_annalist_collection/coll_prov.jsonld"
 
 COLL_TYPE_DIR   = "types"
-TYPE_META_DIR   = "%(type_id)s"
-TYPE_META_PATH  = SITE_COLL_PATH + "/" + COLL_TYPE_DIR + "/" + TYPE_META_DIR
+TYPE_INFO_DIR   = "%(type_id)s"
 TYPE_META_FILE  = "type_meta.lsonld"
+TYPE_META_PATH  = SITE_COLL_DIR + "/" + COLL_TYPE_DIR + "/" + TYPE_INFO_DIR + "/" + TYPE_META_FILE
+TYPE_PROV_FILE  = "type_prov.lsonld"
 
-VIEW_META_DIR   = COLL_META_DIR + "/views"
-VIEW_META_FILE  = VIEW_META_DIR + "%(view_id)s/view_meta.lsonld"
+COLL_VIEW_DIR   = "views"
+VIEW_INFO_DIR   = "%(view_id)s"
+VIEW_META_FILE  = "view_meta.lsonld"
+VIEW_META_PATH  = SITE_COLL_DIR + "/" + COLL_VIEW_DIR + "/" + VIEW_INFO_DIR + "/" + VIEW_META_FILE
+VIEW_PROV_FILE  = "view_prov.lsonld"
 
-LIST_META_DIR   = COLL_META_DIR + "/lists"
-LIST_META_FILE  = LIST_META_DIR + "%(list_id)s/list_meta.lsonld"
+COLL_LIST_DIR   = "lists"
+LIST_INFO_DIR   = "%(list_id)s"
+LIST_META_FILE  = "list_meta.lsonld"
+LIST_META_PATH  = SITE_COLL_DIR + "/" + COLL_LIST_DIR + "/" + LIST_INFO_DIR + "/" + LIST_META_FILE
+LIST_PROV_FILE  = "list_prov.lsonld"
+
+COLL_ENTITY_DIR  = "%(type_id)s/%(entity_id)s"
+ENTITY_DATA_FILE = "entity-data.jsonld"
+ENTITY_DATA_PATH = SITE_COLL_DIR + "/" + COLL_ENTITY_DIR + "/" + ENTITY_DATA_FILE
+ENTITY_PROV_FILE = "entity-prov.jsonld"
 
 # and more...
 
 class Layout(object):
     """
-    A dynamically created layout value with paths that are dynamnically constructed 
+    A dynamically created layout value with paths that are dynamically constructed 
     using a supplied base directory.
     """
 

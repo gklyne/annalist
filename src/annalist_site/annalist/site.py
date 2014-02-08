@@ -51,7 +51,8 @@ class Site(object):
 
         Yielded values are collection objects.
         """
-        site_files   = os.listdir(self._basedir)
+        log.debug("site.collections: basedir: %s"%(self._basedir))
+        site_files = os.listdir(self._basedir)
         for f in site_files:
             c = Collection.load(f, self._baseuri, self._basedir)
             if c:
@@ -69,7 +70,7 @@ class Site(object):
         """
         Return dictionary of site data
         """
-        p = util.entity_path(self._basedir, layout.SITE_META_DIR, layout.SITE_META_FILE)
+        p = util.entity_path(self._basedir, [], layout.SITE_META_FILE)
         if not (p and os.path.exists(p)):
             raise EntityNotFound_Error(p)
         site_data = util.read_entity(p)

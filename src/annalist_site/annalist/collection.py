@@ -67,7 +67,9 @@ class Collection(object):
         basedir     is the base directory containing the subdirectory containing
                     the collection data
         """
-        p = util.entity_path(basedir, [colldir, layout.COLL_META_DIR], layout.COLL_META_FILE)
+        log.debug("collection.load: colldir %s, basedir %s"%(colldir, basedir))
+        p = util.entity_path(basedir, [colldir], layout.COLL_META_FILE)
+        log.debug("collection.load: p %s"%(p))
         d = util.read_entity(p)
         if d:
             # @@TODO do we really want this ad hoc stuff in addition to the saved metadata?
@@ -92,7 +94,7 @@ class Collection(object):
         collection description metadata file.
         """
         log.debug("Collection.exists: id %s"%(coll_id))
-        p = util.entity_path(basedir, [coll_id, layout.COLL_META_DIR], layout.COLL_META_FILE)
+        p = util.entity_path(basedir, [coll_id], layout.COLL_META_FILE)
         return (p != None) and os.path.isfile(p)
 
     @staticmethod
@@ -176,7 +178,7 @@ class Collection(object):
         if not self._values:
             raise ValueError("Collection.save without defined collection metadata")
         (coll_meta_dir,coll_meta_file) = util.entity_dir_path(
-            self._basedir, layout.COLL_META_DIR, layout.COLL_META_FILE)
+            self._basedir, [], layout.COLL_META_FILE)
         util.ensure_dir(coll_meta_dir)
         util.write_entity(coll_meta_file, "../", self._values, 
             entityid=self._id, entitytype=ANNAL.CURIE.Collection)
