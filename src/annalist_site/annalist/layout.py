@@ -61,6 +61,7 @@ SITE_DIR        = "annalist_site"
 SITE_META_FILE  = "_annalist_site/site_meta.jsonld"
 SITE_META_PATH  = SITE_META_FILE
 SITE_PROV_FILE  = "_annalist_site/site_prov.jsonld"
+META_SITE_REF   = "../"
 
 SITE_COLL_DIR   = "%(coll_id)s"
 COLL_META_FILE  = "_annalist_collection/coll_meta.jsonld"

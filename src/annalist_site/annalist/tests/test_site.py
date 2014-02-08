@@ -23,6 +23,8 @@ from bs4                        import BeautifulSoup
 
 from miscutils.MockHttpResources import MockHttpFileResources, MockHttpDictResources
 
+from annalist                   import layout
+from annalist.identifiers       import ANNAL
 from annalist.site              import Site, SiteView
 
 from tests                      import TestBaseUri, TestBaseDir, dict_to_str, init_annalist_test_site
@@ -99,6 +101,17 @@ class SiteTest(TestCase):
 
     def test_SiteTest(self):
         self.assertEqual(Site.__name__, "Site", "Check Site class name")
+        return
+
+    def test_site_init(self):
+        s = Site(TestBaseUri, TestBaseDir)
+        self.assertEqual(s._entitytype,     ANNAL.CURIE.Site)
+        self.assertEqual(s._entityfile,     layout.SITE_META_FILE)
+        self.assertEqual(s._entityref,      layout.META_SITE_REF)
+        self.assertEqual(s._entityid,       None)
+        self.assertEqual(s._entityuri,      TestBaseUri+"/")
+        self.assertEqual(s._entitydir,      TestBaseDir+"/")
+        self.assertEqual(s._values,         None)
         return
 
     def test_site_data(self):

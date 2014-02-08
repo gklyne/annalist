@@ -21,18 +21,23 @@ from django.http                import HttpResponseRedirect
 from django.conf                import settings
 from django.core.urlresolvers   import resolve, reverse
 
-from annalist               import message
-from annalist               import layout
-from annalist.exceptions    import Annalist_Error, EntityNotFound_Error
-from annalist.views         import AnnalistGenericView
-from annalist.confirmview   import ConfirmView
-from annalist               import util
-from annalist.entity        import EntityRoot, Entity
-from annalist.collection    import Collection
+from annalist                   import message
+from annalist                   import layout
+from annalist.identifiers       import ANNAL
+from annalist.exceptions        import Annalist_Error, EntityNotFound_Error
+from annalist.views             import AnnalistGenericView
+from annalist.confirmview       import ConfirmView
+from annalist                   import util
+from annalist.entity            import EntityRoot, Entity
+from annalist.collection        import Collection
 
 # @@TODO: align form variable names with stored collection metadata
 
 class Site(EntityRoot):
+
+    _entitytype = ANNAL.CURIE.Site
+    _entityfile = layout.SITE_META_FILE
+    _entityref  = layout.META_SITE_REF
 
     def __init__(self, sitebaseuri, sitebasedir):
         """
@@ -52,8 +57,7 @@ class Site(EntityRoot):
         Yielded values are collection objects.
         """
         log.debug("site.collections: basedir: %s"%(self._entitydir))
-        site_files = os.listdir(self._entitydir)
-        for f in site_files:
+        for f in self:
             c = Collection.load(f, self._entityuri, self._entitydir)
             if c:
                 yield c
@@ -70,10 +74,9 @@ class Site(EntityRoot):
         """
         Return dictionary of site data
         """
-        p = util.entity_path(self._entitydir, [], layout.SITE_META_FILE)
-        if not (p and os.path.exists(p)):
-            raise EntityNotFound_Error(p)
-        site_data = util.read_entity(p)
+        site_data = self._load_values()
+        # @@TODO rationalize this ad-hoc value creation.
+        #        cf. Entity.set_values()
         site_data["title"]       = site_data.get("rdfs:label", message.SITE_NAME_DEFAULT)
         site_data["collections"] = self.collections_dict()
         return site_data
