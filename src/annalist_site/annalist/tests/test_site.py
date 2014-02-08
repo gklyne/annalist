@@ -25,7 +25,7 @@ from miscutils.MockHttpResources import MockHttpFileResources, MockHttpDictResou
 
 from annalist.site              import Site, SiteView
 
-from tests                      import TestBaseDir, dict_to_str, init_annalist_test_site
+from tests                      import TestBaseUri, TestBaseDir, dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
 
 # Test assertion summary from http://docs.python.org/2/library/unittest.html#test-cases
@@ -67,7 +67,7 @@ class SiteTest(TestCase):
 
     def setUp(self):
         init_annalist_test_site()
-        self.testsite = Site("http://example.com/testsite", TestBaseDir)
+        self.testsite = Site(TestBaseUri, TestBaseDir)
         self.coll1 = (
             { '@id': '../'
             , 'id': 'coll1'

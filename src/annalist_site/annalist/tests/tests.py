@@ -22,6 +22,7 @@ from annalist.layout        import Layout
 
 test_layout = Layout(settings.BASE_DATA_DIR)
 TestBaseDir = test_layout.SITE_PATH
+TestBaseUri = "http://example.com/testsite"
 
 def createSiteData(src, tgt):
     """

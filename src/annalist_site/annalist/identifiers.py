@@ -62,9 +62,9 @@ def makeNamespace(prefix, baseUri, names):
         setattr(ns.CURIE, name, ns.mk_curie(name))
     return ns
 
-# @@NOTE PURL domain approval pending 2014-01-27
 ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
-    [ "Site", "Collection", "Type", "View", "List", "Entity"
+    [ "EntityRoot", "Entity"
+    , "Site", "Collection", "Type", "View", "List", "Entity"
     , "id", "type"
     ])
 

@@ -24,14 +24,15 @@ from django.core.urlresolvers   import resolve, reverse
 from annalist               import message
 from annalist               import layout
 from annalist.exceptions    import Annalist_Error, EntityNotFound_Error
-from annalist.collection    import Collection
 from annalist.views         import AnnalistGenericView
 from annalist.confirmview   import ConfirmView
 from annalist               import util
+from annalist.entity        import EntityRoot, Entity
+from annalist.collection    import Collection
 
 # @@TODO: align form variable names with stored collection metadata
 
-class Site(object):
+class Site(EntityRoot):
 
     def __init__(self, sitebaseuri, sitebasedir):
         """
@@ -41,8 +42,7 @@ class Site(object):
         sitebasedir     the base dictionary for site information
         """
         log.debug("Site init: %s"%(sitebasedir))
-        self._baseuri = sitebaseuri if sitebaseuri.endswith("/") else sitebaseuri+"/"
-        self._basedir = sitebasedir if sitebasedir.endswith("/") else sitebasedir+"/"
+        super(Site, self).__init__(sitebaseuri, sitebasedir)
         return
 
     def collections(self):
