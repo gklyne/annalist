@@ -34,6 +34,24 @@ from annalist.entity            import Entity
 # from annalist.recordtype    import RecordType
 # from annalist.views         import AnnalistGenericView
 
+class Collection_Types(Entity):
+
+    _entitytype = ANNAL.CURIE.Collection_Types
+    _entityfile = None
+    _entityref  = None
+
+class Collection_Views(Entity):
+
+    _entitytype = ANNAL.CURIE.Collection_Views
+    _entityfile = None
+    _entityref  = None
+
+class Collection_Lists(Entity):
+
+    _entitytype = ANNAL.CURIE.Collection_Lists
+    _entityfile = None
+    _entityref  = None
+
 class Collection(Entity):
 
     _entitytype = ANNAL.CURIE.Collection
@@ -48,42 +66,68 @@ class Collection(Entity):
         coll_id     the collection identifier for the collection
         """
         super(Collection, self).__init__(parent, coll_id)
+        self._types = Collection_Types(self, "types")
+        self._views = Collection_Views(self, "views")
+        self._lists = Collection_Lists(self, "lists")
         return
 
-    # @@TODO...
-    def record_types(self):
+    def types(self):
         """
         Generator enumerates and returns record types that may be stored
         """
-        type_dir = os.path.join(self._basedir, settings.COLL_TYPES_DIR)
-        if os.path.isdir(type_dir):
-            try_types = os.listdir(type_dir)
-        else:
-            try_types = []
-        for type_fil in try_types:
-            type_id = util.slug_from_name(type_fil)
-            t = os.path.join(type_dir, typ)
-            # if os.path.isfile(t):
-            #     with open(t, "r") as tf:
-            #         type_meta = json.load(tf)
-            #     yield RecordType(type_id, type_meta, self._baseuri, self._basedir)
-            raise "@@TODO"
+        for f in self:
+            t = RecordType.load(self, f)
+            if t:
+                yield t
         return
 
-    # def add_type(self, type_id, type_meta):
-    #     """
-    #     Add a new record type to the current collection
+    def add_type(self, type_id, type_meta):
+        """
+        Add a new record type to the current collection
 
-    #     type_id     identifier for the new type, as a string
-    #                 with a form that is valid as URI path segment.
-    #     type_meta   a dictionary providing additional information about
-    #                 the type to be created.
+        type_id     identifier for the new type, as a string
+                    with a form that is valid as URI path segment.
+        type_meta   a dictionary providing additional information about
+                    the type to be created.
 
-    #     returns a Collection object for the newly created collection.
-    #     """
-    #     c = RecordType.create(type_id, type_meta, self._baseuri, self._basedir)
-    #     #@@@ create type description
-    #     return c
+        returns a RecordType object for the newly created type.
+        """
+        t = RecordType.create(self._types, type_id, type_meta)
+        return t
+
+    def get_type(self, type_id):
+        """
+        Retrieve identified type description
+
+        type_id     local identifier for the type to retrieve.
+
+        returns a RecordType object for the newly created type, or None.
+        """
+        t = RecordType.load(self._types, type_id)
+        return t
+
+    def remove_type(self, type_id):
+        """
+        Remove identified type description
+
+        type_id     local identifier for the type to remove.
+
+        Returns a non-False status code if the type is not removed.
+        """
+        t = RecordType.remove(self._types, type_id)
+        return t
+
+    # @@TODO:
+    #   views
+    #   add_view
+    #   get_view
+    #   remove_view
+    #   lists
+    #   add_list
+    #   get_list
+    #   remove_list
+
+
 
 # class CollectionView(AnnalistGenericView):
 #     """

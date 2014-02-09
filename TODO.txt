@@ -36,22 +36,35 @@
    / rework authentication/authorization to allow unauthenticated access for public data 
    / test cases for site, site views; refactor tests to separate directory, modules
    / adopt responsive CSS framework (Foundation)
-2. Collection initial display
-   - refactor metadata field access to common superclass
-   - determine base configuration/metadata needed
-   - include supporting logic in Collection module
+2. Collection display
+   / refactor metadata field access to common superclass
+   - types
+    - create test cases for types in collection
+    - implement skeleton RecordType module
+   - views
+    - create test cases for views in collection
+    - implement skeleton RecordView module
+   - lists
+    - create test cases for lists in collection
+    - implement skeleton RecordList module
+   - UI test cases
    - form elements to add/delete types/views/lists/...
-   - test cases
-3. Collection configuration
-4. ...
-5. Misc
-   - Login link to include option to redirect to failed page, with form fields populated
-   - Complete authorization framework, per collection
-   - can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  
-     Use server-internal revectoring?  What about delete multiple?
-   - view collections doesn't use entered label - problem with entry vocab?
-   - util.write_entity: think about capturing provenance metadata too.
-   - move util.py to utils package, and rename?
+3. Record type display
+4. Default record list display (code may later be refactored)
+5. Design generic entity view
+6. Record view display and editing
+7. Generic record list display and editing
+8. ...
+
+Misc
+- Login link to include option to redirect to failed page, with form fields populated
+- Complete authorization framework, per collection
+- can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  
+
+Use server-internal revectoring?  What about delete multiple?
+- view collections doesn't use entered label - problem with entry vocab?
+- util.write_entity: think about capturing provenance metadata too.
+- move util.py to utils package, and rename?
 
 AnalistGenericView:
 - Generic renderers, all driven by a supplied dictionary:
