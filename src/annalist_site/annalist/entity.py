@@ -27,6 +27,10 @@ from annalist               import util
 from annalist.exceptions    import Annalist_Error
 from annalist.identifiers   import ANNAL
 
+#   -------------------------------------------------------------------------------------------
+#   EntityRoot
+#   -------------------------------------------------------------------------------------------
+
 class EntityRoot(object):
     """
     This is the base class for entities that do not have any parent entity
@@ -145,6 +149,12 @@ class EntityRoot(object):
     # Special methods to facilitate access to entity values by dictionary operations
     # on the Entity object
 
+    def keys(self):
+        """
+        Return collection metadata value keys
+        """
+        return self._values.keys()
+
     def items(self):
         """
         Return collection metadata value fields
@@ -162,6 +172,10 @@ class EntityRoot(object):
         Allow direct indexing to update collection metadata value fields
         """
         self._values[k] = v
+
+#   -------------------------------------------------------------------------------------------
+#   Entity
+#   -------------------------------------------------------------------------------------------
 
 class Entity(EntityRoot):
     """

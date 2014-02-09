@@ -67,6 +67,7 @@ SITE_COLL_DIR   = "%(coll_id)s"
 COLL_META_FILE  = "_annalist_collection/coll_meta.jsonld"
 COLL_META_PATH  = SITE_COLL_DIR + "/" + COLL_META_FILE
 COLL_PROV_FILE  = "_annalist_collection/coll_prov.jsonld"
+META_COLL_REF   = "../"
 
 COLL_TYPE_DIR   = "types"
 TYPE_INFO_DIR   = "%(type_id)s"

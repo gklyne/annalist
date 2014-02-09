@@ -25,163 +25,29 @@ log = logging.getLogger(__name__)
 
 from django.conf import settings
 
-from annalist               import util
-from annalist               import layout
-from annalist.exceptions    import Annalist_Error
-from annalist.identifiers   import ANNAL
+from annalist                   import layout
+from annalist.exceptions        import Annalist_Error
+from annalist.identifiers       import ANNAL
+from annalist                   import util
+from annalist.entity            import Entity
 
 # from annalist.recordtype    import RecordType
 # from annalist.views         import AnnalistGenericView
 
-class Collection(object):
+class Collection(Entity):
 
-    # @@TODO: currently association of a collection with a site is by physical location
-    #         which means a collection cannot exist in more than one site.  Later developments
-    #         may want to review this.
+    _entitytype = ANNAL.CURIE.Collection
+    _entityfile = layout.COLL_META_FILE
+    _entityref  = layout.META_COLL_REF
 
-    @staticmethod
-    def create(coll_id, coll_meta, baseuri, basedir):
+    def __init__(self, parent, coll_id):
         """
-        Method creates a new collection in a site, saving its details to disk
+        Initialize a new Collection object, without metadta (yet).
 
-        coll_id     identifier for new collection
-        coll_meta   description metadata about the new collection
-        baseuri     is the base URI from which the collection is accessed
-        basedir     is the base directory containing the subdirectory containing
-                    the collection data
-        """
-        log.debug("Colllection.create: id %s, meta %r"%(coll_id, coll_meta))
-        c = Collection(coll_id, baseuri, basedir)
-        c.set_values(coll_meta)
-        c.save()
-        return c
-
-    @staticmethod
-    def load(colldir, baseuri, basedir):
-        """
-        Return a collection at a location specified by a base directory and subdirectory,
-        or None if there is not collection there.
-
-        colldir     is the name of the subdirectory containing the collection data
-        baseuri     is the base URI from which the collection is accessed
-        basedir     is the base directory containing the subdirectory containing
-                    the collection data
-        """
-        log.debug("collection.load: colldir %s, basedir %s"%(colldir, basedir))
-        p = util.entity_path(basedir, [colldir], layout.COLL_META_FILE)
-        log.debug("collection.load: p %s"%(p))
-        d = util.read_entity(p)
-        if d:
-            # @@TODO do we really want this ad hoc stuff in addition to the saved metadata?
-            d["id"]    = colldir
-            d["uri"]   = urlparse.urljoin(baseuri, colldir)
-            d["title"] = d.get("rdfs:label", "Collection "+colldir)
-            c = Collection(colldir, baseuri, basedir)
-            c.set_values(d)
-            return c
-        return None
-
-    @staticmethod
-    def exists(coll_id, basedir):
-        """
-        Method tests for existence of identified collection in a given base directory.
-
-        coll_id     is the collection identifier whose exostence is tested
-        basedir     is the base directory containing the subdirectory containing
-                    the collection data
-
-        Returns True if the collection exists, as determined by existence of the 
-        collection description metadata file.
-        """
-        log.debug("Collection.exists: id %s"%(coll_id))
-        p = util.entity_path(basedir, [coll_id], layout.COLL_META_FILE)
-        return (p != None) and os.path.isfile(p)
-
-    @staticmethod
-    def remove(coll_id, basedir):
-        """
-        Method removes a collection, deleting its details and data from disk
-
-        coll_id     the collection identifier of the collection
-        basedir     is the base directory containing the subdirectory containing
-                    the collection data
-
-        Returns None on sucess, of a status value indicating a reason for value.
-        """
-        log.debug("Colllection.remove: id %s"%(coll_id))
-        if Collection.exists(coll_id, basedir):
-            d = os.path.join(basedir, coll_id)
-            if d.startswith(basedir):   # Double check...
-                shutil.rmtree(d)
-            else:
-                raise Annalist_Error("Collection %s unexpected base dir %s"%(coll_id, d))
-        else:
-            return Annalist_Error("Collection %s not found"%(coll_id))
-        return None
-
-    def __init__(self, coll_id, baseuri, basedir):
-        """
-        Initialize a new Collection object.  A collectiion Id and values must be 
-        set before the collection can be used.
-
+        parent      is the parent site from which the new collection is descended.
         coll_id     the collection identifier for the collection
-        baseuri     is the base URI from which the collection is accessed
-        basedir     is the base directory containing the subdirectory containing
-                    the collection data
         """
-        if not util.valid_id(coll_id):
-            raise ValueError("Invalid colllection identifier: %s"%(coll_id))
-        self._id      = coll_id
-        self._baseuri = baseuri + coll_id + "/"
-        self._basedir = basedir + coll_id + "/"
-        self._values  = None
-        log.debug("Collection.__init__: base URI %s, base dir %s"%(self._baseuri, self._basedir))
-        return
-
-    def get_id(self):
-        return self._id
-
-    def set_values(self, values):
-        """
-        Set or update values for a collection
-        """
-        self._values = values
-        return
-
-    def get_values(self):
-        """
-        Return collection metadata values
-        """
-        return self._values
-
-    def items(self):
-        """
-        Return collection metadata value fields
-        """
-        return self._values.items()
-
-    def __getitem__(self, k):
-        """
-        Allow direct indexing to access collection metadata value fields
-        """
-        return self._values[k]
-
-    def __setitem__(self, k, v):
-        """
-        Allow direct indexing to update collection metadata value fields
-        """
-        self._values[k] = v
-
-    def save(self):
-        if not self._id:
-            raise ValueError("Collection.save without defined collection id")
-        if not self._values:
-            raise ValueError("Collection.save without defined collection metadata")
-        (coll_meta_dir,coll_meta_file) = util.entity_dir_path(
-            self._basedir, [], layout.COLL_META_FILE)
-        util.ensure_dir(coll_meta_dir)
-        util.write_entity(coll_meta_file, "../", self._values, 
-            entityid=self._id, entitytype=ANNAL.CURIE.Collection)
+        super(Collection, self).__init__(parent, coll_id)
         return
 
     # @@TODO...

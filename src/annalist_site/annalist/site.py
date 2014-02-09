@@ -21,15 +21,15 @@ from django.http                import HttpResponseRedirect
 from django.conf                import settings
 from django.core.urlresolvers   import resolve, reverse
 
-from annalist                   import message
-from annalist                   import layout
 from annalist.identifiers       import ANNAL
 from annalist.exceptions        import Annalist_Error, EntityNotFound_Error
-from annalist.views             import AnnalistGenericView
-from annalist.confirmview       import ConfirmView
-from annalist                   import util
+from annalist                   import layout
+from annalist                   import message
 from annalist.entity            import EntityRoot, Entity
 from annalist.collection        import Collection
+from annalist                   import util
+from annalist.views             import AnnalistGenericView
+from annalist.confirmview       import ConfirmView
 
 # @@TODO: align form variable names with stored collection metadata
 
@@ -58,7 +58,7 @@ class Site(EntityRoot):
         """
         log.debug("site.collections: basedir: %s"%(self._entitydir))
         for f in self:
-            c = Collection.load(f, self._entityuri, self._entitydir)
+            c = Collection.load(self, f)
             if c:
                 yield c
         return
@@ -92,7 +92,7 @@ class Site(EntityRoot):
 
         returns a Collection object for the newly created collection.
         """
-        c = Collection.create(coll_id, coll_meta, self._entityuri, self._entitydir)
+        c = Collection.create(self, coll_id, coll_meta)
         return c
 
     def remove_collection(self, coll_id):
@@ -104,7 +104,7 @@ class Site(EntityRoot):
         Returns a non-False status code if the collection is not removed.
         """
         log.debug("remove_collection: %s"%(coll_id))
-        return Collection.remove(coll_id, self._entitydir)
+        return Collection.remove(self, coll_id)
 
 class SiteView(AnnalistGenericView):
     """
