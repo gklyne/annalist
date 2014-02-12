@@ -31,7 +31,7 @@ from annalist.identifiers       import ANNAL
 from annalist                   import util
 from annalist.entity            import Entity
 
-# from annalist.recordtype    import RecordType
+from annalist.recordtype    import RecordType
 # from annalist.views         import AnnalistGenericView
 
 class Collection_Types(Entity):

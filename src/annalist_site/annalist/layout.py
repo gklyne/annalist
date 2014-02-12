@@ -74,6 +74,7 @@ TYPE_INFO_DIR   = "%(type_id)s"
 TYPE_META_FILE  = "type_meta.lsonld"
 TYPE_META_PATH  = SITE_COLL_DIR + "/" + COLL_TYPE_DIR + "/" + TYPE_INFO_DIR + "/" + TYPE_META_FILE
 TYPE_PROV_FILE  = "type_prov.lsonld"
+META_TYPE_REF   = "./"
 
 COLL_VIEW_DIR   = "views"
 VIEW_INFO_DIR   = "%(view_id)s"
