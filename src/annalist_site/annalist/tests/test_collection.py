@@ -101,6 +101,66 @@ class CollectionTest(TestCase):
             , 'rdfs:comment': 'Annalist collection1 recordtype2'
             , 'rdfs:label': 'Type testcoll/type2'
             })      
+        self.view1_add = (
+            { 'rdfs:comment': 'Annalist collection1 recordview1'
+            , 'rdfs:label': 'Type testcoll/view1'
+            })      
+        self.view1 = (
+            { '@id': './'
+            , 'id': 'view1'
+            , 'type': 'annal:RecordView'
+            , 'title': 'Type testcoll/view1'
+            , 'uri': 'http://example.com/testsite/testcoll/views/view1/'
+            , 'annal:id': 'view1'
+            , 'annal:type': 'annal:RecordView'
+            , 'rdfs:comment': 'Annalist collection1 recordview1'
+            , 'rdfs:label': 'Type testcoll/view1'
+            })      
+        self.view2_add = (
+            { 'rdfs:comment': 'Annalist collection1 recordview2'
+            , 'rdfs:label': 'Type testcoll/view2'
+            })      
+        self.view2 = (
+            { '@id': './'
+            , 'id': 'view2'
+            , 'type': 'annal:RecordView'
+            , 'title': 'Type testcoll/view2'
+            , 'uri': 'http://example.com/testsite/testcoll/views/view2/'
+            , 'annal:id': 'view2'
+            , 'annal:type': 'annal:RecordView'
+            , 'rdfs:comment': 'Annalist collection1 recordview2'
+            , 'rdfs:label': 'Type testcoll/view2'
+            })      
+        self.list1_add = (
+            { 'rdfs:comment': 'Annalist collection1 recordlist1'
+            , 'rdfs:label': 'Type testcoll/list1'
+            })      
+        self.list1 = (
+            { '@id': './'
+            , 'id': 'list1'
+            , 'type': 'annal:RecordList'
+            , 'title': 'Type testcoll/list1'
+            , 'uri': 'http://example.com/testsite/testcoll/lists/list1/'
+            , 'annal:id': 'list1'
+            , 'annal:type': 'annal:RecordList'
+            , 'rdfs:comment': 'Annalist collection1 recordlist1'
+            , 'rdfs:label': 'Type testcoll/list1'
+            })      
+        self.list2_add = (
+            { 'rdfs:comment': 'Annalist collection1 recordlist2'
+            , 'rdfs:label': 'Type testcoll/list2'
+            })      
+        self.list2 = (
+            { '@id': './'
+            , 'id': 'list2'
+            , 'type': 'annal:RecordList'
+            , 'title': 'Type testcoll/list2'
+            , 'uri': 'http://example.com/testsite/testcoll/lists/list2/'
+            , 'annal:id': 'list2'
+            , 'annal:type': 'annal:RecordList'
+            , 'rdfs:comment': 'Annalist collection1 recordlist2'
+            , 'rdfs:label': 'Type testcoll/list2'
+            })      
         return
 
     def tearDown(self):
@@ -138,6 +198,8 @@ class CollectionTest(TestCase):
     #     self.assertEquals(dict_to_str(colls["coll1"]),  self.coll1)
     #     return
 
+    # Record types
+
     def test_add_type(self):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         typenames = { t.get_id() for t in self.testcoll.types() }
@@ -167,9 +229,67 @@ class CollectionTest(TestCase):
         self.assertEqual(typenames, {"type2"})
         return
 
-    # @@TODO:
-    #   views
-    #   lists
+    # Record views
+
+    def test_add_view(self):
+        self.testsite.add_collection("testcoll", self.testcoll_add)
+        viewnames = { t.get_id() for t in self.testcoll.views() }
+        self.assertEqual(viewnames, set())
+        t1 = self.testcoll.add_view("view1", self.view1_add)
+        t2 = self.testcoll.add_view("view2", self.view2_add)
+        viewnames = { t.get_id() for t in self.testcoll.views() }
+        self.assertEqual(viewnames, {"view1", "view2"})
+        return
+
+    def test_get_view(self):
+        self.testsite.add_collection("testcoll", self.testcoll_add)
+        t1 = self.testcoll.add_view("view1", self.view1_add)
+        t2 = self.testcoll.add_view("view2", self.view2_add)
+        self.assertEqual(self.testcoll.get_view("view1").get_values(), self.view1)
+        self.assertEqual(self.testcoll.get_view("view2").get_values(), self.view2)
+        return
+
+    def test_remove_view(self):
+        self.testsite.add_collection("testcoll", self.testcoll_add)
+        t1 = self.testcoll.add_view("view1", self.view1_add)
+        t2 = self.testcoll.add_view("view2", self.view2_add)
+        viewnames =  set([ t.get_id() for t in self.testcoll.views()])
+        self.assertEqual(viewnames, {"view1", "view2"})
+        self.testcoll.remove_view("view1")
+        viewnames =  set([ t.get_id() for t in self.testcoll.views()])
+        self.assertEqual(viewnames, {"view2"})
+        return
+
+    # Record lists
+
+    def test_add_list(self):
+        self.testsite.add_collection("testcoll", self.testcoll_add)
+        listnames = { t.get_id() for t in self.testcoll.lists() }
+        self.assertEqual(listnames, set())
+        t1 = self.testcoll.add_list("list1", self.list1_add)
+        t2 = self.testcoll.add_list("list2", self.list2_add)
+        listnames = { t.get_id() for t in self.testcoll.lists() }
+        self.assertEqual(listnames, {"list1", "list2"})
+        return
+
+    def test_get_list(self):
+        self.testsite.add_collection("testcoll", self.testcoll_add)
+        t1 = self.testcoll.add_list("list1", self.list1_add)
+        t2 = self.testcoll.add_list("list2", self.list2_add)
+        self.assertEqual(self.testcoll.get_list("list1").get_values(), self.list1)
+        self.assertEqual(self.testcoll.get_list("list2").get_values(), self.list2)
+        return
+
+    def test_remove_list(self):
+        self.testsite.add_collection("testcoll", self.testcoll_add)
+        t1 = self.testcoll.add_list("list1", self.list1_add)
+        t2 = self.testcoll.add_list("list2", self.list2_add)
+        listnames =  set([ t.get_id() for t in self.testcoll.lists()])
+        self.assertEqual(listnames, {"list1", "list2"})
+        self.testcoll.remove_list("list1")
+        listnames =  set([ t.get_id() for t in self.testcoll.lists()])
+        self.assertEqual(listnames, {"list2"})
+        return
 
 # class CollectionViewTest(AnnalistTestCase):
 #     """
