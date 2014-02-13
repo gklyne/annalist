@@ -192,8 +192,12 @@ def read_entity(filename):
     """
     log.debug("read_entity %s"%(filename))
     if filename:
-        with open(filename, "r") as f:
-            return json.load(f)
+        try:
+            with open(filename, "r") as f:
+                return json.load(f)
+        except IOError, e:
+            if e.errno != errno.ENOENT:
+                raise
     return None
 
 def write_entity(filename, ref, values, entityid=None, entitytype=None):

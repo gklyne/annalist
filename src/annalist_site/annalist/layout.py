@@ -54,44 +54,46 @@ log = logging.getLogger(__name__)
 #          :
 #        :
 
-SITE_DIR        = "annalist_site"
+SITE_DIR            = "annalist_site"
 
 # Path values in the following are relative to the base directory of the site (.../$SITE_DIR)
 
-SITE_META_FILE  = "_annalist_site/site_meta.jsonld"
-SITE_META_PATH  = SITE_META_FILE
-SITE_PROV_FILE  = "_annalist_site/site_prov.jsonld"
-META_SITE_REF   = "../"
+SITE_META_FILE      = "_annalist_site/site_meta.jsonld"
+SITE_PROV_FILE      = "_annalist_site/site_prov.jsonld"
+META_SITE_REF       = "../"
 
-SITE_COLL_DIR   = "%(coll_id)s"
-COLL_META_FILE  = "_annalist_collection/coll_meta.jsonld"
-COLL_META_PATH  = SITE_COLL_DIR + "/" + COLL_META_FILE
-COLL_PROV_FILE  = "_annalist_collection/coll_prov.jsonld"
-META_COLL_REF   = "../"
+SITE_COLL_DIR       = "%(coll_id)s"
+COLL_META_FILE      = "_annalist_collection/coll_meta.jsonld"
+COLL_PROV_FILE      = "_annalist_collection/coll_prov.jsonld"
+META_COLL_REF       = "../"
 
-COLL_TYPE_DIR   = "types"
-TYPE_INFO_DIR   = "%(type_id)s"
-TYPE_META_FILE  = "type_meta.lsonld"
-TYPE_META_PATH  = SITE_COLL_DIR + "/" + COLL_TYPE_DIR + "/" + TYPE_INFO_DIR + "/" + TYPE_META_FILE
-TYPE_PROV_FILE  = "type_prov.lsonld"
-META_TYPE_REF   = "./"
+COLL_TYPES_DIR      = "types"
+TYPES_META_FILE     = "types_meta.jsonld"
+META_TYPES_REF      = "./"
 
-COLL_VIEW_DIR   = "views"
-VIEW_INFO_DIR   = "%(view_id)s"
-VIEW_META_FILE  = "view_meta.lsonld"
-VIEW_META_PATH  = SITE_COLL_DIR + "/" + COLL_VIEW_DIR + "/" + VIEW_INFO_DIR + "/" + VIEW_META_FILE
-VIEW_PROV_FILE  = "view_prov.lsonld"
+COLL_VIEWS_DIR      = "views"
+VIEWS_META_FILE     = "views_meta.jsonld"
+META_VIEWS_REF      = "./"
 
-COLL_LIST_DIR   = "lists"
-LIST_INFO_DIR   = "%(list_id)s"
-LIST_META_FILE  = "list_meta.lsonld"
-LIST_META_PATH  = SITE_COLL_DIR + "/" + COLL_LIST_DIR + "/" + LIST_INFO_DIR + "/" + LIST_META_FILE
-LIST_PROV_FILE  = "list_prov.lsonld"
+COLL_LISTS_DIR      = "lists"
+LISTS_META_FILE     = "lists_meta.jsonld"
+META_LISTS_REF      = "./"
 
-COLL_ENTITY_DIR  = "%(type_id)s/%(entity_id)s"
-ENTITY_DATA_FILE = "entity-data.jsonld"
-ENTITY_DATA_PATH = SITE_COLL_DIR + "/" + COLL_ENTITY_DIR + "/" + ENTITY_DATA_FILE
-ENTITY_PROV_FILE = "entity-prov.jsonld"
+TYPE_META_FILE      = "type_meta.lsonld"
+TYPE_PROV_FILE      = "type_prov.lsonld"
+META_TYPE_REF       = "./"
+
+VIEW_META_FILE      = "view_meta.lsonld"
+VIEW_PROV_FILE      = "view_prov.lsonld"
+META_VIEW_REF       = "./"
+
+LIST_META_FILE      = "list_meta.lsonld"
+LIST_PROV_FILE      = "list_prov.lsonld"
+META_LIST_REF       = "./"
+
+COLL_ENTITY_DIR     = "%(type_id)s/%(entity_id)s"
+ENTITY_DATA_FILE    = "entity-data.jsonld"
+ENTITY_PROV_FILE    = "entity-prov.jsonld"
 
 # and more...
 

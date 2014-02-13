@@ -38,15 +38,18 @@
    / adopt responsive CSS framework (Foundation)
 2. Collection display
    / refactor metadata field access to common superclass
-   - types
-    - create test cases for types in collection
-    - implement skeleton RecordType module
+   / types
+    / implement skeleton RecordType module
+    / create test cases for types in collection
+    / implement type methods
    - views
-    - create test cases for views in collection
     - implement skeleton RecordView module
+    - create test cases for views in collection
+    - implement view methods
    - lists
-    - create test cases for lists in collection
     - implement skeleton RecordList module
+    - create test cases for lists in collection
+    - implement list methods
    - UI test cases
    - form elements to add/delete types/views/lists/...
 3. Record type display

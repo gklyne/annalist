@@ -37,20 +37,20 @@ from annalist.recordtype    import RecordType
 class Collection_Types(Entity):
 
     _entitytype = ANNAL.CURIE.Collection_Types
-    _entityfile = None
-    _entityref  = None
+    _entityfile = layout.TYPES_META_FILE
+    _entityref  = layout.META_TYPES_REF
 
 class Collection_Views(Entity):
 
     _entitytype = ANNAL.CURIE.Collection_Views
-    _entityfile = None
-    _entityref  = None
+    _entityfile = layout.VIEWS_META_FILE
+    _entityref  = layout.META_VIEWS_REF
 
 class Collection_Lists(Entity):
 
     _entitytype = ANNAL.CURIE.Collection_Lists
-    _entityfile = None
-    _entityref  = None
+    _entityfile = layout.LISTS_META_FILE
+    _entityref  = layout.META_LISTS_REF
 
 class Collection(Entity):
 
@@ -66,17 +66,26 @@ class Collection(Entity):
         coll_id     the collection identifier for the collection
         """
         super(Collection, self).__init__(parent, coll_id)
-        self._types = Collection_Types(self, "types")
-        self._views = Collection_Views(self, "views")
-        self._lists = Collection_Lists(self, "lists")
+        self._types = Collection_Types.create(self, "types", 
+            { 'rdfs:label':   "Record types for collection %s"%(coll_id)
+            , 'rdfs:comment': "Record types for collection %s"%(coll_id)
+            })
+        self._views = Collection_Views.create(self, "views",
+            { 'rdfs:label':   "Record views for collection %s"%(coll_id)
+            , 'rdfs:comment': "Record views for collection %s"%(coll_id)
+            })
+        self._lists = Collection_Lists.create(self, "lists",
+            { 'rdfs:label':   "Record list views for collection %s"%(coll_id)
+            , 'rdfs:comment': "Record list views for collection %s"%(coll_id)
+            })
         return
 
     def types(self):
         """
         Generator enumerates and returns record types that may be stored
         """
-        for f in self:
-            t = RecordType.load(self, f)
+        for f in self._types:
+            t = RecordType.load(self._types, f)
             if t:
                 yield t
         return

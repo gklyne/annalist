@@ -25,6 +25,7 @@ from miscutils.MockHttpResources import MockHttpFileResources, MockHttpDictResou
 
 from annalist.identifiers       import ANNAL
 from annalist                   import layout
+from annalist.site              import Site
 from annalist.collection        import Collection # , CollectionView
 
 from tests                      import TestBaseUri, TestBaseDir, dict_to_str, init_annalist_test_site
@@ -54,6 +55,7 @@ class CollectionTest(TestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
+        self.testcoll = Collection(self.testsite, "testcoll")
         self.coll1 = (
             { '@id': '../'
             , 'id': 'coll1'
@@ -64,22 +66,41 @@ class CollectionTest(TestCase):
             , 'annal:type': 'annal:Collection'
             , 'rdfs:comment': 'Annalist collection metadata.'
             , 'rdfs:label': 'Name collection coll1'
-            })        
-        self.collnewmeta = (
-            { 'rdfs:label': 'Collection new'
-            , 'rdfs:comment': 'Annalist new collection metadata.'
-            })        
-        self.collnew = (
-            { '@id': '../'
-            , 'id': 'new'
-            , 'type': 'annal:Collection'
-            , 'title': 'Collection new'
-            , 'uri': 'http://example.com/testsite/new/'
-            , 'annal:id': 'new'
-            , 'annal:type': 'annal:Collection'
-            , 'rdfs:comment': 'Annalist new collection metadata.'
-            , 'rdfs:label': 'Collection new'
-            })        
+            })
+        self.testcoll_add = (
+            { 'rdfs:comment': 'Annalist collection metadata.'
+            , 'rdfs:label': 'Name collection testcoll'
+            })
+        self.type1_add = (
+            { 'rdfs:comment': 'Annalist collection1 recordtype1'
+            , 'rdfs:label': 'Type testcoll/type1'
+            })      
+        self.type1 = (
+            { '@id': './'
+            , 'id': 'type1'
+            , 'type': 'annal:RecordType'
+            , 'title': 'Type testcoll/type1'
+            , 'uri': 'http://example.com/testsite/testcoll/types/type1/'
+            , 'annal:id': 'type1'
+            , 'annal:type': 'annal:RecordType'
+            , 'rdfs:comment': 'Annalist collection1 recordtype1'
+            , 'rdfs:label': 'Type testcoll/type1'
+            })      
+        self.type2_add = (
+            { 'rdfs:comment': 'Annalist collection1 recordtype2'
+            , 'rdfs:label': 'Type testcoll/type2'
+            })      
+        self.type2 = (
+            { '@id': './'
+            , 'id': 'type2'
+            , 'type': 'annal:RecordType'
+            , 'title': 'Type testcoll/type2'
+            , 'uri': 'http://example.com/testsite/testcoll/types/type2/'
+            , 'annal:id': 'type2'
+            , 'annal:type': 'annal:RecordType'
+            , 'rdfs:comment': 'Annalist collection1 recordtype2'
+            , 'rdfs:label': 'Type testcoll/type2'
+            })      
         return
 
     def tearDown(self):
@@ -118,32 +139,32 @@ class CollectionTest(TestCase):
     #     return
 
     def test_add_type(self):
-        colls = self.testsite.collections_dict()
-        self.assertEquals(colls.keys(),["coll1","coll2","coll3"])
-        self.testsite.add_type("new", self.collnewmeta)
-        colls = self.testsite.collections_dict()
-        self.assertEquals(colls.keys(),["coll1","coll2","coll3","new"])
-        self.assertEquals(dict_to_str(colls["coll1"]), self.coll1)
-        self.assertEquals(dict_to_str(colls["new"]),   self.collnew)
+        self.testsite.add_collection("testcoll", self.testcoll_add)
+        typenames = { t.get_id() for t in self.testcoll.types() }
+        self.assertEqual(typenames, set())
+        t1 = self.testcoll.add_type("type1", self.type1_add)
+        t2 = self.testcoll.add_type("type2", self.type2_add)
+        typenames = { t.get_id() for t in self.testcoll.types() }
+        self.assertEqual(typenames, {"type1", "type2"})
         return
 
     def test_get_type(self):
-        colls = self.testsite.collections_dict()
-        self.assertEquals(colls.keys(),["coll1","coll2","coll3"])
-        self.testsite.add_type("new", self.collnewmeta)
-        colls = self.testsite.collections_dict()
-        self.assertEquals(colls.keys(),["coll1","coll2","coll3","new"])
-        self.assertEquals(dict_to_str(colls["coll1"]), self.coll1)
-        self.assertEquals(dict_to_str(colls["new"]),   self.collnew)
+        self.testsite.add_collection("testcoll", self.testcoll_add)
+        t1 = self.testcoll.add_type("type1", self.type1_add)
+        t2 = self.testcoll.add_type("type2", self.type2_add)
+        self.assertEqual(self.testcoll.get_type("type1").get_values(), self.type1)
+        self.assertEqual(self.testcoll.get_type("type2").get_values(), self.type2)
         return
 
     def test_remove_type(self):
-        colls = self.testsite.collections_dict()
-        self.assertEquals(colls.keys(),["coll1","coll2","coll3"])
-        self.testsite.remove_type("coll2")
-        collsb = self.testsite.collections_dict()
-        self.assertEquals(collsb.keys(),["coll1","coll3"])
-        self.assertEquals(dict_to_str(colls["coll1"]),  self.coll1)
+        self.testsite.add_collection("testcoll", self.testcoll_add)
+        t1 = self.testcoll.add_type("type1", self.type1_add)
+        t2 = self.testcoll.add_type("type2", self.type2_add)
+        typenames =  set([ t.get_id() for t in self.testcoll.types()])
+        self.assertEqual(typenames, {"type1", "type2"})
+        self.testcoll.remove_type("type1")
+        typenames =  set([ t.get_id() for t in self.testcoll.types()])
+        self.assertEqual(typenames, {"type2"})
         return
 
     # @@TODO:
