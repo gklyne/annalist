@@ -42,14 +42,14 @@
     / implement skeleton RecordType module
     / create test cases for types in collection
     / implement type methods
-   - views
-    - implement skeleton RecordView module
-    - create test cases for views in collection
-    - implement view methods
-   - lists
-    - implement skeleton RecordList module
-    - create test cases for lists in collection
-    - implement list methods
+   / views
+    / implement skeleton RecordView module
+    / create test cases for views in collection
+    / implement view methods
+   / lists
+    / implement skeleton RecordList module
+    / create test cases for lists in collection
+    / implement list methods
    - UI test cases
    - form elements to add/delete types/views/lists/...
 3. Record type display

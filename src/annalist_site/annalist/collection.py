@@ -35,7 +35,7 @@ from annalist.recordtype        import RecordType
 from annalist.recordview        import RecordView
 from annalist.recordlist        import RecordList
 
-# from annalist.views         import AnnalistGenericView
+from annalist.views         import AnnalistGenericView
 
 class Collection_Types(Entity):
 
@@ -227,28 +227,38 @@ class Collection(Entity):
         t = RecordList.remove(self._lists, list_id)
         return t
 
+class CollectionEditView(AnnalistGenericView):
+    """
+    View class to handle requests to an Annalist collection edit URI
+    """
+    def __init__(self):
+        super(CollectionEditView, self).__init__()
+        self._site      = Site(self._sitebaseuri, self._sitebasedir)
+        self._site_data = None
+        return
 
-# class CollectionView(AnnalistGenericView):
-#     """
-#     View class to handle requests to an Annalist collection URI
-#     """
-#     def __init__(self):
-#         super(CollectionView, self).__init__()
-#         return
+    # GET
 
-#     # GET
-
-#     def get(self, request):
-#         """
-#         Create a rendering of the current collection.
-#         """
-#         def resultdata():
-#             coll = Collection(self.get_request_uri(), self.get_base_dir())
-#             return coll.get_values()
-#         return (
-#             self.render_html(resultdata(), 'annalist_collection.html') or 
-#             self.error(self.error406values())
-#             )
+    def get(self, request, coll_id):
+        """
+        Create a rendering of the current collection.
+        """
+        def resultdata():
+            coll = Collection(self._site, coll_id)
+            context = (
+                { 'coll_id':    coll_id
+                , 'types':      sorted(coll.types())
+                , 'lists':      sorted(coll.lists())
+                , 'views':      sorted(coll.views())
+                })
+            return coll.get_values()
+        if not Collection.exists(self._site, coll_id):
+            return self.error(self.error404values().update(
+                message="Collection %s does not exist"%(coll_id)))
+        return (
+            self.render_html(resultdata(), 'annalist_collection_edit.html') or 
+            self.error(self.error406values())
+            )
 
 #     # POST
 

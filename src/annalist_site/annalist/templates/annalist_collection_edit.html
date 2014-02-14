@@ -1,0 +1,77 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block heading %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="large-12 columns">
+            <h3>Customize collection {{coll_id}}</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-12 columns">
+            <form method="POST" action="./">
+                {% csrf_token %}
+
+                <div class="row headings">
+                    <div class="medium-4 columns">
+                        <p>Record types</p>
+                    </div>
+                    <div class="medium-4 columns">
+                        <p>Lists</p>
+                    </div>
+                    <div class="medium-4 columns">
+                        <p>Views</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="medium-4 columns">
+                        <select name="typelist" size="{{select_rows}}">
+                            {% for t in types %}
+                            <option>{{ t }}</option>
+                            {% endfor %}
+                         </select>
+                        <input type="submit" name="type_new"    value="New type" />
+                        <input type="submit" name="type_copy"   value="Copy type" />
+                        <input type="submit" name="type_edit"   value="Edit type" />
+                        <input type="submit" name="type_delete" value="Delete type" />
+                    </div>
+                    <div class="medium-4 columns">
+                        <select name="listlist" size="{{select_rows}}">
+                            {% for l in lists %}
+                            <option>{{ l }}</option>
+                            {% endfor %}
+                         </select>
+                        <input type="submit" name="list_new"    value="New list" />
+                        <input type="submit" name="list_copy"   value="Copy list" />
+                        <input type="submit" name="list_edit"   value="Edit list" />
+                        <input type="submit" name="list_delete" value="Delete list" />
+                    </div>
+                    <div class="medium-4 columns">
+                        <select name="viewlist" size="{{select_rows}}">
+                            {% for v in views %}
+                            <option>{{ v }}</option>
+                            {% endfor %}
+                         </select>
+                        <input type="submit" name="view_new"    value="New view" />
+                        <input type="submit" name="view_copy"   value="Copy view" />
+                        <input type="submit" name="view_edit"   value="Edit view" />
+                        <input type="submit" name="view_delete" value="Delete view" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="medium-4 columns">
+                        <input type="submit" name="close" value="Close" />
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+{% endblock %}
