@@ -20,6 +20,9 @@ urlpatterns = patterns('',
     url(r'^site_action/$',  annalist.site.SiteActionView.as_view(),       name='AnnalistSiteActionView'),
     url(r'^profile/$',      annalist.profileview.ProfileView.as_view(),   name='AnnalistProfileView'),
     url(r'^confirm/$',      annalist.confirmview.ConfirmView.as_view(),   name='AnnalistConfirmView'),
+    url(r'^collections/(?P<coll_id>\w{0,32})/$',
+                            annalist.collection.CollectionEditView.as_view(),
+                            name='AnnalistCollectionEditView'),
     )
 
 urlpatterns += patterns('',

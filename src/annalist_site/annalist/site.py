@@ -57,7 +57,7 @@ class Site(EntityRoot):
         Yielded values are collection objects.
         """
         log.debug("site.collections: basedir: %s"%(self._entitydir))
-        for f in self:
+        for f in self._children(Collection):
             c = Collection.load(self, f)
             if c:
                 yield c

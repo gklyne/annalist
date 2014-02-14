@@ -20,39 +20,40 @@ log = logging.getLogger(__name__)
 #       _annalist-site/
 #           site_meta.json_ld
 #           site_prov.json_ld
-#       <collection-id>/
-#         _annalist_collection/
-#             coll_meta.jsonld
-#             coll_prov.jsonld
-#           types/
-#             <type-id>/
-#               type_meta.jsonld
-#               type_prov.jsonld
+#       collections/
+#         <collection-id>/
+#           _annalist_collection/
+#               coll_meta.jsonld
+#               coll_prov.jsonld
+#             types/
+#               <type-id>/
+#                 type_meta.jsonld
+#                 type_prov.jsonld
+#                :
+#             views/
+#                 view_meta.jsonld
+#                 view_prov.jsonld
+#                :
+#             lists/
+#                 list_meta.jsonld
+#                 list_prov.jsonld
+#                :
+#             bridges/
+#               (bridge-description (incl path mapping in collection) - @@TBD)
+#                :
+#             user-groups/  @@TBD
+#               group-description
+#                :
+#             access/  @@TBD
+#               default-access
+#               (more details to work through - keep it simple for starters)
+#           <type-id>/
+#             <entity-id>/
+#               entity-data.jsonld
+#               entity-prov.jsonld
 #              :
-#           views/
-#               view_meta.jsonld
-#               view_prov.jsonld
-#              :
-#           lists/
-#               list_meta.jsonld
-#               list_prov.jsonld
-#              :
-#           bridges/
-#             (bridge-description (incl path mapping in collection) - @@TBD)
-#              :
-#           user-groups/  @@TBD
-#             group-description
-#              :
-#           access/  @@TBD
-#             default-access
-#             (more details to work through - keep it simple for starters)
-#         <type-id>/
-#           <entity-id>/
-#             entity-data.jsonld
-#             entity-prov.jsonld
 #            :
 #          :
-#        :
 
 SITE_DIR            = "annalist_site"
 
@@ -62,36 +63,27 @@ SITE_META_FILE      = "_annalist_site/site_meta.jsonld"
 SITE_PROV_FILE      = "_annalist_site/site_prov.jsonld"
 META_SITE_REF       = "../"
 
-SITE_COLL_DIR       = "%(coll_id)s"
+SITE_COLL_PATH      = "collections/%(id)s"
 COLL_META_FILE      = "_annalist_collection/coll_meta.jsonld"
 COLL_PROV_FILE      = "_annalist_collection/coll_prov.jsonld"
 META_COLL_REF       = "../"
 
-COLL_TYPES_DIR      = "types"
-TYPES_META_FILE     = "types_meta.jsonld"
-META_TYPES_REF      = "./"
-
-COLL_VIEWS_DIR      = "views"
-VIEWS_META_FILE     = "views_meta.jsonld"
-META_VIEWS_REF      = "./"
-
-COLL_LISTS_DIR      = "lists"
-LISTS_META_FILE     = "lists_meta.jsonld"
-META_LISTS_REF      = "./"
-
+COLL_TYPE_PATH      = "types/%(id)s"
 TYPE_META_FILE      = "type_meta.lsonld"
 TYPE_PROV_FILE      = "type_prov.lsonld"
 META_TYPE_REF       = "./"
 
+COLL_VIEW_PATH      = "views/%(id)s"
 VIEW_META_FILE      = "view_meta.lsonld"
 VIEW_PROV_FILE      = "view_prov.lsonld"
 META_VIEW_REF       = "./"
 
+COLL_LIST_PATH      = "lists/%(id)s"
 LIST_META_FILE      = "list_meta.lsonld"
 LIST_PROV_FILE      = "list_prov.lsonld"
 META_LIST_REF       = "./"
 
-COLL_ENTITY_DIR     = "%(type_id)s/%(entity_id)s"
+COLL_ENTITY_PATH    = "%(type_id)s/%(entity_id)s @@TBD"
 ENTITY_DATA_FILE    = "entity-data.jsonld"
 ENTITY_PROV_FILE    = "entity-prov.jsonld"
 

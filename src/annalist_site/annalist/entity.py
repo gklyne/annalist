@@ -116,6 +116,7 @@ class EntityRoot(object):
         if not self._values:
             raise ValueError("Entity._save without defined entity values")
         (body_dir, body_file) = self._dir_path()
+        log.debug("EntityRoot._save: dir %s, file%s"%(body_dir, body_file))
         util.ensure_dir(body_dir)
         # @@TODO: move logic from util to here and rationalize
         util.write_entity(
@@ -132,6 +133,25 @@ class EntityRoot(object):
         (body_dir, body_file) = self._dir_path()
         v = util.read_entity(body_file)
         return v
+
+    def _children(self, cls):
+        """
+        Iterates over canidiate child entities that are instances of an indicated
+        class.  The supplied class is used to determine a subdirectory to be scanned.
+
+        cls         is a subclass of Entity indicating the type of children to
+                    iterate over.
+        """
+        dirpath = self._entitydir
+        if cls and cls._entitypath:
+            dirpath = os.path.dirname(os.path.join(dirpath, cls._entitypath))
+        assert "%" not in dirpath, "_entitypath template variable interpolation may be in filename part only "
+        if os.path.isdir(dirpath):
+            files = os.listdir(dirpath)
+            for f in files:
+                if util.valid_id(f):
+                    yield f
+        return
 
     # Entity as iterator: returns candidate identifiers of contained entities
     def __iter__(self):
@@ -184,6 +204,7 @@ class Entity(EntityRoot):
     """
 
     _entitytype = ANNAL.CURIE.Entity
+    _entitypath = None          # relative path from parent to entity (template)
     _entityfile = None          # To be overriden by entity subclasses..
     _entityref  = None          # Relative reference to entity from body file
 
@@ -197,10 +218,24 @@ class Entity(EntityRoot):
         """
         if not util.valid_id(entityid):
             raise ValueError("Invalid entity identifier: %s"%(entityid))
-        super(Entity, self).__init__(parent._entityuri+entityid, parent._entitydir+entityid)
+        relpath = self.relpath(entityid)
+        super(Entity, self).__init__(parent._entityuri+relpath, parent._entitydir+relpath)
         self._entityid = entityid
         log.debug("Entity.__init__: ID %s"%(self._entityid))
         return
+
+    @classmethod
+    def relpath(cls, entityid):
+        """
+        Returns parent-relative path string for an identified entity of the given class.
+
+        cls         is the class of the entity whose relative path is returned.
+        entityid    is the local identifier (slug) for the entity.
+        """
+        log.debug("Entity.relpath: entitytype %s, entityid %s"%(cls._entitytype, entityid))
+        relpath = (cls._entitypath or "%(id)s")%{'id': entityid}
+        log.debug("Entity.relpath: %s"%(relpath))
+        return relpath
 
     @classmethod
     def path(cls, parent, entityid):
@@ -213,7 +248,7 @@ class Entity(EntityRoot):
         """
         log.debug("Entity.path: entitytype %s, parentdir %s, entityid %s"%(cls._entitytype, parent._entitydir, entityid))
         assert cls._entityfile is not None
-        p = util.entity_path(parent._entitydir, [entityid], cls._entityfile)
+        p = util.entity_path(parent._entitydir, [cls.relpath(entityid)], cls._entityfile)
         log.debug("Entity.path: %s"%(p))
         return p
 

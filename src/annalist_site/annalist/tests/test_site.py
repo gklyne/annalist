@@ -50,15 +50,15 @@ from AnnalistTestCase           import AnnalistTestCase
 init_collections = (
     { 'coll1':
         { 'title': 'Name collection coll1'
-        , 'uri': '/annalist/coll1/'
+        , 'uri': '/annalist/collections/coll1/'
         }
     , 'coll2':
         { 'title': 'Label collection coll2'
-        , 'uri': '/annalist/coll2/'
+        , 'uri': '/annalist/collections/coll2/'
         }
     , 'coll3':
         { 'title': 'Label collection coll3'
-        , 'uri': '/annalist/coll3/'
+        , 'uri': '/annalist/collections/coll3/'
         }
     })
 
@@ -75,7 +75,7 @@ class SiteTest(TestCase):
             , 'id': 'coll1'
             , 'type': 'annal:Collection'
             , 'title': 'Name collection coll1'
-            , 'uri': 'http://example.com/testsite/coll1/'
+            , 'uri': 'http://example.com/testsite/collections/coll1/'
             , 'annal:id': 'coll1'
             , 'annal:type': 'annal:Collection'
             , 'rdfs:comment': 'Annalist collection metadata.'
@@ -90,7 +90,7 @@ class SiteTest(TestCase):
             , 'id': 'new'
             , 'type': 'annal:Collection'
             , 'title': 'Collection new'
-            , 'uri': 'http://example.com/testsite/new/'
+            , 'uri': 'http://example.com/testsite/collections/new/'
             , 'annal:id': 'new'
             , 'annal:type': 'annal:Collection'
             , 'rdfs:comment': 'Annalist new collection metadata.'
@@ -239,11 +239,11 @@ class SiteViewTest(AnnalistTestCase):
         trows = s.form.find_all("div", class_="row")
         self.assertEqual(len(trows), 4)
         self.assertEqual(trows[1].div.p.a.string,  "coll1")
-        self.assertEqual(trows[1].div.p.a['href'], "/annalist/coll1/")
+        self.assertEqual(trows[1].div.p.a['href'], "/annalist/collections/coll1/")
         self.assertEqual(trows[2].div.p.a.string,  "coll2")
-        self.assertEqual(trows[2].div.p.a['href'], "/annalist/coll2/")
+        self.assertEqual(trows[2].div.p.a['href'], "/annalist/collections/coll2/")
         self.assertEqual(trows[3].div.p.a.string,  "coll3")
-        self.assertEqual(trows[3].div.p.a['href'], "/annalist/coll3/")
+        self.assertEqual(trows[3].div.p.a['href'], "/annalist/collections/coll3/")
         return
 
     def test_get_with_login(self):
@@ -280,19 +280,19 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(len(trows), 6)
         tcols1 = trows[1].find_all("div")
         self.assertEqual(tcols1[0].a.string,       "coll1")
-        self.assertEqual(tcols1[0].a['href'],      "/annalist/coll1/")
+        self.assertEqual(tcols1[0].a['href'],      "/annalist/collections/coll1/")
         self.assertEqual(tcols1[2].input['type'],  "checkbox")
         self.assertEqual(tcols1[2].input['name'],  "select")
         self.assertEqual(tcols1[2].input['value'], "coll1")
         tcols2 = trows[2].find_all("div")
         self.assertEqual(tcols2[0].a.string,       "coll2")
-        self.assertEqual(tcols2[0].a['href'],      "/annalist/coll2/")
+        self.assertEqual(tcols2[0].a['href'],      "/annalist/collections/coll2/")
         self.assertEqual(tcols2[2].input['type'],  "checkbox")
         self.assertEqual(tcols2[2].input['name'],  "select")
         self.assertEqual(tcols2[2].input['value'], "coll2")
         tcols3 = trows[3].find_all("div")
         self.assertEqual(tcols3[0].a.string,       "coll3")
-        self.assertEqual(tcols3[0].a['href'],      "/annalist/coll3/")
+        self.assertEqual(tcols3[0].a['href'],      "/annalist/collections/coll3/")
         self.assertEqual(tcols3[2].input['type'],  "checkbox")
         self.assertEqual(tcols3[2].input['name'],  "select")
         self.assertEqual(tcols3[2].input['value'], "coll3")
@@ -336,7 +336,7 @@ class SiteViewTest(AnnalistTestCase):
         new_collections = init_collections.copy()
         new_collections["testnew"] = (
             { 'title': 'Label for new collection'
-            , 'uri':   '/annalist/testnew/'
+            , 'uri':   '/annalist/collections/testnew/'
             })
         colls = r.context['collections']
         for id in new_collections:

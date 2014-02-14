@@ -42,6 +42,7 @@ from AnnalistTestCase           import AnnalistTestCase
 class TestEntityRootType(EntityRoot):
 
     _entitytype = "test:EntityRootType"
+    _entitypath = None
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
 
@@ -145,7 +146,7 @@ class EntityRootTest(TestCase):
         return
 
     def test_entityroot_iter(self):
-        e = EntityRoot(TestBaseUri, TestBaseDir)
+        e = EntityRoot(TestBaseUri+"/collections", TestBaseDir+"/collections")
         # e = TestEntityRootType(Te stBaseUri, TestBaseDir)
         expect = [ "coll1", "coll2", "coll3"]
         count = 0
@@ -203,6 +204,14 @@ class EntityRootTest(TestCase):
 class TestEntityType(Entity):
 
     _entitytype = "test:EntityType"
+    _entitypath = None
+    _entityfile = ".sub/manifest.jsonld"
+    _entityref  = "../"
+
+class TestEntityTypeSub(Entity):
+
+    _entitytype = "test:EntityTypeSub"
+    _entitypath = "sub/%(id)s"
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
 
@@ -251,7 +260,6 @@ class EntityTest(TestCase):
         test_values = (
             { 'type':   'annal:EntityRoot'
             , 'title':  'Name collection coll1'
-            , 'uri':    '/annalist/coll1'
             })
         r = EntityRoot(TestBaseUri, TestBaseDir)
         e = TestEntityType(r, "testid")
@@ -314,6 +322,80 @@ class EntityTest(TestCase):
         self.assertTrue(TestEntityType.exists(r, "testid3"))
         s = TestEntityType.remove(r, "testid3")
         self.assertFalse(TestEntityType.exists(r, "testid3"))
+        return
+
+    # The following tests repeat the above using an entity class with 
+    # an explcit relative path from parent to entity.
+
+    def test_entity_sub_path(self):
+        test_values = (
+            { 'type':   'annal:EntityRoot'
+            , 'title':  'Name collection coll1'
+            })
+        r = EntityRoot(TestBaseUri, TestBaseDir)
+        e = TestEntityTypeSub(r, "testid")
+        self.assertEqual(e._entitydir, TestBaseDir+"/sub/testid/")
+        e.set_values(test_values)
+        e._save()
+        p = TestEntityTypeSub.path(r, "testid")
+        self.assertEqual(p, TestBaseDir+"/sub/testid/.sub/manifest.jsonld")
+        return
+
+    def test_entity_sub_create_exists(self):
+        test_values = (
+            { 'type':   'test:EntityType'
+            , 'title':  'Name entity test'
+            })
+        test_values_returned = (
+            { 'id': 'testid'
+            , 'title': 'Name entity test'
+            , 'type': 'test:EntityType'
+            , 'uri': TestBaseUri+'/sub/testid/'
+            })
+        r = EntityRoot(TestBaseUri, TestBaseDir)
+        self.assertFalse(TestEntityTypeSub.exists(r, "testid"))
+        e = TestEntityTypeSub.create(r, "testid", test_values)
+        self.assertTrue(TestEntityTypeSub.exists(r, "testid"))
+        p = TestEntityTypeSub.path(r, "testid")
+        self.assertEqual(p, TestBaseDir+"/sub/testid/.sub/manifest.jsonld")
+        v = e.get_values()
+        self.assertEqual(set(v.keys()), set(test_values_returned.keys()))
+        self.assertEqual(v, test_values_returned)
+        return
+
+    def test_entity_sub_create_load(self):
+        test_values = (
+            { 'type':   'test:EntityTypeSub'
+            , 'title':  'Name entity test2'
+            })
+        test_values_returned = (
+            { '@id': '../'
+            , 'annal:id': 'testid2'
+            , 'annal:type': 'test:EntityTypeSub'
+            , 'id': 'testid2'
+            , 'title': 'Name entity test2'
+            , 'type': 'test:EntityTypeSub'
+            , 'uri': TestBaseUri+'/sub/testid2/'
+            })
+        r = EntityRoot(TestBaseUri, TestBaseDir)
+        e = TestEntityTypeSub.create(r, "testid2", test_values)
+        e2 = TestEntityTypeSub.load(r, "testid2")
+        v = e2.get_values()
+        self.assertEqual(set(v.keys()), set(test_values_returned.keys()))
+        self.assertEqual(v, test_values_returned)
+        return
+
+    def test_entity_sub_create_remove(self):
+        test_values = (
+            { 'type':   'test:EntityTypeSub'
+            , 'title':  'Name entity test'
+            })
+        r = EntityRoot(TestBaseUri, TestBaseDir)
+        self.assertFalse(TestEntityTypeSub.exists(r, "testid3"))
+        e = TestEntityTypeSub.create(r, "testid3", test_values)
+        self.assertTrue(TestEntityTypeSub.exists(r, "testid3"))
+        s = TestEntityTypeSub.remove(r, "testid3")
+        self.assertFalse(TestEntityTypeSub.exists(r, "testid3"))
         return
 
 # End.

@@ -36,6 +36,7 @@ from annalist.entity            import Entity
 class RecordList(Entity):
 
     _entitytype = ANNAL.CURIE.RecordList
+    _entitypath = layout.COLL_LIST_PATH
     _entityfile = layout.LIST_META_FILE
     _entityref  = layout.META_LIST_REF
 

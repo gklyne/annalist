@@ -30,6 +30,7 @@ from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
 from annalist                   import util
 from annalist.entity            import Entity
+# from annalist.site              import Site
 
 from annalist.recordtype        import RecordType
 from annalist.recordview        import RecordView
@@ -37,27 +38,10 @@ from annalist.recordlist        import RecordList
 
 from annalist.views         import AnnalistGenericView
 
-class Collection_Types(Entity):
-
-    _entitytype = ANNAL.CURIE.Collection_Types
-    _entityfile = layout.TYPES_META_FILE
-    _entityref  = layout.META_TYPES_REF
-
-class Collection_Views(Entity):
-
-    _entitytype = ANNAL.CURIE.Collection_Views
-    _entityfile = layout.VIEWS_META_FILE
-    _entityref  = layout.META_VIEWS_REF
-
-class Collection_Lists(Entity):
-
-    _entitytype = ANNAL.CURIE.Collection_Lists
-    _entityfile = layout.LISTS_META_FILE
-    _entityref  = layout.META_LISTS_REF
-
 class Collection(Entity):
 
     _entitytype = ANNAL.CURIE.Collection
+    _entitypath = layout.SITE_COLL_PATH
     _entityfile = layout.COLL_META_FILE
     _entityref  = layout.META_COLL_REF
 
@@ -69,18 +53,6 @@ class Collection(Entity):
         coll_id     the collection identifier for the collection
         """
         super(Collection, self).__init__(parent, coll_id)
-        self._types = Collection_Types.create(self, "types", 
-            { 'rdfs:label':   "Record types for collection %s"%(coll_id)
-            , 'rdfs:comment': "Record types for collection %s"%(coll_id)
-            })
-        self._views = Collection_Views.create(self, "views",
-            { 'rdfs:label':   "Record views for collection %s"%(coll_id)
-            , 'rdfs:comment': "Record views for collection %s"%(coll_id)
-            })
-        self._lists = Collection_Lists.create(self, "lists",
-            { 'rdfs:label':   "Record list views for collection %s"%(coll_id)
-            , 'rdfs:comment': "Record list views for collection %s"%(coll_id)
-            })
         return
 
     # Record types
@@ -89,8 +61,8 @@ class Collection(Entity):
         """
         Generator enumerates and returns record types that may be stored
         """
-        for f in self._types:
-            t = RecordType.load(self._types, f)
+        for f in self._children(RecordType):
+            t = RecordType.load(self, f)
             if t:
                 yield t
         return
@@ -106,7 +78,7 @@ class Collection(Entity):
 
         returns a RecordType object for the newly created type.
         """
-        t = RecordType.create(self._types, type_id, type_meta)
+        t = RecordType.create(self, type_id, type_meta)
         return t
 
     def get_type(self, type_id):
@@ -117,7 +89,7 @@ class Collection(Entity):
 
         returns a RecordType object for the identified type, or None.
         """
-        t = RecordType.load(self._types, type_id)
+        t = RecordType.load(self, type_id)
         return t
 
     def remove_type(self, type_id):
@@ -128,7 +100,7 @@ class Collection(Entity):
 
         Returns a non-False status code if the type is not removed.
         """
-        t = RecordType.remove(self._types, type_id)
+        t = RecordType.remove(self, type_id)
         return t
 
     # Record views
@@ -137,8 +109,8 @@ class Collection(Entity):
         """
         Generator enumerates and returns record views that may be stored
         """
-        for f in self._views:
-            t = RecordView.load(self._views, f)
+        for f in self._children(RecordView):
+            t = RecordView.load(self, f)
             if t:
                 yield t
         return
@@ -154,7 +126,7 @@ class Collection(Entity):
 
         returns a RecordView object for the newly created view.
         """
-        t = RecordView.create(self._views, view_id, view_meta)
+        t = RecordView.create(self, view_id, view_meta)
         return t
 
     def get_view(self, view_id):
@@ -165,7 +137,7 @@ class Collection(Entity):
 
         returns a RecordView object for the identified view, or None.
         """
-        t = RecordView.load(self._views, view_id)
+        t = RecordView.load(self, view_id)
         return t
 
     def remove_view(self, view_id):
@@ -176,7 +148,7 @@ class Collection(Entity):
 
         Returns a non-False status code if the view is not removed.
         """
-        t = RecordView.remove(self._views, view_id)
+        t = RecordView.remove(self, view_id)
         return t
 
     # Record lists
@@ -185,8 +157,8 @@ class Collection(Entity):
         """
         Generator enumerates and returns record lists that may be stored
         """
-        for f in self._lists:
-            t = RecordList.load(self._lists, f)
+        for f in self._children(RecordList):
+            t = RecordList.load(self, f)
             if t:
                 yield t
         return
@@ -202,7 +174,7 @@ class Collection(Entity):
 
         returns a RecordList object for the newly created list.
         """
-        t = RecordList.create(self._lists, list_id, list_meta)
+        t = RecordList.create(self, list_id, list_meta)
         return t
 
     def get_list(self, list_id):
@@ -213,7 +185,7 @@ class Collection(Entity):
 
         returns a RecordList object for the identified list, or None.
         """
-        t = RecordList.load(self._lists, list_id)
+        t = RecordList.load(self, list_id)
         return t
 
     def remove_list(self, list_id):
@@ -224,7 +196,7 @@ class Collection(Entity):
 
         Returns a non-False status code if the list is not removed.
         """
-        t = RecordList.remove(self._lists, list_id)
+        t = RecordList.remove(self, list_id)
         return t
 
 class CollectionEditView(AnnalistGenericView):
