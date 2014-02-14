@@ -50,10 +50,10 @@ class CollectionEditView(AnnalistGenericView):
             coll = Collection(self._site, coll_id)
             context = (
                 { 'coll_id':        coll_id
-                , 'types':          sorted(coll.types())
-                , 'lists':          sorted(coll.lists())
-                , 'views':          sorted(coll.views())
-                , 'select_rows':    "8"
+                , 'types':          sorted( [t.get_id() for t in coll.types()] )
+                , 'lists':          sorted( [l.get_id() for l in coll.lists()] )
+                , 'views':          sorted( [v.get_id() for v in coll.views()] )
+                , 'select_rows':    "6"
                 })
             return context
         if not Collection.exists(self._site, coll_id):

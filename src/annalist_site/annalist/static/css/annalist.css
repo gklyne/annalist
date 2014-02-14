@@ -34,9 +34,14 @@ div.row.headings {
     font-weight: bold;
 }
 
-div.columns > input {
+div.columns > input , 
+div.columns > select {
     margin: 0.25rem 0;
     padding: 0.25rem 0;
+}
+
+div.columns > select {
+    height: auto;
 }
 
 h2.page-heading {
