@@ -25,7 +25,9 @@ from miscutils.MockHttpResources import MockHttpFileResources, MockHttpDictResou
 
 from annalist                   import layout
 from annalist.identifiers       import ANNAL
-from annalist.site              import Site, SiteView
+from annalist.site              import Site
+
+from annalist.views.site        import SiteView
 
 from tests                      import TestBaseUri, TestBaseDir, dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
