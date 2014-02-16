@@ -1,5 +1,5 @@
 """
-Annalist collection views
+Annalist record type views
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -30,56 +30,44 @@ from annalist.recordlist        import RecordList
 
 from annalist.views             import AnnalistGenericView
 
-class CollectionEditView(AnnalistGenericView):
+class TypeEditView(AnnalistGenericView):
     """
-    View class to handle requests to an Annalist collection edit URI
+    View class to handle requests to an Annalist type edit URI
     """
     def __init__(self):
-        super(CollectionEditView, self).__init__()
+        super(TypeEditView, self).__init__()
         return
 
     # GET
 
-    def get(self, request, coll_id):
+    def get(self, request, coll_id=None, type_id=None, action=None):
         """
-        Create a rendering of the current collection.
+        Create a form for editing a type.
         """
         def resultdata():
-            coll = Collection(self.site(), coll_id)
             context = (
                 { 'title':          self.site_data()["title"]
                 , 'coll_id':        coll_id
-                , 'types':          sorted( [t.get_id() for t in coll.types()] )
-                , 'lists':          sorted( [l.get_id() for l in coll.lists()] )
-                , 'views':          sorted( [v.get_id() for v in coll.views()] )
-                , 'select_rows':    "6"
+                , 'type_id':        type_id
+                # @@TODO
                 })
             return context
         if not Collection.exists(self.site(), coll_id):
             return self.error(self.error404values().update(
                 message="Collection %s does not exist"%(coll_id)))
+        coll     = Collection(self.site(), coll_id)
+        if action == "new":
+            typedesc = RecordType(coll, "<new>")
+        elif not RecordType.exists(coll, type_id):
+            return self.error(self.error404values().update(
+                message="Record type %s/%s does not exist"%(coll_id, type_id)))
+            typedesc = RecordType.load(coll, type_id)
         return (
-            self.render_html(resultdata(), 'annalist_collection_edit.html') or 
+            self.render_html(resultdata(), 'annalist_type_edit.html') or 
             self.error(self.error406values())
             )
 
-    # POST
-
-    def post(self, request, coll_id):
-        """
-        Update some aspect of the current collection
-        """
-        def resultdata():
-            coll = Collection(self.site(), coll_id)
-            if "type_new" in request.POST:
-                pass
-            if "type_copy" in request.POST:
-                pass
-            if "type_edit" in request.POST:
-                pass
-            if "type_delete" in request.POST:
-                pass
-        assert False, "@@TODO POST %r -> %s"%(request.POST, self.get_request_uri())
+#     # POST
 
 #     # DELETE
 

@@ -38,14 +38,7 @@ class SiteView(AnnalistGenericView):
     """
     def __init__(self):
         super(SiteView, self).__init__()
-        self._site      = Site(self._sitebaseuri, self._sitebasedir)
-        self._site_data = None
         return
-
-    def site_data(self):
-        if not self._site_data:
-            self._site_data = self._site.site_data()
-        return self._site_data
 
     # GET
 
@@ -104,7 +97,7 @@ class SiteView(AnnalistGenericView):
                 { 'rdfs:label':    new_label
                 , 'rdfs:comment':  ""
                 })
-            self._site.add_collection(new_id, coll_meta)
+            self.site().add_collection(new_id, coll_meta)
             return self.redirect_info("AnnalistSiteView", message.CREATED_COLLECTION_ID%(new_id))
         return self.error(self.error400values())
 
@@ -114,7 +107,6 @@ class SiteActionView(AnnalistGenericView):
     """
     def __init__(self):
         super(SiteActionView, self).__init__()
-        self._site = Site(self._sitebaseuri, self._sitebasedir)
         return
 
     # POST
@@ -133,7 +125,7 @@ class SiteActionView(AnnalistGenericView):
                 return auth_required
             coll_ids = request.POST.getlist("select")
             for coll_id in coll_ids:
-                err = self._site.remove_collection(coll_id)
+                err = self.site().remove_collection(coll_id)
                 if err:
                     return self.redirect_error("AnnalistSiteView", str(err))
             return self.redirect_info(

@@ -15,18 +15,21 @@ log = logging.getLogger(__name__)
 from django.conf                import settings
 from django.db                  import models
 from django.http                import QueryDict
+from django.core.urlresolvers   import resolve, reverse
 from django.contrib.auth.models import User
 from django.test                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client         import Client
 
-from bs4                        import BeautifulSoup
+# from bs4                        import BeautifulSoup
 
-from miscutils.MockHttpResources import MockHttpFileResources, MockHttpDictResources
+# from miscutils.MockHttpResources import MockHttpFileResources, MockHttpDictResources
 
 from annalist.identifiers       import ANNAL
 from annalist                   import layout
 from annalist.site              import Site
-from annalist.collection        import Collection # , CollectionView
+from annalist.collection        import Collection
+
+from annalist.views.collection  import CollectionEditView
 
 from tests                      import TestBaseUri, TestBaseDir, dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
@@ -291,139 +294,80 @@ class CollectionTest(TestCase):
         self.assertEqual(listnames, {"list2"})
         return
 
-# class CollectionViewTest(AnnalistTestCase):
-#     """
-#     Tests for Site views
-#     """
+class CollectionEditViewTest(AnnalistTestCase):
+    """
+    Tests for Collection views
+    """
 
-#     def setUp(self):
-#         init_annalist_test_site()
-#         self.testsite = Site("http://example.com/testsite", TestBaseDir)
-#         self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-#         self.user.save()
-#         return
+    def setUp(self):
+        init_annalist_test_site()
+        self.testsite = Site("http://example.com/testsite", TestBaseDir)
+        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
+        self.user.save()
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
+        self.uri = reverse("AnnalistCollectionEditView", kwargs={'coll_id': "coll1"})
+        return
 
-#     def tearDown(self):
-#         return
+    def tearDown(self):
+        return
 
-#     def test_CollectionViewTest(self):
-#         self.assertEqual(CollectionView.__name__, "CollectionView", "Check CollectionView class name")
-#         return
+    def test_CollectionEditViewTest(self):
+        self.assertEqual(CollectionEditView.__name__, "CollectionEditView", "Check CollectionView class name")
+        return
 
-#     def test_get(self):
-#         # @@TODO: use reference to self.client, per 
-#         # https://docs.djangoproject.com/en/dev/topics/testing/tools/#default-test-client
-#         c = Client()
-#         r = c.get("/annalist/site/")
-#         self.assertEqual(r.status_code,   200)
-#         self.assertEqual(r.reason_phrase, "OK")
-#         self.assertContains(r, "<title>Annalist data journal test site</title>")
-#         return
+    def test_get(self):
+        r = self.client.get(self.uri)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, "<h3>Customize collection coll1</h3>")
+        return
 
-#     def test_get_no_login(self):
-#         c = Client()
-#         r = c.get("/annalist/site/")
-#         self.assertFalse(r.context["auth_create"])
-#         self.assertFalse(r.context["auth_update"])
-#         self.assertFalse(r.context["auth_delete"])
-#         colls = r.context['collections']
-#         self.assertEqual(len(colls), 3)
-#         for id in init_collections:
-#             self.assertEqual(colls[id]["annal:id"], id)
-#             self.assertEqual(colls[id]["uri"],      init_collections[id]["uri"])
-#             self.assertEqual(colls[id]["title"],    init_collections[id]["title"])
-#         # Check returned HTML (checks template logic)
-#         # (Don't need to keep doing this as logic can be tested through context as above)
-#         # (See: http://stackoverflow.com/questions/2257958/)
-#         s = BeautifulSoup(r.content)
-#         self.assertEqual(s.html.title.string, "Annalist data journal test site")
-#         homelink = s.find(class_="title-area").find(class_="name").h1.a
-#         self.assertEqual(homelink.string,   "Home")
-#         self.assertEqual(homelink['href'],  "/annalist/site/")
-#         menuitems = s.find(class_="top-bar-section").find(class_="right").find_all("li")
-#         self.assertEqual(menuitems[0].a.string,  "Login")
-#         self.assertEqual(menuitems[0].a['href'], "/annalist/profile/")
-#         # print "*****"
-#         # #print s.table.tbody.prettify()
-#         # print s.table.tbody.find_all("tr")
-#         # print "*****"
-#         trows = s.form.find_all("div", class_="row")
-#         self.assertEqual(len(trows), 4)
-#         self.assertEqual(trows[1].div.p.a.string,  "coll1")
-#         self.assertEqual(trows[1].div.p.a['href'], "/annalist/coll1/")
-#         self.assertEqual(trows[2].div.p.a.string,  "coll2")
-#         self.assertEqual(trows[2].div.p.a['href'], "/annalist/coll2/")
-#         self.assertEqual(trows[3].div.p.a.string,  "coll3")
-#         self.assertEqual(trows[3].div.p.a['href'], "/annalist/coll3/")
-#         return
+    def test_get_context(self):
+        r = self.client.get(self.uri)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertEquals(r.context['title'],   "Annalist data journal test site")
+        self.assertEquals(r.context['coll_id'], "coll1")
+        self.assertEquals(r.context['types'],   ["type1", "type2"])
+        self.assertEquals(r.context['lists'],   ["list1", "list2"])
+        self.assertEquals(r.context['views'],   ["view1", "view2"])
+        self.assertEquals(r.context['select_rows'], "6")
+        return
 
-#     def test_get_with_login(self):
-#         c = Client()
-#         loggedin = c.login(username="testuser", password="testpassword")
-#         self.assertTrue(loggedin)
-#         r = c.get("/annalist/site/")
-#         # Preferred way to test main view logic
-#         self.assertTrue(r.context["auth_create"])
-#         self.assertTrue(r.context["auth_update"])
-#         self.assertTrue(r.context["auth_delete"])
-#         colls = r.context['collections']
-#         self.assertEqual(len(colls), 3)
-#         for id in init_collections:
-#             self.assertEqual(colls[id]["annal:id"], id)
-#             self.assertEqual(colls[id]["uri"],      init_collections[id]["uri"])
-#             self.assertEqual(colls[id]["title"],    init_collections[id]["title"])
-#         # Check returned HTML (checks template logic)
-#         # (Don't need to keep doing this as logic can be tested through context as above)
-#         # (See: http://stackoverflow.com/questions/2257958/)
-#         s = BeautifulSoup(r.content)
-#         # title and top menu
-#         self.assertEqual(s.html.title.string, "Annalist data journal test site")
-#         homelink = s.find(class_="title-area").find(class_="name").h1.a
-#         self.assertEqual(homelink.string,   "Home")
-#         self.assertEqual(homelink['href'],  "/annalist/site/")
-#         menuitems = s.find(class_="top-bar-section").find(class_="right").find_all("li")
-#         self.assertEqual(menuitems[0].a.string,  "Profile")
-#         self.assertEqual(menuitems[0].a['href'], "/annalist/profile/")
-#         self.assertEqual(menuitems[1].a.string,  "Logout")
-#         self.assertEqual(menuitems[1].a['href'], "/annalist/logout/")
-#         # Displayed colllections and check-buttons
-#         trows = s.form.find_all("div", class_="row")
-#         self.assertEqual(len(trows), 6)
-#         tcols1 = trows[1].find_all("div")
-#         self.assertEqual(tcols1[0].a.string,       "coll1")
-#         self.assertEqual(tcols1[0].a['href'],      "/annalist/coll1/")
-#         self.assertEqual(tcols1[2].input['type'],  "checkbox")
-#         self.assertEqual(tcols1[2].input['name'],  "select")
-#         self.assertEqual(tcols1[2].input['value'], "coll1")
-#         tcols2 = trows[2].find_all("div")
-#         self.assertEqual(tcols2[0].a.string,       "coll2")
-#         self.assertEqual(tcols2[0].a['href'],      "/annalist/coll2/")
-#         self.assertEqual(tcols2[2].input['type'],  "checkbox")
-#         self.assertEqual(tcols2[2].input['name'],  "select")
-#         self.assertEqual(tcols2[2].input['value'], "coll2")
-#         tcols3 = trows[3].find_all("div")
-#         self.assertEqual(tcols3[0].a.string,       "coll3")
-#         self.assertEqual(tcols3[0].a['href'],      "/annalist/coll3/")
-#         self.assertEqual(tcols3[2].input['type'],  "checkbox")
-#         self.assertEqual(tcols3[2].input['name'],  "select")
-#         self.assertEqual(tcols3[2].input['value'], "coll3")
-#         # Remove/new collection buttons
-#         btn_remove = trows[4].find("div", class_="right")
-#         self.assertEqual(btn_remove.input["type"],  "submit")
-#         self.assertEqual(btn_remove.input["name"],  "remove")
-#         # print "**********"
-#         # print trows[5].prettify()
-#         # print "**********"
-#         field_id = trows[5].find_all("div")[0]
-#         self.assertEqual(field_id.input["type"],  "text")
-#         self.assertEqual(field_id.input["name"],  "new_id")
-#         field_id = trows[5].find_all("div")[1]
-#         self.assertEqual(field_id.input["type"],  "text")
-#         self.assertEqual(field_id.input["name"],  "new_label")
-#         btn_new = trows[5].find_all("div")[2]
-#         self.assertEqual(btn_new.input["type"],  "submit")
-#         self.assertEqual(btn_new.input["name"],  "new")
-#         return
+    def test_post_new_type(self):
+        form_data = (
+            { "type_new":   "New"
+            })
+        r = self.client.post(self.uri, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        typenewuri = reverse(
+            "AnnalistTypeNewView", 
+            kwargs={'coll_id': "coll1", 'action': "new"}
+            )
+        # typeedituri = reverse("AnnalistTypeEditView", kwargs={'coll_id': "coll1", "type_id": "..."})
+        self.assertEqual(r['location'], typenewuri)
+        return
+
+    def test_post_copy_type(self):
+        form_data = (
+            { "typelist":   "type1"
+            , "type_copy":  "Copy"
+            })
+        r = self.client.post(self.uri, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        typenewuri = reverse(
+            "AnnalistTypeCopyView", 
+            kwargs={'coll_id': "coll1", 'type_id': "type1", 'action': "new"}
+            )
+        # typeedituri = reverse("AnnalistTypeEditView", kwargs={'coll_id': "coll1", "type_id": "..."})
+        self.assertEqual(r['location'], typenewuri)
+        return
 
 #     def test_post_add_type(self):
 #         c = Client()
