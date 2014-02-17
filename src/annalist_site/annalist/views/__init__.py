@@ -88,13 +88,20 @@ class AnnalistGenericView(ContentNegotiationView):
         redirect_uri = reverse(viewname)+"?info_head=%s&info_message=%s"%(info_head, info_message)
         return HttpResponseRedirect(redirect_uri)
 
+    def error_params(self, error_message, error_head=message.INPUT_ERROR):
+        """
+        Returns a URI query parameter string with details that are used to generate an
+        error message.
+        """
+        return "?error_head=%s&error_message=%s"%(error_head, error_message)
+
     def redirect_error(self, viewname, error_message=None, error_head=message.INPUT_ERROR):
         """
         Redirect to a specified view with an error message for display
 
         (see templates/base_generic.html for display details)
         """
-        redirect_uri = reverse(viewname)+"?error_head=%s&error_message=%s"%(error_head, error_message)
+        redirect_uri = reverse(viewname)+self.error_params(error_head, error_message)
         return HttpResponseRedirect(redirect_uri)
 
     def get_base_dir_zzz(self):

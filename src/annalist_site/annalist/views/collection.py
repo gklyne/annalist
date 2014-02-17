@@ -20,6 +20,7 @@ from django.http                import HttpResponseRedirect
 from django.core.urlresolvers   import resolve, reverse
 
 # from annalist                   import layout
+from annalist                   import message
 from annalist.exceptions        import Annalist_Error
 # from annalist.identifiers       import ANNAL
 # from annalist                   import util
@@ -79,11 +80,17 @@ class CollectionEditView(AnnalistGenericView):
                 )
             return HttpResponseRedirect(redirect_uri)
         if "type_copy" in request.POST:
-            type_id = request.POST['typelist']
-            redirect_uri = reverse(
-                "AnnalistTypeCopyView", 
-                kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "copy"}
-                )
+            type_id = request.POST.get('typelist', None)
+            if type_id:
+                redirect_uri = reverse(
+                    "AnnalistTypeCopyView", 
+                    kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "copy"}
+                    )
+            else:
+                redirect_uri = (
+                    self.get_request_path()+
+                    self.error_params(message.NO_TYPE_FOR_COPY)
+                    )
             return HttpResponseRedirect(redirect_uri)
         if "type_edit" in request.POST:
             pass

@@ -47,10 +47,20 @@ class ContentNegotiationView(generic.View):
             return guard
         return decorator
 
+    def get_request_path(self):
+        """
+        Utility function returns path of current request URI.
+
+        Cf. https://docs.djangoproject.com/en/dev/ref/request-response/#methods
+        """
+        return self.request.get_full_path()
+
     def get_request_uri(self):
         """
         Utility function returns URI of current request
         (useful when building new URIs with POST, etc.)
+
+        Cf. https://docs.djangoproject.com/en/dev/ref/request-response/#methods
         """
         return self.request.build_absolute_uri()
 

@@ -375,6 +375,18 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r['location'], TestHostUri+typecopyuri)
         return
 
+    def test_post_copy_type_no_selection(self):
+        form_data = (
+            { "type_copy":  "Copy"
+            })
+        r = self.client.post(self.uri, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        erroruri = self.uri+r"\?error_head=.*\&error_message=.*"
+        self.assertMatch(r['location'], TestHostUri+erroruri)
+        return
+
 #     def test_post_add_type(self):
 #         c = Client()
 #         loggedin = c.login(username="testuser", password="testpassword")
