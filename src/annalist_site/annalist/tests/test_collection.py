@@ -31,7 +31,8 @@ from annalist.collection        import Collection
 
 from annalist.views.collection  import CollectionEditView
 
-from tests                      import TestBaseUri, TestBaseDir, dict_to_str, init_annalist_test_site
+from tests                      import TestHost, TestHostUri, TestBaseUri, TestBaseDir
+from tests                      import dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
 
 # Test assertion summary from http://docs.python.org/2/library/unittest.html#test-cases
@@ -64,7 +65,7 @@ class CollectionTest(TestCase):
             , 'id': 'coll1'
             , 'type': 'annal:Collection'
             , 'title': 'Name collection coll1'
-            , 'uri': 'http://example.com/testsite/collections/coll1/'
+            , 'uri': TestBaseUri+'/collections/coll1/'
             , 'annal:id': 'coll1'
             , 'annal:type': 'annal:Collection'
             , 'rdfs:comment': 'Annalist collection metadata.'
@@ -83,7 +84,7 @@ class CollectionTest(TestCase):
             , 'id': 'type1'
             , 'type': 'annal:RecordType'
             , 'title': 'Type testcoll/type1'
-            , 'uri': 'http://example.com/testsite/collections/testcoll/types/type1/'
+            , 'uri': TestBaseUri+'/collections/testcoll/types/type1/'
             , 'annal:id': 'type1'
             , 'annal:type': 'annal:RecordType'
             , 'rdfs:comment': 'Annalist collection1 recordtype1'
@@ -98,7 +99,7 @@ class CollectionTest(TestCase):
             , 'id': 'type2'
             , 'type': 'annal:RecordType'
             , 'title': 'Type testcoll/type2'
-            , 'uri': 'http://example.com/testsite/collections/testcoll/types/type2/'
+            , 'uri': TestBaseUri+'/collections/testcoll/types/type2/'
             , 'annal:id': 'type2'
             , 'annal:type': 'annal:RecordType'
             , 'rdfs:comment': 'Annalist collection1 recordtype2'
@@ -113,7 +114,7 @@ class CollectionTest(TestCase):
             , 'id': 'view1'
             , 'type': 'annal:RecordView'
             , 'title': 'Type testcoll/view1'
-            , 'uri': 'http://example.com/testsite/collections/testcoll/views/view1/'
+            , 'uri': TestBaseUri+'/collections/testcoll/views/view1/'
             , 'annal:id': 'view1'
             , 'annal:type': 'annal:RecordView'
             , 'rdfs:comment': 'Annalist collection1 recordview1'
@@ -128,7 +129,7 @@ class CollectionTest(TestCase):
             , 'id': 'view2'
             , 'type': 'annal:RecordView'
             , 'title': 'Type testcoll/view2'
-            , 'uri': 'http://example.com/testsite/collections/testcoll/views/view2/'
+            , 'uri': TestBaseUri+'/collections/testcoll/views/view2/'
             , 'annal:id': 'view2'
             , 'annal:type': 'annal:RecordView'
             , 'rdfs:comment': 'Annalist collection1 recordview2'
@@ -143,7 +144,7 @@ class CollectionTest(TestCase):
             , 'id': 'list1'
             , 'type': 'annal:RecordList'
             , 'title': 'Type testcoll/list1'
-            , 'uri': 'http://example.com/testsite/collections/testcoll/lists/list1/'
+            , 'uri': TestBaseUri+'/collections/testcoll/lists/list1/'
             , 'annal:id': 'list1'
             , 'annal:type': 'annal:RecordList'
             , 'rdfs:comment': 'Annalist collection1 recordlist1'
@@ -158,7 +159,7 @@ class CollectionTest(TestCase):
             , 'id': 'list2'
             , 'type': 'annal:RecordList'
             , 'title': 'Type testcoll/list2'
-            , 'uri': 'http://example.com/testsite/collections/testcoll/lists/list2/'
+            , 'uri': TestBaseUri+'/collections/testcoll/lists/list2/'
             , 'annal:id': 'list2'
             , 'annal:type': 'annal:RecordList'
             , 'rdfs:comment': 'Annalist collection1 recordlist2'
@@ -294,6 +295,12 @@ class CollectionTest(TestCase):
         self.assertEqual(listnames, {"list2"})
         return
 
+# -----------------------------------------------------------------------------
+#
+# View tests
+#
+# -----------------------------------------------------------------------------
+
 class CollectionEditViewTest(AnnalistTestCase):
     """
     Tests for Collection views
@@ -301,12 +308,13 @@ class CollectionEditViewTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
-        self.testsite = Site("http://example.com/testsite", TestBaseDir)
+        self.testsite = Site(TestBaseUri, TestBaseDir)
         self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
         self.user.save()
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         self.uri = reverse("AnnalistCollectionEditView", kwargs={'coll_id': "coll1"})
+        self.client = Client(HTTP_HOST=TestHost)
         return
 
     def tearDown(self):
@@ -348,8 +356,7 @@ class CollectionEditViewTest(AnnalistTestCase):
             "AnnalistTypeNewView", 
             kwargs={'coll_id': "coll1", 'action': "new"}
             )
-        # typeedituri = reverse("AnnalistTypeEditView", kwargs={'coll_id': "coll1", "type_id": "..."})
-        self.assertEqual(r['location'], typenewuri)
+        self.assertEqual(r['location'], TestHostUri+typenewuri)
         return
 
     def test_post_copy_type(self):
@@ -361,12 +368,11 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        typenewuri = reverse(
+        typecopyuri = reverse(
             "AnnalistTypeCopyView", 
-            kwargs={'coll_id': "coll1", 'type_id': "type1", 'action': "new"}
+            kwargs={'coll_id': "coll1", 'type_id': "type1", 'action': "copy"}
             )
-        # typeedituri = reverse("AnnalistTypeEditView", kwargs={'coll_id': "coll1", "type_id": "..."})
-        self.assertEqual(r['location'], typenewuri)
+        self.assertEqual(r['location'], TestHostUri+typecopyuri)
         return
 
 #     def test_post_add_type(self):

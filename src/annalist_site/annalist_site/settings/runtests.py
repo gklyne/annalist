@@ -9,11 +9,12 @@ from common import *
 import logging
 log = logging.getLogger(__name__)
 
-# Override authentication backend to use local datrabase only
+# Override authentication backend to use local database only
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     )
 
+# Override logging setings for tests
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -61,6 +62,15 @@ LOGGING = {
         },
     }
 }
+
+# URI parts used for testing
+TEST_HOST       = "test.example.com"
+TEST_HOST_URI   = "http://"+TEST_HOST
+TEST_BASE_PATH  = "testsite"
+TEST_BASE_URI   = TEST_HOST_URI+"/"+TEST_BASE_PATH
+
+# Override root URI configuration for tests
+ROOT_URLCONF    = 'annalist_site.test_urls'
 
 SETTINGS_MODULE = __name__
 BASE_DATA_DIR   = SITE_SRC_ROOT+"/test/data"

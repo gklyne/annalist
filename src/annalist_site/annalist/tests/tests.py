@@ -20,9 +20,12 @@ from django.conf import settings
 import annalist.util
 from annalist.layout        import Layout
 
-test_layout = Layout(settings.BASE_DATA_DIR)
-TestBaseDir = test_layout.SITE_PATH
-TestBaseUri = "http://example.com/testsite"
+test_layout     = Layout(settings.BASE_DATA_DIR)
+TestBaseDir     = test_layout.SITE_PATH
+TestHost        = settings.TEST_HOST        # e.g. "test.example.com"
+TestBasePath    = settings.TEST_BASE_PATH   # e.g. "testsite"
+TestHostUri     = settings.TEST_HOST_URI    # e.g. "http://test.example.com"
+TestBaseUri     = settings.TEST_BASE_URI    # e.g. "http://test.example.com/testsite"
 
 def createSiteData(src, tgt):
     """

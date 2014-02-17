@@ -15,6 +15,9 @@ import logging
 log = logging.getLogger(__name__)
 
 from django.conf import settings
+from django.http                import HttpResponse
+from django.http                import HttpResponseRedirect
+from django.core.urlresolvers   import resolve, reverse
 
 # from annalist                   import layout
 from annalist.exceptions        import Annalist_Error
@@ -69,16 +72,23 @@ class CollectionEditView(AnnalistGenericView):
         """
         Update some aspect of the current collection
         """
-        def resultdata():
-            coll = Collection(self.site(), coll_id)
-            if "type_new" in request.POST:
-                pass
-            if "type_copy" in request.POST:
-                pass
-            if "type_edit" in request.POST:
-                pass
-            if "type_delete" in request.POST:
-                pass
+        if "type_new" in request.POST:
+            redirect_uri = reverse(
+                "AnnalistTypeNewView", 
+                kwargs={'coll_id': coll_id, 'action': "new"}
+                )
+            return HttpResponseRedirect(redirect_uri)
+        if "type_copy" in request.POST:
+            type_id = request.POST['typelist']
+            redirect_uri = reverse(
+                "AnnalistTypeCopyView", 
+                kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "copy"}
+                )
+            return HttpResponseRedirect(redirect_uri)
+        if "type_edit" in request.POST:
+            pass
+        if "type_delete" in request.POST:
+            pass
         assert False, "@@TODO POST %r -> %s"%(request.POST, self.get_request_uri())
 
 #     # DELETE
