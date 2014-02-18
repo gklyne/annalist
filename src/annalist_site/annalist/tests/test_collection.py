@@ -387,6 +387,62 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertMatch(r['location'], TestHostUri+erroruri)
         return
 
+    def test_post_edit_type(self):
+        form_data = (
+            { "typelist":   "type1"
+            , "type_edit":  "Edit"
+            })
+        r = self.client.post(self.uri, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        typeedituri = reverse(
+            "AnnalistTypeEditView", 
+            kwargs={'coll_id': "coll1", 'type_id': "type1", 'action': "edit"}
+            )
+        self.assertEqual(r['location'], TestHostUri+typeedituri)
+        return
+
+    def test_post_edit_type_no_selection(self):
+        form_data = (
+            { "type_edit":  "Edit"
+            })
+        r = self.client.post(self.uri, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        erroruri = self.uri+r"\?error_head=.*\&error_message=.*"
+        self.assertMatch(r['location'], TestHostUri+erroruri)
+        return
+
+    def test_post_delete_type(self):
+        form_data = (
+            { "typelist":   "type1"
+            , "type_delete":  "Delete"
+            })
+        r = self.client.post(self.uri, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        typedeleteuri = reverse(
+            "AnnalistTypeDeleteView", 
+            kwargs={'coll_id': "coll1", 'type_id': "type1", 'action': "delete"}
+            )
+        self.assertEqual(r['location'], TestHostUri+typedeleteuri)
+        return
+
+    def test_post_delete_type_no_selection(self):
+        form_data = (
+            { "type_delete":  "Delete"
+            })
+        r = self.client.post(self.uri, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        erroruri = self.uri+r"\?error_head=.*\&error_message=.*"
+        self.assertMatch(r['location'], TestHostUri+erroruri)
+        return
+
 #     def test_post_add_type(self):
 #         c = Client()
 #         loggedin = c.login(username="testuser", password="testpassword")

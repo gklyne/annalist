@@ -87,12 +87,20 @@ class CollectionEditView(AnnalistGenericView):
                     kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "copy"})
                 )
         if "type_edit" in request.POST:
-            pass
+            redirect_uri = (
+                self.check_value_supplied(type_id, message.NO_TYPE_FOR_EDIT) or
+                reverse("AnnalistTypeEditView", 
+                    kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "edit"})
+                )
         if "type_delete" in request.POST:
-            pass
+            redirect_uri = (
+                self.check_value_supplied(type_id, message.NO_TYPE_FOR_DELETE) or
+                reverse("AnnalistTypeDeleteView", 
+                    kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "delete"})
+                )
         if redirect_uri:
             return HttpResponseRedirect(redirect_uri)
-        assert False, "@@TODO POST %r -> %s"%(request.POST, self.get_request_uri())
+        raise Annalist_Error(request.POST, "Unexpected values in POST to "+self.get_request_path())
 
 #     # DELETE
 
