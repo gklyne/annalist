@@ -398,4 +398,21 @@ class EntityTest(TestCase):
         self.assertFalse(TestEntityTypeSub.exists(r, "testid3"))
         return
 
+    def test_entity_allocate_id(self):
+        test_values = (
+            { 'type':   'test:EntityType'
+            , 'title':  'Name entity test'
+            })
+        r = EntityRoot(TestBaseUri, TestBaseDir)
+        eid = TestEntityType.allocate_new_id(r)
+        self.assertEqual(eid, "00000001")
+        self.assertFalse(TestEntityType.exists(r, eid))
+        eid = TestEntityType.allocate_new_id(r)
+        self.assertEqual(eid, "00000001")
+        e = TestEntityType.create(r, eid, test_values)
+        self.assertTrue(TestEntityType.exists(r, eid))
+        eid = TestEntityType.allocate_new_id(r)
+        self.assertEqual(eid, "00000002")
+        return
+
 # End.

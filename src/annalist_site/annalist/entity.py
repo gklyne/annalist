@@ -74,15 +74,38 @@ class EntityRoot(object):
     def get_id(self):
         return self._entityid
 
+    def get_uri(self, baseuri):
+        """
+        Get fully qualified URI referred to supplied base.
+
+        NOTE: entities are stored, as far as possible, using relative references.
+        But when an absolute reference is required, the current context URI must 
+        be taken into account.  If the URI returned by this function is stored, 
+        subsequent references to that value will be fixed, not relative, so the value
+        should only be stored where they may be used as identifiers or "permalink"
+        style locators, so the data can continue to be used when moved to a new location.
+        """
+        return urlparse.urljoin(baseuri, self._entityuri)
+
     def set_values(self, values):
         """
         Set or update values for a collection
         """
         self._values = values.copy()
         # @@TODO do we really want this ad hoc stuff in addition to the explicit data?
-        self._values["id"]    = self._values.get("id",         self._entityid)
-        self._values["uri"]   = self._values.get("uri",        self._entityuri)
-        self._values["type"]  = self._values.get("type",       self._entitytype)
+        # @@     see also Site.site_data
+        self._values["id"]    = (
+            self._values.get("id",         None) or
+            self._values.get("annal:id",   self._entityid)
+            )
+        self._values["uri"]   = (
+            self._values.get("uri",        None) or
+            self._values.get("annal:uri",  self._entityuri)
+            )
+        self._values["type"]  = (
+            self._values.get("type",       None) or
+            self._values.get("annal:type", self._entitytype)
+            )
         self._values["title"] = (
             self._values.get("title",      None) or
             self._values.get("rdfs:label", "%s %s"%(self._entitytype, self._entityid))
@@ -181,6 +204,12 @@ class EntityRoot(object):
         """
         return self._values.items()
 
+    def get(self, key, default):
+        """
+        Equivalent to dict.get() function
+        """
+        return self[key] if key in self else default
+
     def __getitem__(self, k):
         """
         Allow direct indexing to access collection metadata value fields
@@ -207,6 +236,7 @@ class Entity(EntityRoot):
     _entitypath = None          # relative path from parent to entity (template)
     _entityfile = None          # To be overriden by entity subclasses..
     _entityref  = None          # Relative reference to entity from body file
+    _last_id    = None          # Last ID allocated
 
     def __init__(self, parent, entityid):
         """
@@ -223,6 +253,17 @@ class Entity(EntityRoot):
         self._entityid = entityid
         log.debug("Entity.__init__: ID %s"%(self._entityid))
         return
+
+    @classmethod
+    def allocate_new_id(cls, parent):
+        if cls._last_id is None:
+            cls._last_id = 1
+        while True:
+            newid = "%08d"%cls._last_id
+            if not cls.exists(parent, newid):
+                break
+            cls._last_id += 1
+        return newid
 
     @classmethod
     def relpath(cls, entityid):

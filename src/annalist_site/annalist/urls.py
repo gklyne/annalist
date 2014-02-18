@@ -13,7 +13,7 @@ from annalist.views.profile     import ProfileView
 from annalist.views.confirm     import ConfirmView
 from annalist.views.site        import SiteView, SiteActionView
 from annalist.views.collection  import CollectionEditView
-from annalist.views.recordtype  import TypeEditView
+from annalist.views.recordtype  import RecordTypeEditView
 from oauth2.views               import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
 
 urlpatterns = patterns('',
@@ -26,16 +26,16 @@ urlpatterns = patterns('',
                             CollectionEditView.as_view(),
                             name='AnnalistCollectionEditView'),
     url(r'^collections/(?P<coll_id>\w{0,32})/types/!(?P<action>new)$',
-                            TypeEditView.as_view(),
+                            RecordTypeEditView.as_view(),
                             name='AnnalistTypeNewView'),
     url(r'^collections/(?P<coll_id>\w{0,32})/types/(?P<type_id>\w{0,32})/!(?P<action>copy)$',
-                            TypeEditView.as_view(),
+                            RecordTypeEditView.as_view(),
                             name='AnnalistTypeCopyView'),
     url(r'^collections/(?P<coll_id>\w{0,32})/types/(?P<type_id>\w{0,32})/!(?P<action>edit)$',
-                            TypeEditView.as_view(),
+                            RecordTypeEditView.as_view(),
                             name='AnnalistTypeEditView'),
     url(r'^collections/(?P<coll_id>\w{0,32})/types/(?P<type_id>\w{0,32})/!(?P<action>delete)$',
-                            TypeEditView.as_view(),
+                            RecordTypeEditView.as_view(),
                             name='AnnalistTypeDeleteView'),
     )
 

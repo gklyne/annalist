@@ -1,0 +1,66 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block heading %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="large-12 columns">
+            <h3>Record type in collection {{coll_id}}</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-12 columns">
+            <form method="POST" action="./">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="small-2 columns">
+                        <p>Id</p>
+                    </div>
+                    <div class="small-4 columns">
+                        <input type="text" size="32" name="type_id" value="{{type_id}}"/>
+                    </div>
+                    <div class="small-6 columns">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-2 columns">
+                        <p>Label</p>
+                    </div>
+                    <div class="small-10 columns">
+                        <input type="text" size="80" name="type_label" value="{{type_label}}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-2 columns">
+                        <p>Help</p>
+                    </div>
+                    <div class="small-10 columns">
+                        <textarea rows="6" cols="80" name="type_help">{{type_help}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-2 columns">
+                        <p>Class</p>
+                    </div>
+                    <div class="small-10 columns">
+                        <input type="text" size="80" name="type_class" value="{{type_uri}}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-2 columns">
+                    </div>
+                    <div class="small-10 columns">
+                        <input type="submit" name="save"   value="Save" />
+                        <input type="submit" name="cancel" value="Cancel" />
+                        <input type="hidden" name="continuation_uri" value="{{continuation_uri}}"/>
+                        <input type="hidden" name="orig_type_id"     value="{{orig_type_id}}"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

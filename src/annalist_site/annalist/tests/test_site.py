@@ -28,7 +28,7 @@ from annalist                   import layout
 from annalist.identifiers       import ANNAL
 from annalist.site              import Site
 
-from annalist.views.site        import SiteView
+from annalist.views.site        import SiteView, SiteActionView
 
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                      import dict_to_str, init_annalist_test_site

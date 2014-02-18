@@ -39,20 +39,26 @@
 2. Collection display
    / refactor metadata field access to common superclass
    / types
-    / implement skeleton RecordType module
-    / create test cases for types in collection
-    / implement type methods
+     / implement skeleton RecordType module
+     / create test cases for types in collection
+     / implement type methods
    / views
-    / implement skeleton RecordView module
-    / create test cases for views in collection
-    / implement view methods
+     / implement skeleton RecordView module
+     / create test cases for views in collection
+     / implement view methods
    / lists
-    / implement skeleton RecordList module
-    / create test cases for lists in collection
-    / implement list methods
-   - UI test cases
-   - form elements to add/delete types/views/lists/...
+     / implement skeleton RecordList module
+     / create test cases for lists in collection
+     / implement list methods
+   / UI test cases
+   / form elements to add/delete types/views/lists/...
 3. Record type display
+   / template
+   / view: edit form display
+   - view test cases
+   > model
+   - model test cases
+   - view: edit form response handling
 4. Default record list display (code may later be refactored)
 5. Design generic entity view
 6. Record view display and editing
@@ -64,19 +70,36 @@ Misc
 - Complete authorization framework, per collection
 - can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  
 
-Use server-internal revectoring?  What about delete multiple?
-- view collections doesn't use entered label - problem with entry vocab?
-- util.write_entity: think about capturing provenance metadata too.
+- Use server-internal revectoring?  What about delete multiple?
+? view collections doesn't use entered label - problem with entry vocab? (Fixed?)
 - move util.py to utils package, and rename?
+- util.write_entity: think about capturing provenance metadata too
+
+Entity abstraction:
+- replace direct file access with HTTP access
 
 AnalistGenericView:
 - Generic renderers, all driven by a supplied dictionary:
   - HTML
   - JSON-LD
   - uri-list
-- but serve native format directly.  Note that it should be possible to take an Annbalist sirte directory and dump it onto any regular HTTP server to publish thje raw data.  Web site should still be able to work with that.
+- but serve native format directly.
 
-Deployment: look into using Vagrant and/or Puppet/Chef/...
+Data storage:
+- Note that it should be possible to take an Annalist site directory and dump it onto any regular HTTP server to publish the raw data.  Web site should still be able to work with that.
+- think about storage of identifier URIs (e.g. record type URIs.)  Should they default to be:
+  (1) relative to self
+  (2) relative to base of site
+  (3) relative to host
+  (4) absolute
+  Currently, it's (3) or (4), but I think I favour (2).  The intent is that the URI field
+  can be fixed by explicitly entering an absolute URI, but until then they are allocated
+  per site.  The expectation is that if data are moved, it will be as complete collections
+  to ensure they are accompanied by their associated metadata.
+
+
+Deployment:
+- look into using Vagrant and/or Puppet/Chef/...
 
 
 ## Dynamic form interface

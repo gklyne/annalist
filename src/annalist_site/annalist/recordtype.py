@@ -50,30 +50,4 @@ class RecordType(Entity):
         super(RecordType, self).__init__(parent, type_id)
         return
 
-# class RecordTypeView(AnnalistGenericView):
-#     """
-#     View class to handle requests to an Annalist collection URI
-#     """
-#     def __init__(self):
-#         super(RecordTypeView, self).__init__()
-#         return
-
-#     # GET
-
-#     def get(self, request):
-#         """
-#         Create a rendering of the current collection.
-#         """
-#         def resultdata():
-#             coll = Collection(self.get_request_uri(), self.get_base_dir())
-#             return coll.get_values()
-#         return (
-#             self.render_html(resultdata(), 'annalist_collection.html') or 
-#             self.error(self.error406values())
-#             )
-
-#     # POST
-
-#     # DELETE
-
 # End.
