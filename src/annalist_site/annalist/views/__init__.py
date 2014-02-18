@@ -104,12 +104,30 @@ class AnnalistGenericView(ContentNegotiationView):
         redirect_uri = reverse(viewname)+self.error_params(error_head, error_message)
         return HttpResponseRedirect(redirect_uri)
 
-    def get_base_dir_zzz(self):
+    def check_value_supplied(self, val, msg, testfn=(lambda v: v)):
         """
-        Utility function returns base directory for Annalist site,
-        without trailing "/"
+        Test a supplied value is specified (not None) and passes a supplied test,
+        returning a URI to display a supplied error message if the test fails.
+
+        NOTE: this function works with the generic base template base_generic.html, which
+        is assumed to provide an underlay for thne currently viewed page.
+
+        val         value that is required to be not None and not empty or False
+        msg         message to display if the value evaluated to False
+        testfn      is a function to test the value (if not None).  If not specified, 
+                    the default test checks thatthe value does not evaluate as false
+                    (e.g. is a non-empty string, list or collection).
+
+        returns a URI string for use with HttpResponseRedirect to redisplay the 
+        current page with the supplied message, or None if the value passes the test.
         """
-        return settings.SITE_BASE
+        redirect_uri = None
+        if (val is None) or not testfn(val):
+            redirect_uri = (
+                self.get_request_path()+
+                self.error_params(msg)
+                )
+        return redirect_uri
 
     # Authentication and authorization
     def authenticate(self):

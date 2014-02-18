@@ -73,29 +73,25 @@ class CollectionEditView(AnnalistGenericView):
         """
         Update some aspect of the current collection
         """
+        redirect_uri = None
+        type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:
             redirect_uri = reverse(
                 "AnnalistTypeNewView", 
                 kwargs={'coll_id': coll_id, 'action': "new"}
                 )
-            return HttpResponseRedirect(redirect_uri)
         if "type_copy" in request.POST:
-            type_id = request.POST.get('typelist', None)
-            if type_id:
-                redirect_uri = reverse(
-                    "AnnalistTypeCopyView", 
-                    kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "copy"}
-                    )
-            else:
-                redirect_uri = (
-                    self.get_request_path()+
-                    self.error_params(message.NO_TYPE_FOR_COPY)
-                    )
-            return HttpResponseRedirect(redirect_uri)
+            redirect_uri = (
+                self.check_value_supplied(type_id, message.NO_TYPE_FOR_COPY) or
+                reverse("AnnalistTypeCopyView", 
+                    kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "copy"})
+                )
         if "type_edit" in request.POST:
             pass
         if "type_delete" in request.POST:
             pass
+        if redirect_uri:
+            return HttpResponseRedirect(redirect_uri)
         assert False, "@@TODO POST %r -> %s"%(request.POST, self.get_request_uri())
 
 #     # DELETE
