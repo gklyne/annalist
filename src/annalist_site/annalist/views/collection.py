@@ -98,6 +98,8 @@ class CollectionEditView(AnnalistGenericView):
                 reverse("AnnalistTypeDeleteView", 
                     kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "delete"})
                 )
+        if "close" in request.POST:
+            redirect_uri = reverse("AnnalistSiteView")
         if redirect_uri:
             return HttpResponseRedirect(redirect_uri)
         raise Annalist_Error(request.POST, "Unexpected values in POST to "+self.get_request_path())

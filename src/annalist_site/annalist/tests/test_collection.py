@@ -295,11 +295,11 @@ class CollectionTest(TestCase):
         self.assertEqual(listnames, {"list2"})
         return
 
-# -----------------------------------------------------------------------------
+#   -----------------------------------------------------------------------------
 #
-# View tests
+#   CollectionEditView tests
 #
-# -----------------------------------------------------------------------------
+#   -----------------------------------------------------------------------------
 
 class CollectionEditViewTest(AnnalistTestCase):
     """
@@ -443,64 +443,17 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertMatch(r['location'], TestHostUri+erroruri)
         return
 
-#     def test_post_add_type(self):
-#         c = Client()
-#         loggedin = c.login(username="testuser", password="testpassword")
-#         self.assertTrue(loggedin)
-#         form_data = (
-#             { "new":        "New collection"
-#             , "new_id":     "testnew"
-#             , "new_label":  "Label for new collection"
-#             })
-#         r = c.post("/annalist/site/", form_data)
-#         self.assertEqual(r.status_code,   302)
-#         self.assertEqual(r.reason_phrase, "FOUND")
-#         self.assertEqual(r.content,       "")
-#         self.assertEqual(r['location'],
-#             "http://testserver/annalist/site/"+
-#             "?info_head=Action%20completed"+
-#             "&info_message=Created%20new%20collection:%20'testnew'")
-#         # Check site now has new colllection
-#         r = c.get("/annalist/site/")
-#         new_collections = init_collections.copy()
-#         new_collections["testnew"] = (
-#             { 'title': 'Label for new collection'
-#             , 'uri':   '/annalist/testnew/'
-#             })
-#         colls = r.context['collections']
-#         for id in new_collections:
-#             self.assertEqual(colls[id]["annal:id"], id)
-#             self.assertEqual(colls[id]["uri"],      new_collections[id]["uri"])
-#             self.assertEqual(colls[id]["title"],    new_collections[id]["title"])
-#         return
-
-#     def test_post_remove_type(self):
-#         c = Client()
-#         loggedin = c.login(username="testuser", password="testpassword")
-#         self.assertTrue(loggedin)
-#         form_data = (
-#             { "remove":     "Remove selected"
-#             , "new_id":     ""
-#             , "new_label":  ""
-#             , "select":     ["coll1", "coll3"]
-#             })
-#         r = c.post("/annalist/site/", form_data)
-#         self.assertEqual(r.status_code,   200)
-#         self.assertEqual(r.reason_phrase, "OK")
-#         self.assertTemplateUsed(r, "annalist_confirm.html")
-#         # print "********"
-#         # # print repr(r.__dict__)
-#         # # print repr(r.context)
-#         # print r.content
-#         # print "********"
-#         # Returns confirmation form: check
-#         self.assertContains(r, """<form method="POST" action="/annalist/confirm/">""", status_code=200)
-#         self.assertContains(r, """<input type="submit" name="confirm" value="Confirm"/>""", html=True)
-#         self.assertContains(r, """<input type="submit" name="cancel" value="Cancel"/>""", html=True)
-#         self.assertContains(r, """<input type="hidden" name="complete_action" value="/annalist/site_action/"/>""", html=True)
-#         self.assertContains(r, """<input type="hidden" name="action_params"   value="{&quot;new_label&quot;: [&quot;&quot;], &quot;new_id&quot;: [&quot;&quot;], &quot;select&quot;: [&quot;coll1&quot;, &quot;coll3&quot;], &quot;remove&quot;: [&quot;Remove selected&quot;]}"/>""", html=True)
-#         self.assertContains(r, """<input type="hidden" name="cancel_action"   value="/annalist/site/"/>""", html=True)
-#         return
+    def test_post_close(self):
+        form_data = (
+            { "close":  "Close"
+            })
+        r = self.client.post(self.uri, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        siteviewuri = reverse("AnnalistSiteView")
+        self.assertEqual(r['location'], TestHostUri+siteviewuri)
+        return
 
 # class CollectionActionView(AnnalistTestCase):
 #     """

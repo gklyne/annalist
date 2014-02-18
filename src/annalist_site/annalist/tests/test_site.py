@@ -156,11 +156,11 @@ class SiteTest(TestCase):
         self.assertEquals(dict_to_str(colls["coll1"]),  self.coll1)
         return
 
-# -----------------------------------------------------------------------------
+#   -----------------------------------------------------------------------------
 #
-# View tests
+#   SiteView tests
 #
-# -----------------------------------------------------------------------------
+#   -----------------------------------------------------------------------------
 
 class SiteViewTest(AnnalistTestCase):
     """
@@ -378,7 +378,13 @@ class SiteViewTest(AnnalistTestCase):
         self.assertContains(r, """<input type="hidden" name="cancel_action"   value="/"""+TestBasePath+"""/site/"/>""", html=True)
         return
 
-class SiteActionView(AnnalistTestCase):
+#   -----------------------------------------------------------------------------
+#
+#   SiteActionView tests
+#
+#   -----------------------------------------------------------------------------
+
+class SiteActionViewTests(AnnalistTestCase):
     """
     Tests for Site action views (completion of confirmed actions
     requested from the site view)
