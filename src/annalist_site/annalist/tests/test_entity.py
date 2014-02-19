@@ -256,6 +256,28 @@ class EntityTest(TestCase):
         self.assertEqual(e._dir_path(),     (TestBaseDir+"/testid/.sub", TestBaseDir+"/testid/.sub/manifest.jsonld"))
         return
 
+    def test_entity_dict(self):
+        r = EntityRoot(TestBaseUri, TestBaseDir)
+        e = TestEntityType(r, "testid")
+        self.assertEqual(e.get("foo",  "bar"),    "bar")
+        self.assertEqual(e.get("type", "notype"), "notype")
+        test_values = (
+            { 'type':   'annal:EntityRoot'
+            })
+        e.set_values(test_values)
+        self.assertEqual(e.get("foo",  "bar"),    "bar")
+        self.assertEqual(e.get("type", "notype"), "annal:EntityRoot")
+        expect_keys = set(['id', 'type', 'title', 'uri'])
+        self.assertEqual(set(e.keys()), expect_keys)
+        expect_items = set(
+            [ ('id', 'testid')
+            , ('type', 'annal:EntityRoot')
+            , ('title', 'test:EntityType testid')
+            , ('uri', 'http://test.example.com/testsite/testid/')
+            ])
+        self.assertEqual(set(e.items()), expect_items)
+        return
+
     def test_entity_path(self):
         test_values = (
             { 'type':   'annal:EntityRoot'

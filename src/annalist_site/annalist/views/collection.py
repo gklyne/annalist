@@ -77,25 +77,25 @@ class CollectionEditView(AnnalistGenericView):
         type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:
             redirect_uri = reverse(
-                "AnnalistTypeNewView", 
+                "AnnalistRecordTypeNewView", 
                 kwargs={'coll_id': coll_id, 'action': "new"}
                 )
         if "type_copy" in request.POST:
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_COPY) or
-                reverse("AnnalistTypeCopyView", 
+                reverse("AnnalistRecordTypeCopyView", 
                     kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "copy"})
                 )
         if "type_edit" in request.POST:
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_EDIT) or
-                reverse("AnnalistTypeEditView", 
+                reverse("AnnalistRecordTypeEditView", 
                     kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "edit"})
                 )
         if "type_delete" in request.POST:
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_DELETE) or
-                reverse("AnnalistTypeDeleteView", 
+                reverse("AnnalistRecordTypeDeleteView", 
                     kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "delete"})
                 )
         if "close" in request.POST:

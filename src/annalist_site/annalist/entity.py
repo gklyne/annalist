@@ -183,10 +183,12 @@ class EntityRoot(object):
         contained entities.  The caller is responsible for checking the validity 
         of each returned value.
         """
-        files = os.listdir(self._entitydir)
-        for f in files:
-            if util.valid_id(f):
-                yield f
+        # @@TODO: consider caching result
+        if os.path.isdir(self._entitydir):
+            files = os.listdir(self._entitydir)
+            for f in files:
+                if util.valid_id(f):
+                    yield f
         return
 
     # Special methods to facilitate access to entity values by dictionary operations
@@ -208,7 +210,7 @@ class EntityRoot(object):
         """
         Equivalent to dict.get() function
         """
-        return self[key] if key in self else default
+        return self[key] if self._values and key in self._values else default
 
     def __getitem__(self, k):
         """

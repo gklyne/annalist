@@ -176,31 +176,25 @@ class CollectionTest(TestCase):
 
     def test_collection_init(self):
         s = Site(TestBaseUri, TestBaseDir)
-        self.assertEqual(s._entitytype,     ANNAL.CURIE.Site)
-        self.assertEqual(s._entityfile,     layout.SITE_META_FILE)
-        self.assertEqual(s._entityref,      layout.META_SITE_REF)
-        self.assertEqual(s._entityid,       None)
-        self.assertEqual(s._entityuri,      TestBaseUri+"/")
-        self.assertEqual(s._entitydir,      TestBaseDir+"/")
-        self.assertEqual(s._values,         None)
+        c = Collection(s, "testcoll")
+        self.assertEqual(c._entitytype,     ANNAL.CURIE.Collection)
+        self.assertEqual(c._entityfile,     layout.COLL_META_FILE)
+        self.assertEqual(c._entityref,      layout.META_COLL_REF)
+        self.assertEqual(c._entityid,       "testcoll")
+        self.assertEqual(c._entityuri,      TestBaseUri+"/collections/testcoll/")
+        self.assertEqual(c._entitydir,      TestBaseDir+"/collections/testcoll/")
+        self.assertEqual(c._values,         None)
         return
 
     def test_collection_data(self):
-        sd = self.testsite.site_data()
-        self.assertEquals(set(sd.keys()),set(('rdfs:label', 'rdfs:comment', 'collections', 'title')))
-        self.assertEquals(sd["title"],        "Annalist data journal test site")
-        self.assertEquals(sd["rdfs:label"],   "Annalist data journal test site")
-        self.assertEquals(sd["rdfs:comment"], "Annalist site metadata.")
-        self.assertEquals(sd["collections"].keys(),  ["coll1","coll2","coll3"])
-        self.assertEquals(set(sd["collections"]["coll1"].keys()),  set(self.coll1.keys()))
-        self.assertEquals(dict_to_str(sd["collections"]["coll1"]),  self.coll1)
+        c = self.testcoll
+        c.set_values(self.testcoll_add)
+        cd = c.get_values()
+        self.assertEquals(set(cd.keys()),set(('id', 'type', 'uri', 'title', 'rdfs:label', 'rdfs:comment')))
+        self.assertEquals(cd["title"],        "Name collection testcoll")
+        self.assertEquals(cd["rdfs:label"],   "Name collection testcoll")
+        self.assertEquals(cd["rdfs:comment"], "Annalist collection metadata.")
         return
-
-    # def test_collections_dict(self):
-    #     colls = self.testsite.collections_dict()
-    #     self.assertEquals(colls.keys(),["coll1","coll2","coll3"])
-    #     self.assertEquals(dict_to_str(colls["coll1"]),  self.coll1)
-    #     return
 
     # Record types
 
