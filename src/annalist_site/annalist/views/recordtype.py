@@ -34,6 +34,30 @@ from annalist.recordlist        import RecordList
 
 from annalist.views.generic     import AnnalistGenericView
 
+def context_from_record_type_form(site_data, coll_id, form_data, **kwargs):
+    """
+    Local helper function builds a record type form rendering context
+    from supplied site data, RecordType object and optional form data overrides.
+    """
+    context = (
+        { 'title':              site_data["title"]
+        , 'coll_id':            coll_id
+        })
+    # Note: context and form_data keys can be different
+    def context_update(key, form_key):
+        if form_key in form_data:
+            context[key] = form_data[form_key]
+    context_update('type_id',           'type_id')
+    context_update('type_label',        'type_label')
+    context_update('type_help',         'type_help')
+    context_update('type_uri',          'type_class')
+    context_update('orig_type_id',      'orig_type_id')
+    context_update('continuation_uri',  'continuation_uri')
+    context_update('action',            'action')
+    if kwargs:
+        context.update(kwargs)
+    return context
+
 class RecordTypeEditView(AnnalistGenericView):
     """
     View class to handle requests to an Annalist record type edit URI
@@ -49,15 +73,15 @@ class RecordTypeEditView(AnnalistGenericView):
         Create a form for editing a type.
         """
         def resultdata():
-            recordtype_local_uri     = typedesc.get_uri(self.get_request_uri())
+            recordtype_local_uri     = record_type.get_uri(self.get_request_uri())
             context = (
                 { 'title':              self.site_data()["title"]
                 , 'coll_id':            coll_id
-                , 'type_id':            typedesc.get_id()
-                , 'type_label':         typedesc.get(RDFS.CURIE.label, default_type_label)
-                , 'type_help':          typedesc.get(RDFS.CURIE.comment, "")
-                , 'type_uri':           typedesc.get(ANNAL.CURIE.uri, recordtype_local_uri)
-                , 'orig_type_id':       typedesc.get_id()
+                , 'type_id':            record_type.get_id()
+                , 'type_label':         record_type.get(RDFS.CURIE.label, default_type_label)
+                , 'type_help':          record_type.get(RDFS.CURIE.comment, "")
+                , 'type_uri':           record_type.get(ANNAL.CURIE.uri, recordtype_local_uri)
+                , 'orig_type_id':       record_type.get_id()
                 , 'continuation_uri':   request.GET.get('continuation_uri', None)
                 , 'action':             action
                 })
@@ -70,8 +94,8 @@ class RecordTypeEditView(AnnalistGenericView):
             type_id     = RecordType.allocate_new_id(coll)
         default_type_label = "Record type %s in collection %s"%(type_id, coll_id)
         if action == "new":
-            typedesc    = RecordType(coll, type_id)
-            typedesc.set_values(
+            record_type    = RecordType(coll, type_id)
+            record_type.set_values(
                 { "annal:id": type_id
                 , "annal:type": "annal:RecordType"
                 , "annal:uri": coll._entityuri+type_id+"/"
@@ -79,7 +103,7 @@ class RecordTypeEditView(AnnalistGenericView):
                 , "rdfs:comment": ""
                 })
         elif RecordType.exists(coll, type_id):
-            typedesc = RecordType.load(coll, type_id)
+            record_type = RecordType.load(coll, type_id)
         else:
             return self.error(
                 dict(self.error404values(), 
@@ -109,28 +133,34 @@ class RecordTypeEditView(AnnalistGenericView):
 
         coll = self.collection(coll_id)
         if not coll._exists():
-            form_data = request.POST.copy()
-            form_data['error_head']    = message.COLLECTION_ID
-            form_data['error_message'] = message.COLLECTION_NOT_EXISTS%(coll_id)
+            form_data = context_from_record_type_form(
+                self.site_data(), coll_id, request.POST,
+                error_head=message.COLLECTION_ID,
+                error_message=message.COLLECTION_NOT_EXISTS%(coll_id)
+                )
             return (
                 self.render_html(form_data, 'annalist_recordtype_edit.html') or 
                 self.error(self.error406values())
                 )
         if 'save' in request.POST:
             if request.POST['action'] in ["new", "copy"]:
-                type_id = request.POST['type_id']       # Use value from form
+                type_id = request.POST.get('type_id', None)
                 if not util.valid_id(type_id):
-                    form_data = request.POST.copy()
-                    form_data['error_head']    = message.RECORD_TYPE_ID
-                    form_data['error_message'] = message.RECORD_TYPE_ID_INVALID
+                    form_data = context_from_record_type_form(
+                        self.site_data(), coll_id, request.POST,
+                        error_head=message.RECORD_TYPE_ID,
+                        error_message=message.RECORD_TYPE_ID_INVALID
+                        )
                     return (
                         self.render_html(form_data, 'annalist_recordtype_edit.html') or 
                         self.error(self.error406values())
                         )
                 if RecordType.exists(coll, type_id):
-                    form_data = request.POST.copy()
-                    form_data['error_head']    = message.RECORD_TYPE_ID
-                    form_data['error_message'] = message.RECORD_TYPE_EXISTS%(type_id, coll_id)
+                    form_data = context_from_record_type_form(
+                        self.site_data(), coll_id, request.POST,
+                        error_head=message.RECORD_TYPE_ID,
+                        error_message=message.RECORD_TYPE_EXISTS%(type_id, coll_id)
+                        )
                     return (
                         self.render_html(form_data, 'annalist_recordtype_edit.html') or 
                         self.error(self.error406values())
@@ -144,9 +174,11 @@ class RecordTypeEditView(AnnalistGenericView):
             if request.POST['action'] == "edit":
                 if request.POST['type_id'] != request.POST['orig_type_id']:
                     if RecordType.exists(coll, type_id):
-                        form_data = request.POST.copy()
-                        form_data['error_head']    = message.RECORD_TYPE_ID
-                        form_data['error_message'] = message.RECORD_TYPE_EXISTS%(type_id, coll_id)
+                        form_data = context_from_record_type_form(
+                            self.site_data(), coll_id, request.POST,
+                            error_head=message.RECORD_TYPE_ID,
+                            error_message=message.RECORD_TYPE_EXISTS%(type_id, coll_id)
+                            )
                         return (
                             self.render_html(form_data, 'annalist_recordtype_edit.html') or 
                             self.error(self.error406values())
@@ -162,9 +194,11 @@ class RecordTypeEditView(AnnalistGenericView):
                 else:
                     if not RecordType.exists(coll, type_id):
                         # This shouldn't happen, but just incase...
-                        form_data = request.POST.copy()
-                        form_data['error_head']    = message.RECORD_TYPE_ID
-                        form_data['error_message'] = message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
+                        form_data = context_from_record_type_form(
+                            self.site_data(), coll_id, request.POST,
+                            error_head=message.RECORD_TYPE_ID,
+                            error_message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
+                            )
                         return (
                             self.render_html(form_data, 'annalist_recordtype_edit.html') or 
                             self.error(self.error406values())

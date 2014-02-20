@@ -279,10 +279,105 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             self.assertEqual(v[k], expect_values[k])
         return
 
-    # @@ cancel new type form
+    def test_post_new_type_cancel(self):
+        u = reverse(
+                "AnnalistRecordTypeNewView", 
+                kwargs={'coll_id': "testcoll", 'action': 'new'}
+                )
+        form_data = (
+            { 'cancel':         'Cancel'
+            , 'orig_type_id':     'newtype'
+            , 'continuation_uri': '/%s/collections/testcoll/'%TestBasePath
+            , 'action':           'new'
+            })
+        self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
+        r = self.client.post(u, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        collectionedituri = reverse(
+                "AnnalistCollectionEditView", 
+                kwargs={'coll_id': "testcoll"}
+                )
+        self.assertEqual(r['location'], TestHostUri+collectionedituri)
+        # Check that new record type still does not exist
+        self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
+        return
 
-    # @@ Post with missing/invalid type id
+    def test_post_new_type_missing_id(self):
+        u = reverse(
+                "AnnalistRecordTypeNewView", 
+                kwargs={'coll_id': "testcoll", 'action': 'new'}
+                )
+        form_data = (
+            { 'type_label':       'Record type newtype in collection testcoll'
+            , 'type_help':        'Help for newtype'
+            , 'type_class':       '/%s/collections/testcoll/newtype/'%TestBasePath
+            , 'save':             'Save'
+            , 'orig_type_id':     'newtype'
+            , 'continuation_uri': '/%s/collections/testcoll/'%TestBasePath
+            , 'action':           'new'
+            })
+        r = self.client.post(u, form_data)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
+        # Test context
+        expect_context = (
+            { 'title':              "Annalist data journal test site"
+            , 'coll_id':            "testcoll"
+            # , 'type_id':            "newtype"
+            , 'orig_type_id':       "newtype"
+            , 'type_label':         "Record type newtype in collection testcoll"
+            , 'type_help':          "Help for newtype"
+            , 'type_uri':           "/%s/collections/testcoll/newtype/"%(TestBasePath)
+            , 'action':             "new"
+            , 'continuation_uri':   "/%s/collections/testcoll/"%TestBasePath
+            })
+        for k in expect_context:
+            self.assertTrue(k in r.context, "Expected key %s not found in context"%(k))
+            self.assertEqual(r.context[k], expect_context[k])
+        return
 
+    def test_post_new_type_invalid_id(self):
+        u = reverse(
+                "AnnalistRecordTypeNewView", 
+                kwargs={'coll_id': "testcoll", 'action': 'new'}
+                )
+        form_data = (
+            { 'type_id':          '!badtype'
+            , 'type_label':       'Record type newtype in collection testcoll'
+            , 'type_help':        'Help for newtype'
+            , 'type_class':       '/%s/collections/testcoll/newtype/'%TestBasePath
+            , 'save':             'Save'
+            , 'orig_type_id':     'newtype'
+            , 'continuation_uri': '/%s/collections/testcoll/'%TestBasePath
+            , 'action':           'new'
+            })
+        r = self.client.post(u, form_data)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
+        # Test context
+        expect_context = (
+            { 'title':              "Annalist data journal test site"
+            , 'coll_id':            "testcoll"
+            , 'type_id':            "!badtype"
+            , 'orig_type_id':       "newtype"
+            , 'type_label':         "Record type newtype in collection testcoll"
+            , 'type_help':          "Help for newtype"
+            , 'type_uri':           "/%s/collections/testcoll/newtype/"%(TestBasePath)
+            , 'action':             "new"
+            , 'continuation_uri':   "/%s/collections/testcoll/"%TestBasePath
+            })
+        for k in expect_context:
+            self.assertTrue(k in r.context, "Expected key %s not found in context"%(k))
+            self.assertEqual(r.context[k], expect_context[k])
+        return
 
     def test_post_copy_type(self):
         u = reverse(

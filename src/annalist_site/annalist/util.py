@@ -39,7 +39,7 @@ def valid_id(id):
         [ "_annalist_site"
         , "_annalist_collection"
         ])
-    if re.match(r"\w+$", id):
+    if id and re.match(r"\w+$", id):
         return id not in reserved
     return False
 
