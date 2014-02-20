@@ -60,6 +60,8 @@
    > model
    - model test cases
    - view: edit form response handling
+   - when renaming through edit form, update URI if it corresponds to previous ID??
+   - need to think about maintaining a list of correspopnding URIs?
    - refactor code; try to abstract common logic for RecordList, RecordView
 4. Default record list display (code may later be refactored)
 5. Design generic entity view

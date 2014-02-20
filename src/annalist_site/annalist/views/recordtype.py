@@ -172,7 +172,10 @@ class RecordTypeEditView(AnnalistGenericView):
                     })
                 return HttpResponseRedirect(request.POST['continuation_uri'])
             if request.POST['action'] == "edit":
-                if request.POST['type_id'] != request.POST['orig_type_id']:
+                type_id      = request.POST.get('type_id', None)
+                orig_type_id = request.POST.get('orig_type_id', None)
+                if type_id != orig_type_id:
+                    log.debug("RecordType edit renaming %s to %s"%(orig_type_id,type_id))
                     if RecordType.exists(coll, type_id):
                         form_data = context_from_record_type_form(
                             self.site_data(), coll_id, request.POST,
@@ -189,7 +192,7 @@ class RecordTypeEditView(AnnalistGenericView):
                         , 'annal:uri':    request.POST['type_class']
                         })
                     if RecordType.exists(coll, type_id):    # Precautionary
-                        RecordType.delete(coll, orig_type_id)
+                        RecordType.remove(coll, orig_type_id)
                     return HttpResponseRedirect(request.POST['continuation_uri'])
                 else:
                     if not RecordType.exists(coll, type_id):
