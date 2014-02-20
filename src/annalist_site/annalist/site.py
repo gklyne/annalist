@@ -40,7 +40,7 @@ class Site(EntityRoot):
         Initialize a Site object
 
         sitebaseuri     the base URI of the site
-        sitebasedir     the base dictionary for site information
+        sitebasedir     the base directory for site information
         """
         log.debug("Site init: %s"%(sitebasedir))
         super(Site, self).__init__(sitebaseuri, sitebasedir)

@@ -2,11 +2,11 @@
     "@id": "./",
     "id": "type1",
     "type": "annal:RecordType",
-    "uri": "http://test.example.com/testsite/collections/testcoll/types/type1/",
-    "title": "Type testcoll/type1",
+    "uri": "http://test.example.com/testsite/collections/coll1/types/type1/",
+    "title": "Record type coll1/type1",
     "annal:id": "type1",
     "annal:type": "annal:RecordType",
     "annal:uri": "http://localhost:8000/annalist/collections/coll1/types/type1/",
-    "rdfs:label": "Type testcoll/type1",
+    "rdfs:label": "Record type coll1/type1",
     "rdfs:comment": "Annalist collection1 recordtype1"
 }

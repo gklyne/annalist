@@ -22,5 +22,12 @@ COLLECTIONS_REMOVED     = "The following collections were removed: %s"
 NO_TYPE_FOR_COPY        = "No record type selected to copy"
 NO_TYPE_FOR_EDIT        = "No record type selected to edit"
 NO_TYPE_FOR_DELETE      = "No record type selected to delete"
+DOES_NOT_EXIST          = "%s does not exist"
+REMOVE_RECORD_TYPE      = "Remove record type %s in collection %s"
+RECORD_TYPE_ID          = "Problem with record type identifier"
+RECORD_TYPE_EXISTS      = "Record type %s in collection %s already exists"
+RECORD_TYPE_NOT_EXISTS  = "Record type %s in collection %s does not exist"
+SYSTEM_ERROR            = "System error"
+UNEXPECTED_FORM_DATA    = "Unexpected form data: %r"
 
 # End.

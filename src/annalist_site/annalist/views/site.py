@@ -68,11 +68,11 @@ class SiteView(AnnalistGenericView):
                 return (
                     self.authorize("DELETE") or
                     ConfirmView.render_form(request,
-                        action_description= message.REMOVE_COLLECTIONS%(", ".join(collections)),
-                        action_params=      request.POST,
-                        complete_action=    'AnnalistSiteActionView',
-                        cancel_action=      'AnnalistSiteView',
-                        title=              self.site_data()["title"]
+                        action_description=     message.REMOVE_COLLECTIONS%(", ".join(collections)),
+                        action_params=          request.POST,
+                        complete_action_uri=    reverse('AnnalistSiteActionView'),
+                        cancel_action_uri=      reverse('AnnalistSiteView'),
+                        title=                  self.site_data()["title"]
                         )
                     )
             else:
@@ -110,8 +110,6 @@ class SiteActionView(AnnalistGenericView):
         return
 
     # POST
-    # @@TODO: Delete collection: POST <site-action-uri> should be DELETE <collection-uri>
-    #         use secondary request here when DELETE <collection-uri>?
 
     def post(self, request):
         """
@@ -128,6 +126,7 @@ class SiteActionView(AnnalistGenericView):
                 err = self.site().remove_collection(coll_id)
                 if err:
                     return self.redirect_error("AnnalistSiteView", str(err))
+            # @@TODO: change redirect logic to accept URI not view name
             return self.redirect_info(
                 "AnnalistSiteView", 
                 message.COLLECTIONS_REMOVED%(", ".join(coll_ids))

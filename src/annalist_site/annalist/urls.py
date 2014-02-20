@@ -12,19 +12,23 @@ from annalist.views             import AnnalistHomeView
 from annalist.views.profile     import ProfileView
 from annalist.views.confirm     import ConfirmView
 from annalist.views.site        import SiteView, SiteActionView
-from annalist.views.collection  import CollectionEditView
+from annalist.views.collection  import CollectionEditView, CollectionActionView
 from annalist.views.recordtype  import RecordTypeEditView
 from oauth2.views               import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
 
 urlpatterns = patterns('',
     url(r'^$',              AnnalistHomeView.as_view(), name='AnnalistHomeView'),
     url(r'^site/$',         SiteView.as_view(),         name='AnnalistSiteView'),
+    # @@TODO: change URI pattern to be consistent with other action URIs
     url(r'^site_action/$',  SiteActionView.as_view(),   name='AnnalistSiteActionView'),
     url(r'^profile/$',      ProfileView.as_view(),      name='AnnalistProfileView'),
     url(r'^confirm/$',      ConfirmView.as_view(),      name='AnnalistConfirmView'),
     url(r'^collections/(?P<coll_id>\w{0,32})/$',
                             CollectionEditView.as_view(),
                             name='AnnalistCollectionEditView'),
+    url(r'^collections/(?P<coll_id>\w{0,32})/!complete_action$',
+                            CollectionActionView.as_view(),
+                            name='AnnalistCollectionActionView'),
     url(r'^collections/(?P<coll_id>\w{0,32})/types/!(?P<action>new)$',
                             RecordTypeEditView.as_view(),
                             name='AnnalistRecordTypeNewView'),

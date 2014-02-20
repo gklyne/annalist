@@ -69,20 +69,21 @@ class ConfirmView(AnnalistGenericView):
 
     @staticmethod
     def render_form(request,
-            action_description="(description of action to perform)",
+            action_description="Are you sure you want to do that?", # message describing requested action
             action_params={},
-            complete_action='(name of "urls" pattern to dispatch to complete action)',
-            cancel_action='(name of "urls" pattern to dispatch to cancel action)',
+            complete_action_uri="/",    # URI to to POST to complete action
+            cancel_action_uri="/",      # URI to dispatch to cancel action
             title=None):
         """
         Render form that requests a user to confirm an action to be performed and,
-        depending onthe user's response, redirects tp 'complete_action' or 
+        depending onthe user's response, redirects to 'complete_action_uri' or 
+        'cancerl_action_uri'
         """
         form_data = (
             { "action_description":     action_description
             , "action_params":          querydict_dumps(action_params)
-            , "complete_action":        reverse(complete_action)
-            , "cancel_action":          reverse(cancel_action)
+            , "complete_action":        complete_action_uri
+            , "cancel_action":          cancel_action_uri
             , "title":                  title
             , "suppress_user":          True
             })

@@ -7,6 +7,7 @@ __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
+import json
 import unittest
 
 import logging
@@ -31,7 +32,7 @@ from annalist.collection        import Collection
 
 from annalist.views.collection  import CollectionEditView
 
-from tests                      import TestHost, TestHostUri, TestBaseUri, TestBaseDir
+from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                      import dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
 
@@ -305,10 +306,11 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
         self.user.save()
+        self.uri = reverse("AnnalistCollectionEditView", kwargs={'coll_id': "coll1"})
+        self.continuation = "?continuation_uri="+TestHostUri+self.uri
+        self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        self.uri = reverse("AnnalistCollectionEditView", kwargs={'coll_id': "coll1"})
-        self.client = Client(HTTP_HOST=TestHost)
         return
 
     def tearDown(self):
@@ -347,10 +349,10 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         typenewuri = reverse(
-            "AnnalistTypeNewView", 
+            "AnnalistRecordTypeNewView", 
             kwargs={'coll_id': "coll1", 'action': "new"}
             )
-        self.assertEqual(r['location'], TestHostUri+typenewuri)
+        self.assertEqual(r['location'], TestHostUri+typenewuri+self.continuation)
         return
 
     def test_post_copy_type(self):
@@ -363,10 +365,10 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         typecopyuri = reverse(
-            "AnnalistTypeCopyView", 
+            "AnnalistRecordTypeCopyView", 
             kwargs={'coll_id': "coll1", 'type_id': "type1", 'action': "copy"}
             )
-        self.assertEqual(r['location'], TestHostUri+typecopyuri)
+        self.assertEqual(r['location'], TestHostUri+typecopyuri+self.continuation)
         return
 
     def test_post_copy_type_no_selection(self):
@@ -391,10 +393,10 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         typeedituri = reverse(
-            "AnnalistTypeEditView", 
+            "AnnalistRecordTypeEditView", 
             kwargs={'coll_id': "coll1", 'type_id': "type1", 'action': "edit"}
             )
-        self.assertEqual(r['location'], TestHostUri+typeedituri)
+        self.assertEqual(r['location'], TestHostUri+typeedituri+self.continuation)
         return
 
     def test_post_edit_type_no_selection(self):
@@ -415,14 +417,16 @@ class CollectionEditViewTest(AnnalistTestCase):
             , "type_delete":  "Delete"
             })
         r = self.client.post(self.uri, form_data)
-        self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        typedeleteuri = reverse(
-            "AnnalistTypeDeleteView", 
-            kwargs={'coll_id': "coll1", 'type_id': "type1", 'action': "delete"}
-            )
-        self.assertEqual(r['location'], TestHostUri+typedeleteuri)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertTemplateUsed(r, "annalist_confirm.html")
+        # Check confirmation form content
+        self.assertContains(r, """<form method="POST" action="/"""+TestBasePath+"""/confirm/">""", status_code=200)
+        self.assertEqual(r.context['complete_action'], '/%s/collections/coll1/!complete_action'%(TestBasePath))
+        self.assertEqual(r.context['cancel_action'], self.uri)
+        action_params = json.loads(r.context['action_params'])
+        self.assertEqual(action_params['type_delete'], ["Delete"])
+        self.assertEqual(action_params['typelist'],    ["type1"])
         return
 
     def test_post_delete_type_no_selection(self):

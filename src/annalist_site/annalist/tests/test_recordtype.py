@@ -28,7 +28,7 @@ from annalist.recordtype        import RecordType
 
 from annalist.views.recordtype  import RecordTypeEditView
 
-from tests                      import TestHost, TestHostUri, TestBaseUri, TestBaseDir
+from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                      import dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
 
@@ -141,15 +141,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.user.save()
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        uriargs         = {'coll_id': "coll1", 'action': 'new'}
-        self.uri_new    = reverse("AnnalistRecordTypeNewView", kwargs=uriargs)
-        uriargs.update(type_id='type1', action='copy')
-        self.uri_copy   = reverse("AnnalistRecordTypeCopyView", kwargs={'coll_id': "coll1", 'type_id': 'type1', 'action': 'copy'})
-        uriargs.update(action='edit')
-        self.uri_edit   = reverse("AnnalistRecordTypeCopyView", kwargs={'coll_id': "coll1", 'type_id': 'type1', 'action': 'copy'})
-        uriargs.update(action='delete')
-        self.uri_delete = reverse("AnnalistRecordTypeCopyView", kwargs={'coll_id': "coll1", 'type_id': 'type1', 'action': 'copy'})
-        self.client     = Client(HTTP_HOST=TestHost)
         return
 
     def tearDown(self):
@@ -160,54 +151,93 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_get_new(self):
-        r = self.client.get(self.uri_new)
+        u = reverse(
+                "AnnalistRecordTypeNewView", 
+                kwargs={'coll_id': "coll1", 'action': 'new'}
+                )+"?continuation_uri=/xyzzy/"
+        r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Annalist data journal test site</title>")
         self.assertContains(r, "<h3>Record type in collection coll1</h3>")
+        # Test context
+        self.assertEqual(r.context['title'],            "Annalist data journal test site")
+        self.assertEqual(r.context['coll_id'],          "coll1")
+        self.assertEqual(r.context['type_id'],          "00000001")
+        self.assertEqual(r.context['orig_type_id'],     "00000001")
+        self.assertEqual(r.context['type_label'],       "Record type 00000001 in collection coll1")
+        self.assertEqual(r.context['type_help'],        "")
+        self.assertEqual(r.context['type_uri'],         "/%s/collections/coll1/00000001/"%(TestBasePath))
+        self.assertEqual(r.context['action'],           "new")
+        self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         return
 
     def test_get_copy(self):
-        r = self.client.get(self.uri_new)
+        u = reverse(
+                "AnnalistRecordTypeCopyView", 
+                kwargs={'coll_id': "coll1", 'type_id': 'type1', 'action': 'copy'}
+                )
+        r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Annalist data journal test site</title>")
         self.assertContains(r, "<h3>Record type in collection coll1</h3>")
+        # Test context (values read from test data fixture)
+        self.assertEqual(r.context['title'],            "Annalist data journal test site")
+        self.assertEqual(r.context['coll_id'],          "coll1")
+        self.assertEqual(r.context['type_id'],          "type1")
+        self.assertEqual(r.context['orig_type_id'],     "type1")
+        self.assertEqual(r.context['type_label'],       "Record type coll1/type1")
+        self.assertEqual(r.context['type_help'],        "Annalist collection1 recordtype1")
+        self.assertEqual(r.context['type_uri'],         "http://localhost:8000/annalist/collections/coll1/types/type1/")
+        self.assertEqual(r.context['action'],           "copy")
+        self.assertEqual(r.context['continuation_uri'], None)
+        return
+
+    def test_get_copy_not_exists(self):
+        u = reverse(
+                "AnnalistRecordTypeCopyView", 
+                kwargs={'coll_id': "coll1", 'type_id': 'notype', 'action': 'copy'}
+                )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertContains(r, "<title>Annalist error</title>", status_code=404)
+        self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
+        self.assertContains(r, "<p>Record type notype in collection coll1 does not exist</p>", status_code=404)
         return
 
     def test_get_edit(self):
-        r = self.client.get(self.uri_new)
+        u = reverse(
+                "AnnalistRecordTypeEditView", 
+                kwargs={'coll_id': "coll1", 'type_id': 'type1', 'action': 'edit'}
+                )
+        r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Annalist data journal test site</title>")
         self.assertContains(r, "<h3>Record type in collection coll1</h3>")
+        # Test context (values read from test data fixture)
+        self.assertEqual(r.context['title'],            "Annalist data journal test site")
+        self.assertEqual(r.context['coll_id'],          "coll1")
+        self.assertEqual(r.context['type_id'],          "type1")
+        self.assertEqual(r.context['orig_type_id'],     "type1")
+        self.assertEqual(r.context['type_label'],       "Record type coll1/type1")
+        self.assertEqual(r.context['type_help'],        "Annalist collection1 recordtype1")
+        self.assertEqual(r.context['type_uri'],         "http://localhost:8000/annalist/collections/coll1/types/type1/")
+        self.assertEqual(r.context['action'],           "edit")
+        self.assertEqual(r.context['continuation_uri'], None)
         return
-
-    def test_get_delete(self):
-        r = self.client.get(self.uri_new)
-        self.assertEqual(r.status_code,   200)
-        self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
-        self.assertContains(r, "<h3>Customize collection coll1</h3>")
-        return
-
-    # def test_get_context(self):
-    #     r = self.client.get(self.uri)
-    #     self.assertEqual(r.status_code,   200)
-    #     self.assertEqual(r.reason_phrase, "OK")
-    #     self.assertEquals(r.context['title'],   "Annalist data journal test site")
-    #     self.assertEquals(r.context['coll_id'], "coll1")
-    #     self.assertEquals(r.context['types'],   ["type1", "type2"])
-    #     self.assertEquals(r.context['lists'],   ["list1", "list2"])
-    #     self.assertEquals(r.context['views'],   ["view1", "view2"])
-    #     self.assertEquals(r.context['select_rows'], "6")
-    #     return
 
     def test_post_new_type(self):
+        u = reverse(
+                "AnnalistRecordTypeNewView", 
+                kwargs={'coll_id': "coll1", 'action': 'new'}
+                )+"?continuation_uri=/xyzzy/"
         form_data = (
             { "type_new":   "New"
             })
-        r = self.client.post(self.uri, form_data)
+        r = self.client.post(u, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
@@ -218,12 +248,14 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r['location'], TestHostUri+typenewuri)
         return
 
+    # @@ cancel new type form
+
     def test_post_copy_type(self):
         form_data = (
             { "typelist":   "type1"
             , "type_copy":  "Copy"
             })
-        r = self.client.post(self.uri, form_data)
+        r = self.client.post(self.uri_copy, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
@@ -234,11 +266,15 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r['location'], TestHostUri+typecopyuri)
         return
 
+        # edit type
+
+        # confirm delete type
+
     def test_post_close(self):
         form_data = (
             { "close":  "Close"
             })
-        r = self.client.post(self.uri, form_data)
+        r = self.client.post(self.uri_edit, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")

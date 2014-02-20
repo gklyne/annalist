@@ -68,12 +68,18 @@
 Misc
 - Login link to include option to redirect to failed page, with form fields populated
 - Complete authorization framework, per collection
-- can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  
+/ can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
+
 
 - Use server-internal revectoring?  What about delete multiple?
-? view collections doesn't use entered label - problem with entry vocab? (Fixed?)
+- currently there's some inconsistency about this: confirm views are rendered directly
+  (as this allows form parameters to be provided directly), but other form action links 
+  are handled by redirection.  Try to be more consistent about this?  Create a more 
+  general pattern for handling continuation forms?
 - move util.py to utils package, and rename?
 - util.write_entity: think about capturing provenance metadata too
+- move entity I/O logic in util module to entity module (keep it all together)
+? view collections doesn't use entered label - problem with entry vocab? (Fixed?)
 
 Entity abstraction:
 - replace direct file access with HTTP access
