@@ -14,13 +14,16 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf import settings
+from django.conf                import settings
+from django.http                import HttpResponse
+from django.http                import HttpResponseRedirect
+from django.core.urlresolvers   import resolve, reverse
 
 # from annalist                   import layout
 from annalist                   import message
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import RDF, RDFS, ANNAL
-# from annalist                   import util
+from annalist                   import util
 # from annalist.entity            import Entity
 
 from annalist.site              import Site
@@ -29,7 +32,7 @@ from annalist.recordtype        import RecordType
 from annalist.recordview        import RecordView
 from annalist.recordlist        import RecordList
 
-from annalist.views             import AnnalistGenericView
+from annalist.views.generic     import AnnalistGenericView
 
 class RecordTypeEditView(AnnalistGenericView):
     """
@@ -94,15 +97,36 @@ class RecordTypeEditView(AnnalistGenericView):
         """
         Handle response to record type edit form
         """
+        # @@TODO: as type id isn provided in form, does it really need to be part of the form URI??
         log.debug("views.recordtype.post %s"%(self.get_request_path()))
         # log.info("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
         # log.info("  form data %r"%(request.POST))
-        if request.POST['cancel'] == "Cancel":
+        continuation_uri = request.POST['continuation_uri']
+        collection_edit_uri = reverse('AnnalistCollectionEditView', kwargs={'coll_id': coll_id})
+        continuation_uri = request.POST.get('continuation_uri', collection_edit_uri)
+        if 'cancel' in request.POST:
             return HttpResponseRedirect(request.POST['continuation_uri'])
 
         coll = self.collection(coll_id)
-        if request.POST['save'] == "Save":
+        if not coll._exists():
+            form_data = request.POST.copy()
+            form_data['error_head']    = message.COLLECTION_ID
+            form_data['error_message'] = message.COLLECTION_NOT_EXISTS%(coll_id)
+            return (
+                self.render_html(form_data, 'annalist_recordtype_edit.html') or 
+                self.error(self.error406values())
+                )
+        if 'save' in request.POST:
             if request.POST['action'] in ["new", "copy"]:
+                type_id = request.POST['type_id']       # Use value from form
+                if not util.valid_id(type_id):
+                    form_data = request.POST.copy()
+                    form_data['error_head']    = message.RECORD_TYPE_ID
+                    form_data['error_message'] = message.RECORD_TYPE_ID_INVALID
+                    return (
+                        self.render_html(form_data, 'annalist_recordtype_edit.html') or 
+                        self.error(self.error406values())
+                        )
                 if RecordType.exists(coll, type_id):
                     form_data = request.POST.copy()
                     form_data['error_head']    = message.RECORD_TYPE_ID
@@ -112,8 +136,7 @@ class RecordTypeEditView(AnnalistGenericView):
                         self.error(self.error406values())
                         )
                 RecordType.create(coll, type_id,
-                    { 
-                    , 'rdfs:label':   request.POST['type_label']
+                    { 'rdfs:label':   request.POST['type_label']
                     , 'rdfs:comment': request.POST['type_help']
                     , 'annal:uri':    request.POST['type_class']
                     })
@@ -129,12 +152,12 @@ class RecordTypeEditView(AnnalistGenericView):
                             self.error(self.error406values())
                             )
                     RecordType.create(coll, type_id,
-                        { 
-                        , 'rdfs:label':   request.POST['type_label']
+                        { 'rdfs:label':   request.POST['type_label']
                         , 'rdfs:comment': request.POST['type_help']
                         , 'annal:uri':    request.POST['type_class']
                         })
-                    RecordType.delete(coll, orig_type_id,                   
+                    if RecordType.exists(coll, type_id):    # Precautionary
+                        RecordType.delete(coll, orig_type_id)
                     return HttpResponseRedirect(request.POST['continuation_uri'])
                 else:
                     if not RecordType.exists(coll, type_id):
@@ -147,8 +170,7 @@ class RecordTypeEditView(AnnalistGenericView):
                             self.error(self.error406values())
                             )
                 RecordType.create(coll, type_id,
-                    { 
-                    , 'rdfs:label':   request.POST['type_label']
+                    { 'rdfs:label':   request.POST['type_label']
                     , 'rdfs:comment': request.POST['type_help']
                     , 'annal:uri':    request.POST['type_class']
                     })

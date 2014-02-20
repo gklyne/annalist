@@ -39,6 +39,12 @@ from AnnalistTestCase           import AnnalistTestCase
 # assertIsInstance(a, b)    isinstance(a, b)        2.7
 # assertNotIsInstance(a, b) not isinstance(a, b)    2.7
 
+#   -----------------------------------------------------------------------------
+#
+#   EntityRoot tests
+#
+#   -----------------------------------------------------------------------------
+
 class TestEntityRootType(EntityRoot):
 
     _entitytype = "test:EntityRootType"
@@ -200,6 +206,28 @@ class EntityRootTest(TestCase):
         self.assertEqual(v2, test_values_returned)
         return
 
+    def test_entityroot_exists(self):
+        test_values = (
+            { 'type':   'annal:EntityRoot'
+            , 'title':  'Name collection coll1'
+            , 'uri':    '/annalist/coll1'
+            })
+        test_values_returned = (
+            { '@id': '../'
+            , 'annal:id': 'testId'
+            , 'annal:type': 'test:EntityRootType'
+            , 'id': 'testId'
+            , 'title': 'Name collection coll1'
+            , 'type': 'annal:EntityRoot'
+            , 'uri': '/annalist/coll1'
+            })
+        e = TestEntityRootType(TestBaseUri, TestBaseDir)
+        e.set_id("testId")
+        e.set_values(test_values)
+        self.assertFalse(e._exists())
+        e._save()
+        self.assertTrue(e._exists())
+        return
 
 class TestEntityType(Entity):
 
@@ -214,6 +242,12 @@ class TestEntityTypeSub(Entity):
     _entitypath = "sub/%(id)s"
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
+
+#   -----------------------------------------------------------------------------
+#
+#   Entity tests
+#
+#   -----------------------------------------------------------------------------
 
 class EntityTest(TestCase):
     """

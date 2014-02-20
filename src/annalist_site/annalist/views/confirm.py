@@ -27,7 +27,7 @@ from django.core.urlresolvers       import resolve, reverse
 
 from django.conf                    import settings
 
-from annalist.views                 import AnnalistGenericView
+from annalist.views.generic         import AnnalistGenericView
 
 def querydict_dict(querydict):
     """

@@ -8,7 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 from django.conf.urls           import patterns, url
 
-from annalist.views             import AnnalistHomeView
+from annalist.views.home        import AnnalistHomeView
 from annalist.views.profile     import ProfileView
 from annalist.views.confirm     import ConfirmView
 from annalist.views.site        import SiteView, SiteActionView
@@ -29,6 +29,8 @@ urlpatterns = patterns('',
     url(r'^collections/(?P<coll_id>\w{0,32})/!complete_action$',
                             CollectionActionView.as_view(),
                             name='AnnalistCollectionActionView'),
+   # @@TODO: as type id is provided in form, does it really need to be part of the form URI??
+   #         Could reduce the 3 options below to a single 'AnnalistRecordTypeEditView' entry?
     url(r'^collections/(?P<coll_id>\w{0,32})/types/!(?P<action>new)$',
                             RecordTypeEditView.as_view(),
                             name='AnnalistRecordTypeNewView'),
@@ -38,9 +40,6 @@ urlpatterns = patterns('',
     url(r'^collections/(?P<coll_id>\w{0,32})/types/(?P<type_id>\w{0,32})/!(?P<action>edit)$',
                             RecordTypeEditView.as_view(),
                             name='AnnalistRecordTypeEditView'),
-    url(r'^collections/(?P<coll_id>\w{0,32})/types/(?P<type_id>\w{0,32})/!(?P<action>delete)$',
-                            RecordTypeEditView.as_view(),
-                            name='AnnalistRecordTypeDeleteView'),
     )
 
 urlpatterns += patterns('',

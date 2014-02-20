@@ -26,6 +26,7 @@ from annalist.site              import Site
 from annalist.collection        import Collection
 from annalist.recordtype        import RecordType
 
+import annalist.views
 from annalist.views.recordtype  import RecordTypeEditView
 
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -131,14 +132,19 @@ class RecordTypeTest(TestCase):
 
 class RecordTypeEditViewTest(AnnalistTestCase):
     """
-    Tests for Collection views
+    Tests for record type edit views
     """
 
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
+        self.testcoll = Collection.create(self.testsite, "testcoll",
+            { 'rdfs:label':     'Collection testcoll'
+            , 'rdfs:comment':   'Description of Collection testcoll'
+            })
         self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
         self.user.save()
+        self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         return
@@ -232,39 +238,81 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     def test_post_new_type(self):
         u = reverse(
                 "AnnalistRecordTypeNewView", 
-                kwargs={'coll_id': "coll1", 'action': 'new'}
-                )+"?continuation_uri=/xyzzy/"
+                kwargs={'coll_id': "testcoll", 'action': 'new'}
+                )
         form_data = (
-            { "type_new":   "New"
+            { 'type_id':          'newtype'
+            , 'type_label':       'Record type newtype in collection testcoll'
+            , 'type_help':        'Help for newtype'
+            , 'type_class':       '/%s/collections/testcoll/newtype/'%TestBasePath
+            , 'save':             'Save'
+            , 'orig_type_id':     'newtype'
+            , 'continuation_uri': '/%s/collections/testcoll/'%TestBasePath
+            , 'action':           'new'
+            })
+        self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
+        r = self.client.post(u, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        collectionedituri = reverse(
+                "AnnalistCollectionEditView", 
+                kwargs={'coll_id': "testcoll"}
+                )
+        self.assertEqual(r['location'], TestHostUri+collectionedituri)
+        # Check that new record type exists
+        self.assertTrue(RecordType.exists(self.testcoll, "newtype"))
+        # Check values in new type
+        t = RecordType.load(self.testcoll, "newtype")
+        self.assertEqual(t.get_id(), "newtype")
+        self.assertEqual(t.get_uri(""), TestBaseUri+"/collections/testcoll/types/newtype/")
+        expect_values = (
+            { '@id':            './'
+            , 'annal:id':       'newtype'
+            , 'annal:type':     'annal:RecordType'
+            , 'rdfs:label':     'Record type newtype in collection testcoll'
+            , 'rdfs:comment':   'Help for newtype'
+            , 'annal:uri':      '/testsite/collections/testcoll/newtype/'
+            })
+        v = t.get_values()
+        for k in expect_values:
+            self.assertEqual(v[k], expect_values[k])
+        return
+
+    # @@ cancel new type form
+
+    # @@ Post with missing/invalid type id
+
+
+    def test_post_copy_type(self):
+        u = reverse(
+                "AnnalistRecordTypeNewView", 
+                kwargs={'coll_id': "testcoll", 'action': 'copy'}
+                )
+        form_data = (
+            { 'type_id':          'copytype'
+            , 'type_label':       'Record type copytype in collection testcoll'
+            , 'type_help':        'Help for copytype'
+            , 'type_class':       '/%s/collections/testcoll/copyttype/'%TestBasePath
+            , 'save':             'Save'
+            , 'orig_type_id':     'copytype'
+            , 'continuation_uri': '/%s/collections/testcoll/'%TestBasePath
+            , 'action':           'copy'
             })
         r = self.client.post(u, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        typenewuri = reverse(
-            "AnnalistTypeNewView", 
-            kwargs={'coll_id': "coll1", 'action': "new"}
-            )
-        self.assertEqual(r['location'], TestHostUri+typenewuri)
+        collectionedituri = reverse(
+                "AnnalistCollectionEditView", 
+                kwargs={'coll_id': "testcoll"}
+                )
+        self.assertEqual(r['location'], TestHostUri+collectionedituri)
         return
 
-    # @@ cancel new type form
+        # Cancel copy form
 
-    def test_post_copy_type(self):
-        form_data = (
-            { "typelist":   "type1"
-            , "type_copy":  "Copy"
-            })
-        r = self.client.post(self.uri_copy, form_data)
-        self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        typecopyuri = reverse(
-            "AnnalistTypeCopyView", 
-            kwargs={'coll_id': "coll1", 'type_id': "type1", 'action': "copy"}
-            )
-        self.assertEqual(r['location'], TestHostUri+typecopyuri)
-        return
+        # Copy without type selected
 
         # edit type
 

@@ -52,6 +52,7 @@
      / implement list methods
    / UI test cases
    / form elements to add/delete types/views/lists/...
+   - Add CollectionActionView test cases
 3. Record type display
    / template
    / view: edit form display
@@ -59,6 +60,7 @@
    > model
    - model test cases
    - view: edit form response handling
+   - refactor code; try to abstract common logic for RecordList, RecordView
 4. Default record list display (code may later be refactored)
 5. Design generic entity view
 6. Record view display and editing

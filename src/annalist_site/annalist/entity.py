@@ -130,6 +130,16 @@ class EntityRoot(object):
         (basedir, filepath) = util.entity_dir_path(self._entitydir, [], self._entityfile)
         return (basedir, filepath)
 
+    def _exists(self):
+        """
+        Test if the entity denoted by the current object has been created
+        """
+        d, p = self._dir_path()
+        if d and os.path.isdir(d):
+            if p and os.path.isfile(p):
+                return True
+        return False
+
     def _save(self):
         """
         Save current entity to Annalist storage
@@ -375,6 +385,5 @@ class Entity(EntityRoot):
         else:
             return Annalist_Error("Entity %s not found"%(entityid))
         return None
-
 
 # End.

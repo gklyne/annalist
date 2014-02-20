@@ -27,7 +27,7 @@ from annalist                   import message
 from annalist                   import util
 from annalist.site              import Site
 
-from annalist.views             import AnnalistGenericView
+from annalist.views.generic     import AnnalistGenericView
 from annalist.views.confirm     import ConfirmView
 
 # @@TODO: align form variable names with stored collection metadata

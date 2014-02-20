@@ -1,5 +1,5 @@
 """
-Annalist view definitions
+Annalist generic view definition
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -10,15 +10,10 @@ import os
 import os.path
 import json
 import random
-import logging
 import uuid
 import copy
 
 import httplib2
-
-# Needed when importing django.views.generic - default to development settings
-if 'DJANGO_SETTINGS_MODULE' not in os.environ:
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'annalist_site.settings.devel'
 
 import logging
 log = logging.getLogger(__name__)
@@ -44,9 +39,7 @@ from annalist.recordtype            import RecordType
 
 LOGIN_URIS = None
 
-# Create your views here.
-
-class zzz_AnnalistGenericView(ContentNegotiationView):
+class AnnalistGenericView(ContentNegotiationView):
     """
     Common base class for Annalist views
     """
@@ -198,10 +191,6 @@ class zzz_AnnalistGenericView(ContentNegotiationView):
         uri_param_val("info_message",    None)
         uri_param_val("error_head",      message.INPUT_ERROR) 
         uri_param_val("error_message",   None)
-        # resultdata["info_head"]     = self.request.GET.get("info_head",      message.ACTION_COMPLETED) 
-        # resultdata["info_message"]  = self.request.GET.get("info_message",   None)
-        # resultdata["error_head"]    = self.request.GET.get("error_head",     message.INPUT_ERROR) 
-        # resultdata["error_message"] = self.request.GET.get("error_message",  None)
         resultdata["auth_create"]   = self.authorize("CREATE") is None
         resultdata["auth_update"]   = self.authorize("UPDATE") is None
         resultdata["auth_delete"]   = self.authorize("DELETE") is None
@@ -226,17 +215,6 @@ class zzz_AnnalistGenericView(ContentNegotiationView):
 
     def delete(self, request):
         return self.error(self.error405values())
-
-# class zzz_AnnalistHomeView(AnnalistGenericView):
-#     """
-#     View class for home view
-#     """
-#     def __init__(self):
-#         super(AnnalistHomeView, self).__init__()
-#         return
-
-#     def get(self, request):
-#         return HttpResponseRedirect(reverse("AnnalistSiteView"))
 
 
 # End.

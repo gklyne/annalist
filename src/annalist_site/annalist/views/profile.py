@@ -27,7 +27,7 @@ from django.conf                    import settings
 
 from utils.ContentNegotiationView   import ContentNegotiationView
 
-from annalist.views                 import AnnalistGenericView
+from annalist.views.generic         import AnnalistGenericView
 
 class ProfileView(AnnalistGenericView):
     """

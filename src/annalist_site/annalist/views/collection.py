@@ -32,7 +32,7 @@ from annalist.recordtype        import RecordType
 from annalist.recordview        import RecordView
 from annalist.recordlist        import RecordList
 
-from annalist.views             import AnnalistGenericView
+from annalist.views.generic     import AnnalistGenericView
 from annalist.views.confirm     import ConfirmView
 
 class CollectionEditView(AnnalistGenericView):
@@ -85,15 +85,17 @@ class CollectionEditView(AnnalistGenericView):
         if "type_copy" in request.POST:
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_COPY) or
-                reverse("AnnalistRecordTypeCopyView", 
-                    kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "copy"})
-                )+continuation
+                ( reverse("AnnalistRecordTypeCopyView", 
+                          kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "copy"})
+                  + continuation)
+                )
         if "type_edit" in request.POST:
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_EDIT) or
-                reverse("AnnalistRecordTypeEditView", 
-                    kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "edit"})
-                )+continuation
+                ( reverse("AnnalistRecordTypeEditView", 
+                          kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "edit"})
+                  + continuation)
+                )
         if "type_delete" in request.POST:
             if type_id:
                 # Get user to confirm action before actually doing it
