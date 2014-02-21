@@ -74,6 +74,11 @@ class CollectionEditView(AnnalistGenericView):
         """
         Update some aspect of the current collection
         """
+        # Note: in many cases, this function redirects to a form that displays a form
+        #       to gather further details of values to update.  Values returned by
+        #       POST to this view are then passed as URI segments in the GET request
+        #       that renders the form.  Maybe there's an easier way that all this 
+        #       URI-wrangling?
         redirect_uri = None
         continuation = "?continuation_uri=%s"%(self.get_request_uri())
         type_id = request.POST.get('typelist', None)

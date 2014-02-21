@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     url(r'^$',              AnnalistHomeView.as_view(), name='AnnalistHomeView'),
     url(r'^site/$',         SiteView.as_view(),         name='AnnalistSiteView'),
     # @@TODO: change URI pattern to be consistent with other action URIs
-    url(r'^site_action/$',  SiteActionView.as_view(),   name='AnnalistSiteActionView'),
+    url(r'^site/!action$',  SiteActionView.as_view(),   name='AnnalistSiteActionView'),
     url(r'^profile/$',      ProfileView.as_view(),      name='AnnalistProfileView'),
     url(r'^confirm/$',      ConfirmView.as_view(),      name='AnnalistConfirmView'),
     url(r'^collections/(?P<coll_id>\w{0,32})/$',
@@ -29,8 +29,6 @@ urlpatterns = patterns('',
     url(r'^collections/(?P<coll_id>\w{0,32})/!complete_action$',
                             CollectionActionView.as_view(),
                             name='AnnalistCollectionActionView'),
-   # @@TODO: as type id is provided in form, does it really need to be part of the form URI??
-   #         Could reduce the 3 options below to a single 'AnnalistRecordTypeEditView' entry?
     url(r'^collections/(?P<coll_id>\w{0,32})/types/!(?P<action>new)$',
                             RecordTypeEditView.as_view(),
                             name='AnnalistRecordTypeNewView'),

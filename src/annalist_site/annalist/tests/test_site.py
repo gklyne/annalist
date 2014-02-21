@@ -370,12 +370,12 @@ class SiteViewTest(AnnalistTestCase):
         # print r.content
         # print "********"
         # Returns confirmation form: check
-        self.assertContains(r, """<form method="POST" action="/"""+TestBasePath+"""/confirm/">""", status_code=200)
-        self.assertContains(r, """<input type="submit" name="confirm" value="Confirm"/>""", html=True)
-        self.assertContains(r, """<input type="submit" name="cancel" value="Cancel"/>""", html=True)
-        self.assertContains(r, """<input type="hidden" name="complete_action" value="/"""+TestBasePath+"""/site_action/"/>""", html=True)
-        self.assertContains(r, """<input type="hidden" name="action_params"   value="{&quot;new_label&quot;: [&quot;&quot;], &quot;new_id&quot;: [&quot;&quot;], &quot;select&quot;: [&quot;coll1&quot;, &quot;coll3&quot;], &quot;remove&quot;: [&quot;Remove selected&quot;]}"/>""", html=True)
-        self.assertContains(r, """<input type="hidden" name="cancel_action"   value="/"""+TestBasePath+"""/site/"/>""", html=True)
+        self.assertContains(r, '''<form method="POST" action="/'''+TestBasePath+'''/confirm/">''', status_code=200)
+        self.assertContains(r, '''<input type="submit" name="confirm" value="Confirm"/>''', html=True)
+        self.assertContains(r, '''<input type="submit" name="cancel" value="Cancel"/>''', html=True)
+        self.assertContains(r, '''<input type="hidden" name="complete_action" value="'''+reverse("AnnalistSiteActionView")+'''"/>''', html=True)
+        self.assertContains(r, '''<input type="hidden" name="action_params"   value="{&quot;new_label&quot;: [&quot;&quot;], &quot;new_id&quot;: [&quot;&quot;], &quot;select&quot;: [&quot;coll1&quot;, &quot;coll3&quot;], &quot;remove&quot;: [&quot;Remove selected&quot;]}"/>''', html=True)
+        self.assertContains(r, '''<input type="hidden" name="cancel_action"   value="'''+reverse("AnnalistSiteView")+'''"/>''', html=True)
         return
 
 #   -----------------------------------------------------------------------------
@@ -396,11 +396,22 @@ class SiteActionViewTests(AnnalistTestCase):
         self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
         self.user.save()
         self.client = Client(HTTP_HOST=TestHost)
-        self.uri    = reverse("AnnalistSiteActionView")
         return
 
     def tearDown(self):
         return
+
+    def _conf_data(self, action="confirm"):
+        action_values = (
+            { 'confirm': "Confirm"
+            , 'cancel':  "Cancel"
+            })
+        return (
+            { action:             action_values[action]
+            , "complete_action":  reverse("AnnalistSiteActionView")
+            , "action_params":    """{"new_label": [""], "new_id": [""], "select": ["coll1", "coll3"], "remove": ["Remove selected"]}"""
+            , "cancel_action":    reverse("AnnalistSiteView")
+            })
 
     def test_SiteActionViewTest(self):
         self.assertEqual(SiteActionView.__name__, "SiteActionView", "Check SiteActionView class name")
@@ -410,17 +421,12 @@ class SiteActionViewTests(AnnalistTestCase):
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         # Submit positive confirmation
-        conf_data = (
-            { "confirm":          "Confirm"
-            , "complete_action":  "/"+TestBasePath+"/site_action/"
-            , "action_params":    """{"new_label": [""], "new_id": [""], "select": ["coll1", "coll3"], "remove": ["Remove selected"]}"""
-            , "cancel_action":    "/"+TestBasePath+"/site/"
-            })
-        r = self.client.post("/"+TestBasePath+"/confirm/", conf_data)
+        u = reverse("AnnalistConfirmView")
+        r = self.client.post(u, self._conf_data(action="confirm"))
         self.assertEqual(r.status_code,     302)
         self.assertEqual(r.reason_phrase,   "FOUND")
         self.assertEqual(r.content,         "")
-        self.assertMatch(r['location'],     "^"+TestBaseUri+"/site/\\?info_head=.*&info_message=.*coll1,.*coll3.*$")
+        self.assertMatch(r['location'],     "^"+TestHostUri+reverse("AnnalistSiteView")+"\\?info_head=.*&info_message=.*coll1,.*coll3.*$")
         # Confirm collections deleted
         r = self.client.get("/"+TestBasePath+"/site/")
         colls = r.context['collections']
@@ -434,14 +440,8 @@ class SiteActionViewTests(AnnalistTestCase):
     def test_post_cancelled_remove(self):
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        # Cancel in confirmation form response
-        conf_data = (
-            { "cancel":           "Cancel"
-            , "complete_action":  self.uri
-            , "action_params":    """{"new_label": [""], "new_id": [""], "select": ["coll1", "coll3"], "remove": ["Remove selected"]}"""
-            , "cancel_action":    "/"+TestBasePath+"/site/"
-            })
-        r = self.client.post("/"+TestBasePath+"/confirm/", conf_data)
+        u = reverse("AnnalistConfirmView")
+        r = self.client.post(u, self._conf_data(action="cancel"))
         self.assertEqual(r.status_code,     302)
         self.assertEqual(r.reason_phrase,   "FOUND")
         self.assertEqual(r.content,         "")
