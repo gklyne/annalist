@@ -106,12 +106,17 @@ class ConfirmView(AnnalistGenericView):
         the "cancel_action" continuation URI.
         """
         log.debug("confirmview.post: %r"%(request.POST))
-        params         = querydict_loads(request.POST["action_params"])
-        action_request = copy.copy(request)
-        if request.POST.get("confirm", None):
+        # params         = querydict_loads(request.POST["action_params"])
+        # action_request = copy.copy(request)
+        # if "confirm" in request.POST:
+        #     view, args, kwargs  = resolve(request.POST["complete_action"])
+        #     action_request.POST = params
+        #     return view(action_request)
+        if "confirm" in request.POST:
+            action_request      = copy.copy(request)
+            action_request.POST = querydict_loads(request.POST["action_params"])
             view, args, kwargs  = resolve(request.POST["complete_action"])
-            action_request.POST = params
-            return view(action_request)
+            return view(action_request, *args, **kwargs)
         return HttpResponseRedirect(request.POST["cancel_action"])
 
 # End.

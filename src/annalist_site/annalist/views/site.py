@@ -70,15 +70,15 @@ class SiteView(AnnalistGenericView):
                     ConfirmView.render_form(request,
                         action_description=     message.REMOVE_COLLECTIONS%(", ".join(collections)),
                         action_params=          request.POST,
-                        complete_action_uri=    reverse('AnnalistSiteActionView'),
-                        cancel_action_uri=      reverse('AnnalistSiteView'),
+                        complete_action_uri=    self.view_uri('AnnalistSiteActionView'),
+                        cancel_action_uri=      self.view_uri('AnnalistSiteView'),
                         title=                  self.site_data()["title"]
                         )
                     )
             else:
                 return self.redirect_info(
-                    "AnnalistSiteView", message.NO_COLLECTIONS_SELECTED,
-                    info_head=message.NO_ACTION_PERFORMED
+                    self.view_uri("AnnalistSiteView"), 
+                    message.NO_COLLECTIONS_SELECTED, info_head=message.NO_ACTION_PERFORMED
                     )
         if request.POST.get("new", None):
             # Create new collection with name and label supplied
@@ -86,9 +86,13 @@ class SiteView(AnnalistGenericView):
             new_label = request.POST["new_label"]
             log.debug("New collection %s: %s"%(new_id, new_label))
             if not new_id:
-                return self.redirect_error("AnnalistSiteView", message.MISSING_COLLECTION_ID)
+                return self.redirect_error(
+                    self.view_uri("AnnalistSiteView"), 
+                    message.MISSING_COLLECTION_ID)
             if not util.valid_id(new_id):
-                return self.redirect_error("AnnalistSiteView", message.INVALID_COLLECTION_ID%(new_id))
+                return self.redirect_error(
+                    self.view_uri("AnnalistSiteView"), 
+                    message.INVALID_COLLECTION_ID%(new_id))
             # Create new collection with name and label supplied
             auth_required = self.authorize("CREATE")
             if auth_required:
@@ -98,7 +102,9 @@ class SiteView(AnnalistGenericView):
                 , 'rdfs:comment':  ""
                 })
             self.site().add_collection(new_id, coll_meta)
-            return self.redirect_info("AnnalistSiteView", message.CREATED_COLLECTION_ID%(new_id))
+            return self.redirect_info(
+                self.view_uri("AnnalistSiteView"), 
+                message.CREATED_COLLECTION_ID%(new_id))
         return self.error(self.error400values())
 
 class SiteActionView(AnnalistGenericView):
@@ -125,14 +131,15 @@ class SiteActionView(AnnalistGenericView):
             for coll_id in coll_ids:
                 err = self.site().remove_collection(coll_id)
                 if err:
-                    return self.redirect_error("AnnalistSiteView", str(err))
-            # @@TODO: change redirect logic to accept URI not view name
+                    return self.redirect_error(
+                        self.view_uri("AnnalistSiteView"), 
+                        str(err))
             return self.redirect_info(
-                "AnnalistSiteView", 
+                self.view_uri("AnnalistSiteView"), 
                 message.COLLECTIONS_REMOVED%(", ".join(coll_ids))
                 )
         else:
             return self.error(self.error400values())
-        return HttpResponseRedirect(reverse("AnnalistSiteView"))
+        return HttpResponseRedirect(self.view_uri("AnnalistSiteView"))
 
 # End.

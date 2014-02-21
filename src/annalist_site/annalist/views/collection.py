@@ -78,30 +78,27 @@ class CollectionEditView(AnnalistGenericView):
         continuation = "?continuation_uri=%s"%(self.get_request_uri())
         type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:
-            redirect_uri = reverse(
-                "AnnalistRecordTypeNewView", 
-                kwargs={'coll_id': coll_id, 'action': "new"}
-                )+continuation
+            redirect_uri = self.view_uri(
+                "AnnalistRecordTypeNewView", coll_id=coll_id, action="new"
+                ) + continuation
         if "type_copy" in request.POST:
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_COPY) or
-                ( reverse("AnnalistRecordTypeCopyView", 
-                          kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "copy"})
-                  + continuation)
+                ( self.view_uri(
+                    "AnnalistRecordTypeCopyView", coll_id=coll_id, type_id=type_id, action="copy"
+                    ) + continuation)
                 )
         if "type_edit" in request.POST:
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_EDIT) or
-                ( reverse("AnnalistRecordTypeEditView", 
-                          kwargs={'coll_id': coll_id, 'type_id': type_id, 'action': "edit"})
-                  + continuation)
+                ( self.view_uri(
+                    "AnnalistRecordTypeEditView", coll_id=coll_id, type_id=type_id, action="edit"
+                    ) + continuation)
                 )
         if "type_delete" in request.POST:
             if type_id:
                 # Get user to confirm action before actually doing it
-                complete_action_uri = reverse(
-                    "AnnalistCollectionActionView", kwargs={'coll_id': coll_id}
-                    )
+                complete_action_uri = self.view_uri("AnnalistCollectionActionView", coll_id=coll_id)
                 return (
                     self.authorize("DELETE") or
                     ConfirmView.render_form(request,
@@ -117,7 +114,7 @@ class CollectionEditView(AnnalistGenericView):
                     self.check_value_supplied(type_id, message.NO_TYPE_FOR_DELETE)
                     )
         if "close" in request.POST:
-            redirect_uri = reverse("AnnalistSiteView")
+            redirect_uri = self.view_uri("AnnalistSiteView")
         if redirect_uri:
             return HttpResponseRedirect(redirect_uri)
         raise Annalist_Error(request.POST, "Unexpected values in POST to "+self.get_request_path())
@@ -135,7 +132,7 @@ class CollectionActionView(AnnalistGenericView):
 
     # POST
 
-    def post(self, request):
+    def post(self, request, coll_id):
         """
         Process options to complete action to remove a sub-resource
         """
@@ -144,17 +141,20 @@ class CollectionActionView(AnnalistGenericView):
             auth_required = self.authorize("DELETE")
             if auth_required:
                 return auth_required
-            type_id = request.POST['type_id']
-            for coll_id in coll_ids:
-                err = self.site().remove_collection(coll_id)
-                if err:
-                    return self.redirect_error("AnnalistSiteView", str(err))
+            coll    = self.collection(coll_id)
+            type_id = request.POST['typelist']
+            err     = coll.remove_type(type_id)
+            if err:
+                # @@TODO, after refactor: use "AnnalistCollectionView"...
+                return self.redirect_error(
+                    self.view_uri("AnnalistCollectionEditView", coll_id=coll_id), 
+                    str(err))
             return self.redirect_info(
-                "AnnalistSiteView", 
-                message.COLLECTIONS_REMOVED%(", ".join(coll_ids))
-                )
+                    self.view_uri("AnnalistCollectionEditView", coll_id=coll_id), 
+                    message.RECORD_TYPE_REMOVED%(type_id, coll_id)
+                    )
         else:
             return self.error(self.error400values())
-        return HttpResponseRedirect(reverse("AnnalistSiteView"))
+        return HttpResponseRedirect(self.view_uri("AnnalistSiteView"))
 
 # End.

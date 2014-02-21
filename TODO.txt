@@ -56,10 +56,12 @@
 3. Record type display
    / template
    / view: edit form display
-   - view test cases
-   > model
-   - model test cases
-   - view edit form response handling
+   / view test cases
+   / refactor redirect_info, redirect_error in generic view to takle URI rather than view name parameter,
+     and add new method to handle URI generation from view name + params.
+   / model
+   / model test cases
+   / view edit form response handling
    - when renaming through edit form, update URI if it corresponds to previous ID??
    - need to think about maintaining a list of correspopnding URIs?
    - refactor code; try to abstract common logic for RecordList, RecordView

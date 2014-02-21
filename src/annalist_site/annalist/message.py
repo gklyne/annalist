@@ -32,6 +32,7 @@ RECORD_TYPE_ID          = "Problem with record type identifier"
 RECORD_TYPE_ID_INVALID  = "The record type identifier is missing or not a valid identifier"
 RECORD_TYPE_EXISTS      = "Record type %s in collection %s already exists"
 RECORD_TYPE_NOT_EXISTS  = "Record type %s in collection %s does not exist"
+RECORD_TYPE_REMOVED     = "Record type %s in collection %s was removed"
 SYSTEM_ERROR            = "System error"
 UNEXPECTED_FORM_DATA    = "Unexpected form data: %r"
 

@@ -121,13 +121,13 @@ class RecordTypeEditView(AnnalistGenericView):
         """
         Handle response to record type edit form
         """
-        # @@TODO: as type id isn provided in form, does it really need to be part of the form URI??
+        # @@TODO: as type id is provided in form, does it really need to be part of the form URI??
         log.debug("views.recordtype.post %s"%(self.get_request_path()))
         # log.info("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
         # log.info("  form data %r"%(request.POST))
-        continuation_uri = request.POST['continuation_uri']
-        collection_edit_uri = reverse('AnnalistCollectionEditView', kwargs={'coll_id': coll_id})
-        continuation_uri = request.POST.get('continuation_uri', collection_edit_uri)
+        continuation_uri    = request.POST['continuation_uri']
+        collection_edit_uri = self.view_uri('AnnalistCollectionEditView', coll_id=coll_id)
+        continuation_uri    = request.POST.get('continuation_uri', collection_edit_uri)
         if 'cancel' in request.POST:
             return HttpResponseRedirect(request.POST['continuation_uri'])
 

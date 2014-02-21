@@ -80,13 +80,26 @@ class AnnalistGenericView(ContentNegotiationView):
         context  = RequestContext(self.request, values)
         return HttpResponse(template.render(context), status=values['status'], reason=values['reason'])
 
-    def redirect_info(self, viewname, info_message=None, info_head=message.ACTION_COMPLETED):
+    def view_uri(self, viewname, **kwargs):
+        """
+        Return view URI given view name and any additional arguments
+        """
+        return reverse(viewname, kwargs=kwargs)
+
+    def info_params(self, info_message, info_head=message.ACTION_COMPLETED):
+        """
+        Returns a URI query parameter string with details that are used to generate an
+        information message.
+        """
+        return "?info_head=%s&info_message=%s"%(info_head, info_message)
+
+    def redirect_info(self, viewuri, info_message=None, info_head=message.ACTION_COMPLETED):
         """
         Redirect to a specified view with an information/confirmation message for display
 
         (see templates/base_generic.html for display details)
         """
-        redirect_uri = reverse(viewname)+"?info_head=%s&info_message=%s"%(info_head, info_message)
+        redirect_uri = viewuri+self.info_params(info_message, info_head)
         return HttpResponseRedirect(redirect_uri)
 
     def error_params(self, error_message, error_head=message.INPUT_ERROR):
@@ -96,13 +109,13 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return "?error_head=%s&error_message=%s"%(error_head, error_message)
 
-    def redirect_error(self, viewname, error_message=None, error_head=message.INPUT_ERROR):
+    def redirect_error(self, viewuri, error_message=None, error_head=message.INPUT_ERROR):
         """
         Redirect to a specified view with an error message for display
 
         (see templates/base_generic.html for display details)
         """
-        redirect_uri = reverse(viewname)+self.error_params(error_head, error_message)
+        redirect_uri = viewuri+self.error_params(error_head, error_message)
         return HttpResponseRedirect(redirect_uri)
 
     def check_value_supplied(self, val, msg, testfn=(lambda v: v)):
@@ -143,9 +156,9 @@ class AnnalistGenericView(ContentNegotiationView):
         global LOGIN_URIS
         if LOGIN_URIS is None:
             LOGIN_URIS = (
-                { "login_form_uri": reverse('LoginUserView')
-                , "login_post_uri": reverse('LoginPostView')
-                , "login_done_uri": reverse('LoginDoneView')
+                { "login_form_uri": self.view_uri('LoginUserView')
+                , "login_post_uri": self.view_uri('LoginPostView')
+                , "login_done_uri": self.view_uri('LoginDoneView')
                 })
         # Initiate OAuth2 login sequence, if neded
         return oauth2.views.confirm_authentication(self, 

@@ -26,12 +26,12 @@ from annalist.site              import Site
 from annalist.collection        import Collection
 from annalist.recordtype        import RecordType
 
+from annalist.views.collection  import CollectionActionView
 from annalist.views.recordtype  import RecordTypeEditView
 
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                      import init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
-
 
 #   -----------------------------------------------------------------------------
 #
@@ -53,6 +53,21 @@ def recordtype_edit_uri(action, coll_id, type_id=None):
 
 def collection_edit_uri(coll_id="testcoll"):
     return TestHostUri + reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
+
+def recordtype_delete_confirm_uri(coll_id):
+    return TestHostUri + reverse("AnnalistCollectionActionView", kwargs={'coll_id': coll_id})
+
+def recordtype_delete_confirm_form_data(type_id=None):
+    return (
+        { 'typelist':    type_id,
+          'type_delete': 'Delete'
+        })
+
+def collection_create_values(coll_id="testcoll"):
+    return (
+        { 'rdfs:label':     'Collection %s'%coll_id
+        , 'rdfs:comment':   'Description of Collection %s'%coll_id
+        })
 
 def recordtype_create_values(type_id):
     return (
@@ -141,6 +156,11 @@ def recordtype_updated_values(type_id):
         , 'annal:uri':      '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
         })
 
+def recordtype_delete_confirm_values(coll_id, type_id):
+    return (
+        { "foo": "bar"
+        })
+
 #   -----------------------------------------------------------------------------
 #
 #   RecordType tests
@@ -215,10 +235,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.testcoll = Collection.create(self.testsite, "testcoll",
-            { 'rdfs:label':     'Collection testcoll'
-            , 'rdfs:comment':   'Description of Collection testcoll'
-            })
+        self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
         self.user.save()
         self.client = Client(HTTP_HOST=TestHost)
@@ -541,6 +558,52 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self._assert_dict_match(r.context, expect_context)
         return
 
-        # confirm delete type - in test_colection?
+#   -----------------------------------------------------------------------------
+#
+#   ConfirmRecordTypeDeleteTests tests for completion of record deletion
+#
+#   -----------------------------------------------------------------------------
+
+class ConfirmRecordTypeDeleteTests(AnnalistTestCase):
+    """
+    Tests for record type deletion on response to confirmation form
+    """
+
+    def setUp(self):
+        init_annalist_test_site()
+        self.testsite = Site(TestBaseUri, TestBaseDir)
+        self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
+        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
+        self.user.save()
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
+        return
+
+    def tearDown(self):
+        return
+
+    def test_CollectionActionViewTest(self):
+        self.assertEqual(CollectionActionView.__name__, "CollectionActionView", "Check CollectionActionView class name")
+        return
+
+    # NOTE:  test_collection checks the appropriate response from clicking the delete button, 
+    # so here only need to test completion code.
+    def test_post_confirmed_remove_type(self):
+        t = RecordType.create(self.testcoll, "deletetype", recordtype_create_values("deletetype"))
+        self.assertTrue(RecordType.exists(self.testcoll, "deletetype"))
+        # Submit positive confirmation
+        u = recordtype_delete_confirm_uri("testcoll")
+        f = recordtype_delete_confirm_form_data("deletetype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,     302)
+        self.assertEqual(r.reason_phrase,   "FOUND")
+        self.assertEqual(r.content,         "")
+        self.assertMatch(r['location'],    
+            "^"+collection_edit_uri("testcoll")+r"\?info_head=.*&info_message=.*deletetype.*testcoll.*$"
+            )
+        # Confirm deletion
+        self.assertFalse(RecordType.exists(self.testcoll, "deletetype"))
+        return
 
 # End.
