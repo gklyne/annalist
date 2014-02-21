@@ -72,7 +72,8 @@ class RecordTypeEditView(AnnalistGenericView):
         """
         Create a form for editing a type.
         """
-        def resultdata():
+        # Function to generate form data
+        def form_context_data():
             recordtype_local_uri     = record_type.get_uri(self.get_request_uri())
             context = (
                 { 'title':              self.site_data()["title"]
@@ -86,13 +87,22 @@ class RecordTypeEditView(AnnalistGenericView):
                 , 'action':             action
                 })
             return context
+        # Check collection
         if not Collection.exists(self.site(), coll_id):
             return self.error(self.error404values().update(
                 message="Collection %s does not exist"%(coll_id)))
         coll = Collection(self.site(), coll_id)
+        # Sort access mode, type_id and authorization
         if action == "new":
-            type_id     = RecordType.allocate_new_id(coll)
+            type_id    = RecordType.allocate_new_id(coll)
+            auth_scope = "CREATE"
+        else:
+            auth_scope = "UPDATE"
+        auth_required = self.authorize(auth_scope)
+        if auth_required:
+                return auth_required
         default_type_label = "Record type %s in collection %s"%(type_id, coll_id)
+        # Create local record type object or load values from existing
         if action == "new":
             record_type    = RecordType(coll, type_id)
             record_type.set_values(
@@ -111,7 +121,7 @@ class RecordTypeEditView(AnnalistGenericView):
                     )
                 )
         return (
-            self.render_html(resultdata(), 'annalist_recordtype_edit.html') or 
+            self.render_html(form_context_data(), 'annalist_recordtype_edit.html') or 
             self.error(self.error406values())
             )
 
@@ -121,7 +131,6 @@ class RecordTypeEditView(AnnalistGenericView):
         """
         Handle response to record type edit form
         """
-        # @@TODO: as type id is provided in form, does it really need to be part of the form URI??
         log.debug("views.recordtype.post %s"%(self.get_request_path()))
         # log.info("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
         # log.info("  form data %r"%(request.POST))
@@ -130,7 +139,15 @@ class RecordTypeEditView(AnnalistGenericView):
         continuation_uri    = request.POST.get('continuation_uri', collection_edit_uri)
         if 'cancel' in request.POST:
             return HttpResponseRedirect(request.POST['continuation_uri'])
-
+        # Check authorization
+        if action == "new":
+            auth_scope = "CREATE"
+        else:
+            auth_scope = "UPDATE"
+        auth_required = self.authorize(auth_scope)
+        if auth_required:
+            return auth_required
+        # Check collection exists (still)
         coll = self.collection(coll_id)
         if not coll._exists():
             form_data = context_from_record_type_form(
@@ -142,19 +159,24 @@ class RecordTypeEditView(AnnalistGenericView):
                 self.render_html(form_data, 'annalist_recordtype_edit.html') or 
                 self.error(self.error406values())
                 )
+        # Check response has valid type id
+        type_id      = request.POST.get('type_id', None)
+        orig_type_id = request.POST.get('orig_type_id', None)
+        if not util.valid_id(type_id):
+            form_data = context_from_record_type_form(
+                self.site_data(), coll_id, request.POST,
+                error_head=message.RECORD_TYPE_ID,
+                error_message=message.RECORD_TYPE_ID_INVALID
+                )
+            return (
+                self.render_html(form_data, 'annalist_recordtype_edit.html') or 
+                self.error(self.error406values())
+                )
+        # Process response
+        type_id_changed = (request.POST['action'] == "edit") and (type_id != orig_type_id)
         if 'save' in request.POST:
-            if request.POST['action'] in ["new", "copy"]:
-                type_id = request.POST.get('type_id', None)
-                if not util.valid_id(type_id):
-                    form_data = context_from_record_type_form(
-                        self.site_data(), coll_id, request.POST,
-                        error_head=message.RECORD_TYPE_ID,
-                        error_message=message.RECORD_TYPE_ID_INVALID
-                        )
-                    return (
-                        self.render_html(form_data, 'annalist_recordtype_edit.html') or 
-                        self.error(self.error406values())
-                        )
+            # Check existence of type to save according to action performed
+            if (request.POST['action'] in ["new", "copy"]) or type_id_changed:
                 if RecordType.exists(coll, type_id):
                     form_data = context_from_record_type_form(
                         self.site_data(), coll_id, request.POST,
@@ -165,64 +187,29 @@ class RecordTypeEditView(AnnalistGenericView):
                         self.render_html(form_data, 'annalist_recordtype_edit.html') or 
                         self.error(self.error406values())
                         )
-                RecordType.create(coll, type_id,
-                    { 'rdfs:label':   request.POST['type_label']
-                    , 'rdfs:comment': request.POST['type_help']
-                    , 'annal:uri':    request.POST['type_class']
-                    })
-                return HttpResponseRedirect(request.POST['continuation_uri'])
-            if request.POST['action'] == "edit":
-                type_id      = request.POST.get('type_id', None)
-                orig_type_id = request.POST.get('orig_type_id', None)
-                if type_id != orig_type_id:
-                    log.debug("RecordType edit renaming %s to %s"%(orig_type_id,type_id))
-                    if not util.valid_id(type_id):
-                        form_data = context_from_record_type_form(
-                            self.site_data(), coll_id, request.POST,
-                            error_head=message.RECORD_TYPE_ID,
-                            error_message=message.RECORD_TYPE_ID_INVALID
-                            )
-                        return (
-                            self.render_html(form_data, 'annalist_recordtype_edit.html') or 
-                            self.error(self.error406values())
-                            )
-                    if RecordType.exists(coll, type_id):
-                        form_data = context_from_record_type_form(
-                            self.site_data(), coll_id, request.POST,
-                            error_head=message.RECORD_TYPE_ID,
-                            error_message=message.RECORD_TYPE_EXISTS%(type_id, coll_id)
-                            )
-                        return (
-                            self.render_html(form_data, 'annalist_recordtype_edit.html') or 
-                            self.error(self.error406values())
-                            )
-                    RecordType.create(coll, type_id,
-                        { 'rdfs:label':   request.POST['type_label']
-                        , 'rdfs:comment': request.POST['type_help']
-                        , 'annal:uri':    request.POST['type_class']
-                        })
-                    if RecordType.exists(coll, type_id):    # Precautionary
-                        RecordType.remove(coll, orig_type_id)
-                    return HttpResponseRedirect(request.POST['continuation_uri'])
-                else:
-                    if not RecordType.exists(coll, type_id):
-                        # This shouldn't happen, but just incase...
-                        form_data = context_from_record_type_form(
-                            self.site_data(), coll_id, request.POST,
-                            error_head=message.RECORD_TYPE_ID,
-                            error_message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
-                            )
-                        return (
-                            self.render_html(form_data, 'annalist_recordtype_edit.html') or 
-                            self.error(self.error406values())
-                            )
-                RecordType.create(coll, type_id,
-                    { 'rdfs:label':   request.POST['type_label']
-                    , 'rdfs:comment': request.POST['type_help']
-                    , 'annal:uri':    request.POST['type_class']
-                    })
-                return HttpResponseRedirect(request.POST['continuation_uri'])
-
+            else:
+                if not RecordType.exists(coll, type_id):
+                    # This shouldn't happen, but just incase...
+                    form_data = context_from_record_type_form(
+                        self.site_data(), coll_id, request.POST,
+                        error_head=message.RECORD_TYPE_ID,
+                        error_message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
+                        )
+                    return (
+                        self.render_html(form_data, 'annalist_recordtype_edit.html') or 
+                        self.error(self.error406values())
+                        )
+            # Create/update record type now
+            RecordType.create(coll, type_id,
+                { 'rdfs:label':   request.POST['type_label']
+                , 'rdfs:comment': request.POST['type_help']
+                , 'annal:uri':    request.POST['type_class']
+                })
+            # Remove old type if rename
+            if type_id_changed:
+                if RecordType.exists(coll, type_id):    # Precautionary
+                    RecordType.remove(coll, orig_type_id)
+            return HttpResponseRedirect(request.POST['continuation_uri'])
         # Report unexpected form data
         # This shouldn't happen, but just in case...
         # Redirect to continuation with error
