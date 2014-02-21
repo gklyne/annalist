@@ -176,6 +176,16 @@ class RecordTypeEditView(AnnalistGenericView):
                 orig_type_id = request.POST.get('orig_type_id', None)
                 if type_id != orig_type_id:
                     log.debug("RecordType edit renaming %s to %s"%(orig_type_id,type_id))
+                    if not util.valid_id(type_id):
+                        form_data = context_from_record_type_form(
+                            self.site_data(), coll_id, request.POST,
+                            error_head=message.RECORD_TYPE_ID,
+                            error_message=message.RECORD_TYPE_ID_INVALID
+                            )
+                        return (
+                            self.render_html(form_data, 'annalist_recordtype_edit.html') or 
+                            self.error(self.error406values())
+                            )
                     if RecordType.exists(coll, type_id):
                         form_data = context_from_record_type_form(
                             self.site_data(), coll_id, request.POST,

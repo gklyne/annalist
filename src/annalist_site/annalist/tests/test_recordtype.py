@@ -26,12 +26,126 @@ from annalist.site              import Site
 from annalist.collection        import Collection
 from annalist.recordtype        import RecordType
 
-import annalist.views
 from annalist.views.recordtype  import RecordTypeEditView
 
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                      import dict_to_str, init_annalist_test_site
+from tests                      import init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
+
+
+#   -----------------------------------------------------------------------------
+#
+#   Test data helpers
+#
+#   -----------------------------------------------------------------------------
+
+def recordtype_edit_uri(action, coll_id, type_id=None):
+    viewname = ( 
+        "AnnalistRecordTypeNewView"  if action == "new" else
+        "AnnalistRecordTypeCopyView" if action == "copy" else
+        "AnnalistRecordTypeEditView"
+        )
+    if type_id:
+        kwargs = {'action': action, 'coll_id': coll_id, 'type_id': type_id}
+    else:
+        kwargs = {'action': action, 'coll_id': coll_id}
+    return reverse(viewname, kwargs=kwargs)
+
+def collection_edit_uri(coll_id="testcoll"):
+    return TestHostUri + reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
+
+def recordtype_create_values(type_id):
+    return (
+        { 'rdfs:label': 'Type testcoll/%s'%type_id
+        , 'rdfs:comment': 'Annalist collection: testcoll, record type: %s'%type_id
+        , 'annal:uri': '/testsite/collections/testcoll/types/%s/'%type_id
+        })
+
+def expect_value_keys():
+    return (
+        [ 'id', 'type', 'uri', 'title'
+        , 'rdfs:label', 'rdfs:comment', 'annal:uri'
+        ])
+
+def recordtype_load_values(type_id):
+    return (
+        { '@id':            './'
+        , 'id':             type_id
+        , 'title':          'Type testcoll/%s'%type_id
+        , 'type':           'annal:RecordType'
+        , 'uri':            '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
+        , 'annal:id':       type_id
+        , 'annal:type':     'annal:RecordType'
+        , 'rdfs:label':     'Type testcoll/%s'%type_id
+        , 'rdfs:comment':   'Annalist collection: testcoll, record type: %s'%type_id
+        , 'annal:uri':      '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
+        })
+
+def recordtype_form_data(type_id=None, orig_type_id=None, action=None, cancel=None):
+    form_data_dict = (
+        { 'type_label':       'Record type ... in collection testcoll'
+        , 'type_help':        'Help for record type ...'
+        , 'type_class':       '/%s/collections/testcoll/.../'%TestBasePath
+        , 'orig_type_id':     'orig_type_id'
+        , 'continuation_uri': '/%s/collections/testcoll/'%TestBasePath
+        })
+    if type_id:
+        form_data_dict['type_id']       = type_id
+        form_data_dict['orig_type_id']  = type_id
+        form_data_dict['type_label']    = 'Record type %s in collection testcoll'%(type_id)
+        form_data_dict['type_help']     = 'Help for record type %s'%(type_id)
+        form_data_dict['type_class']    = '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
+    if orig_type_id:
+        form_data_dict['orig_type_id']  = orig_type_id
+    if action:
+        form_data_dict['action']        = action
+    if cancel:
+        form_data_dict['cancel']        = "Cancel"
+    else:
+        form_data_dict['save']          = 'Save'
+    return form_data_dict
+
+def recordtype_context_data(type_id=None, orig_type_id=None, action=None):
+    context_dict = (
+        { 'title':              'Annalist data journal test site'
+        , 'coll_id':            'testcoll'
+        , 'orig_type_id':       'orig_type_id'
+        , 'type_label':         'Record type ... in collection testcoll'
+        , 'type_help':          'Help for record type ...'
+        , 'type_uri':           '/%s/collections/testcoll/.../'%TestBasePath
+        , 'continuation_uri':   '/%s/collections/testcoll/'%TestBasePath
+        })
+    if type_id:
+        context_dict['type_id']       = type_id
+        context_dict['orig_type_id']  = type_id
+        context_dict['type_label']    = 'Record type %s in collection testcoll'%(type_id)
+        context_dict['type_help']     = 'Help for record type %s'%(type_id)
+        context_dict['type_uri']      = '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
+    if orig_type_id:
+        context_dict['orig_type_id']  = orig_type_id
+    if action:  
+        context_dict['action']  = action
+    return context_dict
+
+def recordtype_updated_values(type_id):
+    return (
+        { '@id':            './'
+        , 'id':             type_id
+        , 'type':           'annal:RecordType'
+        , 'title':          'Record type %s in collection testcoll'%type_id
+        , 'uri':            '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
+        , 'annal:id':       type_id
+        , 'annal:type':     'annal:RecordType'
+        , 'rdfs:label':     'Record type %s in collection testcoll'%type_id
+        , 'rdfs:comment':   'Help for record type %s'%type_id
+        , 'annal:uri':      '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
+        })
+
+#   -----------------------------------------------------------------------------
+#
+#   RecordType tests
+#
+#   -----------------------------------------------------------------------------
 
 class RecordTypeTest(TestCase):
     """
@@ -42,43 +156,6 @@ class RecordTypeTest(TestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection(self.testsite, "testcoll")
-        self.type1_add = (
-            { 'rdfs:comment': 'Annalist collection1 recordtype1'
-            , 'rdfs:label': 'Type testcoll/type1'
-            , 'annal:uri': TestBaseUri+'/collections/testcoll/types/type1/'
-            })      
-        self.expect_value_keys = (
-            'id', 'type', 'uri', 'title', 'rdfs:label', 'rdfs:comment', 'annal:uri'
-            )
-        self.type1 = (
-            { '@id': './'
-            , 'id': 'type1'
-            , 'title': 'Type testcoll/type1'
-            , 'type': 'annal:RecordType'
-            , 'uri': 'http://test.example.com/testsite/collections/testcoll/types/type1/'
-            , 'annal:id': 'type1'
-            , 'annal:type': 'annal:RecordType'
-            , 'annal:uri': TestBaseUri+'/collections/testcoll/types/type1/'
-            , 'rdfs:label': 'Type testcoll/type1'
-            , 'rdfs:comment': 'Annalist collection1 recordtype1'
-            })
-        self.type2_add = (
-            { 'rdfs:comment': 'Annalist collection1 recordtype2'
-            , 'rdfs:label': 'Type testcoll/type2'
-            , 'annal:uri': TestBaseUri+'/collections/testcoll/types/type2/'
-            })      
-        self.type2 = (
-            { '@id': './'
-            , 'id': 'type2'
-            , 'title': 'Type testcoll/type2'
-            , 'type': 'annal:RecordType'
-            , 'uri': 'http://test.example.com/testsite/collections/testcoll/types/type2/'
-            , 'annal:id': 'type2'
-            , 'annal:type': 'annal:RecordType'
-            , 'annal:uri': TestBaseUri+'/collections/testcoll/types/type2/'
-            , 'rdfs:label': 'Type testcoll/type2'
-            , 'rdfs:comment': 'Annalist collection1 recordtype2'
-            })
         return
 
     def tearDown(self):
@@ -101,27 +178,27 @@ class RecordTypeTest(TestCase):
 
     def test_recordtype1_data(self):
         t = RecordType(self.testcoll, "type1")
-        t.set_values(self.type1_add)
+        t.set_values(recordtype_create_values("type1"))
         td = t.get_values()
-        self.assertEqual(set(td.keys()),set(self.expect_value_keys))
-        # Note: some values are added when entity is saved, so just compare those here
-        self.assertEqual(td, {k:self.type1[k] for k in self.expect_value_keys})
+        self.assertEqual(set(td.keys()), set(expect_value_keys()))
+        v = recordtype_load_values("type1")
+        self.assertEqual(td, {k:v[k] for k in expect_value_keys()})
         return
 
     def test_recordtype2_data(self):
         t = RecordType(self.testcoll, "type2")
-        t.set_values(self.type2_add)
+        t.set_values(recordtype_create_values("type2"))
         td = t.get_values()
-        self.assertEqual(set(td.keys()),set(self.expect_value_keys))
-        # Note: some values are added when entity is saved, so just compare those here
-        self.assertEqual(td, {k:self.type2[k] for k in self.expect_value_keys})
+        self.assertEqual(set(td.keys()), set(expect_value_keys()))
+        v = recordtype_load_values("type2")
+        self.assertEqual(td, {k:v[k] for k in expect_value_keys()})
         return
 
     def test_recordtype_create_load(self):
-        t  = RecordType.create(self.testcoll, "type1", self.type1_add)
+        t  = RecordType.create(self.testcoll, "type1", recordtype_create_values("type1"))
         td = RecordType.load(self.testcoll, "type1").get_values()
-        self.assertEqual(set(td.keys()),set(self.type1.keys()))
-        self.assertEqual(td, self.type1)
+        v = recordtype_load_values("type1")
+        self.assertEqual(td, v)
         return
 
 #   -----------------------------------------------------------------------------
@@ -152,61 +229,43 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     def tearDown(self):
         return
 
-    def form_data(self, type_id=None, orig_type_id=None, action=None, cancel=None):
-        form_data_dict = (
-            { 'type_label':       'Record type ... in collection testcoll'
-            , 'type_help':        'Help for record type ...'
-            , 'type_class':       '/%s/collections/testcoll/.../'%TestBasePath
-            , 'orig_type_id':     'orig_type_id'
-            , 'continuation_uri': '/%s/collections/testcoll/'%TestBasePath
-            })
-        if type_id:
-            form_data_dict['type_id']       = type_id
-            form_data_dict['orig_type_id']  = type_id
-            form_data_dict['type_label']    = 'Record type %s in collection testcoll'%(type_id)
-            form_data_dict['type_help']     = 'Help for record type %s'%(type_id)
-            form_data_dict['type_class']    = '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
-        if orig_type_id:
-            form_data_dict['orig_type_id']  = orig_type_id
-        if action:
-            form_data_dict['action']        = action
-        if cancel:
-            form_data_dict['cancel']        = "Cancel"
-        else:
-            form_data_dict['save']          = 'Save'
-        return form_data_dict
+    #   -----------------------------------------------------------------------------
+    #   Helpers
+    #   -----------------------------------------------------------------------------
 
-    def context_data(self, type_id=None, orig_type_id=None, action=None):
-        context_dict = (
-            { 'title':              'Annalist data journal test site'
-            , 'coll_id':            'testcoll'
-            , 'orig_type_id':       'orig_type_id'
-            , 'type_label':         'Record type ... in collection testcoll'
-            , 'type_help':          'Help for record type ...'
-            , 'type_uri':           '/%s/collections/testcoll/.../'%TestBasePath
-            , 'continuation_uri':   '/%s/collections/testcoll/'%TestBasePath
-            })
-        if type_id:
-            context_dict['type_id']       = type_id
-            context_dict['orig_type_id']  = type_id
-            context_dict['type_label']    = 'Record type %s in collection testcoll'%(type_id)
-            context_dict['type_help']     = 'Help for record type %s'%(type_id)
-            context_dict['type_uri']      = '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
-        if orig_type_id:
-            context_dict['orig_type_id']  = orig_type_id
-        if action:  
-            context_dict['action']  = action
-        return context_dict
+    def _create_record_type(self, type_id):
+        "Helper function creates record type entry with supplied type_id"
+        t = RecordType.create(self.testcoll, type_id, recordtype_create_values(type_id))
+        return t    
 
-    def assert_dict_match(self, actual_dict, expect_dict):
+    def _check_record_type_values(self, type_id):
+        "Helper function checks content of record type entry with supplied type_id"
+        self.assertTrue(RecordType.exists(self.testcoll, type_id))
+        t = RecordType.load(self.testcoll, type_id)
+        self.assertEqual(t.get_id(), type_id)
+        self.assertEqual(t.get_uri(""), TestBaseUri+"/collections/testcoll/types/%s/"%type_id)
+        self._assert_dict_match(t.get_values(), recordtype_load_values(type_id))
+        return t
+
+    def _check_updated_record_type_values(self, type_id):
+        "Helper function checks content of form-updated record type entry with supplied type_id"
+        self.assertTrue(RecordType.exists(self.testcoll, type_id))
+        t = RecordType.load(self.testcoll, type_id)
+        self.assertEqual(t.get_id(), type_id)
+        self.assertEqual(t.get_uri(""), TestBaseUri+"/collections/testcoll/types/%s/"%type_id)
+        self._assert_dict_match(t.get_values(), recordtype_updated_values(type_id))
+        return t
+
+    def _assert_dict_match(self, actual_dict, expect_dict):
         for k in expect_dict:
             self.assertTrue(k in actual_dict, "Expected key %s not found in actual"%(k))
             self.assertEqual(actual_dict[k], expect_dict[k], 
                 "Key %s: actual '%s' expected '%s'"%(k, actual_dict[k], expect_dict[k]))
         return
 
-    def collection_edit_uri(self, coll_id="testcoll"):
-        return TestHostUri + reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
+    #   -----------------------------------------------------------------------------
+    #   Form rendering tests
+    #   -----------------------------------------------------------------------------
 
     def test_RecordTypeEditView(self):
         self.assertEqual(RecordTypeEditView.__name__, "RecordTypeEditView", "Check RecordTypeEditView class name")
@@ -291,57 +350,41 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['continuation_uri'], None)
         return
 
+    #   -----------------------------------------------------------------------------
+    #   Form response tests
+    #   -----------------------------------------------------------------------------
+
+    #   -------- new type --------
+
     def test_post_new_type(self):
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
-        f = self.form_data(type_id="newtype", action="new")
-        u = reverse(
-                "AnnalistRecordTypeNewView", 
-                kwargs={'coll_id': "testcoll", 'action': 'new'}
-                )
+        f = recordtype_form_data(type_id="newtype", action="new")
+        u = recordtype_edit_uri("new", "testcoll")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.collection_edit_uri())
+        self.assertEqual(r['location'], collection_edit_uri())
         # Check that new record type exists
-        self.assertTrue(RecordType.exists(self.testcoll, "newtype"))
-        # Check values in new type
-        t = RecordType.load(self.testcoll, "newtype")
-        self.assertEqual(t.get_id(), "newtype")
-        self.assertEqual(t.get_uri(""), TestBaseUri+"/collections/testcoll/types/newtype/")
-        expect_values = (
-            { '@id':            './'
-            , 'annal:id':       'newtype'
-            , 'annal:type':     'annal:RecordType'
-            , 'rdfs:label':     'Record type newtype in collection testcoll'
-            , 'rdfs:comment':   'Help for record type newtype'
-            , 'annal:uri':      '/testsite/collections/testcoll/types/newtype/'
-            })
-        self.assert_dict_match(t.get_values(), expect_values)
+        self._check_updated_record_type_values("newtype")
         return
 
     def test_post_new_type_cancel(self):
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
-        f = self.form_data(type_id="newtype", action="new", cancel="Cancel")
-        u = reverse(
-                "AnnalistRecordTypeNewView", 
-                kwargs={'coll_id': "testcoll", 'action': 'new'}
-                )
+        f = recordtype_form_data(type_id="newtype", action="new", cancel="Cancel")
+        u = recordtype_edit_uri("new", "testcoll")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.collection_edit_uri())
+        self.assertEqual(r['location'], collection_edit_uri())
         # Check that new record type still does not exist
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
         return
 
     def test_post_new_type_missing_id(self):
-        f = self.form_data(action="new")
-        u = reverse(
-                "AnnalistRecordTypeNewView", 
-                kwargs={'coll_id': "testcoll", 'action': 'new'}
-                )
+        f = recordtype_form_data(action="new")
+        u = recordtype_edit_uri("new", "testcoll")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -349,16 +392,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         # Test context
-        expect_context = self.context_data(action="new")
-        self.assert_dict_match(r.context, expect_context)
+        expect_context = recordtype_context_data(action="new")
+        self._assert_dict_match(r.context, expect_context)
         return
 
     def test_post_new_type_invalid_id(self):
-        f = self.form_data(type_id="!badtype", orig_type_id="orig_type_id", action="new")
-        u = reverse(
-                "AnnalistRecordTypeNewView", 
-                kwargs={'coll_id': "testcoll", 'action': 'new'}
-                )
+        f = recordtype_form_data(type_id="!badtype", orig_type_id="orig_type_id", action="new")
+        u = recordtype_edit_uri("new", "testcoll")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -366,78 +406,130 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         # Test context
-        expect_context = self.context_data(type_id="!badtype", orig_type_id="orig_type_id", action="new")
-        self.assert_dict_match(r.context, expect_context)
+        expect_context = recordtype_context_data(type_id="!badtype", orig_type_id="orig_type_id", action="new")
+        self._assert_dict_match(r.context, expect_context)
         return
+
+    #   -------- copy type --------
 
     def test_post_copy_type(self):
         self.assertFalse(RecordType.exists(self.testcoll, "copytype"))
-        f = self.form_data(type_id="copytype", action="copy")
-        u = reverse(
-                "AnnalistRecordTypeCopyView", 
-                kwargs={'coll_id': "testcoll", 'type_id': "copytype", 'action': 'copy'}
-                )
+        f = recordtype_form_data(type_id="copytype", action="copy")
+        u = recordtype_edit_uri("copy", "testcoll", type_id="copytype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.collection_edit_uri())
+        self.assertEqual(r['location'], collection_edit_uri())
         # Check that new record type exists
-        self.assertTrue(RecordType.exists(self.testcoll, "copytype"))
-        # Check values in new type
-        t = RecordType.load(self.testcoll, "copytype")
-        self.assertEqual(t.get_id(), "copytype")
-        self.assertEqual(t.get_uri(""), TestBaseUri+"/collections/testcoll/types/copytype/")
-        expect_values = (
-            { '@id':            './'
-            , 'annal:id':       'copytype'
-            , 'annal:type':     'annal:RecordType'
-            , 'rdfs:label':     'Record type copytype in collection testcoll'
-            , 'rdfs:comment':   'Help for record type copytype'
-            , 'annal:uri':      '/testsite/collections/testcoll/types/copytype/'
-            })
-        self.assert_dict_match(t.get_values(), expect_values)
+        self._check_updated_record_type_values("copytype")
         return
 
     def test_post_copy_type_cancel(self):
         self.assertFalse(RecordType.exists(self.testcoll, "copytype"))
-        f = self.form_data(type_id="copytype", action="copy", cancel="Cancel")
-        u = reverse(
-                "AnnalistRecordTypeCopyView", 
-                kwargs={'coll_id': "testcoll", 'type_id': "copytype", 'action': 'copy'}
-                )
+        f = recordtype_form_data(type_id="copytype", action="copy", cancel="Cancel")
+        u = recordtype_edit_uri("copy", "testcoll", type_id="copytype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.collection_edit_uri())
+        self.assertEqual(r['location'], collection_edit_uri())
         # Check that target record type still does not exist
         self.assertFalse(RecordType.exists(self.testcoll, "copytype"))
         return
 
     def test_post_copy_type_missing_id(self):
-        f = self.form_data(action="copy")
-        u = reverse(
-                "AnnalistRecordTypeCopyView", 
-                kwargs={'coll_id': "testcoll", 'type_id': "copytype", 'action': 'copy'}
-                )
+        f = recordtype_form_data(action="copy")
+        u = recordtype_edit_uri("copy", "testcoll", type_id="copytype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Annalist data journal test site</title>")
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
-        # Test context
-        expect_context = self.context_data(action="copy")
-        self.assert_dict_match(r.context, expect_context)
+        expect_context = recordtype_context_data(action="copy")
+        self._assert_dict_match(r.context, expect_context)
         return
 
     def test_post_copy_type_invalid_id(self):
-        f = self.form_data(type_id="!badtype", orig_type_id="orig_type_id", action="copy")
-        u = reverse(
-                "AnnalistRecordTypeCopyView", 
-                kwargs={'coll_id': "testcoll", 'type_id': "copytype", 'action': 'copy'}
-                )
+        f = recordtype_form_data(type_id="!badtype", orig_type_id="orig_type_id", action="copy")
+        u = recordtype_edit_uri("copy", "testcoll", type_id="copytype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
+        expect_context = recordtype_context_data(type_id="!badtype", orig_type_id="orig_type_id", action="copy")
+        self._assert_dict_match(r.context, expect_context)
+        return
+
+    #   -------- edit type --------
+
+    def test_post_edit_type(self):
+        self._create_record_type("edittype")
+        self._check_record_type_values("edittype")
+        f = recordtype_form_data(type_id="edittype", action="edit")
+        u = recordtype_edit_uri("edit", "testcoll", type_id="edittype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], collection_edit_uri())
+        self._check_updated_record_type_values("edittype")
+        return
+
+    def test_post_edit_type_new_id(self):
+        self._create_record_type("edittype1")
+        self._check_record_type_values("edittype1")
+        # Now post edit form submission with different values and new id
+        f = recordtype_form_data(type_id="edittype2", orig_type_id="edittype1", action="edit")
+        u = recordtype_edit_uri("edit", "testcoll", type_id="edittype1")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], collection_edit_uri())
+        # Check that new record type exists and old does not
+        self.assertFalse(RecordType.exists(self.testcoll, "edittype1"))
+        self._check_updated_record_type_values("edittype2")
+        return
+
+    def test_post_edit_type_cancel(self):
+        self._create_record_type("edittype")
+        self._check_record_type_values("edittype")
+        # Post from cancelled edit form
+        f = recordtype_form_data(type_id="edittype", action="edit", cancel="Cancel")
+        u = recordtype_edit_uri("edit", "testcoll", type_id="edittype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], collection_edit_uri())
+        # Check that target record type still does not exist and unchanged
+        self._check_record_type_values("edittype")
+        return
+
+    def test_post_edit_type_missing_id(self):
+        self._create_record_type("edittype")
+        self._check_record_type_values("edittype")
+        # Form post with ID missing
+        f = recordtype_form_data(action="edit")
+        u = recordtype_edit_uri("edit", "testcoll", type_id="edittype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
+        # Test context for re-rendered form
+        expect_context = recordtype_context_data(action="edit")
+        self._assert_dict_match(r.context, expect_context)
+        return
+
+    def test_post_edit_type_invalid_id(self):
+        f = recordtype_form_data(type_id="!badtype", orig_type_id="orig_type_id", action="edit")
+        u = recordtype_edit_uri("edit", "testcoll", type_id="edittype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -445,110 +537,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         # Test context
-        expect_context = self.context_data(type_id="!badtype", orig_type_id="orig_type_id", action="copy")
-        self.assert_dict_match(r.context, expect_context)
+        expect_context = recordtype_context_data(type_id="!badtype", orig_type_id="orig_type_id", action="edit")
+        self._assert_dict_match(r.context, expect_context)
         return
 
-        # edit type
-
-    def test_post_edit_type(self):
-        # Create and test initial type'
-        RecordType.create(self.testcoll, "edittype",
-            { 'rdfs:comment': 'Annalist collection1 / edittype'
-            , 'rdfs:label': 'Type testcoll/edittype'
-            , 'annal:uri': '/testsite/collections/testcoll/types/edittype/'
-            })      
-        self.assertTrue(RecordType.exists(self.testcoll, "edittype"))
-        t = RecordType.load(self.testcoll, "edittype")
-        self.assertEqual(t.get_id(), "edittype")
-        self.assertEqual(t.get_uri(""), TestBaseUri+"/collections/testcoll/types/edittype/")
-        expect_values = (
-            { '@id':            './'
-            , 'annal:id':       'edittype'
-            , 'annal:type':     'annal:RecordType'
-            , 'rdfs:label':     'Type testcoll/edittype'
-            , 'rdfs:comment':   'Annalist collection1 / edittype'
-            , 'annal:uri':      '/testsite/collections/testcoll/types/edittype/'
-            })
-        self.assert_dict_match(t.get_values(), expect_values)
-        # Now post edit form submission with different values
-        f = self.form_data(type_id="edittype", action="edit")
-        u = reverse(
-                "AnnalistRecordTypeEditView", 
-                kwargs={'coll_id': "testcoll", 'type_id': "edittype", 'action': 'edit'}
-                )
-        r = self.client.post(u, f)
-        self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.collection_edit_uri())
-        # Check that new record type exists
-        self.assertTrue(RecordType.exists(self.testcoll, "edittype"))
-        # Check values in new type
-        t = RecordType.load(self.testcoll, "edittype")
-        self.assertEqual(t.get_id(), "edittype")
-        self.assertEqual(t.get_uri(""), TestBaseUri+"/collections/testcoll/types/edittype/")
-        expect_values = (
-            { '@id':            './'
-            , 'annal:id':       'edittype'
-            , 'annal:type':     'annal:RecordType'
-            , 'rdfs:label':     'Record type edittype in collection testcoll'
-            , 'rdfs:comment':   'Help for record type edittype'
-            , 'annal:uri':      '/testsite/collections/testcoll/types/edittype/'
-            })
-        self.assert_dict_match(t.get_values(), expect_values)
-        return
-
-    def test_post_edit_type_new_id(self):
-        # Create and test initial type'
-        RecordType.create(self.testcoll, "edittype1",
-            { 'rdfs:comment': 'Annalist testcoll / edittype1'
-            , 'rdfs:label': 'Type testcoll/edittype1'
-            , 'annal:uri': '/testsite/collections/testcoll/types/edittype1/'
-            })      
-        self.assertTrue(RecordType.exists(self.testcoll, "edittype1"))
-        self.assertFalse(RecordType.exists(self.testcoll, "edittype2"))
-        t = RecordType.load(self.testcoll, "edittype1")
-        self.assertEqual(t.get_id(), "edittype1")
-        self.assertEqual(t.get_uri(""), TestBaseUri+"/collections/testcoll/types/edittype1/")
-        expect_values = (
-            { '@id':            './'
-            , 'annal:id':       'edittype1'
-            , 'annal:type':     'annal:RecordType'
-            , 'rdfs:label':     'Type testcoll/edittype1'
-            , 'rdfs:comment':   'Annalist testcoll / edittype1'
-            , 'annal:uri':      '/testsite/collections/testcoll/types/edittype1/'
-            })
-        self.assert_dict_match(t.get_values(), expect_values)
-        # Now post edit form submission with different values and new id
-        f = self.form_data(type_id="edittype2", orig_type_id="edittype1", action="edit")
-        u = reverse(
-                "AnnalistRecordTypeEditView", 
-                kwargs={'coll_id': "testcoll", 'type_id': "edittype1", 'action': 'edit'}
-                )
-        r = self.client.post(u, f)
-        self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.collection_edit_uri())
-        # Check that new record type exists and old does not
-        self.assertFalse(RecordType.exists(self.testcoll, "edittype1"))
-        self.assertTrue(RecordType.exists(self.testcoll, "edittype2"))
-        # Check values in new type
-        t = RecordType.load(self.testcoll, "edittype2")
-        self.assertEqual(t.get_id(), "edittype2")
-        self.assertEqual(t.get_uri(""), TestBaseUri+"/collections/testcoll/types/edittype2/")
-        expect_values = (
-            { '@id':            './'
-            , 'annal:id':       'edittype2'
-            , 'annal:type':     'annal:RecordType'
-            , 'rdfs:label':     'Record type edittype2 in collection testcoll'
-            , 'rdfs:comment':   'Help for record type edittype2'
-            , 'annal:uri':      '/testsite/collections/testcoll/types/edittype2/'
-            })
-        self.assert_dict_match(t.get_values(), expect_values)
-        return
-
-        # confirm delete type
+        # confirm delete type - in test_colection?
 
 # End.

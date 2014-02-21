@@ -59,7 +59,7 @@
    - view test cases
    > model
    - model test cases
-   - view: edit form response handling
+   - view edit form response handling
    - when renaming through edit form, update URI if it corresponds to previous ID??
    - need to think about maintaining a list of correspopnding URIs?
    - refactor code; try to abstract common logic for RecordList, RecordView
@@ -74,12 +74,10 @@ Misc
 - Complete authorization framework, per collection
 / can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
 
-
+- think about use of CURIES in data (e.g. for types, fields, etc.)
+- think about handling of identifier renaming (re-write data, record equivalence, or ...).  (See also "data storage" below.)
 - Use server-internal revectoring?  What about delete multiple?
-- currently there's some inconsistency about this: confirm views are rendered directly
-  (as this allows form parameters to be provided directly), but other form action links 
-  are handled by redirection.  Try to be more consistent about this?  Create a more 
-  general pattern for handling continuation forms?
+- currently there's some inconsistency about this: confirm views are rendered directly (as this allows form parameters to be provided directly), but other form action links are handled by redirection.  Try to be more consistent about this?  Create a more general pattern for handling continuation forms?
 - move util.py to utils package, and rename?
 - util.write_entity: think about capturing provenance metadata too
 - move entity I/O logic in util module to entity module (keep it all together)
