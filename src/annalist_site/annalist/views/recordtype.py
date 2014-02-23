@@ -336,26 +336,49 @@ class RecordTypeDeleteConfirmedView(AnnalistGenericView):
 
     # POST
 
+    def form_respose(self, request, parent, entityid, remove_fn, messages, continuation_uri):
+        """
+        Process options to complete action to remove an entity
+        """
+        auth_required = self.authorize("DELETE")
+        if auth_required:
+            return auth_required
+        type_id = request.POST['typelist']
+        err     = remove_fn(entityid)
+        if err:
+            return self.redirect_error(continuation_uri, str(err))
+        return self.redirect_info(continuation_uri, messages['entity_removed'])
+
+
     def post(self, request, coll_id):
         """
         Process options to complete action to remove a record type from a collection
         """
         log.debug("RecordTypeDeleteConfirmedView.post: %r"%(request.POST))
         if "type_delete" in request.POST:
-            auth_required = self.authorize("DELETE")
-            if auth_required:
-                return auth_required
-            coll    = self.collection(coll_id)
-            type_id = request.POST['typelist']
-            err     = coll.remove_type(type_id)
-            if err:
-                return self.redirect_error(
-                    self.view_uri("AnnalistCollectionEditView", coll_id=coll_id), 
-                    str(err))
-            return self.redirect_info(
-                    self.view_uri("AnnalistCollectionEditView", coll_id=coll_id), 
-                    message.RECORD_TYPE_REMOVED%(type_id, coll_id)
-                    )
+            coll      = self.collection(coll_id)
+            type_id   = request.POST['typelist']
+            messages  = (
+                { 'entity_removed': message.RECORD_TYPE_REMOVED%(type_id, coll_id)
+                })
+            continuation_uri = self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
+            return self.form_respose(request, coll, type_id, coll.remove_type, messages, continuation_uri)
+
+            # auth_required = self.authorize("DELETE")
+            # if auth_required:
+            #     return auth_required
+            # coll    = self.collection(coll_id)
+            # type_id = request.POST['typelist']
+            # err     = coll.remove_type(type_id)
+            # if err:
+            #     return self.redirect_error(
+            #         self.view_uri("AnnalistCollectionEditView", coll_id=coll_id), 
+            #         str(err))
+            # return self.redirect_info(
+            #         self.view_uri("AnnalistCollectionEditView", coll_id=coll_id), 
+            #         message.RECORD_TYPE_REMOVED%(type_id, coll_id)
+            #         )
+
         return self.error(self.error400values())
 
 # End.
