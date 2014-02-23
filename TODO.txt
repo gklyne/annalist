@@ -63,7 +63,8 @@
    / model test cases
    / view edit form response handling
    / refactor code locally
-   - more refactoring; try to abstract common logic for RecordList, RecordView
+   / more refactoring; try to abstract common logic for RecordList, RecordView
+   - review generic view base functions - should some be inlined now?
    - when renaming through edit form, update URI if it corresponds to previous ID??
    - need to think about maintaining a list of correspopnding URIs?
 4. Default record list display (code may later be refactored)
@@ -89,7 +90,7 @@ Misc
 Entity abstraction:
 - replace direct file access with HTTP access
 
-AnalistGenericView:
+AnnalistGenericView:
 - Generic renderers, all driven by a supplied dictionary:
   - HTML
   - JSON-LD
