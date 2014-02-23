@@ -103,7 +103,7 @@ class CollectionEditView(AnnalistGenericView):
         if "type_delete" in request.POST:
             if type_id:
                 # Get user to confirm action before actually doing it
-                complete_action_uri = self.view_uri("AnnalistCollectionActionView", coll_id=coll_id)
+                complete_action_uri = self.view_uri("AnnalistRecordTypeDeleteView", coll_id=coll_id)
                 return (
                     self.authorize("DELETE") or
                     ConfirmView.render_form(request,
@@ -123,43 +123,5 @@ class CollectionEditView(AnnalistGenericView):
         if redirect_uri:
             return HttpResponseRedirect(redirect_uri)
         raise Annalist_Error(request.POST, "Unexpected values in POST to "+self.get_request_path())
-
-    # DELETE
-
-
-class CollectionActionView(AnnalistGenericView):
-    """
-    View class to perform completion of confirmed action requested from site view
-    """
-    def __init__(self):
-        super(CollectionActionView, self).__init__()
-        return
-
-    # POST
-
-    def post(self, request, coll_id):
-        """
-        Process options to complete action to remove a sub-resource
-        """
-        log.debug("CollectionActionView.post: %r"%(request.POST))
-        if "type_delete" in request.POST:
-            auth_required = self.authorize("DELETE")
-            if auth_required:
-                return auth_required
-            coll    = self.collection(coll_id)
-            type_id = request.POST['typelist']
-            err     = coll.remove_type(type_id)
-            if err:
-                # @@TODO, after refactor: use "AnnalistCollectionView"...
-                return self.redirect_error(
-                    self.view_uri("AnnalistCollectionEditView", coll_id=coll_id), 
-                    str(err))
-            return self.redirect_info(
-                    self.view_uri("AnnalistCollectionEditView", coll_id=coll_id), 
-                    message.RECORD_TYPE_REMOVED%(type_id, coll_id)
-                    )
-        else:
-            return self.error(self.error400values())
-        return HttpResponseRedirect(self.view_uri("AnnalistSiteView"))
 
 # End.

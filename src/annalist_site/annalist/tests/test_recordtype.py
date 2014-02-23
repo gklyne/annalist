@@ -26,8 +26,7 @@ from annalist.site              import Site
 from annalist.collection        import Collection
 from annalist.recordtype        import RecordType
 
-from annalist.views.collection  import CollectionActionView
-from annalist.views.recordtype  import RecordTypeEditView
+from annalist.views.recordtype  import RecordTypeEditView, RecordTypeDeleteConfirmedView
 
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                      import init_annalist_test_site
@@ -55,7 +54,7 @@ def collection_edit_uri(coll_id="testcoll"):
     return TestHostUri + reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
 
 def recordtype_delete_confirm_uri(coll_id):
-    return TestHostUri + reverse("AnnalistCollectionActionView", kwargs={'coll_id': coll_id})
+    return TestHostUri + reverse("AnnalistRecordTypeDeleteView", kwargs={'coll_id': coll_id})
 
 def recordtype_delete_confirm_form_data(type_id=None):
     return (
@@ -584,7 +583,7 @@ class ConfirmRecordTypeDeleteTests(AnnalistTestCase):
         return
 
     def test_CollectionActionViewTest(self):
-        self.assertEqual(CollectionActionView.__name__, "CollectionActionView", "Check CollectionActionView class name")
+        self.assertEqual(RecordTypeDeleteConfirmedView.__name__, "RecordTypeDeleteConfirmedView", "Check RecordTypeDeleteConfirmedView class name")
         return
 
     # NOTE:  test_collection checks the appropriate response from clicking the delete button, 

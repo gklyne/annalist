@@ -219,4 +219,37 @@ class RecordTypeEditView(AnnalistGenericView):
             )
         return HttpResponseRedirect(request.POST['continuation_uri']+err_values)
 
+class RecordTypeDeleteConfirmedView(AnnalistGenericView):
+    """
+    View class to perform completion of confirmed record type deletion, requested
+    from collection edit view.
+    """
+    def __init__(self):
+        super(RecordTypeDeleteConfirmedView, self).__init__()
+        return
+
+    # POST
+
+    def post(self, request, coll_id):
+        """
+        Process options to complete action to remove a record type from a collection
+        """
+        log.debug("RecordTypeDeleteConfirmedView.post: %r"%(request.POST))
+        if "type_delete" in request.POST:
+            auth_required = self.authorize("DELETE")
+            if auth_required:
+                return auth_required
+            coll    = self.collection(coll_id)
+            type_id = request.POST['typelist']
+            err     = coll.remove_type(type_id)
+            if err:
+                return self.redirect_error(
+                    self.view_uri("AnnalistCollectionEditView", coll_id=coll_id), 
+                    str(err))
+            return self.redirect_info(
+                    self.view_uri("AnnalistCollectionEditView", coll_id=coll_id), 
+                    message.RECORD_TYPE_REMOVED%(type_id, coll_id)
+                    )
+        return self.error(self.error400values())
+
 # End.
