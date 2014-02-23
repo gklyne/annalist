@@ -6,11 +6,6 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-# import os
-# import os.path
-# import urlparse
-# import shutil
-
 import logging
 log = logging.getLogger(__name__)
 
@@ -27,8 +22,6 @@ from annalist                   import util
 from annalist.site              import Site
 from annalist.collection        import Collection
 from annalist.recordtype        import RecordType
-# from annalist.recordview        import RecordView
-# from annalist.recordlist        import RecordList
 
 from annalist.views.generic     import AnnalistGenericView
 
@@ -36,13 +29,13 @@ class EntityValueMap(object):
     """
     Define an entry in an entity value mapping table, where each entry has a key
     used to:
-    i: specify an initial value when creating a new entity,
+    e: specify an initial value when creating/updating an entity,
     v: access a given value in an entity values record,
     c: access a given value in a view render context, and
     f: access a given value in form data.
     """
-    def __init__(self, i=None, v=None, c=None, f=None):
-        self.i = i
+    def __init__(self, e=None, v=None, c=None, f=None):
+        self.e = e
         self.v = v
         self.c = c
         self.f = f
@@ -88,18 +81,18 @@ class RecordTypeEditView(AnnalistGenericView):
     _entityformtemplate = 'annalist_recordtype_edit.html'
     _entityvaluemap     = (
         # Special fields
-        [ EntityValueMap(i=None,          v=None,           c='title',            f=None               )
-        , EntityValueMap(i=None,          v=None,           c='coll_id',          f=None               )
-        , EntityValueMap(i=None,          v='annal:id',     c='type_id',          f='type_id'          )
+        [ EntityValueMap(e=None,          v=None,           c='title',            f=None               )
+        , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
+        , EntityValueMap(e=None,          v='annal:id',     c='type_id',          f='type_id'          )
         # Normal fields
-        , EntityValueMap(i=None,          v='annal:type',   c=None,               f=None               )
-        , EntityValueMap(i='rdfs:label',  v='rdfs:label',   c='type_label',       f='type_label'       )
-        , EntityValueMap(i='rdfs:comment',v='rdfs:comment', c='type_help',        f='type_help'        )
-        , EntityValueMap(i='annal:uri',   v='annal:uri',    c='type_uri',         f='type_class'       )
+        , EntityValueMap(e=None,          v='annal:type',   c=None,               f=None               )
+        , EntityValueMap(e='rdfs:label',  v='rdfs:label',   c='type_label',       f='type_label'       )
+        , EntityValueMap(e='rdfs:comment',v='rdfs:comment', c='type_help',        f='type_help'        )
+        , EntityValueMap(e='annal:uri',   v='annal:uri',    c='type_uri',         f='type_class'       )
         # Form and interaction control
-        , EntityValueMap(i=None,          v=None,           c='orig_type_id',     f='orig_type_id'     )
-        , EntityValueMap(i=None,          v=None,           c='continuation_uri', f='continuation_uri' )
-        , EntityValueMap(i=None,          v=None,           c='action',           f='action'           )
+        , EntityValueMap(e=None,          v=None,           c='orig_type_id',     f='orig_type_id'     )
+        , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
+        , EntityValueMap(e=None,          v=None,           c='action',           f='action'           )
         ])
 
     def __init__(self):
@@ -138,14 +131,14 @@ class RecordTypeEditView(AnnalistGenericView):
                     context[kmap.c] = kwargs[kmap.c]
         return context
 
-    def map_form_data_to_init_values(self, form_data, **kwargs):
+    def map_form_data_to_values(self, form_data, **kwargs):
         values = {}
         for kmap in self._entityvaluemap:
-            if kmap.i:
+            if kmap.e:
                 if kmap.f and kmap.f in form_data:
-                    values[kmap.i] = form_data[kmap.f]
+                    values[kmap.e] = form_data[kmap.f]
                 elif kmap.c in kwargs:
-                    values[kmap.i] = kwargs[kmap.i]
+                    values[kmap.e] = kwargs[kmap.e]
         return values
 
     def get_entityid(self, action, parent, entityid):
@@ -281,7 +274,7 @@ class RecordTypeEditView(AnnalistGenericView):
                         error_message=messages['entity_not_exists']
                         )
             # Create/update record type now
-            entity_initial_values = self.map_form_data_to_init_values(request.POST)
+            entity_initial_values = self.map_form_data_to_values(request.POST)
             self._entityclass.create(parent, entityid, entity_initial_values)
             # Remove old type if rename
             if entityid_changed:
@@ -363,22 +356,6 @@ class RecordTypeDeleteConfirmedView(AnnalistGenericView):
                 })
             continuation_uri = self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
             return self.form_respose(request, coll, type_id, coll.remove_type, messages, continuation_uri)
-
-            # auth_required = self.authorize("DELETE")
-            # if auth_required:
-            #     return auth_required
-            # coll    = self.collection(coll_id)
-            # type_id = request.POST['typelist']
-            # err     = coll.remove_type(type_id)
-            # if err:
-            #     return self.redirect_error(
-            #         self.view_uri("AnnalistCollectionEditView", coll_id=coll_id), 
-            #         str(err))
-            # return self.redirect_info(
-            #         self.view_uri("AnnalistCollectionEditView", coll_id=coll_id), 
-            #         message.RECORD_TYPE_REMOVED%(type_id, coll_id)
-            #         )
-
         return self.error(self.error400values())
 
 # End.
