@@ -62,7 +62,7 @@
    / model
    / model test cases
    / view edit form response handling
-   - refactor code locally
+   / refactor code locally
    - more refactoring; try to abstract common logic for RecordList, RecordView
    - when renaming through edit form, update URI if it corresponds to previous ID??
    - need to think about maintaining a list of correspopnding URIs?

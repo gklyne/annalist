@@ -19,18 +19,16 @@ from django.http                import HttpResponse
 from django.http                import HttpResponseRedirect
 from django.core.urlresolvers   import resolve, reverse
 
-# from annalist                   import layout
 from annalist                   import message
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import util
-# from annalist.entity            import Entity
 
 from annalist.site              import Site
 from annalist.collection        import Collection
 from annalist.recordtype        import RecordType
-from annalist.recordview        import RecordView
-from annalist.recordlist        import RecordList
+# from annalist.recordview        import RecordView
+# from annalist.recordlist        import RecordList
 
 from annalist.views.generic     import AnnalistGenericView
 
@@ -58,13 +56,107 @@ def context_from_record_type_form(site_data, coll_id, form_data, **kwargs):
         context.update(kwargs)
     return context
 
+class EntityValueMap(object):
+    """
+    Define an entry in an entity value mapping table, where each entry has a key
+    used to access a given value in an entity values record, a view render context
+    and in form data respectively.
+    """
+    def __init__(self, v=None, c=None, f=None):
+        self.v = v
+        self.c = c
+        self.f = f
+        return
+
+    def __str__(self):
+        return "{v:%s, c:%s, f:%s)"%(self.v, self.c, self.f)
+
+    def __repr__(self):
+        return "EntityValueMap(v=%r, c=%r, f=%r)"%(self.v, self.c, self.f)
+
+
 class RecordTypeEditView(AnnalistGenericView):
     """
     View class to handle requests to an Annalist record type edit URI
     """
+
+    _entityclass    = RecordType
+    _entityvaluemap = (
+        # Special fields
+        [ EntityValueMap(v=None,           c='title',            f=None               )
+        , EntityValueMap(v=None,           c='coll_id',          f=None               )
+        , EntityValueMap(v='annal:id',     c='type_id',          f='type_id'          )
+        # Normal fields
+        , EntityValueMap(v='annal:type',   c=None,               f=None               )
+        , EntityValueMap(v='rdfs:label',   c='type_label',       f='type_label'       )
+        , EntityValueMap(v='rdfs:comment', c='type_help',        f='type_help'        )
+        , EntityValueMap(v='annal:uri',    c='type_uri',         f='type_class'       )
+        # Form and interaction control
+        , EntityValueMap(v=None,           c='orig_type_id',     f='orig_type_id'     )
+        , EntityValueMap(v=None,           c='continuation_uri', f='continuation_uri' )
+        , EntityValueMap(v=None,           c='action',           f='action'           )
+        ])
+
     def __init__(self):
         super(RecordTypeEditView, self).__init__()
         return
+
+    def map_value_to_context(self, entity, **kwargs):
+        """
+        Map data from entioty values to view context for renering.
+
+        Values defined in the supplied entity take priority, and the keyword arguments provide
+        values when the entity does not.
+        """
+        context = {}
+        for kmap in self._entityvaluemap:
+            if kmap.c:
+                if kmap.v and kmap.v in entity.keys():
+                    context[kmap.c] = entity[kmap.v]    # Copy value -> context
+                elif kmap.c in kwargs:
+                    context[kmap.c] = kwargs[kmap.c]    # Copy supplied argument -> context
+        return context
+
+    def get_entityid(self, parent, entityid, action):
+        if action == "new":
+            entityid = self._entityclass.allocate_new_id(parent)
+        return entityid
+
+    def form_render(self, request, action, parent, entityid, entity_initial_values, context_extra_values, form_template):
+        """
+        Return rendered form for entity edit, or error response.
+        """
+        # Sort access mode and authorization
+        if action == "new":
+            auth_scope = "CREATE"
+        else:
+            auth_scope = "UPDATE"
+        auth_required = self.authorize(auth_scope)
+        if auth_required:
+                return auth_required
+        # Create local entity object or load values from existing
+        if action == "new":
+            entity = self._entityclass(parent, entityid)
+            entity.set_values(entity_initial_values)
+        elif self._entityclass.exists(parent, entityid):
+            entity = self._entityclass.load(parent, entityid)
+        else:
+            return self.error(
+                dict(self.error404values(), 
+                    message=message.DOES_NOT_EXIST%(entity_initial_values['rdfs:label'])
+                    )
+                )
+        context = self.map_value_to_context(entity,
+            title            = self.site_data()["title"],
+            continuation_uri = request.GET.get('continuation_uri', None),
+            action           = action,
+            **context_extra_values
+            )
+        return (
+            self.render_html(context, form_template) or 
+            self.error(self.error406values())
+            )
+
 
     # GET
 
@@ -72,58 +164,63 @@ class RecordTypeEditView(AnnalistGenericView):
         """
         Create a form for editing a type.
         """
-        # Function to generate form data
-        def form_context_data():
-            recordtype_local_uri     = record_type.get_uri(self.get_request_uri())
-            context = (
-                { 'title':              self.site_data()["title"]
-                , 'coll_id':            coll_id
-                , 'type_id':            record_type.get_id()
-                , 'type_label':         record_type.get(RDFS.CURIE.label, default_type_label)
-                , 'type_help':          record_type.get(RDFS.CURIE.comment, "")
-                , 'type_uri':           record_type.get(ANNAL.CURIE.uri, recordtype_local_uri)
-                , 'orig_type_id':       record_type.get_id()
-                , 'continuation_uri':   request.GET.get('continuation_uri', None)
-                , 'action':             action
-                })
-            return context
         # Check collection
         if not Collection.exists(self.site(), coll_id):
             return self.error(self.error404values().update(
                 message="Collection %s does not exist"%(coll_id)))
         coll = Collection(self.site(), coll_id)
-        # Sort access mode, type_id and authorization
-        if action == "new":
-            type_id    = RecordType.allocate_new_id(coll)
-            auth_scope = "CREATE"
-        else:
-            auth_scope = "UPDATE"
-        auth_required = self.authorize(auth_scope)
-        if auth_required:
-                return auth_required
-        default_type_label = "Record type %s in collection %s"%(type_id, coll_id)
-        # Create local record type object or load values from existing
-        if action == "new":
-            record_type    = RecordType(coll, type_id)
-            record_type.set_values(
-                { "annal:id": type_id
-                , "annal:type": "annal:RecordType"
-                , "annal:uri": coll._entityuri+type_id+"/"
-                , "rdfs:label": default_type_label
-                , "rdfs:comment": ""
-                })
-        elif RecordType.exists(coll, type_id):
-            record_type = RecordType.load(coll, type_id)
-        else:
-            return self.error(
-                dict(self.error404values(), 
-                    message=message.DOES_NOT_EXIST%(default_type_label)
-                    )
-                )
-        return (
-            self.render_html(form_context_data(), 'annalist_recordtype_edit.html') or 
-            self.error(self.error406values())
+        # Set up RecordType-specific values
+        type_id              = self.get_entityid(coll, type_id, action)
+        # default_type_label   = "Record type %s in collection %s"%(type_id, coll_id)
+        initial_type_values  = (
+            { "annal:id":     type_id
+            , "annal:type":   "annal:RecordType"
+            , "annal:uri":    coll._entityuri+type_id+"/"
+            , "rdfs:label":   "Record type %s in collection %s"%(type_id, coll_id)
+            , "rdfs:comment": ""
+            })
+        context_extra_values = (
+            { 'coll_id':          coll_id
+            , 'orig_type_id':     type_id
+            })
+        return self.form_render(request,
+            action, coll, type_id, 
+            initial_type_values, 
+            context_extra_values, 
+            'annalist_recordtype_edit.html'
             )
+
+        # # Sort access mode and authorization
+        # if action == "new":
+        #     auth_scope = "CREATE"
+        # else:
+        #     auth_scope = "UPDATE"
+        # auth_required = self.authorize(auth_scope)
+        # if auth_required:
+        #         return auth_required
+
+        # # Create local record type object or load values from existing
+        # if action == "new":
+        #     record_type    = self._entityclass(coll, type_id)
+        #     record_type.set_values(initial_type_values)
+        # elif self._entityclass.exists(coll, type_id):
+        #     record_type = self._entityclass.load(coll, type_id)
+        # else:
+        #     return self.error(
+        #         dict(self.error404values(), 
+        #             message=message.DOES_NOT_EXIST%(initial_type_values['rdfs:label'])
+        #             )
+        #         )
+        # context = self.map_value_to_context(record_type,
+        #     title            = self.site_data()["title"],
+        #     continuation_uri = request.GET.get('continuation_uri', None),
+        #     action           = action,
+        #     **context_extra_values
+        #     )
+        # return (
+        #     self.render_html(context, 'annalist_recordtype_edit.html') or 
+        #     self.error(self.error406values())
+        #     )
 
     # POST
 
