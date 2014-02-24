@@ -77,22 +77,18 @@ def recordtype_create_values(type_id):
 
 def expect_value_keys():
     return (
-        [ 'id', 'type', 'uri', 'title'
-        , 'rdfs:label', 'rdfs:comment', 'annal:uri'
+        [ 'annal:id', 'annal:type', 'annal:uri'
+        , 'rdfs:label', 'rdfs:comment'
         ])
 
 def recordtype_load_values(type_id):
     return (
         { '@id':            './'
-        , 'id':             type_id
-        , 'title':          'Type testcoll/%s'%type_id
-        , 'type':           'annal:RecordType'
-        , 'uri':            '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
         , 'annal:id':       type_id
         , 'annal:type':     'annal:RecordType'
+        , 'annal:uri':      '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
         , 'rdfs:label':     'Type testcoll/%s'%type_id
         , 'rdfs:comment':   'Annalist collection: testcoll, record type: %s'%type_id
-        , 'annal:uri':      '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
         })
 
 def recordtype_form_data(type_id=None, orig_type_id=None, action=None, cancel=None):
@@ -144,15 +140,11 @@ def recordtype_context_data(type_id=None, orig_type_id=None, action=None):
 def recordtype_updated_values(type_id):
     return (
         { '@id':            './'
-        , 'id':             type_id
-        , 'type':           'annal:RecordType'
-        , 'title':          'Record type %s in collection testcoll'%type_id
-        , 'uri':            '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
         , 'annal:id':       type_id
         , 'annal:type':     'annal:RecordType'
+        , 'annal:uri':      '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
         , 'rdfs:label':     'Record type %s in collection testcoll'%type_id
         , 'rdfs:comment':   'Help for record type %s'%type_id
-        , 'annal:uri':      '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
         })
 
 def recordtype_delete_confirm_values(coll_id, type_id):
