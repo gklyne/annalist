@@ -93,7 +93,9 @@ class EntityRootTest(TestCase):
             , 'uri':    '/annalist/coll1'
             })
         test_values1_returned = (
-            { 'id':    None
+            { 'annal:id':   None
+            , 'annal:type': 'annal:EntityRoot'
+            , 'annal:uri': TestBaseUri+'/'
             , 'type':  'annal:EntityRoot'
             , 'title': 'Name collection coll1'
             , 'uri':   '/annalist/coll1'
@@ -105,9 +107,11 @@ class EntityRootTest(TestCase):
             , 'uri':        '/annalist/coll2'
             })
         test_values2_returned = (
-            { 'id':         'TestId'
+            { 'annal:id':   None
+            , 'annal:type': 'annal:EntityRoot'
+            , 'annal:uri': TestBaseUri+'/'
+            , 'id':         'TestId'
             , 'type':  'annal:EntityRoot'
-            , 'title': 'Name collection coll2'
             , 'rdfs:label': 'Name collection coll2'
             , 'uri':   '/annalist/coll2'
             })
@@ -126,20 +130,26 @@ class EntityRootTest(TestCase):
             , 'uri':    '/annalist/coll1'
             })
         test_values1_returned = (
-            { 'id':    None
-            , 'type':  'annal:EntityRoot'
-            , 'title': 'Name collection coll1'
-            , 'uri':   '/annalist/coll1'
+            { 'annal:id':   None
+            , 'annal:type': 'annal:EntityRoot'
+            , 'type':       'annal:EntityRoot'
+            , 'annal:uri':  TestBaseUri+'/'
+            , 'title':      'Name collection coll1'
+            , 'uri':        '/annalist/coll1'
             })
         test_values2_returned = (
-            { 'id':    'testid'
-            , 'type':  'annal:EntityRoot'
-            , 'title': 'new title'
-            , 'uri':   '/annalist/coll2'
+            { 'annal:id':   None
+            , 'annal:type': 'annal:EntityRoot'
+            , 'annal:uri':  TestBaseUri+'/'
+            , 'id':         'testid'
+            , 'type':       'annal:EntityRoot'
+            , 'title':      'new title'
+            , 'uri':        '/annalist/coll2'
             })
         e = EntityRoot(TestBaseUri, TestBaseDir)
         self.assertEqual(e.get_values(),    None)
         e.set_values(test_values1)
+        self.assertEqual(set(e.get_values().keys()), set(test_values1_returned.keys()))
         self.assertEqual(e.get_values(),    test_values1_returned)
         for k,v in test_values1_returned.items():
             self.assertEqual(e[k], v)
@@ -184,7 +194,7 @@ class EntityRootTest(TestCase):
             { '@id': '../'
             , 'annal:id': 'testId'
             , 'annal:type': 'test:EntityRootType'
-            , 'id': 'testId'
+            , 'annal:uri':  TestBaseUri+'/'
             , 'title': 'Name collection coll1'
             , 'type': 'annal:EntityRoot'
             , 'uri': '/annalist/coll1'
@@ -203,6 +213,7 @@ class EntityRootTest(TestCase):
         e2 = TestEntityRootType(TestBaseUri, TestBaseDir)
         e2.set_id("testId")
         v2 = e2._load_values()
+        self.assertEqual(set(v2.keys()), set(test_values_returned.keys()))
         self.assertEqual(v2, test_values_returned)
         return
 
@@ -301,13 +312,13 @@ class EntityTest(TestCase):
         e.set_values(test_values)
         self.assertEqual(e.get("foo",  "bar"),    "bar")
         self.assertEqual(e.get("type", "notype"), "annal:EntityRoot")
-        expect_keys = set(['id', 'type', 'title', 'uri'])
+        expect_keys = set(['annal:id', 'annal:type', 'annal:uri', 'type'])
         self.assertEqual(set(e.keys()), expect_keys)
         expect_items = set(
-            [ ('id', 'testid')
+            [ ('annal:id', 'testid')
+            , ('annal:type', 'test:EntityType')
+            , ('annal:uri',  TestBaseUri+'/testid/')
             , ('type', 'annal:EntityRoot')
-            , ('title', 'test:EntityType testid')
-            , ('uri', 'http://test.example.com/testsite/testid/')
             ])
         self.assertEqual(set(e.items()), expect_items)
         return
@@ -331,10 +342,11 @@ class EntityTest(TestCase):
             , 'title':  'Name entity test'
             })
         test_values_returned = (
-            { 'id': 'testid'
+            { 'annal:id': 'testid'
+            , 'annal:type': 'test:EntityType'
+            , 'annal:uri': TestBaseUri+'/testid/'
             , 'title': 'Name entity test'
             , 'type': 'test:EntityType'
-            , 'uri': TestBaseUri+'/testid/'
             })
         r = EntityRoot(TestBaseUri, TestBaseDir)
         self.assertFalse(TestEntityType.exists(r, "testid"))
@@ -351,13 +363,12 @@ class EntityTest(TestCase):
             , 'title':  'Name entity test2'
             })
         test_values_returned = (
-            { '@id': '../'
-            , 'annal:id': 'testid2'
+            { '@id':        '../'
+            , 'annal:id':   'testid2'
             , 'annal:type': 'test:EntityType'
-            , 'id': 'testid2'
+            , 'annal:uri':  TestBaseUri+'/testid2/'
             , 'title': 'Name entity test2'
             , 'type': 'test:EntityType'
-            , 'uri': TestBaseUri+'/testid2/'
             })
         r = EntityRoot(TestBaseUri, TestBaseDir)
         e = TestEntityType.create(r, "testid2", test_values)
@@ -403,10 +414,11 @@ class EntityTest(TestCase):
             , 'title':  'Name entity test'
             })
         test_values_returned = (
-            { 'id': 'testid'
+            { 'annal:id': 'testid'
+            , 'annal:type': 'test:EntityTypeSub'
+            , 'annal:uri':  TestBaseUri+'/sub/testid/'
             , 'title': 'Name entity test'
             , 'type': 'test:EntityType'
-            , 'uri': TestBaseUri+'/sub/testid/'
             })
         r = EntityRoot(TestBaseUri, TestBaseDir)
         self.assertFalse(TestEntityTypeSub.exists(r, "testid"))
@@ -425,13 +437,12 @@ class EntityTest(TestCase):
             , 'title':  'Name entity test2'
             })
         test_values_returned = (
-            { '@id': '../'
-            , 'annal:id': 'testid2'
+            { '@id':        '../'
+            , 'annal:id':   'testid2'
             , 'annal:type': 'test:EntityTypeSub'
-            , 'id': 'testid2'
+            , 'annal:uri':  TestBaseUri+'/sub/testid2/'
             , 'title': 'Name entity test2'
             , 'type': 'test:EntityTypeSub'
-            , 'uri': TestBaseUri+'/sub/testid2/'
             })
         r = EntityRoot(TestBaseUri, TestBaseDir)
         e = TestEntityTypeSub.create(r, "testid2", test_values)

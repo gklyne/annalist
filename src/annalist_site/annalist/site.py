@@ -70,11 +70,16 @@ class Site(EntityRoot):
         """
         Return dictionary of site data
         """
+        # @@TODO: consider using generic view logic for this mapping (and elsewhere?)
+        #         This is currently a bit of a kludge, designed to match the site
+        #         view template.  In dure course, it may be reveiwed and implemented
+        #         using tghe generic analist form generating framework
         site_data = self._load_values()
-        # @@TODO rationalize this ad-hoc value creation.
-        #        cf. Entity.set_values()
-        site_data["title"]       = site_data.get("rdfs:label", message.SITE_NAME_DEFAULT)
-        site_data["collections"] = self.collections_dict()
+        site_data["title"] = site_data.get("rdfs:label", message.SITE_NAME_DEFAULT)
+        colls = collections.OrderedDict()
+        for k, v in self.collections_dict().items():
+            colls[k] = dict(v.items(), id=k, uri=v['annal:uri'])
+        site_data["collections"] = colls
         return site_data
 
     def add_collection(self, coll_id, coll_meta):

@@ -61,6 +61,9 @@ class CollectionTest(TestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection(self.testsite, "testcoll")
+        self.collection_value_keys = (
+            [ 'annal:id', 'annal:type', 'annal:uri', 'rdfs:label', 'rdfs:comment'
+            ])
         self.coll1 = (
             { '@id': '../'
             , 'id': 'coll1'
@@ -82,12 +85,9 @@ class CollectionTest(TestCase):
             })      
         self.type1 = (
             { '@id': './'
-            , 'id': 'type1'
-            , 'type': 'annal:RecordType'
-            , 'title': 'Type testcoll/type1'
-            , 'uri': TestBaseUri+'/collections/testcoll/types/type1/'
             , 'annal:id': 'type1'
             , 'annal:type': 'annal:RecordType'
+            , 'annal:uri': TestBaseUri+'/collections/testcoll/types/type1/'
             , 'rdfs:comment': 'Annalist collection1 recordtype1'
             , 'rdfs:label': 'Type testcoll/type1'
             })      
@@ -97,12 +97,9 @@ class CollectionTest(TestCase):
             })      
         self.type2 = (
             { '@id': './'
-            , 'id': 'type2'
-            , 'type': 'annal:RecordType'
-            , 'title': 'Type testcoll/type2'
-            , 'uri': TestBaseUri+'/collections/testcoll/types/type2/'
             , 'annal:id': 'type2'
             , 'annal:type': 'annal:RecordType'
+            , 'annal:uri': TestBaseUri+'/collections/testcoll/types/type2/'
             , 'rdfs:comment': 'Annalist collection1 recordtype2'
             , 'rdfs:label': 'Type testcoll/type2'
             })      
@@ -112,12 +109,9 @@ class CollectionTest(TestCase):
             })      
         self.view1 = (
             { '@id': './'
-            , 'id': 'view1'
-            , 'type': 'annal:RecordView'
-            , 'title': 'Type testcoll/view1'
-            , 'uri': TestBaseUri+'/collections/testcoll/views/view1/'
             , 'annal:id': 'view1'
             , 'annal:type': 'annal:RecordView'
+            , 'annal:uri': TestBaseUri+'/collections/testcoll/views/view1/'
             , 'rdfs:comment': 'Annalist collection1 recordview1'
             , 'rdfs:label': 'Type testcoll/view1'
             })      
@@ -127,12 +121,9 @@ class CollectionTest(TestCase):
             })      
         self.view2 = (
             { '@id': './'
-            , 'id': 'view2'
-            , 'type': 'annal:RecordView'
-            , 'title': 'Type testcoll/view2'
-            , 'uri': TestBaseUri+'/collections/testcoll/views/view2/'
             , 'annal:id': 'view2'
             , 'annal:type': 'annal:RecordView'
+            , 'annal:uri': TestBaseUri+'/collections/testcoll/views/view2/'
             , 'rdfs:comment': 'Annalist collection1 recordview2'
             , 'rdfs:label': 'Type testcoll/view2'
             })      
@@ -142,12 +133,9 @@ class CollectionTest(TestCase):
             })      
         self.list1 = (
             { '@id': './'
-            , 'id': 'list1'
-            , 'type': 'annal:RecordList'
-            , 'title': 'Type testcoll/list1'
-            , 'uri': TestBaseUri+'/collections/testcoll/lists/list1/'
             , 'annal:id': 'list1'
             , 'annal:type': 'annal:RecordList'
+            , 'annal:uri': TestBaseUri+'/collections/testcoll/lists/list1/'
             , 'rdfs:comment': 'Annalist collection1 recordlist1'
             , 'rdfs:label': 'Type testcoll/list1'
             })      
@@ -157,12 +145,9 @@ class CollectionTest(TestCase):
             })      
         self.list2 = (
             { '@id': './'
-            , 'id': 'list2'
-            , 'type': 'annal:RecordList'
-            , 'title': 'Type testcoll/list2'
-            , 'uri': TestBaseUri+'/collections/testcoll/lists/list2/'
             , 'annal:id': 'list2'
             , 'annal:type': 'annal:RecordList'
+            , 'annal:uri': TestBaseUri+'/collections/testcoll/lists/list2/'
             , 'rdfs:comment': 'Annalist collection1 recordlist2'
             , 'rdfs:label': 'Type testcoll/list2'
             })      
@@ -191,8 +176,7 @@ class CollectionTest(TestCase):
         c = self.testcoll
         c.set_values(self.testcoll_add)
         cd = c.get_values()
-        self.assertEquals(set(cd.keys()),set(('id', 'type', 'uri', 'title', 'rdfs:label', 'rdfs:comment')))
-        self.assertEquals(cd["title"],        "Name collection testcoll")
+        self.assertEquals(set(cd.keys()),set(self.collection_value_keys))
         self.assertEquals(cd["rdfs:label"],   "Name collection testcoll")
         self.assertEquals(cd["rdfs:comment"], "Annalist collection metadata.")
         return
@@ -213,6 +197,7 @@ class CollectionTest(TestCase):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         t1 = self.testcoll.add_type("type1", self.type1_add)
         t2 = self.testcoll.add_type("type2", self.type2_add)
+        self.assertEqual(set(self.testcoll.get_type("type1").get_values().keys()), set(self.type1.keys()))
         self.assertEqual(self.testcoll.get_type("type1").get_values(), self.type1)
         self.assertEqual(self.testcoll.get_type("type2").get_values(), self.type2)
         return

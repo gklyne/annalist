@@ -17,6 +17,7 @@ import os
 import os.path
 import urlparse
 import shutil
+import json
 
 import logging
 log = logging.getLogger(__name__)
@@ -92,24 +93,27 @@ class EntityRoot(object):
         Set or update values for a collection
         """
         self._values = values.copy()
+        self._values[ANNAL.CURIE.id]   = self._values.get(ANNAL.CURIE.id,   self._entityid)
+        self._values[ANNAL.CURIE.type] = self._values.get(ANNAL.CURIE.type, self._entitytype)
+        self._values[ANNAL.CURIE.uri]  = self._values.get(ANNAL.CURIE.uri,  self._entityuri)
         # @@TODO do we really want this ad hoc stuff in addition to the explicit data?
         # @@     see also Site.site_data
-        self._values["id"]    = (
-            self._values.get("id",         None) or
-            self._values.get("annal:id",   self._entityid)
-            )
-        self._values["uri"]   = (
-            self._values.get("uri",        None) or
-            self._values.get("annal:uri",  self._entityuri)
-            )
-        self._values["type"]  = (
-            self._values.get("type",       None) or
-            self._values.get("annal:type", self._entitytype)
-            )
-        self._values["title"] = (
-            self._values.get("title",      None) or
-            self._values.get("rdfs:label", "%s %s"%(self._entitytype, self._entityid))
-            )
+        # self._values["id"]    = (
+        #     self._values.get("id",         None) or
+        #     self._values.get("annal:id",   self._entityid)
+        #     )
+        # self._values["uri"]   = (
+        #     self._values.get("uri",        None) or
+        #     self._values.get("annal:uri",  self._entityuri)
+        #     )
+        # self._values["type"]  = (
+        #     self._values.get("type",       None) or
+        #     self._values.get("annal:type", self._entitytype)
+        #     )
+        # self._values["title"] = (
+        #     self._values.get("title",      None) or
+        #     self._values.get("rdfs:label", "%s %s"%(self._entitytype, self._entityid))
+        #     )
         return self._values
 
     def get_values(self):
@@ -126,7 +130,6 @@ class EntityRoot(object):
         """
         if not self._entityfile:
             raise ValueError("Entity._dir_path without defined entity file path")
-        # @@TODO: move logic from util to here and rationalize
         (basedir, filepath) = util.entity_dir_path(self._entitydir, [], self._entityfile)
         return (basedir, filepath)
 
@@ -150,13 +153,26 @@ class EntityRoot(object):
             raise ValueError("Entity._save without defined entity values")
         (body_dir, body_file) = self._dir_path()
         log.debug("EntityRoot._save: dir %s, file%s"%(body_dir, body_file))
+        fullpath = os.path.join(settings.SITE_SRC_ROOT, body_file)
+        # Next is partial protection against code errors
+        if not fullpath.startswith(settings.SITE_SRC_ROOT):
+            raise ValueError("Attempt to create entity file outside Annalist site tree")
+        # Create directory (if needed) and save data
         util.ensure_dir(body_dir)
         # @@TODO: move logic from util to here and rationalize
-        util.write_entity(
-            body_file, self._entityref, self._values, 
-            entityid=self._entityid, 
-            entitytype=self._entitytype
-            )
+        # util.write_entity(
+        #     body_file, self._entityref, self._values, 
+        #     entityid=self._entityid, 
+        #     entitytype=self._entitytype
+        #     )
+        values = self._values.copy()
+        values["@id"] = self._entityref
+        if self._entityid:
+            values[ANNAL.CURIE.id]   = self._entityid
+        if self._entitytype:
+            values[ANNAL.CURIE.type] = self._entitytype
+        with open(fullpath, "wt") as entity_io:
+            json.dump(values, entity_io)
         return
 
     def _load_values(self):
@@ -378,7 +394,7 @@ class Entity(EntityRoot):
         if e:
             d = e._entitydir
             # Extra check to guard against accidentally deleting wrong thing
-            if e['type'] == cls._entitytype and d.startswith(parent._entitydir):
+            if e['annal:type'] == cls._entitytype and d.startswith(parent._entitydir):
                 shutil.rmtree(d)
             else:
                 raise Annalist_Error("Entity %s unexpected type %s or path %s"%(entityid, e['type'], d))
