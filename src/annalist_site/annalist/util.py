@@ -178,29 +178,6 @@ def entity_path(base_dir, path, filename):
         return p
     return None
 
-def read_entity(filename):
-    """
-    Read metadata or entity record and return as dictionary, or `None` if no data
-    resource is present.
-
-    filename    a full path name to the entity description to read.  If the file 
-                does not exist or has malformed content, an exception is raised.
-                If the supplied filename is None then None is returned.
-
-    returns a dictionary value with data from the named file, and possibly some 
-    additional details.
-    """
-    # @@TODO: merge into entity module?
-    log.debug("read_entity %s"%(filename))
-    if filename:
-        try:
-            with open(filename, "r") as f:
-                return json.load(f)
-        except IOError, e:
-            if e.errno != errno.ENOENT:
-                raise
-    return None
-
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

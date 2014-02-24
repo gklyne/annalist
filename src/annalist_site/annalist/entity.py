@@ -157,8 +157,14 @@ class EntityRoot(object):
         Read current entity from Annalist storage, and return entity body
         """
         (body_dir, body_file) = self._dir_path()
-        v = util.read_entity(body_file)
-        return v
+        if body_file:
+            try:
+                with open(body_file, "r") as f:
+                    return json.load(f)
+            except IOError, e:
+                if e.errno != errno.ENOENT:
+                    raise
+        return None
 
     def _children(self, cls):
         """
