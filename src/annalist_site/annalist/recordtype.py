@@ -7,8 +7,6 @@ A record type is represented by:
 - a name/label
 - a description
 - ...
-
-@@TODO: currently just a placeholder class
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"

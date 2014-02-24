@@ -190,6 +190,7 @@ def read_entity(filename):
     returns a dictionary value with data from the named file, and possibly some 
     additional details.
     """
+    # @@TODO: merge into entity module?
     log.debug("read_entity %s"%(filename))
     if filename:
         try:
@@ -199,32 +200,6 @@ def read_entity(filename):
             if e.errno != errno.ENOENT:
                 raise
     return None
-
-def write_entity(filename, ref, values, entityid=None, entitytype=None):
-    """
-    Write a description of an entity to a named file.
-
-    filename    name of file to receive contents
-    ref         reference to entity described (may be relative)
-    entityid    local identifier (slug) for the described identity
-    entitytype  primary type identifier of the described entity
-    values      a dictionary value that populates the entity description
-
-    @@TODO: think about capturing provenance metadata too.
-    """
-    log.debug("write_entity: filename %s, id %s, type %s"%(filename, entityid, entitytype))
-    values = values.copy()
-    values["@id"] = ref
-    if entityid:
-        values[ANNAL.CURIE.id]   = entityid
-    if entitytype:
-        values[ANNAL.CURIE.type] = entitytype
-    # Next is partial protection against code errors
-    fullpath = os.path.join(settings.SITE_SRC_ROOT, filename)
-    assert fullpath.startswith(settings.SITE_SRC_ROOT), "Attempt to create entity file outside Annalist site tree"
-    with open(fullpath, "wt") as entity_io:
-        json.dump(values, entity_io)
-    return fullpath
 
 if __name__ == "__main__":
     import doctest

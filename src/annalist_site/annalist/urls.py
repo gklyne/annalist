@@ -19,7 +19,6 @@ from oauth2.views               import LoginUserView, LoginPostView, LoginDoneVi
 urlpatterns = patterns('',
     url(r'^$',              AnnalistHomeView.as_view(), name='AnnalistHomeView'),
     url(r'^site/$',         SiteView.as_view(),         name='AnnalistSiteView'),
-    # @@TODO: change URI pattern to be consistent with other action URIs
     url(r'^site/!action$',  SiteActionView.as_view(),   name='AnnalistSiteActionView'),
     url(r'^profile/$',      ProfileView.as_view(),      name='AnnalistProfileView'),
     url(r'^confirm/$',      ConfirmView.as_view(),      name='AnnalistConfirmView'),

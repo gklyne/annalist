@@ -30,8 +30,6 @@ from annalist.site              import Site
 from annalist.views.generic     import AnnalistGenericView
 from annalist.views.confirm     import ConfirmView
 
-# @@TODO: align form variable names with stored collection metadata
-
 class SiteView(AnnalistGenericView):
     """
     View class to handle requests to the annalist site home URI

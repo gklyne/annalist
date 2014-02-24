@@ -7,8 +7,6 @@ A record type is represented by:
 - a name/label
 - a description
 - ...
-
-@@TODO: currently just a placeholder class
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -31,8 +29,6 @@ from annalist.identifiers       import ANNAL
 from annalist                   import util
 from annalist.entity            import Entity
 
-# from annalist.views         import AnnalistGenericView
-
 class RecordList(Entity):
 
     _entitytype = ANNAL.CURIE.RecordList
@@ -49,31 +45,5 @@ class RecordList(Entity):
         """
         super(RecordList, self).__init__(parent, list_id)
         return
-
-# class RecordListView(AnnalistGenericView):
-#     """
-#     View class to handle requests to an Annalist record list description URI
-#     """
-#     def __init__(self):
-#         super(RecordListView, self).__init__()
-#         return
-
-#     # GET
-
-#     def get(self, request):
-#         """
-#         Create a rendering of the current record list description.
-#         """
-#         def resultdata():
-#             coll = Collection(self.get_request_uri(), self.get_base_dir())
-#             return coll.get_values()
-#         return (
-#             self.render_html(resultdata(), 'annalist_collection.html') or 
-#             self.error(self.error406values())
-#             )
-
-#     # POST
-
-#     # DELETE
 
 # End.

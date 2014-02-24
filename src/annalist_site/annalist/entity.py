@@ -96,24 +96,6 @@ class EntityRoot(object):
         self._values[ANNAL.CURIE.id]   = self._values.get(ANNAL.CURIE.id,   self._entityid)
         self._values[ANNAL.CURIE.type] = self._values.get(ANNAL.CURIE.type, self._entitytype)
         self._values[ANNAL.CURIE.uri]  = self._values.get(ANNAL.CURIE.uri,  self._entityuri)
-        # @@TODO do we really want this ad hoc stuff in addition to the explicit data?
-        # @@     see also Site.site_data
-        # self._values["id"]    = (
-        #     self._values.get("id",         None) or
-        #     self._values.get("annal:id",   self._entityid)
-        #     )
-        # self._values["uri"]   = (
-        #     self._values.get("uri",        None) or
-        #     self._values.get("annal:uri",  self._entityuri)
-        #     )
-        # self._values["type"]  = (
-        #     self._values.get("type",       None) or
-        #     self._values.get("annal:type", self._entitytype)
-        #     )
-        # self._values["title"] = (
-        #     self._values.get("title",      None) or
-        #     self._values.get("rdfs:label", "%s %s"%(self._entitytype, self._entityid))
-        #     )
         return self._values
 
     def get_values(self):
@@ -147,6 +129,7 @@ class EntityRoot(object):
         """
         Save current entity to Annalist storage
         """
+        # @@TODO: think about capturing provenance metadata too.
         if not self._entityref:
             raise ValueError("Entity._save without defined entity reference")
         if not self._values:
@@ -159,12 +142,6 @@ class EntityRoot(object):
             raise ValueError("Attempt to create entity file outside Annalist site tree")
         # Create directory (if needed) and save data
         util.ensure_dir(body_dir)
-        # @@TODO: move logic from util to here and rationalize
-        # util.write_entity(
-        #     body_file, self._entityref, self._values, 
-        #     entityid=self._entityid, 
-        #     entitytype=self._entitytype
-        #     )
         values = self._values.copy()
         values["@id"] = self._entityref
         if self._entityid:
