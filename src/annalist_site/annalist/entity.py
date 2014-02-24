@@ -168,7 +168,7 @@ class EntityRoot(object):
 
     def _children(self, cls):
         """
-        Iterates over canidiate child entities that are instances of an indicated
+        Iterates over canididate child entities that are instances of an indicated
         class.  The supplied class is used to determine a subdirectory to be scanned.
 
         cls         is a subclass of Entity indicating the type of children to
