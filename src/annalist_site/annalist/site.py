@@ -78,7 +78,7 @@ class Site(EntityRoot):
         site_data["title"] = site_data.get("rdfs:label", message.SITE_NAME_DEFAULT)
         colls = collections.OrderedDict()
         for k, v in self.collections_dict().items():
-            colls[k] = dict(v.items(), id=k, uri=v['annal:uri'])
+            colls[k] = dict(v.items(), id=k, uri=v['annal:uri'], title=v["rdfs:label"])
         site_data["collections"] = colls
         return site_data
 
