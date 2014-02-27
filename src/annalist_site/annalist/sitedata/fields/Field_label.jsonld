@@ -1,0 +1,9 @@
+{ '@id':                "annal:fields/Field_label"
+, 'annal:id':           "Field_label"
+, 'annal:type':         "annal:Field"
+, 'rdfs:label':         "Label"
+, 'rdfs:comment':       "Short string used to label value in form display, or as heading of list column"
+, 'annal:field_render': "annal:field_render/Text"
+, 'annal:placeholder':  "(field label)"
+, 'annal:property_uri': "rdfs:label"
+}

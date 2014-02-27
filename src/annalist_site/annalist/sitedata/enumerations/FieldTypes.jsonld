@@ -1,0 +1,14 @@
+{ '@id':            "annal:enumerate/FieldTypes"
+, 'annal:id':       "FieldTypes"
+, 'rdfs:label':     "Field data types"
+, 'rdfs::comment':  "Enumerates field data types that may be used in record view"
+, 'annal:enum':
+  [ { 'rdfs:label': 'Text',             'annal:uri': 'annal:field_type/Text' }
+  , { 'rdfs:label': 'Field type',       'annal:uri': 'annal_field_type/Identifier' }
+  , { 'rdfs:label': 'Multiline text',   'annal:uri': 'annal_field_type/Identifier' }
+  , { 'rdfs:label': 'Number',           'annal:uri': 'annal_field_type/Identifier' }
+  , { 'rdfs:label': 'Date',             'annal:uri': 'annal_field_type/Identifier' }
+  , { 'rdfs:label': 'Image',            'annal:uri': 'annal_field_type/Identifier' }
+  , { 'rdfs:label': 'Link',             'annal:uri': 'annal_field_type/Identifier' }
+  ]
+}
