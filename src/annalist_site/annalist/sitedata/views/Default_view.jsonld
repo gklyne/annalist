@@ -1,4 +1,4 @@
-{ '@id':                "annal:display/default_view"
+{ '@id':                "annal:views/Default_view"
 , 'annal:id':           "default_view"
 , 'annal:type':         "annal:display/RecordView"
 , 'annal:record_type':  "annal:DefaultType"
