@@ -17,11 +17,11 @@ from django.core.urlresolvers   import resolve, reverse
 from annalist                   import message
 from annalist.exceptions        import Annalist_Error
 
-from annalist.site              import Site
-from annalist.collection        import Collection
-from annalist.recordtype        import RecordType
-from annalist.recordview        import RecordView
-from annalist.recordlist        import RecordList
+from annalist.models.site       import Site
+from annalist.models.collection import Collection
+from annalist.models.recordtype import RecordType
+from annalist.models.recordview import RecordView
+from annalist.models.recordlist import RecordList
 
 from annalist.views.generic     import AnnalistGenericView
 from annalist.views.confirm     import ConfirmView

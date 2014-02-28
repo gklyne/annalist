@@ -22,9 +22,9 @@ from django.test.client         import Client
 
 from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import layout
-from annalist.site              import Site
-from annalist.collection        import Collection
-from annalist.recordtype        import RecordType
+from annalist.models.site       import Site
+from annalist.models.collection import Collection
+from annalist.models.recordtype import RecordType
 
 from annalist.views.recordtype  import RecordTypeEditView, RecordTypeDeleteConfirmedView
 

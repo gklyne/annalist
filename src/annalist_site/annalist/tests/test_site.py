@@ -26,7 +26,7 @@ from bs4                        import BeautifulSoup
 
 from annalist                   import layout
 from annalist.identifiers       import ANNAL
-from annalist.site              import Site
+from annalist.models.site       import Site
 
 from annalist.views.site        import SiteView, SiteActionView
 

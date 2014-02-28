@@ -19,7 +19,7 @@ from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import util
 
-from annalist.site              import Site
+from annalist.models.site       import Site
 
 from annalist.views.generic     import AnnalistGenericView
 

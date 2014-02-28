@@ -1,5 +1,5 @@
 """
-Annalist record list
+Annalist record type
 
 A record type is represented by:
 - an ID (slug)
@@ -27,23 +27,23 @@ from annalist                   import layout
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
 from annalist                   import util
-from annalist.entity            import Entity
+from annalist.models.entity     import Entity
 
-class RecordList(Entity):
+class RecordType(Entity):
 
-    _entitytype = ANNAL.CURIE.RecordList
-    _entitypath = layout.COLL_LIST_PATH
-    _entityfile = layout.LIST_META_FILE
-    _entityref  = layout.META_LIST_REF
+    _entitytype = ANNAL.CURIE.RecordType
+    _entitypath = layout.COLL_TYPE_PATH
+    _entityfile = layout.TYPE_META_FILE
+    _entityref  = layout.META_TYPE_REF
 
-    def __init__(self, parent, list_id):
+    def __init__(self, parent, type_id):
         """
-        Initialize a new RecordList object, without metadta (yet).
+        Initialize a new RecordType object, without metadta (yet).
 
-        parent      is the parent entity from which the list is descended.
-        list_id     the local identifier for the record list
+        parent      is the parent entity from which the type is descended.
+        type_id     the local identifier for the record type
         """
-        super(RecordList, self).__init__(parent, list_id)
+        super(RecordType, self).__init__(parent, type_id)
         return
 
 # End.

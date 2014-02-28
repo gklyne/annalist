@@ -6,13 +6,6 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-# import os
-# import os.path
-# import collections
-# import urlparse
-# import json
-# import traceback
-
 import logging
 log = logging.getLogger(__name__)
 
@@ -21,11 +14,11 @@ from django.http                import HttpResponse
 from django.http                import HttpResponseRedirect
 from django.core.urlresolvers   import resolve, reverse
 
-# from annalist.identifiers       import ANNAL
 from annalist.exceptions        import Annalist_Error, EntityNotFound_Error
 from annalist                   import message
 from annalist                   import util
-from annalist.site              import Site
+
+from annalist.models.site       import Site
 
 from annalist.views.generic     import AnnalistGenericView
 from annalist.views.confirm     import ConfirmView

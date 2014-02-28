@@ -27,8 +27,8 @@ from django.test.client         import Client
 
 from annalist.identifiers       import ANNAL
 from annalist                   import layout
-from annalist.site              import Site
-from annalist.collection        import Collection
+from annalist.models.site       import Site
+from annalist.models.collection import Collection
 
 from annalist.views.collection  import CollectionEditView
 

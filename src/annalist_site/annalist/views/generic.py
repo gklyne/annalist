@@ -33,9 +33,9 @@ from utils.ContentNegotiationView   import ContentNegotiationView
 
 from annalist                       import message
 from annalist                       import layout
-from annalist.site                  import Site
-from annalist.collection            import Collection
-from annalist.recordtype            import RecordType
+from annalist.models.site           import Site
+from annalist.models.collection     import Collection
+from annalist.models.recordtype     import RecordType
 
 LOGIN_URIS = None
 

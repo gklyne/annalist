@@ -18,7 +18,7 @@ from django.test                import TestCase # cf. https://docs.djangoproject
 from django.test.client         import Client
 
 from annalist.identifiers       import ANNAL
-from annalist.entity            import EntityRoot, Entity
+from annalist.models.entity     import EntityRoot, Entity
 
 from tests                      import TestBaseUri, TestBaseDir, dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase

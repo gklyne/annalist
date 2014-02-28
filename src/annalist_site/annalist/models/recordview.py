@@ -27,9 +27,7 @@ from annalist                   import layout
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
 from annalist                   import util
-from annalist.entity            import Entity
-
-# from annalist.views         import AnnalistGenericView
+from annalist.models.entity     import Entity
 
 class RecordView(Entity):
 

@@ -29,11 +29,11 @@ from annalist                   import layout
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
 from annalist                   import util
-from annalist.entity            import Entity
 
-from annalist.recordtype        import RecordType
-from annalist.recordview        import RecordView
-from annalist.recordlist        import RecordList
+from annalist.models.entity     import Entity
+from annalist.models.recordtype import RecordType
+from annalist.models.recordview import RecordView
+from annalist.models.recordlist import RecordList
 
 class Collection(Entity):
 
