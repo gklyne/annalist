@@ -1,1 +1,22 @@
-@@describe form used to display/create/edit record view descriptions
+{ '@id':                "annal:display/RecordView_view"
+, 'annal:id':           "RecordView_view"
+, 'annal:type':         "annal:display/Record_view"
+, 'annal:record_type':  "annal:RecordView"
+, 'rdfs:label':         "View description for record view description"
+, 'rdfs:comment':       "This resource describes the form that is used when displaying and/or editing a record view description"
+, 'annal:view_fields':
+  [ { 'annal:field_id':         "View_id"
+    , 'annal:display_small':    "0,12"
+    , 'annal:display_medium':   "0,4"
+    }
+  , { 'annal:field_id':         "View_label"
+    , 'annal:display_small':    "0,12"
+    }
+  , { 'annal:field_id':         "View_comment"
+    , 'annal:display_small':    "0,12"
+    }
+  , { 'annal:field_id':         "View_fields"
+    , 'annal:display_small':    "0,12"
+    }
+  ]
+}

@@ -4,6 +4,7 @@
 , 'rdfs:label':         "Label"
 , 'rdfs:comment':       "Short string used to label value in form display, or as heading of list column"
 , 'annal:field_render': "annal:field_render/Text"
+, 'annal:value_type':   "annal:Text"
 , 'annal:placeholder':  "(field label)"
 , 'annal:property_uri': "rdfs:label"
 }

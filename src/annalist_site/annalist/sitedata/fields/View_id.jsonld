@@ -1,0 +1,10 @@
+{ '@id':                "annal:fields/View_id"
+, 'annal:id':           "View_id"
+, 'annal:type':         "annal:Field"
+, 'rdfs:label':         "Id"
+, 'rdfs:comment':       "A short identifier that distinguishes this view from all other views in the same collection."
+, 'annal:field_render': "annal:field_render/Slug"
+, 'annal:value_type':   "annal:Slug"
+, 'annal:placeholder':  "(view id)"
+, 'annal:property_uri': "annal:id"
+}

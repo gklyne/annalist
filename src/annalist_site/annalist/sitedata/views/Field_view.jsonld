@@ -3,8 +3,8 @@
 , 'annal:type':         "annal:display/Record_view"
 , 'annal:record_type':  "annal:Field"
 , 'rdfs:label':         "View description for view field description"
-, 'rdfs:comment':       "This resource describes thge form that is used when displaying and/or editing fields in a record view"
-, 'annal:fields':
+, 'rdfs:comment':       "This resource describes the form that is used when displaying and/or editing fields in a record view"
+, 'annal:view_fields':
   [ { 'annal:field_id':         "Field_id"
     , 'annal:display_small':    "0,12"
     , 'annal:display_medium':   "0,4"

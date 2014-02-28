@@ -1,0 +1,10 @@
+{ '@id':                "annal:fields/List_view_selector"
+, 'annal:id':           "List_view_selector"
+, 'annal:type':         "annal:Field"
+, 'rdfs:label':         "View"
+, 'rdfs:comment':       "The identifier of a record view that is used when viewing, editing or creating recoirds from this list view.  (MNote that record views are noty tied to a specific record type:  see also the List_record_type field.)"
+, 'annal:field_render': "annal:field_render/Record_view"
+, 'annal:value_type':   "annal:RecordView"
+, 'annal:placeholder':  "(view id)"
+, 'annal:property_uri': "annal:list_view_selector"
+}

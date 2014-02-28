@@ -5,5 +5,6 @@
 , 'rdfs:comment':       "Size of displayed field, and hints for its position in a record display"
 , 'annal:placeholder':  "(field display size and placement details)"
 , 'annal:field_render': "annal:field_render/Placement"
+, 'annal:value_type':   "annal:Placement"
 , 'annal:property_uri': "annal:field_placement"
 }

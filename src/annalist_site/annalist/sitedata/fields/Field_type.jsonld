@@ -4,6 +4,7 @@
 , 'rdfs:label':         "Type"
 , 'rdfs:comment':       "Type of display field.  This encompasses the actual form of the rendered value and the type of underlying record data that is formatted, and any defaults of other values that may be applied to the field."
 , 'annal:field_render': "annal:field_render/Identifier"
+, 'annal:value_type':   "annal:RenderType"
 , 'annal:placeholder':  "(field type)"
 , 'annal:property_uri': "annal:type"
 }
