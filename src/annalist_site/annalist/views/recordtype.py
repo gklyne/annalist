@@ -63,16 +63,15 @@ class RecordTypeEditView(EntityEditBaseView):
         # Check collection
         if not Collection.exists(self.site(), coll_id):
             return self.error(self.error404values().update(
-                message="Collection %s does not exist"%(coll_id)))
+                message=message.COLLECTION_NOT_EXISTS%(coll_id)))
         coll = Collection(self.site(), coll_id)
         # Set up RecordType-specific values
         type_id              = self.get_entityid(action, coll, type_id)
-        # default_type_label   = "Record type %s in collection %s"%(type_id, coll_id)
         initial_type_values  = (
             { "annal:id":     type_id
             , "annal:type":   "annal:RecordType"
             , "annal:uri":    coll._entityuri+type_id+"/"
-            , "rdfs:label":   "Record type %s in collection %s"%(type_id, coll_id)
+            , "rdfs:label":   message.RECORD_TYPE_LABEL%(type_id, coll_id)
             , "rdfs:comment": ""
             })
         context_extra_values = (

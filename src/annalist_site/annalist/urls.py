@@ -16,15 +16,45 @@ from annalist.views.collection  import CollectionEditView
 from annalist.views.recordtype  import RecordTypeEditView, RecordTypeDeleteConfirmedView
 from oauth2.views               import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
 
+from annalist.views.defaultlist import EntityDefaultListView
+from annalist.views.defaultedit import EntityDefaultEditView
+
+# @@TODO: Thoughts for URI design: 1-letter path segments:
+#
+# c - collections
+# v - view
+# l - list
+# d - data/default view
+#
+# Metadata:
+#
+# /c/<coll-id>/types/                             list of record types
+# /c/<coll-id>/types/<type-id>                    view of type description
+# /c/<coll-id>/views/                             list of record views
+# /c/<coll-id>/views/<view-id>                    view of view description
+# /c/<coll-id>/lists/                             list of record lists
+# /c/<coll-id>/lists/<list-id>                    view of list description
+#
+# Data:
+#
+# /c/<coll-id>/d/                                 default list of records
+# /c/<coll-id>/d/<type-id>/                       default list of records of specified type
+# /c/<coll-id>/d/<type-id>/<entity-id>            default view of identified entity
+# /c/<coll-id>/l/<list-id>/                       specified list of records
+# /c/<coll-id>/l/<list-id>/<type-id>              specified list of records of specified type
+# /c/<coll-id>/v/<view-id>/<type-id>/<entity-id>  specified view of record
+
 urlpatterns = patterns('',
     url(r'^$',              AnnalistHomeView.as_view(), name='AnnalistHomeView'),
     url(r'^site/$',         SiteView.as_view(),         name='AnnalistSiteView'),
     url(r'^site/!action$',  SiteActionView.as_view(),   name='AnnalistSiteActionView'),
     url(r'^profile/$',      ProfileView.as_view(),      name='AnnalistProfileView'),
     url(r'^confirm/$',      ConfirmView.as_view(),      name='AnnalistConfirmView'),
+
     url(r'^collections/(?P<coll_id>\w{0,32})/$',
                             CollectionEditView.as_view(),
                             name='AnnalistCollectionEditView'),
+
     url(r'^collections/(?P<coll_id>\w{0,32})/types/!(?P<action>new)$',
                             RecordTypeEditView.as_view(),
                             name='AnnalistRecordTypeNewView'),
@@ -37,6 +67,16 @@ urlpatterns = patterns('',
     url(r'^collections/(?P<coll_id>\w{0,32})/types/!delete_confirmed$',
                             RecordTypeDeleteConfirmedView.as_view(),
                             name='AnnalistRecordTypeDeleteView'),
+
+    url(r'^c/(?P<coll_id>\w{0,32})/d/$',
+                            EntityDefaultListView.as_view(),
+                            name='AnnalistEntityDefaultListAll'),
+    url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/$',
+                            EntityDefaultListView.as_view(),
+                            name='AnnalistEntityDefaultListType'),
+    url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/$',
+                            EntityDefaultEditView.as_view(),
+                            name='AnnalistEntityDefaultView'),
     )
 
 urlpatterns += patterns('',

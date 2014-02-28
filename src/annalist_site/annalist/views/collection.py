@@ -6,11 +6,6 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-# import os
-# import os.path
-# import urlparse
-# import shutil
-
 import logging
 log = logging.getLogger(__name__)
 
@@ -19,12 +14,8 @@ from django.http                import HttpResponse
 from django.http                import HttpResponseRedirect
 from django.core.urlresolvers   import resolve, reverse
 
-# from annalist                   import layout
 from annalist                   import message
 from annalist.exceptions        import Annalist_Error
-# from annalist.identifiers       import ANNAL
-# from annalist                   import util
-# from annalist.entity            import Entity
 
 from annalist.site              import Site
 from annalist.collection        import Collection
@@ -62,7 +53,7 @@ class CollectionEditView(AnnalistGenericView):
             return context
         if not Collection.exists(self.site(), coll_id):
             return self.error(self.error404values().update(
-                message="Collection %s does not exist"%(coll_id)))
+                message=message.COLLECTION_NOT_EXISTS%(coll_id)))
         return (
             self.render_html(resultdata(), 'annalist_collection_edit.html') or 
             self.error(self.error406values())

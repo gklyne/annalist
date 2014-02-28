@@ -1,5 +1,5 @@
-{ '@id':                "annal:display/default_list"
-, 'annal:id':           "default_list"
+{ '@id':                "annal:display/Default_list"
+, 'annal:id':           "Default_list"
 , 'annal:type':         "annal:display/RecordList"
 , 'rdfs:label':         "View description for default record view"
 , 'rdfs:comment':       "This resource describes the default record listing display"
