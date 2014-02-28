@@ -57,8 +57,6 @@ log = logging.getLogger(__name__)
 
 SITE_DIR            = "annalist_site"
 
-# Path values in the following are relative to the base directory of the site (.../$SITE_DIR)
-
 SITE_META_FILE      = "_annalist_site/site_meta.jsonld"
 SITE_PROV_FILE      = "_annalist_site/site_prov.jsonld"
 META_SITE_REF       = "../"
@@ -83,9 +81,14 @@ LIST_META_FILE      = "list_meta.jsonld"
 LIST_PROV_FILE      = "list_prov.jsonld"
 META_LIST_REF       = "./"
 
-COLL_ENTITY_PATH    = "%(type_id)s/%(entity_id)s @@TBD"
-ENTITY_DATA_FILE    = "entity-data.jsonld"
-ENTITY_PROV_FILE    = "entity-prov.jsonld"
+COLL_TYPEDATA_PATH      = "%(id)s"
+TYPEDATA_META_FILE      = "type_data_meta.jsonld"
+META_TYPEDATA_REF       = "./"
+
+TYPEDATA_ENTITY_PATH    = "%(id)s"
+ENTITY_DATA_FILE        = "entity-data.jsonld"
+ENTITY_PROV_FILE        = "entity-prov.jsonld"
+DATA_ENTITY_REF         = "./"
 
 # and more...
 

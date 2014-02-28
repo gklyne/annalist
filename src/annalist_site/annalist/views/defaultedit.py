@@ -19,9 +19,10 @@ from annalist                       import message
 # from annalist.identifiers           import RDF, RDFS, ANNAL
 # from annalist                       import util
 
-# from annalist.site                  import Site
-# from annalist.collection            import Collection
-# from annalist.recordtype            import RecordType
+# from annalist.models.site           import Site
+from annalist.models.collection     import Collection
+from annalist.models.recordtype     import RecordType
+from annalist.models.recordtypedata import RecordTypeData
 
 # from annalist.views.generic         import AnnalistGenericView
 from annalist.views.entityeditbase  import EntityEditBaseView # , EntityDeleteConfirmedBaseView
@@ -35,17 +36,17 @@ class EntityDefaultEditView(EntityEditBaseView):
 
     # These values are referenced via instances, so can be generated dynamically per-instance...
 
-    _entityclass        = None          # to be supplied dynamically
     _entityformtemplate = 'annalist_default_edit.html'
-    _entityvaluemap     = (             # to be supplied dynamically, but looking something like this...
+    _entityclass        = None          # to be supplied dynamically
+    _entityvaluemap     = (             # to be supplied dynamically, based on this:
         # Special fields
         [ EntityValueMap(e=None,          v=None,           c='title',            f=None               )
         , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
         , EntityValueMap(e=None,          v='annal:id',     c='entity_id',        f='entity_id'        )
         # Normal fields
-        , EntityValueMap(e=None,          v='annal:type',   c=None,               f=None               )
-        , EntityValueMap(e='rdfs:label',  v='rdfs:label',   c='entity_label',     f='entity_label'     )
-        , EntityValueMap(e='rdfs:comment',v='rdfs:comment', c='entity_comment',   f='entity_comment'   )
+        # , EntityValueMap(e=None,          v='annal:type',   c=None,               f=None               )
+        # , EntityValueMap(e='rdfs:label',  v='rdfs:label',   c='entity_label',     f='entity_label'     )
+        # , EntityValueMap(e='rdfs:comment',v='rdfs:comment', c='entity_comment',   f='entity_comment'   )
         # Form and interaction control
         , EntityValueMap(e=None,          v=None,           c='orig_entity_id',   f='orig_entity_id'   )
         , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
@@ -54,6 +55,8 @@ class EntityDefaultEditView(EntityEditBaseView):
 
     def __init__(self):
         super(EntityDefaultEditView, self).__init__()
+        self._entityclass    = None
+        self._entityvaluemap = None
         return
 
     # GET
@@ -71,17 +74,38 @@ class EntityDefaultEditView(EntityEditBaseView):
         if not RecordType.exists(coll, type_id):
             return self.error(self.error404values().update(
                 message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)))
-        recordtype = RecordType(coll, type_id)
-        entitydata = EntityData(coll, type_id)
+        recordtype     = RecordType(coll, type_id)
+        recordtypedata = RecordTypeData(coll, type_id)
         # Set up RecordType-specific values
-        entity_id = self.get_entityid(action, entitydata, entity_id)
-
-        # locate form description
+        entity_id  = self.get_entityid(action, recordtypedata, entity_id)
+        # Locate and read view description
         view_id    = "Default_view"
-        entityview = EntityView(coll, view_id)
-
-        # load form description
+        entityview = RecordView.load(coll, view_id)
         # load values for form
+        viewdata = entityview.get_values()
+        valuemap = EntityDefaultEditView._entityvaluemap.copy()
+        for f in viewdata['annal:view_fields']:
+            # { 'annal:field_id':         "Id"
+            # , 'annal:field_placement':  "small:0,12;medium:0,4"
+            # }
+            field_id  = f['annal:field_id']
+            viewfield = RecordField(coll, field_id)
+            # { '@id':                "annal:fields/Id"
+            # , 'annal:id':           "Id"
+            # , 'annal:type':         "annal:Field"
+            # , 'rdfs:label':         "Id"
+            # , 'rdfs:comment':       "..."
+            # , 'annal:field_render': "annal:field_render/Slug"
+            # , 'annal:value_type':   "annal:Slug"
+            # , 'annal:placeholder':  "(record id)"
+            # , 'annal:property_uri': "annal:id"
+            # }
+
+
+
+
+
+
         # generate form data
 
         # initial_type_values  = (

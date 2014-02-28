@@ -72,12 +72,12 @@ class EntityDefaultListView(EntityEditBaseView):
         if not RecordType.exists(coll, type_id):
             return self.error(self.error404values().update(
                 message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)))
-        recordtype = RecordType(coll, type_id)
-        entitydata = EntityData(coll, type_id)
+        recordtype     = RecordType(coll, type_id)
+        recordtypedata = RecordTypeData(coll, type_id)
 
         # locate form description
         list_id    = "Default_list"
-        entitylist = EntityList(coll, list_id)
+        entitylist = RecordList(coll, list_id)
 
         # load form description
         # load values for form

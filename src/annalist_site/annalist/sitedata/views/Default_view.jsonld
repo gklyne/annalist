@@ -3,7 +3,7 @@
 , 'annal:type':         "annal:display/RecordView"
 , 'annal:record_type':  "annal:DefaultType"
 , 'rdfs:label':         "View description for default record view"
-, 'rdfs:comment':       "This resource describes the defauklt form used for viewing asnd editing records."
+, 'rdfs:comment':       "This resource describes the default form used for viewing and editing records."
 , 'annal:view_fields':
   [ { 'annal:field_id':         "Id"
     , 'annal:field_placement':  "small:0,12;medium:0,4"
