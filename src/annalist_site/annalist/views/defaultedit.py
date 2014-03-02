@@ -6,6 +6,8 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import copy
+
 import logging
 log = logging.getLogger(__name__)
 
@@ -21,8 +23,11 @@ from annalist                       import message
 
 # from annalist.models.site           import Site
 from annalist.models.collection     import Collection
+from annalist.models.recordview     import RecordView
+from annalist.models.recordfield    import RecordField
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
+from annalist.models.entitydata     import EntityData
 
 # from annalist.views.generic         import AnnalistGenericView
 from annalist.views.entityeditbase  import EntityEditBaseView # , EntityDeleteConfirmedBaseView
@@ -34,9 +39,8 @@ class EntityDefaultEditView(EntityEditBaseView):
     View class for default record edit view
     """
 
-    # These values are referenced via instances, so can be generated dynamically per-instance...
-
-    _entityformtemplate = 'annalist_default_edit.html'
+    # These values are referenced via instances, so can also be generated dynamically per-instance...
+    _entityformtemplate = 'annalist_entity_edit.html'
     _entityclass        = None          # to be supplied dynamically
     _entityvaluemap     = (             # to be supplied dynamically, based on this:
         # Special fields
@@ -44,10 +48,8 @@ class EntityDefaultEditView(EntityEditBaseView):
         , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
         , EntityValueMap(e=None,          v=None,           c='type_id',          f=None               )
         , EntityValueMap(e=None,          v='annal:id',     c='entity_id',        f='entity_id'        )
-        # Normal fields
-        # , EntityValueMap(e=None,          v='annal:type',   c=None,               f=None               )
-        # , EntityValueMap(e='rdfs:label',  v='rdfs:label',   c='entity_label',     f='entity_label'     )
-        # , EntityValueMap(e='rdfs:comment',v='rdfs:comment', c='entity_comment',   f='entity_comment'   )
+        # Normal record fields
+        # -- these are filled in from the entity view description used
         # Form and interaction control (hidden fields)
         , EntityValueMap(e=None,          v=None,           c='orig_entity_id',   f='orig_entity_id'   )
         , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
@@ -77,70 +79,71 @@ class EntityDefaultEditView(EntityEditBaseView):
                 message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)))
         recordtype     = RecordType(coll, type_id)
         recordtypedata = RecordTypeData(coll, type_id)
+        self._entityclass = EntityData
+        # Sort access mode and authorization
+        auth_required = self.form_edit_auth(action, recordtypedata._entityuri)
+        if auth_required:
+            return auth_required
         # Set up RecordType-specific values
         entity_id  = self.get_entityid(action, recordtypedata, entity_id)
+        # Create local entity object or load values from existing
+        entity_initial_values  = (
+            { "annal:id":     entity_id
+            , "annal:type":   type_id
+            , "annal:uri":    coll._entityuri+type_id+"/"+entity_id+"/"
+            , "rdfs:label":   "Record '%s' of type '%s' in collection '%s'"%(entity_id, type_id, coll_id)
+            , "rdfs:comment": ""
+            })
+        entity = self.get_entity(action, recordtypedata, entity_id, entity_initial_values)
+        if entity is None:
+            return self.error(
+                dict(self.error404values(), 
+                    message=message.DOES_NOT_EXIST%(entity_initial_values['rdfs:label'])
+                    )
+                )
+        # Set up initial value map and view context
+        self._entityvaluemap    = copy.copy(EntityDefaultEditView._entityvaluemap)
+        viewcontext = self.map_value_to_context(entity,
+            title               = self.site_data()["title"],
+            continuation_uri    = request.GET.get('continuation_uri', None),
+            heading             = entity_initial_values['rdfs:label'],
+            action              = action,
+            coll_id             = coll_id,
+            type_id             = type_id,
+            orig_entity_id      = entity_id
+            )
         # Locate and read view description
         view_id    = "Default_view"
         entityview = RecordView.load(coll, view_id)
-        # load values for form
-        viewdata = entityview.get_values()
-        valuemap = EntityDefaultEditView._entityvaluemap.copy()
-        viewcontext = (
-            {
-            # ...
-            })
-        for f in viewdata['annal:view_fields']:
-            # { 'annal:field_id':         "Id"
-            # , 'annal:field_placement':  "small:0,12;medium:0,4"
-            # }
-            field_id  = f['annal:field_id']
-            viewfield = RecordField(coll, field_id)
-            # { '@id':                "annal:fields/Id"
-            # , 'annal:id':           "Id"
-            # , 'annal:type':         "annal:Field"
-            # , 'rdfs:label':         "Id"
-            # , 'rdfs:comment':       "..."
-            # , 'annal:field_render': "annal:field_render/Slug"
-            # , 'annal:value_type':   "annal:Slug"
-            # , 'annal:placeholder':  "(record id)"
-            # , 'annal:property_uri': "annal:id"
-            # }
+        # Process view desription, updating value map and
+        for f in entityview.get_values()['annal:view_fields']:
+            field_id   = f['annal:field_id']
+            viewfield  = RecordField(coll, field_id)
+            fieldvalue = entity.get_values()[viewfield['annal:property_uri']]
             field_context = (
                 { 'field_id':           field_id
                 , 'field_placement':    f['annal:field_placement']
                 , 'field_name':         field_id    # Assumes same field can't repeat in form
+                , 'field_render':       get_renderer(viewfield['annal:field_render'])
                 , 'field_label':        viewfield['rdfs:label']
                 , 'field_help':         viewfield['rdfs:comment']
-                , 'field_render':       viewfield['annal:field_render']
                 , 'field_value_type':   viewfield['annal:value_type']
-                , 'field_value':        viewfield['...']
+                , 'field_value':        fieldvalue
                 , 'field_placeholder':  viewfield['annal:placeholder']
                 , 'field_property_uri': viewfield['annal:property_uri']
                 })
 
 
-        initial_entity_values  = (
-            { "annal:id":     entity_id
-            , "annal:type":   type_id
-            , "annal:uri":    coll._entityuri+type_id+"/"+entity_id+"/"
-            , "rdfs:label":   "Record type %s in collection %s"%(type_id, coll_id)
-            , "rdfs:comment": ""
-            })
-
-
-
-
-
         # generate form data
 
-        # context_extra_values = (
-        #     { 'coll_id':          coll_id
-        #     , 'orig_type_id':     type_id
-        #     })
-        return self.form_render(request,
-            action, coll, type_id, 
-            initial_type_values, 
-            context_extra_values
+        # ------------------------------------------------------
+
+
+
+        return (
+            self.render_html(viewcontext, self._entityformtemplate) or 
+            self.error(self.error406values())
             )
+
 
 # End.

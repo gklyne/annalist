@@ -1,5 +1,5 @@
 """
-Annalist record view
+Annalist record field description
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -22,21 +22,21 @@ from annalist.identifiers       import ANNAL
 from annalist                   import util
 from annalist.models.entity     import Entity
 
-class RecordView(Entity):
+class RecordField(Entity):
 
-    _entitytype = ANNAL.CURIE.RecordView
+    _entitytype = ANNAL.CURIE.RecordField
     _entitypath = layout.COLL_VIEW_PATH
     _entityfile = layout.VIEW_META_FILE
     _entityref  = layout.META_VIEW_REF
 
     def __init__(self, parent, view_id):
         """
-        Initialize a new RecordView object, without metadta (yet).
+        Initialize a new RecordField object, without metadta (yet).
 
         parent      is the parent entity from which the view is descended.
         view_id     the local identifier for the record view
         """
-        super(RecordView, self).__init__(parent, view_id)
+        super(RecordField, self).__init__(parent, view_id)
         return
 
 # End.

@@ -175,6 +175,8 @@ class AnnalistGenericView(ContentNegotiationView):
         scope       indication of the operation  requested to be performed.
                     e.g. "VIEW", "CREATE", "UPDATE", "DELETE", ...
 
+        @@TODO add resource parameter
+
         @@TODO proper authorization framework
 
         For now, require authentication for anything other than VIEW scope.

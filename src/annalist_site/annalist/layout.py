@@ -38,6 +38,10 @@ log = logging.getLogger(__name__)
 #                 list_meta.jsonld
 #                 list_prov.jsonld
 #                :
+#             fields/
+#                 field_meta.jsonld
+#                 field_prov.jsonld
+#                :
 #             bridges/
 #               (bridge-description (incl path mapping in collection) - @@TBD)
 #                :
@@ -80,6 +84,11 @@ COLL_LIST_PATH      = "lists/%(id)s"
 LIST_META_FILE      = "list_meta.jsonld"
 LIST_PROV_FILE      = "list_prov.jsonld"
 META_LIST_REF       = "./"
+
+COLL_FIELD_PATH     = "fields/%(id)s"
+FIELD_META_FILE     = "field_meta.jsonld"
+FIELD_PROV_FILE     = "field_prov.jsonld"
+META_FIELD_REF      = "./"
 
 COLL_TYPEDATA_PATH      = "%(id)s"
 TYPEDATA_META_FILE      = "type_data_meta.jsonld"

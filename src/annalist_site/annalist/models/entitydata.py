@@ -1,5 +1,5 @@
 """
-Annalist record view
+Collection of Annalist data records for a specified record type
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -22,21 +22,21 @@ from annalist.identifiers       import ANNAL
 from annalist                   import util
 from annalist.models.entity     import Entity
 
-class RecordView(Entity):
+class EntityData(Entity):
 
-    _entitytype = ANNAL.CURIE.RecordView
-    _entitypath = layout.COLL_VIEW_PATH
-    _entityfile = layout.VIEW_META_FILE
-    _entityref  = layout.META_VIEW_REF
+    _entitytype = ANNAL.CURIE.EntityData
+    _entitypath = layout.TYPEDATA_ENTITY_PATH
+    _entityfile = layout.ENTITY_DATA_FILE
+    _entityref  = layout.DATA_ENTITY_REF
 
-    def __init__(self, parent, view_id):
+    def __init__(self, parent, entity_id):
         """
-        Initialize a new RecordView object, without metadta (yet).
+        Initialize a new Entity Data object, without metadta.
 
-        parent      is the parent entity from which the view is descended.
-        view_id     the local identifier for the record view
+        parent      is the parent collection (RecordType) from which the entity is descended.
+        entity_id   the local identifier (slug) for the data record
         """
-        super(RecordView, self).__init__(parent, view_id)
+        super(EntityData, self).__init__(parent, entity_id)
         return
 
 # End.

@@ -18,6 +18,7 @@ import os.path
 import urlparse
 import shutil
 import json
+import errno
 
 import logging
 log = logging.getLogger(__name__)

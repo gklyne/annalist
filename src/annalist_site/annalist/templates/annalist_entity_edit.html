@@ -1,0 +1,39 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block heading %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="large-12 columns">
+            <h3>{{heading}}</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-12 columns">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="small-12 columns">
+                        <p>Field values here</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-2 columns">
+                    </div>
+                    <div class="small-10 columns">
+                        <input type="submit" name="save"             value="Save" />
+                        <input type="submit" name="cancel"           value="Cancel" />
+                        <input type="hidden" name="continuation_uri" value="{{continuation_uri}}"/>
+                        <input type="hidden" name="orig_type_id"     value="{{orig_type_id}}"/>
+                        <input type="hidden" name="action"           value="{{action}}"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
