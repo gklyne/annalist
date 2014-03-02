@@ -105,25 +105,62 @@ class EntityEditBaseView(AnnalistGenericView):
             entityid = self._entityclass.allocate_new_id(parent)
         return entityid
 
-    def form_render(self, request, action, parent, entityid, entity_initial_values, context_extra_values):
+    def form_edit_auth(self, action, auth_resource):
         """
-        Return rendered form for entity edit, or error response.
+        Check that the requested form action is authorized for the current user.
+
+        action          is the requested action: new, edit, copy
+        auth_resource   is the resource URI to which the requested action is directed.
+                        NOTE: This may be the URI of the parent of the resource
+                        being accessed or manipulated.
         """
-        # Sort access mode and authorization
-        if action == "new":
+        if action == "view":
+            auth_scope = "VIEW"
+        elif action in ["new", "copy"]:
             auth_scope = "CREATE"
-        else:
+        elif action == "edit":
             auth_scope = "UPDATE"
-        auth_required = self.authorize(auth_scope)
-        if auth_required:
-                return auth_required
-        # Create local entity object or load values from existing
+        elif action == "delete":
+            auth_scope = "DELETE"
+        else:
+            auth_scope = "UNKNOWN"
+        # return self.authorize(auth_scope, auth_resource)
+        return self.authorize(auth_scope)
+
+    def get_entity(self, action, parent, entityid, entity_initial_values):
+        """
+        Create local entity object or load values from existing.
+
+        action          is the requested action: new, edit, copy
+        parent          is tghe parent of the entity to be accessed or created
+        entityid        is the local id (slug) of the entity to be accessed or created
+        entity_initial_values  is a dictionary of initial values used when a new entity
+                        is created
+
+        self._entityclass   is the class of the entity to be acessed or created.
+
+        returns an object of the appropriate type.  If an existing entity is accessed, values
+        are read from storage, otherwise a new entity object is created but not yet saved.
+        """
+        entity = None
         if action == "new":
             entity = self._entityclass(parent, entityid)
             entity.set_values(entity_initial_values)
         elif self._entityclass.exists(parent, entityid):
             entity = self._entityclass.load(parent, entityid)
-        else:
+        return entity
+
+    def form_render(self, request, action, parent, entityid, entity_initial_values, context_extra_values):
+        """
+        Return rendered form for entity edit, or error response.
+        """
+        # Sort access mode and authorization
+        auth_required = self.form_edit_auth(action, parent._entityuri)
+        if auth_required:
+                return auth_required
+        # Create local entity object or load values from existing
+        entity = self.get_entity(action, parent, entityid, entity_initial_values)
+        if entity is None:
             return self.error(
                 dict(self.error404values(), 
                     message=message.DOES_NOT_EXIST%(entity_initial_values['rdfs:label'])
@@ -163,14 +200,10 @@ class EntityEditBaseView(AnnalistGenericView):
         if 'cancel' in request.POST:
             return HttpResponseRedirect(continuation_uri)
         # Check authorization
-        if action == "new":
-            auth_scope = "CREATE"
-        else:
-            auth_scope = "UPDATE"
-        auth_required = self.authorize(auth_scope)
+        auth_required = self.form_edit_auth(action, parent._entityuri)
         if auth_required:
-            return auth_required
-        # Check parent exists (still)
+                return auth_required
+       # Check parent exists (still)
         if not parent._exists():
             return self.form_re_render(request, context_extra_values,
                 error_head=messages['parent_heading'],

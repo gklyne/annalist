@@ -42,12 +42,13 @@ class EntityDefaultEditView(EntityEditBaseView):
         # Special fields
         [ EntityValueMap(e=None,          v=None,           c='title',            f=None               )
         , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
+        , EntityValueMap(e=None,          v=None,           c='type_id',          f=None               )
         , EntityValueMap(e=None,          v='annal:id',     c='entity_id',        f='entity_id'        )
         # Normal fields
         # , EntityValueMap(e=None,          v='annal:type',   c=None,               f=None               )
         # , EntityValueMap(e='rdfs:label',  v='rdfs:label',   c='entity_label',     f='entity_label'     )
         # , EntityValueMap(e='rdfs:comment',v='rdfs:comment', c='entity_comment',   f='entity_comment'   )
-        # Form and interaction control
+        # Form and interaction control (hidden fields)
         , EntityValueMap(e=None,          v=None,           c='orig_entity_id',   f='orig_entity_id'   )
         , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
         , EntityValueMap(e=None,          v=None,           c='action',           f='action'           )
@@ -84,6 +85,10 @@ class EntityDefaultEditView(EntityEditBaseView):
         # load values for form
         viewdata = entityview.get_values()
         valuemap = EntityDefaultEditView._entityvaluemap.copy()
+        viewcontext = (
+            {
+            # ...
+            })
         for f in viewdata['annal:view_fields']:
             # { 'annal:field_id':         "Id"
             # , 'annal:field_placement':  "small:0,12;medium:0,4"
@@ -100,7 +105,27 @@ class EntityDefaultEditView(EntityEditBaseView):
             # , 'annal:placeholder':  "(record id)"
             # , 'annal:property_uri': "annal:id"
             # }
+            field_context = (
+                { 'field_id':           field_id
+                , 'field_placement':    f['annal:field_placement']
+                , 'field_name':         field_id    # Assumes same field can't repeat in form
+                , 'field_label':        viewfield['rdfs:label']
+                , 'field_help':         viewfield['rdfs:comment']
+                , 'field_render':       viewfield['annal:field_render']
+                , 'field_value_type':   viewfield['annal:value_type']
+                , 'field_value':        viewfield['...']
+                , 'field_placeholder':  viewfield['annal:placeholder']
+                , 'field_property_uri': viewfield['annal:property_uri']
+                })
 
+
+        initial_entity_values  = (
+            { "annal:id":     entity_id
+            , "annal:type":   type_id
+            , "annal:uri":    coll._entityuri+type_id+"/"+entity_id+"/"
+            , "rdfs:label":   "Record type %s in collection %s"%(type_id, coll_id)
+            , "rdfs:comment": ""
+            })
 
 
 
@@ -108,13 +133,6 @@ class EntityDefaultEditView(EntityEditBaseView):
 
         # generate form data
 
-        # initial_type_values  = (
-        #     { "annal:id":     type_id
-        #     , "annal:type":   "annal:RecordType"
-        #     , "annal:uri":    coll._entityuri+type_id+"/"
-        #     , "rdfs:label":   "Record type %s in collection %s"%(type_id, coll_id)
-        #     , "rdfs:comment": ""
-        #     })
         # context_extra_values = (
         #     { 'coll_id':          coll_id
         #     , 'orig_type_id':     type_id
