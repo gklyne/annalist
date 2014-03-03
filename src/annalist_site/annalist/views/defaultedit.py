@@ -116,13 +116,13 @@ class EntityDefaultEditView(EntityEditBaseView):
         view_id      = "Default_view"
         entityview   = RecordView.load(coll, view_id)
         entityvalues = entity.get_values()
-        log.info("entityview   %r"%entityview.get_values())
-        log.info("entityvalues %r"%entityvalues)
+        log.debug("entityview   %r"%entityview.get_values())
+        log.debug("entityvalues %r"%entityvalues)
         # Process view desription, updating value map and
         for f in entityview.get_values()['annal:view_fields']:
             field_id   = f['annal:field_id']
             viewfield  = RecordField.load(coll, field_id)
-            log.info("viewfield   %r"%(viewfield and viewfield.get_values()))
+            log.debug("viewfield   %r"%(viewfield and viewfield.get_values()))
             fieldvalue = entityvalues[viewfield['annal:property_uri']]
             field_context = (
                 { 'field_id':           field_id
