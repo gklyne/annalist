@@ -1,0 +1,10 @@
+{ "@id":                "annal:fields/List_label"
+, "annal:id":           "List_label"
+, "annal:type":         "annal:Field"
+, "rdfs:label":         "Label"
+, "rdfs:comment":       "Short string used to describe list when displayed"
+, "annal:field_render": "annal:field_render/Text"
+, "annal:value_type":   "annal:Text"
+, "annal:placeholder":  "(list label)"
+, "annal:property_uri": "rdfs:label"
+}

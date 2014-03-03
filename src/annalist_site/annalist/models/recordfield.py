@@ -17,26 +17,27 @@ log = logging.getLogger(__name__)
 from django.conf import settings
 
 from annalist                   import layout
-from annalist.exceptions        import Annalist_Error
+# from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
-from annalist                   import util
+# from annalist                   import util
 from annalist.models.entity     import Entity
 
 class RecordField(Entity):
 
     _entitytype = ANNAL.CURIE.RecordField
-    _entitypath = layout.COLL_VIEW_PATH
-    _entityfile = layout.VIEW_META_FILE
-    _entityref  = layout.META_VIEW_REF
+    _entitypath = layout.COLL_FIELD_PATH
+    _entityfile = layout.FIELD_META_FILE
+    _entityref  = layout.META_FIELD_REF
 
-    def __init__(self, parent, view_id):
+    def __init__(self, parent, field_id):
         """
         Initialize a new RecordField object, without metadta (yet).
 
         parent      is the parent entity from which the view is descended.
-        view_id     the local identifier for the record view
+        field_id     the local identifier for the record view
         """
-        super(RecordField, self).__init__(parent, view_id)
+        log.info("RecordField %s"%(field_id))
+        super(RecordField, self).__init__(parent, field_id)
         return
 
 # End.

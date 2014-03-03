@@ -1,0 +1,10 @@
+{ "@id":                "annal:fields/Id"
+, "annal:id":           "Id"
+, "annal:type":         "annal:Field"
+, "rdfs:label":         "Id"
+, "rdfs:comment":       "A short identifier that distinguishes this record from all other records of the same type in the same collection."
+, "annal:field_render": "annal:field_render/Slug"
+, "annal:value_type":   "annal:Slug"
+, "annal:placeholder":  "(record id)"
+, "annal:property_uri": "annal:id"
+}

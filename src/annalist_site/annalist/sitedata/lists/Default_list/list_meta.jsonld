@@ -1,0 +1,35 @@
+{ "@id":                "annal:display/Default_list"
+, "annal:id":           "Default_list"
+, "annal:type":         "annal:display/RecordList"
+, "rdfs:label":         "View description for default record view"
+, "rdfs:comment":       "This resource describes the default record listing display"
+, "annal:selector":     "annal:type=={annal:default_view/annal:record_type} @@TBD"
+, "annal:default_view": "annal:Note"
+, "annal:display_type": "annal:List"
+, "annal:fields":
+  [ { "annal:field_id":         "id"
+    , "rdfs:label":             "Id"
+    , "rdfs:comment":           "A short identifier that distinguishes this field from all others in the same record view"
+    , "annal:placeholder":      "(field id)"
+    , "annal:property_uri":     "annal:id"
+    , "annal:display_small":    "0,12"
+    , "annal:display_medium":   "0,4"
+    }
+  , { "annal:field_id":         "label"
+    , "annal:field_type":       "annal:display_type/Text"
+    , "rdfs:label":             "Label"
+    , "rdfs:comment":           "Short string used to label value in form display"
+    , "annal:placeholder":      "(field label)"
+    , "annal:property_uri":     "rdfs:label"
+    , "annal:display_small":    "0,12"
+    }
+  , { "annal:field_id":         "comment"
+    , "annal:field_type":       "annal:display_type/Text"
+    , "rdfs:label":             "Help"
+    , "rdfs:comment":           "Descriptive text ecplaining for field is intended to be used.  This text may be used to provide content for a tooltip associated with the "
+    , "annal:placeholder":      "(field usage commentary or help text)"
+    , "annal:property_uri":     "rdfs:comment"
+    , "annal:display_small":    "0,12"
+    }
+  ]
+}
