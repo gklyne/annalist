@@ -73,8 +73,14 @@
 7. Generic record list display and editing
 8. ...
 
+Tests required:
+- Missing resource error reporting in:
+  - annalist/views/collection.py
+  - annalist/views/defaultedit.py
+  - annalist/views/defaultlist.py
+  - annalist/views/recordtype.py
 
-Misc
+Misc:
 - Login link to include option to redirect to failed page, with form fields populated
 - Complete authorization framework, per collection
 / can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
