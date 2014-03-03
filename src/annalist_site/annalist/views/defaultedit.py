@@ -70,13 +70,19 @@ class EntityDefaultEditView(EntityEditBaseView):
         """
         # Check collection
         if not Collection.exists(self.site(), coll_id):
-            return self.error(self.error404values().update(
-                message=message.COLLECTION_NOT_EXISTS%(coll_id)))
+            return self.error(
+                dict(self.error404values(), 
+                    message=message.COLLECTION_NOT_EXISTS%(coll_id)
+                    )
+                )
         coll = Collection(self.site(), coll_id)
         # Check type
         if not RecordType.exists(coll, type_id):
-            return self.error(self.error404values().update(
-                message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)))
+            return self.error(
+                dict(self.error404values(),
+                    message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
+                    )
+                )
         recordtype     = RecordType(coll, type_id)
         recordtypedata = RecordTypeData(coll, type_id)
         self._entityclass = EntityData
@@ -97,7 +103,7 @@ class EntityDefaultEditView(EntityEditBaseView):
         entity = self.get_entity(action, recordtypedata, entity_id, entity_initial_values)
         if entity is None:
             return self.error(
-                dict(self.error404values(), 
+                dict(self.error404values(),
                     message=message.DOES_NOT_EXIST%(entity_initial_values['rdfs:label'])
                     )
                 )
@@ -116,8 +122,8 @@ class EntityDefaultEditView(EntityEditBaseView):
         view_id      = "Default_view"
         entityview   = RecordView.load(coll, view_id)
         entityvalues = entity.get_values()
-        log.debug("entityview   %r"%entityview.get_values())
         log.debug("entityvalues %r"%entityvalues)
+        log.debug("entityview   %r"%entityview.get_values())
         # Process view desription, updating value map and
         for f in entityview.get_values()['annal:view_fields']:
             field_id   = f['annal:field_id']

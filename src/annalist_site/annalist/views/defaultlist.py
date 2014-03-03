@@ -65,13 +65,19 @@ class EntityDefaultListView(EntityEditBaseView):
         """
         # Check collection
         if not Collection.exists(self.site(), coll_id):
-            return self.error(self.error404values().update(
-                message=message.COLLECTION_NOT_EXISTS%(coll_id)))
+            return self.error(
+                dict(self.error404values(),
+                    message=message.COLLECTION_NOT_EXISTS%(coll_id)
+                )
+            )
         coll = Collection(self.site(), coll_id)
         # Check type
         if not RecordType.exists(coll, type_id):
-            return self.error(self.error404values().update(
-                message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)))
+            return self.error(
+                dict(self.error404values(),
+                    message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
+                    )
+                )
         recordtype     = RecordType(coll, type_id)
         recordtypedata = RecordTypeData(coll, type_id)
 

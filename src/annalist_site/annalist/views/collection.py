@@ -52,8 +52,11 @@ class CollectionEditView(AnnalistGenericView):
                 })
             return context
         if not Collection.exists(self.site(), coll_id):
-            return self.error(self.error404values().update(
-                message=message.COLLECTION_NOT_EXISTS%(coll_id)))
+            return self.error(
+                dict(self.error404values(),
+                    message=message.COLLECTION_NOT_EXISTS%(coll_id)
+                    )
+                )
         return (
             self.render_html(resultdata(), 'annalist_collection_edit.html') or 
             self.error(self.error406values())

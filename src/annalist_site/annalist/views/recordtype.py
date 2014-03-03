@@ -62,8 +62,11 @@ class RecordTypeEditView(EntityEditBaseView):
         """
         # Check collection
         if not Collection.exists(self.site(), coll_id):
-            return self.error(self.error404values().update(
-                message=message.COLLECTION_NOT_EXISTS%(coll_id)))
+            return self.error(
+                dict(self.error404values(),
+                    message=message.COLLECTION_NOT_EXISTS%(coll_id)
+                    )
+                )
         coll = Collection(self.site(), coll_id)
         # Set up RecordType-specific values
         type_id              = self.get_entityid(action, coll, type_id)
