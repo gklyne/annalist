@@ -7,9 +7,11 @@ annalist = {
     resize_handler: function (event) {
         if (window.matchMedia(Foundation.media_queries['small']).matches){
             $(".small-size-4").attr("size", 4);
+            $(".small-rows-4").attr("rows", 4);
         };
         if (window.matchMedia(Foundation.media_queries['medium']).matches){
             $(".medium-size-8").attr("size", 8);
+            $(".medium-rows-8").attr("rows", 8);
         };
     }
 };

@@ -29,11 +29,10 @@ def get_renderer(renderid):
     if renderid == "annal:field_render/Text":
         return "annalist_field_text.html"
         # return RenderText()
-    if renderid == "annal:field_render/Textarea":
-        return "annalist_field_text.html"
     if renderid == "annal:field_render/Slug":
         return "annalist_field_text.html"
-        # return RenderText()
+    if renderid == "annal:field_render/Textarea":
+        return "annalist_field_textarea.html"
     log.info("*** not found ***")
     return None
 
