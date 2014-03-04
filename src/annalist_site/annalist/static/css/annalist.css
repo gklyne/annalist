@@ -58,6 +58,10 @@ div.column p , div.columns p {
     margin-bottom: 0;
 }
 
+div.column form , div.columns form {
+    margin-bottom: 0;
+}
+
 .error {
     color: red;
 }
@@ -75,7 +79,13 @@ div.column p , div.columns p {
     font-style: italic;
 }
 
-/* Adapted from Foundation / ZURB examples */
+/* Top bar */
+
+.top-bar {
+    margin-bottom: 0.75rem;
+}
+
+/* Footer bar.  Adapted from Foundation / ZURB examples */
 
 .footer-bar {
     margin-top: 0.75rem;

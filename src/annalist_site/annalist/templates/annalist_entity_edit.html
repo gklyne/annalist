@@ -18,13 +18,15 @@
                 {% csrf_token %}
                 <div class="row">
                     <div class="small-12 columns">
-                        <p>Field values here</p>
+                        {% for field in fields %}
+                        {% include field.field_render %}
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="row">
                     <div class="small-2 columns">
                     </div>
-                    <div class="small-10 columns">
+                    <div class="small-12 medium-10 columns">
                         <input type="submit" name="save"             value="Save" />
                         <input type="submit" name="cancel"           value="Cancel" />
                         <input type="hidden" name="continuation_uri" value="{{continuation_uri}}"/>

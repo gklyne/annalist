@@ -32,7 +32,7 @@ from annalist.models.entitydata     import EntityData
 # from annalist.views.generic         import AnnalistGenericView
 from annalist.views.entityeditbase  import EntityEditBaseView # , EntityDeleteConfirmedBaseView
 from annalist.views.entityeditbase  import EntityValueMap
-
+from annalist.fields.render_utils   import get_renderer
 
 class EntityDefaultEditView(EntityEditBaseView):
     """
@@ -118,6 +118,7 @@ class EntityDefaultEditView(EntityEditBaseView):
             type_id             = type_id,
             orig_entity_id      = entity_id
             )
+        viewcontext['fields'] = []
         # Locate and read view description
         view_id      = "Default_view"
         entityview   = RecordView.load(coll, view_id)
@@ -142,14 +143,8 @@ class EntityDefaultEditView(EntityEditBaseView):
                 , 'field_placeholder':  viewfield['annal:placeholder']
                 , 'field_property_uri': viewfield['annal:property_uri']
                 })
-
-
-        # generate form data
-
-        # ------------------------------------------------------
-
-
-
+            viewcontext['fields'].append(field_context)
+        # generate and return form data
         return (
             self.render_html(viewcontext, self._entityformtemplate) or 
             self.error(self.error406values())
