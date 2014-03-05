@@ -9,7 +9,10 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-from annalist.fields.render_text    import RenderText
+import re
+
+# from annalist.fields.render_text    import RenderText
+from render_text    import RenderText
 
 def get_renderer(renderid):
     """
@@ -25,7 +28,6 @@ def get_renderer(renderid):
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
     # @@TODO: currently just a minimal placeholder
-    log.info("get_renderer %s"%(renderid))
     if renderid == "annal:field_render/Text":
         return "annalist_field_text.html"
         # return RenderText()
@@ -33,7 +35,37 @@ def get_renderer(renderid):
         return "annalist_field_text.html"
     if renderid == "annal:field_render/Textarea":
         return "annalist_field_textarea.html"
-    log.info("*** not found ***")
+    log.warning("get_renderer: %s not found"%renderid)
     return None
+
+def get_placement_class(placement):
+    """
+    Returns placement classes corresponding to placement string provided.
+
+    >>> get_placement_class("small:0,12")
+    'small-12 columns'
+    >>> get_placement_class("medium:0,12")
+    'medium-12 columns'
+    >>> get_placement_class("large:0,12")
+    'large-12 columns'
+    >>> get_placement_class("small:0,12;medium:0,4")
+    'small-12 medium-4 columns'
+    >>> get_placement_class("small:0,12;medium:0,6;large:0,4")
+    'small-12 medium-6 large-4 columns'
+    """
+    ppr = re.compile(r"^(small|medium|large):(\d+),(\d+)$")
+    ps = placement.split(';')
+    c = ""
+    for p in ps:
+        pm = ppr.match(p)
+        if not pm:
+            break
+        c += pm.group(1)+"-"+pm.group(3)+" "
+    c += "columns"
+    return c
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
 
 # End.

@@ -17,11 +17,9 @@
             <form method="POST" action="">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="small-12 columns">
-                        {% for field in fields %}
-                        {% include field.field_render %}
-                        {% endfor %}
-                    </div>
+                    {% for field in fields %}
+                    {% include field.field_render %}
+                    {% endfor %}
                 </div>
                 <div class="row">
                     <div class="small-2 columns">

@@ -32,7 +32,7 @@ from annalist.models.entitydata     import EntityData
 # from annalist.views.generic         import AnnalistGenericView
 from annalist.views.entityeditbase  import EntityEditBaseView # , EntityDeleteConfirmedBaseView
 from annalist.views.entityeditbase  import EntityValueMap
-from annalist.fields.render_utils   import get_renderer
+from annalist.fields.render_utils   import get_renderer, get_placement_class
 
 class EntityDefaultEditView(EntityEditBaseView):
     """
@@ -48,8 +48,7 @@ class EntityDefaultEditView(EntityEditBaseView):
         , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
         , EntityValueMap(e=None,          v=None,           c='type_id',          f=None               )
         , EntityValueMap(e=None,          v='annal:id',     c='entity_id',        f='entity_id'        )
-        # Normal record fields
-        # -- these are filled in from the entity view description used
+        # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
         , EntityValueMap(e=None,          v=None,           c='orig_entity_id',   f='orig_entity_id'   )
         , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
@@ -107,8 +106,7 @@ class EntityDefaultEditView(EntityEditBaseView):
                     message=message.DOES_NOT_EXIST%(entity_initial_values['rdfs:label'])
                     )
                 )
-        # Set up initial value map and view context
-        self._entityvaluemap    = copy.copy(EntityDefaultEditView._entityvaluemap)
+        # Set up initial view context
         viewcontext = self.map_value_to_context(entity,
             title               = self.site_data()["title"],
             continuation_uri    = request.GET.get('continuation_uri', None),
@@ -125,7 +123,7 @@ class EntityDefaultEditView(EntityEditBaseView):
         entityvalues = entity.get_values()
         log.debug("entityvalues %r"%entityvalues)
         log.debug("entityview   %r"%entityview.get_values())
-        # Process view desription, updating value map and
+        # Process fields referenced by the view desription, updating value map and
         for f in entityview.get_values()['annal:view_fields']:
             field_id   = f['annal:field_id']
             viewfield  = RecordField.load(coll, field_id)
@@ -133,7 +131,7 @@ class EntityDefaultEditView(EntityEditBaseView):
             fieldvalue = entityvalues[viewfield['annal:property_uri']]
             field_context = (
                 { 'field_id':           field_id
-                , 'field_placement':    f['annal:field_placement']
+                , 'field_placement':    get_placement_class(f['annal:field_placement'])
                 , 'field_name':         field_id    # Assumes same field can't repeat in form
                 , 'field_render':       get_renderer(viewfield['annal:field_render'])
                 , 'field_label':        viewfield['rdfs:label']
