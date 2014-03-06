@@ -7,4 +7,5 @@
 , "annal:field_render": "annal:field_render/Placement"
 , "annal:value_type":   "annal:Placement"
 , "annal:property_uri": "annal:field_placement"
+, "annal:return_value": true
 }

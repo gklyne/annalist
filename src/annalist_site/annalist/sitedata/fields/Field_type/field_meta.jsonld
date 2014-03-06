@@ -6,5 +6,6 @@
 , "annal:field_render": "annal:field_render/Identifier"
 , "annal:value_type":   "annal:RenderType"
 , "annal:placeholder":  "(field type)"
-, "annal:property_uri": "annal:type"
+, "annal:property_uri": "annal:field_render"
+, "annal:return_value": true
 }

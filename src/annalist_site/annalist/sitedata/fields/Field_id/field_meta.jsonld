@@ -7,4 +7,5 @@
 , "annal:value_type":   "annal:Slug"
 , "annal:placeholder":  "(field id)"
 , "annal:property_uri": "annal:id"
+, "annal:return_value": false
 }

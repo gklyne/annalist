@@ -7,4 +7,5 @@
 , "annal:field_render": "annal:field_render/Text"
 , "annal:value_type":   "annal:Text"
 , "annal:property_uri": "annal:placeholder"
+, "annal:return_value": true
 }

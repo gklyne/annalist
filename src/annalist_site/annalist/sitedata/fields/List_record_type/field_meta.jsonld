@@ -7,4 +7,5 @@
 , "annal:value_type":   "annal:RecordType"
 , "annal:placeholder":  "(default record type)"
 , "annal:property_uri": "annal:list_record_type"
+, "annal:return_value": true
 }

@@ -1,11 +1,11 @@
-{ "@id":                "annal:fields/List_label"
-, "annal:id":           "List_label"
+{ "@id":                "annal:fields/Label"
+, "annal:id":           "Label"
 , "annal:type":         "annal:Field"
 , "rdfs:label":         "Label"
-, "rdfs:comment":       "Short string used to describe list when displayed"
+, "rdfs:comment":       "Short string used to describe entity when displayed"
 , "annal:field_render": "annal:field_render/Text"
 , "annal:value_type":   "annal:Text"
-, "annal:placeholder":  "(list label)"
+, "annal:placeholder":  "(label)"
 , "annal:property_uri": "rdfs:label"
 , "annal:return_value": true
 }

@@ -7,4 +7,5 @@
 , "annal:value_type":   "annal:Text"
 , "annal:placeholder":  "(view label)"
 , "annal:property_uri": "rdfs:label"
+, "annal:return_value": true
 }

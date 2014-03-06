@@ -7,4 +7,5 @@
 , "annal:value_type":   "annal:Longtext"
 , "annal:placeholder":  "(field usage commentary or help text)"
 , "annal:property_uri": "rdfs:comment"
+, "annal:return_value": true
 }

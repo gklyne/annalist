@@ -8,10 +8,10 @@
   [ { "annal:field_id":         "Id"
     , "annal:field_placement":  "small:0,12;medium:0,4"
     }
-  , { "annal:field_id":         "Field_label"
+  , { "annal:field_id":         "Label"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Field_comment"
+  , { "annal:field_id":         "Comment"
     , "annal:field_placement":  "small:0,12"
     }
   ]

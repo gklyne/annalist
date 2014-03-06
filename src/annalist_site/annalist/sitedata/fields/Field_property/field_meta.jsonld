@@ -7,4 +7,5 @@
 , "annal:field_render": "annal:field_render/Identifier"
 , "annal:value_type":   "annal:Identifier"
 , "annal:property_uri": "annal:property_uri"
+, "annal:return_value": true
 }
