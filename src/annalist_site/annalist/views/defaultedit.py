@@ -60,7 +60,8 @@ class EntityDefaultEditView(EntityEditBaseView):
 
     def __init__(self):
         super(EntityDefaultEditView, self).__init__()
-        self._entityclass    = None
+        self._view_id       = "Default_view"
+        self._entityclass   = None
         # self._entityvaluemap = None
         return
 
@@ -104,14 +105,13 @@ class EntityDefaultEditView(EntityEditBaseView):
         information from the form field definitions.
         """
         # Locate and read view description
-        # view_id      = "Default_view"
-        entitymap  = EntityDefaultEditView._entityvaluemap.copy()
-        entityview = RecordView.load(self.collection, view_id)
+        entitymap  = copy.copy(EntityDefaultEditView._entityvaluemap)
+        entityview = RecordView.load(self.collection, view_id, altparent=self.sitedata)
         log.debug("entityview   %r"%entityview.get_values())
         # Process fields referenced by the view desription, updating value map
         for f in entityview.get_values()['annal:view_fields']:
             field_id   = f['annal:field_id']
-            viewfield  = RecordField.load(self.collection, field_id)
+            viewfield  = RecordField.load(self.collection, field_id, altparent=self.sitedata)
             log.debug("viewfield   %r"%(viewfield and viewfield.get_values()))
             return_property_uri = (
                 viewfield['annal:property_uri'] if viewfield['annal:return_value'] 
@@ -137,9 +137,9 @@ class EntityDefaultEditView(EntityEditBaseView):
                     e=return_property_uri               # Entity value returned from form
                     )
                 )
+        # log.debug("entitymap %r"%entitymap)
         self._entityvaluemap = entitymap
         return entitymap
-
 
     # GET
 
@@ -171,6 +171,7 @@ class EntityDefaultEditView(EntityEditBaseView):
                     )
                 )
         # Set up initial view context
+        # @@TODO: use generic context mapping logic
         # view_id     = "Default_view"
         # self.get_form_entityvaluemap()
         viewcontext = self.map_value_to_context(entity,
@@ -222,47 +223,38 @@ class EntityDefaultEditView(EntityEditBaseView):
         Handle response from dynamically generatred entity editing form.
         """
         log.debug("views.defaultedit.post %s"%(self.get_request_path()))
-        # log.info("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
-        # log.info("  form data %r"%(request.POST))
+        # log.debug("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
+        # log.debug("  form data %r"%(request.POST))
         http_response = (
             self.get_coll_type_data(coll_id, type_id) or
-            self.form_edit_auth(action, recordtypedata._entityuri)
+            self.form_edit_auth(action, self.recordtypedata._entityuri)
             )
         if http_response:
             return http_response
         # Get key POST values
-        entity_id            = request.POST.get('entity_id', None)
+        entity_id            = request.POST.get('Entity_id', None)
         orig_entity_id       = request.POST.get('orig_entity_id', None)
-        collection_edit_uri  = self.view_uri(
-            'EntityDefaultEditView', 
-            coll_id=coll_id, type_id=type_id, entity_id=entity_id
+        continuation_uri     = request.POST.get('continuation_uri', 
+            self.view_uri('AnnalistEntityDefaultListType', coll_id=coll_id, type_id=type_id)
             )
-        continuation_uri     = request.POST.get('continuation_uri', collection_edit_uri)
-
-
-
-
-
-
-
-
-
         context_extra_values = (
             { 'coll_id':          coll_id
+            , 'type_id':          type_id
             , 'continuation_uri': continuation_uri
             })
         messages = (
-            { 'parent_heading':    message.COLLECTION_ID
-            , 'parent_missing':    message.COLLECTION_NOT_EXISTS%(coll_id)
-            , 'entity_heading':    message.RECORD_TYPE_ID
-            , 'entity_invalid_id': message.RECORD_TYPE_ID_INVALID
-            , 'entity_exists':     message.RECORD_TYPE_EXISTS%(type_id, coll_id)
-            , 'entity_not_exists': message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)        
+            { 'parent_heading':    message.RECORD_TYPE_ID
+            , 'parent_missing':    message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
+            , 'entity_heading':    message.ENTITY_DATA_ID
+            , 'entity_invalid_id': message.ENTITY_DATA_ID_INVALID
+            , 'entity_exists':     message.ENTITY_DATA_EXISTS%(entity_id, type_id, coll_id)
+            , 'entity_not_exists': message.ENTITY_DATA_NOT_EXISTS%(entity_id, type_id, coll_id)
             })
-        return self.form_response(request, action, coll, type_id, orig_type_id, messages, context_extra_values)
-
-
-
-
+        # Process form response and respond accordingly
+        self.get_form_entityvaluemap(self._view_id)
+        return self.form_response(
+            request, action, self.recordtypedata, entity_id, orig_entity_id, 
+            messages, context_extra_values
+            )
 
 # End.

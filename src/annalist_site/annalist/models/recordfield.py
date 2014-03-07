@@ -36,7 +36,7 @@ class RecordField(Entity):
         parent      is the parent entity from which the view is descended.
         field_id     the local identifier for the record view
         """
-        log.info("RecordField %s"%(field_id))
+        log.debug("RecordField %s"%(field_id))
         assert altparent is not None, "RecordField instantiated with no altparent"
         super(RecordField, self).__init__(parent, field_id, altparent=altparent)
         return

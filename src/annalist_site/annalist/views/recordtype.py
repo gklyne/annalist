@@ -94,8 +94,8 @@ class RecordTypeEditView(EntityEditBaseView):
         Handle response to record type edit form
         """
         log.debug("views.recordtype.post %s"%(self.get_request_path()))
-        # log.info("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
-        # log.info("  form data %r"%(request.POST))
+        # log.debug("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
+        # log.debug("  form data %r"%(request.POST))
         type_id              = request.POST.get('type_id', None)
         orig_type_id         = request.POST.get('orig_type_id', None)
         collection_edit_uri  = self.view_uri('AnnalistCollectionEditView', coll_id=coll_id)

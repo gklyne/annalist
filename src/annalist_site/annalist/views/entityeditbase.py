@@ -9,6 +9,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+import copy
+
 from django.conf                import settings
 from django.http                import HttpResponse
 from django.http                import HttpResponseRedirect
@@ -43,10 +45,10 @@ class EntityValueMap(object):
         return
 
     def __str__(self):
-        return "{v:%s, c:%s, f:%s)"%(self.v, self.c, self.f)
+        return "{v:%s, c:%s, f:%s, e:%s)"%(self.v, self.c, self.f, self.e)
 
     def __repr__(self):
-        return "EntityValueMap(v=%r, c=%r, f=%r)"%(self.v, self.c, self.f)
+        return "EntityValueMap(v=%r, c=%r, f=%r, e=%r, s=%r)"%(self.v, self.c, self.f, self.e, self.s)
 
 
 class EntityEditBaseView(AnnalistGenericView):
@@ -68,7 +70,8 @@ class EntityEditBaseView(AnnalistGenericView):
             subcontextname, subcontextdata = subcontext
             if subcontextname not in context:
                 context[subcontextname] = []
-            context.append(subcontextdata)
+            subcontextdata = copy.copy(subcontextdata)
+            context[subcontextname].append(subcontextdata)
             usecontext = subcontextdata
         else:
             usecontext = context
@@ -92,22 +95,6 @@ class EntityEditBaseView(AnnalistGenericView):
                 context, kmap.s, kmap.c, kmap.v, entity_values, 
                 **kwargs
                 )
-    
-            # if kmap.s:
-            #     # Create sub-context and select that (used for data-described form fields)
-            #     subcontextname, subcontext = kmap.s
-            #     if subcontextname not in context:
-            #         context[subcontextname] = []
-            #     context.append(subcontext)
-            #     usecontext = subcontext
-            # else:
-            #     usecontext = context
-            # if kmap.c:
-            #     if kmap.v and kmap.v in entity_values.keys():
-            #         usecontext[kmap.c] = entity_values[kmap.v]    # Copy value -> context
-            #     elif kmap.c in kwargs:
-            #         usecontext[kmap.c] = kwargs[kmap.c]    # Copy supplied argument -> context
-    
         return context
 
     def map_form_data_to_context(self, form_data, **kwargs):
@@ -134,12 +121,13 @@ class EntityEditBaseView(AnnalistGenericView):
         return context
 
     def map_form_data_to_values(self, form_data, **kwargs):
+        log.debug("map_form_data_to_values: form_data %r"%(form_data))
         values = {}
         for kmap in self._entityvaluemap:
             if kmap.e:
                 if kmap.f and kmap.f in form_data:
                     values[kmap.e] = form_data[kmap.f]
-                elif kmap.c in kwargs:
+                elif kmap.e in kwargs:
                     values[kmap.e] = kwargs[kmap.e]
         return values
 
@@ -240,21 +228,26 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         Handle POST response from entity edit form.
         """
+        log.debug("form_response: action %s"%(request.POST['action']))
         continuation_uri = context_extra_values['continuation_uri']
         if 'cancel' in request.POST:
+            # log.debug("form_response: cancel")
             return HttpResponseRedirect(continuation_uri)
         # Check authorization
         auth_required = self.form_edit_auth(action, parent._entityuri)
         if auth_required:
-                return auth_required
+            # log.debug("form_response: auth_required")            
+            return auth_required
         # Check parent exists (still)
         if not parent._exists():
+            # log.debug("form_response: not parent._exists()")
             return self.form_re_render(request, context_extra_values,
                 error_head=messages['parent_heading'],
                 error_message=messages['parent_missing']
                 )
         # Check response has valid type id
         if not util.valid_id(entityid):
+            # log.debug("form_response: not util.valid_id('%s')"%entityid)
             return self.form_re_render(request, context_extra_values,
                 error_head=messages['entity_heading'],
                 error_message=messages['entity_invalid_id']
@@ -262,6 +255,7 @@ class EntityEditBaseView(AnnalistGenericView):
         # Process response
         entityid_changed = (request.POST['action'] == "edit") and (entityid != orig_entityid)
         if 'save' in request.POST:
+            # log.debug("form_response: save")
             # Check existence of type to save according to action performed
             if (request.POST['action'] in ["new", "copy"]) or entityid_changed:
                 if self._entityclass.exists(parent, entityid):
