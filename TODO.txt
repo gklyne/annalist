@@ -67,17 +67,24 @@
    / review generic view base functions - should some be inlined now?
   - Move types/views/lists data into _annalist_collection directory
   - URI (re)design for record display
-4. Default record list display (code may later be refactored)
+4. Default record view/edit display (code to be refactored later)
    / form generation
    - form display test cases
+   - change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.  Similar for /d/ and /data/?
    - refactor form display
    - form response handler
    - test cases
-   - provision for data access fallback to site data (for types, views, fields, etc.)
-5. Design generic entity view
-6. Record view display and editing
-7. Generic record list display and editing
-8. ...
+   / provision for data access fallback to site data (for types, views, fields, etc.)
+5. Default record list display
+   - form generation
+   - form display test cases
+   - form response handler
+   - form response test cases
+   - connect list display toi record view display
+6. Design generic entity view
+7. Record view display and editing
+8. Generic record list display and editing
+9. ...
 
 Tests required:
 - Missing resource error reporting in:

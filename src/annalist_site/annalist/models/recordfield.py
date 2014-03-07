@@ -29,7 +29,7 @@ class RecordField(Entity):
     _entityfile = layout.FIELD_META_FILE
     _entityref  = layout.META_FIELD_REF
 
-    def __init__(self, parent, field_id):
+    def __init__(self, parent, field_id, altparent=None):
         """
         Initialize a new RecordField object, without metadta (yet).
 
@@ -37,7 +37,8 @@ class RecordField(Entity):
         field_id     the local identifier for the record view
         """
         log.info("RecordField %s"%(field_id))
-        super(RecordField, self).__init__(parent, field_id)
+        assert altparent is not None, "RecordField instantiated with no altparent"
+        super(RecordField, self).__init__(parent, field_id, altparent=altparent)
         return
 
 # End.

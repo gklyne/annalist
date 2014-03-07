@@ -29,14 +29,14 @@ class RecordView(Entity):
     _entityfile = layout.VIEW_META_FILE
     _entityref  = layout.META_VIEW_REF
 
-    def __init__(self, parent, view_id):
+    def __init__(self, parent, view_id, altparent=None):
         """
         Initialize a new RecordView object, without metadta (yet).
 
         parent      is the parent entity from which the view is descended.
         view_id     the local identifier for the record view
         """
-        super(RecordView, self).__init__(parent, view_id)
+        super(RecordView, self).__init__(parent, view_id, altparent=altparent)
         return
 
 # End.

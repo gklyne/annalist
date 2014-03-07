@@ -36,14 +36,14 @@ class RecordList(Entity):
     _entityfile = layout.LIST_META_FILE
     _entityref  = layout.META_LIST_REF
 
-    def __init__(self, parent, list_id):
+    def __init__(self, parent, list_id, altparent=None):
         """
         Initialize a new RecordList object, without metadta (yet).
 
         parent      is the parent entity from which the list is descended.
         list_id     the local identifier for the record list
         """
-        super(RecordList, self).__init__(parent, list_id)
+        super(RecordList, self).__init__(parent, list_id, altparent=altparent)
         return
 
 # End.

@@ -20,8 +20,8 @@ from annalist                       import message
 # from annalist                       import util
 
 # from annalist.site                  import Site
-# from annalist.collection            import Collection
-# from annalist.recordtype            import RecordType
+from annalist.models.collection     import Collection
+from annalist.models.recordtype     import RecordType
 
 # from annalist.views.generic         import AnnalistGenericView
 from annalist.views.entityeditbase  import EntityEditBaseView # , EntityDeleteConfirmedBaseView

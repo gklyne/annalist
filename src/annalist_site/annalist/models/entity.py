@@ -60,10 +60,12 @@ class EntityRoot(object):
         entityuri   is the base URI at which the entity is accessed
         entitydir   is the base directory containing the entity
         """
-        self._entityid   = None
-        self._entityuri  = entityuri if entityuri.endswith("/") else entityuri + "/"
-        self._entitydir  = entitydir if entitydir.endswith("/") else entitydir + "/"
-        self._values     = None
+        self._entityid     = None
+        self._entityuri    = entityuri if entityuri.endswith("/") else entityuri + "/"
+        self._entitydir    = entitydir if entitydir.endswith("/") else entitydir + "/"
+        self._entityalturi = None
+        self._entityaltdir = None
+        self._values       = None
         log.debug("EntityRoot.__init__: entity URI %s, entity dir %s"%(self._entityuri, self._entitydir))
         return
 
@@ -116,14 +118,36 @@ class EntityRoot(object):
         (basedir, filepath) = util.entity_dir_path(self._entitydir, [], self._entityfile)
         return (basedir, filepath)
 
+    def _alt_dir_path(self):
+        """
+        Return alternate directory and path for current entity body file
+        """
+        if not self._entityfile:
+            raise ValueError("Entity._alt_dir_path without defined entity file path")
+        if self._entityaltdir:
+            (basedir, filepath) = util.entity_dir_path(self._entityaltdir, [], self._entityfile)
+            return (basedir, filepath)
+        return (None, self._entityfile)
+
+    def _exists_path(self):
+        """
+        Test if the entity denoted by the current object has been created
+        """
+        for (d, p) in (self._dir_path(), self._alt_dir_path()):
+            if d and os.path.isdir(d):
+                if p and os.path.isfile(p):
+                    return p
+        return None
+
     def _exists(self):
         """
         Test if the entity denoted by the current object has been created
         """
-        d, p = self._dir_path()
-        if d and os.path.isdir(d):
-            if p and os.path.isfile(p):
-                return True
+        # @@TODO use _exists_path (above)
+        for (d, p) in (self._dir_path(), self._alt_dir_path()):
+            if d and os.path.isdir(d):
+                if p and os.path.isfile(p):
+                    return True
         return False
 
     def _save(self):
@@ -157,7 +181,7 @@ class EntityRoot(object):
         """
         Read current entity from Annalist storage, and return entity body
         """
-        (body_dir, body_file) = self._dir_path()
+        body_file = self._exists_path()
         if body_file:
             try:
                 with open(body_file, "r") as f:
@@ -245,12 +269,12 @@ class Entity(EntityRoot):
     """
 
     _entitytype = ANNAL.CURIE.Entity
-    _entitypath = None          # relative path from parent to entity (template)
-    _entityfile = None          # To be overriden by entity subclasses..
+    _entitypath = None          # Relative path from parent to entity (template)
+    _entityfile = None          # Relative reference to body file from entity
     _entityref  = None          # Relative reference to entity from body file
     _last_id    = None          # Last ID allocated
 
-    def __init__(self, parent, entityid):
+    def __init__(self, parent, entityid, altparent=None):
         """
         Initialize a new Entity object, possibly without values.  The created
         entity is not saved to disk at this stage - see .save() method.
@@ -262,7 +286,12 @@ class Entity(EntityRoot):
             raise ValueError("Invalid entity identifier: %s"%(entityid))
         relpath = self.relpath(entityid)
         super(Entity, self).__init__(parent._entityuri+relpath, parent._entitydir+relpath)
-        self._entityid = entityid
+        self._entityalturi = None
+        self._entityaltdir = None
+        if altparent:
+            self._entityalturi = altparent._entityuri+relpath
+            self._entityaltdir = altparent._entitydir+relpath
+        self._entityid     = entityid
         log.debug("Entity.__init__: ID %s"%(self._entityid))
         return
 
@@ -325,7 +354,7 @@ class Entity(EntityRoot):
         return c
 
     @classmethod
-    def load(cls, parent, entityid):
+    def load(cls, parent, entityid, altparent=None):
         """
         Return an entity with given identifier belonging to some given parent,
         or None if there is not such identity.
@@ -338,7 +367,10 @@ class Entity(EntityRoot):
         corresponding Annalist storage, or None if there is no such entity.
         """
         log.debug("Entity.load: entitytype %s, parentdir %s, entityid %s"%(cls._entitytype, parent._entitydir, entityid))
-        e = cls(parent, entityid)
+        if altparent:
+            e = cls(parent, entityid, altparent=altparent)
+        else:
+            e = cls(parent, entityid)
         v = e._load_values()
         if v:
             e.set_values(v)

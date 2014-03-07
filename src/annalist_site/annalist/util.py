@@ -150,7 +150,6 @@ def entity_dir_path(base_dir, path, filename):
         d = base_dir
     p = os.path.join(d, filename)
     d = os.path.dirname(p)
-    # if not d.endswith("/"): d += "/"
     return (d, p)
 
 def entity_path(base_dir, path, filename):
@@ -174,6 +173,7 @@ def entity_path(base_dir, path, filename):
     True
     """
     (d, p) = entity_dir_path(base_dir, path, filename)
+    # log.debug("entity_path: d %s, p %s"%(d,p))
     if d and os.path.isdir(d):
         return p
     return None

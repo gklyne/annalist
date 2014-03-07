@@ -23,6 +23,7 @@ from django.test.client         import Client
 from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import layout
 from annalist.models.site       import Site
+from annalist.models.sitedata   import SiteData
 from annalist.models.collection import Collection
 from annalist.models.recordtype import RecordType
 
@@ -166,6 +167,7 @@ class RecordTypeTest(TestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
+        self.sitedata = SiteData(self.testsite, layout.SITEDATA_DIR)
         self.testcoll = Collection(self.testsite, "testcoll")
         return
 
@@ -211,6 +213,7 @@ class RecordTypeTest(TestCase):
         v = recordtype_load_values("type1")
         self.assertEqual(td, v)
         return
+
 
 #   -----------------------------------------------------------------------------
 #

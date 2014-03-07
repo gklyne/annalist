@@ -65,6 +65,11 @@ SITE_META_FILE      = "_annalist_site/site_meta.jsonld"
 SITE_PROV_FILE      = "_annalist_site/site_prov.jsonld"
 META_SITE_REF       = "../"
 
+SITEDATA_DIR        = "sitedata"
+SITEDATA_PATH       = "%(id)s"
+SITEDATA_META_FILE  = "sitedata_meta.jsonld"
+META_SITEDATA_REF   = "./"
+
 SITE_COLL_PATH      = "collections/%(id)s"
 COLL_META_FILE      = "_annalist_collection/coll_meta.jsonld"
 COLL_PROV_FILE      = "_annalist_collection/coll_prov.jsonld"
@@ -90,7 +95,7 @@ FIELD_META_FILE     = "field_meta.jsonld"
 FIELD_PROV_FILE     = "field_prov.jsonld"
 META_FIELD_REF      = "./"
 
-COLL_TYPEDATA_PATH      = "%(id)s"
+COLL_TYPEDATA_PATH      = "d/%(id)s"
 TYPEDATA_META_FILE      = "type_data_meta.jsonld"
 META_TYPEDATA_REF       = "./"
 
@@ -111,9 +116,10 @@ class Layout(object):
         """
         Dynamically initialize a layout value
         """
-        self.BASE_DIR  = base_data_dir
-        self.SITE_DIR  = SITE_DIR
-        self.SITE_PATH = os.path.join(base_data_dir, SITE_DIR)
+        self.BASE_DIR       = base_data_dir
+        self.SITE_DIR       = SITE_DIR
+        self.SITEDATA_DIR   = SITEDATA_DIR
+        self.SITE_PATH      = os.path.join(base_data_dir, SITE_DIR)
         return
 
 # End.

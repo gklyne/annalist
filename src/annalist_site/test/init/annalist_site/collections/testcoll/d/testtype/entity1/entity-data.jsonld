@@ -1,0 +1,8 @@
+{
+    "@id":            "./",
+    "annal:id":       "entity1",
+    "annal:type":     "annal:EntityData",
+    "annal:uri":      "/testsite/collections/testcoll/d/testtype/entity1/",
+    "rdfs:label":     "Record 'entity1' of type 'testtype' in collection 'testcoll'",
+    "rdfs:comment":   "Comment for entity1"
+}

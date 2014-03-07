@@ -185,6 +185,7 @@ class EntityEditBaseView(AnnalistGenericView):
         returns an object of the appropriate type.  If an existing entity is accessed, values
         are read from storage, otherwise a new entity object is created but not yet saved.
         """
+        log.info("get_entity id %s, parent %s, action %s"%(entityid, parent._entitydir, action))
         entity = None
         if action == "new":
             entity = self._entityclass(parent, entityid)

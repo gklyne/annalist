@@ -16,12 +16,14 @@ from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.core.urlresolvers       import resolve, reverse
 
+from annalist                       import layout
 from annalist                       import message
 # from annalist.exceptions            import Annalist_Error
 # from annalist.identifiers           import RDF, RDFS, ANNAL
 # from annalist                       import util
 
 # from annalist.models.site           import Site
+from annalist.models.sitedata       import SiteData
 from annalist.models.collection     import Collection
 from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
@@ -48,6 +50,7 @@ class EntityDefaultEditView(EntityEditBaseView):
         , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
         , EntityValueMap(e=None,          v=None,           c='type_id',          f=None               )
         , EntityValueMap(e=None,          v='annal:id',     c='entity_id',        f='entity_id'        )
+        , EntityValueMap(e='annal:uri',   v='annal:uri',    c='entity_uri',       f='entity_uri'       )
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
         , EntityValueMap(e=None,          v=None,           c='orig_entity_id',   f='orig_entity_id'   )
@@ -74,6 +77,7 @@ class EntityDefaultEditView(EntityEditBaseView):
         Returns None if all is well, or an HttpResponse object with details 
         about any problem encountered.
         """
+        self.sitedata = SiteData(self.site(), layout.SITEDATA_DIR)
         # Check collection
         if not Collection.exists(self.site(), coll_id):
             return self.error(
@@ -143,6 +147,9 @@ class EntityDefaultEditView(EntityEditBaseView):
         """
         Create a form for editing an entity.
         """
+        log.info("defaultedit.get: coll_id %s, type_id %s, entity_id %s, action %s"%
+            (coll_id, type_id, entity_id, action)
+            )
         http_response = (
             self.get_coll_type_data(coll_id, type_id) or
             self.form_edit_auth(action, self.recordtypedata._entityuri)
@@ -153,10 +160,7 @@ class EntityDefaultEditView(EntityEditBaseView):
         entity_id  = self.get_entityid(action, self.recordtypedata, entity_id)
         # Create local entity object or load values from existing
         entity_initial_values  = (
-            { "annal:id":     entity_id
-            , "annal:type":   type_id
-            , "annal:uri":    self.collection._entityuri+type_id+"/"+entity_id+"/"
-            , "rdfs:label":   "Record '%s' of type '%s' in collection '%s'"%(entity_id, type_id, coll_id)
+            { "rdfs:label":   "Record '%s' of type '%s' in collection '%s'"%(entity_id, type_id, coll_id)
             , "rdfs:comment": ""
             })
         entity = self.get_entity(action, self.recordtypedata, entity_id, entity_initial_values)
@@ -180,15 +184,16 @@ class EntityDefaultEditView(EntityEditBaseView):
             )
         viewcontext['fields'] = []
         # Locate and read view description
+        # @@TODO: error recovery for missing vierws/fields
         view_id     = "Default_view"
-        entityview   = RecordView.load(self.collection, view_id)
+        entityview   = RecordView.load(self.collection, view_id, altparent=self.sitedata)
         entityvalues = entity.get_values()
         log.debug("entityvalues %r"%entityvalues)
         log.debug("entityview   %r"%entityview.get_values())
         # Process fields referenced by the view desription, updating value map and
         for f in entityview.get_values()['annal:view_fields']:
             field_id   = f['annal:field_id']             
-            viewfield  = RecordField.load(self.collection, field_id)
+            viewfield  = RecordField.load(self.collection, field_id, altparent=self.sitedata)
             log.debug("viewfield   %r"%(viewfield and viewfield.get_values()))
             fieldvalue = entityvalues[viewfield['annal:property_uri']]
             field_context = (
@@ -200,7 +205,7 @@ class EntityDefaultEditView(EntityEditBaseView):
                 , 'field_help':         viewfield['rdfs:comment']
                 , 'field_value_type':   viewfield['annal:value_type']
                 , 'field_placeholder':  viewfield['annal:placeholder']
-                , 'field_property_put': viewfield['annal:property_uri']
+                , 'field_property_uri': viewfield['annal:property_uri']
                 , 'field_value':        fieldvalue
                 })
             viewcontext['fields'].append(field_context)
