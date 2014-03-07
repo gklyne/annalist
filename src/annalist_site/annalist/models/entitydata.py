@@ -31,7 +31,7 @@ class EntityData(Entity):
 
     def __init__(self, parent, entity_id):
         """
-        Initialize a new Entity Data object, without metadta.
+        Initialize a new Entity Data object, without metadata.
 
         parent      is the parent collection (RecordType) from which the entity is descended.
         entity_id   the local identifier (slug) for the data record

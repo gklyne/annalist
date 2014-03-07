@@ -28,16 +28,18 @@ class EntityValueMap(object):
     """
     Define an entry in an entity value mapping table, where each entry has a key
     used to:
-    e: specify an initial value when creating/updating an entity,
-    v: access a given value in an entity values record,
-    c: access a given value in a view render context, and
-    f: access a given value in form data.
+    v: access a given value in an entity values record
+    c: access a given value in a view render context
+    s: sub-context (name, context)
+    f: access a given value in form data
+    e: value key when updating an entity from form data
     """
-    def __init__(self, e=None, v=None, c=None, f=None):
-        self.e = e
-        self.v = v
-        self.c = c
-        self.f = f
+    def __init__(self, v=None, c=None, s=None, f=None, e=None):
+        self.v = v      # value field to populate context
+        self.c = c      # context field to populate
+        self.s = s      # sub-context for template iteration over context
+        self.f = f      # field name for value
+        self.e = e      # entity value field for retrieved value
         return
 
     def __str__(self):
@@ -58,7 +60,26 @@ class EntityEditBaseView(AnnalistGenericView):
         super(EntityEditBaseView, self).__init__()
         return
 
-    def map_value_to_context(self, entity, **kwargs):
+    def map_entry_to_context(self,
+            context, subcontext, contextkey, valuekey, entity_values, 
+            **kwargs):
+        if subcontext:
+            # Create sub-context and select that (used for data-described form fields)
+            subcontextname, subcontextdata = subcontext
+            if subcontextname not in context:
+                context[subcontextname] = []
+            context.append(subcontextdata)
+            usecontext = subcontextdata
+        else:
+            usecontext = context
+        if contextkey:
+            if valuekey and valuekey in entity_values.keys():
+                usecontext[contextkey] = entity_values[valuekey]    # Copy value -> context
+            elif contextkey in kwargs:
+                usecontext[contextkey] = kwargs[contextkey]         # Supplied argument -> context
+        return
+
+    def map_value_to_context(self, entity_values, **kwargs):
         """
         Map data from entity values to view context for rendering.
 
@@ -67,27 +88,49 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         context = {}
         for kmap in self._entityvaluemap:
-            if kmap.c:
-                if kmap.v and kmap.v in entity.keys():
-                    context[kmap.c] = entity[kmap.v]    # Copy value -> context
-                elif kmap.c in kwargs:
-                    context[kmap.c] = kwargs[kmap.c]    # Copy supplied argument -> context
+            self.map_entry_to_context(
+                context, kmap.s, kmap.c, kmap.v, entity_values, 
+                **kwargs
+                )
+    
+            # if kmap.s:
+            #     # Create sub-context and select that (used for data-described form fields)
+            #     subcontextname, subcontext = kmap.s
+            #     if subcontextname not in context:
+            #         context[subcontextname] = []
+            #     context.append(subcontext)
+            #     usecontext = subcontext
+            # else:
+            #     usecontext = context
+            # if kmap.c:
+            #     if kmap.v and kmap.v in entity_values.keys():
+            #         usecontext[kmap.c] = entity_values[kmap.v]    # Copy value -> context
+            #     elif kmap.c in kwargs:
+            #         usecontext[kmap.c] = kwargs[kmap.c]    # Copy supplied argument -> context
+    
         return context
 
     def map_form_data_to_context(self, form_data, **kwargs):
         """
         Map values from form data to view context for form re-rendering.
 
-        Values defined in the supplied entity take priority, and the keyword arguments provide
+        Values defined in the supplied form data take priority, and the keyword arguments provide
         values where the form data does not.
         """
         context = {}
         for kmap in self._entityvaluemap:
-            if kmap.c:
-                if kmap.f and kmap.f in form_data:
-                    context[kmap.c] = form_data[kmap.f]
-                elif kmap.c in kwargs:
-                    context[kmap.c] = kwargs[kmap.c]
+            self.map_entry_to_context(
+                context, kmap.s, kmap.c, kmap.f, form_data, 
+                **kwargs
+                )
+
+        # for kmap in self._entityvaluemap:
+        #     if kmap.c:
+        #         if kmap.f and kmap.f in form_data:
+        #             context[kmap.c] = form_data[kmap.f]
+        #         elif kmap.c in kwargs:
+        #             context[kmap.c] = kwargs[kmap.c]
+
         return context
 
     def map_form_data_to_values(self, form_data, **kwargs):
@@ -203,7 +246,7 @@ class EntityEditBaseView(AnnalistGenericView):
         auth_required = self.form_edit_auth(action, parent._entityuri)
         if auth_required:
                 return auth_required
-       # Check parent exists (still)
+        # Check parent exists (still)
         if not parent._exists():
             return self.form_re_render(request, context_extra_values,
                 error_head=messages['parent_heading'],

@@ -68,6 +68,12 @@
   - Move types/views/lists data into _annalist_collection directory
   - URI (re)design for record display
 4. Default record list display (code may later be refactored)
+   / form generation
+   - form display test cases
+   - refactor form display
+   - form response handler
+   - test cases
+   - provision for data access fallback to site data (for types, views, fields, etc.)
 5. Design generic entity view
 6. Record view display and editing
 7. Generic record list display and editing

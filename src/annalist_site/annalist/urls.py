@@ -74,9 +74,12 @@ urlpatterns = patterns('',
     url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/$',
                             EntityDefaultListView.as_view(),
                             name='AnnalistEntityDefaultListType'),
+    url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/$',
+                            EntityDefaultEditView.as_view(),
+                            name='AnnalistEntityDefaultNewView'),
     url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/$',
                             EntityDefaultEditView.as_view(),
-                            name='AnnalistEntityDefaultView'),
+                            name='AnnalistEntityDefaultEditView'),
     )
 
 urlpatterns += patterns('',
