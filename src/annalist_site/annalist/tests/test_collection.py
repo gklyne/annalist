@@ -16,14 +16,9 @@ log = logging.getLogger(__name__)
 from django.conf                import settings
 from django.db                  import models
 from django.http                import QueryDict
-from django.core.urlresolvers   import resolve, reverse
 from django.contrib.auth.models import User
 from django.test                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client         import Client
-
-# from bs4                        import BeautifulSoup
-
-# from miscutils.MockHttpResources import MockHttpFileResources, MockHttpDictResources
 
 from annalist.identifiers       import ANNAL
 from annalist                   import layout
@@ -35,26 +30,20 @@ from annalist.views.collection  import CollectionEditView
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                      import dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
+from entity_testutils           import (
+    site_view_uri, collection_edit_uri, recordtype_edit_uri,
+    collection_create_values,
+    )
 
-# Test assertion summary from http://docs.python.org/2/library/unittest.html#test-cases
+#   -----------------------------------------------------------------------------
 #
-# Method                    Checks that             New in
-# assertEqual(a, b)         a == b   
-# assertNotEqual(a, b)      a != b   
-# assertTrue(x)             bool(x) is True  
-# assertFalse(x)            bool(x) is False     
-# assertIs(a, b)            a is b                  2.7
-# assertIsNot(a, b)         a is not b              2.7
-# assertIsNone(x)           x is None               2.7
-# assertIsNotNone(x)        x is not None           2.7
-# assertIn(a, b)            a in b                  2.7
-# assertNotIn(a, b)         a not in b              2.7
-# assertIsInstance(a, b)    isinstance(a, b)        2.7
-# assertNotIsInstance(a, b) not isinstance(a, b)    2.7
+#   Collection object tests
+#
+#   -----------------------------------------------------------------------------
 
 class CollectionTest(TestCase):
     """
-    Tests for Site object interface
+    Tests for Collection object interface
     """
 
     def setUp(self):
@@ -291,7 +280,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
         self.user.save()
-        self.uri = reverse("AnnalistCollectionEditView", kwargs={'coll_id': "coll1"})
+        self.uri = collection_edit_uri(coll_id="coll1")
         self.continuation = "?continuation_uri="+TestHostUri+self.uri
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
@@ -333,11 +322,8 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        typenewuri = reverse(
-            "AnnalistRecordTypeNewView", 
-            kwargs={'coll_id': "coll1", 'action': "new"}
-            )
-        self.assertEqual(r['location'], TestHostUri+typenewuri+self.continuation)
+        new_type_uri = recordtype_edit_uri("new", "coll1")
+        self.assertEqual(r['location'], TestHostUri+new_type_uri+self.continuation)
         return
 
     def test_post_copy_type(self):
@@ -349,11 +335,8 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        typecopyuri = reverse(
-            "AnnalistRecordTypeCopyView", 
-            kwargs={'coll_id': "coll1", 'type_id': "type1", 'action': "copy"}
-            )
-        self.assertEqual(r['location'], TestHostUri+typecopyuri+self.continuation)
+        copy_type_uri = recordtype_edit_uri("copy", "coll1", type_id="type1")
+        self.assertEqual(r['location'], TestHostUri+copy_type_uri+self.continuation)
         return
 
     def test_post_copy_type_no_selection(self):
@@ -377,11 +360,8 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        typeedituri = reverse(
-            "AnnalistRecordTypeEditView", 
-            kwargs={'coll_id': "coll1", 'type_id': "type1", 'action': "edit"}
-            )
-        self.assertEqual(r['location'], TestHostUri+typeedituri+self.continuation)
+        edit_type_uri = recordtype_edit_uri("edit", "coll1", type_id="type1")
+        self.assertEqual(r['location'], TestHostUri+edit_type_uri+self.continuation)
         return
 
     def test_post_edit_type_no_selection(self):
@@ -406,7 +386,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertTemplateUsed(r, "annalist_confirm.html")
         # Check confirmation form content
-        complete_action_uri = reverse("AnnalistRecordTypeDeleteView", kwargs={"coll_id": "coll1"})
+        complete_action_uri = recordtype_edit_uri("delete", "coll1")
         self.assertContains(r, """<form method="POST" action="/"""+TestBasePath+"""/confirm/">""", status_code=200)
         self.assertEqual(r.context['complete_action'], complete_action_uri)
         self.assertEqual(r.context['cancel_action'], self.uri)
@@ -435,8 +415,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        siteviewuri = reverse("AnnalistSiteView")
-        self.assertEqual(r['location'], TestHostUri+siteviewuri)
+        self.assertEqual(r['location'], TestHostUri+site_view_uri())
         return
 
 # End.

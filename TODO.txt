@@ -89,8 +89,10 @@
 8. Generic record list display and editing
 9. ...
 
-99. Future features (see also Misc below)
+X. Future features (see also Misc below)
 - spreadhsheet bridge
+- Research object presentation
+- more field types, including link browser
 - provenance data
 - git integration for dat versioning
 - memento integration for old data recovery
