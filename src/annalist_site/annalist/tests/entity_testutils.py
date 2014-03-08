@@ -209,6 +209,12 @@ def collection_create_values(coll_id="testcoll"):
         , 'rdfs:comment':   'Description of Collection %s'%coll_id
         })
 
+def recordtype_value_keys():
+    return (
+        [ 'annal:id', 'annal:type', 'annal:uri'
+        , 'rdfs:label', 'rdfs:comment'
+        ])
+
 def recordtype_create_values(type_id="testtype"):
     """
     Entity values used when creating a record type entity

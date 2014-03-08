@@ -15,7 +15,6 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.db                      import models
 from django.http                    import QueryDict
-from django.core.urlresolvers       import resolve, reverse
 from django.contrib.auth.models     import User
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client             import Client

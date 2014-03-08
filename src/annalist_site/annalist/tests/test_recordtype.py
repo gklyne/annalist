@@ -32,6 +32,11 @@ from annalist.views.recordtype  import RecordTypeEditView, RecordTypeDeleteConfi
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                      import init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
+from entity_testutils           import (
+    site_view_uri, collection_edit_uri, recordtype_edit_uri,
+    collection_create_values,
+    recordtype_value_keys
+    )
 
 #   -----------------------------------------------------------------------------
 #
@@ -39,34 +44,10 @@ from AnnalistTestCase           import AnnalistTestCase
 #
 #   -----------------------------------------------------------------------------
 
-def recordtype_edit_uri(action, coll_id, type_id=None):
-    viewname = ( 
-        "AnnalistRecordTypeNewView"  if action == "new" else
-        "AnnalistRecordTypeCopyView" if action == "copy" else
-        "AnnalistRecordTypeEditView"
-        )
-    if type_id:
-        kwargs = {'action': action, 'coll_id': coll_id, 'type_id': type_id}
-    else:
-        kwargs = {'action': action, 'coll_id': coll_id}
-    return reverse(viewname, kwargs=kwargs)
-
-def collection_edit_uri(coll_id="testcoll"):
-    return TestHostUri + reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
-
-def recordtype_delete_confirm_uri(coll_id):
-    return TestHostUri + reverse("AnnalistRecordTypeDeleteView", kwargs={'coll_id': coll_id})
-
 def recordtype_delete_confirm_form_data(type_id=None):
     return (
         { 'typelist':    type_id,
           'type_delete': 'Delete'
-        })
-
-def collection_create_values(coll_id="testcoll"):
-    return (
-        { 'rdfs:label':     'Collection %s'%coll_id
-        , 'rdfs:comment':   'Description of Collection %s'%coll_id
         })
 
 def recordtype_create_values(type_id):
@@ -75,12 +56,6 @@ def recordtype_create_values(type_id):
         , 'rdfs:comment': 'Annalist collection: testcoll, record type: %s'%type_id
         , 'annal:uri': '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
         })
-
-def expect_value_keys():
-    return (
-        [ 'annal:id', 'annal:type', 'annal:uri'
-        , 'rdfs:label', 'rdfs:comment'
-        ])
 
 def recordtype_load_values(type_id):
     return (
@@ -193,18 +168,18 @@ class RecordTypeTest(TestCase):
         t = RecordType(self.testcoll, "type1")
         t.set_values(recordtype_create_values("type1"))
         td = t.get_values()
-        self.assertEqual(set(td.keys()), set(expect_value_keys()))
+        self.assertEqual(set(td.keys()), set(recordtype_value_keys()))
         v = recordtype_load_values("type1")
-        self.assertEqual(td, {k:v[k] for k in expect_value_keys()})
+        self.assertEqual(td, {k:v[k] for k in recordtype_value_keys()})
         return
 
     def test_recordtype2_data(self):
         t = RecordType(self.testcoll, "type2")
         t.set_values(recordtype_create_values("type2"))
         td = t.get_values()
-        self.assertEqual(set(td.keys()), set(expect_value_keys()))
+        self.assertEqual(set(td.keys()), set(recordtype_value_keys()))
         v = recordtype_load_values("type2")
-        self.assertEqual(td, {k:v[k] for k in expect_value_keys()})
+        self.assertEqual(td, {k:v[k] for k in recordtype_value_keys()})
         return
 
     def test_recordtype_create_load(self):
@@ -375,7 +350,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], collection_edit_uri())
+        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
         # Check that new record type exists
         self._check_updated_record_type_values("newtype")
         return
@@ -388,7 +363,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], collection_edit_uri())
+        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
         # Check that new record type still does not exist
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
         return
@@ -431,7 +406,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], collection_edit_uri())
+        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
         # Check that new record type exists
         self._check_updated_record_type_values("copytype")
         return
@@ -444,7 +419,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], collection_edit_uri())
+        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
         # Check that target record type still does not exist
         self.assertFalse(RecordType.exists(self.testcoll, "copytype"))
         return
@@ -486,7 +461,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], collection_edit_uri())
+        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
         self._check_updated_record_type_values("edittype")
         return
 
@@ -500,7 +475,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], collection_edit_uri())
+        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
         # Check that new record type exists and old does not
         self.assertFalse(RecordType.exists(self.testcoll, "edittype1"))
         self._check_updated_record_type_values("edittype2")
@@ -516,7 +491,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], collection_edit_uri())
+        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
         # Check that target record type still does not exist and unchanged
         self._check_record_type_values("edittype")
         return
@@ -587,14 +562,16 @@ class ConfirmRecordTypeDeleteTests(AnnalistTestCase):
         t = RecordType.create(self.testcoll, "deletetype", recordtype_create_values("deletetype"))
         self.assertTrue(RecordType.exists(self.testcoll, "deletetype"))
         # Submit positive confirmation
-        u = recordtype_delete_confirm_uri("testcoll")
+        u = TestHostUri + recordtype_edit_uri("delete", "testcoll")
         f = recordtype_delete_confirm_form_data("deletetype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,     302)
         self.assertEqual(r.reason_phrase,   "FOUND")
         self.assertEqual(r.content,         "")
         self.assertMatch(r['location'],    
-            "^"+collection_edit_uri("testcoll")+r"\?info_head=.*&info_message=.*deletetype.*testcoll.*$"
+            "^"+TestHostUri+
+            collection_edit_uri("testcoll")+
+            r"\?info_head=.*&info_message=.*deletetype.*testcoll.*$"
             )
         # Confirm deletion
         self.assertFalse(RecordType.exists(self.testcoll, "deletetype"))
