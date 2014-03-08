@@ -40,11 +40,14 @@ from AnnalistTestCase               import AnnalistTestCase
 #
 #   -----------------------------------------------------------------------------
 
+#   ----- URIs -----
+
 def entitydata_edit_uri(action, coll_id, type_id, entity_id=None):
     viewname = ( 
         'AnnalistEntityDefaultNewView'      if action == "new" else
         'AnnalistEntityDefaultEditView'
         )
+    if action != "new": action = "edit"
     kwargs = {'action': action, 'coll_id': coll_id, 'type_id': type_id}
     if entity_id:
         kwargs.update({'entity_id': entity_id})
@@ -67,36 +70,20 @@ def entitydata_list_uri(coll_id, type_id):
 def collection_edit_uri(coll_id="testcoll"):
     return reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
 
-def entitydata_delete_confirm_form_data(entity_id=None):
-    return (
-        { 'entitylist':    entity_id,
-          'entity_delete': 'Delete'
-        })
-
-def collection_create_values(coll_id="testcoll"):
-    return (
-        { 'rdfs:label':     'Collection %s'%coll_id
-        , 'rdfs:comment':   'Description of Collection %s'%coll_id
-        })
-
-def recordtype_create_values(type_id="testtype"):
-    return (
-        { 'rdfs:label':     'recordType %s'%type_id
-        , 'rdfs:comment':   'Description of RecordType %s'%type_id
-        })
-
-def entitydata_create_values(entity_id):
-    return (
-        { 'rdfs:label': 'Entity testcoll/testtype/%s'%entity_id
-        , 'rdfs:comment': 'Entity: coll testcoll, type testtype, entity %s'%entity_id
-        , 'annal:uri': '/%s/c/testcoll/d/testtype/%s/'%(TestBasePath, entity_id)
-        })
+#   ----- Entity data -----
 
 def expect_value_keys():
     return (
         [ 'annal:id', 'annal:type', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         ])
+
+def entitydata_create_values(entity_id):
+    return (
+        { 'rdfs:label': 'Entity testcoll/testtype/%s'%entity_id
+        , 'rdfs:comment': 'Entity coll testcoll, type testtype, entity %s'%entity_id
+        , 'annal:uri': entitydata_access_uri("testcoll", "testtype", entity_id)
+        })
 
 def entitydata_load_values(entity_id):
     return (
@@ -108,17 +95,17 @@ def entitydata_load_values(entity_id):
         , 'rdfs:comment':       'Entity: coll testcoll, type testtype, entity %s'%entity_id
         })
 
-def entitydata_form_data(entity_id=None, orig_entity_id=None, action=None, cancel=None):
+def entitydata_form_data(entity_id=None, orig_entity_id=None, action=None, cancel=None, update="Entity"):
     form_data_dict = (
-        { 'Entity_label':       'Entity data ... (testcoll/testtype)'
-        , 'Entity_comment':     'Description of entity data ... (testcoll/testtype)'
+        { 'Entity_label':       '%s data ... (testcoll/testtype)'%(update)
+        , 'Entity_comment':     '%s description ... (testcoll/testtype)'%(update)
         , 'orig_entity_id':     'orig_entity_id'
         , 'continuation_uri':   entitydata_list_uri("testcoll", "testtype")
         })
     if entity_id:
         form_data_dict['Entity_id']         = entity_id
-        form_data_dict['Entity_label']      = 'Entity testcoll/testtype/%s'%entity_id
-        form_data_dict['Entity_comment']    = 'Entity: coll testcoll, type testtype, entity %s'%entity_id
+        form_data_dict['Entity_label']      = '%s testcoll/testtype/%s'%(update,entity_id)
+        form_data_dict['Entity_comment']    = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
         form_data_dict['orig_entity_id']    = entity_id
     if orig_entity_id:
         form_data_dict['orig_entity_id']    = orig_entity_id
@@ -130,7 +117,7 @@ def entitydata_form_data(entity_id=None, orig_entity_id=None, action=None, cance
         form_data_dict['save']              = 'Save'
     return form_data_dict
 
-def entitydata_context_data(entity_id=None, orig_entity_id=None, action=None):
+def entitydata_context_data(entity_id=None, orig_entity_id=None, action=None, update="Entity"):
     context_dict = (
         { 'title':              'Annalist data journal test site'
         , 'coll_id':            'testcoll'
@@ -151,7 +138,7 @@ def entitydata_context_data(entity_id=None, orig_entity_id=None, action=None):
             , 'field_placement':  'small-12 columns'
             , 'field_id':         'Entity_label'
             , 'field_value_type': 'annal:Text'
-            , 'field_value':      'Entity data ... (testcoll/testtype)'
+            , 'field_value':      '%s data ... (testcoll/testtype)'%(update)
             }
           , { 'field_label':      'Comment'
             , 'field_render':     'field/annalist_field_textarea.html'
@@ -159,15 +146,15 @@ def entitydata_context_data(entity_id=None, orig_entity_id=None, action=None):
             , 'field_placement':  'small-12 columns'
             , 'field_id':         'Entity_comment'
             , 'field_value_type': 'annal:Longtext'
-            , 'field_value':      'Description of entity data ... (testcoll/testtype)'
+            , 'field_value':      '%s description ... (testcoll/testtype)'%(update)
             }
           ]
         , 'continuation_uri':   entitydata_list_uri("testcoll", "testtype")
         })
     if entity_id:
         context_dict['fields'][0]['field_value'] = entity_id
-        context_dict['fields'][1]['field_value'] = 'Entity testcoll/testtype/%s'%entity_id
-        context_dict['fields'][2]['field_value'] = 'Entity: coll testcoll, type testtype, entity %s'%entity_id
+        context_dict['fields'][1]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
+        context_dict['fields'][2]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
         context_dict['orig_entity_id']  = entity_id
     if orig_entity_id:
         context_dict['orig_entity_id']  = orig_entity_id
@@ -175,14 +162,34 @@ def entitydata_context_data(entity_id=None, orig_entity_id=None, action=None):
         context_dict['action']  = action
     return context_dict
 
-def entitydata_updated_values(entity_id):
+def entitydata_values(entity_id, update="Entity"):
     return (
         { '@id':            './'
         , 'annal:id':       entity_id
         , 'annal:type':     'annal:EntityData'
         , 'annal:uri':      entitydata_access_uri("testcoll", "testtype", entity_id)
-        , 'rdfs:label':     'Entity testcoll/testtype/%s'%entity_id
-        , 'rdfs:comment':   'Entity: coll testcoll, type testtype, entity %s'%entity_id
+        , 'rdfs:label':     '%s testcoll/testtype/%s'%(update,entity_id)
+        , 'rdfs:comment':   '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
+        })
+
+#   ----- Misc data -----
+
+def entitydata_delete_confirm_form_data(entity_id=None):
+    return (
+        { 'entitylist':    entity_id,
+          'entity_delete': 'Delete'
+        })
+
+def collection_create_values(coll_id="testcoll"):
+    return (
+        { 'rdfs:label':     'Collection %s'%coll_id
+        , 'rdfs:comment':   'Description of Collection %s'%coll_id
+        })
+
+def recordtype_create_values(type_id="testtype"):
+    return (
+        { 'rdfs:label':     'recordType %s'%type_id
+        , 'rdfs:comment':   'Description of RecordType %s'%type_id
         })
 
 def entitydata_delete_confirm_values(coll_id, entity_id):
@@ -290,24 +297,14 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         e = EntityData.create(self.testdata, entity_id, entitydata_create_values(entity_id))
         return e    
 
-    def _check_entity_data_values(self, entity_id):
-        "Helper function checks content of record type entry with supplied entity_id"
-        self.assertTrue(EntityData.exists(self.testdata, entity_id))
-        e = EntityData.load(self.testdata, entity_id)
-        self.assertEqual(e.get_id(), entity_id)
-        entity_uri = TestHostUri + entitydata_access_uri("testcoll", "testtype", entity_id)
-        self.assertEqual(e.get_uri(""), entity_uri)
-        self._assert_dict_match(e.get_values(), entitydata_load_values(entity_id))
-        return e
-
-    def _check_updated_entity_data_values(self, entity_id):
+    def _check_entity_data_values(self, entity_id, update="Entity"):
         "Helper function checks content of form-updated record type entry with supplied entity_id"
         self.assertTrue(EntityData.exists(self.testdata, entity_id))
         e = EntityData.load(self.testdata, entity_id)
         self.assertEqual(e.get_id(), entity_id)
         entity_uri = TestHostUri + entitydata_access_uri("testcoll", "testtype", entity_id)
         self.assertEqual(e.get_uri(""), entity_uri)
-        self._assert_dict_match(e.get_values(), entitydata_updated_values(entity_id))
+        self._assert_dict_match(e.get_values(), entitydata_values(entity_id, update=update))
         return e
 
     def _assert_dict_match(self, actual_dict, expect_dict, prefix=""):
@@ -501,7 +498,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], TestHostUri + entitydata_list_uri("testcoll", "testtype"))
         # Check that new record type exists
-        self._check_updated_entity_data_values("newentity")
+        self._check_entity_data_values("newentity")
         return
 
     def test_post_new_entity_cancel(self):
@@ -550,68 +547,68 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
     def test_post_copy_entity(self):
         self.assertFalse(EntityData.exists(self.testdata, "copytype"))
         f = entitydata_form_data(entity_id="copytype", action="copy")
-        u = entitydata_edit_uri("new", "testcoll", "testtype", entity_id="entity1")
+        u = entitydata_edit_uri("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], collection_edit_uri())
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_uri("testcoll", "testtype"))
         # Check that new record type exists
-        self._check_updated_entity_data_values("copytype")
+        self._check_entity_data_values("copytype")
         return
 
     def test_post_copy_entity_cancel(self):
         self.assertFalse(EntityData.exists(self.testdata, "copytype"))
         f = entitydata_form_data(entity_id="copytype", action="copy", cancel="Cancel")
-        u = entitydata_edit_uri("copy", "testcoll", entity_id="copytype")
+        u = entitydata_edit_uri("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], collection_edit_uri())
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_uri("testcoll", "testtype"))
         # Check that target record type still does not exist
         self.assertFalse(EntityData.exists(self.testdata, "copytype"))
         return
 
     def test_post_copy_entity_missing_id(self):
         f = entitydata_form_data(action="copy")
-        u = entitydata_edit_uri("copy", "testcoll", "testtype", entity_id="copytype")
+        u = entitydata_edit_uri("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Annalist data journal test site</title>")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
-        self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
+        self.assertContains(r, "<h3>Problem with entity identifier</h3>")
+        self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         expect_context = entitydata_context_data(action="copy")
         self._assert_dict_match(r.context, expect_context)
         return
 
     def test_post_copy_entity_invalid_id(self):
-        f = entitydata_form_data(entity_id="!badtype", orig_entity_id="orig_entity_id", action="copy")
-        u = entitydata_edit_uri("copy", "testcoll", "testtype", entity_id="copytype")
+        f = entitydata_form_data(entity_id="!badentity", orig_entity_id="orig_entity_id", action="copy")
+        u = entitydata_edit_uri("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Annalist data journal test site</title>")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
-        self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
-        expect_context = entitydata_context_data(entity_id="!badtype", orig_entity_id="orig_entity_id", action="copy")
+        self.assertContains(r, "<h3>Problem with entity identifier</h3>")
+        self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
+        expect_context = entitydata_context_data(entity_id="!badentity", orig_entity_id="orig_entity_id", action="copy")
         self._assert_dict_match(r.context, expect_context)
         return
 
     #   -------- edit type --------
 
     def test_post_edit_entity(self):
-        self._create_entity_data("edittype")
-        self._check_entity_data_values("edittype")
-        f = entitydata_form_data(entity_id="edittype", action="edit")
-        u = entitydata_edit_uri("edit", "testcoll", "testtype", entity_id="edittype")
+        self._create_entity_data("entityedit")
+        self._check_entity_data_values("entityedit")
+        f = entitydata_form_data(entity_id="entityedit", action="edit", update="Updated entity")
+        u = entitydata_edit_uri("edit", "testcoll", "testtype", entity_id="entityedit")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], collection_edit_uri())
-        self._check_updated_entity_data_values("edittype")
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_uri("testcoll", "testtype"))
+        self._check_entity_data_values("entityedit", update="Updated entity")
         return
 
     def test_post_edit_entity_new_id(self):
@@ -624,23 +621,23 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], collection_edit_uri())
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_uri("testcoll", "testtype"))
         # Check that new record type exists and old does not
         self.assertFalse(EntityData.exists(self.testdata, "edittype1"))
-        self._check_updated_entity_data_values("edittype2")
+        self._check_entity_data_values("edittype2")
         return
 
     def test_post_edit_entity_cancel(self):
         self._create_entity_data("edittype")
         self._check_entity_data_values("edittype")
         # Post from cancelled edit form
-        f = entitydata_form_data(entity_id="edittype", action="edit", cancel="Cancel")
+        f = entitydata_form_data(entity_id="edittype", action="edit", cancel="Cancel", update="Updated entity")
         u = entitydata_edit_uri("edit", "testcoll", "testtype", entity_id="edittype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], collection_edit_uri())
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_uri("testcoll", "testtype"))
         # Check that target record type still does not exist and unchanged
         self._check_entity_data_values("edittype")
         return
@@ -649,31 +646,42 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self._create_entity_data("edittype")
         self._check_entity_data_values("edittype")
         # Form post with ID missing
-        f = entitydata_form_data(action="edit")
+        f = entitydata_form_data(action="edit", update="Updated entity")
         u = entitydata_edit_uri("edit", "testcoll", "testtype", entity_id="edittype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Annalist data journal test site</title>")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
-        self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
+        self.assertContains(r, "<h3>Problem with entity identifier</h3>")
+        self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context for re-rendered form
-        expect_context = entitydata_context_data(action="edit")
+        expect_context = entitydata_context_data(action="edit", update="Updated entity")
         self._assert_dict_match(r.context, expect_context)
+        # Check stored entity is unchanged
+        self._check_entity_data_values("edittype")
         return
 
     def test_post_edit_entity_invalid_id(self):
-        f = entitydata_form_data(entity_id="!badtype", orig_entity_id="orig_entity_id", action="edit")
+        self._create_entity_data("edittype")
+        self._check_entity_data_values("edittype")
+        # Form post with ID malformed
+        f = entitydata_form_data(
+            entity_id="!badentity", orig_entity_id="orig_entity_id", action="edit"
+            )
         u = entitydata_edit_uri("edit", "testcoll", "testtype", entity_id="edittype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Annalist data journal test site</title>")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
-        self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
-        # Test context
-        expect_context = entitydata_context_data(entity_id="!badtype", orig_entity_id="orig_type_id", action="edit")
+        self.assertContains(r, "<h3>Problem with entity identifier</h3>")
+        self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
+        # Test context for re-rendered form
+        expect_context = entitydata_context_data(
+            entity_id="!badentity", orig_entity_id="orig_entity_id", action="edit"
+            )
         self._assert_dict_match(r.context, expect_context)
+        # Check stored entity is unchanged
+        self._check_entity_data_values("edittype")
         return
 
 #   -----------------------------------------------------------------------------
