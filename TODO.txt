@@ -69,12 +69,13 @@
   - URI (re)design for record display
 4. Default record view/edit display (code to be refactored later)
    / form generation
-   - form display test cases
+   / form display test cases
+   / provision for data access fallback to site data (for types, views, fields, etc.)
+   > form response handler
+   > test cases
    - change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.  Similar for /d/ and /data/?
    - refactor form display
-   - form response handler
-   - test cases
-   / provision for data access fallback to site data (for types, views, fields, etc.)
+   - create data view display based on generic render logic
 5. Default record list display
    - form generation
    - form display test cases
@@ -85,6 +86,13 @@
 7. Record view display and editing
 8. Generic record list display and editing
 9. ...
+
+99. Future features (see also Misc below)
+- spreadhsheet bridge
+- provenance data
+- git integration for dat versioning
+- memento integration for old data recovery
+- ResourceSync integration for data sync
 
 Tests required:
 - Missing resource error reporting in:
@@ -98,13 +106,13 @@ Misc:
 - Complete authorization framework, per collection
 / can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
 
-- think about use of CURIES in data (e.g. for types, fields, etc.)
+- think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.
 - think about handling of identifier renaming (re-write data, record equivalence, or ...).  (See also "data storage" below.)
    - when renaming through edit form, update URI if it corresponds to previous ID??
    - need to think about maintaining a list of correspopnding URIs?
 - Use server-internal revectoring?  What about delete multiple?
-- currently there's some inconsistency about this: confirm views are rendered directly (as this allows form parameters to be provided directly), but other form action links are handled by redirection.  Try to be more consistent about this?  Create a more general pattern for handling continuation forms?
-- move util.py to utils package, and rename?  Note: redirect means that different view GET function signatures, with values provided in the request URI, are handled in generic fashion.  POST views are more easily handled directly with form parameters as suppliued dictionary
+- currently there's some inconsistency about this: confirm views are rendered directly (as this allows form parameters to be provided directly), but other form action links are handled by redirection.  Try to be more consistent about this?  Create a more general pattern for handling continuation forms?    Note: redirect means that different view GET function signatures, with values provided in the request URI, are handled in generic fashion.  POST views are more easily handled directly with form parameters as supplied dictionary
+- move util.py to utils package, and rename?
 - entity._save: think about capturing provenance metadata too
 / move entity I/O logic in util module to entity module (keep it all together)
 ? view collections doesn't use entered label - problem with entry vocab? (Fixed?)
@@ -134,11 +142,6 @@ Data storage:
 
 Deployment:
 - look into using Vagrant and/or Puppet/Chef/...
-
-
-## Dynamic form interface
-
-(To be planned)
 
 
 ## Authorization
