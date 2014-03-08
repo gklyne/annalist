@@ -90,9 +90,9 @@ def entitydata_load_values(entity_id):
         { '@id':                './'
         , 'annal:id':           entity_id
         , 'annal:type':         'annal:EntityData'
-        , 'annal:uri':          '/%s/c/testcoll/d/testtype/%s/'%(TestBasePath, entity_id)
+        , 'annal:uri':          entitydata_access_uri("testcoll", "testtype", entity_id)
         , 'rdfs:label':         'Entity testcoll/testtype/%s'%entity_id
-        , 'rdfs:comment':       'Entity: coll testcoll, type testtype, entity %s'%entity_id
+        , 'rdfs:comment':       'Entity coll testcoll, type testtype, entity %s'%entity_id
         })
 
 def entitydata_form_data(entity_id=None, orig_entity_id=None, action=None, cancel=None, update="Entity"):
@@ -229,8 +229,8 @@ class EntityDataTest(TestCase):
         self.assertEqual(e._entityfile,     layout.ENTITY_DATA_FILE)
         self.assertEqual(e._entityref,      layout.DATA_ENTITY_REF)
         self.assertEqual(e._entityid,       "testentity")
-        self.assertEqual(e._entityuri,      TestBaseUri+"/collections/testcoll/d/testtype/testentity/")
-        self.assertEqual(e._entitydir,      TestBaseDir+"/collections/testcoll/d/testtype/testentity/")
+        self.assertEqual(e._entityuri,      TestHostUri + entitydata_access_uri("testcoll", "testtype", "testentity"))
+        self.assertEqual(e._entitydir,      TestBaseDir + "/collections/testcoll/d/testtype/testentity/")
         self.assertEqual(e._values,         None)
         return
 

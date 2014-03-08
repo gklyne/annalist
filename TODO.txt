@@ -18,6 +18,7 @@
 * Define data access internal API details for web site
   * First cut in progress
   * @@NOTE: remember to use simple GET semantics where possible; may need to revisist and simplify
+  * @@TODO: current implementation is file-based, but details are hidden in Entity classes.
 * Define UI generation details
 * Implement data access API details
   * Mostly straight HTTP GET, etc
@@ -73,6 +74,7 @@
    / provision for data access fallback to site data (for types, views, fields, etc.)
    > form response handler
    > test cases
+   - refactor URI and test data support for test cases to separate module; use reverse for URI generation; isolate directory generation for tests.
    - change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.  Similar for /d/ and /data/?
    - refactor form display
    - create data view display based on generic render logic

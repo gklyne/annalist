@@ -66,6 +66,9 @@ init_collections = (
         }
     })
 
+def collection_edit_uri(coll_id):
+    return reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
+
 class SiteTest(TestCase):
     """
     Tests for Site object interface
@@ -120,7 +123,7 @@ class SiteTest(TestCase):
         self.assertEquals(sd["title"],        "Annalist data journal test site")
         self.assertEquals(sd["rdfs:label"],   "Annalist data journal test site")
         self.assertEquals(sd["rdfs:comment"], "Annalist site metadata.")
-        self.assertEquals(sd["collections"].keys(),  ["coll1","coll2","coll3"])
+        self.assertEquals(sd["collections"].keys(), ["coll1","coll2","coll3","testcoll"])
         for k in self.coll1:
             self.assertTrue(k in sd["collections"]["coll1"])
             self.assertEqual(sd["collections"]["coll1"][k], self.coll1[k])
@@ -130,26 +133,26 @@ class SiteTest(TestCase):
 
     def test_collections_dict(self):
         colls = self.testsite.collections_dict()
-        self.assertEquals(colls.keys(),["coll1","coll2","coll3"])
+        self.assertEquals(colls.keys(),["coll1","coll2","coll3","testcoll"])
         self.assertEquals(dict_to_str(colls["coll1"]),  self.coll1)
         return
 
     def test_add_collection(self):
         colls = self.testsite.collections_dict()
-        self.assertEquals(colls.keys(),["coll1","coll2","coll3"])
+        self.assertEquals(colls.keys(),["coll1","coll2","coll3","testcoll"])
         self.testsite.add_collection("new", self.collnewmeta)
         colls = self.testsite.collections_dict()
-        self.assertEquals(colls.keys(),["coll1","coll2","coll3","new"])
+        self.assertEquals(set(colls.keys()),set(["coll1","coll2","coll3","testcoll","new"]))
         self.assertEquals(dict_to_str(colls["coll1"]), self.coll1)
         self.assertEquals(dict_to_str(colls["new"]),   self.collnew)
         return
 
     def test_remove_collection(self):
         colls = self.testsite.collections_dict()
-        self.assertEquals(colls.keys(),["coll1","coll2","coll3"])
+        self.assertEquals(colls.keys(),["coll1","coll2","coll3","testcoll"])
         self.testsite.remove_collection("coll2")
         collsb = self.testsite.collections_dict()
-        self.assertEquals(collsb.keys(),["coll1","coll3"])
+        self.assertEquals(collsb.keys(),["coll1","coll3","testcoll"])
         self.assertEquals(dict_to_str(colls["coll1"]),  self.coll1)
         return
 
@@ -221,7 +224,7 @@ class SiteViewTest(AnnalistTestCase):
         self.assertFalse(r.context["auth_update"])
         self.assertFalse(r.context["auth_delete"])
         colls = r.context['collections']
-        self.assertEqual(len(colls), 3)
+        self.assertEqual(len(colls), 4)
         for id in init_collections:
             self.assertEqual(colls[id]["annal:id"],   id)
             self.assertEqual(colls[id]["annal:uri"],  init_collections[id]["uri"])
@@ -242,13 +245,13 @@ class SiteViewTest(AnnalistTestCase):
         # print s.table.tbody.find_all("tr")
         # print "*****"
         trows = s.form.find_all("div", class_="row")
-        self.assertEqual(len(trows), 4)
+        self.assertEqual(len(trows), 5)
         self.assertEqual(trows[1].div.p.a.string,  "coll1")
-        self.assertEqual(trows[1].div.p.a['href'], "/"+TestBasePath+"/collections/coll1/")
+        self.assertEqual(trows[1].div.p.a['href'], collection_edit_uri("coll1"))
         self.assertEqual(trows[2].div.p.a.string,  "coll2")
-        self.assertEqual(trows[2].div.p.a['href'], "/"+TestBasePath+"/collections/coll2/")
+        self.assertEqual(trows[2].div.p.a['href'], collection_edit_uri("coll2"))
         self.assertEqual(trows[3].div.p.a.string,  "coll3")
-        self.assertEqual(trows[3].div.p.a['href'], "/"+TestBasePath+"/collections/coll3/")
+        self.assertEqual(trows[3].div.p.a['href'], collection_edit_uri("coll3"))
         return
 
     def test_get_with_login(self):
@@ -260,7 +263,7 @@ class SiteViewTest(AnnalistTestCase):
         self.assertTrue(r.context["auth_update"])
         self.assertTrue(r.context["auth_delete"])
         colls = r.context['collections']
-        self.assertEqual(len(colls), 3)
+        self.assertEqual(len(colls), 4)
         for id in init_collections:
             # First two here added in site data for view template
             self.assertEqual(colls[id]["id"],   id)
@@ -284,39 +287,45 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(menuitems[1].a['href'], "/"+TestBasePath+"/logout/")
         # Displayed colllections and check-buttons
         trows = s.form.find_all("div", class_="row")
-        self.assertEqual(len(trows), 6)
+        self.assertEqual(len(trows), 7)
         tcols1 = trows[1].find_all("div")
         self.assertEqual(tcols1[0].a.string,       "coll1")
-        self.assertEqual(tcols1[0].a['href'],      "/"+TestBasePath+"/collections/coll1/")
+        self.assertEqual(tcols1[0].a['href'],      collection_edit_uri("coll1"))
         self.assertEqual(tcols1[2].input['type'],  "checkbox")
         self.assertEqual(tcols1[2].input['name'],  "select")
         self.assertEqual(tcols1[2].input['value'], "coll1")
         tcols2 = trows[2].find_all("div")
         self.assertEqual(tcols2[0].a.string,       "coll2")
-        self.assertEqual(tcols2[0].a['href'],      "/"+TestBasePath+"/collections/coll2/")
+        self.assertEqual(tcols2[0].a['href'],      collection_edit_uri("coll2"))
         self.assertEqual(tcols2[2].input['type'],  "checkbox")
         self.assertEqual(tcols2[2].input['name'],  "select")
         self.assertEqual(tcols2[2].input['value'], "coll2")
         tcols3 = trows[3].find_all("div")
         self.assertEqual(tcols3[0].a.string,       "coll3")
-        self.assertEqual(tcols3[0].a['href'],      "/"+TestBasePath+"/collections/coll3/")
+        self.assertEqual(tcols3[0].a['href'],      collection_edit_uri("coll3"))
         self.assertEqual(tcols3[2].input['type'],  "checkbox")
         self.assertEqual(tcols3[2].input['name'],  "select")
         self.assertEqual(tcols3[2].input['value'], "coll3")
+        tcols4 = trows[4].find_all("div")
+        self.assertEqual(tcols4[0].a.string,       "testcoll")
+        self.assertEqual(tcols4[0].a['href'],      TestHostUri + collection_edit_uri("testcoll"))
+        self.assertEqual(tcols4[2].input['type'],  "checkbox")
+        self.assertEqual(tcols4[2].input['name'],  "select")
+        self.assertEqual(tcols4[2].input['value'], "testcoll")
         # Remove/new collection buttons
-        btn_remove = trows[4].find("div", class_="right")
+        btn_remove = trows[5].find("div", class_="right")
         self.assertEqual(btn_remove.input["type"],  "submit")
         self.assertEqual(btn_remove.input["name"],  "remove")
         # print "**********"
         # print trows[5].prettify()
         # print "**********"
-        field_id = trows[5].find_all("div")[0]
+        field_id = trows[6].find_all("div")[0]
         self.assertEqual(field_id.input["type"],  "text")
         self.assertEqual(field_id.input["name"],  "new_id")
-        field_id = trows[5].find_all("div")[1]
+        field_id = trows[6].find_all("div")[1]
         self.assertEqual(field_id.input["type"],  "text")
         self.assertEqual(field_id.input["name"],  "new_label")
-        btn_new = trows[5].find_all("div")[2]
+        btn_new = trows[6].find_all("div")[2]
         self.assertEqual(btn_new.input["type"],  "submit")
         self.assertEqual(btn_new.input["name"],  "new")
         return
@@ -342,7 +351,7 @@ class SiteViewTest(AnnalistTestCase):
         new_collections = init_collections.copy()
         new_collections["testnew"] = (
             { 'title': 'Label for new collection'
-            , 'uri':   '/'+TestBasePath+'/collections/testnew/'
+            , 'uri':   collection_edit_uri("testnew")
             })
         colls = r.context['collections']
         for id in new_collections:
@@ -433,7 +442,7 @@ class SiteActionViewTests(AnnalistTestCase):
         # Confirm collections deleted
         r = self.client.get("/"+TestBasePath+"/site/")
         colls = r.context['collections']
-        self.assertEqual(len(colls), 1)
+        self.assertEqual(len(colls), 2)
         id = "coll2"
         self.assertEqual(colls[id]["annal:id"],   id)
         self.assertEqual(colls[id]["annal:uri"],  init_collections[id]["uri"])
@@ -452,7 +461,7 @@ class SiteActionViewTests(AnnalistTestCase):
         # Confirm no collections deleted
         r = self.client.get("/"+TestBasePath+"/site/")
         colls = r.context['collections']
-        self.assertEqual(len(colls), 3)
+        self.assertEqual(len(colls), 4)
         for id in init_collections:
             self.assertEqual(colls[id]["annal:id"],   id)
             self.assertEqual(colls[id]["annal:uri"],  init_collections[id]["uri"])

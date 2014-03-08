@@ -21,6 +21,7 @@ from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
 from annalist                   import util
 from annalist.models.entity     import Entity
+from annalist.models.entitydata import EntityData
 
 class RecordTypeData(Entity):
 
@@ -38,5 +39,9 @@ class RecordTypeData(Entity):
         """
         super(RecordTypeData, self).__init__(parent, type_id)
         return
+
+    def remove_entity(self, entity_id):
+        t = EntityData.remove(self, entity_id)
+        return t
 
 # End.

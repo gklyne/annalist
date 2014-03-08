@@ -36,6 +36,7 @@ from annalist                       import layout
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
+from annalist.models.recordtypedata import RecordTypeData
 
 LOGIN_URIS = None
 
@@ -68,6 +69,9 @@ class AnnalistGenericView(ContentNegotiationView):
 
     def recordtype(self, coll_id, type_id):
         return RecordType(self.collection(coll_id), type_id)
+
+    def recordtypedata(self, coll_id, type_id):
+        return RecordTypeData(self.collection(coll_id), type_id)
 
     def error(self, values):
         """

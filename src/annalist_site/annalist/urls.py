@@ -83,7 +83,6 @@ urlpatterns = patterns('',
     url(r'^collections/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/$',
                             EntityDefaultEditView.as_view(),
                             name='AnnalistEntityDataAccessView'),
-
     )
 
 urlpatterns += patterns('',

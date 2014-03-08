@@ -186,11 +186,11 @@ class CollectionTest(TestCase):
     def test_add_type(self):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         typenames = { t.get_id() for t in self.testcoll.types() }
-        self.assertEqual(typenames, set())
+        self.assertEqual(typenames, {"testtype"})
         t1 = self.testcoll.add_type("type1", self.type1_add)
         t2 = self.testcoll.add_type("type2", self.type2_add)
         typenames = { t.get_id() for t in self.testcoll.types() }
-        self.assertEqual(typenames, {"type1", "type2"})
+        self.assertEqual(typenames, {"type1", "type2", "testtype"})
         return
 
     def test_get_type(self):
@@ -207,10 +207,10 @@ class CollectionTest(TestCase):
         t1 = self.testcoll.add_type("type1", self.type1_add)
         t2 = self.testcoll.add_type("type2", self.type2_add)
         typenames =  set([ t.get_id() for t in self.testcoll.types()])
-        self.assertEqual(typenames, {"type1", "type2"})
+        self.assertEqual(typenames, {"type1", "type2", "testtype"})
         self.testcoll.remove_type("type1")
         typenames =  set([ t.get_id() for t in self.testcoll.types()])
-        self.assertEqual(typenames, {"type2"})
+        self.assertEqual(typenames, {"type2", "testtype"})
         return
 
     # Record views

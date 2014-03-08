@@ -110,14 +110,6 @@ class EntityEditBaseView(AnnalistGenericView):
                 context, kmap.s, kmap.c, kmap.f, form_data, 
                 **kwargs
                 )
-
-        # for kmap in self._entityvaluemap:
-        #     if kmap.c:
-        #         if kmap.f and kmap.f in form_data:
-        #             context[kmap.c] = form_data[kmap.f]
-        #         elif kmap.c in kwargs:
-        #             context[kmap.c] = kwargs[kmap.c]
-
         return context
 
     def map_form_data_to_values(self, form_data, **kwargs):
@@ -173,7 +165,7 @@ class EntityEditBaseView(AnnalistGenericView):
         returns an object of the appropriate type.  If an existing entity is accessed, values
         are read from storage, otherwise a new entity object is created but not yet saved.
         """
-        log.info("get_entity id %s, parent %s, action %s"%(entityid, parent._entitydir, action))
+        log.debug("get_entity id %s, parent %s, action %s"%(entityid, parent._entitydir, action))
         entity = None
         if action == "new":
             entity = self._entityclass(parent, entityid)
