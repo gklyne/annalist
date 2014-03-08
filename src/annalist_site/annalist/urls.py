@@ -17,7 +17,7 @@ from annalist.views.recordtype  import RecordTypeEditView, RecordTypeDeleteConfi
 from oauth2.views               import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
 
 from annalist.views.defaultlist import EntityDefaultListView
-from annalist.views.defaultedit import EntityDefaultEditView
+from annalist.views.defaultedit import EntityDefaultEditView, EntityDataDeleteConfirmedView
 
 # @@TODO: Thoughts for URI design: 1-letter path segments:
 #
@@ -83,6 +83,10 @@ urlpatterns = patterns('',
     url(r'^collections/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/$',
                             EntityDefaultEditView.as_view(),
                             name='AnnalistEntityDataAccessView'),
+    url(r'^collections/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/!delete_confirmed$',
+                            EntityDataDeleteConfirmedView.as_view(),
+                            name='AnnalistEntityDataDeleteView'),
+
     )
 
 urlpatterns += patterns('',

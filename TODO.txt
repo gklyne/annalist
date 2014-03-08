@@ -72,8 +72,8 @@
    / form generation
    / form display test cases
    / provision for data access fallback to site data (for types, views, fields, etc.)
-   > form response handler
-   > test cases
+   / form response handler
+   / test cases
    - refactor URI and test data support for test cases to separate module; use reverse for URI generation; isolate directory generation for tests.
    - change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.  Similar for /d/ and /data/?
    - refactor form display

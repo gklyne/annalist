@@ -296,7 +296,6 @@ class EntityDeleteConfirmedBaseView(AnnalistGenericView):
         auth_required = self.authorize("DELETE")
         if auth_required:
             return auth_required
-        type_id = request.POST['typelist']
         err     = remove_fn(entityid)
         if err:
             return self.redirect_error(continuation_uri, str(err))
