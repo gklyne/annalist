@@ -15,6 +15,7 @@ from django.conf                    import settings
 from django.http                    import QueryDict
 from django.core.urlresolvers       import resolve, reverse
 
+from annalist.util                  import valid_id
 from annalist.identifiers           import RDF, RDFS, ANNAL
 # from annalist                       import layout
 # from annalist.models.site           import Site
@@ -42,7 +43,11 @@ def collection_edit_uri(coll_id="testcoll"):
 
 def recordtype_uri(coll_id, type_id):
     viewname = "AnnalistRecordTypeAccessView"
-    kwargs   = {'coll_id': coll_id, 'type_id': type_id}
+    kwargs   = {'coll_id': coll_id}
+    if valid_id(type_id):
+        kwargs.update({'type_id': type_id})
+    else:
+        kwargs.update({'type_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
 def recordtype_edit_uri(action, coll_id, type_id=None):
@@ -57,7 +62,10 @@ def recordtype_edit_uri(action, coll_id, type_id=None):
     if action != "delete":
         kwargs.update({'action': action})
     if type_id:
-        kwargs.update({'type_id': type_id})
+        if valid_id(type_id):
+            kwargs.update({'type_id': type_id})
+        else:
+            kwargs.update({'type_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
 def entity_uri(coll_id, type_id, entity_id):
@@ -231,19 +239,65 @@ def recordtype_create_values(type_id="testtype", update="RecordType"):
     Entity values used when creating a record type entity
     """
     return (
-        { 'rdfs:label':     '%s %s'%(update,type_id)
-        , 'rdfs:comment':   '%s description for %s'%(update,type_id)
+        { 'rdfs:label':     "%s %s in collection testcoll"%(update, type_id)
+        , 'rdfs:comment':   "%s help for %s in collection testcoll"%(update,type_id)
         })
 
 def recordtype_values(type_id, update="RecordType"):
     d = recordtype_create_values(type_id, update=update).copy()
     d.update(
-        { '@id':            './'
+        { '@id':            "./"
         , 'annal:id':       type_id
-        , 'annal:type':     'annal:RecordType'
+        , 'annal:type':     "annal:RecordType"
         , 'annal:uri':      TestHostUri + recordtype_uri("testcoll", type_id)
         })
     return d
+
+def recordtype_context_data(type_id=None, orig_type_id=None, action=None, update="RecordType"):
+    context_dict = (
+        { 'title':              "Annalist data journal test site"
+        , 'coll_id':            "testcoll"
+        , 'orig_type_id':       "orig_type_id"
+        , 'type_label':         "%s ... in collection testcoll"%(update)
+        , 'type_help':          "%s help for ... in collection testcoll"%(update)
+        , 'type_uri':           recordtype_uri("testcoll", "___")
+        , 'continuation_uri':   collection_edit_uri("testcoll")
+        })
+    if type_id:
+        context_dict['type_id']       = type_id
+        context_dict['orig_type_id']  = type_id
+        context_dict['type_label']    = "%s %s in collection testcoll"%(update, type_id)
+        context_dict['type_help']     = "%s help for %s in collection testcoll"%(update,type_id)
+        context_dict['type_uri']      = TestHostUri + recordtype_uri("testcoll", type_id)
+    if orig_type_id:
+        context_dict['orig_type_id']  = orig_type_id
+    if action:  
+        context_dict['action']  = action
+    return context_dict
+
+def recordtype_form_data(type_id=None, orig_type_id=None, action=None, cancel=None, update="RecordType"):
+    form_data_dict = (
+        { 'type_label':       "%s ... in collection testcoll"%(update)
+        , 'type_help':        "%s help for ... in collection testcoll"%(update)
+        , 'type_class':       recordtype_uri("testcoll", "___")
+        , 'orig_type_id':     "orig_type_id"
+        , 'continuation_uri': collection_edit_uri("testcoll")
+        })
+    if type_id:
+        form_data_dict['type_id']       = type_id
+        form_data_dict['orig_type_id']  = type_id
+        form_data_dict['type_label']    = "%s %s in collection testcoll"%(update, type_id)
+        form_data_dict['type_help']     = "%s help for %s in collection testcoll"%(update,type_id)
+        form_data_dict['type_class']    = TestHostUri + recordtype_uri("testcoll", type_id)
+    if orig_type_id:
+        form_data_dict['orig_type_id']  = orig_type_id
+    if action:
+        form_data_dict['action']        = action
+    if cancel:
+        form_data_dict['cancel']        = "Cancel"
+    else:
+        form_data_dict['save']          = "Save"
+    return form_data_dict
 
 def recordtype_delete_confirm_form_data(type_id=None):
     return (
