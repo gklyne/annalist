@@ -71,10 +71,7 @@ class RecordTypeEditView(EntityEditBaseView):
         # Set up RecordType-specific values
         type_id              = self.get_entityid(action, coll, type_id)
         initial_type_values  = (
-            { "annal:id":     type_id
-            , "annal:type":   "annal:RecordType"
-            , "annal:uri":    coll._entityuri+type_id+"/"
-            , "rdfs:label":   message.RECORD_TYPE_LABEL%(type_id, coll_id)
+            { "rdfs:label":   message.RECORD_TYPE_LABEL%(type_id, coll_id)
             , "rdfs:comment": ""
             })
         context_extra_values = (

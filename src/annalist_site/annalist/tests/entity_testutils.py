@@ -40,6 +40,11 @@ def site_view_uri():
 def collection_edit_uri(coll_id="testcoll"):
     return reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
 
+def recordtype_uri(coll_id, type_id):
+    viewname = "AnnalistRecordTypeAccessView"
+    kwargs   = {'coll_id': coll_id, 'type_id': type_id}
+    return reverse(viewname, kwargs=kwargs)
+
 def recordtype_edit_uri(action, coll_id, type_id=None):
     viewname = ( 
         'AnnalistRecordTypeNewView'     if action == "new"    else
@@ -187,18 +192,9 @@ def entitydata_form_data(entity_id=None, orig_entity_id=None, action=None, cance
 
 #   -----------------------------------------------------------------------------
 #
-#   ----- Miscellaneous data
+#   ----- Collection data
 #
 #   -----------------------------------------------------------------------------
-
-def entitydata_delete_confirm_form_data(entity_id=None):
-    """
-    Form data from entity deletion confirmation
-    """
-    return (
-        { 'entity_id':     entity_id,
-          'entity_delete': 'Delete'
-        })
 
 def collection_create_values(coll_id="testcoll"):
     """
@@ -209,19 +205,59 @@ def collection_create_values(coll_id="testcoll"):
         , 'rdfs:comment':   'Description of Collection %s'%coll_id
         })
 
+def entitydata_delete_confirm_form_data(entity_id=None):
+    """
+    Form data from entity deletion confirmation
+    """
+    return (
+        { 'entity_id':     entity_id,
+          'entity_delete': 'Delete'
+        })
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- RecordType data
+#
+#   -----------------------------------------------------------------------------
+
 def recordtype_value_keys():
     return (
         [ 'annal:id', 'annal:type', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         ])
 
-def recordtype_create_values(type_id="testtype"):
+def recordtype_create_values(type_id="testtype", update="RecordType"):
     """
     Entity values used when creating a record type entity
     """
     return (
-        { 'rdfs:label':     'recordType %s'%type_id
-        , 'rdfs:comment':   'Description of RecordType %s'%type_id
+        { 'rdfs:label':     '%s %s'%(update,type_id)
+        , 'rdfs:comment':   '%s description for %s'%(update,type_id)
         })
+
+def recordtype_values(type_id, update="RecordType"):
+    d = recordtype_create_values(type_id, update=update).copy()
+    d.update(
+        { '@id':            './'
+        , 'annal:id':       type_id
+        , 'annal:type':     'annal:RecordType'
+        , 'annal:uri':      TestHostUri + recordtype_uri("testcoll", type_id)
+        })
+    return d
+
+def recordtype_delete_confirm_form_data(type_id=None):
+    return (
+        { 'typelist':    type_id,
+          'type_delete': 'Delete'
+        })
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- Miscellaneous data
+#
+#   -----------------------------------------------------------------------------
+
+
+
 
 # End.

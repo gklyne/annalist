@@ -15,7 +15,6 @@ log = logging.getLogger(__name__)
 from django.conf                import settings
 from django.db                  import models
 from django.http                import QueryDict
-from django.core.urlresolvers   import resolve, reverse
 from django.contrib.auth.models import User
 from django.test                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client         import Client
@@ -33,9 +32,10 @@ from tests                      import TestHost, TestHostUri, TestBasePath, Test
 from tests                      import init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import (
-    site_view_uri, collection_edit_uri, recordtype_edit_uri,
+    site_view_uri, collection_edit_uri, recordtype_uri, recordtype_edit_uri,
     collection_create_values,
-    recordtype_value_keys
+    recordtype_value_keys, recordtype_create_values, recordtype_values,
+    recordtype_delete_confirm_form_data
     )
 
 #   -----------------------------------------------------------------------------
@@ -43,29 +43,6 @@ from entity_testutils           import (
 #   Test data helpers
 #
 #   -----------------------------------------------------------------------------
-
-def recordtype_delete_confirm_form_data(type_id=None):
-    return (
-        { 'typelist':    type_id,
-          'type_delete': 'Delete'
-        })
-
-def recordtype_create_values(type_id):
-    return (
-        { 'rdfs:label': 'Type testcoll/%s'%type_id
-        , 'rdfs:comment': 'Annalist collection: testcoll, record type: %s'%type_id
-        , 'annal:uri': '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
-        })
-
-def recordtype_load_values(type_id):
-    return (
-        { '@id':            './'
-        , 'annal:id':       type_id
-        , 'annal:type':     'annal:RecordType'
-        , 'annal:uri':      '/%s/collections/testcoll/types/%s/'%(TestBasePath, type_id)
-        , 'rdfs:label':     'Type testcoll/%s'%type_id
-        , 'rdfs:comment':   'Annalist collection: testcoll, record type: %s'%type_id
-        })
 
 def recordtype_form_data(type_id=None, orig_type_id=None, action=None, cancel=None):
     form_data_dict = (
@@ -169,7 +146,7 @@ class RecordTypeTest(TestCase):
         t.set_values(recordtype_create_values("type1"))
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_value_keys()))
-        v = recordtype_load_values("type1")
+        v = recordtype_values("type1")
         self.assertEqual(td, {k:v[k] for k in recordtype_value_keys()})
         return
 
@@ -178,14 +155,14 @@ class RecordTypeTest(TestCase):
         t.set_values(recordtype_create_values("type2"))
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_value_keys()))
-        v = recordtype_load_values("type2")
+        v = recordtype_values("type2")
         self.assertEqual(td, {k:v[k] for k in recordtype_value_keys()})
         return
 
     def test_recordtype_create_load(self):
         t  = RecordType.create(self.testcoll, "type1", recordtype_create_values("type1"))
         td = RecordType.load(self.testcoll, "type1").get_values()
-        v = recordtype_load_values("type1")
+        v = recordtype_values("type1")
         self.assertEqual(td, v)
         return
 
@@ -229,8 +206,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertTrue(RecordType.exists(self.testcoll, type_id))
         t = RecordType.load(self.testcoll, type_id)
         self.assertEqual(t.get_id(), type_id)
-        self.assertEqual(t.get_uri(""), TestBaseUri+"/collections/testcoll/types/%s/"%type_id)
-        self._assert_dict_match(t.get_values(), recordtype_load_values(type_id))
+        self.assertEqual(t.get_uri(""), TestHostUri + recordtype_uri("testcoll", type_id))
+        self._assert_dict_match(t.get_values(), recordtype_values(type_id))
         return t
 
     def _check_updated_record_type_values(self, type_id):
@@ -238,7 +215,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertTrue(RecordType.exists(self.testcoll, type_id))
         t = RecordType.load(self.testcoll, type_id)
         self.assertEqual(t.get_id(), type_id)
-        self.assertEqual(t.get_uri(""), TestBaseUri+"/collections/testcoll/types/%s/"%type_id)
+        self.assertEqual(t.get_uri(""), TestHostUri + recordtype_uri("testcoll", type_id))
         self._assert_dict_match(t.get_values(), recordtype_updated_values(type_id))
         return t
 
@@ -258,11 +235,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_get_new(self):
-        u = reverse(
-                "AnnalistRecordTypeNewView", 
-                kwargs={'coll_id': "coll1", 'action': 'new'}
-                )+"?continuation_uri=/xyzzy/"
-        r = self.client.get(u)
+        u = recordtype_edit_uri("new", "coll1")
+        r = self.client.get(u+"?continuation_uri=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Annalist data journal test site</title>")
@@ -274,16 +248,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['orig_type_id'],     "00000001")
         self.assertEqual(r.context['type_label'],       "Record type 00000001 in collection coll1")
         self.assertEqual(r.context['type_help'],        "")
-        self.assertEqual(r.context['type_uri'],         "/%s/collections/coll1/00000001/"%(TestBasePath))
+        self.assertEqual(r.context['type_uri'],         recordtype_uri("coll1", "00000001"))
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         return
 
     def test_get_copy(self):
-        u = reverse(
-                "AnnalistRecordTypeCopyView", 
-                kwargs={'coll_id': "coll1", 'type_id': 'type1', 'action': 'copy'}
-                )
+        u = recordtype_edit_uri("copy", "coll1", type_id="type1")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -296,16 +267,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['orig_type_id'],     "type1")
         self.assertEqual(r.context['type_label'],       "Record type coll1/type1")
         self.assertEqual(r.context['type_help'],        "Annalist collection1 recordtype1")
-        self.assertEqual(r.context['type_uri'],         "http://localhost:8000/annalist/collections/coll1/types/type1/")
+        self.assertEqual(r.context['type_uri'],         TestHostUri + recordtype_uri("coll1", "type1"))
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_uri'], None)
         return
 
     def test_get_copy_not_exists(self):
-        u = reverse(
-                "AnnalistRecordTypeCopyView", 
-                kwargs={'coll_id': "coll1", 'type_id': 'notype', 'action': 'copy'}
-                )
+        u = recordtype_edit_uri("copy", "coll1", type_id="notype")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
@@ -315,10 +283,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_get_edit(self):
-        u = reverse(
-                "AnnalistRecordTypeEditView", 
-                kwargs={'coll_id': "coll1", 'type_id': 'type1', 'action': 'edit'}
-                )
+        u = recordtype_edit_uri("edit", "coll1", type_id="type1")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -331,7 +296,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['orig_type_id'],     "type1")
         self.assertEqual(r.context['type_label'],       "Record type coll1/type1")
         self.assertEqual(r.context['type_help'],        "Annalist collection1 recordtype1")
-        self.assertEqual(r.context['type_uri'],         "http://localhost:8000/annalist/collections/coll1/types/type1/")
+        self.assertEqual(r.context['type_uri'],         TestHostUri + recordtype_uri("coll1", "type1"))
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_uri'], None)
         return
