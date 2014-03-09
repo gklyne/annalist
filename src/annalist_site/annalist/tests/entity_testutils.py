@@ -312,6 +312,4 @@ def recordtype_delete_confirm_form_data(type_id=None):
 #   -----------------------------------------------------------------------------
 
 
-
-
 # End.
