@@ -38,6 +38,7 @@ class SiteView(AnnalistGenericView):
         Create a rendering of the current site home page, containing (among other things)
         a list of defined collections.
         """
+        # log.info("SiteView.get: site_data %r"%(self.site_data()))
         return (
             # self.authenticate() or 
             self.authorize("VIEW") or 

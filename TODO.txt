@@ -74,8 +74,11 @@
    / provision for data access fallback to site data (for types, views, fields, etc.)
    / form response handler
    / test cases
-   - refactor URI and test data support for test cases to separate module; use reverse for URI generation; isolate directory generation for tests.
-   - change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.  Similar for /d/ and /data/?
+   / refactor URI and test data support for test cases to separate module; use reverse for URI generation; 
+   - isolate directory generation for tests.
+   - include base, path and/or reference values in entities.
+   - change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.
+   - Similar for /d/ and /data/?
    - refactor form display
    - create data view display based on generic render logic
 5. Default record list display

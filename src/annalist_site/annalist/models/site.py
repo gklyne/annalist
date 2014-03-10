@@ -56,6 +56,7 @@ class Site(EntityRoot):
         log.debug("site.collections: basedir: %s"%(self._entitydir))
         for f in self._children(Collection):
             c = Collection.load(self, f)
+            # log.info("Site.colections: Collection.load %s %r"%(f, c.get_values()))
             if c:
                 yield c
         return
@@ -73,8 +74,8 @@ class Site(EntityRoot):
         """
         # @@TODO: consider using generic view logic for this mapping (and elsewhere?)
         #         This is currently a bit of a kludge, designed to match the site
-        #         view template.  In dure course, it may be reveiwed and implemented
-        #         using tghe generic analist form generating framework
+        #         view template.  In due course, it may be reveiwed and implemented
+        #         using ghe generic analist form generating framework
         site_data = self._load_values()
         site_data["title"] = site_data.get("rdfs:label", message.SITE_NAME_DEFAULT)
         colls = collections.OrderedDict()

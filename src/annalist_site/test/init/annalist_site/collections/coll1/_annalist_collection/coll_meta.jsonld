@@ -2,7 +2,8 @@
     "@id":           "../",
     "annal:id":      "coll1",
     "annal:type":    "annal:Collection",
-    "rdfs:label":    "Name collection coll1",
-    "rdfs:comment":  "Annalist collection metadata."
+    "annal:uri":     "http://test.example.com/testsite/collections/coll1/",
+    "rdfs:label":    "Collection coll1",
+    "rdfs:comment":  "Description of Collection coll1"
 }
 

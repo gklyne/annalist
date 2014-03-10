@@ -35,26 +35,18 @@ from tests                      import dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import (
     site_view_uri, collection_edit_uri, recordtype_uri, recordtype_edit_uri,
+    collection_value_keys, collection_create_values, collection_values,
+    collection_new_form_data, collection_remove_form_data
     )
 
 # Initial collection data used for form display
 init_collections = (
-    { 'coll1':
-        { 'title': 'Name collection coll1'
-        , 'uri': collection_edit_uri("coll1")
-        }
-    , 'coll2':
-        { 'title': 'Label collection coll2'
-        , 'uri': collection_edit_uri("coll2")
-        }
-    , 'coll3':
-        { 'title': 'Label collection coll3'
-        , 'uri': collection_edit_uri("coll3")
-        }
+    { 'coll1': collection_values("coll1")
+    , 'coll2': collection_values("coll2")
+    , 'coll3': collection_values("coll3")
     })
 
-
-class SiteTest(TestCase):
+class SiteTest(AnnalistTestCase):
     """
     Tests for Site object interface
     """
@@ -62,26 +54,9 @@ class SiteTest(TestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.coll1 = (
-            { '@id': '../'
-            , 'annal:id': 'coll1'
-            , 'annal:type': 'annal:Collection'
-            , 'annal:uri': TestBaseUri+'/collections/coll1/'
-            , 'rdfs:comment': 'Annalist collection metadata.'
-            , 'rdfs:label': 'Name collection coll1'
-            })        
-        self.collnewmeta = (
-            { 'rdfs:label': 'Collection new'
-            , 'rdfs:comment': 'Annalist new collection metadata.'
-            })        
-        self.collnew = (
-            { '@id': '../'
-            , 'annal:id': 'new'
-            , 'annal:type': 'annal:Collection'
-            , 'annal:uri': TestBaseUri+'/collections/new/'
-            , 'rdfs:comment': 'Annalist new collection metadata.'
-            , 'rdfs:label': 'Collection new'
-            })        
+        self.coll1 = collection_values(coll_id="coll1")
+        self.collnewmeta = collection_create_values(coll_id="new")
+        self.collnew = collection_values(coll_id="new")
         return
 
     def tearDown(self):
@@ -109,11 +84,7 @@ class SiteTest(TestCase):
         self.assertEquals(sd["rdfs:label"],   "Annalist data journal test site")
         self.assertEquals(sd["rdfs:comment"], "Annalist site metadata.")
         self.assertEquals(sd["collections"].keys(), ["coll1","coll2","coll3","testcoll"])
-        for k in self.coll1:
-            self.assertTrue(k in sd["collections"]["coll1"])
-            self.assertEqual(sd["collections"]["coll1"][k], self.coll1[k])
-        # self.assertEquals(set(sd["collections"]["coll1"].keys()),  set(self.coll1.keys()))
-        # self.assertEquals(dict_to_str(sd["collections"]["coll1"]),  self.coll1)
+        self.assertDictionaryMatch(sd["collections"]["coll1"], self.coll1)
         return
 
     def test_collections_dict(self):
@@ -212,8 +183,8 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(len(colls), 4)
         for id in init_collections:
             self.assertEqual(colls[id]["annal:id"],   id)
-            self.assertEqual(colls[id]["annal:uri"],  init_collections[id]["uri"])
-            self.assertEqual(colls[id]["rdfs:label"], init_collections[id]["title"])
+            self.assertEqual(colls[id]["annal:uri"],  init_collections[id]["annal:uri"])
+            self.assertEqual(colls[id]["rdfs:label"], init_collections[id]["rdfs:label"])
         # Check returned HTML (checks template logic)
         # (Don't need to keep doing this as logic can be tested through context as above)
         # (See: http://stackoverflow.com/questions/2257958/)
@@ -225,18 +196,15 @@ class SiteViewTest(AnnalistTestCase):
         menuitems = s.find(class_="top-bar-section").find(class_="right").find_all("li")
         self.assertEqual(menuitems[0].a.string,  "Login")
         self.assertEqual(menuitems[0].a['href'], self.profileuri)
-        # print "*****"
-        # #print s.table.tbody.prettify()
-        # print s.table.tbody.find_all("tr")
-        # print "*****"
+        # Check displayed collections
         trows = s.form.find_all("div", class_="row")
         self.assertEqual(len(trows), 5)
         self.assertEqual(trows[1].div.p.a.string,  "coll1")
-        self.assertEqual(trows[1].div.p.a['href'], collection_edit_uri("coll1"))
+        self.assertEqual(trows[1].div.p.a['href'], TestHostUri + collection_edit_uri("coll1"))
         self.assertEqual(trows[2].div.p.a.string,  "coll2")
-        self.assertEqual(trows[2].div.p.a['href'], collection_edit_uri("coll2"))
+        self.assertEqual(trows[2].div.p.a['href'], TestHostUri + collection_edit_uri("coll2"))
         self.assertEqual(trows[3].div.p.a.string,  "coll3")
-        self.assertEqual(trows[3].div.p.a['href'], collection_edit_uri("coll3"))
+        self.assertEqual(trows[3].div.p.a['href'], TestHostUri + collection_edit_uri("coll3"))
         return
 
     def test_get_with_login(self):
@@ -250,12 +218,12 @@ class SiteViewTest(AnnalistTestCase):
         colls = r.context['collections']
         self.assertEqual(len(colls), 4)
         for id in init_collections:
-            # First two here added in site data for view template
-            self.assertEqual(colls[id]["id"],   id)
-            self.assertEqual(colls[id]["uri"],  init_collections[id]["uri"])
+            # First two here added in models.site.site_data()
+            self.assertEqual(colls[id]["id"],         id)
+            self.assertEqual(colls[id]["uri"],        init_collections[id]["annal:uri"])
             self.assertEqual(colls[id]["annal:id"],   id)
-            self.assertEqual(colls[id]["annal:uri"],  init_collections[id]["uri"])
-            self.assertEqual(colls[id]["rdfs:label"], init_collections[id]["title"])
+            self.assertEqual(colls[id]["annal:uri"],  init_collections[id]["annal:uri"])
+            self.assertEqual(colls[id]["rdfs:label"], init_collections[id]["rdfs:label"])
         # Check returned HTML (checks template logic)
         # (Don't need to keep doing this as logic can be tested through context as above)
         # (See: http://stackoverflow.com/questions/2257958/)
@@ -275,19 +243,19 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(len(trows), 7)
         tcols1 = trows[1].find_all("div")
         self.assertEqual(tcols1[0].a.string,       "coll1")
-        self.assertEqual(tcols1[0].a['href'],      collection_edit_uri("coll1"))
+        self.assertEqual(tcols1[0].a['href'],      TestHostUri + collection_edit_uri("coll1"))
         self.assertEqual(tcols1[2].input['type'],  "checkbox")
         self.assertEqual(tcols1[2].input['name'],  "select")
         self.assertEqual(tcols1[2].input['value'], "coll1")
         tcols2 = trows[2].find_all("div")
         self.assertEqual(tcols2[0].a.string,       "coll2")
-        self.assertEqual(tcols2[0].a['href'],      collection_edit_uri("coll2"))
+        self.assertEqual(tcols2[0].a['href'],      TestHostUri + collection_edit_uri("coll2"))
         self.assertEqual(tcols2[2].input['type'],  "checkbox")
         self.assertEqual(tcols2[2].input['name'],  "select")
         self.assertEqual(tcols2[2].input['value'], "coll2")
         tcols3 = trows[3].find_all("div")
         self.assertEqual(tcols3[0].a.string,       "coll3")
-        self.assertEqual(tcols3[0].a['href'],      collection_edit_uri("coll3"))
+        self.assertEqual(tcols3[0].a['href'],      TestHostUri + collection_edit_uri("coll3"))
         self.assertEqual(tcols3[2].input['type'],  "checkbox")
         self.assertEqual(tcols3[2].input['name'],  "select")
         self.assertEqual(tcols3[2].input['value'], "coll3")
@@ -301,9 +269,7 @@ class SiteViewTest(AnnalistTestCase):
         btn_remove = trows[5].find("div", class_="right")
         self.assertEqual(btn_remove.input["type"],  "submit")
         self.assertEqual(btn_remove.input["name"],  "remove")
-        # print "**********"
-        # print trows[5].prettify()
-        # print "**********"
+        # Input fields and button for new collection
         field_id = trows[6].find_all("div")[0]
         self.assertEqual(field_id.input["type"],  "text")
         self.assertEqual(field_id.input["name"],  "new_id")
@@ -318,11 +284,7 @@ class SiteViewTest(AnnalistTestCase):
     def test_post_add(self):
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        form_data = (
-            { "new":        "New collection"
-            , "new_id":     "testnew"
-            , "new_label":  "Label for new collection"
-            })
+        form_data = collection_new_form_data("testnew")
         r = self.client.post(self.uri, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -334,38 +296,26 @@ class SiteViewTest(AnnalistTestCase):
         # Check site now has new colllection
         r = self.client.get(self.uri)
         new_collections = init_collections.copy()
-        new_collections["testnew"] = (
-            { 'title': 'Label for new collection'
-            , 'uri':   collection_edit_uri("testnew")
-            })
+        new_collections["testnew"] = collection_values("testnew", hosturi="")
         colls = r.context['collections']
         for id in new_collections:
+            p = "[%s]"%id
             # First two here added in site data for view template
-            self.assertEqual(colls[id]["id"],         id)
-            self.assertEqual(colls[id]["uri"],        new_collections[id]["uri"])
-            self.assertEqual(colls[id]["annal:id"],   id)
-            self.assertEqual(colls[id]["annal:uri"],  new_collections[id]["uri"])
-            self.assertEqual(colls[id]["rdfs:label"], new_collections[id]["title"])
+            self.assertEqualPrefix(colls[id]["id"],         id,                                p)
+            self.assertEqualPrefix(colls[id]["uri"],        new_collections[id]["annal:uri"],  p)
+            self.assertEqualPrefix(colls[id]["annal:id"],   id,                                p)
+            self.assertEqualPrefix(colls[id]["annal:uri"],  new_collections[id]["annal:uri"],  p)
+            self.assertEqualPrefix(colls[id]["rdfs:label"], new_collections[id]["rdfs:label"], p)
         return
 
     def test_post_remove(self):
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        form_data = (
-            { "remove":     "Remove selected"
-            , "new_id":     ""
-            , "new_label":  ""
-            , "select":     ["coll1", "coll3"]
-            })
+        form_data = collection_remove_form_data(["coll1", "coll3"])
         r = self.client.post(self.uri, form_data)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertTemplateUsed(r, "annalist_confirm.html")
-        # print "********"
-        # # print repr(r.__dict__)
-        # # print repr(r.context)
-        # print r.content
-        # print "********"
         # Returns confirmation form: check
         self.assertContains(r, '''<form method="POST" action="/'''+TestBasePath+'''/confirm/">''', status_code=200)
         self.assertContains(r, '''<input type="submit" name="confirm" value="Confirm"/>''', html=True)
@@ -430,8 +380,8 @@ class SiteActionViewTests(AnnalistTestCase):
         self.assertEqual(len(colls), 2)
         id = "coll2"
         self.assertEqual(colls[id]["annal:id"],   id)
-        self.assertEqual(colls[id]["annal:uri"],  init_collections[id]["uri"])
-        self.assertEqual(colls[id]["rdfs:label"], init_collections[id]["title"])
+        self.assertEqual(colls[id]["annal:uri"],  init_collections[id]["annal:uri"])
+        self.assertEqual(colls[id]["rdfs:label"], init_collections[id]["rdfs:label"])
         return
  
     def test_post_cancelled_remove(self):
@@ -449,8 +399,8 @@ class SiteActionViewTests(AnnalistTestCase):
         self.assertEqual(len(colls), 4)
         for id in init_collections:
             self.assertEqual(colls[id]["annal:id"],   id)
-            self.assertEqual(colls[id]["annal:uri"],  init_collections[id]["uri"])
-            self.assertEqual(colls[id]["rdfs:label"], init_collections[id]["title"])
+            self.assertEqual(colls[id]["annal:uri"],  init_collections[id]["annal:uri"])
+            self.assertEqual(colls[id]["rdfs:label"], init_collections[id]["rdfs:label"])
         return
 
 # End.

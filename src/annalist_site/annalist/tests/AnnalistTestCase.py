@@ -18,6 +18,10 @@ class AnnalistTestCase(TestCase):
     Additonal test methods for Annalist test cases
     """
 
+    def assertEqualPrefix(self, actual, expect, prefix=""):
+        self.assertEqual(actual, expect, msg="%s: actual %r, expected %r"%(prefix, actual, expect))
+        return
+
     def assertMatch(self, string, pattern, msg=None):
         """
         Throw an exception if the regular expresson pattern is matched
@@ -26,6 +30,7 @@ class AnnalistTestCase(TestCase):
         if not m or not m.group(0):
             raise self.failureException(
                 (msg or "'%s' does not match /%s/"%(string, pattern)))
+        return
 
     def assertKeysMatch(self, actual_dict, expect_dict):
         """

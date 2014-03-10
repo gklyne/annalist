@@ -244,19 +244,35 @@ def collection_create_values(coll_id="testcoll", update="Collection"):
     Entity values used when creating a collection entity
     """
     return (
-        { 'rdfs:label':     '%s %s'%(update, coll_id)
+        { 'rdfs:label':     "%s %s"%(update, coll_id)
         , 'rdfs:comment':   'Description of %s %s'%(update, coll_id)
         })
 
-def collection_values(coll_id, update="Collection"):
+def collection_values(coll_id, update="Collection", hosturi=TestHostUri):
     d = collection_create_values(coll_id, update=update).copy()
     d.update(
         { '@id':            "../"
         , 'annal:id':       coll_id
         , 'annal:type':     "annal:Collection"
-        , 'annal:uri':      TestHostUri + recordtype_uri("testcoll", coll_id)
+        , 'annal:uri':      hosturi + collection_edit_uri(coll_id=coll_id)
         })
     return d
+
+def collection_new_form_data(coll_id, update="Collection"):
+        return (
+            { "new":        "New collection"
+            , "new_id":     coll_id
+            , "new_label":  "%s %s"%(update, coll_id)
+            })
+
+def collection_remove_form_data(coll_id_list):
+        return (
+            { "remove":     "Remove selected"
+            , "new_id":     ""
+            , "new_label":  ""
+            , "select":     coll_id_list
+            })
+
 
 #   -----------------------------------------------------------------------------
 #
@@ -279,17 +295,21 @@ def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="Rec
         , 'rdfs:comment':   "%s help for %s in collection %s"%(update, type_id, coll_id)
         })
 
-def recordtype_values(coll_id="testcoll", type_id="testtype", update="RecordType"):
+def recordtype_values(
+        coll_id="testcoll", type_id="testtype", 
+        update="RecordType", hosturi=TestHostUri):
     d = recordtype_create_values(coll_id, type_id, update=update).copy()
     d.update(
         { '@id':            "./"
         , 'annal:id':       type_id
         , 'annal:type':     "annal:RecordType"
-        , 'annal:uri':      TestHostUri + recordtype_uri(coll_id, type_id)
+        , 'annal:uri':      hosturi + recordtype_uri(coll_id, type_id)
         })
     return d
 
-def recordtype_context_data(type_id=None, orig_type_id=None, action=None, update="RecordType"):
+def recordtype_context_data(
+        type_id=None, orig_type_id=None, action=None, 
+        update="RecordType", hosturi=TestHostUri):
     context_dict = (
         { 'title':              "Annalist data journal test site"
         , 'coll_id':            "testcoll"
@@ -304,14 +324,16 @@ def recordtype_context_data(type_id=None, orig_type_id=None, action=None, update
         context_dict['orig_type_id']  = type_id
         context_dict['type_label']    = "%s %s in collection testcoll"%(update, type_id)
         context_dict['type_help']     = "%s help for %s in collection testcoll"%(update,type_id)
-        context_dict['type_uri']      = TestHostUri + recordtype_uri("testcoll", type_id)
+        context_dict['type_uri']      = hosturi + recordtype_uri("testcoll", type_id)
     if orig_type_id:
         context_dict['orig_type_id']  = orig_type_id
     if action:  
         context_dict['action']  = action
     return context_dict
 
-def recordtype_form_data(type_id=None, orig_type_id=None, action=None, cancel=None, update="RecordType"):
+def recordtype_form_data(
+        type_id=None, orig_type_id=None, action=None, cancel=None, 
+        update="RecordType", hosturi=TestHostUri):
     form_data_dict = (
         { 'type_label':       "%s ... in collection testcoll"%(update)
         , 'type_help':        "%s help for ... in collection testcoll"%(update)
@@ -324,7 +346,7 @@ def recordtype_form_data(type_id=None, orig_type_id=None, action=None, cancel=No
         form_data_dict['orig_type_id']  = type_id
         form_data_dict['type_label']    = "%s %s in collection testcoll"%(update, type_id)
         form_data_dict['type_help']     = "%s help for %s in collection testcoll"%(update,type_id)
-        form_data_dict['type_class']    = TestHostUri + recordtype_uri("testcoll", type_id)
+        form_data_dict['type_class']    = hosturi + recordtype_uri("testcoll", type_id)
     if orig_type_id:
         form_data_dict['orig_type_id']  = orig_type_id
     if action:
@@ -362,13 +384,15 @@ def recordview_create_values(coll_id="testcoll", view_id="testview", update="Rec
         , 'rdfs:comment':   "%s help for %s in collection %s"%(update, view_id, coll_id)
         })
 
-def recordview_values(coll_id="testcoll", view_id="testtype", update="RecordView"):
+def recordview_values(
+        coll_id="testcoll", view_id="testtype", 
+        update="RecordView", hosturi=TestHostUri):
     d = recordview_create_values(coll_id, view_id, update=update).copy()
     d.update(
         { '@id':            "./"
         , 'annal:id':       view_id
         , 'annal:type':     "annal:RecordView"
-        , 'annal:uri':      TestHostUri + recordview_uri(coll_id, view_id)
+        , 'annal:uri':      hosturi + recordview_uri(coll_id, view_id)
         })
     return d
 
@@ -393,13 +417,15 @@ def recordlist_create_values(coll_id="testcoll", view_id="testlist", update="Rec
         , 'rdfs:comment':   "%s help for %s in collection %s"%(update, view_id, coll_id)
         })
 
-def recordlist_values(coll_id="testcoll", view_id="testtype", update="RecordList"):
+def recordlist_values(
+        coll_id="testcoll", view_id="testtype", 
+        update="RecordList", hosturi=TestHostUri):
     d = recordlist_create_values(coll_id, view_id, update=update).copy()
     d.update(
         { '@id':            "./"
         , 'annal:id':       view_id
         , 'annal:type':     "annal:RecordList"
-        , 'annal:uri':      TestHostUri + recordlist_uri(coll_id, view_id)
+        , 'annal:uri':      hosturi + recordlist_uri(coll_id, view_id)
         })
     return d
 
