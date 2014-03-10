@@ -44,7 +44,7 @@ from entity_testutils           import (
 #
 #   -----------------------------------------------------------------------------
 
-class RecordTypeTest(TestCase):
+class RecordTypeTest(AnnalistTestCase):
     """
     Tests for Site object interface
     """
@@ -76,27 +76,28 @@ class RecordTypeTest(TestCase):
 
     def test_recordtype1_data(self):
         t = RecordType(self.testcoll, "type1")
-        t.set_values(recordtype_create_values("type1"))
+        t.set_values(recordtype_create_values(type_id="type1"))
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_value_keys()))
-        v = recordtype_values("type1")
-        self.assertEqual(td, {k:v[k] for k in recordtype_value_keys()})
+        v = recordtype_create_values(type_id="type1")
+        self.assertDictionaryMatch(td, v)
         return
 
     def test_recordtype2_data(self):
         t = RecordType(self.testcoll, "type2")
-        t.set_values(recordtype_create_values("type2"))
+        t.set_values(recordtype_create_values(type_id="type2"))
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_value_keys()))
-        v = recordtype_values("type2")
-        self.assertEqual(td, {k:v[k] for k in recordtype_value_keys()})
+        v = recordtype_create_values(type_id="type2")
+        self.assertDictionaryMatch(td, v)
         return
 
     def test_recordtype_create_load(self):
-        t  = RecordType.create(self.testcoll, "type1", recordtype_create_values("type1"))
+        t  = RecordType.create(self.testcoll, "type1", recordtype_create_values(type_id="type1"))
         td = RecordType.load(self.testcoll, "type1").get_values()
-        v = recordtype_values("type1")
-        self.assertEqual(td, v)
+        v = recordtype_values(type_id="type1")
+        self.assertKeysMatch(td, v)
+        self.assertDictionaryMatch(td, v)
         return
 
 #   -----------------------------------------------------------------------------
@@ -130,7 +131,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def _create_record_type(self, type_id):
         "Helper function creates record type entry with supplied type_id"
-        t = RecordType.create(self.testcoll, type_id, recordtype_create_values(type_id))
+        t = RecordType.create(self.testcoll, type_id, recordtype_create_values(type_id=type_id))
         return t    
 
     def _check_record_type_values(self, type_id, update="RecordType"):
@@ -139,7 +140,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         t = RecordType.load(self.testcoll, type_id)
         self.assertEqual(t.get_id(), type_id)
         self.assertEqual(t.get_uri(""), TestHostUri + recordtype_uri("testcoll", type_id))
-        self.assertDictionaryMatch(t.get_values(), recordtype_values(type_id, update=update))
+        v = recordtype_values(type_id=type_id, update=update)
+        self.assertDictionaryMatch(t.get_values(), v)
         return t
 
     #   -----------------------------------------------------------------------------

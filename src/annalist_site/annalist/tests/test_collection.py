@@ -32,7 +32,10 @@ from tests                      import dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import (
     site_view_uri, collection_edit_uri, recordtype_edit_uri,
-    collection_create_values,
+    collection_value_keys, collection_create_values, collection_values,
+    recordtype_value_keys, recordtype_create_values, recordtype_values,
+    recordview_value_keys, recordview_create_values, recordview_values,
+    recordlist_value_keys, recordlist_create_values, recordlist_values
     )
 
 #   -----------------------------------------------------------------------------
@@ -41,105 +44,29 @@ from entity_testutils           import (
 #
 #   -----------------------------------------------------------------------------
 
-class CollectionTest(TestCase):
+class CollectionTest(AnnalistTestCase):
     """
     Tests for Collection object interface
     """
 
     def setUp(self):
         init_annalist_test_site()
-        self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.testcoll = Collection(self.testsite, "testcoll")
-        self.collection_value_keys = (
-            [ 'annal:id', 'annal:type', 'annal:uri', 'rdfs:label', 'rdfs:comment'
-            ])
-        self.coll1 = (
-            { '@id': '../'
-            , 'id': 'coll1'
-            , 'type': 'annal:Collection'
-            , 'title': 'Name collection coll1'
-            , 'uri': TestBaseUri+'/collections/coll1/'
-            , 'annal:id': 'coll1'
-            , 'annal:type': 'annal:Collection'
-            , 'rdfs:comment': 'Annalist collection metadata.'
-            , 'rdfs:label': 'Name collection coll1'
-            })
-        self.testcoll_add = (
-            { 'rdfs:comment': 'Annalist collection metadata.'
-            , 'rdfs:label': 'Name collection testcoll'
-            })
-        self.type1_add = (
-            { 'rdfs:comment': 'Annalist collection1 recordtype1'
-            , 'rdfs:label': 'Type testcoll/type1'
-            })      
-        self.type1 = (
-            { '@id': './'
-            , 'annal:id': 'type1'
-            , 'annal:type': 'annal:RecordType'
-            , 'annal:uri': TestBaseUri+'/collections/testcoll/types/type1/'
-            , 'rdfs:comment': 'Annalist collection1 recordtype1'
-            , 'rdfs:label': 'Type testcoll/type1'
-            })      
-        self.type2_add = (
-            { 'rdfs:comment': 'Annalist collection1 recordtype2'
-            , 'rdfs:label': 'Type testcoll/type2'
-            })      
-        self.type2 = (
-            { '@id': './'
-            , 'annal:id': 'type2'
-            , 'annal:type': 'annal:RecordType'
-            , 'annal:uri': TestBaseUri+'/collections/testcoll/types/type2/'
-            , 'rdfs:comment': 'Annalist collection1 recordtype2'
-            , 'rdfs:label': 'Type testcoll/type2'
-            })      
-        self.view1_add = (
-            { 'rdfs:comment': 'Annalist collection1 recordview1'
-            , 'rdfs:label': 'Type testcoll/view1'
-            })      
-        self.view1 = (
-            { '@id': './'
-            , 'annal:id': 'view1'
-            , 'annal:type': 'annal:RecordView'
-            , 'annal:uri': TestBaseUri+'/collections/testcoll/views/view1/'
-            , 'rdfs:comment': 'Annalist collection1 recordview1'
-            , 'rdfs:label': 'Type testcoll/view1'
-            })      
-        self.view2_add = (
-            { 'rdfs:comment': 'Annalist collection1 recordview2'
-            , 'rdfs:label': 'Type testcoll/view2'
-            })      
-        self.view2 = (
-            { '@id': './'
-            , 'annal:id': 'view2'
-            , 'annal:type': 'annal:RecordView'
-            , 'annal:uri': TestBaseUri+'/collections/testcoll/views/view2/'
-            , 'rdfs:comment': 'Annalist collection1 recordview2'
-            , 'rdfs:label': 'Type testcoll/view2'
-            })      
-        self.list1_add = (
-            { 'rdfs:comment': 'Annalist collection1 recordlist1'
-            , 'rdfs:label': 'Type testcoll/list1'
-            })      
-        self.list1 = (
-            { '@id': './'
-            , 'annal:id': 'list1'
-            , 'annal:type': 'annal:RecordList'
-            , 'annal:uri': TestBaseUri+'/collections/testcoll/lists/list1/'
-            , 'rdfs:comment': 'Annalist collection1 recordlist1'
-            , 'rdfs:label': 'Type testcoll/list1'
-            })      
-        self.list2_add = (
-            { 'rdfs:comment': 'Annalist collection1 recordlist2'
-            , 'rdfs:label': 'Type testcoll/list2'
-            })      
-        self.list2 = (
-            { '@id': './'
-            , 'annal:id': 'list2'
-            , 'annal:type': 'annal:RecordList'
-            , 'annal:uri': TestBaseUri+'/collections/testcoll/lists/list2/'
-            , 'rdfs:comment': 'Annalist collection1 recordlist2'
-            , 'rdfs:label': 'Type testcoll/list2'
-            })      
+        self.testsite     = Site(TestBaseUri, TestBaseDir)
+        self.testcoll     = Collection(self.testsite, "testcoll")
+        self.coll1        = collection_values("coll1")
+        self.testcoll_add = collection_create_values("testcoll")
+        self.type1_add    = recordtype_create_values("testcoll", "type1")
+        self.type1        = recordtype_values("testcoll", "type1")
+        self.type2_add    = recordtype_create_values("testcoll", "type2")
+        self.type2        = recordtype_values("testcoll", "type2")
+        self.view1_add    = recordview_create_values("testcoll", "view1")
+        self.view1        = recordview_values("testcoll", "view1")
+        self.view2_add    = recordview_create_values("testcoll", "view2")
+        self.view2        = recordview_values("testcoll", "view2")
+        self.list1_add    = recordlist_create_values("testcoll", "list1")
+        self.list1        = recordlist_values("testcoll", "list1")
+        self.list2_add    = recordlist_create_values("testcoll", "list2")
+        self.list2        = recordlist_values("testcoll", "list2")
         return
 
     def tearDown(self):
@@ -156,8 +83,8 @@ class CollectionTest(TestCase):
         self.assertEqual(c._entityfile,     layout.COLL_META_FILE)
         self.assertEqual(c._entityref,      layout.META_COLL_REF)
         self.assertEqual(c._entityid,       "testcoll")
-        self.assertEqual(c._entityuri,      TestBaseUri+"/collections/testcoll/")
-        self.assertEqual(c._entitydir,      TestBaseDir+"/collections/testcoll/")
+        self.assertEqual(c._entityuri,      TestHostUri + collection_edit_uri(coll_id="testcoll"))
+        self.assertEqual(c._entitydir,      TestBaseDir + "/collections/testcoll/")
         self.assertEqual(c._values,         None)
         return
 
@@ -165,9 +92,9 @@ class CollectionTest(TestCase):
         c = self.testcoll
         c.set_values(self.testcoll_add)
         cd = c.get_values()
-        self.assertEquals(set(cd.keys()),set(self.collection_value_keys))
-        self.assertEquals(cd["rdfs:label"],   "Name collection testcoll")
-        self.assertEquals(cd["rdfs:comment"], "Annalist collection metadata.")
+        self.assertEqual(set(cd.keys()),     set(collection_value_keys()))
+        self.assertEqual(cd["rdfs:label"],   self.testcoll_add["rdfs:label"])
+        self.assertEqual(cd["rdfs:comment"], self.testcoll_add["rdfs:comment"])
         return
 
     # Record types
@@ -186,7 +113,7 @@ class CollectionTest(TestCase):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         t1 = self.testcoll.add_type("type1", self.type1_add)
         t2 = self.testcoll.add_type("type2", self.type2_add)
-        self.assertEqual(set(self.testcoll.get_type("type1").get_values().keys()), set(self.type1.keys()))
+        self.assertKeysMatch(self.testcoll.get_type("type1").get_values(), self.type1)
         self.assertEqual(self.testcoll.get_type("type1").get_values(), self.type1)
         self.assertEqual(self.testcoll.get_type("type2").get_values(), self.type2)
         return
@@ -249,6 +176,8 @@ class CollectionTest(TestCase):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         t1 = self.testcoll.add_list("list1", self.list1_add)
         t2 = self.testcoll.add_list("list2", self.list2_add)
+        self.assertDictionaryMatch(self.testcoll.get_list("list1").get_values(), self.list1)
+        self.assertDictionaryMatch(self.testcoll.get_list("list2").get_values(), self.list2)
         self.assertEqual(self.testcoll.get_list("list1").get_values(), self.list1)
         self.assertEqual(self.testcoll.get_list("list2").get_values(), self.list2)
         return

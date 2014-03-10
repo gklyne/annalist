@@ -27,6 +27,16 @@ class AnnalistTestCase(TestCase):
             raise self.failureException(
                 (msg or "'%s' does not match /%s/"%(string, pattern)))
 
+    def assertKeysMatch(self, actual_dict, expect_dict):
+        """
+        Check that the expect_dict keys are the same as those in actual_dict.
+
+        Use with assertDictionaryMatch to ensure that two dictionaries are the same,
+        not just that all the expected entries are present in the actual dictionary.
+        """
+        self.assertEqual(set(actual_dict.keys()), set(expect_dict.keys()))
+        return
+
     def assertDictionaryMatch(self, actual_dict, expect_dict, prefix=""):
         """
         Check that the expect_dictr values are all present in actual_dict.

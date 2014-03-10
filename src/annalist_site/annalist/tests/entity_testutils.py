@@ -68,6 +68,24 @@ def recordtype_edit_uri(action, coll_id, type_id=None):
             kwargs.update({'type_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
+def recordview_uri(coll_id, view_id):
+    viewname = "AnnalistRecordViewAccessView"
+    kwargs   = {'coll_id': coll_id}
+    if valid_id(view_id):
+        kwargs.update({'view_id': view_id})
+    else:
+        kwargs.update({'view_id': "___"})
+    return reverse(viewname, kwargs=kwargs)
+
+def recordlist_uri(coll_id, list_id):
+    viewname = "AnnalistRecordListAccessView"
+    kwargs   = {'coll_id': coll_id}
+    if valid_id(list_id):
+        kwargs.update({'list_id': list_id})
+    else:
+        kwargs.update({'list_id': "___"})
+    return reverse(viewname, kwargs=kwargs)
+
 def entity_uri(coll_id, type_id, entity_id):
     viewname = "AnnalistEntityDataAccessView"
     kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
@@ -198,21 +216,6 @@ def entitydata_form_data(entity_id=None, orig_entity_id=None, action=None, cance
         form_data_dict['save']              = 'Save'
     return form_data_dict
 
-#   -----------------------------------------------------------------------------
-#
-#   ----- Collection data
-#
-#   -----------------------------------------------------------------------------
-
-def collection_create_values(coll_id="testcoll"):
-    """
-    Entity values used when creating a collection entity
-    """
-    return (
-        { 'rdfs:label':     'Collection %s'%coll_id
-        , 'rdfs:comment':   'Description of Collection %s'%coll_id
-        })
-
 def entitydata_delete_confirm_form_data(entity_id=None):
     """
     Form data from entity deletion confirmation
@@ -221,6 +224,39 @@ def entitydata_delete_confirm_form_data(entity_id=None):
         { 'entity_id':     entity_id,
           'entity_delete': 'Delete'
         })
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- Collection data
+#
+#   -----------------------------------------------------------------------------
+
+def collection_value_keys():
+    """
+    Keys in collection data
+    """
+    return (
+        [ 'annal:id', 'annal:type', 'annal:uri', 'rdfs:label', 'rdfs:comment'
+        ])
+
+def collection_create_values(coll_id="testcoll", update="Collection"):
+    """
+    Entity values used when creating a collection entity
+    """
+    return (
+        { 'rdfs:label':     '%s %s'%(update, coll_id)
+        , 'rdfs:comment':   'Description of %s %s'%(update, coll_id)
+        })
+
+def collection_values(coll_id, update="Collection"):
+    d = collection_create_values(coll_id, update=update).copy()
+    d.update(
+        { '@id':            "../"
+        , 'annal:id':       coll_id
+        , 'annal:type':     "annal:Collection"
+        , 'annal:uri':      TestHostUri + recordtype_uri("testcoll", coll_id)
+        })
+    return d
 
 #   -----------------------------------------------------------------------------
 #
@@ -234,22 +270,22 @@ def recordtype_value_keys():
         , 'rdfs:label', 'rdfs:comment'
         ])
 
-def recordtype_create_values(type_id="testtype", update="RecordType"):
+def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="RecordType"):
     """
     Entity values used when creating a record type entity
     """
     return (
-        { 'rdfs:label':     "%s %s in collection testcoll"%(update, type_id)
-        , 'rdfs:comment':   "%s help for %s in collection testcoll"%(update,type_id)
+        { 'rdfs:label':     "%s %s in collection %s"%(update, type_id, coll_id)
+        , 'rdfs:comment':   "%s help for %s in collection %s"%(update, type_id, coll_id)
         })
 
-def recordtype_values(type_id, update="RecordType"):
-    d = recordtype_create_values(type_id, update=update).copy()
+def recordtype_values(coll_id="testcoll", type_id="testtype", update="RecordType"):
+    d = recordtype_create_values(coll_id, type_id, update=update).copy()
     d.update(
         { '@id':            "./"
         , 'annal:id':       type_id
         , 'annal:type':     "annal:RecordType"
-        , 'annal:uri':      TestHostUri + recordtype_uri("testcoll", type_id)
+        , 'annal:uri':      TestHostUri + recordtype_uri(coll_id, type_id)
         })
     return d
 
@@ -304,6 +340,68 @@ def recordtype_delete_confirm_form_data(type_id=None):
         { 'typelist':    type_id,
           'type_delete': 'Delete'
         })
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- RecordView data
+#
+#   -----------------------------------------------------------------------------
+
+def recordview_value_keys():
+    return (
+        [ 'annal:id', 'annal:type', 'annal:uri'
+        , 'rdfs:label', 'rdfs:comment'
+        ])
+
+def recordview_create_values(coll_id="testcoll", view_id="testview", update="RecordView"):
+    """
+    Entity values used when creating a record type entity
+    """
+    return (
+        { 'rdfs:label':     "%s %s in collection %s"%(update, view_id, coll_id)
+        , 'rdfs:comment':   "%s help for %s in collection %s"%(update, view_id, coll_id)
+        })
+
+def recordview_values(coll_id="testcoll", view_id="testtype", update="RecordView"):
+    d = recordview_create_values(coll_id, view_id, update=update).copy()
+    d.update(
+        { '@id':            "./"
+        , 'annal:id':       view_id
+        , 'annal:type':     "annal:RecordView"
+        , 'annal:uri':      TestHostUri + recordview_uri(coll_id, view_id)
+        })
+    return d
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- RecordList data
+#
+#   -----------------------------------------------------------------------------
+
+def recordlist_value_keys():
+    return (
+        [ 'annal:id', 'annal:type', 'annal:uri'
+        , 'rdfs:label', 'rdfs:comment'
+        ])
+
+def recordlist_create_values(coll_id="testcoll", view_id="testlist", update="RecordList"):
+    """
+    Entity values used when creating a record type entity
+    """
+    return (
+        { 'rdfs:label':     "%s %s in collection %s"%(update, view_id, coll_id)
+        , 'rdfs:comment':   "%s help for %s in collection %s"%(update, view_id, coll_id)
+        })
+
+def recordlist_values(coll_id="testcoll", view_id="testtype", update="RecordList"):
+    d = recordlist_create_values(coll_id, view_id, update=update).copy()
+    d.update(
+        { '@id':            "./"
+        , 'annal:id':       view_id
+        , 'annal:type':     "annal:RecordList"
+        , 'annal:uri':      TestHostUri + recordlist_uri(coll_id, view_id)
+        })
+    return d
 
 #   -----------------------------------------------------------------------------
 #

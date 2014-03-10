@@ -14,6 +14,8 @@ from annalist.views.confirm     import ConfirmView
 from annalist.views.site        import SiteView, SiteActionView
 from annalist.views.collection  import CollectionEditView
 from annalist.views.recordtype  import RecordTypeEditView, RecordTypeDeleteConfirmedView
+from annalist.views.recordview  import RecordViewEditView # , RecordViewDeleteConfirmedView
+from annalist.views.recordlist  import RecordListEditView # , RecordListDeleteConfirmedView
 from oauth2.views               import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
 
 from annalist.views.defaultlist import EntityDefaultListView
@@ -70,6 +72,14 @@ urlpatterns = patterns('',
     url(r'^collections/(?P<coll_id>\w{0,32})/types/!delete_confirmed$',
                             RecordTypeDeleteConfirmedView.as_view(),
                             name='AnnalistRecordTypeDeleteView'),
+
+    url(r'^collections/(?P<coll_id>\w{0,32})/views/(?P<view_id>\w{0,32})/$',
+                            RecordViewEditView.as_view(),
+                            name='AnnalistRecordViewAccessView'),
+
+    url(r'^collections/(?P<coll_id>\w{0,32})/lists/(?P<list_id>\w{0,32})/$',
+                            RecordListEditView.as_view(),
+                            name='AnnalistRecordListAccessView'),
 
     url(r'^collections/(?P<coll_id>\w{0,32})/d/$',
                             EntityDefaultListView.as_view(),

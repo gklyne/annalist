@@ -33,41 +33,26 @@ from annalist.views.site        import SiteView, SiteActionView
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                      import dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
-
-# Test assertion summary from http://docs.python.org/2/library/unittest.html#test-cases
-#
-# Method                    Checks that             New in
-# assertEqual(a, b)         a == b   
-# assertNotEqual(a, b)      a != b   
-# assertTrue(x)             bool(x) is True  
-# assertFalse(x)            bool(x) is False     
-# assertIs(a, b)            a is b                  2.7
-# assertIsNot(a, b)         a is not b              2.7
-# assertIsNone(x)           x is None               2.7
-# assertIsNotNone(x)        x is not None           2.7
-# assertIn(a, b)            a in b                  2.7
-# assertNotIn(a, b)         a not in b              2.7
-# assertIsInstance(a, b)    isinstance(a, b)        2.7
-# assertNotIsInstance(a, b) not isinstance(a, b)    2.7
+from entity_testutils           import (
+    site_view_uri, collection_edit_uri, recordtype_uri, recordtype_edit_uri,
+    )
 
 # Initial collection data used for form display
 init_collections = (
     { 'coll1':
         { 'title': 'Name collection coll1'
-        , 'uri': '/'+TestBasePath+'/collections/coll1/'
+        , 'uri': collection_edit_uri("coll1")
         }
     , 'coll2':
         { 'title': 'Label collection coll2'
-        , 'uri': '/'+TestBasePath+'/collections/coll2/'
+        , 'uri': collection_edit_uri("coll2")
         }
     , 'coll3':
         { 'title': 'Label collection coll3'
-        , 'uri': '/'+TestBasePath+'/collections/coll3/'
+        , 'uri': collection_edit_uri("coll3")
         }
     })
 
-def collection_edit_uri(coll_id):
-    return reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
 
 class SiteTest(TestCase):
     """
