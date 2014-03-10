@@ -1,4 +1,4 @@
-# Explorations
+## Explorations
 
 * Choose web server
   * probably Apache, considering nginx, but deferred until suitable OAuth2/OpenID-connect plugin is available
@@ -75,29 +75,33 @@
    / form response handler
    / test cases
    / refactor URI and test data support for test cases to separate module; use reverse for URI generation; 
-   - isolate directory generation for tests.
+   x isolate directory generation for tests.
+   - refactor form display
    - include base, path and/or reference values in entities.
    - change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.
    - Similar for /d/ and /data/?
-   - refactor form display
    - create data view display based on generic render logic
 5. Default record list display
    - form generation
    - form display test cases
    - form response handler
    - form response test cases
-   - connect list display toi record view display
+   - connect list display to record view display
 6. Design generic entity view
 7. Record view display and editing
 8. Generic record list display and editing
-9. ...
+9. Misc cleanup
+  - Login link to include option to redirect to failed page, with form fields populated
+  - Complete authorization framework
+  - convert to HTTP entity access
+  / can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
 
 X. Future features (see also Misc below)
 - spreadhsheet bridge
-- Research object presentation
+- Research Object presentation
 - more field types, including link browser
 - provenance data
-- git integration for dat versioning
+- git integration for data versioning
 - memento integration for old data recovery
 - ResourceSync integration for data sync
 
