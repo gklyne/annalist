@@ -81,6 +81,7 @@
    - change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.
    - Similar for /d/ and /data/?
    - create data view display based on generic render logic
+   - read-only data views
 5. Default record list display
    - form generation
    - form display test cases
@@ -96,14 +97,18 @@
   - convert to HTTP entity access
   / can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
 
-X. Future features (see also Misc below)
+
+Future features (see also Misc below)
+- try alternative OIDC providers
 - spreadhsheet bridge
 - Research Object presentation
 - more field types, including link browser
+  - image grid + metadata pop-up for mobile browsing?
 - provenance data
 - git integration for data versioning
 - memento integration for old data recovery
 - ResourceSync integration for data sync
+- Shuffl integration?
 
 Tests required:
 - Missing resource error reporting in:
