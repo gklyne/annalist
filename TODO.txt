@@ -75,11 +75,11 @@
    / form response handler
    / test cases
    / refactor URI and test data support for test cases to separate module; use reverse for URI generation; 
+   - refactor DefaultEdit form display
    x isolate directory generation for tests.
-   - refactor form display
-   - include base, path and/or reference values in entities.
    - change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.
    - Similar for /d/ and /data/?
+   - include base, path and/or reference values in entities.
    - create data view display based on generic render logic
    - read-only data views
 5. Default record list display

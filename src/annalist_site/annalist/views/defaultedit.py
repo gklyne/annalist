@@ -18,11 +18,7 @@ from django.core.urlresolvers       import resolve, reverse
 
 from annalist                       import layout
 from annalist                       import message
-# from annalist.exceptions            import Annalist_Error
-# from annalist.identifiers           import RDF, RDFS, ANNAL
-# from annalist                       import util
 
-# from annalist.models.site           import Site
 from annalist.models.sitedata       import SiteData
 from annalist.models.collection     import Collection
 from annalist.models.recordview     import RecordView
@@ -31,7 +27,6 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-# from annalist.views.generic         import AnnalistGenericView
 from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
 from annalist.views.entityeditbase  import EntityValueMap
 from annalist.fields.render_utils   import get_renderer, get_placement_class
@@ -62,7 +57,6 @@ class EntityDefaultEditView(EntityEditBaseView):
         super(EntityDefaultEditView, self).__init__()
         self._view_id       = "Default_view"
         self._entityclass   = None
-        # self._entityvaluemap = None
         return
 
     # Support

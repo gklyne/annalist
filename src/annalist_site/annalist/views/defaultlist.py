@@ -55,6 +55,8 @@ class EntityDefaultListView(EntityEditBaseView):
 
     def __init__(self):
         super(EntityDefaultListView, self).__init__()
+        self._list_id       = "Default_list"
+        self._entityclass   = None
         return
 
     # GET
