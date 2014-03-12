@@ -11,19 +11,27 @@ log = logging.getLogger(__name__)
 
 import copy
 
-from django.conf                import settings
-from django.http                import HttpResponse
-from django.http                import HttpResponseRedirect
-from django.core.urlresolvers   import resolve, reverse
+from django.conf                    import settings
+from django.http                    import HttpResponse
+from django.http                    import HttpResponseRedirect
+from django.core.urlresolvers       import resolve, reverse
 
-from annalist                   import message
-from annalist.exceptions        import Annalist_Error
-from annalist.identifiers       import RDF, RDFS, ANNAL
-from annalist                   import util
+from annalist                       import layout
+from annalist                       import message
+from annalist.exceptions            import Annalist_Error
+from annalist.identifiers           import RDF, RDFS, ANNAL
+from annalist                       import util
 
-from annalist.models.site       import Site
+from annalist.models.site           import Site
+from annalist.models.sitedata       import SiteData
+from annalist.models.collection     import Collection
+from annalist.models.recordview     import RecordView
+from annalist.models.recordfield    import RecordField
+from annalist.models.recordtype     import RecordType
+from annalist.models.recordtypedata import RecordTypeData
 
-from annalist.views.generic     import AnnalistGenericView
+from annalist.views.generic         import AnnalistGenericView
+from annalist.fields.render_utils   import get_renderer, get_placement_class
 
 
 class EntityValueMap(object):
@@ -50,6 +58,20 @@ class EntityValueMap(object):
     def __repr__(self):
         return "EntityValueMap(v=%r, c=%r, f=%r, e=%r, s=%r)"%(self.v, self.c, self.f, self.e, self.s)
 
+# Table used as basis, or initial values, for a dynamically generated entity-value map
+baseentityvaluemap  = (
+        # Special fields
+        [ EntityValueMap(e=None,          v=None,           c='title',            f=None               )
+        , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
+        , EntityValueMap(e=None,          v=None,           c='type_id',          f=None               )
+        , EntityValueMap(e=None,          v='annal:id',     c='entity_id',        f='entity_id'        )
+        , EntityValueMap(e='annal:uri',   v='annal:uri',    c='entity_uri',       f='entity_uri'       )
+        # Field data is handled separately during processing of the form description
+        # Form and interaction control (hidden fields)
+        , EntityValueMap(e=None,          v=None,           c='orig_entity_id',   f='orig_entity_id'   )
+        , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
+        , EntityValueMap(e=None,          v=None,           c='action',           f='action'           )
+        ])
 
 class EntityEditBaseView(AnnalistGenericView):
     """
@@ -62,9 +84,88 @@ class EntityEditBaseView(AnnalistGenericView):
         super(EntityEditBaseView, self).__init__()
         return
 
+    def get_coll_type_data(self, coll_id, type_id):
+        """
+        Check collection and type identifiers, and set up objects for:
+            self.collection
+            self.recordtype
+            self.recordtypedata
+            self._entityclass
+
+        Returns None if all is well, or an HttpResponse object with details 
+        about any problem encountered.
+        """
+        self.sitedata = SiteData(self.site(), layout.SITEDATA_DIR)
+        # Check collection
+        if not Collection.exists(self.site(), coll_id):
+            return self.error(
+                dict(self.error404values(), 
+                    message=message.COLLECTION_NOT_EXISTS%(coll_id)
+                    )
+                )
+        self.collection = Collection(self.site(), coll_id)
+        # Check type
+        if not RecordType.exists(self.collection, type_id):
+            return self.error(
+                dict(self.error404values(),
+                    message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
+                    )
+                )
+        self.recordtype     = RecordType(self.collection, type_id)
+        self.recordtypedata = RecordTypeData(self.collection, type_id)
+        return None
+
+    def get_form_entityvaluemap(self, view_id):
+        """
+        Creates an entity/value map table in the current object incorporating
+        information from the form field definitions.
+        """
+        # Locate and read view description
+        entitymap  = copy.copy(baseentityvaluemap)
+        entityview = RecordView.load(self.collection, view_id, altparent=self.sitedata)
+        log.debug("entityview   %r"%entityview.get_values())
+        # Process fields referenced by the view desription, updating value map
+        for f in entityview.get_values()['annal:view_fields']:
+            field_id   = f['annal:field_id']
+            viewfield  = RecordField.load(self.collection, field_id, altparent=self.sitedata)
+            log.debug("viewfield   %r"%(viewfield and viewfield.get_values()))
+            return_property_uri = (
+                viewfield['annal:property_uri'] if viewfield['annal:return_value'] 
+                else None
+                )
+            field_context = (
+                { 'field_id':           field_id
+                , 'field_placement':    get_placement_class(f['annal:field_placement'])
+                , 'field_name':         field_id    # Assumes same field can't repeat in form
+                , 'field_render':       get_renderer(viewfield['annal:field_render'])
+                , 'field_label':        viewfield['rdfs:label']
+                , 'field_help':         viewfield['rdfs:comment']
+                , 'field_value_type':   viewfield['annal:value_type']
+                , 'field_placeholder':  viewfield['annal:placeholder']
+                , 'field_property_uri': viewfield['annal:property_uri']
+                # 'field_value':        field value to be supplied
+                })
+            entitymap.append(
+                EntityValueMap(
+                    v=viewfield['annal:property_uri'],  # Entity value used to initialize context
+                    c="field_value",                    # Key for value in (sub)context
+                    s=("fields", field_context),        # Field sub-context
+                    f=field_id,                         # Field name in form
+                    e=return_property_uri               # Entity value returned from form
+                    )
+                )
+        # log.debug("entitymap %r"%entitymap)
+        self._entityvaluemap = entitymap
+        return entitymap
+
     def map_entry_to_context(self,
             context, subcontext, contextkey, valuekey, entity_values, 
             **kwargs):
+        """
+        Helper function maps a single entry from a dictionary of entity values
+        (incoming values or form data) to an entry in a context used for rendering
+        an editing form.
+        """
         if subcontext:
             # Create sub-context and select that (used for data-described form fields)
             subcontextname, subcontextdata = subcontext
