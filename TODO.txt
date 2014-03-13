@@ -78,11 +78,12 @@
    / refactor URI and test data support for test cases to separate module; use reverse for URI generation; 
    / refactor DefaultEdit form display
    x isolate directory generation for tests.
-   - change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.
-   - Similar for /d/ and /data/?
+   / change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.
+   x Similar for /d/ and /data/?
    - include base, path and/or reference values in entities.
    / create data view display based on generic render logic
    - read-only data views
+   - function to create initial development site data (based on test code)
 5. Default record list display
    - form generation
    - form display test cases

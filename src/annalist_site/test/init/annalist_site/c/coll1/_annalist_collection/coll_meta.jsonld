@@ -1,0 +1,9 @@
+{ 
+    "@id":           "../",
+    "annal:id":      "coll1",
+    "annal:type":    "annal:Collection",
+    "annal:uri":     "http://test.example.com/testsite/c/coll1/",
+    "rdfs:label":    "Collection coll1",
+    "rdfs:comment":  "Description of Collection coll1"
+}
+

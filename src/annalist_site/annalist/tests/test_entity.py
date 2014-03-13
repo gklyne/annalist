@@ -146,7 +146,7 @@ class EntityRootTest(TestCase):
         return
 
     def test_entityroot_iter(self):
-        e = EntityRoot(TestBaseUri+"/collections", TestBaseDir+"/collections")
+        e = EntityRoot(TestBaseUri+"/c", TestBaseDir+"/c")
         # e = TestEntityRootType(Te stBaseUri, TestBaseDir)
         expect = [ "coll1", "coll2", "coll3", "testcoll"]
         count = 0

@@ -17,7 +17,7 @@ from django.core.urlresolvers       import resolve, reverse
 
 from annalist.util                  import valid_id
 from annalist.identifiers           import RDF, RDFS, ANNAL
-# from annalist                       import layout
+from annalist                       import layout
 # from annalist.models.site           import Site
 # from annalist.models.collection     import Collection
 # from annalist.models.recordtype     import RecordType
@@ -25,6 +25,28 @@ from annalist.identifiers           import RDF, RDFS, ANNAL
 # from annalist.models.entitydata     import EntityData
 
 from tests      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+
+#   -----------------------------------------------------------------------------
+#
+#   Directory generating functions
+#
+#   -----------------------------------------------------------------------------
+
+def site_dir():
+    return TestBaseDir + "/"
+
+def collection_dir(coll_id="testcoll"):
+    return site_dir() + layout.SITE_COLL_PATH%{'id': coll_id} + "/"
+
+def recordtype_dir(coll_id="testcoll", type_id="testtype"):
+    return collection_dir(coll_id) + layout.COLL_TYPE_PATH%{'id': type_id} + "/"
+
+def recorddata_dir(coll_id="testcoll", type_id="testtype"):
+    return collection_dir(coll_id) + layout.COLL_TYPEDATA_PATH%{'id': type_id} + "/"
+
+def entitydata_dir(coll_id="testcoll", type_id="testtype", entity_id="testentity"):
+    return recorddata_dir(coll_id, type_id) + layout.TYPEDATA_ENTITY_PATH%{'id': entity_id} + "/"
+
 
 #   -----------------------------------------------------------------------------
 #
@@ -41,7 +63,7 @@ def site_view_uri():
 def collection_edit_uri(coll_id="testcoll"):
     return reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
 
-def recordtype_uri(coll_id, type_id):
+def recordtype_uri(coll_id="testcoll", type_id="testtype"):
     viewname = "AnnalistRecordTypeAccessView"
     kwargs   = {'coll_id': coll_id}
     if valid_id(type_id):
@@ -86,14 +108,14 @@ def recordlist_uri(coll_id, list_id):
         kwargs.update({'list_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
-def entity_uri(coll_id, type_id, entity_id):
-    viewname = "AnnalistEntityDataAccessView"
-    kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
-    return reverse(viewname, kwargs=kwargs)
-
-def entitydata_list_uri(coll_id, type_id):
+def entitydata_list_uri(coll_id="testcoll", type_id="testtype"):
     viewname = "AnnalistEntityDefaultListType"
     kwargs   = {'coll_id': coll_id, 'type_id': type_id}
+    return reverse(viewname, kwargs=kwargs)
+
+def entity_uri(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
+    viewname = "AnnalistEntityDataAccessView"
+    kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
     return reverse(viewname, kwargs=kwargs)
 
 def entitydata_edit_uri(action, coll_id, type_id, entity_id=None):

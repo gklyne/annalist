@@ -34,6 +34,8 @@ from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     recordtype_create_values, collection_create_values,
+    site_dir, collection_dir, recordtype_dir, recorddata_dir,  entitydata_dir,
+    recordtype_uri,
     entity_uri, entitydata_list_uri, entitydata_edit_uri, entitydata_delete_confirm_uri,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data
@@ -72,7 +74,7 @@ class EntityDataTest(TestCase):
         self.assertEqual(e._entityref,      layout.DATA_ENTITY_REF)
         self.assertEqual(e._entityid,       "testentity")
         self.assertEqual(e._entityuri,      TestHostUri + entity_uri("testcoll", "testtype", "testentity"))
-        self.assertEqual(e._entitydir,      TestBaseDir + "/collections/testcoll/d/testtype/testentity/")
+        self.assertEqual(e._entitydir,      entitydata_dir("testcoll", "testtype", "testentity"))
         self.assertEqual(e._values,         None)
         return
 
@@ -96,7 +98,7 @@ class EntityDataTest(TestCase):
 
     def test_entitydata_create_load(self):
         e  = EntityData.create(self.testdata, "entitydata1", entitydata_create_values("entitydata1"))
-        self.assertEqual(e._entitydir, TestBaseDir+"/collections/testcoll/d/testtype/entitydata1/")
+        self.assertEqual(e._entitydir, entitydata_dir(entity_id="entitydata1"))
         self.assertTrue(os.path.exists(e._entitydir))
         ed = EntityData.load(self.testdata, "entitydata1").get_values()
         v  = entitydata_values("entitydata1")
@@ -171,7 +173,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_entity_id'],   "00000001")
-        self.assertEqual(r.context['entity_uri'],       "/%s/collections/testcoll/d/testtype/00000001/"%(TestBasePath))
+        self.assertEqual(r.context['entity_uri'],       entity_uri(entity_id="00000001"))
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # 1st field
@@ -235,7 +237,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "entity1")
         self.assertEqual(r.context['orig_entity_id'],   "entity1")
-        self.assertEqual(r.context['entity_uri'],       "/%s/collections/testcoll/d/testtype/entity1/"%(TestBasePath))
+        self.assertEqual(r.context['entity_uri'],       entity_uri("testcoll", "testtype", "entity1"))
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # 1st field

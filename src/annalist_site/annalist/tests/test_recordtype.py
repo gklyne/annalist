@@ -32,6 +32,7 @@ from tests                      import TestHost, TestHostUri, TestBasePath, Test
 from tests                      import init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import (
+    site_dir, collection_dir, recordtype_dir,
     site_view_uri, collection_edit_uri, recordtype_uri, recordtype_edit_uri,
     collection_create_values,
     recordtype_value_keys, recordtype_create_values, recordtype_values,
@@ -69,8 +70,8 @@ class RecordTypeTest(AnnalistTestCase):
         self.assertEqual(t._entityfile,     layout.TYPE_META_FILE)
         self.assertEqual(t._entityref,      layout.META_TYPE_REF)
         self.assertEqual(t._entityid,       "testtype")
-        self.assertEqual(t._entityuri,      TestBaseUri+"/collections/testcoll/types/testtype/")
-        self.assertEqual(t._entitydir,      TestBaseDir+"/collections/testcoll/types/testtype/")
+        self.assertEqual(t._entityuri,      TestHostUri + recordtype_uri(type_id="testtype"))
+        self.assertEqual(t._entitydir,      recordtype_dir(type_id="testtype"))
         self.assertEqual(t._values,         None)
         return
 

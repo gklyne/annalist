@@ -31,6 +31,7 @@ from tests                      import TestHost, TestHostUri, TestBasePath, Test
 from tests                      import dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import (
+    site_dir, collection_dir, recordtype_dir,
     site_view_uri, collection_edit_uri, recordtype_edit_uri,
     collection_value_keys, collection_create_values, collection_values,
     recordtype_value_keys, recordtype_create_values, recordtype_values,
@@ -84,7 +85,7 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(c._entityref,      layout.META_COLL_REF)
         self.assertEqual(c._entityid,       "testcoll")
         self.assertEqual(c._entityuri,      TestHostUri + collection_edit_uri(coll_id="testcoll"))
-        self.assertEqual(c._entitydir,      TestBaseDir + "/collections/testcoll/")
+        self.assertEqual(c._entitydir,      collection_dir(coll_id="testcoll"))
         self.assertEqual(c._values,         None)
         return
 

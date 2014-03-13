@@ -1,0 +1,1 @@
+{"rdfs:label": "Type testcoll/list2", "rdfs:comment": "Annalist collection1 recordlist2", "title": "Type testcoll/list2", "@id": "./", "annal:id": "list2", "type": "annal:RecordList", "uri": "http://example.com/testsite/c/testcoll/lists/list2/", "annal:type": "annal:RecordList", "id": "list2"}

@@ -1,7 +1,0 @@
-{ "@id": "./"
-, "annal:id": "view1"
-, "annal:uri": "http://example.com/testsite/collections/testcoll/views/view1/"
-, "annal:type": "annal:RecordView"
-, "rdfs:label": "Type testcoll/view1"
-, "rdfs:comment": "Annalist collection1 recordview1"
-}
