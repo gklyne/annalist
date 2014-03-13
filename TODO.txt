@@ -5,8 +5,9 @@
   * until then, using DJango for everything while ideas are fleshed out
 * Authentication mechanism
   * Going with OAuth2/OpenID-Connect for now
-  * Currently workingwith Google as IDP; loooking for alternatives
+  * Currently working with Google as IDP; loooking for alternatives
   * Considering OAuth2-Shibboleth bridge for uni deployment (have link somewhere in notes)
+  * Oauth registration - note ongoing work in IETF
 * Access control model
   * TBD; expect to use elements from UMA in due course
   * For now have very simple authorization function that requires authentication for up-dates, otherwise open.
@@ -14,7 +15,7 @@
     * Directories
     * Files
     * See https://github.com/gklyne/annalist/blob/develop/src/annalist_site/annalist/layout.py
-    * @@NOTE: need to wean off direct directory access and use HTTP
+    * @@NOTE: wean off direct directory access and use HTTP
 * Define data access internal API details for web site
   * First cut in progress
   * @@NOTE: remember to use simple GET semantics where possible; may need to revisist and simplify
@@ -80,7 +81,7 @@
    - change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.
    - Similar for /d/ and /data/?
    - include base, path and/or reference values in entities.
-   - create data view display based on generic render logic
+   / create data view display based on generic render logic
    - read-only data views
 5. Default record list display
    - form generation
@@ -91,17 +92,13 @@
 6. Design generic entity view
 7. Record view display and editing
 8. Generic record list display and editing
-9. Misc cleanup
-  - Login link to include option to redirect to failed page, with form fields populated
-  - Complete authorization framework
-  - convert to HTTP entity access
-  / can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
-
 
 Future features (see also Misc below)
 - try alternative OIDC providers
 - spreadhsheet bridge
 - Research Object presentation
+- use HTTP to access data; use standard web server backend
+  - need to address auth, resource enumeration (WebDAV?), other issues
 - more field types, including link browser
   - image grid + metadata pop-up for mobile browsing?
 - provenance data
@@ -119,9 +116,9 @@ Tests required:
 
 Misc:
 - Login link to include option to redirect to failed page, with form fields populated
-- Complete authorization framework, per collection
-/ can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
-
+- Complete authorization framework
+- convert to HTTP entity access
+x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
 - think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.
 - think about handling of identifier renaming (re-write data, record equivalence, or ...).  (See also "data storage" below.)
    - when renaming through edit form, update URI if it corresponds to previous ID??
