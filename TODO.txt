@@ -80,7 +80,8 @@
    x isolate directory generation for tests.
    / change <site>/collections/ to <site>/c/ or <site>/coll/ throughout.
    x Similar for /d/ and /data/?
-   - include base, path and/or reference values in entities.
+   / include path values in entities.
+   x include base and reference values in entities. (later: requires use of @context)
    / create data view display based on generic render logic
    - read-only data views
    - function to create initial development site data (based on test code)
@@ -100,6 +101,8 @@ Future features (see also Misc below)
 - Research Object presentation
 - use HTTP to access data; use standard web server backend
   - need to address auth, resource enumeration (WebDAV?), other issues
+  - NOTE: need to address problem of getting HOST part of site URI when initializing a collection;
+   can this logic be shifted to request code instead of __init__?
 - more field types, including link browser
   - image grid + metadata pop-up for mobile browsing?
 - provenance data
@@ -120,7 +123,7 @@ Misc:
 - Complete authorization framework
 - convert to HTTP entity access
 x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
-- think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.
+- think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
 - think about handling of identifier renaming (re-write data, record equivalence, or ...).  (See also "data storage" below.)
    - when renaming through edit form, update URI if it corresponds to previous ID??
    - need to think about maintaining a list of correspopnding URIs?

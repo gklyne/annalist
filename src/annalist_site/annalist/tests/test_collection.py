@@ -146,8 +146,10 @@ class CollectionTest(AnnalistTestCase):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         t1 = self.testcoll.add_view("view1", self.view1_add)
         t2 = self.testcoll.add_view("view2", self.view2_add)
-        self.assertEqual(self.testcoll.get_view("view1").get_values(), self.view1)
-        self.assertEqual(self.testcoll.get_view("view2").get_values(), self.view2)
+        self.assertKeysMatch(self.testcoll.get_view("view1").get_values(), self.view1)
+        self.assertKeysMatch(self.testcoll.get_view("view2").get_values(), self.view2)
+        self.assertDictionaryMatch(self.testcoll.get_view("view1").get_values(), self.view1)
+        self.assertDictionaryMatch(self.testcoll.get_view("view2").get_values(), self.view2)
         return
 
     def test_remove_view(self):
@@ -179,8 +181,10 @@ class CollectionTest(AnnalistTestCase):
         t2 = self.testcoll.add_list("list2", self.list2_add)
         self.assertDictionaryMatch(self.testcoll.get_list("list1").get_values(), self.list1)
         self.assertDictionaryMatch(self.testcoll.get_list("list2").get_values(), self.list2)
-        self.assertEqual(self.testcoll.get_list("list1").get_values(), self.list1)
-        self.assertEqual(self.testcoll.get_list("list2").get_values(), self.list2)
+        self.assertKeysMatch(self.testcoll.get_list("list1").get_values(), self.list1)
+        self.assertKeysMatch(self.testcoll.get_list("list2").get_values(), self.list2)
+        self.assertDictionaryMatch(self.testcoll.get_list("list1").get_values(), self.list1)
+        self.assertDictionaryMatch(self.testcoll.get_list("list2").get_values(), self.list2)
         return
 
     def test_remove_list(self):
@@ -317,7 +321,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertTemplateUsed(r, "annalist_confirm.html")
         # Check confirmation form content
         complete_action_uri = recordtype_edit_uri("delete", "coll1")
-        self.assertContains(r, """<form method="POST" action="/"""+TestBasePath+"""/confirm/">""", status_code=200)
+        self.assertContains(r, '''<form method="POST" action="'''+TestBasePath+'''/confirm/">''', status_code=200)
         self.assertEqual(r.context['complete_action'], complete_action_uri)
         self.assertEqual(r.context['cancel_action'], self.uri)
         action_params = json.loads(r.context['action_params'])

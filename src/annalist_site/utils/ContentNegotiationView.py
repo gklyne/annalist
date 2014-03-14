@@ -47,14 +47,6 @@ class ContentNegotiationView(generic.View):
             return guard
         return decorator
 
-    def get_request_path(self):
-        """
-        Utility function returns path of current request URI.
-
-        Cf. https://docs.djangoproject.com/en/dev/ref/request-response/#methods
-        """
-        return self.request.get_full_path()
-
     def get_request_uri(self):
         """
         Utility function returns URI of current request
@@ -63,6 +55,25 @@ class ContentNegotiationView(generic.View):
         Cf. https://docs.djangoproject.com/en/dev/ref/request-response/#methods
         """
         return self.request.build_absolute_uri()
+
+    def get_request_host(self):
+        """
+        Utility function returns base URI with HOST part of current request
+
+        @@TODO: return scheme part of the request.  request.scheme is introduced in recent Django
+
+        Cf. https://docs.djangoproject.com/en/dev/ref/request-response/#methods
+        """
+        scheme = "https" if self.request.is_secure() else "http"
+        return "%s://%s"%(scheme, self.request.get_host())
+
+    def get_request_path(self):
+        """
+        Utility function returns path of current request URI.
+
+        Cf. https://docs.djangoproject.com/en/dev/ref/request-response/#methods
+        """
+        return self.request.get_full_path()
 
     # Define values for display with common error cases.
     #

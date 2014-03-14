@@ -88,7 +88,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
     , "Collection_Types", "Collection_Views", "Collection_Lists"
     , "RecordType", "RecordView", "RecordList", "RecordField"
     , "RecordType_Data", "EntityData"
-    , "id", "type", "label", "help", "uri"
+    , "id", "type", "label", "help", "uri", "urihost", "uripath"
     ])
 
 # End.

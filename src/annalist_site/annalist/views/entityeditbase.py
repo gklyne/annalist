@@ -84,7 +84,7 @@ class EntityEditBaseView(AnnalistGenericView):
         super(EntityEditBaseView, self).__init__()
         return
 
-    def get_coll_type_data(self, coll_id, type_id):
+    def get_coll_type_data(self, coll_id, type_id, host=""):
         """
         Check collection and type identifiers, and set up objects for:
             self.collection
@@ -95,15 +95,15 @@ class EntityEditBaseView(AnnalistGenericView):
         Returns None if all is well, or an HttpResponse object with details 
         about any problem encountered.
         """
-        self.sitedata = SiteData(self.site(), layout.SITEDATA_DIR)
+        self.sitedata = SiteData(self.site(host=host), layout.SITEDATA_DIR)
         # Check collection
-        if not Collection.exists(self.site(), coll_id):
+        if not Collection.exists(self.site(host=host), coll_id):
             return self.error(
                 dict(self.error404values(), 
                     message=message.COLLECTION_NOT_EXISTS%(coll_id)
                     )
                 )
-        self.collection = Collection(self.site(), coll_id)
+        self.collection = Collection(self.site(host=host), coll_id)
         # Check type
         if not RecordType.exists(self.collection, type_id):
             return self.error(

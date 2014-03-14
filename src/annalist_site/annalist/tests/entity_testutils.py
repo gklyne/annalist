@@ -7,6 +7,7 @@ __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
+import urlparse
 
 import logging
 log = logging.getLogger(__name__)
@@ -148,7 +149,8 @@ def entitydata_value_keys():
     Keys in default view entity data
     """
     return (
-        [ 'annal:id', 'annal:type', 'annal:uri'
+        [ 'annal:id', 'annal:type'
+        , 'annal:uri', 'annal:urihost', 'annal:uripath'
         , 'rdfs:label', 'rdfs:comment'
         ])
 
@@ -159,15 +161,17 @@ def entitydata_create_values(entity_id, update="Entity"):
     return (
         { 'rdfs:label': '%s testcoll/testtype/%s'%(update, entity_id)
         , 'rdfs:comment': '%s coll testcoll, type testtype, entity %s'%(update, entity_id)
-        , 'annal:uri': entity_uri("testcoll", "testtype", entity_id)
         })
 
-def entitydata_values(entity_id, update="Entity"):
+def entitydata_values(entity_id, update="Entity", hosturi=TestHostUri):
     d = entitydata_create_values(entity_id, update=update).copy()
     d.update(
         { '@id':            './'
         , 'annal:id':       entity_id
         , 'annal:type':     'annal:EntityData'
+        , 'annal:uri':      hosturi + entity_uri("testcoll", "testtype", entity_id)
+        , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
+        , 'annal:uripath':  entity_uri("testcoll", "testtype", entity_id)
         })
     return d
 
@@ -258,7 +262,9 @@ def collection_value_keys():
     Keys in collection data
     """
     return (
-        [ 'annal:id', 'annal:type', 'annal:uri', 'rdfs:label', 'rdfs:comment'
+        [ 'annal:id', 'annal:type'
+        , 'annal:uri', 'annal:urihost', 'annal:uripath'
+        , 'rdfs:label', 'rdfs:comment'
         ])
 
 def collection_create_values(coll_id="testcoll", update="Collection"):
@@ -277,6 +283,8 @@ def collection_values(coll_id, update="Collection", hosturi=TestHostUri):
         , 'annal:id':       coll_id
         , 'annal:type':     "annal:Collection"
         , 'annal:uri':      hosturi + collection_edit_uri(coll_id=coll_id)
+        , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
+        , 'annal:uripath':  collection_edit_uri(coll_id=coll_id)
         })
     return d
 
@@ -304,7 +312,8 @@ def collection_remove_form_data(coll_id_list):
 
 def recordtype_value_keys():
     return (
-        [ 'annal:id', 'annal:type', 'annal:uri'
+        [ 'annal:id', 'annal:type'
+        , 'annal:uri', 'annal:urihost', 'annal:uripath'
         , 'rdfs:label', 'rdfs:comment'
         ])
 
@@ -326,6 +335,8 @@ def recordtype_values(
         , 'annal:id':       type_id
         , 'annal:type':     "annal:RecordType"
         , 'annal:uri':      hosturi + recordtype_uri(coll_id, type_id)
+        , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
+        , 'annal:uripath':  recordtype_uri(coll_id, type_id)
         })
     return d
 
@@ -393,7 +404,8 @@ def recordtype_delete_confirm_form_data(type_id=None):
 
 def recordview_value_keys():
     return (
-        [ 'annal:id', 'annal:type', 'annal:uri'
+        [ 'annal:id', 'annal:type'
+        , 'annal:uri', 'annal:urihost', 'annal:uripath'
         , 'rdfs:label', 'rdfs:comment'
         ])
 
@@ -415,6 +427,8 @@ def recordview_values(
         , 'annal:id':       view_id
         , 'annal:type':     "annal:RecordView"
         , 'annal:uri':      hosturi + recordview_uri(coll_id, view_id)
+        , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
+        , 'annal:uripath':  recordview_uri(coll_id, view_id)
         })
     return d
 
@@ -426,28 +440,31 @@ def recordview_values(
 
 def recordlist_value_keys():
     return (
-        [ 'annal:id', 'annal:type', 'annal:uri'
+        [ 'annal:id', 'annal:type'
+        , 'annal:uri', 'annal:urihost', 'annal:uripath'
         , 'rdfs:label', 'rdfs:comment'
         ])
 
-def recordlist_create_values(coll_id="testcoll", view_id="testlist", update="RecordList"):
+def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="RecordList"):
     """
     Entity values used when creating a record type entity
     """
     return (
-        { 'rdfs:label':     "%s %s in collection %s"%(update, view_id, coll_id)
-        , 'rdfs:comment':   "%s help for %s in collection %s"%(update, view_id, coll_id)
+        { 'rdfs:label':     "%s %s in collection %s"%(update, list_id, coll_id)
+        , 'rdfs:comment':   "%s help for %s in collection %s"%(update, list_id, coll_id)
         })
 
 def recordlist_values(
-        coll_id="testcoll", view_id="testtype", 
+        coll_id="testcoll", list_id="testlist", 
         update="RecordList", hosturi=TestHostUri):
-    d = recordlist_create_values(coll_id, view_id, update=update).copy()
+    d = recordlist_create_values(coll_id, list_id, update=update).copy()
     d.update(
         { '@id':            "./"
-        , 'annal:id':       view_id
+        , 'annal:id':       list_id
         , 'annal:type':     "annal:RecordList"
-        , 'annal:uri':      hosturi + recordlist_uri(coll_id, view_id)
+        , 'annal:uri':      hosturi + recordlist_uri(coll_id, list_id)
+        , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
+        , 'annal:uripath':  recordlist_uri(coll_id, list_id)
         })
     return d
 

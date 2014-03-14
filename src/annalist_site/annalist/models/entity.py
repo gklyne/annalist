@@ -44,6 +44,8 @@ class EntityRoot(object):
         cls._entityref      relative reference to entity from body file
         self._entityid      ID of entity; may be None for "root" entities (e.g. site?)
         self._entityuri     URI at which entity is accessed
+        self._entityurihost URI host at which entity is accessed (per HTTP host: header)
+        self._entityuripath URI absolute path at which entity is accessed
         self._entitydir     directory where entity is stored
         self._values        dictionary of values in entity body
     """
@@ -60,12 +62,14 @@ class EntityRoot(object):
         entityuri   is the base URI at which the entity is accessed
         entitydir   is the base directory containing the entity
         """
-        self._entityid     = None
-        self._entityuri    = entityuri if entityuri.endswith("/") else entityuri + "/"
-        self._entitydir    = entitydir if entitydir.endswith("/") else entitydir + "/"
-        self._entityalturi = None
-        self._entityaltdir = None
-        self._values       = None
+        self._entityid      = None
+        self._entityuri     = entityuri if entityuri.endswith("/") else entityuri + "/"
+        self._entitydir     = entitydir if entitydir.endswith("/") else entitydir + "/"
+        self._entityalturi  = None
+        self._entityaltdir  = None
+        self._values        = None
+        self._entityurihost = util.entity_uri_host(self._entityuri, "")
+        self._entityuripath = util.entity_uri_path(self._entityuri, "")
         log.debug("EntityRoot.__init__: entity URI %s, entity dir %s"%(self._entityuri, self._entitydir))
         return
 
@@ -96,9 +100,11 @@ class EntityRoot(object):
         Set or update values for a collection
         """
         self._values = values.copy()
-        self._values[ANNAL.CURIE.id]   = self._values.get(ANNAL.CURIE.id,   self._entityid)
-        self._values[ANNAL.CURIE.type] = self._values.get(ANNAL.CURIE.type, self._entitytype)
-        self._values[ANNAL.CURIE.uri]  = self._values.get(ANNAL.CURIE.uri,  self._entityuri)
+        self._values[ANNAL.CURIE.id]        = self._values.get(ANNAL.CURIE.id,      self._entityid)
+        self._values[ANNAL.CURIE.type]      = self._values.get(ANNAL.CURIE.type,    self._entitytype)
+        self._values[ANNAL.CURIE.uri]       = self._values.get(ANNAL.CURIE.uri,     self._entityuri)
+        self._values[ANNAL.CURIE.uripath]   = self._values.get(ANNAL.CURIE.uripath, self._entityuripath)
+        self._values[ANNAL.CURIE.urihost]   = self._values.get(ANNAL.CURIE.urihost, "") or self._entityurihost
         return self._values
 
     def get_values(self):

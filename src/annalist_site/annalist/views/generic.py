@@ -54,24 +54,26 @@ class AnnalistGenericView(ContentNegotiationView):
         ## self.credential = None
         return
 
-    def site(self):
+    # @@TODO: make host parameter required in the following?
+
+    def site(self, host=""):
         if not self._site:
-            self._site = Site(self._sitebaseuri, self._sitebasedir)
+            self._site = Site(host+self._sitebaseuri, self._sitebasedir)
         return self._site
 
-    def site_data(self):
+    def site_data(self, host=""):
         if not self._site_data:
-            self._site_data = self.site().site_data()
+            self._site_data = self.site(host=host).site_data()
         return self._site_data
 
-    def collection(self, coll_id):
-        return Collection(self.site(), coll_id)
+    def collection(self, coll_id, host=""):
+        return Collection(self.site(host=host), coll_id)
 
-    def recordtype(self, coll_id, type_id):
-        return RecordType(self.collection(coll_id), type_id)
+    def recordtype(self, coll_id, type_id, host=""):
+        return RecordType(self.collection(coll_id, host=host), type_id)
 
-    def recordtypedata(self, coll_id, type_id):
-        return RecordTypeData(self.collection(coll_id), type_id)
+    def recordtypedata(self, coll_id, type_id, host=""):
+        return RecordTypeData(self.collection(coll_id, host=host), type_id)
 
     def error(self, values):
         """

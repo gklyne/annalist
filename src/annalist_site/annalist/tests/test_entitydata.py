@@ -47,7 +47,7 @@ from entity_testutils               import (
 #
 #   -----------------------------------------------------------------------------
 
-class EntityDataTest(TestCase):
+class EntityDataTest(AnnalistTestCase):
     """
     Tests for Site object interface
     """
@@ -102,7 +102,8 @@ class EntityDataTest(TestCase):
         self.assertTrue(os.path.exists(e._entitydir))
         ed = EntityData.load(self.testdata, "entitydata1").get_values()
         v  = entitydata_values("entitydata1")
-        self.assertEqual(ed, v)
+        self.assertKeysMatch(ed, v)
+        self.assertDictionaryMatch(ed, v)
         return
 
 #   -----------------------------------------------------------------------------
@@ -173,7 +174,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_entity_id'],   "00000001")
-        self.assertEqual(r.context['entity_uri'],       entity_uri(entity_id="00000001"))
+        self.assertEqual(r.context['entity_uri'],       TestHostUri + entity_uri(entity_id="00000001"))
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # 1st field
@@ -314,7 +315,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], TestHostUri + entitydata_list_uri("testcoll", "testtype"))
-        # Check that new record type exists
+        # Check new entity data created
         self._check_entity_data_values("newentity")
         return
 
