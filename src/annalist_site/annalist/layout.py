@@ -51,12 +51,14 @@ log = logging.getLogger(__name__)
 #             access/  @@TBD
 #               default-access
 #               (more details to work through - keep it simple for starters)
-#           <type-id>/
-#             <entity-id>/
-#               entity-data.jsonld
-#               entity-prov.jsonld
+#           d/
+#             <type-id>/
+#               <entity-id>/
+#                 entity-data.jsonld
+#                 entity-prov.jsonld
+#                :
 #              :
-#            :
+#         <collection-id>/
 #          :
 
 SITE_DIR                = "annalist_site"
@@ -75,22 +77,22 @@ COLL_META_FILE          = "_annalist_collection/coll_meta.jsonld"
 COLL_PROV_FILE          = "_annalist_collection/coll_prov.jsonld"
 META_COLL_REF           = "../"
 
-COLL_TYPE_PATH          = "types/%(id)s"
+COLL_TYPE_PATH          = "_annalist_collection/types/%(id)s"
 TYPE_META_FILE          = "type_meta.jsonld"
 TYPE_PROV_FILE          = "type_prov.jsonld"
 META_TYPE_REF           = "./"
 
-COLL_VIEW_PATH          = "views/%(id)s"
+COLL_VIEW_PATH          = "_annalist_collection/views/%(id)s"
 VIEW_META_FILE          = "view_meta.jsonld"
 VIEW_PROV_FILE          = "view_prov.jsonld"
 META_VIEW_REF           = "./"
 
-COLL_LIST_PATH          = "lists/%(id)s"
+COLL_LIST_PATH          = "_annalist_collection/lists/%(id)s"
 LIST_META_FILE          = "list_meta.jsonld"
 LIST_PROV_FILE          = "list_prov.jsonld"
 META_LIST_REF           = "./"
 
-COLL_FIELD_PATH         = "fields/%(id)s"
+COLL_FIELD_PATH         = "_annalist_collection/fields/%(id)s"
 FIELD_META_FILE         = "field_meta.jsonld"
 FIELD_PROV_FILE         = "field_prov.jsonld"
 META_FIELD_REF          = "./"

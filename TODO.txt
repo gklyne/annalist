@@ -67,8 +67,7 @@
    / refactor code locally
    / more refactoring; try to abstract common logic for RecordList, RecordView
    / review generic view base functions - should some be inlined now?
-  - Move types/views/lists data into _annalist_collection directory
-  - URI (re)design for record display
+   / Move types/views/lists data into _annalist_collection directory
 4. Default record view/edit display (code to be refactored later)
    / form generation
    / form display test cases
@@ -84,8 +83,9 @@
    x include base and reference values in entities. (later: requires use of @context)
    / create data view display based on generic render logic
    / editing recordtype: returns "already exists" error; display operation (new, copy, edit, etc) in edit form
-   - read-only data views
    / function to create initial development site data (based on test code)
+   - read-only data views
+   - review URI design: can we revert to original design?
 5. Default record list display
    - form generation
    - form display test cases

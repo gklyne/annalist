@@ -45,7 +45,7 @@ def createSiteData(src, sitedatasrc, tgt):
     assert tgt.startswith(TestBaseDir)
     shutil.rmtree(tgt, ignore_errors=True)
     shutil.copytree(src, tgt)
-    sitedatatgt = tgt+"/"+test_layout.SITEDATA_DIR
+    sitedatatgt = tgt+"/"+test_layout.SITEDATA_DIR+"/_annalist_collection"
     shutil.copytree(sitedatasrc, sitedatatgt)
     # Confirm existence of target directory
     assert os.path.exists(tgt), "checking target directory created (%s)"%(tgt)
