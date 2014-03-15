@@ -85,7 +85,7 @@
    / create data view display based on generic render logic
    - editing recordtype: returns "already exists" error; display operation (new, copy, edit, etc) in edit form
    - read-only data views
-   - function to create initial development site data (based on test code)
+   / function to create initial development site data (based on test code)
 5. Default record list display
    - form generation
    - form display test cases
