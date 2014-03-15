@@ -68,7 +68,7 @@ baseentityvaluemap  = (
         , EntityValueMap(e='annal:uri',   v='annal:uri',    c='entity_uri',       f='entity_uri'       )
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
-        , EntityValueMap(e=None,          v=None,           c='orig_entity_id',   f='orig_entity_id'   )
+        , EntityValueMap(e=None,          v=None,           c='orig_id',          f='orig_id'   )
         , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
         , EntityValueMap(e=None,          v=None,           c='action',           f='action'           )
         ])
@@ -348,7 +348,10 @@ class EntityEditBaseView(AnnalistGenericView):
         # Process response
         entityid_changed = (request.POST['action'] == "edit") and (entityid != orig_entityid)
         if 'save' in request.POST:
-            # log.debug("form_response: save")
+            log.debug(
+                "form_response: save, action %s, entity_id %s, orig_entityid %s"
+                %(request.POST['action'], entityid, orig_entityid)
+                )
             # Check existence of type to save according to action performed
             if (request.POST['action'] in ["new", "copy"]) or entityid_changed:
                 if self._entityclass.exists(parent, entityid):
@@ -363,7 +366,7 @@ class EntityEditBaseView(AnnalistGenericView):
                         error_head=messages['entity_heading'],
                         error_message=messages['entity_not_exists']
                         )
-            # Create/update record type now
+            # Create/update data now
             entity_initial_values = self.map_form_data_to_values(request.POST)
             self._entityclass.create(parent, entityid, entity_initial_values)
             # Remove old type if rename

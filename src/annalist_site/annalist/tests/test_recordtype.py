@@ -164,7 +164,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['title'],            "Annalist data journal test site")
         self.assertEqual(r.context['coll_id'],          "coll1")
         self.assertEqual(r.context['type_id'],          "00000001")
-        self.assertEqual(r.context['orig_type_id'],     "00000001")
+        self.assertEqual(r.context['orig_id'],          "00000001")
         self.assertEqual(r.context['type_label'],       "Record type 00000001 in collection coll1")
         self.assertEqual(r.context['type_help'],        "")
         self.assertEqual(r.context['type_uri'],         recordtype_uri("coll1", "00000001"))
@@ -183,7 +183,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['title'],            "Annalist data journal test site")
         self.assertEqual(r.context['coll_id'],          "coll1")
         self.assertEqual(r.context['type_id'],          "type1")
-        self.assertEqual(r.context['orig_type_id'],     "type1")
+        self.assertEqual(r.context['orig_id'],          "type1")
         self.assertEqual(r.context['type_label'],       "RecordType coll1/type1")
         self.assertEqual(r.context['type_help'],        "RecordType help for type1 in collection coll1")
         self.assertEqual(r.context['type_uri'],         TestHostUri + recordtype_uri("coll1", "type1"))
@@ -212,7 +212,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['title'],            "Annalist data journal test site")
         self.assertEqual(r.context['coll_id'],          "coll1")
         self.assertEqual(r.context['type_id'],          "type1")
-        self.assertEqual(r.context['orig_type_id'],     "type1")
+        self.assertEqual(r.context['orig_id'],          "type1")
         self.assertEqual(r.context['type_label'],       "RecordType coll1/type1")
         self.assertEqual(r.context['type_help'],        "RecordType help for type1 in collection coll1")
         self.assertEqual(r.context['type_uri'],         TestHostUri + recordtype_uri("coll1", "type1"))
@@ -267,7 +267,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_post_new_type_invalid_id(self):
-        f = recordtype_form_data(type_id="!badtype", orig_type_id="orig_type_id", action="new", update="Updated RecordType")
+        f = recordtype_form_data(
+            type_id="!badtype", orig_id="orig_type_id", action="new", 
+            update="Updated RecordType"
+            )
         u = recordtype_edit_uri("new", "testcoll")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
@@ -276,7 +279,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         # Test context
-        expect_context = recordtype_context_data(type_id="!badtype", orig_type_id="orig_type_id", action="new", update="Updated RecordType")
+        expect_context = recordtype_context_data(
+            type_id="!badtype", orig_id="orig_type_id", 
+            action="new", update="Updated RecordType"
+            )
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
@@ -323,7 +329,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def test_post_copy_type_invalid_id(self):
         f = recordtype_form_data(
-            type_id="!badtype", orig_type_id="orig_type_id", 
+            type_id="!badtype", orig_id="orig_type_id", 
             action="copy", 
             update="Updated RecordType"
             )
@@ -335,7 +341,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         expect_context = recordtype_context_data(
-            type_id="!badtype", orig_type_id="orig_type_id", 
+            type_id="!badtype", orig_id="orig_type_id", 
             action="copy", 
             update="Updated RecordType"
             )
@@ -361,7 +367,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self._create_record_type("edittype1")
         self._check_record_type_values("edittype1")
         # Now post edit form submission with different values and new id
-        f = recordtype_form_data(type_id="edittype2", orig_type_id="edittype1", action="edit", update="Updated RecordType")
+        f = recordtype_form_data(type_id="edittype2", orig_id="edittype1", action="edit", update="Updated RecordType")
         u = recordtype_edit_uri("edit", "testcoll", type_id="edittype1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -407,7 +413,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def test_post_edit_type_invalid_id(self):
         f = recordtype_form_data(
-            type_id="!badtype", orig_type_id="orig_type_id", 
+            type_id="!badtype", orig_id="orig_type_id", 
             action="edit", 
             update="Updated RecordType"
             )
@@ -420,7 +426,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         # Test context
         expect_context = recordtype_context_data(
-            type_id="!badtype", orig_type_id="orig_type_id", 
+            type_id="!badtype", orig_id="orig_type_id", 
             action="edit", 
             update="Updated RecordType"
             )

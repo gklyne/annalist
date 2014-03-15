@@ -175,36 +175,36 @@ def entitydata_values(entity_id, update="Entity", hosturi=TestHostUri):
         })
     return d
 
-def entitydata_context_data(entity_id=None, orig_entity_id=None, action=None, update="Entity"):
+def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="Entity"):
     context_dict = (
         { 'title':              'Annalist data journal test site'
         , 'coll_id':            'testcoll'
         , 'type_id':            'testtype'
-        , 'orig_entity_id':     'orig_entity_id'
+        , 'orig_id':            'orig_entity_id'
         , 'fields':
-          [ { 'field_label':      'Id'
-            , 'field_render':     'field/annalist_field_text.html'
-            , 'field_name':       'Entity_id'
-            , 'field_placement':  'small-12 medium-4 columns'
-            , 'field_id':         'Entity_id'
-            , 'field_value_type': 'annal:Slug'
-            # , 'field_value':      ''
+          [ { 'field_label':        'Id'
+            , 'field_render':       'field/annalist_field_text.html'
+            , 'field_name':         'Entity_id'
+            , 'field_placement':    'small-12 medium-4 columns'
+            , 'field_id':           'Entity_id'
+            , 'field_value_type':   'annal:Slug'
+            # , 'field_value':      (Supplied separately)
             }
-          , { 'field_label':      'Label'
-            , 'field_render':     'field/annalist_field_text.html'
-            , 'field_name':       'Entity_label'
-            , 'field_placement':  'small-12 columns'
-            , 'field_id':         'Entity_label'
-            , 'field_value_type': 'annal:Text'
-            , 'field_value':      '%s data ... (testcoll/testtype)'%(update)
+          , { 'field_label':        'Label'
+            , 'field_render':       'field/annalist_field_text.html'
+            , 'field_name':         'Entity_label'
+            , 'field_placement':    'small-12 columns'
+            , 'field_id':           'Entity_label'
+            , 'field_value_type':   'annal:Text'
+            , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
             }
-          , { 'field_label':      'Comment'
-            , 'field_render':     'field/annalist_field_textarea.html'
-            , 'field_name':       'Entity_comment'
-            , 'field_placement':  'small-12 columns'
-            , 'field_id':         'Entity_comment'
-            , 'field_value_type': 'annal:Longtext'
-            , 'field_value':      '%s description ... (testcoll/testtype)'%(update)
+          , { 'field_label':        'Comment'
+            , 'field_render':       'field/annalist_field_textarea.html'
+            , 'field_name':         'Entity_comment'
+            , 'field_placement':    'small-12 columns'
+            , 'field_id':           'Entity_comment'
+            , 'field_value_type':   'annal:Longtext'
+            , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
             }
           ]
         , 'continuation_uri':   entitydata_list_uri("testcoll", "testtype")
@@ -213,27 +213,27 @@ def entitydata_context_data(entity_id=None, orig_entity_id=None, action=None, up
         context_dict['fields'][0]['field_value'] = entity_id
         context_dict['fields'][1]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
         context_dict['fields'][2]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
-        context_dict['orig_entity_id']  = entity_id
-    if orig_entity_id:
-        context_dict['orig_entity_id']  = orig_entity_id
+        context_dict['orig_id']     = entity_id
+    if orig_id:
+        context_dict['orig_id']     = orig_id
     if action:  
-        context_dict['action']  = action
+        context_dict['action']      = action
     return context_dict
 
-def entitydata_form_data(entity_id=None, orig_entity_id=None, action=None, cancel=None, update="Entity"):
+def entitydata_form_data(entity_id=None, orig_id=None, action=None, cancel=None, update="Entity"):
     form_data_dict = (
         { 'Entity_label':       '%s data ... (testcoll/testtype)'%(update)
         , 'Entity_comment':     '%s description ... (testcoll/testtype)'%(update)
-        , 'orig_entity_id':     'orig_entity_id'
+        , 'orig_id':            'orig_entity_id'
         , 'continuation_uri':   entitydata_list_uri("testcoll", "testtype")
         })
     if entity_id:
         form_data_dict['Entity_id']         = entity_id
         form_data_dict['Entity_label']      = '%s testcoll/testtype/%s'%(update,entity_id)
         form_data_dict['Entity_comment']    = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
-        form_data_dict['orig_entity_id']    = entity_id
-    if orig_entity_id:
-        form_data_dict['orig_entity_id']    = orig_entity_id
+        form_data_dict['orig_id']           = entity_id
+    if orig_id:
+        form_data_dict['orig_id']           = orig_id
     if action:
         form_data_dict['action']            = action
     if cancel:
@@ -341,47 +341,47 @@ def recordtype_values(
     return d
 
 def recordtype_context_data(
-        type_id=None, orig_type_id=None, action=None, 
+        type_id=None, orig_id=None, action=None, 
         update="RecordType", hosturi=TestHostUri):
     context_dict = (
         { 'title':              "Annalist data journal test site"
         , 'coll_id':            "testcoll"
-        , 'orig_type_id':       "orig_type_id"
+        , 'orig_id':            "orig_type_id"
         , 'type_label':         "%s testcoll/..."%(update)
         , 'type_help':          "%s help for ... in collection testcoll"%(update)
         , 'type_uri':           recordtype_uri("testcoll", "___")
         , 'continuation_uri':   collection_edit_uri("testcoll")
         })
     if type_id:
-        context_dict['type_id']       = type_id
-        context_dict['orig_type_id']  = type_id
-        context_dict['type_label']    = "%s testcoll/%s"%(update, type_id)
-        context_dict['type_help']     = "%s help for %s in collection testcoll"%(update,type_id)
-        context_dict['type_uri']      = hosturi + recordtype_uri("testcoll", type_id)
-    if orig_type_id:
-        context_dict['orig_type_id']  = orig_type_id
+        context_dict['type_id']     = type_id
+        context_dict['orig_id']     = type_id
+        context_dict['type_label']  = "%s testcoll/%s"%(update, type_id)
+        context_dict['type_help']   = "%s help for %s in collection testcoll"%(update,type_id)
+        context_dict['type_uri']    = hosturi + recordtype_uri("testcoll", type_id)
+    if orig_id:
+        context_dict['orig_id']     = orig_id
     if action:  
-        context_dict['action']  = action
+        context_dict['action']      = action
     return context_dict
 
 def recordtype_form_data(
-        type_id=None, orig_type_id=None, action=None, cancel=None, 
+        type_id=None, orig_id=None, action=None, cancel=None, 
         update="RecordType", hosturi=TestHostUri):
     form_data_dict = (
-        { 'type_label':       "%s testcoll/..."%(update)
-        , 'type_help':        "%s help for ... in collection testcoll"%(update)
-        , 'type_class':       recordtype_uri("testcoll", "___")
-        , 'orig_type_id':     "orig_type_id"
-        , 'continuation_uri': collection_edit_uri("testcoll")
+        { 'type_label':         "%s testcoll/..."%(update)
+        , 'type_help':          "%s help for ... in collection testcoll"%(update)
+        , 'type_class':         recordtype_uri("testcoll", "___")
+        , 'orig_id':            "orig_type_id"
+        , 'continuation_uri':   collection_edit_uri("testcoll")
         })
     if type_id:
         form_data_dict['type_id']       = type_id
-        form_data_dict['orig_type_id']  = type_id
+        form_data_dict['orig_id']       = type_id
         form_data_dict['type_label']    = "%s testcoll/%s"%(update, type_id)
         form_data_dict['type_help']     = "%s help for %s in collection testcoll"%(update,type_id)
         form_data_dict['type_class']    = hosturi + recordtype_uri("testcoll", type_id)
-    if orig_type_id:
-        form_data_dict['orig_type_id']  = orig_type_id
+    if orig_id:
+        form_data_dict['orig_id']       = orig_id
     if action:
         form_data_dict['action']        = action
     if cancel:

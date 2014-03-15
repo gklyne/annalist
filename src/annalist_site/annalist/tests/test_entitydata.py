@@ -173,7 +173,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
-        self.assertEqual(r.context['orig_entity_id'],   "00000001")
+        self.assertEqual(r.context['orig_id'],          "00000001")
         self.assertEqual(r.context['entity_uri'],       TestHostUri + entity_uri(entity_id="00000001"))
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
@@ -237,7 +237,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "entity1")
-        self.assertEqual(r.context['orig_entity_id'],   "entity1")
+        self.assertEqual(r.context['orig_id'],          "entity1")
         self.assertEqual(r.context['entity_uri'],       TestHostUri + entity_uri("testcoll", "testtype", "entity1"))
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
@@ -350,7 +350,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_post_new_entity_invalid_id(self):
-        f = entitydata_form_data(entity_id="!badentity", orig_entity_id="orig_entity_id", action="new")
+        f = entitydata_form_data(entity_id="!badentity", orig_id="orig_entity_id", action="new")
         u = entitydata_edit_uri("new", "testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
@@ -359,7 +359,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
-        expect_context = entitydata_context_data(entity_id="!badentity", orig_entity_id="orig_entity_id", action="new")
+        expect_context = entitydata_context_data(
+            entity_id="!badentity", orig_id="orig_entity_id", action="new"
+            )
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
@@ -405,7 +407,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_entity_invalid_id(self):
-        f = entitydata_form_data(entity_id="!badentity", orig_entity_id="orig_entity_id", action="copy")
+        f = entitydata_form_data(entity_id="!badentity", orig_id="orig_entity_id", action="copy")
         u = entitydata_edit_uri("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
@@ -413,7 +415,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist data journal test site</title>")
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
-        expect_context = entitydata_context_data(entity_id="!badentity", orig_entity_id="orig_entity_id", action="copy")
+        expect_context = entitydata_context_data(
+            entity_id="!badentity", orig_id="orig_entity_id", action="copy"
+            )
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
@@ -436,7 +440,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self._create_entity_data("edittype1")
         self._check_entity_data_values("edittype1")
         # Now post edit form submission with different values and new id
-        f = entitydata_form_data(entity_id="edittype2", orig_entity_id="edittype1", action="edit")
+        f = entitydata_form_data(entity_id="edittype2", orig_id="edittype1", action="edit")
         u = entitydata_edit_uri("edit", "testcoll", "testtype", entity_id="edittype1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -487,7 +491,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("edittype")
         # Form post with ID malformed
         f = entitydata_form_data(
-            entity_id="!badentity", orig_entity_id="orig_entity_id", action="edit"
+            entity_id="!badentity", orig_id="orig_entity_id", action="edit"
             )
         u = entitydata_edit_uri("edit", "testcoll", "testtype", entity_id="edittype")
         r = self.client.post(u, f)
@@ -498,7 +502,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context for re-rendered form
         expect_context = entitydata_context_data(
-            entity_id="!badentity", orig_entity_id="orig_entity_id", action="edit"
+            entity_id="!badentity", orig_id="orig_entity_id", action="edit"
             )
         self.assertDictionaryMatch(r.context, expect_context)
         # Check stored entity is unchanged

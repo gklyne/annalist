@@ -83,7 +83,7 @@ class EntityDefaultEditView(EntityEditBaseView):
             action              = action,
             coll_id             = coll_id,
             type_id             = type_id,
-            orig_entity_id      = entity_id
+            orig_id             = entity_id
             )
         # generate and return form data
         return (
@@ -108,7 +108,7 @@ class EntityDefaultEditView(EntityEditBaseView):
             return http_response
         # Get key POST values
         entity_id            = request.POST.get('Entity_id', None)
-        orig_entity_id       = request.POST.get('orig_entity_id', None)
+        orig_entity_id       = request.POST.get('orig_id', None)
         continuation_uri     = request.POST.get('continuation_uri', 
             self.view_uri('AnnalistEntityDefaultListType', coll_id=coll_id, type_id=type_id)
             )

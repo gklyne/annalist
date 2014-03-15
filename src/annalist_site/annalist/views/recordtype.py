@@ -45,7 +45,7 @@ class RecordTypeEditView(EntityEditBaseView):
         , EntityValueMap(e='rdfs:comment',v='rdfs:comment', c='type_help',        f='type_help'        )
         , EntityValueMap(e='annal:uri',   v='annal:uri',    c='type_uri',         f='type_class'       )
         # Form and interaction control
-        , EntityValueMap(e=None,          v=None,           c='orig_type_id',     f='orig_type_id'     )
+        , EntityValueMap(e=None,          v=None,           c='orig_id',          f='orig_id'     )
         , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
         , EntityValueMap(e=None,          v=None,           c='action',           f='action'           )
         ])
@@ -75,8 +75,8 @@ class RecordTypeEditView(EntityEditBaseView):
             , "rdfs:comment": ""
             })
         context_extra_values = (
-            { 'coll_id':          coll_id
-            , 'orig_type_id':     type_id
+            { 'coll_id':    coll_id
+            , 'orig_id':    type_id
             })
         return self.form_render(request,
             action, coll, type_id, 
@@ -91,10 +91,10 @@ class RecordTypeEditView(EntityEditBaseView):
         Handle response to record type edit form
         """
         log.debug("views.recordtype.post %s"%(self.get_request_path()))
-        # log.debug("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
-        # log.debug("  form data %r"%(request.POST))
+        # log.info("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
+        # log.info("  form data %r"%(request.POST))
         type_id              = request.POST.get('type_id', None)
-        orig_type_id         = request.POST.get('orig_type_id', None)
+        orig_type_id         = request.POST.get('orig_id', None)
         collection_edit_uri  = self.view_uri('AnnalistCollectionEditView', coll_id=coll_id)
         continuation_uri     = request.POST.get('continuation_uri', collection_edit_uri)
         coll                 = self.collection(coll_id)
@@ -110,7 +110,10 @@ class RecordTypeEditView(EntityEditBaseView):
             , 'entity_exists':     message.RECORD_TYPE_EXISTS%(type_id, coll_id)
             , 'entity_not_exists': message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)        
             })
-        return self.form_response(request, action, coll, type_id, orig_type_id, messages, context_extra_values)
+        return self.form_response(
+            request, action, coll, type_id, orig_type_id, 
+            messages, context_extra_values
+            )
 
 
 class RecordTypeDeleteConfirmedView(EntityDeleteConfirmedBaseView):
