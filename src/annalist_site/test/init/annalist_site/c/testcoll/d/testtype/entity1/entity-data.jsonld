@@ -1,8 +1,10 @@
 {
-    "@id":            "./",
-    "annal:id":       "entity1",
-    "annal:type":     "annal:EntityData",
-    "annal:uri":      "/testsite/c/testcoll/d/testtype/entity1/",
-    "rdfs:label":     "Record 'entity1' of type 'testtype' in collection 'testcoll'",
-    "rdfs:comment":   "Comment for entity1"
+  "rdfs:label": "Entity testcoll/testtype/entity1",
+  "rdfs:comment": "Entity coll testcoll, type testtype, entity entity1",
+  "annal:uri": "http://test.example.com/testsite/c/testcoll/d/testtype/entity1/",
+  "annal:urihost": "test.example.com",
+  "annal:uripath": "/testsite/c/testcoll/d/testtype/entity1/",
+  "annal:id": "entity1",
+  "@id": "./",
+  "annal:type": "annal:EntityData"
 }

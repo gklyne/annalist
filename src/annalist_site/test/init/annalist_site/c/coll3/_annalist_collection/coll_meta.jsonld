@@ -1,9 +1,10 @@
-{ 
-    "@id":           "../",
-    "annal:id":      "coll3",
-    "annal:type":    "annal:Collection",
-    "annal:uri":     "http://test.example.com/testsite/c/coll3/",
-    "rdfs:label":    "Collection coll3",
-    "rdfs:comment":  "Annalist collection metadata."
+{
+  "rdfs:label": "Collection coll3",
+  "rdfs:comment": "Description of Collection coll3",
+  "annal:uri": "http://test.example.com/testsite/c/coll3/",
+  "annal:urihost": "test.example.com",
+  "annal:uripath": "/testsite/c/coll3/",
+  "annal:id": "coll3",
+  "@id": "../",
+  "annal:type": "annal:Collection"
 }
-

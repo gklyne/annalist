@@ -1,1 +1,10 @@
-{"rdfs:label": "Type testcoll/type2", "rdfs:comment": "Annalist collection1 recordtype2", "title": "Type testcoll/type2", "@id": "./", "annal:id": "type2", "type": "annal:RecordType", "uri": "http://example.com/testsite/c/testcoll/types/type2/", "annal:type": "annal:RecordType", "id": "type2"}
+{
+  "rdfs:label": "RecordType coll3/type2",
+  "rdfs:comment": "RecordType help for type2 in collection coll3",
+  "annal:uri": "http://test.example.com/testsite/c/coll3/types/type2/",
+  "annal:urihost": "test.example.com",
+  "annal:uripath": "/testsite/c/coll3/types/type2/",
+  "annal:id": "type2",
+  "@id": "./",
+  "annal:type": "annal:RecordType"
+}

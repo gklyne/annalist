@@ -322,7 +322,7 @@ def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="Rec
     Entity values used when creating a record type entity
     """
     return (
-        { 'rdfs:label':     "%s %s in collection %s"%(update, type_id, coll_id)
+        { 'rdfs:label':     "%s %s/%s"%(update, coll_id, type_id)
         , 'rdfs:comment':   "%s help for %s in collection %s"%(update, type_id, coll_id)
         })
 
@@ -347,7 +347,7 @@ def recordtype_context_data(
         { 'title':              "Annalist data journal test site"
         , 'coll_id':            "testcoll"
         , 'orig_type_id':       "orig_type_id"
-        , 'type_label':         "%s ... in collection testcoll"%(update)
+        , 'type_label':         "%s testcoll/..."%(update)
         , 'type_help':          "%s help for ... in collection testcoll"%(update)
         , 'type_uri':           recordtype_uri("testcoll", "___")
         , 'continuation_uri':   collection_edit_uri("testcoll")
@@ -355,7 +355,7 @@ def recordtype_context_data(
     if type_id:
         context_dict['type_id']       = type_id
         context_dict['orig_type_id']  = type_id
-        context_dict['type_label']    = "%s %s in collection testcoll"%(update, type_id)
+        context_dict['type_label']    = "%s testcoll/%s"%(update, type_id)
         context_dict['type_help']     = "%s help for %s in collection testcoll"%(update,type_id)
         context_dict['type_uri']      = hosturi + recordtype_uri("testcoll", type_id)
     if orig_type_id:
@@ -368,7 +368,7 @@ def recordtype_form_data(
         type_id=None, orig_type_id=None, action=None, cancel=None, 
         update="RecordType", hosturi=TestHostUri):
     form_data_dict = (
-        { 'type_label':       "%s ... in collection testcoll"%(update)
+        { 'type_label':       "%s testcoll/..."%(update)
         , 'type_help':        "%s help for ... in collection testcoll"%(update)
         , 'type_class':       recordtype_uri("testcoll", "___")
         , 'orig_type_id':     "orig_type_id"
@@ -377,7 +377,7 @@ def recordtype_form_data(
     if type_id:
         form_data_dict['type_id']       = type_id
         form_data_dict['orig_type_id']  = type_id
-        form_data_dict['type_label']    = "%s %s in collection testcoll"%(update, type_id)
+        form_data_dict['type_label']    = "%s testcoll/%s"%(update, type_id)
         form_data_dict['type_help']     = "%s help for %s in collection testcoll"%(update,type_id)
         form_data_dict['type_class']    = hosturi + recordtype_uri("testcoll", type_id)
     if orig_type_id:
@@ -414,7 +414,7 @@ def recordview_create_values(coll_id="testcoll", view_id="testview", update="Rec
     Entity values used when creating a record type entity
     """
     return (
-        { 'rdfs:label':     "%s %s in collection %s"%(update, view_id, coll_id)
+        { 'rdfs:label':     "%s %s/%s"%(update, coll_id, view_id)
         , 'rdfs:comment':   "%s help for %s in collection %s"%(update, view_id, coll_id)
         })
 
@@ -450,7 +450,7 @@ def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="Rec
     Entity values used when creating a record type entity
     """
     return (
-        { 'rdfs:label':     "%s %s in collection %s"%(update, list_id, coll_id)
+        { 'rdfs:label':     "%s %s/%s"%(update, coll_id, list_id)
         , 'rdfs:comment':   "%s help for %s in collection %s"%(update, list_id, coll_id)
         })
 

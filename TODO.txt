@@ -83,6 +83,7 @@
    / include path values in entities.
    x include base and reference values in entities. (later: requires use of @context)
    / create data view display based on generic render logic
+   - editing recordtype: returns "already exists" error; display operation (new, copy, edit, etc) in edit form
    - read-only data views
    - function to create initial development site data (based on test code)
 5. Default record list display

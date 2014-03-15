@@ -238,7 +238,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "entity1")
         self.assertEqual(r.context['orig_entity_id'],   "entity1")
-        self.assertEqual(r.context['entity_uri'],       entity_uri("testcoll", "testtype", "entity1"))
+        self.assertEqual(r.context['entity_uri'],       TestHostUri + entity_uri("testcoll", "testtype", "entity1"))
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # 1st field
@@ -261,7 +261,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             "Short string used to describe entity when displayed"
             )
         field_label_value = (
-            "Record 'entity1' of type 'testtype' in collection 'testcoll'"
+            "Entity testcoll/testtype/entity1"
             )
         self.assertEqual(r.context['fields'][1]['field_id'], 'Entity_label')
         self.assertEqual(r.context['fields'][1]['field_name'], 'Entity_label')
@@ -277,6 +277,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         field_comment_help = (
             "Descriptive text about an entity."
             )
+        field_comment_value = (
+            "Entity coll testcoll, type testtype, entity entity1"
+            )
         self.assertEqual(r.context['fields'][2]['field_id'], 'Entity_comment')
         self.assertEqual(r.context['fields'][2]['field_name'], 'Entity_comment')
         self.assertEqual(r.context['fields'][2]['field_label'], 'Comment')
@@ -286,7 +289,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_render'], "field/annalist_field_textarea.html")
         self.assertEqual(r.context['fields'][2]['field_placement'], "small-12 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Longtext")
-        self.assertEqual(r.context['fields'][2]['field_value'], "Comment for entity1")
+        self.assertEqual(r.context['fields'][2]['field_value'], field_comment_value)
         return
 
     def test_get_edit_not_exists(self):

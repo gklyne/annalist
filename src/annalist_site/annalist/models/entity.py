@@ -180,7 +180,7 @@ class EntityRoot(object):
         if self._entitytype:
             values[ANNAL.CURIE.type] = self._entitytype
         with open(fullpath, "wt") as entity_io:
-            json.dump(values, entity_io)
+            json.dump(values, entity_io, indent=2, separators=(',', ': '))
         return
 
     def _load_values(self):
