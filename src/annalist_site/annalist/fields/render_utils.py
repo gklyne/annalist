@@ -14,9 +14,9 @@ import re
 # from annalist.fields.render_text    import RenderText
 from render_text    import RenderText
 
-def get_renderer(renderid):
+def get_edit_renderer(renderid):
     """
-    Returns a field renderer object that can be referenced in a 
+    Returns an field edit renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
 
     This version returns the name of a template to render the form.
@@ -29,13 +29,37 @@ def get_renderer(renderid):
     """
     # @@TODO: currently just a minimal placeholder
     if renderid == "annal:field_render/Text":
-        return "field/annalist_field_text.html"
+        return "field/annalist_edit_text.html"
         # return RenderText()
     if renderid == "annal:field_render/Slug":
-        return "field/annalist_field_text.html"
+        return "field/annalist_edit_text.html"
     if renderid == "annal:field_render/Textarea":
-        return "field/annalist_field_textarea.html"
-    log.warning("get_renderer: %s not found"%renderid)
+        return "field/annalist_edit_textarea.html"
+    log.warning("get_edit_renderer: %s not found"%renderid)
+    return None
+
+def get_view_renderer(renderid):
+    """
+    Returns a field view renderer object that can be referenced in a 
+    Django template "{% include ... %}" element.
+
+    This version returns the name of a template to render the form.
+    With future versions of Django (>=1.7), and alternative is to return an
+    object with a `.render(context)` method that returns a string to be
+    included in the resulting page:
+        The variable may also be any object with a render() method that accepts 
+        a context. This allows you to reference a compiled Template in your context.
+        - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
+    """
+    # @@TODO: currently just a minimal placeholder
+    if renderid == "annal:field_render/Text":
+        return "field/annalist_view_text.html"
+        # return RenderText()
+    if renderid == "annal:field_render/Slug":
+        return "field/annalist_view_text.html"
+    if renderid == "annal:field_render/Textarea":
+        return "field/annalist_view_textarea.html"
+    log.warning("get_edit_renderer: %s not found"%renderid)
     return None
 
 def get_placement_class(placement):

@@ -36,9 +36,17 @@ div.row.headings {
 
 div.columns > input , 
 div.columns > textarea , 
-div.columns > select {
+div.columns > select
+{
     margin: 0.25rem 0;
     padding: 0.25rem 0;
+    height: auto;
+}
+
+div.columns > p 
+{
+    margin: 0.25rem 0;
+    /*padding: 0.25rem 0;*/
     height: auto;
 }
 

@@ -29,7 +29,6 @@ from annalist.models.entitydata     import EntityData
 
 from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
 from annalist.views.entityeditbase  import EntityValueMap
-from annalist.fields.render_utils   import get_renderer, get_placement_class
 
 class EntityDefaultEditView(EntityEditBaseView):
     """

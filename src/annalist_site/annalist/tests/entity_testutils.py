@@ -183,7 +183,8 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
         , 'orig_id':            'orig_entity_id'
         , 'fields':
           [ { 'field_label':        'Id'
-            , 'field_render':       'field/annalist_field_text.html'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Entity_id'
             , 'field_placement':    'small-12 medium-4 columns'
             , 'field_id':           'Entity_id'
@@ -191,7 +192,8 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
             # , 'field_value':      (Supplied separately)
             }
           , { 'field_label':        'Label'
-            , 'field_render':       'field/annalist_field_text.html'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Entity_label'
             , 'field_placement':    'small-12 columns'
             , 'field_id':           'Entity_label'
@@ -199,7 +201,8 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
             , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
             }
           , { 'field_label':        'Comment'
-            , 'field_render':       'field/annalist_field_textarea.html'
+            , 'field_render_view':  'field/annalist_view_textarea.html'
+            , 'field_render_edit':  'field/annalist_edit_textarea.html'
             , 'field_name':         'Entity_comment'
             , 'field_placement':    'small-12 columns'
             , 'field_id':           'Entity_comment'
