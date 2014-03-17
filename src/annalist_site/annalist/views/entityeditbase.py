@@ -31,7 +31,10 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 
 from annalist.views.generic         import AnnalistGenericView
-from annalist.fields.render_utils   import get_edit_renderer, get_view_renderer, get_placement_class
+from annalist.fields.render_utils   import bound_field, get_placement_class
+from annalist.fields.render_utils   import get_edit_renderer, get_view_renderer
+from annalist.fields.render_utils   import get_head_renderer, get_item_renderer
+# from annalist.fields.render_utils   import get_grid_renderer
 
 
 class EntityValueMap(object):
@@ -134,6 +137,42 @@ class EntityEditBaseView(AnnalistGenericView):
         self.recordtypedata = RecordTypeData(self.collection, type_id)
         return None
 
+    def get_field_context(self, field):
+        """
+        Creates a field description value to use in a context value when
+        rendering a form.  Values used here are also mentioned in field
+        rendering templates.
+
+        field    is the field description from a view or list description.
+
+        Also uses values self.sitedata and self.collection.
+
+        See also: fields.render_utils.bound_field.
+        """
+        field_id    = field['annal:field_id']
+        recordfield = RecordField.load(self.collection, field_id, altparent=self.sitedata)
+        log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
+        return_property_uri = (
+            recordfield['annal:property_uri'] if recordfield['annal:return_value'] 
+            else None
+            )
+        field_context = (
+            { 'field_id':               field_id
+            , 'field_placement':        get_placement_class(field['annal:field_placement'])
+            , 'field_name':             field_id    # Assumes same field can't repeat in form
+            , 'field_render_head':      get_head_renderer(recordfield['annal:field_render'])
+            , 'field_render_item':      get_item_renderer(recordfield['annal:field_render'])
+            , 'field_render_view':      get_view_renderer(recordfield['annal:field_render'])
+            , 'field_render_edit':      get_edit_renderer(recordfield['annal:field_render'])
+            , 'field_label':            recordfield['rdfs:label']
+            , 'field_help':             recordfield['rdfs:comment']
+            , 'field_value_type':       recordfield['annal:value_type']
+            , 'field_placeholder':      recordfield['annal:placeholder']
+            , 'field_property_uri':     recordfield['annal:property_uri']
+            , 'return_property_uri':    return_property_uri
+            })
+        return field_context
+
     def get_form_entityvaluemap(self, view_id):
         """
         Creates an entity/value map table in the current object incorporating
@@ -145,33 +184,14 @@ class EntityEditBaseView(AnnalistGenericView):
         log.debug("entityview   %r"%entityview.get_values())
         # Process fields referenced by the view desription, updating value map
         for f in entityview.get_values()['annal:view_fields']:
-            field_id   = f['annal:field_id']
-            viewfield  = RecordField.load(self.collection, field_id, altparent=self.sitedata)
-            log.debug("viewfield   %r"%(viewfield and viewfield.get_values()))
-            return_property_uri = (
-                viewfield['annal:property_uri'] if viewfield['annal:return_value'] 
-                else None
-                )
-            field_context = (
-                { 'field_id':           field_id
-                , 'field_placement':    get_placement_class(f['annal:field_placement'])
-                , 'field_name':         field_id    # Assumes same field can't repeat in form
-                , 'field_render_edit':  get_edit_renderer(viewfield['annal:field_render'])
-                , 'field_render_view':  get_view_renderer(viewfield['annal:field_render'])
-                , 'field_label':        viewfield['rdfs:label']
-                , 'field_help':         viewfield['rdfs:comment']
-                , 'field_value_type':   viewfield['annal:value_type']
-                , 'field_placeholder':  viewfield['annal:placeholder']
-                , 'field_property_uri': viewfield['annal:property_uri']
-                # 'field_value':        field value to be supplied
-                })
+            field_context = self.get_field_context(f)
             entitymap.append(
                 EntityValueMap(
-                    v=viewfield['annal:property_uri'],  # Entity value used to initialize context
-                    c="field_value",                    # Key for value in (sub)context
-                    s=("fields", field_context),        # Field sub-context
-                    f=field_id,                         # Field name in form
-                    e=return_property_uri               # Entity value returned from form
+                    v=field_context['field_property_uri'],  # Entity value used to initialize context
+                    c="field_value",                        # Key for value in (sub)context
+                    s=("fields", field_context),            # Field sub-context
+                    f=field_context['field_id'],            # Field name in form
+                    e=field_context['return_property_uri']  # Entity value returned from form
                     )
                 )
         # log.debug("entitymap %r"%entitymap)
@@ -189,35 +209,14 @@ class EntityEditBaseView(AnnalistGenericView):
         log.debug("entitylist %r"%entitylist.get_values())
         # Process fields referenced by the view desription, updating value map
         for f in entitylist.get_values()['annal:list_fields']:
-            field_id   = f['annal:field_id']
-            listfield  = RecordField.load(self.collection, field_id, altparent=self.sitedata)
-            log.debug("listfield   %r"%(listfield and listfield.get_values()))
-            return_property_uri = (
-                listfield['annal:property_uri'] if listfield['annal:return_value'] 
-                else None
-                )
-            field_context = (
-                { 'field_id':           field_id
-                , 'field_placement':    get_placement_class(f['annal:field_placement'])
-                , 'field_name':         field_id    # Assumes same field can't repeat in form
-                , 'field_render_head':  get_head_renderer(listfield['annal:field_render'])
-                , 'field_render_item':  get_item_renderer(listfield['annal:field_render'])
-                # , 'field_render_view':  get_view_renderer(listfield['annal:field_render'])
-                # , 'field_render_edit':  get_edit_renderer(listfield['annal:field_render'])
-                , 'field_label':        listfield['rdfs:label']
-                , 'field_help':         listfield['rdfs:comment']
-                , 'field_value_type':   listfield['annal:value_type']
-                , 'field_placeholder':  listfield['annal:placeholder']
-                , 'field_property_uri': listfield['annal:property_uri']
-                # 'field_value':        field value to be supplied
-                })
+            field_context = self.get_field_context(f)
             entitymap.append(
                 EntityValueMap(
-                    v=listfield['annal:property_uri'],  # Entity value used to initialize context
-                    c=None,                             # Key for value in (sub)context
-                    s=("fields", field_context),        # (subcontext-name, subcontext-data)
-                    f=field_id,                         # Field name in form
-                    e=return_property_uri               # Entity value returned from form
+                    v=field_context['field_property_uri'],  # Entity value used to initialize context
+                    c="field_value",                        # Key for value in (sub)context
+                    s=("fields", field_context),            # Field sub-context
+                    f=field_context['field_id'],            # Field name in form
+                    e=field_context['return_property_uri']  # Entity value returned from form
                     )
                 )
         # log.debug("entitymap %r"%entitymap)

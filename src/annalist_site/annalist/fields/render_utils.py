@@ -127,12 +127,7 @@ def get_head_renderer(renderid):
     Returns a field list heading renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    if renderid == "annal:field_render/Text":
-        return "field/annalist_head_text.html"
-    if renderid == "annal:field_render/Slug":
-        return "field/annalist_head_text.html"
-    log.warning("get_head_renderer: %s not found"%renderid)
-    return None
+    return "field/annalist_head_any.html"
 
 def get_item_renderer(renderid):
     """
@@ -143,8 +138,8 @@ def get_item_renderer(renderid):
         return "field/annalist_item_text.html"
     if renderid == "annal:field_render/Slug":
         return "field/annalist_item_text.html"
-    log.warning("get_item_renderer: %s not found"%renderid)
-    return None
+    log.debug("get_item_renderer: %s not found"%renderid)
+    return "field/annalist_item_none.html"
 
 def get_placement_class(placement):
     """

@@ -29,6 +29,20 @@ body > div {
     vertical-align: bottom;
 }
 
+div.row .row {
+    margin: 0 0;
+    padding: 0 0;
+}
+
+div.row .columns {
+    padding: 0 0.75rem;
+}
+
+div.row .columns .row .columns {
+    margin: 0 0;
+    padding: 0 0;
+}
+
 div.row.headings {
     padding-bottom: 0.5rem;
     font-weight: bold;

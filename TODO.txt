@@ -122,7 +122,6 @@ Tests required:
 Misc:
 - Login link to include option to redirect to failed page, with form fields populated
 - Complete authorization framework
-- convert to HTTP entity access
 x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
 - think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
 - think about handling of identifier renaming (re-write data, record equivalence, or ...).  (See also "data storage" below.)
@@ -134,6 +133,9 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
 - entity._save: think about capturing provenance metadata too
 / move entity I/O logic in util module to entity module (keep it all together)
 ? view collections doesn't use entered label - problem with entry vocab? (Fixed?)
+- look into using named tuples instead of dictionaries for rendering
+  - cf. http://stackoverflow.com/questions/1336791/
+- abstract definition of `field_context` - currently defined implicitly in `views.entityeditbase`
 
 Entity abstraction:
 - replace direct file access with HTTP access
