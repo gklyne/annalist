@@ -194,6 +194,8 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_placement'].label, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][0]['field_placement'].value, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][0]['field_value_type'], "annal:Slug")
+        # log.info(repr(r.context['fields'][0]))
+        self.assertEqual(r.context['fields'][0].field_value, "00000001")
         self.assertEqual(r.context['fields'][0]['field_value'], "00000001")
         # 2nd field
         field_label_help = (

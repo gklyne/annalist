@@ -182,7 +182,7 @@ class EntityEditBaseView(AnnalistGenericView):
         entitymap  = copy.copy(baseentityvaluemap)
         entityview = RecordView.load(self.collection, view_id, altparent=self.sitedata)
         log.debug("entityview   %r"%entityview.get_values())
-        # Process fields referenced by the view desription, updating value map
+        # Process fields referenced by the view description, updating value map
         for f in entityview.get_values()['annal:view_fields']:
             field_context = self.get_field_context(f)
             entitymap.append(
@@ -224,28 +224,37 @@ class EntityEditBaseView(AnnalistGenericView):
         return entitymap
 
     def map_entry_to_context(self,
-            context, subcontext, contextkey, valuekey, entity_values, 
+            context, fieldcontext, contextkey, valuekey, entity_values, 
             **kwargs):
         """
         Helper function maps a single entry from a dictionary of entity values
         (incoming values or form data) to an entry in a context used for rendering
         an editing form.
         """
-        if subcontext:
+        default = None
+        if contextkey and contextkey in kwargs:
+            default = kwargs[contextkey] 
+        if fieldcontext:
             # Create sub-context and select that (used for data-described form fields)
-            subcontextname, subcontextdata = subcontext
-            if subcontextname not in context:
-                context[subcontextname] = []
-            subcontextdata = copy.copy(subcontextdata)
-            context[subcontextname].append(subcontextdata)
-            usecontext = subcontextdata
-        else:
-            usecontext = context
+            fieldcontextname, fieldcontextdata = fieldcontext
+            if fieldcontextname not in context:
+                context[fieldcontextname] = []
+            boundfieldcontext = bound_field(
+                field_description=fieldcontextdata, 
+                entity=entity_values, key=valuekey, default=default
+                )
+            context[fieldcontextname].append(boundfieldcontext)
+            # fieldcontextdata = copy.copy(fieldcontextdata)
+            # context[fieldcontextname].append(fieldcontextdata)
+            # usecontext = fieldcontextdata
+        # else:
+        #     usecontext = context
         if contextkey:
-            if valuekey and valuekey in entity_values.keys():
-                usecontext[contextkey] = entity_values[valuekey]    # Copy value -> context
-            elif contextkey in kwargs:
-                usecontext[contextkey] = kwargs[contextkey]         # Supplied argument -> context
+            context[contextkey] = entity_values.get(valuekey, default)
+            # if valuekey and valuekey in entity_values.keys():
+            #     usecontext[contextkey] = entity_values[valuekey]    # Copy value -> context
+            # elif contextkey in kwargs:
+            #     usecontext[contextkey] = kwargs[contextkey]         # Supplied argument -> context
         return
 
     def map_value_to_context(self, entity_values, **kwargs):
@@ -258,7 +267,7 @@ class EntityEditBaseView(AnnalistGenericView):
         context = {}
         for kmap in self._entityvaluemap:
             self.map_entry_to_context(
-                # context, subcontext, contextkey, valuekey, entity_values
+                # context, fieldcontext, contextkey, valuekey, entity_values
                 context, kmap.s, kmap.c, kmap.v, entity_values, 
                 **kwargs
                 )
@@ -274,6 +283,7 @@ class EntityEditBaseView(AnnalistGenericView):
         context = {}
         for kmap in self._entityvaluemap:
             self.map_entry_to_context(
+                # context, fieldcontext, contextkey, valuekey, entity_values
                 context, kmap.s, kmap.c, kmap.f, form_data, 
                 **kwargs
                 )

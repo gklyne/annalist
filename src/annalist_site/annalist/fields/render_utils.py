@@ -51,7 +51,7 @@ class bound_field(object):
     'def_type'
     >>> field_def.field_value == None
     True
-    >>> field_def = bound_field(field_def_desc, entity, "default")
+    >>> field_def = bound_field(field_def_desc, entity, default="default")
     >>> field_def.field_type
     'def_type'
     >>> field_def.field_value
@@ -60,7 +60,7 @@ class bound_field(object):
 
     __slots__ = ("_field_description", "_entity", "_key", "_default")
 
-    def __init__(self, field_description=None, entity=None, default=None):
+    def __init__(self, field_description=None, entity=None, key=None, default=None):
         """
         Initialize a bound_field object.
 
@@ -70,12 +70,17 @@ class bound_field(object):
         entity              is an entity from which a value to be rendered is
                             obtained.  The specific field value used is defined
                             by the combination with `field_description`
+        key                 a key used to extract a field from the supplied entity.
+                            If not specified, the value of the `field_property_uri`
+                            field of the field description is used: this assumes the
+                            supplied entity is an actual entity rather than a field 
+                            value dictionary .
         default             is a default value to be used if the entity does 
                             not define the required value.
         """
         self._field_description = field_description
         self._entity            = entity
-        self._key               = self._field_description['field_property_uri']
+        self._key               = key or self._field_description['field_property_uri']
         self._default           = default
         return
 
@@ -85,13 +90,41 @@ class bound_field(object):
         then the value corresponding to the field description is retrieved from the entity,
         otherwise the named attribute is retrieved from thge field description.
         """
+        # log.info("__getattr__ %s"%name)
+        # log.info("self._key %s"%self._key)
+        # log.info("self._entity %r"%self._entity)
         if name == "field_value":
-            if self._key in self._entity:
+            # Note: .keys() is required here as iterator on EntityData returns files in directory
+            if self._key in self._entity.keys():
                 return self._entity[self._key]
             else:
                 return self._default
         else:
             return self._field_description[name]
+
+    def __getitem__(self, name):
+        return self.__getattr__(name)
+
+    def __iter__(self):
+        """
+        Implement iterator protocol, returning accessible value keys.
+        """
+        yield "field_value"
+        for k in self._field_description:
+            yield k
+        return
+
+    def as_dict(self):
+        return dict(self._field_description.items(), 
+            entity=dict(self._entity.items()), 
+            field_value=self.field_value, 
+            default=self._default, 
+            key=self._key
+            )
+
+    def __repr__(self):
+        return repr(self.as_dict())
+
 
 def get_edit_renderer(renderid):
     """
@@ -207,10 +240,9 @@ def get_placement_classes(placement):
         pmwidth  = int(pm.group(3))
         field_width[pmmode] = pmwidth
         label_width[pmmode] = labelw[pmmode]*(12 // pmwidth)
-        if label_width[pmmode] > 12:
-            label_width[pmmode] = 12
         value_width[pmmode] = 12 - label_width[pmmode]
-        if value_width[pmmode] <= 0:
+        if label_width[pmmode] >= 12:
+            label_width[pmmode] = 12
             value_width[pmmode] = 12
     c = Placement(
             field=format_class(field_width),
