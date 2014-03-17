@@ -24,6 +24,7 @@ from annalist                       import layout
 # from annalist.models.recordtype     import RecordType
 # from annalist.models.recordtypedata import RecordTypeData
 # from annalist.models.entitydata     import EntityData
+from annalist.fields.render_utils   import get_placement_classes
 
 from tests      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 
@@ -186,7 +187,7 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
             , 'field_render_view':  'field/annalist_view_text.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Entity_id'
-            , 'field_placement':    'small-12 medium-4 columns'
+            , 'field_placement':    get_placement_classes('small:0,6;medium:0,4')
             , 'field_id':           'Entity_id'
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
@@ -195,7 +196,7 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
             , 'field_render_view':  'field/annalist_view_text.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Entity_label'
-            , 'field_placement':    'small-12 columns'
+            , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Entity_label'
             , 'field_value_type':   'annal:Text'
             , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
@@ -204,7 +205,7 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
             , 'field_render_view':  'field/annalist_view_textarea.html'
             , 'field_render_edit':  'field/annalist_edit_textarea.html'
             , 'field_name':         'Entity_comment'
-            , 'field_placement':    'small-12 columns'
+            , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Entity_comment'
             , 'field_value_type':   'annal:Longtext'
             , 'field_value':        '%s description ... (testcoll/testtype)'%(update)

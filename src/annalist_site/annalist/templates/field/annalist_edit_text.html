@@ -1,9 +1,10 @@
-<div class="{{field.placement}}">
+<!-- editable text field -->
+<div class="{{field.field_placement.field}}">
     <div class="row">
-        <div class="small-12 medium-2 columns">
+        <div class="{{field.field_placement.label}}">
             <p>{{field.field_label}}</p>
         </div>
-        <div class="small-12 medium-10 columns">
+        <div class="{{field.field_placement.value}} left">
             <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
             <input type="text" size="64" name="{{field.field_name}}" value="{{field.field_value}}"/>
         </div>

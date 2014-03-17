@@ -31,7 +31,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 
 from annalist.views.generic         import AnnalistGenericView
-from annalist.fields.render_utils   import bound_field, get_placement_class
+from annalist.fields.render_utils   import bound_field, get_placement_classes
 from annalist.fields.render_utils   import get_edit_renderer, get_view_renderer
 from annalist.fields.render_utils   import get_head_renderer, get_item_renderer
 # from annalist.fields.render_utils   import get_grid_renderer
@@ -158,7 +158,7 @@ class EntityEditBaseView(AnnalistGenericView):
             )
         field_context = (
             { 'field_id':               field_id
-            , 'field_placement':        get_placement_class(field['annal:field_placement'])
+            , 'field_placement':        get_placement_classes(field['annal:field_placement'])
             , 'field_name':             field_id    # Assumes same field can't repeat in form
             , 'field_render_head':      get_head_renderer(recordfield['annal:field_render'])
             , 'field_render_item':      get_item_renderer(recordfield['annal:field_render'])
@@ -258,6 +258,7 @@ class EntityEditBaseView(AnnalistGenericView):
         context = {}
         for kmap in self._entityvaluemap:
             self.map_entry_to_context(
+                # context, subcontext, contextkey, valuekey, entity_values
                 context, kmap.s, kmap.c, kmap.v, entity_values, 
                 **kwargs
                 )

@@ -10,6 +10,7 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
+from collections    import OrderedDict, namedtuple
 
 # from annalist.fields.render_text    import RenderText
 from render_text    import RenderText
@@ -44,11 +45,22 @@ class bound_field(object):
     'bar_type'
     >>> field_bar.field_value
     'bar_val'
+    >>> field_def_desc = {"field_property_uri": "def", "field_type": "def_type"}
+    >>> field_def = bound_field(field_def_desc, entity)
+    >>> field_def.field_type
+    'def_type'
+    >>> field_def.field_value == None
+    True
+    >>> field_def = bound_field(field_def_desc, entity, "default")
+    >>> field_def.field_type
+    'def_type'
+    >>> field_def.field_value
+    'default'
     """
 
-    __slots__ = ("_field_description", "_entity")
+    __slots__ = ("_field_description", "_entity", "_key", "_default")
 
-    def __init__(self, field_description=None, entity=None):
+    def __init__(self, field_description=None, entity=None, default=None):
         """
         Initialize a bound_field object.
 
@@ -58,9 +70,13 @@ class bound_field(object):
         entity              is an entity from which a value to be rendered is
                             obtained.  The specific field value used is defined
                             by the combination with `field_description`
+        default             is a default value to be used if the entity does 
+                            not define the required value.
         """
         self._field_description = field_description
         self._entity            = entity
+        self._key               = self._field_description['field_property_uri']
+        self._default           = default
         return
 
     def __getattr__(self, name):
@@ -70,7 +86,10 @@ class bound_field(object):
         otherwise the named attribute is retrieved from thge field description.
         """
         if name == "field_value":
-            return self._entity[self._field_description['field_property_uri']]
+            if self._key in self._entity:
+                return self._entity[self._key]
+            else:
+                return self._default
         else:
             return self._field_description[name]
 
@@ -141,30 +160,64 @@ def get_item_renderer(renderid):
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
 
-def get_placement_class(placement):
+Placement = namedtuple("Placement", ['field', 'label', 'value'])
+
+def get_placement_classes(placement):
     """
     Returns placement classes corresponding to placement string provided.
 
-    >>> get_placement_class("small:0,12")
+    >>> get_placement_classes("small:0,12").field
     'small-12 columns'
-    >>> get_placement_class("medium:0,12")
-    'medium-12 columns'
-    >>> get_placement_class("large:0,12")
-    'large-12 columns'
-    >>> get_placement_class("small:0,12;medium:0,4")
-    'small-12 medium-4 columns'
-    >>> get_placement_class("small:0,12;medium:0,6;large:0,4")
-    'small-12 medium-6 large-4 columns'
+    >>> get_placement_classes("small:0,12").label
+    'small-12 medium-2 columns'
+    >>> get_placement_classes("small:0,12").value
+    'small-12 medium-10 columns'
+    >>> get_placement_classes("medium:0,12")
+    Placement(field='small-12 columns', label='small-12 medium-2 columns', value='small-12 medium-10 columns')
+    >>> get_placement_classes("large:0,12")
+    Placement(field='small-12 columns', label='small-12 medium-2 columns', value='small-12 medium-10 columns')
+    >>> get_placement_classes("small:0,12;medium:0,4")
+    Placement(field='small-12 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    >>> get_placement_classes("small:0,12;medium:0,6;large:0,4")
+    Placement(field='small-12 medium-6 large-4 columns', label='small-12 medium-4 large-6 columns', value='small-12 medium-8 large-6 columns')
+    >>> get_placement_classes("small:0,6;medium:0,4")
+    Placement(field='small-6 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
     """
+    def format_class(cd):
+        prev = cd.get("small", None)
+        for test in ("medium", "large"):
+            if (test in cd):
+                if cd[test] == prev:
+                    del cd[test]
+                else:
+                    prev = cd[test]
+        return " ".join([k+"-"+str(v) for k,v in cd.items()]) + " columns"
     ppr = re.compile(r"^(small|medium|large):(\d+),(\d+)$")
     ps = placement.split(';')
-    c = ""
+    labelw      = {'small': 12, 'medium': 2, 'large': 2}
+    field_width = OrderedDict([ ('small', 12) ])
+    label_width = OrderedDict([ ('small', 12), ('medium',  2) ])
+    value_width = OrderedDict([ ('small', 12), ('medium', 10) ])
     for p in ps:
         pm = ppr.match(p)
         if not pm:
             break
-        c += pm.group(1)+"-"+pm.group(3)+" "
-    c += "columns"
+        pmmode   = pm.group(1)    # "small", "medium" or "large"
+        pmoffset = int(pm.group(2))
+        pmwidth  = int(pm.group(3))
+        field_width[pmmode] = pmwidth
+        label_width[pmmode] = labelw[pmmode]*(12 // pmwidth)
+        if label_width[pmmode] > 12:
+            label_width[pmmode] = 12
+        value_width[pmmode] = 12 - label_width[pmmode]
+        if value_width[pmmode] <= 0:
+            value_width[pmmode] = 12
+    c = Placement(
+            field=format_class(field_width),
+            label=format_class(label_width),
+            value=format_class(value_width)
+            )
+    log.debug("get_placement_class %s, returns %s"%(placement,c))
     return c
 
 if __name__ == "__main__":
