@@ -235,7 +235,6 @@ class EntityEditBaseView(AnnalistGenericView):
         if contextkey and contextkey in kwargs:
             default = kwargs[contextkey] 
         if fieldcontext:
-            # Create sub-context and select that (used for data-described form fields)
             fieldcontextname, fieldcontextdata = fieldcontext
             if fieldcontextname not in context:
                 context[fieldcontextname] = []
@@ -244,17 +243,8 @@ class EntityEditBaseView(AnnalistGenericView):
                 entity=entity_values, key=valuekey, default=default
                 )
             context[fieldcontextname].append(boundfieldcontext)
-            # fieldcontextdata = copy.copy(fieldcontextdata)
-            # context[fieldcontextname].append(fieldcontextdata)
-            # usecontext = fieldcontextdata
-        # else:
-        #     usecontext = context
         if contextkey:
             context[contextkey] = entity_values.get(valuekey, default)
-            # if valuekey and valuekey in entity_values.keys():
-            #     usecontext[contextkey] = entity_values[valuekey]    # Copy value -> context
-            # elif contextkey in kwargs:
-            #     usecontext[contextkey] = kwargs[contextkey]         # Supplied argument -> context
         return
 
     def map_value_to_context(self, entity_values, **kwargs):
