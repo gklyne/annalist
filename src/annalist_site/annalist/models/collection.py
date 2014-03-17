@@ -106,7 +106,7 @@ class Collection(Entity):
         """
         Generator enumerates and returns record views that may be stored
         """
-        for f in self._children(RecordView):
+        for f in self._children_all(RecordView):
             t = RecordView.load(self, f)
             if t:
                 yield t
@@ -154,7 +154,7 @@ class Collection(Entity):
         """
         Generator enumerates and returns record lists that may be stored
         """
-        for f in self._children(RecordList):
+        for f in self._children_all(RecordList):
             t = RecordList.load(self, f)
             if t:
                 yield t

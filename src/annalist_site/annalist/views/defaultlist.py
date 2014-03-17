@@ -36,8 +36,8 @@ class EntityDefaultListView(EntityEditBaseView):
     # These values are referenced via instances, so can be generated dynamically per-instance...
 
     _entityformtemplate = 'annalist_default_list.html'
-
     _entityclass        = None          # to be supplied dynamically
+
     _entityvaluemap     = (             # to be supplied dynamically, but looking something like this...
         # Special fields
         [ EntityValueMap(e=None,          v=None,           c='title',            f=None               )
@@ -48,9 +48,7 @@ class EntityDefaultListView(EntityEditBaseView):
         , EntityValueMap(e='rdfs:label',  v='rdfs:label',   c='entity_label',     f='entity_label'     )
         , EntityValueMap(e='rdfs:comment',v='rdfs:comment', c='entity_comment',   f='entity_comment'   )
         # Form and interaction control
-        , EntityValueMap(e=None,          v=None,           c='orig_entity_id',   f='orig_entity_id'   )
         , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
-        , EntityValueMap(e=None,          v=None,           c='action',           f='action'           )
         ])
 
     def __init__(self):
@@ -61,51 +59,40 @@ class EntityDefaultListView(EntityEditBaseView):
 
     # GET
 
-    def get(self, request, coll_id=None, type_id=None, action=None):
+    def get(self, request, coll_id=None, type_id=None):
         """
-        Create a form for editing an entity.
+        Create a form for listing entities.
         """
-        # Check collection
-        if not Collection.exists(self.site(), coll_id):
-            return self.error(
-                dict(self.error404values(),
-                    message=message.COLLECTION_NOT_EXISTS%(coll_id)
-                )
+        log.debug("defaultedit.get: coll_id %s, type_id %s, entity_id %s, action %s"%
+            (coll_id, type_id, entity_id, action)
             )
-        coll = Collection(self.site(), coll_id)
-        # Check type
-        if not RecordType.exists(coll, type_id):
-            return self.error(
-                dict(self.error404values(),
-                    message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
-                    )
-                )
-        recordtype     = RecordType(coll, type_id)
-        recordtypedata = RecordTypeData(coll, type_id)
-
-        # locate form description
-        list_id    = "Default_list"
-        entitylist = RecordList(coll, list_id)
-
-        # load form description
-        # load values for form
-        # generate form data
-
-        # initial_type_values  = (
-        #     { "annal:id":     type_id
-        #     , "annal:type":   "annal:RecordType"
-        #     , "annal:uri":    coll._entityuri+type_id+"/"
-        #     , "rdfs:label":   "Record type %s in collection %s"%(type_id, coll_id)
-        #     , "rdfs:comment": ""
-        #     })
-        # context_extra_values = (
-        #     { 'coll_id':          coll_id
-        #     , 'orig_type_id':     type_id
-        #     })
-        return self.form_render(request,
-            action, coll, type_id, 
-            initial_type_values, 
-            context_extra_values
+        if type_id:
+            http_response = self.get_coll_type_data(coll_id, type_id, host=self.get_request_host())
+        else:
+            http_response = self.get_coll_data(coll_id, host=self.get_request_host())
+        if not http_response:
+            http_response = self.form_edit_auth(action, self.recordtypedata._entityuri)
+        if http_response:
+            return http_response
+        # Prepare context for rendering form
+        list_ids      = [ l.get_id() for l in self.coll.lists() ]
+        list_selected = self.coll.get_values().get("default_list", "Default_list")
+        entity_values = None # @@@ need to revise map_value_to_context so it can use a different
+                             # @@@ value from the form-generating context - supply key and apply 
+                             #     that at run time, or provide alternative values?
+        # Set up initial view context
+        self.get_list_entityvaluemap(self._list_id)
+        viewcontext = self.map_value_to_context(None,
+            title               = self.site_data()["title"],
+            continuation_uri    = request.GET.get('continuation_uri', None),
+            heading             = entity_initial_values['rdfs:label'],
+            coll_id             = coll_id,
+            type_id             = type_id
+            )
+        # generate and return form data
+        return (
+            self.render_html(viewcontext, self._entityformtemplate) or 
+            self.error(self.error406values())
             )
 
 # End.

@@ -84,6 +84,25 @@ class EntityEditBaseView(AnnalistGenericView):
         super(EntityEditBaseView, self).__init__()
         return
 
+    def get_coll_data(self, coll_id, host=""):
+        """
+        Check collection and type identifiers, and set up objects for:
+            self.collection
+
+        Returns None if all is well, or an HttpResponse object with details 
+        about any problem encountered.
+        """
+        self.sitedata = SiteData(self.site(host=host), layout.SITEDATA_DIR)
+        # Check collection
+        if not Collection.exists(self.site(host=host), coll_id):
+            return self.error(
+                dict(self.error404values(), 
+                    message=message.COLLECTION_NOT_EXISTS%(coll_id)
+                    )
+                )
+        self.collection = Collection(self.site(host=host), coll_id)
+        return None
+
     def get_coll_type_data(self, coll_id, type_id, host=""):
         """
         Check collection and type identifiers, and set up objects for:
@@ -151,6 +170,52 @@ class EntityEditBaseView(AnnalistGenericView):
                     v=viewfield['annal:property_uri'],  # Entity value used to initialize context
                     c="field_value",                    # Key for value in (sub)context
                     s=("fields", field_context),        # Field sub-context
+                    f=field_id,                         # Field name in form
+                    e=return_property_uri               # Entity value returned from form
+                    )
+                )
+        # log.debug("entitymap %r"%entitymap)
+        self._entityvaluemap = entitymap
+        return entitymap
+
+    def get_list_entityvaluemap(self, list_id):
+        """
+        Creates an entity/value map table in the current object incorporating
+        information from the form field definitions for the indicated list display.
+        """
+        # Locate and read view description
+        entitymap  = copy.copy(baseentityvaluemap)
+        entitylist = RecordList.load(self.collection, list_id, altparent=self.sitedata)
+        log.debug("entitylist %r"%entitylist.get_values())
+        # Process fields referenced by the view desription, updating value map
+        for f in entitylist.get_values()['annal:list_fields']:
+            field_id   = f['annal:field_id']
+            listfield  = RecordField.load(self.collection, field_id, altparent=self.sitedata)
+            log.debug("listfield   %r"%(listfield and listfield.get_values()))
+            return_property_uri = (
+                listfield['annal:property_uri'] if listfield['annal:return_value'] 
+                else None
+                )
+            field_context = (
+                { 'field_id':           field_id
+                , 'field_placement':    get_placement_class(f['annal:field_placement'])
+                , 'field_name':         field_id    # Assumes same field can't repeat in form
+                , 'field_render_head':  get_head_renderer(listfield['annal:field_render'])
+                , 'field_render_item':  get_item_renderer(listfield['annal:field_render'])
+                # , 'field_render_view':  get_view_renderer(listfield['annal:field_render'])
+                # , 'field_render_edit':  get_edit_renderer(listfield['annal:field_render'])
+                , 'field_label':        listfield['rdfs:label']
+                , 'field_help':         listfield['rdfs:comment']
+                , 'field_value_type':   listfield['annal:value_type']
+                , 'field_placeholder':  listfield['annal:placeholder']
+                , 'field_property_uri': listfield['annal:property_uri']
+                # 'field_value':        field value to be supplied
+                })
+            entitymap.append(
+                EntityValueMap(
+                    v=listfield['annal:property_uri'],  # Entity value used to initialize context
+                    c=None,                             # Key for value in (sub)context
+                    s=("fields", field_context),        # (subcontext-name, subcontext-data)
                     f=field_id,                         # Field name in form
                     e=return_property_uri               # Entity value returned from form
                     )

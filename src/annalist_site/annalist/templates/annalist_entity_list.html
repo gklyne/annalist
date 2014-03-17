@@ -1,0 +1,67 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block heading %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="large-12 columns">
+            <h3>List '{{list_id}}' of entities in collection '{{coll_id}}'</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-12 columns">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="small-12 medium-6 columns">
+                        <input type="text" name="search" value="" />
+                        <img src="{% static 'images/icons/search_32.png' %}" />
+                    </div>
+                    <div class="small-12 medium-6 columns">
+                        <p>View</p>
+                        <select name="list_id" >
+                            {% for l in list_ids %}
+                                {% if l == list_selected %}
+                                <option selected="">{{l}}</option>
+                                {% else %}
+                                <option>{{l}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <input type="submit" name="view"     value="View" />
+                        <input type="submit" name="default"  value="Set default" />
+                    </div>
+                </div>
+                <div class="row">
+                    {% for field in fields %}
+                        {% include field.field_render_head %}
+                    {% endfor %}
+                </div>
+                {% for entity in entities %}
+                <div class="row">
+                    {% for field in fields %}
+                        {% include field.field_render_item %}
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                <div class="row">
+                    <div class="small-12 medium-10 columns">
+                        <input type="submit" name="new"             value="New" />
+                        <input type="submit" name="copy"            value="Copy" />
+                        <input type="submit" name="edit"            value="Edit" />
+                        <input type="submit" name="delete"          value="Delete" />
+                    </div>
+                    <div class="small-12 medium-2 columns">
+                        <input type="submit" name="customize"       value="Customize" />
+                    </div>
+                    <input type="hidden" name="continuation_uri"    value="{{continuation_uri}}"/>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

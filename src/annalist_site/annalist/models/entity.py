@@ -197,6 +197,26 @@ class EntityRoot(object):
                     raise
         return None
 
+    def _children_all(self, cls):
+        """
+        Iterates over canididate child entities that are instances of an indicated
+        class.  The supplied class is used to determine a subdirectory to be scanned.
+
+        cls         is a subclass of Entity indicating the type of children to
+                    iterate over.
+        """
+        for dirpath in (self._entitydir, self._entityaltdir):
+            if dirpath:
+                if cls and cls._entitypath:
+                    dirpath = os.path.dirname(os.path.join(dirpath, cls._entitypath))
+                assert "%" not in dirpath, "_entitypath template variable interpolation may be in filename part only"
+                if os.path.isdir(dirpath):
+                    files = os.listdir(dirpath)
+                    for f in files:
+                        if util.valid_id(f):
+                            yield f
+        return
+
     def _children(self, cls):
         """
         Iterates over canididate child entities that are instances of an indicated
@@ -208,7 +228,7 @@ class EntityRoot(object):
         dirpath = self._entitydir
         if cls and cls._entitypath:
             dirpath = os.path.dirname(os.path.join(dirpath, cls._entitypath))
-        assert "%" not in dirpath, "_entitypath template variable interpolation may be in filename part only "
+        assert "%" not in dirpath, "_entitypath template variable interpolation may be in filename part only"
         if os.path.isdir(dirpath):
             files = os.listdir(dirpath)
             for f in files:
