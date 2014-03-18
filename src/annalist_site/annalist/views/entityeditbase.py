@@ -63,7 +63,6 @@ class EntityValueMap(object):
 
 # Table used as basis, or initial values, for a dynamically generated entity-value map
 baseentityvaluemap  = (
-        # Special fields
         [ EntityValueMap(e=None,          v=None,           c='title',            f=None               )
         , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
         , EntityValueMap(e=None,          v=None,           c='type_id',          f=None               )
@@ -72,8 +71,18 @@ baseentityvaluemap  = (
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
         , EntityValueMap(e=None,          v=None,           c='orig_id',          f='orig_id'   )
-        , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
         , EntityValueMap(e=None,          v=None,           c='action',           f='action'           )
+        , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
+        ])
+
+# Table used as basis, or initial values, for a dynamically generated entity-value map
+listentityvaluemap  = (
+        [ EntityValueMap(e=None,          v=None,           c='title',            f=None               )
+        , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
+        , EntityValueMap(e=None,          v=None,           c='type_id',          f=None               )
+        # Field data is handled separately during processing of the form description
+        # Form and interaction control (hidden fields)
+        , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
         ])
 
 class EntityEditBaseView(AnnalistGenericView):
@@ -173,19 +182,11 @@ class EntityEditBaseView(AnnalistGenericView):
             })
         return field_context
 
-    def get_form_entityvaluemap(self, view_id):
-        """
-        Creates an entity/value map table in the current object incorporating
-        information from the form field definitions.
-        """
-        # Locate and read view description
-        entitymap  = copy.copy(baseentityvaluemap)
-        entityview = RecordView.load(self.collection, view_id, altparent=self.sitedata)
-        log.debug("entityview   %r"%entityview.get_values())
-        # Process fields referenced by the view description, updating value map
-        for f in entityview.get_values()['annal:view_fields']:
+    def get_fields_entityvaluemap(self, fields):
+        entityvaluemap = []
+        for f in fields:
             field_context = self.get_field_context(f)
-            entitymap.append(
+            entityvaluemap.append(
                 EntityValueMap(
                     v=field_context['field_property_uri'],  # Entity value used to initialize context
                     c="field_value",                        # Key for value in (sub)context
@@ -194,7 +195,23 @@ class EntityEditBaseView(AnnalistGenericView):
                     e=field_context['return_property_uri']  # Entity value returned from form
                     )
                 )
-        # log.debug("entitymap %r"%entitymap)
+        return entityvaluemap
+
+    def get_form_entityvaluemap(self, view_id):
+        """
+        Creates an entity/value map table in the current object incorporating
+        information from the form field definitions.
+        """
+        # ...
+        # @@@ rework this to return an entity-value map for the form fields alone, which
+        #     can be combined with other common fields
+        #     Update comments to reflect change
+        # ...
+        # Locate and read view description
+        entitymap  = copy.copy(baseentityvaluemap)
+        entityview = RecordView.load(self.collection, view_id, altparent=self.sitedata)
+        log.debug("entityview   %r"%entityview.get_values())
+        entitymap += self.get_fields_entityvaluemap(entityview.get_values()['annal:view_fields'])
         self._entityvaluemap = entitymap
         return entitymap
 
@@ -203,23 +220,16 @@ class EntityEditBaseView(AnnalistGenericView):
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for the indicated list display.
         """
+        # ...
+        # @@@ rework this to return an entity-value map for the form fields alone, which
+        #     can be combined with other common fields
+        #     Update comments to reflect change
+        # ...
         # Locate and read view description
-        entitymap  = copy.copy(baseentityvaluemap)
+        entitymap  = copy.copy(listentityvaluemap)
         entitylist = RecordList.load(self.collection, list_id, altparent=self.sitedata)
         log.debug("entitylist %r"%entitylist.get_values())
-        # Process fields referenced by the view desription, updating value map
-        for f in entitylist.get_values()['annal:list_fields']:
-            field_context = self.get_field_context(f)
-            entitymap.append(
-                EntityValueMap(
-                    v=field_context['field_property_uri'],  # Entity value used to initialize context
-                    c="field_value",                        # Key for value in (sub)context
-                    s=("fields", field_context),            # Field sub-context
-                    f=field_context['field_id'],            # Field name in form
-                    e=field_context['return_property_uri']  # Entity value returned from form
-                    )
-                )
-        # log.debug("entitymap %r"%entitymap)
+        entitymap += self.get_fields_entityvaluemap(entitylist.get_values()['annal:list_fields'])
         self._entityvaluemap = entitymap
         return entitymap
 
@@ -254,6 +264,13 @@ class EntityEditBaseView(AnnalistGenericView):
         Values defined in the supplied entity take priority, and the keyword arguments provide
         values when the entity does not.
         """
+        # ...
+        # @@@ rework this so that entityvaluemap and context are supplied parameters,
+        #     allowing context to be built up in parts.  Then go back and reset cxall sites.
+        #
+        #     Check consequences for map_form_data_to_values and map_form_data_to_context; 
+        #     may need to parameterize map there too
+        # ...
         context = {}
         for kmap in self._entityvaluemap:
             self.map_entry_to_context(
@@ -304,7 +321,7 @@ class EntityEditBaseView(AnnalistGenericView):
                         NOTE: This may be the URI of the parent of the resource
                         being accessed or manipulated.
         """
-        if action == "view":
+        if action in ["view","list"]:
             auth_scope = "VIEW"
         elif action in ["new", "copy"]:
             auth_scope = "CREATE"

@@ -35,21 +35,8 @@ class EntityDefaultListView(EntityEditBaseView):
 
     # These values are referenced via instances, so can be generated dynamically per-instance...
 
-    _entityformtemplate = 'annalist_default_list.html'
+    _entityformtemplate = 'annalist_entity_list.html'
     _entityclass        = None          # to be supplied dynamically
-
-    _entityvaluemap     = (             # to be supplied dynamically, but looking something like this...
-        # Special fields
-        [ EntityValueMap(e=None,          v=None,           c='title',            f=None               )
-        , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
-        , EntityValueMap(e=None,          v='annal:id',     c='entity_id',        f='entity_id'        )
-        # Normal fields
-        , EntityValueMap(e=None,          v='annal:type',   c=None,               f=None               )
-        , EntityValueMap(e='rdfs:label',  v='rdfs:label',   c='entity_label',     f='entity_label'     )
-        , EntityValueMap(e='rdfs:comment',v='rdfs:comment', c='entity_comment',   f='entity_comment'   )
-        # Form and interaction control
-        , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
-        ])
 
     def __init__(self):
         super(EntityDefaultListView, self).__init__()
@@ -63,23 +50,25 @@ class EntityDefaultListView(EntityEditBaseView):
         """
         Create a form for listing entities.
         """
-        log.debug("defaultedit.get: coll_id %s, type_id %s, entity_id %s, action %s"%
-            (coll_id, type_id, entity_id, action)
-            )
+        log.debug("defaultedit.get: coll_id %s, type_id %s"%(coll_id, type_id))
         if type_id:
             http_response = self.get_coll_type_data(coll_id, type_id, host=self.get_request_host())
         else:
             http_response = self.get_coll_data(coll_id, host=self.get_request_host())
         if not http_response:
-            http_response = self.form_edit_auth(action, self.recordtypedata._entityuri)
+            http_response = self.form_edit_auth("list", self.recordtypedata._entityuri)
         if http_response:
             return http_response
         # Prepare context for rendering form
         list_ids      = [ l.get_id() for l in self.coll.lists() ]
         list_selected = self.coll.get_values().get("default_list", "Default_list")
-        entity_values = None # @@@ need to revise map_value_to_context so it can use a different
-                             # @@@ value from the form-generating context - supply key and apply 
-                             #     that at run time, or provide alternative values?
+
+# ...........
+#         entity_values = None # @@@ need to revise map_value_to_context so it can use a different
+#                              # @@@ value from the form-generating context - supply key and apply 
+#                              #     that at run time, or provide alternative values?
+# ...........
+
         # Set up initial view context
         self.get_list_entityvaluemap(self._list_id)
         viewcontext = self.map_value_to_context(None,
