@@ -10,6 +10,7 @@ import logging
 log = logging.getLogger(__name__)
 
 import copy
+import collections
 
 from django.conf                    import settings
 from django.http                    import HttpResponse
@@ -31,58 +32,37 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 
 from annalist.views.generic         import AnnalistGenericView
+from annalist.views.simplevaluemap  import SimpleValueMap, StableValueMap
+from annalist.views.fieldvaluemap   import FieldValueMap
+
 from annalist.fields.render_utils   import bound_field, get_placement_classes
 from annalist.fields.render_utils   import get_edit_renderer, get_view_renderer
 from annalist.fields.render_utils   import get_head_renderer, get_item_renderer
 # from annalist.fields.render_utils   import get_grid_renderer
 
 
-class EntityValueMap(object):
-    """
-    Define an entry in an entity value mapping table, where each entry has a key
-    used to:
-    v: access a given value in an entity values record
-    c: access a given value in a view render context
-    s: sub-context (name, context)
-    f: access a given value in form data
-    e: value key when updating an entity from form data
-    """
-    def __init__(self, v=None, c=None, s=None, f=None, e=None):
-        self.v = v      # value field to populate context
-        self.c = c      # context field to populate
-        self.s = s      # sub-context for template iteration over context
-        self.f = f      # field name for value
-        self.e = e      # entity value field for retrieved value
-        return
-
-    def __str__(self):
-        return "{v:%s, c:%s, f:%s, e:%s)"%(self.v, self.c, self.f, self.e)
-
-    def __repr__(self):
-        return "EntityValueMap(v=%r, c=%r, f=%r, e=%r, s=%r)"%(self.v, self.c, self.f, self.e, self.s)
-
 # Table used as basis, or initial values, for a dynamically generated entity-value map
 baseentityvaluemap  = (
-        [ EntityValueMap(e=None,          v=None,           c='title',            f=None               )
-        , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
-        , EntityValueMap(e=None,          v=None,           c='type_id',          f=None               )
-        , EntityValueMap(e=None,          v='annal:id',     c='entity_id',        f='entity_id'        )
-        , EntityValueMap(e='annal:uri',   v='annal:uri',    c='entity_uri',       f='entity_uri'       )
+        [ SimpleValueMap(c='title',            e=None,           f=None               )
+        , SimpleValueMap(c='coll_id',          e=None,           f=None               )
+        , SimpleValueMap(c='type_id',          e=None,           f=None               )
+        , StableValueMap(c='entity_id',        e='annal:id',     f='entity_id'        )
+        , SimpleValueMap(c='entity_uri',       e='annal:uri',    f='entity_uri'       )
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
-        , EntityValueMap(e=None,          v=None,           c='orig_id',          f='orig_id'   )
-        , EntityValueMap(e=None,          v=None,           c='action',           f='action'           )
-        , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
+        , SimpleValueMap(c='orig_id',          e=None,           f='orig_id'   )
+        , SimpleValueMap(c='action',           e=None,           f='action'           )
+        , SimpleValueMap(c='continuation_uri', e=None,           f='continuation_uri' )
         ])
 
 # Table used as basis, or initial values, for a dynamically generated entity-value map
 listentityvaluemap  = (
-        [ EntityValueMap(e=None,          v=None,           c='title',            f=None               )
-        , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
-        , EntityValueMap(e=None,          v=None,           c='type_id',          f=None               )
+        [ SimpleValueMap(c='title',            e=None,           f=None               )
+        , SimpleValueMap(c='coll_id',          e=None,           f=None               )
+        , SimpleValueMap(c='type_id',          e=None,           f=None               )
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
-        , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
+        , SimpleValueMap(c='continuation_uri', e=None,           f='continuation_uri' )
         ])
 
 class EntityEditBaseView(AnnalistGenericView):
@@ -187,13 +167,7 @@ class EntityEditBaseView(AnnalistGenericView):
         for f in fields:
             field_context = self.get_field_context(f)
             entityvaluemap.append(
-                EntityValueMap(
-                    v=field_context['field_property_uri'],  # Entity value used to initialize context
-                    c="field_value",                        # Key for value in (sub)context
-                    s=("fields", field_context),            # Field sub-context
-                    f=field_context['field_id'],            # Field name in form
-                    e=field_context['return_property_uri']  # Entity value returned from form
-                    )
+                FieldValueMap(c='fields', f=field_context)
                 )
         return entityvaluemap
 
@@ -212,7 +186,6 @@ class EntityEditBaseView(AnnalistGenericView):
         entityview = RecordView.load(self.collection, view_id, altparent=self.sitedata)
         log.debug("entityview   %r"%entityview.get_values())
         entitymap += self.get_fields_entityvaluemap(entityview.get_values()['annal:view_fields'])
-        self._entityvaluemap = entitymap
         return entitymap
 
     def get_list_entityvaluemap(self, list_id):
@@ -230,32 +203,7 @@ class EntityEditBaseView(AnnalistGenericView):
         entitylist = RecordList.load(self.collection, list_id, altparent=self.sitedata)
         log.debug("entitylist %r"%entitylist.get_values())
         entitymap += self.get_fields_entityvaluemap(entitylist.get_values()['annal:list_fields'])
-        self._entityvaluemap = entitymap
         return entitymap
-
-    def map_entry_to_context(self,
-            context, fieldcontext, contextkey, valuekey, entity_values, 
-            **kwargs):
-        """
-        Helper function maps a single entry from a dictionary of entity values
-        (incoming values or form data) to an entry in a context used for rendering
-        an editing form.
-        """
-        default = None
-        if contextkey and contextkey in kwargs:
-            default = kwargs[contextkey] 
-        if fieldcontext:
-            fieldcontextname, fieldcontextdata = fieldcontext
-            if fieldcontextname not in context:
-                context[fieldcontextname] = []
-            boundfieldcontext = bound_field(
-                field_description=fieldcontextdata, 
-                entity=entity_values, key=valuekey, default=default
-                )
-            context[fieldcontextname].append(boundfieldcontext)
-        if contextkey:
-            context[contextkey] = entity_values.get(valuekey, default)
-        return
 
     def map_value_to_context(self, entity_values, **kwargs):
         """
@@ -273,11 +221,7 @@ class EntityEditBaseView(AnnalistGenericView):
         # ...
         context = {}
         for kmap in self._entityvaluemap:
-            self.map_entry_to_context(
-                # context, fieldcontext, contextkey, valuekey, entity_values
-                context, kmap.s, kmap.c, kmap.v, entity_values, 
-                **kwargs
-                )
+            kmap.map_entity_to_context(context, entity_values, defaults=kwargs)
         return context
 
     def map_form_data_to_context(self, form_data, **kwargs):
@@ -287,24 +231,24 @@ class EntityEditBaseView(AnnalistGenericView):
         Values defined in the supplied form data take priority, and the keyword arguments provide
         values where the form data does not.
         """
+        # ...
+        # @@@ rework this so that entityvaluemap and context are supplied parameters,
+        #     allowing context to be built up in parts.  Then go back and reset cxall sites.
+        # ...
         context = {}
         for kmap in self._entityvaluemap:
-            self.map_entry_to_context(
-                # context, fieldcontext, contextkey, valuekey, entity_values
-                context, kmap.s, kmap.c, kmap.f, form_data, 
-                **kwargs
-                )
+            kmap.map_form_to_context(context, form_data, defaults=kwargs)
         return context
 
     def map_form_data_to_values(self, form_data, **kwargs):
+        # ...
+        # @@@ rework this so that entityvaluemap and context are supplied parameters,
+        #     allowing context to be built up in parts.  Then go back and reset cxall sites.
+        # ...
         log.debug("map_form_data_to_values: form_data %r"%(form_data))
         values = {}
         for kmap in self._entityvaluemap:
-            if kmap.e:
-                if kmap.f and kmap.f in form_data:
-                    values[kmap.e] = form_data[kmap.f]
-                elif kmap.e in kwargs:
-                    values[kmap.e] = kwargs[kmap.e]
+            kmap.map_form_to_entity(values, form_data)
         return values
 
     def get_entityid(self, action, parent, entityid):

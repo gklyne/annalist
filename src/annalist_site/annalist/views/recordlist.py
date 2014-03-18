@@ -26,7 +26,8 @@ from annalist.models.collection     import Collection
 from annalist.models.recordlist     import RecordList
 
 from annalist.views.generic         import AnnalistGenericView
-from annalist.views.entityeditbase  import EntityValueMap, EntityEditBaseView, EntityDeleteConfirmedBaseView
+from annalist.views.simplevaluemap  import SimpleValueMap, StableValueMap
+from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
 
 
 class RecordListEditView(EntityEditBaseView):
@@ -37,19 +38,17 @@ class RecordListEditView(EntityEditBaseView):
     _entityclass        = RecordList
     _entityformtemplate = 'annalist_recordlist_edit.html'
     _entityvaluemap     = (
-        # Special fields
-        [ EntityValueMap(e=None,          v=None,           c='title',            f=None               )
-        , EntityValueMap(e=None,          v=None,           c='coll_id',          f=None               )
-        , EntityValueMap(e=None,          v='annal:id',     c='type_id',          f='type_id'          )
-        # Normal fields
-        , EntityValueMap(e=None,          v='annal:type',   c=None,               f=None               )
-        , EntityValueMap(e='rdfs:label',  v='rdfs:label',   c='type_label',       f='type_label'       )
-        , EntityValueMap(e='rdfs:comment',v='rdfs:comment', c='type_help',        f='type_help'        )
-        , EntityValueMap(e='annal:uri',   v='annal:uri',    c='type_uri',         f='type_class'       )
-        # Form and interaction control
-        , EntityValueMap(e=None,          v=None,           c='orig_type_id',     f='orig_type_id'     )
-        , EntityValueMap(e=None,          v=None,           c='continuation_uri', f='continuation_uri' )
-        , EntityValueMap(e=None,          v=None,           c='action',           f='action'           )
+        [ SimpleValueMap(c='title',            e=None,           f=None               )
+        , SimpleValueMap(c='coll_id',          e=None,           f=None               )
+        , StableValueMap(c='type_id',          e='annal:id',     f='type_id'          )
+        , StableValueMap(c=None,               e='annal:type',   f=None               )
+        , SimpleValueMap(c='type_label',       e='rdfs:label',   f='type_label'       )
+        , SimpleValueMap(c='type_help',        e='rdfs:comment', f='type_help'        )
+        , SimpleValueMap(c='type_uri',         e='annal:uri',    f='type_class'       )
+        # Form and interaction control (hidden fields)
+        , SimpleValueMap(c='orig_id',          e=None,           f='orig_id'   )
+        , SimpleValueMap(c='action',           e=None,           f='action'           )
+        , SimpleValueMap(c='continuation_uri', e=None,           f='continuation_uri' )
         ])
 
     def __init__(self):

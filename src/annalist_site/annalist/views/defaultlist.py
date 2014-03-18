@@ -25,7 +25,6 @@ from annalist.models.recordtype     import RecordType
 
 # from annalist.views.generic         import AnnalistGenericView
 from annalist.views.entityeditbase  import EntityEditBaseView # , EntityDeleteConfirmedBaseView
-from annalist.views.entityeditbase  import EntityValueMap
 
 
 class EntityDefaultListView(EntityEditBaseView):

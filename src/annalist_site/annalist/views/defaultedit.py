@@ -28,7 +28,6 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.entitydata     import EntityData
 
 from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
-from annalist.views.entityeditbase  import EntityValueMap
 
 class EntityDefaultEditView(EntityEditBaseView):
     """
@@ -74,7 +73,7 @@ class EntityDefaultEditView(EntityEditBaseView):
                     )
                 )
         # Set up initial view context
-        self.get_form_entityvaluemap(self._view_id)
+        self._entityvaluemap = self.get_form_entityvaluemap(self._view_id)
         viewcontext = self.map_value_to_context(entity,
             title               = self.site_data()["title"],
             continuation_uri    = request.GET.get('continuation_uri', None),
@@ -125,7 +124,7 @@ class EntityDefaultEditView(EntityEditBaseView):
             , 'entity_not_exists': message.ENTITY_DATA_NOT_EXISTS%(entity_id, type_id, coll_id)
             })
         # Process form response and respond accordingly
-        self.get_form_entityvaluemap(self._view_id)
+        self._entityvaluemap = self.get_form_entityvaluemap(self._view_id)
         return self.form_response(
             request, action, self.recordtypedata, entity_id, orig_entity_id, 
             messages, context_extra_values
