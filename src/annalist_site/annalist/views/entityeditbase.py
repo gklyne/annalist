@@ -162,8 +162,7 @@ class EntityEditBaseView(AnnalistGenericView):
             })
         return field_context
 
-    def get_fields_entityvaluemap(self, fields):
-        entityvaluemap = []
+    def get_fields_entityvaluemap(self, entityvaluemap, fields):
         for f in fields:
             field_context = self.get_field_context(f)
             entityvaluemap.append(
@@ -176,16 +175,14 @@ class EntityEditBaseView(AnnalistGenericView):
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions.
         """
-        # ...
-        # @@@ rework this to return an entity-value map for the form fields alone, which
-        #     can be combined with other common fields
-        #     Update comments to reflect change
-        # ...
         # Locate and read view description
         entitymap  = copy.copy(baseentityvaluemap)
         entityview = RecordView.load(self.collection, view_id, altparent=self.sitedata)
         log.debug("entityview   %r"%entityview.get_values())
-        entitymap += self.get_fields_entityvaluemap(entityview.get_values()['annal:view_fields'])
+        self.get_fields_entityvaluemap(
+            entitymap,
+            entityview.get_values()['annal:view_fields']
+            )
         return entitymap
 
     def get_list_entityvaluemap(self, list_id):
@@ -193,16 +190,14 @@ class EntityEditBaseView(AnnalistGenericView):
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for the indicated list display.
         """
-        # ...
-        # @@@ rework this to return an entity-value map for the form fields alone, which
-        #     can be combined with other common fields
-        #     Update comments to reflect change
-        # ...
         # Locate and read view description
         entitymap  = copy.copy(listentityvaluemap)
         entitylist = RecordList.load(self.collection, list_id, altparent=self.sitedata)
         log.debug("entitylist %r"%entitylist.get_values())
-        entitymap += self.get_fields_entityvaluemap(entitylist.get_values()['annal:list_fields'])
+        self.get_fields_entityvaluemap(
+            entitymap,
+            entitylist.get_values()['annal:list_fields']
+            )
         return entitymap
 
     def map_value_to_context(self, entity_values, **kwargs):
@@ -212,13 +207,6 @@ class EntityEditBaseView(AnnalistGenericView):
         Values defined in the supplied entity take priority, and the keyword arguments provide
         values when the entity does not.
         """
-        # ...
-        # @@@ rework this so that entityvaluemap and context are supplied parameters,
-        #     allowing context to be built up in parts.  Then go back and reset cxall sites.
-        #
-        #     Check consequences for map_form_data_to_values and map_form_data_to_context; 
-        #     may need to parameterize map there too
-        # ...
         context = {}
         for kmap in self._entityvaluemap:
             kmap.map_entity_to_context(context, entity_values, defaults=kwargs)
@@ -231,20 +219,12 @@ class EntityEditBaseView(AnnalistGenericView):
         Values defined in the supplied form data take priority, and the keyword arguments provide
         values where the form data does not.
         """
-        # ...
-        # @@@ rework this so that entityvaluemap and context are supplied parameters,
-        #     allowing context to be built up in parts.  Then go back and reset cxall sites.
-        # ...
         context = {}
         for kmap in self._entityvaluemap:
             kmap.map_form_to_context(context, form_data, defaults=kwargs)
         return context
 
     def map_form_data_to_values(self, form_data, **kwargs):
-        # ...
-        # @@@ rework this so that entityvaluemap and context are supplied parameters,
-        #     allowing context to be built up in parts.  Then go back and reset cxall sites.
-        # ...
         log.debug("map_form_data_to_values: form_data %r"%(form_data))
         values = {}
         for kmap in self._entityvaluemap:

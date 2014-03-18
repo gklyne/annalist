@@ -25,7 +25,7 @@ class FieldValueMap(_FieldValueMap_tuple):
     in the indicated context variable.
 
     c       request context field name for a list of fields
-    fd      field description structure (cf. `get_field_context` below)
+    f       field description structure (cf. `EntityEditBaseView.get_field_context`)
     """
 
     def __new__(cls, *args, **kwargs):
@@ -51,6 +51,7 @@ class FieldValueMap(_FieldValueMap_tuple):
 
     def map_form_to_context(self, context, formvals, defaults=None):
         self._map_to_context(context, formvals, self.i, defaults)
+        return
 
     def map_form_to_entity(self, entityvals, formvals):
         if self.e:
