@@ -201,6 +201,7 @@ class EntityEditBaseView(AnnalistGenericView):
             groupmap,
             entitylist.get_values()['annal:list_fields']
             )
+        entitymap.extend(groupmap)  # for field headings
         entitymap.append(
             GroupRepeatMap(c='entities', e='annal:list_entities', g=groupmap)
             )

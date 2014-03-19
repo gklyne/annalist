@@ -8,6 +8,7 @@ annalist = {
         if (window.matchMedia(Foundation.media_queries['small']).matches){
             $(".small-size-4").attr("size", 4);
             $(".small-rows-4").attr("rows", 4);
+            /* $(".small-only-text-right").attr("text-align", "right"); doesn't work */
         };
         if (window.matchMedia(Foundation.media_queries['medium']).matches){
             $(".medium-size-8").attr("size", 8);

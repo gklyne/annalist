@@ -66,6 +66,7 @@ class EntityDefaultListView(EntityEditBaseView):
         entityval = { 'annal:list_entities': entity_list }
         # Set up initial view context
         self._entityvaluemap = self.get_list_entityvaluemap(self._list_id)
+        log.debug("EntityDefaultListView.get _entityvaluemap %r"%(self._entityvaluemap))
         viewcontext = self.map_value_to_context(entityval,
             title               = self.site_data()["title"],
             continuation_uri    = request.GET.get('continuation_uri', None),
@@ -73,6 +74,7 @@ class EntityDefaultListView(EntityEditBaseView):
             coll_id             = coll_id,
             type_id             = type_id
             )
+        log.debug("EntityDefaultListView.get viewcontext %r"%(viewcontext))
         # generate and return form data
         return (
             self.render_html(viewcontext, self._entityformtemplate) or 

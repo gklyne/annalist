@@ -84,6 +84,16 @@ div.column form , div.columns form {
     margin-bottom: 0;
 }
 
+div.row div.columns table {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+div.row .columns .row .columns thead tr th {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
 .error {
     color: red;
 }

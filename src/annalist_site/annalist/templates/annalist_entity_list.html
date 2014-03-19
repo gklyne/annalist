@@ -10,7 +10,11 @@
 
     <div class="row">
         <div class="large-12 columns">
+            {% if list_id %}
             <h3>List '{{list_id}}' of entities in collection '{{coll_id}}'</h3>
+            {% else %}
+            <h3>List of entities in collection '{{coll_id}}'</h3>
+            {% endif %}
         </div>
     </div>
 
@@ -19,12 +23,13 @@
             <form method="POST" action="">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="small-12 medium-6 columns">
+                    <div class="small-10 medium-4 columns">
                         <input type="text" name="search" value="" />
-                        <img src="{% static 'images/icons/search_32.png' %}" />
                     </div>
-                    <div class="small-12 medium-6 columns">
-                        <p>View</p>
+                    <div class="small-2 medium-1 columns text-right">
+                        <img src="{% static 'images/icons/search_32.png' %}"/>
+                    </div>
+                    <div class="small-6 medium-3 medium-offset-1 columns">
                         <select name="list_id" >
                             {% for l in list_ids %}
                                 {% if l == list_selected %}
@@ -34,22 +39,36 @@
                                 {% endif %}
                             {% endfor %}
                         </select>
+                    </div>
+                    <div class="small-6 medium-3 columns text-right">
                         <input type="submit" name="view"     value="View" />
                         <input type="submit" name="default"  value="Set default" />
                     </div>
                 </div>
+
                 <div class="row">
-                    {% for field in fields %}
-                        {% include field.field_render_head %}
-                    {% endfor %}
+                    <div class="small-12 columns">
+                        <table width="100%">
+                            <thead>
+                                <tr>
+                                {% for field in fields %}
+                                    {% include field.field_render_head %}
+                                {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for entity in entities %}
+                                <tr>
+                                {% for field in entity.fields %}
+                                    {% include field.field_render_item %}
+                                {% endfor %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                {% for entity in entities %}
-                <div class="row">
-                    {% for field in fields %}
-                        {% include field.field_render_item %}
-                    {% endfor %}
-                </div>
-                {% endfor %}
+
                 <div class="row">
                     <div class="small-12 medium-10 columns">
                         <input type="submit" name="new"             value="New" />

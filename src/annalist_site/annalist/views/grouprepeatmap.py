@@ -50,7 +50,7 @@ class GroupRepeatMap(_GroupRepeatMap_tuple):
             for entity in entityval[self.e]:
                 grp_context = {}
                 for kmap in self.g:
-                    kmap.map_entity_to_context(context, entity, defaults=defaults)
+                    kmap.map_entity_to_context(grp_context, entity, defaults=defaults)
                 context[self.c].append(grp_context)
         return
 
