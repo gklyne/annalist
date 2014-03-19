@@ -86,8 +86,9 @@
    / function to create initial development site data (based on test code)
    - read-only data views
    - review URI design: can we revert to original design?
+   - menu dropdown on small display not working: need JS from Zurb site?
 5. Default record list display
-   - form generation
+   / form generation
    - form display test cases
    - form response handler
    - form response test cases
