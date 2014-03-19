@@ -110,9 +110,19 @@ def recordlist_uri(coll_id, list_id):
         kwargs.update({'list_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_list_uri(coll_id="testcoll", type_id="testtype"):
+def entitydata_list_all_uri(coll_id="testcoll"):
     viewname = "AnnalistEntityDefaultListType"
     kwargs   = {'coll_id': coll_id, 'type_id': type_id}
+    return reverse(viewname, kwargs=kwargs)
+
+def entitydata_list_type_uri(coll_id="testcoll", type_id="testtype"):
+    viewname = "AnnalistEntityDefaultListType"
+    kwargs   = {'coll_id': coll_id, 'type_id': type_id}
+    return reverse(viewname, kwargs=kwargs)
+
+def entitydata_list_id_uri(coll_id="testcoll", type_id="testtype", list_id="Default_list"):
+    viewname = "AnnalistEntityDefaultListType"
+    kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'list_id': list_id}
     return reverse(viewname, kwargs=kwargs)
 
 def entity_uri(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
@@ -211,7 +221,7 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
             , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
             }
           ]
-        , 'continuation_uri':   entitydata_list_uri("testcoll", "testtype")
+        , 'continuation_uri':   entitydata_list_type_uri("testcoll", "testtype")
         })
     if entity_id:
         context_dict['fields'][0]['field_value'] = entity_id
@@ -229,7 +239,7 @@ def entitydata_form_data(entity_id=None, orig_id=None, action=None, cancel=None,
         { 'Entity_label':       '%s data ... (testcoll/testtype)'%(update)
         , 'Entity_comment':     '%s description ... (testcoll/testtype)'%(update)
         , 'orig_id':            'orig_entity_id'
-        , 'continuation_uri':   entitydata_list_uri("testcoll", "testtype")
+        , 'continuation_uri':   entitydata_list_type_uri("testcoll", "testtype")
         })
     if entity_id:
         form_data_dict['Entity_id']         = entity_id

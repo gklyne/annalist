@@ -89,10 +89,12 @@
    - menu dropdown on small display not working: need JS from Zurb site?
 5. Default record list display
    / form generation
-   - form display test cases
+   / form display test cases (initial for default)
    - form response handler
    - form response test cases
    - connect list display to record view display
+   - build entity selector logic into list view
+   - implement search within list view
 6. Design generic entity view
 7. Record view display and editing
 8. Generic record list display and editing
