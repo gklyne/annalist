@@ -50,10 +50,11 @@ class EntityDefaultListView(EntityEditBaseView):
         Create a form for listing entities.
         """
         log.debug("defaultedit.get: coll_id %s, type_id %s"%(coll_id, type_id))
+        reqhost = self.get_request_host()
         if type_id:
-            http_response = self.get_coll_type_data(coll_id, type_id, host=self.get_request_host())
+            http_response = self.get_coll_type_data(coll_id, type_id, host=reqhost)
         else:
-            http_response = self.get_coll_data(coll_id, host=self.get_request_host())
+            http_response = self.get_coll_data(coll_id, host=reqhost)
         if not http_response:
             http_response = self.form_edit_auth("list", self.recordtypedata._entityuri)
         if http_response:
@@ -72,7 +73,10 @@ class EntityDefaultListView(EntityEditBaseView):
             continuation_uri    = request.GET.get('continuation_uri', None),
             ### heading             = entity_initial_values['rdfs:label'],
             coll_id             = coll_id,
-            type_id             = type_id
+            type_id             = type_id,
+            list_id             = self._list_id,
+            list_ids            = list_ids,
+            list_selected       = list_selected
             )
         log.debug("EntityDefaultListView.get viewcontext %r"%(viewcontext))
         # generate and return form data

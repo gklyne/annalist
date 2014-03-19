@@ -8,81 +8,94 @@
 
 {% block content %}
 
-    <div class="row">
-        <div class="large-12 columns">
-            {% if list_id %}
-            <h3>List '{{list_id}}' of entities in collection '{{coll_id}}'</h3>
-            {% else %}
-            <h3>List of entities in collection '{{coll_id}}'</h3>
-            {% endif %}
-        </div>
+  <div class="row">
+    <div class="large-12 columns">
+      {% if list_id %}
+      <h3>List '{{list_id}}' of entities in collection '{{coll_id}}'</h3>
+      {% else %}
+      <h3>List of entities in collection '{{coll_id}}'</h3>
+      {% endif %}
     </div>
+  </div>
 
-    <div class="row">
-        <div class="large-12 columns">
-            <form method="POST" action="">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="small-10 medium-4 columns">
-                        <input type="text" name="search" value="" />
-                    </div>
-                    <div class="small-2 medium-1 columns text-right">
-                        <img src="{% static 'images/icons/search_32.png' %}"/>
-                    </div>
-                    <div class="small-6 medium-3 medium-offset-1 columns">
-                        <select name="list_id" >
-                            {% for l in list_ids %}
-                                {% if l == list_selected %}
-                                <option selected="">{{l}}</option>
-                                {% else %}
-                                <option>{{l}}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="small-6 medium-3 columns text-right">
-                        <input type="submit" name="view"     value="View" />
-                        <input type="submit" name="default"  value="Set default" />
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="small-12 columns">
-                        <table width="100%">
-                            <thead>
-                                <tr>
-                                {% for field in fields %}
-                                    {% include field.field_render_head %}
-                                {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for entity in entities %}
-                                <tr>
-                                {% for field in entity.fields %}
-                                    {% include field.field_render_item %}
-                                {% endfor %}
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="small-12 medium-10 columns">
-                        <input type="submit" name="new"             value="New" />
-                        <input type="submit" name="copy"            value="Copy" />
-                        <input type="submit" name="edit"            value="Edit" />
-                        <input type="submit" name="delete"          value="Delete" />
-                    </div>
-                    <div class="small-12 medium-2 columns">
-                        <input type="submit" name="customize"       value="Customize" />
-                    </div>
-                    <input type="hidden" name="continuation_uri"    value="{{continuation_uri}}"/>
-                </div>
-            </form>
+  <div class="row">
+    <div class="small-12 columns">
+      <form method="POST" action="">
+        {% csrf_token %}
+        <div class="row">
+          <div class="small-12 medium-6 columns">
+            <div class="row">
+              <div class="small-6 columns">
+                <input type="text" name="search_for" value="" />
+              </div>
+              <div class="small-6 medium-2 columns text-right left">
+                <input type="submit" name="find"     value="Find" />
+                <!--
+                <button type="submit" name="search" value="Search">
+                <img src="{% static 'images/icons/search_32.png' %}"/>
+                </button>
+                -->
+              </div>
+            </div>
+          </div>
+          <div class="small-12 medium-6 columns">
+            <div class="row">
+              <div class="small-6 columns">
+                <select name="list_id" >
+                  {% for l in list_ids %}
+                    {% if l == list_selected %}
+                    <option selected="">{{l}}</option>
+                    {% else %}
+                    <option>{{l}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="small-6 columns text-right">
+                <input type="submit" name="view"     value="View" />
+                <input type="submit" name="default"  value="Set default" />
+              </div>
+            </div>
+          </div>
         </div>
+
+        <div class="row">
+          <div class="small-12 columns">
+            <table width="100%">
+              <thead>
+                <tr>
+                {% for field in fields %}
+                  {% include field.field_render_head %}
+                {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+              {% for entity in entities %}
+                <tr>
+                {% for field in entity.fields %}
+                  {% include field.field_render_item %}
+                {% endfor %}
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="small-12 medium-10 columns">
+            <input type="submit" name="new"             value="New" />
+            <input type="submit" name="copy"            value="Copy" />
+            <input type="submit" name="edit"            value="Edit" />
+            <input type="submit" name="delete"          value="Delete" />
+          </div>
+          <div class="small-12 medium-2 columns">
+            <input type="submit" name="customize"       value="Customize" />
+          </div>
+          <input type="hidden" name="continuation_uri"    value="{{continuation_uri}}"/>
+        </div>
+      </form>
     </div>
+  </div>
 
 {% endblock %}

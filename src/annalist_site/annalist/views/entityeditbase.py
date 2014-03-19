@@ -62,6 +62,8 @@ listentityvaluemap  = (
         [ SimpleValueMap(c='title',            e=None,           f=None               )
         , SimpleValueMap(c='coll_id',          e=None,           f=None               )
         , SimpleValueMap(c='type_id',          e=None,           f=None               )
+        , SimpleValueMap(c='list_ids',         e=None,           f=None               )
+        , SimpleValueMap(c='list_selected',    e=None,           f=None               )
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
         , SimpleValueMap(c='continuation_uri', e=None,           f='continuation_uri' )
