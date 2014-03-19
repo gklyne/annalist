@@ -40,6 +40,16 @@ class RecordTypeData(Entity):
         super(RecordTypeData, self).__init__(parent, type_id)
         return
 
+    def entities(self):
+        """
+        Generator enumerates and returns record types that may be stored
+        """
+        for f in self._children(EntityData):
+            e = EntityData.load(self, f)
+            if e:
+                yield e
+        return
+
     def remove_entity(self, entity_id):
         t = EntityData.remove(self, entity_id)
         return t

@@ -59,21 +59,17 @@ class EntityDefaultListView(EntityEditBaseView):
         if http_response:
             return http_response
         # Prepare context for rendering form
-        list_ids      = [ l.get_id() for l in self.coll.lists() ]
-        list_selected = self.coll.get_values().get("default_list", "Default_list")
-
-# ...........
-#         entity_values = None # @@@ need to revise map_value_to_context so it can use a different
-#                              # @@@ value from the form-generating context - supply key and apply 
-#                              #     that at run time, or provide alternative values?
-# ...........
-
+        list_ids      = [ l.get_id() for l in self.collection.lists() ]
+        list_selected = self.collection.get_values().get("default_list", "Default_list")
+        # @@TODO: apply selector logic here?
+        entity_list   = self.recordtypedata.entities()
+        entityval = { 'annal:list_entities': entity_list }
         # Set up initial view context
-        self.get_list_entityvaluemap(self._list_id)
-        viewcontext = self.map_value_to_context(None,
+        self._entityvaluemap = self.get_list_entityvaluemap(self._list_id)
+        viewcontext = self.map_value_to_context(entityval,
             title               = self.site_data()["title"],
             continuation_uri    = request.GET.get('continuation_uri', None),
-            heading             = entity_initial_values['rdfs:label'],
+            ### heading             = entity_initial_values['rdfs:label'],
             coll_id             = coll_id,
             type_id             = type_id
             )

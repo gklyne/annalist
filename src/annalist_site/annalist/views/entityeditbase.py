@@ -27,6 +27,7 @@ from annalist.models.site           import Site
 from annalist.models.sitedata       import SiteData
 from annalist.models.collection     import Collection
 from annalist.models.recordview     import RecordView
+from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
@@ -34,6 +35,7 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.views.generic         import AnnalistGenericView
 from annalist.views.simplevaluemap  import SimpleValueMap, StableValueMap
 from annalist.views.fieldvaluemap   import FieldValueMap
+from annalist.views.grouprepeatmap  import GroupRepeatMap
 
 from annalist.fields.render_utils   import bound_field, get_placement_classes
 from annalist.fields.render_utils   import get_edit_renderer, get_view_renderer
@@ -92,7 +94,7 @@ class EntityEditBaseView(AnnalistGenericView):
                     message=message.COLLECTION_NOT_EXISTS%(coll_id)
                     )
                 )
-        self.collection = Collection(self.site(host=host), coll_id)
+        self.collection = Collection.load(self.site(host=host), coll_id)
         return None
 
     def get_coll_type_data(self, coll_id, type_id, host=""):
@@ -114,7 +116,7 @@ class EntityEditBaseView(AnnalistGenericView):
                     message=message.COLLECTION_NOT_EXISTS%(coll_id)
                     )
                 )
-        self.collection = Collection(self.site(host=host), coll_id)
+        self.collection = Collection.load(self.site(host=host), coll_id)
         # Check type
         if not RecordType.exists(self.collection, type_id):
             return self.error(
@@ -194,9 +196,13 @@ class EntityEditBaseView(AnnalistGenericView):
         entitymap  = copy.copy(listentityvaluemap)
         entitylist = RecordList.load(self.collection, list_id, altparent=self.sitedata)
         log.debug("entitylist %r"%entitylist.get_values())
+        groupmap = []
         self.get_fields_entityvaluemap(
-            entitymap,
+            groupmap,
             entitylist.get_values()['annal:list_fields']
+            )
+        entitymap.append(
+            GroupRepeatMap(c='entities', e='annal:list_entities', g=groupmap)
             )
         return entitymap
 

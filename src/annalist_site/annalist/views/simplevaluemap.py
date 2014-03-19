@@ -1,5 +1,9 @@
 """
-Annalist base classes for record editing views and form response handlers
+Annalist class for processing a SimpleValueMap in an annalist view value mapping table.
+
+A SimpleValueMap maps values directly from a supplied entity value to the indicated field
+in the context, and also from the form values returned to an entity value, or another context
+for re-rendering.  The entity and form fields used are build directly into the mapping table.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
