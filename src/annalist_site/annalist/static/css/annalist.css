@@ -48,15 +48,6 @@ div.row.headings {
     font-weight: bold;
 }
 
-div.columns > input , 
-div.columns > textarea , 
-div.columns > select
-{
-    margin: 0.25rem 0;
-    padding: 0.25rem 0;
-    height: auto;
-}
-
 div.columns > p 
 {
     margin: 0.25rem 0;
@@ -64,9 +55,7 @@ div.columns > p
     height: auto;
 }
 
-div.columns > select {
-    height: auto;
-}
+/* Headings */
 
 h2.page-heading {
     padding: 0 0.9375rem;
@@ -80,9 +69,30 @@ div.column p , div.columns p {
     margin-bottom: 0;
 }
 
-div.column form , div.columns form {
+/* Form elements */
+
+div.columns form , div.columns form {
     margin-bottom: 0;
 }
+
+div.columns > input , 
+div.columns > textarea , 
+div.columns > select
+{
+    margin: 0.25rem 0 ;
+    padding: 0.25rem 0 ;
+    height: auto;
+}
+
+div.columns > input[type=text] , 
+div.columns > textarea , 
+div.columns > select {
+    /* @@TODO This to maintain some space between input fields - is there a better way? */ 
+    /*        I tried margins and padding to no avail */
+    width: 95%;
+}
+
+/* Tables */
 
 div.row div.columns table {
     margin-top: 1rem;
@@ -93,6 +103,8 @@ div.row .columns .row .columns thead tr th {
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
 }
+
+/* Messages */
 
 .error {
     color: red;

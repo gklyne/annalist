@@ -25,10 +25,10 @@
         <div class="row">
           <div class="small-12 medium-6 columns">
             <div class="row">
-              <div class="small-6 columns">
+              <div class="small-8 columns">
                 <input type="text" name="search_for" value="" />
               </div>
-              <div class="small-6 medium-2 columns text-right left">
+              <div class="small-4 medium-3 columns text-right left">
                 <input type="submit" name="find"     value="Find" />
                 <!--
                 <button type="submit" name="search" value="Search">
@@ -40,7 +40,7 @@
           </div>
           <div class="small-12 medium-6 columns">
             <div class="row">
-              <div class="small-6 columns">
+              <div class="small-8 columns">
                 <select name="list_id" >
                   {% for l in list_ids %}
                     {% if l == list_selected %}
@@ -51,9 +51,8 @@
                   {% endfor %}
                 </select>
               </div>
-              <div class="small-6 columns text-right">
+              <div class="small-4 columns text-right">
                 <input type="submit" name="view"     value="View" />
-                <input type="submit" name="default"  value="Set default" />
               </div>
             </div>
           </div>
@@ -83,13 +82,14 @@
         </div>
 
         <div class="row">
-          <div class="small-8 medium-10 columns">
+          <div class="small-12 medium-8 columns">
             <input type="submit" name="new"             value="New" />
             <input type="submit" name="copy"            value="Copy" />
             <input type="submit" name="edit"            value="Edit" />
             <input type="submit" name="delete"          value="Delete" />
           </div>
-          <div class="small-4 medium-2 columns text-right">
+          <div class="small-12 medium-4 columns text-right">
+            <input type="submit" name="default"         value="Set default" />
             <input type="submit" name="customize"       value="Customize" />
           </div>
           <input type="hidden" name="continuation_uri"    value="{{continuation_uri}}"/>
