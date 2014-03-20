@@ -45,9 +45,9 @@ class CollectionEditView(AnnalistGenericView):
             context = (
                 { 'title':          self.site_data()["title"]
                 , 'coll_id':        coll_id
-                , 'types':          sorted( [t.get_id() for t in coll.types()] )
-                , 'lists':          sorted( [l.get_id() for l in coll.lists()] )
-                , 'views':          sorted( [v.get_id() for v in coll.views()] )
+                , 'types':          sorted( [t.get_id() for t in coll.types(include_alt=False)] )
+                , 'lists':          sorted( [l.get_id() for l in coll.lists(include_alt=False)] )
+                , 'views':          sorted( [v.get_id() for v in coll.views(include_alt=False)] )
                 , 'select_rows':    "6"
                 })
             return context

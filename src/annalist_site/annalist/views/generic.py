@@ -58,7 +58,7 @@ class AnnalistGenericView(ContentNegotiationView):
 
     def site(self, host=""):
         if not self._site:
-            self._site = Site(host+self._sitebaseuri, self._sitebasedir)
+            self._site = Site(self._sitebaseuri, self._sitebasedir, host=host)
         return self._site
 
     def site_data(self, host=""):

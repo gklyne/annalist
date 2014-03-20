@@ -49,16 +49,16 @@ class Collection(Entity):
         parent      is the parent site from which the new collection is descended.
         coll_id     the collection identifier for the collection
         """
-        super(Collection, self).__init__(parent, coll_id)
+        super(Collection, self).__init__(parent, coll_id, altentity=parent._sitedata)
         return
 
     # Record types
 
-    def types(self):
+    def types(self, include_alt=True):
         """
         Generator enumerates and returns record types that may be stored
         """
-        for f in self._children(RecordType):
+        for f in self._children(RecordType, include_alt=include_alt):
             t = RecordType.load(self, f)
             if t:
                 yield t
@@ -102,11 +102,11 @@ class Collection(Entity):
 
     # Record views
 
-    def views(self):
+    def views(self, include_alt=True):
         """
         Generator enumerates and returns record views that may be stored
         """
-        for f in self._children_all(RecordView):
+        for f in self._children(RecordView, include_alt=include_alt):
             t = RecordView.load(self, f)
             if t:
                 yield t
@@ -150,11 +150,11 @@ class Collection(Entity):
 
     # Record lists
 
-    def lists(self):
+    def lists(self, include_alt=True):
         """
         Generator enumerates and returns record lists that may be stored
         """
-        for f in self._children_all(RecordList):
+        for f in self._children(RecordList, include_alt=include_alt):
             t = RecordList.load(self, f)
             if t:
                 yield t

@@ -85,14 +85,17 @@
    / editing recordtype: returns "already exists" error; display operation (new, copy, edit, etc) in edit form
    / function to create initial development site data (based on test code)
    - read-only data views
-   - entity should carry its own RecordType id (where it's kept within a collection)
+   x entity should carry its own RecordType id (where it's kept within a collection).  Have implemented alternative mechanism throufgh bound_field that allows the entity to be less self-aware, hence more easily ported.
+   - entity should carry URI only.  Other fields (host, path, etc. should be generated as required.  Suggest use an internal value that allows x.uri.path, .host, etc. as required)
    - Review field descriptions in sitedata: type values seem to be inconsistent???
      (e.g. Type vs Entity_type?).  May need to start some proper documentation of the form data descriptions.
+   - rationalize/simplify fields and methods in base model classes - there appears to be some duplication
    - review URI design: can we revert to original design?
    - menu dropdown on small display not working: need JS from Zurb site?
 5. Default record list display
    / form generation
    / form display test cases (initial for default and all)
+   / include sitedata lists in drop-down
    - form response handler
    - form response test cases
    - connect list display to record view display

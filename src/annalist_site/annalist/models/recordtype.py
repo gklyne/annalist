@@ -36,14 +36,14 @@ class RecordType(Entity):
     _entityfile = layout.TYPE_META_FILE
     _entityref  = layout.META_TYPE_REF
 
-    def __init__(self, parent, type_id, altparent=None):
+    def __init__(self, parent, type_id):
         """
         Initialize a new RecordType object, without metadta (yet).
 
         parent      is the parent entity from which the type is descended.
         type_id     the local identifier for the record type
         """
-        super(RecordType, self).__init__(parent, type_id, altparent=altparent)
+        super(RecordType, self).__init__(parent, type_id, altparent=True)
         return
 
 # End.

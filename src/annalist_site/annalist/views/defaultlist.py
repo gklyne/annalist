@@ -64,7 +64,7 @@ class EntityDefaultListView(EntityEditBaseView):
             return http_response
         # Prepare context for rendering form
         list_ids      = [ l.get_id() for l in self.collection.lists() ]
-        list_selected = self.collection.get_values().get("default_list", "Default_list")
+        list_selected = self.collection.get_values().get("default_list", self._list_id)
         # @@TODO: apply selector logic here?
         if type_id:
             entity_list   = self.recordtypedata.entities()

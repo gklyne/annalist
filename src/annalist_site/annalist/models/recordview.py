@@ -36,7 +36,7 @@ class RecordView(Entity):
         parent      is the parent entity from which the view is descended.
         view_id     the local identifier for the record view
         """
-        super(RecordView, self).__init__(parent, view_id, altparent=altparent)
+        super(RecordView, self).__init__(parent, view_id, altparent=True)
         return
 
 # End.

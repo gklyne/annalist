@@ -201,15 +201,22 @@ class EntityRoot(object):
                     raise
         return None
 
-    def _children_all(self, cls):
+    def _children(self, cls, include_alt=True):
         """
-        Iterates over canididate child entities that are instances of an indicated
+        Iterates over candidate child entities that are instances of an indicated
         class.  The supplied class is used to determine a subdirectory to be scanned.
 
         cls         is a subclass of Entity indicating the type of children to
                     iterate over.
+        include_alt if set to False, returns only those children that are explicitly
+                    descended from the current entity, otherwise also includes those
+                    that are descended from the alternate entity or parent specified
+                    when the current entity was created.  E.g. set this parameter to
+                    `False` to exclude site-wide entities when scanning the views or
+                    lists in a collection.
         """
-        for dirpath in (self._entitydir, self._entityaltdir):
+        search_dirs = (self._entitydir, self._entityaltdir if include_alt else None)
+        for dirpath in search_dirs:
             if dirpath:
                 if cls and cls._entitypath:
                     dirpath = os.path.dirname(os.path.join(dirpath, cls._entitypath))
@@ -219,25 +226,6 @@ class EntityRoot(object):
                     for f in files:
                         if util.valid_id(f):
                             yield f
-        return
-
-    def _children(self, cls):
-        """
-        Iterates over candidate child entities that are instances of an indicated
-        class.  The supplied class is used to determine a subdirectory to be scanned.
-
-        cls         is a subclass of Entity indicating the type of children to
-                    iterate over.
-        """
-        dirpath = self._entitydir
-        if cls and cls._entitypath:
-            dirpath = os.path.dirname(os.path.join(dirpath, cls._entitypath))
-        assert "%" not in dirpath, "_entitypath template variable interpolation may be in filename part only"
-        if os.path.isdir(dirpath):
-            files = os.listdir(dirpath)
-            for f in files:
-                if util.valid_id(f):
-                    yield f
         return
 
     # Entity as iterator: returns candidate identifiers of contained entities
@@ -304,13 +292,18 @@ class Entity(EntityRoot):
     _entityref  = None          # Relative reference to entity from body file
     _last_id    = None          # Last ID allocated
 
-    def __init__(self, parent, entityid, altparent=None):
+    def __init__(self, parent, entityid, altentity=None, altparent=False):
         """
         Initialize a new Entity object, possibly without values.  The created
-        entity is not saved to disk at this stage - see .save() method.
+        entity is not saved to disk at this stage - see ._save() method.
 
         parent      is the parent entity from which the new entity is descended.
         entityid    the collection identifier for the collection
+        altentity   is an alternative entity to search for certain kinds of child
+                    entities:  this is used to augment explicitly created entities
+                    in a collection with site-wide installed entites.
+        altparent   if True (and altentity is not specified), indicates that
+                    child entities may be found as children of alternate parents.
         """
         if not util.valid_id(entityid):
             raise ValueError("Invalid entity identifier: %s"%(entityid))
@@ -318,9 +311,13 @@ class Entity(EntityRoot):
         super(Entity, self).__init__(parent._entityuri+relpath, parent._entitydir+relpath)
         self._entityalturi = None
         self._entityaltdir = None
-        if altparent:
-            self._entityalturi = altparent._entityuri+relpath
-            self._entityaltdir = altparent._entitydir+relpath
+        if altentity:
+            self._entityalturi = altentity._entityuri
+            self._entityaltdir = altentity._entitydir
+        elif altparent:
+            assert parent._entityalturi, "Parent has no alt entity (%s,%s)"%(entityid, parent._entityid)
+            self._entityalturi = parent._entityalturi+relpath
+            self._entityaltdir = parent._entityaltdir+relpath
         self._entityid = entityid
         self._typeid   = parent.get_id() 
         log.debug("Entity.__init__: ID %s"%(self._entityid))
@@ -358,6 +355,8 @@ class Entity(EntityRoot):
         cls         is the class of the entity whose path is returned.
         parent      is the parent from which the entity is descended.
         entityid    is the local identifier (slug) for the entity.
+        altentity   is an alternative entity to look to when looking for 
+                    some kinds of child entities.
         """
         log.debug("Entity.path: entitytype %s, parentdir %s, entityid %s"%(cls._entitytype, parent._entitydir, entityid))
         assert cls._entityfile is not None
@@ -366,7 +365,20 @@ class Entity(EntityRoot):
         return p
 
     @classmethod
-    def create(cls, parent, entityid, entitybody):
+    def _child_entity(cls, parent, entityid, altentity=None, altparent=False):
+        """
+        Instatiate a chile entity (e.g. for create and load methods)
+        """
+        if altentity:
+            e = cls(parent, entityid, altentity=altentity)
+        elif altparent:
+            e = cls(parent, entityid, altparent=altparent)
+        else:
+            e = cls(parent, entityid)
+        return e
+
+    @classmethod
+    def create(cls, parent, entityid, entitybody, altentity=None):
         """
         Method creates a new entity.
 
@@ -375,17 +387,19 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the new entity - this is 
                     required to be unique among descendents of a common parent.
         entitybody  is a dictionary of values that are stored for the created entity.
+        altentity   is an alternative entity to look to when looking for 
+                    some kinds of child entities.
 
         Returns the created entity as an instance of the supplied class object.
         """
         log.debug("Entity.create: entityid %s"%(entityid))
-        c = cls(parent, entityid)
-        c.set_values(entitybody)
-        c._save()
-        return c
+        e = cls._child_entity(parent, entityid, altentity=altentity)
+        e.set_values(entitybody)
+        e._save()
+        return e
 
     @classmethod
-    def load(cls, parent, entityid, altparent=None):
+    def load(cls, parent, entityid, altentity=None, altparent=False):
         """
         Return an entity with given identifier belonging to some given parent,
         or None if there is not such identity.
@@ -393,15 +407,14 @@ class Entity(EntityRoot):
         cls         is the class of the entity to be loaded
         parent      is the parent from which the entity is descended.
         entityid    is the local identifier (slug) for the entity.
+        altentity   is an alternative entity to look to when looking for 
+                    some kinds of child entities.
 
         Returns an instance of the indicated class with data loaded from the
         corresponding Annalist storage, or None if there is no such entity.
         """
         log.debug("Entity.load: entitytype %s, parentdir %s, entityid %s"%(cls._entitytype, parent._entitydir, entityid))
-        if altparent:
-            e = cls(parent, entityid, altparent=altparent)
-        else:
-            e = cls(parent, entityid)
+        e = cls._child_entity(parent, entityid, altentity=altentity, altparent=altparent)
         v = e._load_values()
         if v:
             e.set_values(v)

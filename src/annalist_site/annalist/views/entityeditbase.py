@@ -62,6 +62,7 @@ listentityvaluemap  = (
         [ SimpleValueMap(c='title',            e=None,           f=None               )
         , SimpleValueMap(c='coll_id',          e=None,           f=None               )
         , SimpleValueMap(c='type_id',          e=None,           f=None               )
+        , SimpleValueMap(c='list_id',          e=None,           f=None               )
         , SimpleValueMap(c='list_ids',         e=None,           f=None               )
         , SimpleValueMap(c='list_selected',    e=None,           f=None               )
         # Field data is handled separately during processing of the form description
@@ -143,7 +144,7 @@ class EntityEditBaseView(AnnalistGenericView):
         See also: fields.render_utils.bound_field.
         """
         field_id    = field['annal:field_id']
-        recordfield = RecordField.load(self.collection, field_id, altparent=self.sitedata)
+        recordfield = RecordField.load(self.collection, field_id, altparent=True)
         log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
         return_property_uri = (
             recordfield['annal:property_uri'] if recordfield['annal:return_value'] 
@@ -182,7 +183,7 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         # Locate and read view description
         entitymap  = copy.copy(baseentityvaluemap)
-        entityview = RecordView.load(self.collection, view_id, altparent=self.sitedata)
+        entityview = RecordView.load(self.collection, view_id)
         log.debug("entityview   %r"%entityview.get_values())
         self.get_fields_entityvaluemap(
             entitymap,
@@ -197,7 +198,7 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         # Locate and read view description
         entitymap  = copy.copy(listentityvaluemap)
-        entitylist = RecordList.load(self.collection, list_id, altparent=self.sitedata)
+        entitylist = RecordList.load(self.collection, list_id)
         log.debug("entitylist %r"%entitylist.get_values())
         groupmap = []
         self.get_fields_entityvaluemap(

@@ -45,6 +45,10 @@ from entity_testutils           import (
 #
 #   -----------------------------------------------------------------------------
 
+site_types = set()
+site_views = {"Default_view", "Field_view", "Record_view", "List_view"}
+site_lists = {"Default_list", "Default_list_all"}
+
 class CollectionTest(AnnalistTestCase):
     """
     Tests for Collection object interface
@@ -103,11 +107,11 @@ class CollectionTest(AnnalistTestCase):
     def test_add_type(self):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         typenames = { t.get_id() for t in self.testcoll.types() }
-        self.assertEqual(typenames, {"testtype"})
+        self.assertEqual(typenames, {"testtype"}|site_types)
         t1 = self.testcoll.add_type("type1", self.type1_add)
         t2 = self.testcoll.add_type("type2", self.type2_add)
         typenames = { t.get_id() for t in self.testcoll.types() }
-        self.assertEqual(typenames, {"type1", "type2", "testtype"})
+        self.assertEqual(typenames, {"type1", "type2", "testtype"}|site_types)
         return
 
     def test_get_type(self):
@@ -123,10 +127,12 @@ class CollectionTest(AnnalistTestCase):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         t1 = self.testcoll.add_type("type1", self.type1_add)
         t2 = self.testcoll.add_type("type2", self.type2_add)
-        typenames =  set([ t.get_id() for t in self.testcoll.types()])
-        self.assertEqual(typenames, {"type1", "type2", "testtype"})
+        typenames = { t.get_id() for t in self.testcoll.types() }
+        self.assertEqual(typenames, {"type1", "type2", "testtype"}|site_types)
         self.testcoll.remove_type("type1")
-        typenames =  set([ t.get_id() for t in self.testcoll.types()])
+        typenames =  { t.get_id() for t in self.testcoll.types() }
+        self.assertEqual(typenames, {"type2", "testtype"}|site_types)
+        typenames =  { t.get_id() for t in self.testcoll.types(include_alt=False) }
         self.assertEqual(typenames, {"type2", "testtype"})
         return
 
@@ -135,11 +141,11 @@ class CollectionTest(AnnalistTestCase):
     def test_add_view(self):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         viewnames = { t.get_id() for t in self.testcoll.views() }
-        self.assertEqual(viewnames, set())
+        self.assertEqual(viewnames, site_views)
         t1 = self.testcoll.add_view("view1", self.view1_add)
         t2 = self.testcoll.add_view("view2", self.view2_add)
         viewnames = { t.get_id() for t in self.testcoll.views() }
-        self.assertEqual(viewnames, {"view1", "view2"})
+        self.assertEqual(viewnames, {"view1", "view2"}|site_views)
         return
 
     def test_get_view(self):
@@ -156,10 +162,12 @@ class CollectionTest(AnnalistTestCase):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         t1 = self.testcoll.add_view("view1", self.view1_add)
         t2 = self.testcoll.add_view("view2", self.view2_add)
-        viewnames =  set([ t.get_id() for t in self.testcoll.views()])
-        self.assertEqual(viewnames, {"view1", "view2"})
+        viewnames = { t.get_id() for t in self.testcoll.views() }
+        self.assertEqual(viewnames, {"view1", "view2"}|site_views)
         self.testcoll.remove_view("view1")
-        viewnames =  set([ t.get_id() for t in self.testcoll.views()])
+        viewnames = { t.get_id() for t in self.testcoll.views() }
+        self.assertEqual(viewnames, {"view2"}|site_views)
+        viewnames = { t.get_id() for t in self.testcoll.views(include_alt=False) }
         self.assertEqual(viewnames, {"view2"})
         return
 
@@ -168,10 +176,12 @@ class CollectionTest(AnnalistTestCase):
     def test_add_list(self):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         listnames = { t.get_id() for t in self.testcoll.lists() }
-        self.assertEqual(listnames, set())
+        self.assertEqual(listnames, site_lists)
         t1 = self.testcoll.add_list("list1", self.list1_add)
         t2 = self.testcoll.add_list("list2", self.list2_add)
         listnames = { t.get_id() for t in self.testcoll.lists() }
+        self.assertEqual(listnames, {"list1", "list2"}|site_lists)
+        listnames = { t.get_id() for t in self.testcoll.lists(include_alt=False) }
         self.assertEqual(listnames, {"list1", "list2"})
         return
 
@@ -191,11 +201,11 @@ class CollectionTest(AnnalistTestCase):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         t1 = self.testcoll.add_list("list1", self.list1_add)
         t2 = self.testcoll.add_list("list2", self.list2_add)
-        listnames =  set([ t.get_id() for t in self.testcoll.lists()])
-        self.assertEqual(listnames, {"list1", "list2"})
+        listnames = { t.get_id() for t in self.testcoll.lists() }
+        self.assertEqual(listnames, {"list1", "list2"}|site_lists)
         self.testcoll.remove_list("list1")
-        listnames =  set([ t.get_id() for t in self.testcoll.lists()])
-        self.assertEqual(listnames, {"list2"})
+        listnames = { t.get_id() for t in self.testcoll.lists() }
+        self.assertEqual(listnames, {"list2"}|site_lists)
         return
 
 #   -----------------------------------------------------------------------------

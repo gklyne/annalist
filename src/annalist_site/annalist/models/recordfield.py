@@ -37,7 +37,7 @@ class RecordField(Entity):
         field_id     the local identifier for the record view
         """
         log.debug("RecordField %s"%(field_id))
-        assert altparent is not None, "RecordField instantiated with no altparent"
+        assert altparent, "RecordField instantiated with no altparent"
         super(RecordField, self).__init__(parent, field_id, altparent=altparent)
         return
 

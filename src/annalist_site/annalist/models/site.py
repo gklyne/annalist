@@ -27,6 +27,7 @@ from annalist                   import layout
 from annalist                   import message
 
 from annalist.models.entity     import EntityRoot
+from annalist.models.sitedata   import SiteData
 from annalist.models.collection import Collection
 from annalist                   import util
 
@@ -36,7 +37,7 @@ class Site(EntityRoot):
     _entityfile = layout.SITE_META_FILE
     _entityref  = layout.META_SITE_REF
 
-    def __init__(self, sitebaseuri, sitebasedir):
+    def __init__(self, sitebaseuri, sitebasedir, host=""):
         """
         Initialize a Site object
 
@@ -44,7 +45,8 @@ class Site(EntityRoot):
         sitebasedir     the base directory for site information
         """
         log.debug("Site init: %s"%(sitebasedir))
-        super(Site, self).__init__(sitebaseuri, sitebasedir)
+        super(Site, self).__init__(host+sitebaseuri, sitebasedir)
+        self._sitedata = SiteData(self, layout.SITEDATA_DIR)
         return
 
     def collections(self):

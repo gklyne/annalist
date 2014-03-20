@@ -101,11 +101,13 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Annalist data journal test site</title>")
-        self.assertContains(r, "<h3>List of entities in collection 'testcoll'</h3>")
+        self.assertContains(r, "<h3>List 'Default_list_all' of entities in collection 'testcoll'</h3>")
         # Test context
         self.assertEqual(r.context['title'],            "Annalist data journal test site")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          None)
+        self.assertEqual(r.context['list_ids'],         ["Default_list", "Default_list_all"])
+        self.assertEqual(r.context['list_selected'],    "Default_list_all")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # Fields
         self.assertEqual(len(r.context['fields']), 3)
@@ -172,11 +174,13 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Annalist data journal test site</title>")
-        self.assertContains(r, "<h3>List of entities in collection 'testcoll'</h3>")
+        self.assertContains(r, "<h3>List 'Default_list' of entities in collection 'testcoll'</h3>")
         # Test context
         self.assertEqual(r.context['title'],            "Annalist data journal test site")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
+        self.assertEqual(r.context['list_ids'],         ["Default_list", "Default_list_all"])
+        self.assertEqual(r.context['list_selected'],    "Default_list")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # Fields
         self.assertEqual(len(r.context['fields']), 2)
