@@ -22,6 +22,7 @@ from annalist                       import message
 # from annalist.site                  import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
+from annalist.models.recordtypedata import RecordTypeData
 
 # from annalist.views.generic         import AnnalistGenericView
 from annalist.views.entityeditbase  import EntityEditBaseView # , EntityDeleteConfirmedBaseView
@@ -53,17 +54,26 @@ class EntityDefaultListView(EntityEditBaseView):
         reqhost = self.get_request_host()
         if type_id:
             http_response = self.get_coll_type_data(coll_id, type_id, host=reqhost)
+            self._list_id = "Default_list"
         else:
             http_response = self.get_coll_data(coll_id, host=reqhost)
+            self._list_id       = "Default_list_all"
         if not http_response:
-            http_response = self.form_edit_auth("list", self.recordtypedata._entityuri)
+            http_response = self.form_edit_auth("list", self.collection._entityuri)
         if http_response:
             return http_response
         # Prepare context for rendering form
         list_ids      = [ l.get_id() for l in self.collection.lists() ]
         list_selected = self.collection.get_values().get("default_list", "Default_list")
         # @@TODO: apply selector logic here?
-        entity_list   = self.recordtypedata.entities()
+        if type_id:
+            entity_list   = self.recordtypedata.entities()
+        else:
+            entity_list = []
+            for f in self.collection._children(RecordTypeData):
+                t = RecordTypeData.load(self.collection, f)
+                if t:
+                    entity_list.extend(t.entities())
         entityval = { 'annal:list_entities': entity_list }
         # Set up initial view context
         self._entityvaluemap = self.get_list_entityvaluemap(self._list_id)

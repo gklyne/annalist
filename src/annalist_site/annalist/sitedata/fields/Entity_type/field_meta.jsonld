@@ -1,0 +1,11 @@
+{ "@id":                "annal:fields/Type"
+, "annal:id":           "Type"
+, "annal:type":         "annal:Field"
+, "rdfs:label":         "Type"
+, "rdfs:comment":       "A short identifier that identifies the type of the corresponding entity."
+, "annal:field_render": "annal:field_render/Type"
+, "annal:value_type":   "annal:Slug"
+, "annal:placeholder":  "(recordtype id)"
+, "annal:property_uri": "entity_type_id"
+, "annal:return_value": false
+}

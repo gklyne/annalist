@@ -85,11 +85,14 @@
    / editing recordtype: returns "already exists" error; display operation (new, copy, edit, etc) in edit form
    / function to create initial development site data (based on test code)
    - read-only data views
+   - entity should carry its own RecordType id (where it's kept within a collection)
+   - Review field descriptions in sitedata: type values seem to be inconsistent???
+     (e.g. Type vs Entity_type?).  May need to start some proper documentation of the form data descriptions.
    - review URI design: can we revert to original design?
    - menu dropdown on small display not working: need JS from Zurb site?
 5. Default record list display
    / form generation
-   / form display test cases (initial for default)
+   / form display test cases (initial for default and all)
    - form response handler
    - form response test cases
    - connect list display to record view display

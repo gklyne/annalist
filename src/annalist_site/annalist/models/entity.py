@@ -63,6 +63,7 @@ class EntityRoot(object):
         entitydir   is the base directory containing the entity
         """
         self._entityid      = None
+        self._typeid        = None
         self._entityuri     = entityuri if entityuri.endswith("/") else entityuri + "/"
         self._entitydir     = entitydir if entitydir.endswith("/") else entitydir + "/"
         self._entityalturi  = None
@@ -81,6 +82,9 @@ class EntityRoot(object):
 
     def get_id(self):
         return self._entityid
+
+    def get_type_id(self):
+        return self._typeid
 
     def get_uri(self, baseuri):
         """
@@ -317,7 +321,8 @@ class Entity(EntityRoot):
         if altparent:
             self._entityalturi = altparent._entityuri+relpath
             self._entityaltdir = altparent._entitydir+relpath
-        self._entityid     = entityid
+        self._entityid = entityid
+        self._typeid   = parent.get_id() 
         log.debug("Entity.__init__: ID %s"%(self._entityid))
         return
 

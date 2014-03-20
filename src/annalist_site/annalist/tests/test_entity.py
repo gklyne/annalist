@@ -71,6 +71,11 @@ class EntityRootTest(TestCase):
         self.assertEqual(e.get_id(),        "testId")
         return
 
+    def test_entityroot_type_id(self):
+        e = EntityRoot(TestBaseUri, TestBaseDir)
+        self.assertEqual(e.get_type_id(),   None)
+        return
+
     def test_entityroot_values(self):
         test_values1 = (
             { 'type':           'annal:EntityRoot'
@@ -285,6 +290,15 @@ class EntityTest(TestCase):
         self.assertEqual(e._entityuri,      TestBaseUri+"/testid/")
         self.assertEqual(e._entitydir,      TestBaseDir+"/testid/")
         self.assertEqual(e._values,         None)
+        return
+
+    def test_entity_type_id(self):
+        r = EntityRoot(TestBaseUri, TestBaseDir)
+        self.assertEqual(r.get_type_id(),   None)
+        e1 = Entity(r, "testid1")
+        self.assertEqual(e1.get_type_id(),  None)
+        e2 = Entity(e1, "testid2")
+        self.assertEqual(e2.get_type_id(),  "testid1")
         return
 
     def test_entity_subclass(self):

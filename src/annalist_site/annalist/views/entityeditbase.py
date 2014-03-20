@@ -168,6 +168,7 @@ class EntityEditBaseView(AnnalistGenericView):
 
     def get_fields_entityvaluemap(self, entityvaluemap, fields):
         for f in fields:
+            log.debug("get_fields_entityvaluemap: field %r"%(f))
             field_context = self.get_field_context(f)
             entityvaluemap.append(
                 FieldValueMap(c='fields', f=field_context)

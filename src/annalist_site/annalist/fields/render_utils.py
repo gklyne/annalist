@@ -10,10 +10,12 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
-from collections    import OrderedDict, namedtuple
+from collections import OrderedDict, namedtuple
+
+from annalist.models.entity     import EntityRoot, Entity
 
 # from annalist.fields.render_text    import RenderText
-from render_text    import RenderText
+from render_text                import RenderText
 
 class bound_field(object):
     """
@@ -99,6 +101,11 @@ class bound_field(object):
                 return self._entity[self._key]
             else:
                 return self._default
+        elif name == "entity_type_id":
+            if self._entity and isinstance(self._entity, Entity):
+                return self._entity.get_type_id()
+            else:
+                return self._default
         else:
             return self._field_description[name]
 
@@ -123,7 +130,11 @@ class bound_field(object):
             )
 
     def __repr__(self):
-        return repr(self.as_dict())
+        return (
+            "bound_field({'field':%r, 'entity':%r, 'key':%r, 'field_value':%r, 'default':%r})"%
+            (self._field_description, dict(self._entity.items()), 
+                self._key, self.field_value, self._default) 
+            )
 
 
 def get_edit_renderer(renderid):
@@ -147,6 +158,8 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_text.html"
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_edit_textarea.html"
+    if renderid == "annal:field_render/Type":
+        return None
     log.warning("get_edit_renderer: %s not found"%renderid)
     return None
 
@@ -171,7 +184,9 @@ def get_view_renderer(renderid):
         return "field/annalist_view_text.html"
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_view_textarea.html"
-    log.warning("get_edit_renderer: %s not found"%renderid)
+    if renderid == "annal:field_render/Type":
+        return None
+    log.warning("get_view_renderer: %s not found"%renderid)
     return None
 
 def get_head_renderer(renderid):
@@ -190,6 +205,8 @@ def get_item_renderer(renderid):
         return "field/annalist_item_text.html"
     if renderid == "annal:field_render/Slug":
         return "field/annalist_item_text.html"
+    if renderid == "annal:field_render/Type":
+        return "field/annalist_item_type.html"
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
 

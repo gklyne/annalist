@@ -111,8 +111,8 @@ def recordlist_uri(coll_id, list_id):
     return reverse(viewname, kwargs=kwargs)
 
 def entitydata_list_all_uri(coll_id="testcoll"):
-    viewname = "AnnalistEntityDefaultListType"
-    kwargs   = {'coll_id': coll_id, 'type_id': type_id}
+    viewname = "AnnalistEntityDefaultListAll"
+    kwargs   = {'coll_id': coll_id}
     return reverse(viewname, kwargs=kwargs)
 
 def entitydata_list_type_uri(coll_id="testcoll", type_id="testtype"):
@@ -165,13 +165,13 @@ def entitydata_value_keys():
         , 'rdfs:label', 'rdfs:comment'
         ])
 
-def entitydata_create_values(entity_id, update="Entity"):
+def entitydata_create_values(entity_id, type_id="testtype", update="Entity"):
     """
     Data used when creating entity test data
     """
     return (
-        { 'rdfs:label': '%s testcoll/testtype/%s'%(update, entity_id)
-        , 'rdfs:comment': '%s coll testcoll, type testtype, entity %s'%(update, entity_id)
+        { 'rdfs:label': '%s testcoll/%s/%s'%(update, type_id, entity_id)
+        , 'rdfs:comment': '%s coll testcoll, type %s, entity %s'%(update, type_id, entity_id)
         })
 
 def entitydata_values(entity_id, update="Entity", hosturi=TestHostUri):
