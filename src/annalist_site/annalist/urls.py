@@ -21,7 +21,7 @@ from oauth2.views               import LoginUserView, LoginPostView, LoginDoneVi
 from annalist.views.defaultlist import EntityDefaultListView
 from annalist.views.defaultedit import EntityDefaultEditView, EntityDataDeleteConfirmedView
 
-# @@TODO: Thoughts for URI design: 1-letter path segments:
+# @@TODO: Review URI design: 1-letter path segments:
 #
 # c - collections
 # v - view

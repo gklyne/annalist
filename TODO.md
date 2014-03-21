@@ -61,7 +61,9 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / form generation
    / form display test cases (initial for default and all)
    / include sitedata lists in drop-down
-   - form response handler
+   > form response handler
+   - entity list view: add selection fields (and classes)
+   - new entity from list-all display needs default type
    - form response test cases
    - connect list display to record view display
    - build entity selector logic into list view
@@ -84,6 +86,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
 ## Misc TODO
 
 - entity should carry URI only.  Other fields (host, path, etc. should be generated as required.  Suggest use an internal value that allows x.uri.path, .host, etc. as required)
+- Convert literal CURIES to namespace references
 - Review field descriptions in sitedata: type values seem to be inconsistent??? (e.g. Type vs Entity_type?).  May need to start some proper documentation of the form data descriptions.
 - rationalize/simplify fields and methods in site/collection model classes - there appears to be some duplication
 - review URI design: can we revert to original design (without /c/, /d/, etc.)?

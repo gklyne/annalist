@@ -15,7 +15,7 @@ from django.http                    import HttpResponseRedirect
 from django.core.urlresolvers       import resolve, reverse
 
 from annalist                       import message
-# from annalist.exceptions            import Annalist_Error
+from annalist.exceptions            import Annalist_Error
 # from annalist.identifiers           import RDF, RDFS, ANNAL
 # from annalist                       import util
 
@@ -137,7 +137,7 @@ class EntityDefaultListView(EntityEditBaseView):
         # Process requested action
         redirect_uri = None
         continuation = "?continuation_uri=%s"%(self.get_request_path())
-        entity_id = request.POST.get('entity_select', None)
+        entity_id    = request.POST.get('entity_select', None)
         if "new" in request.POST:
             redirect_uri = self.view_uri(
                 "AnnalistEntityDefaultNewView", 
@@ -145,7 +145,7 @@ class EntityDefaultListView(EntityEditBaseView):
                 ) + continuation
         if "copy" in request.POST:
             redirect_uri = (
-                self.check_value_supplied(type_id, message.NO_ENTITY_FOR_COPY) or
+                self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_COPY) or
                 ( self.view_uri(
                     "AnnalistEntityDefaultEditView", 
                     coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="copy"
@@ -153,14 +153,17 @@ class EntityDefaultListView(EntityEditBaseView):
                 )
         if "edit" in request.POST:
             redirect_uri = (
-                self.check_value_supplied(type_id, message.NO_ENTITY_FOR_EDIT) or
+                self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_EDIT) or
                 ( self.view_uri(
                     "AnnalistEntityDefaultEditView", 
                     coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="edit"
                    ) + continuation)
                 )
         if "delete" in request.POST:
-            if entity_id:
+            redirect_uri = (
+                self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_DELETE)
+                )
+            if not redirect_uri:
                 # Get user to confirm action before actually doing it
                 complete_action_uri = self.view_uri(
                     "AnnalistEntityDataDeleteView", coll_id=coll_id, type_id=type_id
@@ -175,13 +178,11 @@ class EntityDefaultListView(EntityEditBaseView):
                         title=                  self.site_data()["title"]
                         )
                     )
-            else:
-                redirect_uri = (
-                    self.check_value_supplied(type_id, message.NO_ENTITY_FOR_DELETE)
-                    )
-        if "default_view" in request.POST:
+        if "search" in request.POST:
             raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
         if "list_view" in request.POST:
+            raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
+        if "default_view" in request.POST:
             raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
         if "customize" in request.POST:
             raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
