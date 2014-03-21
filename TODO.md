@@ -1,35 +1,6 @@
-## Explorations
+## Web application outline plan
 
-* Choose web server
-  * probably Apache, considering nginx, but deferred until suitable OAuth2/OpenID-connect plugin is available
-  * until then, using DJango for everything while ideas are fleshed out
-* Authentication mechanism
-  * Going with OAuth2/OpenID-Connect for now
-  * Currently working with Google as IDP; loooking for alternatives
-  * Considering OAuth2-Shibboleth bridge for uni deployment (have link somewhere in notes)
-  * Oauth registration - note ongoing work in IETF
-* Access control model
-  * TBD; expect to use elements from UMA in due course
-  * For now have very simple authorization function that requires authentication for up-dates, otherwise open.
-* Define on-disk structure
-    * Directories
-    * Files
-    * See https://github.com/gklyne/annalist/blob/develop/src/annalist_site/annalist/layout.py
-    * @@NOTE: wean off direct directory access and use HTTP
-* Define data access internal API details for web site
-  * First cut in progress
-  * @@NOTE: remember to use simple GET semantics where possible; may need to revisist and simplify
-  * @@TODO: current implementation is file-based, but details are hidden in Entity classes.
-* Define UI generation details
-* Implement data access API details
-  * Mostly straight HTTP GET, etc
-* Implement UI generation details
-  * The main challenge.
-  * Follow mockups per https://github.com/gklyne/annalist/tree/develop/mockup
-* Create core UI definitions
-
-
-## Web application
+Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
 
 1. Front page/initial display
    / form elements to create new collection
@@ -54,7 +25,7 @@
      / implement list methods
    / UI test cases
    / form elements to add/delete types/views/lists/...
-   - Add CollectionActionView test cases
+   / Add CollectionActionView test cases (handled with entity managed)
 3. Record type display
    / template
    / view: edit form display
@@ -84,14 +55,8 @@
    / create data view display based on generic render logic
    / editing recordtype: returns "already exists" error; display operation (new, copy, edit, etc) in edit form
    / function to create initial development site data (based on test code)
-   - read-only data views
    x entity should carry its own RecordType id (where it's kept within a collection).  Have implemented alternative mechanism throufgh bound_field that allows the entity to be less self-aware, hence more easily ported.
-   - entity should carry URI only.  Other fields (host, path, etc. should be generated as required.  Suggest use an internal value that allows x.uri.path, .host, etc. as required)
-   - Review field descriptions in sitedata: type values seem to be inconsistent???
-     (e.g. Type vs Entity_type?).  May need to start some proper documentation of the form data descriptions.
-   - rationalize/simplify fields and methods in base model classes - there appears to be some duplication
-   - review URI design: can we revert to original design?
-   - menu dropdown on small display not working: need JS from Zurb site?
+   / menu dropdown on small display not working: need JS from Zurb site? (fixed by update to 5.2.1)
 5. Default record list display
    / form generation
    / form display test cases (initial for default and all)
@@ -101,11 +66,46 @@
    - connect list display to record view display
    - build entity selector logic into list view
    - implement search within list view
-6. Design generic entity view
-7. Record view display and editing
-8. Generic record list display and editing
+6. Read-ony data view (e.g. with formatted Markdown fields)
+7. Design generic entity view
+8. Record view display and editing
+9. Generic record list display and editing
 
-Future features (see also Misc below)
+
+## Tests required:
+
+- Missing resource error reporting in:
+  - annalist/views/collection.py
+  - annalist/views/defaultedit.py
+  - annalist/views/defaultlist.py
+  - annalist/views/recordtype.py
+
+
+## Misc TODO
+
+- entity should carry URI only.  Other fields (host, path, etc. should be generated as required.  Suggest use an internal value that allows x.uri.path, .host, etc. as required)
+- Review field descriptions in sitedata: type values seem to be inconsistent??? (e.g. Type vs Entity_type?).  May need to start some proper documentation of the form data descriptions.
+- rationalize/simplify fields and methods in site/collection model classes - there appears to be some duplication
+- review URI design: can we revert to original design (without /c/, /d/, etc.)?
+- Login link to include option to redirect to failed page, with form fields populated
+- Complete authorization framework
+- think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
+- think about handling of identifier renaming (re-write data, record equivalence, or ...).  (See also "data storage" below.)
+   - when renaming through edit form, update URI if it corresponds to previous ID??
+   - need to think about maintaining a list of correspopnding URIs?
+- Use server-internal revectoring?  What about delete multiple?
+- currently there's some inconsistency about this: confirm views are rendered directly (as this allows form parameters to be provided directly), but other form action links are handled by redirection.  Try to be more consistent about this?  Create a more general pattern for handling continuation forms?    Note: redirect means that different view GET function signatures, with values provided in the request URI, are handled in generic fashion.  POST views are more easily handled directly with form parameters as supplied dictionary
+- move util.py to utils package, and rename?
+- entity._save: think about capturing provenance metadata too
+/ move entity I/O logic in util module to entity module (keep it all together)
+? view collections doesn't use entered label - problem with entry vocab? (Fixed?)
+- look into using named tuples instead of dictionaries for rendering
+  - cf. http://stackoverflow.com/questions/1336791/
+/ abstract definition of `field_context` - currently defined implicitly in `views.entityeditbase` (overtaken by redesign)
+x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
+
+## Future features (see also Misc above)
+
 - try alternative OIDC providers
 - spreadhsheet bridge
 - Research Object presentation
@@ -121,42 +121,9 @@ Future features (see also Misc below)
 - ResourceSync integration for data sync
 - Shuffl integration?
 
-Tests required:
-- Missing resource error reporting in:
-  - annalist/views/collection.py
-  - annalist/views/defaultedit.py
-  - annalist/views/defaultlist.py
-  - annalist/views/recordtype.py
+### Entity abstraction and storage
 
-Misc:
-- Login link to include option to redirect to failed page, with form fields populated
-- Complete authorization framework
-x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
-- think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
-- think about handling of identifier renaming (re-write data, record equivalence, or ...).  (See also "data storage" below.)
-   - when renaming through edit form, update URI if it corresponds to previous ID??
-   - need to think about maintaining a list of correspopnding URIs?
-- Use server-internal revectoring?  What about delete multiple?
-- currently there's some inconsistency about this: confirm views are rendered directly (as this allows form parameters to be provided directly), but other form action links are handled by redirection.  Try to be more consistent about this?  Create a more general pattern for handling continuation forms?    Note: redirect means that different view GET function signatures, with values provided in the request URI, are handled in generic fashion.  POST views are more easily handled directly with form parameters as supplied dictionary
-- move util.py to utils package, and rename?
-- entity._save: think about capturing provenance metadata too
-/ move entity I/O logic in util module to entity module (keep it all together)
-? view collections doesn't use entered label - problem with entry vocab? (Fixed?)
-- look into using named tuples instead of dictionaries for rendering
-  - cf. http://stackoverflow.com/questions/1336791/
-- abstract definition of `field_context` - currently defined implicitly in `views.entityeditbase`
-
-Entity abstraction:
 - replace direct file access with HTTP access
-
-AnnalistGenericView:
-- Generic renderers, all driven by a supplied dictionary:
-  - HTML
-  - JSON-LD
-  - uri-list
-- but serve native format directly.
-
-Data storage:
 - Note that it should be possible to take an Annalist site directory and dump it onto any regular HTTP server to publish the raw data.  Web site should still be able to work with that.
 - think about storage of identifier URIs (e.g. record type URIs.)  Should they default to be:
   (1) relative to self
@@ -168,14 +135,48 @@ Data storage:
   per site.  The expectation is that if data are moved, it will be as complete collections
   to ensure they are accompanied by their associated metadata.
 
+### AnnalistGenericView:
 
-Deployment:
+- Generic renderers, all driven by a supplied dictionary:
+  - HTML
+  - JSON-LD
+  - uri-list
+- but serve native format directly.
+
+### Deployment:
 - look into using Vagrant and/or Puppet/Chef/...
 
+### Authorization
 
-## Authorization
+- Assume use of annalist form data under control of suitable authority
+- Focus on form of authorization data
+- Back-fit to form interface for creation of data; figure what seeding is needed
 
-* Assume use of annalist form data under control of suitable authority
-* Focus on form of authorization data
-* Back-fit to form interface for creation of data; figure what seeding is needed
+
+## Explorations
+
+* Choose web server
+  * probably Apache, considering nginx, but deferred until suitable OAuth2/OpenID-connect plugin is available
+  * until then, using DJango for everything while ideas are fleshed out
+* Authentication mechanism
+  * Going with OAuth2/OpenID-Connect for now
+  * Currently working with Google as IDP; loooking for alternatives
+  * Considering OAuth2-Shibboleth bridge for uni deployment (have link somewhere in notes)
+  * Oauth registration - note ongoing work in IETF
+* Access control model
+  * TBD; expect to use elements from UMA in due course
+  * For now have very simple authorization function that requires authentication for up-dates, otherwise open.
+* Define on-disk structure
+    * Directories
+    * Files
+    * See https://github.com/gklyne/annalist/blob/develop/src/annalist_site/annalist/layout.py
+    * @@NOTE: wean off direct directory access and use HTTP
+* Define data access internal API details for web site
+  * First cut in progress
+  * @@NOTE: remember to use simple GET semantics where possible; may need to revisist and simplify
+  * @@TODO: current implementation is file-based, but details are hidden in Entity classes.
+* Define UI generation details
+* Implement data access API details
+  * Mostly straight HTTP GET, etc.  (Need to investigate access and event linkage - currently using direct file access for concept demonstrator.)
+
 

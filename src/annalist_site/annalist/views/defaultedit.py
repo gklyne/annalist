@@ -29,6 +29,12 @@ from annalist.models.entitydata     import EntityData
 
 from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
 
+#   -------------------------------------------------------------------------------------------
+#
+#   Entity edit view - form rendering and POST response handling
+#
+#   -------------------------------------------------------------------------------------------
+
 class EntityDefaultEditView(EntityEditBaseView):
     """
     View class for default record edit view
@@ -129,6 +135,12 @@ class EntityDefaultEditView(EntityEditBaseView):
             request, action, self.recordtypedata, entity_id, orig_entity_id, 
             messages, context_extra_values
             )
+
+#   -------------------------------------------------------------------------------------------
+#
+#   Entity delete confirmation response handling
+#
+#   -------------------------------------------------------------------------------------------
 
 class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
     """

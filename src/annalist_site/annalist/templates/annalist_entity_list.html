@@ -29,7 +29,7 @@
                 <input type="text" name="search_for" value="" />
               </div>
               <div class="small-4 medium-3 columns text-right left">
-                <input type="submit" name="find"     value="Find" />
+                <input type="submit" name="search" value="Find" />
                 <!--
                 <button type="submit" name="search" value="Search">
                 <img src="{% static 'images/icons/search_32.png' %}"/>
@@ -52,7 +52,7 @@
                 </select>
               </div>
               <div class="small-4 columns text-right">
-                <input type="submit" name="view"     value="View" />
+                <input type="submit" name="list_view" value="View" />
               </div>
             </div>
           </div>
@@ -89,7 +89,7 @@
             <input type="submit" name="delete"          value="Delete" />
           </div>
           <div class="small-12 medium-4 columns text-right">
-            <input type="submit" name="default"         value="Set default" />
+            <input type="submit" name="default_view"    value="Set default" />
             <input type="submit" name="customize"       value="Customize" />
           </div>
           <input type="hidden" name="continuation_uri"    value="{{continuation_uri}}"/>

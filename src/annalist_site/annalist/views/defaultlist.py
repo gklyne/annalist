@@ -27,6 +27,11 @@ from annalist.models.recordtypedata import RecordTypeData
 # from annalist.views.generic         import AnnalistGenericView
 from annalist.views.entityeditbase  import EntityEditBaseView # , EntityDeleteConfirmedBaseView
 
+#   -------------------------------------------------------------------------------------------
+#
+#   List entities view - form rendering and POST response handling
+#
+#   -------------------------------------------------------------------------------------------
 
 class EntityDefaultListView(EntityEditBaseView):
     """
@@ -44,6 +49,28 @@ class EntityDefaultListView(EntityEditBaseView):
         self._entityclass   = None
         return
 
+    # Helper functions
+
+    def view_setup(self, coll_id, type_id):
+        """
+        Check collection and type identifiers, and set up objects for:
+            self.collection
+            self.recordtype
+            self.recordtypedata
+            self._entityclass
+
+        Returns None if all is well, or an HttpResponse object with details 
+        about any problem encountered.
+        """
+        reqhost = self.get_request_host()
+        if type_id:
+            http_response = self.get_coll_type_data(coll_id, type_id, host=reqhost)
+            self._list_id = "Default_list"
+        else:
+            http_response = self.get_coll_data(coll_id, host=reqhost)
+            self._list_id = "Default_list_all"
+        return http_response
+
     # GET
 
     def get(self, request, coll_id=None, type_id=None):
@@ -51,13 +78,7 @@ class EntityDefaultListView(EntityEditBaseView):
         Create a form for listing entities.
         """
         log.debug("defaultedit.get: coll_id %s, type_id %s"%(coll_id, type_id))
-        reqhost = self.get_request_host()
-        if type_id:
-            http_response = self.get_coll_type_data(coll_id, type_id, host=reqhost)
-            self._list_id = "Default_list"
-        else:
-            http_response = self.get_coll_data(coll_id, host=reqhost)
-            self._list_id       = "Default_list_all"
+        http_response = self.view_setup(coll_id, type_id)
         if not http_response:
             http_response = self.form_edit_auth("list", self.collection._entityuri)
         if http_response:
@@ -104,19 +125,78 @@ class EntityDefaultListView(EntityEditBaseView):
         log.debug("views.defaultlist.post %s"%(self.get_request_path()))
         # log.debug("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
         # log.debug("  form data %r"%(request.POST))
-        reqhost = self.get_request_host()
-        if type_id:
-            http_response = self.get_coll_type_data(coll_id, type_id, host=reqhost)
-        else:
-            http_response = self.get_coll_data(coll_id, host=reqhost)
-        if not http_response:
-            http_response = self.form_edit_auth("list", self.collection._entityuri)
+        continuation_uri = request.POST.get(
+            "continuation_uri", 
+            self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
+            )
+        if 'close' in request.POST:
+            return HttpResponseRedirect(continuation_uri)
+        http_response = self.view_setup(coll_id, type_id)
         if http_response:
             return http_response
-        # Get key POST values
-        continuation_uri     = request.POST.get('continuation_uri', 
-            self.view_uri('AnnalistEntityDefaultListType', coll_id=coll_id, type_id=type_id)
-            )
+        # Process requested action
+        redirect_uri = None
+        continuation = "?continuation_uri=%s"%(self.get_request_uri())
+        entity_id = request.POST.get('entity_select', None)
+        if "new" in request.POST:
+            redirect_uri = self.view_uri(
+                "AnnalistEntityDefaultNewView", 
+                coll_id=coll_id, type_id=type_id, action="new"
+                ) + continuation
+        if "copy" in request.POST:
+            redirect_uri = (
+                self.check_value_supplied(type_id, message.NO_TYPE_FOR_COPY) or
+                ( self.view_uri(
+                    "AnnalistEntityDefaultEditView", 
+                    coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="copy"
+                    ) + continuation)
+                )
+        if "edit" in request.POST:
+            redirect_uri = (
+                self.check_value_supplied(type_id, message.NO_TYPE_FOR_EDIT) or
+                ( self.view_uri(
+                    "AnnalistEntityDefaultEditView", 
+                    coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="edit"
+                   ) + continuation)
+                )
+        if "delete" in request.POST:
+            ........
+            if type_id:
+                # Get user to confirm action before actually doing it
+                complete_action_uri = self.view_uri("AnnalistRecordTypeDeleteView", coll_id=coll_id)
+                return (
+                    self.authorize("DELETE") or
+                    ConfirmView.render_form(request,
+                        action_description=     message.REMOVE_RECORD_TYPE%(type_id, coll_id),
+                        complete_action_uri=    complete_action_uri,
+                        action_params=          request.POST,
+                        cancel_action_uri=      self.get_request_path(),
+                        title=                  self.site_data()["title"]
+                        )
+                    )
+            else:
+                redirect_uri = (
+                    self.check_value_supplied(type_id, message.NO_TYPE_FOR_DELETE)
+                    )
+
+
+.......
+
+
+
+        if redirect_uri:
+            return HttpResponseRedirect(redirect_uri)
+
+
+
+
+
+
+
+
+
+
+
         context_extra_values = (
             { 'coll_id':          coll_id
             , 'type_id':          type_id
@@ -140,15 +220,8 @@ class EntityDefaultListView(EntityEditBaseView):
         Handle POST response from entity edit form.
         """
         log.debug("form_response: action %s"%(request.POST['action']))
-        continuation_uri = context_extra_values['continuation_uri']
-        if 'cancel' in request.POST:
-            # log.debug("form_response: cancel")
-            return HttpResponseRedirect(continuation_uri)
-        # Check authorization
-        auth_required = self.form_edit_auth(action, parent._entityuri)
-        if auth_required:
-            # log.debug("form_response: auth_required")            
-            return auth_required
+
+
         # Check parent exists (still)
         if not parent._exists():
             # log.debug("form_response: not parent._exists()")
@@ -200,6 +273,12 @@ class EntityDefaultListView(EntityEditBaseView):
             message.SYSTEM_ERROR
             )
         return HttpResponseRedirect(continuation_uri+err_values)
+
+#   -------------------------------------------------------------------------------------------
+#
+#   Entity deletion confirmed - response handler
+#
+#   -------------------------------------------------------------------------------------------
 
 
 
