@@ -136,7 +136,7 @@ class EntityDefaultListView(EntityEditBaseView):
             return http_response
         # Process requested action
         redirect_uri = None
-        continuation = "?continuation_uri=%s"%(self.get_request_uri())
+        continuation = "?continuation_uri=%s"%(self.get_request_path())
         entity_id = request.POST.get('entity_select', None)
         if "new" in request.POST:
             redirect_uri = self.view_uri(
@@ -145,7 +145,7 @@ class EntityDefaultListView(EntityEditBaseView):
                 ) + continuation
         if "copy" in request.POST:
             redirect_uri = (
-                self.check_value_supplied(type_id, message.NO_TYPE_FOR_COPY) or
+                self.check_value_supplied(type_id, message.NO_ENTITY_FOR_COPY) or
                 ( self.view_uri(
                     "AnnalistEntityDefaultEditView", 
                     coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="copy"
@@ -153,21 +153,22 @@ class EntityDefaultListView(EntityEditBaseView):
                 )
         if "edit" in request.POST:
             redirect_uri = (
-                self.check_value_supplied(type_id, message.NO_TYPE_FOR_EDIT) or
+                self.check_value_supplied(type_id, message.NO_ENTITY_FOR_EDIT) or
                 ( self.view_uri(
                     "AnnalistEntityDefaultEditView", 
                     coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="edit"
                    ) + continuation)
                 )
         if "delete" in request.POST:
-            ........
-            if type_id:
+            if entity_id:
                 # Get user to confirm action before actually doing it
-                complete_action_uri = self.view_uri("AnnalistRecordTypeDeleteView", coll_id=coll_id)
+                complete_action_uri = self.view_uri(
+                    "AnnalistEntityDataDeleteView", coll_id=coll_id, type_id=type_id
+                    )
                 return (
                     self.authorize("DELETE") or
                     ConfirmView.render_form(request,
-                        action_description=     message.REMOVE_RECORD_TYPE%(type_id, coll_id),
+                        action_description=     message.REMOVE_ENTITY_DATA%(type_id, coll_id),
                         complete_action_uri=    complete_action_uri,
                         action_params=          request.POST,
                         cancel_action_uri=      self.get_request_path(),
@@ -176,95 +177,16 @@ class EntityDefaultListView(EntityEditBaseView):
                     )
             else:
                 redirect_uri = (
-                    self.check_value_supplied(type_id, message.NO_TYPE_FOR_DELETE)
+                    self.check_value_supplied(type_id, message.NO_ENTITY_FOR_DELETE)
                     )
-
-
-.......
-
-
-
+        if "default_view" in request.POST:
+            raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
+        if "list_view" in request.POST:
+            raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
+        if "customize" in request.POST:
+            raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
         if redirect_uri:
             return HttpResponseRedirect(redirect_uri)
-
-
-
-
-
-
-
-
-
-
-
-        context_extra_values = (
-            { 'coll_id':          coll_id
-            , 'type_id':          type_id
-            , 'continuation_uri': continuation_uri
-            })
-        messages = (
-            { 
-            })
-
-
-        # Process form response and respond accordingly
-        self._entityvaluemap = self.get_form_entityvaluemap(self._view_id)
-        return self.form_response(
-            request, action, self.recordtypedata, entity_id, orig_entity_id, 
-            messages, context_extra_values
-            )
-
-    # Helper - handle list response
-    def form_response(self, request, action, parent, entityid, orig_entityid, messages, context_extra_values):
-        """
-        Handle POST response from entity edit form.
-        """
-        log.debug("form_response: action %s"%(request.POST['action']))
-
-
-        # Check parent exists (still)
-        if not parent._exists():
-            # log.debug("form_response: not parent._exists()")
-            return self.form_re_render(request, context_extra_values,
-                error_head=messages['parent_heading'],
-                error_message=messages['parent_missing']
-                )
-        # Check response has valid type id
-        if not util.valid_id(entityid):
-            # log.debug("form_response: not util.valid_id('%s')"%entityid)
-            return self.form_re_render(request, context_extra_values,
-                error_head=messages['entity_heading'],
-                error_message=messages['entity_invalid_id']
-                )
-        # Process response
-        entityid_changed = (request.POST['action'] == "edit") and (entityid != orig_entityid)
-        if 'save' in request.POST:
-            log.debug(
-                "form_response: save, action %s, entity_id %s, orig_entityid %s"
-                %(request.POST['action'], entityid, orig_entityid)
-                )
-            # Check existence of type to save according to action performed
-            if (request.POST['action'] in ["new", "copy"]) or entityid_changed:
-                if self._entityclass.exists(parent, entityid):
-                    return self.form_re_render(request, context_extra_values,
-                        error_head=messages['entity_heading'],
-                        error_message=messages['entity_exists']
-                        )
-            else:
-                if not self._entityclass.exists(parent, entityid):
-                    # This shouldn't happen, but just incase...
-                    return self.form_re_render(request, context_extra_values,
-                        error_head=messages['entity_heading'],
-                        error_message=messages['entity_not_exists']
-                        )
-            # Create/update data now
-            entity_initial_values = self.map_form_data_to_values(request.POST)
-            self._entityclass.create(parent, entityid, entity_initial_values)
-            # Remove old type if rename
-            if entityid_changed:
-                if self._entityclass.exists(parent, entityid):    # Precautionary
-                    self._entityclass.remove(parent, orig_entityid)
-            return HttpResponseRedirect(continuation_uri)
         # Report unexpected form data
         # This shouldn't happen, but just in case...
         # Redirect to continuation with error

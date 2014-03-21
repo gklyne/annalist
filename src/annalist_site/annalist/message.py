@@ -37,13 +37,15 @@ RECORD_TYPE_LABEL       = "Record type %s in collection %s"
 RECORD_TYPE_EXISTS      = "Record type %s in collection %s already exists"
 RECORD_TYPE_NOT_EXISTS  = "Record type %s in collection %s does not exist"
 RECORD_TYPE_REMOVED     = "Record type %s in collection %s was removed"
+NO_ENTITY_FOR_COPY      = "No data record selected to copy"
+NO_ENTITY_FOR_EDIT      = "No data record selected to edit"
+NO_ENTITY_FOR_DELETE    = "No data record selected to delete"
+REMOVE_ENTITY_DATA      = "Remove record %s of type %s in collection %s"
 ENTITY_DATA_ID          = "Problem with entity identifier"
 ENTITY_DATA_ID_INVALID  = "The entity identifier is missing or not a valid identifier"
 ENTITY_DATA_LABEL       = "Entity %s of type %s in collection %s"
 ENTITY_DATA_EXISTS      = "Entity %s of type %s in collection %s already exists"
 ENTITY_DATA_NOT_EXISTS  = "Entity %s of type %s in collection %s does not exist"
 ENTITY_DATA_REMOVED     = "Entity %s of type %s in collection %s was removed"
-
-
 
 # End.
