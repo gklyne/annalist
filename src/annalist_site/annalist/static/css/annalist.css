@@ -82,14 +82,23 @@ div.columns > select
     margin: 0.25rem 0 ;
     padding: 0.25rem 0 ;
     height: auto;
+    /* border: 0; - causes buttons to display differently - WTF? */
 }
 
 div.columns > input[type=text] , 
 div.columns > textarea , 
 div.columns > select {
-    /* @@TODO This to maintain some space between input fields - is there a better way? */ 
+    /* @@TODO This to maintain some space between input fields, esp. columns on
+    /*        customize page - is there a better way? */ 
     /*        I tried margins and padding to no avail */
+    /*        It appears Foundation applie a witdh:100% to these elements */
     width: 95%;
+    /* padding-right: 1rem; */
+}
+
+div.columns > input[type=submit] {
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 /* Tables */
@@ -97,11 +106,21 @@ div.columns > select {
 div.row div.columns table {
     margin-top: 1rem;
     margin-bottom: 1rem;
+    border-collapse: collapse;  /* Prevents gap before checkbox in table column */
 }
 
-div.row .columns .row .columns thead tr th {
+td.select_row,
+td.select_row > input[type="checkbox"] {
+    padding: 0;
+    margin: 0;
+}
+
+div.row .columns .row .columns thead tr th ,
+div.row .columns .row .columns thead tr td {
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 /* Messages */

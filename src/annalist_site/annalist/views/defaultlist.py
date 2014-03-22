@@ -136,7 +136,8 @@ class EntityDefaultListView(EntityEditBaseView):
             return http_response
         # Process requested action
         redirect_uri = None
-        continuation = "?continuation_uri=%s"%(self.get_request_path())
+        continuation_path = self.get_request_path().split("?", 1)[0]
+        continuation = "?continuation_uri=%s"%(continuation_path)
         entity_id    = request.POST.get('entity_select', None)
         if "new" in request.POST:
             redirect_uri = self.view_uri(
