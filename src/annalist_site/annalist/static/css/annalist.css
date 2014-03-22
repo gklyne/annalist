@@ -29,18 +29,24 @@ body > div {
     vertical-align: bottom;
 }
 
+/*
 div.row .row {
     margin: 0 0;
     padding: 0 0;
 }
+*/
 
 div.row .columns {
     padding: 0 0.75rem;
 }
 
+div.row .columns .row{
+    padding: 0 -0.75rem;
+}
+
 div.row .columns .row .columns {
     margin: 0 0;
-    padding: 0 0;
+    padding: 0 0.75rem;
 }
 
 div.row.headings {
@@ -106,21 +112,20 @@ div.columns > input[type=submit] {
 div.row div.columns table {
     margin-top: 1rem;
     margin-bottom: 1rem;
+    border:0;
     border-collapse: collapse;  /* Prevents gap before checkbox in table column */
 }
 
-td.select_row,
-td.select_row > input[type="checkbox"] {
+td.select_row ,
+td.select_row > input[type="checkbox"]  /* Overrides Foundation */
+{
     padding: 0;
     margin: 0;
 }
 
-div.row .columns .row .columns thead tr th ,
-div.row .columns .row .columns thead tr td {
+div.row .columns .row .columns thead tr th {
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
-    padding-left: 0;
-    padding-right: 0;
 }
 
 /* Messages */

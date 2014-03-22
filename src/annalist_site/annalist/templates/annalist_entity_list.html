@@ -62,7 +62,7 @@
           <div class="small-12 columns">
             <table width="100%">
               <thead>
-                <tr class="select_row">
+                <tr>
                 {% for field in fields %}
                   {% include field.field_render_head %}
                 {% endfor %}
@@ -71,12 +71,12 @@
               </thead>
               <tbody>
               {% for entity in entities %}
-                <tr>
+                <tr class="select_row">
                 {% for field in entity.fields %}
                   {% include field.field_render_item %}
                 {% endfor %}
                 <td class="select_row">
-                   <input type="checkbox" name="entity_select" value="" class="right" />
+                   <input type="checkbox" name="entity_select" value="" />
                 </td>
                 </tr>
               {% endfor %}

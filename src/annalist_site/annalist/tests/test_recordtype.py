@@ -36,7 +36,8 @@ from entity_testutils           import (
     site_view_uri, collection_edit_uri, recordtype_uri, recordtype_edit_uri,
     collection_create_values,
     recordtype_value_keys, recordtype_create_values, recordtype_values,
-    recordtype_context_data, recordtype_form_data, recordtype_delete_confirm_form_data
+    recordtype_context_data, recordtype_form_data, recordtype_delete_confirm_form_data,
+    site_title
     )
 
 #   -----------------------------------------------------------------------------
@@ -158,10 +159,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_uri=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Record type in collection coll1</h3>")
         # Test context
-        self.assertEqual(r.context['title'],            "Annalist data journal test site")
+        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "coll1")
         self.assertEqual(r.context['type_id'],          "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
@@ -177,10 +178,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Record type in collection coll1</h3>")
         # Test context (values read from test data fixture)
-        self.assertEqual(r.context['title'],            "Annalist data journal test site")
+        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "coll1")
         self.assertEqual(r.context['type_id'],          "type1")
         self.assertEqual(r.context['orig_id'],          "type1")
@@ -206,10 +207,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Record type in collection coll1</h3>")
         # Test context (values read from test data fixture)
-        self.assertEqual(r.context['title'],            "Annalist data journal test site")
+        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "coll1")
         self.assertEqual(r.context['type_id'],          "type1")
         self.assertEqual(r.context['orig_id'],          "type1")
@@ -258,7 +259,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         # Test context
@@ -275,7 +276,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         # Test context
@@ -320,7 +321,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         expect_context = recordtype_context_data(action="copy", update="Updated RecordType")
@@ -337,7 +338,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         expect_context = recordtype_context_data(
@@ -403,7 +404,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         # Test context for re-rendered form
@@ -421,7 +422,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         # Test context

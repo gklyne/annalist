@@ -62,12 +62,13 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / form display test cases (initial for default and all)
    / include sitedata lists in drop-down
    > form response handler
-   - entity list view: add selection fields (and classes)
+   / entity list view: add selection fields (and classes)
    - new entity from list-all display needs default type
    - form response test cases
    - connect list display to record view display
    - build entity selector logic into list view
    - implement search within list view
+   - entity list view: add javascript for selection classes (hide checkbox and highlight row when clicked)
 6. Read-ony data view (e.g. with formatted Markdown fields)
 7. Design generic entity view
 8. Record view display and editing

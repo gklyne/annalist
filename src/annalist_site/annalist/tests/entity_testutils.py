@@ -188,7 +188,7 @@ def entitydata_values(entity_id, update="Entity", hosturi=TestHostUri):
 
 def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="Entity"):
     context_dict = (
-        { 'title':              'Annalist data journal test site'
+        { 'title':              site_title()
         , 'coll_id':            'testcoll'
         , 'type_id':            'testtype'
         , 'orig_id':            'orig_entity_id'
@@ -358,7 +358,7 @@ def recordtype_context_data(
         type_id=None, orig_id=None, action=None, 
         update="RecordType", hosturi=TestHostUri):
     context_dict = (
-        { 'title':              "Annalist data journal test site"
+        { 'title':              site_title()
         , 'coll_id':            "testcoll"
         , 'orig_id':            "orig_type_id"
         , 'type_label':         "%s testcoll/..."%(update)
@@ -488,5 +488,7 @@ def recordlist_values(
 #
 #   -----------------------------------------------------------------------------
 
+def site_title(template="%s"):
+    return template%("Annalist data wiki test site")
 
 # End.

@@ -39,7 +39,8 @@ from entity_testutils               import (
     entity_uri, entitydata_edit_uri, entitydata_delete_confirm_uri,
     entitydata_list_type_uri, entitydata_list_all_uri,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
-    entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data
+    entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
+    site_title
     )
 
 #   -----------------------------------------------------------------------------
@@ -100,10 +101,10 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_uri=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>List 'Default_list_all' of entities in collection 'testcoll'</h3>")
         # Test context
-        self.assertEqual(r.context['title'],            "Annalist data journal test site")
+        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          None)
         self.assertEqual(r.context['list_ids'],         ["Default_list", "Default_list_all"])
@@ -173,10 +174,10 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_uri=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>List 'Default_list' of entities in collection 'testcoll'</h3>")
         # Test context
-        self.assertEqual(r.context['title'],            "Annalist data journal test site")
+        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['list_ids'],         ["Default_list", "Default_list_all"])
@@ -226,10 +227,10 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_uri=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>List of entities in collection 'testcoll'</h3>")
         # Test context
-        self.assertEqual(r.context['title'],            "Annalist data journal test site")
+        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
@@ -312,7 +313,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
@@ -327,7 +328,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context

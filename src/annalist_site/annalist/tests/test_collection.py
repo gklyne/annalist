@@ -36,7 +36,8 @@ from entity_testutils           import (
     collection_value_keys, collection_create_values, collection_values,
     recordtype_value_keys, recordtype_create_values, recordtype_values,
     recordview_value_keys, recordview_create_values, recordview_values,
-    recordlist_value_keys, recordlist_create_values, recordlist_values
+    recordlist_value_keys, recordlist_create_values, recordlist_values,
+    site_title
     )
 
 #   -----------------------------------------------------------------------------
@@ -242,7 +243,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.get(self.uri)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Customize collection coll1</h3>")
         return
 
@@ -250,7 +251,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.get(self.uri)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertEquals(r.context['title'],   "Annalist data journal test site")
+        self.assertEquals(r.context['title'],   site_title())
         self.assertEquals(r.context['coll_id'], "coll1")
         self.assertEquals(r.context['types'],   ["type1", "type2"])
         self.assertEquals(r.context['lists'],   ["list1", "list2"])

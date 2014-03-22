@@ -36,8 +36,12 @@ from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import (
     site_view_uri, collection_edit_uri, recordtype_uri, recordtype_edit_uri,
     collection_value_keys, collection_create_values, collection_values,
-    collection_new_form_data, collection_remove_form_data
+    collection_new_form_data, collection_remove_form_data,
+    site_title
     )
+
+# Keys in side metadata entity
+site_data_keys = {'@id', 'rdfs:label', 'rdfs:comment', 'collections', 'title'}
 
 # Initial collection data used for form display
 init_collections = (
@@ -79,9 +83,9 @@ class SiteTest(AnnalistTestCase):
 
     def test_site_data(self):
         sd = self.testsite.site_data()
-        self.assertEquals(set(sd.keys()),set(('rdfs:label', 'rdfs:comment', 'collections', 'title')))
-        self.assertEquals(sd["title"],        "Annalist data journal test site")
-        self.assertEquals(sd["rdfs:label"],   "Annalist data journal test site")
+        self.assertEquals(set(sd.keys()),site_data_keys)
+        self.assertEquals(sd["title"],        site_title())
+        self.assertEquals(sd["rdfs:label"],   site_title())
         self.assertEquals(sd["rdfs:comment"], "Annalist site metadata.")
         self.assertEquals(sd["collections"].keys(), ["coll1","coll2","coll3","testcoll"])
         self.assertDictionaryMatch(sd["collections"]["coll1"], self.coll1)
@@ -147,7 +151,7 @@ class SiteViewTest(AnnalistTestCase):
         r = self.client.get(self.uri)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data journal test site</title>")
+        self.assertContains(r, site_title("<title>%s</title>"))
         return
 
     def test_get_error(self):
@@ -189,7 +193,7 @@ class SiteViewTest(AnnalistTestCase):
         # (Don't need to keep doing this as logic can be tested through context as above)
         # (See: http://stackoverflow.com/questions/2257958/)
         s = BeautifulSoup(r.content)
-        self.assertEqual(s.html.title.string, "Annalist data journal test site")
+        self.assertEqual(s.html.title.string, site_title())
         homelink = s.find(class_="title-area").find(class_="name").h1.a
         self.assertEqual(homelink.string,   "Home")
         self.assertEqual(homelink['href'],  self.uri)
@@ -229,7 +233,7 @@ class SiteViewTest(AnnalistTestCase):
         # (See: http://stackoverflow.com/questions/2257958/)
         s = BeautifulSoup(r.content)
         # title and top menu
-        self.assertEqual(s.html.title.string, "Annalist data journal test site")
+        self.assertEqual(s.html.title.string, site_title())
         homelink = s.find(class_="title-area").find(class_="name").h1.a
         self.assertEqual(homelink.string,   "Home")
         self.assertEqual(homelink['href'],  self.uri)

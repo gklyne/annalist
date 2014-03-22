@@ -1,4 +1,5 @@
-{ 
-    "rdfs:label": "Annalist data journal test site",
+{
+    "@id":      	"../",
+    "rdfs:label": 	"Annalist data wiki test site",
     "rdfs:comment": "Annalist site metadata."
 }
