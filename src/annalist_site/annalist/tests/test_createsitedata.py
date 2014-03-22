@@ -1,5 +1,5 @@
 """
-Test module used to create some inirtial site data for experimentation and manual testing
+Test module used to create some initial site data for experimentation and manual testing
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -13,15 +13,10 @@ import logging
 log = logging.getLogger(__name__)
 
 from django.conf                    import settings
-# from django.db                      import models
-# from django.http                    import QueryDict
-# from django.contrib.auth.models     import User
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
-# from django.test.client             import Client
 
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
-# from annalist.models.entity         import Entity
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
@@ -30,7 +25,7 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.defaultedit     import EntityDefaultEditView, EntityDataDeleteConfirmedView
+from annalist.views.defaultedit     import EntityDefaultEditView
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import test_layout, createSiteData
@@ -41,11 +36,6 @@ from entity_testutils               import (
     recordtype_create_values,
     recordview_create_values,
     recordlist_create_values,
-#     site_dir, collection_dir, recordtype_dir, recorddata_dir,  entitydata_dir,
-#     recordtype_uri,
-#     entity_uri, entitydata_list_uri, entitydata_edit_uri, entitydata_delete_confirm_uri,
-#     entitydata_value_keys, entitydata_create_values, entitydata_values, 
-#     entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data
     )
 
 #   -----------------------------------------------------------------------------

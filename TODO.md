@@ -61,19 +61,20 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / form generation
    / form display test cases (initial for default and all)
    / include sitedata lists in drop-down
-   > form response handler
+   / form response handler (delete and others todo)
    / entity list view: add selection fields (and classes)
-   - new entity from list-all display needs default type
+   - new entity from list-all display needs default type OR edit field has type selector, with logic to check type on save (treat type as part of id here)
    - form response test cases
-   - connect list display to record view display
-   - build entity selector logic into list view
-   - implement search within list view
-   - entity list view: add javascript for selection classes (hide checkbox and highlight row when clicked)
-6. Read-ony data view (e.g. with formatted Markdown fields)
-7. Design generic entity view
-8. Record view display and editing
-9. Generic record list display and editing
+   / connect list display to record view display
+   / build entity selector logic into list view
+6. Design generic entity view
+7. Record view display and editing
+8. Generic record list display and editing
+9. Read-ony data view (e.g. with formatted Markdown fields)
 
+?. Grid view
+?. Generic entity selector (based on canned sparql expressions?)
+?. implement search within list view
 
 ## Tests required:
 
@@ -86,6 +87,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
 
 ## Misc TODO
 
+- entity list view: add javascript for selection classes (hide checkbox and highlight row when clicked)
 - entity should carry URI only.  Other fields (host, path, etc. should be generated as required.  Suggest use an internal value that allows x.uri.path, .host, etc. as required)
 - Convert literal CURIES to namespace references
 - Review field descriptions in sitedata: type values seem to be inconsistent??? (e.g. Type vs Entity_type?).  May need to start some proper documentation of the form data descriptions.

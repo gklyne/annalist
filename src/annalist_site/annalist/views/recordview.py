@@ -32,7 +32,7 @@ from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfi
 
 class RecordViewEditView(EntityEditBaseView):
     """
-    View class to handle requests to an Annalist record type edit URI
+    View class to handle requests to an Annalist record view edit URI
     """
 
     _entityclass        = RecordView

@@ -16,16 +16,13 @@ from django.core.urlresolvers       import resolve, reverse
 
 from annalist                       import message
 from annalist.exceptions            import Annalist_Error
-# from annalist.identifiers           import RDF, RDFS, ANNAL
-# from annalist                       import util
 
-# from annalist.site                  import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 
-# from annalist.views.generic         import AnnalistGenericView
-from annalist.views.entityeditbase  import EntityEditBaseView # , EntityDeleteConfirmedBaseView
+from annalist.views.confirm         import ConfirmView, dict_querydict
+from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -172,14 +169,19 @@ class EntityDefaultListView(EntityEditBaseView):
                 if not redirect_uri:
                     # Get user to confirm action before actually doing it
                     complete_action_uri = self.view_uri(
-                        "AnnalistEntityDataDeleteView", coll_id=coll_id, type_id=type_id
+                        "AnnalistEntityDataDeleteView", 
+                        coll_id=coll_id, type_id=type_id # , entity_id=entity_id
                         )
+                    delete_params = dict_querydict(
+                        { "entity_delete": ["Delete"]
+                        , "entity_id":     [entity_id]
+                        })
                     return (
                         self.authorize("DELETE") or
                         ConfirmView.render_form(request,
-                            action_description=     message.REMOVE_ENTITY_DATA%(type_id, coll_id),
+                            action_description=     message.REMOVE_ENTITY_DATA%(entity_id, type_id, coll_id),
                             complete_action_uri=    complete_action_uri,
-                            action_params=          request.POST,
+                            action_params=          delete_params,
                             cancel_action_uri=      self.get_request_path(),
                             title=                  self.site_data()["title"]
                             )
@@ -205,11 +207,42 @@ class EntityDefaultListView(EntityEditBaseView):
 
 #   -------------------------------------------------------------------------------------------
 #
-#   Entity deletion confirmed - response handler
+#   Entity delete confirmation response handling
 #
 #   -------------------------------------------------------------------------------------------
 
+class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
+    """
+    View class to perform completion of confirmed entity data deletion,
+    anticipated to be requested from a data list or record view.
+    """
+    def __init__(self):
+        super(EntityDataDeleteConfirmedView, self).__init__()
+        return
 
+    # POST
 
+    def post(self, request, coll_id, type_id):
+        """
+        Process options to complete action to remove an entity data record.
+        """
+        log.debug("EntityDataDeleteConfirmedView.post: %r"%(request.POST))
+        if "entity_delete" in request.POST:
+            entity_id  = request.POST['entity_id']
+            coll       = self.collection(coll_id)
+            recordtype = self.recordtype(coll_id, type_id)
+            recorddata = self.recordtypedata(coll_id, type_id)
+            messages  = (
+                { 'entity_removed': message.ENTITY_DATA_REMOVED%(entity_id, type_id, coll_id)
+                })
+            continuation_uri = (
+                request.POST.get('continuation_uri', None) or
+                self.view_uri("AnnalistEntityDefaultListType", coll_id=coll_id, type_id=type_id)
+                )
+            return self.confirm_form_respose(
+                request, recorddata, entity_id, recorddata.remove_entity, 
+                messages, continuation_uri
+                )
+        return self.error(self.error400values())
 
 # End.

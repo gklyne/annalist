@@ -27,7 +27,8 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.defaultedit     import EntityDefaultEditView, EntityDataDeleteConfirmedView
+from annalist.views.defaultedit     import EntityDefaultEditView
+# from annalist.views.defaultlist     import EntityDataDeleteConfirmedView
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
@@ -36,7 +37,8 @@ from entity_testutils               import (
     recordtype_create_values, collection_create_values,
     site_dir, collection_dir, recordtype_dir, recorddata_dir,  entitydata_dir,
     recordtype_uri,
-    entity_uri, entitydata_edit_uri, entitydata_delete_confirm_uri,
+    entity_uri, entitydata_edit_uri, 
+    # entitydata_delete_confirm_uri,
     entitydata_list_type_uri,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
@@ -454,57 +456,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(r.context, expect_context)
         # Check stored entity is unchanged
         self._check_entity_data_values("edittype")
-        return
-
-#   -----------------------------------------------------------------------------
-#
-#   ConfirmEntityDataDeleteTests - tests for completion of record deletion
-#
-#   -----------------------------------------------------------------------------
-
-class ConfirmEntityDataDeleteTests(AnnalistTestCase):
-    """
-    Tests for record type deletion on response to confirmation form
-    """
-
-    def setUp(self):
-        init_annalist_test_site()
-        self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.testcoll = Collection(self.testsite, "testcoll")
-        self.testdata = RecordTypeData(self.testcoll, "testtype")
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client = Client(HTTP_HOST=TestHost)
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
-        return
-
-    def tearDown(self):
-        return
-
-    def test_CollectionActionViewTest(self):
-        self.assertEqual(EntityDataDeleteConfirmedView.__name__, "EntityDataDeleteConfirmedView", "Check EntityDataDeleteConfirmedView class name")
-        return
-
-    # NOTE:  this logic only tests the entity deletion completion code.
-    # It is assumed that the response to requesting entity deletion is checked elsewhere.
-    def test_post_confirmed_remove_entity(self):
-        t = EntityData.create(self.testdata, "deleteentity", entitydata_create_values("deleteentity"))
-        self.assertTrue(EntityData.exists(self.testdata, "deleteentity"))
-        # Submit positive confirmation
-        u = entitydata_delete_confirm_uri("testcoll", "testtype")
-        f = entitydata_delete_confirm_form_data("deleteentity")
-        r = self.client.post(u, f)
-        self.assertEqual(r.status_code,     302)
-        self.assertEqual(r.reason_phrase,   "FOUND")
-        self.assertEqual(r.content,         "")
-        self.assertMatch(r['location'],    
-            "^"+TestHostUri+
-            entitydata_list_type_uri("testcoll", "testtype")+
-            r"\?info_head=.*&info_message=.*deleteentity.*testcoll.*$"
-            )
-        # Confirm deletion
-        self.assertFalse(EntityData.exists(self.testcoll, "deleteentity"))
         return
 
 # End.

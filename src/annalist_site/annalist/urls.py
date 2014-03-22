@@ -18,8 +18,8 @@ from annalist.views.recordview  import RecordViewEditView # , RecordViewDeleteCo
 from annalist.views.recordlist  import RecordListEditView # , RecordListDeleteConfirmedView
 from oauth2.views               import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
 
-from annalist.views.defaultlist import EntityDefaultListView
-from annalist.views.defaultedit import EntityDefaultEditView, EntityDataDeleteConfirmedView
+from annalist.views.defaultlist import EntityDefaultListView, EntityDataDeleteConfirmedView
+from annalist.views.defaultedit import EntityDefaultEditView
 
 # @@TODO: Review URI design: 1-letter path segments:
 #
