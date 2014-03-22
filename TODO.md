@@ -55,7 +55,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / create data view display based on generic render logic
    / editing recordtype: returns "already exists" error; display operation (new, copy, edit, etc) in edit form
    / function to create initial development site data (based on test code)
-   x entity should carry its own RecordType id (where it's kept within a collection).  Have implemented alternative mechanism throufgh bound_field that allows the entity to be less self-aware, hence more easily ported.
+   x entity should carry its own RecordType id (where it's kept within a collection).  Have implemented alternative mechanism through bound_field that allows the entity to be less self-aware, hence more easily ported.
    / menu dropdown on small display not working: need JS from Zurb site? (fixed by update to 5.2.1)
 5. Default record list display
    / form generation
@@ -63,15 +63,19 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / include sitedata lists in drop-down
    / form response handler (delete and others todo)
    / entity list view: add selection fields (and classes)
+   - customize response handler
+   - list_view response handler (needs generic view to make sense; view button to redisplay)
+   - default_view response handler (needs generic view to make sense)
+   - search response handler (later; see below)
    - new entity from list-all display needs default type OR edit field has type selector, with logic to check type on save (treat type as part of id here)
    - form response test cases
+   - connect site display to default display of entities, not customize
    / connect list display to record view display
    / build entity selector logic into list view
 6. Design generic entity view
 7. Record view display and editing
 8. Generic record list display and editing
-9. Read-ony data view (e.g. with formatted Markdown fields)
-
+9. Read-ony da
 ?. Grid view
 ?. Generic entity selector (based on canned sparql expressions?)
 ?. implement search within list view
