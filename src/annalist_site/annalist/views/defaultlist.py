@@ -122,9 +122,9 @@ class EntityDefaultListView(EntityEditBaseView):
         """
         Handle response from dynamically generated list display form.
         """
-        log.debug("views.defaultlist.post %s"%(self.get_request_path()))
+        log.info("views.defaultlist.post %s"%(self.get_request_path()))
         # log.debug("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
-        # log.debug("  form data %r"%(request.POST))
+        # log.info("  form data %r"%(request.POST))
         continuation_uri = request.POST.get(
             "continuation_uri", 
             self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
@@ -138,55 +138,60 @@ class EntityDefaultListView(EntityEditBaseView):
         redirect_uri = None
         continuation_path = self.get_request_path().split("?", 1)[0]
         continuation = "?continuation_uri=%s"%(continuation_path)
-        entity_id    = request.POST.get('entity_select', None)
-        if "new" in request.POST:
-            redirect_uri = self.view_uri(
-                "AnnalistEntityDefaultNewView", 
-                coll_id=coll_id, type_id=type_id, action="new"
-                ) + continuation
-        if "copy" in request.POST:
-            redirect_uri = (
-                self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_COPY) or
-                ( self.view_uri(
-                    "AnnalistEntityDefaultEditView", 
-                    coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="copy"
-                    ) + continuation)
-                )
-        if "edit" in request.POST:
-            redirect_uri = (
-                self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_EDIT) or
-                ( self.view_uri(
-                    "AnnalistEntityDefaultEditView", 
-                    coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="edit"
-                   ) + continuation)
-                )
-        if "delete" in request.POST:
-            redirect_uri = (
-                self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_DELETE)
-                )
-            if not redirect_uri:
-                # Get user to confirm action before actually doing it
-                complete_action_uri = self.view_uri(
-                    "AnnalistEntityDataDeleteView", coll_id=coll_id, type_id=type_id
+        entity_ids   = request.POST.getlist('entity_select')
+        log.info("entity_ids %r"%(entity_ids))
+        if len(entity_ids) > 1:
+            redirect_uri = self.check_value_supplied(None, message.TOO_MANY_ENTITIES_SEL)
+        else:
+            entity_id    = entity_ids[0] if len(entity_ids) == 1 else None
+            if "new" in request.POST:
+                redirect_uri = self.view_uri(
+                    "AnnalistEntityDefaultNewView", 
+                    coll_id=coll_id, type_id=type_id, action="new"
+                    ) + continuation
+            if "copy" in request.POST:
+                redirect_uri = (
+                    self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_COPY) or
+                    ( self.view_uri(
+                        "AnnalistEntityDefaultEditView", 
+                        coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="copy"
+                        ) + continuation)
                     )
-                return (
-                    self.authorize("DELETE") or
-                    ConfirmView.render_form(request,
-                        action_description=     message.REMOVE_ENTITY_DATA%(type_id, coll_id),
-                        complete_action_uri=    complete_action_uri,
-                        action_params=          request.POST,
-                        cancel_action_uri=      self.get_request_path(),
-                        title=                  self.site_data()["title"]
+            if "edit" in request.POST:
+                redirect_uri = (
+                    self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_EDIT) or
+                    ( self.view_uri(
+                        "AnnalistEntityDefaultEditView", 
+                        coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="edit"
+                       ) + continuation)
+                    )
+            if "delete" in request.POST:
+                redirect_uri = (
+                    self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_DELETE)
+                    )
+                if not redirect_uri:
+                    # Get user to confirm action before actually doing it
+                    complete_action_uri = self.view_uri(
+                        "AnnalistEntityDataDeleteView", coll_id=coll_id, type_id=type_id
                         )
-                    )
-        if "search" in request.POST:
-            raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
-        if "list_view" in request.POST:
-            raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
-        if "default_view" in request.POST:
-            raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
-        if "customize" in request.POST:
-            raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
+                    return (
+                        self.authorize("DELETE") or
+                        ConfirmView.render_form(request,
+                            action_description=     message.REMOVE_ENTITY_DATA%(type_id, coll_id),
+                            complete_action_uri=    complete_action_uri,
+                            action_params=          request.POST,
+                            cancel_action_uri=      self.get_request_path(),
+                            title=                  self.site_data()["title"]
+                            )
+                        )
+            if "search" in request.POST:
+                raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
+            if "list_view" in request.POST:
+                raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
+            if "default_view" in request.POST:
+                raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
+            if "customize" in request.POST:
+                raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
         if redirect_uri:
             return HttpResponseRedirect(redirect_uri)
         # Report unexpected form data
