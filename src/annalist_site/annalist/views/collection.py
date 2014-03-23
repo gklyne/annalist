@@ -43,12 +43,13 @@ class CollectionEditView(AnnalistGenericView):
         def resultdata():
             coll = self.collection(coll_id)
             context = (
-                { 'title':          self.site_data()["title"]
-                , 'coll_id':        coll_id
-                , 'types':          sorted( [t.get_id() for t in coll.types(include_alt=False)] )
-                , 'lists':          sorted( [l.get_id() for l in coll.lists(include_alt=False)] )
-                , 'views':          sorted( [v.get_id() for v in coll.views(include_alt=False)] )
-                , 'select_rows':    "6"
+                { 'title':              self.site_data()["title"]
+                , 'continuation_uri':   continuation_uri
+                , 'coll_id':            coll_id
+                , 'types':              sorted( [t.get_id() for t in coll.types(include_alt=False)] )
+                , 'lists':              sorted( [l.get_id() for l in coll.lists(include_alt=False)] )
+                , 'views':              sorted( [v.get_id() for v in coll.views(include_alt=False)] )
+                , 'select_rows':        "6"
                 })
             return context
         if not Collection.exists(self.site(), coll_id):
@@ -57,6 +58,10 @@ class CollectionEditView(AnnalistGenericView):
                     message=message.COLLECTION_NOT_EXISTS%(coll_id)
                     )
                 )
+        continuation_here, continuation_uri = self.continuation_uris(
+            request.GET,
+            self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
+            )
         return (
             self.render_html(resultdata(), 'annalist_collection_edit.html') or 
             self.error(self.error406values())
@@ -74,25 +79,29 @@ class CollectionEditView(AnnalistGenericView):
         #       that renders the form.  Maybe there's an easier way that all this 
         #       URI-wrangling?
         redirect_uri = None
-        continuation = "?continuation_uri=%s"%(self.get_request_uri())
+        continuation_here, continuation_uri = self.continuation_uris(request.POST,
+            # self.view_uri("AnnalistEntityListAllView", coll_id=coll_id)
+            self.view_uri("AnnalistSiteView")
+            )
+        # continuation = "?continuation_uri=%s"%(self.get_request_uri())
         type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:
             redirect_uri = self.view_uri(
                 "AnnalistRecordTypeNewView", coll_id=coll_id, action="new"
-                ) + continuation
+                ) + continuation_here
         if "type_copy" in request.POST:
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_COPY) or
                 ( self.view_uri(
                     "AnnalistRecordTypeCopyView", coll_id=coll_id, type_id=type_id, action="copy"
-                    ) + continuation)
+                    ) + continuation_here)
                 )
         if "type_edit" in request.POST:
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_EDIT) or
                 ( self.view_uri(
                     "AnnalistRecordTypeEditView", coll_id=coll_id, type_id=type_id, action="edit"
-                    ) + continuation)
+                    ) + continuation_here)
                 )
         if "type_delete" in request.POST:
             if type_id:
@@ -113,7 +122,9 @@ class CollectionEditView(AnnalistGenericView):
                     self.check_value_supplied(type_id, message.NO_TYPE_FOR_DELETE)
                     )
         if "close" in request.POST:
-            redirect_uri = self.view_uri("AnnalistSiteView")
+            redirect_uri = request.POST.get('continuation_uri',
+                self.view_uri("AnnalistSiteView")
+                )
         if redirect_uri:
             return HttpResponseRedirect(redirect_uri)
         raise Annalist_Error(request.POST, "Unexpected values in POST to "+self.get_request_path())

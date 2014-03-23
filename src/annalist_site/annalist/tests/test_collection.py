@@ -33,6 +33,7 @@ from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import (
     site_dir, collection_dir, recordtype_dir,
     site_view_uri, collection_edit_uri, recordtype_edit_uri,
+    continuation_uri_param,
     collection_value_keys, collection_create_values, collection_values,
     recordtype_value_keys, recordtype_create_values, recordtype_values,
     recordview_value_keys, recordview_create_values, recordview_values,
@@ -226,7 +227,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
         self.user.save()
         self.uri = collection_edit_uri(coll_id="coll1")
-        self.continuation = "?continuation_uri="+TestHostUri+self.uri
+        self.continuation = continuation_uri_param(self.uri + continuation_uri_param(site_view_uri()))
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)

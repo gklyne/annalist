@@ -92,6 +92,31 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return reverse(viewname, kwargs=kwargs)
 
+    def continuation_uris(self, request_dict, default_cont):
+        """
+        Returns a tuple of two continuation URI values:
+        [0] a URI query parameter value passed forward for returning to the current page:
+            this is intended to be appended to a bare URI (without query parameters) of
+            any new page invocations.
+        [1] a URI for continuation after the current page is complete, which can
+            be returned as a redirect URI when processing of the current page is 
+            complete.
+
+        Continuation URIs are cascaded, so that the return URI includes the 
+        continuation URI parameter for the current page.
+
+        request_dict    is a request dictionary that is expected to contain a 
+                        continuation_uri value to use
+        default_cont    is a default continuation URI to be used for returning from 
+                        the current page if the current POST request does not specify
+                        a continuation_uri query parameter.
+        """
+        continuation_uri  = request_dict.get("continuation_uri", default_cont)
+        continuation_prev = "%3Fcontinuation_uri=" + continuation_uri
+        continuation_path = self.get_request_path().split("?", 1)[0] + continuation_prev
+        continuation_here = "?continuation_uri=" + continuation_path
+        return (continuation_here, continuation_uri)
+
     def info_params(self, info_message, info_head=message.ACTION_COMPLETED):
         """
         Returns a URI query parameter string with details that are used to generate an

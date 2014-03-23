@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 
 from django.conf                    import settings
 from django.http                    import QueryDict
+from django.utils.http              import urlquote, urlunquote
 from django.core.urlresolvers       import resolve, reverse
 
 from annalist.util                  import valid_id
@@ -145,6 +146,9 @@ def entitydata_edit_uri(action, coll_id, type_id=None, entity_id=None):
 def entitydata_delete_confirm_uri(coll_id, type_id):
     kwargs = {'coll_id': coll_id, 'type_id': type_id}
     return reverse("AnnalistEntityDataDeleteView", kwargs=kwargs)
+
+def continuation_uri_param(uri):
+    return "?continuation_uri=" + urlquote(uri, safe="/=")
 
 #   -----------------------------------------------------------------------------
 #

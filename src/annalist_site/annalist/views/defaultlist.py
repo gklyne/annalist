@@ -80,6 +80,10 @@ class EntityDefaultListView(EntityEditBaseView):
             http_response = self.form_edit_auth("list", self.collection._entityuri)
         if http_response:
             return http_response
+        continuation_here, continuation_uri = self.continuation_uris(
+            request.GET,
+            self.view_uri("AnnalistSiteView")
+            )
         # Prepare context for rendering form
         list_ids      = [ l.get_id() for l in self.collection.lists() ]
         list_selected = self.collection.get_values().get("default_list", self._list_id)
@@ -98,7 +102,7 @@ class EntityDefaultListView(EntityEditBaseView):
         log.debug("EntityDefaultListView.get _entityvaluemap %r"%(self._entityvaluemap))
         viewcontext = self.map_value_to_context(entityval,
             title               = self.site_data()["title"],
-            continuation_uri    = request.GET.get('continuation_uri', None),
+            continuation_uri    = continuation_uri,
             ### heading             = entity_initial_values['rdfs:label'],
             coll_id             = coll_id,
             type_id             = type_id,
@@ -122,19 +126,19 @@ class EntityDefaultListView(EntityEditBaseView):
         log.debug("defaultlist.post: coll_id %s, type_id %s"%(coll_id, type_id))
         # log.info("  %s"%(self.get_request_path()))
         # log.info("  form data %r"%(request.POST))
-        continuation_uri = request.POST.get(
-            "continuation_uri", 
+        continuation_here, continuation_uri = self.continuation_uris(request.POST,
             self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
             )
+        # log.info("continuation_here %s"%(continuation_here))
+        # log.info("continuation_uri  %s"%(continuation_uri))
         if 'close' in request.POST:
             return HttpResponseRedirect(continuation_uri)
+        # Not "Close": set up view parameters
         http_response = self.view_setup(coll_id, type_id)
         if http_response:
             return http_response
         # Process requested action
         redirect_uri = None
-        continuation_path = self.get_request_path().split("?", 1)[0]
-        continuation = "?continuation_uri=%s"%(continuation_path)
         entity_ids   = request.POST.getlist('entity_select')
         log.debug("entity_ids %r"%(entity_ids))
         if len(entity_ids) > 1:
@@ -147,7 +151,7 @@ class EntityDefaultListView(EntityEditBaseView):
                 redirect_uri = self.view_uri(
                     "AnnalistEntityDefaultNewView", 
                     coll_id=coll_id, type_id=type_id, action="new"
-                    ) + continuation
+                    ) + continuation_here
             if "copy" in request.POST:
                 action = "copy"
                 redirect_uri = (
@@ -155,7 +159,7 @@ class EntityDefaultListView(EntityEditBaseView):
                     ( self.view_uri(
                         "AnnalistEntityDefaultEditView", 
                         coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="copy"
-                        ) + continuation)
+                        ) + continuation_here)
                     )
             if "edit" in request.POST:
                 action = "edit"
@@ -164,7 +168,7 @@ class EntityDefaultListView(EntityEditBaseView):
                     ( self.view_uri(
                         "AnnalistEntityDefaultEditView", 
                         coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="edit"
-                       ) + continuation)
+                       ) + continuation_here)
                     )
             if "delete" in request.POST:
                 redirect_uri = (
@@ -200,11 +204,14 @@ class EntityDefaultListView(EntityEditBaseView):
                 action = "config"
                 raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
             if "customize" in request.POST:
-                action = "config"
-                raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
+                action       = "config"
+                redirect_uri = self.view_uri(
+                    "AnnalistCollectionEditView", 
+                    coll_id=coll_id
+                    ) + continuation_here
         if redirect_uri:
             return (
-                self.form_edit_auth(action, self.recordtypedata.get_uri()) or
+                self.form_edit_auth(action, self.collection.get_uri()) or
                 HttpResponseRedirect(redirect_uri)
                 )
         # Report unexpected form data

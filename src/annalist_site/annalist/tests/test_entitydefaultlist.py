@@ -36,6 +36,7 @@ from entity_testutils               import (
     recordtype_create_values, collection_create_values,
     site_dir, collection_dir, recordtype_dir, recorddata_dir,  entitydata_dir,
     collection_edit_uri,
+    continuation_uri_param,
     recordtype_uri,
     entity_uri, entitydata_edit_uri, entitydata_delete_confirm_uri,
     entitydata_list_type_uri, entitydata_list_all_uri,
@@ -105,6 +106,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>List 'Default_list_all' of entities in collection 'testcoll'</h3>")
+        self.assertMatch(r.content, r'<input.type="hidden".name="continuation_uri".+value="/xyzzy/"/>')
         # Test context
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
@@ -223,7 +225,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 self.assertEqual(item_field['field_value'], field_val[fid]%(eid+1))
         return
 
-    @unittest.skip("unimplemented - named list URI")
+    @unittest.skip("@@TODO - handle URI with specified list ID (probably another module)")
     def test_get_named_list(self):
         u = entitydata_list_uri("testcoll", "testtype")
         r = self.client.get(u+"?continuation_uri=/xyzzy/")
@@ -278,14 +280,12 @@ class EntityDefaultListViewTest(AnnalistTestCase):
     #   Form response tests
     #   -----------------------------------------------------------------------------
 
-    #   -------- new / copy / edit --------
-
-    #   def entitylist_form_data(action, search="", list_id="Default_list", entities=None)
+    #   -------- new --------
 
     def test_post_new_type_entity(self):
         f = entitylist_form_data("new")
         u = entitydata_list_type_uri("testcoll", "testtype")
-        c = "?continuation_uri=" + u
+        c = continuation_uri_param(u + continuation_uri_param(collection_edit_uri("testcoll")))
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -297,7 +297,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
     def test_post_new_all_entity(self):
         f = entitylist_form_data("new")
         u = entitydata_list_all_uri("testcoll")
-        c = "?continuation_uri=" + u
+        c = continuation_uri_param(u + continuation_uri_param(collection_edit_uri("testcoll")))
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -308,7 +308,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
     def test_post_new_type_entity_select_one(self):
         f = entitylist_form_data("new", entities=["entity1"])
         u = entitydata_list_type_uri("testcoll", "testtype")
-        c = "?continuation_uri=" + u
+        c = continuation_uri_param(u + continuation_uri_param(collection_edit_uri("testcoll")))
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -327,6 +327,8 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertIn(e, r['location'][:len(e)])
         return
 
+    #   -------- copy --------
+
     def test_post_copy_type_entity(self):
         f = entitylist_form_data("copy", entities=["entity1"])
         u = entitydata_list_type_uri("testcoll", "testtype")
@@ -334,9 +336,21 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        c = "?continuation_uri=" + u
+        c = continuation_uri_param(u + continuation_uri_param(collection_edit_uri("testcoll")))
         v = TestHostUri + entitydata_edit_uri("copy", "testcoll", "testtype", "entity1")
         self.assertEqual(r['location'], v+c)
+        return
+
+    @unittest.skip("@@TODO copy without type_id")
+    def test_post_new_all_entity(self):
+        f = entitylist_form_data("copy")
+        u = entitydata_list_all_uri("testcoll")
+        c = continuation_uri_param(u + continuation_uri_param(collection_edit_uri("testcoll")))
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'],   TestHostUri + entitydata_edit_uri("copy", "testcoll") + c)
         return
 
     def test_post_copy_type_entity_select_none(self):
@@ -370,39 +384,64 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
-    @unittest.skip("unimplemented")
-    def test_post_new_entity_missing_id(self):
-        f = entitydata_form_data(action="new")
-        u = entitydata_edit_uri("new", "testcoll", "testtype")
+    #   -------- edit --------
+
+    def test_post_edit_type_entity(self):
+        f = entitylist_form_data("edit", entities=["entity1"])
+        u = entitydata_list_type_uri("testcoll", "testtype")
         r = self.client.post(u, f)
-        self.assertEqual(r.status_code,   200)
-        self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<h3>Problem with entity identifier</h3>")
-        self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
-        # Test context
-        expect_context = entitydata_context_data(action="new")
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        c = continuation_uri_param(u + continuation_uri_param(collection_edit_uri("testcoll")))
+        v = TestHostUri + entitydata_edit_uri("edit", "testcoll", "testtype", "entity1")
+        self.assertEqual(r['location'], v+c)
         return
 
-    @unittest.skip("unimplemented")
-    def test_post_new_entity_invalid_id(self):
-        f = entitydata_form_data(entity_id="!badentity", orig_id="orig_entity_id", action="new")
-        u = entitydata_edit_uri("new", "testcoll", "testtype")
+    @unittest.skip("@@TODO edit without type_id")
+    def test_post_new_all_entity(self):
+        f = entitylist_form_data("edit")
+        u = entitydata_list_all_uri("testcoll")
+        c = continuation_uri_param(u + continuation_uri_param(collection_edit_uri("testcoll")))
         r = self.client.post(u, f)
-        self.assertEqual(r.status_code,   200)
-        self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<h3>Problem with entity identifier</h3>")
-        self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
-        # Test context
-        expect_context = entitydata_context_data(
-            entity_id="!badentity", orig_id="orig_entity_id", action="new"
-            )
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'],   TestHostUri + entitydata_edit_uri("edit", "testcoll") + c)
         return
 
-    #   -------- close / search / view --------
+    def test_post_edit_type_entity_select_none(self):
+        f = entitylist_form_data("edit")
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
+        self.assertIn(e, r['location'])
+        return
+
+    def test_post_edit_type_entity_select_many(self):
+        f = entitylist_form_data("edit", entities=["entity1", "entity2"])
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
+        self.assertIn(e, r['location'])
+        return
+
+    def test_post_edit_type_entity_no_login(self):
+        self.client.logout()
+        f = entitylist_form_data("edit", entities=["entity1"])
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
+    #   -------- close / search / view / default-view / customize--------
 
     def test_post_close(self):
         f = entitylist_form_data("close", entities=["entity1", "entity2"])
@@ -415,59 +454,23 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(v, r['location'])
         return
 
-
-
-#   -----------------------------------------------------------------------------
-#
-#   ConfirmEntityDataDeleteTests - tests for completion of record deletion
-#
-#   -----------------------------------------------------------------------------
-
-class ConfirmEntityDataDeleteTests(AnnalistTestCase):
-    """
-    Tests for record type deletion on response to confirmation form
-    """
-
-    def setUp(self):
-        init_annalist_test_site()
-        self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.testcoll = Collection(self.testsite, "testcoll")
-        self.testdata = RecordTypeData(self.testcoll, "testtype")
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client = Client(HTTP_HOST=TestHost)
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
+    @unittest.skip("@@TODO defaultlist search handler")
+    def test_post_search(self):
         return
 
-    def tearDown(self):
+    @unittest.skip("@@TODO defaultlist default-view handler")
+    def test_post_default_view(self):
         return
 
-    @unittest.skip("unimplemented")
-    def test_CollectionActionViewTest(self):
-        self.assertEqual(EntityDataDeleteConfirmedView.__name__, "EntityDataDeleteConfirmedView", "Check EntityDataDeleteConfirmedView class name")
-        return
-
-    # NOTE:  this logic only tests the entity deletion completion code.
-    # It is assumed that the response to requesting entity deletion is checked elsewhere.
-    @unittest.skip("unimplemented")
-    def test_post_confirmed_remove_entity(self):
-        t = EntityData.create(self.testdata, "deleteentity", entitydata_create_values("deleteentity"))
-        self.assertTrue(EntityData.exists(self.testdata, "deleteentity"))
-        # Submit positive confirmation
-        u = entitydata_delete_confirm_uri("testcoll", "testtype")
-        f = entitydata_delete_confirm_form_data("deleteentity")
+    def test_post_customize(self):
+        f = entitylist_form_data("customize")
+        u = entitydata_list_all_uri("testcoll")
+        c = continuation_uri_param(u + continuation_uri_param(collection_edit_uri("testcoll")))
         r = self.client.post(u, f)
-        self.assertEqual(r.status_code,     302)
-        self.assertEqual(r.reason_phrase,   "FOUND")
-        self.assertEqual(r.content,         "")
-        self.assertMatch(r['location'],    
-            "^"+TestHostUri+
-            entitydata_list_uri("testcoll", "testtype")+
-            r"\?info_head=.*&info_message=.*deleteentity.*testcoll.*$"
-            )
-        # Confirm deletion
-        self.assertFalse(EntityData.exists(self.testcoll, "deleteentity"))
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'],   TestHostUri + collection_edit_uri("testcoll") + c)
         return
 
 # End.
