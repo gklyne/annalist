@@ -63,12 +63,13 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / include sitedata lists in drop-down
    / form response handler (delete and others todo)
    / entity list view: add selection fields (and classes)
+   > form response test cases
    - customize response handler
+   - add entity links to list view
    - list_view response handler (needs generic view to make sense; view button to redisplay)
    - default_view response handler (needs generic view to make sense)
    - search response handler (later; see below)
    - new entity from list-all display needs default type OR edit field has type selector, with logic to check type on save (treat type as part of id here)
-   - form response test cases
    - connect site display to default display of entities, not customize
    / connect list display to record view display
    / build entity selector logic into list view

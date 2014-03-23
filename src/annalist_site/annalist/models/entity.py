@@ -88,7 +88,7 @@ class EntityRoot(object):
     def get_type_id(self):
         return self._typeid
 
-    def get_uri(self, baseuri):
+    def get_uri(self, baseuri=""):
         """
         Get fully qualified URI referred to supplied base.
 

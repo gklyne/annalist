@@ -35,6 +35,7 @@ from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     recordtype_create_values, collection_create_values,
     site_dir, collection_dir, recordtype_dir, recorddata_dir,  entitydata_dir,
+    collection_edit_uri,
     recordtype_uri,
     entity_uri, entitydata_edit_uri, entitydata_delete_confirm_uri,
     entitydata_list_type_uri, entitydata_list_all_uri,
@@ -277,21 +278,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
     #   Form response tests
     #   -----------------------------------------------------------------------------
 
-    list_form_data = (
-        { 'search_for':         ""
-        , 'search':             "Find"
-        , 'list_id':            "Default_list"
-        , 'list_view':          "View"
-        , 'entity_select':      "{{entity.entity_id}}"
-        , 'new':                "New"
-        , 'copy':               "Copy"
-        , 'edit':               "Edit"
-        , 'delete':             "Delete"
-        , 'default_view':       "Set default"
-        , 'customize':          "Customize"
-        , 'continuation_uri':   "{{continuation_uri}}"
-        })
-
     #   -------- new / copy / edit --------
 
     #   def entitylist_form_data(action, search="", list_id="Default_list", entities=None)
@@ -307,18 +293,81 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r['location'], TestHostUri + entitydata_edit_uri("new", "testcoll", "testtype") + c)
         return
 
-    @unittest.skip("unimplemented")
-    def test_post_new_entity_cancel(self):
-        self.assertFalse(EntityData.exists(self.testdata, "newentity"))
-        f = entitydata_form_data(entity_id="newentity", action="new", cancel="Cancel")
-        u = entitydata_edit_uri("new", "testcoll", "testtype")
+    @unittest.skip("@@TODO new without type_id")
+    def test_post_new_all_entity(self):
+        f = entitylist_form_data("new")
+        u = entitydata_list_all_uri("testcoll")
+        c = "?continuation_uri=" + u
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_uri("testcoll", "testtype"))
-        # Check that new record type still does not exist
-        self.assertFalse(EntityData.exists(self.testdata, "newentity"))
+        self.assertEqual(r['location'],   TestHostUri + entitydata_edit_uri("new", "testcoll") + c)
+        return
+
+    def test_post_new_type_entity_select_one(self):
+        f = entitylist_form_data("new", entities=["entity1"])
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        c = "?continuation_uri=" + u
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], TestHostUri + entitydata_edit_uri("new", "testcoll", "testtype") + c)
+        return
+
+    def test_post_new_type_entity_select_many(self):
+        f = entitylist_form_data("new", entities=["entity1", "entity2"])
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
+        self.assertIn(e, r['location'][:len(e)])
+        return
+
+    def test_post_copy_type_entity(self):
+        f = entitylist_form_data("copy", entities=["entity1"])
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        c = "?continuation_uri=" + u
+        v = TestHostUri + entitydata_edit_uri("copy", "testcoll", "testtype", "entity1")
+        self.assertEqual(r['location'], v+c)
+        return
+
+    def test_post_copy_type_entity_select_none(self):
+        f = entitylist_form_data("copy")
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
+        self.assertIn(e, r['location'])
+        return
+
+    def test_post_copy_type_entity_select_many(self):
+        f = entitylist_form_data("copy", entities=["entity1", "entity2"])
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
+        self.assertIn(e, r['location'])
+        return
+
+    def test_post_copy_type_entity_no_login(self):
+        self.client.logout()
+        f = entitylist_form_data("copy", entities=["entity1"])
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
     @unittest.skip("unimplemented")
@@ -352,6 +401,21 @@ class EntityDefaultListViewTest(AnnalistTestCase):
             )
         self.assertDictionaryMatch(r.context, expect_context)
         return
+
+    #   -------- close / search / view --------
+
+    def test_post_close(self):
+        f = entitylist_form_data("close", entities=["entity1", "entity2"])
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + collection_edit_uri("testcoll")
+        self.assertEqual(v, r['location'])
+        return
+
+
 
 #   -----------------------------------------------------------------------------
 #

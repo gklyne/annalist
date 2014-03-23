@@ -251,19 +251,24 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         Check that the requested form action is authorized for the current user.
 
-        action          is the requested action: new, edit, copy
+        action          is the requested action: new, edit, copy, etc.
         auth_resource   is the resource URI to which the requested action is directed.
                         NOTE: This may be the URI of the parent of the resource
                         being accessed or manipulated.
         """
-        if action in ["view","list"]:
-            auth_scope = "VIEW"
-        elif action in ["new", "copy"]:
-            auth_scope = "CREATE"
-        elif action == "edit":
-            auth_scope = "UPDATE"
-        elif action == "delete":
-            auth_scope = "DELETE"
+        action_scope = (
+            { "view":   "VIEW"
+            , "list":   "VIEW"
+            , "search": "VIEW"
+            , "new":    "CREATE"
+            , "copy":   "CREATE"
+            , "edit":   "UPDATE"
+            , "delete": "DELETE"
+            , "config": "CONFIG"    # or UPDATE?
+            , "admin":  "ADMIN"
+            })
+        if action in action_scope:
+            auth_scope = action_scope[action]
         else:
             auth_scope = "UNKNOWN"
         # return self.authorize(auth_scope, auth_resource)

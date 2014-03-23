@@ -67,7 +67,7 @@ class EntityDefaultEditView(EntityEditBaseView):
         # Set up RecordType-specific values
         entity_id  = self.get_entityid(action, self.recordtypedata, entity_id)
         # Create local entity object or load values from existing
-        entity_initial_values  = (
+        entity_initial_values = (
             { "rdfs:label":   "Record '%s' of type '%s' in collection '%s'"%(entity_id, type_id, coll_id)
             , "rdfs:comment": ""
             })

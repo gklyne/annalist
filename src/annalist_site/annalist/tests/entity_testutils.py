@@ -130,13 +130,14 @@ def entity_uri(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
     kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_edit_uri(action, coll_id, type_id, entity_id=None):
+def entitydata_edit_uri(action, coll_id, type_id=None, entity_id=None):
     viewname = ( 
         'AnnalistEntityDefaultNewView'      if action == "new" else
         'AnnalistEntityDefaultEditView'
         )
-    if action != "new": action = "edit"
-    kwargs = {'action': action, 'coll_id': coll_id, 'type_id': type_id}
+    kwargs = {'action': action, 'coll_id': coll_id}
+    if type_id:
+        kwargs.update({'type_id': type_id})
     if entity_id:
         kwargs.update({'entity_id': entity_id})
     return reverse(viewname, kwargs=kwargs)
@@ -297,15 +298,16 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
         , 'copy':               "Copy"
         , 'edit':               "Edit"
         , 'delete':             "Delete"
+        , 'close':              "Close"
         , 'default_view':       "Set default"
         , 'customize':          "Customize"
         })
     form_data = (
-        { 'search_for': search
-        , 'list_id':    list_id
-        , 'continuation_uri': "???"
+        { 'search_for':         search
+        , 'list_id':            list_id
+        , 'continuation_uri':   collection_edit_uri("testcoll")
         })
-    if entities:
+    if entities is not None:
         form_data['entity_select'] = entities
     if action in form_actions:
         form_data[action] = form_actions[action]

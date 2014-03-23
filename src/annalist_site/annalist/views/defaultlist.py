@@ -138,15 +138,18 @@ class EntityDefaultListView(EntityEditBaseView):
         entity_ids   = request.POST.getlist('entity_select')
         log.debug("entity_ids %r"%(entity_ids))
         if len(entity_ids) > 1:
+            action = ""
             redirect_uri = self.check_value_supplied(None, message.TOO_MANY_ENTITIES_SEL)
         else:
             entity_id    = entity_ids[0] if len(entity_ids) == 1 else None
             if "new" in request.POST:
+                action = "new"
                 redirect_uri = self.view_uri(
                     "AnnalistEntityDefaultNewView", 
                     coll_id=coll_id, type_id=type_id, action="new"
                     ) + continuation
             if "copy" in request.POST:
+                action = "copy"
                 redirect_uri = (
                     self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_COPY) or
                     ( self.view_uri(
@@ -155,6 +158,7 @@ class EntityDefaultListView(EntityEditBaseView):
                         ) + continuation)
                     )
             if "edit" in request.POST:
+                action = "edit"
                 redirect_uri = (
                     self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_EDIT) or
                     ( self.view_uri(
@@ -177,7 +181,7 @@ class EntityDefaultListView(EntityEditBaseView):
                         , "entity_id":     [entity_id]
                         })
                     return (
-                        self.authorize("DELETE") or
+                        self.form_edit_auth("delete", self.recordtypedata.get_uri()) or
                         ConfirmView.render_form(request,
                             action_description=     message.REMOVE_ENTITY_DATA%(entity_id, type_id, coll_id),
                             complete_action_uri=    complete_action_uri,
@@ -187,15 +191,22 @@ class EntityDefaultListView(EntityEditBaseView):
                             )
                         )
             if "search" in request.POST:
+                action = "search"                
                 raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
             if "list_view" in request.POST:
+                action = "list"
                 raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
             if "default_view" in request.POST:
+                action = "config"
                 raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
             if "customize" in request.POST:
+                action = "config"
                 raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
         if redirect_uri:
-            return HttpResponseRedirect(redirect_uri)
+            return (
+                self.form_edit_auth(action, self.recordtypedata.get_uri()) or
+                HttpResponseRedirect(redirect_uri)
+                )
         # Report unexpected form data
         # This shouldn't happen, but just in case...
         # Redirect to continuation with error
