@@ -34,7 +34,8 @@ from tests                      import TestHost, TestHostUri, TestBasePath, Test
 from tests                      import dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import (
-    site_view_uri, collection_edit_uri, recordtype_uri, recordtype_edit_uri,
+    site_view_uri, collection_view_uri, collection_edit_uri, 
+    recordtype_uri, recordtype_edit_uri,
     collection_value_keys, collection_create_values, collection_values,
     collection_new_form_data, collection_remove_form_data,
     site_title
@@ -204,11 +205,11 @@ class SiteViewTest(AnnalistTestCase):
         trows = s.form.find_all("div", class_="row")
         self.assertEqual(len(trows), 5)
         self.assertEqual(trows[1].div.p.a.string,  "coll1")
-        self.assertEqual(trows[1].div.p.a['href'], TestHostUri + collection_edit_uri("coll1"))
+        self.assertEqual(trows[1].div.p.a['href'], TestHostUri + collection_view_uri("coll1"))
         self.assertEqual(trows[2].div.p.a.string,  "coll2")
-        self.assertEqual(trows[2].div.p.a['href'], TestHostUri + collection_edit_uri("coll2"))
+        self.assertEqual(trows[2].div.p.a['href'], TestHostUri + collection_view_uri("coll2"))
         self.assertEqual(trows[3].div.p.a.string,  "coll3")
-        self.assertEqual(trows[3].div.p.a['href'], TestHostUri + collection_edit_uri("coll3"))
+        self.assertEqual(trows[3].div.p.a['href'], TestHostUri + collection_view_uri("coll3"))
         return
 
     def test_get_with_login(self):
@@ -247,25 +248,25 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(len(trows), 7)
         tcols1 = trows[1].find_all("div")
         self.assertEqual(tcols1[0].a.string,        "coll1")
-        self.assertEqual(tcols1[0].a['href'],       TestHostUri + collection_edit_uri("coll1"))
+        self.assertEqual(tcols1[0].a['href'],       TestHostUri + collection_view_uri("coll1"))
         self.assertEqual(tcols1[2].input['type'],   "checkbox")
         self.assertEqual(tcols1[2].input['name'],   "select")
         self.assertEqual(tcols1[2].input['value'],  "coll1")
         tcols2 = trows[2].find_all("div")
         self.assertEqual(tcols2[0].a.string,        "coll2")
-        self.assertEqual(tcols2[0].a['href'],       TestHostUri + collection_edit_uri("coll2"))
+        self.assertEqual(tcols2[0].a['href'],       TestHostUri + collection_view_uri("coll2"))
         self.assertEqual(tcols2[2].input['type'],   "checkbox")
         self.assertEqual(tcols2[2].input['name'],   "select")
         self.assertEqual(tcols2[2].input['value'],  "coll2")
         tcols3 = trows[3].find_all("div")
         self.assertEqual(tcols3[0].a.string,        "coll3")
-        self.assertEqual(tcols3[0].a['href'],       TestHostUri + collection_edit_uri("coll3"))
+        self.assertEqual(tcols3[0].a['href'],       TestHostUri + collection_view_uri("coll3"))
         self.assertEqual(tcols3[2].input['type'],   "checkbox")
         self.assertEqual(tcols3[2].input['name'],   "select")
         self.assertEqual(tcols3[2].input['value'],  "coll3")
         tcols4 = trows[4].find_all("div")
         self.assertEqual(tcols4[0].a.string,        "testcoll")
-        self.assertEqual(tcols4[0].a['href'],       TestHostUri + collection_edit_uri("testcoll"))
+        self.assertEqual(tcols4[0].a['href'],       TestHostUri + collection_view_uri("testcoll"))
         self.assertEqual(tcols4[2].input['type'],   "checkbox")
         self.assertEqual(tcols4[2].input['name'],   "select")
         self.assertEqual(tcols4[2].input['value'],  "testcoll")

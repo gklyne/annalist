@@ -12,7 +12,7 @@ from annalist.views.home        import AnnalistHomeView
 from annalist.views.profile     import ProfileView
 from annalist.views.confirm     import ConfirmView
 from annalist.views.site        import SiteView, SiteActionView
-from annalist.views.collection  import CollectionEditView
+from annalist.views.collection  import CollectionView, CollectionEditView
 from annalist.views.recordtype  import RecordTypeEditView, RecordTypeDeleteConfirmedView
 from annalist.views.recordview  import RecordViewEditView # , RecordViewDeleteConfirmedView
 from annalist.views.recordlist  import RecordListEditView # , RecordListDeleteConfirmedView
@@ -54,6 +54,9 @@ urlpatterns = patterns('',
     url(r'^confirm/$',      ConfirmView.as_view(),      name='AnnalistConfirmView'),
 
     url(r'^c/(?P<coll_id>\w{0,32})/$',
+                            CollectionView.as_view(),
+                            name='AnnalistCollectionView'),
+    url(r'^c/(?P<coll_id>\w{0,32})/!edit$',
                             CollectionEditView.as_view(),
                             name='AnnalistCollectionEditView'),
 

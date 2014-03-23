@@ -26,6 +26,25 @@ from annalist.models.recordlist import RecordList
 from annalist.views.generic     import AnnalistGenericView
 from annalist.views.confirm     import ConfirmView
 
+
+class CollectionView(AnnalistGenericView):
+    """
+    View class to handle requests to display an Annalist collection.
+
+    Redirects to default list view.
+    """
+    def __init__(self):
+        super(CollectionView, self).__init__()
+        return
+
+    def get(self, request, coll_id):
+        """
+        Form for displaying the current collection 
+        """
+        # @@TODO: later, read and redirect to the currently selected default view
+        return HttpResponseRedirect(self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id))
+
+
 class CollectionEditView(AnnalistGenericView):
     """
     View class to handle requests to an Annalist collection edit URI
@@ -38,7 +57,7 @@ class CollectionEditView(AnnalistGenericView):
 
     def get(self, request, coll_id):
         """
-        Create a rendering of the current collection.
+        Form for editing (customizing) the current collection 
         """
         def resultdata():
             coll = self.collection(coll_id)

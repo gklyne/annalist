@@ -63,6 +63,9 @@ def entitydata_dir(coll_id="testcoll", type_id="testtype", entity_id="testentity
 def site_view_uri():
     return reverse("AnnalistSiteView")
 
+def collection_view_uri(coll_id="testcoll"):
+    return reverse("AnnalistCollectionView", kwargs={'coll_id': coll_id})
+
 def collection_edit_uri(coll_id="testcoll"):
     return reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
 
@@ -148,7 +151,7 @@ def entitydata_delete_confirm_uri(coll_id, type_id):
     return reverse("AnnalistEntityDataDeleteView", kwargs=kwargs)
 
 def continuation_uri_param(uri):
-    return "?continuation_uri=" + urlquote(uri, safe="/=")
+    return "?continuation_uri=" + urlquote(uri, safe="/=!")
 
 #   -----------------------------------------------------------------------------
 #
@@ -350,9 +353,9 @@ def collection_values(coll_id, update="Collection", hosturi=TestHostUri):
         { '@id':            "../"
         , 'annal:id':       coll_id
         , 'annal:type':     "annal:Collection"
-        , 'annal:uri':      hosturi + collection_edit_uri(coll_id=coll_id)
+        , 'annal:uri':      hosturi + collection_view_uri(coll_id=coll_id)
         , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
-        , 'annal:uripath':  collection_edit_uri(coll_id=coll_id)
+        , 'annal:uripath':  collection_view_uri(coll_id=coll_id)
         })
     return d
 
