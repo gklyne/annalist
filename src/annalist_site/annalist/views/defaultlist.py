@@ -119,8 +119,8 @@ class EntityDefaultListView(EntityEditBaseView):
         """
         Handle response from dynamically generated list display form.
         """
-        log.info("views.defaultlist.post %s"%(self.get_request_path()))
-        # log.debug("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
+        log.debug("defaultlist.post: coll_id %s, type_id %s"%(coll_id, type_id))
+        # log.info("  %s"%(self.get_request_path()))
         # log.info("  form data %r"%(request.POST))
         continuation_uri = request.POST.get(
             "continuation_uri", 
@@ -136,7 +136,7 @@ class EntityDefaultListView(EntityEditBaseView):
         continuation_path = self.get_request_path().split("?", 1)[0]
         continuation = "?continuation_uri=%s"%(continuation_path)
         entity_ids   = request.POST.getlist('entity_select')
-        log.info("entity_ids %r"%(entity_ids))
+        log.debug("entity_ids %r"%(entity_ids))
         if len(entity_ids) > 1:
             redirect_uri = self.check_value_supplied(None, message.TOO_MANY_ENTITIES_SEL)
         else:

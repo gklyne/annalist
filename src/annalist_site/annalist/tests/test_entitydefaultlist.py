@@ -40,6 +40,7 @@ from entity_testutils               import (
     entitydata_list_type_uri, entitydata_list_all_uri,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
+    entitylist_form_data,
     site_title
     )
 
@@ -221,7 +222,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 self.assertEqual(item_field['field_value'], field_val[fid]%(eid+1))
         return
 
-    @unittest.skip("unimplemented")
+    @unittest.skip("unimplemented - named list URI")
     def test_get_named_list(self):
         u = entitydata_list_uri("testcoll", "testtype")
         r = self.client.get(u+"?continuation_uri=/xyzzy/")
@@ -276,20 +277,34 @@ class EntityDefaultListViewTest(AnnalistTestCase):
     #   Form response tests
     #   -----------------------------------------------------------------------------
 
+    list_form_data = (
+        { 'search_for':         ""
+        , 'search':             "Find"
+        , 'list_id':            "Default_list"
+        , 'list_view':          "View"
+        , 'entity_select':      "{{entity.entity_id}}"
+        , 'new':                "New"
+        , 'copy':               "Copy"
+        , 'edit':               "Edit"
+        , 'delete':             "Delete"
+        , 'default_view':       "Set default"
+        , 'customize':          "Customize"
+        , 'continuation_uri':   "{{continuation_uri}}"
+        })
+
     #   -------- new / copy / edit --------
 
-    @unittest.skip("unimplemented")
-    def test_post_new_entity(self):
-        self.assertFalse(EntityData.exists(self.testdata, "newentity"))
-        f = entitydata_form_data(entity_id="newentity", action="new")
-        u = entitydata_edit_uri("new", "testcoll", "testtype")
+    #   def entitylist_form_data(action, search="", list_id="Default_list", entities=None)
+
+    def test_post_new_type_entity(self):
+        f = entitylist_form_data("new")
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        c = "?continuation_uri=" + u
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_uri("testcoll", "testtype"))
-        # Check new entity data created
-        self._check_entity_data_values("newentity")
+        self.assertEqual(r['location'], TestHostUri + entitydata_edit_uri("new", "testcoll", "testtype") + c)
         return
 
     @unittest.skip("unimplemented")

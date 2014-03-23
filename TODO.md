@@ -72,10 +72,13 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    - connect site display to default display of entities, not customize
    / connect list display to record view display
    / build entity selector logic into list view
-6. Design generic entity view
-7. Record view display and editing
+6. Generic entity view and editing
 8. Generic record list display and editing
-9. Read-ony da
+7. Record view display and editing (data to drive generic view/list)
+   - record view description form
+   - field description form
+   - record list description form
+9. Read-only data view
 ?. Grid view
 ?. Generic entity selector (based on canned sparql expressions?)
 ?. implement search within list view

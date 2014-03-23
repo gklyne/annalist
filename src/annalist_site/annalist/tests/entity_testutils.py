@@ -267,6 +267,54 @@ def entitydata_delete_confirm_form_data(entity_id=None):
 
 #   -----------------------------------------------------------------------------
 #
+#   ----- Entity list
+#
+#   -----------------------------------------------------------------------------
+
+def entitylist_form_data(action, search="", list_id="Default_list", entities=None):
+    """
+    Form data from entity list form submission
+
+    list_form_data = (
+        { 'search_for':         ""
+        , 'search':             "Find"
+        , 'list_id':            "Default_list"
+        , 'list_view':          "View"
+        , 'entity_select':      ["{{entity.entity_id}}"]
+        , 'new':                "New"
+        , 'copy':               "Copy"
+        , 'edit':               "Edit"
+        , 'delete':             "Delete"
+        , 'default_view':       "Set default"
+        , 'customize':          "Customize"
+        , 'continuation_uri':   "{{continuation_uri}}"
+        })
+    """
+    form_actions = (
+        { 'search':             "Find"
+        , 'list_view':          "View"
+        , 'new':                "New"
+        , 'copy':               "Copy"
+        , 'edit':               "Edit"
+        , 'delete':             "Delete"
+        , 'default_view':       "Set default"
+        , 'customize':          "Customize"
+        })
+    form_data = (
+        { 'search_for': search
+        , 'list_id':    list_id
+        , 'continuation_uri': "???"
+        })
+    if entities:
+        form_data['entity_select'] = entities
+    if action in form_actions:
+        form_data[action] = form_actions[action]
+    else:
+        form_data[action] = action
+    return form_data
+
+#   -----------------------------------------------------------------------------
+#
 #   ----- Collection data
 #
 #   -----------------------------------------------------------------------------
