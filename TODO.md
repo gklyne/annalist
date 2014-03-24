@@ -67,14 +67,17 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / customize response handler
    - new entity from list-all display; changing type of entity
        / Create default type in site data
-       - Create field render type for drop-down (render_utils and field template)
-       - Add field to defult display
+       / Create field render type for drop-down (render_utils and field template)
+       / Add field to default display
        - Add type data to display context
        - Add logic to form submission handler
    - add entity links to list view
        - Update bound_field to provide access to entity URI
        - Create field render type for entity link
        - Update field in defult list displays
+   - add type links to list view
+       - (should use same base enhancements as entity)
+       - Update field in default list displays
    - list_view response handler (needs generic view to make sense; view button to redisplay)
    - default_view response handler (needs generic view to make sense)
    - search response handler (later; see below)
@@ -109,8 +112,6 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
   - annalist/views/defaultedit.py
   - annalist/views/defaultlist.py
   - annalist/views/recordtype.py
-- Create new type then create new entityn of that type
-- Create new entity oif default type - copy sitedata
 
 
 ## Misc TODO

@@ -1,0 +1,19 @@
+<!-- record type dropdown -->
+<div class="{{field.field_placement.field}}">
+    <div class="row">
+        <div class="label {{field.field_placement.label}}">
+            <p>{{field.field_label}}</p>
+        </div>
+        <div class="{{field.field_placement.value}} left">
+            <select name="{{field.field_name}}" >
+              {% for v in field.options %}
+                {% if o == option_selected %}
+                <option selected="">{{o}}</option>
+                {% else %}
+                <option>{{o}}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
