@@ -65,8 +65,8 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / entity list view: add selection fields (and classes)
    / form response test cases
    / customize response handler
-   - new entity from list-all display needs default type OR edit field has type selector, with logic to check type on save (treat type as part of id here)
-       - Create default type in site data
+   - new entity from list-all display; changing type of entity
+       / Create default type in site data
        - Create field render type for drop-down (render_utils and field template)
        - Add field to defult display
        - Add type data to display context
@@ -109,6 +109,8 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
   - annalist/views/defaultedit.py
   - annalist/views/defaultlist.py
   - annalist/views/recordtype.py
+- Create new type then create new entityn of that type
+- Create new entity oif default type - copy sitedata
 
 
 ## Misc TODO

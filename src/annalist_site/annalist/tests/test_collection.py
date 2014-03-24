@@ -24,6 +24,7 @@ from annalist.identifiers       import ANNAL
 from annalist                   import layout
 from annalist.models.site       import Site
 from annalist.models.collection import Collection
+from annalist.models.recordtype import RecordType
 
 from annalist.views.collection  import CollectionEditView
 
@@ -50,7 +51,7 @@ from entity_testutils           import (
 #
 #   -----------------------------------------------------------------------------
 
-site_types = set()
+site_types = {"Default_type"}
 site_views = {"Default_view", "Field_view", "Record_view", "List_view"}
 site_lists = {"Default_list", "Default_list_all"}
 
@@ -139,6 +140,13 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(typenames, {"type2", "testtype"}|site_types)
         typenames =  { t.get_id() for t in self.testcoll.types(include_alt=False) }
         self.assertEqual(typenames, {"type2", "testtype"})
+        return
+
+    def test_exists_type(self):
+        # Some type existence tests takling accounbt of site data default type
+        self.assertTrue(RecordType.exists(self.testcoll, "testtype"))
+        self.assertFalse(RecordType.exists(self.testcoll, "notype"))
+        self.assertTrue(RecordType.exists(self.testcoll, "Default_type"))
         return
 
     # Record views

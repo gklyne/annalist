@@ -144,8 +144,11 @@ class EntityRoot(object):
     def _exists_path(self):
         """
         Test if the entity denoted by the current object has been created
+
+        returns of object, or None
         """
         for (d, p) in (self._dir_path(), self._alt_dir_path()):
+            # log.info("_exists %s"%(p))
             if d and os.path.isdir(d):
                 if p and os.path.isfile(p):
                     return p
@@ -153,10 +156,13 @@ class EntityRoot(object):
 
     def _exists(self):
         """
-        Test if the entity denoted by the current object has been created
+        Test if the entity denoted by the current object has been created.
+
+        returns True or False.
         """
         # @@TODO use _exists_path (above)
         for (d, p) in (self._dir_path(), self._alt_dir_path()):
+            # log.info("_exists %s"%(p))
             if d and os.path.isdir(d):
                 if p and os.path.isfile(p):
                     return True
@@ -359,10 +365,10 @@ class Entity(EntityRoot):
         cls         is the class of the entity whose path is returned.
         parent      is the parent from which the entity is descended.
         entityid    is the local identifier (slug) for the entity.
-        altentity   is an alternative entity to look to when looking for 
-                    some kinds of child entities.
         """
-        log.debug("Entity.path: entitytype %s, parentdir %s, entityid %s"%(cls._entitytype, parent._entitydir, entityid))
+        log.debug("Entity.path: entitytype %s, parentdir %s, entityid %s"%
+            (cls._entitytype, parent._entitydir, entityid)
+            )
         assert cls._entityfile is not None
         p = util.entity_path(parent._entitydir, [cls.relpath(entityid)], cls._entityfile)
         log.debug("Entity.path: %s"%(p))
@@ -371,7 +377,7 @@ class Entity(EntityRoot):
     @classmethod
     def _child_entity(cls, parent, entityid, altentity=None, altparent=False):
         """
-        Instatiate a chile entity (e.g. for create and load methods)
+        Instatiate a child entity (e.g. for create and load methods)
         """
         if altentity:
             e = cls(parent, entityid, altentity=altentity)
@@ -391,8 +397,11 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the new entity - this is 
                     required to be unique among descendents of a common parent.
         entitybody  is a dictionary of values that are stored for the created entity.
-        altentity   is an alternative entity to look to when looking for 
-                    some kinds of child entities.
+        altentity   is an alternative location of the entity entity to look to when
+                    looking for some kinds of child entities of the created entity.
+                    E.g., this is used when creating a collection to augment 
+                    explicitly created record types, views and lists with site-wide
+                    installed values.
 
         Returns the created entity as an instance of the supplied class object.
         """
@@ -411,13 +420,17 @@ class Entity(EntityRoot):
         cls         is the class of the entity to be loaded
         parent      is the parent from which the entity is descended.
         entityid    is the local identifier (slug) for the entity.
-        altentity   is an alternative entity to look to when looking for 
-                    some kinds of child entities.
+        altentity   provides an alternative location to look for the entity, 
+                    and to look to when looking for some kinds of child entities.
+        altparent   if True, looks for the entity as a child of the parent's
+                    alternative entity location.
 
         Returns an instance of the indicated class with data loaded from the
         corresponding Annalist storage, or None if there is no such entity.
         """
-        log.debug("Entity.load: entitytype %s, parentdir %s, entityid %s"%(cls._entitytype, parent._entitydir, entityid))
+        log.debug("Entity.load: entitytype %s, parentdir %s, entityid %s"%
+            (cls._entitytype, parent._entitydir, entityid)
+            )
         e = cls._child_entity(parent, entityid, altentity=altentity, altparent=altparent)
         v = e._load_values()
         if v:
@@ -427,20 +440,25 @@ class Entity(EntityRoot):
         return e
 
     @classmethod
-    def exists(cls, parent, entityid):
+    def exists(cls, parent, entityid, altentity=None, altparent=False):
         """
         Method tests for existence of identified entity descended from given parent.
 
         cls         is the class of the entity to be tested
         parent      is the parent from which the entity is descended.
         entityid    is the local identifier (slug) for the entity.
+        altentity   provides an alternative location to look for the entity.
+        altparent   if True, looks additionally for the entity as a child of the 
+                    parent's alternative entity.
 
-        Returns True if the collection exists, as determined by existence of the 
-        collection description metadata file.
+        Returns True if the entity exists, as determined by existence of the 
+        entity description metadata file.
         """
-        log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%(cls._entitytype, parent._entitydir, entityid))
-        p = cls.path(parent, entityid)
-        return (p != None) and os.path.isfile(p)
+        log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%
+            (cls._entitytype, parent._entitydir, entityid)
+            )
+        e = cls._child_entity(parent, entityid, altentity=altentity, altparent=altparent)
+        return e._exists()
 
     @classmethod
     def remove(cls, parent, entityid):

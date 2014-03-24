@@ -182,15 +182,15 @@ def entitydata_create_values(entity_id, type_id="testtype", update="Entity"):
         , 'rdfs:comment': '%s coll testcoll, type %s, entity %s'%(update, type_id, entity_id)
         })
 
-def entitydata_values(entity_id, update="Entity", hosturi=TestHostUri):
-    d = entitydata_create_values(entity_id, update=update).copy()
+def entitydata_values(entity_id, update="Entity", coll_id="testcoll", type_id="testtype", hosturi=TestHostUri):
+    d = entitydata_create_values(entity_id, type_id=type_id, update=update).copy()
     d.update(
         { '@id':            './'
         , 'annal:id':       entity_id
         , 'annal:type':     'annal:EntityData'
-        , 'annal:uri':      hosturi + entity_uri("testcoll", "testtype", entity_id)
+        , 'annal:uri':      hosturi + entity_uri(coll_id, type_id, entity_id)
         , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
-        , 'annal:uripath':  entity_uri("testcoll", "testtype", entity_id)
+        , 'annal:uripath':  entity_uri(coll_id, type_id, entity_id)
         })
     return d
 
@@ -242,17 +242,20 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
         context_dict['action']      = action
     return context_dict
 
-def entitydata_form_data(entity_id=None, orig_id=None, action=None, cancel=None, update="Entity"):
+def entitydata_form_data(
+        entity_id=None, orig_id=None, 
+        coll_id="testcoll", type_id="testtype", 
+        action=None, cancel=None, update="Entity"):
     form_data_dict = (
-        { 'Entity_label':       '%s data ... (testcoll/testtype)'%(update)
-        , 'Entity_comment':     '%s description ... (testcoll/testtype)'%(update)
+        { 'Entity_label':       '%s data ... (%s/%s)'%(update, coll_id, type_id)
+        , 'Entity_comment':     '%s description ... (%s/%s)'%(update, coll_id, type_id)
         , 'orig_id':            'orig_entity_id'
-        , 'continuation_uri':   entitydata_list_type_uri("testcoll", "testtype")
+        , 'continuation_uri':   entitydata_list_type_uri(coll_id, type_id)
         })
     if entity_id:
         form_data_dict['Entity_id']         = entity_id
-        form_data_dict['Entity_label']      = '%s testcoll/testtype/%s'%(update,entity_id)
-        form_data_dict['Entity_comment']    = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
+        form_data_dict['Entity_label']      = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
+        form_data_dict['Entity_comment']    = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['orig_id']           = entity_id
     if orig_id:
         form_data_dict['orig_id']           = orig_id

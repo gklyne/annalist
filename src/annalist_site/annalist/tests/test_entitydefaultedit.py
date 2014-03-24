@@ -28,7 +28,6 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
 from annalist.views.defaultedit     import EntityDefaultEditView
-# from annalist.views.defaultlist     import EntityDataDeleteConfirmedView
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
@@ -36,10 +35,11 @@ from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     recordtype_create_values, collection_create_values,
     site_dir, collection_dir, recordtype_dir, recorddata_dir,  entitydata_dir,
-    recordtype_uri,
+    collection_edit_uri,
+    recordtype_uri, recordtype_edit_uri,
     entity_uri, entitydata_edit_uri, 
-    # entitydata_delete_confirm_uri,
     entitydata_list_type_uri,
+    recordtype_form_data,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
     site_title
@@ -83,13 +83,15 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             )
         return e    
 
-    def _check_entity_data_values(self, entity_id, update="Entity"):
+    def _check_entity_data_values(self, entity_id, type_id="testtype", update="Entity", parent=None):
         "Helper function checks content of form-updated record type entry with supplied entity_id"
-        self.assertTrue(EntityData.exists(self.testdata, entity_id))
-        e = EntityData.load(self.testdata, entity_id)
+        recorddata = RecordTypeData.load(self.testcoll, type_id)
+        self.assertTrue(EntityData.exists(recorddata, entity_id))
+        e = EntityData.load(recorddata, entity_id)
         self.assertEqual(e.get_id(), entity_id)
-        self.assertEqual(e.get_uri(""), TestHostUri + entity_uri("testcoll", "testtype", entity_id))
-        self.assertDictionaryMatch(e.get_values(), entitydata_values(entity_id, update=update))
+        self.assertEqual(e.get_uri(""), TestHostUri + entity_uri("testcoll", type_id, entity_id))
+        v = entitydata_values(entity_id, type_id=type_id, update=update)
+        self.assertDictionaryMatch(e.get_values(), v)
         return e
 
     #   -----------------------------------------------------------------------------
@@ -312,6 +314,46 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             entity_id="!badentity", orig_id="orig_entity_id", action="new"
             )
         self.assertDictionaryMatch(r.context, expect_context)
+        return
+
+    def test_new_entity_default_type(self):
+        # Checks logic related to creating a new recorddata entity in collection 
+        # for type defined in site data
+        self.assertFalse(EntityData.exists(self.testdata, "newentity"))
+        f = entitydata_form_data(entity_id="newentity", type_id="Default_type", action="new")
+        u = entitydata_edit_uri("new", "testcoll", "Default_type")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "Default_type"))
+        # Check new entity data created
+        self._check_entity_data_values("newentity", type_id="Default_type")
+        return
+
+    def test_new_entity_new_type(self):
+        # Checks logic for creating an entity which may require creation of new recorddata
+        # Create new type
+        self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
+        f = recordtype_form_data(type_id="newtype", action="new")
+        u = recordtype_edit_uri("new", "testcoll")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
+        self.assertTrue(RecordType.exists(self.testcoll, "newtype"))
+        # Create new entity
+        self.assertFalse(EntityData.exists(self.testdata, "newentity"))
+        f = entitydata_form_data(entity_id="newentity", type_id="newtype", action="new")
+        u = entitydata_edit_uri("new", "testcoll", "newtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "newtype"))
+        # Check new entity data created
+        self._check_entity_data_values("newentity", type_id="newtype")
         return
 
     #   -------- copy type --------

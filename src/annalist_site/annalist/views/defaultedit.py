@@ -16,15 +16,11 @@ from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.core.urlresolvers       import resolve, reverse
 
-# from annalist                       import layout
 from annalist                       import message
 
-# from annalist.models.sitedata       import SiteData
-# from annalist.models.collection     import Collection
 from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
-# from annalist.models.recordtype     import RecordType
-# from annalist.models.recordtypedata import RecordTypeData
+from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
 from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
@@ -131,6 +127,9 @@ class EntityDefaultEditView(EntityEditBaseView):
             })
         # Process form response and respond accordingly
         self._entityvaluemap = self.get_form_entityvaluemap(self._view_id)
+        if not self.recordtypedata._exists():
+            # Create RecordTypeData when not already exists
+            RecordTypeData.create(self.collection, self.recordtypedata.get_id(), {})
         return self.form_response(
             request, action, self.recordtypedata, entity_id, orig_entity_id, 
             messages, context_extra_values

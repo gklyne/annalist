@@ -122,6 +122,7 @@ class EntityEditBaseView(AnnalistGenericView):
         self.collection = Collection.load(self.site(host=host), coll_id)
         # Check type
         if not RecordType.exists(self.collection, type_id):
+            log.info("get_coll_type_data: RecordType %s not found"%type_id)
             return self.error(
                 dict(self.error404values(),
                     message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
@@ -340,7 +341,9 @@ class EntityEditBaseView(AnnalistGenericView):
             self.error(self.error406values())
             )
 
-    def form_response(self, request, action, parent, entityid, orig_entityid, messages, context_extra_values):
+    def form_response(self, 
+            request, action, parent, entityid, orig_entityid, messages, context_extra_values
+        ):
         """
         Handle POST response from entity edit form.
         """
@@ -356,7 +359,7 @@ class EntityEditBaseView(AnnalistGenericView):
             return auth_required
         # Check parent exists (still)
         if not parent._exists():
-            # log.debug("form_response: not parent._exists()")
+            log.info("form_response: not parent._exists()")
             return self.form_re_render(request, context_extra_values,
                 error_head=messages['parent_heading'],
                 error_message=messages['parent_missing']
