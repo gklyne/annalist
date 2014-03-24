@@ -91,13 +91,15 @@ div.columns > select
     /* border: 0; - causes buttons to display differently - WTF? */
 }
 
+/*
 div.columns > input[type=text] , 
 div.columns > textarea , 
+*/
 div.columns > select {
     /* @@TODO This to maintain some space between input fields, esp. columns on
     /*        customize page - is there a better way? */ 
     /*        I tried margins and padding to no avail */
-    /*        It appears Foundation applie a witdh:100% to these elements */
+    /*        It appears Foundation applies a witdh:100% to these elements */
     width: 95%;
     /* padding-right: 1rem; */
 }

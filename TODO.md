@@ -66,7 +66,15 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / form response test cases
    / customize response handler
    - new entity from list-all display needs default type OR edit field has type selector, with logic to check type on save (treat type as part of id here)
+       - Create default type in site data
+       - Create field render type for drop-down (render_utils and field template)
+       - Add field to defult display
+       - Add type data to display context
+       - Add logic to form submission handler
    - add entity links to list view
+       - Update bound_field to provide access to entity URI
+       - Create field render type for entity link
+       - Update field in defult list displays
    - list_view response handler (needs generic view to make sense; view button to redisplay)
    - default_view response handler (needs generic view to make sense)
    - search response handler (later; see below)
@@ -74,15 +82,25 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / connect list display to record view display
    / build entity selector logic into list view
 6. Generic entity view and editing
-8. Generic record list display and editing
-7. Record view display and editing (data to drive generic view/list)
-   - record view description form
-   - field description form
-   - record list description form
+   - extract/generalize relevant logic from `defaultedit.py`
+   - parameterize view-id on extra URI field
+   - create new URI mapping entries
+   - [later] refactor defaultedit.py as special case (subclass?)
+7. Generic record list display and editing
+   - extract/generalize relevant logic from `defaultlist.py`
+   - parameterize view-id on extra URI field
+   - create new URI mapping entries
+   - [later] refactor defaultedit.py as special case (subclass?)
+8. Record view display and editing (data to drive generic view/list)
+   - record view description form (create data and configure URIs)
+   - field description form (create data and configure URIs)
+   - record list description form (create data and configure URIs)
+   - add "new field" logic to entity edit POST handler
 9. Read-only data view
 ?. Grid view
 ?. Generic entity selector (based on canned sparql expressions?)
 ?. implement search within list view
+
 
 ## Tests required:
 
@@ -110,17 +128,16 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
 - Use server-internal revectoring?  What about delete multiple?
 - currently there's some inconsistency about this: confirm views are rendered directly (as this allows form parameters to be provided directly), but other form action links are handled by redirection.  Try to be more consistent about this?  Create a more general pattern for handling continuation forms?    Note: redirect means that different view GET function signatures, with values provided in the request URI, are handled in generic fashion.  POST views are more easily handled directly with form parameters as supplied dictionary
 - move util.py to utils package, and rename?
-- entity._save: think about capturing provenance metadata too
-/ move entity I/O logic in util module to entity module (keep it all together)
-? view collections doesn't use entered label - problem with entry vocab? (Fixed?)
 - look into using named tuples instead of dictionaries for rendering
   - cf. http://stackoverflow.com/questions/1336791/
+/ view collections doesn't use entered label - problem with entry vocab? (Fixed)
+/ move entity I/O logic in util module to entity module (keep it all together)
 / abstract definition of `field_context` - currently defined implicitly in `views.entityeditbase` (overtaken by redesign)
 x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
 
 ## Future features (see also Misc above)
 
-- try alternative OIDC providers
+- alternative OIDC identity providers
 - spreadhsheet bridge
 - Research Object presentation
 - use HTTP to access data; use standard web server backend
@@ -129,7 +146,7 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
    can this logic be shifted to request code instead of __init__?
 - more field types, including link browser
   - image grid + metadata pop-up for mobile browsing?
-- provenance data
+- provenance data capture (e.g. - look at creating additional resource in entity._save)
 - git integration for data versioning
 - memento integration for old data recovery
 - ResourceSync integration for data sync
