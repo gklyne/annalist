@@ -135,6 +135,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
 / abstract definition of `field_context` - currently defined implicitly in `views.entityeditbase` (overtaken by redesign)
 x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this?  NO
 
+
 ## Future features (see also Misc above)
 
 - alternative OIDC identity providers
@@ -148,7 +149,7 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
   - image grid + metadata pop-up for mobile browsing?
 - provenance data capture (e.g. - look at creating additional resource in entity._save)
 - git integration for data versioning
-- memento integration for old data recovery
+- Memento integration for old data recovery
 - ResourceSync integration for data sync
 - Shuffl integration?
 
