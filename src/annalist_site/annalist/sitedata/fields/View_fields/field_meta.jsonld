@@ -7,5 +7,4 @@
 , "annal:value_type":   "annal:RecordView_fields"
 , "annal:placeholder":  "(View fields)"
 , "annal:property_uri": "annal:view_fields"
-, "annal:return_value": true
 }

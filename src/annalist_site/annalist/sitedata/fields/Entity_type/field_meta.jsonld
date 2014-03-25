@@ -8,5 +8,4 @@
 , "annal:placeholder":  "(recordtype id)"
 , "annal:property_uri": "entity_type_id"
 , "annal:options":      "type_ids"
-, "annal:return_value": false
 }

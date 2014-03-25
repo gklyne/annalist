@@ -7,5 +7,4 @@
 , "annal:value_type":   "annal:recordList_fields"
 , "annal:placeholder":  "(list fields)"
 , "annal:property_uri": "annal:list_fields"
-, "annal:return_value": true
 }

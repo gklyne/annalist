@@ -147,10 +147,6 @@ class EntityEditBaseView(AnnalistGenericView):
         field_id    = field['annal:field_id']
         recordfield = RecordField.load(self.collection, field_id, altparent=True)
         log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
-        return_property_uri = (
-            recordfield['annal:property_uri'] if recordfield['annal:return_value'] 
-            else None
-            )
         field_context = (
             { 'field_id':               field_id
             , 'field_placement':        get_placement_classes(field['annal:field_placement'])
@@ -165,7 +161,6 @@ class EntityEditBaseView(AnnalistGenericView):
             , 'field_placeholder':      recordfield['annal:placeholder']
             , 'field_property_uri':     recordfield['annal:property_uri']
             , 'field_options':          recordfield.get('annal:options', None)
-            , 'return_property_uri':    return_property_uri
             })
         return field_context
 
