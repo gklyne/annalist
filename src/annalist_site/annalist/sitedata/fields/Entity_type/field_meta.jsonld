@@ -1,5 +1,5 @@
-{ "@id":                "annal:fields/Type"
-, "annal:id":           "Type"
+{ "@id":                "annal:fields/Entity_type"
+, "annal:id":           "Entity_type"
 , "annal:type":         "annal:Field"
 , "rdfs:label":         "Type"
 , "rdfs:comment":       "A short identifier that identifies the type of the corresponding entity."

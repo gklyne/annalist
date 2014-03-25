@@ -180,7 +180,7 @@ class EntityEditBaseView(AnnalistGenericView):
     def get_form_entityvaluemap(self, view_id):
         """
         Creates an entity/value map table in the current object incorporating
-        information from the form field definitions.
+        information from the form field definitions for an indicated view.
         """
         # Locate and read view description
         entitymap  = copy.copy(baseentityvaluemap)
@@ -195,7 +195,7 @@ class EntityEditBaseView(AnnalistGenericView):
     def get_list_entityvaluemap(self, list_id):
         """
         Creates an entity/value map table in the current object incorporating
-        information from the form field definitions for the indicated list display.
+        information from the form field definitions for an indicated list display.
         """
         # Locate and read view description
         entitymap  = copy.copy(listentityvaluemap)
@@ -221,7 +221,7 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         context = {}
         for kmap in self._entityvaluemap:
-            kmap.map_entity_to_context(context, entity_values, defaults=kwargs)
+            kmap.map_entity_to_context(context, entity_values, extras=kwargs)
         return context
 
     def map_form_data_to_context(self, form_data, **kwargs):
@@ -233,7 +233,7 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         context = {}
         for kmap in self._entityvaluemap:
-            kmap.map_form_to_context(context, form_data, defaults=kwargs)
+            kmap.map_form_to_context(context, form_data, extras=kwargs)
         return context
 
     def map_form_data_to_values(self, form_data, **kwargs):

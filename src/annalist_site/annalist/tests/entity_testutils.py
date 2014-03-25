@@ -205,8 +205,17 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
             , 'field_render_view':  'field/annalist_view_text.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Entity_id'
-            , 'field_placement':    get_placement_classes('small:0,6;medium:0,4')
+            , 'field_placement':    get_placement_classes('small:0,8;medium:0,4')
             , 'field_id':           'Entity_id'
+            , 'field_value_type':   'annal:Slug'
+            # , 'field_value':      (Supplied separately)
+            }
+          , { 'field_label':        'Type'
+            , 'field_render_view':  'field/annalist_view_select.html'
+            , 'field_render_edit':  'field/annalist_edit_select.html'
+            , 'field_name':         'Entity_type'
+            , 'field_placement':    get_placement_classes('small:0,8;medium:4,4')
+            , 'field_id':           'Entity_type'
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
             }
@@ -233,8 +242,9 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
         })
     if entity_id:
         context_dict['fields'][0]['field_value'] = entity_id
-        context_dict['fields'][1]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
-        context_dict['fields'][2]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
+        context_dict['fields'][1]['field_value'] = "testtype" if valid_id(entity_id) else None
+        context_dict['fields'][2]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
+        context_dict['fields'][3]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
         context_dict['orig_id']     = entity_id
     if orig_id:
         context_dict['orig_id']     = orig_id

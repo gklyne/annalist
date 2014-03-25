@@ -43,18 +43,18 @@ class GroupRepeatMap(_GroupRepeatMap_tuple):
     #     self = super(GroupRepeatMap, cls).__new__(cls, *args, **kwargs)
     #     return self
 
-    def map_entity_to_context(self, context, entityval, defaults=None):
+    def map_entity_to_context(self, context, entityval, extras=None):
         if self.c:
             if self.c not in context:
                 context[self.c] = []
             for entity in entityval[self.e]:
                 grp_context = { 'entity_id': entity.get_id() }
                 for kmap in self.g:
-                    kmap.map_entity_to_context(grp_context, entity, defaults=defaults)
+                    kmap.map_entity_to_context(grp_context, entity, extras=extras)
                 context[self.c].append(grp_context)
         return
 
-    def map_form_to_context(self, context, formvals, defaults=None):
+    def map_form_to_context(self, context, formvals, extras=None):
         log.warn("GroupRepeatMap.map_form_to_context not supported")
         return
 

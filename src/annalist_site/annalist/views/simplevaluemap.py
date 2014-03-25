@@ -33,19 +33,19 @@ class SimpleValueMap(_SimpleValueMap_tuple):
     f       HTML input form field name (used as key in POST results)
     """
 
-    def _map_to_context(self, context, vals, valkey, defaults=None):
+    def _map_to_context(self, context, vals, valkey, extras=None):
         if self.c:
             context[self.c] = vals.get(valkey, 
-                defaults and defaults.get(self.c, None)
+                extras and extras.get(self.c, None)
                 )
         return
 
-    def map_entity_to_context(self, context, entityvals, defaults=None):
-        self._map_to_context(context, entityvals, self.e, defaults)
+    def map_entity_to_context(self, context, entityvals, extras=None):
+        self._map_to_context(context, entityvals, self.e, extras)
         return
 
-    def map_form_to_context(self, context, formvals, defaults=None):
-        self._map_to_context(context, formvals, self.f, defaults)
+    def map_form_to_context(self, context, formvals, extras=None):
+        self._map_to_context(context, formvals, self.f, extras)
         return
 
     def map_form_to_entity(self, entityvals, formvals):

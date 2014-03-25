@@ -114,7 +114,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['list_ids'],         ["Default_list", "Default_list_all"])
         self.assertEqual(r.context['list_selected'],    "Default_list_all")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
-        # Fields
+        # Unbound field descriptions
         self.assertEqual(len(r.context['fields']), 3)
         #  1st field
         self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_type')
@@ -152,9 +152,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][2]['field_value'], None)
         self.assertEqual(r.context['fields'][2]['entity_type_id'], None)
-        # Entities
+        # Entities and bound fields
         self.assertEqual(len(r.context['entities']), 4)
-        field_values = (None, "entity%(eid)d", "Entity testcoll/%(etyp)s/entity%(eid)d")
+        field_values = ("%(etyp)s", "entity%(eid)d", "Entity testcoll/%(etyp)s/entity%(eid)d")
         entity_types = ("testtype", "testtype", "testtype", "testtype2")
         for eid in range(4):
             for fid in range(3):

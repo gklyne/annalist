@@ -53,16 +53,18 @@ class bound_field(object):
     'def_type'
     >>> field_def.field_value == None
     True
-    >>> field_def = bound_field(field_def_desc, entity, default="default")
+    >>> field_def = bound_field(field_def_desc, entity, extras={"def": "default"})
     >>> field_def.field_type
     'def_type'
     >>> field_def.field_value
     'default'
     """
 
-    __slots__ = ("_field_description", "_entity", "_key", "_default")
+    __slots__ = ("_field_description", "_entity", "_key", "_options", "_extras")
 
-    def __init__(self, field_description=None, entity=None, key=None, default=None):
+    def __init__(self, 
+            field_description=None, 
+            entity=None, key=None, options=None, extras=None):
         """
         Initialize a bound_field object.
 
@@ -76,14 +78,15 @@ class bound_field(object):
                             If not specified, the value of the `field_property_uri`
                             field of the field description is used: this assumes the
                             supplied entity is an actual entity rather than a field 
-                            value dictionary .
+                            value dictionary.
         default             is a default value to be used if the entity does 
                             not define the required value.
         """
         self._field_description = field_description
         self._entity            = entity
         self._key               = key or self._field_description['field_property_uri']
-        self._default           = default
+        self._options           = options
+        self._extras            = extras
         return
 
     def __getattr__(self, name):
@@ -95,17 +98,23 @@ class bound_field(object):
         # log.info("__getattr__ %s"%name)
         # log.info("self._key %s"%self._key)
         # log.info("self._entity %r"%self._entity)
-        if name == "field_value":
-            # Note: .keys() is required here as iterator on EntityData returns files in directory
-            if self._key in self._entity.keys():
-                return self._entity[self._key]
-            else:
-                return self._default
-        elif name == "entity_type_id":
+        if name == "entity_type_id" or (name == "field_value" and self._key == "entity_type_id"):
             if self._entity and isinstance(self._entity, Entity):
                 return self._entity.get_type_id()
             else:
-                return self._default
+                # return self._extras.get("entity_type_id", None)
+                return None
+        elif name == "field_value":
+            # Note: .keys() is required here as iterator on EntityData returns files in directory
+            if self._key in self._entity.keys():
+                return self._entity[self._key]
+            elif self._extras and self._key in self._extras:
+                return self._extras[self._key]
+            else:
+                # log.debug("No value for %s"%(self._key))
+                return None
+        elif name == "options":
+            return self._extras.get('options', ["(no options)"])
         else:
             return self._field_description[name]
 
@@ -125,15 +134,15 @@ class bound_field(object):
         return dict(self._field_description.items(), 
             entity=dict(self._entity.items()), 
             field_value=self.field_value, 
-            default=self._default, 
+            extras=self._extras, 
             key=self._key
             )
 
     def __repr__(self):
         return (
-            "bound_field({'field':%r, 'entity':%r, 'key':%r, 'field_value':%r, 'default':%r})"%
+            "bound_field({'field':%r, 'entity':%r, 'key':%r, 'field_value':%r, 'extras':%r})"%
             (self._field_description, dict(self._entity.items()), 
-                self._key, self.field_value, self._default) 
+                self._key, self.field_value, self._extras) 
             )
 
 
@@ -159,7 +168,7 @@ def get_edit_renderer(renderid):
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_edit_textarea.html"
     if renderid == "annal:field_render/Type":
-        return None
+        return "field/annalist_edit_select.html"
     log.warning("get_edit_renderer: %s not found"%renderid)
     return None
 
@@ -185,7 +194,7 @@ def get_view_renderer(renderid):
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_view_textarea.html"
     if renderid == "annal:field_render/Type":
-        return None
+        return "field/annalist_view_select.html"
     log.warning("get_view_renderer: %s not found"%renderid)
     return None
 
