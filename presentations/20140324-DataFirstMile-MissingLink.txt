@@ -1,0 +1,27 @@
+Collaborative use of data by small research groups
+
+## Background:
+
+I have spent several years working on projects related to research data management, some of which has been spent working with small research groups, specifically without technological skills or capacity to undertake software development or complex system configuration.
+
+The data they work with may be diverse, and labour intensive to collect and analyze. E.g., my first project in this area was working with a small team of wet-lab biologists to collect, organize and publish microarray, PCR, statistical, literature references and other data, centred around in-situ hybridization images of gene expression in fruit fly testes.
+
+I perceive there are many generic systems for data publication, and more specialized systems for collaboration in larger projects or in specialized domains.  I also see a lot of attention focused on “big data”.
+
+But for small research groups, which I see reprrsenting the "long tail" of research data, it seems to me there is a missing link in the chain that conveys data from the lab bench and desktop computers to community and public repositories. Often, for these small groups, the best tool is a spreadsheet.  But these are often weak for collaboration, and activities that require sharing and recombining of diverse data.
+
+
+## Response:
+
+(Partly) in response to this, I am working on a “human scale” system that aims to provide data collection and organization features with the following goals:
+
+Easy: can be used for data management “out of the box”, without prior configuration
+
+Flexible: the shape of collected data can be evolved and adapted as patterns are observed.  No force-fitting data to pre-defined schema
+
+Shareable: data are easily shared with collaborators through the use of simple, standard, text-based file formats and web protocols
+
+Remixable: local data can be combined with public data, though inward and outward linking, and common linked-data vocabularies can be applied (even after the event) to create meaningful compositions.
+
+The software is currently at an early demonstration phase, but short of a usable product.  I am aiming to have a releasable prototype available by the end of this summer, when I am hoping to find collaborations to refine the prototype for use in front-line research activities.
+
