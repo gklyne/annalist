@@ -107,7 +107,6 @@ class EntityEditBaseView(AnnalistGenericView):
             self.collection
             self.recordtype
             self.recordtypedata
-            self._entityclass
 
         Returns None if all is well, or an HttpResponse object with details 
         about any problem encountered.
@@ -344,8 +343,8 @@ class EntityEditBaseView(AnnalistGenericView):
             )
 
     def form_response(self, 
-                request, action, parent, 
-                entityid, orig_entityid, 
+                request, action, orig_parent, 
+                entity_id, orig_entity_id, 
                 entity_type, orig_entity_type, 
                 messages, context_extra_values
             ):
@@ -355,62 +354,68 @@ class EntityEditBaseView(AnnalistGenericView):
         log.debug("form_response: action %s"%(request.POST['action']))
         continuation_uri = context_extra_values['continuation_uri']
         if 'cancel' in request.POST:
-            # log.debug("form_response: cancel")
             return HttpResponseRedirect(continuation_uri)
         # Check authorization
-        auth_required = self.form_edit_auth(action, parent._entityuri)
+        auth_required = self.form_edit_auth(action, orig_parent._entityuri)
         if auth_required:
             # log.debug("form_response: auth_required")            
             return auth_required
-        # Check parent exists (still)
-        if not parent._exists():
-            log.info("form_response: not parent._exists()")
+        # Check original parent exists (still)
+        if not orig_parent._exists():
+            log.warning("form_response: not orig_parent._exists()")
             return self.form_re_render(request, context_extra_values,
                 error_head=messages['parent_heading'],
                 error_message=messages['parent_missing']
                 )
         # Check response has valid type id
-        if not util.valid_id(entityid):
-            # log.debug("form_response: not util.valid_id('%s')"%entityid)
+        if not util.valid_id(entity_id):
+            # log.debug("form_response: not util.valid_id('%s')"%entity_id)
             return self.form_re_render(request, context_extra_values,
                 error_head=messages['entity_heading'],
                 error_message=messages['entity_invalid_id']
                 )
         # Process response
-        entityid_changed = (
+        entity_id_changed = (
             ( request.POST['action'] == "edit" ) and
-            ( (entityid != orig_entityid) or (entity_type != orig_entity_type) )
+            ( (entity_id != orig_entity_id) or (entity_type != orig_entity_type) )
             )
         if 'save' in request.POST:
             log.debug(
-                "form_response: save, action %s, entity_id %s, orig_entityid %s"
-                %(request.POST['action'], entityid, orig_entityid)
+                "form_response: save, action %s, entity_id %s, orig_entity_id %s"
+                %(request.POST['action'], entity_id, orig_entity_id)
                 )
             log.debug(
                 "                     entity_type %s, orig_entity_type %s"
                 %(entity_type, orig_entity_type)
                 )
             # Check existence of type to save according to action performed
-            if (request.POST['action'] in ["new", "copy"]) or entityid_changed:
-                if self._entityclass.exists(parent, entityid):
+            if (request.POST['action'] in ["new", "copy"]) or entity_id_changed:
+                if self._entityclass.exists(orig_parent, entity_id):
                     return self.form_re_render(request, context_extra_values,
                         error_head=messages['entity_heading'],
                         error_message=messages['entity_exists']
                         )
             else:
-                if not self._entityclass.exists(parent, entityid):
+                if not self._entityclass.exists(orig_parent, entity_id):
                     # This shouldn't happen, but just incase...
                     return self.form_re_render(request, context_extra_values,
                         error_head=messages['entity_heading'],
                         error_message=messages['entity_not_exists']
                         )
             # Create/update data now
+            if entity_type != orig_entity_type:
+                new_parent = RecordTypeData(self.collection, entity_type)
+                if not new_parent._exists():
+                    # Create RecordTypeData if not already existing
+                    RecordTypeData.create(self.collection, entity_type, {})
+            else:
+                new_parent = orig_parent
             entity_initial_values = self.map_form_data_to_values(request.POST)
-            self._entityclass.create(parent, entityid, entity_initial_values)
+            self._entityclass.create(new_parent, entity_id, entity_initial_values)
             # Remove old type if rename
-            if entityid_changed:
-                if self._entityclass.exists(parent, entityid):    # Precautionary
-                    self._entityclass.remove(parent, orig_entityid)
+            if entity_id_changed:
+                if self._entityclass.exists(orig_parent, entity_id):    # Precautionary
+                    self._entityclass.remove(orig_parent, orig_entity_id)
             return HttpResponseRedirect(continuation_uri)
         # Report unexpected form data
         # This shouldn't happen, but just in case...
@@ -431,14 +436,14 @@ class EntityDeleteConfirmedBaseView(AnnalistGenericView):
         super(EntityDeleteConfirmedBaseView, self).__init__()
         return
 
-    def confirm_form_respose(self, request, parent, entityid, remove_fn, messages, continuation_uri):
+    def confirm_form_respose(self, request, parent, entity_id, remove_fn, messages, continuation_uri):
         """
         Process options to complete action to remove an entity
         """
         auth_required = self.authorize("DELETE")
         if auth_required:
             return auth_required
-        err     = remove_fn(entityid)
+        err     = remove_fn(entity_id)
         if err:
             return self.redirect_error(continuation_uri, str(err))
         return self.redirect_info(continuation_uri, messages['entity_removed'])
