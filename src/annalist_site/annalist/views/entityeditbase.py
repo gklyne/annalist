@@ -367,12 +367,18 @@ class EntityEditBaseView(AnnalistGenericView):
                 error_head=messages['parent_heading'],
                 error_message=messages['parent_missing']
                 )
-        # Check response has valid type id
+        # Check response has valid id and type
         if not util.valid_id(entity_id):
             # log.debug("form_response: not util.valid_id('%s')"%entity_id)
             return self.form_re_render(request, context_extra_values,
                 error_head=messages['entity_heading'],
                 error_message=messages['entity_invalid_id']
+                )
+        if not util.valid_id(entity_type):
+            # log.debug("form_response: not util.valid_id('%s')"%entity_type)
+            return self.form_re_render(request, context_extra_values,
+                error_head=messages['entity_type_heading'],
+                error_message=messages['entity_type_invalid']
                 )
         # Process response
         entity_id_changed = (
@@ -388,9 +394,18 @@ class EntityEditBaseView(AnnalistGenericView):
                 "                     entity_type %s, orig_entity_type %s"
                 %(entity_type, orig_entity_type)
                 )
+            # Determine parent for saved entity
+            if entity_type != orig_entity_type:
+                log.debug("form_response: entity_type %s, orig_entity_type %s"%(entity_type, orig_entity_type))
+                new_parent = RecordTypeData(self.collection, entity_type)
+                if not new_parent._exists():
+                    # Create RecordTypeData if not already existing
+                    RecordTypeData.create(self.collection, entity_type, {})
+            else:
+                new_parent = orig_parent
             # Check existence of type to save according to action performed
             if (request.POST['action'] in ["new", "copy"]) or entity_id_changed:
-                if self._entityclass.exists(orig_parent, entity_id):
+                if self._entityclass.exists(new_parent, entity_id):
                     return self.form_re_render(request, context_extra_values,
                         error_head=messages['entity_heading'],
                         error_message=messages['entity_exists']
@@ -403,13 +418,6 @@ class EntityEditBaseView(AnnalistGenericView):
                         error_message=messages['entity_not_exists']
                         )
             # Create/update data now
-            if entity_type != orig_entity_type:
-                new_parent = RecordTypeData(self.collection, entity_type)
-                if not new_parent._exists():
-                    # Create RecordTypeData if not already existing
-                    RecordTypeData.create(self.collection, entity_type, {})
-            else:
-                new_parent = orig_parent
             entity_initial_values = self.map_form_data_to_values(request.POST)
             self._entityclass.create(new_parent, entity_id, entity_initial_values)
             # Remove old type if rename

@@ -117,18 +117,21 @@ class EntityDefaultEditView(EntityEditBaseView):
         continuation_uri     = request.POST.get('continuation_uri', 
             self.view_uri('AnnalistEntityDefaultListType', coll_id=coll_id, type_id=type_id)
             )
+        # log.debug("continuation_uri %s, type_id %s"%(continuation_uri, type_id))
         context_extra_values = (
             { 'coll_id':          coll_id
             , 'type_id':          type_id
             , 'continuation_uri': continuation_uri
             })
         messages = (
-            { 'parent_heading':    message.RECORD_TYPE_ID
-            , 'parent_missing':    message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
-            , 'entity_heading':    message.ENTITY_DATA_ID
-            , 'entity_invalid_id': message.ENTITY_DATA_ID_INVALID
-            , 'entity_exists':     message.ENTITY_DATA_EXISTS%(entity_id, type_id, coll_id)
-            , 'entity_not_exists': message.ENTITY_DATA_NOT_EXISTS%(entity_id, type_id, coll_id)
+            { 'parent_heading':         message.RECORD_TYPE_ID
+            , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
+            , 'entity_heading':         message.ENTITY_DATA_ID
+            , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
+            , 'entity_exists':          message.ENTITY_DATA_EXISTS%(entity_id, type_id, coll_id)
+            , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS%(entity_id, type_id, coll_id)
+            , 'entity_type_heading':    message.ENTITY_TYPE_ID
+            , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
             })
         # Process form response and respond accordingly
         self._entityvaluemap = self.get_form_entityvaluemap(self._view_id)

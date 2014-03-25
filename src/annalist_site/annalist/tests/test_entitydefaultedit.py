@@ -546,19 +546,46 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_post_edit_entity_new_id(self):
-        self._create_entity_data("edittype1")
-        self._check_entity_data_values("edittype1")
+        self._create_entity_data("entityeditid1")
+        self._check_entity_data_values("entityeditid1")
         # Now post edit form submission with different values and new id
-        f = entitydata_form_data(entity_id="edittype2", orig_id="edittype1", action="edit")
-        u = entitydata_edit_uri("edit", "testcoll", "testtype", entity_id="edittype1")
+        f = entitydata_form_data(entity_id="entityeditid2", orig_id="entityeditid1", action="edit")
+        u = entitydata_edit_uri("edit", "testcoll", "testtype", entity_id="entityeditid1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "testtype"))
         # Check that new record type exists and old does not
-        self.assertFalse(EntityData.exists(self.testdata, "edittype1"))
-        self._check_entity_data_values("edittype2")
+        self.assertFalse(EntityData.exists(self.testdata, "entityeditid1"))
+        self._check_entity_data_values("entityeditid2")
+        return
+
+    def test_post_edit_entity_new_type(self):
+        self._create_entity_data("entityedittype")
+        self._check_entity_data_values("entityedittype")
+        self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
+        newtype = RecordType.create(self.testcoll, "newtype", recordtype_create_values("newtype"))
+        newtypedata = RecordTypeData(self.testcoll, "newtype")
+        self.assertTrue(RecordType.exists(self.testcoll, "newtype"))
+        self.assertFalse(RecordTypeData.exists(self.testcoll, "newtype"))
+        # Now post edit form submission with new type id
+        f = entitydata_form_data(
+            entity_id="entityedittype", orig_id="entityedittype", 
+            type_id="newtype", orig_type="testtype",
+            action="edit")
+        u = entitydata_edit_uri("edit", "testcoll", "testtype", entity_id="entityedittype")
+        r = self.client.post(u, f)
+        # log.info("***********\n"+r.content)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "testtype"))
+        # Check that new record type data now exists, and that new record exists and old does not
+        self.assertTrue(RecordTypeData.exists(self.testcoll, "newtype"))
+        self.assertFalse(EntityData.exists(self.testdata, "entityedittype"))
+        self.assertTrue(EntityData.exists(newtypedata, "entityedittype"))
+        self._check_entity_data_values("entityedittype", type_id="newtype")
         return
 
     def test_post_edit_entity_cancel(self):

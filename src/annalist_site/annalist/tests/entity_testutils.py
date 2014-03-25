@@ -194,7 +194,10 @@ def entitydata_values(entity_id, update="Entity", coll_id="testcoll", type_id="t
         })
     return d
 
-def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="Entity"):
+def entitydata_context_data(
+        entity_id=None, orig_id=None, type_id="testtype", 
+        action=None, update="Entity"
+    ):
     context_dict = (
         { 'title':              site_title()
         , 'coll_id':            'testcoll'
@@ -238,11 +241,11 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
             , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
             }
           ]
-        , 'continuation_uri':   entitydata_list_type_uri("testcoll", "testtype")
+        , 'continuation_uri':   entitydata_list_type_uri("testcoll", type_id)
         })
     if entity_id:
         context_dict['fields'][0]['field_value'] = entity_id
-        context_dict['fields'][1]['field_value'] = "testtype" if valid_id(entity_id) else None
+        context_dict['fields'][1]['field_value'] = type_id if valid_id(type_id) else None
         context_dict['fields'][2]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
         context_dict['fields'][3]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
         context_dict['orig_id']     = entity_id
@@ -254,21 +257,26 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
 
 def entitydata_form_data(
         entity_id=None, orig_id=None, 
-        coll_id="testcoll", type_id="testtype", 
+        type_id="testtype", orig_type=None,
+        coll_id="testcoll", 
         action=None, cancel=None, update="Entity"):
     form_data_dict = (
         { 'Entity_label':       '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Entity_comment':     '%s description ... (%s/%s)'%(update, coll_id, type_id)
         , 'orig_id':            'orig_entity_id'
-        , 'continuation_uri':   entitydata_list_type_uri(coll_id, type_id)
+        , 'continuation_uri':   entitydata_list_type_uri(coll_id, orig_type or type_id)
         })
     if entity_id:
         form_data_dict['Entity_id']         = entity_id
+        form_data_dict['Entity_type']       = type_id
         form_data_dict['Entity_label']      = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Entity_comment']    = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['orig_id']           = entity_id
+        form_data_dict['orig_type']         = type_id
     if orig_id:
         form_data_dict['orig_id']           = orig_id
+    if orig_type:
+        form_data_dict['orig_type']         = orig_type
     if action:
         form_data_dict['action']            = action
     if cancel:

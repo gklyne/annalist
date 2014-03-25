@@ -71,10 +71,11 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        / Add field to default display
        / Add type list data to display context
        / Add original type as hidden field in edit form
-       - Add logic to form submission handler
-       - add test cases for changing type id (new and edit)
-       - remove recordtypedata access from entityeditbase.get_coll_type_data to POST handler
+       / Add logic to form submission handler
+       / add test cases for changing type id (new and edit)
+       x remove recordtypedata access from entityeditbase.get_coll_type_data to POST handler (for recordtype, etc., the collection object is supplied as parent, so this is not so simple.)
        - remove return_value from field definitions - this is now handled differently
+       - remove message header that appears on return from form edit
    - add entity links to list view
        - Update bound_field to provide access to entity URI
        - Create field render type for entity link

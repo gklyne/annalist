@@ -48,5 +48,7 @@ ENTITY_DATA_LABEL       = "Entity %s of type %s in collection %s"
 ENTITY_DATA_EXISTS      = "Entity %s of type %s in collection %s already exists"
 ENTITY_DATA_NOT_EXISTS  = "Entity %s of type %s in collection %s does not exist"
 ENTITY_DATA_REMOVED     = "Entity %s of type %s in collection %s was removed"
+ENTITY_TYPE_ID          = "Problem with entity type identifier"
+ENTITY_TYPE_ID_INVALID  = "The entity type identifier is missing or not a valid identifier"
 
 # End.
