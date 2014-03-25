@@ -145,12 +145,15 @@ class EntityDefaultListView(EntityEditBaseView):
             action = ""
             redirect_uri = self.check_value_supplied(None, message.TOO_MANY_ENTITIES_SEL)
         else:
-            entity_id    = entity_ids[0] if len(entity_ids) == 1 else None
+            (entity_type, entity_id) = (
+                entity_ids[0].split("/") if len(entity_ids) == 1 else (None, None)
+                )
+            entity_type = entity_type or type_id or "Default_type"
             if "new" in request.POST:
                 action = "new"
                 redirect_uri = self.view_uri(
                     "AnnalistEntityDefaultNewView", 
-                    coll_id=coll_id, type_id=type_id, action="new"
+                    coll_id=coll_id, type_id=entity_type, action="new"
                     ) + continuation_here
             if "copy" in request.POST:
                 action = "copy"
@@ -158,7 +161,7 @@ class EntityDefaultListView(EntityEditBaseView):
                     self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_COPY) or
                     ( self.view_uri(
                         "AnnalistEntityDefaultEditView", 
-                        coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="copy"
+                        coll_id=coll_id, type_id=entity_type, entity_id=entity_id, action="copy"
                         ) + continuation_here)
                     )
             if "edit" in request.POST:
@@ -167,7 +170,7 @@ class EntityDefaultListView(EntityEditBaseView):
                     self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_EDIT) or
                     ( self.view_uri(
                         "AnnalistEntityDefaultEditView", 
-                        coll_id=coll_id, type_id=type_id, entity_id=entity_id, action="edit"
+                        coll_id=coll_id, type_id=entity_type, entity_id=entity_id, action="edit"
                        ) + continuation_here)
                     )
             if "delete" in request.POST:

@@ -48,7 +48,7 @@ class GroupRepeatMap(_GroupRepeatMap_tuple):
             if self.c not in context:
                 context[self.c] = []
             for entity in entityval[self.e]:
-                grp_context = { 'entity_id': entity.get_id() }
+                grp_context = { 'entity_id': entity.get_id(), 'type_id': entity.get_type_id() }
                 for kmap in self.g:
                     kmap.map_entity_to_context(grp_context, entity, extras=extras)
                 context[self.c].append(grp_context)

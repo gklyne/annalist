@@ -69,7 +69,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        / Create default type in site data
        / Create field render type for drop-down (render_utils and field template)
        / Add field to default display
-       - Add type data to display context
+       - Add type list data to display context
        - Add logic to form submission handler
    - add entity links to list view
        - Update bound_field to provide access to entity URI
