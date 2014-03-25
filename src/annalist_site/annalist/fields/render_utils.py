@@ -241,8 +241,10 @@ def get_placement_classes(placement):
     Placement(field='small-12 medium-6 large-4 columns', label='small-12 medium-4 large-6 columns', value='small-12 medium-8 large-6 columns')
     >>> get_placement_classes("small:0,6;medium:0,4")
     Placement(field='small-6 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    >>> get_placement_classes("small:0,6;medium:0,4right")
+    Placement(field='small-6 medium-4 right columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
     """
-    def format_class(cd):
+    def format_class(cd, right):
         prev = cd.get("small", None)
         for test in ("medium", "large"):
             if (test in cd):
@@ -250,8 +252,9 @@ def get_placement_classes(placement):
                     del cd[test]
                 else:
                     prev = cd[test]
-        return " ".join([k+"-"+str(v) for k,v in cd.items()]) + " columns"
-    ppr = re.compile(r"^(small|medium|large):(\d+),(\d+)$")
+        if right: right = " right"
+        return " ".join([k+"-"+str(v) for k,v in cd.items()]) + right + " columns"
+    ppr = re.compile(r"^(small|medium|large):(\d+),(\d+)(right)?$")
     ps = placement.split(';')
     labelw      = {'small': 12, 'medium': 2, 'large': 2}
     field_width = OrderedDict([ ('small', 12) ])
@@ -264,6 +267,7 @@ def get_placement_classes(placement):
         pmmode   = pm.group(1)    # "small", "medium" or "large"
         pmoffset = int(pm.group(2))
         pmwidth  = int(pm.group(3))
+        pmright  = pm.group(4) or ""
         field_width[pmmode] = pmwidth
         label_width[pmmode] = labelw[pmmode]*(12 // pmwidth)
         value_width[pmmode] = 12 - label_width[pmmode]
@@ -271,9 +275,9 @@ def get_placement_classes(placement):
             label_width[pmmode] = 12
             value_width[pmmode] = 12
     c = Placement(
-            field=format_class(field_width),
-            label=format_class(label_width),
-            value=format_class(value_width)
+            field=format_class(field_width, pmright),
+            label=format_class(label_width, ""),
+            value=format_class(value_width, "")
             )
     log.debug("get_placement_class %s, returns %s"%(placement,c))
     return c

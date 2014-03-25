@@ -315,7 +315,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], TestHostUri + entitydata_edit_uri("new", "testcoll", "testtype") + c)
         return
-        
+
     @unittest.skip("@@TODO new without type_id")
     def test_post_new_all_entity(self):
         f = entitylist_form_data("new")

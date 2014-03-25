@@ -100,7 +100,7 @@ div.columns > select {
     /*        customize page - is there a better way? */ 
     /*        I tried margins and padding to no avail */
     /*        It appears Foundation applies a witdh:100% to these elements */
-    width: 95%;
+    /* width: 95%; */
     /* padding-right: 1rem; */
 }
 
