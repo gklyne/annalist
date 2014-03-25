@@ -164,6 +164,7 @@ class EntityEditBaseView(AnnalistGenericView):
             , 'field_value_type':       recordfield['annal:value_type']
             , 'field_placeholder':      recordfield['annal:placeholder']
             , 'field_property_uri':     recordfield['annal:property_uri']
+            , 'field_options':          recordfield.get('annal:options', None)
             , 'return_property_uri':    return_property_uri
             })
         return field_context

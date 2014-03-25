@@ -114,7 +114,8 @@ class bound_field(object):
                 # log.debug("No value for %s"%(self._key))
                 return None
         elif name == "options":
-            return self._extras.get('options', ["(no options)"])
+            # log.info(repr(self._options))
+            return self._options
         else:
             return self._field_description[name]
 

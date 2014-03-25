@@ -55,7 +55,13 @@ class FieldValueMap(_FieldValueMap_tuple):
 
     def _map_to_context(self, context, vals, valkey, extras):
         if self.c:
-            options = None
+            options = ["(no options)"]
+            options_key = self.f.get('field_options', None)
+            if options_key:
+                if options_key in extras:
+                    options = extras[options_key]
+                else:
+                    options = ['(missing options)']
             if self.c not in context:
                 context[self.c] = []
             if self.c not in context:

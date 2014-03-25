@@ -74,6 +74,7 @@ class EntityDefaultEditView(EntityEditBaseView):
                     message=message.DOES_NOT_EXIST%(entity_initial_values['rdfs:label'])
                     )
                 )
+        type_ids = [ t.get_id() for t in self.collection.types() ]
         # Set up initial view context
         self._entityvaluemap = self.get_form_entityvaluemap(self._view_id)
         viewcontext = self.map_value_to_context(entity,
@@ -83,6 +84,7 @@ class EntityDefaultEditView(EntityEditBaseView):
             action              = action,
             coll_id             = coll_id,
             type_id             = type_id,
+            type_ids            = type_ids,
             orig_id             = entity_id
             )
         # generate and return form data

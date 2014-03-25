@@ -67,6 +67,8 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
+        self.type_ids   = ['testtype', 'Default_type']
+        self.no_options = ['(no options)']
         return
 
     def tearDown(self):
@@ -102,13 +104,80 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(EntityDefaultEditView.__name__, "EntityDefaultEditView", "Check EntityDefaultEditView class name")
         return
 
-    def test_get_new(self):
+    def test_get_form_rendering(self):
         u = entitydata_edit_uri("new", "testcoll", "testtype")
         r = self.client.get(u+"?continuation_uri=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
+        formdata = """
+            <div class="row">
+              <!-- editable text field -->
+              <div class="small-12 medium-6 columns">
+                <div class="row">
+                  <div class="view_label small-12 medium-4 columns">
+                    <p>
+                      Id
+                    </p>
+                  </div>
+                  <div class="small-12 medium-8 columns">
+                    <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
+                    <input type="text" size="64" name="Entity_id" value="00000001">
+                  </div>
+                </div>
+              </div><!-- record type dropdown -->
+              <div class="small-12 medium-6 right columns">
+                <div class="row">
+                  <div class="view_label small-12 medium-4 columns">
+                    <p>
+                      Type
+                    </p>
+                  </div>
+                  <div class="small-12 medium-8 columns">
+                    <select name="Entity_type" class="right">
+                        <option>testtype</option>
+                        <option>Default_type</option>
+                    </select>
+                  </div>
+                </div>
+              </div><!-- editable text field -->
+              <div class="small-12 columns">
+                <div class="row">
+                  <div class="view_label small-12 medium-2 columns">
+                    <p>
+                      Label
+                    </p>
+                  </div>
+                  <div class="small-12 medium-10 columns">
+                    <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
+                    <input type="text" size="64" name="Entity_label" value="Record '00000001' of type 'testtype' in collection 'testcoll'">
+                  </div>
+                </div>
+              </div><!-- editable textarea field -->
+              <div class="small-12 columns">
+                <div class="row">
+                  <div class="view_label small-12 medium-2 columns">
+                    <p>
+                      Comment
+                    </p>
+                  </div>
+                  <div class="small-12 medium-10 columns">
+                    <textarea cols="64" rows="6" name="Entity_comment" class="small-rows-4 medium-rows-8"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """
+        # log.info("******\n"+r.content)
+        self.assertContains(r, formdata, html=True)
+        return
+
+    def test_get_new(self):
+        u = entitydata_edit_uri("new", "testcoll", "testtype")
+        r = self.client.get(u+"?continuation_uri=/xyzzy/")
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
         # Test context
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
@@ -119,7 +188,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # Fields
-        self.assertEqual(len(r.context['fields']), 4)        
+        self.assertEqual(len(r.context['fields']), 4)
         # 1st field
         field_id_help = (
             "A short identifier that distinguishes this record from "+
@@ -133,14 +202,14 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_property_uri'],  "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_view'],   "field/annalist_view_text.html")
         self.assertEqual(r.context['fields'][0]['field_render_edit'],   "field/annalist_edit_text.html")
-        self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-4 columns")
-        self.assertEqual(r.context['fields'][0]['field_placement'].label, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][0]['field_placement'].value, "small-12 medium-6 columns")
+        self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
+        self.assertEqual(r.context['fields'][0]['field_placement'].label, "small-12 medium-4 columns")
+        self.assertEqual(r.context['fields'][0]['field_placement'].value, "small-12 medium-8 columns")
         self.assertEqual(r.context['fields'][0]['field_value_type'],    "annal:Slug")
         self.assertEqual(r.context['fields'][0].field_value,            "00000001")
         self.assertEqual(r.context['fields'][0]['field_value'],         "00000001")
         self.assertEqual(r.context['fields'][0]['entity_type_id'],      "testtype")
-        self.assertEqual(r.context['fields'][0]['options'],             ["(no options)"])
+        self.assertEqual(r.context['fields'][0]['options'],             self.no_options)
         # 2nd field
         field_type_help = (
             "A short identifier that identifies the type of the corresponding entity."
@@ -153,14 +222,14 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_property_uri'],  "entity_type_id")
         self.assertEqual(r.context['fields'][1]['field_render_view'],   "field/annalist_view_select.html")
         self.assertEqual(r.context['fields'][1]['field_render_edit'],   "field/annalist_edit_select.html")
-        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-4 right columns")
-        self.assertEqual(r.context['fields'][1]['field_placement'].label, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][1]['field_placement'].value, "small-12 medium-6 columns")
+        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 right columns")
+        self.assertEqual(r.context['fields'][1]['field_placement'].label, "small-12 medium-4 columns")
+        self.assertEqual(r.context['fields'][1]['field_placement'].value, "small-12 medium-8 columns")
         self.assertEqual(r.context['fields'][1]['field_value_type'],    "annal:Slug")
         self.assertEqual(r.context['fields'][1].field_value,            "testtype")
         self.assertEqual(r.context['fields'][1]['field_value'],         "testtype")
         self.assertEqual(r.context['fields'][1]['entity_type_id'],      "testtype")
-        self.assertEqual(r.context['fields'][1]['options'],             ["(no options)"])
+        self.assertEqual(r.context['fields'][1]['options'],             self.type_ids)
         # 3rd field
         field_label_help = (
             "Short string used to describe entity when displayed"
@@ -180,7 +249,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_value_type'],    "annal:Text")
         self.assertEqual(r.context['fields'][2]['field_value'],         field_label_value)
         self.assertEqual(r.context['fields'][2]['entity_type_id'],      "testtype")
-        self.assertEqual(r.context['fields'][2]['options'],             ["(no options)"])
+        self.assertEqual(r.context['fields'][2]['options'],             self.no_options)
         # 4th field
         field_comment_help = (
             "Descriptive text about an entity."
@@ -197,7 +266,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_value_type'],    "annal:Longtext")
         self.assertEqual(r.context['fields'][3]['field_value'],         "")
         self.assertEqual(r.context['fields'][3]['entity_type_id'],      "testtype")
-        self.assertEqual(r.context['fields'][3]['options'],             ["(no options)"])
+        self.assertEqual(r.context['fields'][3]['options'],             self.no_options)
         return
 
     def test_get_edit(self):
@@ -231,9 +300,10 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_view'], "field/annalist_view_text.html")
         self.assertEqual(r.context['fields'][0]['field_render_edit'], "field/annalist_edit_text.html")
-        self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-4 columns")
+        self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][0]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][0]['field_value'], "entity1")
+        self.assertEqual(r.context['fields'][0]['options'], self.no_options)
         # 2nd field
         field_type_help = (
             "A short identifier that identifies the type of the corresponding entity."
@@ -246,9 +316,10 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "entity_type_id")
         self.assertEqual(r.context['fields'][1]['field_render_view'],   "field/annalist_view_select.html")
         self.assertEqual(r.context['fields'][1]['field_render_edit'],   "field/annalist_edit_select.html")
-        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-4 right columns")
+        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 right columns")
         self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][1]['field_value'], "testtype")
+        self.assertEqual(r.context['fields'][1]['options'], self.type_ids)
         # 3rd field
         field_label_help = (
             "Short string used to describe entity when displayed"
@@ -267,6 +338,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][2]['field_value'], field_label_value)
+        self.assertEqual(r.context['fields'][2]['options'], self.no_options)
         # 4th field
         field_comment_help = (
             "Descriptive text about an entity."
@@ -285,6 +357,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Longtext")
         self.assertEqual(r.context['fields'][3]['field_value'], field_comment_value)
+        self.assertEqual(r.context['fields'][3]['options'], self.no_options)
         return
 
     def test_get_edit_not_exists(self):

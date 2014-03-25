@@ -205,7 +205,7 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
             , 'field_render_view':  'field/annalist_view_text.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Entity_id'
-            , 'field_placement':    get_placement_classes('small:0,12;medium:0,4')
+            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_id':           'Entity_id'
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
@@ -214,7 +214,7 @@ def entitydata_context_data(entity_id=None, orig_id=None, action=None, update="E
             , 'field_render_view':  'field/annalist_view_select.html'
             , 'field_render_edit':  'field/annalist_edit_select.html'
             , 'field_name':         'Entity_type'
-            , 'field_placement':    get_placement_classes('small:0,12;medium:4,4right')
+            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
             , 'field_id':           'Entity_type'
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
