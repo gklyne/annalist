@@ -111,7 +111,12 @@ class RecordViewEditView(EntityEditBaseView):
             , 'entity_exists':     message.RECORD_TYPE_EXISTS%(type_id, coll_id)
             , 'entity_not_exists': message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)        
             })
-        return self.form_response(request, action, coll, type_id, orig_type_id, messages, context_extra_values)
+        return self.form_response(
+            request, action, coll, 
+            type_id, orig_type_id, 
+            coll_id, coll_id,
+            messages, context_extra_values
+            )
 
 
 class RecordViewDeleteConfirmedView(EntityDeleteConfirmedBaseView):

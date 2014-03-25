@@ -70,6 +70,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        / Create field render type for drop-down (render_utils and field template)
        / Add field to default display
        / Add type list data to display context
+       / Add original type as hidden field in edit form
        - Add logic to form submission handler
        - remove return_value from field definitions - this is now handled differently
    - add entity links to list view
@@ -96,6 +97,8 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    - create new URI mapping entries
    - [later] refactor defaultedit.py as special case (subclass?)
 8. Record view display and editing (data to drive generic view/list)
+   - where possible, migrate methods from editentitybase to subclasses
+   - review logic - ideally, form handlers will access data from form, then hand off for peocessing
    - record view description form (create data and configure URIs)
    - field description form (create data and configure URIs)
    - record list description form (create data and configure URIs)

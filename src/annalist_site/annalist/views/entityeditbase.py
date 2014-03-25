@@ -52,7 +52,8 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='entity_uri',       e='annal:uri',    f='entity_uri'       )
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
-        , SimpleValueMap(c='orig_id',          e=None,           f='orig_id'   )
+        , SimpleValueMap(c='orig_id',          e=None,           f='orig_id'          )
+        , SimpleValueMap(c='orig_type',        e=None,           f='orig_type'          )
         , SimpleValueMap(c='action',           e=None,           f='action'           )
         , SimpleValueMap(c='continuation_uri', e=None,           f='continuation_uri' )
         ])
@@ -343,8 +344,11 @@ class EntityEditBaseView(AnnalistGenericView):
             )
 
     def form_response(self, 
-            request, action, parent, entityid, orig_entityid, messages, context_extra_values
-        ):
+                request, action, parent, 
+                entityid, orig_entityid, 
+                entity_type, orig_entity_type, 
+                messages, context_extra_values
+            ):
         """
         Handle POST response from entity edit form.
         """
@@ -373,11 +377,18 @@ class EntityEditBaseView(AnnalistGenericView):
                 error_message=messages['entity_invalid_id']
                 )
         # Process response
-        entityid_changed = (request.POST['action'] == "edit") and (entityid != orig_entityid)
+        entityid_changed = (
+            ( request.POST['action'] == "edit" ) and
+            ( (entityid != orig_entityid) or (entity_type != orig_entity_type) )
+            )
         if 'save' in request.POST:
             log.debug(
                 "form_response: save, action %s, entity_id %s, orig_entityid %s"
                 %(request.POST['action'], entityid, orig_entityid)
+                )
+            log.debug(
+                "                     entity_type %s, orig_entity_type %s"
+                %(entity_type, orig_entity_type)
                 )
             # Check existence of type to save according to action performed
             if (request.POST['action'] in ["new", "copy"]) or entityid_changed:

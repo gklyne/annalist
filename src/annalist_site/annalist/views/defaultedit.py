@@ -85,7 +85,8 @@ class EntityDefaultEditView(EntityEditBaseView):
             coll_id             = coll_id,
             type_id             = type_id,
             type_ids            = type_ids,
-            orig_id             = entity_id
+            orig_id             = entity_id,
+            orig_type           = type_id
             )
         # generate and return form data
         return (
@@ -111,6 +112,8 @@ class EntityDefaultEditView(EntityEditBaseView):
         # Get key POST values
         entity_id            = request.POST.get('Entity_id', None)
         orig_entity_id       = request.POST.get('orig_id', None)
+        entity_type          = request.POST.get('Entity_type', None)
+        orig_entity_type     = request.POST.get('orig_type', None)
         continuation_uri     = request.POST.get('continuation_uri', 
             self.view_uri('AnnalistEntityDefaultListType', coll_id=coll_id, type_id=type_id)
             )
@@ -129,11 +132,15 @@ class EntityDefaultEditView(EntityEditBaseView):
             })
         # Process form response and respond accordingly
         self._entityvaluemap = self.get_form_entityvaluemap(self._view_id)
+        # @@TODO move recordtypedata access into form_response, 
+        #        where it may be necessary to access old and new values
         if not self.recordtypedata._exists():
             # Create RecordTypeData when not already exists
             RecordTypeData.create(self.collection, self.recordtypedata.get_id(), {})
         return self.form_response(
-            request, action, self.recordtypedata, entity_id, orig_entity_id, 
+            request, action, self.recordtypedata, 
+            entity_id, orig_entity_id, 
+            entity_type, orig_entity_type,
             messages, context_extra_values
             )
 

@@ -109,7 +109,9 @@ class RecordTypeEditView(EntityEditBaseView):
             , 'entity_not_exists': message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)        
             })
         return self.form_response(
-            request, action, coll, type_id, orig_type_id, 
+            request, action, coll, 
+            type_id, orig_type_id, 
+            coll_id, coll_id,
             messages, context_extra_values
             )
 
