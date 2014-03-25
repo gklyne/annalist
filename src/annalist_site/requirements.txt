@@ -1,0 +1,2 @@
+# Default requirements for personal deployment
+-r requirements/personal.txt

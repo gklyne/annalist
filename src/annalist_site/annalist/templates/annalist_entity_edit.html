@@ -1,0 +1,47 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block heading %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="large-12 columns">
+            <h3>'{{type_id}}' data in collection '{{coll_id}}'</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-12 columns">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="row">
+                    {% for field in fields %}
+                    {% include field.field_render_edit %}
+                    {% endfor %}
+                </div>
+                <div class="row">
+                    <div class="small-2 columns">
+                    </div>
+                    <div class="small-12 medium-10 columns">
+                        <div class="row">
+                            <div class="small-8 columns">
+                                <input type="submit" name="save"             value="Save" />
+                                <input type="submit" name="cancel"           value="Cancel" />
+                            </div>
+                            <div class="small-4 columns text-right">
+                                <input type="submit" name="new_field"        value="New field" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="continuation_uri" value="{{continuation_uri}}" />
+                <input type="hidden" name="orig_id"          value="{{orig_id}}" />
+                <input type="hidden" name="orig_type"        value="{{orig_type}}" />
+                <input type="hidden" name="action"           value="{{action}}" />
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

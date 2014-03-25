@@ -1,0 +1,33 @@
+{% extends "base_generic.html" %}
+
+{% block titlezzz %}Login using external service{% endblock %}
+
+{% block heading %}Login using external service{% endblock %}
+
+{% block content %}
+    <h2>Enter login options</h2>
+    <form method="POST" action="auth/">
+      <table border="0">
+        <tr>
+          <td>User ID:</td><td> <input type="text" name="userid" /></td>
+        </tr>
+        <tr>
+          <td>Login service:</td>
+          <td>
+            <select name="provider">
+              {% for p in providers %}
+              <option>{{p}}</option>
+              {% endfor %}
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="submit" value="Login"  name="login"/></td>
+          <td><input type="submit" value="Cancel" name="cancel"/></td>
+        </tr>
+      </table>
+      <input type="hidden" name="scope"         value="{{scope}}"/>
+      <input type="hidden" name="logincomplete" value="{{logincomplete}}"/>
+      <input type="hidden" name="continuation"  value="{{continuation}}"/>
+    </form>
+{% endblock %}

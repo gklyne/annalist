@@ -1,0 +1,109 @@
+{% extends "base_generic.html" %}
+
+{% load staticfiles %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block heading %}{{ title }}{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="large-12 columns">
+      {% if list_id %}
+      <h3>List '{{list_id}}' of entities in collection '{{coll_id}}'</h3>
+      {% else %}
+      <h3>List of entities in collection '{{coll_id}}'</h3>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-12 columns">
+      <form method="POST" action="">
+        {% csrf_token %}
+        <div class="row">
+          <div class="small-12 medium-6 columns">
+            <div class="row">
+              <div class="small-8 columns">
+                <input type="text" name="search_for" value="" />
+              </div>
+              <div class="small-4 medium-3 columns text-right left">
+                <input type="submit" name="search" value="Find" />
+                <!--
+                <button type="submit" name="search" value="Search">
+                <img src="{% static 'images/icons/search_32.png' %}"/>
+                </button>
+                -->
+              </div>
+            </div>
+          </div>
+          <div class="small-12 medium-6 columns">
+            <div class="row">
+              <div class="small-8 columns">
+                <select name="list_id" >
+                  {% for l in list_ids %}
+                    {% if l == list_selected %}
+                    <option selected="">{{l}}</option>
+                    {% else %}
+                    <option>{{l}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="small-4 columns text-right">
+                <input type="submit" name="list_view" value="View" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="small-12 columns">
+            <table width="100%">
+              <thead>
+                <tr>
+                {% for field in fields %}
+                  {% include field.field_render_head %}
+                {% endfor %}
+                <th>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for entity in entities %}
+                <tr class="select_row">
+                {% for field in entity.fields %}
+                  {% include field.field_render_item %}
+                {% endfor %}
+                <td class="select_row">
+                   <input type="checkbox" name="entity_select" 
+                          value="{{entity.type_id}}/{{entity.entity_id}}" />
+                </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="small-12 columns">
+            <input type="submit" name="new"             value="New" />
+            <input type="submit" name="copy"            value="Copy" />
+            <input type="submit" name="edit"            value="Edit" />
+            <input type="submit" name="delete"          value="Delete" />
+          </div>
+          <div class="small-3 columns">
+            <input type="submit" name="close"           value="Close" />
+          </div>
+          <div class="small-9 columns text-right">
+            <input type="submit" name="default_view"    value="Set default" />
+            <input type="submit" name="customize"       value="Customize" />
+          </div>
+          <input type="hidden" name="continuation_uri"    value="{{continuation_uri}}"/>
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

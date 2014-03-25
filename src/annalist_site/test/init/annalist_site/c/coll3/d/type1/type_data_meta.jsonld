@@ -1,0 +1,8 @@
+{
+  "annal:uripath": "/testsite/c/coll3/d/type1/",
+  "annal:uri": "http://test.example.com/testsite/c/coll3/d/type1/",
+  "annal:urihost": "test.example.com",
+  "annal:id": "type1",
+  "@id": "./",
+  "annal:type": "annal:RecordType_Data"
+}

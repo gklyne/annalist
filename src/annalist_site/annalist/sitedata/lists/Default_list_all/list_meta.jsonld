@@ -1,0 +1,20 @@
+{ "@id":                "annal:display/Default_list_all"
+, "annal:id":           "Default_list_all"
+, "annal:type":         "annal:display/RecordList"
+, "rdfs:label":         "List view over all types in a collection"
+, "rdfs:comment":       "This resource describes the default record listing display for all entities in a collection."
+, "annal:selector":     "@@TBD"
+, "annal:default_view": "annal:Default_view"
+, "annal:display_type": "annal:List"
+, "annal:list_fields":
+  [ { "annal:field_id":         "Entity_type"
+    , "annal:field_placement":  "small:0,2"
+    }
+  , { "annal:field_id":         "Entity_id"
+    , "annal:field_placement":  "small:0,2"
+    }
+  , { "annal:field_id":         "Entity_label"
+    , "annal:field_placement":  "small:4,8"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "rdfs:label": "RecordView coll2/view2",
+  "rdfs:comment": "RecordView help for view2 in collection coll2",
+  "annal:uri": "http://test.example.com/testsite/c/coll2/_annalist_collection/views/view2/",
+  "annal:urihost": "test.example.com",
+  "annal:uripath": "/testsite/c/coll2/_annalist_collection/views/view2/",
+  "annal:id": "view2",
+  "@id": "./",
+  "annal:type": "annal:RecordView"
+}

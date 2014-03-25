@@ -23,6 +23,11 @@
 /.pydevproject
 /.project
 
+# ----------
+# Oxygen (?)
+# (or some XML tool)
+catalog-v001.xml
+
 # ---------
 # Mercurial
 
@@ -60,19 +65,16 @@
 *.log
 *.sql
 *.sqlite
+*.sqlite3
 
 # OS generated files
 .DS_Store*
 ehthumbs.db
-Icon?
 Thumbs.db
 
 # Backup files
 *.bak
 *~
-
-# Libre office lock files
-.~*
 
 # Project files
 annalist.sublime*

@@ -1,0 +1,52 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+
+{%if title %}
+    {% block title %}{{ title }}{% endblock %}
+{% endif %}
+
+{%if title %}
+    {% block heading %}{{ title }}{% endblock %}
+{% endif %}
+
+{% block content %}
+    <div class="row">
+        <div class="large-12 columns">
+            <h3>Confirm requested action</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-12 columns">
+            <form method="POST" action="{% url 'AnnalistConfirmView' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="small-2 columns">
+                        <img class="right" src="{% static 'images/icons/warning_32.png' %}"/>
+                    </div>
+                    <div class="small-10 columns alert">
+                        {{action_description}}: Are you sure?
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-2 columns">
+                    </div>
+                    <div class="small-10 columns instruction">
+                        Click "Confirm" to continue, or "Cancel" to abort operation
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-2 columns">
+                    </div>
+                    <div class="small-10 columns">
+                        <input type="submit" name="confirm" value="Confirm"/>
+                        <input type="submit" name="cancel" value="Cancel"/>
+                        <input type="hidden" name="complete_action" value="{{complete_action}}"/>
+                        <input type="hidden" name="action_params"   value="{{action_params}}"/>
+                        <input type="hidden" name="cancel_action"   value="{{cancel_action}}"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

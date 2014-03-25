@@ -1,0 +1,176 @@
+.footer-bar {
+  background: #333333;
+  padding: 9px 0 9px; }
+
+.footer-bar a.logo {
+  color: #858585;
+  font-weight: normal;
+  padding: 0px 12px 0px 0;
+  font-size: 0.88889rem;
+  display: inline-block;
+  vertical-align: bottom;
+  }
+
+.footer-bar ul.links {
+  margin: 0;
+  display: inline-block; }
+
+  .footer-bar ul.links li {
+    display: block;
+    float: left;
+    margin-right: 6px;
+    /* text-transform: uppercase; */
+    font-weight: 700;
+    font-size: 0.77778rem; }
+
+    .footer-bar ul.links li a {
+      color: #666666;
+      padding: 3px 12px 3px 0; }
+
+      .footer-bar ul.links li a:hover {
+        color: #777777; }
+
+  .footer-bar p.copyright {
+    margin: 0 0;
+    font-size: 0.66667rem;
+    color: #666666; 
+    }
+
+    .footer-bar p.copyright a {
+      color: #666666; }
+
+      .footer-bar p.copyright a:hover {
+        color: #777777; }
+
+/*
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+*/
+
+/* Typography resets */
+/*
+div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, p, blockquote, th, td {
+  margin: 0;
+  padding: 0; }
+
+*/
+
+/* Default paragraph styles */
+/*
+p {
+  font-family: inherit;
+  font-weight: normal;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.11111rem;
+  text-rendering: optimizeLegibility; }
+  p.lead {
+    font-size: 1.19444rem;
+    line-height: 1.6; }
+  p aside {
+    font-size: 0.77778rem;
+    line-height: 1.35;
+    font-style: italic; }
+*/
+
+
+/* -----------------------------------------
+   ZURB Footer
+----------------------------------------- */
+
+.zurb-footer-bottom {
+  background: #333333;
+  padding: 24px 0 10px; }
+
+  .zurb-footer-bottom .design-border {
+    border-bottom: 1px solid #484848;
+    padding-bottom: 5px;
+    margin-bottom: 25px; }
+
+  .zurb-footer-bottom a.zurb-logo {
+    color: #858585;
+    font-weight: normal;
+    background: url(../img/icons/footer-icons.png) no-repeat 0 3px;
+    padding: 25px 0 0 0;
+    font-size: 0.88889rem;
+    display: inline-block;
+    width: 90px; }
+
+    .zurb-footer-bottom a.zurb-logo:hover {
+      opacity: 0.8; }
+
+  .zurb-footer-bottom ul.zurb-links {
+    margin: 0;
+    display: inline-block; }
+
+    .zurb-footer-bottom ul.zurb-links li {
+      display: block;
+      float: left;
+      margin-left: 6px;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 0.77778rem; }
+
+      .zurb-footer-bottom ul.zurb-links li a {
+        color: #666666;
+        padding: 3px 6px; }
+
+        .zurb-footer-bottom ul.zurb-links li a:hover {
+          color: #777777; }
+
+  .zurb-footer-bottom p.copyright {
+    margin: 6px 0 0;
+    font-size: 0.66667rem;
+    color: #666666; }
+
+  .zurb-footer-bottom ul.home-social {
+    display: block;
+    float: right;
+    margin-bottom: 8px; }
+
+    .zurb-footer-bottom ul.home-social li {
+      list-style: none;
+      display: block;
+      float: left;
+      margin-left: 10px; }
+
+      .zurb-footer-bottom ul.home-social li:first-child {
+        margin-left: 0; }
+
+      .zurb-footer-bottom ul.home-social li a {
+        display: block;
+        height: 50px;
+        width: 50px;
+        background: url(../img/icons/social.png) no-repeat center 0; }
+
+        .zurb-footer-bottom ul.home-social li a:hover {
+          opacity: 0.8; }
+        .zurb-footer-bottom ul.home-social li a.twitter {
+          background-position: center 0; }
+        .zurb-footer-bottom ul.home-social li a.facebook {
+          background-position: center -200px; }
+        .zurb-footer-bottom ul.home-social li a.mail {
+          background-position: center -400px; }
+
+@media only screen and (max-width: 767px) {
+  .zurb-footer-bottom {
+    text-align: center; }
+    .zurb-footer-bottom .columns {
+      padding: 0; }
+    .zurb-footer-bottom a.zurb-logo {
+      display: block;
+      margin: 0 auto; }
+    .zurb-footer-bottom ul.zurb-links {
+      margin: 16px 0 10px; }
+    .zurb-footer-bottom ul.home-social {
+      float: none;
+      margin: 0 0 20px 0;
+      text-align: center;
+      height: 44px;
+      display: inline-block; } }
+
+@media only screen and (max-width: 320px) {
+  .zurb-footer-bottom ul.zurb-links li a {
+    font-size: 12px; } }

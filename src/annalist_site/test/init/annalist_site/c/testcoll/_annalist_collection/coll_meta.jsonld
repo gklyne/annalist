@@ -1,0 +1,10 @@
+{
+  "rdfs:label": "Collection testcoll",
+  "rdfs:comment": "Description of Collection testcoll",
+  "annal:uri": "http://test.example.com/testsite/c/testcoll/",
+  "annal:urihost": "test.example.com",
+  "annal:uripath": "/testsite/c/testcoll/",
+  "annal:id": "testcoll",
+  "@id": "../",
+  "annal:type": "annal:Collection"
+}

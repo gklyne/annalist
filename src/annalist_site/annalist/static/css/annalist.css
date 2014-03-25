@@ -1,0 +1,197 @@
+/*
+    Annalist site CSS definitions
+
+    __author__      = "Graham Klyne (GK@ACM.ORG)"
+    __copyright__   = "Copyright 2014, G. Klyne"
+    __license__     = "MIT (http://opensource.org/licenses/MIT)"
+
+ */
+
+
+body {
+    margin:         0;
+}
+
+body > div {
+    padding-left:   0.9375rem;
+    padding-right:  0.9375rem;    
+}
+
+.top {
+    vertical-align: top;
+}
+
+.middle {
+    vertical-align: middle;
+}
+
+.bottom {
+    vertical-align: bottom;
+}
+
+/*
+div.row .row {
+    margin: 0 0;
+    padding: 0 0;
+}
+*/
+
+div.row .columns {
+    padding: 0 0.75rem;
+}
+
+div.row .columns .row{
+    padding: 0 -0.75rem;
+}
+
+div.row .columns .row .columns {
+    margin: 0 0;
+    padding: 0 0.75rem;
+}
+
+div.row.headings {
+    padding-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+div.columns > p 
+{
+    margin: 0.25rem 0;
+    /*padding: 0.25rem 0;*/
+    height: auto;
+}
+
+/* Headings */
+
+h2.page-heading {
+    padding: 0 0.9375rem;
+}
+
+div.alert-box p {
+    margin-bottom: 0.25rem;
+}
+
+div.column p , div.columns p {
+    margin-bottom: 0;
+}
+
+/* Form elements */
+
+div.columns form , div.columns form {
+    margin-bottom: 0;
+}
+
+div.columns > input , 
+div.columns > textarea , 
+div.columns > select
+{
+    margin: 0.25rem 0 ;
+    padding: 0.25rem 0 ;
+    height: auto;
+    /* border: 0; - causes buttons to display differently - WTF? */
+}
+
+/*
+div.columns > input[type=text] , 
+div.columns > textarea , 
+*/
+div.columns > select {
+    /* @@TODO This to maintain some space between input fields, esp. columns on
+    /*        customize page - is there a better way? */ 
+    /*        I tried margins and padding to no avail */
+    /*        It appears Foundation applies a witdh:100% to these elements */
+    /* width: 95%; */
+    /* padding-right: 1rem; */
+}
+
+div.columns > input[type=submit] {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Tables */
+
+div.row div.columns table {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border:0;
+    border-collapse: collapse;  /* Prevents gap before checkbox in table column */
+}
+
+td.select_row ,
+td.select_row > input[type="checkbox"]  /* Overrides Foundation */
+{
+    padding: 0;
+    margin: 0;
+}
+
+div.row .columns .row .columns thead tr th {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+/* Messages */
+
+.error {
+    color: red;
+}
+
+.alert {
+    color: green;
+    font-size: large;
+    vertical-align: middle;
+}
+
+.instruction {
+    padding-top: 0.5rem;
+    padding-left: 2rem;
+    padding-bottom: 0.5rem;
+    font-style: italic;
+}
+
+/* Top bar */
+
+.top-bar {
+    margin-bottom: 0.75rem;
+}
+
+/* Footer bar.  Adapted from Foundation / ZURB examples */
+
+.footer-bar {
+    margin-top: 0.75rem;
+    background: #333333;  
+    padding: 0.75rem 0; }
+
+.footer-bar a.logo {
+    display: inline-block;
+    padding: 0 1rem 0 0;
+    font-size: 0.88889rem;
+    font-weight: normal;
+    vertical-align: bottom;
+    color: #858585;
+    }
+
+.footer-bar ul.links {
+  margin: 0;
+  display: inline-block; }
+
+  .footer-bar ul.links li {
+    display: block;
+    float: left; /* Remove this and items display vertically */
+    margin-right: 1.25rem;
+    /* text-transform: uppercase; */
+    font-weight: 700;
+    font-size: 0.77778rem; }
+
+  .footer-bar a {
+    color: #666666; }
+    .footer-bar a:hover {
+      color: #777777; }
+
+  .footer-bar p.copyright {
+    margin: 0 0;
+    font-size: 0.66667rem;
+    color: #666666; 
+    }
+
+

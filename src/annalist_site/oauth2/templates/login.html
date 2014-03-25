@@ -1,0 +1,98 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Login using external service{% endblock %}
+
+{% block heading %}Login using external service{% endblock %}
+
+{% block content %}
+
+    {% if message %}
+    <div class="alert-box warning radius">
+        <h3>Login failed</h3>
+        <p>
+            {{message}}
+        </p>
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="large-12 columns">
+            <h3>Enter login options</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-12 columns">
+            <form method="POST" action="{{login_post}}">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="small-4 columns">
+                        <p>User ID</p>
+                    </div>
+                    <div class="small-8 columns">
+                        <p><input type="text" name="userid" /></p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="small-4 columns">
+                        <p>Login service</p>
+                    </div>
+                    <div class="small-8 columns">
+                        <p>
+                            <select name="provider">
+                              {% for p in providers %}
+                              <option>{{p}}</option>
+                              {% endfor %}
+                            </select>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="small-8 small-push-4 columns ">
+                        <p class="right">
+                            <input type="submit" value="Login"  name="login" />
+                            <input type="submit" value="Cancel" name="cancel" />
+                        </p>
+                    </div>
+                </div>
+                <input type="hidden" name="scope"         value="{{scope}}"/>
+                <input type="hidden" name="login_done"    value="{{login_done}}"/>
+                <input type="hidden" name="continuation"  value="{{continuation}}"/>
+            </form>
+        </div>
+    </div>
+
+<!--
+    <div class="content-head">Enter login options</div>
+    <form method="POST" action="{{login_post}}">
+      {% csrf_token %}
+      <table border="0">
+        <tr>
+          <td>User ID:</td>
+          <td><input type="text" name="userid" /></td>
+        </tr>
+        <tr>
+          <td>Login service:</td>
+          <td>
+            <select name="provider">
+              {% for p in providers %}
+              <option>{{p}}</option>
+              {% endfor %}
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="submit" value="Login"  name="login"/></td>
+          <td><input type="submit" value="Cancel" name="cancel"/></td>
+        </tr>
+      </table>
+      <input type="hidden" name="scope"         value="{{scope}}"/>
+      <input type="hidden" name="login_done"    value="{{login_done}}"/>
+      <input type="hidden" name="continuation"  value="{{continuation}}"/>
+    </form>
+-->
+
+{% endblock %}

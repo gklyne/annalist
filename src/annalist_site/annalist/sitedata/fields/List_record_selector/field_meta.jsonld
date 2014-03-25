@@ -1,0 +1,10 @@
+{ "@id":                "annal:fields/List_record_selector"
+, "annal:id":           "List_record_selector"
+, "annal:type":         "annal:Field"
+, "rdfs:label":         "Selector"
+, "rdfs:comment":       "An expression that is used to select records to be included in the list view.  @@The details of the expression format are TBD; maybe SPARQL query@@.  But if not specified, a default selector is used that selects all records from the current collection of the indicated default record type."
+, "annal:field_render": "annal:field_render/Text"
+, "annal:value_type":   "annal:Text"
+, "annal:placeholder":  "(view id)"
+, "annal:property_uri": "annal:list_record_selector"
+}

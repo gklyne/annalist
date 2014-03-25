@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Annalist error{% endblock %}
+
+{% block heading %}Annalist error{% endblock %}
+
+{% block content %}
+
+    <div class="alert-box warning">
+        <h3>{{status}}: {{reason}}</h3>
+    </div>
+
+    <div class="row error">
+        <p>{{message}}</p>
+    </div>
+
+{% endblock %}

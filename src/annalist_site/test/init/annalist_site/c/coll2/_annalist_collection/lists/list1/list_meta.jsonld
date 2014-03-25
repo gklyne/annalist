@@ -1,0 +1,10 @@
+{
+  "rdfs:label": "RecordList coll2/list1",
+  "rdfs:comment": "RecordList help for list1 in collection coll2",
+  "annal:uri": "http://test.example.com/testsite/c/coll2/_annalist_collection/lists/list1/",
+  "annal:urihost": "test.example.com",
+  "annal:uripath": "/testsite/c/coll2/_annalist_collection/lists/list1/",
+  "annal:id": "list1",
+  "@id": "./",
+  "annal:type": "annal:RecordList"
+}
