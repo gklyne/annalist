@@ -39,6 +39,7 @@ These instructions are my attempt to capture the steps to get a development copy
     cd src/annalist_site/
 
     # Run tests
+    ./makeinitsitedata.sh        # set up initial data for testing in `test/init`
     python manage.py test
 
     # Create development site data and run up server
@@ -50,12 +51,20 @@ These instructions are my attempt to capture the steps to get a development copy
     #   application identifier and client secret allocated when the application was
     #   registered
 
-    # Initialize the web application data
-    python manage.py dbsync
-    mkdir devel
-    cp -rfv test/init/annalist_site/ devel/annalist_site
+    # Initialize the web application data:
+    #
+    # There is a script file `makedevelsitedata.sh` that uses the test suite to generate some
+    # initial annalist data structures, and copies this indo the `devel` directory in the
+    # Annalist development tree.  This incorporates files from `annalist/sitedata` that define
+    # some key information used to drive the annalist interface.
+    #
+    # (In due course, and installation script will need to set up the initial analist data
+    # in a directory of the user's choosing.  This has not yet been implemented.)
+    #
+    ./makedevelsitedata.sh
 
-    # Start the web application
+    # Start the web application, using the default `devel` settings, which use the `devel` directory
+    # in the Annalist source tree for the annalist site data
     python manage.py runserver
 
 Now point a local browser at [http://localhost:8000/annalist](http://localhost:8000/annalist).  Clicking on the login link should display a login screen with "Google" offered as a login service.  Enter a user ID and click "Login" to invoke an OAuth2 authentication sequence with Google.
