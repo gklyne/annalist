@@ -100,21 +100,22 @@ Technical elements
 
 Note: active development is taking place on the "develop" branch in git - see [https://github.com/gklyne/annalist/tree/develop](https://github.com/gklyne/annalist/tree/develop))
 
-* Standard web server
-* Access control with 3rd party IDP authentication
-* File based data storage model
-    * File format RDF-based. Have settled on JSON-LD for initial work.
-    * Records/Entities, Attachments (blobs), Collections, Groups
+Key technical elements of the intended final design include (with notes reflecting status as of March 2014):
+
+* Serve and access data through a standard web server (current implementation uses direct file access).
+* Access control with 3rd party IDP authentication (current implementation uses OAuth2/OpenID Connect, tested with Google)
+* File based, versioning-friendly, textual data storage model
+    * File format RDF-based (currently using JSON-LD; contexts not yet defined so it's just JSON with RDF potential)
+    * Records/Entities, Attachments (blobs), Collections, Groups (current focus on collections and records/entities - more to come later)
     * Directory based organization
-    * Separate indexing as and when required.
+    * Separate indexing as and when required
 * User interface
-    * Self-maintained configuration data
-    * Grid-based flexible layout engine (e.g. Bootstrap)
+    * Self-maintained configuration datan (many technical elements in place, but still bootstrapping the initial system)
+    * Grid-based flexible layout engine (currently using Zurb Foundation)
 * Bridges for other data sources
-    * Spreadsheet
-    * JSON?
+    * Spreadsheet (this is a key goal, to be able to work with existing spreadsheet data)
     * XML?
-    * _others_
+    * _others_?
 
 
 TODO
