@@ -195,7 +195,7 @@ def entitydata_values(entity_id, update="Entity", coll_id="testcoll", type_id="t
     return d
 
 def entitydata_context_data(
-        entity_id=None, orig_id=None, type_id="testtype", 
+        entity_id=None, orig_id=None, type_id="testtype", type_ids=[],
         action=None, update="Entity"
     ):
     context_dict = (
@@ -212,6 +212,7 @@ def entitydata_context_data(
             , 'field_id':           'Entity_id'
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
+            , 'options':            []
             }
           , { 'field_label':        'Type'
             , 'field_render_view':  'field/annalist_view_select.html'
@@ -221,6 +222,7 @@ def entitydata_context_data(
             , 'field_id':           'Entity_type'
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
+            , 'options':            []
             }
           , { 'field_label':        'Label'
             , 'field_render_view':  'field/annalist_view_text.html'
@@ -230,6 +232,7 @@ def entitydata_context_data(
             , 'field_id':           'Entity_label'
             , 'field_value_type':   'annal:Text'
             , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
+            , 'options':            []
             }
           , { 'field_label':        'Comment'
             , 'field_render_view':  'field/annalist_view_textarea.html'
@@ -239,6 +242,7 @@ def entitydata_context_data(
             , 'field_id':           'Entity_comment'
             , 'field_value_type':   'annal:Longtext'
             , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
+            , 'options':            []
             }
           ]
         , 'continuation_uri':   entitydata_list_type_uri("testcoll", type_id)
@@ -567,6 +571,6 @@ def recordlist_values(
 #   -----------------------------------------------------------------------------
 
 def site_title(template="%s"):
-    return template%("Annalist data wiki test site")
+    return template%("Annalist data notebook test site")
 
 # End.

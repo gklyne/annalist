@@ -75,6 +75,8 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        / add test cases for changing type id (new and edit)
        x remove recordtypedata access from entityeditbase.get_coll_type_data to POST handler (for recordtype, etc., the collection object is supplied as parent, so this is not so simple.)
        / remove return_value from field definitions - this is now handled differently
+       / new record from list all: use default type, not random selection
+       - new record, change type, error doesn't redisplay types
        - remove message header that appears on return from form edit
        - review skipped tests - can any be enabled now?
    - add entity links to list view
@@ -141,6 +143,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
 - move util.py to utils package, and rename?
 - look into using named tuples instead of dictionaries for rendering
   - cf. http://stackoverflow.com/questions/1336791/
+- replayable log/journal of data editing actions performed (CW14)
 / view collections doesn't use entered label - problem with entry vocab? (Fixed)
 / move entity I/O logic in util module to entity module (keep it all together)
 / abstract definition of `field_context` - currently defined implicitly in `views.entityeditbase` (overtaken by redesign)
