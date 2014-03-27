@@ -76,9 +76,10 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        x remove recordtypedata access from entityeditbase.get_coll_type_data to POST handler (for recordtype, etc., the collection object is supplied as parent, so this is not so simple.)
        / remove return_value from field definitions - this is now handled differently
        / new record from list all: use default type, not random selection
-       - new record, change type, error doesn't redisplay types
+       / new record, change type, error doesn't redisplay types
+       / error loses continuation URI in edit form
        - remove message header that appears on return from form edit
-       - review skipped tests - can any be enabled now?
+       > review skipped tests - can any be enabled now?
    - add entity links to list view
        - Update bound_field to provide access to entity URI
        - Create field render type for entity link

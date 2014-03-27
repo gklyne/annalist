@@ -150,8 +150,10 @@ def entitydata_delete_confirm_uri(coll_id, type_id):
     kwargs = {'coll_id': coll_id, 'type_id': type_id}
     return reverse("AnnalistEntityDataDeleteView", kwargs=kwargs)
 
-def continuation_uri_param(uri):
-    return "?continuation_uri=" + urlquote(uri, safe="/=!")
+def continuation_uri_param(uri, prev_cont=None):
+    if prev_cont:
+        uri += "?" + prev_cont
+    return "continuation_uri=" + urlquote(uri, safe="/=!")
 
 #   -----------------------------------------------------------------------------
 #

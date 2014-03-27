@@ -239,8 +239,8 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.user.save()
         self.view_uri = collection_view_uri(coll_id="coll1")
         self.edit_uri = collection_edit_uri(coll_id="coll1")
-        self.continuation = continuation_uri_param(
-            self.edit_uri + continuation_uri_param(site_view_uri())
+        self.continuation = "?" + continuation_uri_param(
+            self.edit_uri, continuation_uri_param(site_view_uri())
             )
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")

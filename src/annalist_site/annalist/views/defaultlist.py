@@ -149,6 +149,7 @@ class EntityDefaultListView(EntityEditBaseView):
                 entity_ids[0].split("/") if len(entity_ids) == 1 else (None, None)
                 )
             entity_type = entity_type or type_id or "Default_type"
+            cont_param  = "&continuation_uri="+continuation_uri
             if "new" in request.POST:
                 action = "new"
                 redirect_uri = self.view_uri(
@@ -158,7 +159,10 @@ class EntityDefaultListView(EntityEditBaseView):
             if "copy" in request.POST:
                 action = "copy"
                 redirect_uri = (
-                    self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_COPY) or
+                    self.check_value_supplied(entity_id, 
+                        message.NO_ENTITY_FOR_COPY, 
+                        continuation_uri=cont_param
+                        ) or
                     ( self.view_uri(
                         "AnnalistEntityDefaultEditView", 
                         coll_id=coll_id, type_id=entity_type, entity_id=entity_id, action="copy"
@@ -167,7 +171,10 @@ class EntityDefaultListView(EntityEditBaseView):
             if "edit" in request.POST:
                 action = "edit"
                 redirect_uri = (
-                    self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_EDIT) or
+                    self.check_value_supplied(entity_id, 
+                        message.NO_ENTITY_FOR_EDIT,
+                        continuation_uri=cont_param
+                        ) or
                     ( self.view_uri(
                         "AnnalistEntityDefaultEditView", 
                         coll_id=coll_id, type_id=entity_type, entity_id=entity_id, action="edit"
@@ -175,7 +182,10 @@ class EntityDefaultListView(EntityEditBaseView):
                     )
             if "delete" in request.POST:
                 redirect_uri = (
-                    self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_DELETE)
+                    self.check_value_supplied(entity_id, 
+                        message.NO_ENTITY_FOR_DELETE,
+                        continuation_uri=cont_param
+                        )
                     )
                 if not redirect_uri:
                     # Get user to confirm action before actually doing it

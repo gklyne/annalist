@@ -149,7 +149,7 @@ class AnnalistGenericView(ContentNegotiationView):
         redirect_uri = viewuri+self.error_params(error_head, error_message)
         return HttpResponseRedirect(redirect_uri)
 
-    def check_value_supplied(self, val, msg, testfn=(lambda v: v)):
+    def check_value_supplied(self, val, msg, continuation_uri="", testfn=(lambda v: v)):
         """
         Test a supplied value is specified (not None) and passes a supplied test,
         returning a URI to display a supplied error message if the test fails.
@@ -171,7 +171,7 @@ class AnnalistGenericView(ContentNegotiationView):
             redirect_uri = (
                 self.get_request_path()+
                 self.error_params(msg)
-                )
+                ) + continuation_uri
         return redirect_uri
 
     # Authentication and authorization
