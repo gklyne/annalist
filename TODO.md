@@ -78,8 +78,9 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        / new record from list all: use default type, not random selection
        / new record, change type, error doesn't redisplay types
        / error loses continuation URI in edit form
-       - remove message header that appears on return from form edit
-       > review skipped tests - can any be enabled now?
+       / remove message header that appears on return from form edit (appears to be resolved?)
+       / review skipped tests - can any be enabled now?
+       - delete entity continues to wrong page
    - add entity links to list view
        - Update bound_field to provide access to entity URI
        - Create field render type for entity link
@@ -127,6 +128,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
 
 ## Misc TODO
 
+- CSS style associuation with entity types, so (e.g.) different types can be colour-coded.
 - entity list view: add javascript for selection classes (hide checkbox and highlight row when clicked)
 - entity should carry URI only.  Other fields (host, path, etc. should be generated as required.  Suggest use an internal value that allows x.uri.path, .host, etc. as required)
 - Convert literal CURIES to namespace references
@@ -164,6 +166,7 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
   - image grid + metadata pop-up for mobile browsing?
 - provenance data capture (e.g. - look at creating additional resource in entity._save)
 - git integration for data versioning
+- dat integration for versioning? (https://github.com/maxogden/dat)
 - Memento integration for old data recovery
 - ResourceSync integration for data sync
 - Shuffl integration?

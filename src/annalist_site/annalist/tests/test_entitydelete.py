@@ -29,7 +29,7 @@ from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     entity_uri, entitydata_edit_uri, entitydata_delete_confirm_uri,
-    entitydata_list_type_uri,
+    entitydata_list_all_uri, entitydata_list_type_uri,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_delete_confirm_form_data,
     )
@@ -72,7 +72,8 @@ class ConfirmEntityDataDeleteTests(AnnalistTestCase):
         self.assertEqual(r.content,         "")
         self.assertMatch(r['location'],    
             "^"+TestHostUri+
-            entitydata_list_type_uri("testcoll", "testtype")+
+            entitydata_list_all_uri("testcoll")+
+            # entitydata_list_type_uri("testcoll", "testtype")+
             r"\?info_head=.*&info_message=.*deleteentity.*testcoll.*$"
             )
         # Confirm deletion

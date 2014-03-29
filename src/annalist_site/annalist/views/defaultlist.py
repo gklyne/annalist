@@ -191,16 +191,17 @@ class EntityDefaultListView(EntityEditBaseView):
                     # Get user to confirm action before actually doing it
                     complete_action_uri = self.view_uri(
                         "AnnalistEntityDataDeleteView", 
-                        coll_id=coll_id, type_id=type_id # , entity_id=entity_id
+                        coll_id=coll_id, type_id=entity_type
                         )
                     delete_params = dict_querydict(
-                        { "entity_delete": ["Delete"]
-                        , "entity_id":     [entity_id]
+                        { "entity_delete":      ["Delete"]
+                        , "entity_id":          [entity_id]
+                        , "continuation_uri":   [self.get_request_path()]
                         })
                     return (
-                        self.form_edit_auth("delete", self.recordtypedata.get_uri()) or
+                        self.form_edit_auth("delete", self.collection.get_uri()) or
                         ConfirmView.render_form(request,
-                            action_description=     message.REMOVE_ENTITY_DATA%(entity_id, type_id, coll_id),
+                            action_description=     message.REMOVE_ENTITY_DATA%(entity_id, entity_type, coll_id),
                             complete_action_uri=    complete_action_uri,
                             action_params=          delete_params,
                             cancel_action_uri=      self.get_request_path(),
@@ -268,7 +269,7 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
                 })
             continuation_uri = (
                 request.POST.get('continuation_uri', None) or
-                self.view_uri("AnnalistEntityDefaultListType", coll_id=coll_id, type_id=type_id)
+                self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
                 )
             return self.confirm_form_respose(
                 request, recorddata, entity_id, recorddata.remove_entity, 

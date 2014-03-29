@@ -476,6 +476,52 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
+    #   -------- delete --------
+
+    def test_post_delete_type_entity(self):
+        f = entitylist_form_data("delete", entities=["testtype/entity1"])
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "<h3>Confirm requested action</h3>")
+        self.assertContains(r, "Remove record entity1 of type testtype in collection testcoll: Are you sure?")
+        self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
+        self.assertContains(r, '<input type="hidden" name="complete_action"  value="/testsite/c/testcoll/d/testtype/!delete_confirmed"/>')
+        self.assertEqual(r.context['action_description'], 
+            'Remove record entity1 of type testtype in collection testcoll')
+        self.assertEqual(r.context['complete_action'], 
+            '/testsite/c/testcoll/d/testtype/!delete_confirmed')
+        self.assertEqual(r.context['action_params'], 
+            '{"entity_delete": ["Delete"], "entity_id": ["entity1"], "continuation_uri": ["/testsite/c/testcoll/d/testtype/"]}')
+        self.assertEqual(r.context['cancel_action'], 
+            '/testsite/c/testcoll/d/testtype/')
+        return
+
+    def test_post_delete_all_entity(self):
+        f = entitylist_form_data("delete", entities=["testtype/entity1"])
+        u = entitydata_list_all_uri("testcoll")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "<h3>Confirm requested action</h3>")
+        # print "**********"
+        # print r.content
+        # print "**********"
+        self.assertContains(r, "Remove record entity1 of type testtype in collection testcoll: Are you sure?")
+        self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
+        self.assertContains(r, '<input type="hidden" name="complete_action"  value="/testsite/c/testcoll/d/testtype/!delete_confirmed"/>')
+        self.assertEqual(r.context['action_description'], 
+            'Remove record entity1 of type testtype in collection testcoll')
+        self.assertEqual(r.context['complete_action'], 
+            '/testsite/c/testcoll/d/testtype/!delete_confirmed')
+        self.assertEqual(r.context['action_params'], 
+            '{"entity_delete": ["Delete"], "entity_id": ["entity1"], "continuation_uri": ["/testsite/c/testcoll/d/"]}')
+        self.assertEqual(r.context['cancel_action'], 
+            '/testsite/c/testcoll/d/')
+        return
+
+
     #   -------- close / search / view / default-view / customize--------
 
     def test_post_close(self):
