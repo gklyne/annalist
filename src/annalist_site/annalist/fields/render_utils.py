@@ -127,6 +127,8 @@ class bound_field(object):
         Implement iterator protocol, returning accessible value keys.
         """
         yield "field_value"
+        yield "entity_type_id"
+        yield "options"
         for k in self._field_description:
             yield k
         return

@@ -28,3 +28,6 @@ See also:
 * [oauth2-openid-connect-django.md](./oauth2-openid-connect-django.md)
 * [auth-notes.md](./auth-notes.md)
 
+## Other
+
+* http://pythonhosted.org//Sumatra/

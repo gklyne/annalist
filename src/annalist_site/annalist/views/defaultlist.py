@@ -149,6 +149,7 @@ class EntityDefaultListView(EntityEditBaseView):
                 entity_ids[0].split("/") if len(entity_ids) == 1 else (None, None)
                 )
             entity_type = entity_type or type_id or "Default_type"
+            cont_param  = "&continuation_uri="+continuation_uri
             if "new" in request.POST:
                 action = "new"
                 redirect_uri = self.view_uri(
@@ -158,7 +159,10 @@ class EntityDefaultListView(EntityEditBaseView):
             if "copy" in request.POST:
                 action = "copy"
                 redirect_uri = (
-                    self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_COPY) or
+                    self.check_value_supplied(entity_id, 
+                        message.NO_ENTITY_FOR_COPY, 
+                        continuation_uri=cont_param
+                        ) or
                     ( self.view_uri(
                         "AnnalistEntityDefaultEditView", 
                         coll_id=coll_id, type_id=entity_type, entity_id=entity_id, action="copy"
@@ -167,7 +171,10 @@ class EntityDefaultListView(EntityEditBaseView):
             if "edit" in request.POST:
                 action = "edit"
                 redirect_uri = (
-                    self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_EDIT) or
+                    self.check_value_supplied(entity_id, 
+                        message.NO_ENTITY_FOR_EDIT,
+                        continuation_uri=cont_param
+                        ) or
                     ( self.view_uri(
                         "AnnalistEntityDefaultEditView", 
                         coll_id=coll_id, type_id=entity_type, entity_id=entity_id, action="edit"
@@ -175,22 +182,26 @@ class EntityDefaultListView(EntityEditBaseView):
                     )
             if "delete" in request.POST:
                 redirect_uri = (
-                    self.check_value_supplied(entity_id, message.NO_ENTITY_FOR_DELETE)
+                    self.check_value_supplied(entity_id, 
+                        message.NO_ENTITY_FOR_DELETE,
+                        continuation_uri=cont_param
+                        )
                     )
                 if not redirect_uri:
                     # Get user to confirm action before actually doing it
                     complete_action_uri = self.view_uri(
                         "AnnalistEntityDataDeleteView", 
-                        coll_id=coll_id, type_id=type_id # , entity_id=entity_id
+                        coll_id=coll_id, type_id=entity_type
                         )
                     delete_params = dict_querydict(
-                        { "entity_delete": ["Delete"]
-                        , "entity_id":     [entity_id]
+                        { "entity_delete":      ["Delete"]
+                        , "entity_id":          [entity_id]
+                        , "continuation_uri":   [self.get_request_path()]
                         })
                     return (
-                        self.form_edit_auth("delete", self.recordtypedata.get_uri()) or
+                        self.form_edit_auth("delete", self.collection.get_uri()) or
                         ConfirmView.render_form(request,
-                            action_description=     message.REMOVE_ENTITY_DATA%(entity_id, type_id, coll_id),
+                            action_description=     message.REMOVE_ENTITY_DATA%(entity_id, entity_type, coll_id),
                             complete_action_uri=    complete_action_uri,
                             action_params=          delete_params,
                             cancel_action_uri=      self.get_request_path(),
@@ -258,7 +269,7 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
                 })
             continuation_uri = (
                 request.POST.get('continuation_uri', None) or
-                self.view_uri("AnnalistEntityDefaultListType", coll_id=coll_id, type_id=type_id)
+                self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
                 )
             return self.confirm_form_respose(
                 request, recorddata, entity_id, recorddata.remove_entity, 

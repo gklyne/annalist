@@ -136,7 +136,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   </div>
                   <div class="small-12 medium-8 columns">
                     <select name="Entity_type" class="right">
-                        <option>testtype</option>
+                        <option selected="selected">testtype</option>
                         <option>Default_type</option>
                     </select>
                   </div>

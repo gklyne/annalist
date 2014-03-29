@@ -111,7 +111,7 @@ Key technical elements of the intended final design include (with notes reflecti
     * Directory based organization
     * Separate indexing as and when required
 * User interface
-    * Self-maintained configuration datan (many technical elements in place, but still bootstrapping the initial system)
+    * Self-maintained configuration data (many technical elements in place, but still bootstrapping the initial system)
     * Grid-based flexible layout engine (currently using Zurb Foundation)
 * Bridges for other data sources
     * Spreadsheet (this is a key goal, to be able to work with existing spreadsheet data)

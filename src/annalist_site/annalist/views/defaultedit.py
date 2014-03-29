@@ -98,7 +98,7 @@ class EntityDefaultEditView(EntityEditBaseView):
 
     def post(self, request, coll_id=None, type_id=None, entity_id=None, action=None):
         """
-        Handle response from dynamically generatred entity editing form.
+        Handle response from dynamically generated entity editing form.
         """
         log.debug("views.defaultedit.post %s"%(self.get_request_path()))
         # log.debug("  coll_id %s, type_id %s, action %s"%(coll_id, type_id, action))
@@ -118,9 +118,11 @@ class EntityDefaultEditView(EntityEditBaseView):
             self.view_uri('AnnalistEntityDefaultListType', coll_id=coll_id, type_id=type_id)
             )
         # log.debug("continuation_uri %s, type_id %s"%(continuation_uri, type_id))
+        type_ids = [ t.get_id() for t in self.collection.types() ]
         context_extra_values = (
             { 'coll_id':          coll_id
             , 'type_id':          type_id
+            , 'type_ids':         type_ids
             , 'continuation_uri': continuation_uri
             })
         messages = (
