@@ -104,6 +104,8 @@ class bound_field(object):
             else:
                 # return self._extras.get("entity_type_id", None)
                 return None
+        elif name == "entity_uri":
+            return self._entity.get_uri()
         elif name == "field_value":
             # Note: .keys() is required here as iterator on EntityData returns files in directory
             if self._key in self._entity.keys():
@@ -126,8 +128,9 @@ class bound_field(object):
         """
         Implement iterator protocol, returning accessible value keys.
         """
-        yield "field_value"
+        yield "entity_uri"
         yield "entity_type_id"
+        yield "field_value"
         yield "options"
         for k in self._field_description:
             yield k
@@ -168,6 +171,8 @@ def get_edit_renderer(renderid):
         # return RenderText()
     if renderid == "annal:field_render/Slug":
         return "field/annalist_edit_text.html"
+    if renderid == "annal:field_render/EntityRef":
+        return "field/annalist_edit_text.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_edit_textarea.html"
     if renderid == "annal:field_render/Type":
@@ -194,6 +199,8 @@ def get_view_renderer(renderid):
         # return RenderText()
     if renderid == "annal:field_render/Slug":
         return "field/annalist_view_text.html"
+    if renderid == "annal:field_render/EntityRef":
+        return "field/annalist_view_entityref.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_view_textarea.html"
     if renderid == "annal:field_render/Type":
@@ -217,6 +224,8 @@ def get_item_renderer(renderid):
         return "field/annalist_item_text.html"
     if renderid == "annal:field_render/Slug":
         return "field/annalist_item_text.html"
+    if renderid == "annal:field_render/EntityRef":
+        return "field/annalist_item_entityref.html"    
     if renderid == "annal:field_render/Type":
         return "field/annalist_item_type.html"
     log.debug("get_item_renderer: %s not found"%renderid)

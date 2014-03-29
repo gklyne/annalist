@@ -80,11 +80,11 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        / error loses continuation URI in edit form
        / remove message header that appears on return from form edit (appears to be resolved?)
        / review skipped tests - can any be enabled now?
-       - delete entity continues to wrong page
-   - add entity links to list view
-       - Update bound_field to provide access to entity URI
-       - Create field render type for entity link
-       - Update field in defult list displays
+       / delete entity continues to wrong page
+   / add entity links to list views
+       / Update bound_field to provide access to entity URI
+       / Create field render type for entity ref
+       / Update field in default list displays
    - add type links to list view
        - (should use same base enhancements as entity)
        - Update field in default list displays

@@ -207,7 +207,7 @@ def entitydata_context_data(
         , 'orig_id':            'orig_entity_id'
         , 'fields':
           [ { 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_view':  'field/annalist_view_entityref.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
