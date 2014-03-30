@@ -1,0 +1,10 @@
+{ "@id":                "annal:fields/URI"
+, "annal:id":           "URI"
+, "annal:type":         "annal:Field"
+, "rdfs:label":         "URI"
+, "rdfs:comment":       "Entity type URI"
+, "annal:field_render": "annal:field_render/Text"
+, "annal:value_type":   "annal:Text"
+, "annal:placeholder":  "(URI)"
+, "annal:property_uri": "annal:uri"
+}

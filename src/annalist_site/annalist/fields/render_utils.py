@@ -178,6 +178,7 @@ def get_edit_renderer(renderid):
     if renderid == "annal:field_render/Type":
         return "field/annalist_edit_select.html"
     log.warning("get_edit_renderer: %s not found"%renderid)
+    raise ValueError("get_edit_renderer: %s not found"%renderid)
     return None
 
 def get_view_renderer(renderid):
@@ -206,6 +207,7 @@ def get_view_renderer(renderid):
     if renderid == "annal:field_render/Type":
         return "field/annalist_view_select.html"
     log.warning("get_view_renderer: %s not found"%renderid)
+    raise ValueError("get_view_renderer: %s not found"%renderid)
     return None
 
 def get_head_renderer(renderid):
