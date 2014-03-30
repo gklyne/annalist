@@ -132,6 +132,19 @@ class EntityEditBaseView(AnnalistGenericView):
         self.recordtypedata = RecordTypeData(self.collection, type_id)
         return None
 
+    def get_view_data(self, view_id):
+        if not RecordView.exists(self.collection, view_id):
+            log.info("get_view_data: RecordView %s not found"%view_id)
+            coll_id = self.collection.get_id()
+            return self.error(
+                dict(self.error404values(),
+                    message=message.RECORD_VIEW_NOT_EXISTS%(view_id, coll_id)
+                    )
+                )
+        self.recordview = RecordView.load(self.collection, view_id)
+        log.debug("recordview   %r"%(self.recordview.get_values()))
+        return None
+
     def get_field_context(self, field):
         """
         Creates a field description value to use in a context value when
@@ -179,6 +192,7 @@ class EntityEditBaseView(AnnalistGenericView):
         information from the form field definitions for an indicated view.
         """
         # Locate and read view description
+        # @@TODO: push responsibility to subclass to call get_view_data, and use resulting value
         entitymap  = copy.copy(baseentityvaluemap)
         entityview = RecordView.load(self.collection, view_id)
         log.debug("entityview   %r"%entityview.get_values())
