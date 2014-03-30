@@ -151,7 +151,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   </div>
                   <div class="small-12 medium-10 columns">
                     <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
-                    <input type="text" size="64" name="Entity_label" value="Record '00000001' of type 'testtype' in collection 'testcoll'">
+                    <input type="text" size="64" name="Entity_label" value="Entity '00000001' of type 'testtype' in collection 'testcoll'">
                   </div>
                 </div>
               </div><!-- editable textarea field -->
@@ -235,7 +235,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             "Short string used to describe entity when displayed"
             )
         field_label_value = (
-            "Record '00000001' of type 'testtype' in collection 'testcoll'"
+            "Entity '00000001' of type 'testtype' in collection 'testcoll'"
             )
         self.assertEqual(r.context['fields'][2]['field_id'],            'Entity_label')
         self.assertEqual(r.context['fields'][2]['field_name'],          'Entity_label')
@@ -368,7 +368,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.debug(r.content)
-        self.assertContains(r, "<p>Record &#39;entitynone&#39; of type &#39;testtype&#39; in collection &#39;testcoll&#39; does not exist</p>", status_code=404)
+        self.assertContains(r, "<p>Entity &#39;entitynone&#39; of type &#39;testtype&#39; in collection &#39;testcoll&#39; does not exist</p>", status_code=404)
         return
 
     #   -----------------------------------------------------------------------------
