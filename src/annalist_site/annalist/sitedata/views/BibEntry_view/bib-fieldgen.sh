@@ -24,7 +24,8 @@ for fid in              \
     Bib_school          
 do
 
-cat >${fid}.jsonld <<EOF
+mkdir -p fields/${fid}
+cat >fields/${fid}/field_meta.jsonld <<EOF
 { "@id":                "annal:fields/${fid}"
 , "annal:id":           "${fid}"
 , "annal:type":         "annal:Field"

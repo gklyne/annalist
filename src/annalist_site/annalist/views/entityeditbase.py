@@ -159,7 +159,9 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         field_id    = field['annal:field_id']
         recordfield = RecordField.load(self.collection, field_id, altparent=True)
-        log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
+        if recordfield is None:
+            raise ValueError("Can't retrieve definition for field %s"%(field_id))
+        log.info("recordfield   %r"%(recordfield and recordfield.get_values()))
         field_context = (
             { 'field_id':               field_id
             , 'field_placement':        get_placement_classes(field['annal:field_placement'])

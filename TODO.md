@@ -89,10 +89,11 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / connect list display to record view display
    / build entity selector logic into list view
 6. Generic entity edit view
-   - extract/generalize relevant logic from `defaultedit.py`
-   - parameterize view-id on extra URI field
-   - create new URI mapping entries
-   - refactor defaultedit.py as special case (subclass?)
+   / extract/generalize relevant logic from `defaultedit.py`
+   / parameterize view-id on extra URI field
+   / create new URI mapping entries
+   - create new test suite
+   / refactor defaultedit.py as special case (subclass?)
 7. Generic record list display and editing
    - extract/generalize relevant logic from `defaultlist.py`
    - parameterize view-id on extra URI field

@@ -130,7 +130,7 @@ def entitydata_list_id_uri(coll_id="testcoll", type_id="testtype", list_id="Defa
     return reverse(viewname, kwargs=kwargs)
 
 def entity_uri(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
-    viewname = "AnnalistEntityDataAccessView"
+    viewname = "AnnalistEntityDefaultDataView"
     kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
     return reverse(viewname, kwargs=kwargs)
 
