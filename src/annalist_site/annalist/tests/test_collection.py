@@ -52,7 +52,7 @@ from entity_testutils           import (
 #   -----------------------------------------------------------------------------
 
 site_types = {"Default_type"}
-site_views = {"Default_view", "Field_view", "Record_view", "List_view"}
+site_views = {"Default_view", "Field_view", "Record_view", "List_view", "BibEntry_view"}
 site_lists = {"Default_list", "Default_list_all"}
 
 class CollectionTest(AnnalistTestCase):
