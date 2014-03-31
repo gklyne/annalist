@@ -65,7 +65,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / entity list view: add selection fields (and classes)
    / form response test cases
    / customize response handler
-   - new entity from list-all display; changing type of entity
+   / new entity from list-all display; changing type of entity
        / Create default type in site data
        / Create field render type for drop-down (render_utils and field template)
        / Add field to default display
@@ -80,38 +80,46 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        / error loses continuation URI in edit form
        / remove message header that appears on return from form edit (appears to be resolved?)
        / review skipped tests - can any be enabled now?
-       - delete entity continues to wrong page
-   - add entity links to list view
-       - Update bound_field to provide access to entity URI
-       - Create field render type for entity link
-       - Update field in defult list displays
-   - add type links to list view
-       - (should use same base enhancements as entity)
-       - Update field in default list displays
-   - list_view response handler (needs generic view to make sense; view button to redisplay)
-   - default_view response handler (needs generic view to make sense)
-   - search response handler (later; see below)
+       / delete entity continues to wrong page
+   / add entity links to list views
+       / Update bound_field to provide access to entity URI
+       / Create field render type for entity ref
+       / Update field in default list displays
    / connect site display to default display of entities, not customize
    / connect list display to record view display
    / build entity selector logic into list view
-6. Generic entity view and editing
-   - extract/generalize relevant logic from `defaultedit.py`
-   - parameterize view-id on extra URI field
-   - create new URI mapping entries
-   - [later] refactor defaultedit.py as special case (subclass?)
+6. Generic entity edit view
+   / extract/generalize relevant logic from `defaultedit.py`
+   / parameterize view-id on extra URI field
+   / create new URI mapping entries
+   / create new test suite for generic edit view
+   / refactor defaultedit.py as special case (subclass?)
 7. Generic record list display and editing
    - extract/generalize relevant logic from `defaultlist.py`
    - parameterize view-id on extra URI field
    - create new URI mapping entries
-   - [later] refactor defaultedit.py as special case (subclass?)
-8. Record view display and editing (data to drive generic view/list)
+   - refactor defaultlist.py as special case (subclass?)
+8. Read-only entity data view
+   - based on generic entity edit view, but using different render field options
+   - update URI dispatching
+9. Extend form-generator
+   - support repeated field group (to support RecordView and BibJSON)
+   - support alternate displays for different subtypes (to support BibJSON)
+10. Record view display and editing (data to drive generic view/list)
    - where possible, migrate methods from editentitybase to subclasses
    - review logic - ideally, form handlers will access data from form, then hand off for peocessing
    - record view description form (create data and configure URIs)
    - field description form (create data and configure URIs)
    - record list description form (create data and configure URIs)
    - add "new field" logic to entity edit POST handler
-9. Read-only data view
+11. Display enhancements
+   - add type links to list view (link to typed list view...?)
+       - (should use same base enhancements as entity links at step 5)
+         - cf. [https://github.com/gklyne/annalist/commit/ff16e6063a2fee193e6e0080a77bfc738381a275]()
+       - Update field in default list displays
+   - list_view response handler (needs generic view to make sense; view button to redisplay)
+   - default_view response handler (needs generic view to make sense)
+   - search response handler (later; see below)
 ?. Grid view
 ?. Generic entity selector (based on canned sparql expressions?)
 ?. implement search within list view

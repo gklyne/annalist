@@ -130,16 +130,23 @@ def entitydata_list_id_uri(coll_id="testcoll", type_id="testtype", list_id="Defa
     return reverse(viewname, kwargs=kwargs)
 
 def entity_uri(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
-    viewname = "AnnalistEntityDataAccessView"
+    viewname = "AnnalistEntityDefaultDataView"
     kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_edit_uri(action, coll_id, type_id=None, entity_id=None):
-    viewname = ( 
-        'AnnalistEntityDefaultNewView'      if action == "new" else
-        'AnnalistEntityDefaultEditView'
-        )
-    kwargs = {'action': action, 'coll_id': coll_id}
+def entitydata_edit_uri(action, coll_id, type_id=None, entity_id=None, view_id=None):
+    if view_id:
+        viewname = ( 
+            'AnnalistEntityNewView'             if action == "new" else
+            'AnnalistEntityEditView'
+            )
+        kwargs = {'action': action, 'coll_id': coll_id, 'view_id': view_id}
+    else:
+        viewname = ( 
+            'AnnalistEntityDefaultNewView'      if action == "new" else
+            'AnnalistEntityDefaultEditView'
+            )
+        kwargs = {'action': action, 'coll_id': coll_id}
     if type_id:
         kwargs.update({'type_id': type_id})
     if entity_id:
@@ -207,7 +214,7 @@ def entitydata_context_data(
         , 'orig_id':            'orig_entity_id'
         , 'fields':
           [ { 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_view':  'field/annalist_view_entityref.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
@@ -299,6 +306,108 @@ def entitydata_delete_confirm_form_data(entity_id=None):
         { 'entity_id':     entity_id,
           'entity_delete': 'Delete'
         })
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- Entity data in recordtype view
+#
+#   -----------------------------------------------------------------------------
+
+def entitydata_recordtype_view_context_data(
+        entity_id=None, orig_id=None, type_id="testtype", type_ids=[],
+        action=None, update="Entity"
+    ):
+    context_dict = (
+        { 'title':              site_title()
+        , 'coll_id':            'testcoll'
+        , 'type_id':            'testtype'
+        , 'orig_id':            'orig_entity_id'
+        , 'fields':
+          [ { 'field_label':        'Id'
+            , 'field_render_view':  'field/annalist_view_entityref.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'Entity_id'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+            , 'field_id':           'Entity_id'
+            , 'field_value_type':   'annal:Slug'
+            # , 'field_value':      (Supplied separately)
+            , 'options':            []
+            }
+          , { 'field_label':        'Label'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'Type_label'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_id':           'Type_label'
+            , 'field_value_type':   'annal:Text'
+            , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
+            , 'options':            []
+            }
+          , { 'field_label':        'Comment'
+            , 'field_render_view':  'field/annalist_view_textarea.html'
+            , 'field_render_edit':  'field/annalist_edit_textarea.html'
+            , 'field_name':         'Type_comment'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_id':           'Type_comment'
+            , 'field_value_type':   'annal:Longtext'
+            , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
+            , 'options':            []
+            }
+          , { 'field_label':        'URI'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'Type_uri'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_id':           'Type_uri'
+            , 'field_value_type':   'annal:Text'
+            # , 'field_value':      (Supplied separately)
+            , 'options':            []
+            }
+          ]
+        , 'continuation_uri':   entitydata_list_type_uri("testcoll", type_id)
+        })
+    if entity_id:
+        context_dict['fields'][0]['field_value'] = entity_id
+        context_dict['fields'][1]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
+        context_dict['fields'][2]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
+        context_dict['fields'][3]['field_value'] = TestBaseUri + "/c/%s/d/%s/%s/"%("testcoll", "testtype", entity_id)
+        context_dict['orig_id']     = entity_id
+    if orig_id:
+        context_dict['orig_id']     = orig_id
+    if action:  
+        context_dict['action']      = action
+    return context_dict
+
+def entitydata_recordtype_view_form_data(
+        entity_id=None, orig_id=None, 
+        type_id="testtype", orig_type=None,
+        coll_id="testcoll", 
+        action=None, cancel=None, update="Entity"):
+    # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
+    form_data_dict = (
+        { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
+        , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
+        , 'orig_id':            'orig_entity_id'
+        , 'continuation_uri':   entitydata_list_type_uri(coll_id, orig_type or type_id)
+        })
+    if entity_id:
+        form_data_dict['Entity_id']     = entity_id
+        form_data_dict['Type_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
+        form_data_dict['Type_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
+        form_data_dict['Type_uri']      = TestBaseUri + "/c/%s/d/%s/%s/"%(coll_id, type_id, entity_id)
+        form_data_dict['orig_id']       = entity_id
+        form_data_dict['orig_type']     = type_id
+    if orig_id:
+        form_data_dict['orig_id']       = orig_id
+    if orig_type:
+        form_data_dict['orig_type']     = orig_type
+    if action:
+        form_data_dict['action']        = action
+    if cancel:
+        form_data_dict['cancel']        = "Cancel"
+    else:
+        form_data_dict['save']          = 'Save'
+    return form_data_dict
 
 #   -----------------------------------------------------------------------------
 #

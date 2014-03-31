@@ -6,17 +6,16 @@
 , "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record view description"
 , "annal:view_fields":
   [ { "annal:field_id":         "View_id"
-    , "annal:display_small":    "0,12"
-    , "annal:display_medium":   "0,4"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
     }
   , { "annal:field_id":         "View_label"
-    , "annal:display_small":    "0,12"
+    , "annal:field_placement":  "small:0,12"
     }
   , { "annal:field_id":         "View_comment"
-    , "annal:display_small":    "0,12"
+    , "annal:field_placement":  "small:0,12"
     }
   , { "annal:field_id":         "View_fields"
-    , "annal:display_small":    "0,12"
+    , "annal:field_placement":  "small:0,12"
     }
   ]
 }
