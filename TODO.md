@@ -92,7 +92,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / extract/generalize relevant logic from `defaultedit.py`
    / parameterize view-id on extra URI field
    / create new URI mapping entries
-   - create new test suite
+   / create new test suite for generic edit view
    / refactor defaultedit.py as special case (subclass?)
 7. Generic record list display and editing
    - extract/generalize relevant logic from `defaultlist.py`

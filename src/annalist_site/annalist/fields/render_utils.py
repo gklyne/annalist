@@ -51,7 +51,7 @@ class bound_field(object):
     >>> field_def = bound_field(field_def_desc, entity)
     >>> field_def.field_type
     'def_type'
-    >>> field_def.field_value == None
+    >>> field_def.field_value == ""
     True
     >>> field_def = bound_field(field_def_desc, entity, extras={"def": "default"})
     >>> field_def.field_type
@@ -103,7 +103,7 @@ class bound_field(object):
                 return self._entity.get_type_id()
             else:
                 # return self._extras.get("entity_type_id", None)
-                return None
+                return ""
         elif name == "entity_uri":
             return self._entity.get_uri()
         elif name == "field_value":

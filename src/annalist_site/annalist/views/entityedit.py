@@ -89,7 +89,7 @@ class GenericEntityEditView(EntityEditBaseView):
         self._entityvaluemap = self.get_form_entityvaluemap(view_id or self._view_id)
         viewcontext = self.map_value_to_context(entity,
             title               = self.site_data()["title"],
-            continuation_uri    = request.GET.get('continuation_uri', None),
+            continuation_uri    = request.GET.get('continuation_uri', ""),
             heading             = entity_initial_values['rdfs:label'],
             action              = action,
             coll_id             = coll_id,
@@ -117,7 +117,7 @@ class GenericEntityEditView(EntityEditBaseView):
             "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
-        # log.debug("  form data %r"%(request.POST))
+        log.debug("  form data %r"%(request.POST))
         http_response = (
             self.get_coll_type_data(coll_id, type_id, host=self.get_request_host()) or
             self.form_edit_auth(action, self.recordtypedata._entityuri) or
@@ -125,15 +125,19 @@ class GenericEntityEditView(EntityEditBaseView):
             )
         if http_response:
             return http_response
-        # Get key POST values
-        entity_id            = request.POST.get('Entity_id', None)
-        orig_entity_id       = request.POST.get('orig_id', None)
-        entity_type          = request.POST.get('Entity_type', None)
-        orig_entity_type     = request.POST.get('orig_type', None)
-        continuation_uri     = request.POST.get('continuation_uri', 
+        # Get key POST values; use values from URI when form does not have corresponding fields
+        entity_id            = request.POST.get('Entity_id', entity_id)
+        orig_entity_id       = request.POST.get('orig_id', entity_id)
+        entity_type          = request.POST.get('Entity_type', type_id)
+        orig_entity_type     = request.POST.get('orig_type', type_id)
+        continuation_uri     = (request.POST.get('continuation_uri', None) or
             self.view_uri('AnnalistEntityDefaultListType', coll_id=coll_id, type_id=type_id)
             )
-        # log.debug("continuation_uri %s, type_id %s"%(continuation_uri, type_id))
+        # log.info(
+        #     "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
+        #       (coll_id, type_id, entity_id, view_id, action)
+        #     )
+        # log.info("continuation_uri %s, type_id %s"%(continuation_uri, type_id))
         type_ids = [ t.get_id() for t in self.collection.types() ]
         context_extra_values = (
             { 'coll_id':          coll_id
@@ -156,6 +160,10 @@ class GenericEntityEditView(EntityEditBaseView):
         if not self.recordtypedata._exists():
             # Create RecordTypeData when not already exists
             RecordTypeData.create(self.collection, self.recordtypedata.get_id(), {})
+        # log.info(
+        #     "self.form_response: entity_id %s, orig_entity_id %s, type_id %s, action %s"%
+        #       (entity_id, orig_entity_id, type_id, action)
+        #     )
         return self.form_response(
             request, action, self.recordtypedata, 
             entity_id, orig_entity_id, 

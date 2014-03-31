@@ -367,6 +367,7 @@ class EntityEditBaseView(AnnalistGenericView):
         if 'cancel' in request.POST:
             return HttpResponseRedirect(continuation_uri)
         # Check authorization
+        # @@TODO redundant?  Checked by calling POST handler?
         auth_required = self.form_edit_auth(action, orig_parent._entityuri)
         if auth_required:
             # log.debug("form_response: auth_required")            
@@ -380,13 +381,13 @@ class EntityEditBaseView(AnnalistGenericView):
                 )
         # Check response has valid id and type
         if not util.valid_id(entity_id):
-            # log.debug("form_response: not util.valid_id('%s')"%entity_id)
+            log.debug("form_response: entityid not util.valid_id('%s')"%entity_id)
             return self.form_re_render(request, context_extra_values,
                 error_head=messages['entity_heading'],
                 error_message=messages['entity_invalid_id']
                 )
         if not util.valid_id(entity_type):
-            # log.debug("form_response: not util.valid_id('%s')"%entity_type)
+            log.debug("form_response: entitytype not util.valid_id('%s')"%entity_type)
             return self.form_re_render(request, context_extra_values,
                 error_head=messages['entity_type_heading'],
                 error_message=messages['entity_type_invalid']
@@ -423,7 +424,10 @@ class EntityEditBaseView(AnnalistGenericView):
                         )
             else:
                 if not self._entityclass.exists(orig_parent, entity_id):
-                    # This shouldn't happen, but just incase...
+                    # This shouldn't happen, but just in case...
+                    log.warning("Expected %s/%s not found; action %s, entity_id_changed %r"%
+                          (entity_type, entity_id, request.POST['action'], entity_id_changed)
+                        )
                     return self.form_re_render(request, context_extra_values,
                         error_head=messages['entity_heading'],
                         error_message=messages['entity_not_exists']
@@ -435,6 +439,7 @@ class EntityEditBaseView(AnnalistGenericView):
             if entity_id_changed:
                 if self._entityclass.exists(orig_parent, entity_id):    # Precautionary
                     self._entityclass.remove(orig_parent, orig_entity_id)
+            log.debug("Continue to %s"%(continuation_uri))
             return HttpResponseRedirect(continuation_uri)
         # Report unexpected form data
         # This shouldn't happen, but just in case...
@@ -443,6 +448,8 @@ class EntityEditBaseView(AnnalistGenericView):
             message.UNEXPECTED_FORM_DATA%(request.POST), 
             message.SYSTEM_ERROR
             )
+        log.warning("Unexpected form data %s"%(err_values))
+        log.warning("Continue to %s"%(continuation_uri))
         return HttpResponseRedirect(continuation_uri+err_values)
 
 
