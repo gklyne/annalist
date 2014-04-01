@@ -21,6 +21,8 @@ from oauth2.views               import LoginUserView, LoginPostView, LoginDoneVi
 from annalist.views.defaultlist import EntityDefaultListView, EntityDataDeleteConfirmedView
 from annalist.views.defaultedit import EntityDefaultEditView
 
+from annalist.views.entityedit  import GenericEntityEditView
+
 # @@TODO: Review URI design: 1-letter path segments:
 #
 # c - collections
@@ -90,6 +92,7 @@ urlpatterns = patterns('',
     url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/$',
                             EntityDefaultListView.as_view(),
                             name='AnnalistEntityDefaultListType'),
+
     url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/!delete_confirmed$',
                             EntityDataDeleteConfirmedView.as_view(),
                             name='AnnalistEntityDataDeleteView'),
@@ -108,16 +111,16 @@ urlpatterns = patterns('',
                             name='AnnalistEntityDefaultEditView'),
 
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/$',
-                            EntityDefaultEditView.as_view(),
+                            GenericEntityEditView.as_view(),
                             name='AnnalistEntityDataView'),
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/!(?P<action>new)$',
-                            EntityDefaultEditView.as_view(),
+                            GenericEntityEditView.as_view(),
                             name='AnnalistEntityNewView'),
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>copy)$',
-                            EntityDefaultEditView.as_view(),
+                            GenericEntityEditView.as_view(),
                             name='AnnalistEntityEditView'),
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>edit)$',
-                            EntityDefaultEditView.as_view(),
+                            GenericEntityEditView.as_view(),
                             name='AnnalistEntityEditView'),
 
     )

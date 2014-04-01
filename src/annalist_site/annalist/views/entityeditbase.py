@@ -142,7 +142,20 @@ class EntityEditBaseView(AnnalistGenericView):
                     )
                 )
         self.recordview = RecordView.load(self.collection, view_id)
-        log.debug("recordview   %r"%(self.recordview.get_values()))
+        log.debug("recordview %r"%(self.recordview.get_values()))
+        return None
+
+    def get_list_data(self, list_id):
+        if not RecordList.exists(self.collection, list_id):
+            log.info("get_list_data: RecordList %s not found"%list_id)
+            coll_id = self.collection.get_id()
+            return self.error(
+                dict(self.error404values(),
+                    message=message.RECORD_LIST_NOT_EXISTS%(list_id, coll_id)
+                    )
+                )
+        self.recordlist = RecordList.load(self.collection, list_id)
+        log.debug("recordlist %r"%(self.recordlist.get_values()))
         return None
 
     def get_field_context(self, field):
