@@ -96,11 +96,12 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / refactor defaultedit.py as special case (subclass?)
    / fix urls.py error and re-test
 7. Generic record list display and editing
-   - extract/generalize relevant logic from `defaultlist.py`
-   - refactor defaultlist.py as special case (subclass?)
-   - parameterize view-id on extra URI field
-   - create new URI mapping entries
+   / extract/generalize relevant logic from `defaultlist.py`
+   / refactor defaultlist.py as special case (subclass?)
+   / parameterize view-id on extra URI field
+   / create new URI mapping entries
    - create new test suite for generic list view
+   - refactor list description access out of context handling code (avoid multiple reads)
 8. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching

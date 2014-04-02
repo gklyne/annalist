@@ -6,22 +6,24 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-from django.conf.urls           import patterns, url
+from django.conf.urls               import patterns, url
 
-from annalist.views.home        import AnnalistHomeView
-from annalist.views.profile     import ProfileView
-from annalist.views.confirm     import ConfirmView
-from annalist.views.site        import SiteView, SiteActionView
-from annalist.views.collection  import CollectionView, CollectionEditView
-from annalist.views.recordtype  import RecordTypeEditView, RecordTypeDeleteConfirmedView
-from annalist.views.recordview  import RecordViewEditView # , RecordViewDeleteConfirmedView
-from annalist.views.recordlist  import RecordListEditView # , RecordListDeleteConfirmedView
-from oauth2.views               import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
+from annalist.views.home            import AnnalistHomeView
+from annalist.views.profile         import ProfileView
+from annalist.views.confirm         import ConfirmView
+from annalist.views.site            import SiteView, SiteActionView
+from annalist.views.collection      import CollectionView, CollectionEditView
+from annalist.views.recordtype      import RecordTypeEditView, RecordTypeDeleteConfirmedView
+from annalist.views.recordview      import RecordViewEditView # , RecordViewDeleteConfirmedView
+from annalist.views.recordlist      import RecordListEditView # , RecordListDeleteConfirmedView
+from oauth2.views                   import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
 
-from annalist.views.defaultlist import EntityDefaultListView, EntityDataDeleteConfirmedView
-from annalist.views.defaultedit import EntityDefaultEditView
+from annalist.views.defaultlist     import EntityDefaultListView
+from annalist.views.defaultedit     import EntityDefaultEditView
 
-from annalist.views.entityedit  import GenericEntityEditView
+from annalist.views.entityedit      import GenericEntityEditView
+from annalist.views.entitylist      import GenericEntityListView
+from annalist.views.entitydelete    import EntityDataDeleteConfirmedView
 
 # @@TODO: Review URI design: 1-letter path segments:
 #

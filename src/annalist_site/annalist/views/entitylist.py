@@ -51,7 +51,7 @@ class GenericEntityListView(EntityEditBaseView):
             self.collection
             self.recordtype
             self.recordtypedata
-            self._entityclass
+            self.recordlist
 
         Returns None if all is well, or an HttpResponse object with details 
         about any problem encountered.
@@ -61,7 +61,32 @@ class GenericEntityListView(EntityEditBaseView):
             http_response = self.get_coll_type_data(coll_id, type_id, host=reqhost)
         else:
             http_response = self.get_coll_data(coll_id, host=reqhost)
+        if not http_response:
+            http_response = self.get_list_data(list_id or self._list_id)
         return http_response
+
+    def get_view_id(self):
+        return self.recordlist.get('annal:default_view', None) or "Default_view"
+
+    def get_new_view_uri(self, coll_id, type_id):
+        """
+        Get URI for entity new view
+        """
+        return self.view_uri(
+            "AnnalistEntityNewView", 
+            coll_id=coll_id, view_id=self.get_view_id(), type_id=type_id,
+            action="new"
+            )
+
+    def get_edit_view_uri(self, coll_id, type_id, entity_id, action):
+        """
+        Get URI for entity edit or copy view
+        """
+        return self.view_uri(
+                "AnnalistEntityEditView", 
+                coll_id=coll_id, view_id=view_id, type_id=type_id, entity_id=entity_id,
+                action=action
+                )
 
     # GET
 
@@ -73,8 +98,6 @@ class GenericEntityListView(EntityEditBaseView):
         http_response = self.list_setup(coll_id, type_id)
         if not http_response:
             http_response = self.form_edit_auth("list", self.collection._entityuri)
-        if not http_response:
-            http_response = self.get_list_data(list_id or self._list_id)
         if http_response:
             return http_response
         # Prepare context for rendering form
@@ -126,8 +149,10 @@ class GenericEntityListView(EntityEditBaseView):
         # log.info("continuation_uri  %s"%(continuation_uri))
         if 'close' in request.POST:
             return HttpResponseRedirect(continuation_uri)
-        # Not "Close": set up view parameters
+        # Not "Close": set up list parameters
         http_response = self.list_setup(coll_id, type_id)
+        if not http_response:
+            http_response = self.get_list_data(list_id or self._list_id)
         if http_response:
             return http_response
         # Process requested action
@@ -143,13 +168,9 @@ class GenericEntityListView(EntityEditBaseView):
                 )
             entity_type = entity_type or type_id or "Default_type"
             cont_param  = "&continuation_uri="+continuation_uri
-            view_id     = self.recordlist.get('annal:default_view', None) oe "Default_view"
             if "new" in request.POST:
                 action = "new"
-                redirect_uri = self.view_uri(
-                    "AnnalistEntityNewView", 
-                    coll_id=coll_id, view_id=view_id, type_id=entity_type,
-                    action="new") + continuation_here
+                redirect_uri = self.get_new_view_uri(coll_id, entity_type) + continuation_here
             if "copy" in request.POST:
                 action = "copy"
                 redirect_uri = (
@@ -157,10 +178,7 @@ class GenericEntityListView(EntityEditBaseView):
                         message.NO_ENTITY_FOR_COPY, 
                         continuation_uri=cont_param
                         ) or
-                    ( self.view_uri(
-                        "AnnalistEntityEditView", 
-                        coll_id=coll_id, view_id=view_id, type_id=entity_type, entity_id=entity_id, 
-                        action="copy") + continuation_here)
+                    self.get_edit_view_uri(coll_id, entity_type, entity_id, action) + continuation_here
                     )
             if "edit" in request.POST:
                 action = "edit"
@@ -169,10 +187,7 @@ class GenericEntityListView(EntityEditBaseView):
                         message.NO_ENTITY_FOR_EDIT,
                         continuation_uri=cont_param
                         ) or
-                    ( self.view_uri(
-                        "AnnalistEntityEditView", 
-                        coll_id=coll_id, view_id=view_id, type_id=entity_type, entity_id=entity_id,
-                        action="edit") + continuation_here)
+                    self.get_edit_view_uri(coll_id, entity_type, entity_id, action) + continuation_here
                     )
             if "delete" in request.POST:
                 redirect_uri = (
