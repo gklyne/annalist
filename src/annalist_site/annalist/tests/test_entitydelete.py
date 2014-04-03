@@ -22,7 +22,7 @@ from annalist.models.collection     import Collection
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.defaultlist     import EntityDataDeleteConfirmedView
+from annalist.views.entitydelete    import EntityDataDeleteConfirmedView
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site

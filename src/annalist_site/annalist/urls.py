@@ -6,20 +6,24 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-from django.conf.urls           import patterns, url
+from django.conf.urls               import patterns, url
 
-from annalist.views.home        import AnnalistHomeView
-from annalist.views.profile     import ProfileView
-from annalist.views.confirm     import ConfirmView
-from annalist.views.site        import SiteView, SiteActionView
-from annalist.views.collection  import CollectionView, CollectionEditView
-from annalist.views.recordtype  import RecordTypeEditView, RecordTypeDeleteConfirmedView
-from annalist.views.recordview  import RecordViewEditView # , RecordViewDeleteConfirmedView
-from annalist.views.recordlist  import RecordListEditView # , RecordListDeleteConfirmedView
-from oauth2.views               import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
+from annalist.views.home            import AnnalistHomeView
+from annalist.views.profile         import ProfileView
+from annalist.views.confirm         import ConfirmView
+from annalist.views.site            import SiteView, SiteActionView
+from annalist.views.collection      import CollectionView, CollectionEditView
+from annalist.views.recordtype      import RecordTypeEditView, RecordTypeDeleteConfirmedView
+from annalist.views.recordview      import RecordViewEditView # , RecordViewDeleteConfirmedView
+from annalist.views.recordlist      import RecordListEditView # , RecordListDeleteConfirmedView
+from oauth2.views                   import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
 
-from annalist.views.defaultlist import EntityDefaultListView, EntityDataDeleteConfirmedView
-from annalist.views.defaultedit import EntityDefaultEditView
+from annalist.views.defaultlist     import EntityDefaultListView
+from annalist.views.defaultedit     import EntityDefaultEditView
+
+from annalist.views.entityedit      import GenericEntityEditView
+from annalist.views.entitylist      import GenericEntityListView
+from annalist.views.entitydelete    import EntityDataDeleteConfirmedView
 
 # @@TODO: Review URI design: 1-letter path segments:
 #
@@ -90,6 +94,7 @@ urlpatterns = patterns('',
     url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/$',
                             EntityDefaultListView.as_view(),
                             name='AnnalistEntityDefaultListType'),
+
     url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/!delete_confirmed$',
                             EntityDataDeleteConfirmedView.as_view(),
                             name='AnnalistEntityDataDeleteView'),
@@ -108,16 +113,16 @@ urlpatterns = patterns('',
                             name='AnnalistEntityDefaultEditView'),
 
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/$',
-                            EntityDefaultEditView.as_view(),
+                            GenericEntityEditView.as_view(),
                             name='AnnalistEntityDataView'),
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/!(?P<action>new)$',
-                            EntityDefaultEditView.as_view(),
+                            GenericEntityEditView.as_view(),
                             name='AnnalistEntityNewView'),
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>copy)$',
-                            EntityDefaultEditView.as_view(),
+                            GenericEntityEditView.as_view(),
                             name='AnnalistEntityEditView'),
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>edit)$',
-                            EntityDefaultEditView.as_view(),
+                            GenericEntityEditView.as_view(),
                             name='AnnalistEntityEditView'),
 
     )

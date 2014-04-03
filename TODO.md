@@ -94,14 +94,27 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / create new URI mapping entries
    / create new test suite for generic edit view
    / refactor defaultedit.py as special case (subclass?)
+   / fix urls.py error and re-test
 7. Generic record list display and editing
-   - extract/generalize relevant logic from `defaultlist.py`
-   - parameterize view-id on extra URI field
-   - create new URI mapping entries
-   - refactor defaultlist.py as special case (subclass?)
+   / extract/generalize relevant logic from `defaultlist.py`
+   / refactor defaultlist.py as special case (subclass?)
+   / parameterize view-id on extra URI field
+   / create new URI mapping entries
+   - create new test suite for generic list view
+     - choose test scenario: list of what? what list definition?
+     - list field descriptions?  Need to create list description (4 fields?)
+     - also choose / define default view for list (Create field view?)
+     - check list display in dev app
+     - define test suite test_genericentitylist based loosely on test_entitydefaultlist
+   - refactor list description access out of context handling code (avoid multiple reads)
+   - refactor code from entityeditbase into mkore specific views where possible
+   - rename what is lefy of entityeditbase -> entityviewbase, or more to generic module
+   - don't include continuation-uri param when URI is blank
+   - edit form response should update, not replace, any data from the original (so data from multiple views is not discarded).
 8. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching
+   - include default view
 9. Extend form-generator
    - support repeated field group (to support RecordView and BibJSON)
    - support alternate displays for different subtypes (to support BibJSON)
