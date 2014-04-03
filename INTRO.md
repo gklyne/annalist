@@ -5,11 +5,11 @@ Linked data notebook software
 
 ## Background
 
-Inspired in part by working with small research groups, and also my own experiences and requirements for data management in running a small business.
+This project is inspired in part by working with small research groups, and also my own experiences and requirements for data management in running a small business.
 
-The first mile:  while there are many tools for archiving, publishing and processing data, it seems there is a gap in provision for non-developers to create datasets.  Maybe the most widely used tools are spreadsheets,m but these are not so good for shariung and remixing data.
+**Data - The First Mile**:  while there are many tools for archiving, publishing and processing data, it seems there is a gap in provision for non-developers to create new datasets.  Maybe the most widely used tools are spreadsheets, but these are not so good for sharing and remixing data.
 
-For example, in our work on Research Ob jects, a common question for which there was often not a satisfactory answer was: "How do I create a Research Object?"
+For example, in work on Research Objects, a common question for which there was often not a satisfactory answer was: "How do I create a Research Object?"
 
 
 ## Goals
@@ -27,14 +27,16 @@ A software tool for data management that is:
 
 ## Status (as of April 2014)
 
-In development since January 2014.  An early demonstrator, which shows the intended direction of development, but is still well short of being a usable system.  I estimate it is about 50% along the way to being a minimum releasable product.
+Annalist has been in part-time development since January 2014.  Currently, it exists as an early demonstrator, which shows the intended direction of development, but is still well short of being a usable system.  I estimate it is about 50% along the way to being a minimum releasable product.
 
 
-## Tour of early demonbstrator features
+## Tour of early demonstrator features
+
+(Links here assume a local copy of the Annalist web server application running on Django's default port 8000.)
 
 ### Front page
 
-[http://localhost:8000/annalist/site/]()
+[http://localhost:8000/annalist/site/](http://localhost:8000/annalist/site/)
 
 * Login via OAuth2/Open ID Connect, currently using Google+ as identity provider
 
@@ -44,13 +46,13 @@ In development since January 2014.  An early demonstrator, which shows the inten
 
 ### View collection
 
-[http://localhost:8000/annalist/c/coll1/d/]()
+[http://localhost:8000/annalist/c/coll1/d/](http://localhost:8000/annalist/c/coll1/d/)
 
 A default list of records/entities is displayed.  Alternative list views are (will be) possible, but the default list view is configured per collection.  "Find", "View", "Default" are noit yet implemented.
 
 ### Customize collection
 
-[http://localhost:8000/annalist/c/coll1/!edit]()
+[http://localhost:8000/annalist/c/coll1/!edit](http://localhost:8000/annalist/c/coll1/!edit)
 
 A collection is conbfigured with:
 
@@ -62,23 +64,23 @@ A collection is conbfigured with:
 
 ### View/edit record type
 
-[http://localhost:8000/annalist/c/coll1/_annalist_collection/types/type1/!edit]()
+[http://localhost:8000/annalist/c/coll1/_annalist_collection/types/type1/!edit](http://localhost:8000/annalist/c/coll1/_annalist_collection/types/type1/!edit)
 
 Note that minimal; information associated with a record type - presentational rather than structural.
 
 ### Back to collection view
 
-[http://localhost:8000/annalist/c/coll1/d/]()
+[http://localhost:8000/annalist/c/coll1/d/](http://localhost:8000/annalist/c/coll1/d/)
 
 ### Select entity edit view
 
-[http://localhost:8000/annalist/c/coll1/d/type1/entity1/!edit]()
+[http://localhost:8000/annalist/c/coll1/d/type1/entity1/!edit](http://localhost:8000/annalist/c/coll1/d/type1/entity1/!edit)
 
 This form is entitely data driven.  Cf. `src/annalist_site/annalist/sitedata/views/Default_view/view_meta.jsonld`.
 
 See also (Manualm URI; this navigation is not yet implemented):
 
-[http://localhost:8000/annalist/c/coll1/v/BibEntry_view/type1/entity1/!edit]()
+[http://localhost:8000/annalist/c/coll1/v/BibEntry_view/type1/entity1/!edit](http://localhost:8000/annalist/c/coll1/v/BibEntry_view/type1/entity1/!edit)
 
 and its view definition `src/annalist_site/annalist/sitedata/views/BibEntry_view/view_meta.jsonld`.
 
