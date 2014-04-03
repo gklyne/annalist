@@ -1,0 +1,20 @@
+{ "@id":                "annal:display/Default_list"
+, "annal:id":           "Default_list"
+, "annal:type":         "annal:display/RecordList"
+, "rdfs:label":         "View description for default record view"
+, "rdfs:comment":       "This resource describes the default record listing display"
+, "annal:selector":     "annal:type=={annal:default_view/annal:record_type} @@TBD"
+, "annal:default_view_not": "Default_view"
+, "annal:display_type": "annal:List"
+, "annal:list_fields":
+  [ { "annal:field_id":         "Entity_id"
+    , "annal:field_placement":  "small:0,3"
+    }
+  , { "annal:field_id":         "Field_type"
+    , "annal:field_placement":  "small:3,3"
+    }
+  , { "annal:field_id":         "Entity_label"
+    , "annal:field_placement":  "small:6,6"
+    }
+  ]
+}

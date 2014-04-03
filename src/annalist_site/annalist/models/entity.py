@@ -224,6 +224,7 @@ class EntityRoot(object):
                     lists in a collection.
         """
         search_dirs = (self._entitydir, self._entityaltdir if include_alt else None)
+        log.debug("_children include_alt %r, search_dirs %r"%(include_alt, search_dirs))
         for dirpath in search_dirs:
             if dirpath:
                 if cls and cls._entitypath:
@@ -231,6 +232,7 @@ class EntityRoot(object):
                 assert "%" not in dirpath, "_entitypath template variable interpolation may be in filename part only"
                 if os.path.isdir(dirpath):
                     files = os.listdir(dirpath)
+                    log.debug("_children files %r"%files)
                     for f in files:
                         if util.valid_id(f):
                             yield f
@@ -249,6 +251,11 @@ class EntityRoot(object):
             for f in files:
                 if util.valid_id(f):
                     yield f
+        # if os.path.isdir(self._entityaltdir):
+        #     files = os.listdir(self._entityaltdir)
+        #     for f in files:
+        #         if util.valid_id(f):
+        #             yield f
         return
 
     # Special methods to facilitate access to entity values by dictionary operations
@@ -328,6 +335,7 @@ class Entity(EntityRoot):
             assert parent._entityalturi, "Parent has no alt entity (%s,%s)"%(entityid, parent._entityid)
             self._entityalturi = parent._entityalturi+relpath
             self._entityaltdir = parent._entityaltdir+relpath
+            log.debug("Entity.__init__: entity alt URI %s, entity alt dir %s"%(self._entityalturi, self._entityaltdir))
         self._entityid = entityid
         self._typeid   = parent.get_id() 
         log.debug("Entity.__init__: ID %s"%(self._entityid))
@@ -377,7 +385,7 @@ class Entity(EntityRoot):
     @classmethod
     def _child_entity(cls, parent, entityid, altentity=None, altparent=False):
         """
-        Instatiate a child entity (e.g. for create and load methods)
+        Instantiate a child entity (e.g. for create and load methods)
         """
         if altentity:
             e = cls(parent, entityid, altentity=altentity)

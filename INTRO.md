@@ -48,13 +48,13 @@ Annalist has been in part-time development since January 2014.  Currently, it ex
 
 [http://localhost:8000/annalist/c/coll1/d/](http://localhost:8000/annalist/c/coll1/d/)
 
-A default list of records/entities is displayed.  Alternative list views are (will be) possible, but the default list view is configured per collection.  "Find", "View", "Default" are noit yet implemented.
+A default list of records/entities is displayed.  Alternative list views are (will be) possible, but the default list view is configured per collection.  "Find", "View", "Default" are not yet implemented.
 
 ### Customize collection
 
 [http://localhost:8000/annalist/c/coll1/!edit](http://localhost:8000/annalist/c/coll1/!edit)
 
-A collection is conbfigured with:
+A collection is configured with:
 
 * Record (entity) types - high level classification of collection contents, _not_ structural.
 
@@ -98,7 +98,7 @@ New fields can be added to a view as-required ("New field" not yet implemented)
 
 ("Just-in-time schema"?)
 
-This is supported by the inherent flexibility of the underlying Linked Data model.
+This is supported by the inherent flexibility of the underlying Linked Data RDF model.
 
 **Frame- or entity-oriented**
 

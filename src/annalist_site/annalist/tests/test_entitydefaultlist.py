@@ -52,6 +52,7 @@ from entity_testutils               import (
 #
 #   -----------------------------------------------------------------------------
 
+
 class EntityDefaultListViewTest(AnnalistTestCase):
     """
     Tests for record type edit views
@@ -75,6 +76,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         e4 = EntityData.create(self.testdata2, "entity4", 
             entitydata_create_values("entity4", type_id="testtype2")
             )
+        self.initial_list_ids = ["Default_list", "Default_list_all", "Fields_list"]
         return
 
     def tearDown(self):
@@ -123,7 +125,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          None)
-        self.assertEqual(r.context['list_ids'],         ["Default_list", "Default_list_all"])
+        self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
         self.assertEqual(r.context['list_selected'],    "Default_list_all")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # Unbound field descriptions
@@ -150,7 +152,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_render_item'], "field/annalist_item_entityref.html")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-2 columns")
         self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Slug")
-        self.assertEqual(r.context['fields'][1]['field_value'], "")
+        self.assertEqual(r.context['fields'][1]['field_value'], "(entity id)")
         self.assertEqual(r.context['fields'][1]['entity_type_id'], "")
         # 3rd field
         self.assertEqual(r.context['fields'][2]['field_id'], 'Entity_label')
@@ -162,7 +164,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_render_item'], "field/annalist_item_text.html")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-8 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][2]['field_value'], "")
+        self.assertEqual(r.context['fields'][2]['field_value'], "(label)")
         self.assertEqual(r.context['fields'][2]['entity_type_id'], "")
         # Entities and bound fields
         self.assertEqual(len(r.context['entities']), 4)
@@ -207,7 +209,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
-        self.assertEqual(r.context['list_ids'],         ["Default_list", "Default_list_all"])
+        self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
         self.assertEqual(r.context['list_selected'],    "Default_list")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # Fields
@@ -222,7 +224,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_render_item'], "field/annalist_item_entityref.html")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-3 columns")
         self.assertEqual(r.context['fields'][0]['field_value_type'], "annal:Slug")
-        self.assertEqual(r.context['fields'][0]['field_value'], "")
+        self.assertEqual(r.context['fields'][0]['field_value'], "(entity id)")
         # 2nd field
         self.assertEqual(r.context['fields'][1]['field_id'], 'Entity_label')
         self.assertEqual(r.context['fields'][1]['field_name'], 'Entity_label')

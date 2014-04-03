@@ -112,6 +112,13 @@ urlpatterns = patterns('',
                             EntityDefaultEditView.as_view(),
                             name='AnnalistEntityDefaultEditView'),
 
+    url(r'^c/(?P<coll_id>\w{0,32})/l/(?P<list_id>\w{0,32})/$',
+                            GenericEntityListView.as_view(),
+                            name='AnnalistEntityGenericList'),
+    url(r'^c/(?P<coll_id>\w{0,32})/l/(?P<list_id>\w{0,32})/(?P<type_id>\w{0,32})/$',
+                            GenericEntityListView.as_view(),
+                            name='AnnalistEntityGenericList'),
+
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityDataView'),

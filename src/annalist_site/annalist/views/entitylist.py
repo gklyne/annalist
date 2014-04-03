@@ -61,8 +61,8 @@ class GenericEntityListView(EntityEditBaseView):
             http_response = self.get_coll_type_data(coll_id, type_id, host=reqhost)
         else:
             http_response = self.get_coll_data(coll_id, host=reqhost)
-        if not http_response:
-            http_response = self.get_list_data(list_id or self._list_id)
+        # if not http_response:
+        #     http_response = self.get_list_data(list_id or self._list_id)
         return http_response
 
     def get_view_id(self):
@@ -101,8 +101,10 @@ class GenericEntityListView(EntityEditBaseView):
         if http_response:
             return http_response
         # Prepare context for rendering form
+        if list_id:
+            self._list_id = list_id
         list_ids      = [ l.get_id() for l in self.collection.lists() ]
-        list_selected = self._list_id or self.collection.get_values().get("default_list", "")
+        list_selected = self._list_id or self.collection.get_values().get("Default_list", None)
         # @@TODO: apply selector logic here?
         if type_id:
             entity_list = self.recordtypedata.entities()
@@ -245,45 +247,5 @@ class GenericEntityListView(EntityEditBaseView):
             message.SYSTEM_ERROR
             )
         return HttpResponseRedirect(continuation_uri+err_values)
-
-#   -------------------------------------------------------------------------------------------
-#
-#   Entity delete confirmation response handling
-#
-#   -------------------------------------------------------------------------------------------
-
-class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
-    """
-    View class to perform completion of confirmed entity data deletion,
-    anticipated to be requested from a data list or record view.
-    """
-    def __init__(self):
-        super(EntityDataDeleteConfirmedView, self).__init__()
-        return
-
-    # POST
-
-    def post(self, request, coll_id, type_id):
-        """
-        Process options to complete action to remove an entity data record.
-        """
-        log.debug("EntityDataDeleteConfirmedView.post: %r"%(request.POST))
-        if "entity_delete" in request.POST:
-            entity_id  = request.POST['entity_id']
-            coll       = self.collection(coll_id)
-            recordtype = self.recordtype(coll_id, type_id)
-            recorddata = self.recordtypedata(coll_id, type_id)
-            messages  = (
-                { 'entity_removed': message.ENTITY_DATA_REMOVED%(entity_id, type_id, coll_id)
-                })
-            continuation_uri = (
-                request.POST.get('continuation_uri', None) or
-                self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
-                )
-            return self.confirm_form_respose(
-                request, recorddata, entity_id, recorddata.remove_entity, 
-                messages, continuation_uri
-                )
-        return self.error(self.error400values())
 
 # End.

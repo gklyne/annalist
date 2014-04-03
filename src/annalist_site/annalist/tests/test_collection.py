@@ -51,13 +51,13 @@ from entity_testutils           import (
 #
 #   -----------------------------------------------------------------------------
 
-site_types = {"Default_type"}
+site_types = {"Default_type", "fields"}
 site_views = (
     { "Default_view", "Field_view"
     , "RecordType_view", "RecordView_view"
     , "List_view", "BibEntry_view"
     })
-site_lists = {"Default_list", "Default_list_all"}
+site_lists = {"Default_list", "Default_list_all", "Fields_list"}
 
 class CollectionTest(AnnalistTestCase):
     """

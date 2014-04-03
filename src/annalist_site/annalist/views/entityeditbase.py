@@ -111,6 +111,7 @@ class EntityEditBaseView(AnnalistGenericView):
         Returns None if all is well, or an HttpResponse object with details 
         about any problem encountered.
         """
+        # @@TODO: use get_coll_data (above).  Also, separate get_type_data.
         self.sitedata = SiteData(self.site(host=host), layout.SITEDATA_DIR)
         # Check collection
         if not Collection.exists(self.site(host=host), coll_id):
@@ -129,7 +130,7 @@ class EntityEditBaseView(AnnalistGenericView):
                     )
                 )
         self.recordtype     = RecordType(self.collection, type_id)
-        self.recordtypedata = RecordTypeData(self.collection, type_id)
+        self.recordtypedata = RecordTypeData(self.collection, type_id, altparent=True)
         return None
 
     def get_view_data(self, view_id):

@@ -67,7 +67,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        self.type_ids   = ['testtype', 'Default_type']
+        self.type_ids   = ['testtype', 'Default_type', 'fields']
         self.no_options = ['(no options)']
         return
 
@@ -111,8 +111,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
-        formdata = """
-            <div class="row">
+        formrow1 = """
               <!-- editable text field -->
               <div class="small-12 medium-6 columns">
                 <div class="row">
@@ -126,7 +125,10 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                     <input type="text" size="64" name="Entity_id" value="00000001">
                   </div>
                 </div>
-              </div><!-- record type dropdown -->
+              </div>
+            """
+        formrow2 = """
+              <!-- record type dropdown -->
               <div class="small-12 medium-6 right columns">
                 <div class="row">
                   <div class="view_label small-12 medium-4 columns">
@@ -138,10 +140,14 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                     <select name="Entity_type" class="right">
                         <option selected="selected">testtype</option>
                         <option>Default_type</option>
+                        <option>fields</option>
                     </select>
                   </div>
                 </div>
-              </div><!-- editable text field -->
+              </div>
+            """
+        formrow3 = """
+              <!-- editable text field -->
               <div class="small-12 columns">
                 <div class="row">
                   <div class="view_label small-12 medium-2 columns">
@@ -154,7 +160,10 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                     <input type="text" size="64" name="Entity_label" value="Entity '00000001' of type 'testtype' in collection 'testcoll'">
                   </div>
                 </div>
-              </div><!-- editable textarea field -->
+              </div>
+            """
+        formrow4 = """
+              <!-- editable textarea field -->
               <div class="small-12 columns">
                 <div class="row">
                   <div class="view_label small-12 medium-2 columns">
@@ -167,10 +176,12 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   </div>
                 </div>
               </div>
-            </div>
             """
         # log.info("******\n"+r.content)
-        self.assertContains(r, formdata, html=True)
+        self.assertContains(r, formrow1, html=True)
+        self.assertContains(r, formrow2, html=True)
+        self.assertContains(r, formrow3, html=True)
+        self.assertContains(r, formrow4, html=True)
         return
 
     def test_get_new(self):

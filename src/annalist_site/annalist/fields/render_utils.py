@@ -51,7 +51,7 @@ class bound_field(object):
     >>> field_def = bound_field(field_def_desc, entity)
     >>> field_def.field_type
     'def_type'
-    >>> field_def.field_value == ""
+    >>> field_def.field_value == "..."
     True
     >>> field_def = bound_field(field_def_desc, entity, extras={"def": "default"})
     >>> field_def.field_type
@@ -114,7 +114,7 @@ class bound_field(object):
                 return self._extras[self._key]
             else:
                 # log.debug("No value for %s"%(self._key))
-                return ""
+                return self._field_description.get('field_placeholder', "...")
         elif name == "options":
             # log.info(repr(self._options))
             return self._options
@@ -173,6 +173,8 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_text.html"
     if renderid == "annal:field_render/EntityRef":
         return "field/annalist_edit_text.html"    
+    if renderid == "annal:field_render/Identifier":
+        return "field/annalist_edit_text.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_edit_textarea.html"
     if renderid == "annal:field_render/Type":
@@ -201,6 +203,8 @@ def get_view_renderer(renderid):
     if renderid == "annal:field_render/Slug":
         return "field/annalist_view_text.html"
     if renderid == "annal:field_render/EntityRef":
+        return "field/annalist_view_entityref.html"    
+    if renderid == "annal:field_render/Identifier":
         return "field/annalist_view_entityref.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_view_textarea.html"
