@@ -55,7 +55,10 @@ class EntityDefaultListView(GenericEntityListView):
         """
         reqhost = self.get_request_host()
         if type_id:
-            http_response = self.get_coll_type_data(coll_id, type_id, host=reqhost)
+            http_response = (
+                self.get_coll_data(coll_id, host=reqhost) or
+                self.get_type_data(type_id)
+                )
             self._list_id = "Default_list"
         else:
             http_response = self.get_coll_data(coll_id, host=reqhost)

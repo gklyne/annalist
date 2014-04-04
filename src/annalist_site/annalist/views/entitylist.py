@@ -58,7 +58,10 @@ class GenericEntityListView(EntityEditBaseView):
         """
         reqhost = self.get_request_host()
         if type_id:
-            http_response = self.get_coll_type_data(coll_id, type_id, host=reqhost)
+            http_response = (
+                self.get_coll_data(coll_id, host=host) or
+                self.get_type_data(type_id)
+                )
         else:
             http_response = self.get_coll_data(coll_id, host=reqhost)
         # if not http_response:
@@ -84,7 +87,7 @@ class GenericEntityListView(EntityEditBaseView):
         """
         return self.view_uri(
                 "AnnalistEntityEditView", 
-                coll_id=coll_id, view_id=view_id, type_id=type_id, entity_id=entity_id,
+                coll_id=coll_id, view_id=self.get_view_id(), type_id=type_id, entity_id=entity_id,
                 action=action
                 )
 

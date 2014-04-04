@@ -136,7 +136,7 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         # Check type
         if not RecordType.exists(self.collection, type_id):
-            log.info("get_coll_type_data: RecordType %s not found"%type_id)
+            log.info("get_type_data: RecordType %s not found"%type_id)
             return self.error(
                 dict(self.error404values(),
                     message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
@@ -144,22 +144,6 @@ class EntityEditBaseView(AnnalistGenericView):
                 )
         self.recordtype     = RecordType(self.collection, type_id)
         self.recordtypedata = RecordTypeData(self.collection, type_id, altparent=True)
-        return None
-
-    def get_coll_type_data(self, coll_id, type_id, host=""):
-        """
-        Check collection and type identifiers, and set up objects for:
-            self.collection
-            self.recordtype
-            self.recordtypedata
-
-        Returns None if all is well, or an HttpResponse object with details 
-        about any problem encountered.
-        """
-        return (
-            self.get_coll_data(coll_id, host=host) or
-            self.get_type_data(type_id)
-            )
         return None
 
     def get_view_data(self, view_id):
