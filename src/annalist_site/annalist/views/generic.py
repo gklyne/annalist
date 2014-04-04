@@ -70,15 +70,6 @@ class AnnalistGenericView(ContentNegotiationView):
             self._site_data = self.site(host=host).site_data()
         return self._site_data
 
-    def collection(self, coll_id, host=""):
-        return Collection(self.site(host=host), coll_id)
-
-    def recordtype(self, coll_id, type_id, host=""):
-        return RecordType(self.collection(coll_id, host=host), type_id)
-
-    def recordtypedata(self, coll_id, type_id, host=""):
-        return RecordTypeData(self.collection(coll_id, host=host), type_id)
-
     def get_coll_data(self, coll_id, host=""):
         """
         Check collection and type identifiers, and set up objects for:

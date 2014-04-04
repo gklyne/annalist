@@ -60,7 +60,7 @@ class CollectionEditView(AnnalistGenericView):
         Form for editing (customizing) the current collection 
         """
         def resultdata():
-            coll = self.collection(coll_id)
+            coll = self.collection
             context = (
                 { 'title':              self.site_data()["title"]
                 , 'continuation_uri':   continuation_uri
@@ -71,12 +71,9 @@ class CollectionEditView(AnnalistGenericView):
                 , 'select_rows':        "6"
                 })
             return context
-        if not Collection.exists(self.site(), coll_id):
-            return self.error(
-                dict(self.error404values(),
-                    message=message.COLLECTION_NOT_EXISTS%(coll_id)
-                    )
-                )
+        http_response = self.get_coll_data(coll_id, self.get_request_host())
+        if http_response:
+            return http_response
         continuation_here, continuation_uri = self.continuation_uris(
             request.GET,
             self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)

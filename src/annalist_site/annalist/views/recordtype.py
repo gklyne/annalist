@@ -95,7 +95,9 @@ class RecordTypeEditView(EntityEditBaseView):
         orig_type_id         = request.POST.get('orig_id', None)
         collection_edit_uri  = self.view_uri('AnnalistCollectionEditView', coll_id=coll_id)
         continuation_uri     = request.POST.get('continuation_uri', collection_edit_uri)
-        coll                 = self.collection(coll_id)
+        http_response = self.get_coll_data(coll_id, self.get_request_host())
+        if http_response:
+            return http_response
         context_extra_values = (
             { 'coll_id':          coll_id
             , 'continuation_uri': continuation_uri
@@ -109,7 +111,7 @@ class RecordTypeEditView(EntityEditBaseView):
             , 'entity_not_exists': message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)        
             })
         return self.form_response(
-            request, action, coll, 
+            request, action, self.collection, 
             type_id, orig_type_id, 
             coll_id, coll_id,
             messages, context_extra_values
@@ -133,13 +135,18 @@ class RecordTypeDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         """
         log.debug("RecordTypeDeleteConfirmedView.post: %r"%(request.POST))
         if "type_delete" in request.POST:
-            coll      = self.collection(coll_id)
+            http_response = self.get_coll_data(coll_id, self.get_request_host())
+            if http_response:
+                return http_response
             type_id   = request.POST['typelist']
             messages  = (
                 { 'entity_removed': message.RECORD_TYPE_REMOVED%(type_id, coll_id)
                 })
             continuation_uri = self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
-            return self.confirm_form_respose(request, coll, type_id, coll.remove_type, messages, continuation_uri)
+            return self.confirm_form_respose(
+                request, self.collection, type_id, 
+                self.collection.remove_type, messages, continuation_uri
+                )
         return self.error(self.error400values())
 
 # End.

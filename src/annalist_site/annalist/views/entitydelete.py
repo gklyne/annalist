@@ -48,15 +48,14 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         log.debug("EntityDataDeleteConfirmedView.post: %r"%(request.POST))
         if "entity_delete" in request.POST:
             http_response = (
-                get_coll_data(coll_id, self.get_request_host()) or
-                get_type_data(type_id)
+                self.get_coll_data(coll_id, self.get_request_host()) or
+                self.get_type_data(type_id)
                 )
+            if http_response:
+                return http_response
             # .................
 
             entity_id  = request.POST['entity_id']
-            coll       = self.collection(coll_id)
-            recordtype = self.recordtype(coll_id, type_id)
-            recorddata = self.recordtypedata(coll_id, type_id)
             messages  = (
                 { 'entity_removed': message.ENTITY_DATA_REMOVED%(entity_id, type_id, coll_id)
                 })
@@ -65,7 +64,7 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
                 self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
                 )
             return self.confirm_form_respose(
-                request, recorddata, entity_id, recorddata.remove_entity, 
+                request, self.recordtypedata, entity_id, self.recordtypedata.remove_entity, 
                 messages, continuation_uri
                 )
         return self.error(self.error400values())
