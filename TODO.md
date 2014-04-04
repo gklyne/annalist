@@ -112,6 +112,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    - rename what is lefy of entityeditbase -> entityviewbase, or more to generic module
    - don't include continuation-uri param when URI is blank
    - edit form response should update, not replace, any data from the original (so data from multiple views is not discarded).
+   - move invocation of authentication to the immediate response hander code?
 8. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching

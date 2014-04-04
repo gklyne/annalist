@@ -40,7 +40,7 @@ class GenericEntityListView(EntityEditBaseView):
 
     def __init__(self, list_id=None):
         super(GenericEntityListView, self).__init__()
-        self._list_id       = list_id
+        self._default_list_id = list_id
         return
 
     # Helper functions
@@ -67,6 +67,13 @@ class GenericEntityListView(EntityEditBaseView):
         # if not http_response:
         #     http_response = self.get_list_data(list_id or self._list_id)
         return http_response
+
+    def get_list_id(self, type_id, list_id):
+        return (
+            list_id or 
+            self._default_list_id or 
+            self.collection.get_values().get("Default_list", None)
+            )
 
     def get_view_id(self):
         return self.recordlist.get('annal:default_view', None) or "Default_view"
@@ -104,11 +111,9 @@ class GenericEntityListView(EntityEditBaseView):
         if http_response:
             return http_response
         # Prepare context for rendering form
-        if list_id:
-            self._list_id = list_id
-        list_ids      = [ l.get_id() for l in self.collection.lists() ]
-        list_selected = self._list_id or self.collection.get_values().get("Default_list", None)
         # @@TODO: apply selector logic here?
+        list_id     = self.get_list_id(type_id, list_id)
+        list_ids    = [ l.get_id() for l in self.collection.lists() ]
         if type_id:
             entity_list = self.recordtypedata.entities()
         else:
@@ -119,7 +124,7 @@ class GenericEntityListView(EntityEditBaseView):
                     entity_list.extend(t.entities())
         entityval = { 'annal:list_entities': entity_list }
         # Set up initial view context
-        self._entityvaluemap = self.get_list_entityvaluemap(self._list_id)
+        self._entityvaluemap = self.get_list_entityvaluemap(list_id)
         log.debug("GenericEntityListView.get _entityvaluemap %r"%(self._entityvaluemap))
         viewcontext = self.map_value_to_context(entityval,
             title               = self.site_data()["title"],
@@ -127,9 +132,9 @@ class GenericEntityListView(EntityEditBaseView):
             ### heading             = entity_initial_values['rdfs:label'],
             coll_id             = coll_id,
             type_id             = type_id,
-            list_id             = self._list_id,
+            list_id             = list_id,
             list_ids            = list_ids,
-            list_selected       = list_selected
+            list_selected       = list_id
             )
         log.debug("GenericEntityListView.get viewcontext %r"%(viewcontext))
         # generate and return form data
@@ -155,9 +160,10 @@ class GenericEntityListView(EntityEditBaseView):
         if 'close' in request.POST:
             return HttpResponseRedirect(continuation_uri)
         # Not "Close": set up list parameters
-        http_response = self.list_setup(coll_id, type_id)
-        if not http_response:
-            http_response = self.get_list_data(list_id or self._list_id)
+        http_response = (
+            self.list_setup(coll_id, type_id) or
+            self.get_list_data(self.get_list_id(type_id, list_id))
+            )
         if http_response:
             return http_response
         # Process requested action

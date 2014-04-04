@@ -42,28 +42,11 @@ class EntityDefaultListView(GenericEntityListView):
 
     # Helper functions
 
-    def list_setup(self, coll_id, type_id):
-        """
-        Check collection and type identifiers, and set up objects for:
-            self.collection
-            self.recordtype
-            self.recordtypedata
-            self._entityclass
-
-        Returns None if all is well, or an HttpResponse object with details 
-        about any problem encountered.
-        """
-        reqhost = self.get_request_host()
-        if type_id:
-            http_response = (
-                self.get_coll_data(coll_id, host=reqhost) or
-                self.get_type_data(type_id)
-                )
-            self._list_id = "Default_list"
-        else:
-            http_response = self.get_coll_data(coll_id, host=reqhost)
-            self._list_id = "Default_list_all"
-        return http_response
+    def get_list_id(self, type_id, list_id):
+        return (
+            super(EntityDefaultListView, self).get_list_id(type_id, list_id) or
+            ("Default_list" if type_id else "Default_list_all")
+            )
 
     def get_new_view_uri(self, coll_id, type_id):
         """
