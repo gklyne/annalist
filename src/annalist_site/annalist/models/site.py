@@ -26,7 +26,7 @@ from annalist.exceptions        import Annalist_Error, EntityNotFound_Error
 from annalist                   import layout
 from annalist                   import message
 
-from annalist.models.entity     import EntityRoot
+from annalist.models.entityroot import EntityRoot
 from annalist.models.sitedata   import SiteData
 from annalist.models.collection import Collection
 from annalist                   import util

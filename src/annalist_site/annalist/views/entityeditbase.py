@@ -71,6 +71,27 @@ listentityvaluemap  = (
         , SimpleValueMap(c='continuation_uri', e=None,           f='continuation_uri' )
         ])
 
+Type_Class_Map = (
+    { '_type':  RecordType
+    , '_list':  RecordList
+    , '_view':  RecordView
+    , '_field': RecordField
+    })
+
+def getEntityTypeClass(type_id):
+    """
+    Return entity class for supplied type id, to be used when scanning
+    for instrances of the indicated type_id.
+    """
+    return Type_Class_Map.get(type_id, RecordTypeData)
+
+def isEntityTypeMeta(type_id):
+    """
+    Return True if a supplied type id is site or collection metadata type,
+    otherwise False.
+    """
+    return type_id in Type_Class_Map
+
 class EntityEditBaseView(AnnalistGenericView):
     """
     View class base for handling entity edits (new, copy, edit, delete logic)
@@ -85,6 +106,7 @@ class EntityEditBaseView(AnnalistGenericView):
     def get_coll_data(self, coll_id, host=""):
         """
         Check collection and type identifiers, and set up objects for:
+            self.sitedata
             self.collection
 
         Returns None if all is well, or an HttpResponse object with details 
@@ -101,26 +123,17 @@ class EntityEditBaseView(AnnalistGenericView):
         self.collection = Collection.load(self.site(host=host), coll_id)
         return None
 
-    def get_coll_type_data(self, coll_id, type_id, host=""):
+    def get_type_data(self, type_id):
         """
-        Check collection and type identifiers, and set up objects for:
-            self.collection
+        Check type identifiers, and set up objects for:
             self.recordtype
             self.recordtypedata
+
+        Must be called after has returned.
 
         Returns None if all is well, or an HttpResponse object with details 
         about any problem encountered.
         """
-        # @@TODO: use get_coll_data (above).  Also, separate get_type_data.
-        self.sitedata = SiteData(self.site(host=host), layout.SITEDATA_DIR)
-        # Check collection
-        if not Collection.exists(self.site(host=host), coll_id):
-            return self.error(
-                dict(self.error404values(), 
-                    message=message.COLLECTION_NOT_EXISTS%(coll_id)
-                    )
-                )
-        self.collection = Collection.load(self.site(host=host), coll_id)
         # Check type
         if not RecordType.exists(self.collection, type_id):
             log.info("get_coll_type_data: RecordType %s not found"%type_id)
@@ -131,6 +144,22 @@ class EntityEditBaseView(AnnalistGenericView):
                 )
         self.recordtype     = RecordType(self.collection, type_id)
         self.recordtypedata = RecordTypeData(self.collection, type_id, altparent=True)
+        return None
+
+    def get_coll_type_data(self, coll_id, type_id, host=""):
+        """
+        Check collection and type identifiers, and set up objects for:
+            self.collection
+            self.recordtype
+            self.recordtypedata
+
+        Returns None if all is well, or an HttpResponse object with details 
+        about any problem encountered.
+        """
+        return (
+            self.get_coll_data(coll_id, host=host) or
+            self.get_type_data(type_id)
+            )
         return None
 
     def get_view_data(self, view_id):

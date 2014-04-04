@@ -45,7 +45,7 @@ class RecordTypeData(Entity):
 
     def entities(self):
         """
-        Generator enumerates and returns record types that may be stored
+        Generator enumerates and returns records of given type
         """
         log.debug("RecordTypeData.entities: include_alt %r"%self._include_alt)
         for f in self._children(EntityData, include_alt=self._include_alt):
