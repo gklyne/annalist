@@ -63,8 +63,8 @@ class GenericEntityEditView(EntityEditBaseView):
             )
         http_response = (
             self.get_coll_data(coll_id, host=self.get_request_host()) or
+            self.form_edit_auth(action, self.collection._entityuri) or
             self.get_type_data(type_id) or
-            self.form_edit_auth(action, self.recordtypedata._entityuri) or
             self.get_view_data(view_id or self._view_id)
             )
         if http_response:
@@ -121,8 +121,8 @@ class GenericEntityEditView(EntityEditBaseView):
         log.debug("  form data %r"%(request.POST))
         http_response = (
             self.get_coll_data(coll_id, host=self.get_request_host()) or
+            self.form_edit_auth(action, self.collection._entityuri) or
             self.get_type_data(type_id) or
-            self.form_edit_auth(action, self.recordtypedata._entityuri) or
             self.get_view_data(view_id or self._view_id)
             )
         if http_response:

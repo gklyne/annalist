@@ -135,7 +135,10 @@ class RecordTypeDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         """
         log.debug("RecordTypeDeleteConfirmedView.post: %r"%(request.POST))
         if "type_delete" in request.POST:
-            http_response = self.get_coll_data(coll_id, self.get_request_host())
+            http_response = (
+                self.get_coll_data(coll_id, self.get_request_host()) or
+                self.form_edit_auth("delete", self.collection.get_uri())
+                )
             if http_response:
                 return http_response
             type_id   = request.POST['typelist']
@@ -144,7 +147,7 @@ class RecordTypeDeleteConfirmedView(EntityDeleteConfirmedBaseView):
                 })
             continuation_uri = self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
             return self.confirm_form_respose(
-                request, self.collection, type_id, 
+                request, type_id, 
                 self.collection.remove_type, messages, continuation_uri
                 )
         return self.error(self.error400values())

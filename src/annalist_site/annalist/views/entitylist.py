@@ -47,11 +47,7 @@ class GenericEntityListView(EntityEditBaseView):
 
     def list_setup(self, coll_id, type_id):
         """
-        Check collection and type identifiers, and set up objects for:
-            self.collection
-            self.recordtype
-            self.recordtypedata
-            self.recordlist
+        Check collection and type identifiers and objects.
 
         Returns None if all is well, or an HttpResponse object with details 
         about any problem encountered.

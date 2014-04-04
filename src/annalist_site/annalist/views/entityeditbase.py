@@ -393,14 +393,11 @@ class EntityDeleteConfirmedBaseView(AnnalistGenericView):
         super(EntityDeleteConfirmedBaseView, self).__init__()
         return
 
-    def confirm_form_respose(self, request, parent, entity_id, remove_fn, messages, continuation_uri):
+    def confirm_form_respose(self, request, entity_id, remove_fn, messages, continuation_uri):
         """
         Process options to complete action to remove an entity
         """
         # @@TODO consider eliding this class 
-        auth_required = self.form_edit_auth("delete", parent.get_uri())
-        if auth_required:
-            return auth_required
         err     = remove_fn(entity_id)
         if err:
             return self.redirect_error(continuation_uri, str(err))
