@@ -16,13 +16,13 @@ For example, in work on Research Objects, a common question for which there was 
 
 A software tool for data management that is:
 
-* Easy - can be used out-of-the box without prior configuration
+* **Easy** - can be used out-of-the box without prior configuration
 
-* Flexible - can add struycture to data as needs are recognized.  No force-fitting of datra into a pre-defined schema.
+* **Flexible** - can add structure to data as needs are recognized.  No force-fitting of data into a pre-defined schema.
 
-* Sharable - data is created in an easy-to-read plain text format.  The data is sharable with and accessible by those who don't have Annalist software.
+* **Sharable** - data is created in an easy-to-read plain text format.  The data is sharable with and accessible by those who don't have Annalist software.
 
-* Remixable - data can be mixed with other sources.  This is achieved mainly by using Linbked Data principles and technologies.  Also, provide suppoirt for augmenting existing spreadsheet data and make it available as linked data.
+* **Remixable** - data can be mixed with other sources.  This is achieved mainly by using Linked Data principles and technologies.  Also, provide support for augmenting existing spreadsheet data and make it available as linked data.
 
 
 ## Status (as of April 2014)
