@@ -1,0 +1,10 @@
+{ "@id":                "annal:fields/Bib_address"
+, "annal:id":           "Bib_address"
+, "annal:type":         "annal:Field"
+, "rdfs:label":         "Bib_address"
+, "rdfs:comment":       "BibJSON(ish) field Bib_address"
+, "annal:field_render": "annal:field_render/Text"
+, "annal:value_type":   "annal:Text"
+, "annal:placeholder":  "(Bib_address)"
+, "annal:property_uri": "bib:Bib_address"
+}

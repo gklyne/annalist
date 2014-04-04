@@ -1,0 +1,10 @@
+{ "@id":                "annal:fields/Bib_chapter"
+, "annal:id":           "Bib_chapter"
+, "annal:type":         "annal:Field"
+, "rdfs:label":         "Bib_chapter"
+, "rdfs:comment":       "BibJSON(ish) field Bib_chapter"
+, "annal:field_render": "annal:field_render/Text"
+, "annal:value_type":   "annal:Text"
+, "annal:placeholder":  "(Bib_chapter)"
+, "annal:property_uri": "bib:Bib_chapter"
+}

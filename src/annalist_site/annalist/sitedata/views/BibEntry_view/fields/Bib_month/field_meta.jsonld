@@ -1,0 +1,10 @@
+{ "@id":                "annal:fields/Bib_month"
+, "annal:id":           "Bib_month"
+, "annal:type":         "annal:Field"
+, "rdfs:label":         "Bib_month"
+, "rdfs:comment":       "BibJSON(ish) field Bib_month"
+, "annal:field_render": "annal:field_render/Text"
+, "annal:value_type":   "annal:Text"
+, "annal:placeholder":  "(Bib_month)"
+, "annal:property_uri": "bib:Bib_month"
+}
