@@ -59,7 +59,7 @@ class GenericEntityListView(EntityEditBaseView):
         reqhost = self.get_request_host()
         if type_id:
             http_response = (
-                self.get_coll_data(coll_id, host=host) or
+                self.get_coll_data(coll_id, host=reqhost) or
                 self.get_type_data(type_id)
                 )
         else:

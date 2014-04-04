@@ -47,6 +47,12 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         """
         log.debug("EntityDataDeleteConfirmedView.post: %r"%(request.POST))
         if "entity_delete" in request.POST:
+            http_response = (
+                get_coll_data(coll_id, self.get_request_host()) or
+                get_type_data(type_id)
+                )
+            # .................
+
             entity_id  = request.POST['entity_id']
             coll       = self.collection(coll_id)
             recordtype = self.recordtype(coll_id, type_id)
