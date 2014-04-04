@@ -218,33 +218,6 @@ class EntityEditBaseView(AnnalistGenericView):
             entityid = self._entityclass.allocate_new_id(parent)
         return entityid
 
-    def form_edit_auth(self, action, auth_resource):
-        """
-        Check that the requested form action is authorized for the current user.
-
-        action          is the requested action: new, edit, copy, etc.
-        auth_resource   is the resource URI to which the requested action is directed.
-                        NOTE: This may be the URI of the parent of the resource
-                        being accessed or manipulated.
-        """
-        action_scope = (
-            { "view":   "VIEW"
-            , "list":   "VIEW"
-            , "search": "VIEW"
-            , "new":    "CREATE"
-            , "copy":   "CREATE"
-            , "edit":   "UPDATE"
-            , "delete": "DELETE"
-            , "config": "CONFIG"    # or UPDATE?
-            , "admin":  "ADMIN"
-            })
-        if action in action_scope:
-            auth_scope = action_scope[action]
-        else:
-            auth_scope = "UNKNOWN"
-        # return self.authorize(auth_scope, auth_resource)
-        return self.authorize(auth_scope)
-
     def get_entity(self, action, parent, entityid, entity_initial_values):
         """
         Create local entity object or load values from existing.
@@ -424,7 +397,8 @@ class EntityDeleteConfirmedBaseView(AnnalistGenericView):
         """
         Process options to complete action to remove an entity
         """
-        auth_required = self.authorize("DELETE")
+        # @@TODO consider eliding this class 
+        auth_required = self.form_edit_auth("delete", parent.get_uri())
         if auth_required:
             return auth_required
         err     = remove_fn(entity_id)
