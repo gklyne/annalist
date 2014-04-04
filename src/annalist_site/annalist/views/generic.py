@@ -34,7 +34,11 @@ from utils.ContentNegotiationView   import ContentNegotiationView
 from annalist                       import message
 from annalist                       import layout
 from annalist.models.site           import Site
+from annalist.models.sitedata       import SiteData
 from annalist.models.collection     import Collection
+from annalist.models.recordview     import RecordView
+from annalist.models.recordlist     import RecordList
+from annalist.models.recordfield    import RecordField
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 
@@ -74,6 +78,75 @@ class AnnalistGenericView(ContentNegotiationView):
 
     def recordtypedata(self, coll_id, type_id, host=""):
         return RecordTypeData(self.collection(coll_id, host=host), type_id)
+
+    def get_coll_data(self, coll_id, host=""):
+        """
+        Check collection and type identifiers, and set up objects for:
+            self.sitedata
+            self.collection
+
+        Returns None if all is well, or an HttpResponse object with details 
+        about any problem encountered.
+        """
+        self.sitedata = SiteData(self.site(host=host), layout.SITEDATA_DIR)
+        # Check collection
+        if not Collection.exists(self.site(host=host), coll_id):
+            return self.error(
+                dict(self.error404values(), 
+                    message=message.COLLECTION_NOT_EXISTS%(coll_id)
+                    )
+                )
+        self.collection = Collection.load(self.site(host=host), coll_id)
+        return None
+
+    def get_type_data(self, type_id):
+        """
+        Check type identifiers, and set up objects for:
+            self.recordtype
+            self.recordtypedata
+
+        Must be called after has returned.
+
+        Returns None if all is well, or an HttpResponse object with details 
+        about any problem encountered.
+        """
+        # Check type
+        if not RecordType.exists(self.collection, type_id):
+            log.info("get_type_data: RecordType %s not found"%type_id)
+            return self.error(
+                dict(self.error404values(),
+                    message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
+                    )
+                )
+        self.recordtype     = RecordType(self.collection, type_id)
+        self.recordtypedata = RecordTypeData(self.collection, type_id, altparent=True)
+        return None
+
+    def get_view_data(self, view_id):
+        if not RecordView.exists(self.collection, view_id):
+            log.info("get_view_data: RecordView %s not found"%view_id)
+            coll_id = self.collection.get_id()
+            return self.error(
+                dict(self.error404values(),
+                    message=message.RECORD_VIEW_NOT_EXISTS%(view_id, coll_id)
+                    )
+                )
+        self.recordview = RecordView.load(self.collection, view_id)
+        log.debug("recordview %r"%(self.recordview.get_values()))
+        return None
+
+    def get_list_data(self, list_id):
+        if not RecordList.exists(self.collection, list_id):
+            log.info("get_list_data: RecordList %s not found"%list_id)
+            coll_id = self.collection.get_id()
+            return self.error(
+                dict(self.error404values(),
+                    message=message.RECORD_LIST_NOT_EXISTS%(list_id, coll_id)
+                    )
+                )
+        self.recordlist = RecordList.load(self.collection, list_id)
+        log.debug("recordlist %r"%(self.recordlist.get_values()))
+        return None
 
     def error(self, values):
         """
