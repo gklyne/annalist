@@ -65,7 +65,7 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
                 self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
                 )
             return self.confirm_form_respose(
-                request, entity_id, self.recordtypedata.remove_entity, 
+                request, entity_id, self.entityparent.remove_entity, 
                 messages, continuation_uri
                 )
         return self.error(self.error400values())

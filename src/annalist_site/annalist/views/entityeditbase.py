@@ -377,6 +377,12 @@ class EntityEditBaseView(AnnalistGenericView):
         return HttpResponseRedirect(continuation_uri+err_values)
 
 
+#   -------------------------------------------------------------------------------------------
+#
+#   Generic delete entity confirmation response handling class
+#
+#   -------------------------------------------------------------------------------------------
+
 class EntityDeleteConfirmedBaseView(AnnalistGenericView):
     """
     View class to perform completion of confirmed entity deletion, requested

@@ -53,7 +53,7 @@ class SiteView(AnnalistGenericView):
         Process options to add or remove a collection in an Annalist site
         """
         log.debug("site.post: %r"%(request.POST.lists()))
-        if request.POST.get("remove", None):
+        if "remove" in request.POST:
             collections = request.POST.getlist("select", [])
             if collections:
                 # Get user to confirm action before actually doing it
@@ -72,7 +72,7 @@ class SiteView(AnnalistGenericView):
                     self.view_uri("AnnalistSiteView"), 
                     message.NO_COLLECTIONS_SELECTED, info_head=message.NO_ACTION_PERFORMED
                     )
-        if request.POST.get("new", None):
+        if "new" in request.POST:
             # Create new collection with name and label supplied
             new_id    = request.POST["new_id"]
             new_label = request.POST["new_label"]
@@ -114,7 +114,7 @@ class SiteActionView(AnnalistGenericView):
         Process options to complete action to add or remove a collection
         """
         log.debug("siteactionview.post: %r"%(request.POST))
-        if request.POST.get("remove", None):
+        if "remove" in request.POST:
             log.debug("Complete remove %r"%(request.POST.getlist("select")))
             auth_required = self.authorize("DELETE")
             if auth_required:

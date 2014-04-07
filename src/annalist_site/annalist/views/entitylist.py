@@ -106,17 +106,18 @@ class GenericEntityListView(EntityEditBaseView):
         Create a form for listing entities.
         """
         log.debug("entitylist.get: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
-        http_response = self.list_setup(coll_id, type_id)
-        if not http_response:
-            http_response = self.form_edit_auth("list", self.collection._entityuri)
+        http_response = (
+            self.list_setup(coll_id, type_id) or
+            self.form_edit_auth("list", self.collection._entityuri)
+            )
         if http_response:
             return http_response
-        # Prepare context for rendering form
+        # Prepare list and entity IDs for rendering form
         # @@TODO: apply selector logic here?
         list_id     = self.get_list_id(type_id, list_id)
         list_ids    = [ l.get_id() for l in self.collection.lists() ]
         if type_id:
-            entity_list = self.recordtypedata.entities()
+            entity_list = self.entityparent.entities()
         else:
             entity_list = []
             for f in self.collection._children(RecordTypeData):

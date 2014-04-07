@@ -76,14 +76,14 @@ class GenericEntityEditView(EntityEditBaseView):
         if http_response:
             return http_response
         # Set up RecordType-specific values
-        entity_id  = self.get_entityid(action, self.recordtypedata, entity_id)
+        entity_id  = self.get_entityid(action, self.entityparent, entity_id)
         # Create local entity object or load values from existing
         entity_initial_values = (
             { "rdfs:label":   "Entity '%s' of type '%s' in collection '%s'"%
                               (entity_id, type_id, coll_id)
             , "rdfs:comment": ""
             })
-        entity = self.get_entity(action, self.recordtypedata, entity_id, entity_initial_values)
+        entity = self.get_entity(action, self.entityparent, entity_id, entity_initial_values)
         if entity is None:
             return self.error(
                 dict(self.error404values(),
@@ -165,15 +165,15 @@ class GenericEntityEditView(EntityEditBaseView):
             })
         # Process form response and respond accordingly
         self._entityvaluemap = self.get_form_entityvaluemap(self.get_view_id(view_id))
-        if not self.recordtypedata._exists():
+        if not self.entityparent._exists():
             # Create RecordTypeData when not already exists
-            RecordTypeData.create(self.collection, self.recordtypedata.get_id(), {})
+            RecordTypeData.create(self.collection, self.entityparent.get_id(), {})
         # log.info(
         #     "self.form_response: entity_id %s, orig_entity_id %s, type_id %s, action %s"%
         #       (entity_id, orig_entity_id, type_id, action)
         #     )
         return self.form_response(
-            request, action, self.recordtypedata, 
+            request, action, self.entityparent, 
             entity_id, orig_entity_id, 
             entity_type, orig_entity_type,
             messages, context_extra_values

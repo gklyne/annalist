@@ -111,8 +111,8 @@ class AnnalistGenericView(ContentNegotiationView):
     def get_type_data(self, type_id):
         """
         Check type identifiers, and set up objects for:
-            self.recordtype
-            self.recordtypedata
+            self.entityclass
+            self.entityparent
 
         Must be called after has returned.
 
@@ -137,9 +137,8 @@ class AnnalistGenericView(ContentNegotiationView):
             self.entityclass  = Type_Class_Map.get[type_id]
             self.entityparent = self.collection
         else:
-            self.entityclass    = EntityData
-            self.recordtype     = RecordType(self.collection, type_id)
-            self.recordtypedata = RecordTypeData(self.collection, type_id, altparent=True)
+            self.entityclass  = EntityData
+            self.entityparent = RecordTypeData(self.collection, type_id, altparent=True)
         return None
 
     def get_view_data(self, view_id):
