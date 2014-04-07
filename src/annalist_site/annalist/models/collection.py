@@ -42,14 +42,15 @@ class Collection(Entity):
     _entityfile = layout.COLL_META_FILE
     _entityref  = layout.META_COLL_REF
 
-    def __init__(self, parent, coll_id):
+    def __init__(self, parentsite, coll_id):
         """
         Initialize a new Collection object, without metadta (yet).
 
-        parent      is the parent site from which the new collection is descended.
+        parentsite  is the parent site from which the new collection is descended.
         coll_id     the collection identifier for the collection
         """
-        super(Collection, self).__init__(parent, coll_id, altentity=parent._sitedata)
+        super(Collection, self).__init__(parentsite, coll_id)
+        self._parentsite = parentsite
         return
 
     # Record types
@@ -58,8 +59,9 @@ class Collection(Entity):
         """
         Generator enumerates and returns record types that may be stored
         """
-        for f in self._children(RecordType, include_alt=include_alt):
-            t = RecordType.load(self, f)
+        altparent = self._parentsite if include_alt else None
+        for f in self._children(RecordType, altparent=altparent):
+            t = self.get_type(f)
             if t:
                 yield t
         return
@@ -86,7 +88,7 @@ class Collection(Entity):
 
         returns a RecordType object for the identified type, or None.
         """
-        t = RecordType.load(self, type_id)
+        t = RecordType.load(self, type_id, altparent=self._parentsite)
         return t
 
     def remove_type(self, type_id):
@@ -106,8 +108,9 @@ class Collection(Entity):
         """
         Generator enumerates and returns record views that may be stored
         """
-        for f in self._children(RecordView, include_alt=include_alt):
-            t = RecordView.load(self, f)
+        altparent = self._parentsite if include_alt else None
+        for f in self._children(RecordView, altparent=altparent):
+            t = self.get_view(f)
             if t:
                 yield t
         return
@@ -134,7 +137,7 @@ class Collection(Entity):
 
         returns a RecordView object for the identified view, or None.
         """
-        t = RecordView.load(self, view_id)
+        t = RecordView.load(self, view_id, altparent=self._parentsite)
         return t
 
     def remove_view(self, view_id):
@@ -154,8 +157,9 @@ class Collection(Entity):
         """
         Generator enumerates and returns record lists that may be stored
         """
-        for f in self._children(RecordList, include_alt=include_alt):
-            t = RecordList.load(self, f)
+        altparent = self._parentsite if include_alt else None
+        for f in self._children(RecordList, altparent=altparent):
+            t = self.get_list(f)
             if t:
                 yield t
         return
@@ -182,7 +186,7 @@ class Collection(Entity):
 
         returns a RecordList object for the identified list, or None.
         """
-        t = RecordList.load(self, list_id)
+        t = RecordList.load(self, list_id, altparent=self._parentsite)
         return t
 
     def remove_list(self, list_id):

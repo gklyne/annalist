@@ -97,7 +97,7 @@ class AnnalistGenericView(ContentNegotiationView):
         Returns None if all is well, or an HttpResponse object with details 
         about any problem encountered.
         """
-        self.sitedata = SiteData(self.site(host=host), layout.SITEDATA_DIR)
+        self.sitedata = SiteData(self.site(host=host))
         # Check collection
         if not Collection.exists(self.site(host=host), coll_id):
             return self.error(
@@ -125,37 +125,38 @@ class AnnalistGenericView(ContentNegotiationView):
             , '_view':  RecordView
             , '_field': RecordField
             })
-        # Check type
-        if not RecordType.exists(self.collection, type_id):
-            log.info("get_type_data: RecordType %s not found"%type_id)
-            return self.error(
-                dict(self.error404values(),
-                    message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
-                    )
-                )
         if type_id in Type_Class_Map:
-            self.entityclass  = Type_Class_Map.get[type_id]
+            self.entityclass  = Type_Class_Map[type_id]
             self.entityparent = self.collection
         else:
+            # Check type
+            if not RecordType.exists(self.collection, type_id, self.site()):
+                log.warning("get_type_data: RecordType %s not found"%type_id)
+                assert False
+                return self.error(
+                    dict(self.error404values(),
+                        message=message.RECORD_TYPE_NOT_EXISTS%(type_id, self.collection.get_id())
+                        )
+                    )
             self.entityclass  = EntityData
-            self.entityparent = RecordTypeData(self.collection, type_id, altparent=True)
+            self.entityparent = RecordTypeData(self.collection, type_id)
         return None
 
     def get_view_data(self, view_id):
-        if not RecordView.exists(self.collection, view_id):
-            log.info("get_view_data: RecordView %s not found"%view_id)
+        if not RecordView.exists(self.collection, view_id, self.site()):
+            log.warning("get_view_data: RecordView %s not found"%view_id)
             coll_id = self.collection.get_id()
             return self.error(
                 dict(self.error404values(),
                     message=message.RECORD_VIEW_NOT_EXISTS%(view_id, coll_id)
                     )
                 )
-        self.recordview = RecordView.load(self.collection, view_id)
+        self.recordview = RecordView.load(self.collection, view_id, self.site())
         log.debug("recordview %r"%(self.recordview.get_values()))
         return None
 
     def get_list_data(self, list_id):
-        if not RecordList.exists(self.collection, list_id):
+        if not RecordList.exists(self.collection, list_id, self.site()):
             log.info("get_list_data: RecordList %s not found"%list_id)
             coll_id = self.collection.get_id()
             return self.error(
@@ -163,7 +164,7 @@ class AnnalistGenericView(ContentNegotiationView):
                     message=message.RECORD_LIST_NOT_EXISTS%(list_id, coll_id)
                     )
                 )
-        self.recordlist = RecordList.load(self.collection, list_id)
+        self.recordlist = RecordList.load(self.collection, list_id, self.site())
         log.debug("recordlist %r"%(self.recordlist.get_values()))
         return None
 

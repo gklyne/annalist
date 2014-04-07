@@ -139,13 +139,13 @@ class EntityRoot(object):
         if self._entityaltdir:
             (basedir, filepath) = util.entity_dir_path(self._entityaltdir, [], self._entityfile)
             return (basedir, filepath)
-        return (None, self._entityfile)
+        return (None, None)
 
     def _exists_path(self):
         """
         Test if the entity denoted by the current object has been created
 
-        returns of object, or None
+        returns path of of object body, or None
         """
         for (d, p) in (self._dir_path(), self._alt_dir_path()):
             # log.info("_exists %s"%(p))
@@ -160,13 +160,7 @@ class EntityRoot(object):
 
         returns True or False.
         """
-        # @@TODO use _exists_path (above)
-        for (d, p) in (self._dir_path(), self._alt_dir_path()):
-            # log.info("_exists %s"%(p))
-            if d and os.path.isdir(d):
-                if p and os.path.isfile(p):
-                    return True
-        return False
+        return self._exists_path() is not None
 
     def _save(self):
         """
@@ -209,33 +203,40 @@ class EntityRoot(object):
                     raise
         return None
 
-    def _children(self, cls, include_alt=True):
+    def _child_dirs(self, cls, altparent):
+        """
+        Iterates over directories which may contain child entities.
+
+        cls         is a subclass of Entity indicating the type of children to
+                    be located
+        altparent   is an alternative parent entity to be checked using the specified
+                    class's alternate relative path, or None if only potential children 
+                    of the current entity are returned.
+        """
+        yield os.path.dirname(os.path.join(self._entitydir, cls._entitypath))
+        if altparent and cls._entityaltpath:
+            yield os.path.dirname(os.path.join(altparent._entitydir, cls._entityaltpath))
+        return
+
+    def _children(self, cls, altparent=None):
         """
         Iterates over candidate child entities that are instances of an indicated
         class.  The supplied class is used to determine a subdirectory to be scanned.
 
         cls         is a subclass of Entity indicating the type of children to
                     iterate over.
-        include_alt if set to False, returns only those children that are explicitly
-                    descended from the current entity, otherwise also includes those
-                    that are descended from the alternate entity or parent specified
-                    when the current entity was created.  E.g. set this parameter to
-                    `False` to exclude site-wide entities when scanning the views or
-                    lists in a collection.
+        altparent   is an alternative parent entity to be checked using the class's
+                    alternate relative path, or None if only potential child IDs of the
+                    current entity are returned.
         """
-        search_dirs = (self._entitydir, self._entityaltdir if include_alt else None)
-        log.debug("_children include_alt %r, search_dirs %r"%(include_alt, search_dirs))
-        for dirpath in search_dirs:
-            if dirpath:
-                if cls and cls._entitypath:
-                    dirpath = os.path.dirname(os.path.join(dirpath, cls._entitypath))
-                assert "%" not in dirpath, "_entitypath template variable interpolation may be in filename part only"
-                if os.path.isdir(dirpath):
-                    files = os.listdir(dirpath)
-                    log.debug("_children files %r"%files)
-                    for f in files:
-                        if util.valid_id(f):
-                            yield f
+        for dirpath in self._child_dirs(cls, altparent):
+            assert "%" not in dirpath, "_entitypath/_entityaltpath template variable interpolation may be in filename part only"
+            if os.path.isdir(dirpath):
+                files = os.listdir(dirpath)
+                log.debug("_children files %r"%files)
+                for f in files:
+                    if util.valid_id(f):
+                        yield f
         return
 
     # Entity as iterator: returns candidate identifiers of contained entities

@@ -54,7 +54,7 @@ class RecordTypeTest(AnnalistTestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.sitedata = SiteData(self.testsite, layout.SITEDATA_DIR)
+        self.sitedata = SiteData(self.testsite)
         self.testcoll = Collection(self.testsite, "testcoll")
         return
 

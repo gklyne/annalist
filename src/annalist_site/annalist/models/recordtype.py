@@ -31,19 +31,23 @@ from annalist.models.entity     import Entity
 
 class RecordType(Entity):
 
-    _entitytype = ANNAL.CURIE.RecordType
-    _entitypath = layout.COLL_TYPE_PATH
-    _entityfile = layout.TYPE_META_FILE
-    _entityref  = layout.META_TYPE_REF
+    _entitytype     = ANNAL.CURIE.RecordType
+    _entitypath     = layout.COLL_TYPE_PATH
+    _entityaltpath  = layout.SITE_TYPE_PATH
+    _entityfile     = layout.TYPE_META_FILE
+    _entityref      = layout.META_TYPE_REF
 
-    def __init__(self, parent, type_id):
+    def __init__(self, parent, type_id, altparent=None):
         """
         Initialize a new RecordType object, without metadta (yet).
 
         parent      is the parent entity from which the type is descended.
         type_id     the local identifier for the record type
+        altparent   is a site object to search for this new entity,
+                    allowing site-wide RecordType values to be found.
         """
-        super(RecordType, self).__init__(parent, type_id, altparent=True)
+        super(RecordType, self).__init__(parent, type_id, altparent)
+        log.debug("RecordType %s: dir %s, alt %s"%(type_id, self._entitydir, self._entityaltdir))
         return
 
 # End.

@@ -30,25 +30,21 @@ class RecordTypeData(Entity):
     _entityfile = layout.TYPEDATA_META_FILE
     _entityref  = layout.META_TYPEDATA_REF
 
-    def __init__(self, parent, type_id, altparent=False):
+    def __init__(self, parent, type_id):
         """
         Initialize a new RecordTypeData object, without metadata.
 
         parent      is the parent collection from which the type data is descended.
         type_id     the local identifier (slug) for the record type
-        altparent   True if values from the alternate parent are to be included in
-                    RecordData entities returned.
         """
-        super(RecordTypeData, self).__init__(parent, type_id, altparent=altparent)
-        self._include_alt = altparent
+        super(RecordTypeData, self).__init__(parent, type_id)
         return
 
     def entities(self):
         """
         Generator enumerates and returns records of given type
         """
-        log.debug("RecordTypeData.entities: include_alt %r"%self._include_alt)
-        for f in self._children(EntityData, include_alt=self._include_alt):
+        for f in self._children(EntityData):
             log.debug("RecordTypeData.entities: f %s"%f)            
             e = EntityData.load(self, f)
             if e:

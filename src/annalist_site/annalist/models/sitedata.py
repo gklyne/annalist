@@ -37,13 +37,13 @@ class SiteData(Entity):
     _entityfile = layout.SITEDATA_META_FILE
     _entityref  = layout.META_SITEDATA_REF
 
-    def __init__(self, parent, sitedataid):
+    def __init__(self, parent):
         """
         Initialize a new SiteData object, without metadta (yet).
 
         parent      is the parent site from which the new collection is descended.
         """
-        super(SiteData, self).__init__(parent, sitedataid)
+        super(SiteData, self).__init__(parent, layout.SITEDATA_DIR, idcheck=False)
         return
 
     # Record types

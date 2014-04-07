@@ -37,7 +37,7 @@ class EntityDefaultListView(GenericEntityListView):
     """
 
     def __init__(self):
-        super(EntityDefaultListView, self).__init__(list_id=None)
+        super(EntityDefaultListView, self).__init__()
         return
 
     # Helper functions

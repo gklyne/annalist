@@ -54,8 +54,10 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
                 )
             if http_response:
                 return http_response
-            # .................
-
+            # .....................
+            # @@TODO: rework what follows to work for Entitydata OR a metadata type
+            #         cf. recordtype.RecordTypeDeleteConfirmedView.post
+            # .....................
             entity_id  = request.POST['entity_id']
             messages  = (
                 { 'entity_removed': message.ENTITY_DATA_REMOVED%(entity_id, type_id, coll_id)

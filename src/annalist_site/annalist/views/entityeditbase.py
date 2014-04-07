@@ -109,7 +109,7 @@ class EntityEditBaseView(AnnalistGenericView):
         See also: fields.render_utils.bound_field.
         """
         field_id    = field['annal:field_id']
-        recordfield = RecordField.load(self.collection, field_id, altparent=True)
+        recordfield = RecordField.load(self.collection, field_id, self.site())
         if recordfield is None:
             raise ValueError("Can't retrieve definition for field %s"%(field_id))
         log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
@@ -147,7 +147,7 @@ class EntityEditBaseView(AnnalistGenericView):
         # Locate and read view description
         # @@TODO: push responsibility to subclass to call get_view_data, and use resulting value
         entitymap  = copy.copy(baseentityvaluemap)
-        entityview = RecordView.load(self.collection, view_id)
+        entityview = RecordView.load(self.collection, view_id, self.site())
         log.debug("entityview   %r"%entityview.get_values())
         self.get_fields_entityvaluemap(
             entitymap,
@@ -162,7 +162,7 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         # Locate and read view description
         entitymap  = copy.copy(listentityvaluemap)
-        entitylist = RecordList.load(self.collection, list_id)
+        entitylist = RecordList.load(self.collection, list_id, self.site())
         log.debug("entitylist %r"%entitylist.get_values())
         groupmap = []
         self.get_fields_entityvaluemap(

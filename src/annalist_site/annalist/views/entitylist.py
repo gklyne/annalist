@@ -36,11 +36,9 @@ class GenericEntityListView(EntityEditBaseView):
     """
 
     _entityformtemplate = 'annalist_entity_list.html'
-    _entityclass        = None          # to be supplied dynamically
 
-    def __init__(self, list_id=None):
+    def __init__(self):
         super(GenericEntityListView, self).__init__()
-        self._default_list_id = list_id
         return
 
     # Helper functions
@@ -60,19 +58,20 @@ class GenericEntityListView(EntityEditBaseView):
                 )
         else:
             http_response = self.get_coll_data(coll_id, host=reqhost)
-        # if not http_response:
-        #     http_response = self.get_list_data(list_id or self._list_id)
         return http_response
 
     def get_list_id(self, type_id, list_id):
         return (
             list_id or 
-            self._default_list_id or 
             self.collection.get_values().get("Default_list", None)
             )
 
     def get_list_view_id(self):
         return self.recordlist.get('annal:default_view', None) or "Default_view"
+
+    # @@TODO: the following functions should extract view_id information from the list
+    #         description (including default lists).  
+    #         Then remove corresponding methods from defaultlist.py
 
     def get_new_view_uri(self, coll_id, type_id):
         """
@@ -112,6 +111,10 @@ class GenericEntityListView(EntityEditBaseView):
             )
         if http_response:
             return http_response
+        # .....................
+        # @@TODO: rework what follows to work for EntityData OR a metadata type
+        #         cf. recordtype.RecordTypeDeleteConfirmedView.post
+        # .....................
         # Prepare list and entity IDs for rendering form
         # @@TODO: apply selector logic here?
         list_id     = self.get_list_id(type_id, list_id)
@@ -191,7 +194,9 @@ class GenericEntityListView(EntityEditBaseView):
                         message.NO_ENTITY_FOR_COPY, 
                         continuation_uri=cont_param
                         ) or
-                    self.get_edit_view_uri(coll_id, entity_type, entity_id, action) + continuation_here
+                    self.get_edit_view_uri(
+                        coll_id, entity_type, entity_id, action
+                        ) + continuation_here
                     )
             if "edit" in request.POST:
                 action = "edit"
@@ -200,7 +205,9 @@ class GenericEntityListView(EntityEditBaseView):
                         message.NO_ENTITY_FOR_EDIT,
                         continuation_uri=cont_param
                         ) or
-                    self.get_edit_view_uri(coll_id, entity_type, entity_id, action) + continuation_here
+                    self.get_edit_view_uri(
+                        coll_id, entity_type, entity_id, action
+                        ) + continuation_here
                     )
             if "delete" in request.POST:
                 redirect_uri = (
@@ -253,6 +260,7 @@ class GenericEntityListView(EntityEditBaseView):
         # Report unexpected form data
         # This shouldn't happen, but just in case...
         # Redirect to continuation with error
+        # @@TODO add log.error here
         err_values = self.error_params(
             message.UNEXPECTED_FORM_DATA%(request.POST), 
             message.SYSTEM_ERROR

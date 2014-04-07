@@ -42,11 +42,8 @@ class GenericEntityEditView(EntityEditBaseView):
 
     _entityformtemplate = 'annalist_entity_edit.html'
 
-    # def __init__(self, view_id=None, entity_class=EntityData):
     def __init__(self):
         super(GenericEntityEditView, self).__init__()
-        # self._view_id       = view_id
-        # self._entityclass   = entity_class
         return
 
     def get_view_id(self, view_id):

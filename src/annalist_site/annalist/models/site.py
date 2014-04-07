@@ -46,7 +46,7 @@ class Site(EntityRoot):
         """
         log.debug("Site init: %s"%(sitebasedir))
         super(Site, self).__init__(host+sitebaseuri, sitebasedir)
-        self._sitedata = SiteData(self, layout.SITEDATA_DIR)
+        self._sitedata = SiteData(self)
         return
 
     def collections(self):

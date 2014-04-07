@@ -150,7 +150,8 @@ class CollectionTest(AnnalistTestCase):
         # Some type existence tests takling accounbt of site data default type
         self.assertTrue(RecordType.exists(self.testcoll, "testtype"))
         self.assertFalse(RecordType.exists(self.testcoll, "notype"))
-        self.assertTrue(RecordType.exists(self.testcoll, "Default_type"))
+        self.assertFalse(RecordType.exists(self.testcoll, "Default_type"))
+        self.assertTrue(RecordType.exists(self.testcoll, "Default_type", self.testsite))
         return
 
     # Record views

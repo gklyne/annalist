@@ -30,9 +30,6 @@ class EntityDefaultEditView(GenericEntityEditView):
 
     def __init__(self):
         super(EntityDefaultEditView, self).__init__()
-        # super(EntityDefaultEditView, self).__init__(
-        #     view_id="Default_view", entity_class=EntityData
-        #     )
         return
 
     def get_view_id(self, view_id):
