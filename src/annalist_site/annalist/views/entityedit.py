@@ -42,11 +42,17 @@ class GenericEntityEditView(EntityEditBaseView):
 
     _entityformtemplate = 'annalist_entity_edit.html'
 
-    def __init__(self, view_id=None, entity_class=EntityData):
+    # def __init__(self, view_id=None, entity_class=EntityData):
+    def __init__(self):
         super(GenericEntityEditView, self).__init__()
-        self._view_id       = view_id
-        self._entityclass   = entity_class
+        # self._view_id       = view_id
+        # self._entityclass   = entity_class
         return
+
+    def get_view_id(self, view_id):
+        if not view_id:
+            log.warning("GenericEntityEditView: No view identifier provided")
+        return view_id
 
     # GET
 
@@ -65,7 +71,7 @@ class GenericEntityEditView(EntityEditBaseView):
             self.get_coll_data(coll_id, host=self.get_request_host()) or
             self.form_edit_auth(action, self.collection._entityuri) or
             self.get_type_data(type_id) or
-            self.get_view_data(view_id or self._view_id)
+            self.get_view_data(self.get_view_id(view_id))
             )
         if http_response:
             return http_response
@@ -87,7 +93,7 @@ class GenericEntityEditView(EntityEditBaseView):
         type_ids = [ t.get_id() for t in self.collection.types() ]
         # Set up initial view context
         # @@TODO: move view access logic from get_form_entityvaluemap (see there for details)
-        self._entityvaluemap = self.get_form_entityvaluemap(view_id or self._view_id)
+        self._entityvaluemap = self.get_form_entityvaluemap(self.get_view_id(view_id))
         viewcontext = self.map_value_to_context(entity,
             title               = self.site_data()["title"],
             continuation_uri    = request.GET.get('continuation_uri', ""),
@@ -123,7 +129,7 @@ class GenericEntityEditView(EntityEditBaseView):
             self.get_coll_data(coll_id, host=self.get_request_host()) or
             self.form_edit_auth(action, self.collection._entityuri) or
             self.get_type_data(type_id) or
-            self.get_view_data(view_id or self._view_id)
+            self.get_view_data(self.get_view_id(view_id))
             )
         if http_response:
             return http_response
@@ -158,7 +164,7 @@ class GenericEntityEditView(EntityEditBaseView):
             , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
             })
         # Process form response and respond accordingly
-        self._entityvaluemap = self.get_form_entityvaluemap(view_id or self._view_id)
+        self._entityvaluemap = self.get_form_entityvaluemap(self.get_view_id(view_id))
         if not self.recordtypedata._exists():
             # Create RecordTypeData when not already exists
             RecordTypeData.create(self.collection, self.recordtypedata.get_id(), {})

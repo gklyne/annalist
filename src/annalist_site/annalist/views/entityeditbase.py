@@ -43,6 +43,12 @@ from annalist.fields.render_utils   import get_head_renderer, get_item_renderer
 # from annalist.fields.render_utils   import get_grid_renderer
 
 
+#   -------------------------------------------------------------------------------------------
+#
+#   Mapping table data (not view-specific)
+#
+#   -------------------------------------------------------------------------------------------
+
 # Table used as basis, or initial values, for a dynamically generated entity-value map
 baseentityvaluemap  = (
         [ SimpleValueMap(c='title',            e=None,           f=None               )
@@ -71,26 +77,13 @@ listentityvaluemap  = (
         , SimpleValueMap(c='continuation_uri', e=None,           f='continuation_uri' )
         ])
 
-Type_Class_Map = (
-    { '_type':  RecordType
-    , '_list':  RecordList
-    , '_view':  RecordView
-    , '_field': RecordField
-    })
+#   -------------------------------------------------------------------------------------------
+#
+#   Generic view base class (contains methods common to record lists and views)
+#
+#   -------------------------------------------------------------------------------------------
 
-def getEntityTypeClass(type_id):
-    """
-    Return entity class for supplied type id, to be used when scanning
-    for instrances of the indicated type_id.
-    """
-    return Type_Class_Map.get(type_id, RecordTypeData)
-
-def isEntityTypeMeta(type_id):
-    """
-    Return True if a supplied type id is site or collection metadata type,
-    otherwise False.
-    """
-    return type_id in Type_Class_Map
+# @@TODO: migrate methods not commion to lists and views
 
 class EntityEditBaseView(AnnalistGenericView):
     """
@@ -215,7 +208,7 @@ class EntityEditBaseView(AnnalistGenericView):
 
     def get_entityid(self, action, parent, entityid):
         if action == "new":
-            entityid = self._entityclass.allocate_new_id(parent)
+            entityid = self.entityclass.allocate_new_id(parent)
         return entityid
 
     def get_entity(self, action, parent, entityid, entity_initial_values):
@@ -228,7 +221,7 @@ class EntityEditBaseView(AnnalistGenericView):
         entity_initial_values  is a dictionary of initial values used when a new entity
                         is created
 
-        self._entityclass   is the class of the entity to be acessed or created.
+        self.entityclass   is the class of the entity to be acessed or created.
 
         returns an object of the appropriate type.  If an existing entity is accessed, values
         are read from storage, otherwise a new entity object is created but not yet saved.
@@ -236,10 +229,10 @@ class EntityEditBaseView(AnnalistGenericView):
         log.debug("get_entity id %s, parent %s, action %s"%(entityid, parent._entitydir, action))
         entity = None
         if action == "new":
-            entity = self._entityclass(parent, entityid)
+            entity = self.entityclass(parent, entityid)
             entity.set_values(entity_initial_values)
-        elif self._entityclass.exists(parent, entityid):
-            entity = self._entityclass.load(parent, entityid)
+        elif self.entityclass.exists(parent, entityid):
+            entity = self.entityclass.load(parent, entityid)
         return entity
 
     def form_render(self, request, action, parent, entityid, entity_initial_values, context_extra_values):
@@ -312,13 +305,13 @@ class EntityEditBaseView(AnnalistGenericView):
                 )
         # Check response has valid id and type
         if not util.valid_id(entity_id):
-            log.debug("form_response: entityid not util.valid_id('%s')"%entity_id)
+            log.debug("form_response: entity_id not util.valid_id('%s')"%entity_id)
             return self.form_re_render(request, context_extra_values,
                 error_head=messages['entity_heading'],
                 error_message=messages['entity_invalid_id']
                 )
         if not util.valid_id(entity_type):
-            log.debug("form_response: entitytype not util.valid_id('%s')"%entity_type)
+            log.debug("form_response: entity_type not util.valid_id('%s')"%entity_type)
             return self.form_re_render(request, context_extra_values,
                 error_head=messages['entity_type_heading'],
                 error_message=messages['entity_type_invalid']
@@ -348,13 +341,13 @@ class EntityEditBaseView(AnnalistGenericView):
                 new_parent = orig_parent
             # Check existence of type to save according to action performed
             if (request.POST['action'] in ["new", "copy"]) or entity_id_changed:
-                if self._entityclass.exists(new_parent, entity_id):
+                if self.entityclass.exists(new_parent, entity_id):
                     return self.form_re_render(request, context_extra_values,
                         error_head=messages['entity_heading'],
                         error_message=messages['entity_exists']
                         )
             else:
-                if not self._entityclass.exists(orig_parent, entity_id):
+                if not self.entityclass.exists(orig_parent, entity_id):
                     # This shouldn't happen, but just in case...
                     log.warning("Expected %s/%s not found; action %s, entity_id_changed %r"%
                           (entity_type, entity_id, request.POST['action'], entity_id_changed)
@@ -365,11 +358,11 @@ class EntityEditBaseView(AnnalistGenericView):
                         )
             # Create/update data now
             entity_initial_values = self.map_form_data_to_values(request.POST)
-            self._entityclass.create(new_parent, entity_id, entity_initial_values)
+            self.entityclass.create(new_parent, entity_id, entity_initial_values)
             # Remove old type if rename
             if entity_id_changed:
-                if self._entityclass.exists(orig_parent, entity_id):    # Precautionary
-                    self._entityclass.remove(orig_parent, orig_entity_id)
+                if self.entityclass.exists(orig_parent, entity_id):    # Precautionary
+                    self.entityclass.remove(orig_parent, orig_entity_id)
             log.debug("Continue to %s"%(continuation_uri))
             return HttpResponseRedirect(continuation_uri)
         # Report unexpected form data

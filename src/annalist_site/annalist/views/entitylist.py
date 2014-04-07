@@ -71,7 +71,7 @@ class GenericEntityListView(EntityEditBaseView):
             self.collection.get_values().get("Default_list", None)
             )
 
-    def get_view_id(self):
+    def get_list_view_id(self):
         return self.recordlist.get('annal:default_view', None) or "Default_view"
 
     def get_new_view_uri(self, coll_id, type_id):
@@ -80,7 +80,9 @@ class GenericEntityListView(EntityEditBaseView):
         """
         return self.view_uri(
             "AnnalistEntityNewView", 
-            coll_id=coll_id, view_id=self.get_view_id(), type_id=type_id,
+            coll_id=coll_id, 
+            view_id=self.get_list_view_id(), 
+            type_id=type_id,
             action="new"
             )
 
@@ -90,7 +92,10 @@ class GenericEntityListView(EntityEditBaseView):
         """
         return self.view_uri(
                 "AnnalistEntityEditView", 
-                coll_id=coll_id, view_id=self.get_view_id(), type_id=type_id, entity_id=entity_id,
+                coll_id=coll_id, 
+                view_id=self.get_list_view_id(), 
+                type_id=type_id, 
+                entity_id=entity_id,
                 action=action
                 )
 

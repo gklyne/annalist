@@ -32,7 +32,8 @@ class RecordTypeEditView(EntityEditBaseView):
     View class to handle requests to an Annalist record type edit URI
     """
 
-    _entityclass        = RecordType
+    entityclass        = RecordType
+
     _entityformtemplate = 'annalist_recordtype_edit.html'
     _entityvaluemap     = (
         [ SimpleValueMap(c='title',            e=None,           f=None               )

@@ -41,8 +41,26 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
+from annalist.models.entitydata     import EntityData
 
-LOGIN_URIS = None
+#   -------------------------------------------------------------------------------------------
+#
+#   Utility methods and data
+#
+#   -------------------------------------------------------------------------------------------
+
+LOGIN_URIS = None   # Populated by first call of `authenticate`
+
+#   -------------------------------------------------------------------------------------------
+#
+#   Generic Annalist view (contains logic applicable to all pages)
+#
+#   -------------------------------------------------------------------------------------------
+
+# @@TODO:   refactor this class out of existence?  Or at least dramatically slimmed.
+#           Focus content on message display and auth* functions.
+#           There is logic here that really belongs in view- or list- classes.
+#           Maybe move logic when hand-coded pasges are replaced with data-driven pages.
 
 class AnnalistGenericView(ContentNegotiationView):
     """
@@ -101,6 +119,12 @@ class AnnalistGenericView(ContentNegotiationView):
         Returns None if all is well, or an HttpResponse object with details 
         about any problem encountered.
         """
+        Type_Class_Map = (
+            { '_type':  RecordType
+            , '_list':  RecordList
+            , '_view':  RecordView
+            , '_field': RecordField
+            })
         # Check type
         if not RecordType.exists(self.collection, type_id):
             log.info("get_type_data: RecordType %s not found"%type_id)
@@ -109,8 +133,13 @@ class AnnalistGenericView(ContentNegotiationView):
                     message=message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
                     )
                 )
-        self.recordtype     = RecordType(self.collection, type_id)
-        self.recordtypedata = RecordTypeData(self.collection, type_id, altparent=True)
+        if type_id in Type_Class_Map:
+            self.entityclass  = Type_Class_Map.get[type_id]
+            self.entityparent = self.collection
+        else:
+            self.entityclass    = EntityData
+            self.recordtype     = RecordType(self.collection, type_id)
+            self.recordtypedata = RecordTypeData(self.collection, type_id, altparent=True)
         return None
 
     def get_view_data(self, view_id):
