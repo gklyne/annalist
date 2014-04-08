@@ -120,7 +120,9 @@ class GenericEntityListView(EntityEditBaseView):
         list_id     = self.get_list_id(type_id, list_id)
         list_ids    = [ l.get_id() for l in self.collection.lists() ]
         if type_id:
-            entity_list = self.entityparent.entities()
+            entity_list = self.entityparent.child_entities(
+                self.entityclass, altparent=self.entityaltparent
+                )
         else:
             entity_list = []
             for f in self.collection._children(RecordTypeData):

@@ -79,8 +79,6 @@ class Entity(EntityRoot):
 
     # I/O helper functions
 
-    # Access functions
-
     @classmethod
     def allocate_new_id(cls, parent):
         if cls._last_id is None:
@@ -135,6 +133,25 @@ class Entity(EntityRoot):
         log.debug("Entity.path: %s"%(p))
         return p
 
+    # Create and access functions
+
+    def child_entities(self, cls, altparent=None):
+        """
+        Iterates over child entities of an indicated class.
+        The supplied class is used to determine a subdirectory to be scanned, 
+        and to instantiate and load data for the entities found.
+
+        cls         is a subclass of Entity indicating the type of children to
+                    iterate over.
+        altparent   is an alternative parent entity to be checked using the class's
+                    alternate relative path, or None if only potential child IDs of the
+                    current entity are returned.
+        """
+        for i in self._children(cls, altparent=altparent):
+            e = cls.load(self, i, altparent=altparent)
+            yield e
+        return
+
     @classmethod
     def create(cls, parent, entityid, entitybody):
         """
@@ -155,7 +172,7 @@ class Entity(EntityRoot):
         return e
 
     @classmethod
-    def _child_entity(cls, parent, entityid, altparent=None):
+    def _child_init(cls, parent, entityid, altparent=None):
         """
         Instantiate a child entity (e.g. for create and load methods)
         """
@@ -180,10 +197,11 @@ class Entity(EntityRoot):
         Returns an instance of the indicated class with data loaded from the
         corresponding Annalist storage, or None if there is no such entity.
         """
-        log.debug("Entity.load: entitytype %s, parentdir %s, entityid %s"%
-            (cls._entitytype, parent._entitydir, entityid)
+        log.info("Entity.load: entitytype %s, parentdir %s, entityid %s, altparentdir %s"%
+            (cls._entitytype, parent._entitydir, entityid,
+                altparent._entitydir if altparent else "(no alt)")
             )
-        e = cls._child_entity(parent, entityid, altparent=altparent)
+        e = cls._child_init(parent, entityid, altparent=altparent)
         v = e._load_values()
         if v:
             e.set_values(v)
@@ -208,7 +226,7 @@ class Entity(EntityRoot):
         log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%
             (cls._entitytype, parent._entitydir, entityid)
             )
-        e = cls._child_entity(parent, entityid, altparent=altparent)
+        e = cls._child_init(parent, entityid, altparent=altparent)
         return e._exists()
 
     @classmethod

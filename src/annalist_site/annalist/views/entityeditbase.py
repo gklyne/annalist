@@ -104,8 +104,6 @@ class EntityEditBaseView(AnnalistGenericView):
 
         field    is the field description from a view or list description.
 
-        Also uses values self.sitedata and self.collection.
-
         See also: fields.render_utils.bound_field.
         """
         field_id    = field['annal:field_id']

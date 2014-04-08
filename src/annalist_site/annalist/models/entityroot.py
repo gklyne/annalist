@@ -220,8 +220,9 @@ class EntityRoot(object):
 
     def _children(self, cls, altparent=None):
         """
-        Iterates over candidate child entities that are instances of an indicated
-        class.  The supplied class is used to determine a subdirectory to be scanned.
+        Iterates over candidate child identifiers that are possible instances of an 
+        indicated class.  The supplied class is used to determine a subdirectory to 
+        be scanned.
 
         cls         is a subclass of Entity indicating the type of children to
                     iterate over.
@@ -240,6 +241,7 @@ class EntityRoot(object):
         return
 
     # Entity as iterator: returns candidate identifiers of contained entities
+    # @@TODO: unused except for test case; not sure it makes sense; eliminate?
     def __iter__(self):
         """
         Implement iterator protocol, returning candidate identifiers of 

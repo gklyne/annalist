@@ -91,13 +91,11 @@ class AnnalistGenericView(ContentNegotiationView):
     def get_coll_data(self, coll_id, host=""):
         """
         Check collection and type identifiers, and set up objects for:
-            self.sitedata
             self.collection
 
         Returns None if all is well, or an HttpResponse object with details 
         about any problem encountered.
         """
-        self.sitedata = SiteData(self.site(host=host))
         # Check collection
         if not Collection.exists(self.site(host=host), coll_id):
             return self.error(
@@ -126,8 +124,9 @@ class AnnalistGenericView(ContentNegotiationView):
             , '_field': RecordField
             })
         if type_id in Type_Class_Map:
-            self.entityclass  = Type_Class_Map[type_id]
-            self.entityparent = self.collection
+            self.entityclass     = Type_Class_Map[type_id]
+            self.entityparent    = self.collection
+            self.entityaltparent = self.site()
         else:
             # Check type
             if not RecordType.exists(self.collection, type_id, self.site()):
@@ -138,8 +137,9 @@ class AnnalistGenericView(ContentNegotiationView):
                         message=message.RECORD_TYPE_NOT_EXISTS%(type_id, self.collection.get_id())
                         )
                     )
-            self.entityclass  = EntityData
-            self.entityparent = RecordTypeData(self.collection, type_id)
+            self.entityclass     = EntityData
+            self.entityparent    = RecordTypeData(self.collection, type_id)
+            self.entityaltparent = None
         return None
 
     def get_view_data(self, view_id):
