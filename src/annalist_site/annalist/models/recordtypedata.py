@@ -40,6 +40,7 @@ class RecordTypeData(Entity):
         super(RecordTypeData, self).__init__(parent, type_id)
         return
 
+    # @@TODO remove this method and re-test (now redundant, handled through Entity class)
     def entities(self):
         """
         Generator enumerates and returns records of given type

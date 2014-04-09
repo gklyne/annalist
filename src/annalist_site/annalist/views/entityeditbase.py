@@ -160,12 +160,11 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         # Locate and read view description
         entitymap  = copy.copy(listentityvaluemap)
-        entitylist = RecordList.load(self.collection, list_id, self.site())
-        log.debug("entitylist %r"%entitylist.get_values())
+        log.debug("entitylist %r"%self.recordlist.get_values())
         groupmap = []
         self.get_fields_entityvaluemap(
             groupmap,
-            entitylist.get_values()['annal:list_fields']
+            self.recordlist.get_values()['annal:list_fields']
             )
         entitymap.extend(groupmap)  # for field headings
         entitymap.append(

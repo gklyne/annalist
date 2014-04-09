@@ -197,7 +197,7 @@ class Entity(EntityRoot):
         Returns an instance of the indicated class with data loaded from the
         corresponding Annalist storage, or None if there is no such entity.
         """
-        log.info("Entity.load: entitytype %s, parentdir %s, entityid %s, altparentdir %s"%
+        log.debug("Entity.load: entitytype %s, parentdir %s, entityid %s, altparentdir %s"%
             (cls._entitytype, parent._entitydir, entityid,
                 altparent._entitydir if altparent else "(no alt)")
             )

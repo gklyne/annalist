@@ -234,6 +234,9 @@ def get_item_renderer(renderid):
         return "field/annalist_item_entityref.html"    
     if renderid == "annal:field_render/Type":
         return "field/annalist_item_type.html"
+    if renderid == "annal:field_render/Identifier":
+        # @@TODO: use identifier lookup to display label
+        return "field/annalist_item_text.html"
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
 

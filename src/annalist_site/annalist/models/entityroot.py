@@ -242,6 +242,8 @@ class EntityRoot(object):
 
     # Entity as iterator: returns candidate identifiers of contained entities
     # @@TODO: unused except for test case; not sure it makes sense; eliminate?
+    # @@TODO: iterator should return key values, for consistency withj .keys(), .items() and dict behaviour
+    #         cf. render_utils.bound_field.__getattr__
     def __iter__(self):
         """
         Implement iterator protocol, returning candidate identifiers of 

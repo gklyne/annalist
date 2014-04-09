@@ -101,11 +101,12 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / parameterize view-id on extra URI field
    / create new URI mapping entries
    - create new test suite for generic list view
-     > choose test scenario: list of what? what list definition?
-     > list field descriptions?  Need to create list description (4 fields?)
+     / choose test scenario: Field definitions: http://localhost:8000/annalist/c/coll1/d/_field/ 
+     / list field descriptions?  Need to create list description (4 fields?).
+       http://localhost:8000/annalist/c/coll1/l/Fields_list/_field/
      / also choose / define default view for list (Create field view?)
-     - need to rationalize entity display structure to encompass data, collection level metadata and site-level metadata.
-     - check list display in dev app
+     / need to rationalize entity display structure to encompass data, collection level metadata and site-level metadata.
+     / check list display in dev app
      - define test suite test_genericentitylist based loosely on test_entitydefaultlist
    - refactor list description access out of context handling code (avoid multiple reads)
    - refactor code from entityeditbase into mkore specific views where possible
@@ -135,6 +136,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    - list_view response handler (needs generic view to make sense; view button to redisplay)
    - default_view response handler (needs generic view to make sense)
    - search response handler (later; see below)
+   - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
 ?. Grid view
 ?. Generic entity selector (based on canned sparql expressions?)
 ?. implement search within list view

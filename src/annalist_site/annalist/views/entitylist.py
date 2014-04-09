@@ -43,7 +43,7 @@ class GenericEntityListView(EntityEditBaseView):
 
     # Helper functions
 
-    def list_setup(self, coll_id, type_id):
+    def list_setup(self, coll_id, type_id, list_id):
         """
         Check collection and type identifiers and objects.
 
@@ -58,6 +58,10 @@ class GenericEntityListView(EntityEditBaseView):
                 )
         else:
             http_response = self.get_coll_data(coll_id, host=reqhost)
+        http_response = (
+            http_response or 
+            self.get_list_data(self.get_list_id(type_id, list_id))
+            )
         return http_response
 
     def get_list_id(self, type_id, list_id):
@@ -106,15 +110,11 @@ class GenericEntityListView(EntityEditBaseView):
         """
         log.debug("entitylist.get: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
         http_response = (
-            self.list_setup(coll_id, type_id) or
+            self.list_setup(coll_id, type_id, list_id) or
             self.form_edit_auth("list", self.collection._entityuri)
             )
         if http_response:
             return http_response
-        # .....................
-        # @@TODO: rework what follows to work for EntityData OR a metadata type
-        #         cf. recordtype.RecordTypeDeleteConfirmedView.post
-        # .....................
         # Prepare list and entity IDs for rendering form
         # @@TODO: apply selector logic here?
         list_id     = self.get_list_id(type_id, list_id)
@@ -168,8 +168,7 @@ class GenericEntityListView(EntityEditBaseView):
             return HttpResponseRedirect(continuation_uri)
         # Not "Close": set up list parameters
         http_response = (
-            self.list_setup(coll_id, type_id) or
-            self.get_list_data(self.get_list_id(type_id, list_id))
+            self.list_setup(coll_id, type_id, list_id)
             )
         if http_response:
             return http_response
