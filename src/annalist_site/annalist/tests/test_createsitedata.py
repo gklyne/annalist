@@ -85,24 +85,10 @@ class CreateSiteData(AnnalistTestCase):
     """
 
     def setUp(self):
-        # self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        # self.user.save()
-        # self.client = Client(HTTP_HOST=TestHost)
-        # loggedin = self.client.login(username="testuser", password="testpassword")
-        # self.assertTrue(loggedin)
         return
 
     def tearDown(self):
         return
-
-    # def _check_entity_data_values(self, entity_id, update="Entity"):
-    #     "Helper function checks content of form-updated record type entry with supplied entity_id"
-    #     self.assertTrue(EntityData.exists(self.testdata, entity_id))
-    #     e = EntityData.load(self.testdata, entity_id)
-    #     self.assertEqual(e.get_id(), entity_id)
-    #     self.assertEqual(e.get_uri(""), TestHostUri + entity_uri("testcoll", "testtype", entity_id))
-    #     self.assertDictionaryMatch(e.get_values(), entitydata_values(entity_id, update=update))
-    #     return e
 
     #   -----------------------------------------------------------------------------
     #   Create site data

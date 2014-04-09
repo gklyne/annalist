@@ -30,7 +30,7 @@ from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfi
 #
 #   -------------------------------------------------------------------------------------------
 
-class GenericEntityListView(EntityEditBaseView):
+class EntityGenericListView(EntityEditBaseView):
     """
     View class for generic entity list view
     """
@@ -38,7 +38,7 @@ class GenericEntityListView(EntityEditBaseView):
     _entityformtemplate = 'annalist_entity_list.html'
 
     def __init__(self):
-        super(GenericEntityListView, self).__init__()
+        super(EntityGenericListView, self).__init__()
         return
 
     # Helper functions
@@ -73,6 +73,9 @@ class GenericEntityListView(EntityEditBaseView):
     def get_list_view_id(self):
         return self.recordlist.get('annal:default_view', None) or "Default_view"
 
+    def get_list_type_id(self):
+        return self.recordlist.get('annal:default_type', None) or "Default_type"
+
     # @@TODO: the following functions should extract view_id information from the list
     #         description (including default lists).  
     #         Then remove corresponding methods from defaultlist.py
@@ -97,7 +100,7 @@ class GenericEntityListView(EntityEditBaseView):
                 "AnnalistEntityEditView", 
                 coll_id=coll_id, 
                 view_id=self.get_list_view_id(), 
-                type_id=type_id, 
+                type_id=type_id,
                 entity_id=entity_id,
                 action=action
                 )
@@ -132,7 +135,7 @@ class GenericEntityListView(EntityEditBaseView):
         entityval = { 'annal:list_entities': entity_list }
         # Set up initial view context
         self._entityvaluemap = self.get_list_entityvaluemap(list_id)
-        log.debug("GenericEntityListView.get _entityvaluemap %r"%(self._entityvaluemap))
+        log.debug("EntityGenericListView.get _entityvaluemap %r"%(self._entityvaluemap))
         viewcontext = self.map_value_to_context(entityval,
             title               = self.site_data()["title"],
             continuation_uri    = request.GET.get('continuation_uri', ""),
@@ -143,7 +146,7 @@ class GenericEntityListView(EntityEditBaseView):
             list_ids            = list_ids,
             list_selected       = list_id
             )
-        log.debug("GenericEntityListView.get viewcontext %r"%(viewcontext))
+        # log.debug("EntityGenericListView.get viewcontext %r"%(viewcontext))
         # generate and return form data
         return (
             self.render_html(viewcontext, self._entityformtemplate) or 
@@ -183,7 +186,7 @@ class GenericEntityListView(EntityEditBaseView):
             (entity_type, entity_id) = (
                 entity_ids[0].split("/") if len(entity_ids) == 1 else (None, None)
                 )
-            entity_type = entity_type or type_id or "Default_type"
+            entity_type = entity_type or type_id or self.get_list_type_id()
             cont_param  = "&continuation_uri="+continuation_uri
             if "new" in request.POST:
                 action = "new"
@@ -223,6 +226,7 @@ class GenericEntityListView(EntityEditBaseView):
                         "AnnalistEntityDataDeleteView", 
                         coll_id=coll_id, type_id=entity_type
                         )
+                    # log.info("coll_id %s, type_id %s, complete_action_uri %s"%(coll_id, entity_type, complete_action_uri))
                     delete_params = dict_querydict(
                         { "entity_delete":      ["Delete"]
                         , "entity_id":          [entity_id]

@@ -131,7 +131,6 @@ class AnnalistGenericView(ContentNegotiationView):
             # Check type
             if not RecordType.exists(self.collection, type_id, self.site()):
                 log.warning("get_type_data: RecordType %s not found"%type_id)
-                assert False
                 return self.error(
                     dict(self.error404values(),
                         message=message.RECORD_TYPE_NOT_EXISTS%(type_id, self.collection.get_id())

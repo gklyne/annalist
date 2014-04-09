@@ -22,7 +22,7 @@ from annalist.views.defaultlist     import EntityDefaultListView
 from annalist.views.defaultedit     import EntityDefaultEditView
 
 from annalist.views.entityedit      import GenericEntityEditView
-from annalist.views.entitylist      import GenericEntityListView
+from annalist.views.entitylist      import EntityGenericListView
 from annalist.views.entitydelete    import EntityDataDeleteConfirmedView
 
 # @@TODO: Review URI design: 1-letter path segments:
@@ -113,10 +113,10 @@ urlpatterns = patterns('',
                             name='AnnalistEntityDefaultEditView'),
 
     url(r'^c/(?P<coll_id>\w{0,32})/l/(?P<list_id>\w{0,32})/$',
-                            GenericEntityListView.as_view(),
+                            EntityGenericListView.as_view(),
                             name='AnnalistEntityGenericList'),
     url(r'^c/(?P<coll_id>\w{0,32})/l/(?P<list_id>\w{0,32})/(?P<type_id>\w{0,32})/$',
-                            GenericEntityListView.as_view(),
+                            EntityGenericListView.as_view(),
                             name='AnnalistEntityGenericList'),
 
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/$',

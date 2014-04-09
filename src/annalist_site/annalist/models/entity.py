@@ -71,10 +71,10 @@ class Entity(EntityRoot):
             altpath = self.altpath(entityid)
             self._entityalturi = altparent._entityuri+altpath
             self._entityaltdir = altparent._entitydir+altpath
+            self._entityuseuri = None   # URI not known until enmtity is created or accessed
             log.debug("Entity.__init__: entity alt URI %s, entity alt dir %s"%(self._entityalturi, self._entityaltdir))
         self._entityid = entityid
-        self._typeid   = parent.get_id() 
-        log.debug("Entity.__init__: entity_id %s, type_id %s"%(self._entityid, self._typeid))
+        log.debug("Entity.__init__: entity_id %s, type_id %s"%(self._entityid, self.get_type_id()))
         return
 
     # I/O helper functions

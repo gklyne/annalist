@@ -42,6 +42,7 @@ class EntityRoot(object):
 
     An entity presents at least the following interface:
         cls._entitytype     type of entity (CURIE or URI)
+        cls._entitytypeid   local type id (slug) used in local URI construction
         cls._entityfile     relative path to file where entity body is stored
         cls._entityref      relative reference to entity from body file
         self._entityid      ID of entity; may be None for "root" entities (e.g. site?)
@@ -52,9 +53,10 @@ class EntityRoot(object):
         self._values        dictionary of values in entity body
     """
 
-    _entitytype = ANNAL.CURIE.EntityRoot
-    _entityfile = None          # To be overriden by entity subclasses..
-    _entityref  = None          # Relative reference to entity from body file
+    _entitytype     = ANNAL.CURIE.EntityRoot
+    _entitytypeid   = None          # To be overridden
+    _entityfile     = None          # To be overriden by entity subclasses..
+    _entityref      = None          # Relative reference to entity from body file
 
     def __init__(self, entityuri, entitydir):
         """
@@ -65,11 +67,11 @@ class EntityRoot(object):
         entitydir   is the base directory containing the entity
         """
         self._entityid      = None
-        self._typeid        = None
         self._entityuri     = entityuri if entityuri.endswith("/") else entityuri + "/"
         self._entitydir     = entitydir if entitydir.endswith("/") else entitydir + "/"
         self._entityalturi  = None
         self._entityaltdir  = None
+        self._entityuseuri  = self._entityuri
         self._values        = None
         self._entityurihost = util.entity_uri_host(self._entityuri, "")
         self._entityuripath = util.entity_uri_path(self._entityuri, "")
@@ -86,7 +88,7 @@ class EntityRoot(object):
         return self._entityid
 
     def get_type_id(self):
-        return self._typeid
+        return self._entitytypeid
 
     def get_uri(self, baseuri=""):
         """
@@ -98,6 +100,12 @@ class EntityRoot(object):
         subsequent references to that value will be fixed, not relative, so the value
         should only be stored where they may be used as identifiers or "permalink"
         style locators, so the data can continue to be used when moved to a new location.
+
+        NOTE: this function always returns the primary URI associated with the entity.
+        Where the entity is accessed at a secondary location, that is handled internally
+        and not exposed through this function.  E.g. site-wide metadata entities are
+        presented as belonging to a collection.  This allows for collection-specific
+        specializations to be created without changing the URI used.
         """
         return urlparse.urljoin(baseuri, self._entityuri)
 
@@ -141,16 +149,27 @@ class EntityRoot(object):
             return (basedir, filepath)
         return (None, None)
 
+    def _dir_path_uri(self):
+        (d, p) = self._dir_path()
+        return (d, p, self._entityuri)
+
+    def _alt_dir_path_uri(self):
+        (d, p) = self._alt_dir_path()
+        return (d, p, self._entityalturi)
+
     def _exists_path(self):
         """
-        Test if the entity denoted by the current object has been created
+        Test if the entity denoted by the current object has been created.
+
+        If found, also sets the enity in-use URI value for .get_uri()
 
         returns path of of object body, or None
         """
-        for (d, p) in (self._dir_path(), self._alt_dir_path()):
+        for (d, p, u) in (self._dir_path_uri(), self._alt_dir_path_uri()):
             # log.info("_exists %s"%(p))
             if d and os.path.isdir(d):
                 if p and os.path.isfile(p):
+                    self._entityuseuri = u
                     return p
         return None
 
@@ -187,6 +206,7 @@ class EntityRoot(object):
             values[ANNAL.CURIE.type] = self._entitytype
         with open(fullpath, "wt") as entity_io:
             json.dump(values, entity_io, indent=2, separators=(',', ': '))
+        self._entityuseuri  = self._entityuri
         return
 
     def _load_values(self):

@@ -23,7 +23,7 @@ from annalist.models.recordtypedata import RecordTypeData
 
 from annalist.views.confirm         import ConfirmView, dict_querydict
 # from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
-from annalist.views.entitylist      import GenericEntityListView
+from annalist.views.entitylist      import EntityGenericListView
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -31,7 +31,7 @@ from annalist.views.entitylist      import GenericEntityListView
 #
 #   -------------------------------------------------------------------------------------------
 
-class EntityDefaultListView(GenericEntityListView):
+class EntityDefaultListView(EntityGenericListView):
     """
     View class for default record list view
     """

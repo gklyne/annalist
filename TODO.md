@@ -100,14 +100,15 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / refactor defaultlist.py as special case (subclass?)
    / parameterize view-id on extra URI field
    / create new URI mapping entries
-   - create new test suite for generic list view
+   / create new test suite for generic list view
      / choose test scenario: Field definitions: http://localhost:8000/annalist/c/coll1/d/_field/ 
      / list field descriptions?  Need to create list description (4 fields?).
        http://localhost:8000/annalist/c/coll1/l/Fields_list/_field/
      / also choose / define default view for list (Create field view?)
      / need to rationalize entity display structure to encompass data, collection level metadata and site-level metadata.
      / check list display in dev app
-     - define test suite test_genericentitylist based loosely on test_entitydefaultlist
+     / define test suite test_genericentitylist based loosely on test_entitydefaultlist
+   - align type ID values used in local URI construction with type URIs/CURIEs
    - refactor list description access out of context handling code (avoid multiple reads)
    - refactor code from entityeditbase into mkore specific views where possible
    - rename what is lefy of entityeditbase -> entityviewbase, or more to generic module

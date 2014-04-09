@@ -37,6 +37,7 @@ class EntityData(Entity):
         entity_id   the local identifier (slug) for the data record
         """
         super(EntityData, self).__init__(parent, entity_id)
+        self._entitytypeid = parent.get_id()
         return
 
 # End.

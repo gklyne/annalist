@@ -1,5 +1,5 @@
-{ "@id":                "annal:fields/Label"
-, "annal:id":           "Label"
+{ "@id":                "annal:fields/Entity_label"
+, "annal:id":           "Entity_label"
 , "annal:type":         "annal:Field"
 , "rdfs:label":         "Label"
 , "rdfs:comment":       "Short string used to describe entity when displayed"

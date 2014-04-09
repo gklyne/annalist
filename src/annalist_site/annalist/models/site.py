@@ -33,9 +33,10 @@ from annalist                   import util
 
 class Site(EntityRoot):
 
-    _entitytype = ANNAL.CURIE.Site
-    _entityfile = layout.SITE_META_FILE
-    _entityref  = layout.META_SITE_REF
+    _entitytype     = ANNAL.CURIE.Site
+    _entitytypeid   = "_site"
+    _entityfile     = layout.SITE_META_FILE
+    _entityref      = layout.META_SITE_REF
 
     def __init__(self, sitebaseuri, sitebasedir, host=""):
         """

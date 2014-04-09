@@ -1,5 +1,5 @@
-{ "@id":                "annal:fields/URI"
-, "annal:id":           "URI"
+{ "@id":                "annal:fields/Type_uri"
+, "annal:id":           "Type_uri"
 , "annal:type":         "annal:Field"
 , "rdfs:label":         "URI"
 , "rdfs:comment":       "Entity type URI"

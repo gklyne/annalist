@@ -114,20 +114,28 @@ def recordlist_uri(coll_id, list_id):
         kwargs.update({'list_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_list_all_uri(coll_id="testcoll"):
-    viewname = "AnnalistEntityDefaultListAll"
-    kwargs   = {'coll_id': coll_id}
+def entitydata_list_all_uri(coll_id="testcoll", list_id=None):
+    if list_id:
+        viewname = "AnnalistEntityGenericList"
+        kwargs   = {'list_id': list_id, 'coll_id': coll_id}
+    else:
+        viewname = "AnnalistEntityDefaultListAll"
+        kwargs   = {'coll_id': coll_id}
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_list_type_uri(coll_id="testcoll", type_id="testtype"):
-    viewname = "AnnalistEntityDefaultListType"
-    kwargs   = {'coll_id': coll_id, 'type_id': type_id}
+def entitydata_list_type_uri(coll_id="testcoll", type_id="testtype", list_id=None):
+    if list_id:
+        viewname = "AnnalistEntityGenericList"
+        kwargs   = {'list_id': list_id, 'coll_id': coll_id, 'type_id': type_id}
+    else:
+        viewname = "AnnalistEntityDefaultListType"
+        kwargs   = {'coll_id': coll_id, 'type_id': type_id}
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_list_id_uri(coll_id="testcoll", type_id="testtype", list_id="Default_list"):
-    viewname = "AnnalistEntityDefaultListType"
-    kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'list_id': list_id}
-    return reverse(viewname, kwargs=kwargs)
+# def entitydata_list_id_uri(coll_id="testcoll", type_id="testtype", list_id="Default_list"):
+#     viewname = "AnnalistEntityDefaultListType"
+#     kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'list_id': list_id}
+#     return reverse(viewname, kwargs=kwargs)
 
 def entity_uri(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
     viewname = "AnnalistEntityDefaultDataView"
@@ -518,11 +526,14 @@ def collection_remove_form_data(coll_id_list):
 #   -----------------------------------------------------------------------------
 
 def recordtype_value_keys():
-    return (
+    return set(
         [ 'annal:id', 'annal:type'
         , 'annal:uri', 'annal:urihost', 'annal:uripath'
         , 'rdfs:label', 'rdfs:comment'
         ])
+
+def recordtype_load_keys():
+    return recordtype_value_keys() | {"@id"}
 
 def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="RecordType"):
     """
@@ -538,12 +549,20 @@ def recordtype_values(
         update="RecordType", hosturi=TestHostUri):
     d = recordtype_create_values(coll_id, type_id, update=update).copy()
     d.update(
-        { '@id':            "./"
-        , 'annal:id':       type_id
+        { 'annal:id':       type_id
         , 'annal:type':     "annal:RecordType"
         , 'annal:uri':      hosturi + recordtype_uri(coll_id, type_id)
         , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
         , 'annal:uripath':  recordtype_uri(coll_id, type_id)
+        })
+    return d
+
+def recordtype_read_values(
+        coll_id="testcoll", type_id="testtype", 
+        update="RecordType", hosturi=TestHostUri):
+    d = recordtype_values(coll_id, type_id, update=update, hosturi=hosturi).copy()
+    d.update(
+        { '@id':            "./"
         })
     return d
 

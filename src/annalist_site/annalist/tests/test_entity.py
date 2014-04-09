@@ -298,7 +298,7 @@ class EntityTest(TestCase):
         e1 = Entity(r, "testid1")
         self.assertEqual(e1.get_type_id(),  None)
         e2 = Entity(e1, "testid2")
-        self.assertEqual(e2.get_type_id(),  "testid1")
+        self.assertEqual(e2.get_type_id(),  None)
         return
 
     def test_entity_subclass(self):

@@ -39,7 +39,7 @@ from entity_testutils           import (
     entitydata_list_all_uri,
     continuation_uri_param,
     collection_value_keys, collection_create_values, collection_values,
-    recordtype_value_keys, recordtype_create_values, recordtype_values,
+    recordtype_value_keys, recordtype_create_values, recordtype_values, recordtype_read_values,
     recordview_value_keys, recordview_create_values, recordview_values,
     recordlist_value_keys, recordlist_create_values, recordlist_values,
     site_title
@@ -71,9 +71,9 @@ class CollectionTest(AnnalistTestCase):
         self.coll1        = collection_values("coll1")
         self.testcoll_add = collection_create_values("testcoll")
         self.type1_add    = recordtype_create_values("testcoll", "type1")
-        self.type1        = recordtype_values("testcoll", "type1")
+        self.type1        = recordtype_read_values("testcoll", "type1")
         self.type2_add    = recordtype_create_values("testcoll", "type2")
-        self.type2        = recordtype_values("testcoll", "type2")
+        self.type2        = recordtype_read_values("testcoll", "type2")
         self.view1_add    = recordview_create_values("testcoll", "view1")
         self.view1        = recordview_values("testcoll", "view1")
         self.view2_add    = recordview_create_values("testcoll", "view2")

@@ -1,5 +1,5 @@
-{ "@id":                "annal:fields/Comment"
-, "annal:id":           "Comment"
+{ "@id":                "annal:fields/Entity_comment"
+, "annal:id":           "Entity_comment"
 , "annal:type":         "annal:Field"
 , "rdfs:label":         "Comment"
 , "rdfs:comment":       "Descriptive text about an entity."

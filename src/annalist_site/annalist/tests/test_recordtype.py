@@ -35,7 +35,8 @@ from entity_testutils           import (
     site_dir, collection_dir, recordtype_dir,
     site_view_uri, collection_edit_uri, recordtype_uri, recordtype_edit_uri,
     collection_create_values,
-    recordtype_value_keys, recordtype_create_values, recordtype_values,
+    recordtype_value_keys, recordtype_load_keys, 
+    recordtype_create_values, recordtype_values, recordtype_read_values,
     recordtype_context_data, recordtype_form_data, recordtype_delete_confirm_form_data,
     site_title
     )
@@ -78,27 +79,49 @@ class RecordTypeTest(AnnalistTestCase):
 
     def test_recordtype1_data(self):
         t = RecordType(self.testcoll, "type1")
+        self.assertEqual(t.get_id(), "type1")
+        self.assertEqual(t.get_type_id(), "_type")
+        self.assertIn("/c/testcoll/_annalist_collection/types/type1/", t.get_uri())
         t.set_values(recordtype_create_values(type_id="type1"))
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_value_keys()))
-        v = recordtype_create_values(type_id="type1")
+        v = recordtype_values(type_id="type1")
         self.assertDictionaryMatch(td, v)
         return
 
     def test_recordtype2_data(self):
         t = RecordType(self.testcoll, "type2")
+        self.assertEqual(t.get_id(), "type2")
+        self.assertEqual(t.get_type_id(), "_type")
+        self.assertIn("/c/testcoll/_annalist_collection/types/type2/", t.get_uri())
         t.set_values(recordtype_create_values(type_id="type2"))
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_value_keys()))
-        v = recordtype_create_values(type_id="type2")
+        v = recordtype_values(type_id="type2")
         self.assertDictionaryMatch(td, v)
         return
 
     def test_recordtype_create_load(self):
         t  = RecordType.create(self.testcoll, "type1", recordtype_create_values(type_id="type1"))
         td = RecordType.load(self.testcoll, "type1").get_values()
-        v = recordtype_values(type_id="type1")
+        v = recordtype_read_values(type_id="type1")
         self.assertKeysMatch(td, v)
+        self.assertDictionaryMatch(td, v)
+        return
+
+    def test_recordtype_default_data(self):
+        t = RecordType.load(self.testcoll, "Default_type", altparent=self.testsite)
+        self.assertEqual(t.get_id(), "Default_type")
+        self.assertIn("/c/testcoll/_annalist_collection/types/Default_type", t.get_uri())
+        self.assertEqual(t.get_type_id(), "_type")
+        td = t.get_values()
+        self.assertEqual(set(td.keys()), set(recordtype_load_keys()))
+        v = recordtype_read_values(type_id="Default_type")
+        v.update(
+            { 'rdfs:label':     'Default record type'
+            , 'rdfs:comment':   'Default record type, applied when no type is specified when creating a record.'
+            , 'annal:uri':      'annal:type/Default_type'
+            })
         self.assertDictionaryMatch(td, v)
         return
 
@@ -141,7 +164,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertTrue(RecordType.exists(self.testcoll, type_id))
         t = RecordType.load(self.testcoll, type_id)
         self.assertEqual(t.get_id(), type_id)
-        self.assertEqual(t.get_uri(""), TestHostUri + recordtype_uri("testcoll", type_id))
+        self.assertEqual(t.get_uri(), TestHostUri + recordtype_uri("testcoll", type_id))
         v = recordtype_values(type_id=type_id, update=update)
         self.assertDictionaryMatch(t.get_values(), v)
         return t

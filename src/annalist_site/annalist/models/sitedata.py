@@ -32,10 +32,11 @@ from annalist.models.recordlist import RecordList
 
 class SiteData(Entity):
 
-    _entitytype = ANNAL.CURIE.SiteData
-    _entitypath = layout.SITEDATA_PATH
-    _entityfile = layout.SITEDATA_META_FILE
-    _entityref  = layout.META_SITEDATA_REF
+    _entitytype     = ANNAL.CURIE.SiteData
+    _entitytypeid   = "_sitedata"
+    _entitypath     = layout.SITEDATA_PATH
+    _entityfile     = layout.SITEDATA_META_FILE
+    _entityref      = layout.META_SITEDATA_REF
 
     def __init__(self, parent):
         """

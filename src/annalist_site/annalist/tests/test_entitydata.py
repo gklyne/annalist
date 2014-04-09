@@ -17,6 +17,8 @@ from django.test                    import TestCase # cf. https://docs.djangopro
 
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
+from annalist.models.entityroot     import EntityRoot
+from annalist.models.entity         import Entity
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
@@ -94,6 +96,15 @@ class EntityDataTest(AnnalistTestCase):
         v  = entitydata_values("entitydata1")
         self.assertKeysMatch(ed, v)
         self.assertDictionaryMatch(ed, v)
+        return
+
+    def test_entitydata_type_id(self):
+        r = EntityRoot(TestBaseUri, TestBaseDir)
+        self.assertEqual(r.get_type_id(),   None)
+        e1 = Entity(r, "testid1")
+        self.assertEqual(e1.get_type_id(),  None)
+        e2 = EntityData(e1, "testid2")
+        self.assertEqual(e2.get_type_id(),  "testid1")
         return
 
 # End.

@@ -32,6 +32,7 @@ from annalist.models.entity     import Entity
 class RecordType(Entity):
 
     _entitytype     = ANNAL.CURIE.RecordType
+    _entitytypeid   = "_type"
     _entitypath     = layout.COLL_TYPE_PATH
     _entityaltpath  = layout.SITE_TYPE_PATH
     _entityfile     = layout.TYPE_META_FILE

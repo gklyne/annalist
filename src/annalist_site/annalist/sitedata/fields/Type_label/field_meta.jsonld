@@ -1,5 +1,5 @@
-{ "@id":                "annal:fields/Label"
-, "annal:id":           "Label"
+{ "@id":                "annal:fields/Type_label"
+, "annal:id":           "Type_label"
 , "annal:type":         "annal:Field"
 , "rdfs:label":         "Label"
 , "rdfs:comment":       "Short string used to describe record type when displayed"

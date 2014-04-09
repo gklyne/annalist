@@ -25,6 +25,7 @@ from annalist.models.entity     import Entity
 class RecordView(Entity):
 
     _entitytype     = ANNAL.CURIE.RecordView
+    _entitytypeid   = "_view"
     _entitypath     = layout.COLL_VIEW_PATH
     _entityaltpath  = layout.SITE_VIEW_PATH
     _entityfile     = layout.VIEW_META_FILE
