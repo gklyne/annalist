@@ -100,7 +100,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / refactor defaultlist.py as special case (subclass?)
    / parameterize view-id on extra URI field
    / create new URI mapping entries
-   / create new test suite for generic list view
+   - create new test suite for generic list view
      / choose test scenario: Field definitions: http://localhost:8000/annalist/c/coll1/d/_field/ 
      / list field descriptions?  Need to create list description (4 fields?).
        http://localhost:8000/annalist/c/coll1/l/Fields_list/_field/
@@ -108,6 +108,8 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / need to rationalize entity display structure to encompass data, collection level metadata and site-level metadata.
      / check list display in dev app
      / define test suite test_genericentitylist based loosely on test_entitydefaultlist
+     - create test case for creating/editing site metadata entities (currently fail in dev system)
+       e.g. create test_entitymetadataedit based on entitygenericedit.
    - align type ID values used in local URI construction with type URIs/CURIEs
    - refactor list description access out of context handling code (avoid multiple reads)
    - refactor code from entityeditbase into mkore specific views where possible
@@ -181,21 +183,25 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
 
 ## Future features (see also Misc above)
 
-- alternative OIDC identity providers
-- spreadhsheet bridge
-- Research Object presentation
+- Spreadhsheet bridge
+- BLOB upload and storage
+- Research Objects presentation
+- Checklist integration
 - use HTTP to access data; use standard web server backend
   - need to address auth, resource enumeration (WebDAV?), other issues
   - NOTE: need to address problem of getting HOST part of site URI when initializing a collection;
    can this logic be shifted to request code instead of __init__?
 - more field types, including link browser
   - image grid + metadata pop-up for mobile browsing?
+- alternative OIDC identity providers
 - provenance data capture (e.g. - look at creating additional resource in entity._save)
+- provenance pingbacks - distributed provenance for real data?
 - git integration for data versioning
 - dat integration for versioning? (https://github.com/maxogden/dat)
 - Memento integration for old data recovery
 - ResourceSync integration for data sync
 - Shuffl integration?
+- RML integration for data bridges
 
 ### Entity abstraction and storage
 
@@ -227,6 +233,12 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
 - Assume use of annalist form data under control of suitable authority
 - Focus on form of authorization data
 - Back-fit to form interface for creation of data; figure what seeding is needed
+
+
+## Applications
+
+* Cruising log
+* Image database (bioimage revisited)
 
 
 ## Explorations
