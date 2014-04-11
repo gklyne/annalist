@@ -24,20 +24,32 @@ from annalist.models.entity     import Entity
 
 class EntityData(Entity):
 
-    _entitytype = ANNAL.CURIE.EntityData
-    _entitypath = layout.TYPEDATA_ENTITY_PATH
-    _entityfile = layout.ENTITY_DATA_FILE
-    _entityref  = layout.DATA_ENTITY_REF
+    _entitytype     = ANNAL.CURIE.EntityData
+    _entitytypeid   = None
+    _entityview     = layout.TYPEDATA_ENTITY_VIEW
+    _entitypath     = layout.TYPEDATA_ENTITY_PATH
+    _entityfile     = layout.ENTITY_DATA_FILE
+    _entityref      = layout.DATA_ENTITY_REF
 
-    def __init__(self, parent, entity_id):
+    def __init__(self, parent, entity_id, altparent=None):
         """
         Initialize a new Entity Data object, without metadata.
 
         parent      is the parent collection (RecordType) from which the entity is descended.
         entity_id   the local identifier (slug) for the data record
         """
-        super(EntityData, self).__init__(parent, entity_id)
-        self._entitytypeid = parent.get_id()
+        super(EntityData, self).__init__(parent, entity_id, altparent=altparent)
+        self._entitytypeid  = self._entitytypeid or parent.get_id()
+        self._entityviewuri = parent._entityuri+self._entityview%{'id': entity_id}
         return
+
+    def get_view_uri(self, baseuri=""):
+        """
+        Return URI used to view entity data.  For metadata entities, this may be 
+        different from the URI at which the resource is located, per get_uri().
+        The intent is to provide a URI that works regardless of whether the metadata
+        is stored as site-wide or collection-specific data.
+        """
+        return urlparse.urljoin(baseuri, self._entityviewuri)
 
 # End.

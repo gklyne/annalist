@@ -28,11 +28,13 @@ from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
 from annalist                   import util
 from annalist.models.entity     import Entity
+from annalist.models.entitydata import EntityData
 
-class RecordType(Entity):
+class RecordType(EntityData):
 
     _entitytype     = ANNAL.CURIE.RecordType
     _entitytypeid   = "_type"
+    _entityview     = layout.COLL_TYPE_VIEW
     _entitypath     = layout.COLL_TYPE_PATH
     _entityaltpath  = layout.SITE_TYPE_PATH
     _entityfile     = layout.TYPE_META_FILE

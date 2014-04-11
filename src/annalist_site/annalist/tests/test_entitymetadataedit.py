@@ -111,7 +111,7 @@ class MetadataEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_uri=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        log.info(r.content)
+        # log.info(r.content)
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         formrow1col1 = """
@@ -133,7 +133,6 @@ class MetadataEditViewTest(AnnalistTestCase):
                         <p>Field value type</p>
                     </div>
                     <div class="small-12 medium-8 columns">
-                        <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
                         <input type="text" size="64" name="Field_type" value="(field value type)"/>
                     </div>
                 </div>
@@ -194,7 +193,8 @@ class MetadataEditViewTest(AnnalistTestCase):
                         <p>Size and position</p>
                     </div>
                     <div class="small-12 medium-10 columns">
-                        <p>(field display size and placement details)</p>
+                        <input type="text" size="64" name="Field_placement" 
+                               value="(field display size and placement details)"/>
                     </div>
                 </div>
             </div>
@@ -208,19 +208,19 @@ class MetadataEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow6, html=True)
         return
 
-    @unittest.skip("@@TODO")
     def test_get_new(self):
-        u = entitydata_edit_uri("new", "testcoll", "testtype", view_id="RecordType_view")
+        u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
         r = self.client.get(u+"?continuation_uri=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
+        field_uri = entity_uri(type_id="_field", entity_id="00000001")
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "testtype")
+        self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_uri'],       TestHostUri + entity_uri(entity_id="00000001"))
+        self.assertEqual(r.context['entity_uri'],       TestHostUri + field_uri)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # Fields

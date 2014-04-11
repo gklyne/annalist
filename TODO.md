@@ -110,9 +110,16 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / define test suite test_genericentitylist based loosely on test_entitydefaultlist
      - create test case for creating/editing site metadata entities (currently fail in dev system)
        e.g. create test_entitymetadataedit based on entitygenericedit.
+     / resolve overloading of "entity_uri" in context.  In `entityeditbase.py:58` it is taken from
+       `annal:uri`, but in `render_utils.py:108` it may be derived from the entity object, not the data
+       via logic at `entityroot.py:119` (.set_values()).
+       This leads to inconsistency with metadata entities.  What value *should* be returned for these:
+       the actual location or the URI used for viewing?  Ideally, we'll use the `/c/coll/d/_type/id`
+       form, as that hides whether it comes from the collection or is site-wide.
+   - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - align type ID values used in local URI construction with type URIs/CURIEs
    - refactor list description access out of context handling code (avoid multiple reads)
-   - refactor code from entityeditbase into mkore specific views where possible
+   - refactor code from entityeditbase into more specific views where possible
    - rename what is lefy of entityeditbase -> entityviewbase, or more to generic module
    - don't include continuation-uri param when URI is blank
    - edit form response should update, not replace, any data from the original (so data from multiple views is not discarded).

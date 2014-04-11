@@ -109,6 +109,15 @@ class EntityRoot(object):
         """
         return urlparse.urljoin(baseuri, self._entityuri)
 
+    def get_view_uri(self, baseuri=""):
+        """
+        Return URI used to view entity data.  For metadata entities, this may be 
+        different from the URI at which the resource is located, per get_uri().
+        The intent is to provide a URI that works regardless of whether the metadata
+        is stored as site-wide or collection-specific data.
+        """
+        return self.get_uri(baseuri=baseuri)
+
     def set_values(self, values):
         """
         Set or update values for a collection
@@ -116,7 +125,7 @@ class EntityRoot(object):
         self._values = values.copy()
         self._values[ANNAL.CURIE.id]        = self._values.get(ANNAL.CURIE.id,      self._entityid)
         self._values[ANNAL.CURIE.type]      = self._values.get(ANNAL.CURIE.type,    self._entitytype)
-        self._values[ANNAL.CURIE.uri]       = self._values.get(ANNAL.CURIE.uri,     self._entityuri)
+        self._values[ANNAL.CURIE.uri]       = self._values.get(ANNAL.CURIE.uri,     self.get_view_uri())
         self._values[ANNAL.CURIE.uripath]   = self._values.get(ANNAL.CURIE.uripath, self._entityuripath)
         self._values[ANNAL.CURIE.urihost]   = self._values.get(ANNAL.CURIE.urihost, "") or self._entityurihost
         return self._values

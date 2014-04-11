@@ -20,14 +20,9 @@ from django.core.urlresolvers       import resolve, reverse
 from annalist.util                  import valid_id
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
-# from annalist.models.site           import Site
-# from annalist.models.collection     import Collection
-# from annalist.models.recordtype     import RecordType
-# from annalist.models.recordtypedata import RecordTypeData
-# from annalist.models.entitydata     import EntityData
 from annalist.fields.render_utils   import get_placement_classes
 
-from tests      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from tests  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 
 #   -----------------------------------------------------------------------------
 #
@@ -78,6 +73,15 @@ def recordtype_uri(coll_id="testcoll", type_id="testtype"):
         kwargs.update({'type_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
+def recordtype_view_uri(coll_id="testcoll", type_id="testtype"):
+    viewname = "AnnalistEntityDefaultDataView"
+    kwargs   = {'coll_id': coll_id, 'type_id': "_type"}
+    if valid_id(type_id):
+        kwargs.update({'entity_id': type_id})
+    else:
+        kwargs.update({'entity_id': "___"})
+    return reverse(viewname, kwargs=kwargs)
+
 def recordtype_edit_uri(action, coll_id, type_id=None):
     viewname = ( 
         'AnnalistRecordTypeNewView'     if action == "new"    else
@@ -105,6 +109,15 @@ def recordview_uri(coll_id, view_id):
         kwargs.update({'view_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
+def recordview_view_uri(coll_id, view_id):
+    viewname = "AnnalistEntityDefaultDataView"
+    kwargs   = {'coll_id': coll_id, 'type_id': "_view"}
+    if valid_id(view_id):
+        kwargs.update({'entity_id': view_id})
+    else:
+        kwargs.update({'entity_id': "___"})
+    return reverse(viewname, kwargs=kwargs)
+
 def recordlist_uri(coll_id, list_id):
     viewname = "AnnalistRecordListAccessView"
     kwargs   = {'coll_id': coll_id}
@@ -112,6 +125,15 @@ def recordlist_uri(coll_id, list_id):
         kwargs.update({'list_id': list_id})
     else:
         kwargs.update({'list_id': "___"})
+    return reverse(viewname, kwargs=kwargs)
+
+def recordlist_view_uri(coll_id, list_id):
+    viewname = "AnnalistEntityDefaultDataView"
+    kwargs   = {'coll_id': coll_id, 'type_id': "_list"}
+    if valid_id(list_id):
+        kwargs.update({'entity_id': list_id})
+    else:
+        kwargs.update({'entity_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
 def entitydata_list_all_uri(coll_id="testcoll", list_id=None):
@@ -551,7 +573,7 @@ def recordtype_values(
     d.update(
         { 'annal:id':       type_id
         , 'annal:type':     "annal:RecordType"
-        , 'annal:uri':      hosturi + recordtype_uri(coll_id, type_id)
+        , 'annal:uri':      hosturi + recordtype_view_uri(coll_id, type_id)
         , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
         , 'annal:uripath':  recordtype_uri(coll_id, type_id)
         })
@@ -575,7 +597,7 @@ def recordtype_context_data(
         , 'orig_id':            "orig_type_id"
         , 'type_label':         "%s testcoll/..."%(update)
         , 'type_help':          "%s help for ... in collection testcoll"%(update)
-        , 'type_uri':           recordtype_uri("testcoll", "___")
+        , 'type_uri':           recordtype_view_uri("testcoll", "___")
         , 'continuation_uri':   collection_edit_uri("testcoll")
         })
     if type_id:
@@ -583,7 +605,7 @@ def recordtype_context_data(
         context_dict['orig_id']     = type_id
         context_dict['type_label']  = "%s testcoll/%s"%(update, type_id)
         context_dict['type_help']   = "%s help for %s in collection testcoll"%(update,type_id)
-        context_dict['type_uri']    = hosturi + recordtype_uri("testcoll", type_id)
+        context_dict['type_uri']    = hosturi + recordtype_view_uri("testcoll", type_id)
     if orig_id:
         context_dict['orig_id']     = orig_id
     if action:  
@@ -596,7 +618,7 @@ def recordtype_form_data(
     form_data_dict = (
         { 'type_label':         "%s testcoll/..."%(update)
         , 'type_help':          "%s help for ... in collection testcoll"%(update)
-        , 'type_class':         recordtype_uri("testcoll", "___")
+        , 'type_class':         recordtype_view_uri("testcoll", "___")
         , 'orig_id':            "orig_type_id"
         , 'continuation_uri':   collection_edit_uri("testcoll")
         })
@@ -605,7 +627,7 @@ def recordtype_form_data(
         form_data_dict['orig_id']       = type_id
         form_data_dict['type_label']    = "%s testcoll/%s"%(update, type_id)
         form_data_dict['type_help']     = "%s help for %s in collection testcoll"%(update,type_id)
-        form_data_dict['type_class']    = hosturi + recordtype_uri("testcoll", type_id)
+        form_data_dict['type_class']    = hosturi + recordtype_view_uri("testcoll", type_id)
     if orig_id:
         form_data_dict['orig_id']       = orig_id
     if action:
@@ -652,7 +674,7 @@ def recordview_values(
         { '@id':            "./"
         , 'annal:id':       view_id
         , 'annal:type':     "annal:RecordView"
-        , 'annal:uri':      hosturi + recordview_uri(coll_id, view_id)
+        , 'annal:uri':      hosturi + recordview_view_uri(coll_id, view_id)
         , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
         , 'annal:uripath':  recordview_uri(coll_id, view_id)
         })
@@ -688,7 +710,7 @@ def recordlist_values(
         { '@id':            "./"
         , 'annal:id':       list_id
         , 'annal:type':     "annal:RecordList"
-        , 'annal:uri':      hosturi + recordlist_uri(coll_id, list_id)
+        , 'annal:uri':      hosturi + recordlist_view_uri(coll_id, list_id)
         , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
         , 'annal:uripath':  recordlist_uri(coll_id, list_id)
         })

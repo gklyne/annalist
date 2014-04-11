@@ -21,11 +21,13 @@ from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
 from annalist                   import util
 from annalist.models.entity     import Entity
+from annalist.models.entitydata import EntityData
 
-class RecordView(Entity):
+class RecordView(EntityData):
 
     _entitytype     = ANNAL.CURIE.RecordView
     _entitytypeid   = "_view"
+    _entityview     = layout.COLL_VIEW_VIEW
     _entitypath     = layout.COLL_VIEW_PATH
     _entityaltpath  = layout.SITE_VIEW_PATH
     _entityfile     = layout.VIEW_META_FILE

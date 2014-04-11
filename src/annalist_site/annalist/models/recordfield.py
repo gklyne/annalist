@@ -19,11 +19,13 @@ from django.conf import settings
 from annalist                   import layout
 from annalist.identifiers       import ANNAL
 from annalist.models.entity     import Entity
+from annalist.models.entitydata import EntityData
 
-class RecordField(Entity):
+class RecordField(EntityData):
 
     _entitytype     = ANNAL.CURIE.RecordField
     _entitytypeid   = "_field"
+    _entityview     = layout.COLL_FIELD_VIEW
     _entitypath     = layout.COLL_FIELD_PATH
     _entityaltpath  = layout.SITE_FIELD_PATH
     _entityfile     = layout.FIELD_META_FILE

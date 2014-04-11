@@ -1,7 +1,7 @@
 {
   "rdfs:label": "RecordType coll2/type2",
   "rdfs:comment": "RecordType help for type2 in collection coll2",
-  "annal:uri": "http://test.example.com/testsite/c/coll2/_annalist_collection/types/type2/",
+  "annal:uri": "http://test.example.com/testsite/c/coll2/d/_type/type2/",
   "annal:urihost": "test.example.com",
   "annal:uripath": "/testsite/c/coll2/_annalist_collection/types/type2/",
   "annal:id": "type2",
