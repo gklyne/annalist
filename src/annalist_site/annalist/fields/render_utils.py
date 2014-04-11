@@ -171,6 +171,8 @@ def get_edit_renderer(renderid):
         # return RenderText()
     if renderid == "annal:field_render/Slug":
         return "field/annalist_edit_text.html"
+    if renderid == "annal:field_render/Placement":
+        return "field/annalist_view_text.html"
     if renderid == "annal:field_render/EntityRef":
         return "field/annalist_edit_text.html"    
     if renderid == "annal:field_render/Identifier":
@@ -201,6 +203,8 @@ def get_view_renderer(renderid):
         return "field/annalist_view_text.html"
         # return RenderText()
     if renderid == "annal:field_render/Slug":
+        return "field/annalist_view_text.html"
+    if renderid == "annal:field_render/Placement":
         return "field/annalist_view_text.html"
     if renderid == "annal:field_render/EntityRef":
         return "field/annalist_view_entityref.html"    

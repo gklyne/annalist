@@ -6,27 +6,25 @@
 , "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing fields in a record view"
 , "annal:view_fields":
   [ { "annal:field_id":         "Field_id"
-    , "annal:display_small":    "0,12"
-    , "annal:display_medium":   "0,4"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
     }
   , { "annal:field_id":         "Field_type"
-    , "annal:display_small":    "0,12"
-    , "annal:display_medium":   "8,4,right"
+    , "annal:field_placement":  "small:0,12;medium:6,6right"
     }
   , { "annal:field_id":         "Field_label"
-    , "annal:display_small":    "0,12"
+    , "annal:field_placement":  "small:0,12"
     }
   , { "annal:field_id":         "Field_comment"
-    , "annal:display_small":    "0,12"
+    , "annal:field_placement":  "small:0,12"
     }
   , { "annal:field_id":         "Field_placeholder"
-    , "annal:display_small":    "0,12"
+    , "annal:field_placement":  "small:0,12"
     }
   , { "annal:field_id":         "Field_property"
-    , "annal:display_small":    "0,12"
+    , "annal:field_placement":  "small:0,12"
     }
   , { "annal:field_id":         "Field_placement"
-    , "annal:display_small":    "0,12"
+    , "annal:field_placement":  "small:0,12"
     }
   ]
 }

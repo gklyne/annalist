@@ -34,12 +34,12 @@ class RecordField(Entity):
         Initialize a new RecordField object, without metadta (yet).
 
         parent      is the parent entity from which the view is descended.
-        field_id     the local identifier for the record view
+        field_id    the local identifier for the record view
         altparent   is a site object to search for this new entity,
                     allowing site-wide RecordField values to be found.
         """
         log.debug("RecordField %s"%(field_id))
-        assert altparent, "RecordField instantiated with no altparent"
+        # assert altparent, "RecordField instantiated with no altparent"
         super(RecordField, self).__init__(parent, field_id, altparent=altparent)
         return
 
