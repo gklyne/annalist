@@ -10,6 +10,10 @@ SETTINGS_MODULE = __name__
 BASE_DATA_DIR   = os.path.expanduser("~")
 CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+TEMPLATE_DEBUG = False
+
 import logging
 log = logging.getLogger(__name__)
 log.info("SETTINGS_MODULE: "+SETTINGS_MODULE)

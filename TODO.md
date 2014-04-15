@@ -108,8 +108,11 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / need to rationalize entity display structure to encompass data, collection level metadata and site-level metadata.
      / check list display in dev app
      / define test suite test_genericentitylist based loosely on test_entitydefaultlist
-     - create test case for creating/editing site metadata entities (currently fail in dev system)
-       e.g. create test_entitymetadataedit based on entitygenericedit.
+     - create test case for creating/editing site metadata entities (currently fail in dev system) e.g. create test_entitymetadataedit based on entitygenericedit.
+     - decide how to handle presentation of field types:
+       (a) use simple text string, not CURIE
+       (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?
+       - it all rather depends on the anticipated extensibility model for field types.  Option (a) is simplest for now.
      / resolve overloading of "entity_uri" in context.  In `entityeditbase.py:58` it is taken from
        `annal:uri`, but in `render_utils.py:108` it may be derived from the entity object, not the data
        via logic at `entityroot.py:119` (.set_values()).

@@ -30,4 +30,6 @@ See also:
 
 ## Other
 
-* http://pythonhosted.org//Sumatra/
+* http://pythonhosted.org/Sumatra/ (automated tracking of scientific computations; provenance, electronic notebook)
+* http://sparkleshare.org/ (alt-dropbox, uses git)
+

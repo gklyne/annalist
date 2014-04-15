@@ -223,13 +223,21 @@ class EntityEditBaseView(AnnalistGenericView):
         returns an object of the appropriate type.  If an existing entity is accessed, values
         are read from storage, otherwise a new entity object is created but not yet saved.
         """
-        log.debug("get_entity id %s, parent %s, action %s"%(entityid, parent._entitydir, action))
+        log.debug(
+            "get_entity id %s, parent %s, action %s, altparent %s"%
+            (entityid, parent._entitydir, action, self.entityaltparent)
+            )
         entity = None
         if action == "new":
             entity = self.entityclass(parent, entityid)
             entity.set_values(entity_initial_values)
-        elif self.entityclass.exists(parent, entityid):
-            entity = self.entityclass.load(parent, entityid)
+        elif self.entityclass.exists(parent, entityid, altparent=self.entityaltparent):
+            entity = self.entityclass.load(parent, entityid, altparent=self.entityaltparent)
+        if entity is None:
+            log.debug(
+                "Entity not found: parent %s, entity_id %s, altparent %s"%
+                (parent.get_id(), entityid, self.entityaltparent.get_id())
+                )
         return entity
 
     def form_render(self, request, action, parent, entityid, entity_initial_values, context_extra_values):

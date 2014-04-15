@@ -64,17 +64,23 @@ LOGGING = {
 }
 
 # URI parts used for testing
-TEST_HOST       = "test.example.com"
-TEST_HOST_URI   = "http://"+TEST_HOST
-TEST_BASE_PATH  = "testsite"
-TEST_BASE_URI   = TEST_HOST_URI+"/"+TEST_BASE_PATH
+TEST_HOST           = "test.example.com"
+TEST_HOST_URI       = "http://"+TEST_HOST
+TEST_BASE_PATH      = "testsite"
+TEST_BASE_URI       = TEST_HOST_URI+"/"+TEST_BASE_PATH
+
+# Logging level used by selected log statements whose output may be useful
+# for tracing field values displayed in Annalist edit/view forms.
+# Suggested use is to raise level to logging.INFO when running a single named
+# test, when trying to understand how values end up in a form.
+TRACE_FIELD_VALUE   = logging.DEBUG
 
 # Override root URI configuration for tests
-ROOT_URLCONF    = 'annalist_site.test_urls'
+ROOT_URLCONF        = 'annalist_site.test_urls'
 
-SETTINGS_MODULE = __name__
-BASE_DATA_DIR   = SITE_SRC_ROOT+"/test/data"
-CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
+SETTINGS_MODULE     = __name__
+BASE_DATA_DIR       = SITE_SRC_ROOT+"/test/data"
+CONFIG_BASE         = os.path.join(os.path.expanduser("~"), ".annalist/")
 
 log.info("SETTINGS_MODULE: "+SETTINGS_MODULE)
 log.info("BASE_DATA_DIR:   "+BASE_DATA_DIR)

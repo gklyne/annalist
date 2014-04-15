@@ -10,12 +10,13 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
-from collections import OrderedDict, namedtuple
+from collections    import OrderedDict, namedtuple
 
-from annalist.models.entity     import EntityRoot, Entity
+from django.conf                    import settings
 
-# from annalist.fields.render_text    import RenderText
-from render_text                import RenderText
+from annalist.models.entity         import EntityRoot, Entity
+
+from render_text                    import RenderText
 
 class bound_field(object):
     """
@@ -87,6 +88,10 @@ class bound_field(object):
         self._key               = key or self._field_description['field_property_uri']
         self._options           = options
         self._extras            = extras
+        log.log(settings.TRACE_FIELD_VALUE,
+            "bound_field: field_id %s, entity_id %s, value_key %s, value %s"%
+            (field_description['field_id'], entity.get_id(), self._key, self['field_value'])
+            )
         return
 
     def __getattr__(self, name):

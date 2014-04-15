@@ -59,8 +59,10 @@ class GenericEntityEditView(EntityEditBaseView):
         """
         Create a form for editing an entity.
         """
-        log.debug("views.entityedit.get %s"%(self.get_request_path()))
-        log.debug(
+        log.log(settings.TRACE_FIELD_VALUE,
+            "views.entityedit.get %s"%(self.get_request_path())
+            )
+        log.log(settings.TRACE_FIELD_VALUE,
             "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )

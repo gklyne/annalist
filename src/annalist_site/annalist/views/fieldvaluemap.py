@@ -26,6 +26,8 @@ log = logging.getLogger(__name__)
 
 import collections
 
+from django.conf                    import settings
+
 from annalist.fields.render_utils   import bound_field
 
 

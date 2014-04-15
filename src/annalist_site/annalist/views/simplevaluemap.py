@@ -15,6 +15,8 @@ log = logging.getLogger(__name__)
 
 import collections
 
+from django.conf                    import settings
+
 from annalist.fields.render_utils   import bound_field
 
 # Named tuple is base class for SimpleValueMap:
@@ -37,6 +39,10 @@ class SimpleValueMap(_SimpleValueMap_tuple):
         if self.c:
             context[self.c] = vals.get(valkey, 
                 extras and extras.get(self.c, None)
+                )
+            log.log(settings.TRACE_FIELD_VALUE,
+                "SimpleValueMap._map_to_context: valkey %s, contextkey %s, value %s"%
+                (valkey, self.c, context[self.c])
                 )
         return
 
