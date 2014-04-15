@@ -234,9 +234,10 @@ class EntityEditBaseView(AnnalistGenericView):
         elif self.entityclass.exists(parent, entityid, altparent=self.entityaltparent):
             entity = self.entityclass.load(parent, entityid, altparent=self.entityaltparent)
         if entity is None:
+            parentid = self.entityaltparent.get_id() if self.entityaltparent else "(none)"
             log.debug(
                 "Entity not found: parent %s, entity_id %s, altparent %s"%
-                (parent.get_id(), entityid, self.entityaltparent.get_id())
+                (parent.get_id(), entityid, parentid)
                 )
         return entity
 

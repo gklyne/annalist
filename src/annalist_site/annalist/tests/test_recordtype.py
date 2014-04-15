@@ -192,7 +192,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['orig_id'],          "00000001")
         self.assertEqual(r.context['type_label'],       "Record type 00000001 in collection coll1")
         self.assertEqual(r.context['type_help'],        "")
-        self.assertEqual(r.context['type_uri'],         recordtype_view_uri("coll1", "00000001"))
+        self.assertEqual(r.context['type_uri'],         TestHostUri + recordtype_view_uri("coll1", "00000001"))
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         return

@@ -59,16 +59,17 @@ class RecordTypeEditView(EntityEditBaseView):
         """
         Create a form for editing a type.
         """
+        # @@TODO: replace by data-driven generic form => eliminate this module
         # Check collection
-        if not Collection.exists(self.site(), coll_id):
-            return self.error(
-                dict(self.error404values(),
-                    message=message.COLLECTION_NOT_EXISTS%(coll_id)
-                    )
-                )
-        coll = Collection(self.site(), coll_id)
+        http_response = (
+            self.get_coll_data(coll_id, host=self.get_request_host()) or
+            self.form_edit_auth(action, self.collection._entityuri) or
+            self.get_type_data("_type")
+            )
+        if http_response:
+            return http_response
         # Set up RecordType-specific values
-        type_id              = self.get_entityid(action, coll, type_id)
+        type_id              = self.get_entityid(action, self.collection, type_id)
         initial_type_values  = (
             { "rdfs:label":   message.RECORD_TYPE_LABEL%(type_id, coll_id)
             , "rdfs:comment": ""
@@ -78,7 +79,7 @@ class RecordTypeEditView(EntityEditBaseView):
             , 'orig_id':    type_id
             })
         return self.form_render(request,
-            action, coll, type_id, 
+            action, self.collection, type_id, 
             initial_type_values, 
             context_extra_values
             )

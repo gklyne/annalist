@@ -35,20 +35,22 @@ class bound_field(object):
 
     See also: http://docs.python.org/2/reference/datamodel.html#slots
 
-    >>> entity = {"foo": "foo_val", "bar": "bar_val" }
-    >>> field_foo_desc = {"field_property_uri": "foo", "field_type": "foo_type"}
+    >>> entity = EntityRoot("entityuri", "entitydir")
+    >>> entity.set_id("testentity")
+    >>> vals = entity.set_values({"foo": "foo_val", "bar": "bar_val"})
+    >>> field_foo_desc = {"field_id": "foo_id", "field_property_uri": "foo", "field_type": "foo_type"}
     >>> field_foo = bound_field(field_foo_desc, entity)
     >>> field_foo.field_type
     'foo_type'
     >>> field_foo.field_value
     'foo_val'
-    >>> field_bar_desc = {"field_property_uri": "bar", "field_type": "bar_type"}
+    >>> field_bar_desc = {"field_id": "bar_id", "field_property_uri": "bar", "field_type": "bar_type"}
     >>> field_bar = bound_field(field_bar_desc, entity)
     >>> field_bar.field_type
     'bar_type'
     >>> field_bar.field_value
     'bar_val'
-    >>> field_def_desc = {"field_property_uri": "def", "field_type": "def_type"}
+    >>> field_def_desc = {"field_id": "def_id", "field_property_uri": "def", "field_type": "def_type"}
     >>> field_def = bound_field(field_def_desc, entity)
     >>> field_def.field_type
     'def_type'
@@ -74,7 +76,8 @@ class bound_field(object):
                             `views.entityeditbase` for more details of this.
         entity              is an entity from which a value to be rendered is
                             obtained.  The specific field value used is defined
-                            by the combination with `field_description`
+                            by the combination with `field_description`.  The entity
+                            may be an entity object or a dictionary.
         key                 a key used to extract a field from the supplied entity.
                             If not specified, the value of the `field_property_uri`
                             field of the field description is used: this assumes the
@@ -88,9 +91,13 @@ class bound_field(object):
         self._key               = key or self._field_description['field_property_uri']
         self._options           = options
         self._extras            = extras
+        if isinstance(entity, EntityRoot):
+            eid = entity.get_id()
+        else:
+            eid = "(dict)"
         log.log(settings.TRACE_FIELD_VALUE,
             "bound_field: field_id %s, entity_id %s, value_key %s, value %s"%
-            (field_description['field_id'], entity.get_id(), self._key, self['field_value'])
+            (field_description['field_id'], eid, self._key, self['field_value'])
             )
         return
 

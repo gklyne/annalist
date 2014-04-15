@@ -55,7 +55,7 @@ from entity_testutils               import (
 #
 #   -----------------------------------------------------------------------------
 
-class MetadataEditViewTest(AnnalistTestCase):
+class FieldEditViewTest(AnnalistTestCase):
     """
     Tests for record type edit views
     """
