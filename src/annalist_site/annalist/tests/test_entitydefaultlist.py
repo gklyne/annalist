@@ -144,7 +144,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['entity_type_id'], "")
         #  2nd field
         self.assertEqual(r.context['fields'][1]['field_id'], 'Entity_id')
-        self.assertEqual(r.context['fields'][1]['field_name'], 'Entity_id')
+        self.assertEqual(r.context['fields'][1]['field_name'], 'entity_id')
         self.assertEqual(r.context['fields'][1]['field_label'], 'Id')
         self.assertEqual(r.context['fields'][1]['field_placeholder'], "(entity id)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:id")
@@ -216,7 +216,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(len(r.context['fields']), 2)
         # 1st field
         self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_id')
-        self.assertEqual(r.context['fields'][0]['field_name'], 'Entity_id')
+        self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
         self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
         self.assertEqual(r.context['fields'][0]['field_placeholder'], "(entity id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")

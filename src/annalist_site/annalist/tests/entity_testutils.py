@@ -244,41 +244,41 @@ def entitydata_context_data(
         , 'orig_id':            'orig_entity_id'
         , 'fields':
           [ { 'field_label':        'Id'
+            , 'field_id':           'Entity_id'
+            , 'field_name':         'entity_id'
             , 'field_render_view':  'field/annalist_view_entityref.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
-            , 'field_name':         'Entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_id':           'Entity_id'
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
           , { 'field_label':        'Type'
+            , 'field_id':           'Entity_type'
+            , 'field_name':         'Entity_type'
             , 'field_render_view':  'field/annalist_view_select.html'
             , 'field_render_edit':  'field/annalist_edit_select.html'
-            , 'field_name':         'Entity_type'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
-            , 'field_id':           'Entity_type'
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
           , { 'field_label':        'Label'
+            , 'field_id':           'Entity_label'
+            , 'field_name':         'Entity_label'
             , 'field_render_view':  'field/annalist_view_text.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
-            , 'field_name':         'Entity_label'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_id':           'Entity_label'
             , 'field_value_type':   'annal:Text'
             , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
             , 'options':            []
             }
           , { 'field_label':        'Comment'
+            , 'field_id':           'Entity_comment'
+            , 'field_name':         'Entity_comment'
             , 'field_render_view':  'field/annalist_view_textarea.html'
             , 'field_render_edit':  'field/annalist_edit_textarea.html'
-            , 'field_name':         'Entity_comment'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_id':           'Entity_comment'
             , 'field_value_type':   'annal:Longtext'
             , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
             , 'options':            []
@@ -310,7 +310,7 @@ def entitydata_form_data(
         , 'continuation_uri':   entitydata_list_type_uri(coll_id, orig_type or type_id)
         })
     if entity_id:
-        form_data_dict['Entity_id']         = entity_id
+        form_data_dict['entity_id']         = entity_id
         form_data_dict['Entity_type']       = type_id
         form_data_dict['Entity_label']      = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Entity_comment']    = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
@@ -356,7 +356,7 @@ def entitydata_recordtype_view_context_data(
           [ { 'field_label':        'Id'
             , 'field_render_view':  'field/annalist_view_entityref.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
-            , 'field_name':         'Entity_id'
+            , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_id':           'Entity_id'
             , 'field_value_type':   'annal:Slug'
@@ -421,7 +421,7 @@ def entitydata_recordtype_view_form_data(
         , 'continuation_uri':   entitydata_list_type_uri(coll_id, orig_type or type_id)
         })
     if entity_id:
-        form_data_dict['Entity_id']     = entity_id
+        form_data_dict['entity_id']     = entity_id
         form_data_dict['Type_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Type_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Type_uri']      = TestBaseUri + "/c/%s/d/%s/%s/"%(coll_id, type_id, entity_id)

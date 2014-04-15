@@ -16,6 +16,7 @@ from annalist.views.collection      import CollectionView, CollectionEditView
 from annalist.views.recordtype      import RecordTypeEditView, RecordTypeDeleteConfirmedView
 from annalist.views.recordview      import RecordViewEditView # , RecordViewDeleteConfirmedView
 from annalist.views.recordlist      import RecordListEditView # , RecordListDeleteConfirmedView
+from annalist.views.recordfield     import RecordFieldEditView # , RecordFieldDeleteConfirmedView
 from oauth2.views                   import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
 
 from annalist.views.defaultlist     import EntityDefaultListView
@@ -87,6 +88,10 @@ urlpatterns = patterns('',
     url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/lists/(?P<list_id>\w{0,32})/$',
                             RecordListEditView.as_view(),
                             name='AnnalistRecordListAccessView'),
+
+    url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/fields/(?P<field_id>\w{0,32})/$',
+                            RecordFieldEditView.as_view(),
+                            name='AnnalistRecordFieldAccessView'),
 
     url(r'^c/(?P<coll_id>\w{0,32})/d/$',
                             EntityDefaultListView.as_view(),

@@ -133,9 +133,9 @@ class GenericEntityEditView(EntityEditBaseView):
         if http_response:
             return http_response
         # Get key POST values; use values from URI when form does not have corresponding fields
-        entity_id            = request.POST.get('Entity_id', entity_id)
+        entity_id            = request.POST.get('entity_id', entity_id)
         orig_entity_id       = request.POST.get('orig_id', entity_id)
-        entity_type          = request.POST.get('Entity_type', type_id)
+        entity_type          = request.POST.get('entity_type', type_id)
         orig_entity_type     = request.POST.get('orig_type', type_id)
         continuation_uri     = (request.POST.get('continuation_uri', None) or
             self.view_uri('AnnalistEntityDefaultListType', coll_id=coll_id, type_id=type_id)

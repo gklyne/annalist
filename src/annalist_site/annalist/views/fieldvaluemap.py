@@ -38,11 +38,11 @@ _FieldValueMap_tuple = collections.namedtuple("FieldValueMap", ("c", "f"))
 class FieldValueMap(_FieldValueMap_tuple):
     """
     Define an entry in an entity value mapping table corresponding to a
-    field value and descriuption, which is added to a list of such fields
+    field value and description, which is added to a list of such fields
     in the indicated context variable.
 
     NOTE: select fields are handled by having a special field 'options' passed
-    in the defaul value supplied, which is picked out and handled specially
+    in the default value supplied, which is picked out and handled specially
     in the bound_field class.
 
     c       request context field name for a list of fields
@@ -52,7 +52,7 @@ class FieldValueMap(_FieldValueMap_tuple):
     def __new__(cls, *args, **kwargs):
         self = super(FieldValueMap, cls).__new__(cls, *args, **kwargs)
         self.e = self.f['field_property_uri']
-        self.i = self.f['field_id']
+        self.i = self.f['field_name']
         return self
 
     def _map_to_context(self, context, vals, valkey, extras):

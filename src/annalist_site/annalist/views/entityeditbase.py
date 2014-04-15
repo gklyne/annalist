@@ -106,15 +106,16 @@ class EntityEditBaseView(AnnalistGenericView):
 
         See also: fields.render_utils.bound_field.
         """
-        field_id    = field['annal:field_id']
+        field_id    = field['annal:field_id']                   # Field ID slug in URI
         recordfield = RecordField.load(self.collection, field_id, self.site())
         if recordfield is None:
             raise ValueError("Can't retrieve definition for field %s"%(field_id))
+        field_name  = recordfield.get("annal:field_name", field_id)   # Field name in form
         log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
         field_context = (
             { 'field_id':               field_id
+            , 'field_name':             field_name
             , 'field_placement':        get_placement_classes(field['annal:field_placement'])
-            , 'field_name':             field_id    # Assumes same field can't repeat in form
             , 'field_render_head':      get_head_renderer(recordfield['annal:field_render'])
             , 'field_render_item':      get_item_renderer(recordfield['annal:field_render'])
             , 'field_render_view':      get_view_renderer(recordfield['annal:field_render'])
@@ -132,6 +133,9 @@ class EntityEditBaseView(AnnalistGenericView):
         for f in fields:
             log.debug("get_fields_entityvaluemap: field %r"%(f))
             field_context = self.get_field_context(f)
+            log.debug("get_fields_entityvaluemap: field_id %s, field_name %s"%
+                (field_context['field_id'], field_context['field_name'])
+                )
             entityvaluemap.append(
                 FieldValueMap(c='fields', f=field_context)
                 )
@@ -143,7 +147,8 @@ class EntityEditBaseView(AnnalistGenericView):
         information from the form field definitions for an indicated view.
         """
         # Locate and read view description
-        # @@TODO: push responsibility to subclass to call get_view_data, and use resulting value
+        # @@TODO: push responsibility to subclass to call get_view_data, 
+        #         and use resulting value of self.recordview
         entitymap  = copy.copy(baseentityvaluemap)
         entityview = RecordView.load(self.collection, view_id, self.site())
         log.debug("entityview   %r"%entityview.get_values())

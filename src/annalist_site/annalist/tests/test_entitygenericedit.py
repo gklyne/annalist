@@ -122,7 +122,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                   <p>Id</p>
                 </div>
                 <div class="small-12 medium-8 columns">
-                    <input type="text" size="64" name="Entity_id" value="00000001"/>
+                    <input type="text" size="64" name="entity_id" value="00000001"/>
                 </div>
               </div>
             </div>
@@ -194,7 +194,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             "all other records of the same type in the same collection."
             )
         self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_id')
-        self.assertEqual(r.context['fields'][0]['field_name'], 'Entity_id')
+        self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
         self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
         self.assertEqual(r.context['fields'][0]['field_help'], type_id_help)
         self.assertEqual(r.context['fields'][0]['field_placeholder'], "(entity id)")
@@ -299,7 +299,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             "all other records of the same type in the same collection."
             )
         self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_id')
-        self.assertEqual(r.context['fields'][0]['field_name'], 'Entity_id')
+        self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
         self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
         self.assertEqual(r.context['fields'][0]['field_help'], type_id_help)
         self.assertEqual(r.context['fields'][0]['field_placeholder'], "(entity id)")
