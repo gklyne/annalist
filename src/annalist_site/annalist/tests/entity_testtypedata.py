@@ -226,7 +226,7 @@ def entitydata_recordtype_view_context_data(
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_id':           'Entity_id'
+            , 'field_id':           'Type_id'
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
             , 'options':            []

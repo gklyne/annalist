@@ -195,14 +195,13 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(len(r.context['fields']), 4)        
         # 1st field - Id
         type_id_help = (
-            "A short identifier that distinguishes this record from "+
-            "all other records of the same type in the same collection."
+            "A short identifier that distinguishes this type from all other types in the same collection."
             )
-        self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_id')
+        self.assertEqual(r.context['fields'][0]['field_id'], 'Type_id')
         self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
         self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
         self.assertEqual(r.context['fields'][0]['field_help'], type_id_help)
-        self.assertEqual(r.context['fields'][0]['field_placeholder'], "(entity id)")
+        self.assertEqual(r.context['fields'][0]['field_placeholder'], "(type id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_view'], "field/annalist_view_entityref.html")
         self.assertEqual(r.context['fields'][0]['field_render_edit'], "field/annalist_edit_text.html")
@@ -300,14 +299,13 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(len(r.context['fields']), 4)        
         # 1st field - Id
         type_id_help = (
-            "A short identifier that distinguishes this record from "+
-            "all other records of the same type in the same collection."
+            "A short identifier that distinguishes this type from all other types in the same collection."
             )
-        self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_id')
+        self.assertEqual(r.context['fields'][0]['field_id'], 'Type_id')
         self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
         self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
         self.assertEqual(r.context['fields'][0]['field_help'], type_id_help)
-        self.assertEqual(r.context['fields'][0]['field_placeholder'], "(entity id)")
+        self.assertEqual(r.context['fields'][0]['field_placeholder'], "(type id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_view'], "field/annalist_view_entityref.html")
         self.assertEqual(r.context['fields'][0]['field_render_edit'], "field/annalist_edit_text.html")

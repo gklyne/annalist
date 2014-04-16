@@ -163,7 +163,7 @@ class RecordFieldTest(AnnalistTestCase):
 #
 #   -----------------------------------------------------------------------------
 
-class FieldEditViewTest(AnnalistTestCase):
+class RecordFieldEditViewTest(AnnalistTestCase):
     """
     Tests for record type edit views
     """
