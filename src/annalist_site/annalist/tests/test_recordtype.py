@@ -32,14 +32,17 @@ from tests                      import TestHost, TestHostUri, TestBasePath, Test
 from tests                      import init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import (
-    site_dir, collection_dir, recordtype_dir,
+    site_dir, collection_dir,
     site_view_uri, collection_edit_uri, 
-    recordtype_uri, recordtype_view_uri, recordtype_edit_uri,
     collection_create_values,
+    site_title
+    )
+from entity_testtypedata        import (
+    recordtype_dir,
+    recordtype_uri, recordtype_view_uri, recordtype_edit_uri,
     recordtype_value_keys, recordtype_load_keys, 
     recordtype_create_values, recordtype_values, recordtype_read_values,
     recordtype_context_data, recordtype_form_data, recordtype_delete_confirm_form_data,
-    site_title
     )
 
 #   -----------------------------------------------------------------------------

@@ -26,22 +26,8 @@ from tests                          import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
 from entity_testutils               import (
-    # recordtype_create_values, 
-    # collection_create_values,
-    # site_dir, 
     collection_dir, 
-    # recordtype_dir, recorddata_dir,  entitydata_dir,
-    # collection_edit_uri,
-    # recordtype_edit_uri,
-    # entity_uri, entitydata_edit_uri, 
     entitydata_list_type_uri,
-    # recordtype_form_data,
-    # entitydata_value_keys, entitydata_create_values, entitydata_values,
-    # entitydata_recordtype_view_context_data, 
-    # # entitydata_context_data, 
-    # entitydata_recordtype_view_form_data,
-    # # entitydata_form_data, 
-    # entitydata_delete_confirm_form_data,
     site_title
     )
 
