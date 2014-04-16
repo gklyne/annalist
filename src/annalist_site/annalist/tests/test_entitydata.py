@@ -28,8 +28,10 @@ from annalist.models.entitydata     import EntityData
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
-from entity_testutils               import (
-    entitydata_dir, entity_uri, 
+# from entity_testutils               import (
+from entity_testentitydata          import (
+    entitydata_dir, 
+    entity_uri, 
     entitydata_value_keys, entitydata_create_values, entitydata_values
     )
 

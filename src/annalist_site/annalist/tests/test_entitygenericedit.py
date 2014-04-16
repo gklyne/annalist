@@ -35,14 +35,7 @@ from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     collection_create_values,
     site_dir, collection_dir, 
-    recorddata_dir,  entitydata_dir,
     collection_edit_uri,
-    entity_uri, entitydata_edit_uri, 
-    entitydata_list_type_uri,
-    entitydata_value_keys, entitydata_create_values, entitydata_values,
-    # entitydata_context_data, 
-    # entitydata_form_data, 
-    entitydata_delete_confirm_form_data,
     site_title
     )
 from entity_testtypedata        import (
@@ -52,6 +45,13 @@ from entity_testtypedata        import (
     recordtype_form_data,
     entitydata_recordtype_view_context_data, 
     entitydata_recordtype_view_form_data
+    )
+from entity_testentitydata          import (
+    recorddata_dir,  entitydata_dir,
+    entity_uri, entitydata_edit_uri, 
+    entitydata_list_type_uri,
+    entitydata_value_keys, entitydata_create_values, entitydata_values,
+    entitydata_delete_confirm_form_data,
     )
 
 #   -----------------------------------------------------------------------------

@@ -31,12 +31,10 @@ from tests                          import TestHost, TestHostUri, TestBasePath, 
 from tests                          import test_layout, createSiteData
 
 from AnnalistTestCase               import AnnalistTestCase
-from entity_testutils               import (
-    collection_create_values,
-    recordview_create_values,
-    recordlist_create_values,
-    )
+from entity_testutils               import collection_create_values
 from entity_testtypedata            import recordtype_create_values
+from entity_testviewdata            import recordview_create_values
+from entity_testlistdata            import recordlist_create_values
 
 #   -----------------------------------------------------------------------------
 #

@@ -34,17 +34,24 @@ from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import (
     site_dir, collection_dir,
     site_view_uri, 
-    collection_view_uri, collection_edit_uri, 
-    entitydata_list_all_uri,
+    collection_view_uri, 
+    collection_edit_uri, 
     continuation_uri_param,
     collection_value_keys, collection_create_values, collection_values,
-    recordview_value_keys, recordview_create_values, recordview_values,
-    recordlist_value_keys, recordlist_create_values, recordlist_values,
     site_title
     )
 from entity_testtypedata            import (
     recordtype_edit_uri,
     recordtype_create_values, recordtype_read_values
+    )
+from entity_testviewdata            import (
+    recordview_value_keys, recordview_create_values, recordview_values,
+    )
+from entity_testlistdata            import (
+    recordlist_value_keys, recordlist_create_values, recordlist_values,
+    )
+from entity_testentitydata          import (
+    entitydata_list_all_uri,
     )
 
 #   -----------------------------------------------------------------------------

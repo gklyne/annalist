@@ -27,7 +27,9 @@ from annalist.views.entitydelete    import EntityDataDeleteConfirmedView
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
-from entity_testutils               import (
+# from entity_testutils               import (
+#     )
+from entity_testentitydata          import (
     entity_uri, entitydata_edit_uri, entitydata_delete_confirm_uri,
     entitydata_list_all_uri, entitydata_list_type_uri,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 

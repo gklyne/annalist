@@ -27,8 +27,10 @@ from tests                          import (
     )
 from entity_testutils               import (
     collection_dir, 
-    entitydata_list_type_uri,
     site_title
+    )
+from entity_testentitydata          import (
+    entitydata_list_type_uri
     )
 
 #   -----------------------------------------------------------------------------
