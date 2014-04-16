@@ -108,7 +108,12 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / need to rationalize entity display structure to encompass data, collection level metadata and site-level metadata.
      / check list display in dev app
      / define test suite test_genericentitylist based loosely on test_entitydefaultlist
-     - create test case for creating/editing site metadata entities (currently fail in dev system) e.g. create test_entitymetadataedit based on entitygenericedit.
+     / create test case for creating/editing site metadata entities (currently fail in dev system) e.g. create test_entitymetadataedit based on entitygenericedit.
+     - create edit view tests for all the main entity classes (type, view, list, data), 
+       along the lines of test_entityfieldedit, moving support code out of entity_testutils.
+       - copy/refactor test_recordtype to use same pattern as test_entityfieldedit
+       - incorporate model tests in test_entityfieldedit (cf. test_recordtype)
+       - rename test_entityfieldedit -> test_recordfield? (cf. test_recordtype)
      - decide how to handle presentation of field types:
        (a) use simple text string, not CURIE
        (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?

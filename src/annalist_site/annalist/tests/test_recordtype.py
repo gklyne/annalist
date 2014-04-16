@@ -50,7 +50,7 @@ from entity_testutils           import (
 
 class RecordTypeTest(AnnalistTestCase):
     """
-    Tests for Site object interface
+    Tests for RecordType object interface
     """
 
     def setUp(self):
