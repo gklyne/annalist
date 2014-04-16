@@ -28,7 +28,9 @@ from tests                          import (
 from entity_testutils               import (
     # recordtype_create_values, 
     # collection_create_values,
-    # site_dir, collection_dir, recordtype_dir, recorddata_dir,  entitydata_dir,
+    # site_dir, 
+    collection_dir, 
+    # recordtype_dir, recorddata_dir,  entitydata_dir,
     # collection_edit_uri,
     # recordtype_edit_uri,
     # entity_uri, entitydata_edit_uri, 
@@ -42,6 +44,15 @@ from entity_testutils               import (
     # entitydata_delete_confirm_form_data,
     site_title
     )
+
+#   -----------------------------------------------------------------------------
+#
+#   Directory generating functions
+#
+#   -----------------------------------------------------------------------------
+
+def recordfield_dir(coll_id="testcoll", field_id="testfield"):
+    return collection_dir(coll_id) + layout.COLL_FIELD_PATH%{'id': field_id} + "/"
 
 #   -----------------------------------------------------------------------------
 #
@@ -76,12 +87,20 @@ def recordfield_view_uri(coll_id, field_id):
 #
 #   -----------------------------------------------------------------------------
 
-def recordfield_value_keys():
+def recordfield_init_keys():
     return set(
         [ 'annal:id', 'annal:type'
         , 'annal:uri', 'annal:urihost', 'annal:uripath'
         , 'rdfs:label', 'rdfs:comment'
         ])
+
+def recordfield_value_keys():
+    return (recordfield_init_keys() |
+        { 'annal:property_uri'
+        , 'annal:value_type'
+        , 'annal:field_render'
+        , 'annal:placeholder'
+        })
 
 def recordfield_load_keys():
     return recordfield_value_keys() | {"@id"}
@@ -109,69 +128,69 @@ def recordfield_values(
     return d
 
 def recordfield_read_values(
-        coll_id="testcoll", type_id="testtype", 
-        update="RecordField", hosturi=TestHostUri):
-    d = recordfield_values(coll_id, type_id, update=update, hosturi=hosturi).copy()
+        coll_id="testcoll", field_id="testfield",
+        update="Field", hosturi=TestHostUri):
+    d = recordfield_values(coll_id, field_id, update=update, hosturi=hosturi).copy()
     d.update(
         { '@id':            "./"
         })
     return d
 
-def recordfield_context_data(
-        type_id=None, orig_id=None, action=None, 
-        update="RecordField", hosturi=TestHostUri):
-    context_dict = (
-        { 'title':              site_title()
-        , 'coll_id':            "testcoll"
-        , 'orig_id':            "orig_type_id"
-        , 'type_label':         "%s testcoll/..."%(update)
-        , 'type_help':          "%s help for ... in collection testcoll"%(update)
-        , 'type_uri':           recordfield_view_uri("testcoll", "___")
-        , 'continuation_uri':   collection_edit_uri("testcoll")
-        })
-    if type_id:
-        context_dict['type_id']     = type_id
-        context_dict['orig_id']     = type_id
-        context_dict['type_label']  = "%s testcoll/%s"%(update, type_id)
-        context_dict['type_help']   = "%s help for %s in collection testcoll"%(update,type_id)
-        context_dict['type_uri']    = hosturi + recordfield_view_uri("testcoll", type_id)
-    if orig_id:
-        context_dict['orig_id']     = orig_id
-    if action:  
-        context_dict['action']      = action
-    return context_dict
+# def recordfield_context_data(
+#         type_id=None, orig_id=None, action=None, 
+#         update="Field", hosturi=TestHostUri):
+#     context_dict = (
+#         { 'title':              site_title()
+#         , 'coll_id':            "testcoll"
+#         , 'orig_id':            "orig_type_id"
+#         , 'type_label':         "%s testcoll/..."%(update)
+#         , 'type_help':          "%s help for ... in collection testcoll"%(update)
+#         , 'type_uri':           recordfield_view_uri("testcoll", "___")
+#         , 'continuation_uri':   collection_edit_uri("testcoll")
+#         })
+#     if type_id:
+#         context_dict['type_id']     = type_id
+#         context_dict['orig_id']     = type_id
+#         context_dict['type_label']  = "%s testcoll/%s"%(update, type_id)
+#         context_dict['type_help']   = "%s help for %s in collection testcoll"%(update,type_id)
+#         context_dict['type_uri']    = hosturi + recordfield_view_uri("testcoll", type_id)
+#     if orig_id:
+#         context_dict['orig_id']     = orig_id
+#     if action:  
+#         context_dict['action']      = action
+#     return context_dict
 
-def recordfield_form_data(
-        type_id=None, orig_id=None, action=None, cancel=None, 
-        update="RecordField", hosturi=TestHostUri):
-    form_data_dict = (
-        { 'type_label':         "%s testcoll/..."%(update)
-        , 'type_help':          "%s help for ... in collection testcoll"%(update)
-        , 'type_class':         recordfield_view_uri("testcoll", "___")
-        , 'orig_id':            "orig_type_id"
-        , 'continuation_uri':   collection_edit_uri("testcoll")
-        })
-    if type_id:
-        form_data_dict['type_id']       = type_id
-        form_data_dict['orig_id']       = type_id
-        form_data_dict['type_label']    = "%s testcoll/%s"%(update, type_id)
-        form_data_dict['type_help']     = "%s help for %s in collection testcoll"%(update,type_id)
-        form_data_dict['type_class']    = hosturi + recordfield_view_uri("testcoll", type_id)
-    if orig_id:
-        form_data_dict['orig_id']       = orig_id
-    if action:
-        form_data_dict['action']        = action
-    if cancel:
-        form_data_dict['cancel']        = "Cancel"
-    else:
-        form_data_dict['save']          = "Save"
-    return form_data_dict
+# def recordfield_form_data(
+#         type_id=None, orig_id=None, action=None, cancel=None, 
+#         update="RecordField", hosturi=TestHostUri):
+#     form_data_dict = (
+#         { 'type_label':         "%s testcoll/..."%(update)
+#         , 'type_help':          "%s help for ... in collection testcoll"%(update)
+#         , 'type_class':         recordfield_view_uri("testcoll", "___")
+#         , 'orig_id':            "orig_type_id"
+#         , 'continuation_uri':   collection_edit_uri("testcoll")
+#         })
+#     if type_id:
+#         form_data_dict['type_id']       = type_id
+#         form_data_dict['orig_id']       = type_id
+#         form_data_dict['type_label']    = "%s testcoll/%s"%(update, type_id)
+#         form_data_dict['type_help']     = "%s help for %s in collection testcoll"%(update,type_id)
+#         form_data_dict['type_class']    = hosturi + recordfield_view_uri("testcoll", type_id)
+#     if orig_id:
+#         form_data_dict['orig_id']       = orig_id
+#     if action:
+#         form_data_dict['action']        = action
+#     if cancel:
+#         form_data_dict['cancel']        = "Cancel"
+#     else:
+#         form_data_dict['save']          = "Save"
+#     return form_data_dict
 
-def recordfield_delete_confirm_form_data(type_id=None):
-    return (
-        { 'typelist':    type_id,
-          'type_delete': 'Delete'
-        })
+# def recordfield_delete_confirm_form_data(type_id=None):
+#     return (
+#         { 'typelist':    type_id,
+#           'type_delete': 'Delete'
+#         })
 
 #   -----------------------------------------------------------------------------
 #

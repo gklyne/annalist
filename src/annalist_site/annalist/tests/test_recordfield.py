@@ -35,8 +35,10 @@ from tests                          import TestHost, TestHostUri, TestBasePath, 
 from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testfielddata           import (
+    recordfield_dir,
     recordfield_uri, recordfield_view_uri,
-    recordfield_create_values, recordfield_values,
+    recordfield_init_keys, recordfield_value_keys, recordfield_load_keys,
+    recordfield_create_values, recordfield_values, recordfield_read_values,
     entitydata_recordfield_view_context_data,
     entitydata_recordfield_view_form_data
     )
@@ -44,7 +46,9 @@ from entity_testfielddata           import (
 from entity_testutils               import (
     # recordtype_create_values, 
     collection_create_values,
-    # site_dir, collection_dir, recordtype_dir, recorddata_dir,  entitydata_dir,
+    # site_dir, 
+    # collection_dir, 
+    # recordtype_dir, recorddata_dir,  entitydata_dir,
     # collection_edit_uri,
     # recordtype_edit_uri,
     entity_uri, entitydata_edit_uri, entitydata_list_type_uri,
@@ -60,7 +64,100 @@ from entity_testutils               import (
 
 #   -----------------------------------------------------------------------------
 #
-#   GenericEntityEditView tests
+#   RecordField (model) tests
+#
+#   -----------------------------------------------------------------------------
+
+class RecordFieldTest(AnnalistTestCase):
+    """
+    Tests for RecordField object interface
+    """
+
+    def setUp(self):
+        init_annalist_test_site()
+        self.testsite = Site(TestBaseUri, TestBaseDir)
+        # self.sitedata = SiteData(self.testsite)
+        self.testcoll = Collection(self.testsite, "testcoll")
+        return
+
+    def tearDown(self):
+        return
+
+    def test_RecordFieldTest(self):
+        self.assertEqual(RecordField.__name__, "RecordField", "Check RecordField class name")
+        return
+
+    def test_recordfield_init(self):
+        t = RecordField(self.testcoll, "testfield")
+        self.assertEqual(t._entitytype,     ANNAL.CURIE.RecordField)
+        self.assertEqual(t._entityfile,     layout.FIELD_META_FILE)
+        self.assertEqual(t._entityref,      layout.META_FIELD_REF)
+        self.assertEqual(t._entityid,       "testfield")
+        self.assertEqual(t._entityuri,      TestHostUri + recordfield_uri("testcoll", "testfield"))
+        self.assertEqual(t._entitydir,      recordfield_dir(field_id="testfield"))
+        self.assertEqual(t._values,         None)
+        return
+
+    def test_recordfield1_data(self):
+        t = RecordField(self.testcoll, "field1")
+        self.assertEqual(t.get_id(), "field1")
+        self.assertEqual(t.get_type_id(), "_field")
+        self.assertIn("/c/testcoll/_annalist_collection/fields/field1/", t.get_uri())
+        t.set_values(recordfield_create_values(field_id="field1"))
+        td = t.get_values()
+        self.assertEqual(set(td.keys()), set(recordfield_init_keys()))
+        v = recordfield_values(field_id="field1")
+        self.assertDictionaryMatch(td, v)
+        return
+
+    def test_recordfield2_data(self):
+        t = RecordField(self.testcoll, "field2")
+        self.assertEqual(t.get_id(), "field2")
+        self.assertEqual(t.get_type_id(), "_field")
+        self.assertIn("/c/testcoll/_annalist_collection/fields/field2/", t.get_uri())
+        t.set_values(recordfield_create_values(field_id="field2"))
+        td = t.get_values()
+        self.assertEqual(set(td.keys()), set(recordfield_init_keys()))
+        v = recordfield_values(field_id="field2")
+        self.assertDictionaryMatch(td, v)
+        return
+
+    def test_recordfield_create_load(self):
+        t  = RecordField.create(self.testcoll, "field1", recordfield_create_values(field_id="field1"))
+        td = RecordField.load(self.testcoll, "field1").get_values()
+        v  = recordfield_read_values(field_id="field1")
+        self.assertKeysMatch(td, v)
+        self.assertDictionaryMatch(td, v)
+        return
+
+    def test_recordfield_default_data(self):
+        t = RecordField.load(self.testcoll, "Field_type", altparent=self.testsite)
+        self.assertEqual(t.get_id(), "Field_type")
+        self.assertIn("/c/testcoll/_annalist_collection/fields/Field_type", t.get_uri())
+        self.assertEqual(t.get_type_id(), "_field")
+        td = t.get_values()
+        self.assertEqual(set(td.keys()), set(recordfield_load_keys()))
+        v = recordfield_read_values(field_id="Field_type")
+        v.update(
+            { '@id':                "annal:fields/Field_type"
+            , 'rdfs:label':         "Field value type"
+            , 'rdfs:comment':       "Type of display field.  "+
+                                    "This encompasses the actual form of the rendered value and "+
+                                    "the type of underlying record data that is formatted, and "+
+                                    "any defaults of other values that may be applied to the field."
+            , 'annal:type':         "annal:Field"
+            , 'annal:uri':          "http://test.example.com/testsite/c/testcoll/d/_field/Field_type/"
+            , 'annal:value_type':   "annal:RenderType"
+            , 'annal:field_render': "annal:field_render/Identifier"
+            , 'annal:placeholder':  "(field value type)"
+            , 'annal:property_uri': "annal:field_render"
+            })
+        self.assertDictionaryMatch(td, v)
+        return
+
+#   -----------------------------------------------------------------------------
+#
+#   RecordField edit view tests
 #
 #   -----------------------------------------------------------------------------
 
@@ -73,13 +170,11 @@ class FieldEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        # self.viewtype = RecordType.load(self.testcoll, "_view", altparent=self.testsite)
         self.user     = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
         self.user.save()
         self.client   = Client(HTTP_HOST=TestHost)
         loggedin      = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        # self.type_ids   = ['testtype', 'Default_type']
         self.no_options = ['(no options)']
         return
 
@@ -429,7 +524,7 @@ class FieldEditViewTest(AnnalistTestCase):
         return
 
     def test_get_edit_not_exists(self):
-        u = entitydata_edit_uri("edit", "testcoll", "_field", entity_id="typenone", view_id="Field_view")
+        u = entitydata_edit_uri("edit", "testcoll", "_field", entity_id="fieldnone", view_id="Field_view")
         r = self.client.get(u+"?continuation_uri=/xyzzy/")
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
@@ -437,7 +532,7 @@ class FieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.info(r.content)
         self.assertContains(r, 
-            "<p>Entity &#39;typenone&#39; of type &#39;_field&#39; "+
+            "<p>Entity &#39;fieldnone&#39; of type &#39;_field&#39; "+
             "in collection &#39;testcoll&#39; does not exist</p>", 
             status_code=404
             )
