@@ -132,8 +132,9 @@ class GenericEntityEditView(EntityEditBaseView):
             )
         if http_response:
             return http_response
-        # Get key POST values; use values from URI when form does not have corresponding fields
-        entity_id            = request.POST.get('entity_id', entity_id)
+        # Get key POST values
+        # Except for entity_id, use values from URI when form does not have corresponding fields
+        entity_id            = request.POST.get('entity_id', None)
         orig_entity_id       = request.POST.get('orig_id', entity_id)
         entity_type          = request.POST.get('entity_type', type_id)
         orig_entity_type     = request.POST.get('orig_type', type_id)

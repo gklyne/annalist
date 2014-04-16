@@ -137,7 +137,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                     </p>
                   </div>
                   <div class="small-12 medium-8 columns">
-                    <select name="Entity_type" class="right">
+                    <select name="entity_type" class="right">
                         <option selected="selected">testtype</option>
                         <option>Default_type</option>
                         <option>fields</option>
@@ -226,7 +226,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             "A short identifier that identifies the type of the corresponding entity."
             )
         self.assertEqual(r.context['fields'][1]['field_id'],            'Entity_type')
-        self.assertEqual(r.context['fields'][1]['field_name'],          'Entity_type')
+        self.assertEqual(r.context['fields'][1]['field_name'],          'entity_type')
         self.assertEqual(r.context['fields'][1]['field_label'],         'Type')
         self.assertEqual(r.context['fields'][1]['field_help'],          field_type_help)
         self.assertEqual(r.context['fields'][1]['field_placeholder'],   "(recordtype id)")
@@ -320,7 +320,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             "A short identifier that identifies the type of the corresponding entity."
             )
         self.assertEqual(r.context['fields'][1]['field_id'], 'Entity_type')
-        self.assertEqual(r.context['fields'][1]['field_name'], 'Entity_type')
+        self.assertEqual(r.context['fields'][1]['field_name'], 'entity_type')
         self.assertEqual(r.context['fields'][1]['field_label'], 'Type')
         self.assertEqual(r.context['fields'][1]['field_help'], field_type_help)
         self.assertEqual(r.context['fields'][1]['field_placeholder'], "(recordtype id)")

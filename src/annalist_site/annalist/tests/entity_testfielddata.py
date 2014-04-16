@@ -86,7 +86,7 @@ def recordfield_value_keys():
 def recordfield_load_keys():
     return recordfield_value_keys() | {"@id"}
 
-def recordfield_create_values(coll_id="testcoll", field_id="testfield", update="RecordField"):
+def recordfield_create_values(coll_id="testcoll", field_id="testfield", update="Field"):
     """
     Entity values used when creating a record type entity
     """
@@ -246,7 +246,7 @@ def entitydata_recordfield_view_context_data(
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Identifier'
-            # , 'field_value':      (Supplied separately)
+            , 'field_value':        "(property URI or CURIE)"
             , 'options':            []
             }
           , { 'field_label':        'Size and position'
@@ -265,8 +265,8 @@ def entitydata_recordfield_view_context_data(
     if field_id:
         context_dict['fields'][0]['field_value'] = field_id
         context_dict['fields'][2]['field_value'] = '%s testcoll/_field/%s'%(update,field_id)
-        context_dict['fields'][3]['field_value'] = '%s coll testcoll, type _field, entity %s'%(update,field_id)
-        context_dict['fields'][5]['field_value'] = TestBaseUri + "/c/%s/d/%s/%s/"%("testcoll", "_field", field_id)
+        context_dict['fields'][3]['field_value'] = '%s help for %s in collection testcoll'%(update,field_id)
+        # context_dict['fields'][5]['field_value'] = TestBaseUri + "/c/%s/d/%s/%s/"%("testcoll", "_field", field_id)
         context_dict['orig_id']     = field_id
     if orig_id:
         context_dict['orig_id']     = orig_id

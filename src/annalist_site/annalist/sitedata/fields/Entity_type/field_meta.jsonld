@@ -3,6 +3,7 @@
 , "annal:type":         "annal:Field"
 , "rdfs:label":         "Type"
 , "rdfs:comment":       "A short identifier that identifies the type of the corresponding entity."
+, "annal:field_name":   "entity_type"
 , "annal:field_render": "annal:field_render/Type"
 , "annal:value_type":   "annal:Slug"
 , "annal:placeholder":  "(recordtype id)"

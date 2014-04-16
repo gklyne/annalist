@@ -255,7 +255,7 @@ def entitydata_context_data(
             }
           , { 'field_label':        'Type'
             , 'field_id':           'Entity_type'
-            , 'field_name':         'Entity_type'
+            , 'field_name':         'entity_type'
             , 'field_render_view':  'field/annalist_view_select.html'
             , 'field_render_edit':  'field/annalist_edit_select.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
@@ -311,7 +311,7 @@ def entitydata_form_data(
         })
     if entity_id:
         form_data_dict['entity_id']         = entity_id
-        form_data_dict['Entity_type']       = type_id
+        form_data_dict['entity_type']       = type_id
         form_data_dict['Entity_label']      = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Entity_comment']    = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['orig_id']           = entity_id
