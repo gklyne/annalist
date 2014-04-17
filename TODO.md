@@ -112,8 +112,9 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      - create edit view tests for all the main entity classes (type, view, list, data), 
        along the lines of test_entityfieldedit, moving support code out of entity_testutils.
        - copy/refactor test_recordtype to use same pattern as test_entityfieldedit
-       - incorporate model tests in test_entityfieldedit (cf. test_recordtype)
-       - rename test_entityfieldedit -> test_recordfield? (cf. test_recordtype)
+       - see if old record type view class can be deleted
+       / incorporate model tests in test_entityfieldedit (cf. test_recordtype)
+       / rename test_entityfieldedit -> test_recordfield? (cf. test_recordtype)
      - decide how to handle presentation of field types:
        (a) use simple text string, not CURIE
        (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?
@@ -124,6 +125,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        This leads to inconsistency with metadata entities.  What value *should* be returned for these:
        the actual location or the URI used for viewing?  Ideally, we'll use the `/c/coll/d/_type/id`
        form, as that hides whether it comes from the collection or is site-wide.
+   - entity_uri appears in entity view context as name (same as annal:uri) but also in bound field as locator.  Change name used in bound field to `entity_ref`.
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - align type ID values used in local URI construction with type URIs/CURIEs
    - refactor list description access out of context handling code (avoid multiple reads)
