@@ -51,6 +51,61 @@ from annalist.models.entitydata     import EntityData
 
 LOGIN_URIS = None   # Populated by first call of `authenticate`
 
+ENTITY_MESSAGES = (
+    { 'parent_heading':         message.RECORD_TYPE_ID
+    , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS
+    , 'entity_heading':         message.ENTITY_DATA_ID
+    , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
+    , 'entity_exists':          message.ENTITY_DATA_EXISTS
+    , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
+    , 'entity_type_heading':    message.ENTITY_TYPE_ID
+    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+    })
+
+TYPE_MESSAGES = (
+    { 'parent_heading':         message.COLLECTION_ID
+    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+    , 'entity_heading':         message.RECORD_TYPE_ID
+    , 'entity_invalid_id':      message.RECORD_TYPE_ID_INVALID
+    , 'entity_exists':          message.RECORD_TYPE_EXISTS
+    , 'entity_not_exists':      message.RECORD_TYPE_NOT_EXISTS        
+    , 'entity_type_heading':    message.ENTITY_TYPE_ID
+    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+    })
+
+VIEW_MESSAGES = (
+    { 'parent_heading':         message.RECORD_TYPE_ID
+    , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS
+    , 'entity_heading':         message.ENTITY_DATA_ID
+    , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
+    , 'entity_exists':          message.ENTITY_DATA_EXISTS
+    , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
+    , 'entity_type_heading':    message.ENTITY_TYPE_ID
+    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+    })
+
+LIST_MESSAGES = (
+    { 'parent_heading':         message.RECORD_TYPE_ID
+    , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS
+    , 'entity_heading':         message.ENTITY_DATA_ID
+    , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
+    , 'entity_exists':          message.ENTITY_DATA_EXISTS
+    , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
+    , 'entity_type_heading':    message.ENTITY_TYPE_ID
+    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+    })
+
+FIELD_MESSAGES = (
+    { 'parent_heading':         message.RECORD_TYPE_ID
+    , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS
+    , 'entity_heading':         message.ENTITY_DATA_ID
+    , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
+    , 'entity_exists':          message.ENTITY_DATA_EXISTS
+    , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
+    , 'entity_type_heading':    message.ENTITY_TYPE_ID
+    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+    })
+
 #   -------------------------------------------------------------------------------------------
 #
 #   Generic Annalist view (contains logic applicable to all pages)
@@ -123,8 +178,15 @@ class AnnalistGenericView(ContentNegotiationView):
             , '_view':  RecordView
             , '_field': RecordField
             })
+        Type_Message_Map = (
+            { '_type':  TYPE_MESSAGES
+            , '_list':  LIST_MESSAGES
+            , '_view':  VIEW_MESSAGES
+            , '_field': FIELD_MESSAGES
+            })
         if type_id in Type_Class_Map:
             self.entityclass     = Type_Class_Map[type_id]
+            self.entitymessages  = Type_Message_Map[type_id]
             self.entityparent    = self.collection
             self.entityaltparent = self.site()
         else:
@@ -137,6 +199,7 @@ class AnnalistGenericView(ContentNegotiationView):
                         )
                     )
             self.entityclass     = EntityData
+            self.entitymessages  = ENTITY_MESSAGES
             self.entityparent    = RecordTypeData(self.collection, type_id)
             self.entityaltparent = None
         return None

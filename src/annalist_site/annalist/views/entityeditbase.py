@@ -59,7 +59,7 @@ baseentityvaluemap  = (
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
         , SimpleValueMap(c='orig_id',          e=None,           f='orig_id'          )
-        , SimpleValueMap(c='orig_type',        e=None,           f='orig_type'          )
+        , SimpleValueMap(c='orig_type',        e=None,           f='orig_type'        )
         , SimpleValueMap(c='action',           e=None,           f='action'           )
         , SimpleValueMap(c='continuation_uri', e=None,           f='continuation_uri' )
         ])

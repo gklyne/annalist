@@ -104,13 +104,14 @@ class RecordTypeEditView(EntityEditBaseView):
             { 'coll_id':          coll_id
             , 'continuation_uri': continuation_uri
             })
+        message_vals = {'id': type_id, 'type_id': "_type", 'coll_id': coll_id}
         messages = (
             { 'parent_heading':    message.COLLECTION_ID
-            , 'parent_missing':    message.COLLECTION_NOT_EXISTS%(coll_id)
+            , 'parent_missing':    message.COLLECTION_NOT_EXISTS%message_vals
             , 'entity_heading':    message.RECORD_TYPE_ID
             , 'entity_invalid_id': message.RECORD_TYPE_ID_INVALID
-            , 'entity_exists':     message.RECORD_TYPE_EXISTS%(type_id, coll_id)
-            , 'entity_not_exists': message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)        
+            , 'entity_exists':     message.RECORD_TYPE_EXISTS%message_vals
+            , 'entity_not_exists': message.RECORD_TYPE_NOT_EXISTS%message_vals
             })
         return self.form_response(
             request, action, self.collection, 

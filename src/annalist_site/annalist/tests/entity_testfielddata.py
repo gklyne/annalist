@@ -186,7 +186,7 @@ def recordfield_read_values(
 #
 #   -----------------------------------------------------------------------------
 
-def entitydata_recordfield_view_context_data(
+def recordfield_entity_view_context_data(
         field_id=None, orig_id=None, type_ids=[],
         action=None, update="Field"
     ):
@@ -281,11 +281,11 @@ def entitydata_recordfield_view_context_data(
         context_dict['action']      = action
     return context_dict
 
-def entitydata_recordfield_view_form_data(
+def recordfield_entity_view_form_data(
         field_id=None, orig_id=None, 
         coll_id="testcoll", 
         action=None, cancel=None, update="Field"):
-    # log.info("entitydata_recordfield_view_form_data: field_id %s"%(field_id))
+    # log.info("recordfield_entity_view_form_data: field_id %s"%(field_id))
     form_data_dict = (
         { 'Field_label':        '%s data ... (%s/%s)'%(update, coll_id, "_field")
         , 'Field_comment':      '%s description ... (%s/%s)'%(update, coll_id, "_field")

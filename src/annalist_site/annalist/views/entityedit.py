@@ -86,7 +86,7 @@ class GenericEntityEditView(EntityEditBaseView):
         if entity is None:
             return self.error(
                 dict(self.error404values(),
-                    message=message.DOES_NOT_EXIST%(entity_initial_values['rdfs:label'])
+                    message=message.DOES_NOT_EXIST%{'id': entity_initial_values['rdfs:label']}
                     )
                 )
         type_ids = [ t.get_id() for t in self.collection.types() ]
@@ -153,15 +153,26 @@ class GenericEntityEditView(EntityEditBaseView):
             , 'type_ids':         type_ids
             , 'continuation_uri': continuation_uri
             })
+        # messages = (
+        #     { 'parent_heading':         message.RECORD_TYPE_ID
+        #     , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
+        #     , 'entity_heading':         message.ENTITY_DATA_ID
+        #     , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
+        #     , 'entity_exists':          message.ENTITY_DATA_EXISTS%(entity_id, type_id, coll_id)
+        #     , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS%(entity_id, type_id, coll_id)
+        #     , 'entity_type_heading':    message.ENTITY_TYPE_ID
+        #     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+        #     })
+        message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
         messages = (
-            { 'parent_heading':         message.RECORD_TYPE_ID
-            , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
-            , 'entity_heading':         message.ENTITY_DATA_ID
-            , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
-            , 'entity_exists':          message.ENTITY_DATA_EXISTS%(entity_id, type_id, coll_id)
-            , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS%(entity_id, type_id, coll_id)
-            , 'entity_type_heading':    message.ENTITY_TYPE_ID
-            , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+            { 'parent_heading':         self.entitymessages['parent_heading']%message_vals
+            , 'parent_missing':         self.entitymessages['parent_missing']%message_vals
+            , 'entity_heading':         self.entitymessages['entity_heading']%message_vals
+            , 'entity_invalid_id':      self.entitymessages['entity_invalid_id']%message_vals
+            , 'entity_exists':          self.entitymessages['entity_exists']%message_vals
+            , 'entity_not_exists':      self.entitymessages['entity_not_exists']%message_vals
+            , 'entity_type_heading':    self.entitymessages['entity_type_heading']%message_vals
+            , 'entity_type_invalid':    self.entitymessages['entity_type_invalid']%message_vals
             })
         # Process form response and respond accordingly
         self._entityvaluemap = self.get_form_entityvaluemap(self.get_view_id(view_id))
@@ -176,7 +187,7 @@ class GenericEntityEditView(EntityEditBaseView):
             request, action, self.entityparent, 
             entity_id, orig_entity_id, 
             entity_type, orig_entity_type,
-            messages, context_extra_values
+            self.entitymessages, context_extra_values
             )
 
 # End.

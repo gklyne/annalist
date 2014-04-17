@@ -149,6 +149,7 @@ def recordtype_read_values(
         })
     return d
 
+# @@TODO - remove this? (used with old recordtype view?)
 def recordtype_context_data(
         type_id=None, orig_id=None, action=None, 
         update="RecordType", hosturi=TestHostUri):
@@ -173,6 +174,7 @@ def recordtype_context_data(
         context_dict['action']      = action
     return context_dict
 
+# @@TODO - remove this? (used with old recordtype view?)
 def recordtype_form_data(
         type_id=None, orig_id=None, action=None, cancel=None, 
         update="RecordType", hosturi=TestHostUri):
@@ -199,17 +201,114 @@ def recordtype_form_data(
         form_data_dict['save']          = "Save"
     return form_data_dict
 
+#   -----------------------------------------------------------------------------
+#
+#   ----- Entity data in recordtype view
+#
+#   -----------------------------------------------------------------------------
+
+def recordtype_entity_view_context_data(
+        coll_id="testcoll", type_id=None, orig_id=None, type_ids=[],
+        action=None, update="RecordType"
+    ):
+    context_dict = (
+        { 'title':              site_title()
+        , 'coll_id':            coll_id
+        , 'type_id':            '_type'
+        , 'orig_id':            'orig_type_id'
+        , 'fields':
+          [ { 'field_label':        'Id'
+            , 'field_render_view':  'field/annalist_view_entityref.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'entity_id'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+            , 'field_id':           'Type_id'
+            , 'field_value_type':   'annal:Slug'
+            # , 'field_value':      (Supplied separately)
+            , 'options':            []
+            }
+          , { 'field_label':        'Label'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'Type_label'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_id':           'Type_label'
+            , 'field_value_type':   'annal:Text'
+            , 'field_value':        '%s data ... (%s/%s)'%(update, coll_id, type_id)
+            , 'options':            []
+            }
+          , { 'field_label':        'Comment'
+            , 'field_render_view':  'field/annalist_view_textarea.html'
+            , 'field_render_edit':  'field/annalist_edit_textarea.html'
+            , 'field_name':         'Type_comment'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_id':           'Type_comment'
+            , 'field_value_type':   'annal:Longtext'
+            , 'field_value':        '%s description ... (%s/%s)'%(update, coll_id, type_id)
+            , 'options':            []
+            }
+          , { 'field_label':        'URI'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'Type_uri'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_id':           'Type_uri'
+            , 'field_value_type':   'annal:Text'
+            # , 'field_value':      (Supplied separately)
+            , 'options':            []
+            }
+          ]
+        , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_type")
+        })
+    if type_id:
+        context_dict['fields'][0]['field_value'] = type_id
+        context_dict['fields'][1]['field_value'] = '%s %s/%s'%(update, coll_id, type_id)
+        context_dict['fields'][2]['field_value'] = '%s help for %s in collection %s'%(update, type_id, coll_id)
+        context_dict['fields'][3]['field_value'] = TestBaseUri + "/c/%s/d/_type/%s/"%(coll_id, type_id)
+        context_dict['orig_id']     = type_id
+    if orig_id:
+        context_dict['orig_id']     = orig_id
+    if action:  
+        context_dict['action']      = action
+    return context_dict
+
+def recordtype_entity_view_form_data(
+        coll_id="testcoll", 
+        type_id=None, orig_id=None, 
+        action=None, cancel=None, update="RecordType"):
+    form_data_dict = (
+        { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
+        , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
+        , 'orig_id':            'orig_type_id'
+        , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_type")
+        })
+    if type_id:
+        form_data_dict['entity_id']     = type_id
+        form_data_dict['orig_id']       = type_id
+        form_data_dict['Type_label']    = '%s %s/%s'%(update, coll_id, type_id)
+        form_data_dict['Type_comment']  = '%s help for %s in collection %s'%(update, type_id, coll_id)
+        form_data_dict['Type_uri']      = TestBaseUri + "/c/%s/d/_type/%s/"%(coll_id, type_id)
+        form_data_dict['orig_type']     = "_type"
+    if orig_id:
+        form_data_dict['orig_id']       = orig_id
+    if action:
+        form_data_dict['action']        = action
+    if cancel:
+        form_data_dict['cancel']        = "Cancel"
+    else:
+        form_data_dict['save']          = 'Save'
+    return form_data_dict
+
 def recordtype_delete_confirm_form_data(type_id=None):
     return (
         { 'typelist':    type_id,
           'type_delete': 'Delete'
         })
 
-#   -----------------------------------------------------------------------------
-#
-#   ----- Entity data in recordtype view
-#
-#   -----------------------------------------------------------------------------
+
+
+# Used in test_entitygenericedit - move?
+# Note use of recordtype-specific keys
 
 def entitydata_recordtype_view_context_data(
         entity_id=None, orig_id=None, type_id="testtype", type_ids=[],
@@ -276,10 +375,11 @@ def entitydata_recordtype_view_context_data(
         context_dict['action']      = action
     return context_dict
 
+
 def entitydata_recordtype_view_form_data(
-        entity_id=None, orig_id=None, 
-        type_id="testtype", orig_type=None,
         coll_id="testcoll", 
+        type_id="testtype", orig_type=None,
+        entity_id=None, orig_id=None, 
         action=None, cancel=None, update="Entity"):
     # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (

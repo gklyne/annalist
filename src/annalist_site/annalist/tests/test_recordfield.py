@@ -39,10 +39,8 @@ from entity_testfielddata           import (
     recordfield_uri, recordfield_view_uri,
     recordfield_init_keys, recordfield_value_keys, recordfield_load_keys,
     recordfield_create_values, recordfield_values, recordfield_read_values,
-    entitydata_recordfield_view_context_data,
-    entitydata_recordfield_view_form_data
+    recordfield_entity_view_context_data, recordfield_entity_view_form_data
     )
-
 from entity_testutils               import (
     # recordtype_create_values, 
     collection_create_values,
@@ -204,6 +202,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(e.get_values(), v)
         return e
 
+
     def _check_context_fields(self, response, 
             field_id="(?field_id)", 
             field_type="(?field_type)",
@@ -340,6 +339,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][6]['field_value_type'], "annal:Placement")
         self.assertEqual(r.context['fields'][6]['field_value'], field_placement)
         self.assertEqual(r.context['fields'][6]['options'], self.no_options)
+        return
 
     #   -----------------------------------------------------------------------------
     #   Form rendering tests
@@ -548,7 +548,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     def test_post_new_field(self):
         self.assertFalse(RecordField.exists(self.testcoll, "newfield"))
-        f = entitydata_recordfield_view_form_data(field_id="newfield", action="new")
+        f = recordfield_entity_view_form_data(field_id="newfield", action="new")
         u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
         r = self.client.post(u, f)
         # print r.content
@@ -562,7 +562,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     def test_post_new_field_no_continuation(self):
         self.assertFalse(RecordField.exists(self.testcoll, "newfield"))
-        f = entitydata_recordfield_view_form_data(field_id="newfield", action="new")
+        f = recordfield_entity_view_form_data(field_id="newfield", action="new")
         f['continuation_uri'] = ""
         u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
         r = self.client.post(u, f)
@@ -577,7 +577,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     def test_post_new_field_cancel(self):
         self.assertFalse(RecordField.exists(self.testcoll, "newfield"))
-        f = entitydata_recordfield_view_form_data(field_id="newfield", action="new", cancel="Cancel")
+        f = recordfield_entity_view_form_data(field_id="newfield", action="new", cancel="Cancel")
         u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -589,7 +589,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         return
 
     def test_post_new_field_missing_id(self):
-        f = entitydata_recordfield_view_form_data(action="new")
+        f = recordfield_entity_view_form_data(action="new")
         u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
@@ -598,12 +598,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         # Test context
-        expect_context = entitydata_recordfield_view_context_data(action="new")
+        expect_context = recordfield_entity_view_context_data(action="new")
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
     def test_post_new_field_invalid_id(self):
-        f = entitydata_recordfield_view_form_data(field_id="!badfield", orig_id="orig_field_id", action="new")
+        f = recordfield_entity_view_form_data(field_id="!badfield", orig_id="orig_field_id", action="new")
         u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
@@ -612,7 +612,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         # Test context
-        expect_context = entitydata_recordfield_view_context_data(
+        expect_context = recordfield_entity_view_context_data(
             field_id="!badfield", orig_id="orig_field_id", action="new"
             )
         # log.info(repr(r.context['fields'][0]))
@@ -623,7 +623,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     def test_post_copy_entity(self):
         self.assertFalse(RecordField.exists(self.testcoll, "copyfield"))
-        f = entitydata_recordfield_view_form_data(field_id="copyfield", action="copy")
+        f = recordfield_entity_view_form_data(field_id="copyfield", action="copy")
         u = entitydata_edit_uri("copy", "testcoll", 
             type_id="_field", view_id="Field_view", entity_id="Entity_type"
             )
@@ -638,7 +638,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     def test_post_copy_entity_cancel(self):
         self.assertFalse(RecordField.exists(self.testcoll, "copyfield"))
-        f = entitydata_recordfield_view_form_data(field_id="copyfield", action="copy", cancel="Cancel")
+        f = recordfield_entity_view_form_data(field_id="copyfield", action="copy", cancel="Cancel")
         u = entitydata_edit_uri("copy", "testcoll", 
             type_id="_field", view_id="Field_view", entity_id="Entity_type"
             )
@@ -652,7 +652,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_entity_missing_id(self):
-        f = entitydata_recordfield_view_form_data(action="copy")
+        f = recordfield_entity_view_form_data(action="copy")
         u = entitydata_edit_uri("copy", "testcoll", 
             type_id="_field", view_id="Field_view", entity_id="Entity_type"
             )
@@ -662,12 +662,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
-        expect_context = entitydata_recordfield_view_context_data(action="copy")
+        expect_context = recordfield_entity_view_context_data(action="copy")
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
     def test_post_copy_entity_invalid_id(self):
-        f = entitydata_recordfield_view_form_data(
+        f = recordfield_entity_view_form_data(
             field_id="!badentity", orig_id="orig_field_id", action="copy"
             )
         u = entitydata_edit_uri("copy", "testcoll", 
@@ -679,7 +679,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
-        expect_context = entitydata_recordfield_view_context_data(
+        expect_context = recordfield_entity_view_context_data(
             field_id="!badentity", orig_id="orig_field_id", action="copy"
             )
         self.assertDictionaryMatch(r.context, expect_context)
@@ -690,7 +690,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
     def test_post_edit_entity(self):
         self._create_view_data("editfield")
         self._check_view_data_values("editfield")
-        f = entitydata_recordfield_view_form_data(
+        f = recordfield_entity_view_form_data(
             field_id="editfield", action="edit", update="Updated entity"
             )
         u = entitydata_edit_uri("edit", "testcoll",
@@ -708,7 +708,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._create_view_data("editfieldid1")
         self._check_view_data_values("editfieldid1")
         # Now post edit form submission with different values and new id
-        f = entitydata_recordfield_view_form_data(
+        f = recordfield_entity_view_form_data(
             field_id="editfieldid2", orig_id="editfieldid1", action="edit"
             )
         u = entitydata_edit_uri("edit", "testcoll", 
@@ -728,7 +728,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._create_view_data("editfield")
         self._check_view_data_values("editfield")
         # Post from cancelled edit form
-        f = entitydata_recordfield_view_form_data(
+        f = recordfield_entity_view_form_data(
             field_id="editfield", action="edit", cancel="Cancel", update="Updated entity"
             )
         u = entitydata_edit_uri("edit", "testcoll", 
@@ -747,7 +747,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._create_view_data("editfield")
         self._check_view_data_values("editfield")
         # Form post with ID missing
-        f = entitydata_recordfield_view_form_data(action="edit", update="Updated entity")
+        f = recordfield_entity_view_form_data(action="edit", update="Updated entity")
         u = entitydata_edit_uri("edit", "testcoll", 
             type_id="_field", view_id="Field_view", entity_id="editfield"
             )
@@ -758,7 +758,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         # Test context for re-rendered form
-        expect_context = entitydata_recordfield_view_context_data(action="edit", update="Updated entity")
+        expect_context = recordfield_entity_view_context_data(action="edit", update="Updated entity")
         self.assertDictionaryMatch(r.context, expect_context)
         # Check stored entity is unchanged
         self._check_view_data_values("editfield")
@@ -768,7 +768,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._create_view_data("editfield")
         self._check_view_data_values("editfield")
         # Form post with ID malformed
-        f = entitydata_recordfield_view_form_data(
+        f = recordfield_entity_view_form_data(
             field_id="!badfieldid", orig_id="orig_field_id", action="edit"
             )
         u = entitydata_edit_uri("edit", "testcoll", 
@@ -781,7 +781,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         # Test context for re-rendered form
-        expect_context = entitydata_recordfield_view_context_data(
+        expect_context = recordfield_entity_view_context_data(
             field_id="!badfieldid", orig_id="orig_field_id", action="edit"
             )
         self.assertDictionaryMatch(r.context, expect_context)
