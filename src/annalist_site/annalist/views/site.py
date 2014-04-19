@@ -60,7 +60,7 @@ class SiteView(AnnalistGenericView):
                 return (
                     self.authorize("DELETE") or
                     ConfirmView.render_form(request,
-                        action_description=     message.REMOVE_COLLECTIONS%(", ".join(collections)),
+                        action_description=     message.REMOVE_COLLECTIONS%{'ids': ", ".join(collections)},
                         action_params=          request.POST,
                         complete_action_uri=    self.view_uri('AnnalistSiteActionView'),
                         cancel_action_uri=      self.view_uri('AnnalistSiteView'),
@@ -96,7 +96,8 @@ class SiteView(AnnalistGenericView):
             self.site().add_collection(new_id, coll_meta)
             return self.redirect_info(
                 self.view_uri("AnnalistSiteView"), 
-                message.CREATED_COLLECTION_ID%(new_id))
+                message.CREATED_COLLECTION_ID%{'coll_id': new_id}
+                )
         return self.error(self.error400values())
 
 class SiteActionView(AnnalistGenericView):
@@ -128,7 +129,7 @@ class SiteActionView(AnnalistGenericView):
                         str(err))
             return self.redirect_info(
                 self.view_uri("AnnalistSiteView"), 
-                message.COLLECTIONS_REMOVED%(", ".join(coll_ids))
+                message.COLLECTIONS_REMOVED%{'ids': ", ".join(coll_ids)}
                 )
         else:
             return self.error(self.error400values())

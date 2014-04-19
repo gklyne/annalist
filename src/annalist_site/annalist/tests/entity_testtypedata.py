@@ -84,7 +84,7 @@ def recordtype_view_uri(coll_id="testcoll", type_id="testtype"):
         kwargs.update({'entity_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
-def recordtype_edit_uri(action, coll_id, type_id=None):
+def recordtype_edit_uri(action=None, coll_id=None, type_id=None):
     viewname = ( 
         'AnnalistRecordTypeNewView'     if action == "new"    else
         'AnnalistRecordTypeCopyView'    if action == "copy"   else

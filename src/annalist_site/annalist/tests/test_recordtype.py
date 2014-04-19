@@ -155,6 +155,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         loggedin      = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         self.no_options = ['(no options)']
+        self.continuation_uri = TestHostUri + entitydata_list_type_uri(coll_id="testcoll", type_id="_type")
         return
 
     def tearDown(self):
@@ -454,7 +455,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "_type"))
+        self.assertEqual(r['location'], self.continuation_uri)
         # Check that new record type exists
         self._check_record_type_values("newtype", update="RecordType")
         return
@@ -469,7 +470,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "_type"))
+        self.assertEqual(r['location'], self.continuation_uri)
         # Check that new record type still does not exist
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
         return
@@ -505,68 +506,65 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
-
-# ......................
-
-
     #   -------- copy type --------
 
     def test_post_copy_type(self):
         self.assertFalse(RecordType.exists(self.testcoll, "copytype"))
-        f = recordtype_form_data(type_id="copytype", action="copy", update="Updated RecordType")
-        u = recordtype_edit_uri("copy", "testcoll", type_id="copytype")
+        f = recordtype_entity_view_form_data(
+            type_id="copytype", orig_id="Default_type", action="copy", update="RecordType"
+            )
+        u = entitydata_edit_uri("copy", "testcoll", "_type", entity_id="Default_type", view_id="RecordType_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
+        self.assertEqual(r['location'], self.continuation_uri)
         # Check that new record type exists
-        self._check_record_type_values("copytype", update="Updated RecordType")
+        self._check_record_type_values("copytype", update="RecordType")
         return
 
     def test_post_copy_type_cancel(self):
         self.assertFalse(RecordType.exists(self.testcoll, "copytype"))
-        f = recordtype_form_data(type_id="copytype", action="copy", cancel="Cancel", update="Updated RecordType")
-        u = recordtype_edit_uri("copy", "testcoll", type_id="copytype")
+        f = recordtype_entity_view_form_data(
+            type_id="copytype", orig_id="Default_type", action="copy", cancel="Cancel", update="RecordType"
+            )
+        u = entitydata_edit_uri("copy", "testcoll", "_type", entity_id="Default_type", view_id="RecordType_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
+        self.assertEqual(r['location'], self.continuation_uri)
         # Check that target record type still does not exist
         self.assertFalse(RecordType.exists(self.testcoll, "copytype"))
         return
 
     def test_post_copy_type_missing_id(self):
-        f = recordtype_form_data(action="copy", update="Updated RecordType")
-        u = recordtype_edit_uri("copy", "testcoll", type_id="copytype")
+        f = recordtype_entity_view_form_data(
+            action="copy", update="Updated RecordType"
+            )
+        u = entitydata_edit_uri("copy", "testcoll", "_type", entity_id="Default_type", view_id="RecordType_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
-        self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
-        expect_context = recordtype_context_data(action="copy", update="Updated RecordType")
+        expect_context = recordtype_entity_view_context_data(action="copy", update="Updated RecordType")
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
     def test_post_copy_type_invalid_id(self):
-        f = recordtype_form_data(
-            type_id="!badtype", orig_id="orig_type_id", 
-            action="copy", 
-            update="Updated RecordType"
+        f = recordtype_entity_view_form_data(
+            type_id="!badtype", orig_id="Default_type", action="copy", update="Updated RecordType"
             )
-        u = recordtype_edit_uri("copy", "testcoll", type_id="copytype")
+        u = entitydata_edit_uri("copy", "testcoll", "_type", entity_id="Default_type", view_id="RecordType_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
-        self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
-        expect_context = recordtype_context_data(
-            type_id="!badtype", orig_id="orig_type_id", 
-            action="copy", 
-            update="Updated RecordType"
+        expect_context = recordtype_entity_view_context_data(
+            type_id="!badtype", orig_id="Default_type", 
+            action="copy", update="Updated RecordType"
             )
         self.assertDictionaryMatch(r.context, expect_context)
         return
@@ -576,27 +574,33 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     def test_post_edit_type(self):
         self._create_record_type("edittype")
         self._check_record_type_values("edittype")
-        f = recordtype_form_data(type_id="edittype", action="edit", update="Updated RecordType")
-        u = recordtype_edit_uri("edit", "testcoll", type_id="edittype")
+        f = recordtype_entity_view_form_data(
+            type_id="edittype", orig_id="edittype", 
+            action="edit", update="Updated RecordType"
+            )
+        u = entitydata_edit_uri("edit", "testcoll", "_type", entity_id="edittype", view_id="RecordType_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
+        self.assertEqual(r['location'], self.continuation_uri)
+        # Check that new record type exists
         self._check_record_type_values("edittype", update="Updated RecordType")
         return
 
     def test_post_edit_type_new_id(self):
         self._create_record_type("edittype1")
         self._check_record_type_values("edittype1")
-        # Now post edit form submission with different values and new id
-        f = recordtype_form_data(type_id="edittype2", orig_id="edittype1", action="edit", update="Updated RecordType")
-        u = recordtype_edit_uri("edit", "testcoll", type_id="edittype1")
+        f = recordtype_entity_view_form_data(
+            type_id="edittype2", orig_id="edittype1", 
+            action="edit", update="Updated RecordType"
+            )
+        u = entitydata_edit_uri("edit", "testcoll", "_type", entity_id="edittype1", view_id="RecordType_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
+        self.assertEqual(r['location'], self.continuation_uri)
         # Check that new record type exists and old does not
         self.assertFalse(RecordType.exists(self.testcoll, "edittype1"))
         self._check_record_type_values("edittype2", update="Updated RecordType")
@@ -605,14 +609,16 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     def test_post_edit_type_cancel(self):
         self._create_record_type("edittype")
         self._check_record_type_values("edittype")
-        # Post from cancelled edit form
-        f = recordtype_form_data(type_id="edittype", action="edit", cancel="Cancel", update="Updated RecordType")
-        u = recordtype_edit_uri("edit", "testcoll", type_id="edittype")
+        f = recordtype_entity_view_form_data(
+            type_id="edittype", orig_id="edittype", 
+            action="edit", cancel="Cancel", update="Updated RecordType"
+            )
+        u = entitydata_edit_uri("edit", "testcoll", "_type", entity_id="edittype", view_id="RecordType_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
+        self.assertEqual(r['location'], self.continuation_uri)
         # Check that target record type still does not exist and unchanged
         self._check_record_type_values("edittype")
         return
@@ -621,39 +627,43 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self._create_record_type("edittype")
         self._check_record_type_values("edittype")
         # Form post with ID missing
-        f = recordtype_form_data(action="edit", update="Updated RecordType")
-        u = recordtype_edit_uri("edit", "testcoll", type_id="edittype")
+        f = recordtype_entity_view_form_data(
+            action="edit", update="Updated RecordType"
+            )
+        u = entitydata_edit_uri("edit", "testcoll", "_type", entity_id="edittype", view_id="RecordType_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
-        self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         # Test context for re-rendered form
-        expect_context = recordtype_context_data(action="edit", update="Updated RecordType")
+        expect_context = recordtype_entity_view_context_data(action="edit", update="Updated RecordType")
         self.assertDictionaryMatch(r.context, expect_context)
+        # Check original data is unchanged
+        self._check_record_type_values("edittype")
         return
 
     def test_post_edit_type_invalid_id(self):
-        f = recordtype_form_data(
-            type_id="!badtype", orig_id="orig_type_id", 
-            action="edit", 
-            update="Updated RecordType"
+        self._create_record_type("edittype")
+        self._check_record_type_values("edittype")
+        # Form post with invalid ID
+        f = recordtype_entity_view_form_data(
+            type_id="!badtype", orig_id="edittype", action="edit", update="Updated RecordType"
             )
-        u = recordtype_edit_uri("edit", "testcoll", type_id="edittype")
+        u = entitydata_edit_uri("edit", "testcoll", "_type", entity_id="edittype", view_id="RecordType_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
-        self.assertContains(r, "<h3>Record type in collection testcoll</h3>")
         # Test context
-        expect_context = recordtype_context_data(
-            type_id="!badtype", orig_id="orig_type_id", 
-            action="edit", 
-            update="Updated RecordType"
+        expect_context = recordtype_entity_view_context_data(
+            type_id="!badtype", orig_id="edittype", 
+            action="edit", update="Updated RecordType"
             )
         self.assertDictionaryMatch(r.context, expect_context)
+        # Check original data is unchanged
+        self._check_record_type_values("edittype")
         return
 
 #   -----------------------------------------------------------------------------

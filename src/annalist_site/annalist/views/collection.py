@@ -123,10 +123,11 @@ class CollectionEditView(AnnalistGenericView):
             if type_id:
                 # Get user to confirm action before actually doing it
                 complete_action_uri = self.view_uri("AnnalistRecordTypeDeleteView", coll_id=coll_id)
+                message_vals = {'type_id': type_id, 'coll_id': coll_id}
                 return (
                     self.authorize("DELETE") or
                     ConfirmView.render_form(request,
-                        action_description=     message.REMOVE_RECORD_TYPE%(type_id, coll_id),
+                        action_description=     message.REMOVE_RECORD_TYPE%message_vals,
                         complete_action_uri=    complete_action_uri,
                         action_params=          request.POST,
                         cancel_action_uri=      self.get_request_path(),

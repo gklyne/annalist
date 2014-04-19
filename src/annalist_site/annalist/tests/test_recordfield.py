@@ -619,7 +619,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
-    #   -------- copy type --------
+    #   -------- copy field --------
 
     def test_post_copy_entity(self):
         self.assertFalse(RecordField.exists(self.testcoll, "copyfield"))
@@ -685,7 +685,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
-    #   -------- edit type --------
+    #   -------- edit field --------
 
     def test_post_edit_entity(self):
         self._create_view_data("editfield")

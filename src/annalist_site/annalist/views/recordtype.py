@@ -145,8 +145,9 @@ class RecordTypeDeleteConfirmedView(EntityDeleteConfirmedBaseView):
             if http_response:
                 return http_response
             type_id   = request.POST['typelist']
+            message_vals = {'id': type_id, 'coll_id': coll_id}
             messages  = (
-                { 'entity_removed': message.RECORD_TYPE_REMOVED%(type_id, coll_id)
+                { 'entity_removed': message.RECORD_TYPE_REMOVED%message_vals
                 })
             continuation_uri = self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
             return self.confirm_form_respose(

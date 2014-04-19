@@ -232,10 +232,11 @@ class EntityGenericListView(EntityEditBaseView):
                         , "entity_id":          [entity_id]
                         , "continuation_uri":   [self.get_request_path()]
                         })
+                    message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
                     return (
                         self.form_edit_auth("delete", self.collection.get_uri()) or
                         ConfirmView.render_form(request,
-                            action_description=     message.REMOVE_ENTITY_DATA%(entity_id, entity_type, coll_id),
+                            action_description=     message.REMOVE_ENTITY_DATA%message_vals,
                             complete_action_uri=    complete_action_uri,
                             action_params=          delete_params,
                             cancel_action_uri=      self.get_request_path(),
