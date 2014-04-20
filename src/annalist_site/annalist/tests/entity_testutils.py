@@ -81,7 +81,7 @@ def collection_value_keys():
     """
     return (
         [ 'annal:id', 'annal:type'
-        , 'annal:uri', 'annal:urihost', 'annal:uripath'
+        , 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         ])
 
@@ -101,8 +101,6 @@ def collection_values(coll_id, update="Collection", hosturi=TestHostUri):
         , 'annal:id':       coll_id
         , 'annal:type':     "annal:Collection"
         , 'annal:uri':      hosturi + collection_view_uri(coll_id=coll_id)
-        , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
-        , 'annal:uripath':  collection_view_uri(coll_id=coll_id)
         })
     return d
 

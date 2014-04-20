@@ -42,22 +42,44 @@ def recordview_dir(coll_id="testcoll", view_id="testview"):
 #   These all use the Django `reverse` function so they correspond to
 #   the declared URI patterns.
 
-def recordlist_uri(coll_id, list_id):
-    viewname = "AnnalistRecordListAccessView"
-    kwargs   = {'coll_id': coll_id}
-    if valid_id(list_id):
-        kwargs.update({'list_id': list_id})
-    else:
-        kwargs.update({'list_id': "___"})
-    return reverse(viewname, kwargs=kwargs)
+def recordlist_site_uri(site, list_id="testlist"):
+    return site._entityuri + layout.SITE_FIELD_PATH%{'id': list_id} + "/"
 
-def recordlist_view_uri(coll_id, list_id):
-    viewname = "AnnalistEntityDefaultDataView"
-    kwargs   = {'coll_id': coll_id, 'type_id': "_list"}
+def recordlist_coll_uri(site, coll_id="testcoll", list_id="testlist"):
+    return site._entityuri + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_FIELD_PATH%{'id': list_id} + "/"
+
+def recordlist_uri(coll_id, list_id):
+    """
+    URI for record list description data; also view using default entity view
+    """
+    viewname = "AnnalistEntityAccessView"
+    kwargs   = {'coll_id': coll_id, "type_id": "_list"}
     if valid_id(list_id):
         kwargs.update({'entity_id': list_id})
     else:
         kwargs.update({'entity_id': "___"})
+    return reverse(viewname, kwargs=kwargs)
+
+def recordlist_edit_uri(action=None, coll_id=None, list_id=None):
+    """
+    URI for record list description editing view
+    """
+    viewname = ( 
+        'AnnalistEntityDataView'        if action == "view"   else
+        'AnnalistEntityNewView'         if action == "new"    else
+        'AnnalistEntityEditView'        if action == "copy"   else
+        'AnnalistEntityEditView'        if action == "edit"   else
+        'AnnalistRecordFieldDeleteView' if action == "delete" else
+        'unknown'
+        )
+    kwargs = {'coll_id': coll_id, 'type_id': "_list", 'view_id': "List_view"}
+    if action != "delete":
+        kwargs.update({'action': action})
+    if list_id:
+        if valid_id(list_id):
+            kwargs.update({'entity_id': list_id})
+        else:
+            kwargs.update({'entity_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
 #   -----------------------------------------------------------------------------
@@ -69,7 +91,7 @@ def recordlist_view_uri(coll_id, list_id):
 def recordlist_value_keys():
     return (
         [ 'annal:id', 'annal:type'
-        , 'annal:uri', 'annal:urihost', 'annal:uripath'
+        , 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         ])
 
@@ -90,9 +112,7 @@ def recordlist_values(
         { '@id':            "./"
         , 'annal:id':       list_id
         , 'annal:type':     "annal:RecordList"
-        , 'annal:uri':      hosturi + recordlist_view_uri(coll_id, list_id)
-        , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
-        , 'annal:uripath':  recordlist_uri(coll_id, list_id)
+        , 'annal:uri':      hosturi + recordlist_uri(coll_id, list_id)
         })
     return d
 

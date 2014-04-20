@@ -86,8 +86,6 @@ class EntityRootTest(TestCase):
             { 'annal:id':       None
             , 'annal:type':     'annal:EntityRoot'
             , 'annal:uri':      TestBaseUri+'/'
-            , 'annal:urihost':  TestHost
-            , 'annal:uripath':  TestBasePath+'/'
             , 'type':           'annal:EntityRoot'
             , 'title':          'Name collection coll1'
             , 'uri':            '/annalist/coll1'
@@ -102,8 +100,6 @@ class EntityRootTest(TestCase):
             { 'annal:id':       None
             , 'annal:type':     'annal:EntityRoot'
             , 'annal:uri':      TestBaseUri+'/'
-            , 'annal:urihost':  TestHost
-            , 'annal:uripath':  TestBasePath+'/'
             , 'id':             'TestId'
             , 'type':           'annal:EntityRoot'
             , 'rdfs:label':     'Name collection coll2'
@@ -128,8 +124,6 @@ class EntityRootTest(TestCase):
             , 'annal:type':     'annal:EntityRoot'
             , 'type':           'annal:EntityRoot'
             , 'annal:uri':      TestBaseUri+'/'
-            , 'annal:urihost':  TestHost
-            , 'annal:uripath':  TestBasePath+'/'
             , 'title':          'Name collection coll1'
             , 'uri':            '/annalist/coll1'
             })
@@ -137,8 +131,6 @@ class EntityRootTest(TestCase):
             { 'annal:id':       None
             , 'annal:type':     'annal:EntityRoot'
             , 'annal:uri':      TestBaseUri+'/'
-            , 'annal:urihost':  TestHost
-            , 'annal:uripath':  TestBasePath+'/'
             , 'id':             'testid'
             , 'type':           'annal:EntityRoot'
             , 'title':          'new title'
@@ -177,8 +169,6 @@ class EntityRootTest(TestCase):
         self.assertEqual(e._entityref,      "../")
         self.assertEqual(e._entityid,       None)
         self.assertEqual(e._entityuri,      TestBaseUri+"/")
-        self.assertEqual(e._entityurihost,  TestHost)
-        self.assertEqual(e._entityuripath,  TestBasePath+"/")
         self.assertEqual(e._entitydir,      TestBaseDir+"/")
         self.assertEqual(e._values,         None)
         self.assertEqual(e._dir_path(),     (TestBaseDir+"/.sub", TestBaseDir+"/.sub/manifest.jsonld"))
@@ -195,8 +185,6 @@ class EntityRootTest(TestCase):
             , 'annal:id':       'testId'
             , 'annal:type':     'test:EntityRootType'
             , 'annal:uri':      TestBaseUri+'/'
-            , 'annal:urihost':  TestHost
-            , 'annal:uripath':  TestBasePath+'/'
             , 'title':          'Name collection coll1'
             , 'type':           'annal:EntityRoot'
             , 'uri':            '/annalist/coll1'
@@ -208,8 +196,6 @@ class EntityRootTest(TestCase):
         self.assertEqual(e._entityref,      "../")
         self.assertEqual(e._entityid,       "testId")
         self.assertEqual(e._entityuri,      TestBaseUri+"/")
-        self.assertEqual(e._entityurihost,  TestHost)
-        self.assertEqual(e._entityuripath,  TestBasePath+"/")
         self.assertEqual(e._entitydir,      TestBaseDir+"/")
         self.assertEqual(e._values,         None)
         e.set_values(test_values)
@@ -309,8 +295,6 @@ class EntityTest(TestCase):
         self.assertEqual(e._entityref,      "../")
         self.assertEqual(e._entityid,       "testid")
         self.assertEqual(e._entityuri,      TestBaseUri+"/testid/")
-        self.assertEqual(e._entityurihost,  TestHost)
-        self.assertEqual(e._entityuripath,  TestBasePath+"/testid/")
         self.assertEqual(e._entitydir,      TestBaseDir+"/testid/")
         self.assertEqual(e._values,         None)
         self.assertEqual(e._dir_path(),     (TestBaseDir+"/testid/.sub", TestBaseDir+"/testid/.sub/manifest.jsonld"))
@@ -328,7 +312,7 @@ class EntityTest(TestCase):
         self.assertEqual(e.get("foo",  "bar"),    "bar")
         self.assertEqual(e.get("type", "notype"), "annal:EntityRoot")
         expect_keys = set(
-            ['annal:id', 'annal:type', 'annal:uri', 'annal:urihost', 'annal:uripath'
+            ['annal:id', 'annal:type', 'annal:uri'
             , 'type'
             ])
         self.assertEqual(set(e.keys()), expect_keys)
@@ -336,8 +320,6 @@ class EntityTest(TestCase):
             [ ('annal:id',      'testid')
             , ('annal:type',    'test:EntityType')
             , ('annal:uri',     TestBaseUri+'/testid/')
-            , ('annal:urihost', TestHost)
-            , ('annal:uripath', TestBasePath+'/testid/')
             , ('type', 'annal:EntityRoot')
             ])
         self.assertEqual(set(e.items()), expect_items)
@@ -365,8 +347,6 @@ class EntityTest(TestCase):
             { 'annal:id':       'testid'
             , 'annal:type':     'test:EntityType'
             , 'annal:uri':      TestBaseUri+'/testid/'
-            , 'annal:urihost':  TestHost
-            , 'annal:uripath':  TestBasePath+'/testid/'
             , 'title':          'Name entity test'
             , 'type':           'test:EntityType'
             })
@@ -389,8 +369,6 @@ class EntityTest(TestCase):
             , 'annal:id':       'testid2'
             , 'annal:type':     'test:EntityType'
             , 'annal:uri':      TestBaseUri+'/testid2/'
-            , 'annal:urihost':  TestHost
-            , 'annal:uripath':  TestBasePath+'/testid2/'
             , 'title':          'Name entity test2'
             , 'type':           'test:EntityType'
             })
@@ -441,8 +419,6 @@ class EntityTest(TestCase):
             { 'annal:id':       'testid'
             , 'annal:type':     'test:EntityTypeSub'
             , 'annal:uri':      TestBaseUri+'/sub/testid/'
-            , 'annal:urihost':  TestHost
-            , 'annal:uripath':  TestBasePath+'/sub/testid/'
             , 'title':          'Name entity test'
             , 'type':           'test:EntityType'
             })
@@ -467,8 +443,6 @@ class EntityTest(TestCase):
             , 'annal:id':       'testid2'
             , 'annal:type':     'test:EntityTypeSub'
             , 'annal:uri':      TestBaseUri+'/sub/testid2/'
-            , 'annal:urihost':  TestHost
-            , 'annal:uripath':  TestBasePath+'/sub/testid2/'
             , 'title':          'Name entity test2'
             , 'type':           'test:EntityTypeSub'
             })

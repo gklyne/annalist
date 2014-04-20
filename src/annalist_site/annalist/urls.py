@@ -13,10 +13,10 @@ from annalist.views.profile         import ProfileView
 from annalist.views.confirm         import ConfirmView
 from annalist.views.site            import SiteView, SiteActionView
 from annalist.views.collection      import CollectionView, CollectionEditView
-from annalist.views.recordtype      import RecordTypeEditView, RecordTypeDeleteConfirmedView
-from annalist.views.recordview      import RecordViewEditView # , RecordViewDeleteConfirmedView
-from annalist.views.recordlist      import RecordListEditView # , RecordListDeleteConfirmedView
-from annalist.views.recordfield     import RecordFieldEditView # , RecordFieldDeleteConfirmedView
+from annalist.views.recordtype      import RecordTypeDeleteConfirmedView
+# from annalist.views.recordview      import RecordViewEditView # , RecordViewDeleteConfirmedView
+# from annalist.views.recordlist      import RecordListEditView # , RecordListDeleteConfirmedView
+# from annalist.views.recordfield     import RecordFieldEditView # , RecordFieldDeleteConfirmedView
 from oauth2.views                   import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
 
 from annalist.views.defaultlist     import EntityDefaultListView
@@ -64,34 +64,37 @@ urlpatterns = patterns('',
     url(r'^c/(?P<coll_id>\w{0,32})/!edit$',
                             CollectionEditView.as_view(),
                             name='AnnalistCollectionEditView'),
-
-    url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/types/(?P<type_id>\w{0,32})/$',
-                            RecordTypeEditView.as_view(),
-                            name='AnnalistRecordTypeAccessView'),
-    url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/types/!(?P<action>new)$',
-                            RecordTypeEditView.as_view(),
-                            name='AnnalistRecordTypeNewView'),
-    url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/types/(?P<type_id>\w{0,32})/!(?P<action>copy)$',
-                            RecordTypeEditView.as_view(),
-                            name='AnnalistRecordTypeCopyView'),
-    url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/types/(?P<type_id>\w{0,32})/!(?P<action>edit)$',
-                            RecordTypeEditView.as_view(),
-                            name='AnnalistRecordTypeEditView'),
     url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/types/!delete_confirmed$',
                             RecordTypeDeleteConfirmedView.as_view(),
                             name='AnnalistRecordTypeDeleteView'),
 
-    url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/views/(?P<view_id>\w{0,32})/$',
-                            RecordViewEditView.as_view(),
-                            name='AnnalistRecordViewAccessView'),
+    # url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/types/(?P<type_id>\w{0,32})/$',
+    #                         RecordTypeEditView.as_view(),
+    #                         name='AnnalistRecordTypeAccessView'),
+    # url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/types/!(?P<action>new)$',
+    #                         RecordTypeEditView.as_view(),
+    #                         name='AnnalistRecordTypeNewView'),
+    # url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/types/(?P<type_id>\w{0,32})/!(?P<action>copy)$',
+    #                         RecordTypeEditView.as_view(),
+    #                         name='AnnalistRecordTypeCopyView'),
+    # url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/types/(?P<type_id>\w{0,32})/!(?P<action>edit)$',
+    #                         RecordTypeEditView.as_view(),
+    #                         name='AnnalistRecordTypeEditView'),
+    # url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/types/!delete_confirmed$',
+    #                         RecordTypeDeleteConfirmedView.as_view(),
+    #                         name='AnnalistRecordTypeDeleteView'),
 
-    url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/lists/(?P<list_id>\w{0,32})/$',
-                            RecordListEditView.as_view(),
-                            name='AnnalistRecordListAccessView'),
+    # url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/views/(?P<view_id>\w{0,32})/$',
+    #                         RecordViewEditView.as_view(),
+    #                         name='AnnalistRecordViewAccessView'),
 
-    url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/fields/(?P<field_id>\w{0,32})/$',
-                            RecordFieldEditView.as_view(),
-                            name='AnnalistRecordFieldAccessView'),
+    # url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/lists/(?P<list_id>\w{0,32})/$',
+    #                         RecordListEditView.as_view(),
+    #                         name='AnnalistRecordListAccessView'),
+
+    # url(r'^c/(?P<coll_id>\w{0,32})/_annalist_collection/fields/(?P<field_id>\w{0,32})/$',
+    #                         RecordFieldEditView.as_view(),
+    #                         name='AnnalistRecordFieldAccessView'),
 
     url(r'^c/(?P<coll_id>\w{0,32})/d/$',
                             EntityDefaultListView.as_view(),
@@ -106,7 +109,7 @@ urlpatterns = patterns('',
 
     url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/$',
                             EntityDefaultEditView.as_view(),
-                            name='AnnalistEntityDefaultDataView'),
+                            name='AnnalistEntityAccessView'),
     url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/!(?P<action>new)$',
                             EntityDefaultEditView.as_view(),
                             name='AnnalistEntityDefaultNewView'),

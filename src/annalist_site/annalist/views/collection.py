@@ -92,32 +92,33 @@ class CollectionEditView(AnnalistGenericView):
         # Note: in many cases, this function redirects to a form that displays a form
         #       to gather further details of values to update.  Values returned by
         #       POST to this view are then passed as URI segments in the GET request
-        #       that renders the form.  Maybe there's an easier way that all this 
+        #       that renders the form.  Maybe there's an easier way than all this 
         #       URI-wrangling?
         redirect_uri = None
         continuation_here, continuation_uri = self.continuation_uris(request.POST,
             # self.view_uri("AnnalistEntityListAllView", coll_id=coll_id)
             self.view_uri("AnnalistSiteView")
             )
-        # continuation = "?continuation_uri=%s"%(self.get_request_uri())
         type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:
-            redirect_uri = self.view_uri(
-                "AnnalistRecordTypeNewView", coll_id=coll_id, action="new"
+            redirect_uri = self.view_uri("AnnalistEntityNewView", 
+                coll_id=coll_id, view_id="RecordType_view", type_id="_type", action="new"
                 ) + continuation_here
         if "type_copy" in request.POST:
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_COPY) or
-                ( self.view_uri(
-                    "AnnalistRecordTypeCopyView", coll_id=coll_id, type_id=type_id, action="copy"
-                    ) + continuation_here)
+                    ( self.view_uri("AnnalistEntityEditView", action="copy", 
+                        coll_id=coll_id, view_id="RecordType_view", type_id="_type", entity_id=type_id
+                        ) + continuation_here
+                    )
                 )
         if "type_edit" in request.POST:
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_EDIT) or
-                ( self.view_uri(
-                    "AnnalistRecordTypeEditView", coll_id=coll_id, type_id=type_id, action="edit"
-                    ) + continuation_here)
+                    ( self.view_uri("AnnalistEntityEditView", action="edit", 
+                        coll_id=coll_id, view_id="RecordType_view", type_id="_type", entity_id=type_id
+                        ) + continuation_here
+                    )
                 )
         if "type_delete" in request.POST:
             if type_id:

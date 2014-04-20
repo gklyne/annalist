@@ -51,23 +51,45 @@ def recordfield_dir(coll_id="testcoll", field_id="testfield"):
 #   These use the Django `reverse` function so they correspond to
 #   the declared URI patterns.
 
-def recordfield_uri(coll_id, field_id):
-    fieldname = "AnnalistRecordFieldAccessView"
-    kwargs   = {'coll_id': coll_id}
-    if valid_id(field_id):
-        kwargs.update({'field_id': field_id})
-    else:
-        kwargs.update({'field_id': "___"})
-    return reverse(fieldname, kwargs=kwargs)
+def recordfield_site_uri(site, field_id="testfield"):
+    return site._entityuri + layout.SITE_FIELD_PATH%{'id': field_id} + "/"
 
-def recordfield_view_uri(coll_id, field_id):
-    fieldname = "AnnalistEntityDefaultDataView"
-    kwargs   = {'coll_id': coll_id, 'type_id': "_field"}
+def recordfield_coll_uri(site, coll_id="testcoll", field_id="testfield"):
+    return site._entityuri + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_FIELD_PATH%{'id': field_id} + "/"
+
+def recordfield_uri(coll_id, field_id):
+    """
+    URI for record field description data; also view using default entity view
+    """
+    viewname = "AnnalistEntityAccessView"
+    kwargs   = {'coll_id': coll_id, "type_id": "_field"}
     if valid_id(field_id):
         kwargs.update({'entity_id': field_id})
     else:
         kwargs.update({'entity_id': "___"})
-    return reverse(fieldname, kwargs=kwargs)
+    return reverse(viewname, kwargs=kwargs)
+
+def recordfield_edit_uri(action=None, coll_id=None, field_id=None):
+    """
+    URI for record field description editing view
+    """
+    viewname = ( 
+        'AnnalistEntityDataView'        if action == "view"   else
+        'AnnalistEntityNewView'         if action == "new"    else
+        'AnnalistEntityEditView'        if action == "copy"   else
+        'AnnalistEntityEditView'        if action == "edit"   else
+        'AnnalistRecordFieldDeleteView' if action == "delete" else
+        'unknown'
+        )
+    kwargs = {'coll_id': coll_id, 'type_id': "_field", 'view_id': "Field_view"}
+    if action != "delete":
+        kwargs.update({'action': action})
+    if field_id:
+        if valid_id(field_id):
+            kwargs.update({'entity_id': field_id})
+        else:
+            kwargs.update({'entity_id': "___"})
+    return reverse(viewname, kwargs=kwargs)
 
 #   -----------------------------------------------------------------------------
 #
@@ -78,7 +100,7 @@ def recordfield_view_uri(coll_id, field_id):
 def recordfield_init_keys():
     return set(
         [ 'annal:id', 'annal:type'
-        , 'annal:uri', 'annal:urihost', 'annal:uripath'
+        , 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         ])
 
@@ -109,9 +131,7 @@ def recordfield_values(
     d.update(
         { 'annal:id':       field_id
         , 'annal:type':     "annal:RecordField"
-        , 'annal:uri':      hosturi + recordfield_view_uri(coll_id, field_id)
-        , 'annal:urihost':  urlparse.urlparse(hosturi).netloc
-        , 'annal:uripath':  recordfield_uri(coll_id, field_id)
+        , 'annal:uri':      hosturi + recordfield_uri(coll_id, field_id)
         })
     return d
 
@@ -123,62 +143,6 @@ def recordfield_read_values(
         { '@id':            "./"
         })
     return d
-
-# def recordfield_context_data(
-#         type_id=None, orig_id=None, action=None, 
-#         update="Field", hosturi=TestHostUri):
-#     context_dict = (
-#         { 'title':              site_title()
-#         , 'coll_id':            "testcoll"
-#         , 'orig_id':            "orig_type_id"
-#         , 'type_label':         "%s testcoll/..."%(update)
-#         , 'type_help':          "%s help for ... in collection testcoll"%(update)
-#         , 'type_uri':           recordfield_view_uri("testcoll", "___")
-#         , 'continuation_uri':   collection_edit_uri("testcoll")
-#         })
-#     if type_id:
-#         context_dict['type_id']     = type_id
-#         context_dict['orig_id']     = type_id
-#         context_dict['type_label']  = "%s testcoll/%s"%(update, type_id)
-#         context_dict['type_help']   = "%s help for %s in collection testcoll"%(update,type_id)
-#         context_dict['type_uri']    = hosturi + recordfield_view_uri("testcoll", type_id)
-#     if orig_id:
-#         context_dict['orig_id']     = orig_id
-#     if action:  
-#         context_dict['action']      = action
-#     return context_dict
-
-# def recordfield_form_data(
-#         type_id=None, orig_id=None, action=None, cancel=None, 
-#         update="RecordField", hosturi=TestHostUri):
-#     form_data_dict = (
-#         { 'type_label':         "%s testcoll/..."%(update)
-#         , 'type_help':          "%s help for ... in collection testcoll"%(update)
-#         , 'type_class':         recordfield_view_uri("testcoll", "___")
-#         , 'orig_id':            "orig_type_id"
-#         , 'continuation_uri':   collection_edit_uri("testcoll")
-#         })
-#     if type_id:
-#         form_data_dict['type_id']       = type_id
-#         form_data_dict['orig_id']       = type_id
-#         form_data_dict['type_label']    = "%s testcoll/%s"%(update, type_id)
-#         form_data_dict['type_help']     = "%s help for %s in collection testcoll"%(update,type_id)
-#         form_data_dict['type_class']    = hosturi + recordfield_view_uri("testcoll", type_id)
-#     if orig_id:
-#         form_data_dict['orig_id']       = orig_id
-#     if action:
-#         form_data_dict['action']        = action
-#     if cancel:
-#         form_data_dict['cancel']        = "Cancel"
-#     else:
-#         form_data_dict['save']          = "Save"
-#     return form_data_dict
-
-# def recordfield_delete_confirm_form_data(type_id=None):
-#     return (
-#         { 'typelist':    type_id,
-#           'type_delete': 'Delete'
-#         })
 
 #   -----------------------------------------------------------------------------
 #

@@ -49,8 +49,9 @@ class RecordType(EntityData):
         altparent   is a site object to search for this new entity,
                     allowing site-wide RecordType values to be found.
         """
-        super(RecordType, self).__init__(parent, type_id, altparent)
+        super(RecordType, self).__init__(parent, type_id, altparent=altparent)
         log.debug("RecordType %s: dir %s, alt %s"%(type_id, self._entitydir, self._entityaltdir))
+        log.debug("RecordType %s: uri %s, alt %s"%(type_id, self._entityuri, self._entityalturi))
         return
 
 # End.

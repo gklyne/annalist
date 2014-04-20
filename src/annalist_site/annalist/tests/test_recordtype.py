@@ -39,10 +39,9 @@ from entity_testutils           import (
     )
 from entity_testtypedata        import (
     recordtype_dir,
-    recordtype_uri, recordtype_view_uri, recordtype_edit_uri,
+    recordtype_coll_uri, recordtype_site_uri, recordtype_uri, recordtype_edit_uri,
     recordtype_value_keys, recordtype_load_keys, 
     recordtype_create_values, recordtype_values, recordtype_read_values,
-    recordtype_context_data, recordtype_form_data,
     recordtype_entity_view_context_data, 
     recordtype_entity_view_form_data, recordtype_delete_confirm_form_data
     )
@@ -76,21 +75,23 @@ class RecordTypeTest(AnnalistTestCase):
         return
 
     def test_recordtype_init(self):
-        t = RecordType(self.testcoll, "testtype")
+        t = RecordType(self.testcoll, "testtype", self.testsite)
+        u = recordtype_coll_uri(self.testsite, coll_id="testcoll", type_id="testtype")
         self.assertEqual(t._entitytype,     ANNAL.CURIE.RecordType)
         self.assertEqual(t._entityfile,     layout.TYPE_META_FILE)
         self.assertEqual(t._entityref,      layout.META_TYPE_REF)
         self.assertEqual(t._entityid,       "testtype")
-        self.assertEqual(t._entityuri,      TestHostUri + recordtype_uri(type_id="testtype"))
+        self.assertEqual(t._entityuri,      u)
         self.assertEqual(t._entitydir,      recordtype_dir(type_id="testtype"))
         self.assertEqual(t._values,         None)
         return
 
     def test_recordtype1_data(self):
-        t = RecordType(self.testcoll, "type1")
+        t = RecordType(self.testcoll, "type1", self.testsite)
         self.assertEqual(t.get_id(), "type1")
         self.assertEqual(t.get_type_id(), "_type")
         self.assertIn("/c/testcoll/_annalist_collection/types/type1/", t.get_uri())
+        self.assertEqual(TestBaseUri + "/c/testcoll/d/_type/type1/", t.get_view_uri())
         t.set_values(recordtype_create_values(type_id="type1"))
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_value_keys()))
@@ -99,10 +100,11 @@ class RecordTypeTest(AnnalistTestCase):
         return
 
     def test_recordtype2_data(self):
-        t = RecordType(self.testcoll, "type2")
+        t = RecordType(self.testcoll, "type2", self.testsite)
         self.assertEqual(t.get_id(), "type2")
         self.assertEqual(t.get_type_id(), "_type")
         self.assertIn("/c/testcoll/_annalist_collection/types/type2/", t.get_uri())
+        self.assertEqual(TestBaseUri + "/c/testcoll/d/_type/type2/", t.get_view_uri())
         t.set_values(recordtype_create_values(type_id="type2"))
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_value_keys()))
@@ -175,7 +177,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertTrue(RecordType.exists(self.testcoll, type_id))
         t = RecordType.load(self.testcoll, type_id)
         self.assertEqual(t.get_id(), type_id)
-        self.assertEqual(t.get_uri(), TestHostUri + recordtype_uri("testcoll", type_id))
+        self.assertEqual(t.get_view_uri(), TestHostUri + recordtype_uri("testcoll", type_id))
         v = recordtype_values(type_id=type_id, update=update)
         self.assertDictionaryMatch(t.get_values(), v)
         return t
@@ -368,7 +370,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="00000001",
             type_label="Entity '00000001' of type '_type' in collection 'testcoll'",
             type_help="",
-            type_uri=TestHostUri + recordtype_view_uri("testcoll", "00000001")
+            type_uri=TestHostUri + recordtype_uri("testcoll", "00000001")
             )
         return
 

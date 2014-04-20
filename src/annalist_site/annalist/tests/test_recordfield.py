@@ -36,7 +36,7 @@ from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testfielddata           import (
     recordfield_dir,
-    recordfield_uri, recordfield_view_uri,
+    recordfield_coll_uri, recordfield_uri,
     recordfield_init_keys, recordfield_value_keys, recordfield_load_keys,
     recordfield_create_values, recordfield_values, recordfield_read_values,
     recordfield_entity_view_context_data, recordfield_entity_view_form_data
@@ -89,11 +89,12 @@ class RecordFieldTest(AnnalistTestCase):
 
     def test_recordfield_init(self):
         t = RecordField(self.testcoll, "testfield")
+        u = recordfield_coll_uri(self.testsite, coll_id="testcoll", field_id="testfield")
         self.assertEqual(t._entitytype,     ANNAL.CURIE.RecordField)
         self.assertEqual(t._entityfile,     layout.FIELD_META_FILE)
         self.assertEqual(t._entityref,      layout.META_FIELD_REF)
         self.assertEqual(t._entityid,       "testfield")
-        self.assertEqual(t._entityuri,      TestHostUri + recordfield_uri("testcoll", "testfield"))
+        self.assertEqual(t._entityuri,      u)
         self.assertEqual(t._entitydir,      recordfield_dir(field_id="testfield"))
         self.assertEqual(t._values,         None)
         return
@@ -196,8 +197,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         "Helper function checks content of form-updated record type entry with supplied field_id"
         self.assertTrue(RecordField.exists(self.testcoll, field_id, altparent=self.testsite))
         e = RecordField.load(self.testcoll, field_id, altparent=self.testsite)
+        u = recordfield_coll_uri(self.testsite, coll_id="testcoll", field_id=field_id)
         self.assertEqual(e.get_id(), field_id)
-        self.assertEqual(e.get_uri(), TestHostUri + recordfield_uri("testcoll", field_id))
+        self.assertEqual(e.get_uri(), u)
+        self.assertEqual(e.get_view_uri(), TestHostUri + recordfield_uri("testcoll", field_id))
         v = recordfield_values(field_id=field_id, update=update)
         self.assertDictionaryMatch(e.get_values(), v)
         return e

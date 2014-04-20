@@ -109,16 +109,12 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / check list display in dev app
      / define test suite test_genericentitylist based loosely on test_entitydefaultlist
      / create test case for creating/editing site metadata entities (currently fail in dev system) e.g. create test_entitymetadataedit based on entitygenericedit.
-     - create edit view tests for all the main entity classes (type, view, list, data), 
+     / create edit view tests for all the main entity classes (type, view, list, data), 
        along the lines of test_entityfieldedit, moving support code out of entity_testutils.
-       - copy/refactor test_recordtype to use same pattern as test_entityfieldedit
-       - see if old record type view class can be deleted
+       / copy/refactor test_recordtype to use same pattern as test_entityfieldedit
+       / see if old record type view class can be deleted
        / incorporate model tests in test_entityfieldedit (cf. test_recordtype)
        / rename test_entityfieldedit -> test_recordfield? (cf. test_recordtype)
-     - decide how to handle presentation of field types:
-       (a) use simple text string, not CURIE
-       (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?
-       - it all rather depends on the anticipated extensibility model for field types.  Option (a) is simplest for now.
      / resolve overloading of "entity_uri" in context.  In `entityeditbase.py:58` it is taken from
        `annal:uri`, but in `render_utils.py:108` it may be derived from the entity object, not the data
        via logic at `entityroot.py:119` (.set_values()).
@@ -126,6 +122,11 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        the actual location or the URI used for viewing?  Ideally, we'll use the `/c/coll/d/_type/id`
        form, as that hides whether it comes from the collection or is site-wide.
    - entity_uri appears in entity view context as name (same as annal:uri) but also in bound field as locator.  Change name used in bound field to `entity_ref`.
+   - decide how to handle presentation of field types:
+     (a) use simple text string, not CURIE
+     (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?
+     - it all rather depends on the anticipated extensibility model for field types.
+       Option (a) is simplest for now.
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - align type ID values used in local URI construction with type URIs/CURIEs
    - refactor list description access out of context handling code (avoid multiple reads)

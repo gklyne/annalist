@@ -37,10 +37,15 @@ class EntityData(Entity):
 
         parent      is the parent collection (RecordType) from which the entity is descended.
         entity_id   the local identifier (slug) for the data record
+        altparent   is an alternative parent entity to search for this entity, using 
+                    the alternative path for the entity type: this is used to augment 
+                    explicitly created entities in a collection with site-wide 
+                    installed metadata entites (i.e. types, views, etc.)
         """
         super(EntityData, self).__init__(parent, entity_id, altparent=altparent)
         self._entitytypeid  = self._entitytypeid or parent.get_id()
         self._entityviewuri = parent._entityuri+self._entityview%{'id': entity_id}
+        log.debug("EntityData: _entityviewuri %s"%(self._entityviewuri))
         return
 
     def get_view_uri(self, baseuri=""):

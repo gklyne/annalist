@@ -40,7 +40,7 @@ from entity_testutils               import (
     )
 from entity_testtypedata            import (
     recordtype_edit_uri,
-    recordtype_create_values, recordtype_form_data
+    recordtype_create_values,
     )
 from entity_testentitydata          import (
     recorddata_dir,  entitydata_dir,
@@ -48,10 +48,8 @@ from entity_testentitydata          import (
     entitydata_list_type_uri,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
+    entitydata_recordtype_view_form_data
     )
-
-
-
 
 #   -----------------------------------------------------------------------------
 #
@@ -472,13 +470,16 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         # Checks logic for creating an entity which may require creation of new recorddata
         # Create new type
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
-        f = recordtype_form_data(type_id="newtype", action="new")
-        u = recordtype_edit_uri("new", "testcoll")
+        f = entitydata_recordtype_view_form_data(
+            coll_id="testcoll", type_id="_type", entity_id="newtype",
+            action="new"
+            )
+        u = entitydata_edit_uri("new", "testcoll", type_id="_type", view_id="RecordType_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + collection_edit_uri())
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "_type"))
         self.assertTrue(RecordType.exists(self.testcoll, "newtype"))
         # Create new entity
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
