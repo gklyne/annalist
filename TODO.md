@@ -121,20 +121,21 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        This leads to inconsistency with metadata entities.  What value *should* be returned for these:
        the actual location or the URI used for viewing?  Ideally, we'll use the `/c/coll/d/_type/id`
        form, as that hides whether it comes from the collection or is site-wide.
-   - entity_uri appears in entity view context as name (same as annal:uri) but also in bound field as locator.  Change name used in bound field to `entity_ref`.
+   / entity_uri appears in entity view context as name (same as annal:uri) but also in bound field as locator.  Change name used in bound field to `entity_ref`.
+   - refactor delete confirm code to generic module, with type-specific messages
+   - move invocation of authentication to the immediate response hander code?
+   - don't include continuation-uri param when URI is blank
+   - edit form response should update, not replace, any data from the original (so data from multiple views is not discarded).
+   - refactor list description access out of context handling code (avoid multiple reads)
+   - refactor code from entityeditbase into more specific views where possible
+   - rename what is left of entityeditbase -> entityviewbase, or more to generic module
+   - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
+   - align type ID values used in local URI construction with type URIs/CURIEs
    - decide how to handle presentation of field types:
      (a) use simple text string, not CURIE
      (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?
      - it all rather depends on the anticipated extensibility model for field types.
        Option (a) is simplest for now.
-   - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
-   - align type ID values used in local URI construction with type URIs/CURIEs
-   - refactor list description access out of context handling code (avoid multiple reads)
-   - refactor code from entityeditbase into more specific views where possible
-   - rename what is lefy of entityeditbase -> entityviewbase, or more to generic module
-   - don't include continuation-uri param when URI is blank
-   - edit form response should update, not replace, any data from the original (so data from multiple views is not discarded).
-   - move invocation of authentication to the immediate response hander code?
 8. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching

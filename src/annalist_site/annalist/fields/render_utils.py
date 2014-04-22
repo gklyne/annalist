@@ -61,6 +61,8 @@ class bound_field(object):
     'def_type'
     >>> field_def.field_value
     'default'
+    >>> field_def.entity_link
+    'entityuri/'
     """
 
     __slots__ = ("_field_description", "_entity", "_key", "_options", "_extras")
@@ -116,7 +118,7 @@ class bound_field(object):
             else:
                 # return self._extras.get("entity_type_id", None)
                 return ""
-        elif name == "entity_uri":
+        elif name == "entity_link":
             return self._entity.get_uri()
         elif name == "field_value":
             # Note: .keys() is required here as iterator on EntityData returns files in directory
@@ -140,7 +142,7 @@ class bound_field(object):
         """
         Implement iterator protocol, returning accessible value keys.
         """
-        yield "entity_uri"
+        yield "entity_link"
         yield "entity_type_id"
         yield "field_value"
         yield "options"
