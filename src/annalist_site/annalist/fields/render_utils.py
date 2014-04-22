@@ -195,6 +195,8 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_textarea.html"
     if renderid == "annal:field_render/Type":
         return "field/annalist_edit_select.html"
+    if renderid == "annal:field_render/View_fields":
+        return "field/annalist_todo.html"
     log.warning("get_edit_renderer: %s not found"%renderid)
     raise ValueError("get_edit_renderer: %s not found"%renderid)
     return None
@@ -228,6 +230,8 @@ def get_view_renderer(renderid):
         return "field/annalist_view_textarea.html"
     if renderid == "annal:field_render/Type":
         return "field/annalist_view_select.html"
+    if renderid == "annal:field_render/View_fields":
+        return "field/annalist_todo.html"
     log.warning("get_view_renderer: %s not found"%renderid)
     raise ValueError("get_view_renderer: %s not found"%renderid)
     return None

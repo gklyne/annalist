@@ -514,11 +514,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(v, r['location'])
         return
 
-    @unittest.skip("@@TODO defaultlist search handler")
+    @unittest.skip("@@TODO genericlist search button handler")
     def test_post_search(self):
         return
 
-    @unittest.skip("@@TODO defaultlist default-view handler")
+    @unittest.skip("@@TODO genericlist default-view button handler")
     def test_post_default_view(self):
         return
 

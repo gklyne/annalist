@@ -235,6 +235,12 @@ def recordtype_entity_view_form_data(
         form_data_dict['save']          = 'Save'
     return form_data_dict
 
+#   -----------------------------------------------------------------------------
+#
+#   ----- Recordtype delete confirmation form data
+#
+#   -----------------------------------------------------------------------------
+
 def recordtype_delete_confirm_form_data(type_id=None):
     return (
         { 'typelist':    type_id,

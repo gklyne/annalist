@@ -1,8 +1,8 @@
 {
-  "@id": "./",
-  "annal:id": "Default_type",
-  "annal:type": "annal:RecordType",
-  "annal:uri": "annal:type/Default_type",
-  "rdfs:label": "Default record type",
-  "rdfs:comment": "Default record type, applied when no type is specified when creating a record."
+  "@id":            "./",
+  "annal:id":       "Default_type",
+  "annal:type":     "annal:RecordType",
+  "annal:uri":      "annal:type/Default_type",
+  "rdfs:label":     "Default record type",
+  "rdfs:comment":   "Default record type, applied when no type is specified when creating a record."
 }

@@ -12,32 +12,32 @@ import unittest
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                import settings
-from django.db                  import models
-from django.http                import QueryDict
-from django.contrib.auth.models import User
-from django.test                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
-from django.test.client         import Client
+from django.conf                        import settings
+from django.db                          import models
+from django.http                        import QueryDict
+from django.contrib.auth.models         import User
+from django.test                        import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
+from django.test.client                 import Client
 
-from annalist.identifiers       import RDF, RDFS, ANNAL
-from annalist                   import layout
-from annalist.models.site       import Site
-from annalist.models.sitedata   import SiteData
-from annalist.models.collection import Collection
-from annalist.models.recordtype import RecordType
+from annalist.identifiers               import RDF, RDFS, ANNAL
+from annalist                           import layout
+from annalist.models.site               import Site
+from annalist.models.sitedata           import SiteData
+from annalist.models.collection         import Collection
+from annalist.models.recordtype         import RecordType
 
-from annalist.views.recordtype  import RecordTypeEditView, RecordTypeDeleteConfirmedView
+from annalist.views.recordtypedelete    import RecordTypeDeleteConfirmedView
 
-from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                      import init_annalist_test_site
-from AnnalistTestCase           import AnnalistTestCase
-from entity_testutils           import (
+from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from tests                              import init_annalist_test_site
+from AnnalistTestCase                   import AnnalistTestCase
+from entity_testutils                   import (
     site_dir, collection_dir,
     site_view_uri, collection_edit_uri, 
     collection_create_values,
     site_title
     )
-from entity_testtypedata        import (
+from entity_testtypedata                import (
     recordtype_dir,
     recordtype_coll_uri, recordtype_site_uri, recordtype_uri, recordtype_edit_uri,
     recordtype_value_keys, recordtype_load_keys, 
@@ -45,7 +45,7 @@ from entity_testtypedata        import (
     recordtype_entity_view_context_data, 
     recordtype_entity_view_form_data, recordtype_delete_confirm_form_data
     )
-from entity_testentitydata          import (
+from entity_testentitydata              import (
     entity_uri, entitydata_edit_uri, entitydata_list_type_uri
     )
 
@@ -265,10 +265,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
     #   Form rendering tests
     #   -----------------------------------------------------------------------------
-
-    def test_RecordTypeEditView(self):
-        self.assertEqual(RecordTypeEditView.__name__, "RecordTypeEditView", "Check RecordTypeEditView class name")
-        return
 
     def test_get_form_rendering(self):
         u = entitydata_edit_uri("new", "testcoll", "_type", view_id="RecordType_view")

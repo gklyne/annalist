@@ -45,10 +45,10 @@ from entity_testtypedata            import (
     recordtype_create_values, recordtype_read_values
     )
 from entity_testviewdata            import (
-    recordview_value_keys, recordview_create_values, recordview_values,
+    recordview_create_values, recordview_read_values,
     )
 from entity_testlistdata            import (
-    recordlist_value_keys, recordlist_create_values, recordlist_values,
+    recordlist_create_values, recordlist_values,
     )
 from entity_testentitydata          import (
     entitydata_list_all_uri,
@@ -84,9 +84,9 @@ class CollectionTest(AnnalistTestCase):
         self.type2_add    = recordtype_create_values("testcoll", "type2")
         self.type2        = recordtype_read_values("testcoll", "type2")
         self.view1_add    = recordview_create_values("testcoll", "view1")
-        self.view1        = recordview_values("testcoll", "view1")
+        self.view1        = recordview_read_values("testcoll", "view1")
         self.view2_add    = recordview_create_values("testcoll", "view2")
-        self.view2        = recordview_values("testcoll", "view2")
+        self.view2        = recordview_read_values("testcoll", "view2")
         self.list1_add    = recordlist_create_values("testcoll", "list1")
         self.list1        = recordlist_values("testcoll", "list1")
         self.list2_add    = recordlist_create_values("testcoll", "list2")
