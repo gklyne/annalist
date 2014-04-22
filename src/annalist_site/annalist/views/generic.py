@@ -60,6 +60,7 @@ ENTITY_MESSAGES = (
     , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
     , 'entity_type_heading':    message.ENTITY_TYPE_ID
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+    , 'entity_removed':         message.ENTITY_DATA_REMOVED
     })
 
 TYPE_MESSAGES = (
@@ -68,40 +69,44 @@ TYPE_MESSAGES = (
     , 'entity_heading':         message.RECORD_TYPE_ID
     , 'entity_invalid_id':      message.RECORD_TYPE_ID_INVALID
     , 'entity_exists':          message.RECORD_TYPE_EXISTS
-    , 'entity_not_exists':      message.RECORD_TYPE_NOT_EXISTS        
+    , 'entity_not_exists':      message.RECORD_TYPE_NOT_EXISTS
+    , 'entity_removed':         message.RECORD_TYPE_REMOVED
     , 'entity_type_heading':    message.ENTITY_TYPE_ID
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
 VIEW_MESSAGES = (
-    { 'parent_heading':         message.RECORD_TYPE_ID
-    , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS
-    , 'entity_heading':         message.ENTITY_DATA_ID
-    , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
-    , 'entity_exists':          message.ENTITY_DATA_EXISTS
-    , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
+    { 'parent_heading':         message.COLLECTION_ID
+    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+    , 'entity_heading':         message.RECORD_VIEW_ID
+    , 'entity_invalid_id':      message.RECORD_VIEW_ID_INVALID
+    , 'entity_exists':          message.RECORD_VIEW_EXISTS
+    , 'entity_not_exists':      message.RECORD_VIEW_NOT_EXISTS
+    , 'entity_removed':         message.RECORD_VIEW_REMOVED
     , 'entity_type_heading':    message.ENTITY_TYPE_ID
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
 LIST_MESSAGES = (
-    { 'parent_heading':         message.RECORD_TYPE_ID
-    , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS
-    , 'entity_heading':         message.ENTITY_DATA_ID
-    , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
-    , 'entity_exists':          message.ENTITY_DATA_EXISTS
-    , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
+    { 'parent_heading':         message.COLLECTION_ID
+    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+    , 'entity_heading':         message.RECORD_LIST_ID
+    , 'entity_invalid_id':      message.RECORD_LIST_ID_INVALID
+    , 'entity_exists':          message.RECORD_LIST_EXISTS
+    , 'entity_not_exists':      message.RECORD_LIST_NOT_EXISTS
+    , 'entity_removed':         message.RECORD_LIST_REMOVED
     , 'entity_type_heading':    message.ENTITY_TYPE_ID
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
 FIELD_MESSAGES = (
-    { 'parent_heading':         message.RECORD_TYPE_ID
-    , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS
-    , 'entity_heading':         message.ENTITY_DATA_ID
-    , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
-    , 'entity_exists':          message.ENTITY_DATA_EXISTS
-    , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
+    { 'parent_heading':         message.COLLECTION_ID
+    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+    , 'entity_heading':         message.RECORD_FIELD_ID
+    , 'entity_invalid_id':      message.RECORD_FIELD_ID_INVALID
+    , 'entity_exists':          message.RECORD_FIELD_EXISTS
+    , 'entity_not_exists':      message.RECORD_FIELD_NOT_EXISTS
+    , 'entity_removed':         message.RECORD_FIELD_REMOVED
     , 'entity_type_heading':    message.ENTITY_TYPE_ID
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })

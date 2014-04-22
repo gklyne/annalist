@@ -598,7 +598,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<h3>Problem with entity identifier</h3>")
+        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         # Test context
         expect_context = recordfield_entity_view_context_data(action="new")
@@ -612,7 +612,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<h3>Problem with entity identifier</h3>")
+        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         # Test context
         expect_context = recordfield_entity_view_context_data(
@@ -663,7 +663,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<h3>Problem with entity identifier</h3>")
+        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         expect_context = recordfield_entity_view_context_data(action="copy")
         self.assertDictionaryMatch(r.context, expect_context)
@@ -680,7 +680,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<h3>Problem with entity identifier</h3>")
+        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         expect_context = recordfield_entity_view_context_data(
             field_id="!badentity", orig_id="orig_field_id", action="copy"
@@ -758,7 +758,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<h3>Problem with entity identifier</h3>")
+        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         # Test context for re-rendered form
         expect_context = recordfield_entity_view_context_data(action="edit", update="Updated entity")
@@ -781,7 +781,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<h3>Problem with entity identifier</h3>")
+        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         # Test context for re-rendered form
         expect_context = recordfield_entity_view_context_data(
