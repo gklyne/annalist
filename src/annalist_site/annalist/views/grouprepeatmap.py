@@ -3,8 +3,9 @@ Annalist class for processing a GroupRepeatMap in an annalist view value mapping
 
 A GroupRepeatMap is used to render repeated groups of fields (e.g. a list or grid) for 
 each one of a list of entities.  When the mapping function `map_entity_to_context` is called,
-the supplied `entityvals` is expected to be an iterator (list, tuple, etc.) of entities or
-dictionry values.
+the supplied `entityval` is expected to contain a field, nanmed by the 'e' parameter to the
+constructor, that is an iterator (list, tuple, etc.) of entities or dictionary values that 
+are to be processed for display.
 
 The present implementation does not support mapping from form data (for re-rendering) or
 returning values from a form to update entities.  As yet, no mechanism is adopted for
@@ -32,7 +33,7 @@ class GroupRepeatMap(_GroupRepeatMap_tuple):
     group of fields that is repeated for multiple entities.  
 
     c       request context field name for the repeated groups.
-    e       name of entity value field containig list of entities  
+    e       name of entity value field containing list of entities  
     g       a group of field descriptions to be repeated for each provided entity.
             The value supplied is in the form of an entity value map, and the named
             context field is populated with a list of "sub-context" values, each of
