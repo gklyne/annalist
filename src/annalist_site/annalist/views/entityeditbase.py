@@ -98,24 +98,6 @@ class EntityEditBaseView(AnnalistGenericView):
         super(EntityEditBaseView, self).__init__()
         return
 
-    # def get_repeat_context(self, repeat):
-    #     """
-    #     Creates a repeated group description value to use in a context value when
-    #     rendering a form containing a group of fields that are repeated over different
-    #     values.
-
-    #     repeat      is the repeat description from a view or list description.
-    #     """
-    #     repeat_id           = repeat['annal:repeat_id']
-    #     repeat_label        = repeat['annal:repeat_label']
-    #     repeat_btn_label    = repeat['annal:repeat_btn_label']
-    #     repeat_context = (
-    #         { 'repeat_id':          repeat_id
-    #         , 'repeat_label':       repeat_label
-    #         , 'repeat_btn_label':   repeat_btn_label
-    #         })
-    #     return repeat_context
-
     def get_fields_entityvaluemap(self, entityvaluemap, fields):
         for f in fields:
             log.debug("get_fields_entityvaluemap: field %r"%(f))

@@ -47,6 +47,9 @@ class FieldValueMap(_FieldValueMap_tuple):
 
     c       request context field name for a list of fields
     f       field description structure (cf. `EntityEditBaseView.get_field_context`)
+
+    NOTE: The form rendering template iterates over the context field values to be 
+    added to the form display.
     """
 
     def __new__(cls, *args, **kwargs):
