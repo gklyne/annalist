@@ -2,7 +2,7 @@
 Annalist class for processing a FieldValueMap in an annalist view value mapping table.
 
 A FieldValueMap accepts a context field identifier and a field description structure,
-and generates context values to drive rendering of multiple entity fields in a form.
+and generates context values to drive rendering of that field in a form.
 The template used is expected to iterate over the fields and render each one, e.g.:
 
     {% for field in fields %}
@@ -49,7 +49,8 @@ class FieldValueMap(_FieldValueMap_tuple):
     f       field description structure (cf. `EntityEditBaseView.get_field_context`)
 
     NOTE: The form rendering template iterates over the context field values to be 
-    added to the form display.
+    added to the form display.  The constructor for this object appends the current
+    field to a list of field value mappings at the indcated context field.
     """
 
     def __new__(cls, *args, **kwargs):
@@ -67,8 +68,6 @@ class FieldValueMap(_FieldValueMap_tuple):
                     options = extras[options_key]
                 else:
                     options = ['(missing options)']
-            if self.c not in context:
-                context[self.c] = []
             if self.c not in context:
                 context[self.c] = []
             boundfield = bound_field(

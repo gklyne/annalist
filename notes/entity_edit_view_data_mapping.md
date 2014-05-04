@@ -120,9 +120,9 @@ The context is created by combining stored data with a view description.  Some c
         3:  RepeatValuesMap(
               c="repeat",
               e="annal:view_fields",    // repeat for values of entity field
-              f=EntityFieldMap(
-                  type="_field",
-                  id_field="field_id",
+              f=FieldListValueMap(
+                  // type="_field",
+                  // id_field="field_id",
                   fields=(
                       [ FieldDescription(
                           { "annal:field_id":        "Field_id"
@@ -311,9 +311,9 @@ This example has a label, comment and any number of tags.  It avoids the self-re
         2:  RepeatValuesMap(
               c="tags",
               e="ex:tags",
-              f=EntityFieldMap(
-                  type="Tag",
-                  id_field="field_id",
+              f=FieldListValueMap(
+                  // type="Tag",
+                  // id_field="field_id",
                   fields=(
                       [ FieldDescription(
                           { "annal:field_id":        "Tag_name"
@@ -364,7 +364,7 @@ This example has a label, comment and any number of tags.  It avoids the self-re
   - Already done.
 * `FieldValueMap` - an indirect mapping between an entity field, a context field and a form field, controlled by field description data (cf. FieldDescription)  Implemented, but update to use FieldDescription values.
   - Already works with FieldDescription values.
-* `EntityFieldMap` - try to replace existing ad-hoc logic (cf. EntityEditBase.get_form_entityvaluemap? various functions?) for dealing with field mapping.  
+* `FieldListValueMap` - try to replace existing ad-hoc logic (cf. EntityEditBase.get_form_entityvaluemap? various functions?) for dealing with field mapping.  
   Compared with GroupRepeatMap, the entity selection is explicit.
   This could be suitable to replace GroupRepeatMap.
 * `RepeatValuesMap` - this describes a group of repeated fields.
