@@ -45,7 +45,7 @@ class FieldValueMap(_FieldValueMap_tuple):
     in the default value supplied, which is picked out and handled specially
     in the bound_field class.
 
-    c       request context field name for a list of fields
+    c       request context field name for the field values
     f       field description structure (cf. `EntityEditBaseView.get_field_context`)
 
     NOTE: The form rendering template iterates over the context field values to be 
@@ -59,40 +59,41 @@ class FieldValueMap(_FieldValueMap_tuple):
         self.i = self.f['field_name']
         return self
 
-    def _map_to_context(self, context, vals, valkey, extras):
+    def _map_to_context(self, vals, valkey, extras):
+        """
+        Returns a dictionary of values to be added to the display context under construction
+        """
+        subcontext = {}
         if self.c:
             options = ["(no options)"]
             options_key = self.f.get('field_options', None)
             if options_key:
-                if options_key in extras:
+                if extras and options_key in extras:
                     options = extras[options_key]
                 else:
                     options = ['(missing options)']
-            if self.c not in context:
-                context[self.c] = []
             boundfield = bound_field(
                 field_description=self.f, 
                 entity=vals, key=valkey,
                 options=options,
                 extras=extras
                 )
-            context[self.c].append(boundfield)
-        return
+            subcontext[self.c] = boundfield
+        return subcontext
 
-    def map_entity_to_context(self, context, entityvals, extras=None):
-        self._map_to_context(context, entityvals, self.e, extras)
-        return
+    def map_entity_to_context(self, entityvals, extras=None):
+        return self._map_to_context(entityvals, self.e, extras)
 
-    def map_form_to_context(self, context, formvals, extras=None):
-        self._map_to_context(context, formvals, self.i, extras)
-        return
+    def map_form_to_context(self, formvals, extras=None):
+        return self._map_to_context(formvals, self.i, extras)
 
-    def map_form_to_entity(self, entityvals, formvals):
+    def map_form_to_entity(self, formvals):
+        entityvals = {}
         if self.e:
             log.debug("FieldValueMap.map_form_to_entity %s, %r"%(self.e, formvals))
             v = formvals.get(self.i, None)
             if v:
                 entityvals[self.e] = v
-        return
+        return entityvals
 
 # End.

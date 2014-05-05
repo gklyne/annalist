@@ -32,11 +32,12 @@ from annalist.models.recordfield        import RecordField
 from annalist.models.recordtype         import RecordType
 from annalist.models.recordtypedata     import RecordTypeData
 
-from annalist.views.fielddescription    import FieldDescription
+# from annalist.views.fielddescription    import FieldDescription
 from annalist.views.repeatdescription   import RepeatDescription
 from annalist.views.generic             import AnnalistGenericView
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
-from annalist.views.fieldvaluemap       import FieldValueMap
+# from annalist.views.fieldvaluemap       import FieldValueMap
+from annalist.views.fieldlistvaluemap   import FieldListValueMap
 from annalist.views.grouprepeatmap      import GroupRepeatMap
 
 from annalist.fields.render_utils       import bound_field, get_placement_classes
@@ -99,27 +100,32 @@ class EntityEditBaseView(AnnalistGenericView):
         return
 
     def get_fields_entityvaluemap(self, entityvaluemap, fields):
-        for f in fields:
-            log.debug("get_fields_entityvaluemap: field %r"%(f))
-            if 'annal:field_id' in f:
-                field_context = FieldDescription(self.collection, f)
-                log.debug("get_fields_entityvaluemap: field_id %s, field_name %s"%
-                    (field_context['field_id'], field_context['field_name'])
-                    )
-                entityvaluemap.append(
-                    FieldValueMap(c='fields', f=field_context)
-                    )
-            elif 'annal:repeat_id' in f:
-                repeat_context = RepeatDescription(f)
-                repeatmap = []
-                self.get_fields_entityvaluemap(repeatmap, f['annal:repeat'])
-                # @@TODO: use repeat_id value for context identifier?  
-                #         (Need to ensure it can be recovered later when rendering.)
-                entityvaluemap.append(
-                    RepeatValueMap(c='repeat', e="annal:view_fields", r=repeatmap, f=repeat_context)
-                    )
-            else:
-                assert False, "Unknown/unsupportred field values:"+repr(f)
+        entityvaluemap.append(
+            FieldListValueMap(self.collection, fields, c='fields')
+            )
+
+
+        # for f in fields:
+        #     log.debug("get_fields_entityvaluemap: field %r"%(f))
+        #     if 'annal:field_id' in f:
+        #         field_context = FieldDescription(self.collection, f)
+        #         log.debug("get_fields_entityvaluemap: field_id %s, field_name %s"%
+        #             (field_context['field_id'], field_context['field_name'])
+        #             )
+        #         entityvaluemap.append(
+        #             FieldListValueMap(c='fields', f=field_context)
+        #             )
+        #     elif 'annal:repeat_id' in f:
+        #         repeat_context = RepeatDescription(f)
+        #         repeatmap = []
+        #         self.get_fields_entityvaluemap(repeatmap, f['annal:repeat'])
+        #         # @@TODO: use repeat_id value for context identifier?  
+        #         #         (Need to ensure it can be recovered later when rendering.)
+        #         entityvaluemap.append(
+        #             RepeatValueMap(c='repeat', e="annal:view_fields", r=repeatmap, f=repeat_context)
+        #             )
+        #     else:
+        #         assert False, "Unknown/unsupportred field values:"+repr(f)
         return entityvaluemap
 
     def get_form_entityvaluemap(self, view_id):
@@ -168,7 +174,7 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         context = {}
         for kmap in self._entityvaluemap:
-            kmap.map_entity_to_context(context, entity_values, extras=kwargs)
+            context.update(kmap.map_entity_to_context(entity_values, extras=kwargs))
         return context
 
     def map_form_data_to_context(self, form_data, **kwargs):
@@ -180,14 +186,14 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         context = {}
         for kmap in self._entityvaluemap:
-            kmap.map_form_to_context(context, form_data, extras=kwargs)
+            context.update(kmap.map_form_to_context(form_data, extras=kwargs))
         return context
 
     def map_form_data_to_values(self, form_data, **kwargs):
         log.debug("map_form_data_to_values: form_data %r"%(form_data))
         values = {}
         for kmap in self._entityvaluemap:
-            kmap.map_form_to_entity(values, form_data)
+            values.update(kmap.map_form_to_entity(form_data))
         return values
 
     def get_entityid(self, action, parent, entityid):

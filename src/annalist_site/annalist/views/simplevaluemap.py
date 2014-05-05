@@ -35,33 +35,33 @@ class SimpleValueMap(_SimpleValueMap_tuple):
     f       HTML input form field name (used as key in POST results)
     """
 
-    def _map_to_context(self, context, vals, valkey, extras=None):
+    def _map_to_context(self, vals, valkey, extras=None):
+        subcontext = {}
         if self.c:
-            context[self.c] = vals.get(valkey, 
+            subcontext[self.c] = vals.get(valkey, 
                 extras and extras.get(self.c, None)
                 )
             log.log(settings.TRACE_FIELD_VALUE,
                 "SimpleValueMap._map_to_context: valkey %s, contextkey %s, value %s"%
-                (valkey, self.c, context[self.c])
+                (valkey, self.c, subcontext[self.c])
                 )
-        return
+        return subcontext
 
-    def map_entity_to_context(self, context, entityvals, extras=None):
-        self._map_to_context(context, entityvals, self.e, extras)
-        return
+    def map_entity_to_context(self, entityvals, extras=None):
+        return self._map_to_context(entityvals, self.e, extras)
 
-    def map_form_to_context(self, context, formvals, extras=None):
-        self._map_to_context(context, formvals, self.f, extras)
-        return
+    def map_form_to_context(self, formvals, extras=None):
+        return self._map_to_context(formvals, self.f, extras)
 
-    def map_form_to_entity(self, entityvals, formvals):
+    def map_form_to_entity(self, formvals):
+        entityvals = {}
         if self.e and self.f:
             log.debug("SimpleValueMap.map_form_to_entity %s, %s, %r"%(self.e, self.f, formvals))
             v = formvals.get(self.f, None)
             if v:
                 entityvals[self.e] = v
             # entityvals[self.e] = formvals.get(self.f, None)
-        return
+        return entityvals
 
 
 class StableValueMap(SimpleValueMap):
@@ -70,7 +70,7 @@ class StableValueMap(SimpleValueMap):
     form to the entity.  (Some fields are handled specially.)
     """
 
-    def map_form_to_entity(self, entityvals, formvals):
-        return
+    def map_form_to_entity(self, formvals):
+        return {}
 
 # End.
