@@ -78,6 +78,9 @@ class EntityRoot(object):
         log.debug("EntityRoot.__init__: entity URI %s, entity dir %s"%(self._entityuri, self._entitydir))
         return
 
+    def __repr__(self):
+        return "Entity: entityid %s, values %r"%(self._entityid, self._values)
+
     # General entity access methods
 
     def set_id(self, entityid):
@@ -273,7 +276,7 @@ class EntityRoot(object):
     # @@TODO: unused except for test case; not sure it makes sense; eliminate?
     # @@TODO: iterator should return key values, for consistency withj .keys(), .items() and dict behaviour
     #         cf. render_utils.bound_field.__getattr__
-    def __iter__(self):
+    def old__iter__(self):
         """
         Implement iterator protocol, returning candidate identifiers of 
         contained entities.  The caller is responsible for checking the validity 
@@ -290,6 +293,15 @@ class EntityRoot(object):
         #     for f in files:
         #         if util.valid_id(f):
         #             yield f
+        return
+
+    def __iter__(self):
+        """
+        Return entity value keys
+        """
+        if self._values:
+            for k in self._values:
+                yield k
         return
 
     # Special methods to facilitate access to entity values by dictionary operations

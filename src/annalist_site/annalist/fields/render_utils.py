@@ -74,8 +74,7 @@ class bound_field(object):
         Initialize a bound_field object.
 
         field_description   is a dictionary-like object describing a display
-                            field.  See assignment of `field_context` in 
-                            `views.entityeditbase` for more details of this.
+                            field.  See `FieldDescription` class for more details.
         entity              is an entity from which a value to be rendered is
                             obtained.  The specific field value used is defined
                             by the combination with `field_description`.  The entity
@@ -113,15 +112,20 @@ class bound_field(object):
         # log.info("self._key %s"%self._key)
         # log.info("self._entity %r"%self._entity)
         if name == "entity_type_id" or (name == "field_value" and self._key == "entity_type_id"):
-            if self._entity and isinstance(self._entity, Entity):
+            if self._entity and isinstance(self._entity, EntityRoot):
                 return self._entity.get_type_id()
             else:
-                # return self._extras.get("entity_type_id", None)
                 return ""
         elif name == "entity_link":
-            return self._entity.get_uri()
+            if self._entity and isinstance(self._entity, EntityRoot):
+                return self._entity.get_uri()
+            else:
+                return ""
+        elif name == "field_value_key":
+            return self._key
         elif name == "field_value":
             # Note: .keys() is required here as iterator on EntityData returns files in directory
+            # @@TODO: should be able to drop .keys() now
             if self._key in self._entity.keys():
                 return self._entity[self._key]
             elif self._extras and self._key in self._extras:
@@ -160,7 +164,7 @@ class bound_field(object):
 
     def __repr__(self):
         return (
-            "bound_field({'field':%r, 'entity':%r, 'key':%r, 'field_value':%r, 'extras':%r})"%
+            "bound_field({'field':%r, 'vals':%r, 'key':%r, 'field_value':%r, 'extras':%r})"%
             (self._field_description, dict(self._entity.items()), 
                 self._key, self.field_value, self._extras) 
             )
@@ -280,6 +284,8 @@ def get_placement_classes(placement):
     Placement(field='small-12 columns', label='small-12 medium-2 columns', value='small-12 medium-10 columns')
     >>> get_placement_classes("small:0,12;medium:0,4")
     Placement(field='small-12 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    >>> get_placement_classes("small:0,12; medium:0,4")
+    Placement(field='small-12 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
     >>> get_placement_classes("small:0,12;medium:0,6;large:0,4")
     Placement(field='small-12 medium-6 large-4 columns', label='small-12 medium-4 large-6 columns', value='small-12 medium-8 large-6 columns')
     >>> get_placement_classes("small:0,6;medium:0,4")
@@ -298,7 +304,7 @@ def get_placement_classes(placement):
         if right: right = " right"
         return " ".join([k+"-"+str(v) for k,v in cd.items()]) + right + " columns"
     ppr = re.compile(r"^(small|medium|large):(\d+),(\d+)(right)?$")
-    ps = placement.split(';')
+    ps = [ s.strip() for s in placement.split(';') ]
     labelw      = {'small': 12, 'medium': 2, 'large': 2}
     field_width = OrderedDict([ ('small', 12) ])
     label_width = OrderedDict([ ('small', 12), ('medium',  2) ])

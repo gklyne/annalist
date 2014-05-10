@@ -6,27 +6,26 @@
 , "rdfs:label":         "View description for record view description"
 , "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record view description"
 , "annal:view_fields":
-  [ { "annal:field_id":             "View_id"
-    , "annal:field_placement":      "small:0,12;medium:0,6"
+  [ { "annal:field_id":               "View_id"
+    , "annal:field_placement":        "small:0,12;medium:0,6"
     }
-  , { "annal:field_id":             "View_label"
-    , "annal:field_placement":      "small:0,12"
+  , { "annal:field_id":               "View_label"
+    , "annal:field_placement":        "small:0,12"
     }
-  , { "annal:field_id":             "View_comment"
-    , "annal:field_placement":      "small:0,12"
+  , { "annal:field_id":               "View_comment"
+    , "annal:field_placement":        "small:0,12"
     }
-  , { "annal:repeat_id":            "View_fields"
-    , "annal:repeat_label":         "Record fields"
-    , "annal:repeat_btn_label":     "field"
-    , "annal:repeat_for_values":    "annal:view_fields"
-    , "annal:repeat_entity_type":   "_field"
-    , "annal:repeat_entity_id":     "annal:field_id"
+  , { "annal:repeat_id":              "View_fields"
+    , "annal:repeat_label":           "Fields"
+    , "annal:repeat_btn_label":       "field"
+    , "annal:repeat_entity_values":   "annal:view_fields"
+    , "annal:repeat_context_values":  "repeat"
     , "annal:repeat":
-      [ { "annal:field_id":             "Field_id"
-        , "annal:field_placement":      "small:0,12; medium:0,6"
+      [ { "annal:field_id":               "Field_sel"
+        , "annal:field_placement":        "small:0,12; medium:0,6"
         }
-      , { "annal:field_id":             "Field_placement"
-        , "annal:field_placement":      "small:0,12; medium:6,6"
+      , { "annal:field_id":               "Field_placement"
+        , "annal:field_placement":        "small:0,12; medium:6,6"
         }
       ]
     }

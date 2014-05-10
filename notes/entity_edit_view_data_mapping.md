@@ -120,9 +120,7 @@ The context is created by combining stored data with a view description.  Some c
         3:  RepeatValuesMap(
               c="repeat",
               e="annal:view_fields",    // repeat for values of entity field
-              f=FieldListValueMap(
-                  // type="_field",
-                  // id_field="field_id",
+              f=FieldListValueMap(coll, c="fields"
                   fields=(
                       [ FieldDescription(
                           { "annal:field_id":        "Field_id"
@@ -178,22 +176,23 @@ This example has a label, comment and any number of tags.  It avoids the self-re
     , "rdfs:label":         "Tagged entity view"
     , "rdfs:comment":       "Tagged entity view, displaying label, command and any number of tags"
     , "annal:view_fields":
-      [ { "annal:field_id":             "Example_label"
-        , "annal:field_placement":      "small:0,12"
+      [ { "annal:field_id":               "Example_label"
+        , "annal:field_placement":        "small:0,12"
         }
-      , { "annal:field_id":             "Example_comment"
-        , "annal:field_placement":      "small:0,12"
+      , { "annal:field_id":               "Example_comment"
+        , "annal:field_placement":        "small:0,12"
         }
-      , { "annal:repeat_id":            "View_tags"
-        , "annal:repeat_label":         "Tags"
-        , "annal:repeat_btn_label":     "tag"
-        , "annal:repeat_for_values":    "ex:tags"
-        , "annal:repeat":
-          [ { "annal:field_id":             "Tag_name"
-            , "annal:field_placement":      "small:0,12; medium:0,6"
+      , { "annal:repeat_id":              "View_tags"
+        , "annal:repeat_label":           "Tags"
+        , "annal:repeat_btn_label":       "tag"
+        , "annal:repeat_entity_values":   "ex:tags"
+        , "annal:repeat_context_values":  "tags"
+        , "annal:view_fields":
+          [ { "annal:field_id":               "Tag_name"
+            , "annal:field_placement":        "small:0,12; medium:0,6"
             }
-          , { "annal:field_id":             "Tag_label"
-            , "annal:field_placement":      "small:0,12; medium:6,6"
+          , { "annal:field_id":               "Tag_label"
+            , "annal:field_placement":        "small:0,12; medium:6,6"
             }
           ]
         }
@@ -295,25 +294,26 @@ This example has a label, comment and any number of tags.  It avoids the self-re
 
     "fields":
         0:  FieldValueMap(
-              c="fields", 
               f=FieldDescription(
                   { "annal:field_id":        "Example_label"
                   , "annal:field_placement": "small:0,12"
                   })
               )
         1:  FieldValueMap(
-              c="fields", 
               f=FieldDescription(
                   { "annal:field_id":        "Example_comment"
                   , "annal:field_placement": "small:0,12"
                   })
               )
         2:  RepeatValuesMap(
-              c="tags",
-              e="ex:tags",
-              f=FieldListValueMap(
-                  // type="Tag",
-                  // id_field="field_id",
+              repeat=RepeatDescription(
+                  { "annal:repeat_id":              "View_tags" // ID for this repeat group
+                  , "annal:repeat_label":           "Tags"      // Label for this repeat group
+                  , "annal:repeat_btn_label":       "tag"       // Button label for add/remove buttons
+                  , "annal:repeat_entity_values":   "ex:tags"   // Repeated values key in entity
+                  , "annal:repeat_context_values":  "tags"      // Repeated values key in context
+                  })
+              fields=FieldListValueMap(coll,
                   fields=(
                       [ FieldDescription(
                           { "annal:field_id":        "Tag_name"
@@ -325,12 +325,72 @@ This example has a label, comment and any number of tags.  It avoids the self-re
                           })
                       ])
                   ),
-              r=RepeatDescription(
-                  { 'annal:repeat_id':        "View_tags"       // ID for this repeat group
-                  , 'annal:repeat_label':     "Tags"            // Label for this repeat group
-                  , 'annal:repeat_btn_label': "tag"             // Button label for add/remove buttons
-                  })
               )
+
+Note that the repeated values map does two things when applied to create the context data for an entity:
+(1) it maps the repeated field data into the context data, and (2) it creates a repeated-view field 
+structure that is interpreted by the rendering template to generate the display page.
+
+The above context structure appears to the form-gererating template something like this:
+
+    "title":                <title>
+    "coll_id":              <coll_id>
+    "type_id":              <type_id>
+    "view_id":              <view_id>
+    "action":               <action>
+    "continuation_uri":     <continuation_uri>
+
+    "entity_uri":           "ex:Example"
+    "entity_id":            "Example"
+    "entity_type":          "Example_type"
+    "orig_id":              "Example"
+    "orig_type":            "Example_type"
+
+    "entity_label":         "Example label"
+    "entity_comment":       "Example comment"
+
+    "fields":
+      [ FieldValueMap(
+            f=FieldDescription(
+                { "annal:field_id":        "Example_label"
+                , "annal:field_placement": "small:0,12"
+                })
+            )
+      , FieldValueMap(
+            f=FieldDescription(
+                { "annal:field_id":        "Example_comment"
+                , "annal:field_placement": "small:0,12"
+                })
+            )
+      , "tags":
+        [ { "tag_name":               "tag1"
+          , "tag_label":              "tag1 label"
+          , "repeat_id":              "View_tags"
+          , "repeat_entity_values":   "ex:tags"
+          , "repeat_context_values":  "tags"
+          , "repeat_label":           "Tags"
+          , "repeat_btn_label":       "tag"
+          , "fields":
+              [ FieldValueMap(
+                    f=FieldDescription(
+                        { "annal:field_id":        "Tag_name"
+                        , "annal:field_placement": "small:0,12; medium:0,6"
+                        })
+                    )
+              , FieldValueMap(
+                    f=FieldDescription(
+                        { "annal:field_id":        "Tag_label"
+                        , "annal:field_placement": "small:0,12; medium:6,6"
+                        })
+                    )
+              ]
+          }
+        , { "tag_name":               "tag2"
+          , "tag_label":              "tag2 label"
+          , ... (etc.)
+          }
+        ]
+
 
 ## Form data
 
@@ -364,16 +424,15 @@ This example has a label, comment and any number of tags.  It avoids the self-re
   - Already done.
 * `FieldValueMap` - an indirect mapping between an entity field, a context field and a form field, controlled by field description data (cf. FieldDescription)  Implemented, but update to use FieldDescription values.
   - Already works with FieldDescription values.
-* `FieldListValueMap` - try to replace existing ad-hoc logic (cf. EntityEditBase.get_form_entityvaluemap? various functions?) for dealing with field mapping.  
-  Compared with GroupRepeatMap, the entity selection is explicit.
-  This could be suitable to replace GroupRepeatMap.
+* `FieldListValueMap` - try to replace existing ad-hoc logic (cf. EntityEditBase.get_form_entityvaluemap? various functions?) for dealing with field mapping.
+  - Done.
 * `RepeatValuesMap` - this describes a group of repeated fields.
 
 The value map objects are constructed to take account of a particular view description, and all support the following methods:
 
-* `map_entity_to_context(context, entity_values, extras={})` - maps entity values, usually augmented by entity-independent "extras" values, adding the resulting values to the supplied `context` dictionary.  The form of expected entity_values may be constrained by the particular value mapping class used.
-* `map_form_to_entity(values, form_data)` - maps form data to entity value fields, which are added to or replaced in the supplied `values` dictionary.
-* `map_form_to_context(context, form_data, extras={})`
+* `map_entity_to_context(entity_values, extras={})` - maps entity values, usually augmented by entity-independent "extras" values, returning the resulting values as a dictionary that can be used to update the context under construction.  The form of expected entity_values may be constrained by the particular value mapping class used.
+* `map_form_to_entity(form_data)` - maps form data to entity value fields, which are returned as a dictionary that can be used to update an entity values dictionary under construction.
+* `map_form_to_context(form_data, extras={})`
 
 
 

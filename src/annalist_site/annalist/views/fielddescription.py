@@ -38,6 +38,8 @@ class FieldDescription(object):
             raise ValueError("Can't retrieve definition for field %s"%(field_id))
         field_name  = recordfield.get("annal:field_name", field_id)   # Field name in form
         log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
+        # log.info("FieldDescription: field['annal:field_placement'] %s"%(field['annal:field_placement']))
+        # log.info("FieldDescription: field_placement %r"%(get_placement_classes(field['annal:field_placement']),))
         self._field_context = (
             { 'field_id':               field_id
             , 'field_name':             field_name
@@ -53,7 +55,19 @@ class FieldDescription(object):
             , 'field_property_uri':     recordfield['annal:property_uri']
             , 'field_options':          recordfield.get('annal:options', None)
             })
+        # log.info("FieldDescription: %s"%field_id)
+        # log.info("FieldDescription.field %r"%field)
+        # log.info("FieldDescription.field_context %r"%(self._field_context,))
+        # log.info("FieldDescription.field_placement %r"%(self._field_context['field_placement'],))
         return
+
+    def __repr__(self):
+        return repr(self._field_context)
+        # return (
+        #     "FieldDescription.field_id: %s\n"%(self._field_context["field_id"])+
+        #     "FieldDescription.field_name: %s\n"%(self._field_context["field_name"])+
+        #     "FieldDescription.field_property_uri: %s\n"%(self._field_context["field_property_uri"])
+        #     )
 
     # Define methods to facilitate access to values using dictionary operations
     # on the FieldDescription object

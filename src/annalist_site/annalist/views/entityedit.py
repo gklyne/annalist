@@ -102,7 +102,8 @@ class GenericEntityEditView(EntityEditBaseView):
             type_id             = type_id,
             type_ids            = type_ids,
             orig_id             = entity_id,
-            orig_type           = type_id
+            orig_type           = type_id,
+            view_id             = view_id
             )
         # generate and return form data
         return (
@@ -141,6 +142,8 @@ class GenericEntityEditView(EntityEditBaseView):
         continuation_uri     = (request.POST.get('continuation_uri', None) or
             self.view_uri('AnnalistEntityDefaultListType', coll_id=coll_id, type_id=type_id)
             )
+        view_id              = request.POST.get('view_id', view_id)
+        action               = request.POST.get('action', action)
         # log.info(
         #     "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
         #       (coll_id, type_id, entity_id, view_id, action)
@@ -148,21 +151,18 @@ class GenericEntityEditView(EntityEditBaseView):
         # log.info("continuation_uri %s, type_id %s"%(continuation_uri, type_id))
         type_ids = [ t.get_id() for t in self.collection.types() ]
         context_extra_values = (
-            { 'coll_id':          coll_id
+            { 'title':            self.site_data()["title"]
+            , 'heading':          "Entity '%s' of type '%s' in collection '%s'"%
+                                  (entity_id, type_id, coll_id)
+            , 'action':           action
+            , 'continuation_uri': continuation_uri
+            , 'coll_id':          coll_id
             , 'type_id':          type_id
             , 'type_ids':         type_ids
-            , 'continuation_uri': continuation_uri
+            , 'orig_id':          orig_entity_id
+            , 'orig_type':        orig_entity_type
+            , 'view_id':          view_id
             })
-        # messages = (
-        #     { 'parent_heading':         message.RECORD_TYPE_ID
-        #     , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS%(type_id, coll_id)
-        #     , 'entity_heading':         message.ENTITY_DATA_ID
-        #     , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
-        #     , 'entity_exists':          message.ENTITY_DATA_EXISTS%(entity_id, type_id, coll_id)
-        #     , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS%(entity_id, type_id, coll_id)
-        #     , 'entity_type_heading':    message.ENTITY_TYPE_ID
-        #     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-        #     })
         message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
         messages = (
             { 'parent_heading':         self.entitymessages['parent_heading']%message_vals

@@ -16,50 +16,85 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-import collections
+# from annalist.fields.render_utils   import bound_field
 
-from annalist.fields.render_utils   import bound_field
-
-# Named tuple is base class for RepeatValuesMap:
-
-_RepeatValuesMap_tuple = collections.namedtuple("RepeatValuesMap", ("c", "e", "r", "f"))
-
-class RepeatValuesMap(_RepeatValuesMap_tuple):
+class RepeatValuesMap(object):
     """
     Define an entry in an entity value mapping table corresponding to a
     group of fields that is repeated for multiple values in an entity.  
 
-    c       request context field name for the repeated groups.
-    e       is the name of the entity field containing a list values for which the
-            field group is iterated.
-    r       a group of field descriptions to be repeated for each provided set of values.
-            The value supplied is in the form of an entity value map, and the named
-            context field is populated with a list of "sub-context" values, each of
-            which corresponds to a supplied entity or repeated value.
-    f       is a dictionary of additional values that are used in generating form values
-            related to te repeated fields.
+    repeat  is a `RepeatDescription` value describing the repeated data.
+    fields  a `FieldListValueMap` object describing a set of fields to be 
+            displayed for each repeated value.
     """
 
-    def map_entity_to_context(self, entityvals, extras=None):
-        assert False, "@@TODO RepeatValuesMap.map_entity_to_context, etc."
+    def __init__(self, c=None, repeat=None, fields=None):
+        self.e = repeat["repeat_entity_values"]
+        self.c = c
+        self.r = repeat
+        self.f = fields
+        return
+
+    def __repr__(self):
+        return (
+            "RepeatValuesMap.c: %s\n"%(self.c)+
+            "RepeatValuesMap.e: %r\n"%(self.e)+
+            "RepeatValuesMap.r: %r\n"%(self.r)+
+            "RepeatValuesMap.f: %r\n"%(self.f)
+            )
+
+    def map_entity_to_context(self, entityval, extras=None):
+        """
+        Return a context dictionary for mapping entity list values to repeated
+        field descriptions in a displayed form.
+        """
         subcontext = {}
-        if self.c:
-            subcontext[self.c] = []
-            for entity in entityvals:
-                grp_context = { 'entity_id': entity.get_id(), 'type_id': entity.get_type_id() }
-                for kmap in self.g:
-                    grp_context.update(kmap.map_entity_to_context(entity, extras=extras))
-                subcontext[self.c].append(grp_context)
+        repeatextras = extras.copy().update(self.r)
+        # log.info("RepeatValuesMap.map_entity_to_context, self.e: %s, entityval %r, entityval[self.e]: %r"%(self.e, entityval, entityval.get(self.e, None)))
+        repeatcontext = []
+        if self.e in entityval:
+            for repeatedval in entityval[self.e]:
+                # log.info("RepeatValuesMap.map_entity_to_context: repeatedval %r"%repeatedval)
+                fieldscontext = self.f.map_entity_to_context(repeatedval, extras=repeatextras)
+                # log.info("RepeatValuesMap.map_entity_to_context: fieldscontext %r"%fieldscontext)
+                repeatcontext.append(fieldscontext)
+        repeatcontextkey = self.r['repeat_context_values']
+        subcontext[self.c] = (
+            { 'repeat_id':              self.r['repeat_id']
+            , 'repeat_label':           self.r['repeat_label']
+            , 'repeat_btn_label':       self.r['repeat_btn_label']
+            , 'repeat_context_values':  repeatcontextkey
+            , repeatcontextkey:         repeatcontext
+            })
+        # log.info("subcontext: %r"%(subcontext))
         return subcontext
 
     def map_form_to_context(self, formvals, extras=None):
-        # @@TODO
-        log.warn("RepeatValuesMap.map_form_to_context not supported")
-        return {}
+        # @@TODO: repeats entity value logic; candidate for removal by handling all context 
+        #         regeneration via entity values
+        # log.info(repr(formvals))
+        prefix_template = self.r['repeat_id']+"__%d__"
+        prefix_n        = 0
+        repeatvals      = []
+        while True:
+            vals = self.f.map_form_to_context_repeated_items(formvals, prefix_template%prefix_n)
+            if vals is None:
+                break
+            repeatvals.append(vals)
+            prefix_n += 1
+        return {self.c: repeatvals}
 
     def map_form_to_entity(self, formvals):
-        # @@TODO
-        log.warn("RepeatValuesMap.map_form_to_entity not supported")
-        return {}
+        # log.info(repr(formvals))
+        prefix_template = self.r['repeat_id']+"__%d__"
+        prefix_n        = 0
+        repeatvals      = []
+        while True:
+            vals = self.f.map_form_to_entity_repeated_items(formvals, prefix_template%prefix_n)
+            if vals is None:
+                break
+            repeatvals.append(vals)
+            prefix_n += 1
+        return {self.e: repeatvals}
 
 # End.

@@ -50,14 +50,26 @@ class AnnalistTestCase(TestCase):
         to be dictionaries which are matched recursively. (This logic is used when 
         checking sub-contexts used to render data-defined forms.)
         """
+        # log.info("\n***********\nexpect_dict %r"%(expect_dict))
+        # log.info("\n-----------\nactual_dict %r"%(actual_dict))
         for k in expect_dict:
             self.assertTrue(k in actual_dict, prefix+"Expected key %s not found in actual"%(k))
             if isinstance(expect_dict[k],list):
                 for i in range(len(expect_dict[k])):
+                    # if i >= len(actual_dict[k]):
+                    #     log.info("\n***********\nexpect_dict %r"%(expect_dict))
+                    #     log.info("\n-----------\nactual_dict %r"%(actual_dict))
+                    #     log.info("\n***********")
+                    self.assertTrue(i < len(actual_dict[k]), prefix+"Actual dict key %s has no element %d"%(k,i))
                     self.assertDictionaryMatch(actual_dict[k][i], expect_dict[k][i], prefix="Index %d, "%i)
             else:
+                # if actual_dict[k] != expect_dict[k]:
+                #     log.info("\n***********\nexpect_dict %r"%(expect_dict))
+                #     log.info("\n-----------\nactual_dict %r"%(actual_dict))
+                #     log.info("\n***********")
                 self.assertEqual(actual_dict[k], expect_dict[k], 
                     prefix+"Key %s: actual '%s' expected '%s'"%(k, actual_dict[k], expect_dict[k]))
+        # log.info("\n****** matched")
         return
 
 # End.

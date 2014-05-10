@@ -28,11 +28,16 @@ class RepeatDescription(object):
         field       is a dictionary with the field description from a view or list description.
         """
         self._repeat_context = (
-            { 'repeat_id':          repeat['annal:repeat_id']
-            , 'repeat_label':       repeat['annal:repeat_label']
-            , 'repeat_btn_label':   repeat['annal:repeat_btn_label']
+            { 'repeat_id':              repeat['annal:repeat_id']
+            , 'repeat_label':           repeat['annal:repeat_label']
+            , 'repeat_btn_label':       repeat['annal:repeat_btn_label']
+            , 'repeat_entity_values':   repeat['annal:repeat_entity_values']
+            , 'repeat_context_values':  repeat['annal:repeat_context_values']
             })
         return
+
+    def __repr__(self):
+        return "RepeatDescription.repeat context: %r"%(self._repeat_context)
 
     # Define methods to facilitate access to values using dictionary operations
     # on the RepeatDescription object

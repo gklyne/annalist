@@ -30,9 +30,8 @@ from django.conf                    import settings
 
 from annalist.fields.render_utils   import bound_field
 
-
 # Named tuple is base class for FieldValueMap:
-
+# @@TODO: get rid of this and use simple constructor
 _FieldValueMap_tuple = collections.namedtuple("FieldValueMap", ("c", "f"))
 
 class FieldValueMap(_FieldValueMap_tuple):
@@ -46,7 +45,7 @@ class FieldValueMap(_FieldValueMap_tuple):
     in the bound_field class.
 
     c       request context field name for the field values
-    f       field description structure (cf. `EntityEditBaseView.get_field_context`)
+    f       field description structure (cf. `FieldDescription`)
 
     NOTE: The form rendering template iterates over the context field values to be 
     added to the form display.  The constructor for this object appends the current
@@ -85,6 +84,8 @@ class FieldValueMap(_FieldValueMap_tuple):
         return self._map_to_context(entityvals, self.e, extras)
 
     def map_form_to_context(self, formvals, extras=None):
+        # @@TODO: repeats entity value logic; candidate for removal by handling all context 
+        #         regeneration via entity values
         return self._map_to_context(formvals, self.i, extras)
 
     def map_form_to_entity(self, formvals):
@@ -95,5 +96,39 @@ class FieldValueMap(_FieldValueMap_tuple):
             if v:
                 entityvals[self.e] = v
         return entityvals
+
+    def map_form_to_entity_repeated_item(self, formvals, prefix):
+        """
+        Extra helper method used when mapping repeated field items to repeated entity values.
+        The field name extracted is constructed using the supplied prefix string.
+
+        Returns None if the prefixed value does not exist, which may be used as a loop
+        termination condition.
+        """
+        # log.info("Form->entity: prefix %s, fieldname %s"%(prefix, self.i))
+        v = formvals.get(prefix+self.i, None)
+        if v:
+            return {self.e: v}
+        return None
+
+    def map_form_to_context_repeated_item(self, formvals, prefix):
+        """
+        Extra helper method used when mapping repeated field items to repeated context values.
+        The field name extracted is constructed using the supplied prefix string.
+
+        Returns None if the prefixed value does not exist, which may be used as a loop
+        termination condition.
+        """
+        # @@TODO: repeats entity value logic; candidate for removal by handling all context 
+        #         regeneration via entity values
+        # log.info("Form->entity: prefix %s, fieldname %s"%(prefix, self.i))
+        v = formvals.get(prefix+self.i, None)
+        if v:
+            return bound_field(
+                field_description=self.f, 
+                entity={self.i: v}, key=self.i,
+                options=[], extras={}
+                )
+        return None
 
 # End.

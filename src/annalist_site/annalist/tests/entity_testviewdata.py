@@ -93,32 +93,9 @@ def recordview_edit_uri(action=None, coll_id=None, view_id=None):
 
 #   -----------------------------------------------------------------------------
 #
-#   ----- RecordView data
+#   ----- RecordView data for default view
 #
 #   -----------------------------------------------------------------------------
-
-
-# { "@id":                "annal:views/Default_view"
-# , "annal:id":           "default_view"
-# , "annal:type":         "annal:display/RecordView"
-# , "annal:record_type":  "annal:DefaultType"
-# , "rdfs:label":         "View description for default record view"
-# , "rdfs:comment":       "This resource describes the default form used for viewing and editing records."
-# , "annal:view_fields":
-#   [ { "annal:field_id":         "Entity_id"
-#     , "annal:field_placement":  "small:0,12;medium:0,6"
-#     }
-#   , { "annal:field_id":         "Entity_type"
-#     , "annal:field_placement":  "small:0,12;medium:6,6right"
-#     }
-#   , { "annal:field_id":         "Entity_label"
-#     , "annal:field_placement":  "small:0,12"
-#     }
-#   , { "annal:field_id":         "Entity_comment"
-#     , "annal:field_placement":  "small:0,12"
-#     }
-#   ]
-# }
 
 def recordview_value_keys():
     return set(
@@ -177,7 +154,7 @@ def recordview_read_values(
 
 #   -----------------------------------------------------------------------------
 #
-#   ----- Entity data in recordtype view
+#   ----- Data in recordview view for default entity data
 #
 #   -----------------------------------------------------------------------------
 
@@ -190,23 +167,34 @@ def recordview_entity_view_context_data(
         , 'coll_id':            coll_id
         , 'type_id':            '_view'
         , 'orig_id':            'orig_view_id'
+        , 'record_type':        'annal:DefaultType'
         , 'fields':
           [ { 'field_label':        'Id'
             , 'field_render_view':  'field/annalist_view_entityref.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_id':           'View_id'
+            , 'field_id':           'Entity_id'
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
+            , 'options':            []
+            }
+          , { 'field_label':        'Type'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'entity_type'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
+            , 'field_id':           'Entity_type'
+            , 'field_value_type':   'annal:Text'
+            , 'field_value':        '...'
             , 'options':            []
             }
           , { 'field_label':        'Label'
             , 'field_render_view':  'field/annalist_view_text.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
-            , 'field_name':         'View_label'
+            , 'field_name':         'Entity_label'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_id':           'View_label'
+            , 'field_id':           'Entity_label'
             , 'field_value_type':   'annal:Text'
             , 'field_value':        '%s data ... (%s/%s)'%(update, coll_id, view_id)
             , 'options':            []
@@ -214,21 +202,20 @@ def recordview_entity_view_context_data(
           , { 'field_label':        'Help'
             , 'field_render_view':  'field/annalist_view_textarea.html'
             , 'field_render_edit':  'field/annalist_edit_textarea.html'
-            , 'field_name':         'View_comment'
+            , 'field_name':         'Entity_comment'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_id':           'View_comment'
+            , 'field_id':           'Entity_comment'
             , 'field_value_type':   'annal:Longtext'
             , 'field_value':        '%s description ... (%s/%s)'%(update, coll_id, view_id)
             , 'options':            []
             }
-          # More...
           ]
         , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_view")
         })
     if view_id:
         context_dict['fields'][0]['field_value'] = view_id
-        context_dict['fields'][1]['field_value'] = '%s %s/%s'%(update, coll_id, view_id)
-        context_dict['fields'][2]['field_value'] = '%s help for %s in collection %s'%(update, view_id, coll_id)
+        context_dict['fields'][2]['field_value'] = '%s %s/%s'%(update, coll_id, view_id)
+        context_dict['fields'][3]['field_value'] = '%s help for %s in collection %s'%(update, view_id, coll_id)
         context_dict['orig_id']     = view_id
     if orig_id:
         context_dict['orig_id']     = orig_id
@@ -244,7 +231,183 @@ def recordview_entity_view_form_data(
         { 'View_label':         '%s data ... (%s/%s)'%(update, coll_id, view_id)
         , 'View_comment':       '%s description ... (%s/%s)'%(update, coll_id, view_id)
         , 'orig_id':            'orig_view_id'
+        , 'record_type':        'annal:DefaultType'
         , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_view")
+        # View fields
+        , 'View_fields__0__Field_id':           "Entity_id"
+        , 'View_fields__0__Field_placement':    "small:0,12;medium:0,6"
+        , 'View_fields__1__Field_id':           "Entity_type"
+        , 'View_fields__1__Field_placement':    "small:0,12;medium:6,6right"
+        , 'View_fields__2__Field_id':           "Entity_label"
+        , 'View_fields__2__Field_placement':    "small:0,12"
+        , 'View_fields__3__Field_id':           "Entity_comment"
+        , 'View_fields__3__Field_placement':    "small:0,12"
+        })
+    if view_id:
+        form_data_dict['entity_id']     = view_id
+        form_data_dict['orig_id']       = view_id
+        form_data_dict['View_label']    = '%s %s/%s'%(update, coll_id, view_id)
+        form_data_dict['View_comment']  = '%s help for %s in collection %s'%(update, view_id, coll_id)
+        form_data_dict['View_uri']      = TestBaseUri + "/c/%s/d/_view/%s/"%(coll_id, view_id)
+        form_data_dict['orig_type']     = "_view"
+    if orig_id:
+        form_data_dict['orig_id']       = orig_id
+    if action:
+        form_data_dict['action']        = action
+    if cancel:
+        form_data_dict['cancel']        = "Cancel"
+    else:
+        form_data_dict['save']          = 'Save'
+    return form_data_dict
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- Data in recordview view for view description data
+#
+#   -----------------------------------------------------------------------------
+
+def recordview_view_context_data(
+        coll_id="testcoll", view_id=None, orig_id=None, view_ids=[],
+        action=None, update="RecordView"
+    ):
+    context_dict = (
+        { 'title':              site_title()
+        , 'coll_id':            coll_id
+        , 'type_id':            '_view'
+        , 'orig_id':            'orig_view_id'
+        , 'record_type':        'annal:RecordView'
+        , 'fields':
+          [ { 'field_id':           'View_id'
+            , 'field_label':        'Id'
+            , 'field_render_view':  'field/annalist_view_entityref.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'entity_id'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+            , 'field_value_type':   'annal:Slug'
+            # , 'field_value':      (Supplied separately)
+            , 'options':            []
+            }
+          , { 'field_id':           'View_label'
+            , 'field_label':        'Label'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'View_label'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_value_type':   'annal:Text'
+            , 'field_value':        '%s data ... (%s/%s)'%(update, coll_id, view_id)
+            , 'options':            []
+            }
+          , { 'field_id':           'View_comment'
+            , 'field_label':        'Help'
+            , 'field_render_view':  'field/annalist_view_textarea.html'
+            , 'field_render_edit':  'field/annalist_edit_textarea.html'
+            , 'field_name':         'View_comment'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_value_type':   'annal:Longtext'
+            , 'field_value':        '%s description ... (%s/%s)'%(update, coll_id, view_id)
+            , 'options':            []
+            }
+          , { "repeat_id":              "View_fields"
+            , "repeat_context_values":  "repeat"
+            , "repeat_label":           "Fields"
+            , "repeat_btn_label":       "field"
+            , "repeat":
+              [ { "fields":
+                  [ { 'field_id':           'Field_sel'
+                    , 'field_label':        'Select'
+                    , 'field_render_view':  'field/annalist_view_entityref.html'
+                    , 'field_render_edit':  'field/annalist_edit_text.html'
+                    , 'field_name':         'Field_id'
+                    , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+                    , 'field_value_type':   'annal:Slug'
+                    , 'field_value':        "View_id"
+                    }
+                  , { 'field_id':           'Field_placement'
+                    , 'field_label':        'Size and position'
+                    , 'field_render_view':  'field/annalist_view_text.html'
+                    , 'field_render_edit':  'field/annalist_edit_text.html'
+                    , 'field_name':         'Field_placement'
+                    , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
+                    , 'field_value_type':   'annal:Placement'
+                    , 'field_value':        'small:0,12;medium:0,6'
+                    }
+                  ]
+                }
+              , { "fields":
+                  [ { 'field_id':           'Field_sel'
+                    , 'field_label':        'Select'
+                    , 'field_render_view':  'field/annalist_view_entityref.html'
+                    , 'field_render_edit':  'field/annalist_edit_text.html'
+                    , 'field_name':         'Field_id'
+                    , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+                    , 'field_value_type':   'annal:Slug'
+                    , 'field_value':        "View_label"
+                    }
+                  , { 'field_id':           'Field_placement'
+                    , 'field_label':        'Size and position'
+                    , 'field_render_view':  'field/annalist_view_text.html'
+                    , 'field_render_edit':  'field/annalist_edit_text.html'
+                    , 'field_name':         'Field_placement'
+                    , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
+                    , 'field_value_type':   'annal:Placement'
+                    , 'field_value':        'small:0,12'
+                    }
+                  ]
+                }
+              , { "fields":
+                  [ { 'field_id':           'Field_sel'
+                    , 'field_label':        'Select'
+                    , 'field_render_view':  'field/annalist_view_entityref.html'
+                    , 'field_render_edit':  'field/annalist_edit_text.html'
+                    , 'field_name':         'Field_id'
+                    , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+                    , 'field_value_type':   'annal:Slug'
+                    , 'field_value':        "View_comment"
+                    }
+                  , { 'field_id':           'Field_placement'
+                    , 'field_label':        'Size and position'
+                    , 'field_render_view':  'field/annalist_view_text.html'
+                    , 'field_render_edit':  'field/annalist_edit_text.html'
+                    , 'field_name':         'Field_placement'
+                    , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
+                    , 'field_value_type':   'annal:Placement'
+                    , 'field_value':        'small:0,12'
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_view")
+        })
+    if view_id:
+        context_dict['fields'][0]['field_value'] = view_id
+        context_dict['fields'][1]['field_value'] = '%s %s/%s'%(update, coll_id, view_id)
+        context_dict['fields'][2]['field_value'] = '%s help for %s in collection %s'%(update, view_id, coll_id)
+        context_dict['orig_id']     = view_id
+    if orig_id:
+        context_dict['orig_id']     = orig_id
+    if action:  
+        context_dict['action']      = action
+    return context_dict
+
+def recordview_view_form_data(
+        coll_id="testcoll", 
+        view_id=None, orig_id=None, 
+        action=None, cancel=None, update="RecordView"):
+    form_data_dict = (
+        { 'View_label':         '%s data ... (%s/%s)'%(update, coll_id, view_id)
+        , 'View_comment':       '%s description ... (%s/%s)'%(update, coll_id, view_id)
+        , 'orig_id':            'orig_view_id'
+        , 'record_type':        'annal:RecordView'
+        , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_view")
+        # View fields
+        , 'View_fields__0__Field_id':           "View_id"
+        , 'View_fields__0__Field_placement':    "small:0,12;medium:0,6"
+        , 'View_fields__1__Field_id':           "View_label"
+        , 'View_fields__1__Field_placement':    "small:0,12"
+        , 'View_fields__2__Field_id':           "View_comment"
+        , 'View_fields__2__Field_placement':    "small:0,12"
         })
     if view_id:
         form_data_dict['entity_id']     = view_id
