@@ -111,7 +111,7 @@ class bound_field(object):
         # log.info("__getattr__ %s"%name)
         # log.info("self._key %s"%self._key)
         # log.info("self._entity %r"%self._entity)
-        if name == "entity_type_id" or (name == "field_value" and self._key == "entity_type_id"):
+        if name == "entity_type_id":
             if self._entity and isinstance(self._entity, EntityRoot):
                 return self._entity.get_type_id()
             else:
@@ -130,6 +130,8 @@ class bound_field(object):
                 return self._entity[self._key]
             elif self._extras and self._key in self._extras:
                 return self._extras[self._key]
+            elif self._key == "entity_type_id":
+                return self.entity_type_id
             else:
                 # log.debug("No value for %s"%(self._key))
                 return self._field_description.get('field_placeholder', "...")
