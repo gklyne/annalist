@@ -266,7 +266,7 @@ class EntityGenericListView(EntityEditBaseView):
         # Report unexpected form data
         # This shouldn't happen, but just in case...
         # Redirect to continuation with error
-        # @@TODO add log.error here
+        log.error("Unexpected form data posted to %s: %r"(request.get_full_path(), request.POST))
         err_values = self.error_params(
             message.UNEXPECTED_FORM_DATA%(request.POST), 
             message.SYSTEM_ERROR

@@ -78,14 +78,6 @@ class FieldListValueMap(object):
                 listcontext[self.c].append(fv['field'])
         return listcontext
 
-    def map_form_to_context(self, formvals, extras=None):
-        # @@TODO: repeats entity value logic; candidate for removal by handling all context 
-        #         regeneration via entity values
-        vals = {}
-        for f in self.fs:
-            vals.update(f.map_form_to_context(formvals))
-        return vals
-
     def map_form_to_entity(self, formvals):
         vals = {}
         for f in self.fs:
@@ -103,23 +95,6 @@ class FieldListValueMap(object):
         vals = {}
         for f in self.fs:
             v = f.map_form_to_entity_repeated_item(formvals, prefix)
-            if v is None: return v
-            vals.update(v)
-        return vals
-
-    def map_form_to_context_repeated_items(self, formvals, prefix):
-        """
-        Extra helper method used when mapping repeated field items to repeated entity values.
-        The field names extracted are constructed using the supplied prefix string.
-
-        Returns None if a prefixed value does not exist, which may be used as a loop
-        termination condition.
-        """
-        # @@TODO: repeats entity value logic; candidate for removal by handling all context 
-        #         regeneration via entity values
-        vals = {}
-        for f in self.fs:
-            v = f.map_form_to_context_repeated_item(formvals, prefix)
             if v is None: return v
             vals.update(v)
         return vals

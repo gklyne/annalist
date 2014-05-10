@@ -24,17 +24,11 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-import collections
-
 from django.conf                    import settings
 
 from annalist.fields.render_utils   import bound_field
 
-# Named tuple is base class for FieldValueMap:
-# @@TODO: get rid of this and use simple constructor
-_FieldValueMap_tuple = collections.namedtuple("FieldValueMap", ("c", "f"))
-
-class FieldValueMap(_FieldValueMap_tuple):
+class FieldValueMap(object):
     """
     Define an entry in an entity value mapping table corresponding to a
     field value and description, which is added to a list of such fields
@@ -52,13 +46,14 @@ class FieldValueMap(_FieldValueMap_tuple):
     field to a list of field value mappings at the indcated context field.
     """
 
-    def __new__(cls, *args, **kwargs):
-        self = super(FieldValueMap, cls).__new__(cls, *args, **kwargs)
-        self.e = self.f['field_property_uri']
-        self.i = self.f['field_name']
-        return self
+    def __init__(self, c=None, f=None):
+        self.c = c
+        self.f = f
+        self.e = f['field_property_uri']    # entity data key
+        self.i = f['field_name']            # field data key
+        return
 
-    def _map_to_context(self, vals, valkey, extras):
+    def map_entity_to_context(self, entityvals, extras=None):
         """
         Returns a dictionary of values to be added to the display context under construction
         """
@@ -73,20 +68,12 @@ class FieldValueMap(_FieldValueMap_tuple):
                     options = ['(missing options)']
             boundfield = bound_field(
                 field_description=self.f, 
-                entity=vals, key=valkey,
+                entity=entityvals, key=self.f['field_property_uri'],
                 options=options,
                 extras=extras
                 )
             subcontext[self.c] = boundfield
         return subcontext
-
-    def map_entity_to_context(self, entityvals, extras=None):
-        return self._map_to_context(entityvals, self.e, extras)
-
-    def map_form_to_context(self, formvals, extras=None):
-        # @@TODO: repeats entity value logic; candidate for removal by handling all context 
-        #         regeneration via entity values
-        return self._map_to_context(formvals, self.i, extras)
 
     def map_form_to_entity(self, formvals):
         entityvals = {}
@@ -109,26 +96,6 @@ class FieldValueMap(_FieldValueMap_tuple):
         v = formvals.get(prefix+self.i, None)
         if v:
             return {self.e: v}
-        return None
-
-    def map_form_to_context_repeated_item(self, formvals, prefix):
-        """
-        Extra helper method used when mapping repeated field items to repeated context values.
-        The field name extracted is constructed using the supplied prefix string.
-
-        Returns None if the prefixed value does not exist, which may be used as a loop
-        termination condition.
-        """
-        # @@TODO: repeats entity value logic; candidate for removal by handling all context 
-        #         regeneration via entity values
-        # log.info("Form->entity: prefix %s, fieldname %s"%(prefix, self.i))
-        v = formvals.get(prefix+self.i, None)
-        if v:
-            return bound_field(
-                field_description=self.f, 
-                entity={self.i: v}, key=self.i,
-                options=[], extras={}
-                )
         return None
 
 # End.

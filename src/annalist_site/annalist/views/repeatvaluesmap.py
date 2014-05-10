@@ -69,21 +69,6 @@ class RepeatValuesMap(object):
         # log.info("subcontext: %r"%(subcontext))
         return subcontext
 
-    def map_form_to_context(self, formvals, extras=None):
-        # @@TODO: repeats entity value logic; candidate for removal by handling all context 
-        #         regeneration via entity values
-        # log.info(repr(formvals))
-        prefix_template = self.r['repeat_id']+"__%d__"
-        prefix_n        = 0
-        repeatvals      = []
-        while True:
-            vals = self.f.map_form_to_context_repeated_items(formvals, prefix_template%prefix_n)
-            if vals is None:
-                break
-            repeatvals.append(vals)
-            prefix_n += 1
-        return {self.c: repeatvals}
-
     def map_form_to_entity(self, formvals):
         # log.info(repr(formvals))
         prefix_template = self.r['repeat_id']+"__%d__"
