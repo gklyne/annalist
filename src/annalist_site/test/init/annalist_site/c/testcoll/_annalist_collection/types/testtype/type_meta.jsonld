@@ -2,8 +2,6 @@
   "rdfs:label": "RecordType testtype/testtype",
   "rdfs:comment": "RecordType help for testtype in collection testtype",
   "annal:uri": "http://test.example.com/testsite/c/testcoll/d/_type/testtype/",
-  "annal:urihost": "test.example.com",
-  "annal:uripath": "/testsite/c/testcoll/_annalist_collection/types/testtype/",
   "annal:id": "testtype",
   "@id": "./",
   "annal:type": "annal:RecordType"

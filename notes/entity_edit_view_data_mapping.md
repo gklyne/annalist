@@ -370,7 +370,7 @@ The above context structure appears to the form-gererating template something li
           , "repeat_context_values":  "tags"
           , "repeat_label":           "Tags"
           , "repeat_btn_label":       "tag"
-          , "fields":
+          , "repeatfields":
               [ FieldValueMap(
                     f=FieldDescription(
                         { "annal:field_id":        "Tag_name"

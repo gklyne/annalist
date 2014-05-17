@@ -2,8 +2,6 @@
   "rdfs:label": "Entity coll1/type1/entity1",
   "rdfs:comment": "Entity coll coll1, type type1, entity entity1",
   "annal:uri": "http://test.example.com/testsite/c/coll1/d/type1/entity1/",
-  "annal:urihost": "test.example.com",
-  "annal:uripath": "/testsite/c/coll1/d/type1/entity1/",
   "annal:id": "entity1",
   "@id": "./",
   "annal:type": "annal:EntityData"

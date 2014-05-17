@@ -36,7 +36,6 @@ from annalist.models.recordtypedata     import RecordTypeData
 from annalist.views.repeatdescription   import RepeatDescription
 from annalist.views.generic             import AnnalistGenericView
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
-# from annalist.views.fieldvaluemap       import FieldValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
 from annalist.views.grouprepeatmap      import GroupRepeatMap
 
@@ -104,7 +103,7 @@ class EntityEditBaseView(AnnalistGenericView):
     def get_fields_entityvaluemap(self, entityvaluemap, fields):
         # @@TODO: elide this
         entityvaluemap.append(
-            FieldListValueMap(self.collection, fields, c='fields')
+            FieldListValueMap(self.collection, fields)
             )
         return entityvaluemap
 

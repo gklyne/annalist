@@ -29,15 +29,13 @@ class RepeatValuesMap(object):
     """
 
     def __init__(self, c=None, repeat=None, fields=None):
-        self.e = repeat["repeat_entity_values"]
-        self.c = c
         self.r = repeat
         self.f = fields
+        self.e = repeat["repeat_entity_values"]
         return
 
     def __repr__(self):
         return (
-            "RepeatValuesMap.c: %s\n"%(self.c)+
             "RepeatValuesMap.e: %r\n"%(self.e)+
             "RepeatValuesMap.r: %r\n"%(self.r)+
             "RepeatValuesMap.f: %r\n"%(self.f)
@@ -48,26 +46,29 @@ class RepeatValuesMap(object):
         Return a context dictionary for mapping entity list values to repeated
         field descriptions in a displayed form.
         """
-        subcontext = {}
         repeatextras = extras.copy().update(self.r)
         # log.info("RepeatValuesMap.map_entity_to_context, self.e: %s, entityval %r, entityval[self.e]: %r"%(self.e, entityval, entityval.get(self.e, None)))
-        repeatcontext = []
+        rcv = []
         if self.e in entityval:
+            # Iterate over repeated values in entity data:
+            #
+            # There is a special case for `RecordView_view` data, where the data is both
+            # view description and data to be displayed.  The field list iterator 
+            # (`FieldListValueMap`) iterates over the value as view description, and
+            # needs to information about the repeated field structure, distinguished by 
+            # an `annal:repeat_id` value, but the data value iterator here generates a
+            # list of fields to be actually displayed as a repeated value, and does not 
+            # include the repeat field structure description.
             for repeatedval in entityval[self.e]:
-                # log.info("RepeatValuesMap.map_entity_to_context: repeatedval %r"%repeatedval)
-                fieldscontext = self.f.map_entity_to_context(repeatedval, extras=repeatextras)
-                # log.info("RepeatValuesMap.map_entity_to_context: fieldscontext %r"%fieldscontext)
-                repeatcontext.append(fieldscontext)
-        repeatcontextkey = self.r['repeat_context_values']
-        subcontext[self.c] = (
-            { 'repeat_id':              self.r['repeat_id']
-            , 'repeat_label':           self.r['repeat_label']
-            , 'repeat_btn_label':       self.r['repeat_btn_label']
-            , 'repeat_context_values':  repeatcontextkey
-            , repeatcontextkey:         repeatcontext
-            })
-        # log.info("subcontext: %r"%(subcontext))
-        return subcontext
+                if "annal:repeat_id" not in repeatedval:    # special case test
+                    # log.info("RepeatValuesMap.map_entity_to_context: repeatedval %r"%repeatedval)
+                    fieldscontext = self.f.map_entity_to_context(repeatedval, extras=repeatextras)
+                    # log.info("RepeatValuesMap.map_entity_to_context: fieldscontext %r"%fieldscontext)
+                    rcv.append(fieldscontext)
+        repeatcontext    = self.get_structure_description()
+        repeatcontextkey = repeatcontext['repeat_context_values']
+        repeatcontext[repeatcontextkey] = rcv
+        return repeatcontext
 
     def map_form_to_entity(self, formvals):
         # log.info(repr(formvals))
@@ -81,5 +82,13 @@ class RepeatValuesMap(object):
             repeatvals.append(vals)
             prefix_n += 1
         return {self.e: repeatvals}
+
+    def get_structure_description(self):
+        """
+        Helper function returns structure description information
+        """
+        rd = self.r.get_structure_description()
+        rd['repeat_fields_description'] = self.f.get_structure_description()
+        return rd
 
 # End.

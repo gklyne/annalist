@@ -61,13 +61,25 @@ class FieldDescription(object):
         # log.info("FieldDescription.field_placement %r"%(self._field_context['field_placement'],))
         return
 
+    def get_structure_description(self):
+        """
+        Helper function returns field description information
+        (field selector and placement).
+        """
+        return (
+            { 'field_id':           self._field_context['field_id']
+            , 'field_placement':    self._field_context['field_placement']
+            })
+
     def __repr__(self):
-        return repr(self._field_context)
-        # return (
-        #     "FieldDescription.field_id: %s\n"%(self._field_context["field_id"])+
-        #     "FieldDescription.field_name: %s\n"%(self._field_context["field_name"])+
-        #     "FieldDescription.field_property_uri: %s\n"%(self._field_context["field_property_uri"])
-        #     )
+        return (
+            "FieldDescription("+
+            "  { 'field_id': %r\n"%(self._field_context["field_id"])+
+            "  , 'field_name': %r\n"%(self._field_context["field_name"])+
+            "  , 'field_property_uri': %r\n"%(self._field_context["field_property_uri"])+
+            "  })"
+            )
+        # return repr(self._field_context)
 
     # Define methods to facilitate access to values using dictionary operations
     # on the FieldDescription object

@@ -499,7 +499,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
             '/testsite/c/testcoll/l/Fields_list/')
         return
 
-    # @@TODO attempt delete sitedata element
+    @unittest.skip("@@TODO attempt delete sitedata element")
+    def test_post_delete_all_entity(self):
+        assert False, "@@TODO attempt delete sitedata element"
 
     #   -------- close / search / view / default-view / customize--------
 

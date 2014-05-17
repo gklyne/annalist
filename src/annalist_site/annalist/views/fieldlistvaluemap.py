@@ -23,6 +23,7 @@ from annalist.views.fielddescription    import FieldDescription
 from annalist.views.fieldvaluemap       import FieldValueMap
 from annalist.views.repeatdescription   import RepeatDescription
 from annalist.views.repeatvaluesmap     import RepeatValuesMap
+from annalist.views.subgroupvaluemap    import SubgroupValueMap
 
 class FieldListValueMap(object):
     """
@@ -35,48 +36,47 @@ class FieldListValueMap(object):
 
     coll    is the collection object holding the field definitions
     fields  list of field descritpions from a view definition.
-    c       key in returned context which receives a list of field values
 
     NOTE: The form rendering template iterates over the context field values to be 
     added to the form display.  The constructor for this object appends the current
-    field to a list of field value mappings at the indcated context field.
+    field to a list of field value mappings in context field 'fields'.
     """
 
-    def __init__(self, coll, fields=[], c=None):
-        self.c  = c
+    def __init__(self, coll, fields=[]):
+        self.fd = []
         self.fs = []
         for f in fields:
-            log.debug("FieldListValueMap: field %r"%(f))
+            # log.info("\n********\nFieldListValueMap: field %r\n*********"%(f))
             if 'annal:field_id' in f:
                 field_context = FieldDescription(coll, f)
                 log.debug("FieldListValueMap: field_id %s, field_name %s"%
                     (field_context['field_id'], field_context['field_name'])
                     )
-                self.fs.append(FieldValueMap(c='field', f=field_context))
+                self.fd.append(field_context.get_structure_description())
+                self.fs.append(FieldValueMap(f=field_context))
             elif 'annal:repeat_id' in f:
                 repeat_context  = RepeatDescription(f)  # For repeat controls, button labels, etc.
-                repeatfieldsmap = FieldListValueMap(coll, fields=f['annal:repeat'], c='fields')
-                self.fs.append(
-                    RepeatValuesMap(c='field', repeat=repeat_context, fields=repeatfieldsmap)
-                    )
+                repeatfieldsmap = FieldListValueMap(coll, fields=f['annal:repeat'])
+                repeatvaluesmap = RepeatValuesMap(repeat=repeat_context, fields=repeatfieldsmap)
+                # log.info("\n********\nRepeatValuesMap: repeat_id %s, %r"%(f['annal:repeat_id'], repeatvaluesmap))
+                self.fd.append(repeatvaluesmap.get_structure_description())
+                self.fs.append(repeatvaluesmap)
+                # self.fs.append(SubgroupValueMap(repeatvaluesmap, c="repeatsubgroup"))
             else:
                 assert False, "Unknown/unsupported field values:"+repr(f)
         return
 
     def __repr__(self):
         return (
-            "FieldListValueMap.c: %s\n"%(self.c)+
             "FieldListValueMap.fs: %r\n"%(self.fs)
             )
 
     def map_entity_to_context(self, entityvals, extras=None):
-        listcontext = {}
-        if self.c:
-            listcontext[self.c] = []
-            for f in self.fs:
-                fv = f.map_entity_to_context(entityvals, extras=extras)
-                listcontext[self.c].append(fv['field'])
-        return listcontext
+        listcontext = []
+        for f in self.fs:
+            fv = f.map_entity_to_context(entityvals, extras=extras)
+            listcontext.append(fv)
+        return { 'fields': listcontext }
 
     def map_form_to_entity(self, formvals):
         vals = {}
@@ -98,5 +98,11 @@ class FieldListValueMap(object):
             if v is None: return v
             vals.update(v)
         return vals
+
+    def get_structure_description(self):
+        """
+        Helper function returns list of field description information
+        """
+        return self.fd
 
 # End.

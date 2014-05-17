@@ -132,7 +132,7 @@ class RecordViewTest(AnnalistTestCase):
         v.update(
             { 'rdfs:label':     'Default record view'
             , 'rdfs:comment':   'Default record view, applied when no view is specified when creating a record.'
-            , 'annal:uri':      'annal:view/Default_view'
+            , 'annal:uri':      'annal:display/Default_view'
             })
         self.assertDictionaryMatch(td, v)
         return
@@ -185,7 +185,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(t.get_values(), v)
         return t
 
-    def _check_context_fields(self, response, 
+    def _check_default_entity_context_fields(self, response, 
             action="",
             num_fields=4,
             view_id="(?view_id)", 
@@ -338,6 +338,68 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[3]['fields'][1].field_placement.field,  "small-12 medium-6 columns")
         return
 
+    # The RecordView_view test case checks descriptions of repeat-field-groups that are not 
+    # covererd by the Default_view case.
+    def _check_record_view_context_fields(self, response, action="", num_fields=3):
+        r = response
+        #log.info("r.context['fields']: %r"%(r.context['fields'],))
+        # Common structure
+        self.assertEqual(r.context['title'],            site_title())
+        self.assertEqual(r.context['entity_id'],        'RecordView_view')
+        self.assertEqual(r.context['orig_id'],          'RecordView_view')
+        self.assertEqual(r.context['type_id'],          '_view')
+        self.assertEqual(r.context['orig_type'],        '_view')
+        self.assertEqual(r.context['coll_id'],          'testcoll')
+        self.assertEqual(r.context['entity_uri'],       'annal:display/RecordView_view')
+        self.assertEqual(r.context['action'],           action)
+        self.assertEqual(r.context['view_id'],          'RecordView_view')
+        # Fields
+        self.assertEqual(len(r.context['fields']), 4)        
+        # 1st field - Id
+        self.assertEqual(r.context['fields'][0]['field_id'], 'View_id')
+        self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
+        self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
+        # 2nd field - Label
+        self.assertEqual(r.context['fields'][1]['field_id'], 'View_label')
+        self.assertEqual(r.context['fields'][1]['field_name'], 'View_label')
+        self.assertEqual(r.context['fields'][1]['field_label'], 'Label')
+        # 3rd field - comment
+        self.assertEqual(r.context['fields'][2]['field_id'], 'View_comment')
+        self.assertEqual(r.context['fields'][2]['field_name'], 'View_comment')
+        self.assertEqual(r.context['fields'][2]['field_label'], 'Help')
+        # 4th field - field list (View_id, View_label, View_comment, field descritpions)
+        # log.info("r.context['fields'][3]: %r"%(r.context['fields'][3],))
+        viewfields = r.context['fields'][3]['repeat']
+        self.assertEqual(len(viewfields), num_fields)
+        if num_fields == 0: return
+        self.assertEqual(len(viewfields[0]['fields']), 2)
+        self.assertEqual(len(viewfields[1]['fields']), 2)
+        self.assertEqual(len(viewfields[2]['fields']), 2)
+        # View_id
+        self.assertEqual(viewfields[0]['fields'][0].field_value_key,        "annal:field_id")
+        self.assertEqual(viewfields[0]['fields'][0].field_value,            "View_id")
+        self.assertEqual(viewfields[0]['fields'][1].field_value_key,        "annal:field_placement")
+        self.assertEqual(viewfields[0]['fields'][1].field_value,            "small:0,12;medium:0,6")
+        # View_label
+        self.assertEqual(viewfields[1]['fields'][0].field_value_key,        "annal:field_id")
+        self.assertEqual(viewfields[1]['fields'][0].field_value,            "View_label")
+        self.assertEqual(viewfields[1]['fields'][1].field_value_key,        "annal:field_placement")
+        self.assertEqual(viewfields[1]['fields'][1].field_value,            "small:0,12")
+        # View_comment
+        self.assertEqual(viewfields[2]['fields'][0].field_value_key,        "annal:field_id")
+        self.assertEqual(viewfields[2]['fields'][0].field_value,            "View_comment")
+        self.assertEqual(viewfields[2]['fields'][1].field_value_key,        "annal:field_placement")
+        self.assertEqual(viewfields[2]['fields'][1].field_value,            "small:0,12")
+        # Repeated field structure descritpion (used by add field logic, etc.)
+        # log.info(viewfields[3])
+        view_repeatfields = r.context['fields'][3]['repeat_fields_description']
+        self.assertEqual(len(view_repeatfields), 2)
+        self.assertEqual(view_repeatfields[0]['field_id'], 'Field_sel')
+        self.assertEqual(view_repeatfields[0]['field_placement'].field, "small-12 medium-6 columns")
+        self.assertEqual(view_repeatfields[1]['field_id'], 'Field_placement')
+        self.assertEqual(view_repeatfields[1]['field_placement'].field, "small-12 medium-6 columns")
+        return
+
     #   -----------------------------------------------------------------------------
     #   Form rendering tests
     #   -----------------------------------------------------------------------------
@@ -409,7 +471,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # Fields
-        self._check_context_fields(r, 
+        self._check_default_entity_context_fields(r, 
             action="new",
             num_fields=0,
             view_id="00000001",
@@ -430,16 +492,16 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "Default_view")
         self.assertEqual(r.context['orig_id'],          "Default_view")
-        self.assertEqual(r.context['entity_uri'],       "annal:view/Default_view")
+        self.assertEqual(r.context['entity_uri'],       "annal:display/Default_view")
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_uri'], "")
         # Fields
-        self._check_context_fields(r, 
+        self._check_default_entity_context_fields(r, 
             action="copy",
             view_id="Default_view",
             view_label="Default record view",
             view_help="Default record view, applied when no view is specified when creating a record.",
-            view_uri="annal:view/Default_view"
+            view_uri="annal:display/Default_view"
             )
         return
 
@@ -465,16 +527,16 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "Default_view")
         self.assertEqual(r.context['orig_id'],          "Default_view")
-        self.assertEqual(r.context['entity_uri'],       "annal:view/Default_view") # @@TODO: is this right?
+        self.assertEqual(r.context['entity_uri'],       "annal:display/Default_view") # @@TODO: is this right?
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_uri'], "")
         # Fields
-        self._check_context_fields(r, 
+        self._check_default_entity_context_fields(r, 
             action="edit",
             view_id="Default_view",
             view_label="Default record view",
             view_help="Default record view, applied when no view is specified when creating a record.",
-            view_uri="annal:view/Default_view"
+            view_uri="annal:display/Default_view"
             )
         return
 
@@ -487,6 +549,28 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         self.assertContains(r, "<p>Entity &#39;notype&#39; of type &#39;_view&#39; in collection &#39;testcoll&#39; does not exist</p>", status_code=404)
+        return
+
+    # Test rendering of view with repeated field structure - in this case, RecordView_view
+    def test_get_recordview_edit(self):
+        u = entitydata_edit_uri(
+            "edit", "testcoll", "_view", entity_id="RecordView_view", 
+            view_id="RecordView_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Test context (values read from test data fixture)
+        self.assertEqual(r.context['title'],            site_title())
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "_view")
+        self.assertEqual(r.context['entity_id'],        "RecordView_view")
+        self.assertEqual(r.context['orig_id'],          "RecordView_view")
+        self.assertEqual(r.context['entity_uri'],       "annal:display/RecordView_view")
+        self.assertEqual(r.context['action'],           "edit")
+        self.assertEqual(r.context['continuation_uri'], "")
+        # Fields
+        self._check_record_view_context_fields(r, action="edit")
         return
 
     #   -----------------------------------------------------------------------------

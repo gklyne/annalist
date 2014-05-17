@@ -36,6 +36,12 @@ class RepeatDescription(object):
             })
         return
 
+    def get_structure_description(self):
+        """
+        Helper function returns structure description information
+        """
+        return self._repeat_context
+
     def __repr__(self):
         return "RepeatDescription.repeat context: %r"%(self._repeat_context)
 

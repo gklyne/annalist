@@ -63,6 +63,8 @@ class bound_field(object):
     'default'
     >>> field_def.entity_link
     'entityuri/'
+    >>> field_def.htmlrepr()
+    "<ul><li>key: def</li><li>val: default</li><li>field_description: {'field_property_uri': 'def', 'field_id': 'def_id', 'field_type': 'def_type'}</li></ul>"
     """
 
     __slots__ = ("_field_description", "_entity", "_key", "_options", "_extras")
@@ -139,6 +141,7 @@ class bound_field(object):
             # log.info(repr(self._options))
             return self._options
         else:
+            # log.info("bound_field[%s] -> %r"%(name, self._field_description[name]))
             return self._field_description[name]
 
     def __getitem__(self, name):
@@ -165,12 +168,30 @@ class bound_field(object):
             )
 
     def __repr__(self):
+        return self.shortrepr()
+
+    def shortrepr(self):
+        return (
+            "bound_field(\n"+
+            "  { 'key': %r\n"%(self._key,)+
+            "  , 'val': %r\n"%(self.field_value,)+
+            "  , 'field_description': %r\n"%(self._field_description,)+
+            "  })")
+
+    def fullrepr(self):
         return (
             "bound_field({'field':%r, 'vals':%r, 'key':%r, 'field_value':%r, 'extras':%r})"%
             (self._field_description, dict(self._entity.items()), 
                 self._key, self.field_value, self._extras) 
             )
 
+    def htmlrepr(self):
+        return (
+            "<ul>"+
+            "<li>key: %s</li>"%(self._key,)+
+            "<li>val: %s</li>"%(self.field_value,)+
+            "<li>field_description: %r</li>"%(self._field_description,)+
+            "</ul>")
 
 def get_edit_renderer(renderid):
     """

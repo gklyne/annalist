@@ -1,6 +1,6 @@
 { "@id":                "annal:display/RecordView_view"
 , "annal:id":           "RecordView_view"
-, "annal:type":         "annal:Record_view"
+, "annal:type":         "annal:RecordView"
 , "annal:uri":          "annal:display/RecordView_view"
 , "annal:record_type":  "annal:RecordView"
 , "rdfs:label":         "View description for record view description"

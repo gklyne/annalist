@@ -38,7 +38,6 @@ class FieldValueMap(object):
     in the default value supplied, which is picked out and handled specially
     in the bound_field class.
 
-    c       request context field name for the field values
     f       field description structure (cf. `FieldDescription`)
 
     NOTE: The form rendering template iterates over the context field values to be 
@@ -46,8 +45,7 @@ class FieldValueMap(object):
     field to a list of field value mappings at the indcated context field.
     """
 
-    def __init__(self, c=None, f=None):
-        self.c = c
+    def __init__(self, f=None):
         self.f = f
         self.e = f['field_property_uri']    # entity data key
         self.i = f['field_name']            # field data key
@@ -57,23 +55,20 @@ class FieldValueMap(object):
         """
         Returns a dictionary of values to be added to the display context under construction
         """
-        subcontext = {}
-        if self.c:
-            options = ["(no options)"]
-            options_key = self.f.get('field_options', None)
-            if options_key:
-                if extras and options_key in extras:
-                    options = extras[options_key]
-                else:
-                    options = ['(missing options)']
-            boundfield = bound_field(
-                field_description=self.f, 
-                entity=entityvals, key=self.f['field_property_uri'],
-                options=options,
-                extras=extras
-                )
-            subcontext[self.c] = boundfield
-        return subcontext
+        options = ["(no options)"]
+        options_key = self.f.get('field_options', None)
+        if options_key:
+            if extras and options_key in extras:
+                options = extras[options_key]
+            else:
+                options = ['(missing options)']
+        boundfield = bound_field(
+            field_description=self.f, 
+            entity=entityvals, key=self.f['field_property_uri'],
+            options=options,
+            extras=extras
+            )
+        return boundfield
 
     def map_form_to_entity(self, formvals):
         entityvals = {}

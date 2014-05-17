@@ -123,7 +123,8 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        form, as that hides whether it comes from the collection or is site-wide.
    / entity_uri appears in entity view context as name (same as annal:uri) but also in bound field as locator.  Change name used in bound field to `entity_ref`.
    / refactor delete confirm code to generic module, with type-specific messages.  Note that type, view and list deletes are triggered from the collection edit view, with different form variables, and also have specific remove functions in the collection class, so need separate implementations (for now?).
-   > implement delete confirm view for views and lists.  NEED TESTS.
+   - update render template/logic for RecordView_view
+   > implement delete confirm view for views and lists.  NEED TESTS.  test_recordlist module?
    - review URI for delete type/view/list confirmation
    - move invocation of authentication to the immediate response hander code?
    - don't include continuation-uri param when URI is blank
@@ -143,7 +144,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    - update URI dispatching
    - include default view
 9. Extend form-generator
-   - support repeated field group (to support RecordView and BibJSON)
+   / support repeated field group (to support RecordView and BibJSON)
    - support alternate displays for different subtypes (to support BibJSON)
 10. Record view display and editing (data to drive generic view/list)
    - where possible, migrate methods from editentitybase to subclasses

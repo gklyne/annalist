@@ -1,6 +1,6 @@
 { "@id":                "annal:display/Field_view"
 , "annal:id":           "Field_view"
-, "annal:type":         "annal:display/Record_view"
+, "annal:type":         "annal:display/RecordView"
 , "annal:record_type":  "annal:Field"
 , "rdfs:label":         "View description for view field description"
 , "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing fields in a record view"
