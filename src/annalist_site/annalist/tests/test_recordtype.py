@@ -328,12 +328,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                 </div>
                 <div class="small-12 medium-10 columns">
                     <div class="row">
-                        <div class="small-8 columns">
-                            <input type="submit" name="save"             value="Save" />
-                            <input type="submit" name="cancel"           value="Cancel" />
-                        </div>
-                        <div class="small-4 columns text-right">
-                            <input type="submit" name="new_field"        value="New field" />
+                        <div class="small-12 columns text-right">
+                            <input type="submit" name="save"          value="Save" />
+                            <input type="submit" name="cancel"        value="Cancel" />
                         </div>
                     </div>
                 </div>

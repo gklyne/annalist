@@ -149,6 +149,14 @@ class GenericEntityEditView(EntityEditBaseView):
         #       (coll_id, type_id, entity_id, view_id, action)
         #     )
         # log.info("continuation_uri %s, type_id %s"%(continuation_uri, type_id))
+        #
+        # Retrieve original entity content for any values not included in form 
+        entity_initial_values = {}
+        context_extra_values = self.get_entity(
+            action, self.entityparent, orig_entity_id, entity_initial_values
+            )
+        if context_extra_values is None:
+            context_extra_values = entity_initial_values
         type_ids = [ t.get_id() for t in self.collection.types() ]
         context_extra_values = (
             { 'title':            self.site_data()["title"]
