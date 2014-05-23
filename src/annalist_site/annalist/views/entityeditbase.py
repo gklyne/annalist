@@ -262,7 +262,7 @@ class EntityEditBaseView(AnnalistGenericView):
             )
 
     def form_response(self, 
-                request, action, orig_parent, 
+                request, action, orig_parent, orig_entity,
                 entity_id, orig_entity_id, 
                 entity_type, orig_entity_type, 
                 messages, context_extra_values
@@ -323,7 +323,7 @@ class EntityEditBaseView(AnnalistGenericView):
                     RecordTypeData.create(self.collection, entity_type, {})
             else:
                 new_parent = orig_parent
-            # Check existence of type to save according to action performed
+            # Check existence of entity to save according to action performed
             if (request.POST['action'] in ["new", "copy"]) or entity_id_changed:
                 if self.entityclass.exists(new_parent, entity_id):
                     return self.form_re_render(request, context_extra_values,
@@ -341,14 +341,18 @@ class EntityEditBaseView(AnnalistGenericView):
                         error_message=messages['entity_not_exists']
                         )
             # Create/update data now
-            entity_initial_values = self.map_form_data_to_values(request.POST)
-            self.entityclass.create(new_parent, entity_id, entity_initial_values)
-            # Remove old type if rename
+            entity_values = self.map_form_data_to_values(request.POST)
+            self.entityclass.create(new_parent, entity_id, entity_values)
+            # Remove old entity if rename
             if entity_id_changed:
-                if self.entityclass.exists(orig_parent, entity_id):    # Precautionary
+                if self.entityclass.exists(new_parent, entity_id):    # Precautionary
                     self.entityclass.remove(orig_parent, orig_entity_id)
             log.debug("Continue to %s"%(continuation_uri))
             return HttpResponseRedirect(continuation_uri)
+        ##### other response options here #####
+
+
+
         # Report unexpected form data
         # This shouldn't happen, but just in case...
         # Redirect to continuation with error
