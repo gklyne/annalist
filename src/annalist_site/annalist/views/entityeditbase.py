@@ -100,6 +100,44 @@ class EntityEditBaseView(AnnalistGenericView):
         super(EntityEditBaseView, self).__init__()
         return
 
+    def get_entityid(self, action, parent, entityid):
+        if action == "new":
+            entityid = self.entityclass.allocate_new_id(parent)
+        return entityid
+
+    def get_entity(self, action, parent, entityid, entity_initial_values):
+        """
+        Create local entity object or load values from existing.
+
+        action          is the requested action: new, edit, copy
+        parent          is the parent of the entity to be accessed or created
+        entityid        is the local id (slug) of the entity to be accessed or created
+        entity_initial_values  is a dictionary of initial values used when a new entity
+                        is created
+
+        self.entityclass   is the class of the entity to be acessed or created.
+
+        returns an object of the appropriate type.  If an existing entity is accessed, values
+        are read from storage, otherwise a new entity object is created but not yet saved.
+        """
+        log.debug(
+            "get_entity id %s, parent %s, action %s, altparent %s"%
+            (entityid, parent._entitydir, action, self.entityaltparent)
+            )
+        entity = None
+        if action == "new":
+            entity = self.entityclass(parent, entityid)
+            entity.set_values(entity_initial_values)
+        elif self.entityclass.exists(parent, entityid, altparent=self.entityaltparent):
+            entity = self.entityclass.load(parent, entityid, altparent=self.entityaltparent)
+        if entity is None:
+            parentid = self.entityaltparent.get_id() if self.entityaltparent else "(none)"
+            log.debug(
+                "Entity not found: parent %s, entity_id %s, altparent %s"%
+                (parent.get_id(), entityid, parentid)
+                )
+        return entity
+
     def get_fields_entityvaluemap(self, entityvaluemap, fields):
         # @@TODO: elide this
         entityvaluemap.append(
@@ -180,44 +218,6 @@ class EntityEditBaseView(AnnalistGenericView):
         for kmap in self._entityvaluemap:
             values.update(kmap.map_form_to_entity(form_data))
         return values
-
-    def get_entityid(self, action, parent, entityid):
-        if action == "new":
-            entityid = self.entityclass.allocate_new_id(parent)
-        return entityid
-
-    def get_entity(self, action, parent, entityid, entity_initial_values):
-        """
-        Create local entity object or load values from existing.
-
-        action          is the requested action: new, edit, copy
-        parent          is tghe parent of the entity to be accessed or created
-        entityid        is the local id (slug) of the entity to be accessed or created
-        entity_initial_values  is a dictionary of initial values used when a new entity
-                        is created
-
-        self.entityclass   is the class of the entity to be acessed or created.
-
-        returns an object of the appropriate type.  If an existing entity is accessed, values
-        are read from storage, otherwise a new entity object is created but not yet saved.
-        """
-        log.debug(
-            "get_entity id %s, parent %s, action %s, altparent %s"%
-            (entityid, parent._entitydir, action, self.entityaltparent)
-            )
-        entity = None
-        if action == "new":
-            entity = self.entityclass(parent, entityid)
-            entity.set_values(entity_initial_values)
-        elif self.entityclass.exists(parent, entityid, altparent=self.entityaltparent):
-            entity = self.entityclass.load(parent, entityid, altparent=self.entityaltparent)
-        if entity is None:
-            parentid = self.entityaltparent.get_id() if self.entityaltparent else "(none)"
-            log.debug(
-                "Entity not found: parent %s, entity_id %s, altparent %s"%
-                (parent.get_id(), entityid, parentid)
-                )
-        return entity
 
     def form_render(self, request, action, parent, entityid, entity_initial_values, context_extra_values):
         """

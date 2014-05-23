@@ -367,7 +367,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_id'], 'View_comment')
         self.assertEqual(r.context['fields'][2]['field_name'], 'View_comment')
         self.assertEqual(r.context['fields'][2]['field_label'], 'Help')
-        # 4th field - field list (View_id, View_label, View_comment, field descritpions)
+        # 4th field - field list (View_id, View_label, View_comment, field descriptions)
         # log.info("r.context['fields'][3]: %r"%(r.context['fields'][3],))
         viewfields = r.context['fields'][3]['repeat']
         self.assertEqual(len(viewfields), num_fields)
@@ -806,10 +806,54 @@ class RecordViewEditViewTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
 
     def test_post_add_field(self):
+        # {
+        #   u 'entity_id': [u 'RecordView_view'],
+        #   u 'View_label': [u 'View description for record view description'],
+        #   u 'View_comment': [u 'This resource describes the form that is used when displaying and/or editing a record view description'],
+        #
+        #   u 'View_fields__0__Field_id': [u 'View_id'],
+        #   u 'View_fields__0__Field_placement': [u 'small:0,12;medium:0,6'],
+        #   u 'View_fields__1__Field_id': [u 'View_label'],
+        #   u 'View_fields__1__Field_placement': [u 'small:0,12'],
+        #   u 'View_fields__2__Field_id': [u 'View_comment'],
+        #   u 'View_fields__2__Field_placement': [u 'small:0,12'],
+        #   u 'new_field': [u 'Add field'],
+        #
+        #   u 'action': [u 'edit'],
+        #   u 'view_id': [u 'RecordView_view'],
+        #   u 'orig_id': [u 'RecordView_view'],
+        #   u 'orig_type': [u '_view'],
+        #   u 'continuation_uri': [u ''],
+        # }
+
+
+
         assert False, "@@TODO: test for adding field to view"
         return
 
     def test_post_remove_field(self):
+        # {
+        #   u 'entity_id': [u 'RecordView_view'],
+        #   u 'View_label': [u 'View description for record view description'],
+        #   u 'View_comment': [u 'This resource describes the form that is used when displaying and/or editing a record view description'],
+        #
+        #   u 'View_fields__0__Field_id': [u 'View_id'],
+        #   u 'View_fields__0__Field_placement': [u 'small:0,12;medium:0,6'],
+        #   u 'View_fields__1__Field_id': [u 'View_label'],
+        #   u 'View_fields__1__Field_placement': [u 'small:0,12'],
+        #   u 'View_fields__2__Field_id': [u 'View_comment'],
+        #   u 'View_fields__2__Field_placement': [u 'small:0,12'],
+        #   u 'select_fields': [u '1'],
+        #   u 'delete_fields': [u 'Remove field(s)'],
+        #
+        #   u 'action': [u 'edit'],
+        #   u 'view_id': [u 'RecordView_view'],
+        #   u 'orig_id': [u 'RecordView_view'],
+        #   u 'orig_type': [u '_view'],
+        #   u 'continuation_uri': [u ''],
+        # }
+
+
         assert False, "@@TODO: test for removing field from view"
         return
 

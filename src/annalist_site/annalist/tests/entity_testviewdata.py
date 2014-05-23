@@ -323,7 +323,7 @@ def recordview_view_context_data(
                     , 'field_value':        "View_id"
                     }
                   , { 'field_id':           'Field_placement'
-                    , 'field_label':        'Size and position'
+                    , 'field_label':        'Size/position'
                     , 'field_render_view':  'field/annalist_view_text.html'
                     , 'field_render_edit':  'field/annalist_edit_text.html'
                     , 'field_name':         'Field_placement'
@@ -344,7 +344,7 @@ def recordview_view_context_data(
                     , 'field_value':        "View_label"
                     }
                   , { 'field_id':           'Field_placement'
-                    , 'field_label':        'Size and position'
+                    , 'field_label':        'Size/position'
                     , 'field_render_view':  'field/annalist_view_text.html'
                     , 'field_render_edit':  'field/annalist_edit_text.html'
                     , 'field_name':         'Field_placement'
@@ -365,7 +365,7 @@ def recordview_view_context_data(
                     , 'field_value':        "View_comment"
                     }
                   , { 'field_id':           'Field_placement'
-                    , 'field_label':        'Size and position'
+                    , 'field_label':        'Size/position'
                     , 'field_render_view':  'field/annalist_view_text.html'
                     , 'field_render_edit':  'field/annalist_edit_text.html'
                     , 'field_name':         'Field_placement'

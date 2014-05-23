@@ -238,7 +238,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Entity_type',       "annal:field_render/Type",          "Type")
             , ('Entity_label',      "annal:field_render/Text",          "Label")
             , ('Field_comment',     "annal:field_render/Textarea",      "Help")
-            , ('Field_placement',   "annal:field_render/Placement",     "Size and position")
+            , ('Field_placement',   "annal:field_render/Placement",     "Size/position")
             , ('Field_type',        "annal:field_render/Identifier",    "Field value type")
             , ('List_comment',      "annal:field_render/Textarea",      "Help")
             , ('List_record_type',  "annal:field_render/Record_type",   "Record type")

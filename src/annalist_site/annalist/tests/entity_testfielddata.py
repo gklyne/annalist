@@ -220,7 +220,7 @@ def recordfield_entity_view_context_data(
             , 'field_value':        "(property URI or CURIE)"
             , 'options':            []
             }
-          , { 'field_label':        'Size and position'
+          , { 'field_label':        'Size/position'
             , 'field_id':           'Field_placement'
             , 'field_name':         'Field_placement'
             , 'field_render_view':  'field/annalist_view_text.html'

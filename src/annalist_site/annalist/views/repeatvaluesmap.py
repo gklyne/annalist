@@ -59,10 +59,15 @@ class RepeatValuesMap(object):
             # an `annal:repeat_id` value, but the data value iterator here generates a
             # list of fields to be actually displayed as a repeated value, and does not 
             # include the repeat field structure description.
+            repeat_index  = 0
             for repeatedval in entityval[self.e]:
                 if "annal:repeat_id" not in repeatedval:    # special case test
                     # log.info("RepeatValuesMap.map_entity_to_context: repeatedval %r"%repeatedval)
                     fieldscontext = self.f.map_entity_to_context(repeatedval, extras=repeatextras)
+                    fieldscontext['repeat_id']     = self.r['repeat_id']
+                    fieldscontext['repeat_index']  = repeat_index
+                    fieldscontext['repeat_prefix'] = self.r['repeat_id']+("__%d__"%repeat_index)
+                    repeat_index += 1
                     # log.info("RepeatValuesMap.map_entity_to_context: fieldscontext %r"%fieldscontext)
                     rcv.append(fieldscontext)
         repeatcontext    = self.get_structure_description()

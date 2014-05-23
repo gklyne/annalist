@@ -332,7 +332,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             )
         self.assertEqual(r.context['fields'][6]['field_id'], 'Field_placement')
         self.assertEqual(r.context['fields'][6]['field_name'], 'Field_placement')
-        self.assertEqual(r.context['fields'][6]['field_label'], 'Size and position')
+        self.assertEqual(r.context['fields'][6]['field_label'], 'Size/position')
         self.assertEqual(r.context['fields'][6]['field_help'], field_placement_help)
         self.assertEqual(r.context['fields'][6]['field_placeholder'], field_placement_placeholder)
         self.assertEqual(r.context['fields'][6]['field_property_uri'], "annal:field_placement")
@@ -436,7 +436,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 columns">
                 <div class="row">
                     <div class="view_label small-12 medium-2 columns">
-                        <p>Size and position</p>
+                        <p>Size/position</p>
                     </div>
                     <div class="small-12 medium-10 columns">
                         <input type="text" size="64" name="Field_placement" 
