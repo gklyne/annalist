@@ -24,8 +24,7 @@ class RepeatDescription(object):
         The RepeatDescription object behaves as a dictionary containing the various 
         repeat group attributes.
 
-        collection  is a collection object to which the field is considered to belong.
-        field       is a dictionary with the field description from a view or list description.
+        repeat      is the repeated field description in the view description.
         """
         self._repeat_context = (
             { 'repeat_id':              repeat['annal:repeat_id']

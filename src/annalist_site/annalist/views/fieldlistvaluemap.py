@@ -61,7 +61,6 @@ class FieldListValueMap(object):
                 # log.info("\n********\nRepeatValuesMap: repeat_id %s, %r"%(f['annal:repeat_id'], repeatvaluesmap))
                 self.fd.append(repeatvaluesmap.get_structure_description())
                 self.fs.append(repeatvaluesmap)
-                # self.fs.append(SubgroupValueMap(repeatvaluesmap, c="repeatsubgroup"))
             else:
                 assert False, "Unknown/unsupported field values:"+repr(f)
         return
@@ -103,6 +102,6 @@ class FieldListValueMap(object):
         """
         Helper function returns list of field description information
         """
-        return self.fd
+        return { 'field_list': self.fd }
 
 # End.

@@ -182,6 +182,25 @@ class EntityEditBaseView(AnnalistGenericView):
             )
         return entitymap
 
+    def find_repeat_fields(self):
+        """
+        Iterate over repeat field groups in the current view.
+
+        Each value found is returjned as ...?
+        """
+        for kmap in self._entityvaluemap:
+            field_desc = kmap.get_structure_description()
+            if "repeat_id" in field_desc:
+                yield field_desc
+        return
+
+    def find_add_field(self, form_data):
+        """
+        Locate add field option in form data and,if present, return a description of the field to
+        be added.
+        """
+        return None
+
     def map_value_to_context(self, entity_values, **kwargs):
         """
         Map data from entity values to view context for rendering.
@@ -201,9 +220,6 @@ class EntityEditBaseView(AnnalistGenericView):
         Values defined in the supplied form data take priority, and the keyword arguments provide
         values where the form data does not.
         """
-        # context = {}
-        # for kmap in self._entityvaluemap:
-        #     context.update(kmap.map_form_to_context(form_data, extras=kwargs))
         # log.info("\n*********\nmap_form_data_to_context: form_data: %r"%form_data)
         entityvals = self.map_form_data_to_values(form_data)
         # log.info("\n*********\nmap_form_data_to_context: entityvals: %r"%entityvals)
@@ -250,14 +266,14 @@ class EntityEditBaseView(AnnalistGenericView):
         """
         Returns re-rendering of form with current values and error message displayed.
         """
-        form_data = self.map_form_data_to_context(request.POST,
+        form_context = self.map_form_data_to_context(request.POST,
             **context_extra_values
             )
-        # log.info("********\nform_data %r"%form_data)
-        form_data['error_head']    = error_head
-        form_data['error_message'] = error_message
+        # log.info("********\nform_context %r"%form_context)
+        form_context['error_head']    = error_head
+        form_context['error_message'] = error_message
         return (
-            self.render_html(form_data, self._entityformtemplate) or 
+            self.render_html(form_context, self._entityformtemplate) or 
             self.error(self.error406values())
             )
 
@@ -300,12 +316,9 @@ class EntityEditBaseView(AnnalistGenericView):
                 error_head=messages['entity_type_heading'],
                 error_message=messages['entity_type_invalid']
                 )
-        # Process response
-        entity_id_changed = (
-            ( request.POST['action'] == "edit" ) and
-            ( (entity_id != orig_entity_id) or (entity_type != orig_entity_type) )
-            )
+        # Save updated details
         if 'save' in request.POST:
+            # @@TODO: factor to separate method
             log.debug(
                 "form_response: save, action %s, entity_id %s, orig_entity_id %s"
                 %(request.POST['action'], entity_id, orig_entity_id)
@@ -313,6 +326,10 @@ class EntityEditBaseView(AnnalistGenericView):
             log.debug(
                 "                     entity_type %s, orig_entity_type %s"
                 %(entity_type, orig_entity_type)
+                )
+            entity_id_changed = (
+                ( request.POST['action'] == "edit" ) and
+                ( (entity_id != orig_entity_id) or (entity_type != orig_entity_type) )
                 )
             # Determine parent for saved entity
             if entity_type != orig_entity_type:
@@ -341,7 +358,12 @@ class EntityEditBaseView(AnnalistGenericView):
                         error_message=messages['entity_not_exists']
                         )
             # Create/update data now
-            entity_values = self.map_form_data_to_values(request.POST)
+            # Note: form data is applied as update to original entity data so that
+            # values not in view are preserved.
+            # entity_values = self.map_form_data_to_values(request.POST)
+            entity_values = orig_entity.get_values() if orig_entity else {}
+            entity_values.pop('annal:uri', None)  # Force re-allocation of URI
+            entity_values.update(self.map_form_data_to_values(request.POST))
             self.entityclass.create(new_parent, entity_id, entity_values)
             # Remove old entity if rename
             if entity_id_changed:
@@ -349,7 +371,21 @@ class EntityEditBaseView(AnnalistGenericView):
                     self.entityclass.remove(orig_parent, orig_entity_id)
             log.debug("Continue to %s"%(continuation_uri))
             return HttpResponseRedirect(continuation_uri)
-        ##### other response options here #####
+
+        # Add field
+        add_field = self.find_add_field(request.POST)
+        if add_field:
+            # add_field is repeat field description
+            entityvals = self.map_form_data_to_values(request.POST)
+            log.info("add_field: %r, entityvals: %r"%(add_field, entityvals))
+            assert False, "@@TODO add field"
+            form_context = self.map_value_to_context(entityvals, context_extra_values)
+            return (
+                self.render_html(form_context, self._entityformtemplate) or 
+                self.error(self.error406values())
+                )
+
+        # Remove Field(s)
 
 
 

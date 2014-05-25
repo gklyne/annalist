@@ -392,7 +392,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[2]['fields'][1].field_value,            "small:0,12")
         # Repeated field structure descritpion (used by add field logic, etc.)
         # log.info(viewfields[3])
-        view_repeatfields = r.context['fields'][3]['repeat_fields_description']
+        view_repeatfields = r.context['fields'][3]['repeat_fields_description']['field_list']
         self.assertEqual(len(view_repeatfields), 2)
         self.assertEqual(view_repeatfields[0]['field_id'], 'Field_sel')
         self.assertEqual(view_repeatfields[0]['field_placement'].field, "small-12 medium-6 columns")
