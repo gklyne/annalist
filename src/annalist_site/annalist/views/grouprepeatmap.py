@@ -63,4 +63,12 @@ class GroupRepeatMap(_GroupRepeatMap_tuple):
         log.warn("GroupRepeatMap.map_form_to_entity not supported")
         return {}
 
+    def get_structure_description(self):
+        return (
+            { 'field_type':     'GroupRepeatMap'
+            , 'entity_field':   self.e
+            , 'context_field':  self.c
+            , 'group_fields':   self.g.get_structure_description()
+            })
+
 # End.

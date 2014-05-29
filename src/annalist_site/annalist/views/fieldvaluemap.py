@@ -93,4 +93,12 @@ class FieldValueMap(object):
             return {self.e: v}
         return None
 
+    def get_structure_description(self):
+        return (
+            { 'field_type':     'FieldValueMap'
+            , 'field_descr':    self.f
+            , 'entity_field':   self.e
+            , 'form_field':     self.i
+            })
+
 # End.

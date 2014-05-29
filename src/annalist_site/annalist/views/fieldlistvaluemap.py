@@ -102,6 +102,9 @@ class FieldListValueMap(object):
         """
         Helper function returns list of field description information
         """
-        return { 'field_list': self.fd }
+        return (
+            { 'field_type':     'FieldListValueMap'
+            , 'field_list':     self.fd 
+            })
 
 # End.

@@ -69,6 +69,7 @@ class FieldDescription(object):
         return (
             { 'field_id':           self._field_context['field_id']
             , 'field_placement':    self._field_context['field_placement']
+            , 'field_property_uri': self._field_context['field_property_uri']
             })
 
     def __repr__(self):

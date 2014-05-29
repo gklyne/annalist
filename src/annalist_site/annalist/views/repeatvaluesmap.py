@@ -59,6 +59,10 @@ class RepeatValuesMap(object):
             # an `annal:repeat_id` value, but the data value iterator here generates a
             # list of fields to be actually displayed as a repeated value, and does not 
             # include the repeat field structure description.
+
+            # @@@ rethink above:  the exception should not simply ignore the repeated structure
+            # information, but to preserve it in the entity without including it in the form
+
             repeat_index  = 0
             for repeatedval in entityval[self.e]:
                 if "annal:repeat_id" not in repeatedval:    # special case test
@@ -93,6 +97,7 @@ class RepeatValuesMap(object):
         Helper function returns structure description information
         """
         rd = self.r.get_structure_description()
+        rd['field_type']                = "RepeatValuesMap"
         rd['repeat_fields_description'] = self.f.get_structure_description()
         return rd
 

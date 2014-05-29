@@ -45,8 +45,10 @@
                         <div class="small-12 columns">
                           <div class="row">
                             <div class="small-11 columns">
-                              <input type="submit" name="delete_fields" value="Remove field(s)" />
-                              <input type="submit" name="new_field"     value="Add field" />
+                              <input type="submit" name="{{field.repeat_id}}__delete" 
+                                     value="{{field.repeat_label_delete}}" />
+                              <input type="submit" name="{{field.repeat_id}}__add"    
+                                     value="{{field.repeat_label_add}}" />
                             </div>
                             <div class="small-1 columns">
                               &nbsp;

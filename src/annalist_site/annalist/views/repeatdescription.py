@@ -29,7 +29,8 @@ class RepeatDescription(object):
         self._repeat_context = (
             { 'repeat_id':              repeat['annal:repeat_id']
             , 'repeat_label':           repeat['annal:repeat_label']
-            , 'repeat_btn_label':       repeat['annal:repeat_btn_label']
+            , 'repeat_label_add':       repeat['annal:repeat_label_add']
+            , 'repeat_label_delete':    repeat['annal:repeat_label_delete']
             , 'repeat_entity_values':   repeat['annal:repeat_entity_values']
             , 'repeat_context_values':  repeat['annal:repeat_context_values']
             })

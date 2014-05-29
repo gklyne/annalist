@@ -310,7 +310,8 @@ def recordview_view_context_data(
           , { "repeat_id":              "View_fields"
             , "repeat_context_values":  "repeat"
             , "repeat_label":           "Fields"
-            , "repeat_btn_label":       "field"
+            , "repeat_label_add":       "Add field"
+            , "repeat_label_delete":    "Remove selected field(s)"
             , "repeat":
               [ { "fields":
                   [ { 'field_id':           'Field_sel'

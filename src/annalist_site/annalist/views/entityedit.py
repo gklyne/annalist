@@ -190,7 +190,7 @@ class GenericEntityEditView(EntityEditBaseView):
             request, action, self.entityparent, original_entity,
             entity_id, orig_entity_id, 
             entity_type, orig_entity_type,
-            self.entitymessages, context_extra_values
+            messages, context_extra_values
             )
 
 # End.

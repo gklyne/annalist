@@ -57,6 +57,13 @@ class SimpleValueMap(_SimpleValueMap_tuple):
             # entityvals[self.e] = formvals.get(self.f, None)
         return entityvals
 
+    def get_structure_description(self):
+        return (
+            { 'field_type':     'SimpleValueMap'
+            , 'entity_field':   self.e
+            , 'context_field':  self.c
+            , 'form_field':     self.f
+            })
 
 class StableValueMap(SimpleValueMap):
     """
@@ -66,5 +73,10 @@ class StableValueMap(SimpleValueMap):
 
     def map_form_to_entity(self, formvals):
         return {}
+
+    def get_structure_description(self):
+        d = super(StableValueMap, self).get_structure_description()
+        d['field_type'] = 'StableValueMap'
+        return d
 
 # End.
