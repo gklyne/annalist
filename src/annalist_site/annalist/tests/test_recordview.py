@@ -824,74 +824,49 @@ class RecordViewEditViewTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
 
     def test_post_add_field(self):
-        # {
-        #   u 'entity_id': [u 'RecordView_view'],
-        #   u 'View_comment': [u 'This resource describes the form that is used when displaying and/or editing a record view description'],
-        #   u 'View_label': [u 'View description for record view description'],
-        #
-        #   u 'View_fields__0__Field_id': [u 'View_id'],
-        #   u 'View_fields__0__Field_placement': [u 'small:0,12;medium:0,6'],
-        #   u 'View_fields__1__Field_id': [u 'View_label'],
-        #   u 'View_fields__1__Field_placement': [u 'small:0,12'],
-        #   u 'View_fields__2__Field_id': [u 'View_comment'],
-        #   u 'View_fields__2__Field_placement': [u 'small:0,12'],
-        #   u 'View_fields__3__repeat_fields_data': 
-        #       [u '{ "annal:repeat_id": "View_fields",
-        #             "annal:repeat_label": "Fields",
-        #             "annal:repeat_label_delete": "Remove selected field(s)"
-        #             "annal:repeat_label_add": "Add field",
-        #             "annal:repeat_entity_values": "annal:view_fields",
-        #             "annal:repeat_context_values": "repeat",
-        #             "annal:repeat": [{
-        #               "annal:field_placement": "small:0,12; medium:0,6",
-        #               "annal:field_id": "Field_sel"
-        #             }, {
-        #               "annal:field_placement": "small:0,12; medium:6,6",
-        #               "annal:field_id": "Field_placement"
-        #             }],
-        #           }
-        #       ']
-        #   u 'View_fields__add': [u 'Add field'],
-        #
-        #   u 'orig_id': [u 'RecordView_view'],
-        #   u 'orig_type': [u '_view'],
-        #   u 'view_id': [u 'RecordView_view'],
-        #   u 'action': [u 'edit'],
-        #   u 'continuation_uri': [u '/annalist/c/coll1/d/_view/'],
-        # }
-
-
-
-
-
-
-        assert False, "@@TODO: test for adding field to view"
+        self._create_record_view("addfieldview")
+        self._check_record_view_values("addfieldview")
+        f = recordview_view_form_data(
+            view_id="addfieldview", orig_id="addfieldview", 
+            action="edit",
+            add_field=True
+            )
+        u = entitydata_edit_uri(
+            action="edit", coll_id="testcoll", type_id="_view", entity_id="addfieldview", 
+            view_id="RecordView_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        expect_context = recordview_view_context_data(
+            view_id="addfieldview", orig_id="addfieldview", 
+            action="edit",
+            add_field=True
+            )
+        self.assertDictionaryMatch(r.context, expect_context)
         return
 
     def test_post_remove_field(self):
-        # {
-        #   u 'entity_id': [u 'RecordView_view'],
-        #   u 'View_label': [u 'View description for record view description'],
-        #   u 'View_comment': [u 'This resource describes the form that is used when displaying and/or editing a record view description'],
-        #
-        #   u 'View_fields__0__Field_id': [u 'View_id'],
-        #   u 'View_fields__0__Field_placement': [u 'small:0,12;medium:0,6'],
-        #   u 'View_fields__1__Field_id': [u 'View_label'],
-        #   u 'View_fields__1__Field_placement': [u 'small:0,12'],
-        #   u 'View_fields__2__Field_id': [u 'View_comment'],
-        #   u 'View_fields__2__Field_placement': [u 'small:0,12'],
-        #   u 'View_fields__remove': [u 'Remove selected field(s)'],
-        #   u 'View_fields__select_fields': [u '4'],
-        #
-        #   u 'action': [u 'edit'],
-        #   u 'view_id': [u 'RecordView_view'],
-        #   u 'orig_id': [u 'RecordView_view'],
-        #   u 'orig_type': [u '_view'],
-        #   u 'continuation_uri': [u ''],
-        # }
-
-
-        assert False, "@@TODO: test for removing field from view"
+        self._create_record_view("addfieldview")
+        self._check_record_view_values("addfieldview")
+        f = recordview_view_form_data(
+            view_id="addfieldview", orig_id="addfieldview", 
+            action="edit",
+            remove_fields=['2']
+            )
+        u = entitydata_edit_uri(
+            action="edit", coll_id="testcoll", type_id="_view", entity_id="addfieldview", 
+            view_id="RecordView_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        expect_context = recordview_view_context_data(
+            view_id="addfieldview", orig_id="addfieldview", 
+            action="edit",
+            remove_field=True
+            )
+        self.assertDictionaryMatch(r.context, expect_context)
         return
 
 #   -----------------------------------------------------------------------------

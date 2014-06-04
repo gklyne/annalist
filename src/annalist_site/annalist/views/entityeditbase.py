@@ -223,7 +223,7 @@ class EntityEditBaseView(AnnalistGenericView):
         be added.
         """
         for repeat_desc in self.find_repeat_fields():
-            log.info("find_add_field: %r"%repeat_desc)
+            # log.info("find_add_field: %r"%repeat_desc)
             if repeat_desc['repeat_id']+"__add" in form_data:
                 return repeat_desc
         return None
@@ -234,7 +234,7 @@ class EntityEditBaseView(AnnalistGenericView):
         be removed, with the list of member indexes to be removed added as element 'remove_fields'.
         """
         for repeat_desc in self.find_repeat_fields():
-            log.info("find_add_field: %r"%repeat_desc)
+            # log.info("find_add_field: %r"%repeat_desc)
             if repeat_desc['repeat_id']+"__remove" in form_data:
                 repeat_desc['remove_fields'] = form_data[repeat_desc['repeat_id']+"__select_fields"]
                 return repeat_desc
@@ -415,7 +415,7 @@ class EntityEditBaseView(AnnalistGenericView):
         # Add field
         add_field = self.find_add_field(request.POST)
         if add_field:
-            log.info("add_field: POST data %r"%(request.POST,))
+            # log.info("add_field: POST data %r"%(request.POST,))
             # add_field is repeat field description
             entityvals = self.map_form_data_to_values(request.POST)
             # log.info("add_field: %r, entityvals: %r"%(add_field, entityvals))
@@ -437,7 +437,7 @@ class EntityEditBaseView(AnnalistGenericView):
         # Remove Field(s)
         remove_field = self.find_remove_field(request.POST)
         if remove_field:
-            log.info("remove_field: POST data %r"%(request.POST,))
+            # log.info("remove_field: POST data %r"%(request.POST,))
             # remove_field is repeat field description
             entityvals = self.map_form_data_to_values(request.POST)
             # log.info("remove_field: %r, entityvals: %r"%(remove_field, entityvals))

@@ -62,7 +62,7 @@ def entity_uri(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
     kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_edit_uri(action, coll_id, type_id=None, entity_id=None, view_id=None):
+def entitydata_edit_uri(action=None, coll_id="testcoll", type_id=None, entity_id=None, view_id=None):
     if view_id:
         viewname = ( 
             'AnnalistEntityNewView'             if action == "new" else
@@ -99,7 +99,7 @@ def entitydata_list_type_uri(coll_id="testcoll", type_id="testtype", list_id=Non
         kwargs   = {'coll_id': coll_id, 'type_id': type_id}
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_delete_confirm_uri(coll_id, type_id):
+def entitydata_delete_confirm_uri(coll_id="testcoll", type_id="testtype"):
     kwargs = {'coll_id': coll_id, 'type_id': type_id}
     return reverse("AnnalistEntityDataDeleteView", kwargs=kwargs)
 
