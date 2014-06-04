@@ -228,6 +228,18 @@ class EntityEditBaseView(AnnalistGenericView):
                 return repeat_desc
         return None
 
+    def find_remove_field(self, form_data):
+        """
+        Locate remove field option in form data and, if present, return a description of the field to
+        be removed, with the list of member indexes to be removed added as element 'remove_fields'.
+        """
+        for repeat_desc in self.find_repeat_fields():
+            log.info("find_add_field: %r"%repeat_desc)
+            if repeat_desc['repeat_id']+"__remove" in form_data:
+                repeat_desc['remove_fields'] = form_data[repeat_desc['repeat_id']+"__select_fields"]
+                return repeat_desc
+        return None
+
     def map_value_to_context(self, entity_values, **kwargs):
         """
         Map data from entity values to view context for rendering.
@@ -464,8 +476,24 @@ class EntityEditBaseView(AnnalistGenericView):
                 )
 
         # Remove Field(s)
-
-
+        remove_field = self.find_remove_field(request.POST)
+        if remove_field:
+            # remove_field is repeat field description
+            entityvals = self.map_form_data_to_values(request.POST)
+            log.info("remove_field: %r, entityvals: %r"%(remove_field, entityvals))
+            # Remove field(s) from entity
+            old_repeatvals = entityvals[remove_field['repeat_entity_values']]
+            new_repeatvals = []
+            for i in range(len(old_repeatvals)):
+                if str(i) not in remove_field['remove_fields']:
+                    new_repeatvals.append(old_repeatvals[i])
+            entityvals[remove_field['repeat_entity_values']] = new_repeatvals
+            log.info("entityvals: %r"%(entityvals,))
+            form_context = self.map_value_to_context(entityvals, **context_extra_values)
+            return (
+                self.render_html(form_context, self._entityformtemplate) or 
+                self.error(self.error406values())
+                )
 
         # Report unexpected form data
         # This shouldn't happen, but just in case...

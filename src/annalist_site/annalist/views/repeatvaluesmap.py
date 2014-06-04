@@ -16,7 +16,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-# from annalist.fields.render_utils   import bound_field
+import json
 
 class RepeatValuesMap(object):
     """
@@ -55,25 +55,41 @@ class RepeatValuesMap(object):
             # There is a special case for `RecordView_view` data, where the data is both
             # view description and data to be displayed.  The field list iterator 
             # (`FieldListValueMap`) iterates over the value as view description, and
-            # needs to information about the repeated field structure, distinguished by 
+            # needs information about the repeated field structure, distinguished by 
             # an `annal:repeat_id` value, but the data value iterator here generates a
-            # list of fields to be actually displayed as a repeated value, and does not 
-            # include the repeat field structure description.
-
-            # @@@ rethink above:  the exception should not simply ignore the repeated structure
-            # information, but to preserve it in the entity without including it in the form
-
+            # list of fields to be actually displayed as a repeated value, and simply
+            # preserves the repeated field data so that it can be included in an updated
+            # entity record.
+            #
+            # E.g. repeated field data for the entity edit view looks like this:
+            #
+            # , { "annal:repeat_id":              "View_fields"
+            #   , "annal:repeat_label_add":       "Add field"
+            #   , "annal:repeat_label_delete":    "Remove selected field(s)"
+            #   , "annal:repeat_entity_values":   "annal:view_fields"
+            #   , "annal:repeat_context_values":  "repeat"
+            #   , "annal:repeat":
+            #     [ { "annal:field_id":               "Field_sel"
+            #       , "annal:field_placement":        "small:0,12; medium:0,6"
+            #       }
+            #     , { "annal:field_id":               "Field_placement"
+            #       , "annal:field_placement":        "small:0,12; medium:6,6"
+            #       }
+            #     ]
+            #   }
             repeat_index  = 0
             for repeatedval in entityval[self.e]:
                 if "annal:repeat_id" not in repeatedval:    # special case test
                     # log.info("RepeatValuesMap.map_entity_to_context: repeatedval %r"%repeatedval)
                     fieldscontext = self.f.map_entity_to_context(repeatedval, extras=repeatextras)
-                    fieldscontext['repeat_id']     = self.r['repeat_id']
-                    fieldscontext['repeat_index']  = repeat_index
-                    fieldscontext['repeat_prefix'] = self.r['repeat_id']+("__%d__"%repeat_index)
-                    repeat_index += 1
                     # log.info("RepeatValuesMap.map_entity_to_context: fieldscontext %r"%fieldscontext)
-                    rcv.append(fieldscontext)
+                else:
+                    fieldscontext = self.map_repeat_field_data_to_context(repeatedval)
+                fieldscontext['repeat_id']     = self.r['repeat_id']
+                fieldscontext['repeat_index']  = repeat_index
+                fieldscontext['repeat_prefix'] = self.r['repeat_id']+("__%d__"%repeat_index)
+                rcv.append(fieldscontext)
+                repeat_index += 1
         repeatcontext    = self.get_structure_description()
         repeatcontextkey = repeatcontext['repeat_context_values']
         repeatcontext[repeatcontextkey] = rcv
@@ -85,12 +101,29 @@ class RepeatValuesMap(object):
         prefix_n        = 0
         repeatvals      = []
         while True:
-            vals = self.f.map_form_to_entity_repeated_items(formvals, prefix_template%prefix_n)
+            prefix = prefix_template%prefix_n
+            vals = (
+                self.map_form_to_repeat_field_data(formvals, prefix)
+                or
+                self.f.map_form_to_entity_repeated_items(formvals, prefix)
+                )
             if vals is None:
                 break
             repeatvals.append(vals)
             prefix_n += 1
         return {self.e: repeatvals}
+
+    def map_repeat_field_data_to_context(self, repeatedval):
+        return (
+            { 'repeat_fields_data': json.dumps(repeatedval)
+            })
+
+    def map_form_to_repeat_field_data(self, formvals, prefix):
+        # Generate repeated field description as above, per map_repeat_data_to_context
+        v = formvals.get(prefix+"repeat_fields_data", None)
+        if v:
+            v = json.loads(v)
+        return v
 
     def get_structure_description(self):
         """

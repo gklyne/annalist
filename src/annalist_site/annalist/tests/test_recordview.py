@@ -7,6 +7,7 @@ __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
+import json
 import unittest
 
 import logging
@@ -340,7 +341,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     # The RecordView_view test case checks descriptions of repeat-field-groups that are not 
     # covererd by the Default_view case.
-    def _check_record_view_context_fields(self, response, action="", num_fields=3):
+    def _check_record_view_context_fields(self, response, action="", num_fields=4):
         r = response
         #log.info("r.context['fields']: %r"%(r.context['fields'],))
         # Common structure
@@ -390,6 +391,23 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[2]['fields'][0].field_value,            "View_comment")
         self.assertEqual(viewfields[2]['fields'][1].field_value_key,        "annal:field_placement")
         self.assertEqual(viewfields[2]['fields'][1].field_value,            "small:0,12")
+        # Repeat fields data, to be preserved when form description is updated
+        # log.info("\n********\n%r"%(viewfields[3],))
+        self.assertEqual(viewfields[3]['repeat_id'],     'View_fields')
+        self.assertEqual(viewfields[3]['repeat_index'],  3)
+        self.assertEqual(viewfields[3]['repeat_prefix'], 'View_fields__3__')
+        repeat_fields_data = json.loads(viewfields[3]['repeat_fields_data'])
+        # log.info("\n********\n%r"%(repeat_fields_data,))
+        self.assertEqual(repeat_fields_data['annal:repeat_id'],             'View_fields')
+        self.assertEqual(repeat_fields_data['annal:repeat_label_add'],      'Add field')
+        self.assertEqual(repeat_fields_data['annal:repeat_label_delete'],   'Remove selected field(s)')
+        self.assertEqual(repeat_fields_data['annal:repeat_entity_values'],  'annal:view_fields')
+        self.assertEqual(repeat_fields_data['annal:repeat_context_values'], 'repeat')
+        self.assertEqual(len(repeat_fields_data['annal:repeat']), 2)
+        self.assertEqual(repeat_fields_data['annal:repeat'][0]['annal:field_id'],        'Field_sel')
+        self.assertEqual(repeat_fields_data['annal:repeat'][0]['annal:field_placement'], 'small:0,12; medium:0,6')
+        self.assertEqual(repeat_fields_data['annal:repeat'][1]['annal:field_id'],        'Field_placement')
+        self.assertEqual(repeat_fields_data['annal:repeat'][1]['annal:field_placement'], 'small:0,12; medium:6,6')
         # Repeated field structure descritpion (used by add field logic, etc.)
         # log.info(viewfields[3])
         view_repeatfields = r.context['fields'][3]['repeat_fields_description']['field_list']

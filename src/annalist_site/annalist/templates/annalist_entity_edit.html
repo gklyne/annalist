@@ -26,26 +26,31 @@
                           <div class="small-12 columns"><div class="row">{{field}}</div></div>
                         {% endcomment %}
                         {% for repeat in field.repeat %}
-                          <div class="small-12 columns">
-                            <div class="row selectable">
-                              <div class="small-1 columns">
-                                {% if auth_delete %}
-                                    <input type="checkbox" name="select_fields"
-                                           value="{{repeat.repeat_index}}" class="right" />
-                                {% endif %}
-                              </div>
-                              <div class="small-11 columns">
-                                {% for field in repeat.fields %}
-                                  {% include field.field_render_edit %}
-                                {% endfor %}
+                          {% if repeat.repeat_fields_data %}
+                            <input type="hidden" name="{{repeat.repeat_prefix}}repeat_fields_data" 
+                                   value="{{repeat.repeat_fields_data}}"/>
+                          {% else %}
+                            <div class="small-12 columns">
+                              <div class="row selectable">
+                                <div class="small-1 columns">
+                                  {% if auth_delete %}
+                                      <input type="checkbox" name="{{field.repeat_id}}__select_fields"
+                                             value="{{repeat.repeat_index}}" class="right" />
+                                  {% endif %}
+                                </div>
+                                <div class="small-11 columns">
+                                  {% for field in repeat.fields %}
+                                    {% include field.field_render_edit %}
+                                  {% endfor %}
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          {% endif %}
                         {% endfor %}
                         <div class="small-12 columns">
                           <div class="row">
                             <div class="small-11 columns">
-                              <input type="submit" name="{{field.repeat_id}}__delete" 
+                              <input type="submit" name="{{field.repeat_id}}__remove" 
                                      value="{{field.repeat_label_delete}}" />
                               <input type="submit" name="{{field.repeat_id}}__add"    
                                      value="{{field.repeat_label_add}}" />
