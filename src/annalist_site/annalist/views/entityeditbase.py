@@ -355,6 +355,7 @@ class EntityEditBaseView(AnnalistGenericView):
                 error_head=messages['entity_type_heading'],
                 error_message=messages['entity_type_invalid']
                 )
+
         # Save updated details
         if 'save' in request.POST:
             # @@TODO: factor to separate method
@@ -414,61 +415,19 @@ class EntityEditBaseView(AnnalistGenericView):
         # Add field
         add_field = self.find_add_field(request.POST)
         if add_field:
+            log.info("add_field: POST data %r"%(request.POST,))
             # add_field is repeat field description
             entityvals = self.map_form_data_to_values(request.POST)
-            log.info("add_field: %r, entityvals: %r"%(add_field, entityvals))
-
-            # add_field:
-            # {
-            #   'field_type': 'RepeatValuesMap',
-            #   'repeat_entity_values': u 'annal:view_fields',
-            #   'repeat_id': u 'View_fields',
-            #   'repeat_label_add': u 'Add field',
-            #   'repeat_fields_description': {
-            #     'field_type': 'FieldListValueMap',
-            #     'field_list': [{
-            #       'field_property_uri': u 'annal:field_id',
-            #       'field_placement': Placement(field = u 'small-12 medium-6 columns', label = 'small-12 medium-4 columns', value = 'small-12 medium-8 columns'),
-            #       'field_id': u 'Field_sel'
-            #     }, {
-            #       'field_property_uri': u 'annal:field_placement',
-            #       'field_placement': Placement(field = u 'small-12 medium-6 columns', label = 'small-12 medium-4 columns', value = 'small-12 medium-8 columns'),
-            #       'field_id': u 'Field_placement'
-            #     }]
-            #   },
-            #   'repeat_label_delete': u 'Remove selected field(s)',
-            #   'repeat_label': u 'Fields',
-            #   'repeat_context_values': u 'repeat'
-            # }
-
-            # entityvals: 
-            # {
-            #   u 'annal:view_fields': [{
-            #     u 'annal:field_placement': u 'small:0,12;medium:0,6',
-            #     u 'annal:field_id': u 'View_id'
-            #   }, {
-            #     u 'annal:field_placement': u 'small:0,12',
-            #     u 'annal:field_id': u 'View_label'
-            #   }, {
-            #     u 'annal:field_placement': u 'small:0,12',
-            #     u 'annal:field_id': u 'View_comment'
-            #   }],
-            #   u 'rdfs:label': u 'View description for record view description',
-            #   u 'rdfs:comment': u 'This resource describes the form that is used when displaying and/or editing a record view description',
-            #   u 'annal:id': u 'RecordView_view'
-            # }
-
+            # log.info("add_field: %r, entityvals: %r"%(add_field, entityvals))
             # Construct new field value
-
             field_val = dict(
                 [ (f['field_property_uri'], "") 
                   for f in add_field['repeat_fields_description']['field_list']
                 ])
             # log.info("field_val: %r"%(field_val,))
-
             # Add field to entity
             entityvals[add_field['repeat_entity_values']].append(field_val)
-            log.info("entityvals: %r"%(entityvals,))
+            # log.info("entityvals: %r"%(entityvals,))
             form_context = self.map_value_to_context(entityvals, **context_extra_values)
             return (
                 self.render_html(form_context, self._entityformtemplate) or 
@@ -478,9 +437,10 @@ class EntityEditBaseView(AnnalistGenericView):
         # Remove Field(s)
         remove_field = self.find_remove_field(request.POST)
         if remove_field:
+            log.info("remove_field: POST data %r"%(request.POST,))
             # remove_field is repeat field description
             entityvals = self.map_form_data_to_values(request.POST)
-            log.info("remove_field: %r, entityvals: %r"%(remove_field, entityvals))
+            # log.info("remove_field: %r, entityvals: %r"%(remove_field, entityvals))
             # Remove field(s) from entity
             old_repeatvals = entityvals[remove_field['repeat_entity_values']]
             new_repeatvals = []
@@ -488,7 +448,7 @@ class EntityEditBaseView(AnnalistGenericView):
                 if str(i) not in remove_field['remove_fields']:
                     new_repeatvals.append(old_repeatvals[i])
             entityvals[remove_field['repeat_entity_values']] = new_repeatvals
-            log.info("entityvals: %r"%(entityvals,))
+            # log.info("entityvals: %r"%(entityvals,))
             form_context = self.map_value_to_context(entityvals, **context_extra_values)
             return (
                 self.render_html(form_context, self._entityformtemplate) or 

@@ -100,18 +100,20 @@ class RepeatValuesMap(object):
         prefix_template = self.r['repeat_id']+"__%d__"
         prefix_n        = 0
         repeatvals      = []
+        repeatdata      = []
         while True:
             prefix = prefix_template%prefix_n
-            vals = (
-                self.map_form_to_repeat_field_data(formvals, prefix)
-                or
-                self.f.map_form_to_entity_repeated_items(formvals, prefix)
-                )
-            if vals is None:
-                break
-            repeatvals.append(vals)
+            rdata  = self.map_form_to_repeat_field_data(formvals, prefix)
+            if rdata:
+                repeatdata.append(rdata)
+            else:
+                rvals = self.f.map_form_to_entity_repeated_items(formvals, prefix)
+                if rvals:
+                    repeatvals.append(rvals)
+                else:
+                    break
             prefix_n += 1
-        return {self.e: repeatvals}
+        return {self.e: repeatvals+repeatdata}
 
     def map_repeat_field_data_to_context(self, repeatedval):
         return (

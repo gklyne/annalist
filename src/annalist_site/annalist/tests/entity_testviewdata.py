@@ -395,7 +395,10 @@ def recordview_view_context_data(
 def recordview_view_form_data(
         coll_id="testcoll", 
         view_id=None, orig_id=None, 
-        action=None, cancel=None, update="RecordView"):
+        action=None, cancel=None,
+        add_field=None,         # True for add field option
+        remove_fields=None,     # List of field numbers to remove (as strings)
+        update="RecordView"):
     form_data_dict = (
         { 'View_label':         '%s data ... (%s/%s)'%(update, coll_id, view_id)
         , 'View_comment':       '%s description ... (%s/%s)'%(update, coll_id, view_id)
@@ -409,6 +412,22 @@ def recordview_view_form_data(
         , 'View_fields__1__Field_placement':    "small:0,12"
         , 'View_fields__2__Field_id':           "View_comment"
         , 'View_fields__2__Field_placement':    "small:0,12"
+        , 'View_fields__3__repeat_fields_data': 
+            '{ "annal:repeat_id": "View_fields"' +
+            ', "annal:repeat_label": "Fields"' +
+            ', "annal:repeat_label_add": "Add field"' +
+            ', "annal:repeat_label_delete": "Remove selected field(s)"' +
+            ', "annal:repeat_entity_values": "annal:view_fields"' +
+            ', "annal:repeat_context_values": "repeat"' +
+            ', "annal:repeat": ' +
+                '[ { "annal:field_placement": "small:0,12; medium:0,6"' +
+                  ', "annal:field_id": "Field_sel"' +
+                  '}' +
+                ', { "annal:field_placement": "small:0,12; medium:6,6"' +
+                  ', "annal:field_id": "Field_placement"' +
+                  '}' +
+                ']' +
+            '}'
         })
     if view_id:
         form_data_dict['entity_id']     = view_id
@@ -423,6 +442,11 @@ def recordview_view_form_data(
         form_data_dict['action']        = action
     if cancel:
         form_data_dict['cancel']        = "Cancel"
+    elif add_field:
+        form_data['View_fields__add']           = "Add field"
+    elif remove_fields:
+        form_data['View_fields__remove']        = "Remove field"
+        form_data['View_fields__select_fields'] = remove_fields
     else:
         form_data_dict['save']          = 'Save'
     return form_data_dict
