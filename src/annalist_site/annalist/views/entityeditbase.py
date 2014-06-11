@@ -102,7 +102,7 @@ class EntityEditBaseView(AnnalistGenericView):
 
     def get_entityid(self, action, parent, entityid):
         if action == "new":
-            entityid = self.entityclass.allocate_new_id(parent)
+            entityid = self.entitytypeinfo.entityclass.allocate_new_id(parent)
         return entityid
 
     def get_entity(self, action, parent, entityid, entity_initial_values):
@@ -115,23 +115,23 @@ class EntityEditBaseView(AnnalistGenericView):
         entity_initial_values  is a dictionary of initial values used when a new entity
                         is created
 
-        self.entityclass   is the class of the entity to be acessed or created.
+        self.entitytypeinfo.entityclass   is the class of the entity to be acessed or created.
 
         returns an object of the appropriate type.  If an existing entity is accessed, values
         are read from storage, otherwise a new entity object is created but not yet saved.
         """
         log.debug(
             "get_entity id %s, parent %s, action %s, altparent %s"%
-            (entityid, parent._entitydir, action, self.entityaltparent)
+            (entityid, parent._entitydir, action, self.entitytypeinfo.entityaltparent)
             )
         entity = None
         if action == "new":
-            entity = self.entityclass(parent, entityid)
+            entity = self.entitytypeinfo.entityclass(parent, entityid)
             entity.set_values(entity_initial_values)
-        elif self.entityclass.exists(parent, entityid, altparent=self.entityaltparent):
-            entity = self.entityclass.load(parent, entityid, altparent=self.entityaltparent)
+        elif self.entitytypeinfo.entityclass.exists(parent, entityid, altparent=self.entitytypeinfo.entityaltparent):
+            entity = self.entitytypeinfo.entityclass.load(parent, entityid, altparent=self.entitytypeinfo.entityaltparent)
         if entity is None:
-            parentid = self.entityaltparent.get_id() if self.entityaltparent else "(none)"
+            parentid = self.entitytypeinfo.entityaltparent.get_id() if self.entitytypeinfo.entityaltparent else "(none)"
             log.debug(
                 "Entity not found: parent %s, entity_id %s, altparent %s"%
                 (parent.get_id(), entityid, parentid)
@@ -382,13 +382,13 @@ class EntityEditBaseView(AnnalistGenericView):
                 new_parent = orig_parent
             # Check existence of entity to save according to action performed
             if (request.POST['action'] in ["new", "copy"]) or entity_id_changed:
-                if self.entityclass.exists(new_parent, entity_id):
+                if self.entitytypeinfo.entityclass.exists(new_parent, entity_id):
                     return self.form_re_render(request, context_extra_values,
                         error_head=messages['entity_heading'],
                         error_message=messages['entity_exists']
                         )
             else:
-                if not self.entityclass.exists(orig_parent, entity_id, altparent=self.entityaltparent):
+                if not self.entitytypeinfo.entityclass.exists(orig_parent, entity_id, altparent=self.entitytypeinfo.entityaltparent):
                     # This shouldn't happen, but just in case...
                     log.warning("Expected %s/%s not found; action %s, entity_id_changed %r"%
                           (entity_type, entity_id, request.POST['action'], entity_id_changed)
@@ -404,11 +404,11 @@ class EntityEditBaseView(AnnalistGenericView):
             entity_values = orig_entity.get_values() if orig_entity else {}
             entity_values.pop('annal:uri', None)  # Force re-allocation of URI
             entity_values.update(self.map_form_data_to_values(request.POST))
-            self.entityclass.create(new_parent, entity_id, entity_values)
+            self.entitytypeinfo.entityclass.create(new_parent, entity_id, entity_values)
             # Remove old entity if rename
             if entity_id_changed:
-                if self.entityclass.exists(new_parent, entity_id):    # Precautionary
-                    self.entityclass.remove(orig_parent, orig_entity_id)
+                if self.entitytypeinfo.entityclass.exists(new_parent, entity_id):    # Precautionary
+                    self.entitytypeinfo.entityclass.remove(orig_parent, orig_entity_id)
             log.debug("Continue to %s"%(continuation_uri))
             return HttpResponseRedirect(continuation_uri)
 

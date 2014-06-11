@@ -91,7 +91,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         e4 = EntityData.create(self.testdata2, "entity4", 
             entitydata_create_values("entity4", type_id="testtype2")
             )
-        self.initial_list_ids = ["Default_list", "Default_list_all", "Fields_list"]
+        self.initial_list_ids = ["Default_list", "Default_list_all", "Fields_list", "Types_list"]
         return
 
     def tearDown(self):
@@ -457,23 +457,23 @@ class EntityGenericListViewTest(AnnalistTestCase):
     #   -------- delete --------
 
     def test_post_delete_type_entity(self):
-        f = entitylist_form_data("delete", entities=["_field/field1"])
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        f = entitylist_form_data("delete", entities=["_type/testtype"])
+        u = entitydata_list_type_uri("testcoll", "_type", list_id="Types_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Confirm requested action</h3>")
-        self.assertContains(r, "Remove record field1 of type _field in collection testcoll: Are you sure?")
+        self.assertContains(r, "Remove record testtype of type _type in collection testcoll: Are you sure?")
         self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
-        self.assertContains(r, '<input type="hidden" name="complete_action"  value="/testsite/c/testcoll/d/_field/!delete_confirmed"/>')
+        self.assertContains(r, '<input type="hidden" name="complete_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>')
         self.assertEqual(r.context['action_description'], 
-            'Remove record field1 of type _field in collection testcoll')
+            'Remove record testtype of type _type in collection testcoll')
         self.assertEqual(r.context['complete_action'], 
-            '/testsite/c/testcoll/d/_field/!delete_confirmed')
+            '/testsite/c/testcoll/d/_type/!delete_confirmed')
         self.assertEqual(r.context['action_params'], 
-            '{"entity_delete": ["Delete"], "entity_id": ["field1"], "continuation_uri": ["/testsite/c/testcoll/l/Fields_list/_field/"]}')
+            '{"entity_delete": ["Delete"], "entity_id": ["testtype"], "continuation_uri": ["/testsite/c/testcoll/l/Types_list/_type/"]}')
         self.assertEqual(r.context['cancel_action'], 
-            '/testsite/c/testcoll/l/Fields_list/_field/')
+            '/testsite/c/testcoll/l/Types_list/_type/')
         return
 
     def test_post_delete_all_entity(self):
@@ -499,9 +499,19 @@ class EntityGenericListViewTest(AnnalistTestCase):
             '/testsite/c/testcoll/l/Fields_list/')
         return
 
-    @unittest.skip("@@TODO attempt delete sitedata element")
-    def test_post_delete_all_entity(self):
-        assert False, "@@TODO attempt delete sitedata element"
+    def test_post_delete_site_entity(self):
+        f = entitylist_form_data("delete", entities=["_field/Field_comment"])
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        # log.info("entitydata_list_all_uri: %s"%u)
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        e1 = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
+        self.assertIn(e1, r['location'])
+        e2 = "Cannot%20remove%20site%20built-in%20entity%20Field_comment"
+        self.assertIn(e2, r['location'])
+        return
 
     #   -------- close / search / view / default-view / customize--------
 

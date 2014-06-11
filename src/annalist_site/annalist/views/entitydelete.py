@@ -57,14 +57,14 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
             entity_id    = request.POST['entity_id']
             message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
             messages  = (
-                { 'entity_removed': self.entitymessages['entity_removed']%message_vals
+                { 'entity_removed': self.entitytypeinfo.entitymessages['entity_removed']%message_vals
                 })
             continuation_uri = (
                 request.POST.get('continuation_uri', None) or
                 self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
                 )
             return self.confirm_form_respose(
-                request, entity_id, self.entityparent.remove_entity, 
+                request, entity_id, self.entitytypeinfo.entityparent.remove_entity, 
                 messages, continuation_uri
                 )
         return self.error(self.error400values())

@@ -42,6 +42,7 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
+from annalist.views.entitytypeinfo  import EntityTypeInfo
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -51,65 +52,65 @@ from annalist.models.entitydata     import EntityData
 
 LOGIN_URIS = None   # Populated by first call of `authenticate`
 
-ENTITY_MESSAGES = (
-    { 'parent_heading':         message.RECORD_TYPE_ID
-    , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS
-    , 'entity_heading':         message.ENTITY_DATA_ID
-    , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
-    , 'entity_exists':          message.ENTITY_DATA_EXISTS
-    , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
-    , 'entity_type_heading':    message.ENTITY_TYPE_ID
-    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-    , 'entity_removed':         message.ENTITY_DATA_REMOVED
-    })
+# ENTITY_MESSAGES = (
+#     { 'parent_heading':         message.RECORD_TYPE_ID
+#     , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS
+#     , 'entity_heading':         message.ENTITY_DATA_ID
+#     , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
+#     , 'entity_exists':          message.ENTITY_DATA_EXISTS
+#     , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
+#     , 'entity_type_heading':    message.ENTITY_TYPE_ID
+#     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+#     , 'entity_removed':         message.ENTITY_DATA_REMOVED
+#     })
 
-TYPE_MESSAGES = (
-    { 'parent_heading':         message.COLLECTION_ID
-    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
-    , 'entity_heading':         message.RECORD_TYPE_ID
-    , 'entity_invalid_id':      message.RECORD_TYPE_ID_INVALID
-    , 'entity_exists':          message.RECORD_TYPE_EXISTS
-    , 'entity_not_exists':      message.RECORD_TYPE_NOT_EXISTS
-    , 'entity_removed':         message.RECORD_TYPE_REMOVED
-    , 'entity_type_heading':    message.ENTITY_TYPE_ID
-    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-    })
+# TYPE_MESSAGES = (
+#     { 'parent_heading':         message.COLLECTION_ID
+#     , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+#     , 'entity_heading':         message.RECORD_TYPE_ID
+#     , 'entity_invalid_id':      message.RECORD_TYPE_ID_INVALID
+#     , 'entity_exists':          message.RECORD_TYPE_EXISTS
+#     , 'entity_not_exists':      message.RECORD_TYPE_NOT_EXISTS
+#     , 'entity_removed':         message.RECORD_TYPE_REMOVED
+#     , 'entity_type_heading':    message.ENTITY_TYPE_ID
+#     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+#     })
 
-VIEW_MESSAGES = (
-    { 'parent_heading':         message.COLLECTION_ID
-    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
-    , 'entity_heading':         message.RECORD_VIEW_ID
-    , 'entity_invalid_id':      message.RECORD_VIEW_ID_INVALID
-    , 'entity_exists':          message.RECORD_VIEW_EXISTS
-    , 'entity_not_exists':      message.RECORD_VIEW_NOT_EXISTS
-    , 'entity_removed':         message.RECORD_VIEW_REMOVED
-    , 'entity_type_heading':    message.ENTITY_TYPE_ID
-    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-    })
+# VIEW_MESSAGES = (
+#     { 'parent_heading':         message.COLLECTION_ID
+#     , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+#     , 'entity_heading':         message.RECORD_VIEW_ID
+#     , 'entity_invalid_id':      message.RECORD_VIEW_ID_INVALID
+#     , 'entity_exists':          message.RECORD_VIEW_EXISTS
+#     , 'entity_not_exists':      message.RECORD_VIEW_NOT_EXISTS
+#     , 'entity_removed':         message.RECORD_VIEW_REMOVED
+#     , 'entity_type_heading':    message.ENTITY_TYPE_ID
+#     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+#     })
 
-LIST_MESSAGES = (
-    { 'parent_heading':         message.COLLECTION_ID
-    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
-    , 'entity_heading':         message.RECORD_LIST_ID
-    , 'entity_invalid_id':      message.RECORD_LIST_ID_INVALID
-    , 'entity_exists':          message.RECORD_LIST_EXISTS
-    , 'entity_not_exists':      message.RECORD_LIST_NOT_EXISTS
-    , 'entity_removed':         message.RECORD_LIST_REMOVED
-    , 'entity_type_heading':    message.ENTITY_TYPE_ID
-    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-    })
+# LIST_MESSAGES = (
+#     { 'parent_heading':         message.COLLECTION_ID
+#     , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+#     , 'entity_heading':         message.RECORD_LIST_ID
+#     , 'entity_invalid_id':      message.RECORD_LIST_ID_INVALID
+#     , 'entity_exists':          message.RECORD_LIST_EXISTS
+#     , 'entity_not_exists':      message.RECORD_LIST_NOT_EXISTS
+#     , 'entity_removed':         message.RECORD_LIST_REMOVED
+#     , 'entity_type_heading':    message.ENTITY_TYPE_ID
+#     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+#     })
 
-FIELD_MESSAGES = (
-    { 'parent_heading':         message.COLLECTION_ID
-    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
-    , 'entity_heading':         message.RECORD_FIELD_ID
-    , 'entity_invalid_id':      message.RECORD_FIELD_ID_INVALID
-    , 'entity_exists':          message.RECORD_FIELD_EXISTS
-    , 'entity_not_exists':      message.RECORD_FIELD_NOT_EXISTS
-    , 'entity_removed':         message.RECORD_FIELD_REMOVED
-    , 'entity_type_heading':    message.ENTITY_TYPE_ID
-    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-    })
+# FIELD_MESSAGES = (
+#     { 'parent_heading':         message.COLLECTION_ID
+#     , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+#     , 'entity_heading':         message.RECORD_FIELD_ID
+#     , 'entity_invalid_id':      message.RECORD_FIELD_ID_INVALID
+#     , 'entity_exists':          message.RECORD_FIELD_EXISTS
+#     , 'entity_not_exists':      message.RECORD_FIELD_NOT_EXISTS
+#     , 'entity_removed':         message.RECORD_FIELD_REMOVED
+#     , 'entity_type_heading':    message.ENTITY_TYPE_ID
+#     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+#     })
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -169,10 +170,34 @@ class AnnalistGenericView(ContentNegotiationView):
     def get_type_data(self, type_id):
         """
         Check type identifiers, and set up objects for:
+            self.entitytypeinfo
+
+        Must be called after method 'get_coll_data' has returned.
+
+        Returns None if all is well, or an HttpResponse object with details 
+        about any problem encountered.
+        """
+        if type_id:
+            self.entitytypeinfo = EntityTypeInfo(self.site(), self.collection, type_id)
+            if not self.entitytypeinfo.entityparent:
+                log.warning("get_type_data: RecordType %s not found"%type_id)
+                return self.error(
+                    dict(self.error404values(),
+                        message=message.RECORD_TYPE_NOT_EXISTS%(
+                            {'id': type_id, 'coll_id': self.collection.get_id()})
+                        )
+                    )
+        else:
+            self.entitytypeinfo = None
+        return None
+
+    def zzz_get_type_data(self, type_id):
+        """
+        Check type identifiers, and set up objects for:
             self.entityclass
             self.entityparent
 
-        Must be called after has returned.
+        Must be called after method 'get_coll_data' has returned.
 
         Returns None if all is well, or an HttpResponse object with details 
         about any problem encountered.
@@ -342,12 +367,12 @@ class AnnalistGenericView(ContentNegotiationView):
         returning a URI to display a supplied error message if the test fails.
 
         NOTE: this function works with the generic base template base_generic.html, which
-        is assumed to provide an underlay for thne currently viewed page.
+        is assumed to provide an underlay for the currently viewed page.
 
         val         value that is required to be not None and not empty or False
         msg         message to display if the value evaluated to False
         testfn      is a function to test the value (if not None).  If not specified, 
-                    the default test checks thatthe value does not evaluate as false
+                    the default test checks that the value does not evaluate as false
                     (e.g. is a non-empty string, list or collection).
 
         returns a URI string for use with HttpResponseRedirect to redisplay the 

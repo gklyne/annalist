@@ -151,17 +151,17 @@ class EntityRootTest(TestCase):
             self.assertEqual(e[k], v)
         return
 
-    @unittest.skip("EntityRoot iterator no longer returns members")
-    def test_entityroot_iter(self):
-        e = EntityRoot(TestBaseUri+"/c", TestBaseDir+"/c")
-        # e = TestEntityRootType(Te stBaseUri, TestBaseDir)
-        expect = [ "coll1", "coll2", "coll3", "testcoll"]
-        count = 0
-        for i in e:
-            self.assertIn(i, expect)
-            count += 1
-        self.assertEqual(count, len(expect))
-        return
+    # @unittest.skip("EntityRoot iterator no longer returns members")
+    # def test_entityroot_iter(self):
+    #     e = EntityRoot(TestBaseUri+"/c", TestBaseDir+"/c")
+    #     # e = TestEntityRootType(Te stBaseUri, TestBaseDir)
+    #     expect = [ "coll1", "coll2", "coll3", "testcoll"]
+    #     count = 0
+    #     for i in e:
+    #         self.assertIn(i, expect)
+    #         count += 1
+    #     self.assertEqual(count, len(expect))
+    #     return
 
     def test_entityroot_subclass(self):
         e = TestEntityRootType(TestBaseUri, TestBaseDir)

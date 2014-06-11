@@ -66,7 +66,7 @@ site_views = (
     , "RecordType_view", "RecordView_view"
     , "List_view", "BibEntry_view"
     })
-site_lists = {"Default_list", "Default_list_all", "Fields_list"}
+site_lists = {"Default_list", "Default_list_all", "Fields_list", "Types_list"}
 
 class CollectionTest(AnnalistTestCase):
     """

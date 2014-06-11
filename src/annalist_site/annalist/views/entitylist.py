@@ -21,6 +21,7 @@ from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 
+from annalist.views.entitytypeinfo  import EntityTypeInfo
 from annalist.views.confirm         import ConfirmView, dict_querydict
 from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
 
@@ -51,15 +52,10 @@ class EntityGenericListView(EntityEditBaseView):
         about any problem encountered.
         """
         reqhost = self.get_request_host()
-        if type_id:
-            http_response = (
-                self.get_coll_data(coll_id, host=reqhost) or
-                self.get_type_data(type_id)
-                )
-        else:
-            http_response = self.get_coll_data(coll_id, host=reqhost)
         http_response = (
-            http_response or 
+            # http_response or 
+            self.get_coll_data(coll_id, host=reqhost) or
+            self.get_type_data(type_id) or
             self.get_list_data(self.get_list_id(type_id, list_id))
             )
         return http_response
@@ -105,6 +101,56 @@ class EntityGenericListView(EntityEditBaseView):
                 action=action
                 )
 
+    def get_type_entities(self):
+        """
+        Return list of entities of specified type, including site-wide values.
+        """
+        return self.entitytypeinfo.entityparent.child_entities(
+            self.entitytypeinfo.entityclass,
+            altparent=self.entitytypeinfo.entityaltparent
+            )
+
+    def get_collection_entities(self):
+        """
+        Return list of entities of all types defined in the current collection
+
+        Assumes prior call of get_coll_data method.
+        """
+        entity_list = []
+        for f in self.collection._children(RecordTypeData):
+            t = RecordTypeData.load(self.collection, f)
+            if t:
+                entity_list.extend(t.entities())
+        return entity_list
+
+    def check_collection_entity(self, entity_id, entity_type, msg, continuation_uri=""):
+        """
+        Test a supplied entity_id is defined in the current collection,
+        returning a URI to display a supplied error message if the test fails.
+
+        NOTE: this function works with the generic base template base_generic.html, which
+        is assumed to provide an underlay for the currently viewed page.
+
+        entity_id           entity id that is required to be defined in the current collection.
+        entity_type         specified type for entity to delete.
+        msg                 message to display if the test fails.
+        continuation_uri    URI of page to display when the redisplayed form is closed.
+
+        returns a URI string for use with HttpResponseRedirect to redisplay the 
+        current page with the supplied message, or None if entity id is OK.
+        """
+        # log.info("check_collection_entity: entity_id: %s"%(entity_id))
+        # log.info("check_collection_entity: entityparent: %s"%(self.entityparent.get_id()))
+        # log.info("check_collection_entity: entityclass: %s"%(self.entityclass))
+        redirect_uri = None
+        typeinfo     = self.entitytypeinfo or EntityTypeInfo(self.site(), self.collection, entity_type)
+        if not typeinfo.entityclass.exists(typeinfo.entityparent, entity_id):
+            redirect_uri = (
+                self.get_request_path()+
+                self.error_params(msg)
+                ) + continuation_uri
+        return redirect_uri
+
     # GET
 
     def get(self, request, coll_id=None, type_id=None, list_id=None):
@@ -123,15 +169,17 @@ class EntityGenericListView(EntityEditBaseView):
         list_id     = self.get_list_id(type_id, list_id)
         list_ids    = [ l.get_id() for l in self.collection.lists() ]
         if type_id:
-            entity_list = self.entityparent.child_entities(
-                self.entityclass, altparent=self.entityaltparent
-                )
+            entity_list = self.get_type_entities()
+            # entity_list = self.entityparent.child_entities(
+            #     self.entityclass, altparent=self.entityaltparent
+            #     )
         else:
-            entity_list = []
-            for f in self.collection._children(RecordTypeData):
-                t = RecordTypeData.load(self.collection, f)
-                if t:
-                    entity_list.extend(t.entities())
+            entity_list = self.get_collection_entities()
+            # entity_list = []
+            # for f in self.collection._children(RecordTypeData):
+            #     t = RecordTypeData.load(self.collection, f)
+            #     if t:
+            #         entity_list.extend(t.entities())
         entityval = { 'annal:list_entities': entity_list }
         # Set up initial view context
         self._entityvaluemap = self.get_list_entityvaluemap(list_id)
@@ -214,9 +262,14 @@ class EntityGenericListView(EntityEditBaseView):
                         ) + continuation_here
                     )
             if "delete" in request.POST:
+                action = "delete"
                 redirect_uri = (
                     self.check_value_supplied(entity_id, 
                         message.NO_ENTITY_FOR_DELETE,
+                        continuation_uri=cont_param
+                        ) or
+                    self.check_collection_entity(entity_id, entity_type,
+                        message.SITE_ENTITY_FOR_DELETE%{'id': entity_id},
                         continuation_uri=cont_param
                         )
                     )
