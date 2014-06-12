@@ -477,8 +477,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_post_delete_all_entity(self):
-        f = entitylist_form_data("delete", entities=["_field/field1"])
-        u = entitydata_list_all_uri("testcoll", list_id="Fields_list")
+        f = entitylist_form_data("delete", entities=["_type/testtype"])
+        u = entitydata_list_all_uri("testcoll", list_id="Types_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -486,17 +486,18 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # print "**********"
         # print r.content
         # print "**********"
-        self.assertContains(r, "Remove record field1 of type _field in collection testcoll: Are you sure?")
+        self.assertContains(r, "<h3>Confirm requested action</h3>")
+        self.assertContains(r, "Remove record testtype of type _type in collection testcoll: Are you sure?")
         self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
-        self.assertContains(r, '<input type="hidden" name="complete_action"  value="/testsite/c/testcoll/d/_field/!delete_confirmed"/>')
+        self.assertContains(r, '<input type="hidden" name="complete_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>')
         self.assertEqual(r.context['action_description'], 
-            'Remove record field1 of type _field in collection testcoll')
+            'Remove record testtype of type _type in collection testcoll')
         self.assertEqual(r.context['complete_action'], 
-            '/testsite/c/testcoll/d/_field/!delete_confirmed')
+            '/testsite/c/testcoll/d/_type/!delete_confirmed')
         self.assertEqual(r.context['action_params'], 
-            '{"entity_delete": ["Delete"], "entity_id": ["field1"], "continuation_uri": ["/testsite/c/testcoll/l/Fields_list/"]}')
+            '{"entity_delete": ["Delete"], "entity_id": ["testtype"], "continuation_uri": ["/testsite/c/testcoll/l/Types_list/"]}')
         self.assertEqual(r.context['cancel_action'], 
-            '/testsite/c/testcoll/l/Fields_list/')
+            '/testsite/c/testcoll/l/Types_list/')
         return
 
     def test_post_delete_site_entity(self):
