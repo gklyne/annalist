@@ -75,14 +75,15 @@ class GenericEntityEditView(EntityEditBaseView):
         if http_response:
             return http_response
         # Set up RecordType-specific values
-        entity_id  = self.get_entityid(action, self.entitytypeinfo.entityparent, entity_id)
+        typeinfo   = self.entitytypeinfo
+        entity_id  = self.get_entityid(action, typeinfo.entityparent, entity_id)
         # Create local entity object or load values from existing
         entity_initial_values = (
             { "rdfs:label":   "Entity '%s' of type '%s' in collection '%s'"%
                               (entity_id, type_id, coll_id)
             , "rdfs:comment": ""
             })
-        entity = self.get_entity(action, self.entitytypeinfo.entityparent, entity_id, entity_initial_values)
+        entity = self.get_entity(action, typeinfo.entityparent, entity_id, entity_initial_values)
         if entity is None:
             return self.error(
                 dict(self.error404values(),
@@ -149,10 +150,9 @@ class GenericEntityEditView(EntityEditBaseView):
         #       (coll_id, type_id, entity_id, view_id, action)
         #     )
         # log.info("continuation_uri %s, type_id %s"%(continuation_uri, type_id))
-        original_entity = self.get_entity(
-            action, self.entitytypeinfo.entityparent, orig_entity_id, {}
-            )
-        type_ids = [ t.get_id() for t in self.collection.types() ]
+        typeinfo        = self.entitytypeinfo
+        original_entity = self.get_entity(action, typeinfo.entityparent, orig_entity_id, {})
+        type_ids        = [ t.get_id() for t in self.collection.types() ]
         context_extra_values = (
             { 'title':            self.site_data()["title"]
             , 'heading':          "Entity '%s' of type '%s' in collection '%s'"%
@@ -168,26 +168,26 @@ class GenericEntityEditView(EntityEditBaseView):
             })
         message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
         messages = (
-            { 'parent_heading':         self.entitytypeinfo.entitymessages['parent_heading']%message_vals
-            , 'parent_missing':         self.entitytypeinfo.entitymessages['parent_missing']%message_vals
-            , 'entity_heading':         self.entitytypeinfo.entitymessages['entity_heading']%message_vals
-            , 'entity_invalid_id':      self.entitytypeinfo.entitymessages['entity_invalid_id']%message_vals
-            , 'entity_exists':          self.entitytypeinfo.entitymessages['entity_exists']%message_vals
-            , 'entity_not_exists':      self.entitytypeinfo.entitymessages['entity_not_exists']%message_vals
-            , 'entity_type_heading':    self.entitytypeinfo.entitymessages['entity_type_heading']%message_vals
-            , 'entity_type_invalid':    self.entitytypeinfo.entitymessages['entity_type_invalid']%message_vals
+            { 'parent_heading':         typeinfo.entitymessages['parent_heading']%message_vals
+            , 'parent_missing':         typeinfo.entitymessages['parent_missing']%message_vals
+            , 'entity_heading':         typeinfo.entitymessages['entity_heading']%message_vals
+            , 'entity_invalid_id':      typeinfo.entitymessages['entity_invalid_id']%message_vals
+            , 'entity_exists':          typeinfo.entitymessages['entity_exists']%message_vals
+            , 'entity_not_exists':      typeinfo.entitymessages['entity_not_exists']%message_vals
+            , 'entity_type_heading':    typeinfo.entitymessages['entity_type_heading']%message_vals
+            , 'entity_type_invalid':    typeinfo.entitymessages['entity_type_invalid']%message_vals
             })
         # Process form response and respond accordingly
         self._entityvaluemap = self.get_form_entityvaluemap(self.get_view_id(view_id))
-        if not self.entitytypeinfo.entityparent._exists():
+        if not typeinfo.entityparent._exists():
             # Create RecordTypeData when not already exists
-            RecordTypeData.create(self.collection, self.entitytypeinfo.entityparent.get_id(), {})
+            RecordTypeData.create(self.collection, typeinfo.entityparent.get_id(), {})
         # log.info(
         #     "self.form_response: entity_id %s, orig_entity_id %s, type_id %s, action %s"%
         #       (entity_id, orig_entity_id, type_id, action)
         #     )
         return self.form_response(
-            request, action, self.entitytypeinfo.entityparent, original_entity,
+            request, action, typeinfo.entityparent, original_entity,
             entity_id, orig_entity_id, 
             entity_type, orig_entity_type,
             messages, context_extra_values

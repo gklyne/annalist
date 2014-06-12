@@ -191,49 +191,6 @@ class AnnalistGenericView(ContentNegotiationView):
             self.entitytypeinfo = None
         return None
 
-    def zzz_get_type_data(self, type_id):
-        """
-        Check type identifiers, and set up objects for:
-            self.entityclass
-            self.entityparent
-
-        Must be called after method 'get_coll_data' has returned.
-
-        Returns None if all is well, or an HttpResponse object with details 
-        about any problem encountered.
-        """
-        Type_Class_Map = (
-            { '_type':  RecordType
-            , '_list':  RecordList
-            , '_view':  RecordView
-            , '_field': RecordField
-            })
-        Type_Message_Map = (
-            { '_type':  TYPE_MESSAGES
-            , '_list':  LIST_MESSAGES
-            , '_view':  VIEW_MESSAGES
-            , '_field': FIELD_MESSAGES
-            })
-        if type_id in Type_Class_Map:
-            self.entityclass     = Type_Class_Map[type_id]
-            self.entitymessages  = Type_Message_Map[type_id]
-            self.entityparent    = self.collection
-            self.entityaltparent = self.site()
-        else:
-            # Check type
-            if not RecordType.exists(self.collection, type_id, self.site()):
-                log.warning("get_type_data: RecordType %s not found"%type_id)
-                return self.error(
-                    dict(self.error404values(),
-                        message=message.RECORD_TYPE_NOT_EXISTS%(type_id, self.collection.get_id())
-                        )
-                    )
-            self.entityclass     = EntityData
-            self.entitymessages  = ENTITY_MESSAGES
-            self.entityparent    = RecordTypeData(self.collection, type_id)
-            self.entityaltparent = None
-        return None
-
     def get_view_data(self, view_id):
         if not RecordView.exists(self.collection, view_id, self.site()):
             log.warning("get_view_data: RecordView %s not found"%view_id)
