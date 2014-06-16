@@ -4,7 +4,8 @@
 , "rdfs:label":         "View description for default record view"
 , "rdfs:comment":       "This resource describes the default record listing display"
 , "annal:selector":     "annal:type=={annal:default_view/annal:record_type} @@TBD"
-, "annal:default_view_not": "Default_view"
+, "annal:default_view": "Default_view"
+, "annal:default_type": "Default_type"
 , "annal:display_type": "annal:List"
 , "annal:list_fields":
   [ { "annal:field_id":         "Entity_id"

@@ -129,7 +129,10 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / implement handlers for add/delete fields
    / edit form response should update, not replace, any data from the original (so data from multiple views is not discarded).
    > implement delete confirm view for views and lists.  NEED TESTS.  test_recordlist module?
-   - review missing tests: implement or delete?
+   / review missing tests: implement or delete?
+   - fix up view links from list display
+   - default-view button handler from list display
+   - search button handler from list display
    - review URI for delete type/view/list confirmation
    - move invocation of authentication to the immediate response handler code?
    - don't include continuation-uri param when URI is blank

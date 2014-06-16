@@ -68,7 +68,7 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='continuation_uri', e=None,                  f='continuation_uri' )
         ])
 
-# Table used as basis, or initial values, for a dynamically generated entity-value map
+# Table used as basis, or initial values, for a dynamically generated entity-value map for list displays
 listentityvaluemap  = (
         [ SimpleValueMap(c='title',            e=None,                  f=None               )
         , SimpleValueMap(c='coll_id',          e=None,                  f=None               )
@@ -76,6 +76,8 @@ listentityvaluemap  = (
         , SimpleValueMap(c='list_id',          e=None,                  f=None               )
         , SimpleValueMap(c='list_ids',         e=None,                  f=None               )
         , SimpleValueMap(c='list_selected',    e=None,                  f=None               )
+        , SimpleValueMap(c='collection_view',  e=None,                  f=None               )
+        , SimpleValueMap(c='default_view_id',  e=None,                  f=None               )
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
         , SimpleValueMap(c='continuation_uri', e=None,                  f='continuation_uri' )

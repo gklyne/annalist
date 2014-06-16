@@ -113,7 +113,12 @@ class bound_field(object):
         # log.info("__getattr__ %s"%name)
         # log.info("self._key %s"%self._key)
         # log.info("self._entity %r"%self._entity)
-        if name == "entity_type_id":
+        if name == "entity_id":
+            if self._entity and isinstance(self._entity, EntityRoot):
+                return self._entity.get_id()
+            else:
+                return ""
+        elif name == "entity_type_id":
             if self._entity and isinstance(self._entity, EntityRoot):
                 return self._entity.get_type_id()
             else:
@@ -151,8 +156,9 @@ class bound_field(object):
         """
         Implement iterator protocol, returning accessible value keys.
         """
-        yield "entity_link"
+        yield "entity_id"
         yield "entity_type_id"
+        yield "entity_link"
         yield "field_value"
         yield "options"
         for k in self._field_description:

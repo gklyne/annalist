@@ -192,7 +192,9 @@ class EntityGenericListView(EntityEditBaseView):
             type_id             = type_id,
             list_id             = list_id,
             list_ids            = list_ids,
-            list_selected       = list_id
+            list_selected       = list_id,
+            collection_view     = self.view_uri("AnnalistCollectionView", coll_id=coll_id),
+            default_view_id     = self.recordlist['annal:default_view']
             )
         # log.debug("EntityGenericListView.get viewcontext %r"%(viewcontext))
         # generate and return form data

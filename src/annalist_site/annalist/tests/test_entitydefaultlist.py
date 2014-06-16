@@ -120,15 +120,15 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         rowdata = """
             <tr class="select_row">
                 <td class="small-2 columns">testtype</td>
-                <td class="small-2 columns"><a href="%s/c/testcoll/d/testtype/entity1/">entity1</a></td>
+                <td class="small-2 columns"><a href="%s/c/testcoll/v/Default_view/testtype/entity1">entity1</a></td>
                 <td class="small-8 columns">Entity testcoll/testtype/entity1</td>
                 <td class="select_row">
                     <input type="checkbox" name="entity_select" value="testtype/entity1" />
                 </td>
             </tr>
-            """%(TestBaseUri)
-        self.assertContains(r, rowdata, html=True)
+            """%(TestBasePath)
         # log.info(r.content)
+        self.assertContains(r, rowdata, html=True)
         # Test context
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
@@ -204,13 +204,13 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>List 'Default_list' of entities in collection 'testcoll'</h3>", html=True)
         rowdata = """
             <tr class="select_row">
-                <td class="small-3 columns"><a href="%s/c/testcoll/d/testtype/entity1/">entity1</a></td>
+                <td class="small-3 columns"><a href="%s/c/testcoll/v/Default_view/testtype/entity1">entity1</a></td>
                 <td class="small-9 columns">Entity testcoll/testtype/entity1</td>
                 <td class="select_row">
                     <input type="checkbox" name="entity_select" value="testtype/entity1" />
                 </td>
             </tr>
-            """%(TestBaseUri)
+            """%(TestBasePath)
         self.assertContains(r, rowdata, html=True)
         # log.info(r.content)
         # Test context

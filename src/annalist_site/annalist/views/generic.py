@@ -52,66 +52,6 @@ from annalist.views.entitytypeinfo  import EntityTypeInfo
 
 LOGIN_URIS = None   # Populated by first call of `authenticate`
 
-# ENTITY_MESSAGES = (
-#     { 'parent_heading':         message.RECORD_TYPE_ID
-#     , 'parent_missing':         message.RECORD_TYPE_NOT_EXISTS
-#     , 'entity_heading':         message.ENTITY_DATA_ID
-#     , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
-#     , 'entity_exists':          message.ENTITY_DATA_EXISTS
-#     , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
-#     , 'entity_type_heading':    message.ENTITY_TYPE_ID
-#     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-#     , 'entity_removed':         message.ENTITY_DATA_REMOVED
-#     })
-
-# TYPE_MESSAGES = (
-#     { 'parent_heading':         message.COLLECTION_ID
-#     , 'parent_missing':         message.COLLECTION_NOT_EXISTS
-#     , 'entity_heading':         message.RECORD_TYPE_ID
-#     , 'entity_invalid_id':      message.RECORD_TYPE_ID_INVALID
-#     , 'entity_exists':          message.RECORD_TYPE_EXISTS
-#     , 'entity_not_exists':      message.RECORD_TYPE_NOT_EXISTS
-#     , 'entity_removed':         message.RECORD_TYPE_REMOVED
-#     , 'entity_type_heading':    message.ENTITY_TYPE_ID
-#     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-#     })
-
-# VIEW_MESSAGES = (
-#     { 'parent_heading':         message.COLLECTION_ID
-#     , 'parent_missing':         message.COLLECTION_NOT_EXISTS
-#     , 'entity_heading':         message.RECORD_VIEW_ID
-#     , 'entity_invalid_id':      message.RECORD_VIEW_ID_INVALID
-#     , 'entity_exists':          message.RECORD_VIEW_EXISTS
-#     , 'entity_not_exists':      message.RECORD_VIEW_NOT_EXISTS
-#     , 'entity_removed':         message.RECORD_VIEW_REMOVED
-#     , 'entity_type_heading':    message.ENTITY_TYPE_ID
-#     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-#     })
-
-# LIST_MESSAGES = (
-#     { 'parent_heading':         message.COLLECTION_ID
-#     , 'parent_missing':         message.COLLECTION_NOT_EXISTS
-#     , 'entity_heading':         message.RECORD_LIST_ID
-#     , 'entity_invalid_id':      message.RECORD_LIST_ID_INVALID
-#     , 'entity_exists':          message.RECORD_LIST_EXISTS
-#     , 'entity_not_exists':      message.RECORD_LIST_NOT_EXISTS
-#     , 'entity_removed':         message.RECORD_LIST_REMOVED
-#     , 'entity_type_heading':    message.ENTITY_TYPE_ID
-#     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-#     })
-
-# FIELD_MESSAGES = (
-#     { 'parent_heading':         message.COLLECTION_ID
-#     , 'parent_missing':         message.COLLECTION_NOT_EXISTS
-#     , 'entity_heading':         message.RECORD_FIELD_ID
-#     , 'entity_invalid_id':      message.RECORD_FIELD_ID_INVALID
-#     , 'entity_exists':          message.RECORD_FIELD_EXISTS
-#     , 'entity_not_exists':      message.RECORD_FIELD_NOT_EXISTS
-#     , 'entity_removed':         message.RECORD_FIELD_REMOVED
-#     , 'entity_type_heading':    message.ENTITY_TYPE_ID
-#     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-#     })
-
 #   -------------------------------------------------------------------------------------------
 #
 #   Generic Annalist view (contains logic applicable to all pages)
@@ -197,7 +137,8 @@ class AnnalistGenericView(ContentNegotiationView):
             coll_id = self.collection.get_id()
             return self.error(
                 dict(self.error404values(),
-                    message=message.RECORD_VIEW_NOT_EXISTS%(view_id, coll_id)
+                    message=message.RECORD_VIEW_NOT_EXISTS%(
+                        {'id': view_id, 'coll_id': self.collection.get_id()})
                     )
                 )
         self.recordview = RecordView.load(self.collection, view_id, self.site())
@@ -210,7 +151,8 @@ class AnnalistGenericView(ContentNegotiationView):
             coll_id = self.collection.get_id()
             return self.error(
                 dict(self.error404values(),
-                    message=message.RECORD_LIST_NOT_EXISTS%(list_id, coll_id)
+                    message=message.RECORD_LIST_NOT_EXISTS%(
+                        {'id': list_id, 'coll_id': self.collection.get_id()})
                     )
                 )
         self.recordlist = RecordList.load(self.collection, list_id, self.site())

@@ -127,13 +127,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
         rowdata = """
             <tr class="select_row">
                 <td class="small-2 columns">testtype</td>
-                <td class="small-2 columns"><a href="%s/c/testcoll/d/testtype/entity1/">entity1</a></td>
+                <td class="small-2 columns"><a href="%s/c/testcoll/v/Default_view/testtype/entity1">entity1</a></td>
                 <td class="small-8 columns">Entity testcoll/testtype/entity1</td>
                 <td class="select_row">
                     <input type="checkbox" name="entity_select" value="testtype/entity1" />
                 </td>
             </tr>
-            """%(TestBaseUri)
+            """%(TestBasePath)
         self.assertContains(r, rowdata, html=True)
         # log.info(r.content)
         # Test context
@@ -178,16 +178,16 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>List 'Fields_list' of entities in collection 'testcoll'</h3>", html=True)
         rowdata = """
             <tr class="select_row">
-                <td class="small-3 columns"><a href="%s/c/testcoll/_annalist_collection/fields/Bib_address/">Bib_address</a></td>
+                <td class="small-3 columns"><a href="%s/c/testcoll/v/Field_view/_field/Bib_address">Bib_address</a></td>
                 <td class="small-3 columns">annal:field_render/Text</td>
                 <td class="small-6 columns">Bib_address</td>
                 <td class="select_row">
                     <input name="entity_select" value="_field/Bib_address" type="checkbox">
                 </td>
             </tr>
-            """%(TestBaseUri)
-        self.assertContains(r, rowdata, html=True)
+            """%(TestBasePath)
         # log.info(r.content)
+        self.assertContains(r, rowdata, html=True)
         # Test context
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")

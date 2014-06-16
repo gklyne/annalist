@@ -4,7 +4,7 @@
 , "rdfs:label":         "List types"
 , "rdfs:comment":       "This resource describes the type list display"
 , "annal:selector":     "annal:type=={annal:default_view/annal:record_type} @@TBD"
-, "annal:default_view": "Type_view"
+, "annal:default_view": "RecordType_view"
 , "annal:default_type": "_type"
 , "annal:display_type": "annal:List"
 , "annal:list_fields":
