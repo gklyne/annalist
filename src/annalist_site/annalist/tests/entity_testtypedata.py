@@ -84,7 +84,7 @@ def recordtype_edit_uri(action=None, coll_id=None, type_id=None):
         )
     kwargs = {'coll_id': coll_id}
     if action != "delete":
-        kwargs.update({'action': action, 'type_id': "_type", 'view_id': "RecordType_view"})
+        kwargs.update({'action': action, 'type_id': "_type", 'view_id': "Type_view"})
     if type_id:
         if valid_id(type_id):
             kwargs.update({'entity_id': type_id})

@@ -83,7 +83,7 @@ def recordview_edit_uri(action=None, coll_id=None, view_id=None):
         )
     kwargs = {'coll_id': coll_id}
     if action != "delete":
-        kwargs.update({'action': action, 'type_id': "_view", 'view_id': "RecordView_view"})
+        kwargs.update({'action': action, 'type_id': "_view", 'view_id': "View_view"})
     if view_id:
         if valid_id(view_id):
             kwargs.update({'entity_id': view_id})

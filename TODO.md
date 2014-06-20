@@ -131,6 +131,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / implement delete confirm view for views and lists.
    / review missing tests: implement or delete?
    / fix up view links from list display
+   - define View-list and List-list
    - view button handler from list display
    - default-view button handler from list display
    - search button handler from list display
@@ -142,7 +143,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    - rename what is left of entityeditbase -> entityviewbase, or more to generic module
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - align type ID values used in local URI construction with type URIs/CURIEs
-   - decide how to handle presentation of field types (where?):
+   / decide how to handle presentation of field types (where?):
      (a) use simple text string, not CURIE
      (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?
      - it all rather depends on the anticipated extensibility model for field types.
@@ -160,7 +161,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    - record view description form (create data and configure URIs)
    - field description form (create data and configure URIs)
    - record list description form (create data and configure URIs)
-   - add "new field" logic to entity edit POST handler
+   / add "new field" logic to entity edit POST handler
 11. Display enhancements
    - add type links to list view (link to typed list view...?)
        - (should use same base enhancements as entity links at step 5)

@@ -63,7 +63,7 @@ from entity_testentitydata          import (
 site_types = {"Default_type", "fields"}
 site_views = (
     { "Default_view", "Field_view"
-    , "RecordType_view", "RecordView_view"
+    , "Type_view", "View_view"
     , "List_view", "BibEntry_view"
     })
 site_lists = {"Default_list", "Default_list_all", "Field_list", "Type_list"}

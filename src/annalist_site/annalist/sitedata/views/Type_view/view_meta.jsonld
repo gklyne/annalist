@@ -1,5 +1,5 @@
-{ "@id":                "annal:display/RecordType_view"
-, "annal:id":           "RecordType_view"
+{ "@id":                "annal:display/Type_view"
+, "annal:id":           "Type_view"
 , "annal:type":         "annal:display/RecordView"
 , "annal:record_type":  "annal:RecordType"
 , "rdfs:label":         "View description for record type description"

@@ -52,7 +52,7 @@ class RepeatValuesMap(object):
         if self.e in entityval:
             # Iterate over repeated values in entity data:
             #
-            # There is a special case for `RecordView_view` data, where the data is both
+            # There is a special case for `View_view` data, where the data is both
             # view description and data to be displayed.  The field list iterator 
             # (`FieldListValueMap`) iterates over the value as view description, and
             # needs information about the repeated field structure, distinguished by 

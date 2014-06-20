@@ -102,13 +102,13 @@ class CollectionEditView(AnnalistGenericView):
         type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:
             redirect_uri = self.view_uri("AnnalistEntityNewView", 
-                coll_id=coll_id, view_id="RecordType_view", type_id="_type", action="new"
+                coll_id=coll_id, view_id="Type_view", type_id="_type", action="new"
                 ) + continuation_here
         if "type_copy" in request.POST:
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_COPY) or
                     ( self.view_uri("AnnalistEntityEditView", action="copy", 
-                        coll_id=coll_id, view_id="RecordType_view", type_id="_type", entity_id=type_id
+                        coll_id=coll_id, view_id="Type_view", type_id="_type", entity_id=type_id
                         ) + continuation_here
                     )
                 )
@@ -116,7 +116,7 @@ class CollectionEditView(AnnalistGenericView):
             redirect_uri = (
                 self.check_value_supplied(type_id, message.NO_TYPE_FOR_EDIT) or
                     ( self.view_uri("AnnalistEntityEditView", action="edit", 
-                        coll_id=coll_id, view_id="RecordType_view", type_id="_type", entity_id=type_id
+                        coll_id=coll_id, view_id="Type_view", type_id="_type", entity_id=type_id
                         ) + continuation_here
                     )
                 )

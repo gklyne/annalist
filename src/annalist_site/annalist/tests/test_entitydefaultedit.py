@@ -474,7 +474,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             coll_id="testcoll", type_id="_type", entity_id="newtype",
             action="new"
             )
-        u = entitydata_edit_uri("new", "testcoll", type_id="_type", view_id="RecordType_view")
+        u = entitydata_edit_uri("new", "testcoll", type_id="_type", view_id="Type_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
