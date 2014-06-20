@@ -64,6 +64,7 @@ class RepeatValuesMap(object):
             # E.g. repeated field data for the entity edit view looks like this:
             #
             # , { "annal:repeat_id":              "View_fields"
+            #   , "annal:repeat_label":           "Fields"            
             #   , "annal:repeat_label_add":       "Add field"
             #   , "annal:repeat_label_delete":    "Remove selected field(s)"
             #   , "annal:repeat_entity_values":   "annal:view_fields"
