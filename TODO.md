@@ -128,9 +128,10 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / implement tests for add/delete fields
    / implement handlers for add/delete fields
    / edit form response should update, not replace, any data from the original (so data from multiple views is not discarded).
-   > implement delete confirm view for views and lists.  NEED TESTS.  test_recordlist module?
+   / implement delete confirm view for views and lists.
    / review missing tests: implement or delete?
-   - fix up view links from list display
+   / fix up view links from list display
+   - view button handler from list display
    - default-view button handler from list display
    - search button handler from list display
    - review URI for delete type/view/list confirmation
@@ -155,7 +156,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    - support alternate displays for different subtypes (to support BibJSON)
 10. Record view display and editing (data to drive generic view/list)
    - where possible, migrate methods from editentitybase to subclasses
-   - review logic - ideally, form handlers will access data from form, then hand off for peocessing
+   - review logic - ideally, form handlers will access data from form, then hand off for processing
    - record view description form (create data and configure URIs)
    - field description form (create data and configure URIs)
    - record list description form (create data and configure URIs)

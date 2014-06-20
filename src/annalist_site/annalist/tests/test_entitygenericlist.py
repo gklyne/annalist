@@ -91,7 +91,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         e4 = EntityData.create(self.testdata2, "entity4", 
             entitydata_create_values("entity4", type_id="testtype2")
             )
-        self.initial_list_ids = ["Default_list", "Default_list_all", "Fields_list", "Types_list"]
+        self.initial_list_ids = ["Default_list", "Default_list_all", "Field_list", "Type_list"]
         return
 
     def tearDown(self):
@@ -170,12 +170,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_get_fields_list(self):
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         r = self.client.get(u+"?continuation_uri=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<h3>List 'Fields_list' of entities in collection 'testcoll'</h3>", html=True)
+        self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         rowdata = """
             <tr class="select_row">
                 <td class="small-3 columns"><a href="%s/c/testcoll/v/Field_view/_field/Bib_address">Bib_address</a></td>
@@ -193,7 +193,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
-        self.assertEqual(r.context['list_selected'],    "Fields_list")
+        self.assertEqual(r.context['list_selected'],    "Field_list")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # Fields
         self.assertEqual(len(r.context['fields']), 3)
@@ -271,8 +271,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
     #   -------- new --------
 
     def test_post_new_type_entity(self):
-        f = entitylist_form_data("new", list_id="Fields_list")
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        f = entitylist_form_data("new", list_id="Field_list")
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -284,8 +284,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_post_new_all_entity(self):
-        f = entitylist_form_data("new", list_id="Fields_list")
-        u = entitydata_list_all_uri("testcoll", list_id="Fields_list")
+        f = entitylist_form_data("new", list_id="Field_list")
+        u = entitydata_list_all_uri("testcoll", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -297,8 +297,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_post_new_type_entity_select_one(self):
-        f = entitylist_form_data("new", list_id="Fields_list", entities=["_field/field1"])
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        f = entitylist_form_data("new", list_id="Field_list", entities=["_field/field1"])
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -310,8 +310,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_post_new_type_entity_select_many(self):
-        f = entitylist_form_data("new", list_id="Fields_list", entities=["_field/field1", "testtype/entity1", "testtype/entity2"])
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        f = entitylist_form_data("new", list_id="Field_list", entities=["_field/field1", "testtype/entity1", "testtype/entity2"])
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -324,7 +324,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_copy_type_entity(self):
         f = entitylist_form_data("copy", entities=["_field/field1"])
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -337,7 +337,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_copy_all_entity(self):
         f = entitylist_form_data("copy", entities=["_field/field1"])
-        u = entitydata_list_all_uri("testcoll", list_id="Fields_list")
+        u = entitydata_list_all_uri("testcoll", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -350,7 +350,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_copy_type_entity_select_other(self):
         f = entitylist_form_data("copy", entities=["testtype/entity1"])
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -363,7 +363,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_copy_type_entity_select_none(self):
         f = entitylist_form_data("copy")
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -389,7 +389,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
     def test_post_copy_type_entity_no_login(self):
         self.client.logout()
         f = entitylist_form_data("copy", entities=["_field/field1"])
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   401)
         self.assertEqual(r.reason_phrase, "Unauthorized")
@@ -399,7 +399,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_edit_type_entity(self):
         f = entitylist_form_data("edit", entities=["_field/field1"])
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -412,7 +412,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_edit_all_entity(self):
         f = entitylist_form_data("edit", entities=["_field/field1"])
-        u = entitydata_list_all_uri("testcoll", list_id="Fields_list")
+        u = entitydata_list_all_uri("testcoll", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -425,7 +425,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_edit_type_entity_select_none(self):
         f = entitylist_form_data("edit")
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -436,7 +436,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_edit_type_entity_select_many(self):
         f = entitylist_form_data("edit", entities=["_field/field1", "testtype/entity1", "testtype/entity2"])
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -448,7 +448,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
     def test_post_edit_type_entity_no_login(self):
         self.client.logout()
         f = entitylist_form_data("edit", entities=["_field/field1"])
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   401)
         self.assertEqual(r.reason_phrase, "Unauthorized")
@@ -458,7 +458,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_delete_type_entity(self):
         f = entitylist_form_data("delete", entities=["_type/testtype"])
-        u = entitydata_list_type_uri("testcoll", "_type", list_id="Types_list")
+        u = entitydata_list_type_uri("testcoll", "_type", list_id="Type_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -471,14 +471,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['complete_action'], 
             '/testsite/c/testcoll/d/_type/!delete_confirmed')
         self.assertEqual(r.context['action_params'], 
-            '{"entity_delete": ["Delete"], "entity_id": ["testtype"], "continuation_uri": ["/testsite/c/testcoll/l/Types_list/_type/"]}')
+            '{"entity_delete": ["Delete"], "entity_id": ["testtype"], "continuation_uri": ["/testsite/c/testcoll/l/Type_list/_type/"]}')
         self.assertEqual(r.context['cancel_action'], 
-            '/testsite/c/testcoll/l/Types_list/_type/')
+            '/testsite/c/testcoll/l/Type_list/_type/')
         return
 
     def test_post_delete_all_entity(self):
         f = entitylist_form_data("delete", entities=["_type/testtype"])
-        u = entitydata_list_all_uri("testcoll", list_id="Types_list")
+        u = entitydata_list_all_uri("testcoll", list_id="Type_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -495,14 +495,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['complete_action'], 
             '/testsite/c/testcoll/d/_type/!delete_confirmed')
         self.assertEqual(r.context['action_params'], 
-            '{"entity_delete": ["Delete"], "entity_id": ["testtype"], "continuation_uri": ["/testsite/c/testcoll/l/Types_list/"]}')
+            '{"entity_delete": ["Delete"], "entity_id": ["testtype"], "continuation_uri": ["/testsite/c/testcoll/l/Type_list/"]}')
         self.assertEqual(r.context['cancel_action'], 
-            '/testsite/c/testcoll/l/Types_list/')
+            '/testsite/c/testcoll/l/Type_list/')
         return
 
     def test_post_delete_site_entity(self):
         f = entitylist_form_data("delete", entities=["_field/Field_comment"])
-        u = entitydata_list_type_uri("testcoll", "_field", list_id="Fields_list")
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
         # log.info("entitydata_list_all_uri: %s"%u)
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
