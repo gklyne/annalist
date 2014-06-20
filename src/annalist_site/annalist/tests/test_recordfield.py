@@ -90,7 +90,7 @@ class RecordFieldTest(AnnalistTestCase):
     def test_recordfield_init(self):
         t = RecordField(self.testcoll, "testfield")
         u = recordfield_coll_uri(self.testsite, coll_id="testcoll", field_id="testfield")
-        self.assertEqual(t._entitytype,     ANNAL.CURIE.RecordField)
+        self.assertEqual(t._entitytype,     ANNAL.CURIE.Field)
         self.assertEqual(t._entityfile,     layout.FIELD_META_FILE)
         self.assertEqual(t._entityref,      layout.META_FIELD_REF)
         self.assertEqual(t._entityid,       "testfield")

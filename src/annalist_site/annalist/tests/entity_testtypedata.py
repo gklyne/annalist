@@ -123,7 +123,7 @@ def recordtype_values(
     d = recordtype_create_values(coll_id, type_id, update=update).copy()
     d.update(
         { 'annal:id':       type_id
-        , 'annal:type':     "annal:RecordType"
+        , 'annal:type':     "annal:Type"
         , 'annal:uri':      hosturi + recordtype_uri(coll_id, type_id)
         })
     return d

@@ -23,7 +23,7 @@ from annalist.models.entitydata import EntityData
 
 class RecordField(EntityData):
 
-    _entitytype     = ANNAL.CURIE.RecordField
+    _entitytype     = ANNAL.CURIE.Field
     _entitytypeid   = "_field"
     _entityview     = layout.COLL_FIELD_VIEW
     _entitypath     = layout.COLL_FIELD_PATH

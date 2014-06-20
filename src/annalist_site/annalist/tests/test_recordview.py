@@ -79,7 +79,7 @@ class RecordViewTest(AnnalistTestCase):
     def test_recordview_init(self):
         t = RecordView(self.testcoll, "testview", self.testsite)
         u = recordview_coll_uri(self.testsite, coll_id="testcoll", view_id="testview")
-        self.assertEqual(t._entitytype,     ANNAL.CURIE.RecordView)
+        self.assertEqual(t._entitytype,     ANNAL.CURIE.View)
         self.assertEqual(t._entityfile,     layout.VIEW_META_FILE)
         self.assertEqual(t._entityref,      layout.META_VIEW_REF)
         self.assertEqual(t._entityid,       "testview")

@@ -22,6 +22,6 @@
   "annal:uri": "http://test.example.com/testsite/c/coll2/d/_view/view1/",
   "annal:id": "view1",
   "@id": "./",
-  "annal:type": "annal:RecordView",
+  "annal:type": "annal:View",
   "annal:record_type": "annal:DefaultType"
 }

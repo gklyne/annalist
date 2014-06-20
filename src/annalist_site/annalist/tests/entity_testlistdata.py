@@ -111,7 +111,7 @@ def recordlist_values(
     d.update(
         { '@id':            "./"
         , 'annal:id':       list_id
-        , 'annal:type':     "annal:RecordList"
+        , 'annal:type':     "annal:List"
         , 'annal:uri':      hosturi + recordlist_uri(coll_id, list_id)
         })
     return d

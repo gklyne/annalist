@@ -130,7 +130,7 @@ def recordfield_values(
     d = recordfield_create_values(coll_id, field_id, update=update).copy()
     d.update(
         { 'annal:id':       field_id
-        , 'annal:type':     "annal:RecordField"
+        , 'annal:type':     "annal:Field"
         , 'annal:uri':      hosturi + recordfield_uri(coll_id, field_id)
         })
     return d

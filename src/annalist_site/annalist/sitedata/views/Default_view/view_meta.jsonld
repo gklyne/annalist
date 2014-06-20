@@ -1,6 +1,6 @@
 { "@id":                "./"
 , "annal:id":           "Default_view"
-, "annal:type":         "annal:RecordView"
+, "annal:type":         "annal:View"
 , "annal:uri":          "annal:display/Default_view"
 , "annal:record_type":  "annal:DefaultType"
 , "rdfs:label":         "Default record view"

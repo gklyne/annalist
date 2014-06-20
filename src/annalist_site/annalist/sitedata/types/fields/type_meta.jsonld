@@ -1,7 +1,7 @@
 {
   "@id": "./",
   "annal:id": "fields",
-  "annal:type": "annal:RecordType",
+  "annal:type": "annal:Type",
   "annal:uri": "annal:type/fields",
   "rdfs:label": "Field description type",
   "rdfs:comment": "Type of field descripion record."

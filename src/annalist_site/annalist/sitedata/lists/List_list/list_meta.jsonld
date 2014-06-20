@@ -1,0 +1,19 @@
+{ "@id":                "annal:display/List_list"
+, "annal:id":           "List_list"
+, "annal:type":         "annal:List"
+, "rdfs:label":         "List lists"
+, "rdfs:comment":       "This resource describes the list list display"
+, "annal:selector":     "annal:type==annal:List @@TBD"
+, "annal:default_view": "List_view"
+, "annal:default_type": "_list"
+, "annal:display_type": "annal:display/List"
+, "annal:list_fields":
+  [ { "annal:field_id":         "Entity_id"
+    , "annal:field_placement":  "small:0,3"
+    }
+  , { "annal:field_id":         "Entity_label"
+    , "annal:field_placement":  "small:3,9"
+    }
+  ]
+}
+ 

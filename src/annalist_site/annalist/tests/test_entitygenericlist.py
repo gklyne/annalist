@@ -91,7 +91,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
         e4 = EntityData.create(self.testdata2, "entity4", 
             entitydata_create_values("entity4", type_id="testtype2")
             )
-        self.initial_list_ids = ["Default_list", "Default_list_all", "Field_list", "Type_list"]
+        self.initial_list_ids = (
+            [ "Default_list", "Default_list_all"
+            , "Field_list"
+            , "List_list"
+            , "Type_list"
+            , "View_list"
+            ])
         return
 
     def tearDown(self):

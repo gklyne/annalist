@@ -32,7 +32,7 @@ from annalist.models.entitydata import EntityData
 
 class RecordList(EntityData):
 
-    _entitytype     = ANNAL.CURIE.RecordList
+    _entitytype     = ANNAL.CURIE.List
     _entitytypeid   = "_list"
     _entityview     = layout.COLL_LIST_VIEW
     _entitypath     = layout.COLL_LIST_PATH

@@ -138,7 +138,7 @@ def recordview_values(
     d = recordview_create_values(coll_id, view_id, update=update).copy()
     d.update(
         { 'annal:id':       view_id
-        , 'annal:type':     "annal:RecordView"
+        , 'annal:type':     "annal:View"
         , 'annal:uri':      hosturi + recordview_uri(coll_id, view_id)
         })
     return d
@@ -289,7 +289,7 @@ def recordview_view_context_data(
         , 'coll_id':            coll_id
         , 'type_id':            '_view'
         , 'orig_id':            'orig_view_id'
-        , 'record_type':        'annal:RecordView'
+        , 'record_type':        'annal:View'
         , 'fields':
           [ { 'field_id':           'View_id'
             , 'field_label':        'Id'
@@ -465,7 +465,7 @@ def recordview_view_form_data(
         { 'View_label':         '%s data ... (%s/%s)'%(update, coll_id, view_id)
         , 'View_comment':       '%s description ... (%s/%s)'%(update, coll_id, view_id)
         , 'orig_id':            'orig_view_id'
-        , 'record_type':        'annal:RecordView'
+        , 'record_type':        'annal:View'
         , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_view")
         # View fields
         , 'View_fields__0__Field_id':           "View_id"

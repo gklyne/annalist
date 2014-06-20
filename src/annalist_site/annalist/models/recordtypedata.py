@@ -25,7 +25,7 @@ from annalist.models.entitydata import EntityData
 
 class RecordTypeData(Entity):
 
-    _entitytype = ANNAL.CURIE.RecordType_Data
+    _entitytype = ANNAL.CURIE.Type_Data
     _entitypath = layout.COLL_TYPEDATA_PATH
     _entityfile = layout.TYPEDATA_META_FILE
     _entityref  = layout.META_TYPEDATA_REF

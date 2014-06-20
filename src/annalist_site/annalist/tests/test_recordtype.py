@@ -77,7 +77,7 @@ class RecordTypeTest(AnnalistTestCase):
     def test_recordtype_init(self):
         t = RecordType(self.testcoll, "testtype", self.testsite)
         u = recordtype_coll_uri(self.testsite, coll_id="testcoll", type_id="testtype")
-        self.assertEqual(t._entitytype,     ANNAL.CURIE.RecordType)
+        self.assertEqual(t._entitytype,     ANNAL.CURIE.Type)
         self.assertEqual(t._entityfile,     layout.TYPE_META_FILE)
         self.assertEqual(t._entityref,      layout.META_TYPE_REF)
         self.assertEqual(t._entityid,       "testtype")

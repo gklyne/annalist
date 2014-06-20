@@ -1,6 +1,6 @@
 { "@id":                "annal:views/BinEntry_view"
 , "annal:id":           "BinEntry_view"
-, "annal:type":         "annal:display/RecordView"
+, "annal:type":         "annal:View"
 , "annal:record_type":  "annal:BibEntry"
 , "rdfs:label":         "Bibliographic metadata"
 , "rdfs:comment":       "Bibliography entries each contain some subset of standard data entries."

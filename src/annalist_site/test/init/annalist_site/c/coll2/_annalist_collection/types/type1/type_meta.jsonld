@@ -4,5 +4,5 @@
   "annal:uri": "http://test.example.com/testsite/c/coll2/d/_type/type1/",
   "annal:id": "type1",
   "@id": "./",
-  "annal:type": "annal:RecordType"
+  "annal:type": "annal:Type"
 }
