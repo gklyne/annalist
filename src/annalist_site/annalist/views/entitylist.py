@@ -212,7 +212,8 @@ class EntityGenericListView(EntityEditBaseView):
         log.debug("entitylist.post: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
         # log.info("  %s"%(self.get_request_path()))
         # log.info("  form data %r"%(request.POST))
-        continuation_here, continuation_uri = self.continuation_uris(request.POST,
+        continuation_uri, continuation_here, continuation_next = self.continuation_uris(
+            request.POST,
             self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
             )
         # log.info("continuation_here %s"%(continuation_here))
@@ -300,13 +301,18 @@ class EntityGenericListView(EntityEditBaseView):
                         )
             if "search" in request.POST:
                 action = "search"                
-                raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
+                raise Annalist_Error(request.POST, "@@TODO EntityGenericListView.post unimplemented "+self.get_request_path())
             if "list_view" in request.POST:
-                action = "list"
-                raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
+                action  = "list"
+                redirect_uri = self.view_uri(
+                    "AnnalistEntityGenericList", 
+                    coll_id=coll_id, 
+                    list_id=request.POST['list_id'], 
+                    type_id=type_id or "",
+                    ) + continuation_next
             if "default_view" in request.POST:
                 action = "config"
-                raise Annalist_Error(request.POST, "@@TODO DefaultList unimplemented "+self.get_request_path())
+                raise Annalist_Error(request.POST, "@@TODO EntityGenericListView.post unimplemented "+self.get_request_path())
             if "customize" in request.POST:
                 action       = "config"
                 redirect_uri = self.view_uri(

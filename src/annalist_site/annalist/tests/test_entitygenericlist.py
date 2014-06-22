@@ -533,12 +533,21 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(v, r['location'])
         return
 
-    @unittest.skip("@@TODO genericlist search button handler")
-    def test_post_search(self):
+    def test_post_view_list(self):
+        f = entitylist_form_data("list_view", list_id="View_list")
+        u = entitydata_list_type_uri("testcoll", "_type", list_id="Type_list")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_list_type_uri("testcoll", "_type", list_id="View_list")
+        c = continuation_uri_param(collection_edit_uri("testcoll"))
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
         return
 
-    @unittest.skip("@@TODO genericlist default-view button handler")
-    def test_post_default_view(self):
+    @unittest.skip("@@TODO genericlist search button handler")
+    def test_post_search(self):
         return
 
     def test_post_customize(self):

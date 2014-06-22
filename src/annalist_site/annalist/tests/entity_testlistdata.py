@@ -116,4 +116,25 @@ def recordlist_values(
         })
     return d
 
+def recordlist_init_values(coll_id="testcoll", list_id="testlist", update="RecordList"):
+    """
+    Entity values used when creating a record type entity
+    """
+    d = recordlist_create_values(coll_id, list_id, update=update).copy()
+    d.update(
+        { "annal:selector":     ""
+        , "annal:default_view": "Default_view"
+        , "annal:default_type": "Default_type"
+        , "annal:display_type": "annal:List"
+        , "annal:list_fields":
+          [ { "annal:field_id":         "Entity_id"
+            , "annal:field_placement":  "small:0,3"
+            }
+          , { "annal:field_id":         "Entity_label"
+            , "annal:field_placement":  "small:3,9"
+            }
+          ]
+        })
+    return d
+
 # End.

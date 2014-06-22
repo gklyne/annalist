@@ -34,7 +34,7 @@ from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import collection_create_values
 from entity_testtypedata            import recordtype_create_values
 from entity_testviewdata            import recordview_create_values
-from entity_testlistdata            import recordlist_create_values
+from entity_testlistdata            import recordlist_create_values, recordlist_init_values
 
 #   -----------------------------------------------------------------------------
 #
@@ -59,11 +59,11 @@ def coll123_create_data(site):
     for coll in [coll1, coll2, coll3]:
         type1 = RecordType.create(coll, "type1", recordtype_create_values(coll._entityid, "type1"))
         view1 = RecordView.create(coll, "view1", recordview_create_values(coll._entityid, "view1"))
-        list1 = RecordList.create(coll, "list1", recordlist_create_values(coll._entityid, "list1"))
+        list1 = RecordList.create(coll, "list1", recordlist_init_values(coll._entityid, "list1"))
         data1 = RecordTypeData.create(coll, "type1", {})
         type2 = RecordType.create(coll, "type2", recordtype_create_values(coll._entityid, "type2"))
         view2 = RecordView.create(coll, "view2", recordview_create_values(coll._entityid, "view2"))
-        list2 = RecordList.create(coll, "list2", recordlist_create_values(coll._entityid, "list2"))
+        list2 = RecordList.create(coll, "list2", recordlist_init_values(coll._entityid, "list2"))
         data2 = RecordTypeData.create(coll, "type2", {})
         #
         for t,d in [(type1,data1),(type2,data2)]:

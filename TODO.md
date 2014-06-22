@@ -131,9 +131,8 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / implement delete confirm view for views and lists.
    / review missing tests: implement or delete?
    / fix up view links from list display
-   - define View-list and List-list
-   - view button handler from list display
-   - default-view button handler from list display
+   / define View-list and List-list
+   / view button handler from list display + test
    - search button handler from list display
    - review URI for delete type/view/list confirmation
    - move invocation of authentication to the immediate response handler code?
@@ -148,6 +147,11 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?
      - it all rather depends on the anticipated extensibility model for field types.
        Option (a) is simplest for now.
+   - tests
+     / skipped '@@TODO defaultlist default-view button handler'
+     / skipped '@@TODO defaultlist search button handler'
+     / skipped '@@TODO genericlist default-view button handler'
+     - skipped '@@TODO genericlist search button handler'
 8. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching

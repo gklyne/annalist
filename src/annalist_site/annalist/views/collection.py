@@ -74,7 +74,7 @@ class CollectionEditView(AnnalistGenericView):
         http_response = self.get_coll_data(coll_id, self.get_request_host())
         if http_response:
             return http_response
-        continuation_here, continuation_uri = self.continuation_uris(
+        continuation_uri, continuation_here, continuation_next = self.continuation_uris(
             request.GET,
             self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
             )
@@ -95,8 +95,8 @@ class CollectionEditView(AnnalistGenericView):
         #       that renders the form.  Maybe there's an easier way than all this 
         #       URI-wrangling?
         redirect_uri = None
-        continuation_here, continuation_uri = self.continuation_uris(request.POST,
-            # self.view_uri("AnnalistEntityListAllView", coll_id=coll_id)
+        continuation_uri, continuation_here, continuation_next = self.continuation_uris(
+            request.POST,
             self.view_uri("AnnalistSiteView")
             )
         type_id = request.POST.get('typelist', None)

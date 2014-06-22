@@ -500,14 +500,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(v, r['location'])
         return
 
-    @unittest.skip("@@TODO defaultlist search button handler")
-    def test_post_search(self):
-        return
-
-    @unittest.skip("@@TODO defaultlist default-view button handler")
-    def test_post_default_view(self):
-        return
-
     def test_post_customize(self):
         f = entitylist_form_data("customize")
         u = entitydata_list_all_uri("testcoll")
