@@ -3,7 +3,7 @@
 , "annal:type":         "annal:List"
 , "rdfs:label":         "List views"
 , "rdfs:comment":       "This resource describes the view list display"
-, "annal:selector":     "annal:type==annal:View @@TBD"
+, "annal:selector":     "@annal:type==annal:View"
 , "annal:default_view": "View_view"
 , "annal:default_type": "_view"
 , "annal:display_type": "annal:display/List"

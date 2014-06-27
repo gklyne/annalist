@@ -53,6 +53,14 @@ class Collection(Entity):
         self._parentsite = parentsite
         return
 
+    # Site
+
+    def get_site(self):
+        """
+        Return site object for the site from which the current collection is accessed.
+        """
+        return self._parentsite
+
     # Record types
 
     def types(self, include_alt=True):

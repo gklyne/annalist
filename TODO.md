@@ -134,7 +134,6 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / define View-list and List-list
    / view button handler from list display + test
    - search button handler from list display
-   - review URI for delete type/view/list confirmation
    - move invocation of authentication to the immediate response handler code?
    - don't include continuation-uri param when URI is blank
    - refactor list description access out of context handling code (avoid multiple reads)
@@ -142,6 +141,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    - rename what is left of entityeditbase -> entityviewbase, or more to generic module
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - align type ID values used in local URI construction with type URIs/CURIEs
+   - implement some version of entity selection logic
    / decide how to handle presentation of field types (where?):
      (a) use simple text string, not CURIE
      (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?
@@ -152,6 +152,8 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / skipped '@@TODO defaultlist search button handler'
      / skipped '@@TODO genericlist default-view button handler'
      - skipped '@@TODO genericlist search button handler'
+   - review URI for delete type/view/list confirmation
+   - use proper indexing to accelerate search (maybe later?)
 8. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching
@@ -191,14 +193,14 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
 
 ## Misc TODO
 
-- CSS style associuation with entity types, so (e.g.) different types can be colour-coded.
+- CSS style association with entity types, so (e.g.) different types can be colour-coded.
 - entity list view: add javascript for selection classes (hide checkbox and highlight row when clicked)
 - entity should carry URI only.  Other fields (host, path, etc. should be generated as required.  Suggest use an internal value that allows x.uri.path, .host, etc. as required)
 - Convert literal CURIES to namespace references
 - Review field descriptions in sitedata: type values seem to be inconsistent??? (e.g. Type vs Entity_type?).  May need to start some proper documentation of the form data descriptions.
 - rationalize/simplify fields and methods in site/collection model classes - there appears to be some duplication
 - review URI design: can we revert to original design (without /c/, /d/, etc.)?
-- Login link to include option to redirect to failed page, with form fields populated
+- Login link to include option to redirect to failed page, with form fields populated (i.e. don't lose values entered)
 - Complete authorization framework
 - think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
 - think about handling of identifier renaming (re-write data, record equivalence, or ...).  (See also "data storage" below.)
@@ -247,6 +249,7 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
   (2) relative to base of site
   (3) relative to host
   (4) absolute
+  (5) relative to base of collection
   Currently, it's (3) or (4), but I think I favour (2).  The intent is that the URI field
   can be fixed by explicitly entering an absolute URI, but until then they are allocated
   per site.  The expectation is that if data are moved, it will be as complete collections

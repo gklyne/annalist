@@ -20,10 +20,13 @@ from annalist.exceptions            import Annalist_Error
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
+from annalist.models.entitytypeinfo import EntityTypeInfo
+from annalist.models.entityfinder   import EntityFinder
 
-from annalist.views.entitytypeinfo  import EntityTypeInfo
 from annalist.views.confirm         import ConfirmView, dict_querydict
 from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
+
+
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -101,27 +104,29 @@ class EntityGenericListView(EntityEditBaseView):
                 action=action
                 )
 
-    def get_type_entities(self):
-        """
-        Return list of entities of specified type, including site-wide values.
-        """
-        return self.entitytypeinfo.entityparent.child_entities(
-            self.entitytypeinfo.entityclass,
-            altparent=self.entitytypeinfo.entityaltparent
-            )
+    # def get_type_entities(self):
+    #     """
+    #     Return list of entities of specified type, including site-wide values.
+    #     """
+    #     # @@TODO: old code; remove when tests pass
+    #     return self.entitytypeinfo.entityparent.child_entities(
+    #         self.entitytypeinfo.entityclass,
+    #         altparent=self.entitytypeinfo.entityaltparent
+    #         )
 
-    def get_collection_entities(self):
-        """
-        Return list of entities of all types defined in the current collection
+    # def get_collection_entities(self):
+    #     """
+    #     Return list of entities of all types defined in the current collection
 
-        Assumes prior call of get_coll_data method.
-        """
-        entity_list = []
-        for f in self.collection._children(RecordTypeData):
-            t = RecordTypeData.load(self.collection, f)
-            if t:
-                entity_list.extend(t.entities())
-        return entity_list
+    #     Assumes prior call of get_coll_data method.
+    #     """
+    #     # @@TODO: old code; remove when tests pass
+    #     entity_list = []
+    #     for f in self.collection._children(RecordTypeData):
+    #         t = RecordTypeData.load(self.collection, f)
+    #         if t:
+    #             entity_list.extend(t.entities())
+    #     return entity_list
 
     def check_collection_entity(self, entity_id, entity_type, msg, continuation_uri=""):
         """
@@ -165,22 +170,21 @@ class EntityGenericListView(EntityEditBaseView):
         if http_response:
             return http_response
         # Prepare list and entity IDs for rendering form
-        # @@TODO: apply selector logic here?
         list_id     = self.get_list_id(type_id, list_id)
         list_ids    = [ l.get_id() for l in self.collection.lists() ]
-        if type_id:
-            entity_list = self.get_type_entities()
-            # entity_list = self.entityparent.child_entities(
-            #     self.entityclass, altparent=self.entityaltparent
-            #     )
-        else:
-            entity_list = self.get_collection_entities()
-            # entity_list = []
-            # for f in self.collection._children(RecordTypeData):
-            #     t = RecordTypeData.load(self.collection, f)
-            #     if t:
-            #         entity_list.extend(t.entities())
-        entityval = { 'annal:list_entities': entity_list }
+        entity_list = (
+            EntityFinder(self.collection)
+                .get_entities(type_id, selector=None, search=None)
+            )
+        entityval = { 'annal:list_entities': list(entity_list) }
+
+        # @@TODO: old code; remove when tests pass
+        # if type_id:
+        #     entity_list = self.get_type_entities()
+        # else:
+        #     entity_list = self.get_collection_entities()
+        # entityval = { 'annal:list_entities': entity_list }
+
         # Set up initial view context
         self._entityvaluemap = self.get_list_entityvaluemap(list_id)
         log.debug("EntityGenericListView.get _entityvaluemap %r"%(self._entityvaluemap))

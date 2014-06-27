@@ -13,4 +13,10 @@ log = logging.getLogger(__name__)
 
 @@stuff
 
+class @@class(@@base):
+
+    def __init__(self):
+        super(@@class, self).__init__()
+        return
+
 # End.

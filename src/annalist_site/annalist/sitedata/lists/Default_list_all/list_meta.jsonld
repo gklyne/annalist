@@ -3,7 +3,7 @@
 , "annal:type":         "annal:display/RecordList"
 , "rdfs:label":         "List view over all types in a collection"
 , "rdfs:comment":       "This resource describes the default record listing display for all entities in a collection."
-, "annal:selector":     "@@TBD"
+, "annal:selector":     ""
 , "annal:default_view": "Default_view"
 , "annal:default_type": "Default_type"
 , "annal:display_type": "annal:List"

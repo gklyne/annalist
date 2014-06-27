@@ -3,7 +3,7 @@
 , "annal:type":         "annal:display/RecordList"
 , "rdfs:label":         "List fields"
 , "rdfs:comment":       "This resource describes the field listing display"
-, "annal:selector":     "annal:type=={annal:default_view/annal:record_type} @@TBD"
+, "annal:selector":     "@annal:type==annal:Field"
 , "annal:default_view": "Field_view"
 , "annal:default_type": "_field"
 , "annal:display_type": "annal:List"

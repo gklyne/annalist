@@ -272,29 +272,6 @@ class EntityRoot(object):
                         yield f
         return
 
-    # Entity as iterator: returns candidate identifiers of contained entities
-    # @@TODO: unused except for test case; not sure it makes sense; eliminate?
-    # @@TODO: iterator should return key values, for consistency withj .keys(), .items() and dict behaviour
-    #         cf. render_utils.bound_field.__getattr__
-    def old__iter__(self):
-        """
-        Implement iterator protocol, returning candidate identifiers of 
-        contained entities.  The caller is responsible for checking the validity 
-        of each returned value.
-        """
-        # @@TODO: consider caching result
-        if os.path.isdir(self._entitydir):
-            files = os.listdir(self._entitydir)
-            for f in files:
-                if util.valid_id(f):
-                    yield f
-        # if os.path.isdir(self._entityaltdir):
-        #     files = os.listdir(self._entityaltdir)
-        #     for f in files:
-        #         if util.valid_id(f):
-        #             yield f
-        return
-
     def __iter__(self):
         """
         Return entity value keys
