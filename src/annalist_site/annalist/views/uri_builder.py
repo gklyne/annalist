@@ -16,7 +16,7 @@ import re
 gen_delims  = ":/?#[]@"
 sub_delims  = "!$&'()*+,;="
 unreserved  = "-._~"
-# subset of above safe in query string (no "?", "&" or "#")
+# subset of above safe in query string (no "?", "&" or #")
 query_safe  = re.sub('[?&#]', '', gen_delims + sub_delims + unreserved)
 
 def uri_params(*param_dicts):

@@ -270,6 +270,80 @@ class EntityGenericListViewTest(AnnalistTestCase):
                 self.fail("Field %s not found in context"%f[0])
         return
 
+    def test_get_fields_list_search(self):
+        u = entitydata_list_type_uri("testcoll", "_field", list_id="Field_list")
+        r = self.client.get(u+"?search=Bib_&continuation_uri=/xyzzy/")
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, site_title("<title>%s</title>"))
+        self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
+        rowdata = """
+            <tr class="select_row">
+                <td class="small-3 columns"><a href="%s/c/testcoll/v/Field_view/_field/Bib_address">Bib_address</a></td>
+                <td class="small-3 columns">annal:field_render/Text</td>
+                <td class="small-6 columns">Bib_address</td>
+                <td class="select_row">
+                    <input name="entity_select" value="_field/Bib_address" type="checkbox">
+                </td>
+            </tr>
+            """%(TestBasePath)
+        # log.info(r.content)
+        self.assertContains(r, rowdata, html=True)
+        # Test context
+        self.assertEqual(r.context['title'],            site_title())
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "_field")
+        self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
+        self.assertEqual(r.context['list_selected'],    "Field_list")
+        self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
+        # Fields
+        self.assertEqual(len(r.context['fields']), 3)
+        self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_id')
+        self.assertEqual(r.context['fields'][1]['field_id'], 'Field_type')
+        self.assertEqual(r.context['fields'][2]['field_id'], 'Entity_label')
+        # Entities
+        self.assertEqual(len(r.context['entities']), 21)
+        field_entities = (
+            { ('Bib_address',       "annal:field_render/Text",          "Bib_address")
+            , ('Bib_author',        "annal:field_render/Text",          "Bib_author")
+            , ('Bib_booktitle',     "annal:field_render/Text",          "Bib_booktitle")
+            , ('Bib_chapter',       "annal:field_render/Text",          "Bib_chapter")
+            , ('Bib_edition',       "annal:field_render/Text",          "Bib_edition")
+            , ('Bib_editor',        "annal:field_render/Text",          "Bib_editor")
+            , ('Bib_eprint',        "annal:field_render/Text",          "Bib_eprint")
+            , ('Bib_howpublished',  "annal:field_render/Text",          "Bib_howpublished")
+            , ('Bib_institution',   "annal:field_render/Text",          "Bib_institution")
+            , ('Bib_journal',       "annal:field_render/Text",          "Bib_journal")
+            , ('Bib_month',         "annal:field_render/Text",          "Bib_month")
+            , ('Bib_number',        "annal:field_render/Text",          "Bib_number")
+            , ('Bib_organization',  "annal:field_render/Text",          "Bib_organization")
+            , ('Bib_pages',         "annal:field_render/Text",          "Bib_pages")
+            , ('Bib_publisher',     "annal:field_render/Text",          "Bib_publisher")
+            , ('Bib_school',        "annal:field_render/Text",          "Bib_school")
+            , ('Bib_title',         "annal:field_render/Text",          "Bib_title")
+            , ('Bib_type',          "annal:field_render/Text",          "Bib_type")
+            , ('Bib_url',           "annal:field_render/Text",          "Bib_url")
+            , ('Bib_volume',        "annal:field_render/Text",          "Bib_volume")
+            , ('Bib_year',          "annal:field_render/Text",          "Bib_year")
+            })
+        for f in field_entities:
+            for eid in range(len(r.context['entities'])):
+                item_fields = r.context['entities'][eid]['fields']
+                if item_fields[0]['field_value'] == f[0]:
+                    for fid in range(3):
+                        item_field = r.context['entities'][eid]['fields'][fid]
+                        head_field = r.context['fields'][fid]
+                        for fkey in (
+                                'field_id', 'field_name', 'field_label', 
+                                'field_property_uri', 'field_render_head',
+                                'field_placement', 'field_value_type'):
+                            self.assertEqual(item_field[fkey], head_field[fkey])
+                        self.assertEqual(item_field['field_value'], f[fid])
+                    break
+            else:
+                self.fail("Field %s not found in context"%f[0])
+        return
+
     #   -----------------------------------------------------------------------------
     #   Form response tests
     #   -----------------------------------------------------------------------------
@@ -548,6 +622,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     @unittest.skip("@@TODO genericlist search button handler")
     def test_post_search(self):
+        return
+
+    @unittest.skip("@@TODO genericlist default list button handler")
+    def test_post_default_list(self):
+        # This button makes the current list view default for the collection
         return
 
     def test_post_customize(self):

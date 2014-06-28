@@ -32,6 +32,7 @@ from annalist.models.recordfield        import RecordField
 from annalist.models.recordtype         import RecordType
 from annalist.models.recordtypedata     import RecordTypeData
 
+from annalist.views.uri_builder         import uri_with_params
 # from annalist.views.fielddescription    import FieldDescription
 from annalist.views.repeatdescription   import RepeatDescription
 from annalist.views.generic             import AnnalistGenericView
@@ -431,7 +432,8 @@ class EntityEditBaseView(AnnalistGenericView):
             )
         log.warning("Unexpected form data %s"%(err_values))
         log.warning("Continue to %s"%(continuation_uri))
-        return HttpResponseRedirect(continuation_uri+err_values)
+        redirect_uri = uri_with_params(continuation_uri, err_values)
+        return HttpResponseRedirect(redirect_uri)
 
 
 #   -------------------------------------------------------------------------------------------

@@ -103,7 +103,7 @@ class AnnalistGenericView(ContentNegotiationView):
         if not Collection.exists(self.site(host=host), coll_id):
             return self.error(
                 dict(self.error404values(), 
-                    message=message.COLLECTION_NOT_EXISTS%(coll_id)
+                    message=message.COLLECTION_NOT_EXISTS%{'id': coll_id}
                     )
                 )
         self.collection = Collection.load(self.site(host=host), coll_id)

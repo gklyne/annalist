@@ -169,7 +169,6 @@ class EntityGenericListView(EntityEditBaseView):
         redirect_uri = None
         typeinfo     = self.entitytypeinfo or EntityTypeInfo(self.site(), self.collection, entity_type)
         if not typeinfo.entityclass.exists(typeinfo.entityparent, entity_id):
-
             redirect_uri = (
                 uri_with_params(
                     self.get_request_path(),
@@ -195,9 +194,11 @@ class EntityGenericListView(EntityEditBaseView):
         # Prepare list and entity IDs for rendering form
         list_id     = self.get_list_id(type_id, list_id)
         list_ids    = [ l.get_id() for l in self.collection.lists() ]
+        selector    = self.recordlist.get_values().get('annal:selector', "")
+        search_for  = request.GET.get('search', "")
         entity_list = (
             EntityFinder(self.collection)
-                .get_entities(type_id, selector=None, search=None)
+                .get_entities(type_id, selector=selector, search=search_for)
             )
         entityval = { 'annal:list_entities': list(entity_list) }
         # Set up initial view context
@@ -210,13 +211,14 @@ class EntityGenericListView(EntityEditBaseView):
             coll_id             = coll_id,
             type_id             = type_id,
             list_id             = list_id,
+            search_for          = search_for,
             list_ids            = list_ids,
             list_selected       = list_id,
             collection_view     = self.view_uri("AnnalistCollectionView", coll_id=coll_id),
             default_view_id     = self.recordlist['annal:default_view']
             )
         # log.debug("EntityGenericListView.get viewcontext %r"%(viewcontext))
-        # generate and return form data
+        # Generate and return form data
         return (
             self.render_html(viewcontext, self._entityformtemplate) or 
             self.error(self.error406values())
