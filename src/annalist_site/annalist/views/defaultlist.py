@@ -48,6 +48,10 @@ class EntityDefaultListView(EntityGenericListView):
             ("Default_list" if type_id else "Default_list_all")
             )
 
+    # @@TODO: remove these functions and update tests; maybe consider having the default 
+    #         view URI simply redirect to an explicitly named default view?  Revisit this
+    #         when application URI structure is reviewed.
+
     def get_new_view_uri(self, coll_id, type_id):
         """
         Get URI for entity new view

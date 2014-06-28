@@ -133,6 +133,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / fix up view links from list display
    / define View-list and List-list
    / view button handler from list display + test
+   - continuation handling: replace by more generic parameter handling based on dictionary; move handling of escape logic, etc.
    - search button handler from list display
    - move invocation of authentication to the immediate response handler code?
    - don't include continuation-uri param when URI is blank

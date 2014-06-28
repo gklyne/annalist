@@ -9,6 +9,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+import copy
+
 from django.conf                    import settings
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
@@ -23,9 +25,33 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.entityfinder   import EntityFinder
 
+from annalist.views.simplevaluemap  import SimpleValueMap, StableValueMap
+from annalist.views.grouprepeatmap      import GroupRepeatMap
 from annalist.views.confirm         import ConfirmView, dict_querydict
 from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
 
+
+#   -------------------------------------------------------------------------------------------
+#
+#   Mapping table data (not view-specific)
+#
+#   -------------------------------------------------------------------------------------------
+
+# Table used as basis, or initial values, for a dynamically generated entity-value map for list displays
+listentityvaluemap  = (
+        [ SimpleValueMap(c='title',            e=None,                  f=None               )
+        , SimpleValueMap(c='coll_id',          e=None,                  f=None               )
+        , SimpleValueMap(c='type_id',          e=None,                  f=None               )
+        , SimpleValueMap(c='list_id',          e=None,                  f=None               )
+        , SimpleValueMap(c='list_ids',         e=None,                  f=None               )
+        , SimpleValueMap(c='list_selected',    e=None,                  f=None               )
+        , SimpleValueMap(c='collection_view',  e=None,                  f=None               )
+        , SimpleValueMap(c='default_view_id',  e=None,                  f=None               )
+        , SimpleValueMap(c='search_for',       e=None,                  f='search_for'       )
+        # Field data is handled separately during processing of the form description
+        # Form and interaction control (hidden fields)
+        , SimpleValueMap(c='continuation_uri', e=None,                  f='continuation_uri' )
+        ])
 
 
 #   -------------------------------------------------------------------------------------------
@@ -75,10 +101,6 @@ class EntityGenericListView(EntityEditBaseView):
     def get_list_type_id(self):
         return self.recordlist.get('annal:default_type', None) or "Default_type"
 
-    # @@TODO: the following functions should extract view_id information from the list
-    #         description (including default lists).  
-    #         Then remove corresponding methods from defaultlist.py
-
     def get_new_view_uri(self, coll_id, type_id):
         """
         Get URI for entity new view
@@ -104,29 +126,25 @@ class EntityGenericListView(EntityEditBaseView):
                 action=action
                 )
 
-    # def get_type_entities(self):
-    #     """
-    #     Return list of entities of specified type, including site-wide values.
-    #     """
-    #     # @@TODO: old code; remove when tests pass
-    #     return self.entitytypeinfo.entityparent.child_entities(
-    #         self.entitytypeinfo.entityclass,
-    #         altparent=self.entitytypeinfo.entityaltparent
-    #         )
-
-    # def get_collection_entities(self):
-    #     """
-    #     Return list of entities of all types defined in the current collection
-
-    #     Assumes prior call of get_coll_data method.
-    #     """
-    #     # @@TODO: old code; remove when tests pass
-    #     entity_list = []
-    #     for f in self.collection._children(RecordTypeData):
-    #         t = RecordTypeData.load(self.collection, f)
-    #         if t:
-    #             entity_list.extend(t.entities())
-    #     return entity_list
+    def get_list_entityvaluemap(self, list_id):
+        """
+        Creates an entity/value map table in the current object incorporating
+        information from the form field definitions for an indicated list display.
+        """
+        # @@TODO: can this be subsumed by repeat value logic in get_fields_entityvaluemap?
+        # Locate and read view description
+        entitymap  = copy.copy(listentityvaluemap)
+        log.debug("entitylist %r"%self.recordlist.get_values())
+        groupmap = []
+        self.get_fields_entityvaluemap(
+            groupmap,
+            self.recordlist.get_values()['annal:list_fields']
+            )
+        entitymap.extend(groupmap)  # one-off for access to field headings
+        entitymap.append(
+            GroupRepeatMap(c='entities', e='annal:list_entities', g=groupmap)
+            )
+        return entitymap
 
     def check_collection_entity(self, entity_id, entity_type, msg, continuation_uri=""):
         """
@@ -177,14 +195,6 @@ class EntityGenericListView(EntityEditBaseView):
                 .get_entities(type_id, selector=None, search=None)
             )
         entityval = { 'annal:list_entities': list(entity_list) }
-
-        # @@TODO: old code; remove when tests pass
-        # if type_id:
-        #     entity_list = self.get_type_entities()
-        # else:
-        #     entity_list = self.get_collection_entities()
-        # entityval = { 'annal:list_entities': entity_list }
-
         # Set up initial view context
         self._entityvaluemap = self.get_list_entityvaluemap(list_id)
         log.debug("EntityGenericListView.get _entityvaluemap %r"%(self._entityvaluemap))
@@ -315,6 +325,9 @@ class EntityGenericListView(EntityEditBaseView):
                     type_id=type_id or "",
                     ) + continuation_next
             if "default_view" in request.POST:
+                # @@TODO:
+                # Make currently selected list view default for collection
+                # @@TODO: also, reinstate test case
                 action = "config"
                 raise Annalist_Error(request.POST, "@@TODO EntityGenericListView.post unimplemented "+self.get_request_path())
             if "customize" in request.POST:

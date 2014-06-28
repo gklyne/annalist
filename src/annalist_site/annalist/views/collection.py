@@ -89,7 +89,7 @@ class CollectionEditView(AnnalistGenericView):
         """
         Update some aspect of the current collection
         """
-        # Note: in many cases, this function redirects to a form that displays a form
+        # Note: in many cases, this function redirects to a URI that displays a form
         #       to gather further details of values to update.  Values returned by
         #       POST to this view are then passed as URI segments in the GET request
         #       that renders the form.  Maybe there's an easier way than all this 

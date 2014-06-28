@@ -68,28 +68,13 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='continuation_uri', e=None,                  f='continuation_uri' )
         ])
 
-# Table used as basis, or initial values, for a dynamically generated entity-value map for list displays
-listentityvaluemap  = (
-        [ SimpleValueMap(c='title',            e=None,                  f=None               )
-        , SimpleValueMap(c='coll_id',          e=None,                  f=None               )
-        , SimpleValueMap(c='type_id',          e=None,                  f=None               )
-        , SimpleValueMap(c='list_id',          e=None,                  f=None               )
-        , SimpleValueMap(c='list_ids',         e=None,                  f=None               )
-        , SimpleValueMap(c='list_selected',    e=None,                  f=None               )
-        , SimpleValueMap(c='collection_view',  e=None,                  f=None               )
-        , SimpleValueMap(c='default_view_id',  e=None,                  f=None               )
-        # Field data is handled separately during processing of the form description
-        # Form and interaction control (hidden fields)
-        , SimpleValueMap(c='continuation_uri', e=None,                  f='continuation_uri' )
-        ])
-
 #   -------------------------------------------------------------------------------------------
 #
 #   Generic view base class (contains methods common to record lists and views)
 #
 #   -------------------------------------------------------------------------------------------
 
-# @@TODO: migrate methods not common to lists and views
+# @@TODO: migrate methods not common to lists, edit forms and/or views
 
 class EntityEditBaseView(AnnalistGenericView):
     """
@@ -146,7 +131,7 @@ class EntityEditBaseView(AnnalistGenericView):
             FieldListValueMap(self.collection, fields)
             )
         return entityvaluemap
-
+ 
     def get_form_entityvaluemap(self, view_id):
         """
         Creates an entity/value map table in the current object incorporating
@@ -161,26 +146,6 @@ class EntityEditBaseView(AnnalistGenericView):
         self.get_fields_entityvaluemap(
             entitymap,
             entityview.get_values()['annal:view_fields']
-            )
-        return entitymap
-
-    def get_list_entityvaluemap(self, list_id):
-        """
-        Creates an entity/value map table in the current object incorporating
-        information from the form field definitions for an indicated list display.
-        """
-        # @@TODO: can this be subsumed by repeat value logic in get_fields_entityvaluemap?
-        # Locate and read view description
-        entitymap  = copy.copy(listentityvaluemap)
-        log.debug("entitylist %r"%self.recordlist.get_values())
-        groupmap = []
-        self.get_fields_entityvaluemap(
-            groupmap,
-            self.recordlist.get_values()['annal:list_fields']
-            )
-        entitymap.extend(groupmap)  # one-off for access to field headings
-        entitymap.append(
-            GroupRepeatMap(c='entities', e='annal:list_entities', g=groupmap)
             )
         return entitymap
 
