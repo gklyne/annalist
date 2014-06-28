@@ -44,6 +44,8 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
+from annalist.views.uri_builder     import uri_with_params
+
 #   -------------------------------------------------------------------------------------------
 #
 #   Utility methods and data
@@ -178,20 +180,21 @@ class AnnalistGenericView(ContentNegotiationView):
 
     def continuation_uris(self, request_dict, default_cont):
         """
-        Returns a tuple of three continuation URI values:
-        [0] a URI for continuation after the current page is complete, which can
-            be returned as a redirect URI when processing of the current page is 
-            complete.
-        [1] a URI query parameter value passed forward for returning to the current page:
-            this is intended to be appended to a bare URI (without query parameters) of
-            any new page invocations.
-        [2] a URI query parameter value passed forward for returning to the continuation
-            from the current page: this is intended to be appended to a bare URI 
-            (without query parameters) of any new page invocations.  Use this when redirecting
-            to a new page and not requiring subsequent redirect to the current page
+        Returns a tuple of two continuation URI dictionary values:
 
-        Continuation URIs are cascaded, so that the return URI includes the 
-        continuation URI parameter for the current page.
+        [0] { 'continuation_uri': continuation_uri }
+        [1] { 'continuation_uri': continuation_here }
+
+        where:
+
+        `continuation_uri` is the URI to use after the current page has completed
+        processing, which is either supplied as a parameter to the current page or set to
+        an indicarted default.
+
+        `continuation_here` is a URI that returns control to the current page, to be passed
+        as a contionuation_uri parameter to any subsidiary pages invoked.  Such continuation 
+        URIs are cascaded, so that the return URI includes a the `continuation_uri` for the 
+        current page.
 
         request_dict    is a request dictionary that is expected to contain a 
                         continuation_uri value to use
@@ -201,24 +204,18 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         continuation_uri  = request_dict.get("continuation_uri", default_cont)
         if continuation_uri:
-            continuation_next_enc = "%3Fcontinuation_uri=" + continuation_uri
-            continuation_next     = "?continuation_uri=" + continuation_uri
+            continuation_next = { "continuation_uri": continuation_uri }
         else:
-            continuation_next_enc = ""
-            continuation_next     = ""
-        continuation_path = self.get_request_path().split("?", 1)[0] + continuation_next_enc
-        if continuation_path:
-            continuation_here = "?continuation_uri=" + continuation_path
-        else:
-            continuation_here = ""
-        return (continuation_uri, continuation_here, continuation_next)
+            continuation_next = {}
+        continuation_here = { "continuation_uri": uri_with_params(self.get_request_path(), continuation_next) }
+        return (continuation_next, continuation_here)
 
     def info_params(self, info_message, info_head=message.ACTION_COMPLETED):
         """
-        Returns a URI query parameter string with details that are used to generate an
+        Returns a URI query parameter dictionary with details that are used to generate an
         information message.
         """
-        return "?info_head=%s&info_message=%s"%(info_head, info_message)
+        return {"info_head": info_head, "info_message": info_message}
 
     def redirect_info(self, viewuri, info_message=None, info_head=message.ACTION_COMPLETED):
         """
@@ -226,7 +223,7 @@ class AnnalistGenericView(ContentNegotiationView):
 
         (see templates/base_generic.html for display details)
         """
-        redirect_uri = viewuri+self.info_params(info_message, info_head)
+        redirect_uri = uri_with_params(viewuri, self.info_params(info_message, info_head))
         return HttpResponseRedirect(redirect_uri)
 
     def error_params(self, error_message, error_head=message.INPUT_ERROR):
@@ -234,7 +231,7 @@ class AnnalistGenericView(ContentNegotiationView):
         Returns a URI query parameter string with details that are used to generate an
         error message.
         """
-        return "?error_head=%s&error_message=%s"%(error_head, error_message)
+        return {"error_head": error_head, "error_message": error_message}
 
     def redirect_error(self, viewuri, error_message=None, error_head=message.INPUT_ERROR):
         """
@@ -242,7 +239,7 @@ class AnnalistGenericView(ContentNegotiationView):
 
         (see templates/base_generic.html for display details)
         """
-        redirect_uri = viewuri+self.error_params(error_head, error_message)
+        redirect_uri = uri_with_params(viewuri, self.error_params(error_head, error_message))
         return HttpResponseRedirect(redirect_uri)
 
     def form_edit_auth(self, action, auth_resource):
@@ -272,7 +269,7 @@ class AnnalistGenericView(ContentNegotiationView):
         # return self.authorize(auth_scope, auth_resource)
         return self.authorize(auth_scope)
 
-    def check_value_supplied(self, val, msg, continuation_uri="", testfn=(lambda v: v)):
+    def check_value_supplied(self, val, msg, continuation_uri={}, testfn=(lambda v: v)):
         """
         Test a supplied value is specified (not None) and passes a supplied test,
         returning a URI to display a supplied error message if the test fails.
@@ -291,10 +288,11 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         redirect_uri = None
         if (val is None) or not testfn(val):
-            redirect_uri = (
-                self.get_request_path()+
-                self.error_params(msg)
-                ) + continuation_uri
+            redirect_uri = uri_with_params(
+                self.get_request_path(), 
+                self.error_params(msg),
+                continuation_uri
+                )
         return redirect_uri
 
     # Authentication and authorization

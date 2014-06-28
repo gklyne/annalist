@@ -23,6 +23,7 @@ from annalist.models.recordtype import RecordType
 from annalist.models.recordview import RecordView
 from annalist.models.recordlist import RecordList
 
+from annalist.views.uri_builder import uri_with_params
 from annalist.views.generic     import AnnalistGenericView
 from annalist.views.confirm     import ConfirmView
 
@@ -63,7 +64,7 @@ class CollectionEditView(AnnalistGenericView):
             coll = self.collection
             context = (
                 { 'title':              self.site_data()["title"]
-                , 'continuation_uri':   continuation_uri
+                , 'continuation_uri':   continuation_next['continuation_uri']
                 , 'coll_id':            coll_id
                 , 'types':              sorted( [t.get_id() for t in coll.types(include_alt=False)] )
                 , 'lists':              sorted( [l.get_id() for l in coll.lists(include_alt=False)] )
@@ -74,7 +75,7 @@ class CollectionEditView(AnnalistGenericView):
         http_response = self.get_coll_data(coll_id, self.get_request_host())
         if http_response:
             return http_response
-        continuation_uri, continuation_here, continuation_next = self.continuation_uris(
+        continuation_next, continuation_here = self.continuation_uris(
             request.GET,
             self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
             )
@@ -95,29 +96,44 @@ class CollectionEditView(AnnalistGenericView):
         #       that renders the form.  Maybe there's an easier way than all this 
         #       URI-wrangling?
         redirect_uri = None
-        continuation_uri, continuation_here, continuation_next = self.continuation_uris(
+        continuation_next, continuation_here = self.continuation_uris(
             request.POST,
             self.view_uri("AnnalistSiteView")
             )
         type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:
-            redirect_uri = self.view_uri("AnnalistEntityNewView", 
-                coll_id=coll_id, view_id="Type_view", type_id="_type", action="new"
-                ) + continuation_here
+            redirect_uri = uri_with_params(
+                self.view_uri("AnnalistEntityNewView", 
+                    coll_id=coll_id, view_id="Type_view", type_id="_type", action="new"
+                    ),
+                continuation_here
+                )
         if "type_copy" in request.POST:
             redirect_uri = (
-                self.check_value_supplied(type_id, message.NO_TYPE_FOR_COPY) or
-                    ( self.view_uri("AnnalistEntityEditView", action="copy", 
+                self.check_value_supplied(
+                    type_id, message.NO_TYPE_FOR_COPY, 
+                    continuation_uri=continuation_next
+                    )
+                or
+                uri_with_params(
+                    self.view_uri("AnnalistEntityEditView", action="copy", 
                         coll_id=coll_id, view_id="Type_view", type_id="_type", entity_id=type_id
-                        ) + continuation_here
+                        ),
+                    continuation_here
                     )
                 )
         if "type_edit" in request.POST:
             redirect_uri = (
-                self.check_value_supplied(type_id, message.NO_TYPE_FOR_EDIT) or
-                    ( self.view_uri("AnnalistEntityEditView", action="edit", 
+                self.check_value_supplied(
+                    type_id, message.NO_TYPE_FOR_EDIT, 
+                    continuation_uri=continuation_next
+                    )
+                or
+                uri_with_params(
+                    self.view_uri("AnnalistEntityEditView", action="edit", 
                         coll_id=coll_id, view_id="Type_view", type_id="_type", entity_id=type_id
-                        ) + continuation_here
+                        ),
+                    continuation_here
                     )
                 )
         if "type_delete" in request.POST:
@@ -137,12 +153,13 @@ class CollectionEditView(AnnalistGenericView):
                     )
             else:
                 redirect_uri = (
-                    self.check_value_supplied(type_id, message.NO_TYPE_FOR_DELETE)
+                    self.check_value_supplied(
+                        type_id, message.NO_TYPE_FOR_DELETE,
+                        continuation_uri=continuation_next
+                        )
                     )
         if "close" in request.POST:
-            redirect_uri = request.POST.get('continuation_uri',
-                self.view_uri("AnnalistSiteView")
-                )
+            redirect_uri = continuation_next['continuation_uri']
         if redirect_uri:
             return HttpResponseRedirect(redirect_uri)
         raise Annalist_Error(request.POST, "Unexpected values in POST to "+self.get_request_path())

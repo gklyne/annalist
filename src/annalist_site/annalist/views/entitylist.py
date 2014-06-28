@@ -25,8 +25,9 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.entityfinder   import EntityFinder
 
+from annalist.views.uri_builder     import uri_with_params
 from annalist.views.simplevaluemap  import SimpleValueMap, StableValueMap
-from annalist.views.grouprepeatmap      import GroupRepeatMap
+from annalist.views.grouprepeatmap  import GroupRepeatMap
 from annalist.views.confirm         import ConfirmView, dict_querydict
 from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
 
@@ -146,7 +147,7 @@ class EntityGenericListView(EntityEditBaseView):
             )
         return entitymap
 
-    def check_collection_entity(self, entity_id, entity_type, msg, continuation_uri=""):
+    def check_collection_entity(self, entity_id, entity_type, msg, continuation_uri={}):
         """
         Test a supplied entity_id is defined in the current collection,
         returning a URI to display a supplied error message if the test fails.
@@ -168,10 +169,14 @@ class EntityGenericListView(EntityEditBaseView):
         redirect_uri = None
         typeinfo     = self.entitytypeinfo or EntityTypeInfo(self.site(), self.collection, entity_type)
         if not typeinfo.entityclass.exists(typeinfo.entityparent, entity_id):
+
             redirect_uri = (
-                self.get_request_path()+
-                self.error_params(msg)
-                ) + continuation_uri
+                uri_with_params(
+                    self.get_request_path(),
+                    self.error_params(msg),
+                    continuation_uri
+                    )
+                )
         return redirect_uri
 
     # GET
@@ -226,14 +231,14 @@ class EntityGenericListView(EntityEditBaseView):
         log.debug("entitylist.post: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
         # log.info("  %s"%(self.get_request_path()))
         # log.info("  form data %r"%(request.POST))
-        continuation_uri, continuation_here, continuation_next = self.continuation_uris(
+        continuation_next, continuation_here = self.continuation_uris(
             request.POST,
             self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
             )
         # log.info("continuation_here %s"%(continuation_here))
         # log.info("continuation_uri  %s"%(continuation_uri))
         if 'close' in request.POST:
-            return HttpResponseRedirect(continuation_uri)
+            return HttpResponseRedirect(continuation_next['continuation_uri'])
         # Not "Close": set up list parameters
         http_response = (
             self.list_setup(coll_id, type_id, list_id)
@@ -252,42 +257,53 @@ class EntityGenericListView(EntityEditBaseView):
                 entity_ids[0].split("/") if len(entity_ids) == 1 else (None, None)
                 )
             entity_type = entity_type or type_id or self.get_list_type_id()
-            cont_param  = "&continuation_uri="+continuation_uri
             if "new" in request.POST:
                 action = "new"
-                redirect_uri = self.get_new_view_uri(coll_id, entity_type) + continuation_here
+                redirect_uri = uri_with_params(
+                    self.get_new_view_uri(coll_id, entity_type), 
+                    continuation_here
+                    )
             if "copy" in request.POST:
                 action = "copy"
                 redirect_uri = (
                     self.check_value_supplied(entity_id, 
                         message.NO_ENTITY_FOR_COPY, 
-                        continuation_uri=cont_param
-                        ) or
-                    self.get_edit_view_uri(
-                        coll_id, entity_type, entity_id, action
-                        ) + continuation_here
+                        continuation_uri=continuation_next
+                        )
+                    or
+                    uri_with_params(
+                        self.get_edit_view_uri(
+                            coll_id, entity_type, entity_id, action
+                            ),
+                        continuation_here
+                        )
                     )
             if "edit" in request.POST:
                 action = "edit"
                 redirect_uri = (
                     self.check_value_supplied(entity_id, 
                         message.NO_ENTITY_FOR_EDIT,
-                        continuation_uri=cont_param
-                        ) or
-                    self.get_edit_view_uri(
-                        coll_id, entity_type, entity_id, action
-                        ) + continuation_here
+                        continuation_uri=continuation_next
+                        )
+                    or
+                    uri_with_params(
+                        self.get_edit_view_uri(
+                            coll_id, entity_type, entity_id, action
+                            ),
+                        continuation_here
+                        )
                     )
             if "delete" in request.POST:
                 action = "delete"
                 redirect_uri = (
                     self.check_value_supplied(entity_id, 
                         message.NO_ENTITY_FOR_DELETE,
-                        continuation_uri=cont_param
-                        ) or
+                        continuation_uri=continuation_next
+                        )
+                    or
                     self.check_collection_entity(entity_id, entity_type,
                         message.SITE_ENTITY_FOR_DELETE%{'id': entity_id},
-                        continuation_uri=cont_param
+                        continuation_uri=continuation_next
                         )
                     )
                 if not redirect_uri:
@@ -318,12 +334,17 @@ class EntityGenericListView(EntityEditBaseView):
                 raise Annalist_Error(request.POST, "@@TODO EntityGenericListView.post unimplemented "+self.get_request_path())
             if "list_view" in request.POST:
                 action  = "list"
-                redirect_uri = self.view_uri(
-                    "AnnalistEntityGenericList", 
-                    coll_id=coll_id, 
-                    list_id=request.POST['list_id'], 
-                    type_id=type_id or "",
-                    ) + continuation_next
+                redirect_uri = (
+                    uri_with_params(
+                        self.view_uri(
+                            "AnnalistEntityGenericList", 
+                            coll_id=coll_id, 
+                            list_id=request.POST['list_id'], 
+                            type_id=type_id or "",
+                            ),
+                        continuation_next
+                        )
+                    )
             if "default_view" in request.POST:
                 # @@TODO:
                 # Make currently selected list view default for collection
@@ -332,10 +353,15 @@ class EntityGenericListView(EntityEditBaseView):
                 raise Annalist_Error(request.POST, "@@TODO EntityGenericListView.post unimplemented "+self.get_request_path())
             if "customize" in request.POST:
                 action       = "config"
-                redirect_uri = self.view_uri(
-                    "AnnalistCollectionEditView", 
-                    coll_id=coll_id
-                    ) + continuation_here
+                redirect_uri = (
+                    uri_with_params(
+                        self.view_uri(
+                            "AnnalistCollectionEditView", 
+                            coll_id=coll_id
+                            ),
+                        continuation_here
+                        )
+                    )
         if redirect_uri:
             return (
                 self.form_edit_auth(action, self.collection.get_uri()) or
@@ -349,6 +375,7 @@ class EntityGenericListView(EntityEditBaseView):
             message.UNEXPECTED_FORM_DATA%(request.POST), 
             message.SYSTEM_ERROR
             )
-        return HttpResponseRedirect(continuation_uri+err_values)
+        redirect_uri = uri_with_params(continuation_next['continuation_uri'], err_values)
+        return HttpResponseRedirect(redirect_uri)
 
 # End.

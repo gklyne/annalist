@@ -22,7 +22,7 @@ def uri_params(*param_dicts):
     uri_param_str = ""
     next_sep      = "?"        
     for pnam in uri_param_dict:
-        uri_param_str += next_sep + pnam + "=" + urllib.quote(uri_param_dict[pnam], "?&#")
+        uri_param_str += next_sep + pnam + "=" + urllib.quote(uri_param_dict[pnam], "':,!=/")
         next_sep = "&"
     return uri_param_str
 
