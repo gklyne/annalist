@@ -10,6 +10,14 @@ import logging
 log = logging.getLogger(__name__)
 
 import urllib
+import re
+
+# From RFC 3986:
+gen_delims  = ":/?#[]@"
+sub_delims  = "!$&'()*+,;="
+unreserved  = "-._~"
+# subset of above safe in query string (no "?", "&" or "#")
+query_safe  = re.sub('[?&#]', '', gen_delims + sub_delims + unreserved)
 
 def uri_params(*param_dicts):
     """
@@ -22,7 +30,7 @@ def uri_params(*param_dicts):
     uri_param_str = ""
     next_sep      = "?"        
     for pnam in uri_param_dict:
-        uri_param_str += next_sep + pnam + "=" + urllib.quote(uri_param_dict[pnam], "':,!=/")
+        uri_param_str += next_sep + pnam + "=" + urllib.quote(uri_param_dict[pnam], query_safe)
         next_sep = "&"
     return uri_param_str
 
