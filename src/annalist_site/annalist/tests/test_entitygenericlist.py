@@ -597,6 +597,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
     #   -------- close / search / view / default-view / customize--------
 
     def test_post_close(self):
+        # 'Close' button on list view
         f = entitylist_form_data("close", entities=["testtype/entity1", "testtype/entity2"])
         u = entitydata_list_type_uri("testcoll", "testtype")
         r = self.client.post(u, f)
@@ -607,7 +608,23 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(v, r['location'])
         return
 
+    def test_post_close_no_continuation(self):
+        # 'Close' button on list view with no continuation URI given
+        f = entitylist_form_data("close", 
+            entities=["testtype/entity1", "testtype/entity2"], 
+            continuation_uri=""
+            )
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + collection_edit_uri("testcoll")
+        self.assertEqual(v, r['location'])
+        return
+
     def test_post_view_list(self):
+        # 'View' button on list view: change displayed list
         f = entitylist_form_data("list_view", list_id="View_list")
         u = entitydata_list_type_uri("testcoll", "_type", list_id="Type_list")
         r = self.client.post(u, f)
@@ -622,6 +639,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     @unittest.skip("@@TODO genericlist search button handler")
     def test_post_search(self):
+
+
+
         return
 
     @unittest.skip("@@TODO genericlist default list button handler")

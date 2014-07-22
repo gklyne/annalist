@@ -26,6 +26,23 @@ class EntityFinder(object):
         self._site = coll.get_site()
         return
 
+    def get_entities(self, type_id=None, selector=None, search=None):
+        for e in self.get_selected_entities(type_id=type_id, selector=selector):
+            if self.entity_contains(e, search):
+                yield e
+        return
+
+    def get_selected_entities(self, type_id=None, selector=None):
+        if selector:
+            s = self.compile_selector(type_id, selector)
+            if s:
+                for e in s:
+                    yield e
+        else:
+            for e in self.get_base_entities(type_id):
+                yield e
+        return
+
     def get_base_entities(self, type_id=None):
         if type_id:
             # return all entities in collection of a specific type (includes built-ins)
@@ -41,23 +58,6 @@ class EntityFinder(object):
                 if t:
                     for e in t.entities():
                         yield e
-
-    def get_selected_entities(self, type_id=None, selector=None):
-        if selector:
-            s = self.compile_selector(type_id, selector)
-            if s:
-                for e in s:
-                    yield e
-        else:
-            for e in self.get_base_entities(type_id):
-                yield e
-        return
-
-    def get_entities(self, type_id=None, selector=None, search=None):
-        for e in self.get_selected_entities(type_id=type_id, selector=selector):
-            if self.entity_contains(e, search):
-                yield e
-        return
 
     def compile_selector(self, type_id, selector):
         """
@@ -107,7 +107,7 @@ class EntityFinder(object):
     @classmethod
     def entity_contains(cls, e, search):
         """
-        Returns True is entity contains/matches search term, else False.
+        Returns True if entity contains/matches search term, else False.
         Search term None (or blank) matches all entities.
 
         >>> e  = { 'p:a': '1', 'p:b': '2', 'p:c': '3' }

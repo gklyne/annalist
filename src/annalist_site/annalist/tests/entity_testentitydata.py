@@ -356,7 +356,7 @@ def entitydata_recordtype_view_form_data(
 #
 #   -----------------------------------------------------------------------------
 
-def entitylist_form_data(action, search="", list_id="Default_list", entities=None):
+def entitylist_form_data(action, search="", list_id="Default_list", entities=None, continuation_uri=None):
     """
     Form data from entity list form submission
 
@@ -386,10 +386,12 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
         , 'default_view':       "Set default"
         , 'customize':          "Customize"
         })
+    if continuation_uri is None:
+        continuation_uri = collection_edit_uri("testcoll")
     form_data = (
         { 'search_for':         search
         , 'list_id':            list_id
-        , 'continuation_uri':   collection_edit_uri("testcoll")
+        , 'continuation_uri':   continuation_uri
         })
     if entities is not None:
         form_data['entity_select'] = entities

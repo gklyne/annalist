@@ -182,14 +182,14 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         Returns a tuple of two continuation URI dictionary values:
 
-        [0] { 'continuation_uri': continuation_uri }
+        [0] { 'continuation_uri': continuation_next }
         [1] { 'continuation_uri': continuation_here }
 
         where:
 
-        `continuation_uri` is the URI to use after the current page has completed
-        processing, which is either supplied as a parameter to the current page or set to
-        an indicarted default.
+        `continuation_next` is the URI to use after the current page has completed
+        processing, which is either supplied as a parameter to the current page or 
+        set to an indicated default.
 
         `continuation_here` is a URI that returns control to the current page, to be passed
         as a contionuation_uri parameter to any subsidiary pages invoked.  Such continuation 
@@ -202,7 +202,8 @@ class AnnalistGenericView(ContentNegotiationView):
                         the current page if the current POST request does not specify
                         a continuation_uri query parameter.
         """
-        continuation_uri  = request_dict.get("continuation_uri", default_cont)
+        # Note: use default if request/form parameter is present but blank:
+        continuation_uri  = request_dict.get("continuation_uri", None) or default_cont
         if continuation_uri:
             continuation_next = { "continuation_uri": continuation_uri }
         else:
