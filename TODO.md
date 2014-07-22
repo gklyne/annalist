@@ -100,7 +100,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / refactor defaultlist.py as special case (subclass?)
    / parameterize view-id on extra URI field
    / create new URI mapping entries
-   - create new test suite for generic list view
+   / create new test suite for generic list view
      / choose test scenario: Field definitions: http://localhost:8000/annalist/c/coll1/d/_field/ 
      / list field descriptions?  Need to create list description (4 fields?).
        http://localhost:8000/annalist/c/coll1/l/Fields_list/_field/
@@ -133,8 +133,9 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / fix up view links from list display
    / define View-list and List-list
    / view button handler from list display + test
-   - continuation handling: replace by more generic parameter handling based on dictionary; move handling of escape logic, etc.
+   / continuation handling: replace by more generic parameter handling based on dictionary; move handling of escape logic, etc.
    - search button handler from list display
+   - consider that 'Find' and 'View' buttons could be combined
    - move invocation of authentication to the immediate response handler code?
    - don't include continuation-uri param when URI is blank
    - refactor list description access out of context handling code (avoid multiple reads)
@@ -146,13 +147,16 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / decide how to handle presentation of field types (where?):
      (a) use simple text string, not CURIE
      (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?
-     - it all rather depends on the anticipated extensibility model for field types.
+     / it all rather depends on the anticipated extensibility model for field types.
        Option (a) is simplest for now.
    - tests
      / skipped '@@TODO defaultlist default-view button handler'
      / skipped '@@TODO defaultlist search button handler'
      / skipped '@@TODO genericlist default-view button handler'
      - skipped '@@TODO genericlist search button handler'
+       - annalist.tests.test_entitygenericlist.EntityGenericListViewTest
+     - skipped '@@TODO genericlist default list button'
+       - annalist.tests.test_entitygenericlist.EntityGenericListViewTest
    - review URI for delete type/view/list confirmation
    - use proper indexing to accelerate search (maybe later?)
 8. Read-only entity data view
