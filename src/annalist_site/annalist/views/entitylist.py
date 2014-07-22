@@ -90,9 +90,20 @@ class EntityGenericListView(EntityEditBaseView):
             )
         return http_response
 
+    def get_type_list_id(self, type_id):
+        list_id = None
+        if type_id:
+            typedata  = RecordType.load(self.collection, type_id, self.site())
+            if typedata:
+                list_id  = typedata.get("annal:type_list", None)
+            else:
+                log.warning("EntityGenericListView.get_type_list_id no type data for %s"%(type_id))
+        return list_id
+
     def get_list_id(self, type_id, list_id):
         return (
             list_id or 
+            self.get_type_list_id(type_id) or
             self.collection.get_values().get("Default_list", None)
             )
 

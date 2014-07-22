@@ -98,29 +98,38 @@ def recordtype_edit_uri(action=None, coll_id=None, type_id=None):
 #
 #   -----------------------------------------------------------------------------
 
-def recordtype_value_keys():
-    return set(
+def recordtype_value_keys(type_list=False):
+    ks = set(
         [ 'annal:id', 'annal:type'
         , 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         ])
+    if type_list:
+        ks.add('annal:type_list')
+    return ks
 
-def recordtype_load_keys():
-    return recordtype_value_keys() | {"@id"}
+def recordtype_load_keys(type_list=False):
+    return recordtype_value_keys(type_list=type_list) | {"@id"}
 
-def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="RecordType"):
+def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="RecordType", type_list=False):
     """
     Entity values used when creating a record type entity
     """
-    return (
-        { 'rdfs:label':     "%s %s/%s"%(update, coll_id, type_id)
-        , 'rdfs:comment':   "%s help for %s in collection %s"%(update, type_id, coll_id)
+    d = (
+        { 'rdfs:label':         "%s %s/%s"%(update, coll_id, type_id)
+        , 'rdfs:comment':       "%s help for %s in collection %s"%(update, type_id, coll_id)
         })
+    if type_list:
+        d.update({'annal:type_list':    "Type_list"})
+    return d
 
 def recordtype_values(
         coll_id="testcoll", type_id="testtype", 
-        update="RecordType", hosturi=TestHostUri):
-    d = recordtype_create_values(coll_id, type_id, update=update).copy()
+        update="RecordType", hosturi=TestHostUri, type_list=False):
+    d = recordtype_create_values(coll_id, type_id, 
+        update=update, 
+        type_list=type_list
+        ).copy()
     d.update(
         { 'annal:id':       type_id
         , 'annal:type':     "annal:Type"
@@ -130,8 +139,12 @@ def recordtype_values(
 
 def recordtype_read_values(
         coll_id="testcoll", type_id="testtype", 
-        update="RecordType", hosturi=TestHostUri):
-    d = recordtype_values(coll_id, type_id, update=update, hosturi=hosturi).copy()
+        update="RecordType", hosturi=TestHostUri, type_list=False):
+    d = recordtype_values(coll_id, type_id,
+        update=update,
+        hosturi=hosturi, 
+        type_list=type_list
+        ).copy()
     d.update(
         { '@id':            "./"
         })

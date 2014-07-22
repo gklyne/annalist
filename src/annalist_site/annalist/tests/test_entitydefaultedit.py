@@ -73,7 +73,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        self.type_ids   = ['testtype', 'Default_type', 'fields']
+        self.type_ids   = ['testtype', 'Default_type', '_field']
         self.no_options = ['(no options)']
         return
 
@@ -145,8 +145,8 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   <div class="small-12 medium-8 columns">
                     <select name="entity_type" class="right">
                         <option selected="selected">testtype</option>
+                        <option>_field</option>
                         <option>Default_type</option>
-                        <option>fields</option>
                     </select>
                   </div>
                 </div>
@@ -246,7 +246,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1].field_value,            "testtype")
         self.assertEqual(r.context['fields'][1]['field_value'],         "testtype")
         self.assertEqual(r.context['fields'][1]['entity_type_id'],      "testtype")
-        self.assertEqual(r.context['fields'][1]['options'],             self.type_ids)
+        self.assertEqual(set(r.context['fields'][1]['options']),        set(self.type_ids))
         # 3rd field
         field_label_help = (
             "Short string used to describe entity when displayed"
@@ -336,7 +336,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 right columns")
         self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][1]['field_value'], "testtype")
-        self.assertEqual(r.context['fields'][1]['options'], self.type_ids)
+        self.assertEqual(set(r.context['fields'][1]['options']), set(self.type_ids))
         # 3rd field
         field_label_help = (
             "Short string used to describe entity when displayed"

@@ -129,8 +129,10 @@ class AnnalistGenericView(ContentNegotiationView):
                             {'id': type_id, 'coll_id': self.collection.get_id()})
                         )
                     )
+            # self.entitytype = RecordType.load(self.collection, type_id, self.site())
         else:
             self.entitytypeinfo = None
+            # self.entitytype     = None
         return None
 
     def get_view_data(self, view_id):

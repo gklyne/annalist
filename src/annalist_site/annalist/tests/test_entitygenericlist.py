@@ -345,6 +345,17 @@ class EntityGenericListViewTest(AnnalistTestCase):
                 self.fail("Field %s not found in context"%f[0])
         return
 
+    def test_get_list_select_by_type(self):
+        u = entitydata_list_type_uri("testcoll", "_field", list_id=None)
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Test context
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "_field")
+        self.assertEqual(r.context['list_selected'],    "Field_list")
+        return
+
     #   -----------------------------------------------------------------------------
     #   Form response tests
     #   -----------------------------------------------------------------------------

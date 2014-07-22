@@ -126,7 +126,7 @@ class RecordTypeTest(AnnalistTestCase):
         self.assertIn("/c/testcoll/_annalist_collection/types/Default_type", t.get_uri())
         self.assertEqual(t.get_type_id(), "_type")
         td = t.get_values()
-        self.assertEqual(set(td.keys()), set(recordtype_load_keys()))
+        self.assertEqual(set(td.keys()), set(recordtype_load_keys(type_list=True)))
         v = recordtype_read_values(type_id="Default_type")
         v.update(
             { 'rdfs:label':     'Default record type'
@@ -172,13 +172,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         t = RecordType.create(self.testcoll, type_id, recordtype_create_values(type_id=type_id))
         return t    
 
-    def _check_record_type_values(self, type_id, update="RecordType"):
+    def _check_record_type_values(self, type_id, update="RecordType", type_list=False):
         "Helper function checks content of record type entry with supplied type_id"
         self.assertTrue(RecordType.exists(self.testcoll, type_id))
         t = RecordType.load(self.testcoll, type_id)
         self.assertEqual(t.get_id(), type_id)
         self.assertEqual(t.get_view_uri(), TestHostUri + recordtype_uri("testcoll", type_id))
-        v = recordtype_values(type_id=type_id, update=update)
+        v = recordtype_values(type_id=type_id, update=update, type_list=type_list)
         self.assertDictionaryMatch(t.get_values(), v)
         return t
 
