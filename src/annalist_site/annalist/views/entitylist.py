@@ -332,8 +332,22 @@ class EntityGenericListView(EntityEditBaseView):
                             )
                         )
             if "search" in request.POST:
-                action = "search"                
-                raise Annalist_Error(request.POST, "@@TODO EntityGenericListView.post unimplemented "+self.get_request_path())
+                action = "search"         
+                search = request.POST['search_for']
+                params = continuation_next
+                if search:
+                    params = dict(params, search=search)
+                redirect_uri = (
+                    uri_with_params(
+                        self.view_uri(
+                            "AnnalistEntityGenericList", 
+                            coll_id=coll_id, 
+                            list_id=self.get_list_id(type_id, list_id),  # request.POST['list_id'], 
+                            type_id=type_id or ""
+                            ),
+                        params
+                        )
+                    )
             if "list_view" in request.POST:
                 action  = "list"
                 redirect_uri = (

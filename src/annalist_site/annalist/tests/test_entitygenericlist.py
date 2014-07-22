@@ -295,6 +295,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
         self.assertEqual(r.context['list_selected'],    "Field_list")
+        self.assertEqual(r.context['search_for'],       "Bib_")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # Fields
         self.assertEqual(len(r.context['fields']), 3)
@@ -609,7 +610,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_post_close_no_continuation(self):
-        # 'Close' button on list view with no continuation URI given
+        # 'Close' button on list view with no continuation URI given in form
         f = entitylist_form_data("close", 
             entities=["testtype/entity1", "testtype/entity2"], 
             continuation_uri=""
@@ -637,11 +638,26 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertIn(c, r['location'])
         return
 
-    @unittest.skip("@@TODO genericlist search button handler")
     def test_post_search(self):
-
-
-
+        # Redisplay list with entries matching search string
+        # {
+        #   u 'search': [u 'Find'],
+        #   u 'search_for': [u '...'],
+        #   u 'list_id': [u 'Field_list']
+        # }
+        f = entitylist_form_data("search", search="search&term")
+        u = entitydata_list_type_uri("testcoll", "testtype")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_list_type_uri("testcoll", "testtype", list_id="Default_list")
+        c = continuation_uri_param(collection_edit_uri("testcoll"))
+        s = "search=search%26term"
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self.assertIn(s, r['location'])
+        # Note: Search rendering tested by test_get_fields_list_search above
         return
 
     @unittest.skip("@@TODO genericlist default list button handler")
