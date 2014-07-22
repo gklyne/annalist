@@ -637,7 +637,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_view_list(self):
         # 'View' button on list view: change displayed list
-        f = entitylist_form_data("list_view", list_id="View_list")
+        f = entitylist_form_data("view", list_id="View_list")
         u = entitydata_list_type_uri("testcoll", "_type", list_id="Type_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -651,12 +651,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_search(self):
         # Redisplay list with entries matching search string
-        # {
-        #   u 'search': [u 'Find'],
-        #   u 'search_for': [u '...'],
-        #   u 'list_id': [u 'Field_list']
-        # }
-        f = entitylist_form_data("search", search="search&term")
+        f = entitylist_form_data("view", search="search&term")
         u = entitydata_list_type_uri("testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)

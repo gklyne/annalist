@@ -342,8 +342,8 @@ class EntityGenericListView(EntityEditBaseView):
                             title=                  self.site_data()["title"]
                             )
                         )
-            if "search" in request.POST:
-                action = "search"         
+            if "view" in request.POST:
+                action = "list"         
                 search = request.POST['search_for']
                 params = continuation_next
                 if search:
@@ -353,23 +353,10 @@ class EntityGenericListView(EntityEditBaseView):
                         self.view_uri(
                             "AnnalistEntityGenericList", 
                             coll_id=coll_id, 
-                            list_id=self.get_list_id(type_id, list_id),  # request.POST['list_id'], 
+                            list_id=request.POST['list_id'], 
                             type_id=type_id or ""
                             ),
                         params
-                        )
-                    )
-            if "list_view" in request.POST:
-                action  = "list"
-                redirect_uri = (
-                    uri_with_params(
-                        self.view_uri(
-                            "AnnalistEntityGenericList", 
-                            coll_id=coll_id, 
-                            list_id=request.POST['list_id'], 
-                            type_id=type_id or "",
-                            ),
-                        continuation_next
                         )
                     )
             if "default_view" in request.POST:
@@ -397,7 +384,7 @@ class EntityGenericListView(EntityEditBaseView):
         # Report unexpected form data
         # This shouldn't happen, but just in case...
         # Redirect to continuation with error
-        log.error("Unexpected form data posted to %s: %r"(request.get_full_path(), request.POST))
+        log.error("Unexpected form data posted to %s: %r"%(request.get_full_path(), request.POST))
         err_values = self.error_params(
             message.UNEXPECTED_FORM_DATA%(request.POST), 
             message.SYSTEM_ERROR
