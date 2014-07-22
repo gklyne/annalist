@@ -73,7 +73,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        self.type_ids   = ['testtype', 'Default_type', '_field']
+        self.type_ids   = ['testtype', 'Default_type', '_type', '_field', '_view', '_list']
         self.no_options = ['(no options)']
         return
 
@@ -146,6 +146,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                     <select name="entity_type" class="right">
                         <option selected="selected">testtype</option>
                         <option>_field</option>
+                        <option>_list</option>
+                        <option>_type</option>
+                        <option>_view</option>
                         <option>Default_type</option>
                     </select>
                   </div>
