@@ -101,6 +101,7 @@ class CollectionEditView(AnnalistGenericView):
             request.POST,
             self.view_uri("AnnalistSiteView")
             )
+        # record types
         type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:
             redirect_uri = self.item_new_uri(
@@ -125,6 +126,58 @@ class CollectionEditView(AnnalistGenericView):
                 message.NO_TYPE_FOR_DELETE, 
                 message.REMOVE_RECORD_TYPE, 
                 "AnnalistRecordTypeDeleteView",
+                continuation_next)
+        # list views
+        list_id = request.POST.get('listlist', None)
+        if "list_new" in request.POST:
+            redirect_uri = self.item_new_uri(
+                coll_id, "_list", "List_view", 
+                continuation_here
+                )
+        if "list_copy" in request.POST:
+            redirect_uri = self.item_copy_uri(
+                coll_id, "_list", "List_view", list_id, 
+                message.NO_LIST_FOR_COPY, 
+                continuation_here, continuation_next
+                )
+        if "list_edit" in request.POST:
+            redirect_uri = self.item_edit_uri(
+                coll_id, "_list", "List_view", list_id, 
+                message.NO_LIST_FOR_COPY, 
+                continuation_here, continuation_next
+                )
+        if "list_delete" in request.POST:
+            redirect_uri, http_response = self.item_delete_response(
+                coll_id, list_id, 
+                message.NO_LIST_FOR_DELETE, 
+                message.REMOVE_RECORD_LIST, 
+                "AnnalistRecordListDeleteView",
+                continuation_next)
+        # list views
+        view_id = request.POST.get('viewlist', None)
+        if "view_new" in request.POST:
+            redirect_uri = self.item_new_uri(
+                coll_id, "_view", "View_view", 
+                continuation_here
+                )
+        if "view_copy" in request.POST:
+            redirect_uri = self.item_copy_uri(
+                coll_id, "_view", "View_view", view_id, 
+                message.NO_VIEW_FOR_COPY, 
+                continuation_here, continuation_next
+                )
+        if "view_edit" in request.POST:
+            redirect_uri = self.item_edit_uri(
+                coll_id, "_view", "View_view", view_id, 
+                message.NO_VIEW_FOR_COPY, 
+                continuation_here, continuation_next
+                )
+        if "view_delete" in request.POST:
+            redirect_uri, http_response = self.item_delete_response(
+                coll_id, view_id, 
+                message.NO_VIEW_FOR_DELETE, 
+                message.REMOVE_RECORD_VIEW, 
+                "AnnalistRecordViewDeleteView",
                 continuation_next)
         if "close" in request.POST:
             redirect_uri = continuation_next['continuation_uri']

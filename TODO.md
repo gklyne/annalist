@@ -144,7 +144,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / it all rather depends on the anticipated extensibility model for field types.
        Option (a) is simplest for now.
    / default_view response handler (needs generic view to make sense)
-   - implement view- and list- edit from collection customization page
+   / implement view- and list- edit from collection customization page
    - implement per-type default list and view
    - add field button on entity edit displays
    - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
