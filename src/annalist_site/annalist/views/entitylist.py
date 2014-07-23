@@ -78,17 +78,26 @@ class EntityGenericListView(EntityEditBaseView):
         """
         Check collection and type identifiers and objects.
 
-        Returns None if all is well, or an HttpResponse object with details 
-        about any problem encountered.
+        Returns:
+
+            http_response, list_id
+
+        where: `http_response` is `None` if the list processing is to proceed, 
+        or an HttpResponse value to be returned immediately, and 
+        if `http_response` is `None`, `list_id` is the actual list identifier 
+        to be used for subsequent processing.
         """
         reqhost = self.get_request_host()
-        http_response = (
-            # http_response or 
-            self.get_coll_data(coll_id, host=reqhost) or
-            self.get_type_data(type_id) or
-            self.get_list_data(self.get_list_id(type_id, list_id))
-            )
-        return http_response
+        http_response = self.get_coll_data(coll_id, host=reqhost)
+        if not http_response:
+            list_id       = self.get_list_id(type_id, list_id)
+            http_response = (
+                # http_response or 
+                self.get_type_data(type_id) or
+                self.get_list_data(list_id) or
+                self.form_edit_auth("list", self.collection._entityuri)
+                )
+        return http_response, list_id
 
     def get_type_list_id(self, type_id):
         list_id = None
@@ -104,7 +113,7 @@ class EntityGenericListView(EntityEditBaseView):
         return (
             list_id or 
             self.get_type_list_id(type_id) or
-            self.collection.get_values().get("Default_list", None)
+            self.collection.get_default_list()
             )
 
     def get_list_view_id(self):
@@ -196,14 +205,10 @@ class EntityGenericListView(EntityEditBaseView):
         Create a form for listing entities.
         """
         log.debug("entitylist.get: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
-        http_response = (
-            self.list_setup(coll_id, type_id, list_id) or
-            self.form_edit_auth("list", self.collection._entityuri)
-            )
+        http_response, list_id = self.list_setup(coll_id, type_id, list_id)
         if http_response:
             return http_response
         # Prepare list and entity IDs for rendering form
-        list_id     = self.get_list_id(type_id, list_id)
         list_ids    = [ l.get_id() for l in self.collection.lists() ]
         selector    = self.recordlist.get_values().get('annal:selector', "")
         search_for  = request.GET.get('search', "")
@@ -248,14 +253,10 @@ class EntityGenericListView(EntityEditBaseView):
             request.POST,
             self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
             )
-        # log.info("continuation_here %s"%(continuation_here))
-        # log.info("continuation_uri  %s"%(continuation_uri))
         if 'close' in request.POST:
             return HttpResponseRedirect(continuation_next['continuation_uri'])
         # Not "Close": set up list parameters
-        http_response = (
-            self.list_setup(coll_id, type_id, list_id)
-            )
+        http_response, list_id = self.list_setup(coll_id, type_id, list_id)
         if http_response:
             return http_response
         # Process requested action
@@ -342,6 +343,20 @@ class EntityGenericListView(EntityEditBaseView):
                             title=                  self.site_data()["title"]
                             )
                         )
+            if "default_view" in request.POST:
+                auth_check = self.form_edit_auth("config", self.collection.get_uri())
+                if auth_check:
+                    return auth_check
+                self.collection.set_default_list(list_id)
+                action = "list"
+                msg    = message.DEFAULT_VIEW_UPDATED%{'coll_id': coll_id, 'list_id': list_id}         
+                redirect_uri = (
+                    uri_with_params(
+                        self.get_request_path(), 
+                        self.info_params(msg),
+                        continuation_next
+                        )
+                    )
             if "view" in request.POST:
                 action = "list"         
                 search = request.POST['search_for']
@@ -359,12 +374,6 @@ class EntityGenericListView(EntityEditBaseView):
                         params
                         )
                     )
-            if "default_view" in request.POST:
-                # @@TODO:
-                # Make currently selected list view default for collection
-                # @@TODO: also, reinstate test case
-                action = "config"
-                raise Annalist_Error(request.POST, "@@TODO EntityGenericListView.post unimplemented "+self.get_request_path())
             if "customize" in request.POST:
                 action       = "config"
                 redirect_uri = (

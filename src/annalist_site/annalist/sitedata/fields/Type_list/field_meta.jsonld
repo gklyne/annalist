@@ -1,0 +1,11 @@
+{ "@id":                    "annal:fields/Type_list"
+, "annal:id":               "Type_list"
+, "annal:type":             "annal:Field"
+, "rdfs:label":             "Default list id"
+, "rdfs:comment":           "Default list id for entity type"
+, "annal:field_render":     "annal:field_render/Text"
+, "annal:value_type":       "annal:Text"
+, "annal:placeholder":      "(List Id)"
+, "annal:default_value":    "Default_list"
+, "annal:property_uri":     "annal:type_list"
+}

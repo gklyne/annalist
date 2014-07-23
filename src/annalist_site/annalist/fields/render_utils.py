@@ -140,8 +140,13 @@ class bound_field(object):
             elif self._key == "entity_type_id":
                 return self.entity_type_id
             else:
+                # Return default value or placeholder value
+                # When all types have defined value, drop the placeholder
                 # log.debug("No value for %s"%(self._key))
-                return self._field_description.get('field_placeholder', "...")
+                return (
+                    self._field_description.get('field_default_value', None) or
+                    self._field_description.get('field_placeholder', "...")
+                    )
         elif name == "options":
             # log.info(repr(self._options))
             return self._options

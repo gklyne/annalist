@@ -235,7 +235,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-6 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
         # Entities
-        self.assertEqual(len(r.context['entities']), 49)
+        self.assertEqual(len(r.context['entities']), 51)
         field_entities = (
             { ('Entity_id',         "annal:field_render/EntityRef",     "Id")
             , ('Bib_address',       "annal:field_render/Text",          "Bib_address")
@@ -649,7 +649,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertIn(c, r['location'])
         return
 
-    def test_post_search(self):
+    def test_post_view(self):
         # Redisplay list with entries matching search string
         f = entitylist_form_data("view", search="search&term")
         u = entitydata_list_type_uri("testcoll", "testtype")
@@ -666,9 +666,22 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Note: Search rendering tested by test_get_fields_list_search above
         return
 
-    @unittest.skip("@@TODO genericlist default list button handler")
     def test_post_default_list(self):
         # This button makes the current list view default for the collection
+        f = entitylist_form_data("default_view", list_id="View_list")
+        u = entitydata_list_type_uri("testcoll", "_type", list_id="Type_list")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_list_type_uri("testcoll", "_type", list_id="Type_list")
+        h = "info_head=Action%20completed"
+        m = "info_message=.*view.*testcoll.*Type_list"
+        c = continuation_uri_param(collection_edit_uri("testcoll"))
+        self.assertIn(v, r['location'])
+        self.assertIn(h, r['location'])
+        self.assertMatch(r['location'], m)
+        self.assertIn(c, r['location'])
         return
 
     def test_post_customize(self):

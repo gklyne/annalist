@@ -5,5 +5,6 @@
   "annal:uri":          "annal:type/_field",
   "rdfs:label":         "Field description type",
   "rdfs:comment":       "Type of field description record.",
+  "annal:type_view":    "Field_view",
   "annal:type_list":    "Field_list"
 }

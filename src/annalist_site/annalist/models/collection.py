@@ -208,4 +208,20 @@ class Collection(Entity):
         t = RecordList.remove(self, list_id)
         return t
 
+    def set_default_list(self, list_id):
+        """
+        Set and save the default list to be displayed for the current collection.
+        """
+        self["annal:default_list"] = list_id
+        self._save()
+        return
+
+    def get_default_list(self):
+        """
+        Return the default list to be displayed for the current collection.
+        """
+        return self.get("annal:default_list", None)
+
+
+
 # End.

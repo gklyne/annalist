@@ -52,6 +52,7 @@ class FieldDescription(object):
             , 'field_help':             recordfield['rdfs:comment']
             , 'field_value_type':       recordfield['annal:value_type']
             , 'field_placeholder':      recordfield['annal:placeholder']
+            , 'field_default_value':    recordfield.get('annal:default_value', None)
             , 'field_property_uri':     recordfield['annal:property_uri']
             , 'field_options':          recordfield.get('annal:options', None)
             })

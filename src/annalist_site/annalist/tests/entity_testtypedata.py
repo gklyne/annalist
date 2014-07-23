@@ -98,38 +98,34 @@ def recordtype_edit_uri(action=None, coll_id=None, type_id=None):
 #
 #   -----------------------------------------------------------------------------
 
-def recordtype_value_keys(type_list=False):
+def recordtype_value_keys():
     ks = set(
         [ 'annal:id', 'annal:type'
         , 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
+        , 'annal:type_view', 'annal:type_list'
         ])
-    if type_list:
-        ks.add('annal:type_list')
     return ks
 
-def recordtype_load_keys(type_list=False):
-    return recordtype_value_keys(type_list=type_list) | {"@id"}
+def recordtype_load_keys():
+    return recordtype_value_keys() | {"@id"}
 
-def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="RecordType", type_list=False):
+def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="RecordType"):
     """
     Entity values used when creating a record type entity
     """
     d = (
         { 'rdfs:label':         "%s %s/%s"%(update, coll_id, type_id)
         , 'rdfs:comment':       "%s help for %s in collection %s"%(update, type_id, coll_id)
+        , 'annal:type_view':    "Default_view"
+        , 'annal:type_list':    "Default_list"
         })
-    if type_list:
-        d.update({'annal:type_list':    "Type_list"})
     return d
 
 def recordtype_values(
         coll_id="testcoll", type_id="testtype", 
-        update="RecordType", hosturi=TestHostUri, type_list=False):
-    d = recordtype_create_values(coll_id, type_id, 
-        update=update, 
-        type_list=type_list
-        ).copy()
+        update="RecordType", hosturi=TestHostUri):
+    d = recordtype_create_values(coll_id, type_id, update=update).copy()
     d.update(
         { 'annal:id':       type_id
         , 'annal:type':     "annal:Type"
@@ -139,11 +135,10 @@ def recordtype_values(
 
 def recordtype_read_values(
         coll_id="testcoll", type_id="testtype", 
-        update="RecordType", hosturi=TestHostUri, type_list=False):
+        update="RecordType", hosturi=TestHostUri):
     d = recordtype_values(coll_id, type_id,
         update=update,
-        hosturi=hosturi, 
-        type_list=type_list
+        hosturi=hosturi
         ).copy()
     d.update(
         { '@id':            "./"
@@ -206,6 +201,26 @@ def recordtype_entity_view_context_data(
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
+          , { 'field_label':        'Default view id'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'Type_view'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_id':           'Type_view'
+            , 'field_value_type':   'annal:Text'
+            # , 'field_value':      (Supplied separately)
+            , 'options':            []
+            }
+          , { 'field_label':        'Default list id'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'Type_list'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_id':           'Type_list'
+            , 'field_value_type':   'annal:Text'
+            # , 'field_value':      (Supplied separately)
+            , 'options':            []
+            }
           ]
         , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_type")
         })
@@ -237,6 +252,8 @@ def recordtype_entity_view_form_data(
         form_data_dict['Type_label']    = '%s %s/%s'%(update, coll_id, type_id)
         form_data_dict['Type_comment']  = '%s help for %s in collection %s'%(update, type_id, coll_id)
         form_data_dict['Type_uri']      = TestBaseUri + "/c/%s/d/_type/%s/"%(coll_id, type_id)
+        form_data_dict['Type_view']     = "Default_view"
+        form_data_dict['Type_list']     = "Default_list"
         form_data_dict['orig_type']     = "_type"
     if orig_id:
         form_data_dict['orig_id']       = orig_id
