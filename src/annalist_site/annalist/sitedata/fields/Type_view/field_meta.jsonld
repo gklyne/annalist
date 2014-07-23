@@ -1,7 +1,7 @@
 { "@id":                    "annal:fields/Type_view"
 , "annal:id":               "Type_view"
 , "annal:type":             "annal:Field"
-, "rdfs:label":             "Default view id"
+, "rdfs:label":             "Default view"
 , "rdfs:comment":           "Default view id for entity type"
 , "annal:field_render":     "annal:field_render/Text"
 , "annal:value_type":       "annal:Text"

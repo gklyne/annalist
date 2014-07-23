@@ -143,7 +143,10 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?
      / it all rather depends on the anticipated extensibility model for field types.
        Option (a) is simplest for now.
-   - default_view response handler (needs generic view to make sense)
+   / default_view response handler (needs generic view to make sense)
+   - implement view- and list- edit from collection customization page
+   - implement per-type default list and view
+   - add field button on entity edit displays
    - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - align type ID values used in local URI construction with type URIs/CURIEs
@@ -153,8 +156,8 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / skipped '@@TODO genericlist default-view button handler'
      / skipped '@@TODO genericlist search button handler'
        / annalist.tests.test_entitygenericlist.EntityGenericListViewTest
-     - skipped '@@TODO genericlist default list button'
-       - annalist.tests.test_entitygenericlist.EntityGenericListViewTest
+     / skipped '@@TODO genericlist default list button'
+       / annalist.tests.test_entitygenericlist.EntityGenericListViewTest
 8. Extend form-generator
    / support repeated field group (to support RecordView and BibJSON)
    - support alternate displays for different subtypes (to support BibJSON)

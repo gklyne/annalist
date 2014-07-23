@@ -1,10 +1,10 @@
 {
-  "@id":                "./",
-  "annal:id":           "type1",
-  "annal:type":         "annal:Type",
-  "annal:uri":          "http://test.example.com/testsite/c/coll1/d/_type/type1/",
-  "rdfs:label":         "RecordType coll1/type1",
-  "rdfs:comment":       "RecordType help for type1 in collection coll1",
-  "annal:type_view":    "Default_view",
-  "annal:type_list":    "Default_list"
+  "rdfs:label": "RecordType coll1/type1",
+  "rdfs:comment": "RecordType help for type1 in collection coll1",
+  "annal:uri": "http://test.example.com/testsite/c/coll1/d/_type/type1/",
+  "annal:type_list": "Default_list",
+  "annal:id": "type1",
+  "@id": "./",
+  "annal:type": "annal:Type",
+  "annal:type_view": "Default_view"
 }

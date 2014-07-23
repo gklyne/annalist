@@ -339,10 +339,10 @@ def get_placement_classes(placement):
         return " ".join([k+"-"+str(v) for k,v in cd.items()]) + right + " columns"
     ppr = re.compile(r"^(small|medium|large):(\d+),(\d+)(right)?$")
     ps = [ s.strip() for s in placement.split(';') ]
-    labelw      = {'small': 12, 'medium': 2, 'large': 2}
+    labelw      = {'small': 12, 'medium': 3, 'large': 2}
     field_width = OrderedDict([ ('small', 12) ])
-    label_width = OrderedDict([ ('small', 12), ('medium',  2) ])
-    value_width = OrderedDict([ ('small', 12), ('medium', 10) ])
+    label_width = OrderedDict([ ('small', 12), ('medium',  3) ])
+    value_width = OrderedDict([ ('small', 12), ('medium',  9) ])
     for p in ps:
         pm = ppr.match(p)
         if not pm:
