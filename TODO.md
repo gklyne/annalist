@@ -136,19 +136,17 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / continuation handling: replace by more generic parameter handling based on dictionary; move handling of escape logic, etc.
    / search button handler from list display
    / consider that 'Find' and 'View' buttons could be combined
-   - move invocation of authentication to the immediate response handler code?
-   - don't include continuation-uri param when URI is blank
-   - refactor list description access out of context handling code (avoid multiple reads)
-   - refactor code from entityeditbase into more specific views where possible
-   - rename what is left of entityeditbase -> entityviewbase, or more to generic module
-   - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
-   - align type ID values used in local URI construction with type URIs/CURIEs
-   - implement some version of entity selection logic
+   / don't include continuation-uri param when URI is blank
+   / implement some version of entity selection logic
    / decide how to handle presentation of field types (where?):
      (a) use simple text string, not CURIE
      (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?
      / it all rather depends on the anticipated extensibility model for field types.
        Option (a) is simplest for now.
+   - default_view response handler (needs generic view to make sense)
+   - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
+   - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
+   - align type ID values used in local URI construction with type URIs/CURIEs
    - tests
      / skipped '@@TODO defaultlist default-view button handler'
      / skipped '@@TODO defaultlist search button handler'
@@ -157,34 +155,35 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        / annalist.tests.test_entitygenericlist.EntityGenericListViewTest
      - skipped '@@TODO genericlist default list button'
        - annalist.tests.test_entitygenericlist.EntityGenericListViewTest
-   - review URI for delete type/view/list confirmation
-   - use proper indexing to accelerate search (maybe later?)
-8. Read-only entity data view
+8. Extend form-generator
+   / support repeated field group (to support RecordView and BibJSON)
+   - support alternate displays for different subtypes (to support BibJSON)
+9. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching
    - include default view
-9. Extend form-generator
-   / support repeated field group (to support RecordView and BibJSON)
-   - support alternate displays for different subtypes (to support BibJSON)
-10. Record view display and editing (data to drive generic view/list)
+10. Code improvement - lists
+   - move invocation of authentication to the immediate response handler code?
+   - refactor list description access out of context handling code (avoid multiple reads)
+   - refactor code from entityeditbase into more specific views where possible
+   - rename what is left of entityeditbase -> entityviewbase, or more to generic module
+   - review URI for delete type/view/list confirmation
+   - use proper indexing to accelerate search (maybe later?)
+11. Code improvement - views
    - where possible, migrate methods from editentitybase to subclasses
    - review logic - ideally, form handlers will access data from form, then hand off for processing
-   - record view description form (create data and configure URIs)
-   - field description form (create data and configure URIs)
-   - record list description form (create data and configure URIs)
+   - review record view description form (create data and configure URIs)
+   - review field description form (create data and configure URIs)
+   - review record list description form (create data and configure URIs)
    / add "new field" logic to entity edit POST handler
-11. Display enhancements
+12. Display enhancements
    - add type links to list view (link to typed list view...?)
        - (should use same base enhancements as entity links at step 5)
          - cf. [https://github.com/gklyne/annalist/commit/ff16e6063a2fee193e6e0080a77bfc738381a275]()
        - Update field in default list displays
-   - list_view response handler (needs generic view to make sense; view button to redisplay)
-   - default_view response handler (needs generic view to make sense)
-   - search response handler (later; see below)
-   - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
-?. Grid view
-?. Generic entity selector (based on canned sparql expressions?)
-?. implement search within list view
+   / list_view response handler (needs generic view to make sense; view button to redisplay)
+13. Grid view
+14. Generic entity selector (based on canned sparql expressions?)
 
 
 ## Tests required:
