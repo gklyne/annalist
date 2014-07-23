@@ -271,7 +271,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             )
         self.assertEqual(r.context['fields'][4]['field_id'], 'Type_view')
         self.assertEqual(r.context['fields'][4]['field_name'], 'Type_view')
-        self.assertEqual(r.context['fields'][4]['field_label'], 'Default view id')
+        self.assertEqual(r.context['fields'][4]['field_label'], 'Default view')
         self.assertEqual(r.context['fields'][4]['field_help'], type_uri_help)
         self.assertEqual(r.context['fields'][4]['field_placeholder'], type_uri_placeholder)
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:type_view")
@@ -290,7 +290,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             )
         self.assertEqual(r.context['fields'][5]['field_id'], 'Type_list')
         self.assertEqual(r.context['fields'][5]['field_name'], 'Type_list')
-        self.assertEqual(r.context['fields'][5]['field_label'], 'Default list id')
+        self.assertEqual(r.context['fields'][5]['field_label'], 'Default list')
         self.assertEqual(r.context['fields'][5]['field_help'], type_uri_help)
         self.assertEqual(r.context['fields'][5]['field_placeholder'], type_uri_placeholder)
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_list")
@@ -317,10 +317,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         formrow1 = """
             <div class="small-12 medium-6 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-4 columns">
+                    <div class="view_label small-12 medium-6 columns">
                         <p>Id</p>
                     </div>
-                    <div class="small-12 medium-8 columns">
+                    <div class="small-12 medium-6 columns">
                         <input type="text" size="64" name="entity_id" value="00000001"/>
                     </div>
                 </div>
@@ -329,10 +329,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         formrow2 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-2 columns">
+                    <div class="view_label small-12 medium-3 columns">
                         <p>Label</p>
                     </div>
-                    <div class="small-12 medium-10 columns">
+                    <div class="small-12 medium-9 columns">
                         <input type="text" size="64" name="Type_label" value="Entity &#39;00000001&#39; of type &#39;_type&#39; in collection &#39;testcoll&#39;"/>
                     </div>
                 </div>
@@ -341,10 +341,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         formrow3 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-2 columns">
+                    <div class="view_label small-12 medium-3 columns">
                         <p>Comment</p>
                     </div>
-                    <div class="small-12 medium-10 columns">
+                    <div class="small-12 medium-9 columns">
                                 <textarea cols="64" rows="6" name="Type_comment" class="small-rows-4 medium-rows-8"></textarea>
                     </div>
                 </div>
@@ -353,10 +353,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         formrow4 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-2 columns">
+                    <div class="view_label small-12 medium-3 columns">
                         <p>URI</p>
                     </div>
-                    <div class="small-12 medium-10 columns">
+                    <div class="small-12 medium-9 columns">
                         <input type="text" size="64" name="Type_uri" value="http://test.example.com/testsite/c/testcoll/d/_type/00000001/"/>
                     </div>
                 </div>

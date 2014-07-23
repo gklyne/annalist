@@ -95,73 +95,120 @@ class CollectionEditView(AnnalistGenericView):
         #       POST to this view are then passed as URI segments in the GET request
         #       that renders the form.  Maybe there's an easier way than all this 
         #       URI-wrangling?
-        redirect_uri = None
+        redirect_uri  = None
+        http_response = None
         continuation_next, continuation_here = self.continuation_uris(
             request.POST,
             self.view_uri("AnnalistSiteView")
             )
         type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:
-            redirect_uri = uri_with_params(
-                self.view_uri("AnnalistEntityNewView", 
-                    coll_id=coll_id, view_id="Type_view", type_id="_type", action="new"
-                    ),
+            redirect_uri = self.item_new_uri(
+                coll_id, "_type", "Type_view", 
                 continuation_here
                 )
         if "type_copy" in request.POST:
-            redirect_uri = (
-                self.check_value_supplied(
-                    type_id, message.NO_TYPE_FOR_COPY, 
-                    continuation_uri=continuation_next
-                    )
-                or
-                uri_with_params(
-                    self.view_uri("AnnalistEntityEditView", action="copy", 
-                        coll_id=coll_id, view_id="Type_view", type_id="_type", entity_id=type_id
-                        ),
-                    continuation_here
-                    )
+            redirect_uri = self.item_copy_uri(
+                coll_id, "_type", "Type_view", type_id, 
+                message.NO_TYPE_FOR_COPY, 
+                continuation_here, continuation_next
                 )
         if "type_edit" in request.POST:
-            redirect_uri = (
-                self.check_value_supplied(
-                    type_id, message.NO_TYPE_FOR_EDIT, 
-                    continuation_uri=continuation_next
-                    )
-                or
-                uri_with_params(
-                    self.view_uri("AnnalistEntityEditView", action="edit", 
-                        coll_id=coll_id, view_id="Type_view", type_id="_type", entity_id=type_id
-                        ),
-                    continuation_here
-                    )
+            redirect_uri = self.item_edit_uri(
+                coll_id, "_type", "Type_view", type_id, 
+                message.NO_TYPE_FOR_COPY, 
+                continuation_here, continuation_next
                 )
         if "type_delete" in request.POST:
-            if type_id:
-                # Get user to confirm action before actually doing it
-                complete_action_uri = self.view_uri("AnnalistRecordTypeDeleteView", coll_id=coll_id)
-                message_vals = {'type_id': type_id, 'coll_id': coll_id}
-                return (
-                    self.authorize("DELETE") or
-                    ConfirmView.render_form(request,
-                        action_description=     message.REMOVE_RECORD_TYPE%message_vals,
-                        complete_action_uri=    complete_action_uri,
-                        action_params=          request.POST,
-                        cancel_action_uri=      self.get_request_path(),
-                        title=                  self.site_data()["title"]
-                        )
-                    )
-            else:
-                redirect_uri = (
-                    self.check_value_supplied(
-                        type_id, message.NO_TYPE_FOR_DELETE,
-                        continuation_uri=continuation_next
-                        )
-                    )
+            redirect_uri, http_response = self.item_delete_response(
+                coll_id, type_id, 
+                message.NO_TYPE_FOR_DELETE, 
+                message.REMOVE_RECORD_TYPE, 
+                "AnnalistRecordTypeDeleteView",
+                continuation_next)
         if "close" in request.POST:
             redirect_uri = continuation_next['continuation_uri']
         if redirect_uri:
             return HttpResponseRedirect(redirect_uri)
+        if http_response:
+            return http_response
         raise Annalist_Error(request.POST, "Unexpected values in POST to "+self.get_request_path())
+
+    # POST helper methods
+
+    def item_new_uri(self, coll_id, type_id, view_id, continuation_here):
+        redirect_uri = uri_with_params(
+            self.view_uri("AnnalistEntityNewView", 
+                coll_id=coll_id, view_id=view_id, type_id=type_id, action="new"
+                ),
+            continuation_here
+            )
+        return redirect_uri
+
+    def item_edit_copy_uri(self,
+            coll_id, type_id, view_id, entity_id, no_entity_msg, 
+            continuation_here, continuation_next, action):
+        redirect_uri = (
+            self.check_value_supplied(entity_id, no_entity_msg, continuation_next)
+            or
+            uri_with_params(
+                self.view_uri("AnnalistEntityEditView", action=action, 
+                    coll_id=coll_id, view_id=view_id, type_id=type_id, entity_id=entity_id
+                    ),
+                continuation_here
+                )
+            )
+        return redirect_uri
+
+    def item_copy_uri(self, 
+            coll_id, type_id, view_id, entity_id, no_entity_msg, 
+            continuation_here, continuation_next):
+        redirect_uri = self.item_edit_copy_uri(
+            coll_id, type_id, view_id, entity_id, no_entity_msg, 
+            continuation_here, continuation_next,
+            "copy")
+        return redirect_uri
+
+    def item_edit_uri(self,
+            coll_id, type_id, view_id, entity_id, no_entity_msg, 
+            continuation_here, continuation_next):
+        redirect_uri = self.item_edit_copy_uri(
+            coll_id, type_id, view_id, entity_id, no_entity_msg, 
+            continuation_here, continuation_next,
+            "edit")
+        return redirect_uri
+
+    def item_delete_response(self, 
+            coll_id, entity_id, 
+            no_entity_msg, 
+            confirm_msg, 
+            complete_action_view,
+            continuation_next):
+        redirect_uri  = None
+        http_response = None
+        if entity_id:
+            # Get user to confirm action before actually doing it
+            complete_action_uri = self.view_uri(
+                complete_action_view, coll_id=coll_id
+                )
+            message_vals = {'id': entity_id, 'coll_id': coll_id}
+            http_response = (
+                self.authorize("DELETE") or
+                ConfirmView.render_form(self.request,
+                    action_description=     confirm_msg%message_vals,
+                    complete_action_uri=    complete_action_uri,
+                    action_params=          self.request.POST,
+                    cancel_action_uri=      self.get_request_path(),
+                    title=                  self.site_data()["title"]
+                    )
+                )
+        else:
+            redirect_uri = (
+                self.check_value_supplied(
+                    entity_id, no_entity_msg,
+                    continuation_next
+                    )
+                )
+        return redirect_uri, http_response
 
 # End.

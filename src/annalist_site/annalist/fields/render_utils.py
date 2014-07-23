@@ -309,23 +309,23 @@ def get_placement_classes(placement):
     >>> get_placement_classes("small:0,12").field
     'small-12 columns'
     >>> get_placement_classes("small:0,12").label
-    'small-12 medium-2 columns'
+    'small-12 medium-3 columns'
     >>> get_placement_classes("small:0,12").value
-    'small-12 medium-10 columns'
+    'small-12 medium-9 columns'
     >>> get_placement_classes("medium:0,12")
-    Placement(field='small-12 columns', label='small-12 medium-2 columns', value='small-12 medium-10 columns')
+    Placement(field='small-12 columns', label='small-12 medium-3 columns', value='small-12 medium-9 columns')
     >>> get_placement_classes("large:0,12")
-    Placement(field='small-12 columns', label='small-12 medium-2 columns', value='small-12 medium-10 columns')
+    Placement(field='small-12 columns', label='small-12 medium-3 large-2 columns', value='small-12 medium-9 large-10 columns')
     >>> get_placement_classes("small:0,12;medium:0,4")
-    Placement(field='small-12 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    Placement(field='small-12 medium-4 columns', label='small-12 medium-9 columns', value='small-12 medium-3 columns')
     >>> get_placement_classes("small:0,12; medium:0,4")
-    Placement(field='small-12 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    Placement(field='small-12 medium-4 columns', label='small-12 medium-9 columns', value='small-12 medium-3 columns')
     >>> get_placement_classes("small:0,12;medium:0,6;large:0,4")
-    Placement(field='small-12 medium-6 large-4 columns', label='small-12 medium-4 large-6 columns', value='small-12 medium-8 large-6 columns')
+    Placement(field='small-12 medium-6 large-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
     >>> get_placement_classes("small:0,6;medium:0,4")
-    Placement(field='small-6 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    Placement(field='small-6 medium-4 columns', label='small-12 medium-9 columns', value='small-12 medium-3 columns')
     >>> get_placement_classes("small:0,6;medium:0,4right")
-    Placement(field='small-6 medium-4 right columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    Placement(field='small-6 medium-4 right columns', label='small-12 medium-9 columns', value='small-12 medium-3 columns')
     """
     def format_class(cd, right):
         prev = cd.get("small", None)
@@ -347,7 +347,7 @@ def get_placement_classes(placement):
         pm = ppr.match(p)
         if not pm:
             break
-        pmmode   = pm.group(1)    # "small", "medium" or "large"
+        pmmode   = pm.group(1)      # "small", "medium" or "large"
         pmoffset = int(pm.group(2))
         pmwidth  = int(pm.group(3))
         pmright  = pm.group(4) or ""

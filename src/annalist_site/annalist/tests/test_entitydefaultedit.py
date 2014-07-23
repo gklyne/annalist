@@ -121,12 +121,12 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               <!-- editable text field -->
               <div class="small-12 medium-6 columns">
                 <div class="row">
-                  <div class="view_label small-12 medium-4 columns">
+                  <div class="view_label small-12 medium-6 columns">
                     <p>
                       Id
                     </p>
                   </div>
-                  <div class="small-12 medium-8 columns">
+                  <div class="small-12 medium-6 columns">
                     <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
                     <input type="text" size="64" name="entity_id" value="00000001">
                   </div>
@@ -137,12 +137,12 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               <!-- record type dropdown -->
               <div class="small-12 medium-6 right columns">
                 <div class="row">
-                  <div class="view_label small-12 medium-4 columns">
+                  <div class="view_label small-12 medium-6 columns">
                     <p>
                       Type
                     </p>
                   </div>
-                  <div class="small-12 medium-8 columns">
+                  <div class="small-12 medium-6 columns">
                     <select name="entity_type" class="right">
                         <option selected="selected">testtype</option>
                         <option>_field</option>
@@ -159,12 +159,12 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               <!-- editable text field -->
               <div class="small-12 columns">
                 <div class="row">
-                  <div class="view_label small-12 medium-2 columns">
+                  <div class="view_label small-12 medium-3 columns">
                     <p>
                       Label
                     </p>
                   </div>
-                  <div class="small-12 medium-10 columns">
+                  <div class="small-12 medium-9 columns">
                     <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
                     <input type="text" size="64" name="Entity_label" value="Entity '00000001' of type 'testtype' in collection 'testcoll'">
                   </div>
@@ -175,12 +175,12 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               <!-- editable textarea field -->
               <div class="small-12 columns">
                 <div class="row">
-                  <div class="view_label small-12 medium-2 columns">
+                  <div class="view_label small-12 medium-3 columns">
                     <p>
                       Comment
                     </p>
                   </div>
-                  <div class="small-12 medium-10 columns">
+                  <div class="small-12 medium-9 columns">
                     <textarea cols="64" rows="6" name="Entity_comment" class="small-rows-4 medium-rows-8"></textarea>
                   </div>
                 </div>
@@ -223,8 +223,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_render_view'],   "field/annalist_view_entityref.html")
         self.assertEqual(r.context['fields'][0]['field_render_edit'],   "field/annalist_edit_text.html")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][0]['field_placement'].label, "small-12 medium-4 columns")
-        self.assertEqual(r.context['fields'][0]['field_placement'].value, "small-12 medium-8 columns")
         self.assertEqual(r.context['fields'][0]['field_value_type'],    "annal:Slug")
         self.assertEqual(r.context['fields'][0].field_value,            "00000001")
         self.assertEqual(r.context['fields'][0]['field_value'],         "00000001")
@@ -243,8 +241,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_render_view'],   "field/annalist_view_select.html")
         self.assertEqual(r.context['fields'][1]['field_render_edit'],   "field/annalist_edit_select.html")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 right columns")
-        self.assertEqual(r.context['fields'][1]['field_placement'].label, "small-12 medium-4 columns")
-        self.assertEqual(r.context['fields'][1]['field_placement'].value, "small-12 medium-8 columns")
         self.assertEqual(r.context['fields'][1]['field_value_type'],    "annal:Slug")
         self.assertEqual(r.context['fields'][1].field_value,            "testtype")
         self.assertEqual(r.context['fields'][1]['field_value'],         "testtype")

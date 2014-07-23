@@ -363,10 +363,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         formrow1col1 = """
             <div class="small-12 medium-6 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-4 columns">
+                    <div class="view_label small-12 medium-6 columns">
                         <p>Id</p>
                     </div>
-                    <div class="small-12 medium-8 columns">
+                    <div class="small-12 medium-6 columns">
                         <input type="text" size="64" name="entity_id" value="00000001"/>
                     </div>
                 </div>
@@ -375,10 +375,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         formrow1col2 = """
             <div class="small-12 medium-6 right columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-4 columns">
+                    <div class="view_label small-12 medium-6 columns">
                         <p>Field value type</p>
                     </div>
-                    <div class="small-12 medium-8 columns">
+                    <div class="small-12 medium-6 columns">
                         <input type="text" size="64" name="Field_type" value="(field value type)"/>
                     </div>
                 </div>
@@ -387,10 +387,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         formrow2 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-2 columns">
+                    <div class="view_label small-12 medium-3 columns">
                         <p>Label</p>
                     </div>
-                    <div class="small-12 medium-10 columns">
+                    <div class="small-12 medium-9 columns">
                         <input type="text" size="64" name="Field_label" value="Entity &#39;00000001&#39; of type &#39;_field&#39; in collection &#39;testcoll&#39;"/>
                     </div>
                 </div>
@@ -399,10 +399,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         formrow3 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-2 columns">
+                    <div class="view_label small-12 medium-3 columns">
                         <p>Help</p>
                     </div>
-                    <div class="small-12 medium-10 columns">
+                    <div class="small-12 medium-9 columns">
                                 <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"></textarea>
                     </div>
                 </div>
@@ -411,10 +411,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         formrow4 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-2 columns">
+                    <div class="view_label small-12 medium-3 columns">
                         <p>Placeholder</p>
                     </div>
-                    <div class="small-12 medium-10 columns">
+                    <div class="small-12 medium-9 columns">
                         <input type="text" size="64" name="Field_placeholder" value="(placeholder text)"/>
                     </div>
                 </div>
@@ -423,10 +423,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         formrow5 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-2 columns">
+                    <div class="view_label small-12 medium-3 columns">
                         <p>Property</p>
                     </div>
-                    <div class="small-12 medium-10 columns">
+                    <div class="small-12 medium-9 columns">
                         <input type="text" size="64" name="Field_property" value="(property URI or CURIE)"/>
                     </div>
                 </div>
@@ -435,10 +435,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         formrow6 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-2 columns">
+                    <div class="view_label small-12 medium-3 columns">
                         <p>Size/position</p>
                     </div>
-                    <div class="small-12 medium-10 columns">
+                    <div class="small-12 medium-9 columns">
                         <input type="text" size="64" name="Field_placement" 
                                value="(field display size and placement details)"/>
                     </div>

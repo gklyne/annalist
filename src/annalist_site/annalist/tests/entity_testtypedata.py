@@ -201,7 +201,7 @@ def recordtype_entity_view_context_data(
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
-          , { 'field_label':        'Default view id'
+          , { 'field_label':        'Default view'
             , 'field_render_view':  'field/annalist_view_text.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Type_view'
@@ -211,7 +211,7 @@ def recordtype_entity_view_context_data(
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
-          , { 'field_label':        'Default list id'
+          , { 'field_label':        'Default list'
             , 'field_render_view':  'field/annalist_view_text.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Type_list'
