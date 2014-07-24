@@ -46,7 +46,7 @@ class GenericEntityEditView(EntityEditBaseView):
         super(GenericEntityEditView, self).__init__()
         return
 
-    def get_view_id(self, view_id):
+    def get_view_id(self, type_id, view_id):
         if not view_id:
             log.warning("GenericEntityEditView: No view identifier provided")
         return view_id
@@ -70,7 +70,7 @@ class GenericEntityEditView(EntityEditBaseView):
             self.get_coll_data(coll_id, host=self.get_request_host()) or
             self.form_edit_auth(action, self.collection._entityuri) or
             self.get_type_data(type_id) or
-            self.get_view_data(self.get_view_id(view_id))
+            self.get_view_data(self.get_view_id(type_id, view_id))
             )
         if http_response:
             return http_response
@@ -93,7 +93,9 @@ class GenericEntityEditView(EntityEditBaseView):
         type_ids = [ t.get_id() for t in self.collection.types() ]
         # Set up initial view context
         # @@TODO: move view access logic from get_form_entityvaluemap (see there for details)
-        self._entityvaluemap = self.get_form_entityvaluemap(self.get_view_id(view_id))
+        self._entityvaluemap = self.get_form_entityvaluemap(
+            self.get_view_id(type_id, view_id)
+            )
         viewcontext = self.map_value_to_context(entity,
             title               = self.site_data()["title"],
             continuation_uri    = request.GET.get('continuation_uri', ""),
@@ -130,7 +132,7 @@ class GenericEntityEditView(EntityEditBaseView):
             self.get_coll_data(coll_id, host=self.get_request_host()) or
             self.form_edit_auth(action, self.collection._entityuri) or
             self.get_type_data(type_id) or
-            self.get_view_data(self.get_view_id(view_id))
+            self.get_view_data(self.get_view_id(type_id, view_id))
             )
         if http_response:
             return http_response
@@ -178,7 +180,9 @@ class GenericEntityEditView(EntityEditBaseView):
             , 'entity_type_invalid':    typeinfo.entitymessages['entity_type_invalid']%message_vals
             })
         # Process form response and respond accordingly
-        self._entityvaluemap = self.get_form_entityvaluemap(self.get_view_id(view_id))
+        self._entityvaluemap = self.get_form_entityvaluemap(
+            self.get_view_id(type_id, view_id)
+            )
         if not typeinfo.entityparent._exists():
             # Create RecordTypeData when not already exists
             RecordTypeData.create(self.collection, typeinfo.entityparent.get_id(), {})
