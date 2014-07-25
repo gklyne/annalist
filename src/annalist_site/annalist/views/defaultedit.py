@@ -13,8 +13,6 @@ log = logging.getLogger(__name__)
 
 from django.conf                    import settings
 
-from annalist.models.entitydata     import EntityData
-
 from annalist.views.entityedit      import GenericEntityEditView
 
 #   -------------------------------------------------------------------------------------------
@@ -33,6 +31,11 @@ class EntityDefaultEditView(GenericEntityEditView):
         return
 
     def get_view_id(self, type_id, view_id):
-        return view_id or "Default_view"
+        view_id = (
+            view_id or 
+            self.get_type_view_id(type_id) or
+            "Default_view"
+            )
+        return view_id
 
 # End.

@@ -54,7 +54,6 @@ listentityvaluemap  = (
         , SimpleValueMap(c='continuation_uri', e=None,                  f='continuation_uri' )
         ])
 
-
 #   -------------------------------------------------------------------------------------------
 #
 #   List entities view - form rendering and POST response handling

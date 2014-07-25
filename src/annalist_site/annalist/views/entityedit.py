@@ -18,6 +18,7 @@ from django.core.urlresolvers       import resolve, reverse
 
 from annalist                       import message
 
+from annalist.models.recordtype     import RecordType
 from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
@@ -46,9 +47,28 @@ class GenericEntityEditView(EntityEditBaseView):
         super(GenericEntityEditView, self).__init__()
         return
 
-    def get_view_id(self, type_id, view_id):
+    def old_get_view_id(self, type_id, view_id):
         if not view_id:
             log.warning("GenericEntityEditView: No view identifier provided")
+        return view_id
+
+    def get_type_view_id(self, type_id):
+        view_id = None
+        if type_id:
+            typedata  = RecordType.load(self.collection, type_id, self.site())
+            if typedata:
+                view_id  = typedata.get("annal:type_view", None)
+            else:
+                log.warning("GenericEntityEditView.get_type_view_id no type data for %s"%(type_id))
+        return view_id
+
+    def get_view_id(self, type_id, view_id):
+        view_id = (
+            view_id or 
+            self.get_type_view_id(type_id)
+            )
+        if not view_id:
+            log.warning("GenericEntityEditView: No view identifier provided or defined for type")
         return view_id
 
     # GET

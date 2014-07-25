@@ -9,20 +9,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                    import settings
-from django.http                    import HttpResponse
-from django.http                    import HttpResponseRedirect
-from django.core.urlresolvers       import resolve, reverse
-
-from annalist                       import message
-from annalist.exceptions            import Annalist_Error
-
-from annalist.models.collection     import Collection
-from annalist.models.recordtype     import RecordType
-from annalist.models.recordtypedata import RecordTypeData
-
-from annalist.views.confirm         import ConfirmView, dict_querydict
-# from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
 from annalist.views.entitylist      import EntityGenericListView
 
 #   -------------------------------------------------------------------------------------------
@@ -47,10 +33,6 @@ class EntityDefaultListView(EntityGenericListView):
             super(EntityDefaultListView, self).get_list_id(type_id, list_id) or
             ("Default_list" if type_id else "Default_list_all")
             )
-
-    # @@TODO: remove these functions and update tests; maybe consider having the default 
-    #         view URI simply redirect to an explicitly named default view?  Revisit this
-    #         when application URI structure is reviewed.
 
     def get_new_view_uri(self, coll_id, type_id):
         """

@@ -111,26 +111,29 @@ class EntityTypeInfo(object):
 
         Attributes of type information object are:
 
-        entityclass     Python class object for entity
+        recordtype      type object describing the identified type
         entityparent    Parent enbtity for entities of this type, or None if 
                         the type is not defined for the collection
         entityaltparent Alternative (site-wide) parent entity for built-in types, 
                         or None
+        entityclass     Python class object for entity
         entitymessages  a table of message strings for diagnostics relating to 
                         operations on this type.
         """
         if type_id in TYPE_CLASS_MAP:
+            self.recordtype      = RecordType.load(coll, type_id, site)
             self.entityparent    = coll
             self.entityaltparent = site
             self.entityclass     = TYPE_CLASS_MAP[type_id]
             self.entitymessages  = TYPE_MESSAGE_MAP[type_id]
         else:
-            # Check type
             if RecordType.exists(coll, type_id, site):
-                self.entityparent    = RecordTypeData(coll, type_id)
+                self.recordtype     = RecordType.load(coll, type_id)
+                self.entityparent   = RecordTypeData(coll, type_id)
             else:                
                 log.warning("EntityTypeInfo: RecordType %s not found"%type_id)
-                self.entityparent    = None
+                self.recordtype     = None
+                self.entityparent   = None
             self.entityaltparent = None
             self.entityclass     = EntityData
             self.entitymessages  = ENTITY_MESSAGES

@@ -147,15 +147,16 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / implement view- and list- edit from collection customization page
    - implement per-type default list and view
      / already works for list view; e.g. http://localhost:8000/annalist/c/coll1/d/_type/
-     - but not yet for entity view; e.g. http://localhost:8000/annalist/c/coll1/d/_type/type1/
+     / but not yet for entity view; e.g. http://localhost:8000/annalist/c/coll1/d/_type/type1/
+     - return list_info structure rather than saving values in object. 
      - consider replicating list_seup logic for view_setup.
-     - return list/view_info structure rather than saving values in object. 
+   - fix entity links to use default view URI (/d/...)
    - add field button on entity edit displays
    - implement "add repeating field" option to view edit (and entity view?)
    - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - align type ID values used in local URI construction with type URIs/CURIEs
-   - tests
+   / tests
      / skipped '@@TODO defaultlist default-view button handler'
      / skipped '@@TODO defaultlist search button handler'
      / skipped '@@TODO genericlist default-view button handler'
