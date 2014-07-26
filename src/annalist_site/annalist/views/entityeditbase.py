@@ -126,14 +126,14 @@ class EntityEditBaseView(AnnalistGenericView):
                 )
         return entity
 
-    def get_fields_entityvaluemap(self, entityvaluemap, fields):
+    def get_fields_entityvaluemap(self, collection, entityvaluemap, fields):
         # @@TODO: elide this
         entityvaluemap.append(
-            FieldListValueMap(self.collection, fields)
+            FieldListValueMap(collection, fields)
             )
         return entityvaluemap
  
-    def get_form_entityvaluemap(self, view_id):
+    def get_form_entityvaluemap(self, collection, view_id):
         """
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for an indicated view.
@@ -142,9 +142,10 @@ class EntityEditBaseView(AnnalistGenericView):
         # @@TODO: push responsibility to subclass to call get_view_data, 
         #         and use resulting value of self.recordview instead of entityview
         entitymap  = copy.copy(baseentityvaluemap)
-        entityview = RecordView.load(self.collection, view_id, self.site())
+        entityview = RecordView.load(collection, view_id, self.site())
         log.debug("entityview   %r"%entityview.get_values())
         self.get_fields_entityvaluemap(
+            collection,
             entitymap,
             entityview.get_values()['annal:view_fields']
             )
@@ -299,7 +300,7 @@ class EntityEditBaseView(AnnalistGenericView):
             return HttpResponseRedirect(continuation_uri)
         # Check authorization
         # @@TODO redundant?  Checked by calling POST handler?
-        auth_required = self.form_edit_auth(action, orig_parent._entityuri)
+        auth_required = self.form_action_auth(action, orig_parent._entityuri)
         if auth_required:
             # log.debug("form_response: auth_required")            
             return auth_required

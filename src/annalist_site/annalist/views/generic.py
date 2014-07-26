@@ -245,7 +245,7 @@ class AnnalistGenericView(ContentNegotiationView):
         redirect_uri = uri_with_params(viewuri, self.error_params(error_head, error_message))
         return HttpResponseRedirect(redirect_uri)
 
-    def form_edit_auth(self, action, auth_resource):
+    def form_action_auth(self, action, auth_resource):
         """
         Check that the requested form action is authorized for the current user.
 

@@ -19,6 +19,15 @@ from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.core.urlresolvers       import resolve, reverse
 
+from annalist.models.entitytypeinfo import EntityTypeInfo
+from annalist.models.collection     import Collection
+from annalist.models.recordtype     import RecordType
+from annalist.models.recordtypedata import RecordTypeData
+from annalist.models.recordlist     import RecordList
+from annalist.models.recordview     import RecordView
+
+from annalist.views.uri_builder     import uri_with_params
+
 #   -------------------------------------------------------------------------------------------
 #
 #   Display information class
@@ -45,7 +54,8 @@ class DisplayInfo(object):
     def __init__(self, view):
         self.view           = view
         self.reqhost        = None
-        self.site           = None
+        self.site           = None
+        self.coll_id        = None
         self.collection     = None
         self.type_id        = None
         self.entitytypeinfo = None
@@ -59,7 +69,7 @@ class DisplayInfo(object):
     def get_site_info(self, reqhost):
         if not self.http_response:
             self.reqhost        = reqhost
-            self.site           = self.view.site(host=reqhost)
+            self.site           = self.view.site(host=reqhost)
         return self.http_response
 
     def get_coll_info(self, coll_id):
@@ -75,6 +85,7 @@ class DisplayInfo(object):
                         )
                     )
             else:
+                self.coll_id    = coll_id
                 self.collection = Collection.load(self.site, coll_id)
         return self.http_response
 
@@ -82,8 +93,8 @@ class DisplayInfo(object):
         """
         Check type identifier, and get reference to type information object.
         """
-        assert ((self.site and self.collection) is not None)
         if not self.http_response:
+            assert ((self.site and self.collection) is not None)
             if type_id:
                 self.type_id        = type_id
                 self.entitytypeinfo = EntityTypeInfo(self.site, self.collection, type_id)
@@ -92,7 +103,7 @@ class DisplayInfo(object):
                     self.http_response = self.view.error(
                         dict(self.view.error404values(),
                             message=message.RECORD_TYPE_NOT_EXISTS%(
-                                {'id': type_id, 'coll_id': self.collection.get_id()})
+                                {'id': type_id, 'coll_id': self.coll_id})
                             )
                         )
         return self.http_response
@@ -102,17 +113,19 @@ class DisplayInfo(object):
         Retrieve list definition to use for display
         """
         if not self.http_response:
+            assert ((self.site and self.collection) is not None)
+            assert list_id
             if not RecordList.exists(self.collection, list_id, self.site):
                 log.info("DisplayInfo.get_list_info: RecordList %s not found"%list_id)
-                coll_id = self.collection.get_id()
                 self.http_response = self.view.error(
                     dict(self.view.error404values(),
                         message=message.RECORD_LIST_NOT_EXISTS%(
-                            {'id': list_id, 'coll_id': self.collection.get_id()})
+                            {'id': list_id, 'coll_id': self.coll_id})
                         )
                     )
             else:
-                self.recordlist = RecordList.load(self.collection, list_id, self.site())
+                self.list_id    = list_id
+                self.recordlist = RecordList.load(self.collection, list_id, self.site)
                 log.debug("DisplayInfo.get_list_info: %r"%(self.recordlist.get_values()))
         return self.http_response
 
@@ -121,18 +134,123 @@ class DisplayInfo(object):
         Retrieve view definition to use for display
         """
         if not self.http_response:
-            if not RecordView.exists(self.collection, view_id, self.site:
+            if not RecordView.exists(self.collection, view_id, self.site):
                 log.warning("DisplayInfo.get_view_info: RecordView %s not found"%view_id)
-                coll_id = self.collection.get_id()
                 self.http_response = self.view.error(
                     dict(self.view.error404values(),
                         message=message.RECORD_VIEW_NOT_EXISTS%(
-                            {'id': view_id, 'coll_id': self.collection.get_id()})
+                            {'id': view_id, 'coll_id': self.coll_id})
                         )
                     )
             else:
-                self.recordview = RecordView.load(self.collection, view_id, self.site())
+                self.view_id    = view_id
+                self.recordview = RecordView.load(self.collection, view_id, self.site)
                 log.debug("DisplayInfo.get_view_info: %r"%(self.recordview.get_values()))
         return self.http_response
+
+    def check_authorization(self, action):
+        """
+        If no error so far, check authorization.  Return Nine if all is OK,
+        or HttpResonse object 
+        """
+        return (
+            self.http_response or 
+            self.view.form_action_auth(action, self.collection.get_uri())
+            )
+
+    # Additonal support functions.
+
+    def get_type_list_id(self):
+        """
+        Return default list_id for listing defined type, or None
+        """
+        list_id = None
+        if self.type_id:
+            if self.entitytypeinfo.recordtype:
+                list_id  = self.entitytypeinfo.recordtype.get("annal:type_list", None)
+            else:
+                log.warning("DisplayInfo.get_type_list_id no type data for %s"%(self.type_id))
+        return list_id
+
+    def get_list_id(self, list_id):
+        """
+        Return supplied list_id if defined, otherwise find default list_id for
+        entity type or collection (unless an error has been detected).
+        """
+        if not self.http_response:
+            list_id = (
+                list_id or 
+                self.get_type_list_id() or
+                self.collection.get_default_list() or
+                ("Default_list" if self.type_id else "Default_list_all")
+                )
+            if not list_id:
+                log.warning("get_list_id: %s, type_id %s"%(list_id, self.type_id))
+        return list_id
+
+    def get_list_view_id(self):
+        return self.recordlist.get('annal:default_view', None) or "Default_view"
+
+    def get_list_type_id(self):
+        return self.recordlist.get('annal:default_type', None) or "Default_type"
+
+    def get_new_view_uri(self, coll_id, type_id):
+        """
+        Get URI for entity new view
+        """
+        return self.view.view_uri(
+            "AnnalistEntityNewView", 
+            coll_id=coll_id, 
+            view_id=self.get_list_view_id(), 
+            type_id=type_id,
+            action="new"
+            )
+
+    def get_edit_view_uri(self, coll_id, type_id, entity_id, action):
+        """
+        Get URI for entity edit or copy view
+        """
+        return self.view.view_uri(
+                "AnnalistEntityEditView", 
+                coll_id=coll_id, 
+                view_id=self.get_list_view_id(), 
+                type_id=type_id,
+                entity_id=entity_id,
+                action=action
+                )
+
+    def check_collection_entity(self, entity_id, entity_type, msg, continuation_uri={}):
+        """
+        Test a supplied entity_id is defined in the current collection,
+        returning a URI to display a supplied error message if the test fails.
+
+        NOTE: this function works with the generic base template base_generic.html, which
+        is assumed to provide an underlay for the currently viewed page.
+
+        entity_id           entity id that is required to be defined in the current collection.
+        entity_type         specified type for entity to delete.
+        msg                 message to display if the test fails.
+        continuation_uri    URI of page to display when the redisplayed form is closed.
+
+        returns a URI string for use with HttpResponseRedirect to redisplay the 
+        current page with the supplied message, or None if entity id is OK.
+        """
+        # log.info("check_collection_entity: entity_id: %s"%(entity_id))
+        # log.info("check_collection_entity: entityparent: %s"%(self.entityparent.get_id()))
+        # log.info("check_collection_entity: entityclass: %s"%(self.entityclass))
+        redirect_uri = None
+        typeinfo     = (
+            self.entitytypeinfo or 
+            EntityTypeInfo(self.site, self.collection, entity_type)
+            )
+        if not typeinfo.entityclass.exists(typeinfo.entityparent, entity_id):
+            redirect_uri = (
+                uri_with_params(
+                    self.view.get_request_path(),
+                    self.view.error_params(msg),
+                    continuation_uri
+                    )
+                )
+        return redirect_uri
 
 # End.

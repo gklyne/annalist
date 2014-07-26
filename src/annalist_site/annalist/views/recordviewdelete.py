@@ -46,7 +46,7 @@ class RecordViewDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         if "view_delete" in request.POST:
             http_response = (
                 self.get_coll_data(coll_id, self.get_request_host()) or
-                self.form_edit_auth("delete", self.collection.get_uri())
+                self.form_action_auth("delete", self.collection.get_uri())
                 )
             if http_response:
                 return http_response

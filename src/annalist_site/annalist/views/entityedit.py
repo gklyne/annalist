@@ -88,7 +88,7 @@ class GenericEntityEditView(EntityEditBaseView):
             )
         http_response = (
             self.get_coll_data(coll_id, host=self.get_request_host()) or
-            self.form_edit_auth(action, self.collection._entityuri) or
+            self.form_action_auth(action, self.collection._entityuri) or
             self.get_type_data(type_id) or
             self.get_view_data(self.get_view_id(type_id, view_id))
             )
@@ -114,6 +114,7 @@ class GenericEntityEditView(EntityEditBaseView):
         # Set up initial view context
         # @@TODO: move view access logic from get_form_entityvaluemap (see there for details)
         self._entityvaluemap = self.get_form_entityvaluemap(
+            self.collection,
             self.get_view_id(type_id, view_id)
             )
         viewcontext = self.map_value_to_context(entity,
@@ -150,7 +151,7 @@ class GenericEntityEditView(EntityEditBaseView):
         log.debug("  form data %r"%(request.POST))
         http_response = (
             self.get_coll_data(coll_id, host=self.get_request_host()) or
-            self.form_edit_auth(action, self.collection._entityuri) or
+            self.form_action_auth(action, self.collection._entityuri) or
             self.get_type_data(type_id) or
             self.get_view_data(self.get_view_id(type_id, view_id))
             )
@@ -201,6 +202,7 @@ class GenericEntityEditView(EntityEditBaseView):
             })
         # Process form response and respond accordingly
         self._entityvaluemap = self.get_form_entityvaluemap(
+            self.collection,
             self.get_view_id(type_id, view_id)
             )
         if not typeinfo.entityparent._exists():

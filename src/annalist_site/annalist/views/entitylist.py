@@ -26,6 +26,7 @@ from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.entityfinder   import EntityFinder
 
 from annalist.views.uri_builder     import uri_with_params
+from annalist.views.displayinfo     import DisplayInfo
 from annalist.views.simplevaluemap  import SimpleValueMap, StableValueMap
 from annalist.views.grouprepeatmap  import GroupRepeatMap
 from annalist.views.confirm         import ConfirmView, dict_querydict
@@ -75,78 +76,17 @@ class EntityGenericListView(EntityEditBaseView):
 
     def list_setup(self, coll_id, type_id, list_id):
         """
-        Check collection and type identifiers and objects.
-
-        Returns:
-
-            http_response, list_id
-
-        where: `http_response` is `None` if the list processing is to proceed, 
-        or an HttpResponse value to be returned immediately, and 
-        if `http_response` is `None`, `list_id` is the actual list identifier 
-        to be used for subsequent processing.
+        Assemble display information for list view request handler
         """
-        reqhost = self.get_request_host()
-        http_response = self.get_coll_data(coll_id, host=reqhost)
-        if not http_response:
-            list_id       = self.get_list_id(type_id, list_id)
-            http_response = (
-                # http_response or 
-                self.get_type_data(type_id) or
-                self.get_list_data(list_id) or
-                self.form_edit_auth("list", self.collection._entityuri)
-                )
-        return http_response, list_id
+        listinfo = DisplayInfo(self)
+        listinfo.get_site_info(self.get_request_host())
+        listinfo.get_coll_info(coll_id)
+        listinfo.get_type_info(type_id)
+        listinfo.get_list_info(listinfo.get_list_id(list_id))
+        listinfo.check_authorization("list")
+        return listinfo
 
-    def get_type_list_id(self, type_id):
-        list_id = None
-        if type_id:
-            typedata  = RecordType.load(self.collection, type_id, self.site())
-            if typedata:
-                list_id  = typedata.get("annal:type_list", None)
-            else:
-                log.warning("EntityGenericListView.get_type_list_id no type data for %s"%(type_id))
-        return list_id
-
-    def get_list_id(self, type_id, list_id):
-        return (
-            list_id or 
-            self.get_type_list_id(type_id) or
-            self.collection.get_default_list()
-            )
-
-    def get_list_view_id(self):
-        return self.recordlist.get('annal:default_view', None) or "Default_view"
-
-    def get_list_type_id(self):
-        return self.recordlist.get('annal:default_type', None) or "Default_type"
-
-    def get_new_view_uri(self, coll_id, type_id):
-        """
-        Get URI for entity new view
-        """
-        return self.view_uri(
-            "AnnalistEntityNewView", 
-            coll_id=coll_id, 
-            view_id=self.get_list_view_id(), 
-            type_id=type_id,
-            action="new"
-            )
-
-    def get_edit_view_uri(self, coll_id, type_id, entity_id, action):
-        """
-        Get URI for entity edit or copy view
-        """
-        return self.view_uri(
-                "AnnalistEntityEditView", 
-                coll_id=coll_id, 
-                view_id=self.get_list_view_id(), 
-                type_id=type_id,
-                entity_id=entity_id,
-                action=action
-                )
-
-    def get_list_entityvaluemap(self, list_id):
+    def get_list_entityvaluemap(self, listinfo):
         """
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for an indicated list display.
@@ -154,48 +94,18 @@ class EntityGenericListView(EntityEditBaseView):
         # @@TODO: can this be subsumed by repeat value logic in get_fields_entityvaluemap?
         # Locate and read view description
         entitymap  = copy.copy(listentityvaluemap)
-        log.debug("entitylist %r"%self.recordlist.get_values())
+        log.debug("entitylist %r"%listinfo.recordlist.get_values())
         groupmap = []
         self.get_fields_entityvaluemap(
+            listinfo.collection,
             groupmap,
-            self.recordlist.get_values()['annal:list_fields']
+            listinfo.recordlist.get_values()['annal:list_fields']
             )
         entitymap.extend(groupmap)  # one-off for access to field headings
         entitymap.append(
             GroupRepeatMap(c='entities', e='annal:list_entities', g=groupmap)
             )
         return entitymap
-
-    def check_collection_entity(self, entity_id, entity_type, msg, continuation_uri={}):
-        """
-        Test a supplied entity_id is defined in the current collection,
-        returning a URI to display a supplied error message if the test fails.
-
-        NOTE: this function works with the generic base template base_generic.html, which
-        is assumed to provide an underlay for the currently viewed page.
-
-        entity_id           entity id that is required to be defined in the current collection.
-        entity_type         specified type for entity to delete.
-        msg                 message to display if the test fails.
-        continuation_uri    URI of page to display when the redisplayed form is closed.
-
-        returns a URI string for use with HttpResponseRedirect to redisplay the 
-        current page with the supplied message, or None if entity id is OK.
-        """
-        # log.info("check_collection_entity: entity_id: %s"%(entity_id))
-        # log.info("check_collection_entity: entityparent: %s"%(self.entityparent.get_id()))
-        # log.info("check_collection_entity: entityclass: %s"%(self.entityclass))
-        redirect_uri = None
-        typeinfo     = self.entitytypeinfo or EntityTypeInfo(self.site(), self.collection, entity_type)
-        if not typeinfo.entityclass.exists(typeinfo.entityparent, entity_id):
-            redirect_uri = (
-                uri_with_params(
-                    self.get_request_path(),
-                    self.error_params(msg),
-                    continuation_uri
-                    )
-                )
-        return redirect_uri
 
     # GET
 
@@ -204,20 +114,20 @@ class EntityGenericListView(EntityEditBaseView):
         Create a form for listing entities.
         """
         log.debug("entitylist.get: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
-        http_response, list_id = self.list_setup(coll_id, type_id, list_id)
-        if http_response:
-            return http_response
+        listinfo = self.list_setup(coll_id, type_id, list_id)
+        if listinfo.http_response:
+            return listinfo.http_response
         # Prepare list and entity IDs for rendering form
-        list_ids    = [ l.get_id() for l in self.collection.lists() ]
-        selector    = self.recordlist.get_values().get('annal:selector', "")
+        list_ids    = [ l.get_id() for l in listinfo.collection.lists() ]
+        selector    = listinfo.recordlist.get_values().get('annal:selector', "")
         search_for  = request.GET.get('search', "")
         entity_list = (
-            EntityFinder(self.collection)
+            EntityFinder(listinfo.collection)
                 .get_entities(type_id, selector=selector, search=search_for)
             )
         entityval = { 'annal:list_entities': list(entity_list) }
         # Set up initial view context
-        self._entityvaluemap = self.get_list_entityvaluemap(list_id)
+        self._entityvaluemap = self.get_list_entityvaluemap(listinfo)
         log.debug("EntityGenericListView.get _entityvaluemap %r"%(self._entityvaluemap))
         viewcontext = self.map_value_to_context(entityval,
             title               = self.site_data()["title"],
@@ -228,9 +138,9 @@ class EntityGenericListView(EntityEditBaseView):
             list_id             = list_id,
             search_for          = search_for,
             list_ids            = list_ids,
-            list_selected       = list_id,
+            list_selected       = listinfo.list_id,
             collection_view     = self.view_uri("AnnalistCollectionView", coll_id=coll_id),
-            default_view_id     = self.recordlist['annal:default_view']
+            default_view_id     = listinfo.recordlist['annal:default_view']
             )
         # log.debug("EntityGenericListView.get viewcontext %r"%(viewcontext))
         # Generate and return form data
@@ -255,8 +165,8 @@ class EntityGenericListView(EntityEditBaseView):
         if 'close' in request.POST:
             return HttpResponseRedirect(continuation_next['continuation_uri'])
         # Not "Close": set up list parameters
-        http_response, list_id = self.list_setup(coll_id, type_id, list_id)
-        if http_response:
+        listinfo = self.list_setup(coll_id, type_id, list_id)
+        if listinfo.http_response:
             return http_response
         # Process requested action
         redirect_uri = None
@@ -269,11 +179,11 @@ class EntityGenericListView(EntityEditBaseView):
             (entity_type, entity_id) = (
                 entity_ids[0].split("/") if len(entity_ids) == 1 else (None, None)
                 )
-            entity_type = entity_type or type_id or self.get_list_type_id()
+            entity_type = entity_type or type_id or listinfo.get_list_type_id()
             if "new" in request.POST:
                 action = "new"
                 redirect_uri = uri_with_params(
-                    self.get_new_view_uri(coll_id, entity_type), 
+                    listinfo.get_new_view_uri(coll_id, entity_type), 
                     continuation_here
                     )
             if "copy" in request.POST:
@@ -285,7 +195,7 @@ class EntityGenericListView(EntityEditBaseView):
                         )
                     or
                     uri_with_params(
-                        self.get_edit_view_uri(
+                        listinfo.get_edit_view_uri(
                             coll_id, entity_type, entity_id, action
                             ),
                         continuation_here
@@ -300,7 +210,7 @@ class EntityGenericListView(EntityEditBaseView):
                         )
                     or
                     uri_with_params(
-                        self.get_edit_view_uri(
+                        listinfo.get_edit_view_uri(
                             coll_id, entity_type, entity_id, action
                             ),
                         continuation_here
@@ -314,7 +224,7 @@ class EntityGenericListView(EntityEditBaseView):
                         continuation_uri=continuation_next
                         )
                     or
-                    self.check_collection_entity(entity_id, entity_type,
+                    listinfo.check_collection_entity(entity_id, entity_type,
                         message.SITE_ENTITY_FOR_DELETE%{'id': entity_id},
                         continuation_uri=continuation_next
                         )
@@ -333,7 +243,7 @@ class EntityGenericListView(EntityEditBaseView):
                         })
                     message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
                     return (
-                        self.form_edit_auth("delete", self.collection.get_uri()) or
+                        self.form_action_auth("delete", listinfo.collection.get_uri()) or
                         ConfirmView.render_form(request,
                             action_description=     message.REMOVE_ENTITY_DATA%message_vals,
                             complete_action_uri=    complete_action_uri,
@@ -343,10 +253,10 @@ class EntityGenericListView(EntityEditBaseView):
                             )
                         )
             if "default_view" in request.POST:
-                auth_check = self.form_edit_auth("config", self.collection.get_uri())
+                auth_check = self.form_action_auth("config", listinfo.collection.get_uri())
                 if auth_check:
                     return auth_check
-                self.collection.set_default_list(list_id)
+                listinfo.collection.set_default_list(list_id)
                 action = "list"
                 msg    = message.DEFAULT_VIEW_UPDATED%{'coll_id': coll_id, 'list_id': list_id}         
                 redirect_uri = (
@@ -386,7 +296,7 @@ class EntityGenericListView(EntityEditBaseView):
                     )
         if redirect_uri:
             return (
-                self.form_edit_auth(action, self.collection.get_uri()) or
+                listinfo.check_authorization(action) or
                 HttpResponseRedirect(redirect_uri)
                 )
         # Report unexpected form data

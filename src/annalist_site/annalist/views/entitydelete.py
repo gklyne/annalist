@@ -49,7 +49,7 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         if "entity_delete" in request.POST:
             http_response = (
                 self.get_coll_data(coll_id, self.get_request_host()) or
-                self.form_edit_auth("delete", self.collection.get_uri()) or
+                self.form_action_auth("delete", self.collection.get_uri()) or
                 self.get_type_data(type_id)
                 )
             if http_response:
