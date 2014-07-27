@@ -63,19 +63,11 @@ def entity_uri(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
     return reverse(viewname, kwargs=kwargs)
 
 def entitydata_edit_uri(action=None, coll_id="testcoll", type_id=None, entity_id=None, view_id="Default_view"):
-    if view_id:
-        viewname = ( 
-            'AnnalistEntityNewView'             if action == "new" else
-            'AnnalistEntityEditView'
-            )
-        kwargs = {'action': action, 'coll_id': coll_id, 'view_id': view_id}
-    else:
-        assert False, "No view_id supplied or inferred "
-    #     viewname = ( 
-    #         'AnnalistEntityDefaultNewView'      if action == "new" else
-    #         'AnnalistEntityDefaultEditView'
-    #         )
-    #     kwargs = {'action': action, 'coll_id': coll_id}
+    viewname = ( 
+        'AnnalistEntityNewView'             if action == "new" else
+        'AnnalistEntityEditView'
+        )
+    kwargs = {'action': action, 'coll_id': coll_id, 'view_id': view_id}
     if type_id:
         kwargs.update({'type_id': type_id})
     if entity_id:

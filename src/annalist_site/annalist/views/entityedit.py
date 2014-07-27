@@ -47,11 +47,6 @@ class GenericEntityEditView(EntityEditBaseView):
         super(GenericEntityEditView, self).__init__()
         return
 
-    def old_get_view_id(self, type_id, view_id):
-        if not view_id:
-            log.warning("GenericEntityEditView: No view identifier provided")
-        return view_id
-
     def get_type_view_id(self, type_id):
         view_id = None
         if type_id:

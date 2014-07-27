@@ -148,10 +148,10 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    - implement per-type default list and view
      / already works for list view; e.g. http://localhost:8000/annalist/c/coll1/d/_type/
      / but not yet for entity view; e.g. http://localhost:8000/annalist/c/coll1/d/_type/type1/
-     - return list_info structure rather than saving values in object. 
+     / return list_info structure rather than saving values in object. 
      - consider replicating list_seup logic for view_setup.
    - fix entity links to use default view URI (/d/...)
-   - add field button on entity edit displays
+   - add_field button on entity edit displays
    - implement "add repeating field" option to view edit (and entity view?)
    - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
