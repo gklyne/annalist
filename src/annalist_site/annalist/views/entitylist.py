@@ -117,6 +117,7 @@ class EntityGenericListView(EntityEditBaseView):
         listinfo = self.list_setup(coll_id, type_id, list_id)
         if listinfo.http_response:
             return listinfo.http_response
+        log.debug("list_id %s"%listinfo.list_id)
         # Prepare list and entity IDs for rendering form
         list_ids    = [ l.get_id() for l in listinfo.collection.lists() ]
         selector    = listinfo.recordlist.get_values().get('annal:selector', "")
@@ -135,7 +136,7 @@ class EntityGenericListView(EntityEditBaseView):
             ### heading             = entity_initial_values['rdfs:label'],
             coll_id             = coll_id,
             type_id             = type_id,
-            list_id             = list_id,
+            list_id             = listinfo.list_id,
             search_for          = search_for,
             list_ids            = list_ids,
             list_selected       = listinfo.list_id,
