@@ -28,30 +28,30 @@ class EntityDefaultListView(EntityGenericListView):
 
     # Helper functions
 
-    def get_list_id(self, type_id, list_id):
-        return (
-            super(EntityDefaultListView, self).get_list_id(type_id, list_id) or
-            ("Default_list" if type_id else "Default_list_all")
-            )
+    # def get_list_id(self, type_id, list_id):
+    #     return (
+    #         super(EntityDefaultListView, self).get_list_id(type_id, list_id) or
+    #         ("Default_list" if type_id else "Default_list_all")
+    #         )
 
-    def get_new_view_uri(self, coll_id, type_id):
-        """
-        Get URI for entity new view
-        """
-        return self.view_uri(
-            "AnnalistEntityDefaultNewView", 
-            coll_id=coll_id, type_id=type_id,
-            action="new"
-            )
+    # def get_new_view_uri(self, coll_id, type_id):
+    #     """
+    #     Get URI for entity new view
+    #     """
+    #     return self.view_uri(
+    #         "AnnalistEntityDefaultNewView", 
+    #         coll_id=coll_id, type_id=type_id,
+    #         action="new"
+    #         )
 
-    def get_edit_view_uri(self, coll_id, type_id, entity_id, action):
-        """
-        Get URI for entity edit or copy view
-        """
-        return self.view_uri(
-                "AnnalistEntityDefaultEditView", 
-                coll_id=coll_id, type_id=type_id, entity_id=entity_id,
-                action=action
-                )
+    # def get_edit_view_uri(self, coll_id, type_id, entity_id, action):
+    #     """
+    #     Get URI for entity edit or copy view
+    #     """
+    #     return self.view_uri(
+    #             "AnnalistEntityDefaultEditView", 
+    #             coll_id=coll_id, type_id=type_id, entity_id=entity_id,
+    #             action=action
+    #             )
 
 # End.

@@ -277,7 +277,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        # v = TestHostUri + entitydata_edit_uri("new", "testcoll", "testtype")
         v = TestHostUri + entitydata_edit_uri("new", "testcoll", "testtype", view_id="Default_view")
         c = continuation_uri_param(u, continuation_uri_param(collection_edit_uri("testcoll")))
         self.assertIn(v, r['location'])
@@ -291,7 +290,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        # v = TestHostUri + entitydata_edit_uri("new", "testcoll", "Default_type")
         v = TestHostUri + entitydata_edit_uri("new", "testcoll", "Default_type", 
             view_id="Default_view"
             )
@@ -307,7 +305,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        # v = TestHostUri + entitydata_edit_uri("new", "testcoll", "testtype")
         v = TestHostUri + entitydata_edit_uri("new", "testcoll", "testtype", 
             view_id="Default_view"
             )
@@ -336,7 +333,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        # v = TestHostUri + entitydata_edit_uri("copy", "testcoll", "testtype", "entity1")
         v = TestHostUri + entitydata_edit_uri("copy", "testcoll", "testtype", "entity1", 
             view_id="Default_view"
             )
@@ -352,7 +348,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        # v = TestHostUri + entitydata_edit_uri("copy", "testcoll", "testtype", "entity1")
         v = TestHostUri + entitydata_edit_uri("copy", "testcoll", "testtype", "entity1", 
             view_id="Default_view"
             )
@@ -405,7 +400,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         c = continuation_uri_param(u, continuation_uri_param(collection_edit_uri("testcoll")))
-        # v = TestHostUri + entitydata_edit_uri("edit", "testcoll", "testtype", "entity1")
         v = TestHostUri + entitydata_edit_uri("edit", "testcoll", "testtype", "entity1", 
             view_id="Default_view"
             )
@@ -420,7 +414,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        # v = TestHostUri + entitydata_edit_uri("edit", "testcoll", "testtype", "entity1")
         v = TestHostUri + entitydata_edit_uri("edit", "testcoll", "testtype", "entity1", 
             view_id="Default_view"
             )
