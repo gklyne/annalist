@@ -48,29 +48,6 @@ from annalist.fields.render_utils       import get_head_renderer, get_item_rende
 
 #   -------------------------------------------------------------------------------------------
 #
-#   Mapping table data (not view-specific)
-#
-#   -------------------------------------------------------------------------------------------
-
-# Table used as basis, or initial values, for a dynamically generated entity-value map
-baseentityvaluemap  = (
-        [ SimpleValueMap(c='title',            e=None,                  f=None               )
-        , SimpleValueMap(c='coll_id',          e=None,                  f=None               )
-        , SimpleValueMap(c='type_id',          e=None,                  f=None               )
-        , StableValueMap(c='entity_id',        e='annal:id',            f='entity_id'        )
-        , SimpleValueMap(c='entity_uri',       e='annal:uri',           f='entity_uri'       )
-        , SimpleValueMap(c='record_type',      e='annal:record_type',   f='record_type'      )
-        # Field data is handled separately during processing of the form description
-        # Form and interaction control (hidden fields)
-        , SimpleValueMap(c='view_id',          e=None,                  f='view_id'          )
-        , SimpleValueMap(c='orig_id',          e=None,                  f='orig_id'          )
-        , SimpleValueMap(c='orig_type',        e=None,                  f='orig_type'        )
-        , SimpleValueMap(c='action',           e=None,                  f='action'           )
-        , SimpleValueMap(c='continuation_uri', e=None,                  f='continuation_uri' )
-        ])
-
-#   -------------------------------------------------------------------------------------------
-#
 #   Generic view base class (contains methods common to record lists and views)
 #
 #   -------------------------------------------------------------------------------------------
@@ -87,44 +64,6 @@ class EntityEditBaseView(AnnalistGenericView):
     def __init__(self):
         super(EntityEditBaseView, self).__init__()
         return
-
-    def get_entityid(self, action, parent, entityid):
-        if action == "new":
-            entityid = self.entitytypeinfo.entityclass.allocate_new_id(parent)
-        return entityid
-
-    def get_entity(self, action, parent, entityid, entity_initial_values):
-        """
-        Create local entity object or load values from existing.
-
-        action          is the requested action: new, edit, copy
-        parent          is the parent of the entity to be accessed or created
-        entityid        is the local id (slug) of the entity to be accessed or created
-        entity_initial_values  is a dictionary of initial values used when a new entity
-                        is created
-
-        self.entitytypeinfo.entityclass   is the class of the entity to be acessed or created.
-
-        returns an object of the appropriate type.  If an existing entity is accessed, values
-        are read from storage, otherwise a new entity object is created but not yet saved.
-        """
-        log.debug(
-            "get_entity id %s, parent %s, action %s, altparent %s"%
-            (entityid, parent._entitydir, action, self.entitytypeinfo.entityaltparent)
-            )
-        entity = None
-        if action == "new":
-            entity = self.entitytypeinfo.entityclass(parent, entityid)
-            entity.set_values(entity_initial_values)
-        elif self.entitytypeinfo.entityclass.exists(parent, entityid, altparent=self.entitytypeinfo.entityaltparent):
-            entity = self.entitytypeinfo.entityclass.load(parent, entityid, altparent=self.entitytypeinfo.entityaltparent)
-        if entity is None:
-            parentid = self.entitytypeinfo.entityaltparent.get_id() if self.entitytypeinfo.entityaltparent else "(none)"
-            log.debug(
-                "Entity not found: parent %s, entity_id %s, altparent %s"%
-                (parent.get_id(), entityid, parentid)
-                )
-        return entity
 
     def get_fields_entityvaluemap(self, collection, entityvaluemap, fields):
         # @@TODO: elide this

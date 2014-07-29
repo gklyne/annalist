@@ -24,7 +24,34 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
+from annalist.views.displayinfo     import DisplayInfo
 from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
+from annalist.views.simplevaluemap  import SimpleValueMap, StableValueMap
+# from annalist.views.fieldlistvaluemap   import FieldListValueMap
+# from annalist.views.grouprepeatmap      import GroupRepeatMap
+
+#   -------------------------------------------------------------------------------------------
+#
+#   Mapping table data (not view-specific)
+#
+#   -------------------------------------------------------------------------------------------
+
+# Table used as basis, or initial values, for a dynamically generated entity-value map
+baseentityvaluemap  = (
+        [ SimpleValueMap(c='title',            e=None,                  f=None               )
+        , SimpleValueMap(c='coll_id',          e=None,                  f=None               )
+        , SimpleValueMap(c='type_id',          e=None,                  f=None               )
+        , StableValueMap(c='entity_id',        e='annal:id',            f='entity_id'        )
+        , SimpleValueMap(c='entity_uri',       e='annal:uri',           f='entity_uri'       )
+        , SimpleValueMap(c='record_type',      e='annal:record_type',   f='record_type'      )
+        # Field data is handled separately during processing of the form description
+        # Form and interaction control (hidden fields)
+        , SimpleValueMap(c='view_id',          e=None,                  f='view_id'          )
+        , SimpleValueMap(c='orig_id',          e=None,                  f='orig_id'          )
+        , SimpleValueMap(c='orig_type',        e=None,                  f='orig_type'        )
+        , SimpleValueMap(c='action',           e=None,                  f='action'           )
+        , SimpleValueMap(c='continuation_uri', e=None,                  f='continuation_uri' )
+        ])
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -57,9 +84,8 @@ class GenericEntityEditView(EntityEditBaseView):
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
         viewinfo.get_type_info(type_id)
-        viewinfo.get_view_info(viewinfo.get_view_id(view_id))
+        viewinfo.get_view_info(viewinfo.get_view_id(type_id, view_id))
         viewinfo.get_entity_info(action, entity_id)
-        viewinfo.entity_info(action, entity_id)
         viewinfo.check_authorization(action)
         return viewinfo
 
@@ -77,6 +103,42 @@ class GenericEntityEditView(EntityEditBaseView):
             viewinfo.recordview.get_values()['annal:view_fields']
             )
         return entitymap
+
+    def get_entity(self, viewinfo, action, entity_initial_values, entity_id=None):
+        """
+        Create local entity object or load values from existing.
+
+        viewinfo        DisplaytInfo object for the current view
+        action          is the requested action: new, edit, copy
+        entity_initial_values
+                        is a dictionary of initial values used when 
+                        a new entity is created
+        entity_id       If not None, overrides entity id to create or load
+
+        returns an object of the appropriate type.
+
+        If an existing entity is accessed, values are read from storage, 
+        otherwise a new entity object is created but not yet saved.
+        """
+        entity_id   = entity_id or viewinfo.entity_id
+        typeinfo    = viewinfo.entitytypeinfo
+        entityclass = typeinfo.entityclass
+        log.debug(
+            "get_entity id %s, parent %s, action %s, altparent %s"%
+            (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
+            )
+        entity = None
+        if action == "new":
+            entity = entityclass(typeinfo.entityparent, entity_id)
+            entity.set_values(entity_initial_values)
+        elif entityclass.exists(typeinfo.entityparent, entity_id, altparent=typeinfo.entityaltparent):
+            entity = entityclass.load(typeinfo.entityparent, entity_id, altparent=typeinfo.entityaltparent)
+        if entity is None:
+            parent_id = typeinfo.entityaltparent.get_id() if typeinfo.entityaltparent else "(none)"
+            log.debug(
+                "Entity not found: parent %s, entity_id %s"%(parent_id, entity_id)
+                )
+        return entity
 
     # GET
 
@@ -103,7 +165,7 @@ class GenericEntityEditView(EntityEditBaseView):
                               (viewinfo.entity_id, type_id, coll_id)
             , "rdfs:comment": ""
             })
-        entity = self.get_entity(action, typeinfo.entityparent, viewinfo.entity_id, entity_initial_values)
+        entity = self.get_entity(viewinfo, action, entity_initial_values)
         if entity is None:
             return self.error(
                 dict(self.error404values(),
@@ -165,8 +227,8 @@ class GenericEntityEditView(EntityEditBaseView):
         #     )
         # log.info("continuation_uri %s, type_id %s"%(continuation_uri, type_id))
         typeinfo        = viewinfo.entitytypeinfo
-        original_entity = self.get_entity(action, typeinfo.entityparent, orig_entity_id, {})
-        type_ids        = [ t.get_id() for t in self.collection.types() ]
+        original_entity = self.get_entity(viewinfo, action, {}, entity_id=orig_entity_id)
+        type_ids        = [ t.get_id() for t in viewinfo.collection.types() ]
         context_extra_values = (
             { 'title':            self.site_data()["title"]
             , 'heading':          "Entity '%s' of type '%s' in collection '%s'"%
