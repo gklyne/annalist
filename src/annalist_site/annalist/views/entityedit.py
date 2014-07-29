@@ -47,24 +47,36 @@ class GenericEntityEditView(EntityEditBaseView):
         super(GenericEntityEditView, self).__init__()
         return
 
-    def get_type_view_id(self, type_id):
-        view_id = None
-        if type_id:
-            typedata  = RecordType.load(self.collection, type_id, self.site())
-            if typedata:
-                view_id  = typedata.get("annal:type_view", None)
-            else:
-                log.warning("GenericEntityEditView.get_type_view_id no type data for %s"%(type_id))
-        return view_id
+    # Helper functions
 
-    def get_view_id(self, type_id, view_id):
-        view_id = (
-            view_id or 
-            self.get_type_view_id(type_id)
+    def view_setup(self, action, coll_id, type_id, view_id, entity_id):
+        """
+        Assemble display information for entity view request handler
+        """
+        viewinfo = DisplayInfo(self)
+        viewinfo.get_site_info(self.get_request_host())
+        viewinfo.get_coll_info(coll_id)
+        viewinfo.get_type_info(type_id)
+        viewinfo.get_view_info(viewinfo.get_view_id(view_id))
+        viewinfo.get_entity_info(action, entity_id)
+        viewinfo.entity_info(action, entity_id)
+        viewinfo.check_authorization(action)
+        return viewinfo
+
+    def get_view_entityvaluemap(self, viewinfo):
+        """
+        Creates an entity/value map table in the current object incorporating
+        information from the form field definitions for an indicated view.
+        """
+        # Locate and read view description
+        entitymap = copy.copy(baseentityvaluemap)
+        log.debug("entityview %r"%viewinfo.recordview.get_values())
+        self.get_fields_entityvaluemap(
+            viewinfo.collection,
+            entitymap,
+            viewinfo.recordview.get_values()['annal:view_fields']
             )
-        if not view_id:
-            log.warning("GenericEntityEditView: No view identifier provided or defined for type")
-        return view_id
+        return entitymap
 
     # GET
 
@@ -81,37 +93,26 @@ class GenericEntityEditView(EntityEditBaseView):
             "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
-        http_response = (
-            self.get_coll_data(coll_id, host=self.get_request_host()) or
-            self.form_action_auth(action, self.collection._entityuri) or
-            self.get_type_data(type_id) or
-            self.get_view_data(self.get_view_id(type_id, view_id))
-            )
-        if http_response:
-            return http_response
-        # Set up RecordType-specific values
-        typeinfo   = self.entitytypeinfo
-        entity_id  = self.get_entityid(action, typeinfo.entityparent, entity_id)
+        viewinfo = self.view_setup(action, coll_id, type_id, view_id, entity_id)
+        if viewinfo.http_response:
+            return viewinfo.http_response
+
         # Create local entity object or load values from existing
         entity_initial_values = (
             { "rdfs:label":   "Entity '%s' of type '%s' in collection '%s'"%
-                              (entity_id, type_id, coll_id)
+                              (viewinfo.entity_id, type_id, coll_id)
             , "rdfs:comment": ""
             })
-        entity = self.get_entity(action, typeinfo.entityparent, entity_id, entity_initial_values)
+        entity = self.get_entity(action, typeinfo.entityparent, viewinfo.entity_id, entity_initial_values)
         if entity is None:
             return self.error(
                 dict(self.error404values(),
                     message=message.DOES_NOT_EXIST%{'id': entity_initial_values['rdfs:label']}
                     )
                 )
-        type_ids = [ t.get_id() for t in self.collection.types() ]
+        type_ids = [ t.get_id() for t in viewinfo.collection.types() ]
         # Set up initial view context
-        # @@TODO: move view access logic from get_form_entityvaluemap (see there for details)
-        self._entityvaluemap = self.get_form_entityvaluemap(
-            self.collection,
-            self.get_view_id(type_id, view_id)
-            )
+        self._entityvaluemap = self.get_view_entityvaluemap(viewinfo)
         viewcontext = self.map_value_to_context(entity,
             title               = self.site_data()["title"],
             continuation_uri    = request.GET.get('continuation_uri', ""),
@@ -120,9 +121,9 @@ class GenericEntityEditView(EntityEditBaseView):
             coll_id             = coll_id,
             type_id             = type_id,
             type_ids            = type_ids,
-            orig_id             = entity_id,
+            orig_id             = viewinfo.entity_id,
             orig_type           = type_id,
-            view_id             = view_id
+            view_id             = viewinfo.view_id
             )
         # generate and return form data
         return (
@@ -144,14 +145,9 @@ class GenericEntityEditView(EntityEditBaseView):
               (coll_id, type_id, entity_id, view_id, action)
             )
         log.debug("  form data %r"%(request.POST))
-        http_response = (
-            self.get_coll_data(coll_id, host=self.get_request_host()) or
-            self.form_action_auth(action, self.collection._entityuri) or
-            self.get_type_data(type_id) or
-            self.get_view_data(self.get_view_id(type_id, view_id))
-            )
-        if http_response:
-            return http_response
+        viewinfo = self.view_setup(action, coll_id, type_id, view_id, entity_id)
+        if viewinfo.http_response:
+            return viewinfo.http_response
         # Get key POST values
         # Except for entity_id, use values from URI when form does not have corresponding fields
         entity_id            = request.POST.get('entity_id', None)
@@ -168,7 +164,7 @@ class GenericEntityEditView(EntityEditBaseView):
         #       (coll_id, type_id, entity_id, view_id, action)
         #     )
         # log.info("continuation_uri %s, type_id %s"%(continuation_uri, type_id))
-        typeinfo        = self.entitytypeinfo
+        typeinfo        = viewinfo.entitytypeinfo
         original_entity = self.get_entity(action, typeinfo.entityparent, orig_entity_id, {})
         type_ids        = [ t.get_id() for t in self.collection.types() ]
         context_extra_values = (
@@ -196,13 +192,10 @@ class GenericEntityEditView(EntityEditBaseView):
             , 'entity_type_invalid':    typeinfo.entitymessages['entity_type_invalid']%message_vals
             })
         # Process form response and respond accordingly
-        self._entityvaluemap = self.get_form_entityvaluemap(
-            self.collection,
-            self.get_view_id(type_id, view_id)
-            )
+        self._entityvaluemap = self.get_view_entityvaluemap(viewinfo)
         if not typeinfo.entityparent._exists():
             # Create RecordTypeData when not already exists
-            RecordTypeData.create(self.collection, typeinfo.entityparent.get_id(), {})
+            RecordTypeData.create(viewinfo.collection, typeinfo.entityparent.get_id(), {})
         # log.info(
         #     "self.form_response: entity_id %s, orig_entity_id %s, type_id %s, action %s"%
         #       (entity_id, orig_entity_id, type_id, action)

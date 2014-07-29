@@ -133,24 +133,6 @@ class EntityEditBaseView(AnnalistGenericView):
             )
         return entityvaluemap
  
-    def get_form_entityvaluemap(self, collection, view_id):
-        """
-        Creates an entity/value map table in the current object incorporating
-        information from the form field definitions for an indicated view.
-        """
-        # Locate and read view description
-        # @@TODO: push responsibility to subclass to call get_view_data, 
-        #         and use resulting value of self.recordview instead of entityview
-        entitymap  = copy.copy(baseentityvaluemap)
-        entityview = RecordView.load(collection, view_id, self.site())
-        log.debug("entityview   %r"%entityview.get_values())
-        self.get_fields_entityvaluemap(
-            collection,
-            entitymap,
-            entityview.get_values()['annal:view_fields']
-            )
-        return entitymap
-
     def find_repeat_fields(self, fieldmap=None):
         """
         Iterate over repeat field groups in the current view.

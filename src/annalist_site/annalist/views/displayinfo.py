@@ -63,6 +63,8 @@ class DisplayInfo(object):
         self.recordlist     = None
         self.view_id        = None
         self.recordview     = None
+        self.entity_id      = None
+        # self.entitydata     = None
         self.http_response  = None
         return
 
@@ -134,6 +136,7 @@ class DisplayInfo(object):
         Retrieve view definition to use for display
         """
         if not self.http_response:
+            assert ((self.site and self.collection) is not None)
             if not RecordView.exists(self.collection, view_id, self.site):
                 log.warning("DisplayInfo.get_view_info: RecordView %s not found"%view_id)
                 self.http_response = self.view.error(
@@ -148,6 +151,32 @@ class DisplayInfo(object):
                 log.debug("DisplayInfo.get_view_info: %r"%(self.recordview.get_values()))
         return self.http_response
 
+    def get_entity_info(self, action, entity_id):
+        """
+        Retrieve entity data to use for display
+        """
+        if not self.http_response:
+            assert self.entitytypeinfo is not None
+            if (not entity_id) and (action == "new"):
+                entity_id = self.entitytypeinfo.entityclass.allocate_new_id(
+                    self.entitytypeinfo.entityparent
+                    )
+            self.entity_id = entity_id
+        return self.http_response
+
+    def get_entity_data(self):
+        """
+        Retrieve entity data to use for display
+        """
+        if not self.http_response:
+            assert self.entity_id is not None
+            self.entity_data = self.entitytypeinfo.entityclass.load(
+                self.entitytypeinfo.entityparent, 
+                self.entity_id, 
+                self.entitytypeinfo.entityaltparent)
+            log.debug("DisplayInfo.get_entity_data: %r"%(self.entity_data.get_values()))
+        return self.http_response
+
     def check_authorization(self, action):
         """
         If no error so far, check authorization.  Return Nine if all is OK,
@@ -158,7 +187,7 @@ class DisplayInfo(object):
             self.view.form_action_auth(action, self.collection.get_uri())
             )
 
-    # Additonal support functions.
+    # Additonal support functions for list views
 
     def get_type_list_id(self):
         """
@@ -194,31 +223,6 @@ class DisplayInfo(object):
     def get_list_type_id(self):
         return self.recordlist.get('annal:default_type', None) or "Default_type"
 
-    def get_new_view_uri(self, coll_id, type_id):
-        """
-        Get URI for entity new view
-        """
-        return self.view.view_uri(
-            "AnnalistEntityNewView", 
-            coll_id=coll_id, 
-            view_id=self.get_list_view_id(), 
-            type_id=type_id,
-            action="new"
-            )
-
-    def get_edit_view_uri(self, coll_id, type_id, entity_id, action):
-        """
-        Get URI for entity edit or copy view
-        """
-        return self.view.view_uri(
-                "AnnalistEntityEditView", 
-                coll_id=coll_id, 
-                view_id=self.get_list_view_id(), 
-                type_id=type_id,
-                entity_id=entity_id,
-                action=action
-                )
-
     def check_collection_entity(self, entity_id, entity_type, msg, continuation_uri={}):
         """
         Test a supplied entity_id is defined in the current collection,
@@ -252,5 +256,53 @@ class DisplayInfo(object):
                     )
                 )
         return redirect_uri
+
+    def get_new_view_uri(self, coll_id, type_id):
+        """
+        Get URI for entity new view
+        """
+        return self.view.view_uri(
+            "AnnalistEntityNewView", 
+            coll_id=coll_id, 
+            view_id=self.get_list_view_id(), 
+            type_id=type_id,
+            action="new"
+            )
+
+    def get_edit_view_uri(self, coll_id, type_id, entity_id, action):
+        """
+        Get URI for entity edit or copy view
+        """
+        return self.view.view_uri(
+                "AnnalistEntityEditView", 
+                coll_id=coll_id, 
+                view_id=self.get_list_view_id(), 
+                type_id=type_id,
+                entity_id=entity_id,
+                action=action
+                )
+
+    # Additonal support functions for entity views
+
+    def get_type_view_id(self, type_id):
+        view_id = None
+        if self.type_id:
+            if self.entitytypeinfo.recordtype:
+                view_id  = self.entitytypeinfo.recordtype.get("annal:type_view", None)
+            else:
+                log.warning("DisplayInfo.get_type_view_id: no type data for %s"%(self.type_id))
+        return view_id
+
+    def get_view_id(self, type_id, view_id):
+        if not self.http_response:
+            view_id = (
+                view_id or 
+                self.get_type_view_id() or
+                # self.collection.get_default_view() or
+                "Default_view"
+                )
+            if not view_id:
+                log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
+        return view_id
 
 # End.

@@ -25,21 +25,21 @@ from annalist.views.entityedit          import GenericEntityEditView
 from annalist.views.entitylist          import EntityGenericListView
 from annalist.views.entitydelete        import EntityDataDeleteConfirmedView
 
-# @@TODO: Review URI design: 1-letter path segments:
-#
 # c - collections
 # v - view
 # l - list
 # d - data/default view
 #
-# Metadata:
+# Metadata (using built-in type identifiers, otherwise same pattern data data):
 #
-# /c/<coll-id>/types/                             list of record types
-# /c/<coll-id>/types/<type-id>                    view of type description
-# /c/<coll-id>/views/                             list of record views
-# /c/<coll-id>/views/<view-id>                    view of view description
-# /c/<coll-id>/lists/                             list of record lists
-# /c/<coll-id>/lists/<list-id>                    view of list description
+# /c/<coll-id>/d/_type/                           list of record types
+# /c/<coll-id>/d/_type/<type-id>                  view of type description
+# /c/<coll-id>/d/_view/                           list of record views
+# /c/<coll-id>/d/_view/<view-id>                  view of view description
+# /c/<coll-id>/d/_list/                           list of record lists
+# /c/<coll-id>/d/_list/<list-id>                  view of list description
+# /c/<coll-id>/d/_field/                          list of field descriptions
+# /c/<coll-id>/d/_field/<field-id>                view of field description
 #
 # Data:
 #
@@ -49,6 +49,10 @@ from annalist.views.entitydelete        import EntityDataDeleteConfirmedView
 # /c/<coll-id>/l/<list-id>/                       specified list of records
 # /c/<coll-id>/l/<list-id>/<type-id>              specified list of records of specified type
 # /c/<coll-id>/v/<view-id>/<type-id>/<entity-id>  specified view of record
+#
+# Suffixes /!new, /!copy, /!edit, /!delete, etc. are used for forms that are opart of the
+# user interface for editing collections and resources, and do not of themselves identify
+# persistent resources.
 
 urlpatterns = patterns('',
     url(r'^$',              AnnalistHomeView.as_view(), name='AnnalistHomeView'),
@@ -105,7 +109,6 @@ urlpatterns = patterns('',
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>edit)$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityEditView'),
-
     )
 
 urlpatterns += patterns('',
