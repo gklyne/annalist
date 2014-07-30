@@ -1,5 +1,9 @@
 """
 Tests for RecordField metadata editing view
+
+Note: this module tests for rendering specifically for Field values, and using
+field description sitedata files, and as such duplicates some tests covered by
+module test_entitygenericedit.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"

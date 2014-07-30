@@ -4,7 +4,7 @@
 , "rdfs:label":         "List display type"
 , "rdfs:comment":       "Type of list display (List or Grid)"
 , "annal:field_render": "annal:field_render/Slug"
-, "annal:value_type":   "annal:ListType"
+, "annal:value_type":   "annal:List"
 , "annal:placeholder":  "(list type)"
-, "annal:property_uri": "annal:list_type"
+, "annal:property_uri": "annal:display_type"
 }

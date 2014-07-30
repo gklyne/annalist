@@ -2,11 +2,11 @@
 , "annal:id":           "View_list"
 , "annal:type":         "annal:List"
 , "rdfs:label":         "List views"
-, "rdfs:comment":       "This resource describes the view list display"
+, "rdfs:comment":       "Description of list of views"
+, "annal:display_type": "annal:display_type/List"
 , "annal:selector":     "@annal:type==annal:View"
 , "annal:default_view": "View_view"
 , "annal:default_type": "_view"
-, "annal:display_type": "annal:display/List"
 , "annal:list_fields":
   [ { "annal:field_id":         "Entity_id"
     , "annal:field_placement":  "small:0,3"

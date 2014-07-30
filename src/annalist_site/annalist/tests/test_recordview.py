@@ -1,5 +1,9 @@
 """
 Tests for RecordView module and view
+
+Note: this module tests for rendering specifically for RecordView values, using
+view description sitedata files, and as such duplicates some tests covered by
+module test_entitygenericedit.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -722,7 +726,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
-    #   -------- edit type --------
+    #   -------- edit view --------
 
     def test_post_edit_view(self):
         self._create_record_view("editview")
@@ -737,7 +741,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_uri)
-        # Check that new record type exists
+        # Check that new record view exists
         self._check_record_view_values("editview", update="Updated RecordView")
         return
 
@@ -754,7 +758,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_uri)
-        # Check that new record type exists and old does not
+        # Check that new record view exists and old does not
         self.assertFalse(RecordView.exists(self.testcoll, "editview1"))
         self._check_record_view_values("editview2", update="Updated RecordView")
         return
@@ -772,7 +776,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_uri)
-        # Check that target record type still does not exist and unchanged
+        # Check that target record view still does not exist and unchanged
         self._check_record_view_values("editview")
         return
 
@@ -820,7 +824,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         return
 
     #   -----------------------------------------------------------------------------
-    #   Form response tests - with repeating fields
+    #   Form response tests for view descriptions with repeating fields
     #   -----------------------------------------------------------------------------
 
     def test_post_add_field(self):

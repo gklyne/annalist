@@ -42,7 +42,7 @@ class RecordListDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         """
         Process options to complete action to remove a record view from a collection
         """
-        log.debug("RecordListDeleteConfirmedView.post: %r"%(request.POST))
+        log.info("RecordListDeleteConfirmedView.post: %r"%(request.POST))
         if "list_delete" in request.POST:
             http_response = (
                 self.get_coll_data(coll_id, self.get_request_host()) or

@@ -1,5 +1,9 @@
 """
 Tests for RecordType module and view
+
+Note: this module tests for rendering specifically for RecordType values, using
+type description sitedata files, and as such duplicates some tests covered by
+module test_entitygenericedit.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"

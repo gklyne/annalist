@@ -2,11 +2,11 @@
 , "annal:id":           "Type_list"
 , "annal:type":         "annal:List"
 , "rdfs:label":         "List types"
-, "rdfs:comment":       "This resource describes the type list display"
+, "rdfs:comment":       "Description of list of types"
+, "annal:display_type": "annal:display_type/List"
 , "annal:selector":     "@annal:type==annal:Type"
 , "annal:default_view": "Type_view"
 , "annal:default_type": "_type"
-, "annal:display_type": "annal:List"
 , "annal:list_fields":
   [ { "annal:field_id":         "Entity_id"
     , "annal:field_placement":  "small:0,3"

@@ -141,7 +141,7 @@ class GenericEntityEditView(EntityEditBaseView):
             "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
-        log.debug("  form data %r"%(request.POST))
+        log.info("  form data %r"%(request.POST))
         viewinfo = self.view_setup(action, coll_id, type_id, view_id, entity_id)
         if viewinfo.http_response:
             return viewinfo.http_response
