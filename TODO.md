@@ -151,6 +151,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / return list_info structure rather than saving values in object. 
      / consider replicating list_seup logic for view_setup.
      - find and eliminate other references to get_coll_data, etc.
+     - don't return placeholder text as value
    - fix entity links to use default view URI (/d/...)
    - add_field button on entity edit displays
    - implement "add repeating field" option to view edit (and entity view?)

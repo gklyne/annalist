@@ -1,21 +1,21 @@
-{ "@id":                "annal:display/Field_list"
-, "annal:id":           "Field_list"
-, "annal:type":         "annal:List"
-, "rdfs:label":         "List fields"
-, "rdfs:comment":       "Description of list of fields"
-, "annal:display_type": "annal:display_type/List"
-, "annal:default_view": "Field_view"
-, "annal:default_type": "_field"
-, "annal:selector":     "@annal:type==annal:Field"
+{ "@id":                        "annal:display/Field_list"
+, "annal:id":                   "Field_list"
+, "annal:type":                 "annal:List"
+, "rdfs:label":                 "List fields"
+, "rdfs:comment":               "Description of list of fields"
+, "annal:display_type":         "annal:display_type/List"
+, "annal:default_view":         "Field_view"
+, "annal:default_type":         "_field"
+, "annal:list_entity_selector": "@annal:type==annal:Field"
 , "annal:list_fields":
-  [ { "annal:field_id":         "Entity_id"
-    , "annal:field_placement":  "small:0,3"
+  [ { "annal:field_id":             "Entity_id"
+    , "annal:field_placement":      "small:0,3"
     }
-  , { "annal:field_id":         "Field_type"
-    , "annal:field_placement":  "small:3,3"
+  , { "annal:field_id":             "Field_type"
+    , "annal:field_placement":      "small:3,3"
     }
-  , { "annal:field_id":         "Entity_label"
-    , "annal:field_placement":  "small:6,6"
+  , { "annal:field_id":             "Entity_label"
+    , "annal:field_placement":      "small:6,6"
     }
   ]
 }

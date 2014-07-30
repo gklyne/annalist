@@ -1,18 +1,18 @@
-{ "@id":                "annal:display/View_list"
-, "annal:id":           "View_list"
-, "annal:type":         "annal:List"
-, "rdfs:label":         "List views"
-, "rdfs:comment":       "Description of list of views"
-, "annal:display_type": "annal:display_type/List"
-, "annal:selector":     "@annal:type==annal:View"
-, "annal:default_view": "View_view"
-, "annal:default_type": "_view"
+{ "@id":                        "annal:display/View_list"
+, "annal:id":                   "View_list"
+, "annal:type":                 "annal:List"
+, "rdfs:label":                 "List views"
+, "rdfs:comment":               "Description of list of views"
+, "annal:display_type":         "annal:display_type/List"
+, "annal:default_view":         "View_view"
+, "annal:default_type":         "_view"
+, "annal:list_entity_selector": "@annal:type==annal:View"
 , "annal:list_fields":
-  [ { "annal:field_id":         "Entity_id"
-    , "annal:field_placement":  "small:0,3"
+  [ { "annal:field_id":             "Entity_id"
+    , "annal:field_placement":      "small:0,3"
     }
-  , { "annal:field_id":         "Entity_label"
-    , "annal:field_placement":  "small:3,9"
+  , { "annal:field_id":             "Entity_label"
+    , "annal:field_placement":      "small:3,9"
     }
   ]
 }

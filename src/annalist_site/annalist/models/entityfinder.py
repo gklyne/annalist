@@ -75,7 +75,7 @@ class EntityFinder(object):
         Return filter for for testing entities matching a supplied selector.
 
         Selector formats:
-            (blank)                     match any entity
+            ALL (or blank)              match any entity
             @annal:type==annal:Field    entity type is indicated value
             @<field>==<value>           entity named field is indicated value
 
@@ -96,7 +96,7 @@ class EntityFinder(object):
             def match_field_f(e):
                 return e[field_name] == field_val
             return match_field_f
-        if selector == "":
+        if selector in {"", "ALL"}:
             return match_any
         sm = re.match(r'@((\w|:)+)==((\w|:)+)$', selector)
         if sm:

@@ -120,7 +120,7 @@ class EntityGenericListView(EntityEditBaseView):
         log.debug("list_id %s"%listinfo.list_id)
         # Prepare list and entity IDs for rendering form
         list_ids    = [ l.get_id() for l in listinfo.collection.lists() ]
-        selector    = listinfo.recordlist.get_values().get('annal:selector', "")
+        selector    = listinfo.recordlist.get_values().get('annal:list_entity_selector', "")
         search_for  = request.GET.get('search', "")
         entity_list = (
             EntityFinder(listinfo.collection)

@@ -55,6 +55,7 @@ class AnnalistTestCase(TestCase):
         for k in expect_dict:
             self.assertTrue(k in actual_dict, prefix+"Expected key %s not found in actual"%(k))
             if isinstance(expect_dict[k],list):
+                # log.info("dict match: prefix: %s, key: %s, list_len %d"%(prefix, k, len(expect_dict[k])))
                 for i in range(len(expect_dict[k])):
                     # if i >= len(actual_dict[k]):
                     #     log.info("\n***********\nexpect_dict %r"%(expect_dict))
@@ -67,6 +68,7 @@ class AnnalistTestCase(TestCase):
                 #     log.info("\n***********\nexpect_dict %r"%(expect_dict))
                 #     log.info("\n-----------\nactual_dict %r"%(actual_dict))
                 #     log.info("\n***********")
+                # log.info("dict match: prefix: %s, key: %s, actual %s, expected: %s"%(prefix, k, actual_dict[k], expect_dict[k]))
                 self.assertEqual(actual_dict[k], expect_dict[k], 
                     prefix+"Key %s: actual '%s' expected '%s'"%(k, actual_dict[k], expect_dict[k]))
         # log.info("\n****** matched")
