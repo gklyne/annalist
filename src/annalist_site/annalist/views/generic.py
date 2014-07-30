@@ -91,77 +91,77 @@ class AnnalistGenericView(ContentNegotiationView):
             self._site_data = self.site(host=host).site_data()
         return self._site_data
 
-    def get_coll_data(self, coll_id, host=""):
-        """
-        Check collection and type identifiers, and set up objects for:
-            self.collection
+    # def get_coll_data(self, coll_id, host=""):
+    #     """
+    #     Check collection and type identifiers, and set up objects for:
+    #         self.collection
 
-        Returns None if all is well, or an HttpResponse object with details 
-        about any problem encountered.
-        """
-        # Check collection
-        if not Collection.exists(self.site(host=host), coll_id):
-            return self.error(
-                dict(self.error404values(), 
-                    message=message.COLLECTION_NOT_EXISTS%{'id': coll_id}
-                    )
-                )
-        self.collection = Collection.load(self.site(host=host), coll_id)
-        return None
+    #     Returns None if all is well, or an HttpResponse object with details 
+    #     about any problem encountered.
+    #     """
+    #     # Check collection
+    #     if not Collection.exists(self.site(host=host), coll_id):
+    #         return self.error(
+    #             dict(self.error404values(), 
+    #                 message=message.COLLECTION_NOT_EXISTS%{'id': coll_id}
+    #                 )
+    #             )
+    #     self.collection = Collection.load(self.site(host=host), coll_id)
+    #     return None
 
-    def get_type_data(self, type_id):
-        """
-        Check type identifiers, and set up objects for:
-            self.entitytypeinfo
+    # def get_type_data(self, type_id):
+    #     """
+    #     Check type identifiers, and set up objects for:
+    #         self.entitytypeinfo
 
-        Must be called after method 'get_coll_data' has returned.
+    #     Must be called after method 'get_coll_data' has returned.
 
-        Returns None if all is well, or an HttpResponse object with details 
-        about any problem encountered.
-        """
-        if type_id:
-            self.entitytypeinfo = EntityTypeInfo(self.site(), self.collection, type_id)
-            if not self.entitytypeinfo.entityparent:
-                log.warning("get_type_data: RecordType %s not found"%type_id)
-                return self.error(
-                    dict(self.error404values(),
-                        message=message.RECORD_TYPE_NOT_EXISTS%(
-                            {'id': type_id, 'coll_id': self.collection.get_id()})
-                        )
-                    )
-            # self.entitytype = RecordType.load(self.collection, type_id, self.site())
-        else:
-            self.entitytypeinfo = None
-            # self.entitytype     = None
-        return None
+    #     Returns None if all is well, or an HttpResponse object with details 
+    #     about any problem encountered.
+    #     """
+    #     if type_id:
+    #         self.entitytypeinfo = EntityTypeInfo(self.site(), self.collection, type_id)
+    #         if not self.entitytypeinfo.entityparent:
+    #             log.warning("get_type_data: RecordType %s not found"%type_id)
+    #             return self.error(
+    #                 dict(self.error404values(),
+    #                     message=message.RECORD_TYPE_NOT_EXISTS%(
+    #                         {'id': type_id, 'coll_id': self.collection.get_id()})
+    #                     )
+    #                 )
+    #         # self.entitytype = RecordType.load(self.collection, type_id, self.site())
+    #     else:
+    #         self.entitytypeinfo = None
+    #         # self.entitytype     = None
+    #     return None
 
-    def get_view_data(self, view_id):
-        if not RecordView.exists(self.collection, view_id, self.site()):
-            log.warning("get_view_data: RecordView %s not found"%view_id)
-            coll_id = self.collection.get_id()
-            return self.error(
-                dict(self.error404values(),
-                    message=message.RECORD_VIEW_NOT_EXISTS%(
-                        {'id': view_id, 'coll_id': self.collection.get_id()})
-                    )
-                )
-        self.recordview = RecordView.load(self.collection, view_id, self.site())
-        log.debug("recordview %r"%(self.recordview.get_values()))
-        return None
+    # def get_view_data(self, view_id):
+    #     if not RecordView.exists(self.collection, view_id, self.site()):
+    #         log.warning("get_view_data: RecordView %s not found"%view_id)
+    #         coll_id = self.collection.get_id()
+    #         return self.error(
+    #             dict(self.error404values(),
+    #                 message=message.RECORD_VIEW_NOT_EXISTS%(
+    #                     {'id': view_id, 'coll_id': self.collection.get_id()})
+    #                 )
+    #             )
+    #     self.recordview = RecordView.load(self.collection, view_id, self.site())
+    #     log.debug("recordview %r"%(self.recordview.get_values()))
+    #     return None
 
-    def get_list_data(self, list_id):
-        if not RecordList.exists(self.collection, list_id, self.site()):
-            log.info("get_list_data: RecordList %s not found"%list_id)
-            coll_id = self.collection.get_id()
-            return self.error(
-                dict(self.error404values(),
-                    message=message.RECORD_LIST_NOT_EXISTS%(
-                        {'id': list_id, 'coll_id': self.collection.get_id()})
-                    )
-                )
-        self.recordlist = RecordList.load(self.collection, list_id, self.site())
-        log.debug("recordlist %r"%(self.recordlist.get_values()))
-        return None
+    # def get_list_data(self, list_id):
+    #     if not RecordList.exists(self.collection, list_id, self.site()):
+    #         log.info("get_list_data: RecordList %s not found"%list_id)
+    #         coll_id = self.collection.get_id()
+    #         return self.error(
+    #             dict(self.error404values(),
+    #                 message=message.RECORD_LIST_NOT_EXISTS%(
+    #                     {'id': list_id, 'coll_id': self.collection.get_id()})
+    #                 )
+    #             )
+    #     self.recordlist = RecordList.load(self.collection, list_id, self.site())
+    #     log.debug("recordlist %r"%(self.recordlist.get_values()))
+    #     return None
 
     def error(self, values):
         """

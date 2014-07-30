@@ -24,6 +24,7 @@ from annalist.models.recordview import RecordView
 from annalist.models.recordlist import RecordList
 
 from annalist.views.uri_builder import uri_with_params
+from annalist.views.displayinfo import DisplayInfo
 from annalist.views.generic     import AnnalistGenericView
 from annalist.views.confirm     import ConfirmView
 
@@ -54,14 +55,24 @@ class CollectionEditView(AnnalistGenericView):
         super(CollectionEditView, self).__init__()
         return
 
+    def collection_view_setup(self, coll_id):
+        """
+        Assemble display information for collection view request handler
+        """
+        viewinfo = DisplayInfo(self)
+        viewinfo.get_site_info(self.get_request_host())
+        viewinfo.get_coll_info(coll_id)
+        viewinfo.check_authorization("view")
+        return viewinfo
+
     # GET
 
     def get(self, request, coll_id):
         """
         Form for editing (customizing) the current collection 
         """
-        def resultdata():
-            coll = self.collection
+        def resultdata(viewinfo):
+            coll = viewinfo.collection
             context = (
                 { 'title':              self.site_data()["title"]
                 , 'continuation_uri':   continuation_next['continuation_uri']
@@ -72,15 +83,15 @@ class CollectionEditView(AnnalistGenericView):
                 , 'select_rows':        "6"
                 })
             return context
-        http_response = self.get_coll_data(coll_id, self.get_request_host())
-        if http_response:
-            return http_response
+        viewinfo = self.collection_view_setup(coll_id)
+        if viewinfo.http_response:
+            return viewinfo.http_response
         continuation_next, continuation_here = self.continuation_uris(
             request.GET,
             self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
             )
         return (
-            self.render_html(resultdata(), 'annalist_collection_edit.html') or 
+            self.render_html(resultdata(viewinfo), 'annalist_collection_edit.html') or 
             self.error(self.error406values())
             )
 

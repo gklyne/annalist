@@ -149,7 +149,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / already works for list view; e.g. http://localhost:8000/annalist/c/coll1/d/_type/
      / but not yet for entity view; e.g. http://localhost:8000/annalist/c/coll1/d/_type/type1/
      / return list_info structure rather than saving values in object. 
-     - consider replicating list_seup logic for view_setup.
+     / consider replicating list_seup logic for view_setup.
      - find and eliminate other references to get_coll_data, etc.
    - fix entity links to use default view URI (/d/...)
    - add_field button on entity edit displays
