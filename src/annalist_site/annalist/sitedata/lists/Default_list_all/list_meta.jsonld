@@ -6,7 +6,7 @@
 , "annal:display_type":         "annal:display_type/List"
 , "annal:default_view":         "Default_view"
 , "annal:default_type":         "Default_type"
-, "annal:list_entity_selector": ""
+, "annal:list_entity_selector": "ALL"
 , "annal:list_fields":
   [ { "annal:field_id":             "Entity_type"
     , "annal:field_placement":      "small:0,2"

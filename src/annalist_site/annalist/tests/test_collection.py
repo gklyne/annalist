@@ -48,7 +48,7 @@ from entity_testviewdata            import (
     recordview_create_values, recordview_read_values,
     )
 from entity_testlistdata            import (
-    recordlist_create_values, recordlist_values,
+    recordlist_create_values, recordlist_read_values,
     )
 from entity_testentitydata          import (
     entitydata_list_all_uri,
@@ -88,9 +88,9 @@ class CollectionTest(AnnalistTestCase):
         self.view2_add    = recordview_create_values("testcoll", "view2")
         self.view2        = recordview_read_values("testcoll", "view2")
         self.list1_add    = recordlist_create_values("testcoll", "list1")
-        self.list1        = recordlist_values("testcoll", "list1")
+        self.list1        = recordlist_read_values("testcoll", "list1")
         self.list2_add    = recordlist_create_values("testcoll", "list2")
-        self.list2        = recordlist_values("testcoll", "list2")
+        self.list2        = recordlist_read_values("testcoll", "list2")
         return
 
     def tearDown(self):

@@ -44,22 +44,29 @@ class RecordTypeDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         """
         log.debug("RecordTypeDeleteConfirmedView.post: %r"%(request.POST))
         if "type_delete" in request.POST:
-            http_response = (
-                self.get_coll_data(coll_id, self.get_request_host()) or
-                self.form_action_auth("delete", self.collection.get_uri())
+            entity_id = request.POST['typelist']
+            continuation_uri = (
+                request.POST.get('continuation_uri', None) or
+                self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
                 )
-            if http_response:
-                return http_response
-            type_id   = request.POST['typelist']
-            message_vals = {'id': type_id, 'coll_id': coll_id}
-            messages  = (
-                { 'entity_removed': message.RECORD_TYPE_REMOVED%message_vals
-                })
-            continuation_uri = self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
-            return self.confirm_form_respose(
-                request, type_id, 
-                self.collection.remove_type, messages, continuation_uri
-                )
+            return self.complete_remove_entity(coll_id, "_type", entity_id, continuation_uri)
+
+            # http_response = (
+            #     self.get_coll_data(coll_id, self.get_request_host()) or
+            #     self.form_action_auth("delete", self.collection.get_uri())
+            #     )
+            # if http_response:
+            #     return http_response
+            # type_id   = request.POST['typelist']
+            # message_vals = {'id': type_id, 'coll_id': coll_id}
+            # messages  = (
+            #     { 'entity_removed': message.RECORD_TYPE_REMOVED%message_vals
+            #     })
+            # continuation_uri = self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
+            # return self.confirm_form_respose(
+            #     request, type_id, 
+            #     self.collection.remove_type, messages, continuation_uri
+            #     )
         return self.error(self.error400values())
 
 # End.

@@ -135,8 +135,8 @@ class RecordListTest(AnnalistTestCase):
         self.assertEqual(set(td.keys()), set(recordlist_load_keys()))
         v = recordlist_read_values(list_id="Default_list")
         v.update(
-            { 'rdfs:label':     'Default list view'
-            , 'rdfs:comment':   'This resource describes the default record listing display'
+            { 'rdfs:label':     'List one type'
+            , 'rdfs:comment':   'Default list of entities of given type'
             , 'annal:uri':      "annal:display/Default_list"
             })
         self.assertDictionaryMatch(td, v)
@@ -202,7 +202,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_type="annal:display_type/List",
             list_default_type="Default_type",
             list_default_view="Default_view",
-            list_selector=""
+            list_selector="ALL"
             ):
         r = response
         #log.info("r.context['fields']: %r"%(r.context['fields'],))

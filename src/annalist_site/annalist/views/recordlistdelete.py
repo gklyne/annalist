@@ -40,26 +40,34 @@ class RecordListDeleteConfirmedView(EntityDeleteConfirmedBaseView):
 
     def post(self, request, coll_id):
         """
-        Process options to complete action to remove a record view from a collection
+        Complete removal of a record view from a collection
         """
-        log.info("RecordListDeleteConfirmedView.post: %r"%(request.POST))
+        log.debug("RecordListDeleteConfirmedView.post: %r"%(request.POST))
         if "list_delete" in request.POST:
-            http_response = (
-                self.get_coll_data(coll_id, self.get_request_host()) or
-                self.form_action_auth("delete", self.collection.get_uri())
+            entity_id = request.POST['listlist']
+            continuation_uri = (
+                request.POST.get('continuation_uri', None) or
+                self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
                 )
-            if http_response:
-                return http_response
-            list_id   = request.POST['listlist']
-            message_vals = {'id': list_id, 'coll_id': coll_id}
-            messages  = (
-                { 'entity_removed': message.RECORD_LIST_REMOVED%message_vals
-                })
-            continuation_uri = self.list_uri("AnnalistCollectionEditView", coll_id=coll_id)
-            return self.confirm_form_respose(
-                request, list_id, 
-                self.collection.remove_list, messages, continuation_uri
-                )
+            return self.complete_remove_entity(coll_id, "_list", entity_id, continuation_uri)
+
+
+            # http_response = (
+            #     self.get_coll_data(coll_id, self.get_request_host()) or
+            #     self.form_action_auth("delete", self.collection.get_uri())
+            #     )
+            # if http_response:
+            #     return http_response
+            # list_id   = request.POST['listlist']
+            # message_vals = {'id': list_id, 'coll_id': coll_id}
+            # messages  = (
+            #     { 'entity_removed': message.RECORD_LIST_REMOVED%message_vals
+            #     })
+            # continuation_uri = self.list_uri("AnnalistCollectionEditView", coll_id=coll_id)
+            # return self.confirm_form_respose(
+            #     request, list_id, 
+            #     self.collection.remove_list, messages, continuation_uri
+            #     )
         return self.error(self.error400values())
 
 # End.
