@@ -30,7 +30,7 @@ from annalist.views.displayinfo     import DisplayInfo
 from annalist.views.simplevaluemap  import SimpleValueMap, StableValueMap
 from annalist.views.grouprepeatmap  import GroupRepeatMap
 from annalist.views.confirm         import ConfirmView, dict_querydict
-from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
+from annalist.views.entityeditbase  import EntityEditBaseView
 
 
 #   -------------------------------------------------------------------------------------------

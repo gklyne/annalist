@@ -26,7 +26,7 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
 from annalist.views.displayinfo     import DisplayInfo
-from annalist.views.entityeditbase  import EntityEditBaseView, EntityDeleteConfirmedBaseView
+from annalist.views.entityeditbase  import EntityEditBaseView
 from annalist.views.simplevaluemap  import SimpleValueMap, StableValueMap
 # from annalist.views.fieldlistvaluemap   import FieldListValueMap
 # from annalist.views.grouprepeatmap      import GroupRepeatMap

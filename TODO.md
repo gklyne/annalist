@@ -150,8 +150,8 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / but not yet for entity view; e.g. http://localhost:8000/annalist/c/coll1/d/_type/type1/
      / return list_info structure rather than saving values in object. 
      / consider replicating list_seup logic for view_setup.
-     - find and eliminate other references to get_coll_data, etc.
-     - don't return placeholder text as value
+     / find and eliminate other references to get_coll_data, etc.
+     - don't return placeholder text in a form as field value; default values in field definition?
    - fix entity links to use default view URI (/d/...)
    - add_field button on entity edit displays
    - implement "add repeating field" option to view edit (and entity view?)

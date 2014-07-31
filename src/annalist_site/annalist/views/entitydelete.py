@@ -9,20 +9,12 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                    import settings
-from django.http                    import HttpResponse
-from django.http                    import HttpResponseRedirect
-from django.core.urlresolvers       import resolve, reverse
+from django.conf                        import settings
+from django.http                        import HttpResponse
+from django.http                        import HttpResponseRedirect
+from django.core.urlresolvers           import resolve, reverse
 
-from annalist                       import message
-from annalist.exceptions            import Annalist_Error
-
-# from annalist.models.collection     import Collection
-# from annalist.models.recordtype     import RecordType
-# from annalist.models.recordtypedata import RecordTypeData
-
-from annalist.views.confirm         import ConfirmView, dict_querydict
-from annalist.views.entityeditbase  import EntityDeleteConfirmedBaseView
+from annalist.views.entitydeletebase    import EntityDeleteConfirmedBaseView
 
 #   -------------------------------------------------------------------------------------------
 #

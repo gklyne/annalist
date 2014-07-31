@@ -23,26 +23,12 @@ from annalist.exceptions                import Annalist_Error
 from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist                           import util
 
-from annalist.models.site               import Site
-from annalist.models.sitedata           import SiteData
-from annalist.models.collection         import Collection
-from annalist.models.recordview         import RecordView
-from annalist.models.recordlist         import RecordList
-from annalist.models.recordfield        import RecordField
-from annalist.models.recordtype         import RecordType
-from annalist.models.recordtypedata     import RecordTypeData
-
 from annalist.views.uri_builder         import uri_with_params
-from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.repeatdescription   import RepeatDescription
 from annalist.views.generic             import AnnalistGenericView
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
 from annalist.views.grouprepeatmap      import GroupRepeatMap
-
-from annalist.fields.render_utils       import bound_field, get_placement_classes
-from annalist.fields.render_utils       import get_edit_renderer, get_view_renderer
-from annalist.fields.render_utils       import get_head_renderer, get_item_renderer
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -159,54 +145,5 @@ class EntityEditBaseView(AnnalistGenericView):
         for kmap in self._entityvaluemap:
             values.update(kmap.map_form_to_entity(form_data))
         return values
-
-
-#   -------------------------------------------------------------------------------------------
-#
-#   Generic delete entity confirmation response handling class
-#
-#   -------------------------------------------------------------------------------------------
-
-# @@TODO: move this class to a separate module
-
-class EntityDeleteConfirmedBaseView(AnnalistGenericView):
-    """
-    View class to perform completion of confirmed entity deletion, requested
-    from collection edit view.
-    """
-    def __init__(self):
-        super(EntityDeleteConfirmedBaseView, self).__init__()
-        return
-
-    def complete_remove_entity(self, coll_id, type_id, entity_id, continuation_uri):
-        """
-        Complete action to remove an entity.
-        """
-        viewinfo = DisplayInfo(self)
-        viewinfo.get_site_info(self.get_request_host())
-        viewinfo.get_coll_info(coll_id)
-        viewinfo.get_type_info(type_id)
-        viewinfo.check_authorization("delete")
-        if viewinfo.http_response:
-            return viewinfo.http_response
-        typeinfo     = viewinfo.entitytypeinfo
-        message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
-        messages     = (
-            { 'entity_removed': typeinfo.entitymessages['entity_removed']%message_vals
-            })
-        err = typeinfo.entityclass.remove(typeinfo.entityparent, entity_id)
-        if err:
-            return self.redirect_error(continuation_uri, str(err))
-        return self.redirect_info(continuation_uri, messages['entity_removed'])
-
-    # def confirm_form_respose(self, request, entity_id, remove_fn, messages, continuation_uri):
-    #     """
-    #     Process options to complete action to remove an entity
-    #     """
-    #     # @@TODO consider eliding this class 
-    #     err     = remove_fn(entity_id)
-    #     if err:
-    #         return self.redirect_error(continuation_uri, str(err))
-    #     return self.redirect_info(continuation_uri, messages['entity_removed'])
 
 # End.
