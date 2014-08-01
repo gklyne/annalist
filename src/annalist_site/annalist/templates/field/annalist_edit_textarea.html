@@ -5,7 +5,10 @@
             <p>{{field.field_label}}</p>
         </div>
         <div class="{{field.field_placement.value}}">
-                    <textarea cols="64" rows="6" name="{{repeat.repeat_prefix}}{{field.field_name}}" class="small-rows-4 medium-rows-8">{{field.field_value}}</textarea>
+                    <textarea cols="64" rows="6" name="{{repeat.repeat_prefix}}{{field.field_name}}" 
+                              class="small-rows-4 medium-rows-8"
+                              placeholder="{{field.field_placeholder}}"
+                              >{{field.field_value}}</textarea>
         </div>
     </div>
 </div>

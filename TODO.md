@@ -145,13 +145,14 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        Option (a) is simplest for now.
    / default_view response handler (needs generic view to make sense)
    / implement view- and list- edit from collection customization page
-   - implement per-type default list and view
+   / implement per-type default list and view
      / already works for list view; e.g. http://localhost:8000/annalist/c/coll1/d/_type/
      / but not yet for entity view; e.g. http://localhost:8000/annalist/c/coll1/d/_type/type1/
      / return list_info structure rather than saving values in object. 
-     / consider replicating list_seup logic for view_setup.
-     / find and eliminate other references to get_coll_data, etc.
-     - don't return placeholder text in a form as field value; default values in field definition?
+   / consider replicating list_seup logic for view_setup.
+   / find and eliminate other references to get_coll_data, etc.
+   / don't return placeholder text in a form as field value; use HTML5 placeholder attribute
+   - refactor fields package as subpackage of views
    - fix entity links to use default view URI (/d/...)
    - add_field button on entity edit displays
    - implement "add repeating field" option to view edit (and entity view?)

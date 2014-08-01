@@ -167,6 +167,7 @@ def recordfield_entity_view_context_data(
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Slug'
+            , 'field_placeholder':  '(field id)'
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
@@ -177,7 +178,8 @@ def recordfield_entity_view_context_data(
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
             , 'field_value_type':   'annal:RenderType'
-            , 'field_value':        '(field value type)'
+            , 'field_placeholder':  '(field value type)'
+            , 'field_value':        ''
             , 'options':            []
             }
           , { 'field_label':        'Label'
@@ -187,6 +189,7 @@ def recordfield_entity_view_context_data(
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Text'
+            , 'field_placeholder':  '(field label)'
             , 'field_value':        '%s data ... (testcoll/_field)'%(update)
             , 'options':            []
             }
@@ -197,6 +200,7 @@ def recordfield_entity_view_context_data(
             , 'field_render_edit':  'field/annalist_edit_textarea.html'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Longtext'
+            , 'field_placeholder':  '(field usage commentary or help text)'
             , 'field_value':        '%s description ... (testcoll/_field)'%(update)
             , 'options':            []
             }
@@ -207,7 +211,8 @@ def recordfield_entity_view_context_data(
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Text'
-            , 'field_value':        '(placeholder text)'
+            , 'field_placeholder':  '(placeholder text)'
+            , 'field_value':        ''
             , 'options':            []
             }
           , { 'field_label':        'Property'
@@ -217,7 +222,8 @@ def recordfield_entity_view_context_data(
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Identifier'
-            , 'field_value':        "(property URI or CURIE)"
+            , 'field_placeholder':  "(property URI or CURIE)"
+            , 'field_value':        ''
             , 'options':            []
             }
           , { 'field_label':        'Size/position'
@@ -227,7 +233,8 @@ def recordfield_entity_view_context_data(
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Placement'
-            , 'field_value':        '(field display size and placement details)'
+            , 'field_placeholder':  '(field display size and placement details)'
+            , 'field_value':        ''
             , 'options':            []
             }
           ]

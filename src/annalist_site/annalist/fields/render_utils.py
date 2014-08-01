@@ -54,7 +54,9 @@ class bound_field(object):
     >>> field_def = bound_field(field_def_desc, entity)
     >>> field_def.field_type
     'def_type'
-    >>> field_def.field_value == "..."
+    >>> field_def.field_placeholder == "..."
+    True
+    >>> field_def.field_value == ""
     True
     >>> field_def = bound_field(field_def_desc, entity, extras={"def": "default"})
     >>> field_def.field_type
@@ -69,9 +71,7 @@ class bound_field(object):
 
     __slots__ = ("_field_description", "_entity", "_key", "_options", "_extras")
 
-    def __init__(self, 
-            field_description=None, 
-            entity=None, key=None, options=None, extras=None):
+    def __init__(self, field_description, entity, key=None, options=None, extras=None):
         """
         Initialize a bound_field object.
 
@@ -86,8 +86,10 @@ class bound_field(object):
                             field of the field description is used: this assumes the
                             supplied entity is an actual entity rather than a field 
                             value dictionary.
-        default             is a default value to be used if the entity does 
-                            not define the required value.
+        options             for enumeration/select type fields, a list of allowable values
+        extras              if supplied, a supplementary value dictionary that may be probed
+                            for values that are not provided by the entity itself.  
+                            Can be used to specify default values for an entity.
         """
         self._field_description = field_description
         self._entity            = entity
@@ -130,6 +132,8 @@ class bound_field(object):
                 return ""
         elif name == "field_value_key":
             return self._key
+        elif name == "field_placeholder":
+            return self._field_description.get('field_placeholder', "...")
         elif name == "field_value":
             # Note: .keys() is required here as iterator on EntityData returns files in directory
             # @@TODO: should be able to drop .keys() now
@@ -140,13 +144,9 @@ class bound_field(object):
             elif self._key == "entity_type_id":
                 return self.entity_type_id
             else:
-                # Return default value or placeholder value
-                # When all types have defined value, drop the placeholder
-                # log.debug("No value for %s"%(self._key))
-                return (
-                    self._field_description.get('field_default_value', None) or
-                    self._field_description.get('field_placeholder', "...")
-                    )
+                # Return default value, or empty string.
+                # Used to populate form field value when no value supplied
+                return self._field_description.get('field_default_value', None) or ""
         elif name == "options":
             # log.info(repr(self._options))
             return self._options

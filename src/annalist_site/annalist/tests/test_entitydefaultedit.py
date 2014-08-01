@@ -128,7 +128,8 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   </div>
                   <div class="small-12 medium-6 columns">
                     <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
-                    <input type="text" size="64" name="entity_id" value="00000001">
+                    <input type="text" size="64" name="entity_id" 
+                           placeholder="(entity id)" value="00000001">
                   </div>
                 </div>
               </div>
@@ -166,7 +167,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   </div>
                   <div class="small-12 medium-9 columns">
                     <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
-                    <input type="text" size="64" name="Entity_label" value="Entity '00000001' of type 'testtype' in collection 'testcoll'">
+                    <input type="text" size="64" name="Entity_label" 
+                           placeholder="(label)" 
+                           value="Entity '00000001' of type 'testtype' in collection 'testcoll'">
                   </div>
                 </div>
               </div>
@@ -181,7 +184,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                     </p>
                   </div>
                   <div class="small-12 medium-9 columns">
-                    <textarea cols="64" rows="6" name="Entity_comment" class="small-rows-4 medium-rows-8"></textarea>
+                    <textarea cols="64" rows="6" name="Entity_comment" 
+                              class="small-rows-4 medium-rows-8"
+                              placeholder="(description)"></textarea>
                   </div>
                 </div>
               </div>

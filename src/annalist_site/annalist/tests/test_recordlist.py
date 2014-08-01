@@ -294,7 +294,9 @@ class RecordListEditViewTest(AnnalistTestCase):
                         <p>Id</p>
                     </div>
                     <div class="small-12 medium-6 columns">
-                        <input type="text" size="64" name="entity_id" value="00000001"/>
+                        <input type="text" size="64" name="entity_id" 
+                               placeholder="(list id)" 
+                               value="00000001"/>
                     </div>
                 </div>
             </div>
@@ -307,6 +309,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                     </div>
                     <div class="small-12 medium-9 columns">
                         <input type="text" size="64" name="List_label" 
+                               placeholder="(list label)" 
                                value="Entity &#39;00000001&#39; of type &#39;_list&#39; in collection &#39;testcoll&#39;"/>
                     </div>
                 </div>
@@ -319,7 +322,10 @@ class RecordListEditViewTest(AnnalistTestCase):
                         <p>Help</p>
                     </div>
                     <div class="small-12 medium-9 columns">
-                                <textarea cols="64" rows="6" name="List_comment" class="small-rows-4 medium-rows-8"></textarea>
+                        <textarea cols="64" rows="6" name="List_comment" 
+                                  class="small-rows-4 medium-rows-8"
+                                  placeholder="(description of list view)">
+                        </textarea>
                     </div>
                 </div>
             </div>
@@ -353,10 +359,10 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_label="Entity '00000001' of type '_list' in collection 'testcoll'",
             list_help="",
             list_uri=TestHostUri + recordlist_uri("testcoll", "00000001"),
-            list_type="(list type)", # @@TODO: don't use placeholders as results
-            list_default_type="(default record type)",
-            list_default_view="(view id)",
-            list_selector="(entity selector)"
+            list_type="",
+            list_default_type="",
+            list_default_view="",
+            list_selector=""
             )
         return
 

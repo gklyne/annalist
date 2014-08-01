@@ -371,7 +371,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                         <p>Id</p>
                     </div>
                     <div class="small-12 medium-6 columns">
-                        <input type="text" size="64" name="entity_id" value="00000001"/>
+                        <input type="text" size="64" name="entity_id" 
+                               placeholder="(field id)" value="00000001"/>
                     </div>
                 </div>
             </div>
@@ -383,7 +384,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                         <p>Field value type</p>
                     </div>
                     <div class="small-12 medium-6 columns">
-                        <input type="text" size="64" name="Field_type" value="(field value type)"/>
+                        <input type="text" size="64" name="Field_type" 
+                               placeholder="(field value type)" value=""/>
                     </div>
                 </div>
             </div>
@@ -395,7 +397,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                         <p>Label</p>
                     </div>
                     <div class="small-12 medium-9 columns">
-                        <input type="text" size="64" name="Field_label" value="Entity &#39;00000001&#39; of type &#39;_field&#39; in collection &#39;testcoll&#39;"/>
+                        <input type="text" size="64" name="Field_label" 
+                        placeholder="(field label)"
+                        value="Entity &#39;00000001&#39; of type &#39;_field&#39; in collection &#39;testcoll&#39;"/>
                     </div>
                 </div>
             </div>
@@ -407,7 +411,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                         <p>Help</p>
                     </div>
                     <div class="small-12 medium-9 columns">
-                                <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"></textarea>
+                        <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"
+                                  placeholder="(field usage commentary or help text)"></textarea>
                     </div>
                 </div>
             </div>
@@ -419,7 +424,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                         <p>Placeholder</p>
                     </div>
                     <div class="small-12 medium-9 columns">
-                        <input type="text" size="64" name="Field_placeholder" value="(placeholder text)"/>
+                        <input type="text" size="64" name="Field_placeholder"
+                               placeholder="(placeholder text)" value=""/>
                     </div>
                 </div>
             </div>
@@ -431,7 +437,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                         <p>Property</p>
                     </div>
                     <div class="small-12 medium-9 columns">
-                        <input type="text" size="64" name="Field_property" value="(property URI or CURIE)"/>
+                        <input type="text" size="64" name="Field_property" 
+                        placeholder="(property URI or CURIE)" value=""/>
                     </div>
                 </div>
             </div>
@@ -443,8 +450,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                         <p>Size/position</p>
                     </div>
                     <div class="small-12 medium-9 columns">
-                        <input type="text" size="64" name="Field_placement" 
-                               value="(field display size and placement details)"/>
+                        <input type="text" size="64" name="Field_placement"
+                               placeholder="(field display size and placement details)"
+                               value=""/>
                     </div>
                 </div>
             </div>
@@ -476,12 +484,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Fields
         self._check_context_fields(r, 
             field_id="00000001",
-            field_type="(field value type)",
+            field_type="",
             field_label="Entity '00000001' of type '_field' in collection 'testcoll'",
             field_comment="",
-            field_placeholder="(placeholder text)",
-            field_property="(property URI or CURIE)",
-            field_placement="(field display size and placement details)"
+            field_placeholder="",
+            field_property="",
+            field_placement=""
             )
         return
 
@@ -528,7 +536,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_comment="Short string used to describe record type when displayed",
             field_placeholder="(label)",
             field_property="rdfs:label",
-            field_placement="(field display size and placement details)"
+            field_placement=""
             )
         return
 

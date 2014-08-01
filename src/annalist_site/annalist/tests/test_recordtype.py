@@ -325,7 +325,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                         <p>Id</p>
                     </div>
                     <div class="small-12 medium-6 columns">
-                        <input type="text" size="64" name="entity_id" value="00000001"/>
+                        <input type="text" size="64" name="entity_id" 
+                               placeholder="(type id)" value="00000001"/>
                     </div>
                 </div>
             </div>
@@ -337,7 +338,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                         <p>Label</p>
                     </div>
                     <div class="small-12 medium-9 columns">
-                        <input type="text" size="64" name="Type_label" value="Entity &#39;00000001&#39; of type &#39;_type&#39; in collection &#39;testcoll&#39;"/>
+                        <input type="text" size="64" name="Type_label" 
+                               placeholder="(label)" 
+                               value="Entity &#39;00000001&#39; of type &#39;_type&#39; in collection &#39;testcoll&#39;"/>
                     </div>
                 </div>
             </div>
@@ -349,7 +352,11 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                         <p>Comment</p>
                     </div>
                     <div class="small-12 medium-9 columns">
-                                <textarea cols="64" rows="6" name="Type_comment" class="small-rows-4 medium-rows-8"></textarea>
+                        <textarea cols="64" rows="6" name="Type_comment" 
+                                  class="small-rows-4 medium-rows-8"
+                                  placeholder="(type description)"
+                                  >
+                        </textarea>
                     </div>
                 </div>
             </div>
@@ -361,7 +368,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                         <p>URI</p>
                     </div>
                     <div class="small-12 medium-9 columns">
-                        <input type="text" size="64" name="Type_uri" value="http://test.example.com/testsite/c/testcoll/d/_type/00000001/"/>
+                        <input type="text" size="64" name="Type_uri" 
+                               placeholder="(URI)"
+                               value="http://test.example.com/testsite/c/testcoll/d/_type/00000001/"/>
                     </div>
                 </div>
             </div>
