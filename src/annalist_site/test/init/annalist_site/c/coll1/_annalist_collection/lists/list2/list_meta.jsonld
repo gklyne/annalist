@@ -1,9 +1,10 @@
 {
   "rdfs:label": "RecordList coll1/list2",
-  "rdfs:comment": "RecordList help for list2 in collection coll1",
+  "rdfs:comment": "RecordList help for coll1/list2",
   "annal:default_view": "Default_view",
   "annal:default_type": "Default_type",
-  "annal:display_type": "annal:List",
+  "annal:list_entity_selector": "ALL",
+  "annal:display_type": "annal:display_type/List",
   "annal:list_fields": [
     {
       "annal:field_placement": "small:0,3",
@@ -15,7 +16,6 @@
     }
   ],
   "annal:uri": "http://test.example.com/testsite/c/coll1/d/_list/list2/",
-  "annal:selector": "",
   "annal:id": "list2",
   "@id": "./",
   "annal:type": "annal:List"
