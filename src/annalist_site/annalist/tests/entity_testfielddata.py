@@ -12,17 +12,20 @@ import urlparse
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                    import settings
-from django.http                    import QueryDict
-from django.utils.http              import urlquote, urlunquote
-from django.core.urlresolvers       import resolve, reverse
+from django.conf                import settings
+from django.http                import QueryDict
+from django.utils.http          import urlquote, urlunquote
+from django.core.urlresolvers   import resolve, reverse
 
-from annalist.util                  import valid_id
-from annalist.identifiers           import RDF, RDFS, ANNAL
-from annalist                       import layout
-from annalist.fields.render_utils   import get_placement_classes
+from annalist.util              import valid_id
+from annalist.identifiers       import RDF, RDFS, ANNAL
+from annalist                   import layout
 
-from tests                          import (
+from annalist.views.fields.render_utils import (
+    get_placement_classes
+    )
+
+from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
 from entity_testutils               import (

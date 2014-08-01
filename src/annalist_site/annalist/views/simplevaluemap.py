@@ -15,9 +15,9 @@ log = logging.getLogger(__name__)
 
 import collections
 
-from django.conf                    import settings
+from django.conf                        import settings
 
-from annalist.fields.render_utils   import bound_field
+from annalist.views.fields.render_utils import bound_field
 
 # Named tuple is base class for SimpleValueMap:
 

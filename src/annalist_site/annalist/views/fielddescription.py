@@ -9,11 +9,11 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-from annalist.models.recordfield    import RecordField
+from annalist.models.recordfield        import RecordField
 
-from annalist.fields.render_utils   import get_placement_classes
-from annalist.fields.render_utils   import get_edit_renderer, get_view_renderer
-from annalist.fields.render_utils   import get_head_renderer, get_item_renderer
+from annalist.views.fields.render_utils import get_placement_classes
+from annalist.views.fields.render_utils import get_edit_renderer, get_view_renderer
+from annalist.views.fields.render_utils import get_head_renderer, get_item_renderer
 
 class FieldDescription(object):
     """

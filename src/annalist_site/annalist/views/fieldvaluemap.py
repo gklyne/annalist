@@ -24,9 +24,9 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                    import settings
+from django.conf                        import settings
 
-from annalist.fields.render_utils   import bound_field
+from annalist.views.fields.render_utils import bound_field
 
 class FieldValueMap(object):
     """

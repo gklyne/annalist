@@ -152,7 +152,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / consider replicating list_seup logic for view_setup.
    / find and eliminate other references to get_coll_data, etc.
    / don't return placeholder text in a form as field value; use HTML5 placeholder attribute
-   - refactor fields package as subpackage of views
+   / refactor fields package as subpackage of views
    - fix entity links to use default view URI (/d/...)
    - add_field button on entity edit displays
    - implement "add repeating field" option to view edit (and entity view?)

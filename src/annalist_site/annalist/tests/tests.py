@@ -18,8 +18,9 @@ from django.test import TestCase
 from django.conf import settings
 
 import annalist.util
-import annalist.fields.render_utils
-from annalist.layout        import Layout
+import annalist.views.fields.render_utils
+
+from annalist.layout import Layout
 
 test_layout     = Layout(settings.BASE_DATA_DIR)
 TestBaseDir     = test_layout.SITE_PATH
@@ -68,7 +69,7 @@ def load_tests(loader, tests, ignore):
     #init_annalist_test_site()
     # See http://stackoverflow.com/questions/2380527/django-doctests-in-views-py
     tests.addTests(doctest.DocTestSuite(annalist.util))
-    tests.addTests(doctest.DocTestSuite(annalist.fields.render_utils))
+    tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_utils))
     tests.addTests(doctest.DocTestSuite(annalist.models.entityfinder))
     return tests
 
