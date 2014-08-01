@@ -153,7 +153,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / find and eliminate other references to get_coll_data, etc.
    / don't return placeholder text in a form as field value; use HTML5 placeholder attribute
    / refactor fields package as subpackage of views
-   - fix entity links to use default view URI (/d/...)
+   / fix entity links to use default view URI (/d/...)
    - List type + "View" selection uses // for type field - select based on list or suppress
    - add_field button on entity edit displays
    - implement "add repeating field" option to view edit (and entity view?)
