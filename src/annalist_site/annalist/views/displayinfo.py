@@ -189,19 +189,19 @@ class DisplayInfo(object):
 
     # Additonal support functions for list views
 
-    def get_type_list_id(self):
+    def get_type_list_id(self, type_id):
         """
         Return default list_id for listing defined type, or None
         """
         list_id = None
-        if self.type_id:
+        if type_id:
             if self.entitytypeinfo.recordtype:
-                list_id  = self.entitytypeinfo.recordtype.get("annal:type_list", None)
+                list_id = self.entitytypeinfo.recordtype.get("annal:type_list", None)
             else:
-                log.warning("DisplayInfo.get_type_list_id no type data for %s"%(self.type_id))
+                log.warning("DisplayInfo.get_type_list_id no type data for %s"%(type_id))
         return list_id
 
-    def get_list_id(self, list_id):
+    def get_list_id(self, type_id, list_id):
         """
         Return supplied list_id if defined, otherwise find default list_id for
         entity type or collection (unless an error has been detected).
@@ -209,12 +209,12 @@ class DisplayInfo(object):
         if not self.http_response:
             list_id = (
                 list_id or 
-                self.get_type_list_id() or
+                self.get_type_list_id(type_id) or
                 self.collection.get_default_list() or
-                ("Default_list" if self.type_id else "Default_list_all")
+                ("Default_list" if type_id else "Default_list_all")
                 )
             if not list_id:
-                log.warning("get_list_id: %s, type_id %s"%(list_id, self.type_id))
+                log.warning("get_list_id: %s, type_id %s"%(list_id, type_id))
         return list_id
 
     def get_list_view_id(self):
@@ -297,7 +297,7 @@ class DisplayInfo(object):
         if not self.http_response:
             view_id = (
                 view_id or 
-                self.get_type_view_id() or
+                self.get_type_view_id(type_id) or
                 # self.collection.get_default_view() or
                 "Default_view"
                 )

@@ -82,7 +82,7 @@ class EntityGenericListView(EntityEditBaseView):
         listinfo.get_site_info(self.get_request_host())
         listinfo.get_coll_info(coll_id)
         listinfo.get_type_info(type_id)
-        listinfo.get_list_info(listinfo.get_list_id(list_id))
+        listinfo.get_list_info(listinfo.get_list_id(listinfo.type_id, list_id))
         listinfo.check_authorization("list")
         return listinfo
 
