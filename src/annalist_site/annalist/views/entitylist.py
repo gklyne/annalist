@@ -273,14 +273,15 @@ class EntityGenericListView(EntityEditBaseView):
                 params = continuation_next
                 if search:
                     params = dict(params, search=search)
+                list_uri_params = (
+                    { 'coll_id': coll_id
+                    , 'list_id': request.POST['list_id']
+                    })
+                if type_id:
+                    list_uri_params.update({'type_id': type_id})
                 redirect_uri = (
                     uri_with_params(
-                        self.view_uri(
-                            "AnnalistEntityGenericList", 
-                            coll_id=coll_id, 
-                            list_id=request.POST['list_id'], 
-                            type_id=type_id or ""
-                            ),
+                        self.view_uri("AnnalistEntityGenericList", **list_uri_params),
                         params
                         )
                     )

@@ -19,6 +19,8 @@ from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.core.urlresolvers       import resolve, reverse
 
+from annalist                       import message
+
 from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType

@@ -154,7 +154,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / don't return placeholder text in a form as field value; use HTML5 placeholder attribute
    / refactor fields package as subpackage of views
    / fix entity links to use default view URI (/d/...)
-   - List type + "View" selection uses // for type field - select based on list or suppress
+   / List type + "View" selection uses // for type field - select based on list or suppress
    - add_field button on entity edit displays
    - implement "add repeating field" option to view edit (and entity view?)
    - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
