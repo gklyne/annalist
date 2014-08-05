@@ -5,7 +5,7 @@ A RepeatValuesMap is used to render repeated groups of fields for each one of a 
 sets of values.
 
 When the mapping function `map_entity_to_context` is called, the supplied `entityvals` 
-is expected to be an iterator (list, tuple, etc.) of entities or dictionry values to be 
+is expected to be an iterator (list, tuple, etc.) of entities or dictionary values to be 
 processed for display.
 """
 
@@ -45,6 +45,11 @@ class RepeatValuesMap(object):
         """
         Return a context dictionary for mapping entity list values to repeated
         field descriptions in a displayed form.
+
+        Note: this sets up data which is rendered by 'templates/annalist_entity_edit.html',
+        which picks up on the presence of 'field.field_id' or 'field.repeat_id' in
+        the view context, and which in turn is handled by the POST response handler
+        in 'views/entityedit.py'.
         """
         repeatextras = extras.copy().update(self.r)
         # log.info("RepeatValuesMap.map_entity_to_context, self.e: %s, entityval %r, entityval[self.e]: %r"%(self.e, entityval, entityval.get(self.e, None)))
@@ -80,12 +85,12 @@ class RepeatValuesMap(object):
             #   }
             repeat_index  = 0
             for repeatedval in entityval[self.e]:
-                if "annal:repeat_id" not in repeatedval:    # special case test
+                if "annal:repeat_id" in repeatedval:    # special case test
+                    fieldscontext = self.map_repeat_field_data_to_context(repeatedval)
+                else:
                     # log.info("RepeatValuesMap.map_entity_to_context: repeatedval %r"%repeatedval)
                     fieldscontext = self.f.map_entity_to_context(repeatedval, extras=repeatextras)
                     # log.info("RepeatValuesMap.map_entity_to_context: fieldscontext %r"%fieldscontext)
-                else:
-                    fieldscontext = self.map_repeat_field_data_to_context(repeatedval)
                 fieldscontext['repeat_id']     = self.r['repeat_id']
                 fieldscontext['repeat_index']  = repeat_index
                 fieldscontext['repeat_prefix'] = self.r['repeat_id']+("__%d__"%repeat_index)

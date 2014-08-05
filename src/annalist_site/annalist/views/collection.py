@@ -75,7 +75,7 @@ class CollectionEditView(AnnalistGenericView):
             coll = viewinfo.collection
             context = (
                 { 'title':              self.site_data()["title"]
-                , 'continuation_uri':   continuation_next['continuation_uri']
+                , 'continuation_uri':   continuation_next.get('continuation_uri', "")
                 , 'coll_id':            coll_id
                 , 'types':              sorted( [t.get_id() for t in coll.types(include_alt=False)] )
                 , 'lists':              sorted( [l.get_id() for l in coll.lists(include_alt=False)] )
@@ -88,7 +88,7 @@ class CollectionEditView(AnnalistGenericView):
             return viewinfo.http_response
         continuation_next, continuation_here = self.continuation_uris(
             request.GET,
-            self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
+            None  # self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
             )
         return (
             self.render_html(resultdata(viewinfo), 'annalist_collection_edit.html') or 
@@ -110,9 +110,9 @@ class CollectionEditView(AnnalistGenericView):
         http_response = None
         continuation_next, continuation_here = self.continuation_uris(
             request.POST,
-            self.view_uri("AnnalistSiteView")
+            None  # self.view_uri("AnnalistSiteView")
             )
-        # record types
+        # Record types
         type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:
             redirect_uri = self.item_new_uri(
@@ -138,7 +138,7 @@ class CollectionEditView(AnnalistGenericView):
                 message.REMOVE_RECORD_TYPE, 
                 "AnnalistRecordTypeDeleteView",
                 continuation_next)
-        # list views
+        # List views
         list_id = request.POST.get('listlist', None)
         if "list_new" in request.POST:
             redirect_uri = self.item_new_uri(
@@ -164,7 +164,7 @@ class CollectionEditView(AnnalistGenericView):
                 message.REMOVE_RECORD_LIST, 
                 "AnnalistRecordListDeleteView",
                 continuation_next)
-        # list views
+        # Record views
         view_id = request.POST.get('viewlist', None)
         if "view_new" in request.POST:
             redirect_uri = self.item_new_uri(
@@ -190,10 +190,11 @@ class CollectionEditView(AnnalistGenericView):
                 message.REMOVE_RECORD_VIEW, 
                 "AnnalistRecordViewDeleteView",
                 continuation_next)
+        # Others
         if "close" in request.POST:
-            redirect_uri = continuation_next['continuation_uri']
+            redirect_uri = continuation_next.get('continuation_uri', self.view_uri("AnnalistSiteView"))
         if redirect_uri:
-            return HttpResponseRedirect(redirect_uri)
+            http_response = http_response or HttpResponseRedirect(redirect_uri)
         if http_response:
             return http_response
         raise Annalist_Error(request.POST, "Unexpected values in POST to "+self.get_request_path())
