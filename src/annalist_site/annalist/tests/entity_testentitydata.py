@@ -25,6 +25,7 @@ from annalist.views.fields.render_utils import get_placement_classes
 
 from entity_testutils import (
     collection_dir, 
+    site_view_uri,
     collection_edit_uri,
     site_title
     )
@@ -382,7 +383,7 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
         , 'customize':          "Customize"
         })
     if continuation_uri is None:
-        continuation_uri = collection_edit_uri("testcoll")
+        continuation_uri = "" # collection_edit_uri("testcoll")
     form_data = (
         { 'search_for':         search
         , 'list_id':            list_id

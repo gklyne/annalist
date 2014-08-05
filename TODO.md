@@ -155,8 +155,8 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / refactor fields package as subpackage of views
    / fix entity links to use default view URI (/d/...)
    / List type + "View" selection uses // for type field - select based on list or suppress
+   / customize > edit record view > add field > cancel -- returns to wrong place.
    - add_field button on entity edit displays
-   - customize > edit record view > add field > cancel -- returns to wrong place.
    - implement "add repeating field" option to view edit (and entity view?)
    - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)

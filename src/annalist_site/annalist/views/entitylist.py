@@ -161,10 +161,14 @@ class EntityGenericListView(EntityEditBaseView):
         # log.info("  form data %r"%(request.POST))
         continuation_next, continuation_here = self.continuation_uris(
             request.POST,
-            self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
+            None
+            # self.view_uri("AnnalistSiteView")
+            # self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
             )
         if 'close' in request.POST:
-            return HttpResponseRedirect(continuation_next['continuation_uri'])
+            return HttpResponseRedirect(
+                continuation_next.get('continuation_uri', self.view_uri("AnnalistSiteView"))
+                )
         # Not "Close": set up list parameters
         listinfo = self.list_setup(coll_id, type_id, list_id)
         if listinfo.http_response:

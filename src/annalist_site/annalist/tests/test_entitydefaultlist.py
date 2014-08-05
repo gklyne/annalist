@@ -279,9 +279,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         v = TestHostUri + entitydata_edit_uri("new", "testcoll", "testtype", view_id="Default_view")
-        c = continuation_uri_param(u, continuation_uri_param(collection_edit_uri("testcoll")))
         self.assertIn(v, r['location'])
-        self.assertIn(c, r['location'])
         return
 
     def test_post_new_all_entity(self):
@@ -294,9 +292,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         v = TestHostUri + entitydata_edit_uri("new", "testcoll", "Default_type", 
             view_id="Default_view"
             )
-        c = continuation_uri_param(u, continuation_uri_param(collection_edit_uri("testcoll")))
         self.assertIn(v, r['location'])
-        self.assertIn(c, r['location'])
         return
 
     def test_post_new_type_entity_select_one(self):
@@ -309,9 +305,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         v = TestHostUri + entitydata_edit_uri("new", "testcoll", "testtype", 
             view_id="Default_view"
             )
-        c = continuation_uri_param(u, continuation_uri_param(collection_edit_uri("testcoll")))
         self.assertIn(v, r['location'])
-        self.assertIn(c, r['location'])
         return
 
     def test_post_new_type_entity_select_many(self):
@@ -337,9 +331,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         v = TestHostUri + entitydata_edit_uri("copy", "testcoll", "testtype", "entity1", 
             view_id="Default_view"
             )
-        c = continuation_uri_param(u, continuation_uri_param(collection_edit_uri("testcoll")))
         self.assertIn(v, r['location'])
-        self.assertIn(c, r['location'])
         return
 
     def test_post_copy_all_entity(self):
@@ -352,9 +344,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         v = TestHostUri + entitydata_edit_uri("copy", "testcoll", "testtype", "entity1", 
             view_id="Default_view"
             )
-        c = continuation_uri_param(u, continuation_uri_param(collection_edit_uri("testcoll")))
         self.assertIn(v, r['location'])
-        self.assertIn(c, r['location'])
         return
 
     def test_post_copy_type_entity_select_none(self):
@@ -364,10 +354,8 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        c = continuation_uri_param(collection_edit_uri("testcoll"))
         e = error_head="Problem%20with%20input&error_message=No%20data%20record%20selected%20to%20copy"
         self.assertIn(TestHostUri + u, r['location'])
-        self.assertIn(c, r['location'])
         self.assertIn(e, r['location'])
         return
 
@@ -400,12 +388,10 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        c = continuation_uri_param(u, continuation_uri_param(collection_edit_uri("testcoll")))
         v = TestHostUri + entitydata_edit_uri("edit", "testcoll", "testtype", "entity1", 
             view_id="Default_view"
             )
         self.assertIn(v, r['location'])
-        self.assertIn(c, r['location'])
         return
 
     def test_post_edit_all_entity(self):
@@ -418,9 +404,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         v = TestHostUri + entitydata_edit_uri("edit", "testcoll", "testtype", "entity1", 
             view_id="Default_view"
             )
-        c = continuation_uri_param(u, continuation_uri_param(collection_edit_uri("testcoll")))
         self.assertIn(v, r['location'])
-        self.assertIn(c, r['location'])
         return
 
     def test_post_edit_type_entity_select_none(self):
@@ -497,33 +481,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
             '{"entity_delete": ["Delete"], "entity_id": ["entity1"], "continuation_uri": ["/testsite/c/testcoll/d/"]}')
         self.assertEqual(r.context['cancel_action'], 
             '/testsite/c/testcoll/d/')
-        return
-
-
-    #   -------- close / search / view / default-view / customize--------
-
-    def test_post_close(self):
-        f = entitylist_form_data("close", entities=["testtype/entity1", "testtype/entity2"])
-        u = entitydata_list_type_uri("testcoll", "testtype")
-        r = self.client.post(u, f)
-        self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        v = TestHostUri + collection_edit_uri("testcoll")
-        self.assertEqual(v, r['location'])
-        return
-
-    def test_post_customize(self):
-        f = entitylist_form_data("customize")
-        u = entitydata_list_all_uri("testcoll")
-        r = self.client.post(u, f)
-        self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        v = TestHostUri + collection_edit_uri("testcoll")
-        c = continuation_uri_param(u, continuation_uri_param(collection_edit_uri("testcoll")))
-        self.assertIn(v, r['location'])
-        self.assertIn(c, r['location'])
         return
 
 # End.
