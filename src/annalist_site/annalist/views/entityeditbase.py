@@ -26,9 +26,8 @@ from annalist                           import util
 from annalist.views.uri_builder         import uri_with_params
 from annalist.views.repeatdescription   import RepeatDescription
 from annalist.views.generic             import AnnalistGenericView
-from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
-from annalist.views.fieldlistvaluemap   import FieldListValueMap
-from annalist.views.grouprepeatmap      import GroupRepeatMap
+# from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
+# from annalist.views.grouprepeatmap      import GroupRepeatMap
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -53,64 +52,6 @@ class EntityEditBaseView(AnnalistGenericView):
             FieldListValueMap(collection, fields)
             )
         return entityvaluemap
- 
-    # def find_repeat_fields(self, fieldmap=None):
-    #     """
-    #     Iterate over repeat field groups in the current view.
-
-    #     Each value found is returned as a field structure description; e.g.
-
-    #         { 'field_type': 'RepeatValuesMap'
-    #         , 'repeat_entity_values': u 'annal:view_fields'
-    #         , 'repeat_id': u 'View_fields'
-    #         , 'repeat_btn_label': u 'field'
-    #         , 'repeat_label': u 'Fields'
-    #         , 'repeat_context_values': u 'repeat'
-    #         , 'repeat_fields_description':
-    #         , { 'field_type': 'FieldListValueMap'
-    #           , 'field_list':
-    #             [ { 'field_placement': Placement(field = u 'small-12 medium-6 columns', ... )
-    #               , 'field_id': u 'Field_sel'
-    #               }
-    #             , { 'field_placement': Placement(field = u 'small-12 medium-6 columns', ... )
-    #               , 'field_id': u 'Field_placement'
-    #               }
-    #             ]
-    #           }
-    #         }
-    #     """
-    #     def _find_repeat_fields(fieldmap):
-    #         for kmap in fieldmap:
-    #             field_desc = kmap.get_structure_description()
-    #             if field_desc['field_type'] == "FieldListValueMap":
-    #                 for fd in _find_repeat_fields(kmap.fs):
-    #                     yield fd
-    #             if field_desc['field_type'] == "RepeatValuesMap":
-    #                 yield field_desc
-    #     return _find_repeat_fields(self._entityvaluemap)
-
-    # def find_add_field(self, form_data):
-    #     """
-    #     Locate add field option in form data and,if present, return a description of the field to
-    #     be added.
-    #     """
-    #     for repeat_desc in self.find_repeat_fields():
-    #         # log.info("find_add_field: %r"%repeat_desc)
-    #         if repeat_desc['repeat_id']+"__add" in form_data:
-    #             return repeat_desc
-    #     return None
-
-    # def find_remove_field(self, form_data):
-    #     """
-    #     Locate remove field option in form data and, if present, return a description of the field to
-    #     be removed, with the list of member indexes to be removed added as element 'remove_fields'.
-    #     """
-    #     for repeat_desc in self.find_repeat_fields():
-    #         # log.info("find_add_field: %r"%repeat_desc)
-    #         if repeat_desc['repeat_id']+"__remove" in form_data:
-    #             repeat_desc['remove_fields'] = form_data[repeat_desc['repeat_id']+"__select_fields"]
-    #             return repeat_desc
-    #     return None
 
     def map_value_to_context(self, entity_values, **kwargs):
         """

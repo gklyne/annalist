@@ -11,26 +11,27 @@ log = logging.getLogger(__name__)
 
 import copy
 
-from django.conf                    import settings
-from django.http                    import HttpResponse
-from django.http                    import HttpResponseRedirect
-from django.core.urlresolvers       import resolve, reverse
+from django.conf                        import settings
+from django.http                        import HttpResponse
+from django.http                        import HttpResponseRedirect
+from django.core.urlresolvers           import resolve, reverse
 
-from annalist                       import message
-from annalist.exceptions            import Annalist_Error
+from annalist                           import message
+from annalist.exceptions                import Annalist_Error
 
-from annalist.models.collection     import Collection
-from annalist.models.recordtype     import RecordType
-from annalist.models.recordtypedata import RecordTypeData
-from annalist.models.entitytypeinfo import EntityTypeInfo
-from annalist.models.entityfinder   import EntityFinder
+from annalist.models.collection         import Collection
+from annalist.models.recordtype         import RecordType
+from annalist.models.recordtypedata     import RecordTypeData
+from annalist.models.entitytypeinfo     import EntityTypeInfo
+from annalist.models.entityfinder       import EntityFinder
 
-from annalist.views.uri_builder     import uri_with_params
-from annalist.views.displayinfo     import DisplayInfo
-from annalist.views.simplevaluemap  import SimpleValueMap, StableValueMap
-from annalist.views.grouprepeatmap  import GroupRepeatMap
-from annalist.views.confirm         import ConfirmView, dict_querydict
-from annalist.views.entityeditbase  import EntityEditBaseView
+from annalist.views.uri_builder         import uri_with_params
+from annalist.views.displayinfo         import DisplayInfo
+from annalist.views.confirm             import ConfirmView, dict_querydict
+from annalist.views.entityeditbase      import EntityEditBaseView
+from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
+from annalist.views.fieldlistvaluemap   import FieldListValueMap
+from annalist.views.grouprepeatmap      import GroupRepeatMap
 
 
 #   -------------------------------------------------------------------------------------------
@@ -96,11 +97,16 @@ class EntityGenericListView(EntityEditBaseView):
         entitymap  = copy.copy(listentityvaluemap)
         log.debug("entitylist %r"%listinfo.recordlist.get_values())
         groupmap = []
-        self.get_fields_entityvaluemap(
-            listinfo.collection,
-            groupmap,
+        fieldlistmap = FieldListValueMap(
+            listinfo.collection, 
             listinfo.recordlist.get_values()['annal:list_fields']
             )
+        groupmap.append(fieldlistmap)
+        # self.get_fields_entityvaluemap(
+        #     listinfo.collection,
+        #     groupmap,
+        #     listinfo.recordlist.get_values()['annal:list_fields']
+        #     )
         entitymap.extend(groupmap)  # one-off for access to field headings
         entitymap.append(
             GroupRepeatMap(c='entities', e='annal:list_entities', g=groupmap)

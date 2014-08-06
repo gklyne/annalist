@@ -11,24 +11,24 @@ import copy
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                    import settings
-from django.http                    import HttpResponse
-from django.http                    import HttpResponseRedirect
-from django.core.urlresolvers       import resolve, reverse
+from django.conf                        import settings
+from django.http                        import HttpResponse
+from django.http                        import HttpResponseRedirect
+from django.core.urlresolvers           import resolve, reverse
 
-from annalist                       import message
-from annalist                       import util
+from annalist                           import message
+from annalist                           import util
 
-from annalist.models.recordtype     import RecordType
-from annalist.models.recordview     import RecordView
-from annalist.models.recordfield    import RecordField
-from annalist.models.recordtypedata import RecordTypeData
-from annalist.models.entitydata     import EntityData
+from annalist.models.recordtype         import RecordType
+from annalist.models.recordview         import RecordView
+from annalist.models.recordfield        import RecordField
+from annalist.models.recordtypedata     import RecordTypeData
+from annalist.models.entitydata         import EntityData
 
-from annalist.views.displayinfo     import DisplayInfo
-from annalist.views.entityeditbase  import EntityEditBaseView
-from annalist.views.simplevaluemap  import SimpleValueMap, StableValueMap
-# from annalist.views.fieldlistvaluemap   import FieldListValueMap
+from annalist.views.displayinfo         import DisplayInfo
+from annalist.views.entityeditbase      import EntityEditBaseView
+from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
+from annalist.views.fieldlistvaluemap   import FieldListValueMap
 # from annalist.views.grouprepeatmap      import GroupRepeatMap
 
 #   -------------------------------------------------------------------------------------------
@@ -228,11 +228,16 @@ class GenericEntityEditView(EntityEditBaseView):
         # Locate and read view description
         entitymap = copy.copy(baseentityvaluemap)
         log.debug("entityview %r"%viewinfo.recordview.get_values())
-        self.get_fields_entityvaluemap(
-            viewinfo.collection,
-            entitymap,
+        fieldlistmap = FieldListValueMap(
+            viewinfo.collection, 
             viewinfo.recordview.get_values()['annal:view_fields']
             )
+        entitymap.append(fieldlistmap)
+        # self.get_fields_entityvaluemap(
+        #     viewinfo.collection,
+        #     entitymap,
+        #     viewinfo.recordview.get_values()['annal:view_fields']
+        #     )
         return entitymap
 
     def get_entity(self, viewinfo, action, entity_initial_values, entity_id=None):
