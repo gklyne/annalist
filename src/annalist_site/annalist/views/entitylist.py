@@ -96,20 +96,20 @@ class EntityGenericListView(EntityEditBaseView):
         # Locate and read view description
         entitymap  = copy.copy(listentityvaluemap)
         log.debug("entitylist %r"%listinfo.recordlist.get_values())
-        groupmap = []
+        # groupmap = []
         fieldlistmap = FieldListValueMap(
             listinfo.collection, 
             listinfo.recordlist.get_values()['annal:list_fields']
             )
-        groupmap.append(fieldlistmap)
+        # groupmap.append(fieldlistmap)
         # self.get_fields_entityvaluemap(
         #     listinfo.collection,
         #     groupmap,
         #     listinfo.recordlist.get_values()['annal:list_fields']
         #     )
-        entitymap.extend(groupmap)  # one-off for access to field headings
+        entitymap.append(fieldlistmap)  # one-off for access to field headings
         entitymap.append(
-            GroupRepeatMap(c='entities', e='annal:list_entities', g=groupmap)
+            GroupRepeatMap(c='entities', e='annal:list_entities', g=[fieldlistmap])
             )
         return entitymap
 
