@@ -33,7 +33,6 @@ from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
 from annalist.views.grouprepeatmap      import GroupRepeatMap
 
-
 #   -------------------------------------------------------------------------------------------
 #
 #   Mapping table data (not view-specific)
@@ -96,17 +95,10 @@ class EntityGenericListView(EntityEditBaseView):
         # Locate and read view description
         entitymap  = copy.copy(listentityvaluemap)
         log.debug("entitylist %r"%listinfo.recordlist.get_values())
-        # groupmap = []
         fieldlistmap = FieldListValueMap(
             listinfo.collection, 
             listinfo.recordlist.get_values()['annal:list_fields']
             )
-        # groupmap.append(fieldlistmap)
-        # self.get_fields_entityvaluemap(
-        #     listinfo.collection,
-        #     groupmap,
-        #     listinfo.recordlist.get_values()['annal:list_fields']
-        #     )
         entitymap.append(fieldlistmap)  # one-off for access to field headings
         entitymap.append(
             GroupRepeatMap(c='entities', e='annal:list_entities', g=[fieldlistmap])

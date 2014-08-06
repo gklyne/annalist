@@ -179,12 +179,12 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
 10. Code improvement - lists
    - move invocation of authentication to the immediate response handler code?
    - refactor list description access out of context handling code (avoid multiple reads)
-   - refactor code from entityeditbase into more specific views where possible
-   - rename what is left of entityeditbase -> entityviewbase, or more to generic module
+   / refactor code from entityeditbase into more specific views where possible
+   - rename what is left of entityeditbase -> entityviewbase, or move to generic module
    - review URI for delete type/view/list confirmation
    - use proper indexing to accelerate search (maybe later?)
 11. Code improvement - views
-   - where possible, migrate methods from editentitybase to subclasses
+   / where possible, migrate methods from editentitybase to subclasses
    - review logic - ideally, form handlers will access data from form, then hand off for processing
    - review record view description form (create data and configure URIs)
    - review field description form (create data and configure URIs)

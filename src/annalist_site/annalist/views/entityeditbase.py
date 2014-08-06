@@ -46,13 +46,6 @@ class EntityEditBaseView(AnnalistGenericView):
         super(EntityEditBaseView, self).__init__()
         return
 
-    # def get_fields_entityvaluemap(self, collection, entityvaluemap, fields):
-    #     # @@TODO: elide this
-    #     entityvaluemap.append(
-    #         FieldListValueMap(collection, fields)
-    #         )
-    #     return entityvaluemap
-
     def map_value_to_context(self, entity_values, **kwargs):
         """
         Map data from entity values to view context for rendering.

@@ -29,7 +29,6 @@ from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.entityeditbase      import EntityEditBaseView
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
-# from annalist.views.grouprepeatmap      import GroupRepeatMap
 
 #   -------------------------------------------------------------------------------------------
 #
