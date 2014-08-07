@@ -91,7 +91,6 @@ class GenericEntityEditView(AnnalistGenericView):
         viewinfo = self.view_setup(action, coll_id, type_id, view_id, entity_id)
         if viewinfo.http_response:
             return viewinfo.http_response
-        #@@ entityvaluemap = self.get_view_entityvaluemap(viewinfo)
 
         # Create local entity object or load values from existing
         entity_initial_values = (
@@ -107,29 +106,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
                 )
         continuation_uri = request.GET.get('continuation_uri', "")
-        return self.render_entity_view(viewinfo, entity, continuation_uri)
-
-
-        #@@
-        # type_ids = [ t.get_id() for t in viewinfo.collection.types() ]
-        # # Set up initial view context
-        # viewcontext = entityvaluemap.map_value_to_context(entity,
-        #     title               = self.site_data()["title"],
-        #     continuation_uri    = request.GET.get('continuation_uri', ""),
-        #     action              = action,
-        #     coll_id             = coll_id,
-        #     type_id             = type_id,
-        #     type_ids            = type_ids,
-        #     orig_id             = viewinfo.entity_id,
-        #     orig_type           = type_id,
-        #     view_id             = viewinfo.view_id
-        #     )
-        # # Generate and return form data
-        # return (
-        #     self.render_html(viewcontext, self._entityformtemplate) or 
-        #     self.error(self.error406values())
-        #     )
-        #@@
+        return self.form_render(viewinfo, entity, continuation_uri)
 
     # POST
 
@@ -314,11 +291,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 return viewinfo.http_response
             (continuation_next, continuation_here) = self.continuation_uris(form_data, continuation_uri)
 
-
-
-
-
-
             assert False, "@@TODO: Add field from entity view"
             # Fake up POST to add field to view description view, with current page as continuation
             # Return HTTP response
@@ -379,31 +351,13 @@ class GenericEntityEditView(AnnalistGenericView):
         redirect_uri = uri_with_params(continuation_uri, err_values)
         return HttpResponseRedirect(redirect_uri)
 
-    def form_re_render(self, 
-            entityvaluemap, form_data, context_extra_values={}, 
-            error_head=None, error_message=None):
-        """
-        Returns re-rendering of form with current values and error message displayed.
-        """
-        form_context = entityvaluemap.map_form_data_to_context(form_data,
-            **context_extra_values
-            )
-        # log.info("********\nform_context %r"%form_context)
-        form_context['error_head']    = error_head
-        form_context['error_message'] = error_message
-        return (
-            self.render_html(form_context, self._entityformtemplate) or 
-            self.error(self.error406values())
-            )
-
-    def render_entity_view(self, viewinfo, entity, continuation_uri):
+    def form_render(self, viewinfo, entity, continuation_uri):
         """
         Returns an HTTP response that renders a view of an entity, 
         using supplied entity data
         """
         coll_id   = viewinfo.coll_id
         type_id   = viewinfo.type_id
-        #@@ typeinfo  = viewinfo.entitytypeinfo
         entity_id = entity.get_id()
         type_ids  = [ t.get_id() for t in viewinfo.collection.types() ]
         if entity is None:
@@ -429,6 +383,23 @@ class GenericEntityEditView(AnnalistGenericView):
         # Generate and return form data
         return (
             self.render_html(viewcontext, self._entityformtemplate) or 
+            self.error(self.error406values())
+            )
+
+    def form_re_render(self, 
+            entityvaluemap, form_data, context_extra_values={}, 
+            error_head=None, error_message=None):
+        """
+        Returns re-rendering of form with current values and error message displayed.
+        """
+        form_context = entityvaluemap.map_form_data_to_context(form_data,
+            **context_extra_values
+            )
+        # log.info("********\nform_context %r"%form_context)
+        form_context['error_head']    = error_head
+        form_context['error_message'] = error_message
+        return (
+            self.render_html(form_context, self._entityformtemplate) or 
             self.error(self.error406values())
             )
 
