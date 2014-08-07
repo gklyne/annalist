@@ -181,7 +181,7 @@ class DisplayInfo(object):
 
     def check_authorization(self, action):
         """
-        If no error so far, check authorization.  Return Nine if all is OK,
+        If no error so far, check authorization.  Return None if all is OK,
         or HttpResonse object 
         """
         return (

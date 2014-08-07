@@ -9,8 +9,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-import copy
-
 from django.conf                        import settings
 from django.http                        import HttpResponse
 from django.http                        import HttpResponseRedirect
@@ -27,11 +25,12 @@ from annalist.models.entityfinder       import EntityFinder
 
 from annalist.views.uri_builder         import uri_with_params
 from annalist.views.displayinfo         import DisplayInfo
-from annalist.views.confirm             import ConfirmView, dict_querydict
-from annalist.views.entityeditbase      import EntityEditBaseView
+from annalist.views.entityvaluemap      import EntityValueMap
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
 from annalist.views.grouprepeatmap      import GroupRepeatMap
+from annalist.views.confirm             import ConfirmView, dict_querydict
+from annalist.views.generic             import AnnalistGenericView
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -61,7 +60,7 @@ listentityvaluemap  = (
 #
 #   -------------------------------------------------------------------------------------------
 
-class EntityGenericListView(EntityEditBaseView):
+class EntityGenericListView(AnnalistGenericView):
     """
     View class for generic entity list view
     """
@@ -93,14 +92,14 @@ class EntityGenericListView(EntityEditBaseView):
         """
         # @@TODO: can this be subsumed by repeat value logic in get_fields_entityvaluemap?
         # Locate and read view description
-        entitymap  = copy.copy(listentityvaluemap)
+        entitymap  = EntityValueMap(listentityvaluemap)
         log.debug("entitylist %r"%listinfo.recordlist.get_values())
         fieldlistmap = FieldListValueMap(
             listinfo.collection, 
             listinfo.recordlist.get_values()['annal:list_fields']
             )
-        entitymap.append(fieldlistmap)  # one-off for access to field headings
-        entitymap.append(
+        entitymap.add_map_entry(fieldlistmap)  # one-off for access to field headings
+        entitymap.add_map_entry(
             GroupRepeatMap(c='entities', e='annal:list_entities', g=[fieldlistmap])
             )
         return entitymap
@@ -126,9 +125,8 @@ class EntityGenericListView(EntityEditBaseView):
             )
         entityval = { 'annal:list_entities': list(entity_list) }
         # Set up initial view context
-        self._entityvaluemap = self.get_list_entityvaluemap(listinfo)
-        log.debug("EntityGenericListView.get _entityvaluemap %r"%(self._entityvaluemap))
-        viewcontext = self.map_value_to_context(entityval,
+        entityvaluemap = self.get_list_entityvaluemap(listinfo)
+        viewcontext = entityvaluemap.map_value_to_context(entityval,
             title               = self.site_data()["title"],
             continuation_uri    = request.GET.get('continuation_uri', ""),
             ### heading             = entity_initial_values['rdfs:label'],
