@@ -58,6 +58,13 @@ class EntityEditBaseView(AnnalistGenericView):
             context.update(kmap.map_entity_to_context(entity_values, extras=kwargs))
         return context
 
+    def map_form_data_to_values(self, form_data, **kwargs):
+        log.debug("map_form_data_to_values: form_data %r"%(form_data))
+        values = {}
+        for kmap in self._entityvaluemap:
+            values.update(kmap.map_form_to_entity(form_data))
+        return values
+
     def map_form_data_to_context(self, form_data, **kwargs):
         """
         Map values from form data to view context for form re-rendering.
@@ -72,12 +79,5 @@ class EntityEditBaseView(AnnalistGenericView):
         # log.info("\n*********\nmap_form_data_to_context: context: %r"%context)
         # log.info("\n*********")
         return context
-
-    def map_form_data_to_values(self, form_data, **kwargs):
-        log.debug("map_form_data_to_values: form_data %r"%(form_data))
-        values = {}
-        for kmap in self._entityvaluemap:
-            values.update(kmap.map_form_to_entity(form_data))
-        return values
 
 # End.

@@ -232,11 +232,6 @@ class GenericEntityEditView(EntityEditBaseView):
             viewinfo.recordview.get_values()['annal:view_fields']
             )
         entitymap.append(fieldlistmap)
-        # self.get_fields_entityvaluemap(
-        #     viewinfo.collection,
-        #     entitymap,
-        #     viewinfo.recordview.get_values()['annal:view_fields']
-        #     )
         return entitymap
 
     def get_entity(self, viewinfo, action, entity_initial_values, entity_id=None):
@@ -277,6 +272,9 @@ class GenericEntityEditView(EntityEditBaseView):
 
     # @@TODO: refactor form_response to separate methods for each action
     #         form_response should handle initial checking and dispatching.
+    # @@TODO: eliminate 'request' parameter - access it through the view object
+    #         as self.request; subsidiary code already assumes this, so there's 
+    #         no value in paramneterizing it.
     def form_response(self, viewinfo,
                 request, action, orig_entity,
                 entity_id, orig_entity_id, 
@@ -291,89 +289,104 @@ class GenericEntityEditView(EntityEditBaseView):
         if 'cancel' in request.POST:
             return HttpResponseRedirect(continuation_uri)
         typeinfo    = viewinfo.entitytypeinfo
-        orig_parent = typeinfo.entityparent
+
+        # # Check original parent exists (still)
+        # orig_parent = typeinfo.entityparent
+        # # @@TODO redundant?  Checked by save method?
+        # if not orig_parent._exists():
+        #     log.warning("form_response: not orig_parent._exists()")
+        #     return self.form_re_render(context_extra_values,
+        #         error_head=messages['parent_heading'],
+        #         error_message=messages['parent_missing']
+        #         )
+
         # Check authorization
         # @@TODO redundant?  Checked by calling POST handler?
-        auth_required = self.form_action_auth(action, orig_parent._entityuri)
-        if auth_required:
-            # log.debug("form_response: auth_required")            
-            return auth_required
-        # Check original parent exists (still)
-        if not orig_parent._exists():
-            log.warning("form_response: not orig_parent._exists()")
-            return self.form_re_render(request, context_extra_values,
-                error_head=messages['parent_heading'],
-                error_message=messages['parent_missing']
-                )
+        # auth_required = self.form_action_auth(action, orig_parent._entityuri)
+        # if auth_required:
+        #     # log.debug("form_response: auth_required")            
+        #     return auth_required
+
         # Check response has valid id and type
         if not util.valid_id(entity_id):
             log.debug("form_response: entity_id not util.valid_id('%s')"%entity_id)
-            return self.form_re_render(request, context_extra_values,
+            return self.form_re_render(context_extra_values,
                 error_head=messages['entity_heading'],
                 error_message=messages['entity_invalid_id']
                 )
         if not util.valid_id(entity_type):
             log.debug("form_response: entity_type not util.valid_id('%s')"%entity_type)
-            return self.form_re_render(request, context_extra_values,
+            return self.form_re_render(context_extra_values,
                 error_head=messages['entity_type_heading'],
                 error_message=messages['entity_type_invalid']
                 )
 
         # Save updated details
         if 'save' in request.POST:
-            # @@TODO: factor to separate method
-            log.debug(
-                "form_response: save, action %s, entity_id %s, orig_entity_id %s"
-                %(request.POST['action'], entity_id, orig_entity_id)
-                )
-            log.debug(
-                "                     entity_type %s, orig_entity_type %s"
-                %(entity_type, orig_entity_type)
-                )
-            entity_id_changed = (
-                ( request.POST['action'] == "edit" ) and
-                ( (entity_id != orig_entity_id) or (entity_type != orig_entity_type) )
-                )
-            # Determine parent for saved entity
-            if entity_type != orig_entity_type:
-                log.debug("form_response: entity_type %s, orig_entity_type %s"%(entity_type, orig_entity_type))
-                new_parent = RecordTypeData(viewinfo.collection, entity_type)
-                if not new_parent._exists():
-                    # Create RecordTypeData if not already existing
-                    RecordTypeData.create(viewinfo.collection, entity_type, {})
-            else:
-                new_parent = orig_parent
-            # Check existence of entity to save according to action performed
-            if (request.POST['action'] in ["new", "copy"]) or entity_id_changed:
-                if typeinfo.entityclass.exists(new_parent, entity_id):
-                    return self.form_re_render(request, context_extra_values,
-                        error_head=messages['entity_heading'],
-                        error_message=messages['entity_exists']
-                        )
-            else:
-                if not typeinfo.entityclass.exists(orig_parent, entity_id, altparent=typeinfo.entityaltparent):
-                    # This shouldn't happen, but just in case...
-                    log.warning("Expected %s/%s not found; action %s, entity_id_changed %r"%
-                          (entity_type, entity_id, request.POST['action'], entity_id_changed)
-                        )
-                    return self.form_re_render(request, context_extra_values,
-                        error_head=messages['entity_heading'],
-                        error_message=messages['entity_not_exists']
-                        )
-            # Create/update data now
-            # Note: form data is applied as update to original entity data so that
-            # values not in view are preserved.
-            # entity_values = self.map_form_data_to_values(request.POST)
-            entity_values = orig_entity.get_values() if orig_entity else {}
-            entity_values.pop('annal:uri', None)  # Force re-allocation of URI
-            entity_values.update(self.map_form_data_to_values(request.POST))
-            typeinfo.entityclass.create(new_parent, entity_id, entity_values)
-            # Remove old entity if rename
-            if entity_id_changed:
-                if typeinfo.entityclass.exists(new_parent, entity_id):    # Precautionary
-                    typeinfo.entityclass.remove(orig_parent, orig_entity_id)
-            log.debug("Continue to %s"%(continuation_uri))
-            return HttpResponseRedirect(continuation_uri)
+            # # @@TODO: factor to separate method
+            # log.debug(
+            #     "form_response: save, action %s, entity_id %s, orig_entity_id %s"
+            #     %(request.POST['action'], entity_id, orig_entity_id)
+            #     )
+            # log.debug(
+            #     "                     entity_type %s, orig_entity_type %s"
+            #     %(entity_type, orig_entity_type)
+            #     )
+            # entity_id_changed = (
+            #     ( request.POST['action'] == "edit" ) and
+            #     ( (entity_id != orig_entity_id) or (entity_type != orig_entity_type) )
+            #     )
+            # # Determine parent for saved entity
+            # if entity_type != orig_entity_type:
+            #     log.debug("form_response: entity_type %s, orig_entity_type %s"%(entity_type, orig_entity_type))
+            #     new_parent = RecordTypeData(viewinfo.collection, entity_type)
+            #     if not new_parent._exists():
+            #         # Create RecordTypeData if not already existing
+            #         RecordTypeData.create(viewinfo.collection, entity_type, {})
+            # else:
+            #     new_parent = orig_parent
+            # # Check existence of entity to save according to action performed
+            # if (request.POST['action'] in ["new", "copy"]) or entity_id_changed:
+            #     if typeinfo.entityclass.exists(new_parent, entity_id):
+            #         return self.form_re_render(context_extra_values,
+            #             error_head=messages['entity_heading'],
+            #             error_message=messages['entity_exists']
+            #             )
+            # else:
+            #     if not typeinfo.entityclass.exists(orig_parent, entity_id, altparent=typeinfo.entityaltparent):
+            #         # This shouldn't happen, but just in case...
+            #         log.warning("Expected %s/%s not found; action %s, entity_id_changed %r"%
+            #               (entity_type, entity_id, request.POST['action'], entity_id_changed)
+            #             )
+            #         return self.form_re_render(context_extra_values,
+            #             error_head=messages['entity_heading'],
+            #             error_message=messages['entity_not_exists']
+            #             )
+            # # Create/update data now
+            # # Note: form data is applied as update to original entity data so that
+            # # values not in view are preserved.
+            # # entity_values = self.map_form_data_to_values(request.POST)
+            # entity_values = orig_entity.get_values() if orig_entity else {}
+            # entity_values.pop('annal:uri', None)  # Force re-allocation of URI
+            # entity_values.update(self.map_form_data_to_values(request.POST))
+            # typeinfo.entityclass.create(new_parent, entity_id, entity_values)
+            # # Remove old entity if rename
+            # if entity_id_changed:
+            #     if typeinfo.entityclass.exists(new_parent, entity_id):    # Precautionary
+            #         typeinfo.entityclass.remove(orig_parent, orig_entity_id)
+            http_response = self.save_entity(request.POST, orig_entity,
+                entity_id, entity_type, orig_entity_id, orig_entity_type, 
+                viewinfo.collection, typeinfo, context_extra_values, messages)
+            return http_response or HttpResponseRedirect(continuation_uri)
+
+        # Add field from entity view (as opposed to view description view)
+        if 'add_field' in request.POST:
+            assert False, "@@TODO: Add field from entity view"
+            # Save current entity
+            # Check authz for config change
+            # Fake up POST to add field to view description view, with current page as continuation
+            # Return HTTP response
+            # @@TODO change view rendering
 
         # Add field
         add_field = self.find_add_field(request.POST)
@@ -430,11 +443,11 @@ class GenericEntityEditView(EntityEditBaseView):
         redirect_uri = uri_with_params(continuation_uri, err_values)
         return HttpResponseRedirect(redirect_uri)
 
-    def form_re_render(self, request, context_extra_values={}, error_head=None, error_message=None):
+    def form_re_render(self, context_extra_values={}, error_head=None, error_message=None):
         """
         Returns re-rendering of form with current values and error message displayed.
         """
-        form_context = self.map_form_data_to_context(request.POST,
+        form_context = self.map_form_data_to_context(self.request.POST,
             **context_extra_values
             )
         # log.info("********\nform_context %r"%form_context)
@@ -501,6 +514,79 @@ class GenericEntityEditView(EntityEditBaseView):
             if repeat_desc['repeat_id']+"__remove" in form_data:
                 repeat_desc['remove_fields'] = form_data[repeat_desc['repeat_id']+"__select_fields"]
                 return repeat_desc
+        return None
+
+    def save_entity(self,
+            form_data, orig_entity,
+            entity_id, entity_type, orig_entity_id, orig_entity_type, 
+            collection, typeinfo, context_extra_values, messages):
+        """
+        This method contains logic to save entity data modified through a form
+        intrerface.  If an entity is being edited (as oppoosed to created or copied)
+        and the entity id or type have been changed, then new entity data is written 
+        and the original entity data is removed.
+
+        Redturns None if the save completes successfully, otherwise an 
+        HTTP response object that reports the nature of the problem.
+        """
+        action = form_data['action']
+        log.debug(
+            "form_response: save, action %s, entity_id %s, orig_entity_id %s"
+            %(action, entity_id, orig_entity_id)
+            )
+        log.debug(
+            "                     entity_type %s, orig_entity_type %s"
+            %(entity_type, orig_entity_type)
+            )
+        entity_id_changed = (
+            ( action == "edit" ) and
+            ( (entity_id != orig_entity_id) or (entity_type != orig_entity_type) )
+            )
+        # Check original parent exists (still)
+        orig_parent = typeinfo.entityparent
+        if not orig_parent._exists():
+            log.warning("form_response: not orig_parent._exists()")
+            return self.form_re_render(context_extra_values,
+                error_head=messages['parent_heading'],
+                error_message=messages['parent_missing']
+                )
+        # Determine new parent for saved entity
+        if entity_type != orig_entity_type:
+            log.debug("form_response: entity_type %s, orig_entity_type %s"%(entity_type, orig_entity_type))
+            new_parent = RecordTypeData(collection, entity_type)
+            if not new_parent._exists():
+                # Create RecordTypeData if not already existing
+                RecordTypeData.create(collection, entity_type, {})
+        else:
+            new_parent = orig_parent
+        # Check existence of entity to save according to action performed
+        if (action in ["new", "copy"]) or entity_id_changed:
+            if typeinfo.entityclass.exists(new_parent, entity_id):
+                return self.form_re_render(context_extra_values,
+                    error_head=messages['entity_heading'],
+                    error_message=messages['entity_exists']
+                    )
+        else:
+            if not typeinfo.entityclass.exists(orig_parent, entity_id, altparent=typeinfo.entityaltparent):
+                # This shouldn't happen, but just in case...
+                log.warning("Expected %s/%s not found; action %s, entity_id_changed %r"%
+                      (entity_type, entity_id, action, entity_id_changed)
+                    )
+                return self.form_re_render(context_extra_values,
+                    error_head=messages['entity_heading'],
+                    error_message=messages['entity_not_exists']
+                    )
+        # Create/update data now
+        # Note: form data is applied as update to original entity data so that
+        # values not in view are preserved.
+        entity_values = orig_entity.get_values() if orig_entity else {}
+        entity_values.pop('annal:uri', None)  # Force re-allocation of URI
+        entity_values.update(self.map_form_data_to_values(form_data))
+        typeinfo.entityclass.create(new_parent, entity_id, entity_values)
+        # Remove old entity if rename
+        if entity_id_changed:
+            if typeinfo.entityclass.exists(new_parent, entity_id):    # Precautionary
+                typeinfo.entityclass.remove(orig_parent, orig_entity_id)
         return None
 
 # End.
