@@ -53,10 +53,12 @@ class DisplayInfo(object):
     invoked in a sequence that ensures the dependencies are satisfied.
     """
 
-    def __init__(self, view):
+    def __init__(self, view, action):
         self.view           = view
+        self.action         = action
         self.reqhost        = None
         self.site           = None
+        self.sitedata       = None
         self.coll_id        = None
         self.collection     = None
         self.type_id        = None
@@ -74,6 +76,7 @@ class DisplayInfo(object):
         if not self.http_response:
             self.reqhost        = reqhost
             self.site           = self.view.site(host=reqhost)
+            self.sitedata       = self.view.site_data()
         return self.http_response
 
     def get_coll_info(self, coll_id):

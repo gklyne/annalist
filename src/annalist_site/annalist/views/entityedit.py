@@ -91,7 +91,7 @@ class GenericEntityEditView(AnnalistGenericView):
         viewinfo = self.view_setup(action, coll_id, type_id, view_id, entity_id)
         if viewinfo.http_response:
             return viewinfo.http_response
-        entityvaluemap = self.get_view_entityvaluemap(viewinfo)
+        #@@ entityvaluemap = self.get_view_entityvaluemap(viewinfo)
 
         # Create local entity object or load values from existing
         entity_initial_values = (
@@ -106,24 +106,30 @@ class GenericEntityEditView(AnnalistGenericView):
                     message=message.DOES_NOT_EXIST%{'id': entity_initial_values['rdfs:label']}
                     )
                 )
-        type_ids = [ t.get_id() for t in viewinfo.collection.types() ]
-        # Set up initial view context
-        viewcontext = entityvaluemap.map_value_to_context(entity,
-            title               = self.site_data()["title"],
-            continuation_uri    = request.GET.get('continuation_uri', ""),
-            action              = action,
-            coll_id             = coll_id,
-            type_id             = type_id,
-            type_ids            = type_ids,
-            orig_id             = viewinfo.entity_id,
-            orig_type           = type_id,
-            view_id             = viewinfo.view_id
-            )
-        # Generate and return form data
-        return (
-            self.render_html(viewcontext, self._entityformtemplate) or 
-            self.error(self.error406values())
-            )
+        continuation_uri = request.GET.get('continuation_uri', "")
+        return self.render_entity_view(viewinfo, entity, continuation_uri)
+
+
+        #@@
+        # type_ids = [ t.get_id() for t in viewinfo.collection.types() ]
+        # # Set up initial view context
+        # viewcontext = entityvaluemap.map_value_to_context(entity,
+        #     title               = self.site_data()["title"],
+        #     continuation_uri    = request.GET.get('continuation_uri', ""),
+        #     action              = action,
+        #     coll_id             = coll_id,
+        #     type_id             = type_id,
+        #     type_ids            = type_ids,
+        #     orig_id             = viewinfo.entity_id,
+        #     orig_type           = type_id,
+        #     view_id             = viewinfo.view_id
+        #     )
+        # # Generate and return form data
+        # return (
+        #     self.render_html(viewcontext, self._entityformtemplate) or 
+        #     self.error(self.error406values())
+        #     )
+        #@@
 
     # POST
 
@@ -161,7 +167,7 @@ class GenericEntityEditView(AnnalistGenericView):
         typeinfo        = viewinfo.entitytypeinfo
         type_ids        = [ t.get_id() for t in viewinfo.collection.types() ]
         context_extra_values = (
-            { 'title':            self.site_data()["title"]
+            { 'title':            viewinfo.sitedata["title"]
             , 'action':           action
             , 'continuation_uri': continuation_uri
             , 'coll_id':          coll_id
@@ -199,7 +205,7 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Assemble display information for entity view request handler
         """
-        viewinfo = DisplayInfo(self)
+        viewinfo = DisplayInfo(self, action)
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
         viewinfo.get_type_info(type_id)
@@ -389,42 +395,36 @@ class GenericEntityEditView(AnnalistGenericView):
             self.render_html(form_context, self._entityformtemplate) or 
             self.error(self.error406values())
             )
- 
 
-
-###################################################################################################
-
-
-    def render_entity_view(self, 
-            collection, typeinfo, entity, 
-            action, view_id, continuation_uri):
+    def render_entity_view(self, viewinfo, entity, continuation_uri):
         """
         Returns an HTTP response that renders a view of an entity, 
         using supplied entity data
         """
-        coll_id   = collection.get_id()
-        type_id   = typeinfo.type_id
+        coll_id   = viewinfo.coll_id
+        type_id   = viewinfo.type_id
+        #@@ typeinfo  = viewinfo.entitytypeinfo
         entity_id = entity.get_id()
-        type_ids  = [ t.get_id() for t in collection.types() ]
+        type_ids  = [ t.get_id() for t in viewinfo.collection.types() ]
         if entity is None:
             return self.error(
                 dict(self.error404values(),
                     message=message.DOES_NOT_EXIST%
-                        {'id': "Collection %s, entity %s of type %s"%(coll_id, entyity_id, type_id)}
+                        {'id': "Collection %s, entity %s of type %s"%(coll_id, entity_id, type_id)}
                     )
                 )
         # Set up initial view context
-        #@@ entityvaluemap = self.get_view_entityvaluemap(viewinfo)
-        viewcontext = entityvaluemap.map_value_to_context(entity,
-            title               = self.site_data()["title"],
+        entityvaluemap = self.get_view_entityvaluemap(viewinfo)
+        viewcontext    = entityvaluemap.map_value_to_context(entity,
+            title               = viewinfo.sitedata["title"],
             continuation_uri    = continuation_uri,
-            action              = action,
+            action              = viewinfo.action,
             coll_id             = coll_id,
             type_id             = type_id,
             type_ids            = type_ids,
             orig_id             = entity_id,
             orig_type           = type_id,
-            view_id             = view_id
+            view_id             = viewinfo.view_id
             )
         # Generate and return form data
         return (

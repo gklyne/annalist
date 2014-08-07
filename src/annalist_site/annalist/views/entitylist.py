@@ -77,7 +77,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         Assemble display information for list view request handler
         """
-        listinfo = DisplayInfo(self)
+        listinfo = DisplayInfo(self, "list")
         listinfo.get_site_info(self.get_request_host())
         listinfo.get_coll_info(coll_id)
         listinfo.get_type_info(type_id)

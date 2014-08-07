@@ -36,7 +36,7 @@ class EntityDeleteConfirmedBaseView(AnnalistGenericView):
         """
         Complete action to remove an entity.
         """
-        viewinfo = DisplayInfo(self)
+        viewinfo = DisplayInfo(self, "delete")
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
         viewinfo.get_type_info(type_id)

@@ -59,7 +59,7 @@ class CollectionEditView(AnnalistGenericView):
         """
         Assemble display information for collection view request handler
         """
-        viewinfo = DisplayInfo(self)
+        viewinfo = DisplayInfo(self, "view")
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
         viewinfo.check_authorization("view")
