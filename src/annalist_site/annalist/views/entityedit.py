@@ -23,6 +23,7 @@ from annalist.models.recordfield        import RecordField
 from annalist.models.recordtypedata     import RecordTypeData
 from annalist.models.entitydata         import EntityData
 
+from annalist.views.uri_builder         import uri_with_params
 from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.entityvaluemap      import EntityValueMap
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
@@ -292,12 +293,15 @@ class GenericEntityEditView(AnnalistGenericView):
             if viewinfo.http_response:
                 return viewinfo.http_response
             (continuation_next, continuation_here) = self.continuation_uris(form_data, continuation_uri)
-
-
-            assert False, "@@TODO: Add field from entity view"
-            # Fake up POST to add field to view description view, with current page as continuation
-            # Return HTTP response
-            # @@TODO change view rendering
+            view_edit_uri_base = self.view_uri("AnnalistEntityEditView",
+                coll_id=viewinfo.coll_id,
+                view_id="View_view",
+                type_id="_view",
+                entity_id=viewinfo.view_id,
+                action="edit"
+                )
+            view_edit_uri = uri_with_params(view_edit_uri_base, {"add_field": "View_fields"}, continuation_here)
+            return HttpResponseRedirect(view_edit_uri)
 
         # Add new instance of repeating field
         add_field = self.find_add_field(entityvaluemap, form_data)
@@ -326,7 +330,7 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         log.warning("Unexpected form data %s"%(err_values))
         log.warning("Continue to %s"%(continuation_uri))
-        redirect_uri = uri_with_params(continuation_uri, err_values)
+        redirect_uri = view_edit_uri(continuation_uri, err_values)
         return HttpResponseRedirect(redirect_uri)
 
     def form_render(self, viewinfo, entity, continuation_uri):

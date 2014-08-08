@@ -158,6 +158,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / customize > edit record view > add field > cancel -- returns to wrong place.
    / need test case for remove field with no field selected
    / factor out add-field logic used by current add-field code
+   / test case for POST with 'add_view_field'
    - provide option to invoke add-field logic during initial form rendering
    - add_field button on entity edit displays
    - implement "add repeating field" option to view edit (and entity view?)

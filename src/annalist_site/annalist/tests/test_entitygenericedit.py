@@ -35,6 +35,7 @@ from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     collection_create_values,
     site_dir, collection_dir, 
+    continuation_uri_param,
     collection_edit_uri,
     site_title
     )
@@ -755,5 +756,29 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # Check stored entity is unchanged
         self._check_entity_data_values("edittype")
         return
+
+    # Add view field response
+
+    def test_post_entity_add_view_field(self):
+        self._create_entity_data("entityaddfield")
+        self._check_entity_data_values("entityaddfield")
+        f = entitydata_recordtype_view_form_data(
+                entity_id="entityaddfield", action="edit", update="Updated entity", 
+                add_view_field="View_fields"
+                )
+        u = entitydata_edit_uri("edit", "testcoll", "testtype", entity_id="entityaddfield", view_id="Type_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_edit_uri("edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view")
+        c = continuation_uri_param(u)
+        a = "add_field=View_fields"
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self.assertIn(a, r['location'])
+        self._check_entity_data_values("entityaddfield", update="Updated entity")
+        return
+
 
 # End.
