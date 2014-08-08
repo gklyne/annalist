@@ -504,7 +504,8 @@ def recordview_view_form_data(
         form_data_dict['View_fields__add']           = "Add field"
     elif remove_fields:
         form_data_dict['View_fields__remove']        = "Remove field"
-        form_data_dict['View_fields__select_fields'] = remove_fields
+        if remove_fields != "no-selection":
+            form_data_dict['View_fields__select_fields'] = remove_fields
     else:
         form_data_dict['save']          = 'Save'
     return form_data_dict

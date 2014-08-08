@@ -856,25 +856,51 @@ class RecordViewEditViewTest(AnnalistTestCase):
         return
 
     def test_post_remove_field(self):
-        self._create_record_view("addfieldview")
-        self._check_record_view_values("addfieldview")
+        self._create_record_view("removefieldview")
+        self._check_record_view_values("removefieldview")
         f = recordview_view_form_data(
-            view_id="addfieldview", orig_id="addfieldview", 
+            view_id="removefieldview", orig_id="removefieldview", 
             action="edit",
             remove_fields=['2']
             )
         u = entitydata_edit_uri(
-            action="edit", coll_id="testcoll", type_id="_view", entity_id="addfieldview", 
+            action="edit", coll_id="testcoll", type_id="_view", entity_id="removefieldview", 
             view_id="View_view"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         expect_context = recordview_view_context_data(
-            view_id="addfieldview", orig_id="addfieldview", 
+            view_id="removefieldview", orig_id="removefieldview", 
             action="edit",
             remove_field=True
             )
+        self.assertDictionaryMatch(r.context, expect_context)
+        return
+
+    def test_post_remove_no_field_selected(self):
+        self._create_record_view("removefieldview")
+        self._check_record_view_values("removefieldview")
+        f = recordview_view_form_data(
+            view_id="removefieldview", orig_id="removefieldview", 
+            action="edit",
+            remove_fields="no-selection"
+            )
+        u = entitydata_edit_uri(
+            action="edit", coll_id="testcoll", type_id="_view", entity_id="removefieldview", 
+            view_id="View_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "<h3>Problem with remove field(s) request</h3>")
+        self.assertContains(r, "<p>No field(s) selected</p>")
+        expect_context = recordview_view_context_data(
+            view_id="removefieldview", orig_id="removefieldview", 
+            action="edit",
+            remove_field=False
+            )
+        # log.info("expect_context: %r"%(expect_context))
         self.assertDictionaryMatch(r.context, expect_context)
         return
 

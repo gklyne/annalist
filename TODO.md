@@ -156,7 +156,9 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / fix entity links to use default view URI (/d/...)
    / List type + "View" selection uses // for type field - select based on list or suppress
    / customize > edit record view > add field > cancel -- returns to wrong place.
-   - factor out add-field logic used by current add-field code; provide option to invoke it during initial form rendering
+   / need test case for remove field with no field selected
+   / factor out add-field logic used by current add-field code
+   - provide option to invoke add-field logic during initial form rendering
    - add_field button on entity edit displays
    - implement "add repeating field" option to view edit (and entity view?)
    - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?

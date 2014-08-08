@@ -164,6 +164,8 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'entity_not_exists':      typeinfo.entitymessages['entity_not_exists']%message_vals
             , 'entity_type_heading':    typeinfo.entitymessages['entity_type_heading']%message_vals
             , 'entity_type_invalid':    typeinfo.entitymessages['entity_type_invalid']%message_vals
+            , 'remove_field_error':     message.REMOVE_FIELD_ERROR
+            , 'no_field_selected':      message.NO_FIELD_SELECTED
             })
         # Process form response and respond accordingly
         if not typeinfo.entityparent._exists():
@@ -301,7 +303,7 @@ class GenericEntityEditView(AnnalistGenericView):
         add_field = self.find_add_field(entityvaluemap, form_data)
         if add_field:
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
-            return self.add_field_to_view(add_field, entityvals, entityvaluemap, **context_extra_values)
+            return self.update_view_fields(add_field, entityvals, entityvaluemap, **context_extra_values)
 
             # # log.info("add_field: %r, entityvals: %r"%(add_field, entityvals))
             # # Construct new field value
@@ -322,23 +324,29 @@ class GenericEntityEditView(AnnalistGenericView):
         # Remove Field(s)
         remove_field = self.find_remove_field(entityvaluemap, form_data)
         if remove_field:
-            # log.info("remove_field: POST data %r"%(form_data,))
-            # remove_field is repeat field description
+            if not remove_field['remove_fields']:
+                log.debug("form_response: No field(s) selected for remove_field")
+                return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+                    error_head=messages['remove_field_error'],
+                    error_message=messages['no_field_selected']
+                    )
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
-            # log.info("remove_field: %r, entityvals: %r"%(remove_field, entityvals))
-            # Remove field(s) from entity
-            old_repeatvals = entityvals[remove_field['repeat_entity_values']]
-            new_repeatvals = []
-            for i in range(len(old_repeatvals)):
-                if str(i) not in remove_field['remove_fields']:
-                    new_repeatvals.append(old_repeatvals[i])
-            entityvals[remove_field['repeat_entity_values']] = new_repeatvals
-            # log.info("entityvals: %r"%(entityvals,))
-            form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
-            return (
-                self.render_html(form_context, self._entityformtemplate) or 
-                self.error(self.error406values())
-                )
+            return self.update_view_fields(remove_field, entityvals, entityvaluemap, **context_extra_values)
+
+            # # log.info("remove_field: %r, entityvals: %r"%(remove_field, entityvals))
+            # # Remove field(s) from entity
+            # old_repeatvals = entityvals[remove_field['repeat_entity_values']]
+            # new_repeatvals = []
+            # for i in range(len(old_repeatvals)):
+            #     if str(i) not in remove_field['remove_fields']:
+            #         new_repeatvals.append(old_repeatvals[i])
+            # entityvals[remove_field['repeat_entity_values']] = new_repeatvals
+            # # log.info("entityvals: %r"%(entityvals,))
+            # form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
+            # return (
+            #     self.render_html(form_context, self._entityformtemplate) or 
+            #     self.error(self.error406values())
+            #     )
 
         # Report unexpected form data
         # This shouldn't happen, but just in case...
@@ -531,7 +539,11 @@ class GenericEntityEditView(AnnalistGenericView):
         for repeat_desc in self.find_repeat_fields(entityvaluemap):
             # log.info("find_remove_field: %r"%repeat_desc)
             if repeat_desc['repeat_id']+"__remove" in form_data:
-                repeat_desc['remove_fields'] = form_data[repeat_desc['repeat_id']+"__select_fields"]
+                remove_fields_key = repeat_desc['repeat_id']+"__select_fields"
+                if remove_fields_key in form_data:
+                    repeat_desc['remove_fields'] = form_data[remove_fields_key]
+                else:
+                    repeat_desc['remove_fields'] = []
                 return repeat_desc
         return None
 
@@ -547,15 +559,19 @@ class GenericEntityEditView(AnnalistGenericView):
                 return repeat_desc
         return None
 
-    def add_field_to_view(self, add_field, entityvals, entityvaluemap, **context_extra_values):
+    def update_view_fields(self, field_desc, entityvals, entityvaluemap, **context_extra_values):
         """
-        Adds a new instance of a repeated field to supplied entity instance data.
+        Renders a new form from supplied entity instance data with a repeateds field or 
+        field group added or removed.
 
-        The change is made in memory, not saved to permanent storage, and is used to 
-        render an updated form display.  The new field is saved by invoking 'save' 
-        from the displayed form (i.e. a corresponding HTTP POST).
+        The change is not saved to permanent storage, and is used to render a form display.
+        The new field is saved by invoking 'save' from the displayed form (i.e. a corresponding 
+        HTTP POST).
 
-        add_field   is a field description for a field or field group to be added.
+        field_desc  is a field description for a field or field group to be added
+                    or removed.  Fields are removed if the description contains a
+                    'remove_fields' field, which contains a list of the repeat index
+                    values to be removed, otherwise a field is added.
         entityvals  is a dictionary of entity values to which the field is added.
         entityvaluemap
                     an EntityValueMap object for the entity being presented.
@@ -566,13 +582,22 @@ class GenericEntityEditView(AnnalistGenericView):
         returns an HttpResponse object to rendering the updated entity editing form,
         or to indicate an reason for failure.
         """
-        # log.info("add_field: %r: %r"%(add_field,))
+        # log.info("field_desc: %r: %r"%(field_desc,))
         # Construct new field value (may be a group of several fields)
-        field_val = dict(
-            [ (f['field_property_uri'], "")
-              for f in add_field['repeat_fields_description']['field_list']
-            ])
-        entityvals[add_field['repeat_entity_values']].append(field_val)
+        repeatvals = entityvals[field_desc['repeat_entity_values']]
+        if 'remove_fields' in field_desc:
+            old_repeatvals = repeatvals
+            repeatvals = []
+            for i in range(len(old_repeatvals)):
+                if str(i) not in field_desc['remove_fields']:
+                    repeatvals.append(old_repeatvals[i])
+        else:
+            field_val = dict(
+                [ (f['field_property_uri'], "")
+                  for f in field_desc['repeat_fields_description']['field_list']
+                ])
+            repeatvals.append(field_val)
+        entityvals[field_desc['repeat_entity_values']] = repeatvals
         # log.info("entityvals: %r"%(entityvals,))
         form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
         return (

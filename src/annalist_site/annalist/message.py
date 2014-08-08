@@ -78,5 +78,7 @@ ENTITY_DATA_REMOVED     = "Entity %(id)s of type %(type_id)s in collection %(col
 ENTITY_TYPE_ID          = "Problem with entity type identifier"
 ENTITY_TYPE_ID_INVALID  = "The entity type identifier is missing or not a valid identifier"
 DEFAULT_VIEW_UPDATED    = "Default list view for collection %(coll_id)s changed to %(list_id)s"
+REMOVE_FIELD_ERROR      = "Problem with remove field(s) request"
+NO_FIELD_SELECTED       = "No field(s) selected"
 
 # End.
