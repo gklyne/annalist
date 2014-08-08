@@ -305,22 +305,6 @@ class GenericEntityEditView(AnnalistGenericView):
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
             return self.update_view_fields(add_field, entityvals, entityvaluemap, **context_extra_values)
 
-            # # log.info("add_field: %r, entityvals: %r"%(add_field, entityvals))
-            # # Construct new field value
-            # field_val = dict(
-            #     [ (f['field_property_uri'], "")
-            #       for f in add_field['repeat_fields_description']['field_list']
-            #     ])
-            # # log.info("field_val: %r"%(field_val,))
-            # # Add field to entity
-            # entityvals[add_field['repeat_entity_values']].append(field_val)
-            # # log.info("entityvals: %r"%(entityvals,))
-            # form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
-            # return (
-            #     self.render_html(form_context, self._entityformtemplate) or 
-            #     self.error(self.error406values())
-            #     )
-
         # Remove Field(s)
         remove_field = self.find_remove_field(entityvaluemap, form_data)
         if remove_field:
@@ -332,21 +316,6 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
             return self.update_view_fields(remove_field, entityvals, entityvaluemap, **context_extra_values)
-
-            # # log.info("remove_field: %r, entityvals: %r"%(remove_field, entityvals))
-            # # Remove field(s) from entity
-            # old_repeatvals = entityvals[remove_field['repeat_entity_values']]
-            # new_repeatvals = []
-            # for i in range(len(old_repeatvals)):
-            #     if str(i) not in remove_field['remove_fields']:
-            #         new_repeatvals.append(old_repeatvals[i])
-            # entityvals[remove_field['repeat_entity_values']] = new_repeatvals
-            # # log.info("entityvals: %r"%(entityvals,))
-            # form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
-            # return (
-            #     self.render_html(form_context, self._entityformtemplate) or 
-            #     self.error(self.error406values())
-            #     )
 
         # Report unexpected form data
         # This shouldn't happen, but just in case...
