@@ -258,13 +258,6 @@ class GenericEntityEditView(AnnalistGenericView):
         type_id   = viewinfo.type_id
         entity_id = entity.get_id()
         type_ids  = [ t.get_id() for t in viewinfo.collection.types() ]
-        # if entity is None:
-        #     return self.error(
-        #         dict(self.error404values(),
-        #             message=message.DOES_NOT_EXIST%
-        #                 {'id': "Collection %s, entity %s of type %s"%(coll_id, entity_id, type_id)}
-        #             )
-        #         )
         # Set up initial view context
         entityvaluemap = self.get_view_entityvaluemap(viewinfo)
         if add_field:
@@ -565,22 +558,10 @@ class GenericEntityEditView(AnnalistGenericView):
         or to indicate an reason for failure.
         """
         # log.info("field_desc: %r: %r"%(field_desc,))
-        # Construct new field value (may be a group of several fields)
         if 'remove_fields' in field_desc:
             self.remove_entity_field(field_desc, entityvals)
-            # old_repeatvals = entityvals[field_desc['repeat_entity_values']]
-            # repeatvals = []
-            # for i in range(len(old_repeatvals)):
-            #     if str(i) not in field_desc['remove_fields']:
-            #         repeatvals.append(old_repeatvals[i])
-            # entityvals[field_desc['repeat_entity_values']] = repeatvals
         else:
             self.add_entity_field(field_desc, entityvals)
-            # field_val = dict(
-            #     [ (f['field_property_uri'], "")
-            #       for f in field_desc['repeat_fields_description']['field_list']
-            #     ])
-            # repeatvals.append(field_val)
         # log.info("entityvals: %r"%(entityvals,))
         form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
         return (
@@ -605,35 +586,5 @@ class GenericEntityEditView(AnnalistGenericView):
                 new_repeatvals.append(old_repeatvals[i])
         entity[repeatvals_key] = new_repeatvals
         return
-
-#####################################################
-
-    def add_view_field(self,
-            form_data,
-            entity_id, entity_type, orig_entity_id, orig_entity_type, 
-            collection, typeinfo, context_extra_values, messages):
-        """
-        Add a new field to the current entity view.
-
-        First, the current form data is saved back to the entity being edited or created,
-        then an view descriptiuon edit form is displayed to allow details of the new field 
-        to be entered.  When the view display is dismissed, conbtrol returns to the
-        current entity view.
-
-        Returns an HTTP response object that reports the nature of any problem encountered,
-        or ?????
-        """
-        http_response = self.add_view_field(form_data,
-            entity_id, entity_type, orig_entity_id, orig_entity_type, 
-            viewinfo.collection, typeinfo, context_extra_values, messages)
-        if http_response:
-            return http_response
-
-        # Check authz for config change
-        # Fake up POST to add field to view description view, with current page as continuation
-        # Return HTTP response
-        # @@TODO change view rendering
-
-        assert False, "@@TODO: add_view_field"
 
 # End.
