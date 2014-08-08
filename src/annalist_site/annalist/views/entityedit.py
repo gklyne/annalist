@@ -291,6 +291,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 return viewinfo.http_response
             (continuation_next, continuation_here) = self.continuation_uris(form_data, continuation_uri)
 
+
             assert False, "@@TODO: Add field from entity view"
             # Fake up POST to add field to view description view, with current page as continuation
             # Return HTTP response

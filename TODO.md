@@ -156,6 +156,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / fix entity links to use default view URI (/d/...)
    / List type + "View" selection uses // for type field - select based on list or suppress
    / customize > edit record view > add field > cancel -- returns to wrong place.
+   - factor out add-field logic used by current add-field code; provide option to invoke it during initial form rendering
    - add_field button on entity edit displays
    - implement "add repeating field" option to view edit (and entity view?)
    - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
@@ -177,10 +178,10 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    - update URI dispatching
    - include default view
 10. Code improvement - lists
-   - move invocation of authentication to the immediate response handler code?
-   - refactor list description access out of context handling code (avoid multiple reads)
+   / move invocation of authentication to the immediate response handler code?
+   / refactor list description access out of context handling code (avoid multiple reads)
    / refactor code from entityeditbase into more specific views where possible
-   - rename what is left of entityeditbase -> entityviewbase, or move to generic module
+   / rename what is left of entityeditbase -> entityviewbase, or move to generic module
    - review URI for delete type/view/list confirmation
    - use proper indexing to accelerate search (maybe later?)
 11. Code improvement - views
