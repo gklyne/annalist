@@ -106,8 +106,12 @@ class GenericEntityEditView(AnnalistGenericView):
                     message=message.DOES_NOT_EXIST%{'id': entity_initial_values['rdfs:label']}
                     )
                 )
+        # @@TODO: build context_extra_values here and pass into form_render.
+        #         eventually, form_render will ideally be used for both GET and POST 
+        #         handlers that respond with a rendered form.
+        add_field        = request.GET.get('add_field', None)
         continuation_uri = request.GET.get('continuation_uri', "")
-        return self.form_render(viewinfo, entity, continuation_uri)
+        return self.form_render(viewinfo, entity, add_field, continuation_uri)
 
     # POST
 
@@ -143,6 +147,7 @@ class GenericEntityEditView(AnnalistGenericView):
         #     )
         # log.info("continuation_uri %s, type_id %s"%(continuation_uri, type_id))
         typeinfo        = viewinfo.entitytypeinfo
+        # @@TODO: handle enumeration of values more generically in fields/render_utils.
         type_ids        = [ t.get_id() for t in viewinfo.collection.types() ]
         context_extra_values = (
             { 'title':            viewinfo.sitedata["title"]
@@ -243,6 +248,62 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
         return entity
 
+    def form_render(self, viewinfo, entity, add_field, continuation_uri):
+        """
+        Returns an HTTP response that renders a view of an entity, 
+        using supplied entity data
+        """
+        assert entity, "No entity value provided"
+        coll_id   = viewinfo.coll_id
+        type_id   = viewinfo.type_id
+        entity_id = entity.get_id()
+        type_ids  = [ t.get_id() for t in viewinfo.collection.types() ]
+        # if entity is None:
+        #     return self.error(
+        #         dict(self.error404values(),
+        #             message=message.DOES_NOT_EXIST%
+        #                 {'id': "Collection %s, entity %s of type %s"%(coll_id, entity_id, type_id)}
+        #             )
+        #         )
+        # Set up initial view context
+        entityvaluemap = self.get_view_entityvaluemap(viewinfo)
+        if add_field:
+            add_field_desc = self.find_repeat_id(entityvaluemap, add_field)
+            if add_field_desc:
+                self.add_entity_field(self, add_field_desc, entity)
+        viewcontext    = entityvaluemap.map_value_to_context(entity,
+            title               = viewinfo.sitedata["title"],
+            continuation_uri    = continuation_uri,
+            action              = viewinfo.action,
+            coll_id             = coll_id,
+            type_id             = type_id,
+            type_ids            = type_ids,
+            orig_id             = entity_id,
+            orig_type           = type_id,
+            view_id             = viewinfo.view_id
+            )
+        # Generate and return form data
+        return (
+            self.render_html(viewcontext, self._entityformtemplate) or 
+            self.error(self.error406values())
+            )
+
+    def form_re_render(self, 
+            entityvaluemap, form_data, context_extra_values={}, 
+            error_head=None, error_message=None):
+        """
+        Returns re-rendering of form with current values and error message displayed.
+        """
+        form_context = entityvaluemap.map_form_data_to_context(form_data,
+            **context_extra_values
+            )
+        # log.info("********\nform_context %r"%form_context)
+        form_context['error_head']    = error_head
+        form_context['error_message'] = error_message
+        return (
+            self.render_html(form_context, self._entityformtemplate) or 
+            self.error(self.error406values())
+            )
 
     # @@TODO: refactor form_response to separate methods for each action
     #         form_response should handle initial checking and dispatching.
@@ -332,58 +393,6 @@ class GenericEntityEditView(AnnalistGenericView):
         log.warning("Continue to %s"%(continuation_uri))
         redirect_uri = view_edit_uri(continuation_uri, err_values)
         return HttpResponseRedirect(redirect_uri)
-
-    def form_render(self, viewinfo, entity, continuation_uri):
-        """
-        Returns an HTTP response that renders a view of an entity, 
-        using supplied entity data
-        """
-        coll_id   = viewinfo.coll_id
-        type_id   = viewinfo.type_id
-        entity_id = entity.get_id()
-        type_ids  = [ t.get_id() for t in viewinfo.collection.types() ]
-        if entity is None:
-            return self.error(
-                dict(self.error404values(),
-                    message=message.DOES_NOT_EXIST%
-                        {'id': "Collection %s, entity %s of type %s"%(coll_id, entity_id, type_id)}
-                    )
-                )
-        # Set up initial view context
-        entityvaluemap = self.get_view_entityvaluemap(viewinfo)
-        viewcontext    = entityvaluemap.map_value_to_context(entity,
-            title               = viewinfo.sitedata["title"],
-            continuation_uri    = continuation_uri,
-            action              = viewinfo.action,
-            coll_id             = coll_id,
-            type_id             = type_id,
-            type_ids            = type_ids,
-            orig_id             = entity_id,
-            orig_type           = type_id,
-            view_id             = viewinfo.view_id
-            )
-        # Generate and return form data
-        return (
-            self.render_html(viewcontext, self._entityformtemplate) or 
-            self.error(self.error406values())
-            )
-
-    def form_re_render(self, 
-            entityvaluemap, form_data, context_extra_values={}, 
-            error_head=None, error_message=None):
-        """
-        Returns re-rendering of form with current values and error message displayed.
-        """
-        form_context = entityvaluemap.map_form_data_to_context(form_data,
-            **context_extra_values
-            )
-        # log.info("********\nform_context %r"%form_context)
-        form_context['error_head']    = error_head
-        form_context['error_message'] = error_message
-        return (
-            self.render_html(form_context, self._entityformtemplate) or 
-            self.error(self.error406values())
-            )
 
     def save_entity(self,
             entityvaluemap, form_data,
@@ -557,20 +566,21 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         # log.info("field_desc: %r: %r"%(field_desc,))
         # Construct new field value (may be a group of several fields)
-        repeatvals = entityvals[field_desc['repeat_entity_values']]
         if 'remove_fields' in field_desc:
-            old_repeatvals = repeatvals
-            repeatvals = []
-            for i in range(len(old_repeatvals)):
-                if str(i) not in field_desc['remove_fields']:
-                    repeatvals.append(old_repeatvals[i])
+            self.remove_entity_field(field_desc, entityvals)
+            # old_repeatvals = entityvals[field_desc['repeat_entity_values']]
+            # repeatvals = []
+            # for i in range(len(old_repeatvals)):
+            #     if str(i) not in field_desc['remove_fields']:
+            #         repeatvals.append(old_repeatvals[i])
+            # entityvals[field_desc['repeat_entity_values']] = repeatvals
         else:
-            field_val = dict(
-                [ (f['field_property_uri'], "")
-                  for f in field_desc['repeat_fields_description']['field_list']
-                ])
-            repeatvals.append(field_val)
-        entityvals[field_desc['repeat_entity_values']] = repeatvals
+            self.add_entity_field(field_desc, entityvals)
+            # field_val = dict(
+            #     [ (f['field_property_uri'], "")
+            #       for f in field_desc['repeat_fields_description']['field_list']
+            #     ])
+            # repeatvals.append(field_val)
         # log.info("entityvals: %r"%(entityvals,))
         form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
         return (
@@ -578,6 +588,23 @@ class GenericEntityEditView(AnnalistGenericView):
             self.error(self.error406values())
             )
 
+    def add_entity_field(self, add_field_desc, entity):
+        field_val = dict(
+            [ (f['field_property_uri'], "")
+              for f in add_field_desc['repeat_fields_description']['field_list']
+            ])
+        entity[add_field_desc['repeat_entity_values']].append(field_val)
+        return
+
+    def remove_entity_field(self, remove_field_desc, entity):
+        repeatvals_key = remove_field_desc['repeat_entity_values']
+        old_repeatvals = entity[repeatvals_key]
+        new_repeatvals = []
+        for i in range(len(old_repeatvals)):
+            if str(i) not in remove_field_desc['remove_fields']:
+                new_repeatvals.append(old_repeatvals[i])
+        entity[repeatvals_key] = new_repeatvals
+        return
 
 #####################################################
 
