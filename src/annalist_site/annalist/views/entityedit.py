@@ -263,7 +263,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if add_field:
             add_field_desc = self.find_repeat_id(entityvaluemap, add_field)
             if add_field_desc:
-                self.add_entity_field(self, add_field_desc, entity)
+                self.add_entity_field(add_field_desc, entity)
         viewcontext    = entityvaluemap.map_value_to_context(entity,
             title               = viewinfo.sitedata["title"],
             continuation_uri    = continuation_uri,

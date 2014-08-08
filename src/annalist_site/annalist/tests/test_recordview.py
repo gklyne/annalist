@@ -31,6 +31,7 @@ from annalist.models.sitedata           import SiteData
 from annalist.models.collection         import Collection
 from annalist.models.recordview         import RecordView
 
+from annalist.views.uri_builder         import uri_with_params
 from annalist.views.recordviewdelete    import RecordViewDeleteConfirmedView
 
 from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -397,10 +398,11 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[2]['fields'][1].field_value,            "small:0,12")
         # Repeat fields data, to be preserved when form description is updated
         # log.info("\n********\n%r"%(viewfields[3],))
-        self.assertEqual(viewfields[3]['repeat_id'],     'View_fields')
-        self.assertEqual(viewfields[3]['repeat_index'],  3)
-        self.assertEqual(viewfields[3]['repeat_prefix'], 'View_fields__3__')
-        repeat_fields_data = json.loads(viewfields[3]['repeat_fields_data'])
+        ri = 3
+        self.assertEqual(viewfields[ri]['repeat_id'],     'View_fields')
+        self.assertEqual(viewfields[ri]['repeat_index'],  3)
+        self.assertEqual(viewfields[ri]['repeat_prefix'], 'View_fields__3__')
+        repeat_fields_data = json.loads(viewfields[ri]['repeat_fields_data'])
         # log.info("\n********\n%r"%(repeat_fields_data,))
         self.assertEqual(repeat_fields_data['annal:repeat_id'],             'View_fields')
         self.assertEqual(repeat_fields_data['annal:repeat_label_add'],      'Add field')
@@ -413,13 +415,19 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(repeat_fields_data['annal:repeat'][1]['annal:field_id'],        'Field_placement')
         self.assertEqual(repeat_fields_data['annal:repeat'][1]['annal:field_placement'], 'small:0,12; medium:6,6')
         # Repeated field structure descritpion (used by add field logic, etc.)
-        # log.info(viewfields[3])
-        view_repeatfields = r.context['fields'][3]['repeat_fields_description']['field_list']
+        # log.info(viewfields[ri])
+        view_repeatfields = r.context['fields'][ri]['repeat_fields_description']['field_list']
         self.assertEqual(len(view_repeatfields), 2)
         self.assertEqual(view_repeatfields[0]['field_id'], 'Field_sel')
         self.assertEqual(view_repeatfields[0]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(view_repeatfields[1]['field_id'], 'Field_placement')
         self.assertEqual(view_repeatfields[1]['field_placement'].field, "small-12 medium-6 columns")
+        # New blank field, if selected
+        if num_fields == 5:
+            self.assertEqual(viewfields[4]['fields'][0].field_value_key,        "annal:field_id")
+            self.assertEqual(viewfields[4]['fields'][0].field_value,            "")
+            self.assertEqual(viewfields[4]['fields'][1].field_value_key,        "annal:field_placement")
+            self.assertEqual(viewfields[4]['fields'][1].field_value,            "")
         return
 
     #   -----------------------------------------------------------------------------
@@ -598,6 +606,28 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['continuation_uri'], "")
         # Fields
         self._check_record_view_context_fields(r, action="edit")
+        return
+
+    def test_get_recordview_edit_add_field(self):
+        u = entitydata_edit_uri(
+            "edit", "testcoll", "_view", entity_id="View_view", 
+            view_id="View_view"
+            )
+        u = uri_with_params(u, {'add_field': 'View_fields'})
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Test context (values read from test data fixture)
+        self.assertEqual(r.context['title'],            site_title())
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "_view")
+        self.assertEqual(r.context['entity_id'],        "View_view")
+        self.assertEqual(r.context['orig_id'],          "View_view")
+        self.assertEqual(r.context['entity_uri'],       "annal:display/View_view")
+        self.assertEqual(r.context['action'],           "edit")
+        self.assertEqual(r.context['continuation_uri'], "")
+        # Fields
+        self._check_record_view_context_fields(r, action="edit", num_fields=5)
         return
 
     #   -----------------------------------------------------------------------------
