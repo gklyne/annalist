@@ -300,24 +300,24 @@ class GenericEntityEditView(AnnalistGenericView):
         # Add new instance of repeating field
         add_field = self.find_add_field(entityvaluemap, form_data)
         if add_field:
-            # log.info("add_field: POST data %r"%(form_data,))
-            # add_field is repeat field description
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
-            # log.info("add_field: %r, entityvals: %r"%(add_field, entityvals))
-            # Construct new field value
-            field_val = dict(
-                [ (f['field_property_uri'], "")
-                  for f in add_field['repeat_fields_description']['field_list']
-                ])
-            # log.info("field_val: %r"%(field_val,))
-            # Add field to entity
-            entityvals[add_field['repeat_entity_values']].append(field_val)
-            # log.info("entityvals: %r"%(entityvals,))
-            form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
-            return (
-                self.render_html(form_context, self._entityformtemplate) or 
-                self.error(self.error406values())
-                )
+            return self.add_field_to_view(add_field, entityvals, entityvaluemap, **context_extra_values)
+
+            # # log.info("add_field: %r, entityvals: %r"%(add_field, entityvals))
+            # # Construct new field value
+            # field_val = dict(
+            #     [ (f['field_property_uri'], "")
+            #       for f in add_field['repeat_fields_description']['field_list']
+            #     ])
+            # # log.info("field_val: %r"%(field_val,))
+            # # Add field to entity
+            # entityvals[add_field['repeat_entity_values']].append(field_val)
+            # # log.info("entityvals: %r"%(entityvals,))
+            # form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
+            # return (
+            #     self.render_html(form_context, self._entityformtemplate) or 
+            #     self.error(self.error406values())
+            #     )
 
         # Remove Field(s)
         remove_field = self.find_remove_field(entityvaluemap, form_data)
@@ -404,64 +404,6 @@ class GenericEntityEditView(AnnalistGenericView):
             self.error(self.error406values())
             )
 
-    def find_repeat_fields(self, entityvaluemap):
-        """
-        Iterate over repeat field groups in the current view.
-
-        Each value found is returned as a field structure description; e.g.
-
-            { 'field_type': 'RepeatValuesMap'
-            , 'repeat_entity_values': u 'annal:view_fields'
-            , 'repeat_id': u 'View_fields'
-            , 'repeat_btn_label': u 'field'
-            , 'repeat_label': u 'Fields'
-            , 'repeat_context_values': u 'repeat'
-            , 'repeat_fields_description':
-            , { 'field_type': 'FieldListValueMap'
-              , 'field_list':
-                [ { 'field_placement': Placement(field = u 'small-12 medium-6 columns', ... )
-                  , 'field_id': u 'Field_sel'
-                  }
-                , { 'field_placement': Placement(field = u 'small-12 medium-6 columns', ... )
-                  , 'field_id': u 'Field_placement'
-                  }
-                ]
-              }
-            }
-        """
-        def _find_repeat_fields(fieldmap):
-            for kmap in fieldmap:
-                field_desc = kmap.get_structure_description()
-                if field_desc['field_type'] == "FieldListValueMap":
-                    for fd in _find_repeat_fields(kmap.fs):
-                        yield fd
-                if field_desc['field_type'] == "RepeatValuesMap":
-                    yield field_desc
-        return _find_repeat_fields(entityvaluemap)
-
-    def find_add_field(self, entityvaluemap, form_data):
-        """
-        Locate add field option in form data and,if present, return a description of the field to
-        be added.
-        """
-        for repeat_desc in self.find_repeat_fields(entityvaluemap):
-            # log.info("find_add_field: %r"%repeat_desc)
-            if repeat_desc['repeat_id']+"__add" in form_data:
-                return repeat_desc
-        return None
-
-    def find_remove_field(self, entityvaluemap, form_data):
-        """
-        Locate remove field option in form data and, if present, return a description of the field to
-        be removed, with the list of member indexes to be removed added as element 'remove_fields'.
-        """
-        for repeat_desc in self.find_repeat_fields(entityvaluemap):
-            # log.info("find_remove_field: %r"%repeat_desc)
-            if repeat_desc['repeat_id']+"__remove" in form_data:
-                repeat_desc['remove_fields'] = form_data[repeat_desc['repeat_id']+"__select_fields"]
-                return repeat_desc
-        return None
-
     def save_entity(self,
             entityvaluemap, form_data,
             entity_id, entity_type, orig_entity_id, orig_entity_type, 
@@ -535,6 +477,112 @@ class GenericEntityEditView(AnnalistGenericView):
                 typeinfo.entityclass.remove(orig_parent, orig_entity_id)
         return None
 
+    def find_repeat_fields(self, entityvaluemap):
+        """
+        Iterate over repeat field groups in the current view.
+
+        Each value found is returned as a field structure description; e.g.
+
+            { 'field_type': 'RepeatValuesMap'
+            , 'repeat_entity_values': u 'annal:view_fields'
+            , 'repeat_id': u 'View_fields'
+            , 'repeat_btn_label': u 'field'
+            , 'repeat_label': u 'Fields'
+            , 'repeat_context_values': u 'repeat'
+            , 'repeat_fields_description':
+            , { 'field_type': 'FieldListValueMap'
+              , 'field_list':
+                [ { 'field_placement': Placement(field = u 'small-12 medium-6 columns', ... )
+                  , 'field_id': u 'Field_sel'
+                  }
+                , { 'field_placement': Placement(field = u 'small-12 medium-6 columns', ... )
+                  , 'field_id': u 'Field_placement'
+                  }
+                ]
+              }
+            }
+        """
+        def _find_repeat_fields(fieldmap):
+            for kmap in fieldmap:
+                field_desc = kmap.get_structure_description()
+                if field_desc['field_type'] == "FieldListValueMap":
+                    for fd in _find_repeat_fields(kmap.fs):
+                        yield fd
+                if field_desc['field_type'] == "RepeatValuesMap":
+                    yield field_desc
+        return _find_repeat_fields(entityvaluemap)
+
+    def find_add_field(self, entityvaluemap, form_data):
+        """
+        Locate add field option in form data and,if present, return a description of the field to
+        be added.
+        """
+        for repeat_desc in self.find_repeat_fields(entityvaluemap):
+            # log.info("find_add_field: %r"%repeat_desc)
+            if repeat_desc['repeat_id']+"__add" in form_data:
+                return repeat_desc
+        return None
+
+    def find_remove_field(self, entityvaluemap, form_data):
+        """
+        Locate remove field option in form data and, if present, return a description of the field to
+        be removed, with the list of member indexes to be removed added as element 'remove_fields'.
+        """
+        for repeat_desc in self.find_repeat_fields(entityvaluemap):
+            # log.info("find_remove_field: %r"%repeat_desc)
+            if repeat_desc['repeat_id']+"__remove" in form_data:
+                repeat_desc['remove_fields'] = form_data[repeat_desc['repeat_id']+"__select_fields"]
+                return repeat_desc
+        return None
+
+    def find_repeat_id(self, entityvaluemap, repeat_id):
+        """
+        Locate a repeated field description by repeat_id.
+
+        Returns the field description (see `find_repeat_fields` above), or None
+        """
+        for repeat_desc in self.find_repeat_fields(entityvaluemap):
+            # log.info("find_add_field: %r"%repeat_desc)
+            if repeat_desc['repeat_id'] == repeat_id:
+                return repeat_desc
+        return None
+
+    def add_field_to_view(self, add_field, entityvals, entityvaluemap, **context_extra_values):
+        """
+        Adds a new instance of a repeated field to supplied entity instance data.
+
+        The change is made in memory, not saved to permanent storage, and is used to 
+        render an updated form display.  The new field is saved by invoking 'save' 
+        from the displayed form (i.e. a corresponding HTTP POST).
+
+        add_field   is a field description for a field or field group to be added.
+        entityvals  is a dictionary of entity values to which the field is added.
+        entityvaluemap
+                    an EntityValueMap object for the entity being presented.
+        context_extra_values
+                    is a dictionary of default and additional values not provided by the
+                    entity itself, that may be needed to render the updated form. 
+
+        returns an HttpResponse object to rendering the updated entity editing form,
+        or to indicate an reason for failure.
+        """
+        # log.info("add_field: %r: %r"%(add_field,))
+        # Construct new field value (may be a group of several fields)
+        field_val = dict(
+            [ (f['field_property_uri'], "")
+              for f in add_field['repeat_fields_description']['field_list']
+            ])
+        entityvals[add_field['repeat_entity_values']].append(field_val)
+        # log.info("entityvals: %r"%(entityvals,))
+        form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
+        return (
+            self.render_html(form_context, self._entityformtemplate) or 
+            self.error(self.error406values())
+            )
+
+
+#####################################################
+
     def add_view_field(self,
             form_data,
             entity_id, entity_type, orig_entity_id, orig_entity_type, 
@@ -562,7 +610,5 @@ class GenericEntityEditView(AnnalistGenericView):
         # @@TODO change view rendering
 
         assert False, "@@TODO: add_view_field"
-
-
 
 # End.
