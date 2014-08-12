@@ -51,7 +51,8 @@ from entity_testentitydata          import (
     entitydata_value_keys, entitydata_create_values, entitydata_values,
     entitydata_delete_confirm_form_data,
     entitydata_recordtype_view_context_data, 
-    entitydata_recordtype_view_form_data
+    entitydata_recordtype_view_form_data,
+    layout_classes
     )
 
 #   -----------------------------------------------------------------------------
@@ -118,42 +119,43 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_uri=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
+        # log.info(r.content)
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         formrow1 = """
             <div class="small-12 medium-6 columns">
               <div class="row">
-                <div class="view_label small-12 medium-6 columns">
+                <div class="%(label_classes)s">
                   <p>Id</p>
                 </div>
-                <div class="small-12 medium-6 columns">
+                <div class="%(input_classes)s">
                     <input type="text" size="64" name="entity_id" 
                            placeholder="(type id)" value="00000001"/>
                 </div>
               </div>
             </div>
-            """
+            """%layout_classes(width=6)
         formrow2 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>Label</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="Type_label"
                         placeholder="(label)"  
                         value="Entity &#39;00000001&#39; of type &#39;testtype&#39; in collection &#39;testcoll&#39;"/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=12)
         formrow3 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>Comment</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <textarea cols="64" rows="6" name="Type_comment" 
                                   class="small-rows-4 medium-rows-8"
                                   placeholder="(type description)">
@@ -161,25 +163,52 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=12)
         formrow4 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>URI</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="Type_uri"
                                placeholder="(URI)"  
                                value="http://test.example.com/testsite/c/testcoll/d/testtype/00000001/"/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=12)
+        formrow5 = """
+            <div class="row">
+                <div class="%(space_classes)s">
+                    <div class="row">
+                        <div class="small-12 columns">
+                          &nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div class="%(button_group_classes)s">
+                    <div class="row">
+                        <div class="%(group_left_classes)s">
+                            <input type="submit" name="save"          value="Save" />
+                            <input type="submit" name="cancel"        value="Cancel" />
+                        </div>
+                    </div>
+                </div>
+                <div class="%(button_group_classes)s">
+                    <div class="row">
+                        <div class="%(group_right_classes)s">
+                            <input type="submit" name="add_view_field" value="Add field" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            """%layout_classes(width=12)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)
         self.assertContains(r, formrow4, html=True)
+        self.assertContains(r, formrow5, html=True)
         return
 
     def test_get_new(self):

@@ -21,7 +21,9 @@ from annalist.util              import valid_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import layout
 
-from annalist.views.fields.render_utils import get_placement_classes
+from annalist.views.fields.render_placement import (
+    get_placement_classes
+    )
 
 from entity_testentitydata      import entitydata_list_type_uri
 from tests import (

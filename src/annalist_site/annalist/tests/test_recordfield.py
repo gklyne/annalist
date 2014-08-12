@@ -63,7 +63,8 @@ from entity_testutils               import (
     site_title
     )
 from entity_testentitydata          import (
-    entity_uri, entitydata_edit_uri, entitydata_list_type_uri
+    entity_uri, entitydata_edit_uri, entitydata_list_type_uri,
+    layout_classes
     )
 
 #   -----------------------------------------------------------------------------
@@ -367,96 +368,96 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         formrow1col1 = """
             <div class="small-12 medium-6 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-6 columns">
+                    <div class="%(label_classes)s">
                         <p>Id</p>
                     </div>
-                    <div class="small-12 medium-6 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="entity_id" 
                                placeholder="(field id)" value="00000001"/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=6)
         formrow1col2 = """
             <div class="small-12 medium-6 right columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-6 columns">
+                    <div class="%(label_classes)s">
                         <p>Field value type</p>
                     </div>
-                    <div class="small-12 medium-6 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="Field_type" 
                                placeholder="(field value type)" value=""/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=6)
         formrow2 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>Label</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="Field_label" 
                         placeholder="(field label)"
                         value="Entity &#39;00000001&#39; of type &#39;_field&#39; in collection &#39;testcoll&#39;"/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=12)
         formrow3 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>Help</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"
                                   placeholder="(field usage commentary or help text)"></textarea>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=12)
         formrow4 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>Placeholder</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="Field_placeholder"
                                placeholder="(placeholder text)" value=""/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=12)
         formrow5 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>Property</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="Field_property" 
                         placeholder="(property URI or CURIE)" value=""/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=12)
         formrow6 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>Size/position</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="Field_placement"
                                placeholder="(field display size and placement details)"
                                value=""/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=12)
         self.assertContains(r, formrow1col1, html=True)
         self.assertContains(r, formrow1col2, html=True)
         self.assertContains(r, formrow2, html=True)

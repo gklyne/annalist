@@ -48,7 +48,8 @@ from entity_testentitydata          import (
     entitydata_list_type_uri,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
-    entitydata_recordtype_view_form_data
+    entitydata_recordtype_view_form_data,
+    layout_classes
     )
 
 #   -----------------------------------------------------------------------------
@@ -121,29 +122,29 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               <!-- editable text field -->
               <div class="small-12 medium-6 columns">
                 <div class="row">
-                  <div class="view_label small-12 medium-6 columns">
+                  <div class="%(label_classes)s">
                     <p>
                       Id
                     </p>
                   </div>
-                  <div class="small-12 medium-6 columns">
+                  <div class="%(input_classes)s">
                     <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
                     <input type="text" size="64" name="entity_id" 
                            placeholder="(entity id)" value="00000001">
                   </div>
                 </div>
               </div>
-            """
+            """%layout_classes(width=6)
         formrow2 = """
               <!-- record type dropdown -->
               <div class="small-12 medium-6 right columns">
                 <div class="row">
-                  <div class="view_label small-12 medium-6 columns">
+                  <div class="%(label_classes)s">
                     <p>
                       Type
                     </p>
                   </div>
-                  <div class="small-12 medium-6 columns">
+                  <div class="%(input_classes)s">
                     <select name="entity_type" class="right">
                         <option selected="selected">testtype</option>
                         <option>_field</option>
@@ -155,17 +156,17 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   </div>
                 </div>
               </div>
-            """
+            """%layout_classes(width=6)
         formrow3 = """
               <!-- editable text field -->
               <div class="small-12 columns">
                 <div class="row">
-                  <div class="view_label small-12 medium-3 columns">
+                  <div class="%(label_classes)s">
                     <p>
                       Label
                     </p>
                   </div>
-                  <div class="small-12 medium-9 columns">
+                  <div class="%(input_classes)s">
                     <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
                     <input type="text" size="64" name="Entity_label" 
                            placeholder="(label)" 
@@ -173,24 +174,24 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   </div>
                 </div>
               </div>
-            """
+            """%layout_classes(width=12)
         formrow4 = """
               <!-- editable textarea field -->
               <div class="small-12 columns">
                 <div class="row">
-                  <div class="view_label small-12 medium-3 columns">
+                  <div class="%(label_classes)s">
                     <p>
                       Comment
                     </p>
                   </div>
-                  <div class="small-12 medium-9 columns">
+                  <div class="%(input_classes)s">
                     <textarea cols="64" rows="6" name="Entity_comment" 
                               class="small-rows-4 medium-rows-8"
                               placeholder="(description)"></textarea>
                   </div>
                 </div>
               </div>
-            """
+            """%layout_classes(width=12)
         # log.info("******\n"+r.content)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)

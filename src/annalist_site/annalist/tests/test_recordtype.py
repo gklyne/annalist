@@ -50,7 +50,8 @@ from entity_testtypedata                import (
     recordtype_entity_view_form_data, recordtype_delete_confirm_form_data
     )
 from entity_testentitydata              import (
-    entity_uri, entitydata_edit_uri, entitydata_list_type_uri
+    entity_uri, entitydata_edit_uri, entitydata_list_type_uri,
+    layout_classes
     )
 
 #   -----------------------------------------------------------------------------
@@ -321,37 +322,37 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         formrow1 = """
             <div class="small-12 medium-6 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-6 columns">
+                    <div class="%(label_classes)s">
                         <p>Id</p>
                     </div>
-                    <div class="small-12 medium-6 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="entity_id" 
                                placeholder="(type id)" value="00000001"/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=6)
         formrow2 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>Label</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="Type_label" 
                                placeholder="(label)" 
                                value="Entity &#39;00000001&#39; of type &#39;_type&#39; in collection &#39;testcoll&#39;"/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=12)
         formrow3 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>Comment</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <textarea cols="64" rows="6" name="Type_comment" 
                                   class="small-rows-4 medium-rows-8"
                                   placeholder="(type description)"
@@ -360,35 +361,47 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=12)
         formrow4 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>URI</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="Type_uri" 
                                placeholder="(URI)"
                                value="http://test.example.com/testsite/c/testcoll/d/_type/00000001/"/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=12)
         formrow5 = """
             <div class="row">
-                <div class="small-2 columns">
-                </div>
-                <div class="small-12 medium-10 columns">
+                <div class="%(space_classes)s">
                     <div class="row">
-                        <div class="small-12 columns text-right">
+                        <div class="small-12 columns">
+                          &nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div class="%(button_group_classes)s">
+                    <div class="row">
+                        <div class="%(group_left_classes)s">
                             <input type="submit" name="save"          value="Save" />
                             <input type="submit" name="cancel"        value="Cancel" />
                         </div>
                     </div>
                 </div>
+                <div class="%(button_group_classes)s">
+                    <div class="row">
+                        <div class="%(group_right_classes)s">
+                            <input type="submit" name="add_view_field" value="Add field" />
+                        </div>
+                    </div>
+                </div>
             </div>
-            """
+            """%layout_classes(width=12)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)

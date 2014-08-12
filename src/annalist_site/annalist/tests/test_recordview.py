@@ -53,7 +53,8 @@ from entity_testviewdata                import (
     recordview_delete_confirm_form_data
     )
 from entity_testentitydata              import (
-    entity_uri, entitydata_edit_uri, entitydata_list_type_uri
+    entity_uri, entitydata_edit_uri, entitydata_list_type_uri,
+    layout_classes
     )
 
 #   -----------------------------------------------------------------------------
@@ -445,37 +446,37 @@ class RecordViewEditViewTest(AnnalistTestCase):
         formrow1 = """
             <div class="small-12 medium-6 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-6 columns">
+                    <div class="%(label_classes)s">
                         <p>Id</p>
                     </div>
-                    <div class="small-12 medium-6 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="entity_id" 
                         placeholder="(view id)" value="00000001"/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=6)
         formrow2 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>Label</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <input type="text" size="64" name="View_label"
                                placeholder="(view label)" 
                                value="Entity &#39;00000001&#39; of type &#39;_view&#39; in collection &#39;testcoll&#39;"/>
                     </div>
                 </div>
             </div>
-            """
+            """%layout_classes(width=12)
         formrow3 = """
             <div class="small-12 columns">
                 <div class="row">
-                    <div class="view_label small-12 medium-3 columns">
+                    <div class="%(label_classes)s">
                         <p>Help</p>
                     </div>
-                    <div class="small-12 medium-9 columns">
+                    <div class="%(input_classes)s">
                         <textarea cols="64" rows="6" name="View_comment" 
                                   class="small-rows-4 medium-rows-8"
                                   placeholder="(description of record view)">
@@ -483,8 +484,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
                     </div>
                 </div>
             </div>
-            """
-        # @@TODO: more .....
+            """%layout_classes(width=12)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)

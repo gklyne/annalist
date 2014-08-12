@@ -11,9 +11,11 @@ log = logging.getLogger(__name__)
 
 from annalist.models.recordfield        import RecordField
 
-from annalist.views.fields.render_utils import get_placement_classes
 from annalist.views.fields.render_utils import get_edit_renderer, get_view_renderer
 from annalist.views.fields.render_utils import get_head_renderer, get_item_renderer
+from annalist.views.fields.render_placement import (
+    get_placement_classes
+    )
 
 class FieldDescription(object):
     """

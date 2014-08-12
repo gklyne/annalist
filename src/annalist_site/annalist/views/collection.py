@@ -193,6 +193,7 @@ class CollectionEditView(AnnalistGenericView):
         # Others
         if "close" in request.POST:
             redirect_uri = continuation_next.get('continuation_uri', self.view_uri("AnnalistSiteView"))
+        # Invoke selected view and/or render status response
         if redirect_uri:
             http_response = http_response or HttpResponseRedirect(redirect_uri)
         if http_response:

@@ -21,7 +21,9 @@ from annalist.util              import valid_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import layout
 
-from annalist.views.fields.render_utils import get_placement_classes
+from annalist.views.fields.render_placement import (
+    get_placement_classes
+    )
 
 from entity_testutils import (
     collection_dir, 
@@ -399,5 +401,30 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
     else:
         form_data[action] = action
     return form_data
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- Field layout classes
+#
+#   -----------------------------------------------------------------------------
+
+def layout_classes(width=12):
+    if width == 6:
+        class_dict = (
+            { 'label_classes': "view_label small-12 medium-4 columns"
+            , 'input_classes': "small-12 medium-8 columns"
+            })
+    elif width == 12:
+        class_dict = (
+            { 'label_classes': "view_label small-12 medium-2 columns"
+            , 'input_classes': "small-12 medium-10 columns"
+            , 'space_classes': "medium-2 columns show-for-medium-up"
+            , 'button_group_classes': "small-12 medium-5 columns"
+            , 'group_left_classes':   "small-12 columns"
+            , 'group_right_classes':  "small-12 columns text-right"
+            })
+    else:
+        assert False, "Unexpected width %r"%width
+    return class_dict
 
 # End.
