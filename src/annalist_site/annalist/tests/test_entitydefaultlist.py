@@ -70,8 +70,8 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite  = Site(TestBaseUri, TestBaseDir)
         self.testcoll  = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.testtype  = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
-        self.testtype2 = RecordType.create(self.testcoll, "testtype2", recordtype_create_values("testtype2"))
+        self.testtype  = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testcoll", "testtype"))
+        self.testtype2 = RecordType.create(self.testcoll, "testtype2", recordtype_create_values("testcoll", "testtype2"))
         self.testdata  = RecordTypeData.create(self.testcoll, "testtype", {})
         self.testdata2 = RecordTypeData.create(self.testcoll, "testtype2", {})
         self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
@@ -182,24 +182,49 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_value'], "")
         self.assertEqual(r.context['fields'][2]['entity_type_id'], "")
         # Entities and bound fields
-        self.assertEqual(len(r.context['entities']), 4)
-        field_values = ("%(etyp)s", "entity%(eid)d", "Entity testcoll/%(etyp)s/entity%(eid)d")
-        entity_types = ("testtype", "testtype", "testtype", "testtype2")
-        for eid in range(4):
+        self.assertEqual(len(r.context['entities']), 6)
+        entity_fields = (
+            [ {'entity_type_id': "_type",     'annal:id': "testtype",  'rdfs:label': "RecordType testcoll/testtype"}
+            , {'entity_type_id': "_type",     'annal:id': "testtype2", 'rdfs:label': "RecordType testcoll/testtype2"}
+            , {'entity_type_id': "testtype",  'annal:id': "entity1",   'rdfs:label': "Entity testcoll/testtype/entity1"}
+            , {'entity_type_id': "testtype",  'annal:id': "entity2",   'rdfs:label': "Entity testcoll/testtype/entity2"}
+            , {'entity_type_id': "testtype",  'annal:id': "entity3",   'rdfs:label': "Entity testcoll/testtype/entity3"}
+            , {'entity_type_id': "testtype2", 'annal:id': "entity4",   'rdfs:label': "Entity testcoll/testtype2/entity4"}
+            ])
+        field_keys = ('entity_type_id', 'annal:id', 'rdfs:label')
+        for eid in range(6):
             for fid in range(3):
                 item_field = r.context['entities'][eid]['fields'][fid]
                 head_field = r.context['fields'][fid]
+                # Check that row field descriptions match corresponding heading feld descriptions
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
                         'field_property_uri', 'field_render_head',
                         'field_placement', 'field_value_type'):
                     self.assertEqual(item_field[fkey], head_field[fkey])
-                if field_values[fid]:
-                    field_val = field_values[fid]%{'eid': (eid+1), 'etyp': entity_types[eid]}
-                else:
-                    field_val = None
-                self.assertEqual(item_field['field_value'], field_val)
-                self.assertEqual(item_field['entity_type_id'], entity_types[eid])
+                # Check row field values
+                fkey = field_keys[fid]
+                self.assertEqual(item_field['field_value'],    entity_fields[eid][fkey])
+                self.assertEqual(item_field['entity_type_id'], entity_fields[eid]['entity_type_id'])
+        #@@
+        # self.assertEqual(len(r.context['entities']), 4)
+        # field_values = ("%(etyp)s", "entity%(eid)d", "Entity testcoll/%(etyp)s/entity%(eid)d")
+        # entity_types = ("testtype", "testtype", "testtype", "testtype2")
+        # for eid in range(4):
+        #     for fid in range(3):
+        #         item_field = r.context['entities'][eid]['fields'][fid]
+        #         head_field = r.context['fields'][fid]
+        #         for fkey in (
+        #                 'field_id', 'field_name', 'field_label', 
+        #                 'field_property_uri', 'field_render_head',
+        #                 'field_placement', 'field_value_type'):
+        #             self.assertEqual(item_field[fkey], head_field[fkey])
+        #         if field_values[fid]:
+        #             field_val = field_values[fid]%{'eid': (eid+1), 'etyp': entity_types[eid]}
+        #         else:
+        #             field_val = None
+        #         self.assertEqual(item_field['field_value'], field_val)
+        #         self.assertEqual(item_field['entity_type_id'], entity_types[eid])
         return
 
     def test_get_default_type_list(self):
