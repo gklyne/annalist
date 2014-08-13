@@ -1,0 +1,11 @@
+{ "@id":                "annal:fields/View_add_field"
+, "annal:id":           "View_add_field"
+, "annal:type":         "annal:Field"
+, "rdfs:label":         "Add field?"
+, "rdfs:comment":       "Selects whether an 'Add field' button is displayed while editing an entity"
+, "annal:field_name":   "View_add_field"
+, "annal:field_render": "annal:field_render/Text"
+, "annal:value_type":   "annal:Text"
+, "annal:placeholder":  "(yes or no)"
+, "annal:property_uri": "annal:add_field"
+}

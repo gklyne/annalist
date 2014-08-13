@@ -213,7 +213,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['action'],           action)
         self.assertEqual(r.context['view_id'],          'View_view')
         # Fields
-        self.assertEqual(len(r.context['fields']), 4)        
+        self.assertEqual(len(r.context['fields']), 5)        
         # 1st field - Id
         view_id_help = (
             "A short identifier that distinguishes this view from all other views in the same collection."
@@ -267,9 +267,29 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Longtext")
         self.assertEqual(r.context['fields'][2]['field_value'], view_help)
         self.assertEqual(r.context['fields'][2]['options'], self.no_options)
-        # 4th field - field list (Entity_id, Entity_type, Entity_label, Entity_comment)
-        # log.info("******\n"+repr(r.context['fields'][3]['repeat']))
-        viewfields = r.context['fields'][3]['repeat']
+        # 4rd field - add field
+        # log.info("******\n"+repr(r.context['fields'][3]))
+        view_add_field_help = (
+            "Selects whether an 'Add field' button is displayed while editing an entity"
+            )
+        view_add_field_placeholder = (
+            "(yes or no)"
+            )
+        self.assertEqual(r.context['fields'][3]['field_id'], 'View_add_field')
+        self.assertEqual(r.context['fields'][3]['field_name'], 'View_add_field')
+        self.assertEqual(r.context['fields'][3]['field_label'], 'Add field?')
+        self.assertEqual(r.context['fields'][3]['field_help'], view_add_field_help)
+        self.assertEqual(r.context['fields'][3]['field_placeholder'], view_add_field_placeholder)
+        self.assertEqual(r.context['fields'][3]['field_property_uri'], "annal:add_field")
+        self.assertEqual(r.context['fields'][3]['field_render_view'],   "field/annalist_view_text.html")
+        self.assertEqual(r.context['fields'][3]['field_render_edit'],   "field/annalist_edit_text.html")
+        self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 medium-6 columns")
+        self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][3]['field_value'], 'yes')
+        self.assertEqual(r.context['fields'][3]['options'], self.no_options)
+        # 5th field - field list (Entity_id, Entity_type, Entity_label, Entity_comment)
+        # log.info("******\n"+repr(r.context['fields'][4]['repeat']))
+        viewfields = r.context['fields'][4]['repeat']
         self.assertEqual(len(viewfields), num_fields)
         if num_fields == 0: return
         self.assertEqual(len(viewfields[0]['fields']), 2)
@@ -348,7 +368,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     # The View_view test case checks descriptions of repeat-field-groups that are not 
     # covererd by the Default_view case.
-    def _check_record_view_context_fields(self, response, action="", num_fields=4):
+    def _check_record_view_context_fields(self, response, action="", num_fields=5):
         r = response
         #log.info("r.context['fields']: %r"%(r.context['fields'],))
         # Common structure
@@ -362,7 +382,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['action'],           action)
         self.assertEqual(r.context['view_id'],          'View_view')
         # Fields
-        self.assertEqual(len(r.context['fields']), 4)        
+        self.assertEqual(len(r.context['fields']), 5)        
         # 1st field - Id
         self.assertEqual(r.context['fields'][0]['field_id'], 'View_id')
         self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
@@ -375,9 +395,14 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_id'], 'View_comment')
         self.assertEqual(r.context['fields'][2]['field_name'], 'View_comment')
         self.assertEqual(r.context['fields'][2]['field_label'], 'Help')
+        # 4rd field - add field
+        # log.info("******\n"+repr(r.context['fields'][3]))
+        self.assertEqual(r.context['fields'][3]['field_id'], 'View_add_field')
+        self.assertEqual(r.context['fields'][3]['field_name'], 'View_add_field')
+        self.assertEqual(r.context['fields'][3]['field_label'], 'Add field?')
         # 4th field - field list (View_id, View_label, View_comment, field descriptions)
         # log.info("r.context['fields'][3]: %r"%(r.context['fields'][3],))
-        viewfields = r.context['fields'][3]['repeat']
+        viewfields = r.context['fields'][4]['repeat']
         self.assertEqual(len(viewfields), num_fields)
         if num_fields == 0: return
         self.assertEqual(len(viewfields[0]['fields']), 2)
@@ -398,12 +423,17 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[2]['fields'][0].field_value,            "View_comment")
         self.assertEqual(viewfields[2]['fields'][1].field_value_key,        "annal:field_placement")
         self.assertEqual(viewfields[2]['fields'][1].field_value,            "small:0,12")
+        # View_add_field
+        self.assertEqual(viewfields[3]['fields'][0].field_value_key,        "annal:field_id")
+        self.assertEqual(viewfields[3]['fields'][0].field_value,            "View_add_field")
+        self.assertEqual(viewfields[3]['fields'][1].field_value_key,        "annal:field_placement")
+        self.assertEqual(viewfields[3]['fields'][1].field_value,            "small:0,12;medium:0,6")
         # Repeat fields data, to be preserved when form description is updated
         # log.info("\n********\n%r"%(viewfields[3],))
-        ri = 3
+        ri = 4
         self.assertEqual(viewfields[ri]['repeat_id'],     'View_fields')
-        self.assertEqual(viewfields[ri]['repeat_index'],  3)
-        self.assertEqual(viewfields[ri]['repeat_prefix'], 'View_fields__3__')
+        self.assertEqual(viewfields[ri]['repeat_index'],  4)
+        self.assertEqual(viewfields[ri]['repeat_prefix'], 'View_fields__4__')
         repeat_fields_data = json.loads(viewfields[ri]['repeat_fields_data'])
         # log.info("\n********\n%r"%(repeat_fields_data,))
         self.assertEqual(repeat_fields_data['annal:repeat_id'],             'View_fields')
@@ -425,11 +455,11 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(view_repeatfields[1]['field_id'], 'Field_placement')
         self.assertEqual(view_repeatfields[1]['field_placement'].field, "small-12 medium-6 columns")
         # New blank field, if selected
-        if num_fields == 5:
-            self.assertEqual(viewfields[4]['fields'][0].field_value_key,        "annal:field_id")
-            self.assertEqual(viewfields[4]['fields'][0].field_value,            "")
-            self.assertEqual(viewfields[4]['fields'][1].field_value_key,        "annal:field_placement")
-            self.assertEqual(viewfields[4]['fields'][1].field_value,            "")
+        if num_fields == 6:
+            self.assertEqual(viewfields[5]['fields'][0].field_value_key,        "annal:field_id")
+            self.assertEqual(viewfields[5]['fields'][0].field_value,            "")
+            self.assertEqual(viewfields[5]['fields'][1].field_value_key,        "annal:field_placement")
+            self.assertEqual(viewfields[5]['fields'][1].field_value,            "")
         return
 
     #   -----------------------------------------------------------------------------
@@ -488,9 +518,23 @@ class RecordViewEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
+        formrow4 = """
+            <div class="small-12 medium-6 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>Add field?</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <input type="text" size="64" name="View_add_field" 
+                        placeholder="(yes or no)" value="yes"/>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=6)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)
+        self.assertContains(r, formrow4, html=True)
         return
 
     def test_get_new(self):
@@ -507,6 +551,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['orig_id'],          "00000001")
         self.assertEqual(r.context['entity_uri'],       TestHostUri + view_uri)
         self.assertEqual(r.context['action'],           "new")
+        self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
         # Fields initially created
         self._check_default_entity_context_fields(r, 
@@ -532,6 +577,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['orig_id'],          "Default_view")
         self.assertEqual(r.context['entity_uri'],       "annal:display/Default_view")
         self.assertEqual(r.context['action'],           "copy")
+        self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_uri'], "")
         # Fields
         self._check_default_entity_context_fields(r, 
@@ -568,6 +614,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['orig_id'],          "Default_view")
         self.assertEqual(r.context['entity_uri'],       "annal:display/Default_view") # @@TODO: is this right?
         self.assertEqual(r.context['action'],           "edit")
+        self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_uri'], "")
         # Fields
         self._check_default_entity_context_fields(r, 
@@ -632,7 +679,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_uri'], "")
         # Fields
-        self._check_record_view_context_fields(r, action="edit", num_fields=5)
+        self._check_record_view_context_fields(r, action="edit", num_fields=6)
         return
 
     #   -----------------------------------------------------------------------------

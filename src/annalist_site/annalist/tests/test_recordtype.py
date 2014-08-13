@@ -379,7 +379,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow5 = """
+        formrow5 = ("""
             <div class="row">
                 <div class="%(space_classes)s">
                     <div class="row">
@@ -388,23 +388,25 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                         </div>
                     </div>
                 </div>
-                <div class="%(button_group_classes)s">
+                <div class="%(button_wide_classes)s">
                     <div class="row">
-                        <div class="%(group_left_classes)s">
+                        <div class="%(button_left_classes)s">
                             <input type="submit" name="save"          value="Save" />
                             <input type="submit" name="cancel"        value="Cancel" />
                         </div>
                     </div>
                 </div>
-                <div class="%(button_group_classes)s">
-                    <div class="row">
-                        <div class="%(group_right_classes)s">
-                            <input type="submit" name="add_view_field" value="Add field" />
-                        </div>
-                    </div>
-                </div>
+                """+
+                # <div class="%(button_half_classes)s">
+                #     <div class="row">
+                #         <div class="%(button_right_classes)s">
+                #             <input type="submit" name="add_view_field" value="Add field" />
+                #         </div>
+                #     </div>
+                # </div>
+                """
             </div>
-            """%field_vals(width=12)
+            """)%field_vals(width=12)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)

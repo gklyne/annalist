@@ -459,12 +459,13 @@ def layout_classes(width=12):
             })
     elif width == 12:
         class_dict = (
-            { 'label_classes': "view_label small-12 medium-2 columns"
-            , 'input_classes': "small-12 medium-10 columns"
-            , 'space_classes': "medium-2 columns show-for-medium-up"
-            , 'button_group_classes': "small-12 medium-5 columns"
-            , 'group_left_classes':   "small-12 columns"
-            , 'group_right_classes':  "small-12 columns text-right"
+            { 'label_classes':          "view_label small-12 medium-2 columns"
+            , 'input_classes':          "small-12 medium-10 columns"
+            , 'space_classes':          "medium-2 columns show-for-medium-up"
+            , 'button_half_classes':    "small-12 medium-5 columns"
+            , 'button_wide_classes':    "small-12 medium-10 columns"
+            , 'button_left_classes':    "small-12 columns"
+            , 'button_right_classes':   "small-12 columns text-right"
             })
     else:
         assert False, "Unexpected width %r"%width

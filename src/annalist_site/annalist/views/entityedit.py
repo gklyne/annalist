@@ -41,6 +41,7 @@ baseentityvaluemap  = (
         [ SimpleValueMap(c='title',            e=None,                  f=None               )
         , SimpleValueMap(c='coll_id',          e=None,                  f=None               )
         , SimpleValueMap(c='type_id',          e=None,                  f=None               )
+        , SimpleValueMap(c='edit_add_field',   e=None,                  f=None               )
         , StableValueMap(c='entity_id',        e='annal:id',            f='entity_id'        )
         , SimpleValueMap(c='entity_uri',       e='annal:uri',           f='entity_uri'       )
         , SimpleValueMap(c='record_type',      e='annal:record_type',   f='record_type'      )
@@ -154,6 +155,7 @@ class GenericEntityEditView(AnnalistGenericView):
         context_extra_values = (
             { 'title':            viewinfo.sitedata["title"]
             , 'action':           action
+            , 'edit_add_field':   viewinfo.recordview.get("annal:add_field", "yeszz1")
             , 'continuation_uri': continuation_uri
             , 'coll_id':          coll_id
             , 'type_id':          type_id
@@ -268,8 +270,9 @@ class GenericEntityEditView(AnnalistGenericView):
                 self.add_entity_field(add_field_desc, entity)
         viewcontext    = entityvaluemap.map_value_to_context(entity,
             title               = viewinfo.sitedata["title"],
-            continuation_uri    = continuation_uri,
             action              = viewinfo.action,
+            edit_add_field      = viewinfo.recordview.get("annal:add_field", "yeszz2"),
+            continuation_uri    = continuation_uri,
             coll_id             = coll_id,
             type_id             = type_id,
             type_ids            = type_ids,
@@ -348,6 +351,7 @@ class GenericEntityEditView(AnnalistGenericView):
             viewinfo.check_authorization("config")
             if viewinfo.http_response:
                 return viewinfo.http_response
+            # @@TODO: logic to override action in continuation_here (after save, change to 'edit')
             (continuation_next, continuation_here) = self.continuation_uris(form_data, continuation_uri)
             view_edit_uri_base = self.view_uri("AnnalistEntityEditView",
                 coll_id=viewinfo.coll_id,

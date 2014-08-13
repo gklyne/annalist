@@ -6,97 +6,108 @@
 
 {% block content %}
 
-    <div class="row">
-        <div class="large-12 columns">
-            <h3>'{{type_id}}' data in collection '{{coll_id}}'</h3>
-        </div>
-    </div>
+<div class="row">
+  <div class="large-12 columns">
+    <h3>'{{type_id}}' data in collection '{{coll_id}}'</h3>
+  </div>
+</div>
 
-    <div class="row">
-        <div class="large-12 columns">
-            <form method="POST" action="">
-                {% csrf_token %}
-                <div class="row">
-                    {% for field in fields %}
-                      {% if field.field_id  %}
-                        <!-- {{field.field_name}}: {{field.field_render_edit}}</p> -->
-                        {% include field.field_render_edit %}
-                      {% elif field.repeat_id %}
-                        <div class="small-12 columns">
-                          <p class="caption">{{field.repeat_label}}</p>
-                        </div>
-                        {% comment %}
-                          <div class="small-12 columns"><div class="row">{{field}}</div></div>
-                        {% endcomment %}
-                        {% for repeat in field.repeat %}
-                          {% if repeat.repeat_fields_data %}
-                            <input type="hidden" name="{{repeat.repeat_prefix}}repeat_fields_data" 
-                                   value="{{repeat.repeat_fields_data}}"/>
-                          {% else %}
-                            <div class="small-12 columns">
-                              <div class="row selectable">
-                                <div class="small-1 columns">
-                                  {% if auth_delete %}
-                                      <input type="checkbox" name="{{field.repeat_id}}__select_fields"
-                                             value="{{repeat.repeat_index}}" class="right" />
-                                  {% endif %}
-                                </div>
-                                <div class="small-11 columns">
-                                  {% for field in repeat.fields %}
-                                    {% include field.field_render_edit %}
-                                  {% endfor %}
-                                </div>
-                              </div>
-                            </div>
-                          {% endif %}
-                        {% endfor %}
-                        <div class="small-12 columns">
-                          <div class="row">
-                            <div class="small-11 columns">
-                              <input type="submit" name="{{field.repeat_id}}__remove" 
-                                     value="{{field.repeat_label_delete}}" />
-                              <input type="submit" name="{{field.repeat_id}}__add"    
-                                     value="{{field.repeat_label_add}}" />
-                            </div>
-                            <div class="small-1 columns">
-                              &nbsp;
-                            </div>
-                          </div>
-                        </div>
-                      {% endif %}
-                    {% endfor %}
-                </div>
-                <div class="row">
-                    <div class="medium-2 columns show-for-medium-up">
-                        <div class="row">
-                            <div class="small-12 columns">
-                              &nbsp;
-                            </div>
-                        </div>
-                    </div>
-                    <div class="small-12 medium-5 columns">
-                        <div class="row">
-                            <div class="small-12 columns">
-                                <input type="submit" name="save"          value="Save" />
-                                <input type="submit" name="cancel"        value="Cancel" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="small-12 medium-5 columns">
-                        <div class="row">
-                            <div class="small-12 columns text-right">
-                                <input type="submit" name="add_view_field" value="Add field" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <input type="hidden" name="orig_id"          value="{{orig_id}}" />
-                <input type="hidden" name="orig_type"        value="{{orig_type}}" />
-                <input type="hidden" name="action"           value="{{action}}" />
-                <input type="hidden" name="view_id"          value="{{view_id}}" />
-                <input type="hidden" name="continuation_uri" value="{{continuation_uri}}" />
-            </form>
+<div class="row">
+  <div class="large-12 columns">
+    <form method="POST" action="">
+      {% csrf_token %}
+      <div class="row">
+        {% for field in fields %}
+        {% if field.field_id  %}
+        <!-- {{field.field_name}}: {{field.field_render_edit}}</p> -->
+        {% include field.field_render_edit %}
+        {% elif field.repeat_id %}
+        <div class="small-12 columns">
+          <p class="caption">{{field.repeat_label}}</p>
         </div>
-    </div>
+        {% comment %}
+          <div class="small-12 columns"><div class="row">{{field}}</div></div>
+        {% endcomment %}
+        {% for repeat in field.repeat %}
+          {% if repeat.repeat_fields_data %}
+          <input type="hidden" name="{{repeat.repeat_prefix}}repeat_fields_data" 
+                 value="{{repeat.repeat_fields_data}}"/>
+          {% else %}
+          <div class="small-12 columns">
+            <div class="row selectable">
+              <div class="small-2 columns">
+                {% if auth_delete %}
+                <input type="checkbox" name="{{field.repeat_id}}__select_fields"
+                       value="{{repeat.repeat_index}}" class="right" />
+                {% endif %}
+              </div>
+              <div class="small-10 columns">
+                {% for field in repeat.fields %}
+                {% include field.field_render_edit %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+        <div class="small-12 columns">
+          <div class="row">
+            <div class="small-2 columns">
+              &nbsp;
+            </div>
+            <div class="small-10 columns">
+              <input type="submit" name="{{field.repeat_id}}__remove" 
+                     value="{{field.repeat_label_delete}}" />
+              <input type="submit" name="{{field.repeat_id}}__add"    
+                     value="{{field.repeat_label_add}}" />
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+      <div class="row">
+        <div class="medium-2 columns show-for-medium-up">
+          <div class="row">
+            <div class="small-12 columns">
+              &nbsp;
+            </div>
+          </div>
+        </div>
+        {% if edit_add_field and edit_add_field != "no" %}
+        <div class="small-12 medium-5 columns">
+          <div class="row">
+            <div class="small-12 columns">
+              <input type="submit" name="save"          value="Save" />
+              <input type="submit" name="cancel"        value="Cancel" />
+            </div>
+          </div>
+        </div>
+        <div class="small-12 medium-5 columns">
+            <div class="row">
+                <div class="small-12 columns text-right">
+                    <input type="submit" name="add_view_field" value="Add field" />
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="small-12 medium-10 columns">
+            <div class="row">
+                <div class="small-12 columns">
+                    <input type="submit" name="save"          value="Save" />
+                    <input type="submit" name="cancel"        value="Cancel" />
+                </div>
+            </div>
+        </div>
+        {% endif %}
+      </div>
+      <input type="hidden" name="orig_id"          value="{{orig_id}}" />
+      <input type="hidden" name="orig_type"        value="{{orig_type}}" />
+      <input type="hidden" name="action"           value="{{action}}" />
+      <input type="hidden" name="view_id"          value="{{view_id}}" />
+      <input type="hidden" name="continuation_uri" value="{{continuation_uri}}" />
+    </form>
+  </div>
+</div>
 
 {% endblock %}

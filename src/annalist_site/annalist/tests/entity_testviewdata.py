@@ -100,6 +100,7 @@ def recordview_value_keys():
         [ 'annal:id', 'annal:type', 'annal:uri'
         , 'annal:record_type'
         , 'rdfs:label', 'rdfs:comment'
+        , 'annal:add_field'
         , 'annal:view_fields'
         ])
 
@@ -114,6 +115,7 @@ def recordview_create_values(coll_id="testcoll", view_id="testview", update="Rec
         { 'rdfs:label':         "%s %s/%s"%(update, coll_id, view_id)
         , 'rdfs:comment':       "%s help for %s in collection %s"%(update, view_id, coll_id)
         , 'annal:record_type':  "annal:DefaultType"
+        , 'annal:add_field':    "yes"
         , 'annal:view_fields':
           [ { 'annal:field_id':         "Entity_id"
             , 'annal:field_placement':  "small:0,12;medium:0,6"
@@ -228,6 +230,7 @@ def recordview_entity_view_form_data(
     form_data_dict = (
         { 'View_label':         '%s data ... (%s/%s)'%(update, coll_id, view_id)
         , 'View_comment':       '%s description ... (%s/%s)'%(update, coll_id, view_id)
+        , 'View_add_field':     'yes'
         , 'orig_id':            'orig_view_id'
         , 'record_type':        'annal:DefaultType'
         , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_view")
@@ -317,6 +320,16 @@ def recordview_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Longtext'
             , 'field_value':        '%s description ... (%s/%s)'%(update, coll_id, view_id)
+            , 'options':            []
+            }
+          , { 'field_id':           'View_add_field'
+            , 'field_label':        'Add field?'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'View_add_field'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+            , 'field_value_type':   'annal:Text'
+            , 'field_value':        ''
             , 'options':            []
             }
           , { "repeat_id":              "View_fields"
@@ -417,7 +430,7 @@ def recordview_view_context_data(
     if action:  
         context_dict['action']      = action
     if add_field:
-        context_dict['fields'][3]['repeat'].append(
+        context_dict['fields'][4]['repeat'].append(
             { 'repeat_id': 'View_fields'
             , 'repeat_index': 4
             , 'repeat_prefix': 'View_fields__4__'
@@ -443,7 +456,7 @@ def recordview_view_context_data(
               ]
             })
     if remove_field:
-        context_dict['fields'][3]['repeat'][2:4] = (
+        context_dict['fields'][4]['repeat'][2:4] = (
             [ { 'repeat_id': 'View_fields'
               , 'repeat_index': 2
               , 'repeat_prefix': 'View_fields__2__'

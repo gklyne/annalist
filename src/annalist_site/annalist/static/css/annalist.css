@@ -47,6 +47,9 @@ div.row .columns .row{
 div.row .columns .row .columns {
     margin: 0 0;
     padding: 0 0.75rem;
+    /*
+    padding: 0 0.75rem;
+    */
 }
 
 div.row.headings {
