@@ -50,7 +50,8 @@ from entity_testentitydata          import (
     entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
     entitydata_recordtype_view_form_data,
     default_fields, default_label, default_comment,
-    layout_classes
+    layout_classes,
+    get_site_types_sorted
     )
 
 #   -----------------------------------------------------------------------------
@@ -119,6 +120,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
+        # log.info(r.content)
         field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         formrow1 = """
               <!-- editable text field -->
@@ -137,7 +139,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                 </div>
               </div>
             """%field_vals(width=6)
-        formrow2 = """
+        formrow2 = ("""
               <!-- record type dropdown -->
               <div class="small-12 medium-6 right columns">
                 <div class="row">
@@ -148,17 +150,15 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   </div>
                   <div class="%(input_classes)s">
                     <select name="entity_type" class="right">
+                        """ +
+                        '\n'.join(["<option>%s</option>"%o for o in get_site_types_sorted()]) +
+                        """
                         <option selected="selected">testtype</option>
-                        <option>_field</option>
-                        <option>_list</option>
-                        <option>_type</option>
-                        <option>_view</option>
-                        <option>Default_type</option>
                     </select>
                   </div>
                 </div>
               </div>
-            """%field_vals(width=6)
+            """)%field_vals(width=6)
         formrow3 = """
               <!-- editable text field -->
               <div class="small-12 columns">

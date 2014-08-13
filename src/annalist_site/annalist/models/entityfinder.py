@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 import re
 
 from annalist.models.recordtypedata import RecordTypeData
-from annalist.models.entitytypeinfo import EntityTypeInfo
+from annalist.models.entitytypeinfo import EntityTypeInfo, get_built_in_type_ids
 
 class EntityFinder(object):
     """
@@ -47,17 +47,38 @@ class EntityFinder(object):
         if type_id:
             # return all entities in collection of a specific type (includes built-ins)
             entitytypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
-            for e in entitytypeinfo.entityparent.child_entities(
-                    entitytypeinfo.entityclass, 
-                    altparent=entitytypeinfo.entityaltparent):
+            for e in entitytypeinfo.enum_entities(usealtparent=True):
                 yield e
+            #@@
+            # for e in entitytypeinfo.entityparent.child_entities(
+            #         entitytypeinfo.entityclass, 
+            #         altparent=entitytypeinfo.entityaltparent):
+            #     yield e
+            #@@
         else:
-            # Return all entitities in collection (not including built-in types)
-            for f in self._coll._children(RecordTypeData):
-                t = RecordTypeData.load(self._coll, f)
-                if t:
-                    for e in t.entities():
-                        yield e
+            # Return all entitities in collection (not including site built-ins)
+            #@@
+            # for f in self._coll._children(RecordTypeData):
+            #     t = RecordTypeData.load(self._coll, f)
+            #     if t:
+            #@@
+            for t in self.get_collection_type_ids():
+                entitytypeinfo = EntityTypeInfo(self._site, self._coll, t)
+                for e in entitytypeinfo.enum_entities(usealtparent=False):
+                    yield e
+        return
+
+    def get_collection_type_ids(self):
+        """
+        Returns iterator over possible type ids in current collection.
+
+        Each type is returned as an EntityTypeInfo object.
+        """
+        for t in get_built_in_type_ids():
+            yield t
+        for t in self._coll._children(RecordTypeData):
+            yield t
+        return
 
     def compile_selector(self, type_id, selector):
         """

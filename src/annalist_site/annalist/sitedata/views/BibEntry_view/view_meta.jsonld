@@ -1,5 +1,5 @@
-{ "@id":                "annal:views/BinEntry_view"
-, "annal:id":           "BinEntry_view"
+{ "@id":                "annal:views/BibEntry_view"
+, "annal:id":           "BibEntry_view"
 , "annal:type":         "annal:View"
 , "annal:record_type":  "annal:BibEntry"
 , "rdfs:label":         "Bibliographic metadata"

@@ -10,6 +10,9 @@ import logging
 log = logging.getLogger(__name__)
 
 from annalist                       import message
+
+from annalist.identifiers           import ANNAL, RDF, RDFS
+
 from annalist.models.recordview     import RecordView
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
@@ -91,6 +94,12 @@ TYPE_MESSAGE_MAP = (
     , '_field': FIELD_MESSAGES
     })
 
+def get_built_in_type_ids():
+    """
+    Returns an interator over the built-in types
+    """
+    return TYPE_CLASS_MAP.iterkeys()
+
 class EntityTypeInfo(object):
     """
     Check a supplied type identifier, and access values for:
@@ -119,7 +128,13 @@ class EntityTypeInfo(object):
         entityclass     Python class object for entity
         entitymessages  a table of message strings for diagnostics relating to 
                         operations on this type.
+
+        and other values as initialized here.
         """
+        self.entitysite = site
+        self.entitycoll = coll
+        self.coll_id    = coll.get_id()
+        self.type_id    = type_id
         if type_id in TYPE_CLASS_MAP:
             self.recordtype      = RecordType.load(coll, type_id, site)
             self.entityparent    = coll
@@ -138,5 +153,57 @@ class EntityTypeInfo(object):
             self.entityclass     = EntityData
             self.entitymessages  = ENTITY_MESSAGES
         return
+
+    def get_entity(self, entity_id):
+        """
+        Loads and returns an entity for the current type, or 
+        returns None if the entity does not exist.
+        """
+        log.debug(
+            "get_entity id %s, parent %s, altparent %s"%
+            (entity_id, self.entityparent, self.entityaltparent)
+            )
+        if self.entityclass.exists(self.entityparent, entity_id, altparent=self.entityaltparent):
+            return self.entityclass.load(self.entityparent, entity_id, altparent=self.entityaltparent)
+        return None
+
+    def enum_entities(self, usealtparent=False):
+        """
+        Iterate over entities in collection with current type.
+
+        usealtparent    is True if site-wide entities are to be included.
+        """
+        altparent = self.entityaltparent if usealtparent else None
+        if self.entityparent:
+            for e in self.entityparent.child_entities(
+                    self.entityclass, 
+                    altparent=altparent):
+                yield e
+        else:
+            log.warning("EntityTypeInfo missing entityparent; type_id %s"%(self.type_id))
+        return
+
+    def get_initial_entity_values(self, entity_id):
+        """
+        Returns an initial value dictionary for the indicated entity.
+
+        Attempts to read initial values from the type parent directory.
+        Failing that, returns system-wide default values.
+        """
+        values = (
+            { RDFS.CURIE.label:     "%s/%s/%s"%
+                                    (self.coll_id, self.type_id, entity_id)
+            , RDFS.CURIE.comment:   "Entity '%s' of type '%s' in collection '%s'"%
+                                    (entity_id, self.type_id, self.coll_id)
+            , ANNAL.CURIE.type:     "annal:EntityData"
+            })
+        init_entity = self.get_entity("_initial_values")
+        if init_entity:
+            values = init_entity.get_values()
+            values.pop("@id", None)
+            values.pop(ANNAL.CURIE.id, None)
+            values.pop(ANNAL.CURIE.uri, None)
+        values[ANNAL.CURIE.id] = entity_id
+        return values
 
 # End.

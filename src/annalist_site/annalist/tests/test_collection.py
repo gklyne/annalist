@@ -52,6 +52,7 @@ from entity_testlistdata            import (
     )
 from entity_testentitydata          import (
     entitydata_list_all_uri,
+    get_site_types, get_site_views, get_site_lists
     )
 
 #   -----------------------------------------------------------------------------
@@ -60,13 +61,9 @@ from entity_testentitydata          import (
 #
 #   -----------------------------------------------------------------------------
 
-site_types = {"Default_type", "_type", "_field", "_view", "_list"}
-site_views = (
-    { "Default_view", "Field_view"
-    , "Type_view", "View_view"
-    , "List_view", "BibEntry_view"
-    })
-site_lists = {"Default_list", "Default_list_all", "Field_list", "Type_list", "List_list", "View_list"}
+site_types = get_site_types()
+site_views = get_site_views()
+site_lists = get_site_lists()
 
 class CollectionTest(AnnalistTestCase):
     """

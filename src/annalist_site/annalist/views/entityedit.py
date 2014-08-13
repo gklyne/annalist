@@ -94,12 +94,14 @@ class GenericEntityEditView(AnnalistGenericView):
             return viewinfo.http_response
 
         # Create local entity object or load values from existing
-        entity_initial_values = (
-            { "rdfs:label":   "Entity '%s' of type '%s' in collection '%s'"%
-                              (viewinfo.entity_id, type_id, coll_id)
-            , "rdfs:comment": ""
-            })
-        entity = self.get_entity(viewinfo.entity_id, viewinfo.entitytypeinfo, action, entity_initial_values)
+        # entity_initial_values = (
+        #     { "rdfs:label":   "Entity '%s' of type '%s' in collection '%s'"%
+        #                       (viewinfo.entity_id, type_id, coll_id)
+        #     , "rdfs:comment": ""
+        #     })
+        typeinfo              = viewinfo.entitytypeinfo
+        entity_initial_values = typeinfo.get_initial_entity_values(viewinfo.entity_id)
+        entity = self.get_entity(viewinfo.entity_id, typeinfo, action, entity_initial_values)
         if entity is None:
             return self.error(
                 dict(self.error404values(),

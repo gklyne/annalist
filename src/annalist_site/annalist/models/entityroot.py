@@ -270,7 +270,7 @@ class EntityRoot(object):
         assert "%" not in coll_dir, "_entitypath/_entityaltpath template variable interpolation may be in filename part only"
         site_files = []
         coll_files = []
-        if site_dir and os.path.isdir(coll_dir):
+        if site_dir and os.path.isdir(site_dir):
             site_files = os.listdir(site_dir)
         if os.path.isdir(coll_dir):
             coll_files = os.listdir(coll_dir)

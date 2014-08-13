@@ -161,7 +161,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / test case for POST with 'add_view_field'
    / provide option to invoke add-field logic during initial form rendering
    > add_field button on entity edit displays
-   - new entity initialization vector through typeinfo, AND/OR provide mechanism to associate initial values for each entity type.
+   / new entity initialization vector through typeinfo, AND/OR provide mechanism to associate initial values for each entity type.
    - "Add field" when creating new entity results in multiple entities created (use !edit for continuation URI?)  Add test case.
    - implement "add repeating field" option to view edit (and entity view?)
    - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?

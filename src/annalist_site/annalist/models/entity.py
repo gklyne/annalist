@@ -149,7 +149,8 @@ class Entity(EntityRoot):
         """
         for i in self._children(cls, altparent=altparent):
             e = cls.load(self, i, altparent=altparent)
-            yield e
+            if e:
+                yield e
         return
 
     @classmethod

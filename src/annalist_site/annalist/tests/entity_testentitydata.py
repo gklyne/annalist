@@ -432,10 +432,17 @@ def default_fields(coll_id=None, type_id=None, entity_id=None, width=12):
         return fields
     return def_fields
 
+
 def default_label(coll_id=None, type_id=None, entity_id=None):
+    # Note: for built-in types, default values matches corresponding sitedata _initial_values
+    if type_id == "_view":
+        return "Record view label"
     return default_label_template%dict(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
 
 def default_comment(coll_id=None, type_id=None, entity_id=None):
+    # Note: for built-in types, default values matches corresponding sitedata _initial_values
+    if type_id == "_view":
+        return "Record view comment/description/help"
     return default_comment_template%dict(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
 
 #   -----------------------------------------------------------------------------
@@ -462,5 +469,38 @@ def layout_classes(width=12):
     else:
         assert False, "Unexpected width %r"%width
     return class_dict
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- Site-wide entirtiues defined
+#
+#   -----------------------------------------------------------------------------
+
+
+def get_site_types_sorted():
+    return (
+        [ "_field", "_list", "_type", "_view", "Default_type"
+        ])
+
+def get_site_types():
+    return set(get_site_types_sorted())
+
+def get_site_views():
+    return (
+        { "Default_view", "Field_view"
+        , "Type_view", "View_view"
+        , "List_view", "BibEntry_view"
+        , "_initial_values"
+        })
+
+def get_site_lists():
+    return (
+        { "Default_list", "Default_list_all", "Field_list", "Type_list", "List_list", "View_list"
+        })
+
+def get_site_fields():
+    return (
+        { 
+        })
 
 # End.

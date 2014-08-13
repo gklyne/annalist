@@ -508,10 +508,10 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_uri'],       TestHostUri + view_uri)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
-        # Fields
+        # Fields initially created
         self._check_default_entity_context_fields(r, 
             action="new",
-            num_fields=0,
+            num_fields=4,
             view_id="00000001",
             view_label=default_label("testcoll", "_view", "00000001"),
             view_help=default_comment("testcoll", "_view", "00000001"),
