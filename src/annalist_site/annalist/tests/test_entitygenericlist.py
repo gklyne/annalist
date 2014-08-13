@@ -78,6 +78,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.testsite  = Site(TestBaseUri, TestBaseDir)
         self.testcoll  = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.testtype  = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
+        self.testtype2 = RecordType.create(self.testcoll, "testtype2", recordtype_create_values("testtype2"))
         self.testdata  = RecordTypeData.create(self.testcoll, "testtype", {})
         self.testdata2 = RecordTypeData.create(self.testcoll, "testtype2", {})
         # @@TODO: add some collection-specific fields
