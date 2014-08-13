@@ -404,6 +404,42 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
 
 #   -----------------------------------------------------------------------------
 #
+#   ----- Default field values
+#
+#   -----------------------------------------------------------------------------
+
+default_label_template = "%(coll_id)s/%(type_id)s/%(entity_id)s"
+
+default_comment_template = "Entity '%(entity_id)s' of type '%(type_id)s' in collection '%(coll_id)s'"
+
+def default_fields(coll_id=None, type_id=None, entity_id=None, width=12):
+    """
+    Returns a function that accepts a field width and returns a dictionaruy of entity values
+    for testing.  The goal is to isolate default entity value settings from the test cases.
+    """
+    def_label       = default_label(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+    def_comment     = default_comment(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+    def_label_esc   = def_label.replace("'", "&#39;")
+    def_comment_esc = def_comment.replace("'", "&#39;")
+    def def_fields(width=12):
+        fields = layout_classes(width=width)
+        fields.update(
+            { 'default_label':       def_label
+            , 'default_comment':     def_comment
+            , 'default_label_esc':   def_label_esc
+            , 'default_comment_esc': def_comment_esc
+            })
+        return fields
+    return def_fields
+
+def default_label(coll_id=None, type_id=None, entity_id=None):
+    return default_label_template%dict(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+
+def default_comment(coll_id=None, type_id=None, entity_id=None):
+    return default_comment_template%dict(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+
+#   -----------------------------------------------------------------------------
+#
 #   ----- Field layout classes
 #
 #   -----------------------------------------------------------------------------

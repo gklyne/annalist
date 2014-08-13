@@ -64,6 +64,7 @@ from entity_testutils               import (
     )
 from entity_testentitydata          import (
     entity_uri, entitydata_edit_uri, entitydata_list_type_uri,
+    default_fields, default_label, default_comment,
     layout_classes
     )
 
@@ -365,6 +366,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # log.info(r.content)
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
+        field_vals = default_fields(coll_id="testcoll", type_id="_field", entity_id="00000001")
         formrow1col1 = """
             <div class="small-12 medium-6 columns">
                 <div class="row">
@@ -377,7 +379,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     </div>
                 </div>
             </div>
-            """%layout_classes(width=6)
+            """%field_vals(width=6)
         formrow1col2 = """
             <div class="small-12 medium-6 right columns">
                 <div class="row">
@@ -390,7 +392,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     </div>
                 </div>
             </div>
-            """%layout_classes(width=6)
+            """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
                 <div class="row">
@@ -400,11 +402,11 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="Field_label" 
                         placeholder="(field label)"
-                        value="Entity &#39;00000001&#39; of type &#39;_field&#39; in collection &#39;testcoll&#39;"/>
+                        value="%(default_label_esc)s"/>
                     </div>
                 </div>
             </div>
-            """%layout_classes(width=12)
+            """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
                 <div class="row">
@@ -413,11 +415,13 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     </div>
                     <div class="%(input_classes)s">
                         <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"
-                                  placeholder="(field usage commentary or help text)"></textarea>
+                                  placeholder="(field usage commentary or help text)">
+                            %(default_comment_esc)s
+                        </textarea>
                     </div>
                 </div>
             </div>
-            """%layout_classes(width=12)
+            """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 columns">
                 <div class="row">
@@ -430,7 +434,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     </div>
                 </div>
             </div>
-            """%layout_classes(width=12)
+            """%field_vals(width=12)
         formrow5 = """
             <div class="small-12 columns">
                 <div class="row">
@@ -443,7 +447,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     </div>
                 </div>
             </div>
-            """%layout_classes(width=12)
+            """%field_vals(width=12)
         formrow6 = """
             <div class="small-12 columns">
                 <div class="row">
@@ -457,7 +461,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     </div>
                 </div>
             </div>
-            """%layout_classes(width=12)
+            """%field_vals(width=12)
         self.assertContains(r, formrow1col1, html=True)
         self.assertContains(r, formrow1col2, html=True)
         self.assertContains(r, formrow2, html=True)
@@ -486,8 +490,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._check_context_fields(r, 
             field_id="00000001",
             field_type="",
-            field_label="Entity '00000001' of type '_field' in collection 'testcoll'",
-            field_comment="",
+            field_label=default_label("testcoll", "_field", "00000001"),
+            field_comment=default_comment("testcoll", "_field", "00000001"),
             field_placeholder="",
             field_property="",
             field_placement=""
@@ -549,9 +553,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.info(r.content)
+        def_label = default_label("testcoll", "_field", "fieldnone")
         self.assertContains(r, 
-            "<p>Entity &#39;fieldnone&#39; of type &#39;_field&#39; "+
-            "in collection &#39;testcoll&#39; does not exist</p>", 
+            "<p>%s does not exist</p>"%(def_label), 
             status_code=404
             )
         return

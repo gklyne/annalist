@@ -54,6 +54,7 @@ from entity_testviewdata                import (
     )
 from entity_testentitydata              import (
     entity_uri, entitydata_edit_uri, entitydata_list_type_uri,
+    default_fields, default_label, default_comment,
     layout_classes
     )
 
@@ -443,6 +444,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # log.info(r.content)
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'_view' data in collection 'testcoll'</h3>")
+        field_vals = default_fields(coll_id="testcoll", type_id="_view", entity_id="00000001")
         formrow1 = """
             <div class="small-12 medium-6 columns">
                 <div class="row">
@@ -455,7 +457,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
                     </div>
                 </div>
             </div>
-            """%layout_classes(width=6)
+            """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
                 <div class="row">
@@ -465,11 +467,11 @@ class RecordViewEditViewTest(AnnalistTestCase):
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="View_label"
                                placeholder="(view label)" 
-                               value="Entity &#39;00000001&#39; of type &#39;_view&#39; in collection &#39;testcoll&#39;"/>
+                               value="%(default_label_esc)s"/>
                     </div>
                 </div>
             </div>
-            """%layout_classes(width=12)
+            """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
                 <div class="row">
@@ -480,11 +482,12 @@ class RecordViewEditViewTest(AnnalistTestCase):
                         <textarea cols="64" rows="6" name="View_comment" 
                                   class="small-rows-4 medium-rows-8"
                                   placeholder="(description of record view)">
+                            %(default_comment_esc)s
                         </textarea>
                     </div>
                 </div>
             </div>
-            """%layout_classes(width=12)
+            """%field_vals(width=12)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)
@@ -510,8 +513,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
             action="new",
             num_fields=0,
             view_id="00000001",
-            view_label="Entity '00000001' of type '_view' in collection 'testcoll'",
-            view_help="",
+            view_label=default_label("testcoll", "_view", "00000001"),
+            view_help=default_comment("testcoll", "_view", "00000001"),
             view_uri=TestHostUri + recordview_uri("testcoll", "00000001")
             )
         return
@@ -541,14 +544,15 @@ class RecordViewEditViewTest(AnnalistTestCase):
         return
 
     def test_get_copy_not_exists(self):
-        u = entitydata_edit_uri("copy", "testcoll", "_view", entity_id="notype", view_id="View_view")
+        u = entitydata_edit_uri("copy", "testcoll", "_view", entity_id="noview", view_id="View_view")
         r = self.client.get(u)
         # log.info(r.content)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        self.assertContains(r, "<p>Entity &#39;notype&#39; of type &#39;_view&#39; in collection &#39;testcoll&#39; does not exist</p>", status_code=404)
+        def_label = default_label("testcoll", "_view", "noview")
+        self.assertContains(r, "<p>%s does not exist</p>"%(def_label), status_code=404)
         return
 
     def test_get_edit(self):
@@ -576,14 +580,15 @@ class RecordViewEditViewTest(AnnalistTestCase):
         return
 
     def test_get_edit_not_exists(self):
-        u = entitydata_edit_uri("edit", "testcoll", "_view", entity_id="notype", view_id="View_view")
+        u = entitydata_edit_uri("edit", "testcoll", "_view", entity_id="noview", view_id="View_view")
         r = self.client.get(u)
         # log.info(r.content)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        self.assertContains(r, "<p>Entity &#39;notype&#39; of type &#39;_view&#39; in collection &#39;testcoll&#39; does not exist</p>", status_code=404)
+        def_label = default_label("testcoll", "_view", "noview")
+        self.assertContains(r, "<p>%s does not exist</p>"%(def_label), status_code=404)
         return
 
     # Test rendering of view with repeated field structure - in this case, View_view

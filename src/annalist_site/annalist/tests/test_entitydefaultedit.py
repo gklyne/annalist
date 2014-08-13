@@ -49,6 +49,7 @@ from entity_testentitydata          import (
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
     entitydata_recordtype_view_form_data,
+    default_fields, default_label, default_comment,
     layout_classes
     )
 
@@ -118,6 +119,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
+        field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         formrow1 = """
               <!-- editable text field -->
               <div class="small-12 medium-6 columns">
@@ -134,7 +136,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   </div>
                 </div>
               </div>
-            """%layout_classes(width=6)
+            """%field_vals(width=6)
         formrow2 = """
               <!-- record type dropdown -->
               <div class="small-12 medium-6 right columns">
@@ -156,7 +158,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   </div>
                 </div>
               </div>
-            """%layout_classes(width=6)
+            """%field_vals(width=6)
         formrow3 = """
               <!-- editable text field -->
               <div class="small-12 columns">
@@ -170,11 +172,11 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                     <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
                     <input type="text" size="64" name="Entity_label" 
                            placeholder="(label)" 
-                           value="Entity '00000001' of type 'testtype' in collection 'testcoll'">
+                           value="%(default_label_esc)s">
                   </div>
                 </div>
               </div>
-            """%layout_classes(width=12)
+            """%field_vals(width=12)
         formrow4 = """
               <!-- editable textarea field -->
               <div class="small-12 columns">
@@ -187,11 +189,13 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   <div class="%(input_classes)s">
                     <textarea cols="64" rows="6" name="Entity_comment" 
                               class="small-rows-4 medium-rows-8"
-                              placeholder="(description)"></textarea>
+                              placeholder="(description)">
+                        %(default_comment_esc)s
+                    </textarea>
                   </div>
                 </div>
               </div>
-            """%layout_classes(width=12)
+            """%field_vals(width=12)
         # log.info("******\n"+r.content)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
@@ -256,9 +260,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         field_label_help = (
             "Short string used to describe entity when displayed"
             )
-        field_label_value = (
-            "Entity '00000001' of type 'testtype' in collection 'testcoll'"
-            )
+        field_label_value = default_label("testcoll", "testtype", "00000001")
         self.assertEqual(r.context['fields'][2]['field_id'],            'Entity_label')
         self.assertEqual(r.context['fields'][2]['field_name'],          'Entity_label')
         self.assertEqual(r.context['fields'][2]['field_label'],         'Label')
@@ -276,6 +278,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         field_comment_help = (
             "Descriptive text about an entity."
             )
+        field_comment_value = default_comment("testcoll", "testtype", "00000001")
         self.assertEqual(r.context['fields'][3]['field_id'],            'Entity_comment')
         self.assertEqual(r.context['fields'][3]['field_name'],          'Entity_comment')
         self.assertEqual(r.context['fields'][3]['field_label'],         'Comment')
@@ -286,7 +289,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_render_edit'],   "field/annalist_edit_textarea.html")
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value_type'],    "annal:Longtext")
-        self.assertEqual(r.context['fields'][3]['field_value'],         "")
+        self.assertEqual(r.context['fields'][3]['field_value'],         field_comment_value)
         self.assertEqual(r.context['fields'][3]['entity_type_id'],      "testtype")
         self.assertEqual(r.context['fields'][3]['options'],             self.no_options)
         return
@@ -390,7 +393,8 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.debug(r.content)
-        self.assertContains(r, "<p>Entity &#39;entitynone&#39; of type &#39;testtype&#39; in collection &#39;testcoll&#39; does not exist</p>", status_code=404)
+        def_label = default_label("testcoll", "testtype", "entitynone")
+        self.assertContains(r, "<p>%s does not exist</p>"%(def_label), status_code=404)
         return
 
     #   -----------------------------------------------------------------------------
