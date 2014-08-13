@@ -237,7 +237,9 @@ class EntityRoot(object):
 
     def _child_dirs(self, cls, altparent):
         """
-        Iterates over directories which may contain child entities.
+        Returns a pair of directories that may contain child entities.
+        The second of the pair is descended from the "altparent", which is 
+        used only for entities that are not in the main directory.
 
         cls         is a subclass of Entity indicating the type of children to
                     be located
@@ -245,10 +247,12 @@ class EntityRoot(object):
                     class's alternate relative path, or None if only potential children 
                     of the current entity are returned.
         """
-        yield os.path.dirname(os.path.join(self._entitydir, cls._entitypath))
+        dir1 = os.path.dirname(os.path.join(self._entitydir, cls._entitypath))
         if altparent and cls._entityaltpath:
-            yield os.path.dirname(os.path.join(altparent._entitydir, cls._entityaltpath))
-        return
+            dir2 = os.path.dirname(os.path.join(altparent._entitydir, cls._entityaltpath))
+        else:
+            dir2 = None
+        return (dir1, dir2)
 
     def _children(self, cls, altparent=None):
         """
@@ -262,14 +266,27 @@ class EntityRoot(object):
                     alternate relative path, or None if only potential child IDs of the
                     current entity are returned.
         """
-        for dirpath in self._child_dirs(cls, altparent):
-            assert "%" not in dirpath, "_entitypath/_entityaltpath template variable interpolation may be in filename part only"
-            if os.path.isdir(dirpath):
-                files = os.listdir(dirpath)
-                log.debug("_children files %r"%files)
-                for f in files:
-                    if util.valid_id(f):
-                        yield f
+        coll_dir, site_dir = self._child_dirs(cls, altparent)
+        assert "%" not in coll_dir, "_entitypath/_entityaltpath template variable interpolation may be in filename part only"
+        site_files = []
+        coll_files = []
+        if site_dir and os.path.isdir(coll_dir):
+            site_files = os.listdir(site_dir)
+        if os.path.isdir(coll_dir):
+            coll_files = os.listdir(coll_dir)
+        for fil in [ f for f in site_files if f not in coll_files] + coll_files:
+            if util.valid_id(fil):
+                yield fil
+        #@@
+        # for dirpath in self._child_dirs(cls, altparent):
+        #     assert "%" not in dirpath, "_entitypath/_entityaltpath template variable interpolation may be in filename part only"
+        #     if os.path.isdir(dirpath):
+        #         files = os.listdir(dirpath)
+        #         log.debug("_children files %r"%files)
+        #         for f in files:
+        #             if util.valid_id(f):
+        #                 yield f
+        #@@
         return
 
     def __iter__(self):
