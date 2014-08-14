@@ -155,7 +155,7 @@ class GenericEntityEditView(AnnalistGenericView):
         context_extra_values = (
             { 'title':            viewinfo.sitedata["title"]
             , 'action':           action
-            , 'edit_add_field':   viewinfo.recordview.get("annal:add_field", "yeszz1")
+            , 'edit_add_field':   viewinfo.recordview.get("annal:add_field", "yes")
             , 'continuation_uri': continuation_uri
             , 'coll_id':          coll_id
             , 'type_id':          type_id
@@ -271,7 +271,7 @@ class GenericEntityEditView(AnnalistGenericView):
         viewcontext    = entityvaluemap.map_value_to_context(entity,
             title               = viewinfo.sitedata["title"],
             action              = viewinfo.action,
-            edit_add_field      = viewinfo.recordview.get("annal:add_field", "yeszz2"),
+            edit_add_field      = viewinfo.recordview.get("annal:add_field", "yes"),
             continuation_uri    = continuation_uri,
             coll_id             = coll_id,
             type_id             = type_id,
@@ -352,7 +352,10 @@ class GenericEntityEditView(AnnalistGenericView):
             if viewinfo.http_response:
                 return viewinfo.http_response
             # @@TODO: logic to override action in continuation_here (after save, change to 'edit')
-            (continuation_next, continuation_here) = self.continuation_uris(form_data, continuation_uri)
+            (continuation_next, continuation_here) = self.continuation_uris(
+                form_data, continuation_uri, 
+                base_here=viewinfo.get_edit_continuation_uri(entity_type, entity_id)
+                )
             view_edit_uri_base = self.view_uri("AnnalistEntityEditView",
                 coll_id=viewinfo.coll_id,
                 view_id="View_view",

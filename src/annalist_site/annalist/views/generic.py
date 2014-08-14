@@ -108,7 +108,7 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return reverse(viewname, kwargs=kwargs)
 
-    def continuation_uris(self, request_dict, default_cont):
+    def continuation_uris(self, request_dict, default_cont, base_here=None):
         """
         Returns a tuple of two continuation URI dictionary values:
 
@@ -131,14 +131,20 @@ class AnnalistGenericView(ContentNegotiationView):
         default_cont    is a default continuation URI to be used for returning from 
                         the current page if the current POST request does not specify
                         a continuation_uri query parameter.
+        base_here       if specified, overrides the current request path as the base URI
+                        to be used to return to the currently displayed page (e.g. when
+                        current request URI is non-idempotent, such as creating a new 
+                        entity).
         """
         # Note: use default if request/form parameter is present but blank:
         continuation_uri  = request_dict.get("continuation_uri", None) or default_cont
+        if not base_here:
+            base_here = self.get_request_path()
         if continuation_uri:
             continuation_next = { "continuation_uri": continuation_uri }
         else:
             continuation_next = {}
-        continuation_here = { "continuation_uri": uri_with_params(self.get_request_path(), continuation_next) }
+        continuation_here = { "continuation_uri": uri_with_params(base_here, continuation_next) }
         return (continuation_next, continuation_here)
 
     def info_params(self, info_message, info_head=message.ACTION_COMPLETED):

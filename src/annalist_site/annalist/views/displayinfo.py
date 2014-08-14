@@ -264,7 +264,7 @@ class DisplayInfo(object):
 
     def get_new_view_uri(self, coll_id, type_id):
         """
-        Get URI for entity new view
+        Get URI for entity new view from list display
         """
         return self.view.view_uri(
             "AnnalistEntityNewView", 
@@ -276,7 +276,7 @@ class DisplayInfo(object):
 
     def get_edit_view_uri(self, coll_id, type_id, entity_id, action):
         """
-        Get URI for entity edit or copy view
+        Get URI for entity edit or copy view from list display
         """
         return self.view.view_uri(
                 "AnnalistEntityEditView", 
@@ -290,6 +290,9 @@ class DisplayInfo(object):
     # Additonal support functions for entity views
 
     def get_type_view_id(self, type_id):
+        """
+        Get default view id for given type
+        """
         view_id = None
         if self.type_id:
             if self.entitytypeinfo.recordtype:
@@ -299,6 +302,9 @@ class DisplayInfo(object):
         return view_id
 
     def get_view_id(self, type_id, view_id):
+        """
+        Get view id or suitable default using type if defined.
+        """
         if not self.http_response:
             view_id = (
                 view_id or 
@@ -309,5 +315,22 @@ class DisplayInfo(object):
             if not view_id:
                 log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
         return view_id
+
+    def get_edit_continuation_uri(self, entity_type, entity_id):
+        """
+        Gets a URI that is based on that used to invoke the current view,
+        but with a different action and specified entity_type/entity_id
+
+        This is used to continue editing a new or copied entity after that 
+        entity has been saved.
+        """
+        return self.view.view_uri(
+                "AnnalistEntityEditView", 
+                coll_id=self.coll_id,
+                view_id=self.view_id,
+                type_id=entity_type,
+                entity_id=entity_id,
+                action="edit"
+                )
 
 # End.
