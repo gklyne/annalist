@@ -163,7 +163,6 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / add_field button on entity edit displays; need way to control its inclusion
    / new entity initialization vector through typeinfo, AND/OR provide mechanism to associate initial values for each entity type.
    / "Add field" when creating new entity results in multiple entities created (use !edit for continuation URI?)  Add test case.
-   - List editing view formatting is messed up (small-6?)
    - implement "add repeating field" option to view edit (and entity view?)
    - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
@@ -176,35 +175,48 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
        / annalist.tests.test_entitygenericlist.EntityGenericListViewTest
      / skipped '@@TODO genericlist default list button'
        / annalist.tests.test_entitygenericlist.EntityGenericListViewTest
-8. Extend form-generator
+8. initial application testing
+   - Create new type - appears twice in default_list_all display.  Delete one deletes both appearances, so this looks like display problem.  I thought this had been fixed.
+   - New entry save as _type does not create new type in collection
+   - Changing type to built-in type in entity edit display does not save to correct location
+   - When creating new type, URI should be based on ID entered.  Set URI when saving rather than when creating?
+   - List editing view formatting is messed up (small-6?)
+   - Click on local type in default_list, then cancel, returns to Type_list display
+   - Click on local record in Default_list, cancel, returns to default data display (/d/ rather than /l/).  In default display, types don't appear.
+   - When creating new collection, there's no easy way to create a new record type (or view) from the front page.
+   - View_type display should suppress add-field option.  Similar for View_list and View_field?
+   - Add field allows new view type to be created, but how to malke this default for displayed type?
+   - No easy way to create field description while editing view details
+   / Handle bare /l/ URI and redirect to default view for collection
+9. Extend form-generator
    / support repeated field group (to support RecordView and BibJSON)
    - support alternate displays for different subtypes (to support BibJSON)
-9. Read-only entity data view
+10. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching
    - include default view
-10. Code improvement - lists
+11. Code improvement - lists
    / move invocation of authentication to the immediate response handler code?
    / refactor list description access out of context handling code (avoid multiple reads)
    / refactor code from entityeditbase into more specific views where possible
    / rename what is left of entityeditbase -> entityviewbase, or move to generic module
    - review URI for delete type/view/list confirmation
    - use proper indexing to accelerate search (maybe later?)
-11. Code improvement - views
+12. Code improvement - views
    / where possible, migrate methods from editentitybase to subclasses
-   - review logic - ideally, form handlers will access data from form, then hand off for processing
+   / review logic - ideally, form handlers will access data from form, then hand off for processing
    - review record view description form (create data and configure URIs)
    - review field description form (create data and configure URIs)
    - review record list description form (create data and configure URIs)
    / add "new field" logic to entity edit POST handler
-12. Display enhancements
+13. Display enhancements
    - add type links to list view (link to typed list view...?)
        - (should use same base enhancements as entity links at step 5)
          - cf. [https://github.com/gklyne/annalist/commit/ff16e6063a2fee193e6e0080a77bfc738381a275]()
        - Update field in default list displays
    / list_view response handler (needs generic view to make sense; view button to redisplay)
-13. Grid view
-14. Generic entity selector (based on canned sparql expressions?)
+14. Grid view
+15. Generic entity selector (based on canned sparql expressions?)
 
 
 ## Tests required:
