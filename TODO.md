@@ -176,6 +176,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / skipped '@@TODO genericlist default list button'
        / annalist.tests.test_entitygenericlist.EntityGenericListViewTest
 8. initial application testing
+   - review and simplify bound_field logic for accessing field_value
    / Create new type - appears twice in default_list_all display.  Delete one deletes both appearances, so this looks like display problem.  I thought this had been fixed.  Confirmed to be knock-on from incorrect creation of _type data (see next).
    / New entry save as _type does not create new type in collection
    - field view has size/position field; use as default when adding to view.
@@ -192,6 +193,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    - View_type display should suppress add-field option.  Similar for View_list and View_field?
    - Add field allows new view type to be created, but how to malke this default for displayed type?
    - No easy way to create field description while editing view details
+   - from type display, want easy retreat to default display for collection
    / Handle bare /l/ URI and redirect to default view for collection
 9. Extend form-generator
    / support repeated field group (to support RecordView and BibJSON)

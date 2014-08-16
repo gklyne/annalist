@@ -40,6 +40,8 @@ def get_placement_classes(placement):
     Placement(field='small-6 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
     >>> get_placement_classes("small:0,6;medium:0,4right")
     Placement(field='small-6 medium-4 right columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    >>> get_placement_classes("small:0,6")
+    Placement(field='small-6 columns', label='small-12 medium-4 columns', value='small-12 medium-8 columns')
     """
     def format_class(cd, right):
         prev = cd.get("small", None)

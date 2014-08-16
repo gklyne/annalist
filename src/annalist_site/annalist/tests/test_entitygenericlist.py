@@ -195,7 +195,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         rowdata = """
             <tr class="select_row">
                 <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address">Bib_address</a></td>
-                <td class="small-3 columns">annal:field_render/Text</td>
+                <td class="small-3 columns">annal:Text</td>
                 <td class="small-6 columns">Bib_address</td>
                 <td class="select_row">
                     <input name="entity_select" value="_field/Bib_address" type="checkbox">
@@ -229,11 +229,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_name'], 'Field_type')
         self.assertEqual(r.context['fields'][1]['field_label'], 'Field value type')
         self.assertEqual(r.context['fields'][1]['field_placeholder'], "(field value type)")
-        self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:field_render")
+        self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:value_type")
         self.assertEqual(r.context['fields'][1]['field_render_head'], "field/annalist_head_any.html")
         self.assertEqual(r.context['fields'][1]['field_render_item'], "field/annalist_item_text.html")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-3 columns")
-        self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:RenderType")
+        self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Type")
         # 3rd field
         self.assertEqual(r.context['fields'][2]['field_id'], 'Entity_label')
         self.assertEqual(r.context['fields'][2]['field_name'], 'Entity_label')
@@ -245,22 +245,23 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-6 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
         # Entities
-        self.assertEqual(len(r.context['entities']), 52)
+        self.assertEqual(len(r.context['entities']), 53)
         field_entities = (
-            { ('Entity_id',         "annal:field_render/EntityRef",     "Id")
-            , ('Bib_address',       "annal:field_render/Text",          "Bib_address")
-            , ('Bib_author',        "annal:field_render/Text",          "Bib_author")
-            , ('Bib_booktitle',     "annal:field_render/Text",          "Bib_booktitle")
-            , ('Entity_type',       "annal:field_render/Type",          "Type")
-            , ('Entity_label',      "annal:field_render/Text",          "Label")
-            , ('Field_comment',     "annal:field_render/Textarea",      "Help")
-            , ('Field_placement',   "annal:field_render/Placement",     "Size/position")
-            , ('Field_type',        "annal:field_render/Identifier",    "Field value type")
-            , ('List_comment',      "annal:field_render/Textarea",      "Help")
-            , ('List_record_type',  "annal:field_render/Slug",          "Record type")
-            , ('Type_label',        "annal:field_render/Text",          "Label")
-            , ('Type_comment',      "annal:field_render/Textarea",      "Comment")
-            , ('Type_uri',          "annal:field_render/Text",          "URI")
+            { ('Entity_id',         "annal:Slug",          "Id")
+            , ('Bib_address',       "annal:Text",          "Bib_address")
+            , ('Bib_author',        "annal:Text",          "Bib_author")
+            , ('Bib_booktitle',     "annal:Text",          "Bib_booktitle")
+            , ('Entity_type',       "annal:Slug",          "Type")
+            , ('Entity_label',      "annal:Text",          "Label")
+            , ('Field_comment',     "annal:Longtext",      "Help")
+            , ('Field_placement',   "annal:Placement",     "Size/position")
+            , ('Field_type',        "annal:Type",          "Field value type")
+            , ('Field_render',      "annal:RenderType",    "Field render type")
+            , ('List_comment',      "annal:Longtext",      "Help")
+            , ('List_record_type',  "annal:Type",          "Record type")
+            , ('Type_label',        "annal:Text",          "Label")
+            , ('Type_comment',      "annal:Longtext",      "Comment")
+            , ('Type_uri',          "annal:Text",          "URI")
             })
         for f in field_entities:
             for eid in range(len(r.context['entities'])):
@@ -290,7 +291,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         rowdata = """
             <tr class="select_row">
                 <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address">Bib_address</a></td>
-                <td class="small-3 columns">annal:field_render/Text</td>
+                <td class="small-3 columns">annal:Text</td>
                 <td class="small-6 columns">Bib_address</td>
                 <td class="select_row">
                     <input name="entity_select" value="_field/Bib_address" type="checkbox">
@@ -315,27 +316,27 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Entities
         self.assertEqual(len(r.context['entities']), 21)
         field_entities = (
-            { ('Bib_address',       "annal:field_render/Text",          "Bib_address")
-            , ('Bib_author',        "annal:field_render/Text",          "Bib_author")
-            , ('Bib_booktitle',     "annal:field_render/Text",          "Bib_booktitle")
-            , ('Bib_chapter',       "annal:field_render/Text",          "Bib_chapter")
-            , ('Bib_edition',       "annal:field_render/Text",          "Bib_edition")
-            , ('Bib_editor',        "annal:field_render/Text",          "Bib_editor")
-            , ('Bib_eprint',        "annal:field_render/Text",          "Bib_eprint")
-            , ('Bib_howpublished',  "annal:field_render/Text",          "Bib_howpublished")
-            , ('Bib_institution',   "annal:field_render/Text",          "Bib_institution")
-            , ('Bib_journal',       "annal:field_render/Text",          "Bib_journal")
-            , ('Bib_month',         "annal:field_render/Text",          "Bib_month")
-            , ('Bib_number',        "annal:field_render/Text",          "Bib_number")
-            , ('Bib_organization',  "annal:field_render/Text",          "Bib_organization")
-            , ('Bib_pages',         "annal:field_render/Text",          "Bib_pages")
-            , ('Bib_publisher',     "annal:field_render/Text",          "Bib_publisher")
-            , ('Bib_school',        "annal:field_render/Text",          "Bib_school")
-            , ('Bib_title',         "annal:field_render/Text",          "Bib_title")
-            , ('Bib_type',          "annal:field_render/Text",          "Bib_type")
-            , ('Bib_url',           "annal:field_render/Text",          "Bib_url")
-            , ('Bib_volume',        "annal:field_render/Text",          "Bib_volume")
-            , ('Bib_year',          "annal:field_render/Text",          "Bib_year")
+            { ('Bib_address',       "annal:Text",          "Bib_address")
+            , ('Bib_author',        "annal:Text",          "Bib_author")
+            , ('Bib_booktitle',     "annal:Text",          "Bib_booktitle")
+            , ('Bib_chapter',       "annal:Text",          "Bib_chapter")
+            , ('Bib_edition',       "annal:Text",          "Bib_edition")
+            , ('Bib_editor',        "annal:Text",          "Bib_editor")
+            , ('Bib_eprint',        "annal:Text",          "Bib_eprint")
+            , ('Bib_howpublished',  "annal:Text",          "Bib_howpublished")
+            , ('Bib_institution',   "annal:Text",          "Bib_institution")
+            , ('Bib_journal',       "annal:Text",          "Bib_journal")
+            , ('Bib_month',         "annal:Text",          "Bib_month")
+            , ('Bib_number',        "annal:Text",          "Bib_number")
+            , ('Bib_organization',  "annal:Text",          "Bib_organization")
+            , ('Bib_pages',         "annal:Text",          "Bib_pages")
+            , ('Bib_publisher',     "annal:Text",          "Bib_publisher")
+            , ('Bib_school',        "annal:Text",          "Bib_school")
+            , ('Bib_title',         "annal:Text",          "Bib_title")
+            , ('Bib_type',          "annal:Text",          "Bib_type")
+            , ('Bib_url',           "annal:Text",          "Bib_url")
+            , ('Bib_volume',        "annal:Text",          "Bib_volume")
+            , ('Bib_year',          "annal:Text",          "Bib_year")
             })
         for f in field_entities:
             for eid in range(len(r.context['entities'])):

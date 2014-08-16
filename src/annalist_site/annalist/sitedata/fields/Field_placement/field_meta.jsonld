@@ -2,7 +2,7 @@
 , "annal:id":           "Field_placement"
 , "annal:type":         "annal:Field"
 , "rdfs:label":         "Size/position"
-, "rdfs:comment":       "Size of displayed field, and hints for its position in a record display.  Provides default placement for field when incuded in view."
+, "rdfs:comment":       "Size of displayed field, and hints for its position in a record display. Provides default placement for field when incuded in view."
 , "annal:placeholder":  "(field display size and placement details)"
 , "annal:field_name":   "Field_placement"
 , "annal:field_render": "annal:field_render/Placement"

@@ -180,8 +180,19 @@ def recordfield_entity_view_context_data(
             , 'field_render_view':  'field/annalist_view_entityref.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
-            , 'field_value_type':   'annal:RenderType'
+            , 'field_value_type':   'annal:Type'
             , 'field_placeholder':  '(field value type)'
+            , 'field_value':        ''
+            , 'options':            []
+            }
+          , { 'field_label':        'Field render type'
+            , 'field_id':           'Field_render'
+            , 'field_name':         'Field_render'
+            , 'field_render_view':  'field/annalist_view_entityref.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+            , 'field_value_type':   'annal:RenderType'
+            , 'field_placeholder':  '(field render type)'
             , 'field_value':        ''
             , 'options':            []
             }
@@ -245,8 +256,8 @@ def recordfield_entity_view_context_data(
         })
     if field_id:
         context_dict['fields'][0]['field_value'] = field_id
-        context_dict['fields'][2]['field_value'] = '%s testcoll/_field/%s'%(update,field_id)
-        context_dict['fields'][3]['field_value'] = '%s help for %s in collection testcoll'%(update,field_id)
+        context_dict['fields'][3]['field_value'] = '%s testcoll/_field/%s'%(update,field_id)
+        context_dict['fields'][4]['field_value'] = '%s help for %s in collection testcoll'%(update,field_id)
         # context_dict['fields'][5]['field_value'] = TestBaseUri + "/c/%s/d/%s/%s/"%("testcoll", "_field", field_id)
         context_dict['orig_id']     = field_id
     if orig_id:
