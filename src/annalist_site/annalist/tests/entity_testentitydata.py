@@ -111,6 +111,21 @@ def entitydata_delete_confirm_uri(coll_id="testcoll", type_id="testtype"):
 #   the same entity at different stages of the processing (initial values, 
 #   stored values, Django view context data and Django form data).
 
+def entitydata_type(type_id):
+    """
+    Returns type URI/CURIE/ref for indicated type id.
+    """
+    if type_id == "_type":
+        return "annal:Type"
+    elif type_id == "_list":
+        return "annal:List"
+    elif type_id == "_view":
+        return "annal:View"
+    elif type_id == "_field":
+        return "annal:Field"
+    else:
+        return "annal:EntityData"
+
 def entitydata_value_keys():
     """
     Keys in default view entity data
@@ -135,7 +150,7 @@ def entitydata_values(entity_id, update="Entity", coll_id="testcoll", type_id="t
     d.update(
         { '@id':            './'
         , 'annal:id':       entity_id
-        , 'annal:type':     'annal:EntityData'
+        , 'annal:type':     entitydata_type(type_id)
         , 'annal:uri':      hosturi + entity_uri(coll_id, type_id, entity_id)
         })
     return d
@@ -246,7 +261,113 @@ def entitydata_delete_confirm_form_data(entity_id=None):
 
 #   -----------------------------------------------------------------------------
 #
-#   ----- Entity data in RecordType view
+#   ----- Entity data in Default_view
+#
+#   -----------------------------------------------------------------------------
+
+def entitydata_default_view_context_data(
+        entity_id=None, orig_id=None, type_id="testtype", type_ids=[],
+        action=None, update="Entity"
+    ):
+    context_dict = (
+        { 'title':              site_title()
+        , 'coll_id':            'testcoll'
+        , 'type_id':            'testtype'
+        , 'orig_id':            'orig_entity_id'
+        , 'fields':
+          [ { 'field_label':        'Id'
+            , 'field_render_view':  'field/annalist_view_entityref.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'entity_id'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+            , 'field_id':           'Entity_id'
+            , 'field_value_type':   'annal:Slug'
+            # , 'field_value':      (Supplied separately)
+            , 'options':            []
+            }
+          , { 'field_label':        'Type'
+            , 'field_render_view':  'field/annalist_view_select.html'
+            , 'field_render_edit':  'field/annalist_edit_select.html'
+            , 'field_name':         'entity_type'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
+            , 'field_id':           'Entity_type'
+            , 'field_value_type':   'annal:Text'
+            # , 'field_value':      (Supplied separately)
+            , 'options':            []
+            }
+          , { 'field_label':        'Label'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'Entity_label'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_id':           'Entity_label'
+            , 'field_value_type':   'annal:Text'
+            , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
+            , 'options':            []
+            }
+          , { 'field_label':        'Comment'
+            , 'field_render_view':  'field/annalist_view_textarea.html'
+            , 'field_render_edit':  'field/annalist_edit_textarea.html'
+            , 'field_name':         'Entity_comment'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_id':           'Entity_comment'
+            , 'field_value_type':   'annal:Longtext'
+            , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
+            , 'options':            []
+            }
+          ]
+        , 'continuation_uri':   entitydata_list_type_uri("testcoll", type_id)
+        })
+    if entity_id:
+        context_dict['fields'][0]['field_value'] = entity_id
+        context_dict['fields'][2]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
+        context_dict['fields'][3]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
+        context_dict['orig_id']     = entity_id
+    if type_id:
+        context_dict['fields'][1]['field_value'] = type_id       
+    if orig_id:
+        context_dict['orig_id']     = orig_id
+    if action:  
+        context_dict['action']      = action
+    return context_dict
+
+def entitydata_default_view_form_data(
+        coll_id="testcoll", 
+        type_id="testtype", orig_type=None,
+        entity_id=None, orig_id=None, 
+        action=None, cancel=None, update="Entity",
+        add_view_field=None):
+    # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
+    form_data_dict = (
+        { 'Entity_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
+        , 'Entity_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
+        , 'orig_id':            'orig_entity_id'
+        , 'continuation_uri':   entitydata_list_type_uri(coll_id, orig_type or type_id)
+        })
+    if entity_id:
+        form_data_dict['entity_id']       = entity_id
+        form_data_dict['entity_type']     = type_id
+        form_data_dict['Entity_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
+        form_data_dict['Entity_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
+        form_data_dict['orig_id']         = entity_id
+        form_data_dict['orig_type']       = type_id
+    if orig_id:
+        form_data_dict['orig_id']         = orig_id
+    if orig_type:
+        form_data_dict['orig_type']       = orig_type
+    if action:
+        form_data_dict['action']          = action
+    if cancel:
+        form_data_dict['cancel']          = "Cancel"
+    elif add_view_field:
+        form_data_dict['add_view_field']  = add_view_field
+    else:
+        form_data_dict['save']            = 'Save'
+    return form_data_dict
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- Entity data in Type_view
 #
 #   -----------------------------------------------------------------------------
 
@@ -414,7 +535,7 @@ default_comment_template = "Entity '%(entity_id)s' of type '%(type_id)s' in coll
 
 def default_fields(coll_id=None, type_id=None, entity_id=None, width=12):
     """
-    Returns a function that accepts a field width and returns a dictionaruy of entity values
+    Returns a function that accepts a field width and returns a dictionary of entity values
     for testing.  The goal is to isolate default entity value settings from the test cases.
     """
     def_label       = default_label(coll_id=coll_id, type_id=type_id, entity_id=entity_id)

@@ -246,8 +246,8 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_name'],          'entity_type')
         self.assertEqual(r.context['fields'][1]['field_label'],         'Type')
         self.assertEqual(r.context['fields'][1]['field_help'],          field_type_help)
-        self.assertEqual(r.context['fields'][1]['field_placeholder'],   "(recordtype id)")
-        self.assertEqual(r.context['fields'][1]['field_property_uri'],  "entity_type_id")
+        self.assertEqual(r.context['fields'][1]['field_placeholder'],   "(type id)")
+        self.assertEqual(r.context['fields'][1]['field_property_uri'],  "annal:type")
         self.assertEqual(r.context['fields'][1]['field_render_view'],   "field/annalist_view_select.html")
         self.assertEqual(r.context['fields'][1]['field_render_edit'],   "field/annalist_edit_select.html")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 right columns")
@@ -337,8 +337,8 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_name'], 'entity_type')
         self.assertEqual(r.context['fields'][1]['field_label'], 'Type')
         self.assertEqual(r.context['fields'][1]['field_help'], field_type_help)
-        self.assertEqual(r.context['fields'][1]['field_placeholder'], "(recordtype id)")
-        self.assertEqual(r.context['fields'][1]['field_property_uri'], "entity_type_id")
+        self.assertEqual(r.context['fields'][1]['field_placeholder'], "(type id)")
+        self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:type")
         self.assertEqual(r.context['fields'][1]['field_render_view'],   "field/annalist_view_select.html")
         self.assertEqual(r.context['fields'][1]['field_render_edit'],   "field/annalist_edit_select.html")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 right columns")
@@ -456,6 +456,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         expect_context = entitydata_context_data(
             entity_id="!badentity", orig_id="orig_entity_id", action="new"
             )
+        # log.info(repr(f))
         # log.info(repr(r.context['fields'][1]))
         self.assertDictionaryMatch(r.context, expect_context)
         return

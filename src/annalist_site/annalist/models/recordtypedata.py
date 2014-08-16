@@ -25,10 +25,12 @@ from annalist.models.entitydata import EntityData
 
 class RecordTypeData(Entity):
 
-    _entitytype = ANNAL.CURIE.Type_Data
-    _entitypath = layout.COLL_TYPEDATA_PATH
-    _entityfile = layout.TYPEDATA_META_FILE
-    _entityref  = layout.META_TYPEDATA_REF
+    _entitytype     = ANNAL.CURIE.Type_Data
+    _entitytypeid   = "_entitytypedata"
+    _entityview     = layout.COLL_TYPEDATA_VIEW
+    _entitypath     = layout.COLL_TYPEDATA_PATH
+    _entityfile     = layout.TYPEDATA_META_FILE
+    _entityref      = layout.META_TYPEDATA_REF
 
     def __init__(self, parent, type_id):
         """

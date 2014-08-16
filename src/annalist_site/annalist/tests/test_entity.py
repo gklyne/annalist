@@ -235,6 +235,7 @@ class TestEntityType(Entity):
 
     _entitytype = "test:EntityType"
     _entitypath = None
+    _entityview = "%(id)s/"
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
 
@@ -242,6 +243,7 @@ class TestEntityTypeSub(Entity):
 
     _entitytype = "test:EntityTypeSub"
     _entitypath = "sub/%(id)s"
+    _entityview = "sub/%(id)s/"
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
 

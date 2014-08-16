@@ -21,9 +21,12 @@ from django.test.client             import Client
 
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
+
+from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
+from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
@@ -50,8 +53,8 @@ from entity_testentitydata          import (
     entitydata_list_type_uri,
     entitydata_value_keys, entitydata_create_values, entitydata_values,
     entitydata_delete_confirm_form_data,
-    entitydata_recordtype_view_context_data, 
-    entitydata_recordtype_view_form_data,
+    entitydata_default_view_context_data, entitydata_default_view_form_data,
+    entitydata_recordtype_view_context_data, entitydata_recordtype_view_form_data,
     default_fields, default_label, default_comment,
     layout_classes
     )
@@ -96,14 +99,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             )
         return e    
 
-    def _check_entity_data_values(self, entity_id, type_id="testtype", update="Entity", parent=None):
+    def _check_entity_data_values(self, entity_id, type_id="testtype", update="Entity"):
         "Helper function checks content of form-updated record type entry with supplied entity_id"
-        recorddata = RecordTypeData.load(self.testcoll, type_id)
-        self.assertTrue(EntityData.exists(recorddata, entity_id))
-        e = EntityData.load(recorddata, entity_id)
+        typeinfo = EntityTypeInfo(self.testsite, self.testcoll, type_id)
+        #@@
+        # RecordTypeData.load(self.testcoll, type_id)
+        #@@
+        self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, entity_id))
+        e = typeinfo.entityclass.load(typeinfo.entityparent, entity_id)
         self.assertEqual(e.get_id(), entity_id)
-        self.assertEqual(e.get_uri(""), TestHostUri + entity_uri("testcoll", type_id, entity_id))
+        self.assertEqual(e.get_view_uri(""), TestHostUri + entity_uri("testcoll", type_id, entity_id))
         v = entitydata_values(entity_id, type_id=type_id, update=update)
+        # log.info(e.get_values())
         self.assertDictionaryMatch(e.get_values(), v)
         return e
 
@@ -576,21 +583,24 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("newentity", type_id="Default_type")
         return
 
-    def test_new_entity_new_type(self):
-        # Checks logic for creating an entity which may require creation of new recorddata
-        # Create new type
+    def create_new_type(self, coll_id, type_id):
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
         f = entitydata_recordtype_view_form_data(
-            coll_id="testcoll", type_id="_type", entity_id="newtype",
+            coll_id=coll_id, type_id="_type", entity_id=type_id,
             action="new"
             )
-        u = entitydata_edit_uri("new", "testcoll", type_id="_type", view_id="Type_view")
+        u = entitydata_edit_uri("new", coll_id, type_id="_type", view_id="Type_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "_type"))
-        self.assertTrue(RecordType.exists(self.testcoll, "newtype"))
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri(coll_id, "_type"))
+        self.assertTrue(RecordType.exists(self.testcoll, type_id))
+        return
+
+    def test_new_entity_new_type(self):
+        # Checks logic for creating an entity which may require creation of new recorddata
+        self.create_new_type("testcoll", "newtype")
         # Create new entity
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
         f = entitydata_recordtype_view_form_data(entity_id="newentity", type_id="newtype", action="new")
@@ -603,6 +613,32 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # Check new entity data created
         self._check_entity_data_values("newentity", type_id="newtype")
         return
+
+
+
+
+
+
+    def test_new_entity_builtin_type(self):
+        # Create new entity
+        self.assertFalse(RecordField.exists(self.testcoll, "newfield", self.testsite))
+        f = entitydata_default_view_form_data(
+                entity_id="newfield", type_id="_field", orig_type="Default_type", action="new"
+                )
+        u = entitydata_edit_uri("new", "testcoll", "Default_type", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "Default_type"))
+        # Check new entity data created
+        self.assertTrue(RecordField.exists(self.testcoll, "newfield", self.testsite))
+        self._check_entity_data_values("newfield", type_id="_field")
+        return
+
+
+
+
 
     def test_post_new_entity_add_view_field(self):
         self.assertFalse(EntityData.exists(self.testdata, "entityaddfield"))

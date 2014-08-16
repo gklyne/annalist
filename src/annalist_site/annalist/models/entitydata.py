@@ -48,13 +48,13 @@ class EntityData(Entity):
         log.debug("EntityData: _entityviewuri %s"%(self._entityviewuri))
         return
 
-    def get_view_uri(self, baseuri=""):
-        """
-        Return URI used to view entity data.  For metadata entities, this may be 
-        different from the URI at which the resource is located, per get_uri().
-        The intent is to provide a URI that works regardless of whether the metadata
-        is stored as site-wide or collection-specific data.
-        """
-        return urlparse.urljoin(baseuri, self._entityviewuri)
+    # def get_view_uri(self, baseuri=""):
+    #     """
+    #     Return URI used to view entity data.  For metadata entities, this may be 
+    #     different from the URI at which the resource is located, per get_uri().
+    #     The intent is to provide a URI that works regardless of whether the metadata
+    #     is stored as site-wide or collection-specific data.
+    #     """
+    #     return urlparse.urljoin(baseuri, self._entityviewuri)
 
 # End.

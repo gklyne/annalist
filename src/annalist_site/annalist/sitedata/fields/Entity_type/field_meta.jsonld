@@ -6,7 +6,7 @@
 , "annal:field_name":   "entity_type"
 , "annal:field_render": "annal:field_render/Type"
 , "annal:value_type":   "annal:Slug"
-, "annal:placeholder":  "(recordtype id)"
-, "annal:property_uri": "entity_type_id"
+, "annal:placeholder":  "(type id)"
+, "annal:property_uri": "annal:type"
 , "annal:options":      "type_ids"
 }

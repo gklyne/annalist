@@ -32,6 +32,8 @@ from annalist.views.grouprepeatmap      import GroupRepeatMap
 from annalist.views.confirm             import ConfirmView, dict_querydict
 from annalist.views.generic             import AnnalistGenericView
 
+from annalist.views.fields.render_utils import get_entity_values
+
 #   -------------------------------------------------------------------------------------------
 #
 #   Mapping table data (not view-specific)
@@ -104,6 +106,11 @@ class EntityGenericListView(AnnalistGenericView):
             )
         return entitymap
 
+    def get_entityvals(self, entity_list):
+        for e in entity_list:
+            v = e.get_values()
+            v[...]
+
     # GET
 
     def get(self, request, coll_id=None, type_id=None, list_id=None):
@@ -123,7 +130,7 @@ class EntityGenericListView(AnnalistGenericView):
             EntityFinder(listinfo.collection)
                 .get_entities(type_id, selector=selector, search=search_for)
             )
-        entityval = { 'annal:list_entities': list(entity_list) }
+        entityval = { 'annal:list_entities': [ get_entity_values(e) for e in entity_list ] }
         # Set up initial view context
         entityvaluemap = self.get_list_entityvaluemap(listinfo)
         viewcontext = entityvaluemap.map_value_to_context(entityval,

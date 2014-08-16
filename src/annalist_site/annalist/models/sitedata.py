@@ -34,6 +34,7 @@ class SiteData(Entity):
 
     _entitytype     = ANNAL.CURIE.SiteData
     _entitytypeid   = "_sitedata"
+    _entityview     = layout.SITEDATA_VIEW
     _entitypath     = layout.SITEDATA_PATH
     _entityfile     = layout.SITEDATA_META_FILE
     _entityref      = layout.META_SITEDATA_REF

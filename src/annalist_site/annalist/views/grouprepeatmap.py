@@ -48,10 +48,10 @@ class GroupRepeatMap(_GroupRepeatMap_tuple):
         subcontext = {}
         if self.c:
             subcontext[self.c] = []
-            for entity in entityval[self.e]:
-                grp_context = { 'entity_id': entity.get_id(), 'type_id': entity.get_type_id() }
+            for v in entityval[self.e]:
+                grp_context = { 'entity_id': v['entity_id'], 'type_id': v['entity_type_id'] }
                 for kmap in self.g:
-                    grp_context.update(kmap.map_entity_to_context(entity, extras=extras))
+                    grp_context.update(kmap.map_entity_to_context(v, extras=extras))
                 subcontext[self.c].append(grp_context)
         return subcontext
 

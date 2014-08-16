@@ -37,10 +37,12 @@ from annalist.models.recordlist import RecordList
 
 class Collection(Entity):
 
-    _entitytype = ANNAL.CURIE.Collection
-    _entitypath = layout.SITE_COLL_PATH
-    _entityfile = layout.COLL_META_FILE
-    _entityref  = layout.META_COLL_REF
+    _entitytype     = ANNAL.CURIE.Collection
+    _entitytypeid   = "_collection"
+    _entityview     = layout.SITE_COLL_VIEW
+    _entitypath     = layout.SITE_COLL_PATH
+    _entityfile     = layout.COLL_META_FILE
+    _entityref      = layout.META_COLL_REF
 
     def __init__(self, parentsite, coll_id):
         """

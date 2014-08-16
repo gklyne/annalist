@@ -118,6 +118,10 @@ class EntityRoot(object):
         different from the URI at which the resource is located, per get_uri().
         The intent is to provide a URI that works regardless of whether the metadata
         is stored as site-wide or collection-specific data.
+
+        This implementation is the same as get_uri, but for entities that belong to a
+        collection the URI is mapped via the web application to the underlying storage
+        location.
         """
         return self.get_uri(baseuri=baseuri)
 

@@ -17,6 +17,7 @@ from django.core.urlresolvers           import resolve, reverse
 from annalist                           import message
 from annalist                           import util
 
+from annalist.models.entitytypeinfo     import EntityTypeInfo
 from annalist.models.recordtype         import RecordType
 from annalist.models.recordview         import RecordView
 from annalist.models.recordfield        import RecordField
@@ -29,6 +30,8 @@ from annalist.views.entityvaluemap      import EntityValueMap
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
 from annalist.views.generic             import AnnalistGenericView
+
+from annalist.views.fields.render_utils import get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -129,7 +132,7 @@ class GenericEntityEditView(AnnalistGenericView):
             "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
-        # log.debug("  form data %r"%(request.POST))
+        # log.info("  form data %r"%(request.POST))
         viewinfo = self.view_setup(action, coll_id, type_id, view_id, entity_id)
         if viewinfo.http_response:
             return viewinfo.http_response
@@ -178,9 +181,11 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'no_field_selected':      message.NO_FIELD_SELECTED
             })
         # Process form response and respond accordingly
+        #@@ TODO: this should be redundant - create as-needed, not before
         if not typeinfo.entityparent._exists():
             # Create RecordTypeData when not already exists
             RecordTypeData.create(viewinfo.collection, typeinfo.entityparent.get_id(), {})
+        #@@
         return self.form_response(
             viewinfo,
             entity_id, orig_entity_id, 
@@ -268,7 +273,8 @@ class GenericEntityEditView(AnnalistGenericView):
             add_field_desc = self.find_repeat_id(entityvaluemap, add_field)
             if add_field_desc:
                 self.add_entity_field(add_field_desc, entity)
-        viewcontext    = entityvaluemap.map_value_to_context(entity,
+        entityvals  = get_entity_values(entity, entity_id)
+        viewcontext = entityvaluemap.map_value_to_context(entityvals,
             title               = viewinfo.sitedata["title"],
             action              = viewinfo.action,
             edit_add_field      = viewinfo.recordview.get("annal:add_field", "yes"),
@@ -317,7 +323,6 @@ class GenericEntityEditView(AnnalistGenericView):
         continuation_uri = context_extra_values['continuation_uri']
         if 'cancel' in form_data:
             return HttpResponseRedirect(continuation_uri)
-        typeinfo       = viewinfo.entitytypeinfo
         entityvaluemap = self.get_view_entityvaluemap(viewinfo)
 
         # Check response has valid id and type
@@ -338,14 +343,14 @@ class GenericEntityEditView(AnnalistGenericView):
         if 'save' in form_data:
             http_response = self.save_entity(entityvaluemap, form_data,
                 entity_id, entity_type, orig_entity_id, orig_entity_type, 
-                viewinfo.collection, typeinfo, context_extra_values, messages)
+                viewinfo, context_extra_values, messages)
             return http_response or HttpResponseRedirect(continuation_uri)
 
         # Add field from entity view (as opposed to view description view)
         if 'add_view_field' in form_data:
             http_response = self.save_entity(entityvaluemap, form_data,
                 entity_id, entity_type, orig_entity_id, orig_entity_type, 
-                viewinfo.collection, typeinfo, context_extra_values, messages)
+                viewinfo, context_extra_values, messages)
             if http_response:
                 return http_response
             viewinfo.check_authorization("config")
@@ -399,7 +404,7 @@ class GenericEntityEditView(AnnalistGenericView):
     def save_entity(self,
             entityvaluemap, form_data,
             entity_id, entity_type, orig_entity_id, orig_entity_type, 
-            collection, typeinfo, context_extra_values, messages):
+            viewinfo, context_extra_values, messages):
         """
         This method contains logic to save entity data modified through a form
         intrerface.  If an entity is being edited (as oppoosed to created or copied)
@@ -410,6 +415,7 @@ class GenericEntityEditView(AnnalistGenericView):
         HTTP response object that reports the nature of the problem.
         """
         action      = form_data['action']
+        typeinfo    = viewinfo.entitytypeinfo
         orig_entity = self.get_entity(orig_entity_id, typeinfo, action, {})
         log.debug(
             "save_entity: save, action %s, entity_id %s, orig_entity_id %s"
@@ -419,11 +425,16 @@ class GenericEntityEditView(AnnalistGenericView):
             "                     entity_type %s, orig_entity_type %s"
             %(entity_type, orig_entity_type)
             )
+        # log.info(
+        #     "                     orig_entity %r"
+        #     %(orig_entity)
+        #     )
         entity_id_changed = (
             ( action == "edit" ) and
             ( (entity_id != orig_entity_id) or (entity_type != orig_entity_type) )
             )
         # Check original parent exists (still)
+        #@@ TODO: unless this is a "new" action
         orig_parent = typeinfo.entityparent
         if not orig_parent._exists():
             log.warning("save_entity: not orig_parent._exists()")
@@ -433,12 +444,20 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
         # Determine new parent for saved entity
         if entity_type != orig_entity_type:
-            new_parent = RecordTypeData(collection, entity_type)
-            if not new_parent._exists():
-                # Create RecordTypeData if not already existing
-                RecordTypeData.create(collection, entity_type, {})
+            new_typeinfo = EntityTypeInfo(
+                viewinfo.site, viewinfo.collection, entity_type, 
+                create_typedata=True
+                )
+            new_parent   = new_typeinfo.entityparent
+            #@@
+            # new_parent = RecordTypeData(collection, entity_type)
+            # if not new_parent._exists():
+            #     # Create RecordTypeData if not already existing
+            #     RecordTypeData.create(collection, entity_type, {})
+            #@@
         else:
-            new_parent = orig_parent
+            new_typeinfo = typeinfo
+            new_parent   = orig_parent
         # Check existence of entity to save according to action performed
         if (action in ["new", "copy"]) or entity_id_changed:
             if typeinfo.entityclass.exists(new_parent, entity_id):
@@ -460,9 +479,12 @@ class GenericEntityEditView(AnnalistGenericView):
         # Note: form data is applied as update to original entity data so that
         # values not in view are preserved.
         entity_values = orig_entity.get_values() if orig_entity else {}
+        # log.info("orig_entity values%r"%(entity_values))
         entity_values.pop('annal:uri', None)  # Force re-allocation of URI
         entity_values.update(entityvaluemap.map_form_data_to_values(form_data))
-        typeinfo.entityclass.create(new_parent, entity_id, entity_values)
+        # log.info("entity_values%r"%(entity_values))
+        # log.info("new_parent%r"%(new_parent))
+        new_typeinfo.entityclass.create(new_parent, entity_id, entity_values)
         # Remove old entity if rename
         if entity_id_changed:
             if typeinfo.entityclass.exists(new_parent, entity_id):    # Precautionary

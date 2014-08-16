@@ -109,7 +109,7 @@ class EntityTypeInfo(object):
         Type-dependent messages
     """
 
-    def __init__(self, site, coll, type_id):
+    def __init__(self, site, coll, type_id, create_typedata=False):
         """
         Set up type attribute values.
 
@@ -117,6 +117,11 @@ class EntityTypeInfo(object):
         coll            collection object in which type is used
         type_id         entity type id, which is a collection-defined value,
                         or one of a number of special site-wide built-in types.
+        create_typedata if true, requests that a RecordTypeData entity be created
+                        and saved on disk for user-defined types if it does not 
+                        already exist.  (Creating a RecordTypeData entity ensures
+                        that the corresponding data storage location is available 
+                        for saving entity data.)
 
         Attributes of type information object are:
 
@@ -144,8 +149,20 @@ class EntityTypeInfo(object):
         else:
             if RecordType.exists(coll, type_id, site):
                 self.recordtype     = RecordType.load(coll, type_id)
-                self.entityparent   = RecordTypeData(coll, type_id)
-            else:                
+                if create_typedata and not RecordTypeData.exists(coll, type_id):
+                    self.entityparent   = RecordTypeData.create(coll, type_id, {})
+                else:
+                    self.entityparent   = RecordTypeData(coll, type_id)
+            #@@
+            #     self.entityparent   = RecordTypeData(coll, type_id)
+            # elif RecordTypeData.exists(coll, type_id):
+            #     self.recordtype     = None
+            #     self.entityparent   = RecordTypeData(coll, type_id)
+            # elif create_typedata:
+            #     self.recordtype     = None
+            #     self.entityparent   = RecordTypeData.create(coll, type_id, {})
+            #@@
+            else:
                 log.warning("EntityTypeInfo: RecordType %s not found"%type_id)
                 self.recordtype     = None
                 self.entityparent   = None

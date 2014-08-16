@@ -51,6 +51,10 @@ class bound_field(object):
     >>> field_bar.field_value
     'bar_val'
     >>> field_def_desc = {"field_id": "def_id", "field_property_uri": "def", "field_type": "def_type"}
+    >>> entityvals = entity.get_values()
+    >>> entityvals['entity_id']      = entity.get_id()
+    >>> entityvals['entity_type_id'] = entity.get_type_id()
+    >>> entityvals['entity_link']    = entity.get_uri()
     >>> field_def = bound_field(field_def_desc, entity)
     >>> field_def.field_type
     'def_type'
@@ -69,18 +73,17 @@ class bound_field(object):
     "<ul><li>key: def</li><li>val: default</li><li>field_description: {'field_property_uri': 'def', 'field_id': 'def_id', 'field_type': 'def_type'}</li></ul>"
     """
 
-    __slots__ = ("_field_description", "_entity", "_key", "_options", "_extras")
+    __slots__ = ("_field_description", "_entityvals", "_key", "_options", "_extras")
 
-    def __init__(self, field_description, entity, key=None, options=None, extras=None):
+    def __init__(self, field_description, entityvals, key=None, options=None, extras=None):
         """
         Initialize a bound_field object.
 
         field_description   is a dictionary-like object describing a display
                             field.  See `FieldDescription` class for more details.
-        entity              is an entity from which a value to be rendered is
-                            obtained.  The specific field value used is defined
-                            by the combination with `field_description`.  The entity
-                            may be an entity object or a dictionary.
+        entityvals          is an entity values dictionary from which a value to be 
+                            rendered is obtained.  The specific field value used is 
+                            defined by the combination with `field_description`.  
         key                 a key used to extract a field from the supplied entity.
                             If not specified, the value of the `field_property_uri`
                             field of the field description is used: this assumes the
@@ -92,14 +95,15 @@ class bound_field(object):
                             Can be used to specify default values for an entity.
         """
         self._field_description = field_description
-        self._entity            = entity
+        self._entityvals        = entityvals
         self._key               = key or self._field_description['field_property_uri']
         self._options           = options
         self._extras            = extras
-        if isinstance(entity, EntityRoot):
-            eid = entity.get_id()
-        else:
-            eid = "(dict)"
+        # if isinstance(entity, EntityRoot):
+        #     eid = entity.get_id()
+        # else:
+        #     eid = "(dict)"
+        eid = entityvals.get('entity_id', "@@@render_utils.__init__@@@")
         log.log(settings.TRACE_FIELD_VALUE,
             "bound_field: field_id %s, entity_id %s, value_key %s, value %s"%
             (field_description['field_id'], eid, self._key, self['field_value'])
@@ -112,24 +116,28 @@ class bound_field(object):
         then the value corresponding to the field description is retrieved from the entity,
         otherwise the named attribute is retrieved from thge field description.
         """
-        # log.info("__getattr__ %s"%name)
+        # log.info("self._key %s, __getattr__ %s"%(self._key, name))
         # log.info("self._key %s"%self._key)
         # log.info("self._entity %r"%self._entity)
-        if name == "entity_id":
-            if self._entity and isinstance(self._entity, EntityRoot):
-                return self._entity.get_id()
-            else:
-                return ""
-        elif name == "entity_type_id":
-            if self._entity and isinstance(self._entity, EntityRoot):
-                return self._entity.get_type_id()
-            else:
-                return ""
-        elif name == "entity_link":
-            if self._entity and isinstance(self._entity, EntityRoot):
-                return self._entity.get_uri()
-            else:
-                return ""
+        if name in ["entity_id", "entity_type_id", "entity_link"]:
+            # if not self._entityvals.get(name, ""):
+            #     log.info("*** bound_field.%s: '%s' *** %r"%(name, self._entityvals.get(name, "???"), self._entityvals))
+            return self._entityvals.get(name, "")
+        # if name == "entity_id":
+        #     if self._entity and isinstance(self._entity, EntityRoot):
+        #         return self._entity.get_id()
+        #     else:
+        #         return ""
+        # elif name == "entity_type_id":
+        #     if self._entity and isinstance(self._entity, EntityRoot):
+        #         return self._entity.get_type_id()
+        #     else:
+        #         return ""
+        # elif name == "entity_link":
+        #     if self._entity and isinstance(self._entity, EntityRoot):
+        #         return self._entity.get_uri()
+        #     else:
+        #         return ""
         elif name == "field_value_key":
             return self._key
         elif name == "field_placeholder":
@@ -137,12 +145,18 @@ class bound_field(object):
         elif name == "field_value":
             # Note: .keys() is required here as iterator on EntityData returns files in directory
             # @@TODO: should be able to drop .keys() now
-            if self._key in self._entity.keys():
-                return self._entity[self._key]
-            elif self._extras and self._key in self._extras:
-                return self._extras[self._key]
+            # @@TODO: what follows is a horrible hack w.r.t. entity type info.
+            #         It should be re-jigged to make access to type id information more regular.
+            if False:
+                pass
             elif self._key == "entity_type_id":
                 return self.entity_type_id
+            elif self._key == "annal:type":
+                return self.entity_type_id
+            elif self._key in self._entityvals.keys():
+                return self._entityvals[self._key]
+            elif self._extras and self._key in self._extras:
+                return self._extras[self._key]
             else:
                 # Return default value, or empty string.
                 # Used to populate form field value when no value supplied
@@ -172,7 +186,7 @@ class bound_field(object):
 
     def as_dict(self):
         return dict(self._field_description.items(), 
-            entity=dict(self._entity.items()), 
+            entity=dict(self._entityvals.items()), 
             field_value=self.field_value, 
             extras=self._extras, 
             key=self._key
@@ -192,7 +206,7 @@ class bound_field(object):
     def fullrepr(self):
         return (
             "bound_field({'field':%r, 'vals':%r, 'key':%r, 'field_value':%r, 'extras':%r})"%
-            (self._field_description, dict(self._entity.items()), 
+            (self._field_description, dict(self._entityvals.items()), 
                 self._key, self.field_value, self._extras) 
             )
 
@@ -300,70 +314,18 @@ def get_item_renderer(renderid):
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
 
-# Placement = namedtuple("Placement", ['field', 'label', 'value'])
-
-# def get_placement_classes(placement):
-#     """
-#     Returns placement classes corresponding to placement string provided.
-
-#     >>> get_placement_classes("small:0,12").field
-#     'small-12 columns'
-#     >>> get_placement_classes("small:0,12").label
-#     'small-12 medium-3 columns'
-#     >>> get_placement_classes("small:0,12").value
-#     'small-12 medium-9 columns'
-#     >>> get_placement_classes("medium:0,12")
-#     Placement(field='small-12 columns', label='small-12 medium-3 columns', value='small-12 medium-9 columns')
-#     >>> get_placement_classes("large:0,12")
-#     Placement(field='small-12 columns', label='small-12 medium-3 large-2 columns', value='small-12 medium-9 large-10 columns')
-#     >>> get_placement_classes("small:0,12;medium:0,4")
-#     Placement(field='small-12 medium-4 columns', label='small-12 medium-9 columns', value='small-12 medium-3 columns')
-#     >>> get_placement_classes("small:0,12; medium:0,4")
-#     Placement(field='small-12 medium-4 columns', label='small-12 medium-9 columns', value='small-12 medium-3 columns')
-#     >>> get_placement_classes("small:0,12;medium:0,6;large:0,4")
-#     Placement(field='small-12 medium-6 large-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
-#     >>> get_placement_classes("small:0,6;medium:0,4")
-#     Placement(field='small-6 medium-4 columns', label='small-12 medium-9 columns', value='small-12 medium-3 columns')
-#     >>> get_placement_classes("small:0,6;medium:0,4right")
-#     Placement(field='small-6 medium-4 right columns', label='small-12 medium-9 columns', value='small-12 medium-3 columns')
-#     """
-#     def format_class(cd, right):
-#         prev = cd.get("small", None)
-#         for test in ("medium", "large"):
-#             if (test in cd):
-#                 if cd[test] == prev:
-#                     del cd[test]
-#                 else:
-#                     prev = cd[test]
-#         if right: right = " right"
-#         return " ".join([k+"-"+str(v) for k,v in cd.items()]) + right + " columns"
-#     ppr = re.compile(r"^(small|medium|large):(\d+),(\d+)(right)?$")
-#     ps = [ s.strip() for s in placement.split(';') ]
-#     labelw      = {'small': 12, 'medium': 3, 'large': 2}
-#     field_width = OrderedDict([ ('small', 12) ])
-#     label_width = OrderedDict([ ('small', 12), ('medium',  3) ])
-#     value_width = OrderedDict([ ('small', 12), ('medium',  9) ])
-#     for p in ps:
-#         pm = ppr.match(p)
-#         if not pm:
-#             break
-#         pmmode   = pm.group(1)      # "small", "medium" or "large"
-#         pmoffset = int(pm.group(2))
-#         pmwidth  = int(pm.group(3))
-#         pmright  = pm.group(4) or ""
-#         field_width[pmmode] = pmwidth
-#         label_width[pmmode] = labelw[pmmode]*(12 // pmwidth)
-#         value_width[pmmode] = 12 - label_width[pmmode]
-#         if label_width[pmmode] >= 12:
-#             label_width[pmmode] = 12
-#             value_width[pmmode] = 12
-#     c = Placement(
-#             field=format_class(field_width, pmright),
-#             label=format_class(label_width, ""),
-#             value=format_class(value_width, "")
-#             )
-#     log.debug("get_placement_class %s, returns %s"%(placement,c))
-#     return c
+def get_entity_values(entity, entity_id=None):
+    """
+    Returns an entity values dictionary for a supplied entity, suitable for
+    use with a bound_field object (see above).
+    """
+    if not entity_id:
+        entity_id = entity.get_id()
+    entityvals = entity.get_values().copy()
+    entityvals['entity_id']      = entity_id
+    entityvals['entity_type_id'] = entity.get_type_id()
+    entityvals['entity_link']    = entity.get_uri() + "@@get_uri@@"     #@@   .get_view_uri() ??
+    return entityvals
 
 if __name__ == "__main__":
     import doctest

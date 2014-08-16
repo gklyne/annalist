@@ -44,6 +44,7 @@ class Entity(EntityRoot):
     """
 
     _entitytype = ANNAL.CURIE.Entity
+    _entityview = "%(id)s/"     # Placeholder for testing
     _entitypath = None          # Relative path from parent to entity (template)
     _entityfile = None          # Relative reference to body file from entity
     _entityref  = None          # Relative reference to entity from body file
@@ -65,8 +66,9 @@ class Entity(EntityRoot):
             raise ValueError("Invalid entity identifier: %s"%(entityid))
         relpath = self.relpath(entityid)
         super(Entity, self).__init__(parent._entityuri+relpath, parent._entitydir+relpath)
-        self._entityalturi = None
-        self._entityaltdir = None
+        self._entityviewuri = parent._entityuri+self._entityview%{'id': entityid}
+        self._entityalturi  = None
+        self._entityaltdir  = None
         if altparent:
             altpath = self.altpath(entityid)
             self._entityalturi = altparent._entityuri+altpath
@@ -76,6 +78,15 @@ class Entity(EntityRoot):
         self._entityid = entityid
         log.debug("Entity.__init__: entity_id %s, type_id %s"%(self._entityid, self.get_type_id()))
         return
+
+    def get_view_uri(self, baseuri=""):
+        """
+        Return URI used to view entity data.  For metadata entities, this may be 
+        different from the URI at which the resource is located, per get_uri().
+        The intent is to provide a URI that works regardless of whether the metadata
+        is stored as site-wide or collection-specific data.
+        """
+        return urlparse.urljoin(baseuri, self._entityviewuri)
 
     # I/O helper functions
 

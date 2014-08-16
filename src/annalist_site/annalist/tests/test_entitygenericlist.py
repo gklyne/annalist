@@ -132,6 +132,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>List 'Default_list_all' of entities in collection 'testcoll'</h3>", html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_uri".+value="/xyzzy/"/>')
+        # log.info(r.content)
         rowdata = """
             <tr class="select_row">
                 <td class="small-2 columns">testtype</td>
