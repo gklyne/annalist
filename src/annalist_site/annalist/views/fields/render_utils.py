@@ -250,8 +250,9 @@ def get_edit_renderer(renderid):
     if renderid == "annal:field_render/View_fields":
         return "field/annalist_todo.html"
     log.warning("get_edit_renderer: %s not found"%renderid)
-    raise ValueError("get_edit_renderer: %s not found"%renderid)
-    return None
+    # raise ValueError("get_edit_renderer: %s not found"%renderid)
+    # Default to simple text for unknown renderer type
+    return "field/annalist_edit_text.html"
 
 def get_view_renderer(renderid):
     """
@@ -285,8 +286,9 @@ def get_view_renderer(renderid):
     if renderid == "annal:field_render/View_fields":
         return "field/annalist_todo.html"
     log.warning("get_view_renderer: %s not found"%renderid)
-    raise ValueError("get_view_renderer: %s not found"%renderid)
-    return None
+    # raise ValueError("get_view_renderer: %s not found"%renderid)
+    # Default to simple text for unknown renderer type
+    return "field/annalist_view_text.html"
 
 def get_head_renderer(renderid):
     """

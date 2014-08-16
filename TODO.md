@@ -176,10 +176,15 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / skipped '@@TODO genericlist default list button'
        / annalist.tests.test_entitygenericlist.EntityGenericListViewTest
 8. initial application testing
-   - Create new type - appears twice in default_list_all display.  Delete one deletes both appearances, so this looks like display problem.  I thought this had been fixed.  Confirmed to be knock-on from incorrect creation of _type data (see next).
-   - New entry save as _type does not create new type in collection
-   - Changing type to built-in type in entity edit display does not save to correct location
-   - When creating new type, URI should be based on ID entered.  Set URI when saving rather than when creating?
+   / Create new type - appears twice in default_list_all display.  Delete one deletes both appearances, so this looks like display problem.  I thought this had been fixed.  Confirmed to be knock-on from incorrect creation of _type data (see next).
+   / New entry save as _type does not create new type in collection
+   - field view has size/position field; use as default when adding to view.
+   / viewing new entity with custom type generates "keyerror annal:value_type" @ fielddescription.py line 55.
+   / (a) update field view description to display all relevant fields; ???
+   / (b) when defining a field, the render type selected also implies a field value type; handle this in "FieldDescription constructor?"  Later, maybe.  For now, add value type field.
+   / (c) make FieldDescription constructor more resilient to missing data.
+   / Changing type to built-in type in entity edit display does not save to correct location
+   - When creating new type, URI should be based on ID entered.  Set URI when saving rather than when creating? (Partially works)
    - List editing view formatting is messed up (small-6?)
    - Click on local type in default_list, then cancel, returns to Type_list display
    - Click on local record in Default_list, cancel, returns to default data display (/d/ rather than /l/).  In default display, types don't appear.

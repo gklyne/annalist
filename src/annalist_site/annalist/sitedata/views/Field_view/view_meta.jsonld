@@ -12,6 +12,9 @@
   , { "annal:field_id":         "Field_type"
     , "annal:field_placement":  "small:0,12;medium:6,6right"
     }
+  , { "annal:field_id":         "Field_render"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
   , { "annal:field_id":         "Field_label"
     , "annal:field_placement":  "small:0,12"
     }

@@ -32,7 +32,8 @@ class FieldDescription(object):
         The FieldDescription object behaves as a dictionary containing the various field attributes.
 
         collection  is a collection object to which the field is considered to belong.
-        field       is a dictionary with the field description from a view or list description.
+        field       is a dictionary with the field description from a view or list description,
+                    containing a field id and placement values.
         """
         field_id    = field['annal:field_id']                   # Field ID slug in URI
         recordfield = RecordField.load(collection, field_id, collection._parentsite)
@@ -46,16 +47,16 @@ class FieldDescription(object):
             { 'field_id':               field_id
             , 'field_name':             field_name
             , 'field_placement':        get_placement_classes(field['annal:field_placement'])
-            , 'field_render_head':      get_head_renderer(recordfield['annal:field_render'])
-            , 'field_render_item':      get_item_renderer(recordfield['annal:field_render'])
-            , 'field_render_view':      get_view_renderer(recordfield['annal:field_render'])
-            , 'field_render_edit':      get_edit_renderer(recordfield['annal:field_render'])
-            , 'field_label':            recordfield['rdfs:label']
-            , 'field_help':             recordfield['rdfs:comment']
-            , 'field_value_type':       recordfield['annal:value_type']
-            , 'field_placeholder':      recordfield['annal:placeholder']
+            , 'field_render_head':      get_head_renderer(recordfield.get('annal:field_render', ""))
+            , 'field_render_item':      get_item_renderer(recordfield.get('annal:field_render', ""))
+            , 'field_render_view':      get_view_renderer(recordfield.get('annal:field_render', ""))
+            , 'field_render_edit':      get_edit_renderer(recordfield.get('annal:field_render', ""))
+            , 'field_label':            recordfield.get('rdfs:label', "")
+            , 'field_help':             recordfield.get('rdfs:comment', "")
+            , 'field_value_type':       recordfield.get('annal:value_type', "")
+            , 'field_placeholder':      recordfield.get('annal:placeholder', "")
             , 'field_default_value':    recordfield.get('annal:default_value', None)
-            , 'field_property_uri':     recordfield['annal:property_uri']
+            , 'field_property_uri':     recordfield.get('annal:property_uri', "")
             , 'field_options':          recordfield.get('annal:options', None)
             })
         # log.info("FieldDescription: %s"%field_id)
