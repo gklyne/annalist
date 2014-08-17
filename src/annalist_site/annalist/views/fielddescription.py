@@ -39,14 +39,17 @@ class FieldDescription(object):
         recordfield = RecordField.load(collection, field_id, collection._parentsite)
         if recordfield is None:
             raise ValueError("Can't retrieve definition for field %s"%(field_id))
-        field_name  = recordfield.get("annal:field_name", field_id)   # Field name in form
+        field_name      = recordfield.get("annal:field_name", field_id)   # Field name in form
+        field_placement = get_placement_classes(
+            field['annal:field_placement'] or recordfield.get('annal:field_placement', "")
+            )
         log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
         # log.info("FieldDescription: field['annal:field_placement'] %s"%(field['annal:field_placement']))
         # log.info("FieldDescription: field_placement %r"%(get_placement_classes(field['annal:field_placement']),))
         self._field_context = (
             { 'field_id':               field_id
             , 'field_name':             field_name
-            , 'field_placement':        get_placement_classes(field['annal:field_placement'])
+            , 'field_placement':        field_placement
             , 'field_render_head':      get_head_renderer(recordfield.get('annal:field_render', ""))
             , 'field_render_item':      get_item_renderer(recordfield.get('annal:field_render', ""))
             , 'field_render_view':      get_view_renderer(recordfield.get('annal:field_render', ""))

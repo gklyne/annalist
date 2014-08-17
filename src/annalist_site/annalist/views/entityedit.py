@@ -497,23 +497,27 @@ class GenericEntityEditView(AnnalistGenericView):
 
         Each value found is returned as a field structure description; e.g.
 
-            { 'field_type': 'RepeatValuesMap'
-            , 'repeat_entity_values': u 'annal:view_fields'
-            , 'repeat_id': u 'View_fields'
-            , 'repeat_btn_label': u 'field'
-            , 'repeat_label': u 'Fields'
-            , 'repeat_context_values': u 'repeat'
+            { 'field_type': 'RepeatValuesMap',
+            , 'repeat_entity_values':  'annal:list_fields'
+            , 'repeat_id':             'List_fields'
+            , 'repeat_label_add':      'Add field'
+            , 'repeat_label_delete':   'Remove selected field(s)'
+            , 'repeat_label':          'Fields'
+            , 'repeat_context_values': 'repeat'
             , 'repeat_fields_description':
-            , { 'field_type': 'FieldListValueMap'
-              , 'field_list':
-                [ { 'field_placement': Placement(field = u 'small-12 medium-6 columns', ... )
-                  , 'field_id': u 'Field_sel'
-                  }
-                , { 'field_placement': Placement(field = u 'small-12 medium-6 columns', ... )
-                  , 'field_id': u 'Field_placement'
-                  }
-                ]
-              }
+                {
+                'field_type': 'FieldListValueMap',
+                'field_list': 
+                  [ { 'field_id':           'Field_sel'
+                    , 'field_placement':    Placement(field = 'small-12 medium-6 columns', ...)
+                    , 'field_property_uri': 'annal:field_id'
+                    }
+                  , { 'field_id':           'Field_placement'
+                    , 'field_placement':    Placement(field = 'small-12 medium-6 columns', ...),
+                    , 'field_property_uri': 'annal:field_placement'                  
+                    }
+                  ]
+                }
             }
         """
         def _find_repeat_fields(fieldmap):
@@ -521,8 +525,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 field_desc = kmap.get_structure_description()
                 if field_desc['field_type'] == "FieldListValueMap":
                     for fd in _find_repeat_fields(kmap.fs):
+                        # log.info("find_repeat_field FieldListValueMap yield %r"%(fd))
                         yield fd
                 if field_desc['field_type'] == "RepeatValuesMap":
+                    # log.info("find_repeat_field RepeatValuesMap yield %r"%(field_desc))
                     yield field_desc
         return _find_repeat_fields(entityvaluemap)
 
@@ -601,6 +607,20 @@ class GenericEntityEditView(AnnalistGenericView):
             )
 
     def add_entity_field(self, add_field_desc, entity):
+        """
+        Add a described field to the supplied entity values.
+
+        See 'find_repeat_fields' for information about the field description.
+
+        e.g. each 'f' below is like this:
+
+            { 'field_id':           'Field_sel'
+            , 'field_placement':    Placement(field = 'small-12 medium-6 columns', ...)
+            , 'field_property_uri': 'annal:field_id'
+            }
+
+        being generated from a 'FieldDescription' value.
+        """
         field_val = dict(
             [ (f['field_property_uri'], "")
               for f in add_field_desc['repeat_fields_description']['field_list']

@@ -176,10 +176,10 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
      / skipped '@@TODO genericlist default list button'
        / annalist.tests.test_entitygenericlist.EntityGenericListViewTest
 8. initial application testing
-   - review and simplify bound_field logic for accessing field_value
+   / review and simplify bound_field logic for accessing field_value
    / Create new type - appears twice in default_list_all display.  Delete one deletes both appearances, so this looks like display problem.  I thought this had been fixed.  Confirmed to be knock-on from incorrect creation of _type data (see next).
    / New entry save as _type does not create new type in collection
-   - field view has size/position field; use as default when adding to view.
+   / field view has size/position field; use as default when adding to view.
    / viewing new entity with custom type generates "keyerror annal:value_type" @ fielddescription.py line 55.
    / (a) update field view description to display all relevant fields; ???
    / (b) when defining a field, the render type selected also implies a field value type; handle this in "FieldDescription constructor?"  Later, maybe.  For now, add value type field.
