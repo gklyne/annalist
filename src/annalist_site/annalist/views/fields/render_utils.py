@@ -120,40 +120,23 @@ class bound_field(object):
         # log.info("self._key %s"%self._key)
         # log.info("self._entity %r"%self._entity)
         if name in ["entity_id", "entity_type_id", "entity_link"]:
-            # if not self._entityvals.get(name, ""):
-            #     log.info("*** bound_field.%s: '%s' *** %r"%(name, self._entityvals.get(name, "???"), self._entityvals))
             return self._entityvals.get(name, "")
-        # if name == "entity_id":
-        #     if self._entity and isinstance(self._entity, EntityRoot):
-        #         return self._entity.get_id()
-        #     else:
-        #         return ""
-        # elif name == "entity_type_id":
-        #     if self._entity and isinstance(self._entity, EntityRoot):
-        #         return self._entity.get_type_id()
-        #     else:
-        #         return ""
-        # elif name == "entity_link":
-        #     if self._entity and isinstance(self._entity, EntityRoot):
-        #         return self._entity.get_uri()
-        #     else:
-        #         return ""
         elif name == "field_value_key":
             return self._key
         elif name == "field_placeholder":
             return self._field_description.get('field_placeholder', "...")
         elif name == "field_value":
-            # Note: .keys() is required here as iterator on EntityData returns files in directory
-            # @@TODO: should be able to drop .keys() now
-            # @@TODO: what follows is a horrible hack w.r.t. entity type info.
-            #         It should be re-jigged to make access to type id information more regular.
-            if False:
-                pass
-            elif self._key == "entity_type_id":
+            if self._key == "annal:type":
+                # @@TODO: remove annal:Type hack when proper selection from enumerated entities
+                #         has been implemented.
+                #
+                # The handling of annal:Type is something of a hack to return the internal
+                # type-id for an entity rarther than its type URI/CURIE, which is used in 
+                # turn by the form renderer to determine the type_id selection on the rendered
+                # form.  This hack shoukd be rendered unnecessary when the entity reference
+                # selection is properly generalized.
                 return self.entity_type_id
-            elif self._key == "annal:type":
-                return self.entity_type_id
-            elif self._key in self._entityvals.keys():
+            elif self._key in self._entityvals:
                 return self._entityvals[self._key]
             elif self._extras and self._key in self._extras:
                 return self._extras[self._key]
