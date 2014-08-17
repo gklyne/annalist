@@ -186,7 +186,7 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / (c) make FieldDescription constructor more resilient to missing data.
    / Changing type to built-in type in entity edit display does not save to correct location
    - When creating new type, URI should be based on ID entered.  Set URI when saving rather than when creating? (Partially works)
-   - List editing view formatting is messed up (small-6?)
+   / List editing view formatting is messed up (small-6?)
    - Click on local type in default_list, then cancel, returns to Type_list display
    - Click on local record in Default_list, cancel, returns to default data display (/d/ rather than /l/).  In default display, types don't appear.
    - When creating new collection, there's no easy way to create a new record type (or view) from the front page.

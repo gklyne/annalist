@@ -43,6 +43,14 @@ def get_placement_classes(placement):
     >>> get_placement_classes("small:0,6")
     Placement(field='small-6 columns', label='small-12 medium-4 columns', value='small-12 medium-8 columns')
     """
+    def set_field_width(pmmode, pmwidth):
+        field_width[pmmode] = pmwidth
+        label_width[pmmode] = labelw[pmmode]*(12 // pmwidth)
+        value_width[pmmode] = 12 - label_width[pmmode]
+        if label_width[pmmode] >= 12:
+            label_width[pmmode] = 12
+            value_width[pmmode] = 12
+        return
     def format_class(cd, right):
         prev = cd.get("small", None)
         for test in ("medium", "large"):
@@ -56,9 +64,12 @@ def get_placement_classes(placement):
     ppr = re.compile(r"^(small|medium|large):(\d+),(\d+)(right)?$")
     ps = [ s.strip() for s in placement.split(';') ]
     labelw      = {'small': 12, 'medium': 2, 'large': 2}
-    field_width = OrderedDict([ ('small', 12) ])
-    label_width = OrderedDict([ ('small', 12), ('medium',  2) ])
-    value_width = OrderedDict([ ('small', 12), ('medium',  10) ])
+    field_width = OrderedDict()
+    label_width = OrderedDict()
+    value_width = OrderedDict()
+    set_field_width("small", 12)        # Default small-12 columns (may be overridden)
+    set_field_width("medium", 12)       # Default medium-12 columns (may be overridden)
+    # Process each placeent sub-expression
     for p in ps:
         pm = ppr.match(p)
         if not pm:
@@ -67,12 +78,9 @@ def get_placement_classes(placement):
         pmoffset = int(pm.group(2))
         pmwidth  = int(pm.group(3))
         pmright  = pm.group(4) or ""
-        field_width[pmmode] = pmwidth
-        label_width[pmmode] = labelw[pmmode]*(12 // pmwidth)
-        value_width[pmmode] = 12 - label_width[pmmode]
-        if label_width[pmmode] >= 12:
-            label_width[pmmode] = 12
-            value_width[pmmode] = 12
+        set_field_width(pmmode, pmwidth)
+        if pmmode == "small":
+            set_field_width("medium", pmwidth)
     c = Placement(
             field=format_class(field_width, pmright),
             label=format_class(label_width, ""),
