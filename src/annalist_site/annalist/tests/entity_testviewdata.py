@@ -26,7 +26,7 @@ from annalist.views.fields.render_placement import (
     )
 
 from entity_testutils           import collection_dir, site_title
-from entity_testentitydata      import entitydata_list_type_uri
+from entity_testentitydata      import entitydata_list_type_url
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
@@ -49,13 +49,13 @@ def recordview_dir(coll_id="testcoll", view_id="testview"):
 #   These all use the Django `reverse` function so they correspond to
 #   the declared URI patterns.
 
-def recordview_site_uri(site, view_id="testview"):
-    return site._entityuri + layout.SITE_VIEW_PATH%{'id': view_id} + "/"
+def recordview_site_url(site, view_id="testview"):
+    return site._entityurl + layout.SITE_VIEW_PATH%{'id': view_id} + "/"
 
-def recordview_coll_uri(site, coll_id="testcoll", view_id="testview"):
-    return site._entityuri + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_VIEW_PATH%{'id': view_id} + "/"
+def recordview_coll_url(site, coll_id="testcoll", view_id="testview"):
+    return site._entityurl + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_VIEW_PATH%{'id': view_id} + "/"
 
-def recordview_uri(coll_id, view_id):
+def recordview_url(coll_id, view_id):
     """
     URI for record view description data; also view using default entity view
     """
@@ -67,7 +67,7 @@ def recordview_uri(coll_id, view_id):
         kwargs.update({'entity_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
-def recordview_edit_uri(action=None, coll_id=None, view_id=None):
+def recordview_edit_url(action=None, coll_id=None, view_id=None):
     """
     URI for record view description editing view
     """
@@ -140,7 +140,7 @@ def recordview_values(
         coll_id="testcoll", view_id="testtype", view_uri=None, 
         update="RecordView", hosturi=TestHostUri):
     d = recordview_create_values(coll_id, view_id, update=update).copy()
-    view_url = hosturi + recordview_uri(coll_id, view_id)
+    view_url = hosturi + recordview_url(coll_id, view_id)
     if not view_uri:
         view_uri = view_url
     d.update(
@@ -218,7 +218,7 @@ def recordview_entity_view_context_data(
             , 'options':            []
             }
           ]
-        , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_view")
+        , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
         })
     if view_id:
         context_dict['fields'][0]['field_value'] = view_id
@@ -241,7 +241,7 @@ def recordview_entity_view_form_data(
         , 'View_add_field':     'yes'
         , 'orig_id':            'orig_view_id'
         , 'record_type':        'annal:DefaultType'
-        , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_view")
+        , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
         # View fields
         , 'View_fields__0__Field_id':           "Entity_id"
         , 'View_fields__0__Field_placement':    "small:0,12;medium:0,6"
@@ -426,7 +426,7 @@ def recordview_view_context_data(
               ]
             }
           ]
-        , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_view")
+        , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
         })
     if view_id:
         context_dict['fields'][0]['field_value'] = view_id
@@ -485,7 +485,7 @@ def recordview_view_form_data(
         , 'View_comment':       '%s description ... (%s/%s)'%(update, coll_id, view_id)
         , 'orig_id':            'orig_view_id'
         , 'record_type':        'annal:View'
-        , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_view")
+        , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
         # View fields
         , 'View_fields__0__Field_id':           "View_id"
         , 'View_fields__0__Field_placement':    "small:0,12;medium:0,6"

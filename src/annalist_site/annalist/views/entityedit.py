@@ -56,7 +56,7 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='orig_id',          e=None,                    f='orig_id'          )
         , SimpleValueMap(c='orig_type',        e=None,                    f='orig_type'        )
         , SimpleValueMap(c='action',           e=None,                    f='action'           )
-        , SimpleValueMap(c='continuation_uri', e=None,                    f='continuation_uri' )
+        , SimpleValueMap(c='continuation_url', e=None,                    f='continuation_url' )
         ])
 
 #   -------------------------------------------------------------------------------------------
@@ -118,8 +118,8 @@ class GenericEntityEditView(AnnalistGenericView):
         #         eventually, form_render will ideally be used for both GET and POST 
         #         handlers that respond with a rendered form.
         add_field        = request.GET.get('add_field', None)
-        continuation_uri = request.GET.get('continuation_uri', "")
-        return self.form_render(viewinfo, entity, add_field, continuation_uri)
+        continuation_url = request.GET.get('continuation_url', "")
+        return self.form_render(viewinfo, entity, add_field, continuation_url)
 
     # POST
 
@@ -144,7 +144,7 @@ class GenericEntityEditView(AnnalistGenericView):
         orig_entity_id       = request.POST.get('orig_id', entity_id)
         entity_type          = request.POST.get('entity_type', type_id)
         orig_entity_type     = request.POST.get('orig_type', type_id)
-        continuation_uri     = (request.POST.get('continuation_uri', None) or
+        continuation_url     = (request.POST.get('continuation_url', None) or
             self.view_uri('AnnalistEntityDefaultListType', coll_id=coll_id, type_id=type_id)
             )
         view_id              = request.POST.get('view_id', view_id)
@@ -153,7 +153,7 @@ class GenericEntityEditView(AnnalistGenericView):
         #     "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
         #       (coll_id, type_id, entity_id, view_id, action)
         #     )
-        # log.info("continuation_uri %s, type_id %s"%(continuation_uri, type_id))
+        # log.info("continuation_url %s, type_id %s"%(continuation_url, type_id))
         typeinfo        = viewinfo.entitytypeinfo
         # @@TODO: handle enumeration of values more generically in fields/render_utils.
         type_ids        = [ t.get_id() for t in viewinfo.collection.types() ]
@@ -161,7 +161,7 @@ class GenericEntityEditView(AnnalistGenericView):
             { 'title':            viewinfo.sitedata["title"]
             , 'action':           action
             , 'edit_add_field':   viewinfo.recordview.get("annal:add_field", "yes")
-            , 'continuation_uri': continuation_uri
+            , 'continuation_url': continuation_url
             , 'coll_id':          coll_id
             , 'type_id':          type_id
             , 'type_ids':         type_ids
@@ -259,7 +259,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
         return entity
 
-    def form_render(self, viewinfo, entity, add_field, continuation_uri):
+    def form_render(self, viewinfo, entity, add_field, continuation_url):
         """
         Returns an HTTP response that renders a view of an entity, 
         using supplied entity data
@@ -280,7 +280,7 @@ class GenericEntityEditView(AnnalistGenericView):
             title               = viewinfo.sitedata["title"],
             action              = viewinfo.action,
             edit_add_field      = viewinfo.recordview.get("annal:add_field", "yes"),
-            continuation_uri    = continuation_uri,
+            continuation_url    = continuation_url,
             coll_id             = coll_id,
             type_id             = type_id,
             type_ids            = type_ids,
@@ -322,9 +322,9 @@ class GenericEntityEditView(AnnalistGenericView):
         Handle POST response from entity edit form.
         """
         form_data        = self.request.POST    
-        continuation_uri = context_extra_values['continuation_uri']
+        continuation_url = context_extra_values['continuation_url']
         if 'cancel' in form_data:
-            return HttpResponseRedirect(continuation_uri)
+            return HttpResponseRedirect(continuation_url)
         entityvaluemap = self.get_view_entityvaluemap(viewinfo)
 
         # Check response has valid id and type
@@ -346,7 +346,7 @@ class GenericEntityEditView(AnnalistGenericView):
             http_response = self.save_entity(entityvaluemap, form_data,
                 entity_id, entity_type, orig_entity_id, orig_entity_type, 
                 viewinfo, context_extra_values, messages)
-            return http_response or HttpResponseRedirect(continuation_uri)
+            return http_response or HttpResponseRedirect(continuation_url)
 
         # Add field from entity view (as opposed to view description view)
         if 'add_view_field' in form_data:
@@ -359,9 +359,9 @@ class GenericEntityEditView(AnnalistGenericView):
             if viewinfo.http_response:
                 return viewinfo.http_response
             # @@TODO: logic to override action in continuation_here (after save, change to 'edit')
-            (continuation_next, continuation_here) = self.continuation_uris(
-                form_data, continuation_uri, 
-                base_here=viewinfo.get_edit_continuation_uri(entity_type, entity_id)
+            (continuation_next, continuation_here) = self.continuation_urls(
+                form_data, continuation_url, 
+                base_here=viewinfo.get_edit_continuation_url(entity_type, entity_id)
                 )
             view_edit_uri_base = self.view_uri("AnnalistEntityEditView",
                 coll_id=viewinfo.coll_id,
@@ -399,8 +399,8 @@ class GenericEntityEditView(AnnalistGenericView):
             message.SYSTEM_ERROR
             )
         log.warning("Unexpected form data %s"%(err_values))
-        log.warning("Continue to %s"%(continuation_uri))
-        redirect_uri = view_edit_uri(continuation_uri, err_values)
+        log.warning("Continue to %s"%(continuation_url))
+        redirect_uri = view_edit_uri(continuation_url, err_values)
         return HttpResponseRedirect(redirect_uri)
 
     def save_entity(self,

@@ -26,7 +26,7 @@ from annalist.views.fields.render_placement import (
     )
 
 from entity_testutils           import collection_dir, site_title
-from entity_testentitydata      import entitydata_list_type_uri
+from entity_testentitydata      import entitydata_list_type_url
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
@@ -49,13 +49,13 @@ def recordlist_dir(coll_id="testcoll", list_id="testlist"):
 #   These all use the Django `reverse` function so they correspond to
 #   the declared URI patterns.
 
-def recordlist_site_uri(site, list_id="testlist"):
-    return site._entityuri + layout.SITE_LIST_PATH%{'id': list_id} + "/"
+def recordlist_site_url(site, list_id="testlist"):
+    return site._entityurl + layout.SITE_LIST_PATH%{'id': list_id} + "/"
 
-def recordlist_coll_uri(site, coll_id="testcoll", list_id="testlist"):
-    return site._entityuri + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_LIST_PATH%{'id': list_id} + "/"
+def recordlist_coll_url(site, coll_id="testcoll", list_id="testlist"):
+    return site._entityurl + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_LIST_PATH%{'id': list_id} + "/"
 
-def recordlist_uri(coll_id, list_id):
+def recordlist_url(coll_id, list_id):
     """
     URI for record list description data; also view using default entity view
     """
@@ -67,7 +67,7 @@ def recordlist_uri(coll_id, list_id):
         kwargs.update({'entity_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
-def recordlist_edit_uri(action=None, coll_id=None, list_id=None):
+def recordlist_edit_url(action=None, coll_id=None, list_id=None):
     """
     URI for record list description editing view
     """
@@ -134,7 +134,7 @@ def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="Rec
 def recordlist_values(
         coll_id="testcoll", list_id="testlist", list_uri=None,
         update="RecordList", hosturi=TestHostUri):
-    list_url = hosturi + recordlist_uri(coll_id, list_id)
+    list_url = hosturi + recordlist_url(coll_id, list_id)
     if not list_uri:
         list_uri = list_url
     d = recordlist_create_values(coll_id, list_id, update=update).copy()
@@ -299,7 +299,7 @@ def recordlist_view_context_data(
               ]
             }
           ]
-        , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_list")
+        , 'continuation_url':   entitydata_list_type_url(coll_id, "_list")
         })
     if list_id:
         context_dict['fields'][0]['field_value'] = list_id
@@ -335,7 +335,7 @@ def recordlist_view_form_data(
     #   u 'view_id': [u 'List_view'],
     #   u 'orig_id': [u 'orig_list_id'],
     #   u 'orig_type': [u '_list'],
-    #   u 'continuation_uri': [u '/annalist/c/coll1/!edit?continuation_uri=/annalist/c/coll1/d/%3Fcontinuation_uri=/annalist/c/coll1/!edit'],
+    #   u 'continuation_url': [u '/annalist/c/coll1/!edit?continuation_url=/annalist/c/coll1/d/%3Fcontinuation_url=/annalist/c/coll1/!edit'],
     #
     #   u 'save': [u 'Save'],
     # }
@@ -357,7 +357,7 @@ def recordlist_view_form_data(
         , 'view_id':                'List_view'
         , 'orig_id':                'orig_list_id'
         , 'orig_type':              '_list'
-        , 'continuation_uri':       entitydata_list_type_uri(coll_id, "_list")        
+        , 'continuation_url':       entitydata_list_type_url(coll_id, "_list")        
         })
     if list_id:
         form_data_dict['entity_id']     = list_id

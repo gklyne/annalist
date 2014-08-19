@@ -178,17 +178,17 @@ def entity_path(base_dir, path, filename):
         return p
     return None
 
-def entity_uri_host(baseuri, entityref):
+def entity_url_host(baseuri, entityref):
     """
     Return host part (as appears in an HTTP host: header) from an entity URI.
 
-    >>> entity_uri_host("http://example.org/basepath/", "/path/to/entity")
+    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity")
     'example.org'
-    >>> entity_uri_host("http://example.org:80/basepath/", "/path/to/entity")
+    >>> entity_url_host("http://example.org:80/basepath/", "/path/to/entity")
     'example.org:80'
-    >>> entity_uri_host("http://userinfo@example.org:80/basepath/", "/path/to/entity")
+    >>> entity_url_host("http://userinfo@example.org:80/basepath/", "/path/to/entity")
     'example.org:80'
-    >>> entity_uri_host("http://base.example.org:80/basepath/", "http://ref.example.org/path/to/entity")
+    >>> entity_url_host("http://base.example.org:80/basepath/", "http://ref.example.org/path/to/entity")
     'ref.example.org'
     """
     uri = urlparse.urljoin(baseuri, entityref)
@@ -201,18 +201,18 @@ def entity_uri_host(baseuri, entityref):
     """
     Return absolute path part from an entity URI, excluding query or fragment.
 
-    >>> entity_uri_host("http://example.org/basepath/", "/path/to/entity")
+    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity")
     '/path/to/entity'
-    >>> entity_uri_host("http://example.org/basepath/", "relpath/to/entity")
+    >>> entity_url_host("http://example.org/basepath/", "relpath/to/entity")
     '/basepath/relpath/to/entity'
-    >>> entity_uri_host("http://example.org/basepath/", "/path/to/entity?query")
+    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity?query")
     '/path/to/entity'
-    >>> entity_uri_host("http://example.org/basepath/", "/path/to/entity#frag")
+    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity#frag")
     '/path/to/entity'
-    >>> entity_uri_host("/basepath/", "relpath/to/entity")
+    >>> entity_url_host("/basepath/", "relpath/to/entity")
     '/basepath/relpath/to/entity'
     """
-def entity_uri_path(baseuri, entityref):
+def entity_url_path(baseuri, entityref):
     uri = urlparse.urljoin(baseuri, entityref)
     return urlparse.urlparse(uri).path
 

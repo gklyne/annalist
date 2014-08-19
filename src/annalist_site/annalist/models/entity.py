@@ -65,13 +65,13 @@ class Entity(EntityRoot):
         if idcheck and not util.valid_id(entityid):
             raise ValueError("Invalid entity identifier: %s"%(entityid))
         relpath = self.relpath(entityid)
-        super(Entity, self).__init__(parent._entityuri+relpath, parent._entitydir+relpath)
-        self._entityviewuri = parent._entityuri+self._entityview%{'id': entityid}
+        super(Entity, self).__init__(parent._entityurl+relpath, parent._entitydir+relpath)
+        self._entityviewuri = parent._entityurl+self._entityview%{'id': entityid}
         self._entityalturi  = None
         self._entityaltdir  = None
         if altparent:
             altpath = self.altpath(entityid)
-            self._entityalturi = altparent._entityuri+altpath
+            self._entityalturi = altparent._entityurl+altpath
             self._entityaltdir = altparent._entitydir+altpath
             self._entityuseuri = None   # URI not known until enmtity is created or accessed
             log.debug("Entity.__init__: entity alt URI %s, entity alt dir %s"%(self._entityalturi, self._entityaltdir))
@@ -79,14 +79,14 @@ class Entity(EntityRoot):
         log.debug("Entity.__init__: entity_id %s, type_id %s"%(self._entityid, self.get_type_id()))
         return
 
-    def get_view_uri(self, baseuri=""):
+    def get_view_url(self, baseurl=""):
         """
         Return URI used to view entity data.  For metadata entities, this may be 
         different from the URI at which the resource is located, per get_uri().
         The intent is to provide a URI that works regardless of whether the metadata
         is stored as site-wide or collection-specific data.
         """
-        return urlparse.urljoin(baseuri, self._entityviewuri)
+        return urlparse.urljoin(baseurl, self._entityviewuri)
 
     # I/O helper functions
 

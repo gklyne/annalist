@@ -27,8 +27,8 @@ from annalist.views.fields.render_placement import (
 
 from entity_testutils import (
     collection_dir, 
-    site_view_uri,
-    collection_edit_uri,
+    site_view_url,
+    collection_edit_url,
     site_title
     )
 from tests import (
@@ -59,7 +59,7 @@ def entitydata_dir(coll_id="testcoll", type_id="testtype", entity_id="testentity
 #   These all use the Django `reverse` function so they correspond to
 #   the declared URI patterns.
 
-def entity_uri(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
+def entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
     """
     URI for entity data; also view using default entity view
     """
@@ -67,7 +67,7 @@ def entity_uri(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
     kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_edit_uri(action=None, coll_id="testcoll", type_id=None, entity_id=None, view_id="Default_view"):
+def entitydata_edit_url(action=None, coll_id="testcoll", type_id=None, entity_id=None, view_id="Default_view"):
     viewname = ( 
         'AnnalistEntityNewView'             if action == "new" else
         'AnnalistEntityEditView'
@@ -79,7 +79,7 @@ def entitydata_edit_uri(action=None, coll_id="testcoll", type_id=None, entity_id
         kwargs.update({'entity_id': entity_id})
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_list_all_uri(coll_id="testcoll", list_id=None):
+def entitydata_list_all_url(coll_id="testcoll", list_id=None):
     if list_id:
         viewname = "AnnalistEntityGenericList"
         kwargs   = {'list_id': list_id, 'coll_id': coll_id}
@@ -88,7 +88,7 @@ def entitydata_list_all_uri(coll_id="testcoll", list_id=None):
         kwargs   = {'coll_id': coll_id}
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_list_type_uri(coll_id="testcoll", type_id="testtype", list_id=None):
+def entitydata_list_type_url(coll_id="testcoll", type_id="testtype", list_id=None):
     if list_id:
         viewname = "AnnalistEntityGenericList"
         kwargs   = {'list_id': list_id, 'coll_id': coll_id, 'type_id': type_id}
@@ -97,7 +97,7 @@ def entitydata_list_type_uri(coll_id="testcoll", type_id="testtype", list_id=Non
         kwargs   = {'coll_id': coll_id, 'type_id': type_id}
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_delete_confirm_uri(coll_id="testcoll", type_id="testtype"):
+def entitydata_delete_confirm_url(coll_id="testcoll", type_id="testtype"):
     kwargs = {'coll_id': coll_id, 'type_id': type_id}
     return reverse("AnnalistEntityDataDeleteView", kwargs=kwargs)
 
@@ -151,8 +151,8 @@ def entitydata_values(entity_id, update="Entity", coll_id="testcoll", type_id="t
         { '@id':            './'
         , 'annal:id':       entity_id
         , 'annal:type':     entitydata_type(type_id)
-        , 'annal:url':      hosturi + entity_uri(coll_id, type_id, entity_id)
-        , 'annal:uri':      hosturi + entity_uri(coll_id, type_id, entity_id)
+        , 'annal:url':      hosturi + entity_url(coll_id, type_id, entity_id)
+        , 'annal:uri':      hosturi + entity_url(coll_id, type_id, entity_id)
         })
     return d
 
@@ -207,7 +207,7 @@ def entitydata_context_data(
             , 'options':            []
             }
           ]
-        , 'continuation_uri':   entitydata_list_type_uri("testcoll", type_id)
+        , 'continuation_url':   entitydata_list_type_url("testcoll", type_id)
         })
     if entity_id:
         context_dict['fields'][0]['field_value'] = entity_id
@@ -230,7 +230,7 @@ def entitydata_form_data(
         { 'Entity_label':       '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Entity_comment':     '%s description ... (%s/%s)'%(update, coll_id, type_id)
         , 'orig_id':            'orig_entity_id'
-        , 'continuation_uri':   entitydata_list_type_uri(coll_id, orig_type or type_id)
+        , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
         })
     if entity_id:
         form_data_dict['entity_id']         = entity_id
@@ -317,7 +317,7 @@ def entitydata_default_view_context_data(
             , 'options':            []
             }
           ]
-        , 'continuation_uri':   entitydata_list_type_uri("testcoll", type_id)
+        , 'continuation_url':   entitydata_list_type_url("testcoll", type_id)
         })
     if entity_id:
         context_dict['fields'][0]['field_value'] = entity_id
@@ -343,7 +343,7 @@ def entitydata_default_view_form_data(
         { 'Entity_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Entity_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
         , 'orig_id':            'orig_entity_id'
-        , 'continuation_uri':   entitydata_list_type_uri(coll_id, orig_type or type_id)
+        , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
         })
     if entity_id:
         form_data_dict['entity_id']       = entity_id
@@ -425,7 +425,7 @@ def entitydata_recordtype_view_context_data(
             , 'options':            []
             }
           ]
-        , 'continuation_uri':   entitydata_list_type_uri("testcoll", type_id)
+        , 'continuation_url':   entitydata_list_type_url("testcoll", type_id)
         })
     if entity_id:
         context_dict['fields'][0]['field_value'] = entity_id
@@ -450,7 +450,7 @@ def entitydata_recordtype_view_form_data(
         { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
         , 'orig_id':            'orig_entity_id'
-        , 'continuation_uri':   entitydata_list_type_uri(coll_id, orig_type or type_id)
+        , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
         })
     if entity_id:
         form_data_dict['entity_id']     = entity_id
@@ -479,7 +479,7 @@ def entitydata_recordtype_view_form_data(
 #
 #   -----------------------------------------------------------------------------
 
-def entitylist_form_data(action, search="", list_id="Default_list", entities=None, continuation_uri=None):
+def entitylist_form_data(action, search="", list_id="Default_list", entities=None, continuation_url=None):
     """
     Form data from entity list form submission
 
@@ -495,7 +495,7 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
         , 'delete':             "Delete"
         , 'default_view':       "Set default"
         , 'customize':          "Customize"
-        , 'continuation_uri':   "{{continuation_uri}}"
+        , 'continuation_url':   "{{continuation_url}}"
         })
     """
     form_actions = (
@@ -509,12 +509,12 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
         , 'default_view':       "Set default"
         , 'customize':          "Customize"
         })
-    if continuation_uri is None:
-        continuation_uri = "" # collection_edit_uri("testcoll")
+    if continuation_url is None:
+        continuation_url = "" # collection_edit_url("testcoll")
     form_data = (
         { 'search_for':         search
         , 'list_id':            list_id
-        , 'continuation_uri':   continuation_uri
+        , 'continuation_url':   continuation_url
         })
     if entities is not None:
         form_data['entity_select'] = entities

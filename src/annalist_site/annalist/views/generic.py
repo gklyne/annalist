@@ -108,12 +108,12 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return reverse(viewname, kwargs=kwargs)
 
-    def continuation_uris(self, request_dict, default_cont, base_here=None):
+    def continuation_urls(self, request_dict, default_cont, base_here=None):
         """
         Returns a tuple of two continuation URI dictionary values:
 
-        [0] { 'continuation_uri': continuation_next }
-        [1] { 'continuation_uri': continuation_here }
+        [0] { 'continuation_url': continuation_next }
+        [1] { 'continuation_url': continuation_here }
 
         where:
 
@@ -123,28 +123,28 @@ class AnnalistGenericView(ContentNegotiationView):
 
         `continuation_here` is a URI that returns control to the current page, to be passed
         as a contionuation_uri parameter to any subsidiary pages invoked.  Such continuation 
-        URIs are cascaded, so that the return URI includes a the `continuation_uri` for the 
+        URIs are cascaded, so that the return URI includes a the `continuation_url` for the 
         current page.
 
         request_dict    is a request dictionary that is expected to contain a 
-                        continuation_uri value to use
+                        continuation_url value to use
         default_cont    is a default continuation URI to be used for returning from 
                         the current page if the current POST request does not specify
-                        a continuation_uri query parameter.
+                        a continuation_url query parameter.
         base_here       if specified, overrides the current request path as the base URI
                         to be used to return to the currently displayed page (e.g. when
                         current request URI is non-idempotent, such as creating a new 
                         entity).
         """
         # Note: use default if request/form parameter is present but blank:
-        continuation_uri  = request_dict.get("continuation_uri", None) or default_cont
+        continuation_url  = request_dict.get("continuation_url", None) or default_cont
         if not base_here:
             base_here = self.get_request_path()
-        if continuation_uri:
-            continuation_next = { "continuation_uri": continuation_uri }
+        if continuation_url:
+            continuation_next = { "continuation_url": continuation_url }
         else:
             continuation_next = {}
-        continuation_here = { "continuation_uri": uri_with_params(base_here, continuation_next) }
+        continuation_here = { "continuation_url": uri_with_params(base_here, continuation_next) }
         return (continuation_next, continuation_here)
 
     def info_params(self, info_message, info_head=message.ACTION_COMPLETED):
@@ -206,7 +206,7 @@ class AnnalistGenericView(ContentNegotiationView):
         # return self.authorize(auth_scope, auth_resource)
         return self.authorize(auth_scope)
 
-    def check_value_supplied(self, val, msg, continuation_uri={}, testfn=(lambda v: v)):
+    def check_value_supplied(self, val, msg, continuation_url={}, testfn=(lambda v: v)):
         """
         Test a supplied value is specified (not None) and passes a supplied test,
         returning a URI to display a supplied error message if the test fails.
@@ -228,7 +228,7 @@ class AnnalistGenericView(ContentNegotiationView):
             redirect_uri = uri_with_params(
                 self.get_request_path(), 
                 self.error_params(msg),
-                continuation_uri
+                continuation_url
                 )
         return redirect_uri
 
@@ -251,7 +251,7 @@ class AnnalistGenericView(ContentNegotiationView):
                 })
         # Initiate OAuth2 login sequence, if neded
         return oauth2.views.confirm_authentication(self, 
-            continuation_uri=self.get_request_uri(),
+            continuation_url=self.get_request_uri(),
             **LOGIN_URIS
             )
 

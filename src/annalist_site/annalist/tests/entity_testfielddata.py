@@ -33,7 +33,7 @@ from entity_testutils               import (
     site_title
     )
 from entity_testentitydata          import (
-    entitydata_list_type_uri
+    entitydata_list_type_url
     )
 
 #   -----------------------------------------------------------------------------
@@ -54,13 +54,13 @@ def recordfield_dir(coll_id="testcoll", field_id="testfield"):
 #   These use the Django `reverse` function so they correspond to
 #   the declared URI patterns.
 
-def recordfield_site_uri(site, field_id="testfield"):
-    return site._entityuri + layout.SITE_FIELD_PATH%{'id': field_id} + "/"
+def recordfield_site_url(site, field_id="testfield"):
+    return site._entityurl + layout.SITE_FIELD_PATH%{'id': field_id} + "/"
 
-def recordfield_coll_uri(site, coll_id="testcoll", field_id="testfield"):
-    return site._entityuri + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_FIELD_PATH%{'id': field_id} + "/"
+def recordfield_coll_url(site, coll_id="testcoll", field_id="testfield"):
+    return site._entityurl + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_FIELD_PATH%{'id': field_id} + "/"
 
-def recordfield_uri(coll_id, field_id):
+def recordfield_url(coll_id, field_id):
     """
     URI for record field description data; also view using default entity view
     """
@@ -72,7 +72,7 @@ def recordfield_uri(coll_id, field_id):
         kwargs.update({'entity_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
-def recordfield_edit_uri(action=None, coll_id=None, field_id=None):
+def recordfield_edit_url(action=None, coll_id=None, field_id=None):
     """
     URI for record field description editing view
     """
@@ -134,8 +134,8 @@ def recordfield_values(
     d.update(
         { 'annal:id':       field_id
         , 'annal:type':     "annal:Field"
-        , 'annal:url':      hosturi + recordfield_uri(coll_id, field_id)
-        , 'annal:uri':      hosturi + recordfield_uri(coll_id, field_id)
+        , 'annal:url':      hosturi + recordfield_url(coll_id, field_id)
+        , 'annal:uri':      hosturi + recordfield_url(coll_id, field_id)
         })
     return d
 
@@ -253,7 +253,7 @@ def recordfield_entity_view_context_data(
             , 'options':            []
             }
           ]
-        , 'continuation_uri':   entitydata_list_type_uri("testcoll", "_field")
+        , 'continuation_url':   entitydata_list_type_url("testcoll", "_field")
         })
     if field_id:
         context_dict['fields'][0]['field_value'] = field_id
@@ -276,7 +276,7 @@ def recordfield_entity_view_form_data(
         { 'Field_label':        '%s data ... (%s/%s)'%(update, coll_id, "_field")
         , 'Field_comment':      '%s description ... (%s/%s)'%(update, coll_id, "_field")
         , 'orig_id':            'orig_field_id'
-        , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_field")
+        , 'continuation_url':   entitydata_list_type_url(coll_id, "_field")
         })
     if field_id:
         form_data_dict['entity_id']     = field_id

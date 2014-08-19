@@ -75,7 +75,7 @@ class CollectionEditView(AnnalistGenericView):
             coll = viewinfo.collection
             context = (
                 { 'title':              self.site_data()["title"]
-                , 'continuation_uri':   continuation_next.get('continuation_uri', "")
+                , 'continuation_url':   continuation_next.get('continuation_url', "")
                 , 'coll_id':            coll_id
                 , 'types':              sorted( [t.get_id() for t in coll.types(include_alt=False)] )
                 , 'lists':              sorted( [l.get_id() for l in coll.lists(include_alt=False)] )
@@ -86,7 +86,7 @@ class CollectionEditView(AnnalistGenericView):
         viewinfo = self.collection_view_setup(coll_id)
         if viewinfo.http_response:
             return viewinfo.http_response
-        continuation_next, continuation_here = self.continuation_uris(
+        continuation_next, continuation_here = self.continuation_urls(
             request.GET,
             None  # self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
             )
@@ -108,7 +108,7 @@ class CollectionEditView(AnnalistGenericView):
         #       URI-wrangling?
         redirect_uri  = None
         http_response = None
-        continuation_next, continuation_here = self.continuation_uris(
+        continuation_next, continuation_here = self.continuation_urls(
             request.POST,
             None  # self.view_uri("AnnalistSiteView")
             )
@@ -192,7 +192,7 @@ class CollectionEditView(AnnalistGenericView):
                 continuation_next)
         # Others
         if "close" in request.POST:
-            redirect_uri = continuation_next.get('continuation_uri', self.view_uri("AnnalistSiteView"))
+            redirect_uri = continuation_next.get('continuation_url', self.view_uri("AnnalistSiteView"))
         # Invoke selected view and/or render status response
         if redirect_uri:
             http_response = http_response or HttpResponseRedirect(redirect_uri)

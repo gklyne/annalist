@@ -53,7 +53,7 @@ listentityvaluemap  = (
         , SimpleValueMap(c='search_for',       e=None,                  f='search_for'       )
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
-        , SimpleValueMap(c='continuation_uri', e=None,                  f='continuation_uri' )
+        , SimpleValueMap(c='continuation_url', e=None,                  f='continuation_url' )
         ])
 
 #   -------------------------------------------------------------------------------------------
@@ -135,7 +135,7 @@ class EntityGenericListView(AnnalistGenericView):
         entityvaluemap = self.get_list_entityvaluemap(listinfo)
         viewcontext = entityvaluemap.map_value_to_context(entityval,
             title               = self.site_data()["title"],
-            continuation_uri    = request.GET.get('continuation_uri', ""),
+            continuation_url    = request.GET.get('continuation_url', ""),
             ### heading             = entity_initial_values['rdfs:label'],
             coll_id             = coll_id,
             type_id             = type_id,
@@ -162,7 +162,7 @@ class EntityGenericListView(AnnalistGenericView):
         log.debug("entitylist.post: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
         # log.info("  %s"%(self.get_request_path()))
         # log.info("  form data %r"%(request.POST))
-        continuation_next, continuation_here = self.continuation_uris(
+        continuation_next, continuation_here = self.continuation_urls(
             request.POST,
             None
             # self.view_uri("AnnalistSiteView")
@@ -170,7 +170,7 @@ class EntityGenericListView(AnnalistGenericView):
             )
         if 'close' in request.POST:
             return HttpResponseRedirect(
-                continuation_next.get('continuation_uri', self.view_uri("AnnalistSiteView"))
+                continuation_next.get('continuation_url', self.view_uri("AnnalistSiteView"))
                 )
         # Not "Close": set up list parameters
         listinfo = self.list_setup(coll_id, type_id, list_id)
@@ -199,7 +199,7 @@ class EntityGenericListView(AnnalistGenericView):
                 redirect_uri = (
                     self.check_value_supplied(entity_id, 
                         message.NO_ENTITY_FOR_COPY, 
-                        continuation_uri=continuation_next
+                        continuation_url=continuation_next
                         )
                     or
                     uri_with_params(
@@ -214,7 +214,7 @@ class EntityGenericListView(AnnalistGenericView):
                 redirect_uri = (
                     self.check_value_supplied(entity_id, 
                         message.NO_ENTITY_FOR_EDIT,
-                        continuation_uri=continuation_next
+                        continuation_url=continuation_next
                         )
                     or
                     uri_with_params(
@@ -229,12 +229,12 @@ class EntityGenericListView(AnnalistGenericView):
                 redirect_uri = (
                     self.check_value_supplied(entity_id, 
                         message.NO_ENTITY_FOR_DELETE,
-                        continuation_uri=continuation_next
+                        continuation_url=continuation_next
                         )
                     or
                     listinfo.check_collection_entity(entity_id, entity_type,
                         message.SITE_ENTITY_FOR_DELETE%{'id': entity_id},
-                        continuation_uri=continuation_next
+                        continuation_url=continuation_next
                         )
                     )
                 if not redirect_uri:
@@ -247,11 +247,11 @@ class EntityGenericListView(AnnalistGenericView):
                     delete_params = dict_querydict(
                         { "entity_delete":      ["Delete"]
                         , "entity_id":          [entity_id]
-                        , "continuation_uri":   [self.get_request_path()]
+                        , "continuation_url":   [self.get_request_path()]
                         })
                     message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
                     return (
-                        self.form_action_auth("delete", listinfo.collection.get_uri()) or
+                        self.form_action_auth("delete", listinfo.collection.get_url()) or
                         ConfirmView.render_form(request,
                             action_description=     message.REMOVE_ENTITY_DATA%message_vals,
                             complete_action_uri=    complete_action_uri,
@@ -261,7 +261,7 @@ class EntityGenericListView(AnnalistGenericView):
                             )
                         )
             if "default_view" in request.POST:
-                auth_check = self.form_action_auth("config", listinfo.collection.get_uri())
+                auth_check = self.form_action_auth("config", listinfo.collection.get_url())
                 if auth_check:
                     return auth_check
                 listinfo.collection.set_default_list(list_id)
@@ -316,7 +316,7 @@ class EntityGenericListView(AnnalistGenericView):
             message.UNEXPECTED_FORM_DATA%(request.POST), 
             message.SYSTEM_ERROR
             )
-        redirect_uri = uri_with_params(continuation_next['continuation_uri'], err_values)
+        redirect_uri = uri_with_params(continuation_next['continuation_url'], err_values)
         return HttpResponseRedirect(redirect_uri)
 
 # End.

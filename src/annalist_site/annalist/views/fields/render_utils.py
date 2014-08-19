@@ -54,7 +54,7 @@ class bound_field(object):
     >>> entityvals = entity.get_values()
     >>> entityvals['entity_id']      = entity.get_id()
     >>> entityvals['entity_type_id'] = entity.get_type_id()
-    >>> entityvals['entity_link']    = entity.get_uri()
+    >>> entityvals['entity_link']    = entity.get_url()
     >>> field_def = bound_field(field_def_desc, entity)
     >>> field_def.field_type
     'def_type'
@@ -309,7 +309,7 @@ def get_entity_values(entity, entity_id=None):
     entityvals = entity.get_values().copy()
     entityvals['entity_id']      = entity_id
     entityvals['entity_type_id'] = entity.get_type_id()
-    entityvals['entity_link']    = entity.get_uri() + "@@get_uri@@"     #@@   .get_view_uri() ??
+    entityvals['entity_link']    = entity.get_url() + "@@get_uri@@"     #@@   .get_view_url() ??
     return entityvals
 
 if __name__ == "__main__":

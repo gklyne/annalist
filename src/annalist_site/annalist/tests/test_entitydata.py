@@ -31,7 +31,7 @@ from AnnalistTestCase               import AnnalistTestCase
 # from entity_testutils               import (
 from entity_testentitydata          import (
     entitydata_dir, 
-    entity_uri, 
+    entity_url, 
     entitydata_value_keys, entitydata_create_values, entitydata_values
     )
 
@@ -67,7 +67,7 @@ class EntityDataTest(AnnalistTestCase):
         self.assertEqual(e._entityfile,     layout.ENTITY_DATA_FILE)
         self.assertEqual(e._entityref,      layout.DATA_ENTITY_REF)
         self.assertEqual(e._entityid,       "testentity")
-        self.assertEqual(e._entityuri,      TestHostUri + entity_uri("testcoll", "testtype", "testentity"))
+        self.assertEqual(e._entityurl,      TestHostUri + entity_url("testcoll", "testtype", "testentity"))
         self.assertEqual(e._entitydir,      entitydata_dir("testcoll", "testtype", "testentity"))
         self.assertEqual(e._values,         None)
         return

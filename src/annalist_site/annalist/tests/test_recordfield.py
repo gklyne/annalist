@@ -40,7 +40,7 @@ from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testfielddata           import (
     recordfield_dir,
-    recordfield_coll_uri, recordfield_uri,
+    recordfield_coll_url, recordfield_url,
     recordfield_init_keys, recordfield_value_keys, recordfield_load_keys,
     recordfield_create_values, recordfield_values, recordfield_read_values,
     recordfield_entity_view_context_data, recordfield_entity_view_form_data
@@ -51,8 +51,8 @@ from entity_testutils               import (
     # site_dir, 
     # collection_dir, 
     # recordtype_dir, recorddata_dir,  entitydata_dir,
-    # collection_edit_uri,
-    # recordtype_edit_uri,
+    # collection_edit_url,
+    # recordtype_edit_url,
     # recordtype_form_data,
     # entitydata_value_keys, entitydata_create_values, entitydata_values,
     # entitydata_recordtype_view_context_data, 
@@ -63,7 +63,7 @@ from entity_testutils               import (
     site_title
     )
 from entity_testentitydata          import (
-    entity_uri, entitydata_edit_uri, entitydata_list_type_uri,
+    entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment,
     layout_classes
     )
@@ -95,12 +95,12 @@ class RecordFieldTest(AnnalistTestCase):
 
     def test_recordfield_init(self):
         t = RecordField(self.testcoll, "testfield")
-        u = recordfield_coll_uri(self.testsite, coll_id="testcoll", field_id="testfield")
+        u = recordfield_coll_url(self.testsite, coll_id="testcoll", field_id="testfield")
         self.assertEqual(t._entitytype,     ANNAL.CURIE.Field)
         self.assertEqual(t._entityfile,     layout.FIELD_META_FILE)
         self.assertEqual(t._entityref,      layout.META_FIELD_REF)
         self.assertEqual(t._entityid,       "testfield")
-        self.assertEqual(t._entityuri,      u)
+        self.assertEqual(t._entityurl,      u)
         self.assertEqual(t._entitydir,      recordfield_dir(field_id="testfield"))
         self.assertEqual(t._values,         None)
         return
@@ -109,7 +109,7 @@ class RecordFieldTest(AnnalistTestCase):
         t = RecordField(self.testcoll, "field1")
         self.assertEqual(t.get_id(), "field1")
         self.assertEqual(t.get_type_id(), "_field")
-        self.assertIn("/c/testcoll/_annalist_collection/fields/field1/", t.get_uri())
+        self.assertIn("/c/testcoll/_annalist_collection/fields/field1/", t.get_url())
         t.set_values(recordfield_create_values(field_id="field1"))
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordfield_init_keys()))
@@ -121,7 +121,7 @@ class RecordFieldTest(AnnalistTestCase):
         t = RecordField(self.testcoll, "field2")
         self.assertEqual(t.get_id(), "field2")
         self.assertEqual(t.get_type_id(), "_field")
-        self.assertIn("/c/testcoll/_annalist_collection/fields/field2/", t.get_uri())
+        self.assertIn("/c/testcoll/_annalist_collection/fields/field2/", t.get_url())
         t.set_values(recordfield_create_values(field_id="field2"))
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordfield_init_keys()))
@@ -140,7 +140,7 @@ class RecordFieldTest(AnnalistTestCase):
     def test_recordfield_default_data(self):
         t = RecordField.load(self.testcoll, "Field_type", altparent=self.testsite)
         self.assertEqual(t.get_id(), "Field_type")
-        self.assertIn("/c/testcoll/_annalist_collection/fields/Field_type", t.get_uri())
+        self.assertIn("/c/testcoll/_annalist_collection/fields/Field_type", t.get_url())
         self.assertEqual(t.get_type_id(), "_field")
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordfield_load_keys()))
@@ -200,10 +200,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         "Helper function checks content of form-updated record type entry with supplied field_id"
         self.assertTrue(RecordField.exists(self.testcoll, field_id, altparent=self.testsite))
         e = RecordField.load(self.testcoll, field_id, altparent=self.testsite)
-        u = recordfield_coll_uri(self.testsite, coll_id="testcoll", field_id=field_id)
+        u = recordfield_coll_url(self.testsite, coll_id="testcoll", field_id=field_id)
         self.assertEqual(e.get_id(), field_id)
-        self.assertEqual(e.get_uri(), u)
-        self.assertEqual(e.get_view_uri(), TestHostUri + recordfield_uri("testcoll", field_id))
+        self.assertEqual(e.get_url(), u)
+        self.assertEqual(e.get_view_url(), TestHostUri + recordfield_url("testcoll", field_id))
         v = recordfield_values(field_id=field_id, update=update)
         self.assertDictionaryMatch(e.get_values(), v)
         return e
@@ -373,8 +373,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         return
 
     def test_get_form_rendering(self):
-        u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
-        r = self.client.get(u+"?continuation_uri=/xyzzy/")
+        u = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content)
@@ -486,20 +486,20 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         return
 
     def test_get_new(self):
-        u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
-        r = self.client.get(u+"?continuation_uri=/xyzzy/")
+        u = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        field_uri = entity_uri(type_id="_field", entity_id="00000001")
+        field_url = entity_url(type_id="_field", entity_id="00000001")
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_uri'],       TestHostUri + field_uri)
+        self.assertEqual(r.context['entity_url'],       TestHostUri + field_url)
         self.assertEqual(r.context['action'],           "new")
-        self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
+        self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
         self._check_context_fields(r, 
             field_id="00000001",
@@ -514,26 +514,26 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         return
 
     def test_get_new_no_continuation(self):
-        u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
+        u = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        field_uri = entity_uri(type_id="_field", entity_id="00000001")
+        field_url = entity_url(type_id="_field", entity_id="00000001")
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_uri'],       TestHostUri + field_uri)
+        self.assertEqual(r.context['entity_url'],       TestHostUri + field_url)
         self.assertEqual(r.context['action'],           "new")
-        self.assertEqual(r.context['continuation_uri'], "")
+        self.assertEqual(r.context['continuation_url'], "")
         return
 
     def test_get_edit(self):
-        u = entitydata_edit_uri("edit", "testcoll", "_field", entity_id="Type_label", view_id="Field_view")
+        u = entitydata_edit_url("edit", "testcoll", "_field", entity_id="Type_label", view_id="Field_view")
         # log.info("test_get_edit uri %s"%u)
-        r = self.client.get(u+"?continuation_uri=/xyzzy/")
+        r = self.client.get(u+"?continuation_url=/xyzzy/")
         # log.info("test_get_edit resp %s"%r.content)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -545,9 +545,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['entity_id'],        "Type_label")
         self.assertEqual(r.context['orig_id'],          "Type_label")
-        self.assertEqual(r.context['entity_uri'],       TestHostUri + entity_uri("testcoll", "_field", "Type_label"))
+        self.assertEqual(r.context['entity_url'],       TestHostUri + entity_url("testcoll", "_field", "Type_label"))
         self.assertEqual(r.context['action'],           "edit")
-        self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
+        self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
         self._check_context_fields(r, 
             field_id="Type_label",
@@ -562,8 +562,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         return
 
     def test_get_edit_not_exists(self):
-        u = entitydata_edit_uri("edit", "testcoll", "_field", entity_id="fieldnone", view_id="Field_view")
-        r = self.client.get(u+"?continuation_uri=/xyzzy/")
+        u = entitydata_edit_url("edit", "testcoll", "_field", entity_id="fieldnone", view_id="Field_view")
+        r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
@@ -585,13 +585,13 @@ class RecordFieldEditViewTest(AnnalistTestCase):
     def test_post_new_field(self):
         self.assertFalse(RecordField.exists(self.testcoll, "newfield"))
         f = recordfield_entity_view_form_data(field_id="newfield", action="new")
-        u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
+        u = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
         r = self.client.post(u, f)
         # print r.content
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "_field"))
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "_field"))
         # Check new entity data created
         self._check_view_data_values("newfield")
         return
@@ -599,14 +599,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
     def test_post_new_field_no_continuation(self):
         self.assertFalse(RecordField.exists(self.testcoll, "newfield"))
         f = recordfield_entity_view_form_data(field_id="newfield", action="new")
-        f['continuation_uri'] = ""
-        u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
+        f['continuation_url'] = ""
+        u = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
         r = self.client.post(u, f)
         # print r.content
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "_field"))
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "_field"))
         # Check new entity data created
         self._check_view_data_values("newfield")
         return
@@ -614,19 +614,19 @@ class RecordFieldEditViewTest(AnnalistTestCase):
     def test_post_new_field_cancel(self):
         self.assertFalse(RecordField.exists(self.testcoll, "newfield"))
         f = recordfield_entity_view_form_data(field_id="newfield", action="new", cancel="Cancel")
-        u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
+        u = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "_field"))
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "_field"))
         # Check that new record type still does not exist
         self.assertFalse(RecordField.exists(self.testcoll, "newfield"))
         return
 
     def test_post_new_field_missing_id(self):
         f = recordfield_entity_view_form_data(action="new")
-        u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
+        u = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -640,7 +640,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     def test_post_new_field_invalid_id(self):
         f = recordfield_entity_view_form_data(field_id="!badfield", orig_id="orig_field_id", action="new")
-        u = entitydata_edit_uri("new", "testcoll", "_field", view_id="Field_view")
+        u = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -660,14 +660,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
     def test_post_copy_entity(self):
         self.assertFalse(RecordField.exists(self.testcoll, "copyfield"))
         f = recordfield_entity_view_form_data(field_id="copyfield", action="copy")
-        u = entitydata_edit_uri("copy", "testcoll", 
+        u = entitydata_edit_url("copy", "testcoll", 
             type_id="_field", view_id="Field_view", entity_id="Entity_type"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "_field"))
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "_field"))
         # Check that new record type exists
         self._check_view_data_values("copyfield")
         return
@@ -675,21 +675,21 @@ class RecordFieldEditViewTest(AnnalistTestCase):
     def test_post_copy_entity_cancel(self):
         self.assertFalse(RecordField.exists(self.testcoll, "copyfield"))
         f = recordfield_entity_view_form_data(field_id="copyfield", action="copy", cancel="Cancel")
-        u = entitydata_edit_uri("copy", "testcoll", 
+        u = entitydata_edit_url("copy", "testcoll", 
             type_id="_field", view_id="Field_view", entity_id="Entity_type"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "_field"))
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "_field"))
         # Check that target record type still does not exist
         self.assertFalse(RecordField.exists(self.testcoll, "copyfield"))
         return
 
     def test_post_copy_entity_missing_id(self):
         f = recordfield_entity_view_form_data(action="copy")
-        u = entitydata_edit_uri("copy", "testcoll", 
+        u = entitydata_edit_url("copy", "testcoll", 
             type_id="_field", view_id="Field_view", entity_id="Entity_type"
             )
         r = self.client.post(u, f)
@@ -706,7 +706,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f = recordfield_entity_view_form_data(
             field_id="!badentity", orig_id="orig_field_id", action="copy"
             )
-        u = entitydata_edit_uri("copy", "testcoll", 
+        u = entitydata_edit_url("copy", "testcoll", 
             type_id="_field", view_id="Field_view", entity_id="Entity_type"
             )
         r = self.client.post(u, f)
@@ -729,14 +729,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f = recordfield_entity_view_form_data(
             field_id="editfield", action="edit", update="Updated entity"
             )
-        u = entitydata_edit_uri("edit", "testcoll",
+        u = entitydata_edit_url("edit", "testcoll",
             type_id="_field", view_id="Field_view", entity_id="editfield"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "_field"))
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "_field"))
         self._check_view_data_values("editfield", update="Updated entity")
         return
 
@@ -747,14 +747,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f = recordfield_entity_view_form_data(
             field_id="editfieldid2", orig_id="editfieldid1", action="edit"
             )
-        u = entitydata_edit_uri("edit", "testcoll", 
+        u = entitydata_edit_url("edit", "testcoll", 
             type_id="_field", view_id="Field_view", entity_id="editfieldid1"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "_field"))
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "_field"))
         # Check that new record type exists and old does not
         self.assertFalse(RecordField.exists(self.testcoll, "editfieldid1"))
         self._check_view_data_values("editfieldid2")
@@ -767,14 +767,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f = recordfield_entity_view_form_data(
             field_id="editfield", action="edit", cancel="Cancel", update="Updated entity"
             )
-        u = entitydata_edit_uri("edit", "testcoll", 
+        u = entitydata_edit_url("edit", "testcoll", 
             type_id="_field", view_id="Field_view", entity_id="editfield"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_uri("testcoll", "_field"))
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "_field"))
         # Check that target record type still does not exist and unchanged
         self._check_view_data_values("editfield")
         return
@@ -784,7 +784,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._check_view_data_values("editfield")
         # Form post with ID missing
         f = recordfield_entity_view_form_data(action="edit", update="Updated entity")
-        u = entitydata_edit_uri("edit", "testcoll", 
+        u = entitydata_edit_url("edit", "testcoll", 
             type_id="_field", view_id="Field_view", entity_id="editfield"
             )
         r = self.client.post(u, f)
@@ -807,7 +807,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f = recordfield_entity_view_form_data(
             field_id="!badfieldid", orig_id="orig_field_id", action="edit"
             )
-        u = entitydata_edit_uri("edit", "testcoll", 
+        u = entitydata_edit_url("edit", "testcoll", 
             type_id="_field", view_id="Field_view", entity_id="fieldid"
             )
         r = self.client.post(u, f)

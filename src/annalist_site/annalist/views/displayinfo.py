@@ -189,7 +189,7 @@ class DisplayInfo(object):
         """
         return (
             self.http_response or 
-            self.view.form_action_auth(action, self.collection.get_uri())
+            self.view.form_action_auth(action, self.collection.get_url())
             )
 
     # Additonal support functions for list views
@@ -228,7 +228,7 @@ class DisplayInfo(object):
     def get_list_type_id(self):
         return self.recordlist.get('annal:default_type', None) or "Default_type"
 
-    def check_collection_entity(self, entity_id, entity_type, msg, continuation_uri={}):
+    def check_collection_entity(self, entity_id, entity_type, msg, continuation_url={}):
         """
         Test a supplied entity_id is defined in the current collection,
         returning a URI to display a supplied error message if the test fails.
@@ -239,7 +239,7 @@ class DisplayInfo(object):
         entity_id           entity id that is required to be defined in the current collection.
         entity_type         specified type for entity to delete.
         msg                 message to display if the test fails.
-        continuation_uri    URI of page to display when the redisplayed form is closed.
+        continuation_url    URI of page to display when the redisplayed form is closed.
 
         returns a URI string for use with HttpResponseRedirect to redisplay the 
         current page with the supplied message, or None if entity id is OK.
@@ -257,7 +257,7 @@ class DisplayInfo(object):
                 uri_with_params(
                     self.view.get_request_path(),
                     self.view.error_params(msg),
-                    continuation_uri
+                    continuation_url
                     )
                 )
         return redirect_uri
@@ -316,7 +316,7 @@ class DisplayInfo(object):
                 log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
         return view_id
 
-    def get_edit_continuation_uri(self, entity_type, entity_id):
+    def get_edit_continuation_url(self, entity_type, entity_id):
         """
         Gets a URI that is based on that used to invoke the current view,
         but with a different action and specified entity_type/entity_id

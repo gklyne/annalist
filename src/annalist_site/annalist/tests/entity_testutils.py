@@ -51,19 +51,19 @@ def collection_dir(coll_id="testcoll"):
 #   These all use the Django `reverse` function so they correspond to
 #   the declared URI patterns.
 
-def site_view_uri():
+def site_view_url():
     return reverse("AnnalistSiteView")
 
-def collection_view_uri(coll_id="testcoll"):
+def collection_view_url(coll_id="testcoll"):
     return reverse("AnnalistCollectionView", kwargs={'coll_id': coll_id})
 
-def collection_edit_uri(coll_id="testcoll"):
+def collection_edit_url(coll_id="testcoll"):
     return reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
 
-def continuation_uri_param(uri, prev_cont=None):
+def continuation_url_param(uri, prev_cont=None):
     if prev_cont:
         uri += "?" + prev_cont
-    return "continuation_uri=" + urlquote(uri, safe="/=!")
+    return "continuation_url=" + urlquote(uri, safe="/=!")
 
 #   -----------------------------------------------------------------------------
 #
@@ -105,8 +105,8 @@ def collection_values(coll_id, update="Collection", hosturi=TestHostUri):
         { '@id':            "../"
         , 'annal:id':       coll_id
         , 'annal:type':     "annal:Collection"
-        , 'annal:url':      hosturi + collection_view_uri(coll_id=coll_id)
-        , 'annal:uri':      hosturi + collection_view_uri(coll_id=coll_id)
+        , 'annal:url':      hosturi + collection_view_url(coll_id=coll_id)
+        , 'annal:uri':      hosturi + collection_view_url(coll_id=coll_id)
         })
     return d
 

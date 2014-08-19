@@ -25,13 +25,13 @@ from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
-from entity_testentitydata      import entitydata_list_type_uri
+from entity_testentitydata      import entitydata_list_type_url
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
 from entity_testutils import (
     collection_dir, 
-    collection_edit_uri,
+    collection_edit_url,
     site_title
     )
 
@@ -53,13 +53,13 @@ def recordtype_dir(coll_id="testcoll", type_id="testtype"):
 #   These use the Django `reverse` function so they correspond to
 #   the declared URI patterns.
 
-def recordtype_site_uri(site, type_id="testtype"):
-    return site._entityuri + layout.SITE_TYPE_PATH%{'id': type_id} + "/"
+def recordtype_site_url(site, type_id="testtype"):
+    return site._entityurl + layout.SITE_TYPE_PATH%{'id': type_id} + "/"
 
-def recordtype_coll_uri(site, coll_id="testcoll", type_id="testtype"):
-    return site._entityuri + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_TYPE_PATH%{'id': type_id} + "/"
+def recordtype_coll_url(site, coll_id="testcoll", type_id="testtype"):
+    return site._entityurl + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_TYPE_PATH%{'id': type_id} + "/"
 
-def recordtype_uri(coll_id="testcoll", type_id="testtype"):
+def recordtype_url(coll_id="testcoll", type_id="testtype"):
     """
     URI for record type description data; also view using default entity view
     """
@@ -71,7 +71,7 @@ def recordtype_uri(coll_id="testcoll", type_id="testtype"):
         kwargs.update({'entity_id': "___"})
     return reverse(viewname, kwargs=kwargs)
 
-def recordtype_edit_uri(action=None, coll_id=None, type_id=None):
+def recordtype_edit_url(action=None, coll_id=None, type_id=None):
     """
     URI for record type description editing view
     """
@@ -126,7 +126,7 @@ def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="Rec
 def recordtype_values(
         coll_id="testcoll", type_id="testtype", type_uri=None,
         update="RecordType", hosturi=TestHostUri):
-    type_url = hosturi + recordtype_uri(coll_id, type_id)
+    type_url = hosturi + recordtype_url(coll_id, type_id)
     if not type_uri:
         type_uri = type_url
     d = recordtype_create_values(coll_id, type_id, update=update).copy()
@@ -227,7 +227,7 @@ def recordtype_entity_view_context_data(
             , 'options':            []
             }
           ]
-        , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_type")
+        , 'continuation_url':   entitydata_list_type_url(coll_id, "_type")
         })
     if type_id:
         context_dict['fields'][0]['field_value'] = type_id
@@ -249,7 +249,7 @@ def recordtype_entity_view_form_data(
         { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
         , 'orig_id':            'orig_type_id'
-        , 'continuation_uri':   entitydata_list_type_uri(coll_id, "_type")
+        , 'continuation_url':   entitydata_list_type_url(coll_id, "_type")
         })
     if type_id:
         form_data_dict['entity_id']     = type_id

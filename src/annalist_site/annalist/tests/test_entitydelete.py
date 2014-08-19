@@ -30,8 +30,8 @@ from AnnalistTestCase               import AnnalistTestCase
 # from entity_testutils               import (
 #     )
 from entity_testentitydata          import (
-    entity_uri, entitydata_edit_uri, entitydata_delete_confirm_uri,
-    entitydata_list_all_uri, entitydata_list_type_uri,
+    entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
+    entitydata_list_all_url, entitydata_list_type_url,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_delete_confirm_form_data,
     )
@@ -66,7 +66,7 @@ class ConfirmEntityDataDeleteTests(AnnalistTestCase):
         t = EntityData.create(self.testdata, "deleteentity", entitydata_create_values("deleteentity"))
         self.assertTrue(EntityData.exists(self.testdata, "deleteentity"))
         # Submit positive confirmation
-        u = entitydata_delete_confirm_uri("testcoll", "testtype")
+        u = entitydata_delete_confirm_url("testcoll", "testtype")
         f = entitydata_delete_confirm_form_data("deleteentity")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,     302)
@@ -74,8 +74,8 @@ class ConfirmEntityDataDeleteTests(AnnalistTestCase):
         self.assertEqual(r.content,         "")
         self.assertMatch(r['location'],    
             "^"+TestHostUri+
-            entitydata_list_all_uri("testcoll")+
-            # entitydata_list_type_uri("testcoll", "testtype")+
+            entitydata_list_all_url("testcoll")+
+            # entitydata_list_type_url("testcoll", "testtype")+
             r"\?info_head=.*&info_message=.*deleteentity.*testcoll.*$"
             )
         # Confirm deletion

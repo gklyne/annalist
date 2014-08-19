@@ -32,7 +32,7 @@ class EntityDeleteConfirmedBaseView(AnnalistGenericView):
         super(EntityDeleteConfirmedBaseView, self).__init__()
         return
 
-    def complete_remove_entity(self, coll_id, type_id, entity_id, continuation_uri):
+    def complete_remove_entity(self, coll_id, type_id, entity_id, continuation_url):
         """
         Complete action to remove an entity.
         """
@@ -50,7 +50,7 @@ class EntityDeleteConfirmedBaseView(AnnalistGenericView):
             })
         err = typeinfo.entityclass.remove(typeinfo.entityparent, entity_id)
         if err:
-            return self.redirect_error(continuation_uri, str(err))
-        return self.redirect_info(continuation_uri, messages['entity_removed'])
+            return self.redirect_error(continuation_url, str(err))
+        return self.redirect_info(continuation_url, messages['entity_removed'])
 
 # End.
