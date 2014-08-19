@@ -209,8 +209,8 @@ class EntityTypeInfo(object):
         if init_entity:
             values = init_entity.get_values()
             values.pop("@id", None)
-            values.pop(ANNAL.CURIE.id, None)
-            values.pop(ANNAL.CURIE.uri, None)
+            values.pop(ANNAL.CURIE.id,  None)
+            values.pop(ANNAL.CURIE.url, None)
         values[ANNAL.CURIE.id] = entity_id
         return values
 

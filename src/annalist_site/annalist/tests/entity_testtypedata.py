@@ -102,7 +102,7 @@ def recordtype_edit_uri(action=None, coll_id=None, type_id=None):
 def recordtype_value_keys():
     ks = set(
         [ 'annal:id', 'annal:type'
-        , 'annal:uri'
+        , 'annal:url', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:type_view', 'annal:type_list'
         ])
@@ -124,13 +124,17 @@ def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="Rec
     return d
 
 def recordtype_values(
-        coll_id="testcoll", type_id="testtype", 
+        coll_id="testcoll", type_id="testtype", type_uri=None,
         update="RecordType", hosturi=TestHostUri):
+    type_url = hosturi + recordtype_uri(coll_id, type_id)
+    if not type_uri:
+        type_uri = type_url
     d = recordtype_create_values(coll_id, type_id, update=update).copy()
     d.update(
         { 'annal:id':       type_id
         , 'annal:type':     "annal:Type"
-        , 'annal:uri':      hosturi + recordtype_uri(coll_id, type_id)
+        , 'annal:url':      type_url
+        , 'annal:uri':      type_uri
         })
     return d
 

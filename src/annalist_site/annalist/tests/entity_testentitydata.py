@@ -132,7 +132,7 @@ def entitydata_value_keys():
     """
     return (
         [ 'annal:id', 'annal:type'
-        , 'annal:uri'
+        , 'annal:url', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         ])
 
@@ -151,6 +151,7 @@ def entitydata_values(entity_id, update="Entity", coll_id="testcoll", type_id="t
         { '@id':            './'
         , 'annal:id':       entity_id
         , 'annal:type':     entitydata_type(type_id)
+        , 'annal:url':      hosturi + entity_uri(coll_id, type_id, entity_id)
         , 'annal:uri':      hosturi + entity_uri(coll_id, type_id, entity_id)
         })
     return d

@@ -14,6 +14,7 @@ from django.http                import HttpResponse
 from django.http                import HttpResponseRedirect
 from django.core.urlresolvers   import resolve, reverse
 
+from annalist.identifiers       import ANNAL, RDFS
 from annalist.exceptions        import Annalist_Error, EntityNotFound_Error
 from annalist                   import message
 from annalist                   import util
@@ -40,7 +41,6 @@ class SiteView(AnnalistGenericView):
         """
         # log.info("SiteView.get: site_data %r"%(self.site_data()))
         return (
-            # self.authenticate() or 
             self.authorize("VIEW") or 
             self.render_html(self.site_data(), 'annalist_site.html') or 
             self.error(self.error406values())
@@ -90,8 +90,8 @@ class SiteView(AnnalistGenericView):
             if auth_required:
                 return auth_required
             coll_meta = (
-                { 'rdfs:label':    new_label
-                , 'rdfs:comment':  ""
+                { RDFS.CURIE.label:    new_label
+                , RDFS.CURIE.comment:  ""
                 })
             self.site().add_collection(new_id, coll_meta)
             return self.redirect_info(

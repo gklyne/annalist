@@ -181,13 +181,13 @@ class RecordViewEditViewTest(AnnalistTestCase):
         t = RecordView.create(self.testcoll, view_id, recordview_create_values(view_id=view_id))
         return t
 
-    def _check_record_view_values(self, view_id, update="RecordView", num_fields=4):
+    def _check_record_view_values(self, view_id, view_uri=None, update="RecordView", num_fields=4):
         "Helper function checks content of record view entry with supplied view_id"
         self.assertTrue(RecordView.exists(self.testcoll, view_id))
         t = RecordView.load(self.testcoll, view_id)
         self.assertEqual(t.get_id(), view_id)
         self.assertEqual(t.get_view_uri(), TestHostUri + recordview_uri("testcoll", view_id))
-        v = recordview_values(view_id=view_id, update=update)
+        v = recordview_values(view_id=view_id, view_uri=view_uri, update=update)
         if num_fields == 0:
             v['annal:view_fields'] = []
         self.assertDictionaryMatch(t.get_values(), v)
@@ -199,6 +199,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="(?view_id)", 
             view_label="(?view_label)",
             view_help="(?view_help)",
+            view_url="(?view_url)",
             view_uri="(?view_uri)"
             ):
         r = response
@@ -209,7 +210,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          '_view')
         self.assertEqual(r.context['orig_type'],        '_view')
         self.assertEqual(r.context['coll_id'],          'testcoll')
-        self.assertEqual(r.context['entity_uri'],       view_uri)
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           action)
         self.assertEqual(r.context['view_id'],          'View_view')
         # Fields
@@ -549,7 +550,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_uri'],       TestHostUri + view_uri)
+        self.assertEqual(r.context['entity_url'],       TestHostUri + view_uri)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_uri'], "/xyzzy/")
@@ -560,7 +561,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="00000001",
             view_label=default_label("testcoll", "_view", "00000001"),
             view_help=default_comment("testcoll", "_view", "00000001"),
-            view_uri=TestHostUri + recordview_uri("testcoll", "00000001")
+            view_url=TestHostUri + recordview_uri("testcoll", "00000001")
             )
         return
 
@@ -575,7 +576,10 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "Default_view")
         self.assertEqual(r.context['orig_id'],          "Default_view")
-        self.assertEqual(r.context['entity_uri'],       "annal:display/Default_view")
+        self.assertEqual(r.context['entity_url'],       "http://test.example.com/testsite/c/testcoll/d/_view/Default_view/")
+        #@@
+        # self.assertEqual(r.context['entity_uri'],       "annal:display/Default_view")
+        #@@
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_uri'], "")
@@ -585,6 +589,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="Default_view",
             view_label="Default record view",
             view_help="Default record view, applied when no view is specified when creating a record.",
+            view_url="http://test.example.com/testsite/c/testcoll/d/_view/Default_view/",
             view_uri="annal:display/Default_view"
             )
         return
@@ -622,6 +627,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="Default_view",
             view_label="Default record view",
             view_help="Default record view, applied when no view is specified when creating a record.",
+            view_url="http://test.example.com/testsite/c/testcoll/d/_view/Default_view/",
             view_uri="annal:display/Default_view"
             )
         return
@@ -764,7 +770,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_uri)
         # Check that new record type exists
-        self._check_record_view_values("copyview", update="RecordView")
+        self._check_record_view_values("copyview", update="RecordView", view_uri="annal:display/Default_view")
         return
 
     def test_post_copy_view_cancel(self):

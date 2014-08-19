@@ -103,7 +103,7 @@ def recordfield_edit_uri(action=None, coll_id=None, field_id=None):
 def recordfield_init_keys():
     return set(
         [ 'annal:id', 'annal:type'
-        , 'annal:uri'
+        , 'annal:url', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         ])
 
@@ -134,6 +134,7 @@ def recordfield_values(
     d.update(
         { 'annal:id':       field_id
         , 'annal:type':     "annal:Field"
+        , 'annal:url':      hosturi + recordfield_uri(coll_id, field_id)
         , 'annal:uri':      hosturi + recordfield_uri(coll_id, field_id)
         })
     return d

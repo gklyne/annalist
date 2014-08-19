@@ -215,6 +215,7 @@ class Entity(EntityRoot):
             )
         e = cls._child_init(parent, entityid, altparent=altparent)
         v = e._load_values()
+        # log.info("entity.load %r"%(v,))
         if v:
             e.set_values(v)
         else:

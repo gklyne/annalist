@@ -96,22 +96,23 @@ def recordview_edit_uri(action=None, coll_id=None, view_id=None):
 #   -----------------------------------------------------------------------------
 
 def recordview_value_keys():
-    return set(
-        [ 'annal:id', 'annal:type', 'annal:uri'
+    keys = set(
+        [ 'annal:id', 'annal:type', 'annal:url', 'annal:uri'
         , 'annal:record_type'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:add_field'
         , 'annal:view_fields'
         ])
+    return keys
 
 def recordview_load_keys():
     return recordview_value_keys() | {"@id"}
 
-def recordview_create_values(coll_id="testcoll", view_id="testview", update="RecordView"):
+def recordview_create_values(coll_id="testcoll", view_id="testview", update="RecordView", uri=None):
     """
     Entity values used when creating a record type entity
     """
-    return (
+    view_values = (
         { 'rdfs:label':         "%s %s/%s"%(update, coll_id, view_id)
         , 'rdfs:comment':       "%s help for %s in collection %s"%(update, view_id, coll_id)
         , 'annal:record_type':  "annal:DefaultType"
@@ -131,22 +132,29 @@ def recordview_create_values(coll_id="testcoll", view_id="testview", update="Rec
             }
           ]
         })
+    if uri:
+        view_values['annal:uri'] = uri
+    return view_values
 
 def recordview_values(
-        coll_id="testcoll", view_id="testtype", 
+        coll_id="testcoll", view_id="testtype", view_uri=None, 
         update="RecordView", hosturi=TestHostUri):
     d = recordview_create_values(coll_id, view_id, update=update).copy()
+    view_url = hosturi + recordview_uri(coll_id, view_id)
+    if not view_uri:
+        view_uri = view_url
     d.update(
         { 'annal:id':       view_id
         , 'annal:type':     "annal:View"
-        , 'annal:uri':      hosturi + recordview_uri(coll_id, view_id)
+        , 'annal:url':      view_url
+        , 'annal:uri':      view_uri
         })
     return d
 
 def recordview_read_values(
-        coll_id="testcoll", view_id="testview", 
+        coll_id="testcoll", view_id="testview", view_uri=None, 
         update="RecordView", hosturi=TestHostUri):
-    d = recordview_values(coll_id, view_id, update=update, hosturi=hosturi).copy()
+    d = recordview_values(coll_id, view_id, view_uri=view_uri, update=update, hosturi=hosturi).copy()
     d.update(
         { '@id':            "./"
         })

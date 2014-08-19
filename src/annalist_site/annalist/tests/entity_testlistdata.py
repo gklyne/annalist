@@ -98,7 +98,7 @@ def recordlist_edit_uri(action=None, coll_id=None, list_id=None):
 def recordlist_value_keys():
     return set(
         [ 'annal:id', 'annal:type'
-        , 'annal:uri'
+        , 'annal:url', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:display_type'
         , 'annal:list_entity_selector'
@@ -132,13 +132,17 @@ def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="Rec
         })
 
 def recordlist_values(
-        coll_id="testcoll", list_id="testlist", 
+        coll_id="testcoll", list_id="testlist", list_uri=None,
         update="RecordList", hosturi=TestHostUri):
+    list_url = hosturi + recordlist_uri(coll_id, list_id)
+    if not list_uri:
+        list_uri = list_url
     d = recordlist_create_values(coll_id, list_id, update=update).copy()
     d.update(
         { 'annal:id':       list_id
         , 'annal:type':     "annal:List"
-        , 'annal:uri':      hosturi + recordlist_uri(coll_id, list_id)
+        , 'annal:url':      list_url
+        , 'annal:uri':      list_uri
         })
     return d
 

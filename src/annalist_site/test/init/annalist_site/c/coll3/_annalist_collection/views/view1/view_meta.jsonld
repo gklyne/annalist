@@ -22,6 +22,7 @@
   "annal:add_field": "yes",
   "annal:record_type": "annal:DefaultType",
   "annal:uri": "http://test.example.com/testsite/c/coll3/d/_view/view1/",
+  "annal:url": "http://test.example.com/testsite/c/coll3/d/_view/view1/",
   "annal:id": "view1",
   "@id": "./",
   "annal:type": "annal:View"

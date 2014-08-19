@@ -132,9 +132,8 @@ class EntityRoot(object):
         self._values = values.copy()
         self._values[ANNAL.CURIE.id]        = self._values.get(ANNAL.CURIE.id,      self._entityid)
         self._values[ANNAL.CURIE.type]      = self._values.get(ANNAL.CURIE.type,    self._entitytype)
+        self._values[ANNAL.CURIE.url]       = self._values.get(ANNAL.CURIE.url,     self.get_view_uri())
         self._values[ANNAL.CURIE.uri]       = self._values.get(ANNAL.CURIE.uri,     self.get_view_uri())
-        # self._values[ANNAL.CURIE.uripath]   = self._values.get(ANNAL.CURIE.uripath, self._entityuripath)
-        # self._values[ANNAL.CURIE.urihost]   = self._values.get(ANNAL.CURIE.urihost, "") or self._entityurihost
         return self._values
 
     def get_values(self):

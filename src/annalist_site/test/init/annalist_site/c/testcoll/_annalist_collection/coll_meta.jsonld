@@ -2,6 +2,7 @@
   "rdfs:label": "Collection testcoll",
   "rdfs:comment": "Description of Collection testcoll",
   "annal:uri": "http://test.example.com/testsite/c/testcoll/",
+  "annal:url": "http://test.example.com/testsite/c/testcoll/",
   "annal:id": "testcoll",
   "@id": "../",
   "annal:type": "annal:Collection"

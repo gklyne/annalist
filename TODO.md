@@ -303,6 +303,7 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
   per site.  The expectation is that if data are moved, it will be as complete collections
   to ensure they are accompanied by their associated metadata.  This is easiest with (5), but (2) may be easier to implement.
 - see also notes below about URI/URL handling
+- Note that entityroot.set_values currently favours a copy of the URL from the stored/internal data.  Currently this is created with a full URI (including hostname), but need not be.
 
 ### AnnalistGenericView:
 
@@ -448,3 +449,4 @@ This proposal generalizes the handling of entity location and identifiers to ent
 
   Existing saved 'annal:uri' values should just work, as the URI is regenerated when an entity is saved.
 
+  For copy operations, the annal:uri field should be reset.

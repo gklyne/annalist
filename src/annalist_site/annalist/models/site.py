@@ -21,7 +21,7 @@ from django.http                import HttpResponseRedirect
 from django.conf                import settings
 from django.core.urlresolvers   import resolve, reverse
 
-from annalist.identifiers       import ANNAL
+from annalist.identifiers       import ANNAL, RDFS
 from annalist.exceptions        import Annalist_Error, EntityNotFound_Error
 from annalist                   import layout
 from annalist                   import message
@@ -78,12 +78,14 @@ class Site(EntityRoot):
         # @@TODO: consider using generic view logic for this mapping (and elsewhere?)
         #         This is currently a bit of a kludge, designed to match the site
         #         view template.  In due course, it may be reveiwed and implemented
-        #         using ghe generic analist form generating framework
+        #         using the generic Annalist form generating framework
         site_data = self._load_values()
-        site_data["title"] = site_data.get("rdfs:label", message.SITE_NAME_DEFAULT)
+        site_data["title"] = site_data.get(RDFS.CURIE.label, message.SITE_NAME_DEFAULT)
+        # log.info("site.site_data: site_data %r"%(site_data))
         colls = collections.OrderedDict()
         for k, v in self.collections_dict().items():
-            colls[k] = dict(v.items(), id=k, uri=v['annal:uri'], title=v["rdfs:label"])
+            # log.info("site.site_data: colls[%s] %r"%(k, v))
+            colls[k] = dict(v.items(), id=k, url=v[ANNAL.CURIE.url], title=v[RDFS.CURIE.label])
         site_data["collections"] = colls
         return site_data
 

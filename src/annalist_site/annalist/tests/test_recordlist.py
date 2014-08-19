@@ -180,13 +180,13 @@ class RecordListEditViewTest(AnnalistTestCase):
         t = RecordList.create(self.testcoll, list_id, recordlist_create_values(list_id=list_id))
         return t
 
-    def _check_list_view_values(self, list_id, update="RecordList", num_fields=4):
+    def _check_list_view_values(self, list_id, list_uri=None, update="RecordList", num_fields=4):
         "Helper function checks content of record view entry with supplied list_id"
         self.assertTrue(RecordList.exists(self.testcoll, list_id))
         t = RecordList.load(self.testcoll, list_id)
         self.assertEqual(t.get_id(), list_id)
         self.assertEqual(t.get_view_uri(), TestHostUri + recordlist_uri("testcoll", list_id))
-        v = recordlist_values(list_id=list_id, update=update)
+        v = recordlist_values(list_id=list_id, list_uri=list_uri, update=update)
         if num_fields == 0:
             v['annal:list_fields'] = []
         # log.info("RecordList.load values: %r"%(t.get_values(),))
@@ -564,7 +564,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_uri)
         # Check that new record type exists
-        self._check_list_view_values("copylist", update="RecordList")
+        self._check_list_view_values("copylist", list_uri="annal:display/Default_list", update="RecordList")
         return
 
     def test_post_copy_view_cancel(self):

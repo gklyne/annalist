@@ -14,6 +14,7 @@ from django.http                        import HttpResponse
 from django.http                        import HttpResponseRedirect
 from django.core.urlresolvers           import resolve, reverse
 
+from annalist.identifiers               import ANNAL
 from annalist                           import message
 from annalist                           import util
 
@@ -41,20 +42,21 @@ from annalist.views.fields.render_utils import get_entity_values
 
 # Table used as basis, or initial values, for a dynamically generated entity-value map
 baseentityvaluemap  = (
-        [ SimpleValueMap(c='title',            e=None,                  f=None               )
-        , SimpleValueMap(c='coll_id',          e=None,                  f=None               )
-        , SimpleValueMap(c='type_id',          e=None,                  f=None               )
-        , SimpleValueMap(c='edit_add_field',   e=None,                  f=None               )
-        , StableValueMap(c='entity_id',        e='annal:id',            f='entity_id'        )
-        , SimpleValueMap(c='entity_uri',       e='annal:uri',           f='entity_uri'       )
-        , SimpleValueMap(c='record_type',      e='annal:record_type',   f='record_type'      )
+        [ SimpleValueMap(c='title',            e=None,                    f=None               )
+        , SimpleValueMap(c='coll_id',          e=None,                    f=None               )
+        , SimpleValueMap(c='type_id',          e=None,                    f=None               )
+        , SimpleValueMap(c='edit_add_field',   e=None,                    f=None               )
+        , StableValueMap(c='entity_id',        e=ANNAL.CURIE.id,          f='entity_id'        )
+        , SimpleValueMap(c='entity_url',       e=ANNAL.CURIE.url,         f='entity_url'       )
+        , SimpleValueMap(c='entity_uri',       e=ANNAL.CURIE.uri,         f='entity_uri'       )
+        , SimpleValueMap(c='record_type',      e=ANNAL.CURIE.record_type, f='record_type'      )
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
-        , SimpleValueMap(c='view_id',          e=None,                  f='view_id'          )
-        , SimpleValueMap(c='orig_id',          e=None,                  f='orig_id'          )
-        , SimpleValueMap(c='orig_type',        e=None,                  f='orig_type'        )
-        , SimpleValueMap(c='action',           e=None,                  f='action'           )
-        , SimpleValueMap(c='continuation_uri', e=None,                  f='continuation_uri' )
+        , SimpleValueMap(c='view_id',          e=None,                    f='view_id'          )
+        , SimpleValueMap(c='orig_id',          e=None,                    f='orig_id'          )
+        , SimpleValueMap(c='orig_type',        e=None,                    f='orig_type'        )
+        , SimpleValueMap(c='action',           e=None,                    f='action'           )
+        , SimpleValueMap(c='continuation_uri', e=None,                    f='continuation_uri' )
         ])
 
 #   -------------------------------------------------------------------------------------------
@@ -474,7 +476,10 @@ class GenericEntityEditView(AnnalistGenericView):
         # values not in view are preserved.
         entity_values = orig_entity.get_values() if orig_entity else {}
         # log.info("orig_entity values%r"%(entity_values))
-        entity_values.pop('annal:uri', None)  # Force re-allocation of URI
+        if ( (ANNAL.CURIE.uri in entity_values) and 
+             (entity_values[ANNAL.CURIE.uri] == entity_values.get(ANNAL.CURIE.url, None)) ):
+            del entity_values[ANNAL.CURIE.uri]          # Don't save URI if same as URL
+        entity_values.pop(ANNAL.CURIE.url, None)        # Force re-allocation of URL
         entity_values.update(entityvaluemap.map_form_data_to_values(form_data))
         # log.info("entity_values%r"%(entity_values))
         # log.info("new_parent%r"%(new_parent))

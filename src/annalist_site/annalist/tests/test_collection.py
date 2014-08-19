@@ -113,9 +113,7 @@ class CollectionTest(AnnalistTestCase):
         c = self.testcoll
         c.set_values(self.testcoll_add)
         cd = c.get_values()
-        self.assertEqual(set(cd.keys()),     set(collection_value_keys()))
-        self.assertEqual(cd["rdfs:label"],   self.testcoll_add["rdfs:label"])
-        self.assertEqual(cd["rdfs:comment"], self.testcoll_add["rdfs:comment"])
+        self.assertDictionaryMatch(cd, self.testcoll_add)
         return
 
     # Record types
@@ -134,9 +132,8 @@ class CollectionTest(AnnalistTestCase):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         t1 = self.testcoll.add_type("type1", self.type1_add)
         t2 = self.testcoll.add_type("type2", self.type2_add)
-        self.assertKeysMatch(self.testcoll.get_type("type1").get_values(), self.type1)
-        self.assertEqual(self.testcoll.get_type("type1").get_values(), self.type1)
-        self.assertEqual(self.testcoll.get_type("type2").get_values(), self.type2)
+        self.assertDictionaryMatch(self.testcoll.get_type("type1").get_values(), self.type1)
+        self.assertDictionaryMatch(self.testcoll.get_type("type2").get_values(), self.type2)
         return
 
     def test_remove_type(self):
@@ -213,10 +210,6 @@ class CollectionTest(AnnalistTestCase):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         t1 = self.testcoll.add_list("list1", self.list1_add)
         t2 = self.testcoll.add_list("list2", self.list2_add)
-        self.assertDictionaryMatch(self.testcoll.get_list("list1").get_values(), self.list1)
-        self.assertDictionaryMatch(self.testcoll.get_list("list2").get_values(), self.list2)
-        self.assertKeysMatch(self.testcoll.get_list("list1").get_values(), self.list1)
-        self.assertKeysMatch(self.testcoll.get_list("list2").get_values(), self.list2)
         self.assertDictionaryMatch(self.testcoll.get_list("list1").get_values(), self.list1)
         self.assertDictionaryMatch(self.testcoll.get_list("list2").get_values(), self.list2)
         return
