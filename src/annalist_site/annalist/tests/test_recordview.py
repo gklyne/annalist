@@ -579,7 +579,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_id'],        "Default_view")
         self.assertEqual(r.context['orig_id'],          "Default_view")
         self.assertEqual(r.context['entity_url'],       view_url)
-        self.assertEqual(r.context['entity_uri'],       "annal:display/Default_view")
+        self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_url'], "")
@@ -590,7 +590,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_label="Default record view",
             view_help="Default record view, applied when no view is specified when creating a record.",
             view_url=view_url,
-            view_uri="annal:display/Default_view"
+            view_uri=None
             )
         return
 
@@ -773,7 +773,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record type exists
-        self._check_record_view_values("copyview", update="RecordView", view_uri="annal:display/Default_view")
+        self._check_record_view_values("copyview", update="RecordView")
         return
 
     def test_post_copy_view_cancel(self):

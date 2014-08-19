@@ -276,6 +276,8 @@ class GenericEntityEditView(AnnalistGenericView):
             if add_field_desc:
                 self.add_entity_field(add_field_desc, entity)
         entityvals  = get_entity_values(entity, entity_id)
+        if viewinfo.action == "copy":
+            entityvals.pop('annal:uri')
         viewcontext = entityvaluemap.map_value_to_context(entityvals,
             title               = viewinfo.sitedata["title"],
             action              = viewinfo.action,
@@ -477,7 +479,8 @@ class GenericEntityEditView(AnnalistGenericView):
         entity_values = orig_entity.get_values() if orig_entity else {}
         # log.info("orig_entity values%r"%(entity_values))
         if ( (ANNAL.CURIE.uri in entity_values) and 
-             (entity_values[ANNAL.CURIE.uri] == entity_values.get(ANNAL.CURIE.url, None)) ):
+             ( ( entity_values[ANNAL.CURIE.uri] == entity_values.get(ANNAL.CURIE.url, None) ) or 
+               ( action == "copy" ) ) ):
             del entity_values[ANNAL.CURIE.uri]          # Don't save URI if same as URL
         entity_values.pop(ANNAL.CURIE.url, None)        # Force re-allocation of URL
         entity_values.update(entityvaluemap.map_form_data_to_values(form_data))

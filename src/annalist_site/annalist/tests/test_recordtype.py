@@ -452,7 +452,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_id'],        "Default_type")
         self.assertEqual(r.context['orig_id'],          "Default_type")
         self.assertEqual(r.context['entity_url'],       TestHostUri + type_url)
-        self.assertEqual(r.context['entity_uri'],       "annal:type/Default_type")
+        self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
         # Fields
@@ -460,7 +460,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="Default_type",
             type_label="Default record type",
             type_help="Default record type, applied when no type is specified when creating a record.",
-            type_uri="annal:type/Default_type"
+            type_uri=""
             )
         return
 

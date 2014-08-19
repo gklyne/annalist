@@ -386,7 +386,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_id'],        "Default_list")
         self.assertEqual(r.context['orig_id'],          "Default_list")
         self.assertEqual(r.context['entity_url'],       TestHostUri+list_url)
-        self.assertEqual(r.context['entity_uri'],       "annal:display/Default_list")
+        self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
         # Fields
@@ -397,7 +397,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_label="List one type",
             list_help="Default list of entities of given type",
             list_url=TestHostUri+list_url,
-            list_uri="annal:display/Default_list"
+            list_uri=None
             )
         return
 
@@ -577,7 +577,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record type exists
-        self._check_list_view_values("copylist", list_uri="annal:display/Default_list", update="RecordList")
+        self._check_list_view_values("copylist", update="RecordList")
         return
 
     def test_post_copy_view_cancel(self):

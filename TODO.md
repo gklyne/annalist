@@ -360,7 +360,7 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
 
 ## Rendering of entity type on form; rationalize rendering logic
 
-(Changes made as described)
+(Changes made as described below)
 
 ### Form field rendering for GET
 
@@ -425,8 +425,9 @@ the target entity ids on the fly as required, using type information in the fiel
 
 When creating new type, URI should be based on ID entered, but possible to override by user.  Set URI when saving rather than when creating? (Partially works).
 
+(Changes made as described below)
 
-### Current processing and speculation
+### Current processing and thoughts
 
 Uses annal:uri property, which is overloaded as an arbitrary entity locator, which in turn gets some special treatment.  This means the type identifier is bound to its Annalist location, which is OK as a default but not always what is required.
 
@@ -447,6 +448,4 @@ This proposal generalizes the handling of entity location and identifiers to ent
     2. Remove any saved 'annal:uri' values in sitedata if they are also locators.
     3. Introduce a new 'annal:uri' field which defaults to annal:url when retrieved, but which may be overridden by user input (if the form used allows this).  On saving, if 'annal:uri' is the same as 'annal:url', don't save it (so that if the entity itself is renamed, its 'annal:uri' value will update accordingly)
 
-  Existing saved 'annal:uri' values should just work, as the URI is regenerated when an entity is saved.
-
-  For copy operations, the annal:uri field should be reset.
+  For copy operations, the annal:uri field should be reset as the form is rendered.
