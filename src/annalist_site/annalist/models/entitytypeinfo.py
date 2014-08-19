@@ -153,15 +153,6 @@ class EntityTypeInfo(object):
                     self.entityparent   = RecordTypeData.create(coll, type_id, {})
                 else:
                     self.entityparent   = RecordTypeData(coll, type_id)
-            #@@
-            #     self.entityparent   = RecordTypeData(coll, type_id)
-            # elif RecordTypeData.exists(coll, type_id):
-            #     self.recordtype     = None
-            #     self.entityparent   = RecordTypeData(coll, type_id)
-            # elif create_typedata:
-            #     self.recordtype     = None
-            #     self.entityparent   = RecordTypeData.create(coll, type_id, {})
-            #@@
             else:
                 log.warning("EntityTypeInfo: RecordType %s not found"%type_id)
                 self.recordtype     = None

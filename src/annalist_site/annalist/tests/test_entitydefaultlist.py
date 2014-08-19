@@ -206,25 +206,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 fkey = field_keys[fid]
                 self.assertEqual(item_field['field_value'],    entity_fields[eid][fkey])
                 self.assertEqual(item_field['entity_type_id'], entity_fields[eid]['entity_type_id'])
-        #@@
-        # self.assertEqual(len(r.context['entities']), 4)
-        # field_values = ("%(etyp)s", "entity%(eid)d", "Entity testcoll/%(etyp)s/entity%(eid)d")
-        # entity_types = ("testtype", "testtype", "testtype", "testtype2")
-        # for eid in range(4):
-        #     for fid in range(3):
-        #         item_field = r.context['entities'][eid]['fields'][fid]
-        #         head_field = r.context['fields'][fid]
-        #         for fkey in (
-        #                 'field_id', 'field_name', 'field_label', 
-        #                 'field_property_uri', 'field_render_head',
-        #                 'field_placement', 'field_value_type'):
-        #             self.assertEqual(item_field[fkey], head_field[fkey])
-        #         if field_values[fid]:
-        #             field_val = field_values[fid]%{'eid': (eid+1), 'etyp': entity_types[eid]}
-        #         else:
-        #             field_val = None
-        #         self.assertEqual(item_field['field_value'], field_val)
-        #         self.assertEqual(item_field['entity_type_id'], entity_types[eid])
         return
 
     def test_get_default_type_list(self):

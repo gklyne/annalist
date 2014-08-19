@@ -449,12 +449,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 create_typedata=True
                 )
             new_parent   = new_typeinfo.entityparent
-            #@@
-            # new_parent = RecordTypeData(collection, entity_type)
-            # if not new_parent._exists():
-            #     # Create RecordTypeData if not already existing
-            #     RecordTypeData.create(collection, entity_type, {})
-            #@@
         else:
             new_typeinfo = typeinfo
             new_parent   = orig_parent

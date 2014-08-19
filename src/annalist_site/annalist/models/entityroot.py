@@ -281,16 +281,6 @@ class EntityRoot(object):
         for fil in [ f for f in site_files if f not in coll_files] + coll_files:
             if util.valid_id(fil):
                 yield fil
-        #@@
-        # for dirpath in self._child_dirs(cls, altparent):
-        #     assert "%" not in dirpath, "_entitypath/_entityaltpath template variable interpolation may be in filename part only"
-        #     if os.path.isdir(dirpath):
-        #         files = os.listdir(dirpath)
-        #         log.debug("_children files %r"%files)
-        #         for f in files:
-        #             if util.valid_id(f):
-        #                 yield f
-        #@@
         return
 
     def __iter__(self):

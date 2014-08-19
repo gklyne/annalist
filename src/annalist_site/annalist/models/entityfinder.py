@@ -49,19 +49,8 @@ class EntityFinder(object):
             entitytypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
             for e in entitytypeinfo.enum_entities(usealtparent=True):
                 yield e
-            #@@
-            # for e in entitytypeinfo.entityparent.child_entities(
-            #         entitytypeinfo.entityclass, 
-            #         altparent=entitytypeinfo.entityaltparent):
-            #     yield e
-            #@@
         else:
             # Return all entitities in collection (not including site built-ins)
-            #@@
-            # for f in self._coll._children(RecordTypeData):
-            #     t = RecordTypeData.load(self._coll, f)
-            #     if t:
-            #@@
             for t in self.get_collection_type_ids():
                 entitytypeinfo = EntityTypeInfo(self._site, self._coll, t)
                 for e in entitytypeinfo.enum_entities(usealtparent=False):
