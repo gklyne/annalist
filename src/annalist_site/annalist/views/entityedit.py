@@ -373,7 +373,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 entityvaluemap, form_data,
                 entity_id, entity_type, orig_entity_id, orig_entity_type, 
                 viewinfo, context_extra_values, messages,
-                view_edit_uri_base, {"add_field": "View_fields"}, continuation_url)
+                view_edit_uri_base, {"add_field": "View_fields"}, continuation_url
+                )
             #@@
             # http_response = self.save_entity(entityvaluemap, form_data,
             #     entity_id, entity_type, orig_entity_id, orig_entity_type, 
@@ -400,13 +401,60 @@ class GenericEntityEditView(AnnalistGenericView):
             # return HttpResponseRedirect(view_edit_uri)
             #@@
 
+        # Update or define new view or type (invoked from generic entity editing view)
+        if 'use_view' in form_data:
+            # Save entity, then redirect to selected view
+            http_response = self.save_entity(entityvaluemap, form_data,
+                entity_id, entity_type, orig_entity_id, orig_entity_type, 
+                viewinfo, context_extra_values, messages)
+            if http_response:
+                return http_response
+            view_uri_params = (
+                { 'coll_id':    viewinfo.coll_id
+                , 'type_id':    entity_type
+                , 'view_id':    form_data['view_choice']
+                , 'entity_id':  entity_id
+                , 'action':     "edit"
+                })
+            redirect_uri = (
+                uri_with_params(
+                    self.view_uri("AnnalistEntityEditView", **view_uri_params),
+                    { 'continuation_url': continuation_url }
+                    )
+                )
+            return HttpResponseRedirect(redirect_uri)
+
+        if 'new_view' in form_data:
+            view_edit_uri_base = self.view_uri("AnnalistEntityNewView",
+                coll_id=viewinfo.coll_id, view_id="View_view", type_id="_view", action="new"
+                )
+            return self.invoke_config_edit_view(
+                entityvaluemap, form_data,
+                entity_id, entity_type, orig_entity_id, orig_entity_type, 
+                viewinfo, context_extra_values, messages,
+                view_edit_uri_base, {}, continuation_url
+                )
+
+        if 'new_type' in form_data:
+            type_edit_uri_base = self.view_uri("AnnalistEntityNewView",
+                coll_id=viewinfo.coll_id, view_id="Type_view", type_id="_type", action="new"
+                )
+            return self.invoke_config_edit_view(
+                entityvaluemap, form_data,
+                entity_id, entity_type, orig_entity_id, orig_entity_type, 
+                viewinfo, context_extra_values, messages,
+                type_edit_uri_base, {}, continuation_url
+                )
+
         # Add new instance of repeating field
+        # This is invoked by a view-edit view
         add_field = self.find_add_field(entityvaluemap, form_data)
         if add_field:
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
             return self.update_view_fields(add_field, entityvals, entityvaluemap, **context_extra_values)
 
         # Remove Field(s)
+        # This is invoked by a view-edit view
         remove_field = self.find_remove_field(entityvaluemap, form_data)
         if remove_field:
             if not remove_field['remove_fields']:
@@ -417,14 +465,6 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
             return self.update_view_fields(remove_field, entityvals, entityvaluemap, **context_extra_values)
-
-        # Update or define new view or type
-        if 'use_view' in form_data:
-            assert False, "@@TODO: use_view handler"
-        if 'new_view' in form_data:
-            assert False, "@@TODO: new_view handler"
-        if 'new_type' in form_data:
-            assert False, "@@TODO: new_type handler"
 
         # Report unexpected form data
         # This shouldn't happen, but just in case...
@@ -532,12 +572,12 @@ class GenericEntityEditView(AnnalistGenericView):
             viewinfo, context_extra_values, messages,
             config_edit_url, url_params, continuation_url):
         """
-        Common logic for invoking a configuration resource edit while editing some
-        other resource:
+        Common logic for invoking a configuration resource edit while editing
+        some other resource:
           - the entity currently being edited is saved
           - authorization to perform configuration edits is checked
           - a continuaton URL is calculated which is the URL for the current view,
-            except that the continuation actions is always "edit"
+            except that the continuation action is always "edit"
           - a URL for the config edit view is assembled from the supplied base URL
             and parameters, and the calculated continuaton URL
           - an HTTP redirect response to the config edit view is returned.

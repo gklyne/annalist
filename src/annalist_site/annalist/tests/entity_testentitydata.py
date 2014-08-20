@@ -337,7 +337,7 @@ def entitydata_default_view_form_data(
         type_id="testtype", orig_type=None,
         entity_id=None, orig_id=None, 
         action=None, cancel=None, update="Entity",
-        add_view_field=None):
+        add_view_field=None, use_view=None, new_view=None, new_type=None):
     # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (
         { 'Entity_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
@@ -362,6 +362,13 @@ def entitydata_default_view_form_data(
         form_data_dict['cancel']          = "Cancel"
     elif add_view_field:
         form_data_dict['add_view_field']  = add_view_field
+    elif use_view:
+        form_data_dict['use_view']        = "Show view"
+        form_data_dict['view_choice']     = use_view
+    elif new_view:
+        form_data_dict['new_view']        = new_view
+    elif new_type:
+        form_data_dict['new_type']        = new_type
     else:
         form_data_dict['save']            = 'Save'
     return form_data_dict
@@ -576,8 +583,10 @@ def default_comment(coll_id=None, type_id=None, entity_id=None):
 def layout_classes(width=12):
     if width == 6:
         class_dict = (
-            { 'label_classes': "view_label small-12 medium-4 columns"
-            , 'input_classes': "small-12 medium-8 columns"
+            { 'label_classes':          "view_label small-12 medium-4 columns"
+            , 'input_classes':          "small-12 medium-8 columns"
+            , 'button_left_classes':    "small-12 medium-6 columns"
+            , 'button_right_classes':   "small-12 medium-6 columns text-right"
             })
     elif width == 12:
         class_dict = (
