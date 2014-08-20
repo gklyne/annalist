@@ -186,7 +186,8 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / List editing view formatting is messed up (small-6?)
    / Click on local type in default_list, then cancel, returns to Type_list display.  No continuation_uri in links.
    / Click on local record in Default_list, cancel, returns to default data display (/d/ rather than /l/).  In default display, types don't appear.
-   - When creating new collection, there's no easy way to create a new record type (or view) from the front page.
+   / grey out set_default button on collection default display (/d/, /l/)
+   - When creating new collection, there's no obvious way to create a new record type (or view).
    - View_type display should suppress add-field option.  Similar for View_list and View_field?
    - Add field allows new view type to be created, but how to make this default for displayed type?
    - No easy way to create field description while editing view details

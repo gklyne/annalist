@@ -107,7 +107,8 @@
             <input type="submit" name="close"           value="Close" />
           </div>
           <div class="small-9 columns text-right">
-            <input type="submit" name="default_view"    value="Set default" />
+            <!-- list_id:{{list_id}}, list_id_url:{{list_id_url}} -->
+            <input type="submit" name="default_view"    value="Set default" {{default_view_enable}} />
             <input type="submit" name="customize"       value="Customize" />
           </div>
           <input type="hidden" name="continuation_url"    value="{{continuation_url}}"/>

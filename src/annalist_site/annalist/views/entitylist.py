@@ -42,18 +42,19 @@ from annalist.views.fields.render_utils import get_entity_values
 
 # Table used as basis, or initial values, for a dynamically generated entity-value map for list displays
 listentityvaluemap  = (
-        [ SimpleValueMap(c='title',            e=None,                  f=None               )
-        , SimpleValueMap(c='coll_id',          e=None,                  f=None               )
-        , SimpleValueMap(c='type_id',          e=None,                  f=None               )
-        , SimpleValueMap(c='list_id',          e=None,                  f=None               )
-        , SimpleValueMap(c='list_ids',         e=None,                  f=None               )
-        , SimpleValueMap(c='list_selected',    e=None,                  f=None               )
-        , SimpleValueMap(c='collection_view',  e=None,                  f=None               )
-        , SimpleValueMap(c='default_view_id',  e=None,                  f=None               )
-        , SimpleValueMap(c='search_for',       e=None,                  f='search_for'       )
+        [ SimpleValueMap(c='title',                 e=None,                  f=None               )
+        , SimpleValueMap(c='coll_id',               e=None,                  f=None               )
+        , SimpleValueMap(c='type_id',               e=None,                  f=None               )
+        , SimpleValueMap(c='list_id',               e=None,                  f=None               )
+        , SimpleValueMap(c='list_ids',              e=None,                  f=None               )
+        , SimpleValueMap(c='list_selected',         e=None,                  f=None               )
+        , SimpleValueMap(c='collection_view',       e=None,                  f=None               )
+        , SimpleValueMap(c='default_view_id',       e=None,                  f=None               )
+        , SimpleValueMap(c='default_view_enable',   e=None,                  f=None               )
+        , SimpleValueMap(c='search_for',            e=None,                  f='search_for'       )
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
-        , SimpleValueMap(c='continuation_url', e=None,                  f='continuation_url' )
+        , SimpleValueMap(c='continuation_url',      e=None,                  f='continuation_url' )
         ])
 
 #   -------------------------------------------------------------------------------------------
@@ -106,10 +107,12 @@ class EntityGenericListView(AnnalistGenericView):
             )
         return entitymap
 
-    def get_entityvals(self, entity_list):
-        for e in entity_list:
-            v = e.get_values()
-            v[...]
+    #@@
+    # def get_entityvals(self, entity_list):
+    #     for e in entity_list:
+    #         v = e.get_values()
+    #         v[...]
+    #@@
 
     # GET
 
@@ -145,7 +148,8 @@ class EntityGenericListView(AnnalistGenericView):
             list_ids            = list_ids,
             list_selected       = listinfo.list_id,
             collection_view     = self.view_uri("AnnalistCollectionView", coll_id=coll_id),
-            default_view_id     = listinfo.recordlist['annal:default_view']
+            default_view_id     = listinfo.recordlist['annal:default_view'],
+            default_view_enable = ("" if list_id else 'disabled="disabled"')
             )
         # log.debug("EntityGenericListView.get viewcontext %r"%(viewcontext))
         # Generate and return form data
