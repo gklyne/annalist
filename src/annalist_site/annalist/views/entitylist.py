@@ -136,6 +136,7 @@ class EntityGenericListView(AnnalistGenericView):
         viewcontext = entityvaluemap.map_value_to_context(entityval,
             title               = self.site_data()["title"],
             continuation_url    = request.GET.get('continuation_url', ""),
+            request_url         = self.get_request_path(),
             ### heading             = entity_initial_values['rdfs:label'],
             coll_id             = coll_id,
             type_id             = type_id,

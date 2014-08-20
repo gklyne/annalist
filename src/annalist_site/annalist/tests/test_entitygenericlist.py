@@ -34,6 +34,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
+from annalist.views.uri_builder     import uri_params, uri_with_params
 from annalist.views.entitylist      import EntityGenericListView #, EntityDataDeleteConfirmedView
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -81,7 +82,6 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.testtype2 = RecordType.create(self.testcoll, "testtype2", recordtype_create_values("testcoll", "testtype2"))
         self.testdata  = RecordTypeData.create(self.testcoll, "testtype", {})
         self.testdata2 = RecordTypeData.create(self.testcoll, "testtype2", {})
-        # @@TODO: add some collection-specific fields
         self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
         self.user.save()
         self.client = Client(HTTP_HOST=TestHost)
@@ -125,24 +125,25 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_get_default_all_list(self):
-        u = entitydata_list_all_url("testcoll", list_id="Default_list_all")
-        r = self.client.get(u+"?continuation_url=/xyzzy/")
+        u = entitydata_list_all_url("testcoll", list_id="Default_list_all") + "?continuation_url=/xyzzy/"
+        r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>List 'Default_list_all' of entities in collection 'testcoll'</h3>", html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         # log.info(r.content)
+        cont = uri_params({"continuation_url": u})
         rowdata = """
             <tr class="select_row">
                 <td class="small-2 columns">testtype</td>
-                <td class="small-2 columns"><a href="%s/c/testcoll/d/testtype/entity1">entity1</a></td>
+                <td class="small-2 columns"><a href="%s/c/testcoll/d/testtype/entity1/%s">entity1</a></td>
                 <td class="small-8 columns">Entity testcoll/testtype/entity1</td>
                 <td class="select_row">
                     <input type="checkbox" name="entity_select" value="testtype/entity1" />
                 </td>
             </tr>
-            """%(TestBasePath)
+            """%(TestBasePath, cont)
         self.assertContains(r, rowdata, html=True)
         # log.info(r.content)
         # Test context
@@ -186,22 +187,23 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_get_fields_list(self):
-        u = entitydata_list_type_url("testcoll", "_field", list_id="Field_list")
-        r = self.client.get(u+"?continuation_url=/xyzzy/")
+        u = entitydata_list_type_url("testcoll", "_field", list_id="Field_list")+"?continuation_url=/xyzzy/"
+        r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
+        cont = uri_params({"continuation_url": u})
         rowdata = """
             <tr class="select_row">
-                <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address">Bib_address</a></td>
+                <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
                 <td class="small-3 columns">annal:Text</td>
                 <td class="small-6 columns">Bib_address</td>
                 <td class="select_row">
                     <input name="entity_select" value="_field/Bib_address" type="checkbox">
                 </td>
             </tr>
-            """%(TestBasePath)
+            """%(TestBasePath, cont)
         # log.info(r.content)
         self.assertContains(r, rowdata, html=True)
         # Test context
@@ -282,22 +284,23 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_get_fields_list_search(self):
-        u = entitydata_list_type_url("testcoll", "_field", list_id="Field_list")
-        r = self.client.get(u+"?search=Bib_&continuation_url=/xyzzy/")
+        u = entitydata_list_type_url("testcoll", "_field", list_id="Field_list") + "?search=Bib_&continuation_url=/xyzzy/"
+        r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
+        cont = uri_params({"continuation_url": u})
         rowdata = """
             <tr class="select_row">
-                <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address">Bib_address</a></td>
+                <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
                 <td class="small-3 columns">annal:Text</td>
                 <td class="small-6 columns">Bib_address</td>
                 <td class="select_row">
                     <input name="entity_select" value="_field/Bib_address" type="checkbox">
                 </td>
             </tr>
-            """%(TestBasePath)
+            """%(TestBasePath, cont)
         # log.info(r.content)
         self.assertContains(r, rowdata, html=True)
         # Test context

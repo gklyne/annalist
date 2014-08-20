@@ -21,7 +21,7 @@ query_safe  = re.sub('[?&#]', '', gen_delims + sub_delims + unreserved)
 
 def uri_params(*param_dicts):
     """
-    Consruct a URI parameter string from the supplied dictionary values 
+    Construct a URI parameter string from the supplied dictionary values 
     (or values which are convertible to a dictionary using `dict()`).
     """
     uri_param_dict = {}

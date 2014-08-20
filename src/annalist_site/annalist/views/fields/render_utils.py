@@ -16,6 +16,8 @@ from django.conf                    import settings
 
 from annalist.models.entity         import EntityRoot, Entity
 
+from annalist.views.uri_builder     import uri_params
+
 from render_text                    import RenderText
 
 class bound_field(object):
@@ -125,6 +127,10 @@ class bound_field(object):
             return self._key
         elif name == "field_placeholder":
             return self._field_description.get('field_placeholder', "...")
+        elif name == "continuation_url":
+            return self._extras.get("request_url", "")
+        elif name == "entity_link_continuation":
+            return self.entity_link+self.get_continuation_param()
         elif name == "field_value":
             if self._key == "annal:type":
                 # @@TODO: remove annal:Type hack when proper selection from enumerated entities
@@ -151,6 +157,12 @@ class bound_field(object):
             # log.info("bound_field[%s] -> %r"%(name, self._field_description[name]))
             return self._field_description[name]
 
+    def get_continuation_param(self):
+        cparam = self.continuation_url
+        if cparam:
+            cparam = uri_params({'continuation_url': cparam})
+        return cparam
+
     def __getitem__(self, name):
         return self.__getattr__(name)
 
@@ -161,6 +173,8 @@ class bound_field(object):
         yield "entity_id"
         yield "entity_type_id"
         yield "entity_link"
+        yield "continuation_url"
+        yield "entity_link_continuation"
         yield "field_value"
         yield "options"
         for k in self._field_description:
@@ -309,7 +323,7 @@ def get_entity_values(entity, entity_id=None):
     entityvals = entity.get_values().copy()
     entityvals['entity_id']      = entity_id
     entityvals['entity_type_id'] = entity.get_type_id()
-    entityvals['entity_link']    = entity.get_url() + "@@get_uri@@"     #@@   .get_view_url() ??
+    entityvals['entity_link']    = entity.get_view_url_path()
     return entityvals
 
 if __name__ == "__main__":

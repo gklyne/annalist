@@ -63,6 +63,7 @@ class FieldValueMap(object):
             else:
                 options = ['(missing options)']
         # log.info("map entity %s to context %s, vals %r"%(self.e, self.i, entityvals))
+        # log.info("map_entity_to_context: bound_field: extras %r"%(extras,))
         boundfield = bound_field(
             field_description=self.f, 
             entityvals=entityvals, key=self.f['field_property_uri'],

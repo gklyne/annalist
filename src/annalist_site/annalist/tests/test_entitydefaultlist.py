@@ -27,7 +27,8 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.defaultlist     import EntityDefaultListView #, EntityDataDeleteConfirmedView
+from annalist.views.uri_builder     import uri_params, uri_with_params
+from annalist.views.defaultlist     import EntityDefaultListView
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
@@ -117,24 +118,25 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         return
 
     def test_get_default_all_list(self):
-        u = entitydata_list_all_url("testcoll")
-        r = self.client.get(u+"?continuation_url=/xyzzy/")
+        u = entitydata_list_all_url("testcoll") + "?continuation_url=/xyzzy/"
+        r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content)
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>List 'Default_list_all' of entities in collection 'testcoll'</h3>", html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
+        cont = uri_params({"continuation_url": u})
         rowdata = """
             <tr class="select_row">
                 <td class="small-2 columns">testtype</td>
-                <td class="small-2 columns"><a href="%s/c/testcoll/d/testtype/entity1">entity1</a></td>
+                <td class="small-2 columns"><a href="%s/c/testcoll/d/testtype/entity1/%s">entity1</a></td>
                 <td class="small-8 columns">Entity testcoll/testtype/entity1</td>
                 <td class="select_row">
                     <input type="checkbox" name="entity_select" value="testtype/entity1" />
                 </td>
             </tr>
-            """%(TestBasePath)
+            """%(TestBasePath, cont)
         self.assertContains(r, rowdata, html=True)
         # Test context
         self.assertEqual(r.context['title'],            site_title())
@@ -209,21 +211,22 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         return
 
     def test_get_default_type_list(self):
-        u = entitydata_list_type_url("testcoll", "testtype")
-        r = self.client.get(u+"?continuation_url=/xyzzy/")
+        u = entitydata_list_type_url("testcoll", "testtype") + "?continuation_url=/xyzzy/"
+        r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>List 'Default_list' of entities in collection 'testcoll'</h3>", html=True)
+        cont = uri_params({"continuation_url": u})
         rowdata = """
             <tr class="select_row">
-                <td class="small-3 columns"><a href="%s/c/testcoll/d/testtype/entity1">entity1</a></td>
+                <td class="small-3 columns"><a href="%s/c/testcoll/d/testtype/entity1/%s">entity1</a></td>
                 <td class="small-9 columns">Entity testcoll/testtype/entity1</td>
                 <td class="select_row">
                     <input type="checkbox" name="entity_select" value="testtype/entity1" />
                 </td>
             </tr>
-            """%(TestBasePath)
+            """%(TestBasePath, cont)
         self.assertContains(r, rowdata, html=True)
         # log.info(r.content)
         # Test context

@@ -125,6 +125,14 @@ class EntityRoot(object):
         """
         return self.get_url(baseurl=baseurl)
 
+    def get_view_url_path(self, baseurl=""):
+        """
+        Return URL path used to view entity data.  This is the URI-path of the URL
+        returned by get_view_url (above)
+
+        """
+        return util.entity_url_path(self.get_view_url(), "")
+
     def set_values(self, values):
         """
         Set or update values for a collection

@@ -162,6 +162,7 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'action':           action
             , 'edit_add_field':   viewinfo.recordview.get("annal:add_field", "yes")
             , 'continuation_url': continuation_url
+            # , 'request_url':      self.get_request_path()
             , 'coll_id':          coll_id
             , 'type_id':          type_id
             , 'type_ids':         type_ids
@@ -283,6 +284,7 @@ class GenericEntityEditView(AnnalistGenericView):
             action              = viewinfo.action,
             edit_add_field      = viewinfo.recordview.get("annal:add_field", "yes"),
             continuation_url    = continuation_url,
+            request_url         = self.get_request_path(),
             coll_id             = coll_id,
             type_id             = type_id,
             type_ids            = type_ids,

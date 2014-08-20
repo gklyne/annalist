@@ -64,6 +64,7 @@ class EntityValueMap(object):
         Values defined in the supplied entity take priority, and the keyword arguments provide
         values when the entity does not.
         """
+        # log.info("entityvaluemap: map_value_to_context: extras %r"%(kwargs,))
         context = {}
         for kmap in self._map:
             context.update(kmap.map_entity_to_context(entity_values, extras=kwargs))

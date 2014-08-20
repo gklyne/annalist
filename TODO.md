@@ -1,6 +1,6 @@
 # Annalist TODO
 
-## Web application outline plan
+## Initial web application outline plan
 
 Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
 
@@ -184,14 +184,16 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / (c) make FieldDescription constructor more resilient to missing data.
    / Changing type to built-in type in entity edit display does not save to correct location
    / List editing view formatting is messed up (small-6?)
-   - Click on local type in default_list, then cancel, returns to Type_list display
-   - Click on local record in Default_list, cancel, returns to default data display (/d/ rather than /l/).  In default display, types don't appear.
+   / Click on local type in default_list, then cancel, returns to Type_list display.  No continuation_uri in links.
+   / Click on local record in Default_list, cancel, returns to default data display (/d/ rather than /l/).  In default display, types don't appear.
    - When creating new collection, there's no easy way to create a new record type (or view) from the front page.
    - View_type display should suppress add-field option.  Similar for View_list and View_field?
-   - Add field allows new view type to be created, but how to malke this default for displayed type?
+   - Add field allows new view type to be created, but how to make this default for displayed type?
    - No easy way to create field description while editing view details
    - from type display, want easy retreat to default display for collection
    / Handle bare /l/ URI and redirect to default view for collection
+   - generic field renderer for entityref as selection among available entity ids.  Use for field selection.  Options should be reworked using this form of enumeration, handled on the fly as required, using type information from the field definition.
+      -- fieldvaluemap.map_entity_to_context handles population of bound_field through 'extras', including 'options'
 9. Extend form-generator
    / support repeated field group (to support RecordView and BibJSON)
    - support alternate displays for different subtypes (to support BibJSON)
@@ -204,7 +206,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
 11. Code improvement - general
    - review URI for delete type/view/list confirmation
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
-   - align type ID values used in local URI construction with type URIs/CURIEs
+   ? align type ID values used in local URI construction with type URIs/CURIEs
 12. Code improvement - lists
    / move invocation of authentication to the immediate response handler code?
    / refactor list description access out of context handling code (avoid multiple reads)
@@ -226,6 +228,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        - Update field in default list displays
    / list_view response handler (needs generic view to make sense; view button to redisplay)
 15. Grid view
+   - to be planned
 16. Generic entity selector (based on canned sparql expressions?)
    / initial, simple non-SPARQL implementation in place - can revisit later
 
