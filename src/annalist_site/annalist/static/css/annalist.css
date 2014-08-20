@@ -64,7 +64,7 @@ div.column > p , div.columns > p
     height: auto;
 }
 
-div.view_label.column p , div.view_label.columns p {
+div.view_label p {
     margin: 0.5rem 0 0 0;
     font-size: small;
     color: #666666;

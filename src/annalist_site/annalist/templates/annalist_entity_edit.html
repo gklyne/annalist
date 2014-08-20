@@ -84,23 +84,65 @@
           </div>
         </div>
         <div class="small-12 medium-5 columns">
-            <div class="row">
-                <div class="small-12 columns text-right">
-                    <input type="submit" name="add_view_field" value="Add field" />
-                </div>
+          <div class="row">
+            <div class="small-12 columns text-right">
+              <input type="submit" name="add_view_field" value="Add field" />
             </div>
+          </div>
         </div>
         {% else %}
         <div class="small-12 medium-10 columns">
-            <div class="row">
-                <div class="small-12 columns">
-                    <input type="submit" name="save"          value="Save" />
-                    <input type="submit" name="cancel"        value="Cancel" />
-                </div>
+          <div class="row">
+            <div class="small-12 columns">
+              <input type="submit" name="save"          value="Save" />
+              <input type="submit" name="cancel"        value="Cancel" />
             </div>
+          </div>
         </div>
         {% endif %}
       </div>
+
+      <hr />
+
+      <div class="row">
+        <!--
+        <div class="medium-6 columns show-for-medium-up">
+          <div class="row">
+            <div class="small-12 columns">
+              &nbsp;
+            </div>
+          </div>
+        </div>
+        -->
+        <div class="small-12 medium-6 columns">
+          <div class="row">
+            <div class="view_label small-12 medium-4 columns">
+              <p>View:</p>
+            </div>
+            <div class="view_label small-12 medium-8 columns text-right">
+              <select name="view_choice">
+                {% for v in view_ids %}
+                  {% if v == view_selected %}
+                  <option selected="">{{v}}</option>
+                  {% else %}
+                  <option>{{v}}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="small-12 medium-6 columns text-right">
+          <div class="row">
+            <div class="small-12 columns">
+              <input type="submit" name="use_view"      value="Show view" />
+              <input type="submit" name="new_view"      value="New view" />
+              <input type="submit" name="new_type"      value="New type" />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <input type="hidden" name="orig_id"          value="{{orig_id}}" />
       <input type="hidden" name="orig_type"        value="{{orig_type}}" />
       <input type="hidden" name="action"           value="{{action}}" />

@@ -45,6 +45,8 @@ baseentityvaluemap  = (
         [ SimpleValueMap(c='title',            e=None,                    f=None               )
         , SimpleValueMap(c='coll_id',          e=None,                    f=None               )
         , SimpleValueMap(c='type_id',          e=None,                    f=None               )
+        , SimpleValueMap(c='view_ids',         e=None,                    f=None               )
+        , SimpleValueMap(c='view_selected',    e=None,                    f=None               )
         , SimpleValueMap(c='edit_add_field',   e=None,                    f=None               )
         , StableValueMap(c='entity_id',        e=ANNAL.CURIE.id,          f='entity_id'        )
         , SimpleValueMap(c='entity_url',       e=ANNAL.CURIE.url,         f='entity_url'       )
@@ -157,15 +159,18 @@ class GenericEntityEditView(AnnalistGenericView):
         typeinfo        = viewinfo.entitytypeinfo
         # @@TODO: handle enumeration of values more generically in fields/render_utils.
         type_ids        = [ t.get_id() for t in viewinfo.collection.types() ]
+        view_ids        = [ v.get_id() for v in viewinfo.collection.views() ]
         context_extra_values = (
             { 'title':            viewinfo.sitedata["title"]
             , 'action':           action
             , 'edit_add_field':   viewinfo.recordview.get("annal:add_field", "yes")
             , 'continuation_url': continuation_url
-            # , 'request_url':      self.get_request_path()
+            , 'request_url':      self.get_request_path()
             , 'coll_id':          coll_id
             , 'type_id':          type_id
             , 'type_ids':         type_ids
+            , 'view_ids':         view_ids
+            , 'view_selected':    viewinfo.view_id
             , 'orig_id':          orig_entity_id
             , 'orig_type':        orig_entity_type
             , 'view_id':          view_id
@@ -270,6 +275,7 @@ class GenericEntityEditView(AnnalistGenericView):
         type_id   = viewinfo.type_id
         entity_id = entity.get_id()
         type_ids  = [ t.get_id() for t in viewinfo.collection.types() ]
+        view_ids  = [ v.get_id() for v in viewinfo.collection.views() ]
         # Set up initial view context
         entityvaluemap = self.get_view_entityvaluemap(viewinfo)
         if add_field:
@@ -288,6 +294,8 @@ class GenericEntityEditView(AnnalistGenericView):
             coll_id             = coll_id,
             type_id             = type_id,
             type_ids            = type_ids,
+            view_ids            = view_ids,
+            view_selected       = viewinfo.view_id,
             orig_id             = entity_id,
             orig_type           = type_id,
             view_id             = viewinfo.view_id
@@ -354,19 +362,6 @@ class GenericEntityEditView(AnnalistGenericView):
 
         # Add field from entity view (as opposed to view description view)
         if 'add_view_field' in form_data:
-            http_response = self.save_entity(entityvaluemap, form_data,
-                entity_id, entity_type, orig_entity_id, orig_entity_type, 
-                viewinfo, context_extra_values, messages)
-            if http_response:
-                return http_response
-            viewinfo.check_authorization("config")
-            if viewinfo.http_response:
-                return viewinfo.http_response
-            # @@TODO: logic to override action in continuation_here (after save, change to 'edit')
-            (continuation_next, continuation_here) = self.continuation_urls(
-                form_data, continuation_url, 
-                base_here=viewinfo.get_edit_continuation_url(entity_type, entity_id)
-                )
             view_edit_uri_base = self.view_uri("AnnalistEntityEditView",
                 coll_id=viewinfo.coll_id,
                 view_id="View_view",
@@ -374,8 +369,36 @@ class GenericEntityEditView(AnnalistGenericView):
                 entity_id=viewinfo.view_id,
                 action="edit"
                 )
-            view_edit_uri = uri_with_params(view_edit_uri_base, {"add_field": "View_fields"}, continuation_here)
-            return HttpResponseRedirect(view_edit_uri)
+            return self.invoke_config_edit_view(
+                entityvaluemap, form_data,
+                entity_id, entity_type, orig_entity_id, orig_entity_type, 
+                viewinfo, context_extra_values, messages,
+                view_edit_uri_base, {"add_field": "View_fields"}, continuation_url)
+            #@@
+            # http_response = self.save_entity(entityvaluemap, form_data,
+            #     entity_id, entity_type, orig_entity_id, orig_entity_type, 
+            #     viewinfo, context_extra_values, messages)
+            # if http_response:
+            #     return http_response
+            # viewinfo.check_authorization("config")
+            # if viewinfo.http_response:
+            #     return viewinfo.http_response
+            # (continuation_next, continuation_here) = self.continuation_urls(
+            #     form_data, continuation_url, 
+            #     base_here=viewinfo.get_edit_continuation_url(entity_type, entity_id)
+            #     )
+            # view_edit_uri_base = self.view_uri("AnnalistEntityEditView",
+            #     coll_id=viewinfo.coll_id,
+            #     view_id="View_view",
+            #     type_id="_view",
+            #     entity_id=viewinfo.view_id,
+            #     action="edit"
+            #     )
+            # view_edit_uri = uri_with_params(
+            #     view_edit_uri_base, {"add_field": "View_fields"}, continuation_here
+            #     )
+            # return HttpResponseRedirect(view_edit_uri)
+            #@@
 
         # Add new instance of repeating field
         add_field = self.find_add_field(entityvaluemap, form_data)
@@ -395,6 +418,14 @@ class GenericEntityEditView(AnnalistGenericView):
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
             return self.update_view_fields(remove_field, entityvals, entityvaluemap, **context_extra_values)
 
+        # Update or define new view or type
+        if 'use_view' in form_data:
+            assert False, "@@TODO: use_view handler"
+        if 'new_view' in form_data:
+            assert False, "@@TODO: new_view handler"
+        if 'new_type' in form_data:
+            assert False, "@@TODO: new_type handler"
+
         # Report unexpected form data
         # This shouldn't happen, but just in case...
         # Redirect to continuation with error
@@ -404,7 +435,7 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         log.warning("Unexpected form data %s"%(err_values))
         log.warning("Continue to %s"%(continuation_url))
-        redirect_uri = view_edit_uri(continuation_url, err_values)
+        redirect_uri = uri_with_params(continuation_url, err_values)
         return HttpResponseRedirect(redirect_uri)
 
     def save_entity(self,
@@ -494,6 +525,41 @@ class GenericEntityEditView(AnnalistGenericView):
             if typeinfo.entityclass.exists(new_parent, entity_id):    # Precautionary
                 typeinfo.entityclass.remove(orig_parent, orig_entity_id)
         return None
+
+    def invoke_config_edit_view(self, 
+            entityvaluemap, form_data,
+            entity_id, entity_type, orig_entity_id, orig_entity_type, 
+            viewinfo, context_extra_values, messages,
+            config_edit_url, url_params, continuation_url):
+        """
+        Common logic for invoking a configuration resource edit while editing some
+        other resource:
+          - the entity currently being edited is saved
+          - authorization to perform configuration edits is checked
+          - a continuaton URL is calculated which is the URL for the current view,
+            except that the continuation actions is always "edit"
+          - a URL for the config edit view is assembled from the supplied base URL
+            and parameters, and the calculated continuaton URL
+          - an HTTP redirect response to the config edit view is returned.
+
+        If there is a problem with any ofthese steps, an error response is returned
+        and displayed in the current view.
+        """
+        http_response = self.save_entity(entityvaluemap, form_data,
+            entity_id, entity_type, orig_entity_id, orig_entity_type, 
+            viewinfo, context_extra_values, messages)
+        if http_response:
+            return http_response
+        viewinfo.check_authorization("config")
+        if viewinfo.http_response:
+            return viewinfo.http_response
+        (continuation_next, continuation_here) = self.continuation_urls(
+            form_data, continuation_url, 
+            base_here=viewinfo.get_edit_continuation_url(entity_type, entity_id)
+            )
+        return HttpResponseRedirect(
+            uri_with_params(config_edit_url, url_params, continuation_here)
+            )
 
     def find_repeat_fields(self, entityvaluemap):
         """
