@@ -150,9 +150,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          None)
-        self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
-        self.assertEqual(r.context['list_selected'],    "Default_list_all")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
+        list_choices = r.context['list_choices']
+        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(list_choices['field_value'],   "Default_list_all")
         # Unbound field descriptions
         self.assertEqual(len(r.context['fields']), 3)
         self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_type')
@@ -210,9 +211,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
-        self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
-        self.assertEqual(r.context['list_selected'],    "Field_list")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
+        #@@
+        # self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
+        # self.assertEqual(r.context['list_selected'],    "Field_list")
+        list_choices = r.context['list_choices']
+        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         self.assertEqual(len(r.context['fields']), 3)
         # 1st field
@@ -247,7 +252,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-6 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
         # Entities
-        self.assertEqual(len(r.context['entities']), 54)
+        self.assertEqual(len(r.context['entities']), 55)
         field_entities = (
             { ('Entity_id',         "annal:Slug",          "Id")
             , ('Bib_address',       "annal:Text",          "Bib_address")
@@ -307,10 +312,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
-        self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
-        self.assertEqual(r.context['list_selected'],    "Field_list")
-        self.assertEqual(r.context['search_for'],       "Bib_")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
+        self.assertEqual(r.context['search_for'],       "Bib_")
+        #@@ self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
+        #@@ self.assertEqual(r.context['list_selected'],    "Field_list")
+        list_choices = r.context['list_choices']
+        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         self.assertEqual(len(r.context['fields']), 3)
         self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_id')
@@ -367,7 +375,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Test context
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
-        self.assertEqual(r.context['list_selected'],    "Field_list")
+        #@@self.assertEqual(r.context['list_selected'],    "Field_list")
+        list_choices = r.context['list_choices']
+        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(list_choices['field_value'],   "Field_list")
         return
 
     #   -----------------------------------------------------------------------------

@@ -493,7 +493,7 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
     list_form_data = (
         { 'search_for':         ""
         , 'search':             "Find"
-        , 'list_id':            "Default_list"
+        , 'list_choice':        "Default_list"
         , 'list_view':          "View"
         , 'entity_select':      ["{{entity.entity_id}}"]
         , 'new':                "New"
@@ -520,7 +520,7 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
         continuation_url = "" # collection_edit_url("testcoll")
     form_data = (
         { 'search_for':         search
-        , 'list_id':            list_id
+        , 'list_choice':        list_id
         , 'continuation_url':   continuation_url
         })
     if entities is not None:
@@ -586,7 +586,7 @@ def layout_classes(width=12):
             { 'label_classes':          "view_label small-12 medium-4 columns"
             , 'input_classes':          "small-12 medium-8 columns"
             , 'button_left_classes':    "small-12 medium-6 columns"
-            , 'button_right_classes':   "small-12 medium-6 columns text-right"
+            , 'button_right_classes':   "small-12 medium-6 columns medium-text-right"
             })
     elif width == 12:
         class_dict = (

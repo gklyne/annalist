@@ -317,28 +317,6 @@ def recordlist_view_form_data(
         list_id=None, orig_id=None, 
         action=None, cancel=None,
         update="RecordView"):
-    # Example:
-    # {
-    #   u 'entity_id': [u 'list1'],
-    #   u 'List_type': [u 'list'],
-    #   u 'List_label': [u 'Default list view'],
-    #   u 'List_comment': [u 'Description of default list view'],
-    #   u 'List_default_type': [u 'Default_type'],
-    #   u 'List_default_view': [u 'Default_view'],
-    #   u 'List_entity_selector': [u ''],
-    #   u 'List_fields__0__Field_id': [u 'Entity_id'],
-    #   u 'List_fields__0__Field_placement': [u 'small:0,3'],
-    #   u 'List_fields__1__Field_id': [u 'Entity_label']
-    #   u 'List_fields__1__Field_placement': [u 'small:3,9'],
-    #
-    #   u 'action': [u 'edit'],
-    #   u 'view_id': [u 'List_view'],
-    #   u 'orig_id': [u 'orig_list_id'],
-    #   u 'orig_type': [u '_list'],
-    #   u 'continuation_url': [u '/annalist/c/coll1/!edit?continuation_url=/annalist/c/coll1/d/%3Fcontinuation_url=/annalist/c/coll1/!edit'],
-    #
-    #   u 'save': [u 'Save'],
-    # }
     form_data_dict = (
         { 'List_type':              'annal:display_type/List'
         , 'List_label':             '%s list (%s/@@list_id@@)'%(update, coll_id)

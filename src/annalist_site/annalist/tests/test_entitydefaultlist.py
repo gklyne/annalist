@@ -142,9 +142,13 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          None)
-        self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
-        self.assertEqual(r.context['list_selected'],    "Default_list_all")
+        #@@ self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
+        #@@ self.assertEqual(r.context['list_selected'],    "Default_list_all")
+        list_choices = r.context['list_choices']
+        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(list_choices['field_value'],   "Default_list_all")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
+
         # Unbound field descriptions
         self.assertEqual(len(r.context['fields']), 3)
         #  1st field
@@ -233,8 +237,11 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
-        self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
-        self.assertEqual(r.context['list_selected'],    "Default_list")
+        #@@ self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
+        #@@ self.assertEqual(r.context['list_selected'],    "Default_list")
+        list_choices = r.context['list_choices']
+        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(list_choices['field_value'],   "Default_list")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
         self.assertEqual(len(r.context['fields']), 2)

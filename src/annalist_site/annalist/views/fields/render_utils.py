@@ -235,7 +235,7 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_text.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_edit_textarea.html"
-    if renderid in ["annal:field_render/Type", "annal:field_render/View"]:
+    if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List"]:
         return "field/annalist_edit_select.html"
     if renderid == "annal:field_render/View_fields":
         return "field/annalist_todo.html"
@@ -270,7 +270,7 @@ def get_view_renderer(renderid):
         return "field/annalist_view_entityref.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_view_textarea.html"
-    if renderid in ["annal:field_render/Type", "annal:field_render/View"]:
+    if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List"]:
         return "field/annalist_view_select.html"
     if renderid == "annal:field_render/View_fields":
         return "field/annalist_todo.html"
@@ -297,7 +297,7 @@ def get_item_renderer(renderid):
         return "field/annalist_item_text.html"
     if renderid == "annal:field_render/EntityRef":
         return "field/annalist_item_entityref.html"    
-    if renderid in ["annal:field_render/Type", "annal:field_render/View"]:
+    if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List"]:
         return "field/annalist_item_type.html"
     if renderid == "annal:field_render/Identifier":
         # @@TODO: use identifier lookup to display label

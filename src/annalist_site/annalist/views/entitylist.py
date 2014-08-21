@@ -25,6 +25,7 @@ from annalist.models.entityfinder       import EntityFinder
 
 from annalist.views.uri_builder         import uri_with_params
 from annalist.views.displayinfo         import DisplayInfo
+from annalist.views.fielddescription    import FieldDescription
 from annalist.views.entityvaluemap      import EntityValueMap
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
@@ -32,7 +33,7 @@ from annalist.views.grouprepeatmap      import GroupRepeatMap
 from annalist.views.confirm             import ConfirmView, dict_querydict
 from annalist.views.generic             import AnnalistGenericView
 
-from annalist.views.fields.render_utils import get_entity_values
+from annalist.views.fields.render_utils import bound_field, get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -46,8 +47,9 @@ listentityvaluemap  = (
         , SimpleValueMap(c='coll_id',               e=None,                  f=None               )
         , SimpleValueMap(c='type_id',               e=None,                  f=None               )
         , SimpleValueMap(c='list_id',               e=None,                  f=None               )
-        , SimpleValueMap(c='list_ids',              e=None,                  f=None               )
-        , SimpleValueMap(c='list_selected',         e=None,                  f=None               )
+        #@@ , SimpleValueMap(c='list_ids',              e=None,                  f=None               )
+        #@@ , SimpleValueMap(c='list_selected',         e=None,                  f=None               )
+        , SimpleValueMap(c='list_choices',          e=None,                    f=None               )
         , SimpleValueMap(c='collection_view',       e=None,                  f=None               )
         , SimpleValueMap(c='default_view_id',       e=None,                  f=None               )
         , SimpleValueMap(c='default_view_enable',   e=None,                  f=None               )
@@ -126,7 +128,7 @@ class EntityGenericListView(AnnalistGenericView):
             return listinfo.http_response
         log.debug("list_id %s"%listinfo.list_id)
         # Prepare list and entity IDs for rendering form
-        list_ids    = [ l.get_id() for l in listinfo.collection.lists() ]
+        #@@ list_ids    = [ l.get_id() for l in listinfo.collection.lists() ]
         selector    = listinfo.recordlist.get_values().get('annal:list_entity_selector', "")
         search_for  = request.GET.get('search', "")
         entity_list = (
@@ -145,8 +147,9 @@ class EntityGenericListView(AnnalistGenericView):
             type_id             = type_id,
             list_id             = listinfo.list_id,
             search_for          = search_for,
-            list_ids            = list_ids,
-            list_selected       = listinfo.list_id,
+            #@@ list_ids            = list_ids,
+            #@@ list_selected       = listinfo.list_id,
+            list_choices        = self.get_list_choices_field(listinfo),
             collection_view     = self.view_uri("AnnalistCollectionView", coll_id=coll_id),
             default_view_id     = listinfo.recordlist['annal:default_view'],
             default_view_enable = ("" if list_id else 'disabled="disabled"')
@@ -287,7 +290,7 @@ class EntityGenericListView(AnnalistGenericView):
                     params = dict(params, search=search)
                 list_uri_params = (
                     { 'coll_id': coll_id
-                    , 'list_id': request.POST['list_id']
+                    , 'list_id': request.POST['list_choice']
                     })
                 if type_id:
                     list_uri_params.update({'type_id': type_id})
@@ -323,5 +326,21 @@ class EntityGenericListView(AnnalistGenericView):
             )
         redirect_uri = uri_with_params(continuation_next['continuation_url'], err_values)
         return HttpResponseRedirect(redirect_uri)
+
+    def get_list_choices_field(self, listinfo):
+        """
+        Returns a bound_field object that displays as a list-choice selection drop-down.
+        """
+        # @@TODO: Possibly create FieldValueMap and return map_entity_to_context value? 
+        #         or extract this logic and share?  See also entityedit view choices
+        field_description = FieldDescription(
+            listinfo.collection, 
+            { 'annal:field_id': "List_choice", 'annal:field_placement': "small:0,12;medium:5,5" } 
+            )
+        entityvals        = { field_description['field_property_uri']: listinfo.list_id }
+        # Note: the options list may be enumerated more than once,
+        # so any generator supplied must be materialized here
+        options           = list(field_description['field_choices'])
+        return bound_field(field_description, entityvals, options)
 
 # End.

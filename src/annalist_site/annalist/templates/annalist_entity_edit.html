@@ -114,35 +114,10 @@
           </div>
         </div>
         -->
-        <!--
-        view_choices {{ view_choices }}.
-        field {{ field }}.
-        field.field_render_edit {{ field.field_render_edit }}.
-        -->
         {% with field=view_choices %}
         {% include field.field_render_edit %}
         {% endwith %}
-        <!--
-        <div class="small-12 medium-6 columns">
-          <div class="row">
-            <div class="view_label small-12 medium-4 columns">
-              <p>View:</p>
-            </div>
-            <div class="small-12 medium-8 columns">
-              <select name="view_choice">
-                {% for v in view_ids %}
-                  {% if v == view_selected %}
-                  <option selected="">{{v}}</option>
-                  {% else %}
-                  <option>{{v}}</option>
-                  {% endif %}
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-        </div>
-        -->
-        <div class="small-12 medium-6 columns text-right">
+        <div class="small-12 medium-6 columns medium-text-right">
           <div class="row">
             <div class="small-12 columns">
               <input type="submit" name="use_view"      value="Show view" />

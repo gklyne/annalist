@@ -396,15 +396,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                         </div>
                     </div>
                 </div>
-                """+
-                # <div class="%(button_half_classes)s">
-                #     <div class="row">
-                #         <div class="%(button_right_classes)s">
-                #             <input type="submit" name="add_view_field" value="Add field" />
-                #         </div>
-                #     </div>
-                # </div>
-                """
             </div>
             """)%field_vals(width=12)
         self.assertContains(r, formrow1, html=True)

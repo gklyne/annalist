@@ -47,7 +47,7 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='coll_id',          e=None,                    f=None               )
         , SimpleValueMap(c='type_id',          e=None,                    f=None               )
         #@@ , SimpleValueMap(c='view_ids',         e=None,                    f=None               )
-        , SimpleValueMap(c='view_selected',    e=None,                    f=None               )
+        #@@ , SimpleValueMap(c='view_selected',    e=None,                    f=None               )
         , SimpleValueMap(c='view_choices',     e=None,                    f=None               )
         #@@ , SimpleValueMap(c='field_ids',        e=None,                    f=None               )
         , SimpleValueMap(c='edit_add_field',   e=None,                    f=None               )
@@ -161,7 +161,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # log.info("continuation_url %s, type_id %s"%(continuation_url, type_id))
         typeinfo        = viewinfo.entitytypeinfo
         # @@TODO: handle enumeration of values more generically in fields/render_utils.
-        coll            = viewinfo.collection
+        #@@ coll            = viewinfo.collection
         #@@ type_ids        = [ t.get_id() for t in coll.types() ]
         #@@ view_ids        = [ v.get_id() for v in coll.views() ]
         #@@ field_ids       = [ f for f in coll._children(RecordField, altparent=coll._parentsite) ]
@@ -246,7 +246,9 @@ class GenericEntityEditView(AnnalistGenericView):
         #         or extract this logic and share?
         field_description = FieldDescription(viewinfo.collection, { 'annal:field_id': "View_choice" } )
         entityvals        = { field_description['field_property_uri']: viewinfo.view_id }
-        options           = field_description['field_choices']
+        # Note: the options list may be enumerated more than once,
+        # so any generator supplied must be materialized here
+        options           = list(field_description['field_choices'])
         return bound_field(field_description, entityvals, options)
 
     def get_entity(self, entity_id, typeinfo, action, entity_initial_values):
