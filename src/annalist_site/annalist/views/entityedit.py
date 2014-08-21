@@ -47,6 +47,7 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='type_id',          e=None,                    f=None               )
         , SimpleValueMap(c='view_ids',         e=None,                    f=None               )
         , SimpleValueMap(c='view_selected',    e=None,                    f=None               )
+        , SimpleValueMap(c='field_ids',        e=None,                    f=None               )
         , SimpleValueMap(c='edit_add_field',   e=None,                    f=None               )
         , StableValueMap(c='entity_id',        e=ANNAL.CURIE.id,          f='entity_id'        )
         , SimpleValueMap(c='entity_url',       e=ANNAL.CURIE.url,         f='entity_url'       )
@@ -158,8 +159,10 @@ class GenericEntityEditView(AnnalistGenericView):
         # log.info("continuation_url %s, type_id %s"%(continuation_url, type_id))
         typeinfo        = viewinfo.entitytypeinfo
         # @@TODO: handle enumeration of values more generically in fields/render_utils.
-        type_ids        = [ t.get_id() for t in viewinfo.collection.types() ]
-        view_ids        = [ v.get_id() for v in viewinfo.collection.views() ]
+        coll            = viewinfo.collection
+        type_ids        = [ t.get_id() for t in coll.types() ]
+        view_ids        = [ v.get_id() for v in coll.views() ]
+        field_ids       = [ f for f in coll._children(RecordField, altparent=coll._parentsite) ]
         context_extra_values = (
             { 'title':            viewinfo.sitedata["title"]
             , 'action':           action
@@ -171,6 +174,7 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'type_ids':         type_ids
             , 'view_ids':         view_ids
             , 'view_selected':    viewinfo.view_id
+            , 'field_ids':        field_ids
             , 'orig_id':          orig_entity_id
             , 'orig_type':        orig_entity_type
             , 'view_id':          view_id
@@ -274,8 +278,10 @@ class GenericEntityEditView(AnnalistGenericView):
         coll_id   = viewinfo.coll_id
         type_id   = viewinfo.type_id
         entity_id = entity.get_id()
-        type_ids  = [ t.get_id() for t in viewinfo.collection.types() ]
-        view_ids  = [ v.get_id() for v in viewinfo.collection.views() ]
+        coll      = viewinfo.collection
+        type_ids  = [ t.get_id() for t in coll.types() ]
+        view_ids  = [ v.get_id() for v in coll.views() ]
+        field_ids = [ f for f in coll._children(RecordField, altparent=coll._parentsite) ]
         # Set up initial view context
         entityvaluemap = self.get_view_entityvaluemap(viewinfo)
         if add_field:

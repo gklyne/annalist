@@ -56,8 +56,11 @@ class FieldValueMap(object):
         Returns a dictionary of values to be added to the display context under construction
         """
         options = ["(no options)"]
-        options_key = self.f.get('field_options', None)
-        if options_key:
+        options_choices = self.f.get('field_choices', None)
+        options_key     = self.f.get('field_options_valkey', None)
+        if options_choices:
+            options = options_choices
+        elif options_key:
             if extras and options_key in extras:
                 options = extras[options_key]
             else:

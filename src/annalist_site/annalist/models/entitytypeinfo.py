@@ -175,6 +175,22 @@ class EntityTypeInfo(object):
             return self.entityclass.load(self.entityparent, entity_id, altparent=self.entityaltparent)
         return None
 
+    def enum_entity_ids(self, usealtparent=False):
+        """
+        Iterate over entity identifiers in collection with current type.
+
+        usealtparent    is True if site-wide entities are to be included.
+        """
+        altparent = self.entityaltparent if usealtparent else None
+        if self.entityparent:
+            for eid in self.entityparent.child_entity_ids(
+                    self.entityclass, 
+                    altparent=altparent):
+                yield eid
+        else:
+            log.warning("EntityTypeInfo missing entityparent; type_id %s"%(self.type_id))
+        return
+
     def enum_entities(self, usealtparent=False):
         """
         Iterate over entities in collection with current type.

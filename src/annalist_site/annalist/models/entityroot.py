@@ -258,7 +258,7 @@ class EntityRoot(object):
                     class's alternate relative path, or None if only potential children 
                     of the current entity are returned.
         """
-        dir1 = os.path.dirname(os.path.join(self._entitydir, cls._entitypath))
+        dir1 = os.path.dirname(os.path.join(self._entitydir, cls._entitypath or ""))
         if altparent and cls._entityaltpath:
             dir2 = os.path.dirname(os.path.join(altparent._entitydir, cls._entityaltpath))
         else:

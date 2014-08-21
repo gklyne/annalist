@@ -10,6 +10,7 @@ import logging
 log = logging.getLogger(__name__)
 
 from annalist.models.recordfield        import RecordField
+from annalist.models.entitytypeinfo     import EntityTypeInfo
 
 from annalist.views.fields.render_utils import get_edit_renderer, get_view_renderer
 from annalist.views.fields.render_utils import get_head_renderer, get_item_renderer
@@ -60,8 +61,13 @@ class FieldDescription(object):
             , 'field_placeholder':      recordfield.get('annal:placeholder', "")
             , 'field_default_value':    recordfield.get('annal:default_value', None)
             , 'field_property_uri':     recordfield.get('annal:property_uri', "")
-            , 'field_options':          recordfield.get('annal:options', None)
+            , 'field_options_valkey':   recordfield.get('annal:options_valkey', None)
+            , 'field_options_typeref':  recordfield.get('annal:options_typeref', None)
+            , 'field_choices':          None
             })
+        if self._field_context['field_options_typeref']:
+            typeinfo = EntityTypeInfo(collection._parentsite, collection, self._field_context['field_options_typeref'])
+            self._field_context['field_choices'] = typeinfo.enum_entity_ids(usealtparent=True)
         # log.info("FieldDescription: %s"%field_id)
         # log.info("FieldDescription.field %r"%field)
         # log.info("FieldDescription.field_context %r"%(self._field_context,))

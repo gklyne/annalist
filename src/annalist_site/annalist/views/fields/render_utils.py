@@ -151,11 +151,14 @@ class bound_field(object):
                 # Used to populate form field value when no value supplied
                 return self._field_description.get('field_default_value', None) or ""
         elif name == "options":
-            # log.info(repr(self._options))
-            return self._options
+            return self.get_field_options()
         else:
             # log.info("bound_field[%s] -> %r"%(name, self._field_description[name]))
             return self._field_description[name]
+
+    def get_field_options(self):
+        # log.info("get_field_options: %r"(self._options,))
+        return self._options
 
     def get_continuation_param(self):
         cparam = self.continuation_url

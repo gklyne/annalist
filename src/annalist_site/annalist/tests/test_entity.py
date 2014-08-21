@@ -155,18 +155,6 @@ class EntityRootTest(TestCase):
             self.assertEqual(e[k], v)
         return
 
-    # @unittest.skip("EntityRoot iterator no longer returns members")
-    # def test_entityroot_iter(self):
-    #     e = EntityRoot(TestBaseUri+"/c", TestBaseDir+"/c")
-    #     # e = TestEntityRootType(Te stBaseUri, TestBaseDir)
-    #     expect = [ "coll1", "coll2", "coll3", "testcoll"]
-    #     count = 0
-    #     for i in e:
-    #         self.assertIn(i, expect)
-    #         count += 1
-    #     self.assertEqual(count, len(expect))
-    #     return
-
     def test_entityroot_subclass(self):
         e = TestEntityRootType(TestBaseUri, TestBaseDir)
         self.assertEqual(e._entitytype,     "test:EntityRootType")
@@ -236,6 +224,13 @@ class EntityRootTest(TestCase):
         self.assertTrue(e._exists())
         return
 
+
+#   -----------------------------------------------------------------------------
+#
+#   Entity tests
+#
+#   -----------------------------------------------------------------------------
+
 class TestEntityType(Entity):
 
     _entitytype = "test:EntityType"
@@ -251,12 +246,6 @@ class TestEntityTypeSub(Entity):
     _entityview = "sub/%(id)s/"
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
-
-#   -----------------------------------------------------------------------------
-#
-#   Entity tests
-#
-#   -----------------------------------------------------------------------------
 
 class EntityTest(TestCase):
     """
@@ -389,6 +378,52 @@ class EntityTest(TestCase):
         v = e2.get_values()
         self.assertEqual(set(v.keys()), set(test_values_returned.keys()))
         self.assertEqual(v, test_values_returned)
+        return
+
+    def test_entity_children(self):
+        test_values1 = (
+            { 'type':   'test:EntityType'
+            , 'title':  'Name entity test1'
+            })
+        test_values1_returned = (
+            { '@id':            '../'
+            , 'annal:id':       'testid1'
+            , 'annal:type':     'test:EntityType'
+            , 'annal:url':      TestBaseUri+'/testbase/testid1/'
+            , 'annal:uri':      TestBaseUri+'/testbase/testid1/'
+            , 'title':          'Name entity test1'
+            , 'type':           'test:EntityType'
+            })
+        test_values2 = (
+            { 'type':   'test:EntityType'
+            , 'title':  'Name entity test2'
+            })
+        test_values2_returned = (
+            { '@id':            '../'
+            , 'annal:id':       'testid2'
+            , 'annal:type':     'test:EntityType'
+            , 'annal:url':      TestBaseUri+'/testbase/testid2/'
+            , 'annal:uri':      TestBaseUri+'/testbase/testid2/'
+            , 'title':          'Name entity test2'
+            , 'type':           'test:EntityType'
+            })
+        r  = EntityRoot(TestBaseUri, TestBaseDir)
+        b  = TestEntityType.create(r, "testbase", {})
+        e1 = TestEntityType.create(b, "testid1", test_values1)
+        e2 = TestEntityType.create(b, "testid2", test_values2)
+        eids = list(b.child_entity_ids(TestEntityType))
+        self.assertEqual(eids, ["testid1", "testid2"])
+        es  = b.child_entities(TestEntityType)
+        es1 = es.next()
+        v1  = es1.get_values()
+        # log.info(v1)
+        # log.info(test_values1_returned)
+        self.assertEqual(set(v1.keys()), set(test_values1_returned.keys()))
+        self.assertEqual(v1, test_values1_returned)
+        es2 = es.next()
+        v2  = es2.get_values()
+        self.assertEqual(set(v2.keys()), set(test_values2_returned.keys()))
+        self.assertEqual(v2, test_values2_returned)
         return
 
     def test_entity_create_remove(self):

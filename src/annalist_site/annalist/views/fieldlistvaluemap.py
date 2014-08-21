@@ -17,7 +17,9 @@ log = logging.getLogger(__name__)
 
 from django.conf                        import settings
 
-from annalist.views.fields.render_utils import bound_field
+#@@
+# from annalist.views.fields.render_utils import bound_field
+#@@
 
 from annalist.views.fielddescription    import FieldDescription
 from annalist.views.fieldvaluemap       import FieldValueMap
@@ -29,10 +31,6 @@ class FieldListValueMap(object):
     """
     Define an entry to be added to an entity view value mapping table,
     corresponding to a list of field descriptions.
-
-    NOTE: select fields are handled by having a special field 'options' passed
-    in the default value supplied, which is picked out and handled specially
-    in the bound_field class.
 
     coll    is the collection object holding the field definitions
     fields  list of field descritpions from a view definition.

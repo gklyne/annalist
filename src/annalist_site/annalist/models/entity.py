@@ -146,6 +146,22 @@ class Entity(EntityRoot):
 
     # Create and access functions
 
+    def child_entity_ids(self, cls, altparent=None):
+        """
+        Iterates over child entity identifiers of an indicated class.
+        The supplied class is used to determine a subdirectory to be scanned.
+
+        cls         is a subclass of Entity indicating the type of children to
+                    iterate over.
+        altparent   is an alternative parent entity to be checked using the class's
+                    alternate relative path, or None if only potential child IDs of the
+                    current entity are returned.
+        """
+        for i in self._children(cls, altparent=altparent):
+            if cls.exists(self, i, altparent=altparent):
+                yield i
+        return
+
     def child_entities(self, cls, altparent=None):
         """
         Iterates over child entities of an indicated class.
