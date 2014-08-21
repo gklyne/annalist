@@ -72,7 +72,7 @@ class FieldValueMap(object):
         # log.info("map_entity_to_context: bound_field: extras %r"%(extras,))
         boundfield = bound_field(
             field_description=self.f, 
-            entityvals=entityvals, #@@ key=self.f['field_property_uri'],
+            entityvals=entityvals,
             options=options,
             extras=extras
             )

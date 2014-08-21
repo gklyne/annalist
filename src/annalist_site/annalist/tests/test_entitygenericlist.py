@@ -212,9 +212,6 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
-        #@@
-        # self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
-        # self.assertEqual(r.context['list_selected'],    "Field_list")
         list_choices = r.context['list_choices']
         self.assertEqual(list(list_choices.options),    self.initial_list_ids)
         self.assertEqual(list_choices['field_value'],   "Field_list")
@@ -314,8 +311,6 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         self.assertEqual(r.context['search_for'],       "Bib_")
-        #@@ self.assertEqual(r.context['list_ids'],         self.initial_list_ids)
-        #@@ self.assertEqual(r.context['list_selected'],    "Field_list")
         list_choices = r.context['list_choices']
         self.assertEqual(list(list_choices.options),    self.initial_list_ids)
         self.assertEqual(list_choices['field_value'],   "Field_list")
@@ -375,7 +370,6 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Test context
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
-        #@@self.assertEqual(r.context['list_selected'],    "Field_list")
         list_choices = r.context['list_choices']
         self.assertEqual(list(list_choices.options),    self.initial_list_ids)
         self.assertEqual(list_choices['field_value'],   "Field_list")

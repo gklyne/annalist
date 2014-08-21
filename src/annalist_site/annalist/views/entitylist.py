@@ -47,8 +47,6 @@ listentityvaluemap  = (
         , SimpleValueMap(c='coll_id',               e=None,                  f=None               )
         , SimpleValueMap(c='type_id',               e=None,                  f=None               )
         , SimpleValueMap(c='list_id',               e=None,                  f=None               )
-        #@@ , SimpleValueMap(c='list_ids',              e=None,                  f=None               )
-        #@@ , SimpleValueMap(c='list_selected',         e=None,                  f=None               )
         , SimpleValueMap(c='list_choices',          e=None,                    f=None               )
         , SimpleValueMap(c='collection_view',       e=None,                  f=None               )
         , SimpleValueMap(c='default_view_id',       e=None,                  f=None               )
@@ -109,13 +107,6 @@ class EntityGenericListView(AnnalistGenericView):
             )
         return entitymap
 
-    #@@
-    # def get_entityvals(self, entity_list):
-    #     for e in entity_list:
-    #         v = e.get_values()
-    #         v[...]
-    #@@
-
     # GET
 
     def get(self, request, coll_id=None, type_id=None, list_id=None):
@@ -128,7 +119,6 @@ class EntityGenericListView(AnnalistGenericView):
             return listinfo.http_response
         log.debug("list_id %s"%listinfo.list_id)
         # Prepare list and entity IDs for rendering form
-        #@@ list_ids    = [ l.get_id() for l in listinfo.collection.lists() ]
         selector    = listinfo.recordlist.get_values().get('annal:list_entity_selector', "")
         search_for  = request.GET.get('search', "")
         entity_list = (
@@ -147,8 +137,6 @@ class EntityGenericListView(AnnalistGenericView):
             type_id             = type_id,
             list_id             = listinfo.list_id,
             search_for          = search_for,
-            #@@ list_ids            = list_ids,
-            #@@ list_selected       = listinfo.list_id,
             list_choices        = self.get_list_choices_field(listinfo),
             collection_view     = self.view_uri("AnnalistCollectionView", coll_id=coll_id),
             default_view_id     = listinfo.recordlist['annal:default_view'],
