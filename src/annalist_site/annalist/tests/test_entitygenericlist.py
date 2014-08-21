@@ -132,18 +132,18 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>List 'Default_list_all' of entities in collection 'testcoll'</h3>", html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
-        # log.info(r.content)
+        # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
         rowdata = """
             <tr class="select_row">
-                <td class="small-2 columns">testtype</td>
-                <td class="small-2 columns"><a href="%s/c/testcoll/d/testtype/entity1/%s">entity1</a></td>
+                <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></td>
+                <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/_type/testtype/%(cont)s">testtype</a></td>
                 <td class="small-8 columns">Entity testcoll/testtype/entity1</td>
                 <td class="select_row">
                     <input type="checkbox" name="entity_select" value="testtype/entity1" />
                 </td>
             </tr>
-            """%(TestBasePath, cont)
+            """%({'base': TestBasePath, 'cont': cont})
         self.assertContains(r, rowdata, html=True)
         # log.info(r.content)
         # Test context
@@ -156,11 +156,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(list_choices['field_value'],   "Default_list_all")
         # Unbound field descriptions
         self.assertEqual(len(r.context['fields']), 3)
-        self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_type')
-        self.assertEqual(r.context['fields'][1]['field_id'], 'Entity_id')
+        self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_id')
+        self.assertEqual(r.context['fields'][1]['field_id'], 'Entity_type')
         self.assertEqual(r.context['fields'][2]['field_id'], 'Entity_label')
         # Entities and bound fields
-        # log.info(r.context['entities'])
+        # log.info(r.context['entities'])  #@@
         self.assertEqual(len(r.context['entities']), 6)
         entity_fields = (
             [ {'entity_type_id': "_type",     'annal:id': "testtype",  'rdfs:label': "RecordType testcoll/testtype"}
@@ -170,7 +170,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , {'entity_type_id': "testtype",  'annal:id': "entity3",   'rdfs:label': "Entity testcoll/testtype/entity3"}
             , {'entity_type_id': "testtype2", 'annal:id': "entity4",   'rdfs:label': "Entity testcoll/testtype2/entity4"}
             ])
-        field_keys = ('entity_type_id', 'annal:id', 'rdfs:label')
+        field_keys = ('annal:id', 'entity_type_id', 'rdfs:label')
         for eid in range(6):
             for fid in range(3):
                 item_field = r.context['entities'][eid]['fields'][fid]

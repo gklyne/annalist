@@ -30,6 +30,7 @@ from annalist.models.site               import Site
 from annalist.models.sitedata           import SiteData
 from annalist.models.collection         import Collection
 from annalist.models.recordview         import RecordView
+from annalist.models.recordfield        import RecordField
 
 from annalist.views.uri_builder         import uri_with_params
 from annalist.views.recordviewdelete    import RecordViewDeleteConfirmedView
@@ -165,7 +166,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.client   = Client(HTTP_HOST=TestHost)
         loggedin      = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        self.no_options = ['(no options)']
+        self.no_options       = ['(no options)']
+        self.field_options    = [fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite)]
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_view")
         return
 
@@ -302,7 +304,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[0]['fields'][0].entity_link,            "")
         self.assertEqual(viewfields[0]['fields'][0].field_value_key,        "annal:field_id")
         self.assertEqual(viewfields[0]['fields'][0].field_value,            "Entity_id")
-        self.assertEqual(viewfields[0]['fields'][0].options,                ["(no options)"])
+        self.assertEqual(viewfields[0]['fields'][0].options,                self.field_options)
         self.assertEqual(viewfields[0]['fields'][0].field_id,               "Field_sel")
         self.assertEqual(viewfields[0]['fields'][0].field_name,             "Field_id")
         self.assertEqual(viewfields[0]['fields'][0].field_placement.field,  "small-12 medium-6 columns")
@@ -310,7 +312,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[0]['fields'][1].entity_link,            "")
         self.assertEqual(viewfields[0]['fields'][1].field_value_key,        "annal:field_placement")
         self.assertEqual(viewfields[0]['fields'][1].field_value,            "small:0,12;medium:0,6")
-        self.assertEqual(viewfields[0]['fields'][1].options,                ["(no options)"])
+        self.assertEqual(viewfields[0]['fields'][1].options,                self.no_options)
         self.assertEqual(viewfields[0]['fields'][1].field_id,               "Field_placement")
         self.assertEqual(viewfields[0]['fields'][1].field_name,             "Field_placement")
         self.assertEqual(viewfields[0]['fields'][1].field_placement.field,  "small-12 medium-6 columns")
@@ -319,7 +321,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[1]['fields'][0].entity_link,            "")
         self.assertEqual(viewfields[1]['fields'][0].field_value_key,        "annal:field_id")
         self.assertEqual(viewfields[1]['fields'][0].field_value,            "Entity_type")
-        self.assertEqual(viewfields[1]['fields'][0].options,                ["(no options)"])
+        self.assertEqual(viewfields[1]['fields'][0].options,                self.field_options)
         self.assertEqual(viewfields[1]['fields'][0].field_id,               "Field_sel")
         self.assertEqual(viewfields[1]['fields'][0].field_name,             "Field_id")
         self.assertEqual(viewfields[1]['fields'][0].field_placement.field,  "small-12 medium-6 columns")
@@ -327,7 +329,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[1]['fields'][1].entity_link,            "")
         self.assertEqual(viewfields[1]['fields'][1].field_value_key,        "annal:field_placement")
         self.assertEqual(viewfields[1]['fields'][1].field_value,            "small:0,12;medium:6,6right")
-        self.assertEqual(viewfields[1]['fields'][1].options,                ["(no options)"])
+        self.assertEqual(viewfields[1]['fields'][1].options,                self.no_options)
         self.assertEqual(viewfields[1]['fields'][1].field_id,               "Field_placement")
         self.assertEqual(viewfields[1]['fields'][1].field_name,             "Field_placement")
         self.assertEqual(viewfields[1]['fields'][1].field_placement.field,  "small-12 medium-6 columns")
@@ -336,7 +338,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[2]['fields'][0].entity_link,            "")
         self.assertEqual(viewfields[2]['fields'][0].field_value_key,        "annal:field_id")
         self.assertEqual(viewfields[2]['fields'][0].field_value,            "Entity_label")
-        self.assertEqual(viewfields[2]['fields'][0].options,                ["(no options)"])
+        self.assertEqual(viewfields[2]['fields'][0].options,                self.field_options)
         self.assertEqual(viewfields[2]['fields'][0].field_id,               "Field_sel")
         self.assertEqual(viewfields[2]['fields'][0].field_name,             "Field_id")
         self.assertEqual(viewfields[2]['fields'][0].field_placement.field,  "small-12 medium-6 columns")
@@ -344,7 +346,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[2]['fields'][1].entity_link,            "")
         self.assertEqual(viewfields[2]['fields'][1].field_value_key,        "annal:field_placement")
         self.assertEqual(viewfields[2]['fields'][1].field_value,            "small:0,12")
-        self.assertEqual(viewfields[2]['fields'][1].options,                ["(no options)"])
+        self.assertEqual(viewfields[2]['fields'][1].options,                self.no_options)
         self.assertEqual(viewfields[2]['fields'][1].field_id,               "Field_placement")
         self.assertEqual(viewfields[2]['fields'][1].field_name,             "Field_placement")
         self.assertEqual(viewfields[2]['fields'][1].field_placement.field,  "small-12 medium-6 columns")
@@ -353,7 +355,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[3]['fields'][0].entity_link,            "")
         self.assertEqual(viewfields[3]['fields'][0].field_value_key,        "annal:field_id")
         self.assertEqual(viewfields[3]['fields'][0].field_value,            "Entity_comment")
-        self.assertEqual(viewfields[3]['fields'][0].options,                ["(no options)"])
+        self.assertEqual(viewfields[3]['fields'][0].options,                self.field_options)
         self.assertEqual(viewfields[3]['fields'][0].field_id,               "Field_sel")
         self.assertEqual(viewfields[3]['fields'][0].field_name,             "Field_id")
         self.assertEqual(viewfields[3]['fields'][0].field_placement.field,  "small-12 medium-6 columns")
@@ -361,7 +363,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[3]['fields'][1].entity_link,            "")
         self.assertEqual(viewfields[3]['fields'][1].field_value_key,        "annal:field_placement")
         self.assertEqual(viewfields[3]['fields'][1].field_value,            "small:0,12")
-        self.assertEqual(viewfields[3]['fields'][1].options,                ["(no options)"])
+        self.assertEqual(viewfields[3]['fields'][1].options,                self.no_options)
         self.assertEqual(viewfields[3]['fields'][1].field_id,               "Field_placement")
         self.assertEqual(viewfields[3]['fields'][1].field_name,             "Field_placement")
         self.assertEqual(viewfields[3]['fields'][1].field_placement.field,  "small-12 medium-6 columns")

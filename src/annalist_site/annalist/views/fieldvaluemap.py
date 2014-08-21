@@ -34,10 +34,6 @@ class FieldValueMap(object):
     field value and description, which is added to a list of such fields
     in the indicated context variable.
 
-    NOTE: select fields are handled by having a special field 'options' passed
-    in the default value supplied, which is picked out and handled specially
-    in the bound_field class.
-
     f       field description structure (cf. `FieldDescription`)
 
     NOTE: The form rendering template iterates over the context field values to be 

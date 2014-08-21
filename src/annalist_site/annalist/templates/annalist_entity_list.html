@@ -38,29 +38,6 @@
           {% with field=list_choices %}
           {% include field.field_render_edit %}
           {% endwith %}
-          <!--
-          <div class="small-12 medium-5 columns">
-            <div class="row">
-              <div class="small-2 medium-3 columns">
-                <p>List:</p>
-              </div>
-              <div class="small-8 medium-7 columns">
-                <select name="list_id" >
-                  {% for l in list_ids %}
-                    {% if l == list_selected %}
-                    <option selected="">{{l}}</option>
-                    {% else %}
-                    <option>{{l}}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="small-2 columns text-right show-for-small-only">
-                <input type="submit" name="view" value="View" />
-              </div>
-            </div>
-          </div>
-          -->
           <div class="small-12 medium-2 columns text-right">
             <div class="row">
               <div class="small-12 columns right">
@@ -74,7 +51,7 @@
             </div>
           </div>
         </div>
-
+        <!-- - - - - -  row data here - - - - - -->
         <div class="row">
           <div class="small-12 columns">
             <table width="100%">

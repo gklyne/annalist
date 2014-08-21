@@ -190,8 +190,8 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / When creating new collection, there's no obvious way to create a new record type (or view).
    / Handle bare /l/ URI and redirect to default view for collection
    / Remove precalculated list_ids and view_ids from view context
-   - Script to refresh sitedata in devel site
-   - In view editing, provide field id drodown
+   / Script to refresh sitedata in devel site
+   / In view editing, provide field id drodown
    - No easy way to create field description while editing view details
    - When defining field, missing placement is silently ignored; field is not saved; (still)
    - From type display, want easy retreat to default display for collection

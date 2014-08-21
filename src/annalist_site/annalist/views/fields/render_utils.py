@@ -15,6 +15,7 @@ from collections    import OrderedDict, namedtuple
 from django.conf                    import settings
 
 from annalist.models.entity         import EntityRoot, Entity
+from annalist.models.entitytypeinfo import EntityTypeInfo
 
 from annalist.views.uri_builder     import uri_params
 
@@ -112,7 +113,7 @@ class bound_field(object):
         # log.info("self._key %s, __getattr__ %s"%(self._key, name))
         # log.info("self._key %s"%self._key)
         # log.info("self._entity %r"%self._entity)
-        if name in ["entity_id", "entity_type_id", "entity_link"]:
+        if name in ["entity_id", "entity_link", "entity_type_id", "entity_type_link"]:
             return self._entityvals.get(name, "")
         elif name == "field_value_key":
             return self._key
@@ -122,6 +123,8 @@ class bound_field(object):
             return self._extras.get("request_url", "")
         elif name == "entity_link_continuation":
             return self.entity_link+self.get_continuation_param()
+        elif name == "entity_type_link_continuation":
+            return self.entity_type_link+self.get_continuation_param()
         elif name == "field_value":
             if self._key == "annal:type":
                 # @@TODO: remove annal:Type hack when proper selection from enumerated entities
@@ -167,8 +170,10 @@ class bound_field(object):
         yield "entity_id"
         yield "entity_type_id"
         yield "entity_link"
-        yield "continuation_url"
         yield "entity_link_continuation"
+        yield "entity_type_link"
+        yield "entity_type_link_continuation"
+        yield "continuation_url"
         yield "field_value"
         yield "options"
         for k in self._field_description:
@@ -231,11 +236,13 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_text.html"
     if renderid == "annal:field_render/EntityRef":
         return "field/annalist_edit_text.html"    
+    if renderid == "annal:field_render/EntityTypeRef":
+        return "field/annalist_edit_select.html"    
     if renderid == "annal:field_render/Identifier":
         return "field/annalist_edit_text.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_edit_textarea.html"
-    if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List"]:
+    if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List", "annal:field_render/Field"]:
         return "field/annalist_edit_select.html"
     if renderid == "annal:field_render/View_fields":
         return "field/annalist_todo.html"
@@ -266,12 +273,14 @@ def get_view_renderer(renderid):
         return "field/annalist_view_text.html"
     if renderid == "annal:field_render/EntityRef":
         return "field/annalist_view_entityref.html"    
+    if renderid == "annal:field_render/EntityTypeRef":
+        return "field/annalist_view_select.html"    
     if renderid == "annal:field_render/Identifier":
         return "field/annalist_view_entityref.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_view_textarea.html"
-    if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List"]:
-        return "field/annalist_view_select.html"
+    if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List", "annal:field_render/Field"]:
+        return "field/annalist_view_entityref.html"
     if renderid == "annal:field_render/View_fields":
         return "field/annalist_todo.html"
     log.warning("get_view_renderer: %s not found"%renderid)
@@ -297,25 +306,30 @@ def get_item_renderer(renderid):
         return "field/annalist_item_text.html"
     if renderid == "annal:field_render/EntityRef":
         return "field/annalist_item_entityref.html"    
-    if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List"]:
-        return "field/annalist_item_type.html"
+    if renderid == "annal:field_render/EntityTypeRef":
+        return "field/annalist_item_entitytyperef.html"
+    if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List", "annal:field_render/Field"]:
+        return "field/annalist_item_entityref.html"
     if renderid == "annal:field_render/Identifier":
         # @@TODO: use identifier lookup to display label
         return "field/annalist_item_text.html"
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
 
-def get_entity_values(entity, entity_id=None):
+def get_entity_values(displayinfo, entity, entity_id=None):
     """
     Returns an entity values dictionary for a supplied entity, suitable for
     use with a bound_field object (see above).
     """
     if not entity_id:
         entity_id = entity.get_id()
+    type_id    = entity.get_type_id()
+    typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
     entityvals = entity.get_values().copy()
-    entityvals['entity_id']      = entity_id
-    entityvals['entity_type_id'] = entity.get_type_id()
-    entityvals['entity_link']    = entity.get_view_url_path()
+    entityvals['entity_id']        = entity_id
+    entityvals['entity_link']      = entity.get_view_url_path()
+    entityvals['entity_type_id']   = type_id
+    entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
     return entityvals
 
 if __name__ == "__main__":

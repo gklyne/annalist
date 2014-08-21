@@ -234,9 +234,7 @@ class GenericEntityEditView(AnnalistGenericView):
         #         or extract this logic and share?
         field_description = FieldDescription(viewinfo.collection, { 'annal:field_id': "View_choice" } )
         entityvals        = { field_description['field_property_uri']: viewinfo.view_id }
-        # Note: the options list may be enumerated more than once,
-        # so any generator supplied must be materialized here
-        options           = list(field_description['field_choices'])
+        options           = field_description['field_choices']
         return bound_field(field_description, entityvals, options)
 
     def get_entity(self, entity_id, typeinfo, action, entity_initial_values):
@@ -289,7 +287,7 @@ class GenericEntityEditView(AnnalistGenericView):
             add_field_desc = self.find_repeat_id(entityvaluemap, add_field)
             if add_field_desc:
                 self.add_entity_field(add_field_desc, entity)
-        entityvals  = get_entity_values(entity, entity_id)
+        entityvals  = get_entity_values(viewinfo, entity, entity_id)
         if viewinfo.action == "copy":
             entityvals.pop('annal:uri')
         viewcontext = entityvaluemap.map_value_to_context(entityvals,

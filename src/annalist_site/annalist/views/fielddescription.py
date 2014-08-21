@@ -67,7 +67,9 @@ class FieldDescription(object):
             })
         if self._field_context['field_options_typeref']:
             typeinfo = EntityTypeInfo(collection._parentsite, collection, self._field_context['field_options_typeref'])
-            self._field_context['field_choices'] = typeinfo.enum_entity_ids(usealtparent=True)
+            # Note: the options list may be used more than once, so the id generator returned 
+            # must be materialized here as a list
+            self._field_context['field_choices'] = list(typeinfo.enum_entity_ids(usealtparent=True))
             # log.info(list(self._field_context['field_choices']))
         # log.info("FieldDescription: %s"%field_id)
         # log.info("FieldDescription.field %r"%field)

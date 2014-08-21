@@ -86,9 +86,10 @@ class EntityValueMap(object):
         """
         # log.info("\n*********\nmap_form_data_to_context: form_data: %r"%form_data)
         entityvals = self.map_form_data_to_values(form_data)
-        entityvals['entity_id']      = form_data.get('entity_id', "")
-        entityvals['entity_type_id'] = form_data.get('entity_type', "")
-        entityvals['entity_link']    = "" # form_data['entity_link']
+        entityvals['entity_id']        = form_data.get('entity_id', "")
+        entityvals['entity_type_id']   = form_data.get('entity_type', "")
+        entityvals['entity_link']      = "" # form_data['entity_link']
+        entityvals['entity_type_link'] = ""
         # log.info("\n*********\nmap_form_data_to_context: entityvals: %r"%entityvals)
         context = self.map_value_to_context(entityvals, **kwargs)
         # log.info("\n*********\nmap_form_data_to_context: context: %r"%context)

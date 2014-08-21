@@ -125,7 +125,7 @@ class EntityGenericListView(AnnalistGenericView):
             EntityFinder(listinfo.collection)
                 .get_entities(type_id, selector=selector, search=search_for)
             )
-        entityval = { 'annal:list_entities': [ get_entity_values(e) for e in entity_list ] }
+        entityval = { 'annal:list_entities': [ get_entity_values(listinfo, e) for e in entity_list ] }
         # Set up initial view context
         entityvaluemap = self.get_list_entityvaluemap(listinfo)
         viewcontext = entityvaluemap.map_value_to_context(entityval,
@@ -326,9 +326,7 @@ class EntityGenericListView(AnnalistGenericView):
             { 'annal:field_id': "List_choice", 'annal:field_placement': "small:0,12;medium:5,5" } 
             )
         entityvals        = { field_description['field_property_uri']: listinfo.list_id }
-        # Note: the options list may be enumerated more than once,
-        # so any generator supplied must be materialized here
-        options           = list(field_description['field_choices'])
+        options           = field_description['field_choices']
         return bound_field(field_description, entityvals, options)
 
 # End.
