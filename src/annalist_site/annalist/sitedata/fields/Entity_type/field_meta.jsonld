@@ -8,5 +8,5 @@
 , "annal:value_type":       "annal:Slug"
 , "annal:placeholder":      "(type id)"
 , "annal:property_uri":     "annal:type"
-, "annal:options_valkey":   "type_ids"
+, "annal:options_typeref":  "_type"
 }

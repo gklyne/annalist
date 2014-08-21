@@ -157,7 +157,7 @@ class bound_field(object):
             return self._field_description[name]
 
     def get_field_options(self):
-        # log.info("get_field_options: %r"(self._options,))
+        # log.info("get_field_options: %r"%(list(self._options),))
         return self._options
 
     def get_continuation_param(self):

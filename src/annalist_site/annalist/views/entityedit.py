@@ -160,7 +160,7 @@ class GenericEntityEditView(AnnalistGenericView):
         typeinfo        = viewinfo.entitytypeinfo
         # @@TODO: handle enumeration of values more generically in fields/render_utils.
         coll            = viewinfo.collection
-        type_ids        = [ t.get_id() for t in coll.types() ]
+        #@@ type_ids        = [ t.get_id() for t in coll.types() ]
         view_ids        = [ v.get_id() for v in coll.views() ]
         field_ids       = [ f for f in coll._children(RecordField, altparent=coll._parentsite) ]
         context_extra_values = (
@@ -171,7 +171,7 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'request_url':      self.get_request_path()
             , 'coll_id':          coll_id
             , 'type_id':          type_id
-            , 'type_ids':         type_ids
+            #@@ , 'type_ids':         type_ids
             , 'view_ids':         view_ids
             , 'view_selected':    viewinfo.view_id
             , 'field_ids':        field_ids
@@ -279,7 +279,7 @@ class GenericEntityEditView(AnnalistGenericView):
         type_id   = viewinfo.type_id
         entity_id = entity.get_id()
         coll      = viewinfo.collection
-        type_ids  = [ t.get_id() for t in coll.types() ]
+        #@@ type_ids  = [ t.get_id() for t in coll.types() ]
         view_ids  = [ v.get_id() for v in coll.views() ]
         field_ids = [ f for f in coll._children(RecordField, altparent=coll._parentsite) ]
         # Set up initial view context
@@ -299,7 +299,7 @@ class GenericEntityEditView(AnnalistGenericView):
             request_url         = self.get_request_path(),
             coll_id             = coll_id,
             type_id             = type_id,
-            type_ids            = type_ids,
+            #@@ type_ids            = type_ids,
             view_ids            = view_ids,
             view_selected       = viewinfo.view_id,
             orig_id             = entity_id,
