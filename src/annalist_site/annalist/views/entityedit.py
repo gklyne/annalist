@@ -27,12 +27,13 @@ from annalist.models.entitydata         import EntityData
 
 from annalist.views.uri_builder         import uri_with_params
 from annalist.views.displayinfo         import DisplayInfo
+from annalist.views.fielddescription    import FieldDescription
 from annalist.views.entityvaluemap      import EntityValueMap
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
 from annalist.views.generic             import AnnalistGenericView
 
-from annalist.views.fields.render_utils import get_entity_values
+from annalist.views.fields.render_utils import bound_field, get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -45,9 +46,10 @@ baseentityvaluemap  = (
         [ SimpleValueMap(c='title',            e=None,                    f=None               )
         , SimpleValueMap(c='coll_id',          e=None,                    f=None               )
         , SimpleValueMap(c='type_id',          e=None,                    f=None               )
-        , SimpleValueMap(c='view_ids',         e=None,                    f=None               )
+        #@@ , SimpleValueMap(c='view_ids',         e=None,                    f=None               )
         , SimpleValueMap(c='view_selected',    e=None,                    f=None               )
-        , SimpleValueMap(c='field_ids',        e=None,                    f=None               )
+        , SimpleValueMap(c='view_choices',     e=None,                    f=None               )
+        #@@ , SimpleValueMap(c='field_ids',        e=None,                    f=None               )
         , SimpleValueMap(c='edit_add_field',   e=None,                    f=None               )
         , StableValueMap(c='entity_id',        e=ANNAL.CURIE.id,          f='entity_id'        )
         , SimpleValueMap(c='entity_url',       e=ANNAL.CURIE.url,         f='entity_url'       )
@@ -161,8 +163,8 @@ class GenericEntityEditView(AnnalistGenericView):
         # @@TODO: handle enumeration of values more generically in fields/render_utils.
         coll            = viewinfo.collection
         #@@ type_ids        = [ t.get_id() for t in coll.types() ]
-        view_ids        = [ v.get_id() for v in coll.views() ]
-        field_ids       = [ f for f in coll._children(RecordField, altparent=coll._parentsite) ]
+        #@@ view_ids        = [ v.get_id() for v in coll.views() ]
+        #@@ field_ids       = [ f for f in coll._children(RecordField, altparent=coll._parentsite) ]
         context_extra_values = (
             { 'title':            viewinfo.sitedata["title"]
             , 'action':           action
@@ -172,9 +174,10 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'coll_id':          coll_id
             , 'type_id':          type_id
             #@@ , 'type_ids':         type_ids
-            , 'view_ids':         view_ids
-            , 'view_selected':    viewinfo.view_id
-            , 'field_ids':        field_ids
+            #@@ , 'view_ids':         view_ids
+            #@@ , 'view_selected':    viewinfo.view_id
+            , 'view_choices':     self.get_view_choices_field(viewinfo)
+            #@@ , 'field_ids':        field_ids
             , 'orig_id':          orig_entity_id
             , 'orig_type':        orig_entity_type
             , 'view_id':          view_id
@@ -235,6 +238,17 @@ class GenericEntityEditView(AnnalistGenericView):
         entitymap.add_map_entry(fieldlistmap)
         return entitymap
 
+    def get_view_choices_field(self, viewinfo):
+        """
+        Returns a bound_field object that displays as a view-choice selection drop-down.
+        """
+        # @@TODO: Possibly create FieldValueMap and return map_entity_to_context value? 
+        #         or extract this logic and share?
+        field_description = FieldDescription(viewinfo.collection, { 'annal:field_id': "View_choice" } )
+        entityvals        = { field_description['field_property_uri']: viewinfo.view_id }
+        options           = field_description['field_choices']
+        return bound_field(field_description, entityvals, options)
+
     def get_entity(self, entity_id, typeinfo, action, entity_initial_values):
         """
         Create local entity object or load values from existing.
@@ -280,8 +294,8 @@ class GenericEntityEditView(AnnalistGenericView):
         entity_id = entity.get_id()
         coll      = viewinfo.collection
         #@@ type_ids  = [ t.get_id() for t in coll.types() ]
-        view_ids  = [ v.get_id() for v in coll.views() ]
-        field_ids = [ f for f in coll._children(RecordField, altparent=coll._parentsite) ]
+        #@@ view_ids  = [ v.get_id() for v in coll.views() ]
+        #@@ field_ids = [ f for f in coll._children(RecordField, altparent=coll._parentsite) ]
         # Set up initial view context
         entityvaluemap = self.get_view_entityvaluemap(viewinfo)
         if add_field:
@@ -300,8 +314,9 @@ class GenericEntityEditView(AnnalistGenericView):
             coll_id             = coll_id,
             type_id             = type_id,
             #@@ type_ids            = type_ids,
-            view_ids            = view_ids,
-            view_selected       = viewinfo.view_id,
+            #@@ view_ids            = view_ids,
+            #@@ view_selected       = viewinfo.view_id,
+            view_choices        = self.get_view_choices_field(viewinfo),
             orig_id             = entity_id,
             orig_type           = type_id,
             view_id             = viewinfo.view_id

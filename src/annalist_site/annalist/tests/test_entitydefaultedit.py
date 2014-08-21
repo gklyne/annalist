@@ -149,7 +149,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                     </p>
                   </div>
                   <div class="%(input_classes)s">
-                    <select name="entity_type" class="right">
+                    <select name="entity_type">
                         """ +
                         '\n'.join(["<option>%s</option>"%o for o in get_site_types_sorted()]) +
                         """

@@ -53,7 +53,8 @@ class FieldValueMap(object):
 
     def map_entity_to_context(self, entityvals, extras=None):
         """
-        Returns a dictionary of values to be added to the display context under construction
+        Returns a dictionary-like of values to be added to the display context 
+        under construction
         """
         options = ["(no options)"]
         options_choices = self.f.get('field_choices', None)
@@ -71,7 +72,7 @@ class FieldValueMap(object):
         # log.info("map_entity_to_context: bound_field: extras %r"%(extras,))
         boundfield = bound_field(
             field_description=self.f, 
-            entityvals=entityvals, key=self.f['field_property_uri'],
+            entityvals=entityvals, #@@ key=self.f['field_property_uri'],
             options=options,
             extras=extras
             )

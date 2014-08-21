@@ -67,6 +67,7 @@ def get_placement_classes(placement):
     field_width = OrderedDict()
     label_width = OrderedDict()
     value_width = OrderedDict()
+    pmright     = ""
     set_field_width("small", 12)        # Default small-12 columns (may be overridden)
     set_field_width("medium", 12)       # Default medium-12 columns (may be overridden)
     # Process each placeent sub-expression

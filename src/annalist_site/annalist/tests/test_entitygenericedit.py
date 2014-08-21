@@ -124,7 +124,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # log.info(r.content)
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
@@ -207,7 +206,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         formrow6 = """
             <div class="row">
               <div class="%(label_classes)s">
-                <p>View:</p>
+                <p>Choose view</p>
               </div>
               <div class="%(input_classes)s">
                 <select name="view_choice">
@@ -216,7 +215,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                     <option>Default_view</option>
                     <option>Field_view</option>
                     <option>List_view</option>
-                    <option selected="">Type_view</option>
+                    <option selected="selected">Type_view</option>
                     <option>View_view</option>
                 </select>
               </div>
@@ -233,6 +232,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
+        # log.info(r.content)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)

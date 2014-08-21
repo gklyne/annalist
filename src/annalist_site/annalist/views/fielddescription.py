@@ -42,7 +42,7 @@ class FieldDescription(object):
             raise ValueError("Can't retrieve definition for field %s"%(field_id))
         field_name      = recordfield.get("annal:field_name", field_id)   # Field name in form
         field_placement = get_placement_classes(
-            field['annal:field_placement'] or recordfield.get('annal:field_placement', "")
+            field.get('annal:field_placement', None) or recordfield.get('annal:field_placement', "")
             )
         log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
         # log.info("FieldDescription: field['annal:field_placement'] %s"%(field['annal:field_placement']))

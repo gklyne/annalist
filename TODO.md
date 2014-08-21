@@ -189,8 +189,10 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / grey out set_default button on collection default display (/d/, /l/)
    / When creating new collection, there's no obvious way to create a new record type (or view).
    / Handle bare /l/ URI and redirect to default view for collection
+   - Remove precalculated list_ids and view_ids from view context
    - In view editing, provide field id drodown
    - No easy way to create field description while editing view details
+   - When defining field, missing placement is silently ignored; field is not saved
    - From type display, want easy retreat to default display for collection
    - View_type display should suppress add-field option.  Similar for View_list and View_field?
    x Add field allows new view type to be created, but how to make this default for displayed type?

@@ -17,10 +17,6 @@ log = logging.getLogger(__name__)
 
 from django.conf                        import settings
 
-#@@
-# from annalist.views.fields.render_utils import bound_field
-#@@
-
 from annalist.views.fielddescription    import FieldDescription
 from annalist.views.fieldvaluemap       import FieldValueMap
 from annalist.views.repeatdescription   import RepeatDescription

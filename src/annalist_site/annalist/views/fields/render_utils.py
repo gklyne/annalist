@@ -77,7 +77,7 @@ class bound_field(object):
 
     __slots__ = ("_field_description", "_entityvals", "_key", "_options", "_extras")
 
-    def __init__(self, field_description, entityvals, key=None, options=None, extras=None):
+    def __init__(self, field_description, entityvals, options=None, extras=None):
         """
         Initialize a bound_field object.
 
@@ -86,11 +86,6 @@ class bound_field(object):
         entityvals          is an entity values dictionary from which a value to be 
                             rendered is obtained.  The specific field value used is 
                             defined by the combination with `field_description`.  
-        key                 a key used to extract a field from the supplied entity.
-                            If not specified, the value of the `field_property_uri`
-                            field of the field description is used: this assumes the
-                            supplied entity is an actual entity rather than a field 
-                            value dictionary.
         options             for enumeration/select type fields, a list of allowable values
         extras              if supplied, a supplementary value dictionary that may be probed
                             for values that are not provided by the entity itself.  
@@ -98,13 +93,9 @@ class bound_field(object):
         """
         self._field_description = field_description
         self._entityvals        = entityvals
-        self._key               = key or self._field_description['field_property_uri']
+        self._key               = self._field_description['field_property_uri']
         self._options           = options
         self._extras            = extras
-        # if isinstance(entity, EntityRoot):
-        #     eid = entity.get_id()
-        # else:
-        #     eid = "(dict)"
         eid = entityvals.get('entity_id', "@@@render_utils.__init__@@@")
         log.log(settings.TRACE_FIELD_VALUE,
             "bound_field: field_id %s, entity_id %s, value_key %s, value %s"%
@@ -231,7 +222,6 @@ def get_edit_renderer(renderid):
         a context. This allows you to reference a compiled Template in your context.
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
-    # @@TODO: currently just a minimal placeholder
     if renderid == "annal:field_render/Text":
         return "field/annalist_edit_text.html"
         # return RenderText()
@@ -245,7 +235,7 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_text.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_edit_textarea.html"
-    if renderid == "annal:field_render/Type":
+    if renderid in ["annal:field_render/Type", "annal:field_render/View"]:
         return "field/annalist_edit_select.html"
     if renderid == "annal:field_render/View_fields":
         return "field/annalist_todo.html"
@@ -267,7 +257,6 @@ def get_view_renderer(renderid):
         a context. This allows you to reference a compiled Template in your context.
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
-    # @@TODO: currently just a minimal placeholder
     if renderid == "annal:field_render/Text":
         return "field/annalist_view_text.html"
         # return RenderText()
@@ -281,7 +270,7 @@ def get_view_renderer(renderid):
         return "field/annalist_view_entityref.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_view_textarea.html"
-    if renderid == "annal:field_render/Type":
+    if renderid in ["annal:field_render/Type", "annal:field_render/View"]:
         return "field/annalist_view_select.html"
     if renderid == "annal:field_render/View_fields":
         return "field/annalist_todo.html"
@@ -308,7 +297,7 @@ def get_item_renderer(renderid):
         return "field/annalist_item_text.html"
     if renderid == "annal:field_render/EntityRef":
         return "field/annalist_item_entityref.html"    
-    if renderid == "annal:field_render/Type":
+    if renderid in ["annal:field_render/Type", "annal:field_render/View"]:
         return "field/annalist_item_type.html"
     if renderid == "annal:field_render/Identifier":
         # @@TODO: use identifier lookup to display label
