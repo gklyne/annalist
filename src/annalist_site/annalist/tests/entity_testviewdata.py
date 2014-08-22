@@ -450,7 +450,7 @@ def recordview_view_context_data(
                 , 'field_name':         'Field_id'
                 , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
                 , 'field_value_type':   'annal:Slug'
-                , 'field_value':        ""
+                , 'field_value':        "Default_field"
                 }
               , { 'field_id':           'Field_placement'
                 , 'field_label':        'Size/position'

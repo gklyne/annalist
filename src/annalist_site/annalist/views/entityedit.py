@@ -286,6 +286,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if add_field:
             add_field_desc = self.find_repeat_id(entityvaluemap, add_field)
             if add_field_desc:
+                # Add empty fields per named repeat group
                 self.add_entity_field(add_field_desc, entity)
         entityvals  = get_entity_values(viewinfo, entity, entity_id)
         if viewinfo.action == "copy":
@@ -590,47 +591,6 @@ class GenericEntityEditView(AnnalistGenericView):
             uri_with_params(config_edit_url, url_params, continuation_here)
             )
 
-    def find_repeat_fields(self, entityvaluemap):
-        """
-        Iterate over repeat field groups in the current view.
-
-        Each value found is returned as a field structure description; e.g.
-
-            { 'field_type': 'RepeatValuesMap',
-            , 'repeat_entity_values':  'annal:list_fields'
-            , 'repeat_id':             'List_fields'
-            , 'repeat_label_add':      'Add field'
-            , 'repeat_label_delete':   'Remove selected field(s)'
-            , 'repeat_label':          'Fields'
-            , 'repeat_context_values': 'repeat'
-            , 'repeat_fields_description':
-                {
-                'field_type': 'FieldListValueMap',
-                'field_list': 
-                  [ { 'field_id':           'Field_sel'
-                    , 'field_placement':    Placement(field = 'small-12 medium-6 columns', ...)
-                    , 'field_property_uri': 'annal:field_id'
-                    }
-                  , { 'field_id':           'Field_placement'
-                    , 'field_placement':    Placement(field = 'small-12 medium-6 columns', ...),
-                    , 'field_property_uri': 'annal:field_placement'                  
-                    }
-                  ]
-                }
-            }
-        """
-        def _find_repeat_fields(fieldmap):
-            for kmap in fieldmap:
-                field_desc = kmap.get_structure_description()
-                if field_desc['field_type'] == "FieldListValueMap":
-                    for fd in _find_repeat_fields(kmap.fs):
-                        # log.info("find_repeat_field FieldListValueMap yield %r"%(fd))
-                        yield fd
-                if field_desc['field_type'] == "RepeatValuesMap":
-                    # log.info("find_repeat_field RepeatValuesMap yield %r"%(field_desc))
-                    yield field_desc
-        return _find_repeat_fields(entityvaluemap)
-
     def find_add_field(self, entityvaluemap, form_data):
         """
         Locate add field option in form data and,if present, return a description of the field to
@@ -705,9 +665,50 @@ class GenericEntityEditView(AnnalistGenericView):
             self.error(self.error406values())
             )
 
+    def find_repeat_fields(self, entityvaluemap):
+        """
+        Iterate over repeat field groups in the current view.
+
+        Each value found is returned as a field structure description; e.g.
+
+            { 'field_type': 'RepeatValuesMap',
+            , 'repeat_entity_values':  'annal:list_fields'
+            , 'repeat_id':             'List_fields'
+            , 'repeat_label_add':      'Add field'
+            , 'repeat_label_delete':   'Remove selected field(s)'
+            , 'repeat_label':          'Fields'
+            , 'repeat_context_values': 'repeat'
+            , 'repeat_fields_description':
+                {
+                'field_type': 'FieldListValueMap',
+                'field_list': 
+                  [ { 'field_id':           'Field_sel'
+                    , 'field_placement':    Placement(field = 'small-12 medium-6 columns', ...)
+                    , 'field_property_uri': 'annal:field_id'
+                    }
+                  , { 'field_id':           'Field_placement'
+                    , 'field_placement':    Placement(field = 'small-12 medium-6 columns', ...),
+                    , 'field_property_uri': 'annal:field_placement'                  
+                    }
+                  ]
+                }
+            }
+        """
+        def _find_repeat_fields(fieldmap):
+            for kmap in fieldmap:
+                field_desc = kmap.get_structure_description()
+                if field_desc['field_type'] == "FieldListValueMap":
+                    for fd in _find_repeat_fields(kmap.fs):
+                        # log.info("find_repeat_field FieldListValueMap yield %r"%(fd))
+                        yield fd
+                if field_desc['field_type'] == "RepeatValuesMap":
+                    # log.info("find_repeat_field RepeatValuesMap yield %r"%(field_desc))
+                    yield field_desc
+        return _find_repeat_fields(entityvaluemap)
+
     def add_entity_field(self, add_field_desc, entity):
         """
-        Add a described field to the supplied entity values.
+        Add a described repeat field group to the supplied entity values.
 
         See 'find_repeat_fields' for information about the field description.
 
@@ -721,7 +722,7 @@ class GenericEntityEditView(AnnalistGenericView):
         being generated from a 'FieldDescription' value.
         """
         field_val = dict(
-            [ (f['field_property_uri'], "")
+            [ (f['field_property_uri'], None)
               for f in add_field_desc['repeat_fields_description']['field_list']
             ])
         entity[add_field_desc['repeat_entity_values']].append(field_val)

@@ -21,6 +21,8 @@ from annalist.views.uri_builder     import uri_params
 
 from render_text                    import RenderText
 
+# @@TODO: split bnound_field to separate module
+
 class bound_field(object):
     """
     Class representing an entity bound to a field description, 
@@ -126,6 +128,7 @@ class bound_field(object):
         elif name == "entity_type_link_continuation":
             return self.entity_type_link+self.get_continuation_param()
         elif name == "field_value":
+            field_val = None
             if self._key == "annal:type":
                 # @@TODO: remove annal:Type hack when proper selection from enumerated entities
                 #         has been implemented.
@@ -135,15 +138,16 @@ class bound_field(object):
                 # turn by the form renderer to determine the type_id selection on the rendered
                 # form.  This hack shoukd be rendered unnecessary when the entity reference
                 # selection is properly generalized.
-                return self.entity_type_id
+                field_val = self.entity_type_id
             elif self._key in self._entityvals:
-                return self._entityvals[self._key]
+                field_val = self._entityvals[self._key]
             elif self._extras and self._key in self._extras:
-                return self._extras[self._key]
-            else:
+                field_val = self._extras[self._key]
+            if field_val is None:
                 # Return default value, or empty string.
-                # Used to populate form field value when no value supplied
-                return self._field_description.get('field_default_value', None) or ""
+                # Used to populate form field value when no value supplied, or provide per-field default
+                field_val = self._field_description.get('field_default_value', None) or ""
+            return field_val
         elif name == "options":
             return self.get_field_options()
         else:

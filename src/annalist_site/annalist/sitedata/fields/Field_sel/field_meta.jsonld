@@ -10,5 +10,5 @@
 , "annal:property_uri":     "annal:field_id"
 , "annal:options_typeref":  "_field"
 , "annal:field_placement":  "small:0,6"
-, "annal:default_value":    "Default_view"
+, "annal:default_value":    "Default_field"
 }

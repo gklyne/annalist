@@ -461,7 +461,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # New blank field, if selected
         if num_fields == 6:
             self.assertEqual(viewfields[5]['fields'][0].field_value_key,        "annal:field_id")
-            self.assertEqual(viewfields[5]['fields'][0].field_value,            "")
+            self.assertEqual(viewfields[5]['fields'][0].field_value,            "Default_field")
             self.assertEqual(viewfields[5]['fields'][1].field_value_key,        "annal:field_placement")
             self.assertEqual(viewfields[5]['fields'][1].field_value,            "")
         return
