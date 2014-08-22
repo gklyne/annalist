@@ -197,6 +197,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / update form template
        / implement handler for 'new_field' response
        / implement test case for 'new_field' response
+       / list description view not showing types or views in dropdowns
        - introduce Default_field type
    - When defining field, missing placement is silently ignored; field is not saved; (still)
    - From type display, want easy retreat to default display for collection

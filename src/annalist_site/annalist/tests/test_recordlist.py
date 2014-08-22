@@ -291,54 +291,110 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'_list' data in collection 'testcoll'</h3>")
         field_vals = default_fields(coll_id="testcoll", type_id="_list", entity_id="00000001")
-        # log.info(r.content)     #@@
         formrow1 = """
             <div class="small-12 medium-6 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Id</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="entity_id" 
-                               placeholder="(list id)" 
-                               value="00000001"/>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  <p>Id</p>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="entity_id" 
+                         placeholder="(list id)" 
+                         value="00000001"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Label</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="List_label" 
-                               placeholder="(list label)" 
-                               value="%(default_label_esc)s"/>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  <p>Label</p>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="List_label" 
+                         placeholder="(list label)" 
+                         value="%(default_label_esc)s"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Help</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <textarea cols="64" rows="6" name="List_comment" 
-                                  class="small-rows-4 medium-rows-8"
-                                  placeholder="(description of list view)">
-                            %(default_comment_esc)s
-                        </textarea>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  <p>Help</p>
                 </div>
+                <div class="%(input_classes)s">
+                  <textarea cols="64" rows="6" name="List_comment" 
+                          class="small-rows-4 medium-rows-8"
+                          placeholder="(description of list view)">
+                    %(default_comment_esc)s
+                  </textarea>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
+        formrow4 = """
+            <div class="small-6 columns">
+              <div class="row">
+                <div class="%(label_classes)s">
+                  <p>Record type</p>
+                </div>
+                <div class="%(input_classes)s">
+                  <select name="List_default_type">
+                    <option>_field</option>
+                    <option>_list</option>
+                    <option>_type</option>
+                    <option>_view</option>
+                    <option selected="selected">Default_type</option>
+                    <option>testtype</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        formrow5 = """
+            <div class="small-6 columns">
+              <div class="row">
+                <div class="%(label_classes)s">
+                  <p>View</p>
+                </div>
+                <div class="%(input_classes)s">
+                  <select name="List_default_view">
+                    <option>_initial_values</option>
+                    <option>BibEntry_view</option>
+                    <option selected="selected">Default_view</option>
+                    <option>Field_view</option>
+                    <option>List_view</option>
+                    <option>Type_view</option>
+                    <option>View_view</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        formrow6 = """
+            <div class="small-12 columns">
+              <div class="row">
+                <div class="%(label_classes)s">
+                  <p>Selector</p>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="List_entity_selector" 
+                         placeholder="(entity selector)"
+                         value="ALL"/>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        # log.info(r.content)     #@@
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)
+        self.assertContains(r, formrow4, html=True)
+        self.assertContains(r, formrow5, html=True)
+        self.assertContains(r, formrow6, html=True)
         return
 
     def test_get_new(self):
@@ -367,9 +423,9 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_url=TestHostUri + recordlist_url("testcoll", "00000001"),
             list_uri=TestHostUri + recordlist_url("testcoll", "00000001"),
             list_type="",
-            list_default_type="",
-            list_default_view="",
-            list_selector=""
+            list_default_type="Default_type",
+            list_default_view="Default_view",
+            list_selector="ALL"
             )
         return
 

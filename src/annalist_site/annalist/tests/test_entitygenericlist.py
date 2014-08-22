@@ -195,7 +195,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
-        rowdata = """
+        rowdata1 = """
             <tr class="select_row">
                 <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
                 <td class="small-3 columns">annal:Text</td>
@@ -206,7 +206,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             </tr>
             """%(TestBasePath, cont)
         # log.info(r.content)
-        self.assertContains(r, rowdata, html=True)
+        self.assertContains(r, rowdata1, html=True)
         # Test context
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
