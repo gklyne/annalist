@@ -197,6 +197,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / update form template
        / implement handler for 'new_field' response
        / implement test case for 'new_field' response
+       - introduce Default_field type
    - When defining field, missing placement is silently ignored; field is not saved; (still)
    - From type display, want easy retreat to default display for collection
    - View_type display should suppress add-field option.  Similar for View_list and View_field?

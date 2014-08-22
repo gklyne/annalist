@@ -169,8 +169,8 @@ def entitydata_context_data(
           [ { 'field_label':        'Id'
             , 'field_id':           'Entity_id'
             , 'field_name':         'entity_id'
-            , 'field_render_view':  'field/annalist_view_entityref.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_view':  'field/annalist_view_entityid.html'
+            , 'field_render_edit':  'field/annalist_edit_entityid.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
@@ -179,8 +179,8 @@ def entitydata_context_data(
           , { 'field_label':        'Type'
             , 'field_id':           'Entity_type'
             , 'field_name':         'entity_type'
-            , 'field_render_view':  'field/annalist_view_select.html'
-            , 'field_render_edit':  'field/annalist_edit_select.html'
+            , 'field_render_view':  'field/annalist_view_entitytyperef.html'
+            , 'field_render_edit':  'field/annalist_edit_entitytyperef.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
@@ -277,8 +277,8 @@ def entitydata_default_view_context_data(
         , 'orig_id':            'orig_entity_id'
         , 'fields':
           [ { 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_entityref.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_view':  'field/annalist_view_entityid.html'
+            , 'field_render_edit':  'field/annalist_edit_entityid.html'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_id':           'Entity_id'
@@ -395,8 +395,8 @@ def entitydata_recordtype_view_context_data(
         , 'orig_id':            'orig_entity_id'
         , 'fields':
           [ { 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_entityref.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_view':  'field/annalist_view_entityid.html'
+            , 'field_render_edit':  'field/annalist_edit_entityid.html'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_id':           'Type_id'
@@ -425,12 +425,12 @@ def entitydata_recordtype_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'URI'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_view':  'field/annalist_view_identifier.html'
+            , 'field_render_edit':  'field/annalist_edit_identifier.html'
             , 'field_name':         'Type_uri'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_uri'
-            , 'field_value_type':   'annal:Text'
+            , 'field_value_type':   'annal:Identifier'
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }

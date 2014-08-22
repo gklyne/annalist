@@ -167,8 +167,8 @@ def recordfield_entity_view_context_data(
           [ { 'field_label':        'Id'
             , 'field_id':           'Field_id'
             , 'field_name':         'entity_id'
-            , 'field_render_view':  'field/annalist_view_entityref.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_view':  'field/annalist_view_entityid.html'
+            , 'field_render_edit':  'field/annalist_edit_entityid.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Slug'
             , 'field_placeholder':  '(field id)'
@@ -178,10 +178,10 @@ def recordfield_entity_view_context_data(
           , { 'field_label':        'Field value type'
             , 'field_id':           'Field_type'
             , 'field_name':         'Field_type'
-            , 'field_render_view':  'field/annalist_view_entityref.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_view':  'field/annalist_view_identifier.html'
+            , 'field_render_edit':  'field/annalist_edit_identifier.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
-            , 'field_value_type':   'annal:Type'
+            , 'field_value_type':   'annal:Identifier'
             , 'field_placeholder':  '(field value type)'
             , 'field_value':        ''
             , 'options':            []
@@ -189,8 +189,8 @@ def recordfield_entity_view_context_data(
           , { 'field_label':        'Field render type'
             , 'field_id':           'Field_render'
             , 'field_name':         'Field_render'
-            , 'field_render_view':  'field/annalist_view_entityref.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_view':  'field/annalist_view_identifier.html'
+            , 'field_render_edit':  'field/annalist_edit_identifier.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:RenderType'
             , 'field_placeholder':  '(field render type)'
@@ -233,8 +233,8 @@ def recordfield_entity_view_context_data(
           , { 'field_label':        'Property'
             , 'field_id':           'Field_property'
             , 'field_name':         'Field_property'
-            , 'field_render_view':  'field/annalist_view_entityref.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_view':  'field/annalist_view_identifier.html'
+            , 'field_render_edit':  'field/annalist_edit_identifier.html'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Identifier'
             , 'field_placeholder':  "(property URI or CURIE)"

@@ -231,15 +231,15 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_text.html"
         # return RenderText()
     if renderid == "annal:field_render/Slug":
-        return "field/annalist_edit_text.html"
+        return "field/annalist_edit_slug.html"
     if renderid == "annal:field_render/Placement":
         return "field/annalist_edit_text.html"
-    if renderid == "annal:field_render/EntityRef":
-        return "field/annalist_edit_text.html"    
+    if renderid == "annal:field_render/EntityId":
+        return "field/annalist_edit_entityid.html"    
     if renderid == "annal:field_render/EntityTypeRef":
-        return "field/annalist_edit_select.html"    
+        return "field/annalist_edit_entitytyperef.html"    
     if renderid == "annal:field_render/Identifier":
-        return "field/annalist_edit_text.html"    
+        return "field/annalist_edit_identifier.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_edit_textarea.html"
     if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List", "annal:field_render/Field"]:
@@ -269,24 +269,22 @@ def get_view_renderer(renderid):
     if renderid == "annal:field_render/Text":
         return "field/annalist_view_text.html"
         # return RenderText()
-    if renderid == "annal:field_render/Slug":
-        return "field/annalist_view_text.html"
-    if renderid == "annal:field_render/Placement":
-        return "field/annalist_view_text.html"
-    if renderid == "annal:field_render/EntityRef":
-        return "field/annalist_view_entityref.html"    
-    if renderid == "annal:field_render/EntityTypeRef":
-        return "field/annalist_view_select.html"    
-    if renderid == "annal:field_render/Identifier":
-        return "field/annalist_view_entityref.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_view_textarea.html"
+    if renderid == "annal:field_render/Slug":
+        return "field/annalist_view_slug.html"
+    if renderid == "annal:field_render/Placement":
+        return "field/annalist_view_text.html"
+    if renderid == "annal:field_render/EntityId":
+        return "field/annalist_view_entityid.html"    
+    if renderid == "annal:field_render/EntityTypeRef":
+        return "field/annalist_view_entitytyperef.html"    
+    if renderid == "annal:field_render/Identifier":
+        return "field/annalist_view_identifier.html"    
     if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List", "annal:field_render/Field"]:
-        return "field/annalist_view_entityref.html"
+        return "field/annalist_view_select.html"
     if renderid == "annal:field_render/View_sel":
-        return "field/annalist_view_entityref.html"
-    if renderid == "annal:field_render/View_fields":
-        return "field/annalist_todo.html"
+        return "field/annalist_view_view_sel.html"
     log.warning("get_view_renderer: %s not found"%renderid)
     # raise ValueError("get_view_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
@@ -308,17 +306,16 @@ def get_item_renderer(renderid):
         return "field/annalist_item_text.html"
     if renderid == "annal:field_render/Slug":
         return "field/annalist_item_text.html"
-    if renderid == "annal:field_render/EntityRef":
-        return "field/annalist_item_entityref.html"    
+    if renderid == "annal:field_render/EntityId":
+        return "field/annalist_item_entityid.html"    
     if renderid == "annal:field_render/EntityTypeRef":
         return "field/annalist_item_entitytyperef.html"
+    if renderid == "annal:field_render/Identifier":
+        return "field/annalist_item_identifier.html"
     if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List", "annal:field_render/Field"]:
         return "field/annalist_item_entityref.html"
     # if renderid == "annal:field_render/View_sel":
     #     return "field/annalist_item_entityref.html"
-    if renderid == "annal:field_render/Identifier":
-        # @@TODO: use identifier lookup to display label?
-        return "field/annalist_item_text.html"
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
 

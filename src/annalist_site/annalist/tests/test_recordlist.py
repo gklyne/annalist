@@ -288,10 +288,10 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # log.info(r.content)
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'_list' data in collection 'testcoll'</h3>")
         field_vals = default_fields(coll_id="testcoll", type_id="_list", entity_id="00000001")
+        # log.info(r.content)     #@@
         formrow1 = """
             <div class="small-12 medium-6 columns">
                 <div class="row">

@@ -224,7 +224,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_placeholder'], "(entity id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_head'], "field/annalist_head_any.html")
-        self.assertEqual(r.context['fields'][0]['field_render_item'], "field/annalist_item_entityref.html")
+        self.assertEqual(r.context['fields'][0]['field_render_item'], "field/annalist_item_entityid.html")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-3 columns")
         self.assertEqual(r.context['fields'][0]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][0]['field_value'], "")
@@ -235,9 +235,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_placeholder'], "(field value type)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:value_type")
         self.assertEqual(r.context['fields'][1]['field_render_head'], "field/annalist_head_any.html")
-        self.assertEqual(r.context['fields'][1]['field_render_item'], "field/annalist_item_text.html")
+        self.assertEqual(r.context['fields'][1]['field_render_item'], "field/annalist_item_identifier.html")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-3 columns")
-        self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Type")
+        self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Identifier")
         # 3rd field
         self.assertEqual(r.context['fields'][2]['field_id'], 'Entity_label')
         self.assertEqual(r.context['fields'][2]['field_name'], 'Entity_label')
@@ -249,7 +249,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-6 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
         # Entities
-        self.assertEqual(len(r.context['entities']), 55)
+        self.assertEqual(len(r.context['entities']), 56)
         field_entities = (
             { ('Entity_id',         "annal:Slug",          "Id")
             , ('Bib_address',       "annal:Text",          "Bib_address")
@@ -259,13 +259,16 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Entity_label',      "annal:Text",          "Label")
             , ('Field_comment',     "annal:Longtext",      "Help")
             , ('Field_placement',   "annal:Placement",     "Size/position")
-            , ('Field_type',        "annal:Type",          "Field value type")
+            , ('Field_type',        "annal:Identifier",    "Field value type")
             , ('Field_render',      "annal:RenderType",    "Field render type")
             , ('List_comment',      "annal:Longtext",      "Help")
             , ('List_record_type',  "annal:Type",          "Record type")
             , ('Type_label',        "annal:Text",          "Label")
             , ('Type_comment',      "annal:Longtext",      "Comment")
-            , ('Type_uri',          "annal:Text",          "URI")
+            , ('Type_uri',          "annal:Identifier",    "URI")
+            , ('List_choice',       "annal:Slug",          "List view")
+            , ('View_choice',       "annal:Slug",          "Choose view")
+            , ('Field_sel',         "annal:Slug",          "Select")
             })
         for f in field_entities:
             for eid in range(len(r.context['entities'])):

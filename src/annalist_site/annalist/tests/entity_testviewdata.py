@@ -178,8 +178,8 @@ def recordview_entity_view_context_data(
         , 'record_type':        'annal:DefaultType'
         , 'fields':
           [ { 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_entityref.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_view':  'field/annalist_view_entityid.html'
+            , 'field_render_edit':  'field/annalist_edit_entityid.html'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_id':           'Entity_id'
@@ -302,8 +302,8 @@ def recordview_view_context_data(
         , 'fields':
           [ { 'field_id':           'View_id'
             , 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_entityref.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_view':  'field/annalist_view_entityid.html'
+            , 'field_render_edit':  'field/annalist_edit_entityid.html'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Slug'
@@ -352,7 +352,7 @@ def recordview_view_context_data(
                 , "fields":
                   [ { 'field_id':           'Field_sel'
                     , 'field_label':        'Select'
-                    , 'field_render_view':  'field/annalist_view_entityref.html'
+                    , 'field_render_view':  'field/annalist_view_select.html'
                     , 'field_render_edit':  'field/annalist_edit_select.html'
                     , 'field_name':         'Field_id'
                     , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
@@ -376,7 +376,7 @@ def recordview_view_context_data(
                 , "fields":
                   [ { 'field_id':           'Field_sel'
                     , 'field_label':        'Select'
-                    , 'field_render_view':  'field/annalist_view_entityref.html'
+                    , 'field_render_view':  'field/annalist_view_select.html'
                     , 'field_render_edit':  'field/annalist_edit_select.html'
                     , 'field_name':         'Field_id'
                     , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
@@ -400,7 +400,7 @@ def recordview_view_context_data(
                 , "fields":
                   [ { 'field_id':           'Field_sel'
                     , 'field_label':        'Select'
-                    , 'field_render_view':  'field/annalist_view_entityref.html'
+                    , 'field_render_view':  'field/annalist_view_select.html'
                     , 'field_render_edit':  'field/annalist_edit_select.html'
                     , 'field_name':         'Field_id'
                     , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
@@ -445,7 +445,7 @@ def recordview_view_context_data(
             , "fields":
               [ { 'field_id':           'Field_sel'
                 , 'field_label':        'Select'
-                , 'field_render_view':  'field/annalist_view_entityref.html'
+                , 'field_render_view':  'field/annalist_view_select.html'
                 , 'field_render_edit':  'field/annalist_edit_select.html'
                 , 'field_name':         'Field_id'
                 , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
