@@ -192,7 +192,11 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / Remove precalculated list_ids and view_ids from view context
    / Script to refresh sitedata in devel site
    / In view editing, provide field id drodown
-   - No easy way to create field description while editing view details
+   / In list displays, hyperlink entity type to view/edit form
+   / No easy way to create field description while editing view details; include new-field button
+       / update form template
+       / implement handler for 'new_field' response
+       / implement test case for 'new_field' response
    - When defining field, missing placement is silently ignored; field is not saved; (still)
    - From type display, want easy retreat to default display for collection
    - View_type display should suppress add-field option.  Similar for View_list and View_field?
@@ -226,10 +230,8 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / add "new field" logic to entity edit POST handler
    - update to Django 1.7 and re-work field rendering (use code rather than templates?  simplify context generation?)
 14. Display enhancements
-   - add type links to list view (link to typed list view...?)
-       - (should use same base enhancements as entity links at step 5)
-         - cf. [https://github.com/gklyne/annalist/commit/ff16e6063a2fee193e6e0080a77bfc738381a275]()
-       - Update field in default list displays
+   / add type links to list view (link to typed list view...?)
+       / Update field in default list displays
    / list_view response handler (needs generic view to make sense; view button to redisplay)
 15. Grid view
    - to be planned

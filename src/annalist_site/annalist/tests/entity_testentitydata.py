@@ -337,7 +337,8 @@ def entitydata_default_view_form_data(
         type_id="testtype", orig_type=None,
         entity_id=None, orig_id=None, 
         action=None, cancel=None, update="Entity",
-        add_view_field=None, use_view=None, new_view=None, new_type=None):
+        add_view_field=None, use_view=None, 
+        new_view=None, new_field=None, new_type=None):
     # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (
         { 'Entity_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
@@ -367,6 +368,8 @@ def entitydata_default_view_form_data(
         form_data_dict['view_choice']     = use_view
     elif new_view:
         form_data_dict['new_view']        = new_view
+    elif new_field:
+        form_data_dict['new_field']       = new_field
     elif new_type:
         form_data_dict['new_type']        = new_type
     else:

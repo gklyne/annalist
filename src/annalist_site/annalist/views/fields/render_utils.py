@@ -244,6 +244,8 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_textarea.html"
     if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List", "annal:field_render/Field"]:
         return "field/annalist_edit_select.html"
+    if renderid == "annal:field_render/View_sel":
+        return "field/annalist_edit_view_sel.html"
     if renderid == "annal:field_render/View_fields":
         return "field/annalist_todo.html"
     log.warning("get_edit_renderer: %s not found"%renderid)
@@ -281,6 +283,8 @@ def get_view_renderer(renderid):
         return "field/annalist_view_textarea.html"
     if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List", "annal:field_render/Field"]:
         return "field/annalist_view_entityref.html"
+    if renderid == "annal:field_render/View_sel":
+        return "field/annalist_view_entityref.html"
     if renderid == "annal:field_render/View_fields":
         return "field/annalist_todo.html"
     log.warning("get_view_renderer: %s not found"%renderid)
@@ -310,8 +314,10 @@ def get_item_renderer(renderid):
         return "field/annalist_item_entitytyperef.html"
     if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List", "annal:field_render/Field"]:
         return "field/annalist_item_entityref.html"
+    # if renderid == "annal:field_render/View_sel":
+    #     return "field/annalist_item_entityref.html"
     if renderid == "annal:field_render/Identifier":
-        # @@TODO: use identifier lookup to display label
+        # @@TODO: use identifier lookup to display label?
         return "field/annalist_item_text.html"
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"

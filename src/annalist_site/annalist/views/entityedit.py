@@ -413,6 +413,17 @@ class GenericEntityEditView(AnnalistGenericView):
                 view_edit_uri_base, {}, continuation_url
                 )
 
+        if 'new_field' in form_data:
+            view_edit_uri_base = self.view_uri("AnnalistEntityNewView",
+                coll_id=viewinfo.coll_id, view_id="Field_view", type_id="_field", action="new"
+                )
+            return self.invoke_config_edit_view(
+                entityvaluemap, form_data,
+                entity_id, entity_type, orig_entity_id, orig_entity_type, 
+                viewinfo, context_extra_values, messages,
+                view_edit_uri_base, {}, continuation_url
+                )
+
         if 'new_type' in form_data:
             type_edit_uri_base = self.view_uri("AnnalistEntityNewView",
                 coll_id=viewinfo.coll_id, view_id="Type_view", type_id="_type", action="new"

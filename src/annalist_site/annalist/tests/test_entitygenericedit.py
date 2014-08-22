@@ -209,15 +209,22 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                 <p>Choose view</p>
               </div>
               <div class="%(input_classes)s">
-                <select name="view_choice">
-                    <option>_initial_values</option>
-                    <option>BibEntry_view</option>
-                    <option>Default_view</option>
-                    <option>Field_view</option>
-                    <option>List_view</option>
-                    <option selected="selected">Type_view</option>
-                    <option>View_view</option>
-                </select>
+                <div class="row">
+                  <div class="small-9 columns">
+                    <select name="view_choice">
+                      <option>_initial_values</option>
+                      <option>BibEntry_view</option>
+                      <option>Default_view</option>
+                      <option>Field_view</option>
+                      <option>List_view</option>
+                      <option selected="selected">Type_view</option>
+                      <option>View_view</option>
+                    </select>
+                  </div>
+                  <div class="small-3 columns">
+                    <input type="submit" name="use_view"      value="Show view" />
+                  </div>
+                </div>
               </div>
             </div>
             """%field_vals(width=6)
@@ -225,8 +232,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             <div class="%(button_right_classes)s">
               <div class="row">
                 <div class="small-12 columns">
-                  <input type="submit" name="use_view"      value="Show view" />
                   <input type="submit" name="new_view"      value="New view" />
+                  <input type="submit" name="new_field"     value="New field" />
                   <input type="submit" name="new_type"      value="New type" />
                 </div>
               </div>
@@ -699,7 +706,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         return
 
     def test_post_new_entity_new_view(self):
-        self.assertFalse(EntityData.exists(self.testdata, "entityuseview"))
+        self.assertFalse(EntityData.exists(self.testdata, "entitynewview"))
         f = entitydata_default_view_form_data(
                 entity_id="entitynewview", action="new", update="Updated entity", 
                 new_view="New view"
@@ -717,8 +724,27 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entitynewview", update="Updated entity")
         return
 
+    def test_post_new_entity_new_field(self):
+        self.assertFalse(EntityData.exists(self.testdata, "entitynewfield"))
+        f = entitydata_default_view_form_data(
+                entity_id="entitynewfield", action="new", update="Updated entity", 
+                new_field="New field"
+                )
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewfield", view_id="Default_view")
+        c = continuation_url_param(w)
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self._check_entity_data_values("entitynewfield", update="Updated entity")
+        return
+
     def test_post_new_entity_new_type(self):
-        self.assertFalse(EntityData.exists(self.testdata, "entityuseview"))
+        self.assertFalse(EntityData.exists(self.testdata, "entitynewview"))
         f = entitydata_default_view_form_data(
                 entity_id="entitynewtype", action="new", update="Updated entity", 
                 new_type="New type"
@@ -851,6 +877,26 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self._check_entity_data_values("entitynewview1", update="Updated entity")
+        return
+
+    def test_post_copy_entity_new_field(self):
+        self._create_entity_data("entitynewfield")
+        self._check_entity_data_values("entitynewfield")
+        f = entitydata_default_view_form_data(
+                entity_id="entitynewfield1", action="copy", update="Updated entity", 
+                new_field="New field"
+                )
+        u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entitynewfield", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewfield1", view_id="Default_view")
+        c = continuation_url_param(w)
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self._check_entity_data_values("entitynewfield1", update="Updated entity")
         return
 
     def test_post_copy_entity_new_type(self):
@@ -1046,6 +1092,25 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self._check_entity_data_values("entitynewview", update="Updated entity")
+        return
+
+    def test_post_edit_entity_new_field(self):
+        self._create_entity_data("entitynewfield")
+        self._check_entity_data_values("entitynewfield")
+        f = entitydata_default_view_form_data(
+                entity_id="entitynewfield", action="edit", update="Updated entity", 
+                new_field="New field"
+                )
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewfield", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        c = continuation_url_param(u)
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self._check_entity_data_values("entitynewfield", update="Updated entity")
         return
 
     def test_post_edit_entity_new_type(self):
