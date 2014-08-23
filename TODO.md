@@ -204,6 +204,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
      allows config when no delete authz (no login)
      Also, display of remove-field checkbox is based on "delete" permission. 
    / Save entity edit is not requiring login - should check from POST?
+   - entityedit add test cases for unauthorized config requests (and more?)
    - From type display, want easy retreat to default display for collection
    - View_type display should suppress add-field option.  Similar for View_list and View_field?
    x Add field allows new view type to be created, but how to make this default for displayed type?
@@ -221,6 +222,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    - review URI for delete type/view/list confirmation
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    ? align type ID values used in local URI construction with type URIs/CURIEs
+   - improve authorization failure messages cf. AnnalistGenericView.authorize, .form_action_auth, displayinfo.check_authorization, entityedit.save_entity, etc.
 12. Code improvement - lists
    / move invocation of authentication to the immediate response handler code?
    / refactor list description access out of context handling code (avoid multiple reads)
