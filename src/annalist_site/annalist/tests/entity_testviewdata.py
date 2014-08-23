@@ -108,7 +108,10 @@ def recordview_value_keys():
 def recordview_load_keys():
     return recordview_value_keys() | {"@id"}
 
-def recordview_create_values(coll_id="testcoll", view_id="testview", update="RecordView", uri=None):
+def recordview_create_values(
+        coll_id="testcoll", view_id="testview", update="RecordView", uri=None, 
+        field3_placement="small:0,12"
+        ):
     """
     Entity values used when creating a record type entity
     """
@@ -128,18 +131,22 @@ def recordview_create_values(coll_id="testcoll", view_id="testview", update="Rec
             , 'annal:field_placement':  "small:0,12"
             }
           , { 'annal:field_id':         "Entity_comment"
-            , 'annal:field_placement':  "small:0,12"
+            # , 'annal:field_placement':  field3_placement
             }
           ]
         })
+    if field3_placement:
+        view_values['annal:view_fields'][3]['annal:field_placement'] = field3_placement
     if uri:
         view_values['annal:uri'] = uri
     return view_values
 
 def recordview_values(
         coll_id="testcoll", view_id="testtype", view_uri=None, 
-        update="RecordView", hosturi=TestHostUri):
-    d = recordview_create_values(coll_id, view_id, update=update).copy()
+        update="RecordView", hosturi=TestHostUri, field3_placement="small:0,12"):
+    d = recordview_create_values(
+        coll_id, view_id, update=update, field3_placement=field3_placement
+        ).copy()
     view_url = hosturi + recordview_url(coll_id, view_id)
     if not view_uri:
         view_uri = view_url
@@ -234,7 +241,7 @@ def recordview_entity_view_context_data(
 def recordview_entity_view_form_data(
         coll_id="testcoll", 
         view_id=None, orig_id=None, 
-        action=None, cancel=None, update="RecordView"):
+        action=None, cancel=None, update="RecordView", field3_placement="small:0,12"):
     form_data_dict = (
         { 'View_label':         '%s data ... (%s/%s)'%(update, coll_id, view_id)
         , 'View_comment':       '%s description ... (%s/%s)'%(update, coll_id, view_id)
@@ -250,7 +257,7 @@ def recordview_entity_view_form_data(
         , 'View_fields__2__Field_id':           "Entity_label"
         , 'View_fields__2__Field_placement':    "small:0,12"
         , 'View_fields__3__Field_id':           "Entity_comment"
-        , 'View_fields__3__Field_placement':    "small:0,12"
+        , 'View_fields__3__Field_placement':    field3_placement
         })
     if view_id:
         form_data_dict['entity_id']     = view_id

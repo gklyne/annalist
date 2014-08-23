@@ -79,17 +79,23 @@ class FieldListValueMap(object):
 
     def map_form_to_entity_repeated_items(self, formvals, prefix):
         """
-        Extra helper method used when mapping repeated field items to repeated entity values.
-        The field names extracted are constructed using the supplied prefix string.
+        Extra helper method used when mapping a repeated list of fields items to 
+        repeated entity values.  Returns values corresponding to a single repeated 
+        set of fields.  The field names extracted are constructed using the supplied 
+        prefix string.
 
-        Returns None if a prefixed value does not exist, which may be used as a loop
+        Returns a dictionary of repeated field values found using the supplied prefix.
+
+        Returns None if no prefixed field value exists, which may be used as a loop
         termination condition.
         """
         vals = {}
+        prefix_seen = False
         for f in self.fs:
             v = f.map_form_to_entity_repeated_item(formvals, prefix)
-            if v is None: return v
-            vals.update(v)
+            if v is not None:
+                vals.update(v)
+                prefix_seen = True
         return vals
 
     def get_structure_description(self):

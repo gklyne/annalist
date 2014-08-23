@@ -183,13 +183,19 @@ class RecordViewEditViewTest(AnnalistTestCase):
         t = RecordView.create(self.testcoll, view_id, recordview_create_values(view_id=view_id))
         return t
 
-    def _check_record_view_values(self, view_id, view_uri=None, update="RecordView", num_fields=4):
+    def _check_record_view_values(
+            self, view_id, view_uri=None, update="RecordView", 
+            num_fields=4, field3_placement="small:0,12"
+            ):
         "Helper function checks content of record view entry with supplied view_id"
         self.assertTrue(RecordView.exists(self.testcoll, view_id))
         t = RecordView.load(self.testcoll, view_id)
         self.assertEqual(t.get_id(), view_id)
         self.assertEqual(t.get_view_url(), TestHostUri + recordview_url("testcoll", view_id))
-        v = recordview_values(view_id=view_id, view_uri=view_uri, update=update)
+        v = recordview_values(
+            view_id=view_id, view_uri=view_uri, update=update, 
+            field3_placement=field3_placement
+            )
         if num_fields == 0:
             v['annal:view_fields'] = []
         self.assertDictionaryMatch(t.get_values(), v)
@@ -919,6 +925,24 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(r.context, expect_context)
         # Check original data is unchanged
         self._check_record_view_values("editview")
+        return
+
+    def test_post_edit_view_field_placement_missing(self):
+        self._create_record_view("editview")
+        self._check_record_view_values("editview")
+        f = recordview_entity_view_form_data(
+            view_id="editview", orig_id="editview", 
+            action="edit", update="Updated RecordView",
+            field3_placement=""
+            )
+        u = entitydata_edit_url("edit", "testcoll", "_view", entity_id="editview", view_id="View_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], self.continuation_url)
+        # Check that new record view exists
+        self._check_record_view_values("editview", update="Updated RecordView", field3_placement="")
         return
 
     #   -----------------------------------------------------------------------------
