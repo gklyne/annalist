@@ -187,6 +187,9 @@ class AnnalistGenericView(ContentNegotiationView):
         auth_resource   is the resource URI to which the requested action is directed.
                         NOTE: This may be the URI of the parent of the resource
                         being accessed or manipulated.
+
+        Returns None if the desired action is authorized for the current user, otherwise
+        an HTTP response value to return an error condition.
         """
         action_scope = (
             { "view":   "VIEW"
@@ -196,12 +199,13 @@ class AnnalistGenericView(ContentNegotiationView):
             , "copy":   "CREATE"
             , "edit":   "UPDATE"
             , "delete": "DELETE"
-            , "config": "CONFIG"    # or UPDATE?
+            , "config": "CONFIG"
             , "admin":  "ADMIN"
             })
         if action in action_scope:
             auth_scope = action_scope[action]
         else:
+            log.warning("form_action_auth: unknown action: %s"%(action))
             auth_scope = "UNKNOWN"
         # return self.authorize(auth_scope, auth_resource)
         return self.authorize(auth_scope)
@@ -262,7 +266,7 @@ class AnnalistGenericView(ContentNegotiationView):
         May be called with or without an authenticated user.
 
         scope       indication of the operation  requested to be performed.
-                    e.g. "VIEW", "CREATE", "UPDATE", "DELETE", ...
+                    e.g. "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", ...
 
         @@TODO add resource parameter
 
@@ -270,8 +274,10 @@ class AnnalistGenericView(ContentNegotiationView):
 
         For now, require authentication for anything other than VIEW scope.
         """
+        log.debug("Authorize %s"%(scope))
         if scope != "VIEW":
             if not self.request.user.is_authenticated():
+                log.debug("Authorize %s denied"%(scope))
                 return self.error(self.error401values())
         return None
 
@@ -298,6 +304,7 @@ class AnnalistGenericView(ContentNegotiationView):
         resultdata["auth_create"]   = self.authorize("CREATE") is None
         resultdata["auth_update"]   = self.authorize("UPDATE") is None
         resultdata["auth_delete"]   = self.authorize("DELETE") is None
+        resultdata["auth_config"]   = self.authorize("CONFIG") is None
         template  = loader.get_template(template_name)
         context   = RequestContext(self.request, resultdata)
         log.debug("render_html - data: %r"%(resultdata))

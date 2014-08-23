@@ -482,6 +482,8 @@ class GenericEntityEditView(AnnalistGenericView):
         HTTP response object that reports the nature of the problem.
         """
         action      = form_data['action']
+        if viewinfo.check_authorization(action):
+            return viewinfo.http_response
         typeinfo    = viewinfo.entitytypeinfo
         orig_entity = self.get_entity(orig_entity_id, typeinfo, action, {})
         log.debug(
@@ -580,8 +582,7 @@ class GenericEntityEditView(AnnalistGenericView):
             viewinfo, context_extra_values, messages)
         if http_response:
             return http_response
-        viewinfo.check_authorization("config")
-        if viewinfo.http_response:
+        if viewinfo.check_authorization("config"):
             return viewinfo.http_response
         (continuation_next, continuation_here) = self.continuation_urls(
             form_data, continuation_url, 

@@ -36,7 +36,7 @@
           <div class="small-12 columns">
             <div class="row selectable">
               <div class="small-2 columns">
-                {% if auth_delete %}
+                {% if auth_config %}
                 <input type="checkbox" name="{{field.repeat_id}}__select_fields"
                        value="{{repeat.repeat_index}}" class="right" />
                 {% endif %}
@@ -74,7 +74,7 @@
             </div>
           </div>
         </div>
-        {% if edit_add_field and edit_add_field != "no" %}
+        {% if auth_config and edit_add_field and edit_add_field != "no" %}
         <div class="small-12 medium-5 columns">
           <div class="row">
             <div class="small-12 columns">
@@ -102,8 +102,8 @@
         {% endif %}
       </div>
 
+      {% if auth_config %}
       <hr />
-
       <div class="row">
         <!--
         <div class="medium-6 columns show-for-medium-up">
@@ -128,6 +128,7 @@
           </div>
         </div>
       </div>
+      {% endif %}
 
       <input type="hidden" name="orig_id"          value="{{orig_id}}" />
       <input type="hidden" name="orig_type"        value="{{orig_type}}" />

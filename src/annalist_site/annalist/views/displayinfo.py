@@ -187,10 +187,12 @@ class DisplayInfo(object):
         If no error so far, check authorization.  Return None if all is OK,
         or HttpResonse object 
         """
-        return (
+        action = action or "view"
+        self.http_response = (
             self.http_response or 
             self.view.form_action_auth(action, self.collection.get_url())
             )
+        return self.http_response
 
     # Additonal support functions for list views
 
