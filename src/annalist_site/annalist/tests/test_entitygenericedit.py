@@ -119,6 +119,50 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(GenericEntityEditView.__name__, "GenericEntityEditView", "Check GenericEntityEditView class name")
         return
 
+    def test_get_default_form_no_login(self):
+        self.client.logout()
+        u = entity_url("testcoll", "testtype", "entity1")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        return
+
+    def test_post_default_form_use_view_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entityuseview", action="new", update="Updated entity", 
+                use_view="Type_view", 
+                )
+        u = entity_url("testcoll", "testtype", "entity1")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
+    def test_get_new_form_no_login(self):
+        self.client.logout()
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
+    def test_get_copy_form_no_login(self):
+        self.client.logout()
+        u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1", view_id="Type_view")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
+    def test_get_edit_form_no_login(self):
+        self.client.logout()
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entity1", view_id="Type_view")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
     def test_get_form_rendering(self):
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
         r = self.client.get(u+"?continuation_url=/xyzzy/")
@@ -544,6 +588,15 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("newentity")
         return
 
+    def test_post_new_entity_no_login(self):
+        self.client.logout()
+        f = entitydata_recordtype_view_form_data(entity_id="newentity", action="new")
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
     def test_post_new_entity_no_continuation(self):
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
         f = entitydata_recordtype_view_form_data(entity_id="newentity", action="new")
@@ -633,7 +686,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertTrue(RecordType.exists(self.testcoll, type_id))
         return
 
-    def test_new_entity_new_type(self):
+    def test_new_entity_new_typedata(self):
         # Checks logic for creating an entity which may require creation of new recorddata
         self.create_new_type("testcoll", "newtype")
         # Create new entity
@@ -687,6 +740,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entityaddfield")
         return
 
+    def test_post_new_entity_add_view_field_no_login(self):
+        self.client.logout()
+        f = entitydata_recordtype_view_form_data(
+                entity_id="entityaddfield", action="new",
+                add_view_field="View_fields"
+                )
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
     def test_post_new_entity_use_view(self):
         self.assertFalse(EntityData.exists(self.testdata, "entityuseview"))
         f = entitydata_default_view_form_data(
@@ -703,6 +768,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self._check_entity_data_values("entityuseview", update="Updated entity")
+        return
+
+    def test_post_new_entity_use_view_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entityuseview", action="new", update="Updated entity", 
+                use_view="Type_view", 
+                )
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
     def test_post_new_entity_new_view(self):
@@ -724,6 +801,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entitynewview", update="Updated entity")
         return
 
+    def test_post_new_entity_new_view_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entitynewview", action="new", update="Updated entity", 
+                new_view="New view"
+                )
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
     def test_post_new_entity_new_field(self):
         self.assertFalse(EntityData.exists(self.testdata, "entitynewfield"))
         f = entitydata_default_view_form_data(
@@ -741,6 +830,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self._check_entity_data_values("entitynewfield", update="Updated entity")
+        return
+
+    def test_post_new_entity_new_field_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entitynewfield", action="new", update="Updated entity", 
+                new_field="New field"
+                )
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
     def test_post_new_entity_new_type(self):
@@ -762,6 +863,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entitynewtype", update="Updated entity")
         return
 
+    def test_post_new_entity_new_type_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entitynewtype", action="new", update="Updated entity", 
+                new_type="New type"
+                )
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
     #   -------- copy type --------
 
     def test_post_copy_entity(self):
@@ -775,6 +888,15 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
         # Check that new record type exists
         self._check_entity_data_values("copytype")
+        return
+
+    def test_post_copy_entity_no_login(self):
+        self.client.logout()
+        f = entitydata_recordtype_view_form_data(entity_id="copytype", action="copy")
+        u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1", view_id="Type_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
     def test_post_copy_entity_cancel(self):
@@ -840,6 +962,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entityaddfield", update="Updated entity")
         return
 
+    def test_post_copy_entity_add_view_field_no_login(self):
+        self.client.logout()
+        f = entitydata_recordtype_view_form_data(
+                entity_id="entityaddfield", action="copy", update="Updated entity", 
+                add_view_field="View_fields"
+                )
+        u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1", view_id="Type_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
     def test_post_copy_entity_use_view(self):
         self._create_entity_data("entityuseview")
         self._check_entity_data_values("entityuseview")
@@ -857,6 +991,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self._check_entity_data_values("entityuseview1", update="Updated entity")
+        return
+
+    def test_post_copy_entity_use_view_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entityuseview1", action="copy", update="Updated entity", 
+                use_view="Type_view", 
+                )
+        u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entityuseview", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
     def test_post_copy_entity_new_view(self):
@@ -879,6 +1025,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entitynewview1", update="Updated entity")
         return
 
+    def test_post_copy_entity_new_view_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entitynewview1", action="copy", update="Updated entity", 
+                new_view="New view"
+                )
+        u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entitynewview", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
     def test_post_copy_entity_new_field(self):
         self._create_entity_data("entitynewfield")
         self._check_entity_data_values("entitynewfield")
@@ -897,6 +1055,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self._check_entity_data_values("entitynewfield1", update="Updated entity")
+        return
+
+    def test_post_copy_entity_new_field_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entitynewfield1", action="copy", update="Updated entity", 
+                new_field="New field"
+                )
+        u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entitynewfield", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
     def test_post_copy_entity_new_type(self):
@@ -919,6 +1089,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entitynewtype1", update="Updated entity")
         return
 
+    def test_post_copy_entity_new_type_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entitynewtype1", action="copy", update="Updated entity", 
+                new_type="New type"
+                )
+        u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entitynewtype", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
     #   -------- edit type --------
 
     def test_post_edit_entity(self):
@@ -932,6 +1114,15 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
         self._check_entity_data_values("entityedit", update="Updated entity")
+        return
+
+    def test_post_edit_entity_no_login(self):
+        self.client.logout()
+        f = entitydata_recordtype_view_form_data(entity_id="edittype", action="edit")
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entity1", view_id="Type_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
     def test_post_edit_entity_new_id(self):
@@ -1056,6 +1247,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entityaddfield", update="Updated entity")
         return
 
+    def test_post_edit_entity_add_view_field_no_login(self):
+        self.client.logout()
+        f = entitydata_recordtype_view_form_data(
+                entity_id="entityaddfield", action="edit", update="Updated entity", 
+                add_view_field="View_fields"
+                )
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityaddfield", view_id="Type_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
     def test_post_edit_entity_use_view(self):
         self._create_entity_data("entityuseview")
         self._check_entity_data_values("entityuseview")
@@ -1073,6 +1276,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self._check_entity_data_values("entityuseview", update="Updated entity")
+        return
+
+    def test_post_edit_entity_use_view_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entityuseview", action="edit", update="Updated entity", 
+                use_view="Type_view", 
+                )
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityuseview", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
     def test_post_edit_entity_new_view(self):
@@ -1094,6 +1309,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entitynewview", update="Updated entity")
         return
 
+    def test_post_edit_entity_new_view_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entitynewview", action="edit", update="Updated entity", 
+                new_view="New view"
+                )
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewview", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
     def test_post_edit_entity_new_field(self):
         self._create_entity_data("entitynewfield")
         self._check_entity_data_values("entitynewfield")
@@ -1113,6 +1340,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entitynewfield", update="Updated entity")
         return
 
+    def test_post_edit_entity_new_field_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entitynewfield", action="edit", update="Updated entity", 
+                new_field="New field"
+                )
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewfield", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
     def test_post_edit_entity_new_type(self):
         self._create_entity_data("entitynewtype")
         self._check_entity_data_values("entitynewtype")
@@ -1130,6 +1369,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self._check_entity_data_values("entitynewtype", update="Updated entity")
+        return
+
+    def test_post_edit_entity_new_type_no_login(self):
+        self.client.logout()
+        f = entitydata_default_view_form_data(
+                entity_id="entitynewtype", action="edit", update="Updated entity", 
+                new_type="New type"
+                )
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewtype", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
 # End.
