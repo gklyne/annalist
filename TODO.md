@@ -205,8 +205,9 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
      Also, display of remove-field checkbox is based on "delete" permission. 
    / Save entity edit is not requiring login - should check from POST?
    / entityedit add test cases for unauthorized config requests (and more?)
-   - From type display, want easy retreat to default display for collection
+   / From type display, want easy retreat to default display for collection
    - View_type display should suppress add-field option.  Similar for View_list and View_field?
+   - suppress _initial_values as option when selecting type/view/list
    x Add field allows new view type to be created, but how to make this default for displayed type?
    / Generic field renderer for entityref as selection among available entity ids.  Use for field selection.  Options should be reworked using this form of enumeration, handled on the fly as required, using type information from the field definition.
 9. Extend form-generator
