@@ -362,7 +362,6 @@ class RecordListEditViewTest(AnnalistTestCase):
                 </div>
                 <div class="%(input_classes)s">
                   <select name="List_default_view">
-                    <option>_initial_values</option>
                     <option>BibEntry_view</option>
                     <option selected="selected">Default_view</option>
                     <option>Field_view</option>
@@ -374,6 +373,12 @@ class RecordListEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
+        selector_text = (
+            "(entity selector; "+
+            "e.g. &#39;ALL&#39;, "+
+            "&#39;@annal:type==&lt;type&gt;&#39; or "+
+            "&#39;@&lt;field&gt;==&lt;value&gt;&#39;)"
+            )
         formrow6 = """
             <div class="small-12 columns">
               <div class="row">
@@ -382,12 +387,12 @@ class RecordListEditViewTest(AnnalistTestCase):
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="List_entity_selector" 
-                         placeholder="(entity selector)"
+                         placeholder="%(selector_text)s"
                          value="ALL"/>
                 </div>
               </div>
             </div>
-            """%field_vals(width=12)
+            """%dict(field_vals(width=12), selector_text=selector_text)
         # log.info(r.content)     #@@
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
@@ -416,13 +421,13 @@ class RecordListEditViewTest(AnnalistTestCase):
         # Fields
         self._check_list_view_context_fields(r, 
             action="new",
-            num_fields=0,
+            num_fields=2,
             list_id="00000001",
             list_label=default_label("testcoll", "_list", "00000001"),
             list_help=default_comment("testcoll", "_list", "00000001"),
             list_url=TestHostUri + recordlist_url("testcoll", "00000001"),
             list_uri=TestHostUri + recordlist_url("testcoll", "00000001"),
-            list_type="",
+            list_type="annal:display_type/List",
             list_default_type="Default_type",
             list_default_view="Default_view",
             list_selector="ALL"

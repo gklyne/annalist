@@ -256,7 +256,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                 <div class="row">
                   <div class="small-9 columns">
                     <select name="view_choice">
-                      <option>_initial_values</option>
                       <option>BibEntry_view</option>
                       <option>Default_view</option>
                       <option>Field_view</option>

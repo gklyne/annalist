@@ -1,8 +1,8 @@
 { "annal:id":           "_initial_values"
 , "annal:type":         "annal:View"
 , "annal:record_type":  "annal:DefaultType"
-, "rdfs:label":         "Record view label"
-, "rdfs:comment":       "Record view comment/description/help"
+, "rdfs:label":         ""
+, "rdfs:comment":       ""
 , "annal:add_field":    "yes"
 , "annal:view_fields":
   [ { "annal:field_id":         "Entity_id"

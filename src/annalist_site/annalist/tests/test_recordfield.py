@@ -377,7 +377,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # log.info(r.content)
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         field_vals = default_fields(coll_id="testcoll", type_id="_field", entity_id="00000001")
@@ -402,7 +401,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="Field_type" 
-                               placeholder="(field value type)" value=""/>
+                               placeholder="(field value type)" 
+                               value="annal:Text"/>
                     </div>
                 </div>
             </div>
@@ -476,6 +476,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
+        # log.info(r.content)   #@@
         self.assertContains(r, formrow1col1, html=True)
         self.assertContains(r, formrow1col2, html=True)
         self.assertContains(r, formrow2, html=True)
@@ -503,8 +504,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Fields
         self._check_context_fields(r, 
             field_id="00000001",
-            field_type="",
-            field_render="",
+            field_type="annal:Text",
+            field_render="annal:field_render/Text",
             field_label=default_label("testcoll", "_field", "00000001"),
             field_comment=default_comment("testcoll", "_field", "00000001"),
             field_placeholder="",

@@ -167,7 +167,10 @@ class RecordViewEditViewTest(AnnalistTestCase):
         loggedin      = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         self.no_options       = ['(no options)']
-        self.field_options    = [fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite)]
+        self.field_options    = (
+            [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
+                  if fid != "_initial_values"
+            ])
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_view")
         return
 
@@ -559,7 +562,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + view_url)
+        self.assertEqual(r.context['entity_url'],       TestHostUri+view_url)
+        self.assertEqual(r.context['entity_uri'],       TestHostUri+view_url)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
@@ -568,8 +572,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
             action="new",
             num_fields=4,
             view_id="00000001",
-            view_label=default_label("testcoll", "_view", "00000001"),
-            view_help=default_comment("testcoll", "_view", "00000001"),
+            view_label="", # default_label("testcoll", "_view", "00000001"),
+            view_help="", # default_comment("testcoll", "_view", "00000001"),
             view_url=TestHostUri + recordview_url("testcoll", "00000001")
             )
         return

@@ -72,7 +72,7 @@ class Collection(Entity):
         altparent = self._parentsite if include_alt else None
         for f in self._children(RecordType, altparent=altparent):
             t = self.get_type(f)
-            if t:
+            if t and t.get_id() != "_initial_values":
                 yield t
         return
 
@@ -109,8 +109,8 @@ class Collection(Entity):
 
         Returns a non-False status code if the type is not removed.
         """
-        t = RecordType.remove(self, type_id)
-        return t
+        s = RecordType.remove(self, type_id)
+        return s
 
     # Record views
 
@@ -120,9 +120,9 @@ class Collection(Entity):
         """
         altparent = self._parentsite if include_alt else None
         for f in self._children(RecordView, altparent=altparent):
-            t = self.get_view(f)
-            if t:
-                yield t
+            v = self.get_view(f)
+            if v and v.get_id() != "_initial_values":
+                yield v
         return
 
     def add_view(self, view_id, view_meta):
@@ -136,8 +136,8 @@ class Collection(Entity):
 
         returns a RecordView object for the newly created view.
         """
-        t = RecordView.create(self, view_id, view_meta)
-        return t
+        v = RecordView.create(self, view_id, view_meta)
+        return v
 
     def get_view(self, view_id):
         """
@@ -147,8 +147,8 @@ class Collection(Entity):
 
         returns a RecordView object for the identified view, or None.
         """
-        t = RecordView.load(self, view_id, altparent=self._parentsite)
-        return t
+        v = RecordView.load(self, view_id, altparent=self._parentsite)
+        return v
 
     def remove_view(self, view_id):
         """
@@ -158,8 +158,8 @@ class Collection(Entity):
 
         Returns a non-False status code if the view is not removed.
         """
-        t = RecordView.remove(self, view_id)
-        return t
+        s = RecordView.remove(self, view_id)
+        return s
 
     # Record lists
 
@@ -169,9 +169,9 @@ class Collection(Entity):
         """
         altparent = self._parentsite if include_alt else None
         for f in self._children(RecordList, altparent=altparent):
-            t = self.get_list(f)
-            if t:
-                yield t
+            l = self.get_list(f)
+            if l and l.get_id() != "_initial_values":
+                yield l
         return
 
     def add_list(self, list_id, list_meta):
@@ -185,8 +185,8 @@ class Collection(Entity):
 
         returns a RecordList object for the newly created list.
         """
-        t = RecordList.create(self, list_id, list_meta)
-        return t
+        l = RecordList.create(self, list_id, list_meta)
+        return l
 
     def get_list(self, list_id):
         """
@@ -196,8 +196,8 @@ class Collection(Entity):
 
         returns a RecordList object for the identified list, or None.
         """
-        t = RecordList.load(self, list_id, altparent=self._parentsite)
-        return t
+        l = RecordList.load(self, list_id, altparent=self._parentsite)
+        return l
 
     def remove_list(self, list_id):
         """
@@ -207,8 +207,8 @@ class Collection(Entity):
 
         Returns a non-False status code if the list is not removed.
         """
-        t = RecordList.remove(self, list_id)
-        return t
+        s = RecordList.remove(self, list_id)
+        return s
 
     def set_default_list(self, list_id):
         """
@@ -223,7 +223,5 @@ class Collection(Entity):
         Return the default list to be displayed for the current collection.
         """
         return self.get("annal:default_list", None)
-
-
 
 # End.

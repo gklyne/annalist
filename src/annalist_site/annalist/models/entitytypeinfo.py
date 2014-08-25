@@ -227,6 +227,7 @@ class EntityTypeInfo(object):
             values.pop("@id", None)
             values.pop(ANNAL.CURIE.id,  None)
             values.pop(ANNAL.CURIE.url, None)
+            values.pop(ANNAL.CURIE.uri, None)
         values[ANNAL.CURIE.id] = entity_id
         return values
 
