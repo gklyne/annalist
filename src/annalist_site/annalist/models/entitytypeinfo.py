@@ -148,7 +148,7 @@ class EntityTypeInfo(object):
             self.entitymessages  = TYPE_MESSAGE_MAP[type_id]
         else:
             if RecordType.exists(coll, type_id, site):
-                self.recordtype     = RecordType.load(coll, type_id)
+                self.recordtype     = RecordType.load(coll, type_id, site)
                 if create_typedata and not RecordTypeData.exists(coll, type_id):
                     self.entityparent   = RecordTypeData.create(coll, type_id, {})
                 else:

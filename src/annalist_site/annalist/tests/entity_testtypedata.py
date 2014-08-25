@@ -207,22 +207,22 @@ def recordtype_entity_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Default view'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_view':  'field/annalist_view_select.html'
+            , 'field_render_edit':  'field/annalist_edit_select.html'
             , 'field_name':         'Type_view'
-            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_placement':    get_placement_classes('small:0,6')
             , 'field_id':           'Type_view'
-            , 'field_value_type':   'annal:Text'
+            , 'field_value_type':   'annal:View'
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
           , { 'field_label':        'Default list'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_view':  'field/annalist_view_select.html'
+            , 'field_render_edit':  'field/annalist_edit_select.html'
             , 'field_name':         'Type_list'
-            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_placement':    get_placement_classes('small:6,6')
             , 'field_id':           'Type_list'
-            , 'field_value_type':   'annal:Text'
+            , 'field_value_type':   'annal:List'
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }

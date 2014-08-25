@@ -26,6 +26,8 @@ from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
+from annalist.models.recordlist     import RecordList
+from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
@@ -83,6 +85,14 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertTrue(loggedin)
         self.type_ids   = ['testtype', 'Default_type']
         self.no_options = ['(no options)']
+        self.view_options    = (
+            [ vid for vid in self.testcoll.child_entity_ids(RecordView, self.testsite) 
+                  if vid != "_initial_values"
+            ])
+        self.list_options    = (
+            [ lid for lid in self.testcoll.child_entity_ids(RecordList, self.testsite) 
+                  if lid != "_initial_values"
+            ])
         return
 
     def tearDown(self):
@@ -376,36 +386,36 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['options'], self.no_options)
         # 5th field - view id
         view_id_help = (
-            "Default view id for entity type"
+            "Default view id for this type"
             )
         self.assertEqual(r.context['fields'][4]['field_id'], 'Type_view')
         self.assertEqual(r.context['fields'][4]['field_name'], 'Type_view')
         self.assertEqual(r.context['fields'][4]['field_label'], 'Default view')
         self.assertEqual(r.context['fields'][4]['field_help'], view_id_help)
-        self.assertEqual(r.context['fields'][4]['field_placeholder'], "(View Id)")
+        self.assertEqual(r.context['fields'][4]['field_placeholder'], "(view id)")
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:type_view")
-        self.assertEqual(r.context['fields'][4]['field_render_view'],   "field/annalist_view_text.html")
-        self.assertEqual(r.context['fields'][4]['field_render_edit'],   "field/annalist_edit_text.html")
-        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][4]['field_render_view'],   "field/annalist_view_select.html")
+        self.assertEqual(r.context['fields'][4]['field_render_edit'],   "field/annalist_edit_select.html")
+        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:View")
         self.assertEqual(r.context['fields'][4]['field_value'], "Default_view")
-        self.assertEqual(r.context['fields'][4]['options'], self.no_options)
+        self.assertEqual(r.context['fields'][4]['options'], self.view_options)
         # 6th field - list id
         list_id_help = (
-            "Default list id for entity type"
+            "Default list id for this type"
             )
         self.assertEqual(r.context['fields'][5]['field_id'], 'Type_list')
         self.assertEqual(r.context['fields'][5]['field_name'], 'Type_list')
         self.assertEqual(r.context['fields'][5]['field_label'], 'Default list')
         self.assertEqual(r.context['fields'][5]['field_help'], list_id_help)
-        self.assertEqual(r.context['fields'][5]['field_placeholder'], "(List Id)")
+        self.assertEqual(r.context['fields'][5]['field_placeholder'], "(list id)")
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_list")
-        self.assertEqual(r.context['fields'][5]['field_render_view'],   "field/annalist_view_text.html")
-        self.assertEqual(r.context['fields'][5]['field_render_edit'],   "field/annalist_edit_text.html")
-        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][5]['field_render_view'],   "field/annalist_view_select.html")
+        self.assertEqual(r.context['fields'][5]['field_render_edit'],   "field/annalist_edit_select.html")
+        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:List")
         self.assertEqual(r.context['fields'][5]['field_value'], "Default_list")
-        self.assertEqual(r.context['fields'][5]['options'], self.no_options)
+        self.assertEqual(r.context['fields'][5]['options'], self.list_options)
         return
 
     def test_get_new_no_continuation(self):
@@ -515,10 +525,10 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['options'], self.no_options)
         # 5th field - view id
         type_uri_help = (
-            "Default view id for entity type"
+            "Default view id for this type"
             )
         type_uri_placeholder = (
-            "(View Id)"
+            "(view id)"
             )
         self.assertEqual(r.context['fields'][4]['field_id'], 'Type_view')
         self.assertEqual(r.context['fields'][4]['field_name'], 'Type_view')
@@ -526,18 +536,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_help'], type_uri_help)
         self.assertEqual(r.context['fields'][4]['field_placeholder'], type_uri_placeholder)
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:type_view")
-        self.assertEqual(r.context['fields'][4]['field_render_view'],   "field/annalist_view_text.html")
-        self.assertEqual(r.context['fields'][4]['field_render_edit'],   "field/annalist_edit_text.html")
-        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][4]['field_render_view'],   "field/annalist_view_select.html")
+        self.assertEqual(r.context['fields'][4]['field_render_edit'],   "field/annalist_edit_select.html")
+        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:View")
         self.assertEqual(r.context['fields'][4]['field_value'], "Default_view")
-        self.assertEqual(r.context['fields'][4]['options'], self.no_options)
+        self.assertEqual(r.context['fields'][4]['options'], self.view_options)
         # 6th field - list id
         type_uri_help = (
-            "Default list id for entity type"
+            "Default list id for this type"
             )
         type_uri_placeholder = (
-            "(List Id)"
+            "(list id)"
             )
         self.assertEqual(r.context['fields'][5]['field_id'], 'Type_list')
         self.assertEqual(r.context['fields'][5]['field_name'], 'Type_list')
@@ -545,12 +555,12 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_help'], type_uri_help)
         self.assertEqual(r.context['fields'][5]['field_placeholder'], type_uri_placeholder)
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_list")
-        self.assertEqual(r.context['fields'][5]['field_render_view'],   "field/annalist_view_text.html")
-        self.assertEqual(r.context['fields'][5]['field_render_edit'],   "field/annalist_edit_text.html")
-        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][5]['field_render_view'],   "field/annalist_view_select.html")
+        self.assertEqual(r.context['fields'][5]['field_render_edit'],   "field/annalist_edit_select.html")
+        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:List")
         self.assertEqual(r.context['fields'][5]['field_value'], "Default_list")
-        self.assertEqual(r.context['fields'][5]['options'], self.no_options)
+        self.assertEqual(r.context['fields'][5]['options'], self.list_options)
         return
 
     def test_get_edit_not_exists(self):

@@ -335,6 +335,7 @@ def get_entity_values(displayinfo, entity, entity_id=None):
     entityvals = entity.get_values().copy()
     entityvals['entity_id']        = entity_id
     entityvals['entity_link']      = entity.get_view_url_path()
+    # log.info("type_id %s"%(type_id))
     entityvals['entity_type_id']   = type_id
     entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
     return entityvals

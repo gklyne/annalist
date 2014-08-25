@@ -102,9 +102,9 @@
         {% endif %}
       </div>
 
-      {% if auth_config %}
       <hr />
       <div class="row">
+ 
         <!--
         <div class="medium-6 columns show-for-medium-up">
           <div class="row">
@@ -114,9 +114,12 @@
           </div>
         </div>
         -->
+ 
         {% with field=view_choices %}
         {% include field.field_render_edit %}
         {% endwith %}
+  
+        {% if auth_config %}
         <div class="small-12 medium-6 columns medium-text-right">
           <div class="row">
             <div class="small-12 columns">
@@ -127,9 +130,10 @@
             </div>
           </div>
         </div>
-      </div>
-      {% endif %}
-
+        {% endif %}
+ 
+    </div>
+  
       <input type="hidden" name="orig_id"          value="{{orig_id}}" />
       <input type="hidden" name="orig_type"        value="{{orig_type}}" />
       <input type="hidden" name="action"           value="{{action}}" />
