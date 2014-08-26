@@ -1,6 +1,7 @@
 { "@id":                    "annal:fields/Field_choice"
+, "@type":                  ["annal:Field"]
 , "annal:id":               "Field_choice"
-, "annal:type":             "annal:Field"
+, "annal:type_id":          "_field"
 , "rdfs:label":             "Choose field"
 , "rdfs:comment":           "Choose field to display."
 , "annal:field_name":       "field_choice"

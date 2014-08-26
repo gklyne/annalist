@@ -85,7 +85,8 @@ def collection_value_keys():
     Keys in collection data
     """
     return (
-        [ 'annal:id', 'annal:type'
+        [ '@type'
+        , 'annal:id' # , 'annal:type_id'
         , 'annal:url', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         ])
@@ -103,7 +104,9 @@ def collection_values(coll_id, update="Collection", hosturi=TestHostUri):
     d = collection_create_values(coll_id, update=update).copy()
     d.update(
         { '@id':            "../"
+        , '@type':          ["annal:Collection"]
         , 'annal:id':       coll_id
+        # , 'annal:type_id':  "_coll"
         , 'annal:type':     "annal:Collection"
         , 'annal:url':      hosturi + collection_view_url(coll_id=coll_id)
         , 'annal:uri':      hosturi + collection_view_url(coll_id=coll_id)

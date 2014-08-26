@@ -1,6 +1,7 @@
 { "@id":                "annal:display/List_view"
+, "@type":              ["annal:View"]
 , "annal:id":           "List_view"
-, "annal:type":         "annal:View"
+, "annal:type_id":      "_view"
 , "annal:record_type":  "annal:List"
 , "rdfs:label":         "View description for record list description"
 , "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record list description"

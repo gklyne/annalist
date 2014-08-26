@@ -97,8 +97,8 @@ def recordlist_edit_url(action=None, coll_id=None, list_id=None):
 
 def recordlist_value_keys():
     return set(
-        [ 'annal:id', 'annal:type'
-        , 'annal:url', 'annal:uri'
+        [ 'annal:id', 'annal:type_id'
+        , 'annal:type', 'annal:url', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:display_type'
         , 'annal:list_entity_selector'
@@ -108,14 +108,15 @@ def recordlist_value_keys():
         ])
 
 def recordlist_load_keys():
-    return recordlist_value_keys() | {"@id"}
+    return recordlist_value_keys() | {'@id', '@type'}
 
 def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="RecordList"):
     """
     Entity values used when creating a record type entity
     """
     return (
-        { 'rdfs:label':                 "%s %s/%s"%(update, coll_id, list_id)
+        { 'annal:type':                 "annal:List"
+        , 'rdfs:label':                 "%s %s/%s"%(update, coll_id, list_id)
         , 'rdfs:comment':               "%s help for %s/%s"%(update, coll_id, list_id)
         , "annal:display_type":         "annal:display_type/List"
         , "annal:default_view":         "Default_view"
@@ -140,7 +141,7 @@ def recordlist_values(
     d = recordlist_create_values(coll_id, list_id, update=update).copy()
     d.update(
         { 'annal:id':       list_id
-        , 'annal:type':     "annal:List"
+        , 'annal:type_id':  "_list"
         , 'annal:url':      list_url
         , 'annal:uri':      list_uri
         })
@@ -152,6 +153,7 @@ def recordlist_read_values(
     d = recordlist_values(coll_id, list_id, update=update, hosturi=hosturi).copy()
     d.update(
         { '@id':            "./"
+        , '@type':          ["annal:List"]
         })
     return d
 

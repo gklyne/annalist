@@ -188,7 +188,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     def _check_record_view_values(
             self, view_id, view_uri=None, update="RecordView", 
-            num_fields=4, field3_placement="small:0,12"
+            num_fields=4, field3_placement="small:0,12",
+            update_dict=None,
             ):
         "Helper function checks content of record view entry with supplied view_id"
         self.assertTrue(RecordView.exists(self.testcoll, view_id))
@@ -199,8 +200,11 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id=view_id, view_uri=view_uri, update=update, 
             field3_placement=field3_placement
             )
-        if num_fields == 0:
-            v['annal:view_fields'] = []
+        if update_dict:
+            v.update(update_dict)
+            for k in update_dict:
+                if update_dict[k] is None:
+                    v.pop(k, None)
         self.assertDictionaryMatch(t.get_values(), v)
         return t
 

@@ -1,6 +1,7 @@
 { "@id":                "annal:fields/List_label"
+, "@type":              ["annal:Field"]
 , "annal:id":           "List_label"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "Label"
 , "rdfs:comment":       "Short string used to describe list when displayed"
 , "annal:field_render": "annal:field_render/Text"

@@ -1,6 +1,7 @@
 { "@id":                "annal:fields/Field_type"
+, "@type":              ["annal:Field"]
 , "annal:id":           "Field_type"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "Field value type"
 , "rdfs:comment":       "Type (URI or CURIE) of underlying data that is stored in a field."
 , "annal:field_render": "annal:field_render/Identifier"

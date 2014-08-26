@@ -1,6 +1,7 @@
 { "@id":                "annal:fields/Field_label"
+, "@type":              ["annal:Field"]
 , "annal:id":           "Field_label"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "Label"
 , "rdfs:comment":       "Short string used to label value in form display, or as heading of list column"
 , "annal:field_render": "annal:field_render/Text"

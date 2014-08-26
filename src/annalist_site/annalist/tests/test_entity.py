@@ -84,6 +84,7 @@ class EntityRootTest(TestCase):
             })
         test_values1_returned = (
             { 'annal:id':       None
+            , 'annal:type_id':  None
             , 'annal:type':     'annal:EntityRoot'
             , 'annal:url':      TestBaseUri+'/'
             , 'annal:uri':      TestBaseUri+'/'
@@ -99,6 +100,7 @@ class EntityRootTest(TestCase):
             })
         test_values2_returned = (
             { 'annal:id':       None
+            , 'annal:type_id':  None
             , 'annal:type':     'annal:EntityRoot'
             , 'annal:url':      TestBaseUri+'/'
             , 'annal:uri':      TestBaseUri+'/'
@@ -123,6 +125,7 @@ class EntityRootTest(TestCase):
             })
         test_values1_returned = (
             { 'annal:id':       None
+            , 'annal:type_id':  None
             , 'annal:type':     'annal:EntityRoot'
             , 'type':           'annal:EntityRoot'
             , 'annal:url':      TestBaseUri+'/'
@@ -132,6 +135,7 @@ class EntityRootTest(TestCase):
             })
         test_values2_returned = (
             { 'annal:id':       None
+            , 'annal:type_id':  None
             , 'annal:type':     'annal:EntityRoot'
             , 'annal:url':      TestBaseUri+'/'
             , 'annal:uri':      TestBaseUri+'/'
@@ -175,7 +179,9 @@ class EntityRootTest(TestCase):
             })
         test_values_returned = (
             { '@id':            '../'
+            , '@type':          ['test:EntityRootType']
             , 'annal:id':       'testId'
+            , 'annal:type_id':  None
             , 'annal:type':     'test:EntityRootType'
             , 'annal:url':      TestBaseUri+'/'
             , 'annal:uri':      TestBaseUri+'/'
@@ -309,12 +315,13 @@ class EntityTest(TestCase):
         self.assertEqual(e.get("foo",  "bar"),    "bar")
         self.assertEqual(e.get("type", "notype"), "annal:EntityRoot")
         expect_keys = set(
-            ['annal:id', 'annal:type', 'annal:url', 'annal:uri'
+            ['annal:id', 'annal:type_id', 'annal:type', 'annal:url', 'annal:uri'
             , 'type'
             ])
         self.assertEqual(set(e.keys()), expect_keys)
         expect_items = set(
             [ ('annal:id',      'testid')
+            , ('annal:type_id',  None)
             , ('annal:type',    'test:EntityType')
             , ('annal:url',     TestBaseUri+'/testid/')
             , ('annal:uri',     TestBaseUri+'/testid/')
@@ -343,6 +350,7 @@ class EntityTest(TestCase):
             })
         test_values_returned = (
             { 'annal:id':       'testid'
+            , 'annal:type_id':  None
             , 'annal:type':     'test:EntityType'
             , 'annal:url':      TestBaseUri+'/testid/'
             , 'annal:uri':      TestBaseUri+'/testid/'
@@ -365,7 +373,9 @@ class EntityTest(TestCase):
             })
         test_values_returned = (
             { '@id':            '../'
+            , '@type':          ['test:EntityType']
             , 'annal:id':       'testid2'
+            , 'annal:type_id':  None
             , 'annal:type':     'test:EntityType'
             , 'annal:url':      TestBaseUri+'/testid2/'
             , 'annal:uri':      TestBaseUri+'/testid2/'
@@ -387,6 +397,9 @@ class EntityTest(TestCase):
             })
         test_values1_returned = (
             { '@id':            '../'
+            , '@type':          ['test:EntityType']
+            , 'annal:id':       'testid1'
+            , 'annal:type_id':  None
             , 'annal:id':       'testid1'
             , 'annal:type':     'test:EntityType'
             , 'annal:url':      TestBaseUri+'/testbase/testid1/'
@@ -400,7 +413,9 @@ class EntityTest(TestCase):
             })
         test_values2_returned = (
             { '@id':            '../'
+            , '@type':          ['test:EntityType']
             , 'annal:id':       'testid2'
+            , 'annal:type_id':  None
             , 'annal:type':     'test:EntityType'
             , 'annal:url':      TestBaseUri+'/testbase/testid2/'
             , 'annal:uri':      TestBaseUri+'/testbase/testid2/'
@@ -463,6 +478,7 @@ class EntityTest(TestCase):
             })
         test_values_returned = (
             { 'annal:id':       'testid'
+            , 'annal:type_id':  None
             , 'annal:type':     'test:EntityTypeSub'
             , 'annal:url':      TestBaseUri+'/sub/testid/'
             , 'annal:uri':      TestBaseUri+'/sub/testid/'
@@ -487,7 +503,9 @@ class EntityTest(TestCase):
             })
         test_values_returned = (
             { '@id':            '../'
+            , '@type':          ['test:EntityTypeSub']
             , 'annal:id':       'testid2'
+            , 'annal:type_id':  None
             , 'annal:type':     'test:EntityTypeSub'
             , 'annal:url':      TestBaseUri+'/sub/testid2/'
             , 'annal:uri':      TestBaseUri+'/sub/testid2/'

@@ -1,6 +1,7 @@
 { "@id":                "annal:fields/List_fields"
+, "@type":              ["annal:Field"]
 , "annal:id":           "List_fields"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "Fields"
 , "rdfs:comment":       "This value encodes a list of fields (columns or grid labels) that are displayed for each displayed record.  The form rendering is a complex widget with a variable number of rows, each of which specifies a field and a placement for that field."
 , "annal:field_render": "annal:field_render/List_fields"

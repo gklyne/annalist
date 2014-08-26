@@ -1,6 +1,7 @@
 { "@id":                "annal:fields/Field_comment"
+, "@type":              ["annal:Field"]
 , "annal:id":           "Field_comment"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "Help"
 , "rdfs:comment":       "Descriptive text explaining how field is intended to be used.  This text may be used to provide content for a tooltip associated with the field display in a form."
 , "annal:field_render": "annal:field_render/Textarea"

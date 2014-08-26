@@ -1,7 +1,10 @@
 {
+  "annal:type_id": "_entitytypedata",
   "annal:uri": "http://test.example.com/testsite/c/coll3/d/type1/",
-  "@id": "./",
-  "annal:id": "type1",
   "annal:url": "http://test.example.com/testsite/c/coll3/d/type1/",
-  "annal:type": "annal:Type_Data"
+  "annal:id": "type1",
+  "@id": "./",
+  "@type": [
+    "annal:Type_Data"
+  ]
 }

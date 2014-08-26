@@ -376,8 +376,8 @@ class RecordListEditViewTest(AnnalistTestCase):
         selector_text = (
             "(entity selector; "+
             "e.g. &#39;ALL&#39;, "+
-            "&#39;@annal:type==&lt;type&gt;&#39; or "+
-            "&#39;@&lt;field&gt;==&lt;value&gt;&#39;)"
+            "&#39;@type&gt;=&lt;type&gt;&#39; or "+
+            "&#39;[&lt;field&gt;]==&lt;value&gt;&#39;)"
             )
         formrow6 = """
             <div class="small-12 columns">

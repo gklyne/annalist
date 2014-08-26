@@ -1,5 +1,6 @@
-{ "annal:id":                   "_initial_values"
-, "annal:type":                 "annal:List"
+{ "@type":                      ["annal:List"]
+, "annal:id":                   "_initial_values"
+, "annal:type_id":              "_list"
 , "rdfs:label":                 ""
 , "rdfs:comment":               ""
 , "annal:display_type":         "annal:display_type/List"

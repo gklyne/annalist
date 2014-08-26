@@ -1,6 +1,7 @@
 { "@id":                "annal:fields/Bib_eprint"
+, "@type":              ["annal:Field"]
 , "annal:id":           "Bib_eprint"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "Bib_eprint"
 , "rdfs:comment":       "BibJSON(ish) field Bib_eprint"
 , "annal:field_render": "annal:field_render/Text"

@@ -1,6 +1,7 @@
 { "@id":                "annal:fields/List_type"
+, "@type":              ["annal:Field"]
 , "annal:id":           "List_type"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "List display type"
 , "rdfs:comment":       "Type of list display (List or Grid)"
 , "annal:field_render": "annal:field_render/Slug"

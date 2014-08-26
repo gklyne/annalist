@@ -1,6 +1,7 @@
 { "@id":                "annal:fields/Default_field"
+, "@type":              ["annal:Field"]
 , "annal:id":           "Default_field"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "Default_field"
 , "rdfs:comment":       "Default field type that can be used as a placeholder in view descriptions.  Renders as a simple 1-line text value.  Not really suitable for real data storage."
 , "annal:field_render": "annal:field_render/Text"

@@ -109,7 +109,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             )
         return e    
 
-    def _check_entity_data_values(self, entity_id, type_id="testtype", update="Entity"):
+    def _check_entity_data_values(self, entity_id, type_id="testtype", update="Entity", update_dict=None):
         "Helper function checks content of form-updated record type entry with supplied entity_id"
         typeinfo = EntityTypeInfo(self.testsite, self.testcoll, type_id)
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, entity_id))
@@ -117,6 +117,11 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(e.get_id(), entity_id)
         self.assertEqual(e.get_view_url(""), TestHostUri + entity_url("testcoll", type_id, entity_id))
         v = entitydata_values(entity_id, type_id=type_id, update=update)
+        if update_dict:
+            v.update(update_dict)
+            for k in update_dict:
+                if update_dict[k] is None:
+                    v.pop(k, None)
         # log.info(e.get_values())
         self.assertDictionaryMatch(e.get_values(), v)
         return e
@@ -677,7 +682,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "Default_type"))
         # Check new entity data created
-        self._check_entity_data_values("newentity", type_id="Default_type")
+        self._check_entity_data_values("newentity", type_id="Default_type", update_dict=
+            { '@type':          ['annal:Default_type', 'annal:EntityData']
+            })
         return
 
     def create_new_type(self, coll_id, type_id):
@@ -725,7 +732,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "Default_type"))
         # Check new entity data created
         self.assertTrue(RecordField.exists(self.testcoll, "newfield", self.testsite))
-        self._check_entity_data_values("newfield", type_id="_field")
+        self._check_entity_data_values("newfield", type_id="_field", update_dict=
+            { '@type':          ['annal:Field']
+            })
         return
 
     def test_post_new_entity_add_view_field(self):
@@ -1114,10 +1123,10 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     def test_post_edit_entity(self):
         self._create_entity_data("entityedit")
-        self._check_entity_data_values("entityedit")
-        f = entitydata_recordtype_view_form_data(entity_id="entityedit", action="edit", update="Updated entity")
-        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityedit", view_id="Type_view")
-        r = self.client.post(u, f)
+        e1 = self._check_entity_data_values("entityedit")
+        f  = entitydata_recordtype_view_form_data(entity_id="entityedit", action="edit", update="Updated entity")
+        u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityedit", view_id="Type_view")
+        r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
@@ -1136,13 +1145,13 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     def test_post_edit_entity_new_id(self):
         self._create_entity_data("entityeditid1")
-        self._check_entity_data_values("entityeditid1")
+        e1 = self._check_entity_data_values("entityeditid1")
         # Now post edit form submission with different values and new id
-        f = entitydata_recordtype_view_form_data(
+        f  = entitydata_recordtype_view_form_data(
             entity_id="entityeditid2", orig_id="entityeditid1", action="edit"
             )
-        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditid1", view_id="Type_view")
-        r = self.client.post(u, f)
+        u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditid1", view_id="Type_view")
+        r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
@@ -1237,13 +1246,13 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     def test_post_edit_entity_add_view_field(self):
         self._create_entity_data("entityaddfield")
-        self._check_entity_data_values("entityaddfield")
-        f = entitydata_recordtype_view_form_data(
+        e1 = self._check_entity_data_values("entityaddfield")
+        f  = entitydata_recordtype_view_form_data(
                 entity_id="entityaddfield", action="edit", update="Updated entity", 
                 add_view_field="View_fields"
                 )
-        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityaddfield", view_id="Type_view")
-        r = self.client.post(u, f)
+        u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityaddfield", view_id="Type_view")
+        r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
@@ -1270,13 +1279,13 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     def test_post_edit_entity_use_view(self):
         self._create_entity_data("entityuseview")
-        self._check_entity_data_values("entityuseview")
-        f = entitydata_default_view_form_data(
+        e1 = self._check_entity_data_values("entityuseview")
+        f  = entitydata_default_view_form_data(
                 entity_id="entityuseview", action="edit", update="Updated entity", 
                 use_view="Type_view", 
                 )
-        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityuseview", view_id="Default_view")
-        r = self.client.post(u, f)
+        u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityuseview", view_id="Default_view")
+        r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
@@ -1301,13 +1310,13 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     def test_post_edit_entity_new_view(self):
         self._create_entity_data("entitynewview")
-        self._check_entity_data_values("entitynewview")
-        f = entitydata_default_view_form_data(
+        e1 = self._check_entity_data_values("entitynewview")
+        f  = entitydata_default_view_form_data(
                 entity_id="entitynewview", action="edit", update="Updated entity", 
                 new_view="New view"
                 )
-        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewview", view_id="Default_view")
-        r = self.client.post(u, f)
+        u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewview", view_id="Default_view")
+        r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
@@ -1332,13 +1341,13 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     def test_post_edit_entity_new_field(self):
         self._create_entity_data("entitynewfield")
-        self._check_entity_data_values("entitynewfield")
-        f = entitydata_default_view_form_data(
+        e1 = self._check_entity_data_values("entitynewfield")
+        f  = entitydata_default_view_form_data(
                 entity_id="entitynewfield", action="edit", update="Updated entity", 
                 new_field="New field"
                 )
-        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewfield", view_id="Default_view")
-        r = self.client.post(u, f)
+        u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewfield", view_id="Default_view")
+        r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
@@ -1363,13 +1372,13 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     def test_post_edit_entity_new_type(self):
         self._create_entity_data("entitynewtype")
-        self._check_entity_data_values("entitynewtype")
-        f = entitydata_default_view_form_data(
+        e1 = self._check_entity_data_values("entitynewtype")
+        f  = entitydata_default_view_form_data(
                 entity_id="entitynewtype", action="edit", update="Updated entity", 
                 new_type="New type"
                 )
-        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewtype", view_id="Default_view")
-        r = self.client.post(u, f)
+        u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewtype", view_id="Default_view")
+        r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")

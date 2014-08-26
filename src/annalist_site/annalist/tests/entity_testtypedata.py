@@ -101,22 +101,23 @@ def recordtype_edit_url(action=None, coll_id=None, type_id=None):
 
 def recordtype_value_keys():
     ks = set(
-        [ 'annal:id', 'annal:type'
-        , 'annal:url', 'annal:uri'
+        [ 'annal:id', 'annal:type_id'
+        , 'annal:type', 'annal:url', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:type_view', 'annal:type_list'
         ])
     return ks
 
 def recordtype_load_keys():
-    return recordtype_value_keys() | {"@id"}
+    return recordtype_value_keys() | {'@id', '@type'}
 
 def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="RecordType"):
     """
     Entity values used when creating a record type entity
     """
     d = (
-        { 'rdfs:label':         "%s %s/%s"%(update, coll_id, type_id)
+        { 'annal:type':         "annal:Type"
+        , 'rdfs:label':         "%s %s/%s"%(update, coll_id, type_id)
         , 'rdfs:comment':       "%s help for %s in collection %s"%(update, type_id, coll_id)
         , 'annal:type_view':    "Default_view"
         , 'annal:type_list':    "Default_list"
@@ -132,7 +133,7 @@ def recordtype_values(
     d = recordtype_create_values(coll_id, type_id, update=update).copy()
     d.update(
         { 'annal:id':       type_id
-        , 'annal:type':     "annal:Type"
+        , 'annal:type_id':  "_type"
         , 'annal:url':      type_url
         , 'annal:uri':      type_uri
         })
@@ -147,6 +148,7 @@ def recordtype_read_values(
         ).copy()
     d.update(
         { '@id':            "./"
+        , '@type':          ["annal:Type"]
         })
     return d
 

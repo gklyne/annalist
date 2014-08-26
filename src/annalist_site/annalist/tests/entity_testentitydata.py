@@ -131,28 +131,38 @@ def entitydata_value_keys():
     Keys in default view entity data
     """
     return (
-        [ 'annal:id', 'annal:type'
-        , 'annal:url', 'annal:uri'
+        [ '@type'
+        , 'annal:id', 'annal:type_id'
+        , 'annal:type', 'annal:url', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         ])
 
-def entitydata_create_values(entity_id, type_id="testtype", update="Entity"):
+def entitydata_create_values(entity_id, update="Entity", coll_id="testcoll", type_id="testtype", hosturi=TestHostUri):
     """
     Data used when creating entity test data
     """
+    typeuri = hosturi + entity_url(coll_id, "_type", type_id)
+    types   = [entitydata_type(type_id), typeuri]
+    # log.info('entitydata_create_values: types %r'%(types,)) 
     return (
-        { 'rdfs:label': '%s testcoll/%s/%s'%(update, type_id, entity_id)
-        , 'rdfs:comment': '%s coll testcoll, type %s, entity %s'%(update, type_id, entity_id)
+        { '@type':          types
+        , 'annal:type':     types[0]
+        , 'rdfs:label':     '%s testcoll/%s/%s'%(update, type_id, entity_id)
+        , 'rdfs:comment':   '%s coll testcoll, type %s, entity %s'%(update, type_id, entity_id)
         })
 
 def entitydata_values(entity_id, update="Entity", coll_id="testcoll", type_id="testtype", hosturi=TestHostUri):
-    d = entitydata_create_values(entity_id, type_id=type_id, update=update).copy()
+    typeuri = hosturi + entity_url(coll_id, "_type", type_id)
+    dataurl = hosturi + entity_url(coll_id, type_id, entity_id)
+    d = entitydata_create_values(
+        entity_id, update=update, coll_id=coll_id, type_id=type_id, hosturi=hosturi
+        ).copy() #@@ copy needed here?
     d.update(
         { '@id':            './'
         , 'annal:id':       entity_id
-        , 'annal:type':     entitydata_type(type_id)
-        , 'annal:url':      hosturi + entity_url(coll_id, type_id, entity_id)
-        , 'annal:uri':      hosturi + entity_url(coll_id, type_id, entity_id)
+        , 'annal:type_id':  type_id
+        , 'annal:url':      dataurl
+        , 'annal:uri':      dataurl
         })
     return d
 

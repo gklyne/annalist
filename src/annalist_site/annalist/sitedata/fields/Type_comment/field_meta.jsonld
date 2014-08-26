@@ -1,6 +1,7 @@
 { "@id":                "annal:fields/Type_comment"
+, "@type":              ["annal:Field"]
 , "annal:id":           "Type_comment"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "Comment"
 , "rdfs:comment":       "Descriptive text about a record type"
 , "annal:field_render": "annal:field_render/Textarea"

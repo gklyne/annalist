@@ -1,6 +1,7 @@
 { "@id":                "annal:fields/Bib_pages"
+, "@type":              ["annal:Field"]
 , "annal:id":           "Bib_pages"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "Bib_pages"
 , "rdfs:comment":       "BibJSON(ish) field Bib_pages"
 , "annal:field_render": "annal:field_render/Text"

@@ -1,10 +1,10 @@
-{
-  "@id":                "./",
-  "annal:id":           "_type",
-  "annal:type":         "annal:Type",
-  "annal:uri":          "annal:type/_type",
-  "rdfs:label":         "Type description type",
-  "rdfs:comment":       "Type of type description record.",
-  "annal:type_view":    "Type_view",
-  "annal:type_list":    "Type_list"
+{ "@id":                "./"
+, "@type":              ["annal:Type"]
+, "annal:id":           "_type"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Type"
+, "rdfs:label":         "Type description type"
+, "rdfs:comment":       "Type of type description record."
+, "annal:type_view":    "Type_view"
+, "annal:type_list":    "Type_list"
 }

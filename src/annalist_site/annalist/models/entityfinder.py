@@ -86,29 +86,56 @@ class EntityFinder(object):
 
         Selector formats:
             ALL (or blank)              match any entity
-            @annal:type==annal:Field    entity type is indicated value
-            @<field>==<value>           entity named field is indicated value
+            @type>=<uri>/<curie>        entity has indicated type
+            [annal:type]==annal:Field   entity type is indicated value
+            [<field>]==<value>          entity named field is indicated value
 
-        >>> e  = { 'p:a': '1', 'p:b': '2', 'p:c': '3' }
-        >>> f1 = "@p:a==1"
-        >>> f2 = "@p:a==2"
+        >>> e  = { 'p:a': '1', 'p:b': '2', 'p:c': '3', '@type': ["http://example.com/type", "foo:bar"] }
+        >>> f1 = "[p:a]==1"
+        >>> f2 = "[p:a]==2"
         >>> f3 = ''
+        >>> f4 = "@type>=http://example.com/type"
+        >>> f5 = "@type>=foo:bar"
+        >>> f6 = "@type>=bar:foo"
         >>> EntityFinder.compile_selector_filter(f1)(e)
         True
         >>> EntityFinder.compile_selector_filter(f2)(e)
         False
         >>> EntityFinder.compile_selector_filter(f3)(e)
         True
+        >>> EntityFinder.compile_selector_filter(f4)(e)
+        True
+        >>> EntityFinder.compile_selector_filter(f5)(e)
+        True
+        >>> EntityFinder.compile_selector_filter(f6)(e)
+        False
         """
         def match_any(e):
             return True
+        def match_type(type_val):
+            def match_type_f(e):
+                return type_val in e.get('@type',[])
+            return match_type_f
         def match_field(field_name, field_val):
             def match_field_f(e):
                 return e[field_name] == field_val
             return match_field_f
         if selector in {"", "ALL"}:
             return match_any
-        sm = re.match(r'@((\w|:)+)==((\w|:)+)$', selector)
+        #
+        # RFC3986:
+        #    unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
+        #    reserved      = gen-delims / sub-delims
+        #    gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
+        #    sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
+        #                  / "*" / "+" / "," / ";" / "="
+        #
+        # Not matching [ ] ' for now
+        #
+        tm = re.match(r'@type>=((\w|[-.~:/?#@!$&()*+,;=])+)$', selector)
+        if tm:
+            return match_type(tm.group(1))
+        sm = re.match(r'\[((\w|:)+)\]==((\w|:)+)$', selector)
         if sm:
             return match_field(sm.group(1), sm.group(3))
         # Drop through: raise error

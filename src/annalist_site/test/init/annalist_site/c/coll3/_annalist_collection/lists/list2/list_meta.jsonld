@@ -3,6 +3,7 @@
   "rdfs:comment": "RecordList help for coll3/list2",
   "annal:id": "list2",
   "annal:default_type": "Default_type",
+  "annal:type_id": "_list",
   "annal:list_entity_selector": "ALL",
   "annal:display_type": "annal:display_type/List",
   "annal:list_fields": [
@@ -19,5 +20,7 @@
   "annal:url": "http://test.example.com/testsite/c/coll3/d/_list/list2/",
   "annal:default_view": "Default_view",
   "@id": "./",
-  "annal:type": "annal:List"
+  "@type": [
+    "annal:List"
+  ]
 }

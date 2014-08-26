@@ -1,6 +1,7 @@
 { "@id":                "annal:fields/Field_render"
+, "@type":              ["annal:Field"]
 , "annal:id":           "Field_render"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "Field render type"
 , "rdfs:comment":       "Field rendering type. This encompasses the actual form of the rendered value, and any defaults or other values that may be applied to the field."
 , "annal:field_render": "annal:field_render/Identifier"

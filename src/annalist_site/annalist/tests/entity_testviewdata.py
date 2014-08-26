@@ -97,7 +97,8 @@ def recordview_edit_url(action=None, coll_id=None, view_id=None):
 
 def recordview_value_keys():
     keys = set(
-        [ 'annal:id', 'annal:type', 'annal:url', 'annal:uri'
+        [ 'annal:id', 'annal:type_id'
+        , 'annal:type', 'annal:url', 'annal:uri'
         , 'annal:record_type'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:add_field'
@@ -106,7 +107,7 @@ def recordview_value_keys():
     return keys
 
 def recordview_load_keys():
-    return recordview_value_keys() | {"@id"}
+    return recordview_value_keys() | {"@id", '@type'}
 
 def recordview_create_values(
         coll_id="testcoll", view_id="testview", update="RecordView", uri=None, 
@@ -116,7 +117,8 @@ def recordview_create_values(
     Entity values used when creating a record type entity
     """
     view_values = (
-        { 'rdfs:label':         "%s %s/%s"%(update, coll_id, view_id)
+        { 'annal:type':         "annal:View"
+        , 'rdfs:label':         "%s %s/%s"%(update, coll_id, view_id)
         , 'rdfs:comment':       "%s help for %s in collection %s"%(update, view_id, coll_id)
         , 'annal:record_type':  "annal:DefaultType"
         , 'annal:add_field':    "yes"
@@ -152,7 +154,7 @@ def recordview_values(
         view_uri = view_url
     d.update(
         { 'annal:id':       view_id
-        , 'annal:type':     "annal:View"
+        , 'annal:type_id':  "_view"
         , 'annal:url':      view_url
         , 'annal:uri':      view_uri
         })
@@ -164,6 +166,7 @@ def recordview_read_values(
     d = recordview_values(coll_id, view_id, view_uri=view_uri, update=update, hosturi=hosturi).copy()
     d.update(
         { '@id':            "./"
+        , '@type':          ["annal:View"]
         })
     return d
 

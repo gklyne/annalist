@@ -139,7 +139,7 @@ class RecordTypeTest(AnnalistTestCase):
         v.update(
             { 'rdfs:label':     'Default record type'
             , 'rdfs:comment':   'Default record type, applied when no type is specified when creating a record.'
-            , 'annal:uri':      'annal:type/Default_type'
+            , 'annal:uri':      'annal:Default_type'
             })
         self.assertDictionaryMatch(td, v)
         return
@@ -490,7 +490,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_id'],        "Default_type")
         self.assertEqual(r.context['orig_id'],          "Default_type")
         self.assertEqual(r.context['entity_url'],       TestHostUri + type_url)
-        self.assertEqual(r.context['entity_uri'],       "annal:type/Default_type")
+        self.assertEqual(r.context['entity_uri'],       "annal:Default_type")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "")
         # Fields
@@ -498,7 +498,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="Default_type",
             type_label="Default record type",
             type_help="Default record type, applied when no type is specified when creating a record.",
-            type_uri="annal:type/Default_type"
+            type_uri="annal:Default_type"
             )
         return
 

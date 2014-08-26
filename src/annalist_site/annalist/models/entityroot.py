@@ -27,7 +27,7 @@ from django.conf import settings
 
 from annalist               import util
 from annalist.exceptions    import Annalist_Error
-from annalist.identifiers   import ANNAL
+from annalist.identifiers   import ANNAL, RDF
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -67,6 +67,7 @@ class EntityRoot(object):
         entitydir   is the base directory containing the entity
         """
         self._entityid      = None
+        # self._entitytypes   = []  #@@
         self._entityurl     = entityurl if entityurl.endswith("/") else entityurl + "/"
         self._entitydir     = entitydir if entitydir.endswith("/") else entitydir + "/"
         self._entityalturl  = None
@@ -139,9 +140,10 @@ class EntityRoot(object):
         """
         self._values = values.copy()
         self._values[ANNAL.CURIE.id]        = self._values.get(ANNAL.CURIE.id,      self._entityid)
+        self._values[ANNAL.CURIE.type_id]   = self._values.get(ANNAL.CURIE.type_id, self._entitytypeid)
         self._values[ANNAL.CURIE.type]      = self._values.get(ANNAL.CURIE.type,    self._entitytype)
-        self._values[ANNAL.CURIE.url]       = self._values.get(ANNAL.CURIE.url,     self.get_view_url())
         self._values[ANNAL.CURIE.uri]       = self._values.get(ANNAL.CURIE.uri,     self.get_view_url())
+        self._values[ANNAL.CURIE.url]       = self.get_view_url()
         return self._values
 
     def get_values(self):
@@ -149,6 +151,31 @@ class EntityRoot(object):
         Return collection metadata values
         """
         return self._values
+
+    #@@
+    # def set_types(self, types):
+    #     """
+    #     Set user-supplied type(s).  The supplied value may be a URI, CURIE or list/tuple of same.
+    #     """
+    #     if types is None:
+    #         self._entitytypes = []
+    #     elif isinstance(types, (tuple, list)):
+    #         self._entitytypes = types
+    #     else:
+    #         self._entitytypes = [types]
+    #     # log.info("set_types %r"%(types,))
+    #     return self._entitytypes
+
+    # def get_types(self, types):
+    #     """
+    #     Get user-supplied type(s).
+    #
+    #     Returns a sequence of URIs and/or CURIES, which may be empty.
+    #     """
+    #     return self._entitytypes
+    #@@
+
+
 
     # I/O helper functions
 
@@ -204,6 +231,27 @@ class EntityRoot(object):
         """
         return self._exists_path() is not None
 
+    def _get_types(self, types):
+        """
+        Processes a supplied type value and returns a list of types to be stored.
+
+        1. None is converted to an empty list
+        2. A simple string is wrapped in a list
+        3. A tuple is converted to a list
+        4. If not already present, the current entity type is added to the list
+        """
+        # log.info("types in  %r"%(types,))  #@@
+        if types is None:
+            types = []
+        elif isinstance(types, (tuple, list)):
+            types = list(types)     # Make mutable copy
+        else:
+            types = [types]
+        if self._entitytype not in types:
+            types.append(self._entitytype)
+        # log.info("types out %r"%(types,))  #@@
+        return types
+
     def _save(self):
         """
         Save current entity to Annalist storage
@@ -222,11 +270,11 @@ class EntityRoot(object):
         # Create directory (if needed) and save data
         util.ensure_dir(body_dir)
         values = self._values.copy()
-        values["@id"] = self._entityref
+        values['@id']   = self._entityref
+        values['@type'] = self._get_types(values.get('@type', None))
+        # @TODO: is this next needed?  Put logic in set_values?
         if self._entityid:
-            values[ANNAL.CURIE.id]   = self._entityid
-        if self._entitytype:
-            values[ANNAL.CURIE.type] = self._entitytype
+            values[ANNAL.CURIE.id] = self._entityid
         with open(fullpath, "wt") as entity_io:
             json.dump(values, entity_io, indent=2, separators=(',', ': '))
         self._entityuseurl  = self._entityurl
@@ -244,6 +292,10 @@ class EntityRoot(object):
             except IOError, e:
                 if e.errno != errno.ENOENT:
                     raise
+            except ValueError, e:
+                log.error("EntityRoot._load_values: error loading %s"%(body_file))
+                log.error(e)
+                return { "@error": body_file }
         return None
 
     def _child_dirs(self, cls, altparent):

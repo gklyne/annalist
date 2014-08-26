@@ -1,4 +1,5 @@
-{ "annal:type":         "annal:Type"
+{ "@type":              ["annal:Type"]
+, "annal:type_id":      "_type"
 , "rdfs:label":         ""
 , "rdfs:comment":       ""
 , "annal:type_view":    "Default_view"

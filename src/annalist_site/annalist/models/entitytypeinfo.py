@@ -215,11 +215,12 @@ class EntityTypeInfo(object):
         Failing that, returns system-wide default values.
         """
         values = (
-            { RDFS.CURIE.label:     "%s/%s/%s"%
+            { '@type':              ["annal:EntityData"]
+            , ANNAL.CURIE.type_id:  self.type_id
+            , RDFS.CURIE.label:     "%s/%s/%s"%
                                     (self.coll_id, self.type_id, entity_id)
             , RDFS.CURIE.comment:   "Entity '%s' of type '%s' in collection '%s'"%
                                     (entity_id, self.type_id, self.coll_id)
-            , ANNAL.CURIE.type:     "annal:EntityData"
             })
         init_entity = self.get_entity("_initial_values")
         if init_entity:

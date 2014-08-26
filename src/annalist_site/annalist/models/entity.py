@@ -183,7 +183,7 @@ class Entity(EntityRoot):
     @classmethod
     def create(cls, parent, entityid, entitybody):
         """
-        Method creates a new entity.
+        Method creates a new entityor rewrites an existing entity.
 
         cls         is a class value used to construct the new entity value
         parent      is the parent entity from which the new entity is descended.
@@ -274,12 +274,15 @@ class Entity(EntityRoot):
         if e:
             d = e._entitydir
             # Extra check to guard against accidentally deleting wrong thing
-            if e['annal:type'] == cls._entitytype and d.startswith(parent._entitydir):
+            if cls._entitytype in e['@type'] and d.startswith(parent._entitydir):
                 shutil.rmtree(d)
             else:
-                raise Annalist_Error("Entity %s unexpected type %s or path %s"%(entityid, e['type'], d))
+                log.error("Expected type_id: %s, got %s"%(cls._entitytypeid, e[ANNAL.CURIE.type_id]))
+                log.error("Expected dirbase: %s, got %s"%(parent._entitydir, d))
+                raise Annalist_Error("Entity %s unexpected type %s or path %s"%(entityid, e[ANNAL.CURIE.type_id], d))
         else:
             return Annalist_Error("Entity %s not found"%(entityid))
         return None
+
 
 # End.

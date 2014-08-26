@@ -211,8 +211,14 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    x Add field allows new view type to be created, but how to make this default for displayed type?
    / Generic field renderer for entityref as selection among available entity ids.  Use for field selection.  Options should be reworked using this form of enumeration, handled on the fly as required, using type information from the field definition.
    / Type view should have dropdowns for default view and list
-   - List view selector syntax isn't working: need to nail down how type selection can work
+   / List view selector syntax isn't working: need to nail down how type selection can work.  In saved data, I'm seeing '"annal:type": "annal:EntityData"', which isn't realy helpful.
+       / change all references to annal:type to @type, in sitedata and code (i.e. URIs/CURIE values).  E.g. annal:Type, annal:View, annal:EntityData, etc.
+       / for annal:type, assign local type_id value.  Consider renaming as annal:type_id.
+       / annal:type is retained for URI/CURIE of entity class (is this helpful?)
+       / list type selectors then use local type_id values.
+   - @type list selector - allow selection by type substring - e.g. coll/type
    - From list view, continuation URI for new, copy, etc should exclude message parameters
+   - Customize > delete record > confirm : returns to wrong place
    / When not logged in, should still have option to select a different view
 9. Extend form-generator
    / support repeated field group (to support RecordView and BibJSON)

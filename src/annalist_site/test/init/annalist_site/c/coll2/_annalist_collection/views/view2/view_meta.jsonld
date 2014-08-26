@@ -20,10 +20,13 @@
   "rdfs:label": "RecordView coll2/view2",
   "rdfs:comment": "RecordView help for view2 in collection coll2",
   "annal:add_field": "yes",
+  "annal:type_id": "_view",
   "annal:record_type": "annal:DefaultType",
   "annal:uri": "http://test.example.com/testsite/c/coll2/d/_view/view2/",
   "annal:url": "http://test.example.com/testsite/c/coll2/d/_view/view2/",
   "annal:id": "view2",
   "@id": "./",
-  "annal:type": "annal:View"
+  "@type": [
+    "annal:View"
+  ]
 }
