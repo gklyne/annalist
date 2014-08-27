@@ -15,6 +15,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import os
 import django
 import sys
+import logging
 
 DJANGO_ROOT     = os.path.dirname(os.path.realpath(django.__file__))
 SETTINGS_DIR    = os.path.dirname(os.path.realpath(__file__))
@@ -28,9 +29,15 @@ SITE_SRC_ROOT   = os.path.dirname(SITE_CONFIG_DIR)
 SECRET_KEY = '@-+h*%@h+0yj(^c9y-=1a@9l^@xzub200ofq2@a$gm2k_l*$pf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# (overrides in settings.devel and settings.runtests)
+DEBUG = False
+TEMPLATE_DEBUG = False
 
-TEMPLATE_DEBUG = True
+# Logging level used by selected log statements whose output may be useful
+# for tracing field values displayed in Annalist edit/view forms.
+# Suggested use is to raise level to logging.INFO when running a single named
+# test, when trying to understand how values end up in a form.
+TRACE_FIELD_VALUE   = logging.DEBUG
 
 ALLOWED_HOSTS = []
 

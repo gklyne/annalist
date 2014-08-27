@@ -33,14 +33,13 @@ These instructions are my attempt to capture the steps to get a development copy
     cd annalist
     git checkout develop
 
-    # Create Pythoin virtualenv for testing Annalist
+    # Create Python virtualenv for testing Annalist
     virtualenv -p python2.7 anenv
     source anenv/bin/activate
     pip install -r src/annalist_site/requirements/devel.txt 
     cd src/annalist_site/
 
     # Run tests
-    ./makeinitsitedata.sh        # set up initial data for testing in `test/init`
     python manage.py test
 
     # Create development site data and run up server

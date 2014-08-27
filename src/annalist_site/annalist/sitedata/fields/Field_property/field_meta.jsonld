@@ -1,6 +1,7 @@
 { "@id":                "annal:fields/Field_property"
+, "@type":              ["annal:Field"]
 , "annal:id":           "Field_property"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "Property"
 , "rdfs:comment":       "Property URI (or CURIE) used to represent this field data in a record"
 , "annal:placeholder":  "(property URI or CURIE)"

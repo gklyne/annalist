@@ -27,8 +27,9 @@ do
 mkdir -p fields/${fid}
 cat >fields/${fid}/field_meta.jsonld <<EOF
 { "@id":                "annal:fields/${fid}"
+, "@type":              ["annal:Field"]
 , "annal:id":           "${fid}"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "${fid}"
 , "rdfs:comment":       "BibJSON(ish) field ${fid}"
 , "annal:field_render": "annal:field_render/Text"

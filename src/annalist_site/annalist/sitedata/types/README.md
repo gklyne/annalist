@@ -13,12 +13,10 @@ Literals:
 
 References:
 
-- RecordType
-- RecordList
-- RecordView
-- RecordField
-- RecordView_fields
-- RecordList_fields
+- Type
+- List
+- View
+- Field
 
 Specials:
 

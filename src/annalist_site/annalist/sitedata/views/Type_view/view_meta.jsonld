@@ -1,0 +1,29 @@
+{ "@id":                "annal:display/Type_view"
+, "@type":              ["annal:View"]
+, "annal:id":           "Type_view"
+, "annal:type_id":      "_view"
+, "annal:record_type":  "annal:Type"
+, "rdfs:label":         "View description for record type description"
+, "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record type description"
+, "annal:add_field":    "no"
+, "annal:view_fields":
+  [ { "annal:field_id":         "Type_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "Type_label"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "Type_comment"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "Type_uri"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "Type_view"
+    , "annal:field_placement":  "small:0,6"
+    }
+  , { "annal:field_id":         "Type_list"
+    , "annal:field_placement":  "small:6,6"
+    }
+  ]
+}

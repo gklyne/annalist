@@ -13,6 +13,8 @@ log = logging.getLogger(__name__)
 
 from django.test import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 
+from annalist.views.fields.render_utils import bound_field
+
 class AnnalistTestCase(TestCase):
     """
     Additonal test methods for Annalist test cases
@@ -50,14 +52,48 @@ class AnnalistTestCase(TestCase):
         to be dictionaries which are matched recursively. (This logic is used when 
         checking sub-contexts used to render data-defined forms.)
         """
+        # log.info("\n***********\nexpect_dict %r"%(expect_dict))
+        # log.info("\n-----------\nactual_dict %r"%(actual_dict))
         for k in expect_dict:
             self.assertTrue(k in actual_dict, prefix+"Expected key %s not found in actual"%(k))
             if isinstance(expect_dict[k],list):
-                for i in range(len(expect_dict[k])):
-                    self.assertDictionaryMatch(actual_dict[k][i], expect_dict[k][i], prefix="Index %d, "%i)
+                if isinstance(actual_dict[k],list):
+                    # log.info("dict match: prefix: %s, key: %s, list_len %d"%(prefix, k, len(expect_dict[k])))
+                    if k == "@type":
+                        self.assertEqual(
+                            set(actual_dict[k]), set(expect_dict[k]),
+                            "Key %s: %r != %r"%(k, set(actual_dict[k]), set(expect_dict[k]))
+                            )
+                    else:
+                        for i in range(len(expect_dict[k])):
+                            # if i >= len(actual_dict[k]):
+                            #     log.info("\n***********\nexpect_dict %r"%(expect_dict))
+                            #     log.info("\n-----------\nactual_dict %r"%(actual_dict))
+                            #     log.info("\n***********")
+                            self.assertTrue(i < len(actual_dict[k]), prefix+"Actual dict key %s has no element %d"%(k,i))
+                            if ( isinstance(actual_dict[k][i], (dict, bound_field)) and 
+                                 isinstance(expect_dict[k][i], dict)
+                               ):
+                                self.assertDictionaryMatch(
+                                    actual_dict[k][i], expect_dict[k][i], 
+                                    prefix="Key %s[%d]: "%(k,i)
+                                    )
+                            else:
+                                self.assertEqual(
+                                    actual_dict[k][i], expect_dict[k][i],
+                                    "Key %s[%d]: %r != %r"%(k, i, actual_dict[k], expect_dict[k])
+                                    )
+                else:
+                    self.fail("Key %s expected list, got %r instead of %r"%(k, actual_dict[k], expect_dict[k]))
             else:
+                # if actual_dict[k] != expect_dict[k]:
+                #     log.info("\n***********\nexpect_dict %r"%(expect_dict))
+                #     log.info("\n-----------\nactual_dict %r"%(actual_dict))
+                #     log.info("\n***********")
+                # log.info("dict match: prefix: %s, key: %s, actual %s, expected: %s"%(prefix, k, actual_dict[k], expect_dict[k]))
                 self.assertEqual(actual_dict[k], expect_dict[k], 
                     prefix+"Key %s: actual '%s' expected '%s'"%(k, actual_dict[k], expect_dict[k]))
+        # log.info("\n****** matched")
         return
 
 # End.

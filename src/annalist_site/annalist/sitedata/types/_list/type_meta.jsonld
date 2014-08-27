@@ -1,0 +1,10 @@
+{ "@id":                "./"
+, "@type":              ["annal:Type"]
+, "annal:id":           "_list"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:List"
+, "rdfs:label":         "List description type"
+, "rdfs:comment":       "Type of list description record."
+, "annal:type_view":    "List_view"
+, "annal:type_list":    "List_list"
+}

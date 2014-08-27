@@ -1,0 +1,14 @@
+{ "@id":                    "annal:fields/View_choice"
+, "@type":                  ["annal:Field"]
+, "annal:id":               "View_choice"
+, "annal:type_id":          "_field"
+, "rdfs:label":             "Choose view"
+, "rdfs:comment":           "Choose view to display."
+, "annal:field_name":       "view_choice"
+, "annal:field_render":     "annal:field_render/View_sel"
+, "annal:value_type":       "annal:Slug"
+, "annal:placeholder":      "(view id)"
+, "annal:property_uri":     "annal:view"
+, "annal:options_typeref":  "_view"
+, "annal:field_placement":  "small:0,6"
+}

@@ -1,6 +1,8 @@
-## Web application outline plan
+# Annalist TODO
 
-Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
+## Initial web application outline plan
+
+Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
 
 1. Front page/initial display
    / form elements to create new collection
@@ -100,42 +102,167 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
    / refactor defaultlist.py as special case (subclass?)
    / parameterize view-id on extra URI field
    / create new URI mapping entries
-   - create new test suite for generic list view
-     - choose test scenario: list of what? what list definition?
-     - list field descriptions?  Need to create list description (4 fields?)
-     - also choose / define default view for list (Create field view?)
-     - check list display in dev app
-     - define test suite test_genericentitylist based loosely on test_entitydefaultlist
-   - refactor list description access out of context handling code (avoid multiple reads)
-   - refactor code from entityeditbase into mkore specific views where possible
-   - rename what is lefy of entityeditbase -> entityviewbase, or more to generic module
-   - don't include continuation-uri param when URI is blank
-   - edit form response should update, not replace, any data from the original (so data from multiple views is not discarded).
-8. Read-only entity data view
+   / create new test suite for generic list view
+     / choose test scenario: Field definitions: http://localhost:8000/annalist/c/coll1/d/_field/ 
+     / list field descriptions?  Need to create list description (4 fields?).
+       http://localhost:8000/annalist/c/coll1/l/Fields_list/_field/
+     / also choose / define default view for list (Create field view?)
+     / need to rationalize entity display structure to encompass data, collection level metadata and site-level metadata.
+     / check list display in dev app
+     / define test suite test_genericentitylist based loosely on test_entitydefaultlist
+     / create test case for creating/editing site metadata entities (currently fail in dev system) e.g. create test_entitymetadataedit based on entitygenericedit.
+     / create edit view tests for all the main entity classes (type, view, list, data), 
+       along the lines of test_entityfieldedit, moving support code out of entity_testutils.
+       / copy/refactor test_recordtype to use same pattern as test_entityfieldedit
+       / see if old record type view class can be deleted
+       / incorporate model tests in test_entityfieldedit (cf. test_recordtype)
+       / rename test_entityfieldedit -> test_recordfield? (cf. test_recordtype)
+     / resolve overloading of "entity_uri" in context.  In `entityeditbase.py:58` it is taken from
+       `annal:uri`, but in `render_utils.py:108` it may be derived from the entity object, not the data
+       via logic at `entityroot.py:119` (.set_values()).
+       This leads to inconsistency with metadata entities.  What value *should* be returned for these:
+       the actual location or the URI used for viewing?  Ideally, we'll use the `/c/coll/d/_type/id`
+       form, as that hides whether it comes from the collection or is site-wide.
+   / entity_uri appears in entity view context as name (same as annal:uri) but also in bound field as locator.  Change name used in bound field to `entity_ref`.
+   / refactor delete confirm code to generic module, with type-specific messages.  Note that type, view and list deletes are triggered from the collection edit view, with different form variables, and also have specific remove functions in the collection class, so need separate implementations (for now?).
+   / update render template/logic for RecordView_view
+   / update template to include delete field options; finalize form response data
+   / implement tests for add/delete fields
+   / implement handlers for add/delete fields
+   / edit form response should update, not replace, any data from the original (so data from multiple views is not discarded).
+   / implement delete confirm view for views and lists.
+   / review missing tests: implement or delete?
+   / fix up view links from list display
+   / define View-list and List-list
+   / view button handler from list display + test
+   / continuation handling: replace by more generic parameter handling based on dictionary; move handling of escape logic, etc.
+   / search button handler from list display
+   / consider that 'Find' and 'View' buttons could be combined
+   / don't include continuation-uri param when URI is blank
+   / implement some version of entity selection logic
+   / decide how to handle presentation of field types (where?):
+     (a) use simple text string, not CURIE
+     (b) use CURIE, but use render type to extract ID; but will need to map back when form is submitted?
+     / it all rather depends on the anticipated extensibility model for field types.
+       Option (a) is simplest for now.
+   / default_view response handler (needs generic view to make sense)
+   / implement view- and list- edit from collection customization page
+   / implement per-type default list and view
+     / already works for list view; e.g. http://localhost:8000/annalist/c/coll1/d/_type/
+     / but not yet for entity view; e.g. http://localhost:8000/annalist/c/coll1/d/_type/type1/
+     / return list_info structure rather than saving values in object. 
+   / consider replicating list_seup logic for view_setup.
+   / find and eliminate other references to get_coll_data, etc.
+   / don't return placeholder text in a form as field value; use HTML5 placeholder attribute
+   / refactor fields package as subpackage of views
+   / fix entity links to use default view URI (/d/...)
+   / List type + "View" selection uses // for type field - select based on list or suppress
+   / customize > edit record view > add field > cancel -- returns to wrong place.
+   / need test case for remove field with no field selected
+   / factor out add-field logic used by current add-field code
+   / test case for POST with 'add_view_field'
+   / provide option to invoke add-field logic during initial form rendering
+   / add_field button on entity edit displays; need way to control its inclusion
+   / new entity initialization vector through typeinfo, AND/OR provide mechanism to associate initial values for each entity type.
+   / "Add field" when creating new entity results in multiple entities created (use !edit for continuation URI?)  Add test case.
+   / tests
+     / skipped '@@TODO defaultlist default-view button handler'
+     / skipped '@@TODO defaultlist search button handler'
+     / skipped '@@TODO genericlist default-view button handler'
+     / skipped '@@TODO genericlist search button handler'
+       / annalist.tests.test_entitygenericlist.EntityGenericListViewTest
+     / skipped '@@TODO genericlist default list button'
+       / annalist.tests.test_entitygenericlist.EntityGenericListViewTest
+8. initial application testing
+   / review and simplify bound_field logic for accessing field_value
+   / Create new type - appears twice in default_list_all display.  Delete one deletes both appearances, so this looks like display problem.  I thought this had been fixed.  Confirmed to be knock-on from incorrect creation of _type data (see next).
+   / New entry save as _type does not create new type in collection
+   / field view has size/position field; use as default when adding to view.
+   / viewing new entity with custom type generates "keyerror annal:value_type" @ fielddescription.py line 55.
+   / (a) update field view description to display all relevant fields; ???
+   / (b) when defining a field, the render type selected also implies a field value type; handle this in "FieldDescription constructor?"  Later, maybe.  For now, add value type field.
+   / (c) make FieldDescription constructor more resilient to missing data.
+   / Changing type to built-in type in entity edit display does not save to correct location
+   / List editing view formatting is messed up (small-6?)
+   / Click on local type in default_list, then cancel, returns to Type_list display.  No continuation_uri in links.
+   / Click on local record in Default_list, cancel, returns to default data display (/d/ rather than /l/).  In default display, types don't appear.
+   / grey out set_default button on collection default display (/d/, /l/)
+   / When creating new collection, there's no obvious way to create a new record type (or view).
+   / Handle bare /l/ URI and redirect to default view for collection
+   / Remove precalculated list_ids and view_ids from view context
+   / Script to refresh sitedata in devel site
+   / In view editing, provide field id drodown
+   / In list displays, hyperlink entity type to view/edit form
+   / No easy way to create field description while editing view details; include new-field button
+       / update form template
+       / implement handler for 'new_field' response
+       / implement test case for 'new_field' response
+       / list description view not showing types or views in dropdowns
+       / introduce Default_field type
+   / When defining field, missing placement is silently ignored; field is not saved; (still)
+   / Authorization of field editing is not handled consistently:
+     allows config when no delete authz (no login)
+     Also, display of remove-field checkbox is based on "delete" permission. 
+   / Save entity edit is not requiring login - should check from POST?
+   / Entityedit add test cases for unauthorized config requests (and more?)
+   / From type display, want easy retreat to default display for collection
+   / View_type display should suppress add-field option.  Similar for View_list and View_field?
+   / suppress _initial_values as option when selecting type/view/list
+   x Add field allows new view type to be created, but how to make this default for displayed type?
+   / Generic field renderer for entityref as selection among available entity ids.  Use for field selection.  Options should be reworked using this form of enumeration, handled on the fly as required, using type information from the field definition.
+   / Type view should have dropdowns for default view and list
+   / List view selector syntax isn't working: need to nail down how type selection can work.  In saved data, I'm seeing '"annal:type": "annal:EntityData"', which isn't realy helpful.
+       / change all references to annal:type to @type, in sitedata and code (i.e. URIs/CURIE values).  E.g. annal:Type, annal:View, annal:EntityData, etc.
+       / for annal:type, assign local type_id value.  Consider renaming as annal:type_id.
+       / annal:type is retained for URI/CURIE of entity class (is this helpful?)
+       / list type selectors then use local type_id values.
+   x @type list selector - allow selection by type substring - e.g. coll/type
+   - From list view, continuation URI for new, copy, etc should exclude message parameters
+   - Customize > delete record > confirm : returns to wrong place
+   - Enumeration type for render types (text, longtext, etc...); use in fields display
+   - Enumeration type for list types (list/grid: default list)
+   - Move Bib_* fields to separate "built-in" collection
+   / When not logged in, should still have option to select a different view
+9. Extend form-generator
+   / Support repeated field group (to support RecordView and BibJSON)
+   - Support alternate displays for different subtypes (to support BibJSON)
+   - New render types: number, date, ...
+   - Blob and file upload/linking support: images, spreadsheets, ...
+   - Implement "add repeating field" option to view edit (and entity view?)
+10. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching
    - include default view
-9. Extend form-generator
-   - support repeated field group (to support RecordView and BibJSON)
-   - support alternate displays for different subtypes (to support BibJSON)
-10. Record view display and editing (data to drive generic view/list)
-   - where possible, migrate methods from editentitybase to subclasses
-   - review logic - ideally, form handlers will access data from form, then hand off for peocessing
-   - record view description form (create data and configure URIs)
-   - field description form (create data and configure URIs)
-   - record list description form (create data and configure URIs)
-   - add "new field" logic to entity edit POST handler
-11. Display enhancements
-   - add type links to list view (link to typed list view...?)
-       - (should use same base enhancements as entity links at step 5)
-         - cf. [https://github.com/gklyne/annalist/commit/ff16e6063a2fee193e6e0080a77bfc738381a275]()
-       - Update field in default list displays
-   - list_view response handler (needs generic view to make sense; view button to redisplay)
-   - default_view response handler (needs generic view to make sense)
-   - search response handler (later; see below)
-?. Grid view
-?. Generic entity selector (based on canned sparql expressions?)
-?. implement search within list view
+11. Code improvement - general
+   - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
+   - Support import types from another collection
+   - review URI for delete type/view/list confirmation
+   ? align type ID values used in local URI construction with type URIs/CURIEs
+   - implement full authorization structure (currently just requires authentication for any changes).  Update "no_login" test cases accordingly.
+   - improve authorization failure messages cf. AnnalistGenericView.authorize, .form_action_auth, displayinfo.check_authorization, entityedit.save_entity, etc.
+   - Identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
+12. Code improvement - lists
+   / move invocation of authentication to the immediate response handler code?
+   / refactor list description access out of context handling code (avoid multiple reads)
+   / refactor code from entityeditbase into more specific views where possible
+   / rename what is left of entityeditbase -> entityviewbase, or move to generic module
+   - use proper indexing to accelerate search (maybe later?)
+13. Code improvement - views
+   / where possible, migrate methods from editentitybase to subclasses
+   / review logic - ideally, form handlers will access data from form, then hand off for processing
+   - review record view description form (create data and configure URIs)
+   - review field description form (create data and configure URIs)
+   - review record list description form (create data and configure URIs)
+   / add "new field" logic to entity edit POST handler
+   - update to Django 1.7 and re-work field rendering (use code rather than templates?  simplify context generation?)
+14. Display enhancements
+   / add type links to list view (link to typed list view...?)
+       / Update field in default list displays
+   / list_view response handler (needs generic view to make sense; view button to redisplay)
+15. Grid view
+   - to be planned
+16. Generic entity selector (based on canned sparql expressions?)
+   / initial, simple non-SPARQL implementation in place - can revisit later
 
 
 ## Tests required:
@@ -149,14 +276,14 @@ Guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
 
 ## Misc TODO
 
-- CSS style associuation with entity types, so (e.g.) different types can be colour-coded.
+- CSS style association with entity types, so (e.g.) different types can be colour-coded.
 - entity list view: add javascript for selection classes (hide checkbox and highlight row when clicked)
-- entity should carry URI only.  Other fields (host, path, etc. should be generated as required.  Suggest use an internal value that allows x.uri.path, .host, etc. as required)
+- entity object should carry URI only.  Other fields (host, path, etc. should be generated as required.  Suggest use an internal value that allows x.uri.path, .host, etc. as required)
 - Convert literal CURIES to namespace references
-- Review field descriptions in sitedata: type values seem to be inconsistent??? (e.g. Type vs Entity_type?).  May need to start some proper documentation of the form data descriptions.
+- Review field descriptions in sitedata: type values seem to be inconsistent??? (e.g. Type vs Entity_type?).  Need to start some proper documentation of the form data descriptions.
 - rationalize/simplify fields and methods in site/collection model classes - there appears to be some duplication
 - review URI design: can we revert to original design (without /c/, /d/, etc.)?
-- Login link to include option to redirect to failed page, with form fields populated
+- Login link to include option to redirect to failed page, with form fields populated (i.e. don't lose values entered)
 - Complete authorization framework
 - think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
 - think about handling of identifier renaming (re-write data, record equivalence, or ...).  (See also "data storage" below.)
@@ -176,35 +303,42 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
 
 ## Future features (see also Misc above)
 
-- alternative OIDC identity providers
-- spreadhsheet bridge
-- Research Object presentation
+- Spreadhsheet bridge
+- BLOB upload and storage
+- Research Objects presentation
+- Checklist integration
 - use HTTP to access data; use standard web server backend
   - need to address auth, resource enumeration (WebDAV?), other issues
   - NOTE: need to address problem of getting HOST part of site URI when initializing a collection;
    can this logic be shifted to request code instead of __init__?
 - more field types, including link browser
   - image grid + metadata pop-up for mobile browsing?
-- provenance data capture (e.g. - look at creating additional resource in entity._save)
+- alternative OIDC identity providers
+- provenance data capture (e.g. - look at creating additional resource in entity directory)
+- provenance pingbacks - distributed provenance for real data?
 - git integration for data versioning
 - dat integration for versioning? (https://github.com/maxogden/dat)
 - Memento integration for old data recovery
 - ResourceSync integration for data sync
 - Shuffl integration?
+- RML integration for data bridges
 
 ### Entity abstraction and storage
 
-- replace direct file access with HTTP access
+- replace/augment direct file access with HTTP access
 - Note that it should be possible to take an Annalist site directory and dump it onto any regular HTTP server to publish the raw data.  Web site should still be able to work with that.
 - think about storage of identifier URIs (e.g. record type URIs.)  Should they default to be:
   (1) relative to self
   (2) relative to base of site
   (3) relative to host
   (4) absolute
-  Currently, it's (3) or (4), but I think I favour (2).  The intent is that the URI field
+  (5) relative to base of collection
+  Currently, it's (3) or (4), but I think I favour (2) (or (5)?).  The intent is that the URI field
   can be fixed by explicitly entering an absolute URI, but until then they are allocated
   per site.  The expectation is that if data are moved, it will be as complete collections
-  to ensure they are accompanied by their associated metadata.
+  to ensure they are accompanied by their associated metadata.  This is easiest with (5), but (2) may be easier to implement.
+- see also notes below about URI/URL handling
+- Note that entityroot.set_values currently favours a copy of the URL from the stored/internal data.  Currently this is created with a full URI (including hostname), but need not be.
 
 ### AnnalistGenericView:
 
@@ -222,6 +356,12 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
 - Assume use of annalist form data under control of suitable authority
 - Focus on form of authorization data
 - Back-fit to form interface for creation of data; figure what seeding is needed
+
+
+## Applications
+
+* Cruising log
+* Image database (bioimage revisited)
 
 
 ## Explorations
@@ -251,3 +391,96 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
   * Mostly straight HTTP GET, etc.  (Need to investigate access and event linkage - currently using direct file access for concept demonstrator.)
 
 
+# Notes
+
+## Rendering of entity type on form; rationalize rendering logic
+
+(Changes made as described below)
+
+### Form field rendering for GET
+
+  get:
+
+        entity = self.get_entity(viewinfo.entity_id, typeinfo, action, entity_initial_values)
+
+        return self.form_render(viewinfo, entity, add_field, continuation_uri)
+
+  form_render(self, viewinfo, entity, add_field, continuation_uri):
+
+        viewcontext = entityvaluemap.map_value_to_context(entity, ...)
+
+So, in this case, values are provided as a genuine entity with proper entity_type, etc.
+
+### Form re-rendering for POST
+
+  post:
+        return self.form_response(
+            viewinfo,
+            entity_id, orig_entity_id, 
+            entity_type, orig_entity_type,
+            messages, context_extra_values
+            )
+
+  form_response(self, viewinfo, 
+                entity_id, orig_entity_id, entity_type, orig_entity_type, 
+                messages, context_extra_values):
+
+        return self.form_re_render(entityvaluemap, form_data, context_extra_values, ...)
+
+        form_context = entityvaluemap.map_form_data_to_context(form_data, ...)
+
+  map_form_data_to_context(self, form_data, **kwargs):
+
+        entityvals = self.map_form_data_to_values(form_data)
+
+        context = self.map_value_to_context(entityvals, **kwargs)
+
+In this case, values are provided as a dictionary without proper entity_type, etc.
+
+### Solution
+
+Simplify bound_field so that it works with entity values supplied as a dictionary only.
+
+Vaues may be 1:1 with stored entity values keyed by CURIE or URI, or may be special keys
+that access entity parameters unrelated to the field being rendered, or field parameters
+unrelated to the entity being processed.
+
+A special case is 'field_value' which uses a field definition to select a value from
+the entity data.  Special cases of field_value are 'entity_id', 'entity_type[_id?]' and 'annal:type'.  The first two are clearly bound to the entity access logic.  The third works as a synonym for 'entity_type', so that when an entity is rendered its type drop-down is initialized to the stored 'annal:type' value.
+
+In code paths that supply values from an entity, the special fields should be added to the
+entity values dictionary so they can be referenced directly.  All code paths should add 
+special values to the entity values dictionary as needed.
+
+(later) Options should be re-worked as a more generic entity reference that enumerates 
+the target entity ids on the fly as required, using type information in the field definition.
+
+
+## Handling of entity URI (cf. for Type records)
+
+When creating new type, URI should be based on ID entered, but possible to override by user.  Set URI when saving rather than when creating? (Partially works).
+
+(Changes made as described below)
+
+### Current processing and thoughts
+
+Uses annal:uri property, which is overloaded as an arbitrary entity locator, which in turn gets some special treatment.  This means the type identifier is bound to its Annalist location, which is OK as a default but not always what is required.
+
+Could use a different property URI, and think about generic way to default value on save based on other fields?
+
+Type URI processing involves the following methods:
+
+    - entityvaluemap.map_form_data_to_values
+    - kmap.map_form_to_entity(form_data)
+    - Fieldvaluemap.map_form_to_entity looks like the place to intervene; self.f is a field description.
+    - FieldDescription contains information extracted from _field entity on disk.  Could use special form of 'field_default_value', which is currently used by bound_field in views.fields.render_utils?
+
+### Proposed solution
+
+This proposal generalizes the handling of entity location and identifiers to entities other than type descriptions.
+
+    1. Rename annal:uri to annal:url with current special-case processing logic (to emphasize its role as locator).
+    2. Remove any saved 'annal:uri' values in sitedata if they are also locators.
+    3. Introduce a new 'annal:uri' field which defaults to annal:url when retrieved, but which may be overridden by user input (if the form used allows this).  On saving, if 'annal:uri' is the same as 'annal:url', don't save it (so that if the entity itself is renamed, its 'annal:uri' value will update accordingly)
+
+  For copy operations, the annal:uri field should be reset as the form is rendered.

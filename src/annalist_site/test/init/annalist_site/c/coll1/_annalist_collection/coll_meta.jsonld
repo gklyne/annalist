@@ -2,9 +2,11 @@
   "rdfs:label": "Collection coll1",
   "rdfs:comment": "Description of Collection coll1",
   "annal:uri": "http://test.example.com/testsite/c/coll1/",
-  "annal:urihost": "test.example.com",
-  "annal:uripath": "/testsite/c/coll1/",
+  "annal:url": "http://test.example.com/testsite/c/coll1/",
+  "annal:type_id": "_collection",
   "annal:id": "coll1",
   "@id": "../",
-  "annal:type": "annal:Collection"
+  "@type": [
+    "annal:Collection"
+  ]
 }

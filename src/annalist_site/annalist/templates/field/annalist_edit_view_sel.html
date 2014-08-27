@@ -1,0 +1,26 @@
+<!-- field/annalist_edit_view_sel.html -->
+<div class="{{field.field_placement.field}}">
+  <div class="row">
+    <div class="view_label {{field.field_placement.label}}">
+      <p>{{field.field_label}}</p>
+    </div>
+    <div class="{{field.field_placement.value}}">
+      <div class="row">
+        <div class="small-9 columns">
+          <select name="{{repeat.repeat_prefix}}{{field.field_name}}">
+            {% for v in field.options %}
+              {% if v == field.field_value %}
+              <option selected="selected">{{v}}</option>
+              {% else %}
+              <option>{{v}}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+        <div class="small-3 columns">
+          <input type="submit" name="use_view" value="Show view" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

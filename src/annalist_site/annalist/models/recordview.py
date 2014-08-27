@@ -21,13 +21,17 @@ from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
 from annalist                   import util
 from annalist.models.entity     import Entity
+from annalist.models.entitydata import EntityData
 
-class RecordView(Entity):
+class RecordView(EntityData):
 
-    _entitytype = ANNAL.CURIE.RecordView
-    _entitypath = layout.COLL_VIEW_PATH
-    _entityfile = layout.VIEW_META_FILE
-    _entityref  = layout.META_VIEW_REF
+    _entitytype     = ANNAL.CURIE.View
+    _entitytypeid   = "_view"
+    _entityview     = layout.COLL_VIEW_VIEW
+    _entitypath     = layout.COLL_VIEW_PATH
+    _entityaltpath  = layout.SITE_VIEW_PATH
+    _entityfile     = layout.VIEW_META_FILE
+    _entityref      = layout.META_VIEW_REF
 
     def __init__(self, parent, view_id, altparent=None):
         """
@@ -35,8 +39,11 @@ class RecordView(Entity):
 
         parent      is the parent entity from which the view is descended.
         view_id     the local identifier for the record view
+        altparent   is a site object to search for this new entity,
+                    allowing site-wide RecordView values to be found.
         """
-        super(RecordView, self).__init__(parent, view_id, altparent=True)
+        super(RecordView, self).__init__(parent, view_id, altparent)
+        log.debug("RecordView %s: dir %s, alt %s"%(view_id, self._entitydir, self._entityaltdir))
         return
 
 # End.

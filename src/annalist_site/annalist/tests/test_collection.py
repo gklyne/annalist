@@ -32,17 +32,27 @@ from tests                      import TestHost, TestHostUri, TestBasePath, Test
 from tests                      import dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import (
-    site_dir, collection_dir, recordtype_dir,
-    site_view_uri, 
-    collection_view_uri, collection_edit_uri, 
-    recordtype_edit_uri,
-    entitydata_list_all_uri,
-    continuation_uri_param,
+    site_dir, collection_dir,
+    site_view_url, 
+    collection_view_url, 
+    collection_edit_url, 
+    continuation_url_param,
     collection_value_keys, collection_create_values, collection_values,
-    recordtype_value_keys, recordtype_create_values, recordtype_values,
-    recordview_value_keys, recordview_create_values, recordview_values,
-    recordlist_value_keys, recordlist_create_values, recordlist_values,
     site_title
+    )
+from entity_testtypedata            import (
+    recordtype_edit_url,
+    recordtype_create_values, recordtype_read_values
+    )
+from entity_testviewdata            import (
+    recordview_create_values, recordview_read_values,
+    )
+from entity_testlistdata            import (
+    recordlist_create_values, recordlist_read_values,
+    )
+from entity_testentitydata          import (
+    entitydata_list_all_url,
+    get_site_types, get_site_views, get_site_lists
     )
 
 #   -----------------------------------------------------------------------------
@@ -51,13 +61,9 @@ from entity_testutils           import (
 #
 #   -----------------------------------------------------------------------------
 
-site_types = {"Default_type"}
-site_views = (
-    { "Default_view", "Field_view"
-    , "RecordType_view", "RecordView_view"
-    , "List_view", "BibEntry_view"
-    })
-site_lists = {"Default_list", "Default_list_all"}
+site_types = get_site_types()
+site_views = get_site_views()
+site_lists = get_site_lists()
 
 class CollectionTest(AnnalistTestCase):
     """
@@ -71,17 +77,17 @@ class CollectionTest(AnnalistTestCase):
         self.coll1        = collection_values("coll1")
         self.testcoll_add = collection_create_values("testcoll")
         self.type1_add    = recordtype_create_values("testcoll", "type1")
-        self.type1        = recordtype_values("testcoll", "type1")
+        self.type1        = recordtype_read_values("testcoll", "type1")
         self.type2_add    = recordtype_create_values("testcoll", "type2")
-        self.type2        = recordtype_values("testcoll", "type2")
+        self.type2        = recordtype_read_values("testcoll", "type2")
         self.view1_add    = recordview_create_values("testcoll", "view1")
-        self.view1        = recordview_values("testcoll", "view1")
+        self.view1        = recordview_read_values("testcoll", "view1")
         self.view2_add    = recordview_create_values("testcoll", "view2")
-        self.view2        = recordview_values("testcoll", "view2")
+        self.view2        = recordview_read_values("testcoll", "view2")
         self.list1_add    = recordlist_create_values("testcoll", "list1")
-        self.list1        = recordlist_values("testcoll", "list1")
+        self.list1        = recordlist_read_values("testcoll", "list1")
         self.list2_add    = recordlist_create_values("testcoll", "list2")
-        self.list2        = recordlist_values("testcoll", "list2")
+        self.list2        = recordlist_read_values("testcoll", "list2")
         return
 
     def tearDown(self):
@@ -98,7 +104,7 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(c._entityfile,     layout.COLL_META_FILE)
         self.assertEqual(c._entityref,      layout.META_COLL_REF)
         self.assertEqual(c._entityid,       "testcoll")
-        self.assertEqual(c._entityuri,      TestHostUri + collection_view_uri(coll_id="testcoll"))
+        self.assertEqual(c._entityurl,      TestHostUri + collection_view_url(coll_id="testcoll"))
         self.assertEqual(c._entitydir,      collection_dir(coll_id="testcoll"))
         self.assertEqual(c._values,         None)
         return
@@ -107,9 +113,7 @@ class CollectionTest(AnnalistTestCase):
         c = self.testcoll
         c.set_values(self.testcoll_add)
         cd = c.get_values()
-        self.assertEqual(set(cd.keys()),     set(collection_value_keys()))
-        self.assertEqual(cd["rdfs:label"],   self.testcoll_add["rdfs:label"])
-        self.assertEqual(cd["rdfs:comment"], self.testcoll_add["rdfs:comment"])
+        self.assertDictionaryMatch(cd, self.testcoll_add)
         return
 
     # Record types
@@ -128,9 +132,8 @@ class CollectionTest(AnnalistTestCase):
         self.testsite.add_collection("testcoll", self.testcoll_add)
         t1 = self.testcoll.add_type("type1", self.type1_add)
         t2 = self.testcoll.add_type("type2", self.type2_add)
-        self.assertKeysMatch(self.testcoll.get_type("type1").get_values(), self.type1)
-        self.assertEqual(self.testcoll.get_type("type1").get_values(), self.type1)
-        self.assertEqual(self.testcoll.get_type("type2").get_values(), self.type2)
+        self.assertDictionaryMatch(self.testcoll.get_type("type1").get_values(), self.type1)
+        self.assertDictionaryMatch(self.testcoll.get_type("type2").get_values(), self.type2)
         return
 
     def test_remove_type(self):
@@ -150,7 +153,8 @@ class CollectionTest(AnnalistTestCase):
         # Some type existence tests takling accounbt of site data default type
         self.assertTrue(RecordType.exists(self.testcoll, "testtype"))
         self.assertFalse(RecordType.exists(self.testcoll, "notype"))
-        self.assertTrue(RecordType.exists(self.testcoll, "Default_type"))
+        self.assertFalse(RecordType.exists(self.testcoll, "Default_type"))
+        self.assertTrue(RecordType.exists(self.testcoll, "Default_type", self.testsite))
         return
 
     # Record views
@@ -208,10 +212,6 @@ class CollectionTest(AnnalistTestCase):
         t2 = self.testcoll.add_list("list2", self.list2_add)
         self.assertDictionaryMatch(self.testcoll.get_list("list1").get_values(), self.list1)
         self.assertDictionaryMatch(self.testcoll.get_list("list2").get_values(), self.list2)
-        self.assertKeysMatch(self.testcoll.get_list("list1").get_values(), self.list1)
-        self.assertKeysMatch(self.testcoll.get_list("list2").get_values(), self.list2)
-        self.assertDictionaryMatch(self.testcoll.get_list("list1").get_values(), self.list1)
-        self.assertDictionaryMatch(self.testcoll.get_list("list2").get_values(), self.list2)
         return
 
     def test_remove_list(self):
@@ -241,11 +241,9 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
         self.user.save()
-        self.view_uri = collection_view_uri(coll_id="coll1")
-        self.edit_uri = collection_edit_uri(coll_id="coll1")
-        self.continuation = "?" + continuation_uri_param(
-            self.edit_uri, continuation_uri_param(site_view_uri())
-            )
+        self.view_url = collection_view_url(coll_id="coll1")
+        self.edit_url = collection_edit_url(coll_id="coll1")
+        self.continuation = "?" + continuation_url_param(self.edit_url)
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
@@ -259,15 +257,15 @@ class CollectionEditViewTest(AnnalistTestCase):
         return
 
     def test_get_view(self):
-        r = self.client.get(self.view_uri)
+        r = self.client.get(self.view_url)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_all_uri(coll_id="coll1"))
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_all_url(coll_id="coll1"))
         return
 
     def test_get_edit(self):
-        r = self.client.get(self.edit_uri)
+        r = self.client.get(self.edit_url)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
@@ -275,7 +273,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         return
 
     def test_get_edit_context(self):
-        r = self.client.get(self.edit_uri)
+        r = self.client.get(self.edit_url)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertEquals(r.context['title'],   site_title())
@@ -290,11 +288,11 @@ class CollectionEditViewTest(AnnalistTestCase):
         form_data = (
             { "type_new":   "New"
             })
-        r = self.client.post(self.edit_uri, form_data)
+        r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        new_type_uri = recordtype_edit_uri("new", "coll1")
+        new_type_uri = recordtype_edit_url("new", "coll1")
         self.assertEqual(r['location'], TestHostUri+new_type_uri+self.continuation)
         return
 
@@ -303,11 +301,11 @@ class CollectionEditViewTest(AnnalistTestCase):
             { "typelist":   "type1"
             , "type_copy":  "Copy"
             })
-        r = self.client.post(self.edit_uri, form_data)
+        r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        copy_type_uri = recordtype_edit_uri("copy", "coll1", type_id="type1")
+        copy_type_uri = recordtype_edit_url("copy", "coll1", type_id="type1")
         self.assertEqual(r['location'], TestHostUri+copy_type_uri+self.continuation)
         return
 
@@ -315,11 +313,11 @@ class CollectionEditViewTest(AnnalistTestCase):
         form_data = (
             { "type_copy":  "Copy"
             })
-        r = self.client.post(self.edit_uri, form_data)
+        r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        erroruri = self.edit_uri+r"\?error_head=.*\&error_message=.*"
+        erroruri = self.edit_url+r"\?error_head=.*\&error_message=.*"
         self.assertMatch(r['location'], TestHostUri+erroruri)
         return
 
@@ -328,11 +326,11 @@ class CollectionEditViewTest(AnnalistTestCase):
             { "typelist":   "type1"
             , "type_edit":  "Edit"
             })
-        r = self.client.post(self.edit_uri, form_data)
+        r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        edit_type_uri = recordtype_edit_uri("edit", "coll1", type_id="type1")
+        edit_type_uri = recordtype_edit_url("edit", "coll1", type_id="type1")
         self.assertEqual(r['location'], TestHostUri+edit_type_uri+self.continuation)
         return
 
@@ -340,11 +338,11 @@ class CollectionEditViewTest(AnnalistTestCase):
         form_data = (
             { "type_edit":  "Edit"
             })
-        r = self.client.post(self.edit_uri, form_data)
+        r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        erroruri = self.edit_uri+r"\?error_head=.*\&error_message=.*"
+        erroruri = self.edit_url+r"\?error_head=.*\&error_message=.*"
         self.assertMatch(r['location'], TestHostUri+erroruri)
         return
 
@@ -353,15 +351,15 @@ class CollectionEditViewTest(AnnalistTestCase):
             { "typelist":   "type1"
             , "type_delete":  "Delete"
             })
-        r = self.client.post(self.edit_uri, form_data)
+        r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertTemplateUsed(r, "annalist_confirm.html")
         # Check confirmation form content
-        complete_action_uri = recordtype_edit_uri("delete", "coll1")
+        complete_action_uri = recordtype_edit_url("delete", "coll1")
         self.assertContains(r, '''<form method="POST" action="'''+TestBasePath+'''/confirm/">''', status_code=200)
         self.assertEqual(r.context['complete_action'], complete_action_uri)
-        self.assertEqual(r.context['cancel_action'], self.edit_uri)
+        self.assertEqual(r.context['cancel_action'], self.edit_url)
         action_params = json.loads(r.context['action_params'])
         self.assertEqual(action_params['type_delete'], ["Delete"])
         self.assertEqual(action_params['typelist'],    ["type1"])
@@ -371,11 +369,11 @@ class CollectionEditViewTest(AnnalistTestCase):
         form_data = (
             { "type_delete":  "Delete"
             })
-        r = self.client.post(self.edit_uri, form_data)
+        r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        erroruri = self.edit_uri+r"\?error_head=.*\&error_message=.*"
+        erroruri = self.edit_url+r"\?error_head=.*\&error_message=.*"
         self.assertMatch(r['location'], TestHostUri+erroruri)
         return
 
@@ -383,11 +381,11 @@ class CollectionEditViewTest(AnnalistTestCase):
         form_data = (
             { "close":  "Close"
             })
-        r = self.client.post(self.edit_uri, form_data)
+        r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri+site_view_uri())
+        self.assertEqual(r['location'], TestHostUri+site_view_url())
         return
 
 # End.

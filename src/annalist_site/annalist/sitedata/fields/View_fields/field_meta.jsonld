@@ -1,8 +1,9 @@
 { "@id":                "annal:fields/View_fields"
+, "@type":              ["annal:Field"]
 , "annal:id":           "View_fields"
-, "annal:type":         "annal:Field"
+, "annal:type_id":      "_field"
 , "rdfs:label":         "Fields"
-, "rdfs:comment":       "This value encodes a list of fields (columns or grid labels) that are displayed by a record view.  The form rendering of thius is a complex widget with a variable number of rows, each of which specifies a field and a placement for that field."
+, "rdfs:comment":       "This value encodes a list of fields (columns or grid labels) that are displayed by a record view.  The form rendering of thus is a complex widget with a variable number of rows, each of which specifies a field and a placement for that field."
 , "annal:field_render": "annal:field_render/View_fields"
 , "annal:value_type":   "annal:RecordView_fields"
 , "annal:placeholder":  "(View fields)"

@@ -37,20 +37,31 @@ from annalist.models.recordlist import RecordList
 
 class Collection(Entity):
 
-    _entitytype = ANNAL.CURIE.Collection
-    _entitypath = layout.SITE_COLL_PATH
-    _entityfile = layout.COLL_META_FILE
-    _entityref  = layout.META_COLL_REF
+    _entitytype     = ANNAL.CURIE.Collection
+    _entitytypeid   = "_collection"
+    _entityview     = layout.SITE_COLL_VIEW
+    _entitypath     = layout.SITE_COLL_PATH
+    _entityfile     = layout.COLL_META_FILE
+    _entityref      = layout.META_COLL_REF
 
-    def __init__(self, parent, coll_id):
+    def __init__(self, parentsite, coll_id):
         """
         Initialize a new Collection object, without metadta (yet).
 
-        parent      is the parent site from which the new collection is descended.
+        parentsite  is the parent site from which the new collection is descended.
         coll_id     the collection identifier for the collection
         """
-        super(Collection, self).__init__(parent, coll_id, altentity=parent._sitedata)
+        super(Collection, self).__init__(parentsite, coll_id)
+        self._parentsite = parentsite
         return
+
+    # Site
+
+    def get_site(self):
+        """
+        Return site object for the site from which the current collection is accessed.
+        """
+        return self._parentsite
 
     # Record types
 
@@ -58,9 +69,10 @@ class Collection(Entity):
         """
         Generator enumerates and returns record types that may be stored
         """
-        for f in self._children(RecordType, include_alt=include_alt):
-            t = RecordType.load(self, f)
-            if t:
+        altparent = self._parentsite if include_alt else None
+        for f in self._children(RecordType, altparent=altparent):
+            t = self.get_type(f)
+            if t and t.get_id() != "_initial_values":
                 yield t
         return
 
@@ -86,7 +98,7 @@ class Collection(Entity):
 
         returns a RecordType object for the identified type, or None.
         """
-        t = RecordType.load(self, type_id)
+        t = RecordType.load(self, type_id, altparent=self._parentsite)
         return t
 
     def remove_type(self, type_id):
@@ -97,8 +109,8 @@ class Collection(Entity):
 
         Returns a non-False status code if the type is not removed.
         """
-        t = RecordType.remove(self, type_id)
-        return t
+        s = RecordType.remove(self, type_id)
+        return s
 
     # Record views
 
@@ -106,10 +118,11 @@ class Collection(Entity):
         """
         Generator enumerates and returns record views that may be stored
         """
-        for f in self._children(RecordView, include_alt=include_alt):
-            t = RecordView.load(self, f)
-            if t:
-                yield t
+        altparent = self._parentsite if include_alt else None
+        for f in self._children(RecordView, altparent=altparent):
+            v = self.get_view(f)
+            if v and v.get_id() != "_initial_values":
+                yield v
         return
 
     def add_view(self, view_id, view_meta):
@@ -123,8 +136,8 @@ class Collection(Entity):
 
         returns a RecordView object for the newly created view.
         """
-        t = RecordView.create(self, view_id, view_meta)
-        return t
+        v = RecordView.create(self, view_id, view_meta)
+        return v
 
     def get_view(self, view_id):
         """
@@ -134,8 +147,8 @@ class Collection(Entity):
 
         returns a RecordView object for the identified view, or None.
         """
-        t = RecordView.load(self, view_id)
-        return t
+        v = RecordView.load(self, view_id, altparent=self._parentsite)
+        return v
 
     def remove_view(self, view_id):
         """
@@ -145,8 +158,8 @@ class Collection(Entity):
 
         Returns a non-False status code if the view is not removed.
         """
-        t = RecordView.remove(self, view_id)
-        return t
+        s = RecordView.remove(self, view_id)
+        return s
 
     # Record lists
 
@@ -154,10 +167,11 @@ class Collection(Entity):
         """
         Generator enumerates and returns record lists that may be stored
         """
-        for f in self._children(RecordList, include_alt=include_alt):
-            t = RecordList.load(self, f)
-            if t:
-                yield t
+        altparent = self._parentsite if include_alt else None
+        for f in self._children(RecordList, altparent=altparent):
+            l = self.get_list(f)
+            if l and l.get_id() != "_initial_values":
+                yield l
         return
 
     def add_list(self, list_id, list_meta):
@@ -171,8 +185,8 @@ class Collection(Entity):
 
         returns a RecordList object for the newly created list.
         """
-        t = RecordList.create(self, list_id, list_meta)
-        return t
+        l = RecordList.create(self, list_id, list_meta)
+        return l
 
     def get_list(self, list_id):
         """
@@ -182,8 +196,8 @@ class Collection(Entity):
 
         returns a RecordList object for the identified list, or None.
         """
-        t = RecordList.load(self, list_id)
-        return t
+        l = RecordList.load(self, list_id, altparent=self._parentsite)
+        return l
 
     def remove_list(self, list_id):
         """
@@ -193,7 +207,21 @@ class Collection(Entity):
 
         Returns a non-False status code if the list is not removed.
         """
-        t = RecordList.remove(self, list_id)
-        return t
+        s = RecordList.remove(self, list_id)
+        return s
+
+    def set_default_list(self, list_id):
+        """
+        Set and save the default list to be displayed for the current collection.
+        """
+        self["annal:default_list"] = list_id
+        self._save()
+        return
+
+    def get_default_list(self):
+        """
+        Return the default list to be displayed for the current collection.
+        """
+        return self.get("annal:default_list", None)
 
 # End.

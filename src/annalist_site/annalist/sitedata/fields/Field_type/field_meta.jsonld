@@ -1,10 +1,11 @@
 { "@id":                "annal:fields/Field_type"
+, "@type":              ["annal:Field"]
 , "annal:id":           "Field_type"
-, "annal:type":         "annal:Field"
-, "rdfs:label":         "Type"
-, "rdfs:comment":       "Type of display field.  This encompasses the actual form of the rendered value and the type of underlying record data that is formatted, and any defaults of other values that may be applied to the field."
+, "annal:type_id":      "_field"
+, "rdfs:label":         "Field value type"
+, "rdfs:comment":       "Type (URI or CURIE) of underlying data that is stored in a field."
 , "annal:field_render": "annal:field_render/Identifier"
-, "annal:value_type":   "annal:RenderType"
-, "annal:placeholder":  "(field type)"
-, "annal:property_uri": "annal:field_render"
+, "annal:value_type":   "annal:Identifier"
+, "annal:placeholder":  "(field value type)"
+, "annal:property_uri": "annal:value_type"
 }

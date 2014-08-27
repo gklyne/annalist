@@ -15,7 +15,9 @@ log = logging.getLogger(__name__)
 
 import collections
 
-from annalist.fields.render_utils   import bound_field
+from django.conf                        import settings
+
+from annalist.views.fields.render_utils import bound_field
 
 # Named tuple is base class for SimpleValueMap:
 
@@ -33,30 +35,35 @@ class SimpleValueMap(_SimpleValueMap_tuple):
     f       HTML input form field name (used as key in POST results)
     """
 
-    def _map_to_context(self, context, vals, valkey, extras=None):
+    def map_entity_to_context(self, entityvals, extras=None):
+        subcontext = {}
         if self.c:
-            context[self.c] = vals.get(valkey, 
+            subcontext[self.c] = entityvals.get(self.e, 
                 extras and extras.get(self.c, None)
                 )
-        return
+            log.log(settings.TRACE_FIELD_VALUE,
+                "SimpleValueMap.map_entity_to_context: entitykey %s, contextkey %s, value %s"%
+                (self.e, self.c, subcontext[self.c])
+                )
+        return subcontext
 
-    def map_entity_to_context(self, context, entityvals, extras=None):
-        self._map_to_context(context, entityvals, self.e, extras)
-        return
-
-    def map_form_to_context(self, context, formvals, extras=None):
-        self._map_to_context(context, formvals, self.f, extras)
-        return
-
-    def map_form_to_entity(self, entityvals, formvals):
+    def map_form_to_entity(self, formvals):
+        entityvals = {}
         if self.e and self.f:
             log.debug("SimpleValueMap.map_form_to_entity %s, %s, %r"%(self.e, self.f, formvals))
             v = formvals.get(self.f, None)
             if v:
                 entityvals[self.e] = v
             # entityvals[self.e] = formvals.get(self.f, None)
-        return
+        return entityvals
 
+    def get_structure_description(self):
+        return (
+            { 'field_type':     'SimpleValueMap'
+            , 'entity_field':   self.e
+            , 'context_field':  self.c
+            , 'form_field':     self.f
+            })
 
 class StableValueMap(SimpleValueMap):
     """
@@ -64,7 +71,12 @@ class StableValueMap(SimpleValueMap):
     form to the entity.  (Some fields are handled specially.)
     """
 
-    def map_form_to_entity(self, entityvals, formvals):
-        return
+    def map_form_to_entity(self, formvals):
+        return {}
+
+    def get_structure_description(self):
+        d = super(StableValueMap, self).get_structure_description()
+        d['field_type'] = 'StableValueMap'
+        return d
 
 # End.

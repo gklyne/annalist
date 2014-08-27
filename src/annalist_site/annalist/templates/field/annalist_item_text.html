@@ -1,1 +1,4 @@
-<td class="{{field.field_placement.field}}">{{field.field_value}}</td>
+<!-- field/annalist_item_text.html -->
+<td class="{{field.field_placement.field}}">
+{{ field.field_value|default:"&nbsp;" }}
+</td>

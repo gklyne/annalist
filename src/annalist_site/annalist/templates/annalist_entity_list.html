@@ -23,13 +23,25 @@
       <form method="POST" action="">
         {% csrf_token %}
         <div class="row">
-          <div class="small-12 medium-6 columns">
+          <div class="small-12 medium-5 columns">
             <div class="row">
-              <div class="small-8 columns">
-                <input type="text" name="search_for" value="" />
+              <div class="view_label small-12 medium-3 columns">
+                <p>Search</p>
               </div>
-              <div class="small-4 medium-3 columns text-right left">
-                <input type="submit" name="search" value="Find" />
+              <div class="small-12 medium-9 columns end">
+                <input type="text" name="search_for" value="{{search_for}}" />
+              </div>
+            </div>
+          </div>
+          <!--
+          -->
+          {% with field=list_choices %}
+          {% include field.field_render_edit %}
+          {% endwith %}
+          <div class="small-12 medium-2 columns text-right">
+            <div class="row">
+              <div class="small-12 columns right">
+                <input type="submit" name="view" value="View" />
                 <!--
                 <button type="submit" name="search" value="Search">
                 <img src="{% static 'images/icons/search_32.png' %}"/>
@@ -38,26 +50,8 @@
               </div>
             </div>
           </div>
-          <div class="small-12 medium-6 columns">
-            <div class="row">
-              <div class="small-8 columns">
-                <select name="list_id" >
-                  {% for l in list_ids %}
-                    {% if l == list_selected %}
-                    <option selected="">{{l}}</option>
-                    {% else %}
-                    <option>{{l}}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="small-4 columns text-right">
-                <input type="submit" name="list_view" value="View" />
-              </div>
-            </div>
-          </div>
         </div>
-
+        <!-- - - - - -  row data here - - - - - -->
         <div class="row">
           <div class="small-12 columns">
             <table width="100%">
@@ -97,10 +91,11 @@
             <input type="submit" name="close"           value="Close" />
           </div>
           <div class="small-9 columns text-right">
-            <input type="submit" name="default_view"    value="Set default" />
+            <!-- list_id:{{list_id}}, list_id_url:{{list_id_url}} -->
+            <input type="submit" name="default_view"    value="Set default" {{default_view_enable}} />
             <input type="submit" name="customize"       value="Customize" />
           </div>
-          <input type="hidden" name="continuation_uri"    value="{{continuation_uri}}"/>
+          <input type="hidden" name="continuation_url"    value="{{continuation_url}}"/>
         </div>
       </form>
     </div>

@@ -13,8 +13,6 @@ log = logging.getLogger(__name__)
 
 from django.conf                    import settings
 
-from annalist.models.entitydata     import EntityData
-
 from annalist.views.entityedit      import GenericEntityEditView
 
 #   -------------------------------------------------------------------------------------------
@@ -26,12 +24,13 @@ from annalist.views.entityedit      import GenericEntityEditView
 class EntityDefaultEditView(GenericEntityEditView):
     """
     View class for default record edit view
+
+    Currently, this class is somewhat redundant, but future developments are 
+    expected to provide content negotiation on this URI.
     """
 
     def __init__(self):
-        super(EntityDefaultEditView, self).__init__(
-            view_id="Default_view", entity_class=EntityData
-            )
+        super(EntityDefaultEditView, self).__init__()
         return
 
 # End.

@@ -24,19 +24,28 @@ from annalist.models.entity     import Entity
 
 class EntityData(Entity):
 
-    _entitytype = ANNAL.CURIE.EntityData
-    _entitypath = layout.TYPEDATA_ENTITY_PATH
-    _entityfile = layout.ENTITY_DATA_FILE
-    _entityref  = layout.DATA_ENTITY_REF
+    _entitytype     = ANNAL.CURIE.EntityData
+    _entitytypeid   = None
+    _entityview     = layout.TYPEDATA_ENTITY_VIEW
+    _entitypath     = layout.TYPEDATA_ENTITY_PATH
+    _entityfile     = layout.ENTITY_DATA_FILE
+    _entityref      = layout.DATA_ENTITY_REF
 
-    def __init__(self, parent, entity_id):
+    def __init__(self, parent, entity_id, altparent=None):
         """
         Initialize a new Entity Data object, without metadata.
 
         parent      is the parent collection (RecordType) from which the entity is descended.
         entity_id   the local identifier (slug) for the data record
+        altparent   is an alternative parent entity to search for this entity, using 
+                    the alternative path for the entity type: this is used to augment 
+                    explicitly created entities in a collection with site-wide 
+                    installed metadata entites (i.e. types, views, etc.)
         """
-        super(EntityData, self).__init__(parent, entity_id)
+        super(EntityData, self).__init__(parent, entity_id, altparent=altparent)
+        self._entitytypeid  = self._entitytypeid or parent.get_id()
+        self._entityviewuri = parent._entityurl+self._entityview%{'id': entity_id}
+        log.debug("EntityData: _entityviewuri %s"%(self._entityviewuri))
         return
 
 # End.

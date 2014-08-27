@@ -1,0 +1,15 @@
+{ "@id":                    "annal:fields/Type_view"
+, "@type":                  ["annal:Field"]
+, "annal:id":               "Type_view"
+, "annal:type_id":          "_field"
+, "rdfs:label":             "Default view"
+, "rdfs:comment":           "Default view id for this type"
+, "annal:field_render":     "annal:field_render/View"
+, "annal:value_type":       "annal:View"
+, "annal:placeholder":      "(view id)"
+, "annal:default_value":    "Default_view"
+, "annal:property_uri":     "annal:type_view"
+, "annal:options_typeref":  "_view"
+, "annal:field_placement":  "small:0,6"
+, "annal:default_value":    "Default_view"
+}

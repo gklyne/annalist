@@ -34,11 +34,36 @@ from utils.ContentNegotiationView   import ContentNegotiationView
 from annalist                       import message
 from annalist                       import layout
 from annalist.models.site           import Site
+from annalist.models.sitedata       import SiteData
 from annalist.models.collection     import Collection
+from annalist.models.recordview     import RecordView
+from annalist.models.recordlist     import RecordList
+from annalist.models.recordfield    import RecordField
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
+from annalist.models.entitydata     import EntityData
+from annalist.models.entitytypeinfo import EntityTypeInfo
 
-LOGIN_URIS = None
+from annalist.views.uri_builder     import uri_with_params
+
+#   -------------------------------------------------------------------------------------------
+#
+#   Utility methods and data
+#
+#   -------------------------------------------------------------------------------------------
+
+LOGIN_URIS = None   # Populated by first call of `authenticate`
+
+#   -------------------------------------------------------------------------------------------
+#
+#   Generic Annalist view (contains logic applicable to all pages)
+#
+#   -------------------------------------------------------------------------------------------
+
+# @@TODO:   refactor this class out of existence?  Or at least dramatically slimmed.
+#           Focus content on message display and auth* functions.
+#           There is logic here that really belongs in view- or list- classes.
+#           Maybe move logic when hand-coded pasges are replaced with data-driven pages.
 
 class AnnalistGenericView(ContentNegotiationView):
     """
@@ -66,15 +91,6 @@ class AnnalistGenericView(ContentNegotiationView):
             self._site_data = self.site(host=host).site_data()
         return self._site_data
 
-    def collection(self, coll_id, host=""):
-        return Collection(self.site(host=host), coll_id)
-
-    def recordtype(self, coll_id, type_id, host=""):
-        return RecordType(self.collection(coll_id, host=host), type_id)
-
-    def recordtypedata(self, coll_id, type_id, host=""):
-        return RecordTypeData(self.collection(coll_id, host=host), type_id)
-
     def error(self, values):
         """
         Construct HTTP error response.
@@ -92,37 +108,51 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return reverse(viewname, kwargs=kwargs)
 
-    def continuation_uris(self, request_dict, default_cont):
+    def continuation_urls(self, request_dict, default_cont, base_here=None):
         """
-        Returns a tuple of two continuation URI values:
-        [0] a URI query parameter value passed forward for returning to the current page:
-            this is intended to be appended to a bare URI (without query parameters) of
-            any new page invocations.
-        [1] a URI for continuation after the current page is complete, which can
-            be returned as a redirect URI when processing of the current page is 
-            complete.
+        Returns a tuple of two continuation URI dictionary values:
 
-        Continuation URIs are cascaded, so that the return URI includes the 
-        continuation URI parameter for the current page.
+        [0] { 'continuation_url': continuation_next }
+        [1] { 'continuation_url': continuation_here }
+
+        where:
+
+        `continuation_next` is the URI to use after the current page has completed
+        processing, which is either supplied as a parameter to the current page or 
+        set to an indicated default.
+
+        `continuation_here` is a URI that returns control to the current page, to be passed
+        as a contionuation_uri parameter to any subsidiary pages invoked.  Such continuation 
+        URIs are cascaded, so that the return URI includes a the `continuation_url` for the 
+        current page.
 
         request_dict    is a request dictionary that is expected to contain a 
-                        continuation_uri value to use
+                        continuation_url value to use
         default_cont    is a default continuation URI to be used for returning from 
                         the current page if the current POST request does not specify
-                        a continuation_uri query parameter.
+                        a continuation_url query parameter.
+        base_here       if specified, overrides the current request path as the base URI
+                        to be used to return to the currently displayed page (e.g. when
+                        current request URI is non-idempotent, such as creating a new 
+                        entity).
         """
-        continuation_uri  = request_dict.get("continuation_uri", default_cont)
-        continuation_prev = "%3Fcontinuation_uri=" + continuation_uri
-        continuation_path = self.get_request_path().split("?", 1)[0] + continuation_prev
-        continuation_here = "?continuation_uri=" + continuation_path
-        return (continuation_here, continuation_uri)
+        # Note: use default if request/form parameter is present but blank:
+        continuation_url  = request_dict.get("continuation_url", None) or default_cont
+        if not base_here:
+            base_here = self.get_request_path()
+        if continuation_url:
+            continuation_next = { "continuation_url": continuation_url }
+        else:
+            continuation_next = {}
+        continuation_here = { "continuation_url": uri_with_params(base_here, continuation_next) }
+        return (continuation_next, continuation_here)
 
     def info_params(self, info_message, info_head=message.ACTION_COMPLETED):
         """
-        Returns a URI query parameter string with details that are used to generate an
+        Returns a URI query parameter dictionary with details that are used to generate an
         information message.
         """
-        return "?info_head=%s&info_message=%s"%(info_head, info_message)
+        return {"info_head": info_head, "info_message": info_message}
 
     def redirect_info(self, viewuri, info_message=None, info_head=message.ACTION_COMPLETED):
         """
@@ -130,7 +160,7 @@ class AnnalistGenericView(ContentNegotiationView):
 
         (see templates/base_generic.html for display details)
         """
-        redirect_uri = viewuri+self.info_params(info_message, info_head)
+        redirect_uri = uri_with_params(viewuri, self.info_params(info_message, info_head))
         return HttpResponseRedirect(redirect_uri)
 
     def error_params(self, error_message, error_head=message.INPUT_ERROR):
@@ -138,7 +168,7 @@ class AnnalistGenericView(ContentNegotiationView):
         Returns a URI query parameter string with details that are used to generate an
         error message.
         """
-        return "?error_head=%s&error_message=%s"%(error_head, error_message)
+        return {"error_head": error_head, "error_message": error_message}
 
     def redirect_error(self, viewuri, error_message=None, error_head=message.INPUT_ERROR):
         """
@@ -146,21 +176,52 @@ class AnnalistGenericView(ContentNegotiationView):
 
         (see templates/base_generic.html for display details)
         """
-        redirect_uri = viewuri+self.error_params(error_head, error_message)
+        redirect_uri = uri_with_params(viewuri, self.error_params(error_head, error_message))
         return HttpResponseRedirect(redirect_uri)
 
-    def check_value_supplied(self, val, msg, continuation_uri="", testfn=(lambda v: v)):
+    def form_action_auth(self, action, auth_resource):
+        """
+        Check that the requested form action is authorized for the current user.
+
+        action          is the requested action: new, edit, copy, etc.
+        auth_resource   is the resource URI to which the requested action is directed.
+                        NOTE: This may be the URI of the parent of the resource
+                        being accessed or manipulated.
+
+        Returns None if the desired action is authorized for the current user, otherwise
+        an HTTP response value to return an error condition.
+        """
+        action_scope = (
+            { "view":   "VIEW"
+            , "list":   "VIEW"
+            , "search": "VIEW"
+            , "new":    "CREATE"
+            , "copy":   "CREATE"
+            , "edit":   "UPDATE"
+            , "delete": "DELETE"
+            , "config": "CONFIG"
+            , "admin":  "ADMIN"
+            })
+        if action in action_scope:
+            auth_scope = action_scope[action]
+        else:
+            log.warning("form_action_auth: unknown action: %s"%(action))
+            auth_scope = "UNKNOWN"
+        # return self.authorize(auth_scope, auth_resource)
+        return self.authorize(auth_scope)
+
+    def check_value_supplied(self, val, msg, continuation_url={}, testfn=(lambda v: v)):
         """
         Test a supplied value is specified (not None) and passes a supplied test,
         returning a URI to display a supplied error message if the test fails.
 
         NOTE: this function works with the generic base template base_generic.html, which
-        is assumed to provide an underlay for thne currently viewed page.
+        is assumed to provide an underlay for the currently viewed page.
 
         val         value that is required to be not None and not empty or False
         msg         message to display if the value evaluated to False
         testfn      is a function to test the value (if not None).  If not specified, 
-                    the default test checks thatthe value does not evaluate as false
+                    the default test checks that the value does not evaluate as false
                     (e.g. is a non-empty string, list or collection).
 
         returns a URI string for use with HttpResponseRedirect to redisplay the 
@@ -168,10 +229,11 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         redirect_uri = None
         if (val is None) or not testfn(val):
-            redirect_uri = (
-                self.get_request_path()+
-                self.error_params(msg)
-                ) + continuation_uri
+            redirect_uri = uri_with_params(
+                self.get_request_path(), 
+                self.error_params(msg),
+                continuation_url
+                )
         return redirect_uri
 
     # Authentication and authorization
@@ -193,7 +255,7 @@ class AnnalistGenericView(ContentNegotiationView):
                 })
         # Initiate OAuth2 login sequence, if neded
         return oauth2.views.confirm_authentication(self, 
-            continuation_uri=self.get_request_uri(),
+            continuation_url=self.get_request_uri(),
             **LOGIN_URIS
             )
 
@@ -204,7 +266,7 @@ class AnnalistGenericView(ContentNegotiationView):
         May be called with or without an authenticated user.
 
         scope       indication of the operation  requested to be performed.
-                    e.g. "VIEW", "CREATE", "UPDATE", "DELETE", ...
+                    e.g. "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", ...
 
         @@TODO add resource parameter
 
@@ -212,8 +274,10 @@ class AnnalistGenericView(ContentNegotiationView):
 
         For now, require authentication for anything other than VIEW scope.
         """
+        log.debug("Authorize %s"%(scope))
         if scope != "VIEW":
             if not self.request.user.is_authenticated():
+                log.debug("Authorize %s denied"%(scope))
                 return self.error(self.error401values())
         return None
 
@@ -240,6 +304,7 @@ class AnnalistGenericView(ContentNegotiationView):
         resultdata["auth_create"]   = self.authorize("CREATE") is None
         resultdata["auth_update"]   = self.authorize("UPDATE") is None
         resultdata["auth_delete"]   = self.authorize("DELETE") is None
+        resultdata["auth_config"]   = self.authorize("CONFIG") is None
         template  = loader.get_template(template_name)
         context   = RequestContext(self.request, resultdata)
         log.debug("render_html - data: %r"%(resultdata))

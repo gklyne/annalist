@@ -1,0 +1,369 @@
+"""
+Utility functions to support entity data testing
+"""
+
+__author__      = "Graham Klyne (GK@ACM.ORG)"
+__copyright__   = "Copyright 2014, G. Klyne"
+__license__     = "MIT (http://opensource.org/licenses/MIT)"
+
+import os
+import urlparse
+
+import logging
+log = logging.getLogger(__name__)
+
+from django.conf                import settings
+from django.http                import QueryDict
+from django.utils.http          import urlquote, urlunquote
+from django.core.urlresolvers   import resolve, reverse
+
+from annalist.util              import valid_id
+from annalist.identifiers       import RDF, RDFS, ANNAL
+from annalist                   import layout
+
+from annalist.views.fields.render_placement import (
+    get_placement_classes
+    )
+
+from entity_testutils           import collection_dir, site_title
+from entity_testentitydata      import entitydata_list_type_url
+from tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+
+#   -----------------------------------------------------------------------------
+#
+#   Directory generating functions
+#
+#   -----------------------------------------------------------------------------
+
+def recordlist_dir(coll_id="testcoll", list_id="testlist"):
+    return collection_dir(coll_id) + layout.COLL_LIST_PATH%{'id': list_id} + "/"
+
+#   -----------------------------------------------------------------------------
+#
+#   URI generating functions
+#
+#   -----------------------------------------------------------------------------
+
+#   These all use the Django `reverse` function so they correspond to
+#   the declared URI patterns.
+
+def recordlist_site_url(site, list_id="testlist"):
+    return site._entityurl + layout.SITE_LIST_PATH%{'id': list_id} + "/"
+
+def recordlist_coll_url(site, coll_id="testcoll", list_id="testlist"):
+    return site._entityurl + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_LIST_PATH%{'id': list_id} + "/"
+
+def recordlist_url(coll_id, list_id):
+    """
+    URI for record list description data; also view using default entity view
+    """
+    viewname = "AnnalistEntityAccessView"
+    kwargs   = {'coll_id': coll_id, "type_id": "_list"}
+    if valid_id(list_id):
+        kwargs.update({'entity_id': list_id})
+    else:
+        kwargs.update({'entity_id': "___"})
+    return reverse(viewname, kwargs=kwargs)
+
+def recordlist_edit_url(action=None, coll_id=None, list_id=None):
+    """
+    URI for record list description editing view
+    """
+    viewname = ( 
+        'AnnalistEntityDataView'        if action == "view"   else
+        'AnnalistEntityNewView'         if action == "new"    else
+        'AnnalistEntityEditView'        if action == "copy"   else
+        'AnnalistEntityEditView'        if action == "edit"   else
+        'AnnalistRecordListDeleteView'  if action == "delete" else
+        'unknown'
+        )
+    kwargs = {'coll_id': coll_id}
+    if action != "delete":
+        kwargs.update({'action': action, 'type_id': "_list", 'view_id': "List_view"})
+    if list_id:
+        if valid_id(list_id):
+            kwargs.update({'entity_id': list_id})
+        else:
+            kwargs.update({'entity_id': "___"})
+    return reverse(viewname, kwargs=kwargs)
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- RecordList data
+#
+#   -----------------------------------------------------------------------------
+
+def recordlist_value_keys():
+    return set(
+        [ 'annal:id', 'annal:type_id'
+        , 'annal:type', 'annal:url', 'annal:uri'
+        , 'rdfs:label', 'rdfs:comment'
+        , 'annal:display_type'
+        , 'annal:list_entity_selector'
+        , 'annal:default_view'
+        , 'annal:default_type'
+        , 'annal:list_fields'
+        ])
+
+def recordlist_load_keys():
+    return recordlist_value_keys() | {'@id', '@type'}
+
+def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="RecordList"):
+    """
+    Entity values used when creating a record type entity
+    """
+    return (
+        { 'annal:type':                 "annal:List"
+        , 'rdfs:label':                 "%s %s/%s"%(update, coll_id, list_id)
+        , 'rdfs:comment':               "%s help for %s/%s"%(update, coll_id, list_id)
+        , "annal:display_type":         "annal:display_type/List"
+        , "annal:default_view":         "Default_view"
+        , "annal:default_type":         "Default_type"
+        , "annal:list_entity_selector": "ALL"
+        , "annal:list_fields":
+          [ { "annal:field_id":             "Entity_id"
+            , "annal:field_placement":      "small:0,3"
+            }
+          , { "annal:field_id":             "Entity_label"
+            , "annal:field_placement":      "small:3,9"
+            }
+          ]
+        })
+
+def recordlist_values(
+        coll_id="testcoll", list_id="testlist", list_uri=None,
+        update="RecordList", hosturi=TestHostUri):
+    list_url = hosturi + recordlist_url(coll_id, list_id)
+    if not list_uri:
+        list_uri = list_url
+    d = recordlist_create_values(coll_id, list_id, update=update).copy()
+    d.update(
+        { 'annal:id':       list_id
+        , 'annal:type_id':  "_list"
+        , 'annal:url':      list_url
+        , 'annal:uri':      list_uri
+        })
+    return d
+
+def recordlist_read_values(
+        coll_id="testcoll", list_id="testlist", 
+        update="RecordList", hosturi=TestHostUri):
+    d = recordlist_values(coll_id, list_id, update=update, hosturi=hosturi).copy()
+    d.update(
+        { '@id':            "./"
+        , '@type':          ["annal:List"]
+        })
+    return d
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- Data in recordlist view for list description data
+#
+#   -----------------------------------------------------------------------------
+
+def recordlist_view_context_data(
+        coll_id="testcoll", list_id=None, orig_id=None, view_ids=[],
+        action=None, update="RecordList"
+    ):
+    context_dict = (
+        { 'title':              site_title()
+        , 'coll_id':            coll_id
+        , 'type_id':            '_list'
+        , 'orig_id':            'orig_list_id'
+        # , 'record_type':        'annal:View'
+        , 'fields':
+          [ { 'field_id':           'List_id'
+            , 'field_label':        'Id'
+            , 'field_render_view':  'field/annalist_view_slug.html'
+            , 'field_render_edit':  'field/annalist_edit_slug.html'
+            , 'field_name':         'entity_id'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+            , 'field_value_type':   'annal:Slug'
+            # , 'field_value':      (Supplied separately, below)
+            , 'options':            []
+            }
+          , { 'field_id':           'List_type'
+            , 'field_label':        'List display type'
+            , 'field_render_view':  'field/annalist_view_slug.html'
+            , 'field_render_edit':  'field/annalist_edit_slug.html'
+            , 'field_name':         'List_type'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6right')
+            , 'field_value_type':   'annal:List_display_type'
+            , 'field_value':        'annal:display_type/List'
+            , 'options':            [] # ['list', 'grid']
+            }
+          , { 'field_id':           'List_label'
+            , 'field_label':        'Label'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'List_label'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_value_type':   'annal:Text'
+            # , 'field_value':      (Supplied separately, below)
+            , 'options':            []
+            }
+          , { 'field_id':           'List_comment'
+            , 'field_label':        'Help'
+            , 'field_render_view':  'field/annalist_view_textarea.html'
+            , 'field_render_edit':  'field/annalist_edit_textarea.html'
+            , 'field_name':         'List_comment'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_value_type':   'annal:Longtext'
+            # , 'field_value':      (Supplied separately, below)
+            , 'options':            []
+            }
+          , { 'field_id':           'List_default_type'
+            , 'field_label':        'Record type'
+            , 'field_render_view':  'field/annalist_view_select.html'
+            , 'field_render_edit':  'field/annalist_edit_select.html'
+            , 'field_name':         'List_default_type'
+            , 'field_placement':    get_placement_classes('small:0,6')
+            , 'field_value_type':   'annal:Type'
+            , 'field_value':        'Default_type'
+            , 'options':            []
+            }
+          , { 'field_id':           'List_default_view'
+            , 'field_label':        'View'
+            , 'field_render_view':  'field/annalist_view_select.html'
+            , 'field_render_edit':  'field/annalist_edit_select.html'
+            , 'field_name':         'List_default_view'
+            , 'field_placement':    get_placement_classes('small:6,6')
+            , 'field_value_type':   'annal:View'
+            , 'field_value':        'Default_view'
+            , 'options':            []
+            }
+          , { 'field_id':           'List_entity_selector'
+            , 'field_label':        'Selector'
+            , 'field_render_view':  'field/annalist_view_text.html'
+            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_name':         'List_entity_selector'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_value_type':   'annal:Text'
+            , 'field_value':        'ALL'
+            , 'options':            []
+            }
+          , { "repeat_id":              "List_fields"
+            , "repeat_context_values":  "repeat"
+            , "repeat_label":           "Fields"
+            , "repeat_label_add":       "Add field"
+            , "repeat_label_delete":    "Remove selected field(s)"
+            , "repeat":
+              [ { 'repeat_id': 'List_fields'
+                , 'repeat_index': 0
+                , 'repeat_prefix': 'List_fields__0__'
+                , "fields":
+                  [ { 'field_id':           'Field_sel'
+                    , 'field_label':        'Select'
+                    , 'field_render_view':  'field/annalist_view_select.html'
+                    , 'field_render_edit':  'field/annalist_edit_select.html'
+                    , 'field_name':         'Field_id'
+                    , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+                    , 'field_value_type':   'annal:Slug'
+                    , 'field_value':        "Entity_id"
+                    }
+                  , { 'field_id':           'Field_placement'
+                    , 'field_label':        'Size/position'
+                    , 'field_render_view':  'field/annalist_view_text.html'
+                    , 'field_render_edit':  'field/annalist_edit_text.html'
+                    , 'field_name':         'Field_placement'
+                    , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
+                    , 'field_value_type':   'annal:Placement'
+                    , 'field_value':        'small:0,3'
+                    }
+                  ]
+                }
+              , { 'repeat_id': 'List_fields'
+                , 'repeat_index': 1
+                , 'repeat_prefix': 'List_fields__1__'
+                , "fields":
+                  [ { 'field_id':           'Field_sel'
+                    , 'field_label':        'Select'
+                    , 'field_render_view':  'field/annalist_view_select.html'
+                    , 'field_render_edit':  'field/annalist_edit_select.html'
+                    , 'field_name':         'Field_id'
+                    , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+                    , 'field_value_type':   'annal:Slug'
+                    , 'field_value':        "Entity_label"
+                    }
+                  , { 'field_id':           'Field_placement'
+                    , 'field_label':        'Size/position'
+                    , 'field_render_view':  'field/annalist_view_text.html'
+                    , 'field_render_edit':  'field/annalist_edit_text.html'
+                    , 'field_name':         'Field_placement'
+                    , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
+                    , 'field_value_type':   'annal:Placement'
+                    , 'field_value':        'small:3,9'
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        , 'continuation_url':   entitydata_list_type_url(coll_id, "_list")
+        })
+    if list_id:
+        context_dict['fields'][0]['field_value'] = list_id
+        context_dict['fields'][2]['field_value'] = '%s %s/%s'%(update, coll_id, list_id)
+        context_dict['fields'][3]['field_value'] = '%s help for %s/%s'%(update, coll_id, list_id)
+        context_dict['orig_id']     = list_id
+    if orig_id:
+        context_dict['orig_id']     = orig_id
+    if action:  
+        context_dict['action']      = action
+    return context_dict
+
+def recordlist_view_form_data(
+        coll_id="testcoll", 
+        list_id=None, orig_id=None, 
+        action=None, cancel=None,
+        update="RecordView"):
+    form_data_dict = (
+        { 'List_type':              'annal:display_type/List'
+        , 'List_label':             '%s list (%s/@@list_id@@)'%(update, coll_id)
+        , 'List_comment':           '%s help (%s/@@list_id@@)'%(update, coll_id)
+        , 'List_display_type':      'annal:display_type/List'
+        , 'List_default_type':      'Default_type'
+        , 'List_default_view':      'Default_view'
+        , 'List_entity_selector':   'ALL'
+        # List repeating fields
+        , 'List_fields__0__Field_id':           "Entity_id"
+        , 'List_fields__0__Field_placement':    "small:0,3"
+        , 'List_fields__1__Field_id':           "Entity_label"
+        , 'List_fields__1__Field_placement':    "small:3,9"
+        # Hidden fields
+        , 'action':                 '@@TBD@@'
+        , 'view_id':                'List_view'
+        , 'orig_id':                'orig_list_id'
+        , 'orig_type':              '_list'
+        , 'continuation_url':       entitydata_list_type_url(coll_id, "_list")        
+        })
+    if list_id:
+        form_data_dict['entity_id']     = list_id
+        form_data_dict['orig_id']       = list_id
+        form_data_dict['List_label']    = '%s %s/%s'%(update, coll_id, list_id)
+        form_data_dict['List_comment']  = '%s help for %s/%s'%(update, coll_id, list_id)
+    if orig_id:
+        form_data_dict['orig_id']       = orig_id
+    if action:
+        form_data_dict['action']        = action
+    if cancel:
+        form_data_dict['cancel']        = "Cancel"
+    else:
+        form_data_dict['save']          = 'Save'
+    return form_data_dict
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- Recordview delete confirmation form data
+#
+#   -----------------------------------------------------------------------------
+
+def recordlist_delete_confirm_form_data(list_id=None):
+    return (
+        { 'listlist':    list_id,
+          'list_delete': 'Delete'
+        })
+
+# End.

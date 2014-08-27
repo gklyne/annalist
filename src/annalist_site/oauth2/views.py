@@ -116,7 +116,7 @@ def dict_to_flow(d):
 
 def authentication_required(
         login_form_uri=None, login_post_uri=None, login_done_uri=None, 
-        continuation_uri=None, scope=SCOPE_DEFAULT):
+        continuation_url=None, scope=SCOPE_DEFAULT):
     """
     Decorator for view handler function that activates OAuth2 authentication flow
     if the current request is not already associated with an authenticated user.
@@ -128,7 +128,7 @@ def authentication_required(
             return (
                 confirm_authentication(view, 
                     login_form_uri, login_post_uri, login_done_uri, 
-                    continuation_uri, scope)
+                    continuation_url, scope)
             or
                 func(view, values)
             )
@@ -147,7 +147,7 @@ def HttpResponseRedirectLoginWithMessage(request, message):
     login_form_uri = request.session['login_form_uri']
     log.info("login_form_uri: "+login_form_uri)
     query_params = (
-        { "continuation": request.session['continuation_uri']
+        { "continuation": request.session['continuation_url']
         , "scope":        request.session['oauth2_scope']
         , "message":      message
         })
@@ -156,7 +156,7 @@ def HttpResponseRedirectLoginWithMessage(request, message):
 # Authentication and authorization
 def confirm_authentication(view, 
         login_form_uri=None, login_post_uri=None, login_done_uri=None, 
-        continuation_uri=None, scope=SCOPE_DEFAULT):
+        continuation_url=None, scope=SCOPE_DEFAULT):
     """
     Return None if required authentication is present, otherwise
     a login redirection response to the supplied URI
@@ -174,16 +174,16 @@ def confirm_authentication(view,
         return error400values(view, "No login completion URI specified")
     if not login_post_uri:
         login_post_uri = login_form_uri
-    if not continuation_uri:
-        continuation_uri = view.request.path
+    if not continuation_url:
+        continuation_url = view.request.path
     # Redirect to initiate login sequence 
     view.request.session['login_form_uri']   = login_form_uri
     view.request.session['login_post_uri']   = login_post_uri
     view.request.session['login_done_uri']   = login_done_uri
-    view.request.session['continuation_uri'] = continuation_uri
+    view.request.session['continuation_url'] = continuation_url
     view.request.session['oauth2_scope']     = scope
     query_params = (
-        { "continuation": continuation_uri
+        { "continuation": continuation_url
         , "scope":        scope
         , "message":      ""
         })

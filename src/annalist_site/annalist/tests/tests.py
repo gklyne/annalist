@@ -18,8 +18,10 @@ from django.test import TestCase
 from django.conf import settings
 
 import annalist.util
-import annalist.fields.render_utils
-from annalist.layout        import Layout
+import annalist.views.fields.render_utils
+import annalist.views.fields.render_placement
+
+from annalist.layout import Layout
 
 test_layout     = Layout(settings.BASE_DATA_DIR)
 TestBaseDir     = test_layout.SITE_PATH
@@ -45,8 +47,11 @@ def createSiteData(src, sitedatasrc, tgt):
     assert tgt.startswith(TestBaseDir)
     shutil.rmtree(tgt, ignore_errors=True)
     shutil.copytree(src, tgt)
-    sitedatatgt = tgt+"/"+test_layout.SITEDATA_DIR+"/_annalist_collection"
-    shutil.copytree(sitedatasrc, sitedatatgt)
+    sitedatatgt = os.path.join(tgt, test_layout.SITEDATA_DIR)
+    for sdir in ("types", "lists", "views", "fields", "enumerations"):
+        s = os.path.join(sitedatasrc, sdir)
+        d = os.path.join(sitedatatgt, sdir)
+        shutil.copytree(s, d)
     # Confirm existence of target directory
     assert os.path.exists(tgt), "checking target directory created (%s)"%(tgt)
     assert os.path.exists(sitedatatgt), "checking target sitedata directory created (%s)"%(sitedatatgt)
@@ -65,7 +70,9 @@ def load_tests(loader, tests, ignore):
     #init_annalist_test_site()
     # See http://stackoverflow.com/questions/2380527/django-doctests-in-views-py
     tests.addTests(doctest.DocTestSuite(annalist.util))
-    tests.addTests(doctest.DocTestSuite(annalist.fields.render_utils))
+    tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_utils))
+    tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_placement))
+    tests.addTests(doctest.DocTestSuite(annalist.models.entityfinder))
     return tests
 
 # Test helper functions

@@ -1,0 +1,11 @@
+{ "@id":                "annal:fields/Bib_volume"
+, "@type":              ["annal:Field"]
+, "annal:id":           "Bib_volume"
+, "annal:type_id":      "_field"
+, "rdfs:label":         "Bib_volume"
+, "rdfs:comment":       "BibJSON(ish) field Bib_volume"
+, "annal:field_render": "annal:field_render/Text"
+, "annal:value_type":   "annal:Text"
+, "annal:placeholder":  "(Bib_volume)"
+, "annal:property_uri": "bib:Bib_volume"
+}

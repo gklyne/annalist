@@ -1,0 +1,14 @@
+<!-- field/annalist_edit_slug.html -->
+<div class="{{field.field_placement.field}}">
+    <div class="row">
+        <div class="view_label {{field.field_placement.label}}">
+            <p>{{field.field_label}}</p>
+        </div>
+        <div class="{{field.field_placement.value}}">
+            <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
+            <input type="text" size="64" name="{{repeat.repeat_prefix}}{{field.field_name}}" 
+                   placeholder="{{field.field_placeholder}}"
+                   value="{{field.field_value}}"/>
+        </div>
+    </div>
+</div>

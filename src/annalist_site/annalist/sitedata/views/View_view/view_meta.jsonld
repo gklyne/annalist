@@ -1,0 +1,39 @@
+{ "@id":                "annal:display/View_view"
+, "@type":              ["annal:View"]
+, "annal:id":           "View_view"
+, "annal:type_id":      "_view"
+, "annal:uri":          "annal:display/View_view"
+, "annal:record_type":  "annal:View"
+, "rdfs:label":         "View description for record view description"
+, "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record view description"
+, "annal:add_field":    "no"
+, "annal:view_fields":
+  [ { "annal:field_id":               "View_id"
+    , "annal:field_placement":        "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":               "View_label"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "View_comment"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "View_add_field"
+    , "annal:field_placement":        "small:0,12;medium:0,6"
+    }
+  , { "annal:repeat_id":              "View_fields"
+    , "annal:repeat_label":           "Fields"
+    , "annal:repeat_label_add":       "Add field"
+    , "annal:repeat_label_delete":    "Remove selected field(s)"
+    , "annal:repeat_entity_values":   "annal:view_fields"
+    , "annal:repeat_context_values":  "repeat"
+    , "annal:repeat":
+      [ { "annal:field_id":               "Field_sel"
+        , "annal:field_placement":        "small:0,12; medium:0,6"
+        }
+      , { "annal:field_id":               "Field_placement"
+        , "annal:field_placement":        "small:0,12; medium:6,6"
+        }
+      ]
+    }
+  ]
+}

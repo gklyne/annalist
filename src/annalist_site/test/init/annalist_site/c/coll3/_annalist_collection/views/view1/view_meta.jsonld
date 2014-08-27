@@ -1,10 +1,32 @@
 {
+  "annal:view_fields": [
+    {
+      "annal:field_placement": "small:0,12;medium:0,6",
+      "annal:field_id": "Entity_id"
+    },
+    {
+      "annal:field_placement": "small:0,12;medium:6,6right",
+      "annal:field_id": "Entity_type"
+    },
+    {
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "Entity_label"
+    },
+    {
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "Entity_comment"
+    }
+  ],
   "rdfs:label": "RecordView coll3/view1",
   "rdfs:comment": "RecordView help for view1 in collection coll3",
-  "annal:uri": "http://test.example.com/testsite/c/coll3/_annalist_collection/views/view1/",
-  "annal:urihost": "test.example.com",
-  "annal:uripath": "/testsite/c/coll3/_annalist_collection/views/view1/",
+  "annal:add_field": "yes",
+  "annal:type_id": "_view",
+  "annal:record_type": "annal:DefaultType",
+  "annal:uri": "http://test.example.com/testsite/c/coll3/d/_view/view1/",
+  "annal:url": "http://test.example.com/testsite/c/coll3/d/_view/view1/",
   "annal:id": "view1",
   "@id": "./",
-  "annal:type": "annal:RecordView"
+  "@type": [
+    "annal:View"
+  ]
 }

@@ -9,20 +9,12 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                    import settings
-from django.http                    import HttpResponse
-from django.http                    import HttpResponseRedirect
-from django.core.urlresolvers       import resolve, reverse
+from django.conf                        import settings
+from django.http                        import HttpResponse
+from django.http                        import HttpResponseRedirect
+from django.core.urlresolvers           import resolve, reverse
 
-from annalist                       import message
-from annalist.exceptions            import Annalist_Error
-
-# from annalist.models.collection     import Collection
-# from annalist.models.recordtype     import RecordType
-# from annalist.models.recordtypedata import RecordTypeData
-
-from annalist.views.confirm         import ConfirmView, dict_querydict
-from annalist.views.entityeditbase  import EntityDeleteConfirmedBaseView
+from annalist.views.entitydeletebase    import EntityDeleteConfirmedBaseView
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -47,21 +39,12 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         """
         log.debug("EntityDataDeleteConfirmedView.post: %r"%(request.POST))
         if "entity_delete" in request.POST:
-            entity_id  = request.POST['entity_id']
-            coll       = self.collection(coll_id)
-            recordtype = self.recordtype(coll_id, type_id)
-            recorddata = self.recordtypedata(coll_id, type_id)
-            messages  = (
-                { 'entity_removed': message.ENTITY_DATA_REMOVED%(entity_id, type_id, coll_id)
-                })
-            continuation_uri = (
-                request.POST.get('continuation_uri', None) or
+            entity_id = request.POST['entity_id']
+            continuation_url = (
+                request.POST.get('continuation_url', None) or
                 self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
                 )
-            return self.confirm_form_respose(
-                request, recorddata, entity_id, recorddata.remove_entity, 
-                messages, continuation_uri
-                )
+            return self.complete_remove_entity(coll_id, type_id, entity_id, continuation_url)
         return self.error(self.error400values())
 
 # End.

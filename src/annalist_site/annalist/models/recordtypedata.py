@@ -25,14 +25,16 @@ from annalist.models.entitydata import EntityData
 
 class RecordTypeData(Entity):
 
-    _entitytype = ANNAL.CURIE.RecordType_Data
-    _entitypath = layout.COLL_TYPEDATA_PATH
-    _entityfile = layout.TYPEDATA_META_FILE
-    _entityref  = layout.META_TYPEDATA_REF
+    _entitytype     = ANNAL.CURIE.Type_Data
+    _entitytypeid   = "_entitytypedata"
+    _entityview     = layout.COLL_TYPEDATA_VIEW
+    _entitypath     = layout.COLL_TYPEDATA_PATH
+    _entityfile     = layout.TYPEDATA_META_FILE
+    _entityref      = layout.META_TYPEDATA_REF
 
     def __init__(self, parent, type_id):
         """
-        Initialize a new RecordTypeData object, without metadta.
+        Initialize a new RecordTypeData object, without metadata.
 
         parent      is the parent collection from which the type data is descended.
         type_id     the local identifier (slug) for the record type
@@ -40,11 +42,13 @@ class RecordTypeData(Entity):
         super(RecordTypeData, self).__init__(parent, type_id)
         return
 
+    # @@TODO remove this method and re-test (now redundant, handled through Entity class)
     def entities(self):
         """
-        Generator enumerates and returns record types that may be stored
+        Generator enumerates and returns records of given type
         """
         for f in self._children(EntityData):
+            log.debug("RecordTypeData.entities: f %s"%f)            
             e = EntityData.load(self, f)
             if e:
                 yield e

@@ -47,6 +47,9 @@ div.row .columns .row{
 div.row .columns .row .columns {
     margin: 0 0;
     padding: 0 0.75rem;
+    /*
+    padding: 0 0.75rem;
+    */
 }
 
 div.row.headings {
@@ -54,12 +57,33 @@ div.row.headings {
     font-weight: bold;
 }
 
-div.columns > p 
+div.column > p , div.columns > p 
 {
-    margin: 0.25rem 0;
+    margin: 0.25rem 0 0 0;
     /*padding: 0.25rem 0;*/
     height: auto;
 }
+
+div.view_label p {
+    margin: 0.5rem 0 0 0;
+    font-size: small;
+    color: #666666;
+}
+
+dir.row div.column p.caption , div.row div.columns p.caption
+{
+    margin-top:  0.25rem;
+    margin-left: 0.25rem;
+    /*padding: 0.25rem 0;*/
+    height: auto;
+    font-weight: bold;
+}
+
+/*
+div.column p , div.columns p {
+    margin-bottom: 0;
+}
+*/
 
 /* Headings */
 
@@ -69,10 +93,6 @@ h2.page-heading {
 
 div.alert-box p {
     margin-bottom: 0.25rem;
-}
-
-div.column p , div.columns p {
-    margin-bottom: 0;
 }
 
 /* Form elements */
@@ -89,6 +109,12 @@ div.columns > select
     padding: 0.25rem 0 ;
     height: auto;
     /* border: 0; - causes buttons to display differently - WTF? */
+}
+
+div.columns input[type="checkbox"]
+{
+    margin-top: 0.65rem ;
+    /* vertical-align: middle; */
 }
 
 /*

@@ -1,10 +1,26 @@
 {
   "rdfs:label": "RecordList coll3/list2",
-  "rdfs:comment": "RecordList help for list2 in collection coll3",
-  "annal:uri": "http://test.example.com/testsite/c/coll3/_annalist_collection/lists/list2/",
-  "annal:urihost": "test.example.com",
-  "annal:uripath": "/testsite/c/coll3/_annalist_collection/lists/list2/",
+  "rdfs:comment": "RecordList help for coll3/list2",
   "annal:id": "list2",
+  "annal:default_type": "Default_type",
+  "annal:type_id": "_list",
+  "annal:list_entity_selector": "ALL",
+  "annal:display_type": "annal:display_type/List",
+  "annal:list_fields": [
+    {
+      "annal:field_placement": "small:0,3",
+      "annal:field_id": "Entity_id"
+    },
+    {
+      "annal:field_placement": "small:3,9",
+      "annal:field_id": "Entity_label"
+    }
+  ],
+  "annal:uri": "http://test.example.com/testsite/c/coll3/d/_list/list2/",
+  "annal:url": "http://test.example.com/testsite/c/coll3/d/_list/list2/",
+  "annal:default_view": "Default_view",
   "@id": "./",
-  "annal:type": "annal:RecordList"
+  "@type": [
+    "annal:List"
+  ]
 }

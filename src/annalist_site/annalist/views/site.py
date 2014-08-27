@@ -14,6 +14,7 @@ from django.http                import HttpResponse
 from django.http                import HttpResponseRedirect
 from django.core.urlresolvers   import resolve, reverse
 
+from annalist.identifiers       import ANNAL, RDFS
 from annalist.exceptions        import Annalist_Error, EntityNotFound_Error
 from annalist                   import message
 from annalist                   import util
@@ -40,7 +41,6 @@ class SiteView(AnnalistGenericView):
         """
         # log.info("SiteView.get: site_data %r"%(self.site_data()))
         return (
-            # self.authenticate() or 
             self.authorize("VIEW") or 
             self.render_html(self.site_data(), 'annalist_site.html') or 
             self.error(self.error406values())
@@ -53,14 +53,14 @@ class SiteView(AnnalistGenericView):
         Process options to add or remove a collection in an Annalist site
         """
         log.debug("site.post: %r"%(request.POST.lists()))
-        if request.POST.get("remove", None):
+        if "remove" in request.POST:
             collections = request.POST.getlist("select", [])
             if collections:
                 # Get user to confirm action before actually doing it
                 return (
                     self.authorize("DELETE") or
                     ConfirmView.render_form(request,
-                        action_description=     message.REMOVE_COLLECTIONS%(", ".join(collections)),
+                        action_description=     message.REMOVE_COLLECTIONS%{'ids': ", ".join(collections)},
                         action_params=          request.POST,
                         complete_action_uri=    self.view_uri('AnnalistSiteActionView'),
                         cancel_action_uri=      self.view_uri('AnnalistSiteView'),
@@ -72,7 +72,7 @@ class SiteView(AnnalistGenericView):
                     self.view_uri("AnnalistSiteView"), 
                     message.NO_COLLECTIONS_SELECTED, info_head=message.NO_ACTION_PERFORMED
                     )
-        if request.POST.get("new", None):
+        if "new" in request.POST:
             # Create new collection with name and label supplied
             new_id    = request.POST["new_id"]
             new_label = request.POST["new_label"]
@@ -90,13 +90,14 @@ class SiteView(AnnalistGenericView):
             if auth_required:
                 return auth_required
             coll_meta = (
-                { 'rdfs:label':    new_label
-                , 'rdfs:comment':  ""
+                { RDFS.CURIE.label:    new_label
+                , RDFS.CURIE.comment:  ""
                 })
             self.site().add_collection(new_id, coll_meta)
             return self.redirect_info(
                 self.view_uri("AnnalistSiteView"), 
-                message.CREATED_COLLECTION_ID%(new_id))
+                message.CREATED_COLLECTION_ID%{'coll_id': new_id}
+                )
         return self.error(self.error400values())
 
 class SiteActionView(AnnalistGenericView):
@@ -114,7 +115,7 @@ class SiteActionView(AnnalistGenericView):
         Process options to complete action to add or remove a collection
         """
         log.debug("siteactionview.post: %r"%(request.POST))
-        if request.POST.get("remove", None):
+        if "remove" in request.POST:
             log.debug("Complete remove %r"%(request.POST.getlist("select")))
             auth_required = self.authorize("DELETE")
             if auth_required:
@@ -128,7 +129,7 @@ class SiteActionView(AnnalistGenericView):
                         str(err))
             return self.redirect_info(
                 self.view_uri("AnnalistSiteView"), 
-                message.COLLECTIONS_REMOVED%(", ".join(coll_ids))
+                message.COLLECTIONS_REMOVED%{'ids': ", ".join(coll_ids)}
                 )
         else:
             return self.error(self.error400values())

@@ -1,4 +1,4 @@
-<!-- editable text field -->
+<!-- field/annalist_edit_text.html -->
 <div class="{{field.field_placement.field}}">
     <div class="row">
         <div class="view_label {{field.field_placement.label}}">
@@ -6,7 +6,9 @@
         </div>
         <div class="{{field.field_placement.value}}">
             <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
-            <input type="text" size="64" name="{{field.field_name}}" value="{{field.field_value}}"/>
+            <input type="text" size="64" name="{{repeat.repeat_prefix}}{{field.field_name}}" 
+                   placeholder="{{field.field_placeholder}}"
+                   value="{{field.field_value}}"/>
         </div>
     </div>
 </div>
