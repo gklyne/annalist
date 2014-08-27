@@ -204,7 +204,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
      allows config when no delete authz (no login)
      Also, display of remove-field checkbox is based on "delete" permission. 
    / Save entity edit is not requiring login - should check from POST?
-   / entityedit add test cases for unauthorized config requests (and more?)
+   / Entityedit add test cases for unauthorized config requests (and more?)
    / From type display, want easy retreat to default display for collection
    / View_type display should suppress add-field option.  Similar for View_list and View_field?
    / suppress _initial_values as option when selecting type/view/list
@@ -216,25 +216,31 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / for annal:type, assign local type_id value.  Consider renaming as annal:type_id.
        / annal:type is retained for URI/CURIE of entity class (is this helpful?)
        / list type selectors then use local type_id values.
-   - @type list selector - allow selection by type substring - e.g. coll/type
+   x @type list selector - allow selection by type substring - e.g. coll/type
    - From list view, continuation URI for new, copy, etc should exclude message parameters
    - Customize > delete record > confirm : returns to wrong place
+   - Enumeration type for render types (text, longtext, etc...); use in fields display
+   - Enumeration type for list types (list/grid: default list)
+   - Move Bib_* fields to separate "built-in" collection
    / When not logged in, should still have option to select a different view
 9. Extend form-generator
-   / support repeated field group (to support RecordView and BibJSON)
-   - support alternate displays for different subtypes (to support BibJSON)
-   - implement "add repeating field" option to view edit (and entity view?)
-   - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
+   / Support repeated field group (to support RecordView and BibJSON)
+   - Support alternate displays for different subtypes (to support BibJSON)
+   - New render types: number, date, ...
+   - Blob and file upload/linking support: images, spreadsheets, ...
+   - Implement "add repeating field" option to view edit (and entity view?)
 10. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching
    - include default view
 11. Code improvement - general
-   - review URI for delete type/view/list confirmation
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
+   - Support import types from another collection
+   - review URI for delete type/view/list confirmation
    ? align type ID values used in local URI construction with type URIs/CURIEs
    - implement full authorization structure (currently just requires authentication for any changes).  Update "no_login" test cases accordingly.
    - improve authorization failure messages cf. AnnalistGenericView.authorize, .form_action_auth, displayinfo.check_authorization, entityedit.save_entity, etc.
+   - Identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
 12. Code improvement - lists
    / move invocation of authentication to the immediate response handler code?
    / refactor list description access out of context handling code (avoid multiple reads)
