@@ -261,14 +261,18 @@ def entitydata_form_data(
         form_data_dict['save']              = 'Save'
     return form_data_dict
 
-def entitydata_delete_confirm_form_data(entity_id=None):
+def entitydata_delete_confirm_form_data(entity_id=None, search=None):
     """
     Form data from entity deletion confirmation
     """
-    return (
+    form_data = (
         { 'entity_id':     entity_id,
           'entity_delete': 'Delete'
         })
+    if search:
+        form_data['search'] = search
+    return form_data
+
 
 #   -----------------------------------------------------------------------------
 #

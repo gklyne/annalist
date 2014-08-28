@@ -74,10 +74,34 @@ class ConfirmEntityDataDeleteTests(AnnalistTestCase):
         self.assertEqual(r.content,         "")
         self.assertMatch(r['location'],    
             "^"+TestHostUri+
-            entitydata_list_all_url("testcoll")+
-            # entitydata_list_type_url("testcoll", "testtype")+
-            r"\?info_head=.*&info_message=.*deleteentity.*testcoll.*$"
+            entitydata_list_all_url("testcoll")
             )
+        self.assertMatch(r['location'],    
+            r"info_head=.*&info_message=.*deleteentity.*testcoll.*$"
+            )
+        self.assertNotIn("search=testcoll", r['location'])
+        # Confirm deletion
+        self.assertFalse(EntityData.exists(self.testcoll, "deleteentity"))
+        return
+
+    def test_post_confirmed_remove_entity_from_search(self):
+        t = EntityData.create(self.testdata, "deleteentity", entitydata_create_values("deleteentity"))
+        self.assertTrue(EntityData.exists(self.testdata, "deleteentity"))
+        # Submit positive confirmation
+        u = entitydata_delete_confirm_url("testcoll", "testtype")
+        f = entitydata_delete_confirm_form_data("deleteentity", search="testcoll")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,     302)
+        self.assertEqual(r.reason_phrase,   "FOUND")
+        self.assertEqual(r.content,         "")
+        self.assertMatch(r['location'],    
+            "^"+TestHostUri+
+            entitydata_list_all_url("testcoll")
+            )
+        self.assertMatch(r['location'],    
+            r"info_head=.*&info_message=.*deleteentity.*testcoll.*$"
+            )
+        self.assertIn("search=testcoll", r['location'])
         # Confirm deletion
         self.assertFalse(EntityData.exists(self.testcoll, "deleteentity"))
         return

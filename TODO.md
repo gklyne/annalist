@@ -218,7 +218,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / list type selectors then use local type_id values.
    x @type list selector - allow selection by type substring - e.g. coll/type
    / From list view, continuation URI for new, copy, etc should exclude message parameters.  In particular, links in rendered fields have the extra stuff.  (But do include ?search param)
-   - Customize > delete record > confirm : returns to wrong place
+   / Customize > delete record > confirm : returns to wrong place
    - Enumeration type for render types (text, longtext, etc...); use in fields display
    - Enumeration type for list types (list/grid: default list)
    - Move Bib_* fields to separate "built-in" collection

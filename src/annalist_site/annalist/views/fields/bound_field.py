@@ -16,7 +16,7 @@ from django.conf                    import settings
 
 from annalist.models.entity         import EntityRoot
 
-from annalist.views.uri_builder     import uri_params, uri_with_params
+from annalist.views.uri_builder     import uri_params, uri_with_params, continuation_params
 
 class bound_field(object):
     """
@@ -58,7 +58,7 @@ class bound_field(object):
     >>> field_def = bound_field(field_def_desc, entity)
     >>> field_def.field_type
     'def_type'
-    >>> field_def.field_placeholder == "..."
+    >>> field_def.field_placeholder in ["...","@@bound_field.field_placeholder@@"]
     True
     >>> field_def.field_value == ""
     True
@@ -119,10 +119,14 @@ class bound_field(object):
         elif name == "continuation_url":
             cont = self._extras.get("request_url", "")
             if cont:
-                cont = uri_with_params(cont, 
-                    { 'search':             self._extras.get("search", None) or None
-                    , 'continuation_url':   self._extras.get("continuation_url", None) or None
-                    })
+                cont = uri_with_params(cont, continuation_params(self._extras))
+                #@@
+                # cont = uri_with_continuation_params(cont, self._extras)
+                # cont = uri_with_params(cont, 
+                #     { 'search':             self._extras.get("search_for") or None
+                #     , 'continuation_url':   self._extras.get("continuation_url") or None
+                #     })
+                #@@
             # log.info('bound_field.continuation_url %s'%(cont,))  #@@
             return cont
         elif name == "entity_link_continuation":

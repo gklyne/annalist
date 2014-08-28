@@ -65,6 +65,25 @@ def continuation_url_param(uri, prev_cont=None):
         uri += "?" + prev_cont
     return "continuation_url=" + urlquote(uri, safe="/=!")
 
+def confirm_delete_params(
+        button_id="entity_delete", coll_id="testcoll", entity_id="entity1", search_for="", list_id=None, type_id="testtype"):
+    vals = (
+        { 'button_id':  button_id
+        , 'entity_id':  entity_id
+        , 'coll_id':    coll_id
+        , 'list_id_':   "/l/"+list_id+"/" if list_id else "/d/"
+        , 'type_id_':   type_id + '/' if type_id else ""
+        , 'search_for': search_for
+        })
+    params = (
+        """{"%(button_id)s": ["Delete"],"""+
+        """ "entity_id": ["%(entity_id)s"],"""+
+        """ "continuation_url": [null],"""+
+        """ "completion_url": ["/testsite/c/%(coll_id)s%(list_id_)s%(type_id_)s"],"""+
+        """ "search_for": ["%(search_for)s"]}"""
+        )%vals
+    return params
+
 #   -----------------------------------------------------------------------------
 #
 #   ----- Site data

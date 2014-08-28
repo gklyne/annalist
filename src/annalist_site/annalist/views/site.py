@@ -62,7 +62,7 @@ class SiteView(AnnalistGenericView):
                     ConfirmView.render_form(request,
                         action_description=     message.REMOVE_COLLECTIONS%{'ids': ", ".join(collections)},
                         action_params=          request.POST,
-                        complete_action_uri=    self.view_uri('AnnalistSiteActionView'),
+                        confirmed_action_uri=   self.view_uri('AnnalistSiteActionView'),
                         cancel_action_uri=      self.view_uri('AnnalistSiteView'),
                         title=                  self.site_data()["title"]
                         )
@@ -70,7 +70,7 @@ class SiteView(AnnalistGenericView):
             else:
                 return self.redirect_info(
                     self.view_uri("AnnalistSiteView"), 
-                    message.NO_COLLECTIONS_SELECTED, info_head=message.NO_ACTION_PERFORMED
+                    info_message=message.NO_COLLECTIONS_SELECTED, info_head=message.NO_ACTION_PERFORMED
                     )
         if "new" in request.POST:
             # Create new collection with name and label supplied
@@ -80,11 +80,11 @@ class SiteView(AnnalistGenericView):
             if not new_id:
                 return self.redirect_error(
                     self.view_uri("AnnalistSiteView"), 
-                    message.MISSING_COLLECTION_ID)
+                    error_message=message.MISSING_COLLECTION_ID)
             if not util.valid_id(new_id):
                 return self.redirect_error(
                     self.view_uri("AnnalistSiteView"), 
-                    message.INVALID_COLLECTION_ID%(new_id))
+                    error_message=message.INVALID_COLLECTION_ID%(new_id))
             # Create new collection with name and label supplied
             auth_required = self.authorize("CREATE")
             if auth_required:
@@ -96,7 +96,7 @@ class SiteView(AnnalistGenericView):
             self.site().add_collection(new_id, coll_meta)
             return self.redirect_info(
                 self.view_uri("AnnalistSiteView"), 
-                message.CREATED_COLLECTION_ID%{'coll_id': new_id}
+                info_message=message.CREATED_COLLECTION_ID%{'coll_id': new_id}
                 )
         return self.error(self.error400values())
 
@@ -126,10 +126,10 @@ class SiteActionView(AnnalistGenericView):
                 if err:
                     return self.redirect_error(
                         self.view_uri("AnnalistSiteView"), 
-                        str(err))
+                        error_message=str(err))
             return self.redirect_info(
                 self.view_uri("AnnalistSiteView"), 
-                message.COLLECTIONS_REMOVED%{'ids': ", ".join(coll_ids)}
+                info_message=message.COLLECTIONS_REMOVED%{'ids': ", ".join(coll_ids)}
                 )
         else:
             return self.error(self.error400values())

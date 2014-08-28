@@ -45,6 +45,7 @@ from entity_testutils               import (
     site_view_url,
     collection_edit_url,
     continuation_url_param,
+    confirm_delete_params,
     collection_create_values,
     site_title
     )
@@ -144,8 +145,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
                 </td>
             </tr>
             """%({'base': TestBasePath, 'cont': cont})
-        self.assertContains(r, rowdata, html=True)
         # log.info(r.content)
+        self.assertContains(r, rowdata, html=True)
         # Test context
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
@@ -617,13 +618,17 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Confirm requested action</h3>")
         self.assertContains(r, "Remove record testtype of type _type in collection testcoll: Are you sure?")
         self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
-        self.assertContains(r, '<input type="hidden" name="complete_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>')
+        self.assertContains(r,
+            '<input type="hidden" name="confirmed_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>', 
+            html=True
+            )
         self.assertEqual(r.context['action_description'], 
             'Remove record testtype of type _type in collection testcoll')
-        self.assertEqual(r.context['complete_action'], 
+        self.assertEqual(r.context['confirmed_action'], 
             '/testsite/c/testcoll/d/_type/!delete_confirmed')
         self.assertEqual(r.context['action_params'], 
-            '{"entity_delete": ["Delete"], "entity_id": ["testtype"], "continuation_url": ["/testsite/c/testcoll/l/Type_list/_type/"]}')
+            confirm_delete_params(button_id="entity_delete", entity_id="testtype", type_id="_type", list_id="Type_list")
+            )
         self.assertEqual(r.context['cancel_action'], 
             '/testsite/c/testcoll/l/Type_list/_type/')
         return
@@ -641,13 +646,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Confirm requested action</h3>")
         self.assertContains(r, "Remove record testtype of type _type in collection testcoll: Are you sure?")
         self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
-        self.assertContains(r, '<input type="hidden" name="complete_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>')
+        self.assertContains(r, '<input type="hidden" name="confirmed_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>', html=True)
         self.assertEqual(r.context['action_description'], 
             'Remove record testtype of type _type in collection testcoll')
-        self.assertEqual(r.context['complete_action'], 
+        self.assertEqual(r.context['confirmed_action'], 
             '/testsite/c/testcoll/d/_type/!delete_confirmed')
         self.assertEqual(r.context['action_params'], 
-            '{"entity_delete": ["Delete"], "entity_id": ["testtype"], "continuation_url": ["/testsite/c/testcoll/l/Type_list/"]}')
+            confirm_delete_params(button_id="entity_delete", entity_id="testtype", type_id=None, list_id="Type_list")
+            )
         self.assertEqual(r.context['cancel_action'], 
             '/testsite/c/testcoll/l/Type_list/')
         return

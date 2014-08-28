@@ -356,9 +356,9 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertTemplateUsed(r, "annalist_confirm.html")
         # Check confirmation form content
-        complete_action_uri = recordtype_edit_url("delete", "coll1")
+        confirmed_action_uri = recordtype_edit_url("delete", "coll1")
         self.assertContains(r, '''<form method="POST" action="'''+TestBasePath+'''/confirm/">''', status_code=200)
-        self.assertEqual(r.context['complete_action'], complete_action_uri)
+        self.assertEqual(r.context['confirmed_action'], confirmed_action_uri)
         self.assertEqual(r.context['cancel_action'], self.edit_url)
         action_params = json.loads(r.context['action_params'])
         self.assertEqual(action_params['type_delete'], ["Delete"])
