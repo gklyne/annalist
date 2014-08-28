@@ -33,7 +33,8 @@ from annalist.views.grouprepeatmap      import GroupRepeatMap
 from annalist.views.confirm             import ConfirmView, dict_querydict
 from annalist.views.generic             import AnnalistGenericView
 
-from annalist.views.fields.render_utils import bound_field, get_entity_values
+from annalist.views.fields.bound_field  import bound_field
+from annalist.views.fields.render_utils import get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -128,10 +129,11 @@ class EntityGenericListView(AnnalistGenericView):
         entityval = { 'annal:list_entities': [ get_entity_values(listinfo, e) for e in entity_list ] }
         # Set up initial view context
         entityvaluemap = self.get_list_entityvaluemap(listinfo)
-        viewcontext = entityvaluemap.map_value_to_context(entityval,
+        listcontext = entityvaluemap.map_value_to_context(entityval,
             title               = self.site_data()["title"],
-            continuation_url    = request.GET.get('continuation_url', ""),
             request_url         = self.get_request_path(),
+            continuation_url    = request.GET.get('continuation_url', ""),
+            search              = request.GET.get('search', ""),
             ### heading             = entity_initial_values['rdfs:label'],
             coll_id             = coll_id,
             type_id             = type_id,
@@ -142,10 +144,10 @@ class EntityGenericListView(AnnalistGenericView):
             default_view_id     = listinfo.recordlist['annal:default_view'],
             default_view_enable = ("" if list_id else 'disabled="disabled"')
             )
-        # log.debug("EntityGenericListView.get viewcontext %r"%(viewcontext))
+        # log.debug("EntityGenericListView.get listcontext %r"%(listcontext))
         # Generate and return form data
         return (
-            self.render_html(viewcontext, self._entityformtemplate) or 
+            self.render_html(listcontext, self._entityformtemplate) or 
             self.error(self.error406values())
             )
 
@@ -243,7 +245,7 @@ class EntityGenericListView(AnnalistGenericView):
                     delete_params = dict_querydict(
                         { "entity_delete":      ["Delete"]
                         , "entity_id":          [entity_id]
-                        , "continuation_url":   [self.get_request_path()]
+                        , "continuation_url":   [continuation_here['continuation_url']]
                         })
                     message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
                     return (

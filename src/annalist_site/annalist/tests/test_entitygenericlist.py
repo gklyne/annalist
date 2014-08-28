@@ -289,6 +289,38 @@ class EntityGenericListViewTest(AnnalistTestCase):
                 self.fail("Field %s not found in context"%f[0])
         return
 
+    def test_get_fields_list_no_continuation(self):
+        u = entitydata_list_type_url("testcoll", "_field", list_id="Field_list")
+        r = self.client.get(u+"?foo=bar")
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, site_title("<title>%s</title>"))
+        self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
+        cont = uri_params({"continuation_url": u})
+        rowdata1 = """
+            <tr class="select_row">
+                <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
+                <td class="small-3 columns">annal:Text</td>
+                <td class="small-6 columns">Bib_address</td>
+                <td class="select_row">
+                    <input name="entity_select" value="_field/Bib_address" type="checkbox">
+                </td>
+            </tr>
+            """%(TestBasePath, cont)
+        # log.info(r.content)
+        self.assertContains(r, rowdata1, html=True)
+        # Test context
+        self.assertEqual(r.context['title'],            site_title())
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "_field")
+        self.assertEqual(r.context['continuation_url'], "")
+        list_choices = r.context['list_choices']
+        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(list_choices['field_value'],   "Field_list")
+        # Fields
+        self.assertEqual(len(r.context['fields']), 3)
+        return
+
     def test_get_fields_list_search(self):
         u = entitydata_list_type_url("testcoll", "_field", list_id="Field_list") + "?search=Bib_&continuation_url=/xyzzy/"
         r = self.client.get(u)
@@ -308,6 +340,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             </tr>
             """%(TestBasePath, cont)
         # log.info(r.content)
+        # If this test fails, check ordering of URI parameters
         self.assertContains(r, rowdata, html=True)
         # Test context
         self.assertEqual(r.context['title'],            site_title())

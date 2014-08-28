@@ -30,17 +30,25 @@ def uri_params(*param_dicts):
     uri_param_str = ""
     next_sep      = "?"        
     for pnam in uri_param_dict:
-        uri_param_str += next_sep + pnam + "=" + urllib.quote(uri_param_dict[pnam], query_safe)
-        next_sep = "&"
+        pval = uri_param_dict[pnam]
+        if pval is not None:
+            uri_param_str += next_sep + pnam + "=" + urllib.quote(pval, query_safe)
+            next_sep = "&"
     return uri_param_str
+
+def uri_base(uri):
+    """
+    Construct a base URI from the supplied base URI by removing any parameters and/or fragments.
+    """
+    base_uri = uri.split("#", 1)[0]
+    base_uri = base_uri.split("?", 1)[0]
+    return base_uri
 
 def uri_with_params(base_uri, *param_dicts):
     """
     Construct a URI from the supplied base URI (with any parameters and/or fragment removed)
     and URI paramneters created using the supplied dictionary values.
     """
-    bare_uri = base_uri.split("#", 1)[0]
-    bare_uri = bare_uri.split("?", 1)[0]
-    return bare_uri + uri_params(*param_dicts)
+    return uri_base(base_uri) + uri_params(*param_dicts)
 
 # End.

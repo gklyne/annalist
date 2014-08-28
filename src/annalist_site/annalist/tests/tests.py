@@ -71,6 +71,7 @@ def load_tests(loader, tests, ignore):
     # See http://stackoverflow.com/questions/2380527/django-doctests-in-views-py
     tests.addTests(doctest.DocTestSuite(annalist.util))
     tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_utils))
+    tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))
     tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_placement))
     tests.addTests(doctest.DocTestSuite(annalist.models.entityfinder))
     return tests
