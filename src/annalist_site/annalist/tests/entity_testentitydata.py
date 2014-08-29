@@ -630,7 +630,7 @@ def get_site_types_sorted():
     return (
         [ "_field", "_list", "_type", "_view"
         , "Default_type"
-        , "enum_list_type"
+        , "Enum_list_type"
         ])
 
 def get_site_types():
@@ -645,7 +645,8 @@ def get_site_views():
 
 def get_site_lists():
     return (
-        { "Default_list", "Default_list_all", "Field_list", "Type_list", "List_list", "View_list"
+        { "Default_list", "Default_list_all"
+        , "Field_list", "Type_list", "List_list", "View_list"
         })
 
 def get_site_fields():

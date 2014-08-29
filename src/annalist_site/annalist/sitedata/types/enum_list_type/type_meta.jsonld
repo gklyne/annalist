@@ -1,6 +1,6 @@
 { "@id":                "./"
 , "@type":              ["annal:List_display_type", "annal:Enum", "annal:Type"]
-, "annal:id":           "enum_list_type"
+, "annal:id":           "Enum_list_type"
 , "annal:type_id":      "_type"
 , "annal:uri":          "annal:List_display_type"
 , "rdfs:label":         "List display type"

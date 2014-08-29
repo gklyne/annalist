@@ -8,7 +8,7 @@
 , "annal:value_type":       "annal:List_display_type"
 , "annal:placeholder":      "(list type)"
 , "annal:property_uri":     "annal:display_type"
-, "annal:options_typeref":  "enum_list_type"
+, "annal:options_typeref":  "Enum_list_type"
 , "annal:field_placement":  "small:0,3"
 , "annal:default_value":    "List"
 }

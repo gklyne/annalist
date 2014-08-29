@@ -98,7 +98,7 @@ TYPE_CLASS_MAP = (
     , '_list':          RecordList
     , '_view':          RecordView
     , '_field':         RecordField
-    , 'enum_list_type': RecordEnumFactory('enum_list_type', 'enum_list_type')
+    , 'Enum_list_type': RecordEnumFactory('Enum_list_type', 'Enum_list_type')
     })
 
 TYPE_MESSAGE_MAP = (
@@ -106,7 +106,7 @@ TYPE_MESSAGE_MAP = (
     , '_list':          LIST_MESSAGES
     , '_view':          VIEW_MESSAGES
     , '_field':         FIELD_MESSAGES
-    , 'enum_list_type': ENUM_MESSAGES
+    , 'Enum_list_type': ENUM_MESSAGES
     })
 
 def get_built_in_type_ids():
