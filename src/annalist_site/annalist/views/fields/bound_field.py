@@ -136,14 +136,15 @@ class bound_field(object):
         elif name == "field_value":
             field_val = None
             if self._key == "annal:type":
-                # @@TODO: remove annal:Type hack when proper selection from enumerated entities
-                #         has been implemented.
+                # @@TODO: remove annal:Type hack when proper selection from enumerated 
+                #         entities has been implemented.
                 #
                 # The handling of annal:Type is something of a hack to return the internal
                 # type-id for an entity rarther than its type URI/CURIE, which is used in 
-                # turn by the form renderer to determine the type_id selection on the rendered
-                # form.  This hack shoukd be rendered unnecessary when the entity reference
-                # selection is properly generalized.
+                # turn by the form renderer to determine the type_id selection on the 
+                # rendered form.  This hack may be rendered unnecessary when the 
+                # entity reference selection is properly generalized.
+                #
                 field_val = self.entity_type_id
             elif self._key in self._entityvals:
                 field_val = self._entityvals[self._key]

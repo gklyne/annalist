@@ -67,7 +67,7 @@ class Entity(EntityRoot):
             raise ValueError("Invalid entity identifier: %s"%(entityid))
         relpath = self.relpath(entityid)
         super(Entity, self).__init__(parent._entityurl+relpath, parent._entitydir+relpath)
-        self._entityviewuri = parent._entityurl+self._entityview%{'id': entityid}
+        self._entityviewuri = parent._entityurl+self._entityview%{'id': entityid, 'type_id': self._entitytypeid}
         self._entityalturi  = None
         self._entityaltdir  = None
         if altparent:
@@ -111,7 +111,7 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the entity.
         """
         log.debug("Entity.relpath: entitytype %s, entityid %s"%(cls._entitytype, entityid))
-        relpath = (cls._entitypath or "%(id)s")%{'id': entityid}
+        relpath = (cls._entitypath or "%(id)s")%{'id': entityid, 'type_id': cls._entitytypeid}
         log.debug("Entity.relpath: %s"%(relpath))
         return relpath
 
@@ -124,7 +124,7 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the entity.
         """
         log.debug("Entity.altpath: entitytype %s, entityid %s"%(cls._entitytype, entityid))
-        altpath = (cls._entityaltpath or "%(id)s")%{'id': entityid}
+        altpath = (cls._entityaltpath or "%(id)s")%{'id': entityid, 'type_id': cls._entitytypeid}
         log.debug("Entity.altpath: %s"%(altpath))
         return altpath
 

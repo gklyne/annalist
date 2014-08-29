@@ -118,7 +118,7 @@ def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="Rec
         { 'annal:type':                 "annal:List"
         , 'rdfs:label':                 "%s %s/%s"%(update, coll_id, list_id)
         , 'rdfs:comment':               "%s help for %s/%s"%(update, coll_id, list_id)
-        , "annal:display_type":         "annal:display_type/List"
+        , "annal:display_type":         "List"
         , "annal:default_view":         "Default_view"
         , "annal:default_type":         "Default_type"
         , "annal:list_entity_selector": "ALL"
@@ -186,12 +186,12 @@ def recordlist_view_context_data(
             }
           , { 'field_id':           'List_type'
             , 'field_label':        'List display type'
-            , 'field_render_view':  'field/annalist_view_slug.html'
-            , 'field_render_edit':  'field/annalist_edit_slug.html'
+            , 'field_render_view':  'field/annalist_view_select.html'
+            , 'field_render_edit':  'field/annalist_edit_select.html'
             , 'field_name':         'List_type'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6right')
             , 'field_value_type':   'annal:List_display_type'
-            , 'field_value':        'annal:display_type/List'
+            , 'field_value':        'List'
             , 'options':            [] # ['list', 'grid']
             }
           , { 'field_id':           'List_label'
@@ -320,10 +320,10 @@ def recordlist_view_form_data(
         action=None, cancel=None,
         update="RecordView"):
     form_data_dict = (
-        { 'List_type':              'annal:display_type/List'
+        { 'List_type':              'List'
         , 'List_label':             '%s list (%s/@@list_id@@)'%(update, coll_id)
         , 'List_comment':           '%s help (%s/@@list_id@@)'%(update, coll_id)
-        , 'List_display_type':      'annal:display_type/List'
+        # , 'List_display_type':      'List'
         , 'List_default_type':      'Default_type'
         , 'List_default_view':      'Default_view'
         , 'List_entity_selector':   'ALL'

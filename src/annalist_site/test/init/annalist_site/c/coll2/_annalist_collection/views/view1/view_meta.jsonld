@@ -28,5 +28,6 @@
   "@id": "./",
   "@type": [
     "annal:View"
-  ]
+  ],
+  "annal:type": "annal:View"
 }

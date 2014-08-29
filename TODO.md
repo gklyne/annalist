@@ -221,25 +221,30 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / From list view, continuation URI for new, copy, etc should exclude message parameters.  In particular, links in rendered fields have the extra stuff.  (But do include ?search param)
    / Customize > delete record > confirm : returns to wrong place
    - Generalized enumeration types
-       - Define new RecordEnum class with type_id parameter on constructor; dynamically created directory paths; dynamic class creation?
-       - Test cases for RecordEnum
-       - Add optional type_id to all entity constructors (ignore on existing)
-       - Update entitytypeinfo to support enum types
-       - More test cases?
+       / Define new RecordEnum class with type_id parameter on constructor; dynamically created directory paths; dynamic class creation?
+       / Test cases for RecordEnum
+       x Add optional type_id to all entity constructors (ignore on existing)
+       / Update entitytypeinfo to support enum types
+       / More test cases?
        - Review, rationalize type naming and type ids.  Update sitedata.
        - Update list type field definition
        - Update tests using list type field definition
+       - Create type records for enumeration types, used for:
+           - locateong the default view and/or list id for records of that type
+           - getting entity @type URI/CURIE values while editing
+           - getting a view/edit link to type record
+           - See notes in models.typeinfo
    - Enumeration type for list types (list/grid: default list)
-       - Update field definition
-       - Create type records
-       - Update/add tests cases
+       / Update field definition
+       - Create type record
+       / Update/add tests cases
    - Enumeration type for field types (text, testarea, etc...); use in fields display
        - Update field definition
        - Create type records
        - Update/add tests cases
    - Enumeration type for value types (text, longtext, etc...); use in fields display
        - Update field definition
-       - Create type records
+       - Create type record
        - Update/add tests cases
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - Move Bib_* fields to separate "built-in" collection

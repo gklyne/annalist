@@ -251,7 +251,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
         # Entities
         self.assertIn('_initial_values', [ e['fields'][0]['field_value'] for e in r.context['entities'] ])
-        self.assertEqual(len(r.context['entities']), 57)
+        self.assertEqual(len(r.context['entities']), 55)
         field_entities = (
             { ('Entity_id',         "annal:Slug",          "Id")
             , ('Bib_address',       "annal:Text",          "Bib_address")

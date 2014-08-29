@@ -90,7 +90,11 @@ def get_view_renderer(renderid):
         return "field/annalist_view_entitytyperef.html"    
     if renderid == "annal:field_render/Identifier":
         return "field/annalist_view_identifier.html"    
-    if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List", "annal:field_render/Field"]:
+    if renderid in ["annal:field_render/Type",
+                    "annal:field_render/View", 
+                    "annal:field_render/List", 
+                    "annal:field_render/Field", 
+                    "annal:field_render/Enum"]:
         return "field/annalist_view_select.html"
     if renderid == "annal:field_render/View_sel":
         return "field/annalist_view_view_sel.html"
@@ -121,7 +125,11 @@ def get_item_renderer(renderid):
         return "field/annalist_item_entitytyperef.html"
     if renderid == "annal:field_render/Identifier":
         return "field/annalist_item_identifier.html"
-    if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List", "annal:field_render/Field"]:
+    if renderid in ["annal:field_render/Type",
+                    "annal:field_render/View", 
+                    "annal:field_render/List", 
+                    "annal:field_render/Field", 
+                    "annal:field_render/Enum"]:
         return "field/annalist_item_entityref.html"
     # if renderid == "annal:field_render/View_sel":
     #     return "field/annalist_item_entityref.html"

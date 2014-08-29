@@ -8,5 +8,6 @@
   "@id": "../",
   "@type": [
     "annal:Collection"
-  ]
+  ],
+  "annal:type": "annal:Collection"
 }
