@@ -47,7 +47,11 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_identifier.html"    
     if renderid == "annal:field_render/Textarea":
         return "field/annalist_edit_textarea.html"
-    if renderid in ["annal:field_render/Type", "annal:field_render/View", "annal:field_render/List", "annal:field_render/Field"]:
+    if renderid in ["annal:field_render/Type",
+                    "annal:field_render/View", 
+                    "annal:field_render/List", 
+                    "annal:field_render/Field", 
+                    "annal:field_render/Enum"]:
         return "field/annalist_edit_select.html"
     if renderid == "annal:field_render/View_sel":
         return "field/annalist_edit_view_sel.html"

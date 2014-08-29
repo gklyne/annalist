@@ -175,8 +175,6 @@ class EntityRoot(object):
     #     return self._entitytypes
     #@@
 
-
-
     # I/O helper functions
 
     def _dir_path(self):

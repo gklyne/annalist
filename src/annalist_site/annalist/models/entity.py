@@ -43,12 +43,13 @@ class Entity(EntityRoot):
     descendents of some other entity.
     """
 
-    _entitytype = ANNAL.CURIE.Entity
-    _entityview = "%(id)s/"     # Placeholder for testing
-    _entitypath = None          # Relative path from parent to entity (template)
-    _entityfile = None          # Relative reference to body file from entity
-    _entityref  = None          # Relative reference to entity from body file
-    _last_id    = None          # Last ID allocated
+    _entitytype     = ANNAL.CURIE.Entity
+    _entitytypeid   = None
+    _entityview     = "%(id)s/"     # Placeholder for testing
+    _entitypath     = None          # Relative path from parent to entity (template)
+    _entityfile     = None          # Relative reference to body file from entity
+    _entityref      = None          # Relative reference to entity from body file
+    _last_id        = None          # Last ID allocated
 
     def __init__(self, parent, entityid, altparent=None, idcheck=True):
         """

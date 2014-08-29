@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum"]
+, "annal:id":           "List"
+, "annal:type_id":      "enum_list_style"
+, "rdfs:label":         "annal:display_type/List"
+, "rdfs:comment":       "List displayed one entry per line with columns for fields"
+, "annal:uri":          "annal:display_type/List"
+}

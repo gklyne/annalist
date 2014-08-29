@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum", "annal:List_display_type"]
+, "annal:id":           "List"
+, "annal:type_id":      "enum_list_type"
+, "rdfs:label":         "annal:display_type/Grid"
+, "rdfs:comment":       "List displayed with each entry in a multi-line cell, with cells arranged on a grid pattern."
+, "annal:uri":          "annal:display_type/Grid"
+}

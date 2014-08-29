@@ -48,7 +48,7 @@ def createSiteData(src, sitedatasrc, tgt):
     shutil.rmtree(tgt, ignore_errors=True)
     shutil.copytree(src, tgt)
     sitedatatgt = os.path.join(tgt, test_layout.SITEDATA_DIR)
-    for sdir in ("types", "lists", "views", "fields", "enumerations"):
+    for sdir in ("types", "lists", "views", "fields", "enums"):
         s = os.path.join(sitedatasrc, sdir)
         d = os.path.join(sitedatatgt, sdir)
         shutil.copytree(s, d)

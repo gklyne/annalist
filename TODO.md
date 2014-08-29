@@ -217,16 +217,38 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / annal:type is retained for URI/CURIE of entity class (is this helpful?)
        / list type selectors then use local type_id values.
    x @type list selector - allow selection by type substring - e.g. coll/type
+   / When not logged in, should still have option to select a different view
    / From list view, continuation URI for new, copy, etc should exclude message parameters.  In particular, links in rendered fields have the extra stuff.  (But do include ?search param)
    / Customize > delete record > confirm : returns to wrong place
-   - Enumeration type for render types (text, longtext, etc...); use in fields display
+   - Generalized enumeration types
+       - Define new RecordEnum class with type_id parameter on constructor; dynamically created directory paths; dynamic class creation?
+       - Test cases for RecordEnum
+       - Add optional type_id to all entity constructors (ignore on existing)
+       - Update entitytypeinfo to support enum types
+       - More test cases?
+       - Review, rationalize type naming and type ids.  Update sitedata.
+       - Update list type field definition
+       - Update tests using list type field definition
    - Enumeration type for list types (list/grid: default list)
+       - Update field definition
+       - Create type records
+       - Update/add tests cases
+   - Enumeration type for field types (text, testarea, etc...); use in fields display
+       - Update field definition
+       - Create type records
+       - Update/add tests cases
+   - Enumeration type for value types (text, longtext, etc...); use in fields display
+       - Update field definition
+       - Create type records
+       - Update/add tests cases
+   - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - Move Bib_* fields to separate "built-in" collection
-   / When not logged in, should still have option to select a different view
+       - Can enumeration-like logic be used to support sub-areas in site data?
 9. Extend form-generator
    / Support repeated field group (to support RecordView and BibJSON)
    - Support alternate displays for different subtypes (to support BibJSON)
    - New render types: number, date, ...
+   - Options for scoping enumerations (e.g. fields by record_type); select entries with field matching value from containing form?  The goal here is to prevent (say) the Bib_* field entries swamping new view definition options.
    - Blob and file upload/linking support: images, spreadsheets, ...
    - Implement "add repeating field" option to view edit (and entity view?)
 10. Read-only entity data view
@@ -234,7 +256,6 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    - update URI dispatching
    - include default view
 11. Code improvement - general
-   - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - Support import types from another collection
    - review URI for delete type/view/list confirmation
    ? align type ID values used in local URI construction with type URIs/CURIEs
