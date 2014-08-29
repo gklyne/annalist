@@ -628,7 +628,9 @@ def layout_classes(width=12):
 
 def get_site_types_sorted():
     return (
-        [ "_field", "_list", "_type", "_view", "Default_type"
+        [ "_field", "_list", "_type", "_view"
+        , "Default_type"
+        , "enum_list_type"
         ])
 
 def get_site_types():

@@ -151,10 +151,12 @@ class EntityTypeInfo(object):
 
         and other values as initialized here.
         """
-        self.entitysite = site
-        self.entitycoll = coll
-        self.coll_id    = coll.get_id()
-        self.type_id    = type_id
+        self.entitysite     = site
+        self.entitycoll     = coll
+        self.recordtype     = None
+        self.entityparent   = None
+        self.coll_id        = coll.get_id()
+        self.type_id        = type_id
         if type_id in TYPE_CLASS_MAP:
             self.recordtype      = RecordType.load(coll, type_id, site)
             self.entityparent    = coll
@@ -168,21 +170,19 @@ class EntityTypeInfo(object):
                     self.entityparent   = RecordTypeData.create(coll, type_id, {})
                 else:
                     self.entityparent   = RecordTypeData(coll, type_id)
-            else:
-                #@@
-                # .recordtype is used by views.displayinfo to locate the default
-                # view and/or list id for examining records of a particular type.
-                #
-                # Also used in entityedit for getting @type URI/CURIE values.
-                #
-                # Used in render_utils to get link to type record
-                #@@
-                log.warning("EntityTypeInfo: RecordType %s not found"%type_id)
-                self.recordtype     = None
-                self.entityparent   = None
             self.entityaltparent = None
             self.entityclass     = EntityData
             self.entitymessages  = ENTITY_MESSAGES
+        if not self.recordtype:
+            #@@
+            # .recordtype is used by views.displayinfo to locate the default
+            # view and/or list id for examining records of a particular type.
+            #
+            # Also used in entityedit for getting @type URI/CURIE values.
+            #
+            # Used in render_utils to get link to type record
+            #@@
+            log.warning("EntityTypeInfo: RecordType %s not found"%type_id)
         return
 
     def get_entity(self, entity_id):

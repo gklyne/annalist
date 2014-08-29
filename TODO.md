@@ -234,9 +234,9 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
            - getting entity @type URI/CURIE values while editing
            - getting a view/edit link to type record
            - See notes in models.typeinfo
-   - Enumeration type for list types (list/grid: default list)
+   / Enumeration type for list types (list/grid: default list)
        / Update field definition
-       - Create type record
+       / Create type record
        / Update/add tests cases
    - Enumeration type for field types (text, testarea, etc...); use in fields display
        - Update field definition

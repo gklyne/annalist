@@ -76,7 +76,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        self.type_ids   = ['testtype', 'Default_type', '_type', '_field', '_view', '_list']
+        self.type_ids   = get_site_types_sorted() + ['testtype']
         self.no_options = ['(no options)']
         return
 

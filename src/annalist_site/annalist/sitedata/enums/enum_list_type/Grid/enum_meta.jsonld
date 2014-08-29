@@ -1,5 +1,5 @@
 { "@id":                "./"
-, "@type":              ["annal:Enum", "annal:List_display_type"]
+, "@type":              ["annal:List_display_type", "annal:Enum"]
 , "annal:id":           "List"
 , "annal:type_id":      "enum_list_type"
 , "rdfs:label":         "annal:display_type/Grid"

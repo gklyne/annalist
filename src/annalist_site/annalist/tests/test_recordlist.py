@@ -40,7 +40,8 @@ from entity_testutils                   import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_create_values,
-    site_title
+    site_title,
+    render_select_options
     )
 from entity_testlistdata                import (
     recordlist_dir,
@@ -54,6 +55,7 @@ from entity_testlistdata                import (
 from entity_testentitydata              import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment,
+    get_site_types_sorted,
     layout_classes
     )
 
@@ -350,25 +352,23 @@ class RecordListEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow4 = """
+        formrow4 = ("""
             <div class="small-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
                   <p>Record type</p>
                 </div>
                 <div class="%(input_classes)s">
-                  <select name="List_default_type">
-                    <option>_field</option>
-                    <option>_list</option>
-                    <option>_type</option>
-                    <option>_view</option>
-                    <option selected="selected">Default_type</option>
-                    <option>testtype</option>
-                  </select>
+                """+
+                  render_select_options(
+                    "List_default_type", 
+                    get_site_types_sorted()+["testtype"],
+                    "Default_type")+
+                """
                 </div>
               </div>
             </div>
-            """%field_vals(width=6)
+            """)%field_vals(width=6)
         formrow5 = """
             <div class="small-6 columns">
               <div class="row">

@@ -147,4 +147,35 @@ def collection_remove_form_data(coll_id_list):
             , "select":     coll_id_list
             })
 
+#   -----------------------------------------------------------------------------
+#
+#   ----- Rendering support
+#
+#   -----------------------------------------------------------------------------
+
+def render_select_options(name, opts, sel):
+    """
+    >>> print render_select_options("foo", ["aa", "bb", "cc"], "bb")
+    <select name="foo">
+      <option>aa</option>
+      <option selected="selected">bb</option>
+      <option>cc</option>
+    </select>
+    """
+    select_template = (
+        """<select name="%s">\n"""+
+        """  %s\n"""+
+        """</select>"""
+        )
+    options = ([ 
+        ("""<option>%s</option>""" if o != sel else 
+         """<option selected="selected">%s</option>""")%o
+        for o in opts
+        ])
+    return select_template%(name, "\n  ".join(options))
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+
 # End.
