@@ -107,7 +107,7 @@ FIELD_META_FILE         = "field_meta.jsonld"
 FIELD_PROV_FILE         = "field_prov.jsonld"
 META_FIELD_REF          = "./"
 
-COLL_ENUM_VIEW          = "d/_enum/%(type_id)s/%(id)s/"
+COLL_ENUM_VIEW          = "d/%(type_id)s/%(id)s/"
 COLL_ENUM_PATH          = "_annalist_collection/enums/%(type_id)s/%(id)s"
 SITE_ENUM_PATH          = "_annalist_site/enums/%(type_id)s/%(id)s"
 ENUM_META_FILE          = "enum_meta.jsonld"
