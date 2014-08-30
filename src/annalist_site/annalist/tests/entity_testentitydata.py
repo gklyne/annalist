@@ -189,8 +189,8 @@ def entitydata_context_data(
           , { 'field_label':        'Type'
             , 'field_id':           'Entity_type'
             , 'field_name':         'entity_type'
-            , 'field_render_view':  'field/annalist_view_entitytyperef.html'
-            , 'field_render_edit':  'field/annalist_edit_entitytyperef.html'
+            , 'field_render_view':  'field/annalist_view_entitytypeid.html'
+            , 'field_render_edit':  'field/annalist_edit_entitytypeid.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)

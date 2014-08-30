@@ -1,7 +1,7 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum", ...]
 , "annal:id":           "_term_id"
-, "annal:type_id":      "enum_value_type"
+, "annal:type_id":      "Enum_value_type"
 , "rdfs:label":         ""
 , "rdfs:comment":       ""
 , "annal:uri":          ""

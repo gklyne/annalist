@@ -1,8 +1,8 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum", "annal:List_display_type"]
 , "annal:id":           "_initial_values"
-, "annal:type_id":      "enum_list_style"
-, "rdfs:label":         "enum_list_style: initial values"
+, "annal:type_id":      "Enum_list_type"
+, "rdfs:label":         "Enum_list_type: initial values"
 , "rdfs:comment":       ""
 , "annal:uri":          "..."
 }

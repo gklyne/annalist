@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum"]
+, "annal:id":           "EnttityId"
+, "annal:type_id":      "Enum_field_render"
+, "rdfs:label":         "annal:field_render/EntityId"
+, "rdfs:comment":       "Field is short text string (slug); may be hyperlinked to entity."
+, "annal:uri":          "annal:field_render/EntityId"
+}

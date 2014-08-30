@@ -1,7 +1,7 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum"]
 , "annal:id":           "Text"
-, "annal:type_id":      "enum_value_type"
+, "annal:type_id":      "Enum_value_type"
 , "rdfs:label":         "annal:Longtext"
 , "rdfs:comment":       "Text string that may contain layout characters"
 , "annal:uri":          "annal:Longtext"

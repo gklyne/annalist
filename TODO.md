@@ -419,6 +419,20 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
 
 # Notes
 
+## List of types found
+
+"annal:Identifier"
+"annal:List"
+"annal:List_display_type"
+"annal:Longtext"
+"annal:Placement"
+"annal:RenderType"
+"annal:Slug"
+"annal:Text"
+"annal:Type"
+"annal:View"
+
+
 ## Rendering of entity type on form; rationalize rendering logic
 
 (Changes made as described below)

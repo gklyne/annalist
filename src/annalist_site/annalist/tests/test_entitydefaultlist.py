@@ -169,7 +169,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_placeholder'], "(type id)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:type_id")
         self.assertEqual(r.context['fields'][1]['field_render_head'], "field/annalist_head_any.html")
-        self.assertEqual(r.context['fields'][1]['field_render_item'], "field/annalist_item_entitytyperef.html")
+        self.assertEqual(r.context['fields'][1]['field_render_item'], "field/annalist_item_entitytypeid.html")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-2 columns")
         self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][1]['field_value'], "")

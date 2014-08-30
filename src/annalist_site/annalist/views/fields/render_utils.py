@@ -41,8 +41,8 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_text.html"
     if renderid == "annal:field_render/EntityId":
         return "field/annalist_edit_entityid.html"    
-    if renderid == "annal:field_render/EntityTypeRef":
-        return "field/annalist_edit_entitytyperef.html"    
+    if renderid == "annal:field_render/EntityTypeId":
+        return "field/annalist_edit_entitytypeid.html"    
     if renderid == "annal:field_render/Identifier":
         return "field/annalist_edit_identifier.html"    
     if renderid == "annal:field_render/Textarea":
@@ -55,8 +55,6 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_select.html"
     if renderid == "annal:field_render/View_sel":
         return "field/annalist_edit_view_sel.html"
-    if renderid == "annal:field_render/View_fields":
-        return "field/annalist_todo.html"
     log.warning("get_edit_renderer: %s not found"%renderid)
     # raise ValueError("get_edit_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
@@ -86,8 +84,8 @@ def get_view_renderer(renderid):
         return "field/annalist_view_text.html"
     if renderid == "annal:field_render/EntityId":
         return "field/annalist_view_entityid.html"    
-    if renderid == "annal:field_render/EntityTypeRef":
-        return "field/annalist_view_entitytyperef.html"    
+    if renderid == "annal:field_render/EntityTypeId":
+        return "field/annalist_view_entitytypeid.html"    
     if renderid == "annal:field_render/Identifier":
         return "field/annalist_view_identifier.html"    
     if renderid in ["annal:field_render/Type",
@@ -121,8 +119,8 @@ def get_item_renderer(renderid):
         return "field/annalist_item_text.html"
     if renderid == "annal:field_render/EntityId":
         return "field/annalist_item_entityid.html"    
-    if renderid == "annal:field_render/EntityTypeRef":
-        return "field/annalist_item_entitytyperef.html"
+    if renderid == "annal:field_render/EntityTypeId":
+        return "field/annalist_item_entitytypeid.html"
     if renderid == "annal:field_render/Identifier":
         return "field/annalist_item_identifier.html"
     if renderid in ["annal:field_render/Type",
