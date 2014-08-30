@@ -1,5 +1,5 @@
 { "@id":                "./"
-, "@type":              ["annal:Enum", "annal:List_display_type"]
+, "@type":              ["annal:List_display_type", "annal:Enum", "annal:Type"]
 , "annal:id":           "_initial_values"
 , "annal:type_id":      "Enum_list_type"
 , "rdfs:label":         "Enum_list_type: initial values"

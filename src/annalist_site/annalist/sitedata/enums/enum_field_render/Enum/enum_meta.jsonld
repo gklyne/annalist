@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_field_render", "annal:Enum", "annal:Type"]
+, "annal:id":           "Enum"
+, "annal:type_id":      "Enum_field_render"
+, "rdfs:label":         "annal:field_render/Enum"
+, "rdfs:comment":       "Field is entity identifier referring to value of a designated type in the current collection, rendered as a drop-down list from which an entity id may be selected."
+, "annal:uri":          "annal:field_render/Enum"
+}

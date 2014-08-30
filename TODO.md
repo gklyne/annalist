@@ -226,14 +226,15 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        x Add optional type_id to all entity constructors (ignore on existing)
        / Update entitytypeinfo to support enum types
        / More test cases?
-       - Review, rationalize type naming and type ids.  Update sitedata.
-       - Update list type field definition
-       - Update tests using list type field definition
+       / Review, rationalize type naming and type ids.  Update sitedata.
+       > Update list type field definition
+       / Update tests using list type field definition
        - Create type records for enumeration types, used for:
-           - locateong the default view and/or list id for records of that type
+           - locating the default view and/or list id for records of that type
            - getting entity @type URI/CURIE values while editing
            - getting a view/edit link to type record
            - See notes in models.typeinfo
+           - update tests
    / Enumeration type for list types (list/grid: default list)
        / Update field definition
        / Create type record

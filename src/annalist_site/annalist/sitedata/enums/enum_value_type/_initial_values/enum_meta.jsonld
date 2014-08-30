@@ -1,10 +1,10 @@
 { "@id":                "./"
-, "@type":              ["annal:Enum", ...]
-, "annal:id":           "_term_id"
+, "@type":              ["annal:Enum_value_type", "annal:Enum", "annal:Type"]
+, "annal:id":           "ZZZZ"
 , "annal:type_id":      "Enum_value_type"
-, "rdfs:label":         ""
-, "rdfs:comment":       ""
-, "annal:uri":          ""
+, "rdfs:label":         "annal:ZZZZ"
+, "rdfs:comment":       "..."
+, "annal:uri":          "annal:ZZZZ"
 }
 
 

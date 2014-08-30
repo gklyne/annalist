@@ -1,5 +1,5 @@
 { "@id":                "./"
-, "@type":              ["annal:Enum"]
+, "@type":              ["annal:Enum_field_render", "annal:Enum", "annal:Type"]
 , "annal:id":           "Text"
 , "annal:type_id":      "Enum_field_render"
 , "rdfs:label":         "annal:field_render/Text"
