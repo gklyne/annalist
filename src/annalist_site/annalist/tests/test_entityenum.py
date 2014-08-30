@@ -63,7 +63,7 @@ def recordenum_value_keys():
 
 def recordenum_create_values(
         enum_id, coll_id="testcoll", type_id="testtype", 
-        type_uri="annal:List_display_type", update="Enum", hosturi=TestHostUri):
+        type_uri="annal:List_type", update="Enum", hosturi=TestHostUri):
     """
     Data used when creating enumeration test data
     """

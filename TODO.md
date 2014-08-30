@@ -227,9 +227,9 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Update entitytypeinfo to support enum types
        / More test cases?
        / Review, rationalize type naming and type ids.  Update sitedata.
-       > Update list type field definition
+       / Update list type field definition
        / Update tests using list type field definition
-       - Create type records for enumeration types, used for:
+       > Create type records for enumeration types, used for:
            - locating the default view and/or list id for records of that type
            - getting entity @type URI/CURIE values while editing
            - getting a view/edit link to type record
@@ -239,11 +239,13 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Update field definition
        / Create type record
        / Update/add tests cases
-   - Enumeration type for field types (text, testarea, etc...); use in fields display
+   > Enumeration type for field render types (text, testarea, etc...); use in fields display
+       / Create enumeration data
        - Update field definition
-       - Create type records
-       - Update/add tests cases
+       / Create type records
+       > Update/add tests cases
    - Enumeration type for value types (text, longtext, etc...); use in fields display
+       - Create enumeration data
        - Update field definition
        - Create type record
        - Update/add tests cases

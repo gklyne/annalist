@@ -36,7 +36,8 @@ from entity_testutils               import (
     site_dir, collection_dir, 
     collection_edit_url,
     collection_create_values,
-    site_title
+    site_title,
+    render_select_options
     )
 from entity_testtypedata            import (
     recordtype_edit_url,
@@ -156,12 +157,12 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                     </p>
                   </div>
                   <div class="%(input_classes)s">
-                    <select name="entity_type">
-                        """ +
-                        '\n'.join(["<option>%s</option>"%o for o in get_site_types_sorted()]) +
-                        """
-                        <option selected="selected">testtype</option>
-                    </select>
+                  """+
+                    render_select_options(
+                      "entity_type", 
+                      get_site_types_sorted()+["testtype"],
+                      "testtype")+
+                  """
                   </div>
                 </div>
               </div>

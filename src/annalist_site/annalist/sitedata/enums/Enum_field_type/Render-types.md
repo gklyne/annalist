@@ -2,7 +2,7 @@
 
 Obtained by:
 
-    grep -rh annal:field_render * | awk '{print $3}' | sort | uniq
+    grep -rh annal:field_render ./annalist | awk '{print $3}' | sort | uniq
 
 Results (reorganized and "attic" values removed)
 

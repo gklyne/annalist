@@ -194,7 +194,7 @@ def recordfield_entity_view_context_data(
             , 'field_render_view':  'field/annalist_view_identifier.html'
             , 'field_render_edit':  'field/annalist_edit_identifier.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_value_type':   'annal:RenderType'
+            , 'field_value_type':   'annal:Field_type'
             , 'field_placeholder':  '(field render type)'
             , 'field_value':        ''
             , 'options':            []

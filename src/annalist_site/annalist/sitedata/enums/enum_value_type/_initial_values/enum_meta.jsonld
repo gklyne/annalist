@@ -6,20 +6,3 @@
 , "rdfs:comment":       "..."
 , "annal:uri":          "annal:ZZZZ"
 }
-
-
-// TODO:
-//
-// annal:Slug
-// annal:Placement
-// annal:Identifier
-// annal:Enum
-// 
-// annal:Type
-// annal:View
-// annal:List
-// annal:Field
-//
-// annal:Field_type
-// annal:Value_type
-// annal:List_type

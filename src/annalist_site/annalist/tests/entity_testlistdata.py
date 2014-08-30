@@ -190,7 +190,7 @@ def recordlist_view_context_data(
             , 'field_render_edit':  'field/annalist_edit_select.html'
             , 'field_name':         'List_type'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6right')
-            , 'field_value_type':   'annal:List_display_type'
+            , 'field_value_type':   'annal:List_type'
             , 'field_value':        'List'
             , 'options':            [] # ['list', 'grid']
             }
@@ -323,7 +323,7 @@ def recordlist_view_form_data(
         { 'List_type':              'List'
         , 'List_label':             '%s list (%s/@@list_id@@)'%(update, coll_id)
         , 'List_comment':           '%s help (%s/@@list_id@@)'%(update, coll_id)
-        # , 'List_display_type':      'List'
+        # , 'List_type':      'List'
         , 'List_default_type':      'Default_type'
         , 'List_default_view':      'Default_view'
         , 'List_entity_selector':   'ALL'

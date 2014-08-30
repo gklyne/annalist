@@ -3,6 +3,6 @@
 , "annal:id":           "Enum"
 , "annal:type_id":      "Enum_field_render"
 , "rdfs:label":         "annal:field_render/Enum"
-, "rdfs:comment":       "Field is entity identifier referring to value of a designated type in the current collection, rendered as a drop-down list from which an entity id may be selected."
+, "rdfs:comment":       "An entity identifier referring to some value of a designated type in the current collection, which may be rendered as a drop-down selection."
 , "annal:uri":          "annal:field_render/Enum"
 }

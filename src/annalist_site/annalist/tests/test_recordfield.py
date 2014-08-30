@@ -270,7 +270,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_render_view'], "field/annalist_view_identifier.html")
         self.assertEqual(r.context['fields'][2]['field_render_edit'], "field/annalist_edit_identifier.html")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:RenderType")
+        self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Field_type")
         self.assertEqual(r.context['fields'][2]['field_value'], field_render)
         self.assertEqual(r.context['fields'][2]['options'], self.no_options)
         # 4th field - Label
