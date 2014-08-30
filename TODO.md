@@ -239,16 +239,16 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Update field definition
        / Create type record
        / Update/add tests cases
-   > Enumeration type for field render types (text, testarea, etc...); use in fields display
+   / Enumeration type for field render types (text, testarea, etc...); use in fields display
        / Create enumeration data
-       - Update field definition
+       / Update field definition
        / Create type records
-       > Update/add tests cases
-   - Enumeration type for value types (text, longtext, etc...); use in fields display
-       - Create enumeration data
-       - Update field definition
-       - Create type record
-       - Update/add tests cases
+       / Update/add tests cases
+       - development test site is broken - why?  Isolate problem in test before fixing.
+   x Enumeration type for value types (text, longtext, etc...); use in fields display
+       - This won't work as val;ue types MAY be arbitrary identifiers; 
+         i.e. not limited to internal values.
+       - Possible candidate for new render type?
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - Move Bib_* fields to separate "built-in" collection
        - Can enumeration-like logic be used to support sub-areas in site data?

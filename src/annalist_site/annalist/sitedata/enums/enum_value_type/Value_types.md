@@ -2,7 +2,7 @@
 
 Obtained by:
 
-    grep -rh annal:value_type * | awk '{print $3}' | sort | uniq
+    grep -rh annal:value_type ./annalist | awk '{print $3}' | sort | uniq
 
 Results (reorganized and "attic" values removed)
 
@@ -16,19 +16,6 @@ Results (reorganized and "attic" values removed)
     annal:List
     annal:Field
     annal:Field_type
-    annal:Value_type
     annal:List_type
+    (annal:Value_type)
 
-
-    "annal:Text"
-    "annal:Longtext"
-    "annal:Slug"
-    "annal:Identifier"
-
-    "annal:Type"
-    "annal:View"
-    "annal:List"
-
-    "annal:Field_type"
-    "annal:List_type"
-    "annal:Placement"

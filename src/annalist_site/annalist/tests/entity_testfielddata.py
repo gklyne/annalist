@@ -113,6 +113,7 @@ def recordfield_value_keys():
         , 'annal:value_type'
         , 'annal:field_render'
         , 'annal:placeholder'
+        , 'annal:default_value'
         })
 
 def recordfield_load_keys():
@@ -185,18 +186,18 @@ def recordfield_entity_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
             , 'field_value_type':   'annal:Identifier'
             , 'field_placeholder':  '(field value type)'
-            , 'field_value':        ''
+            , 'field_value':        'annal:Text'
             , 'options':            []
             }
           , { 'field_label':        'Field render type'
             , 'field_id':           'Field_render'
             , 'field_name':         'Field_render'
-            , 'field_render_view':  'field/annalist_view_identifier.html'
-            , 'field_render_edit':  'field/annalist_edit_identifier.html'
+            , 'field_render_view':  'field/annalist_view_select.html'
+            , 'field_render_edit':  'field/annalist_edit_select.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_value_type':   'annal:Field_type'
+            , 'field_value_type':   'annal:Slug'
             , 'field_placeholder':  '(field render type)'
-            , 'field_value':        ''
+            , 'field_value':        'Text'
             , 'options':            []
             }
           , { 'field_label':        'Label'
