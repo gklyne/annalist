@@ -4,7 +4,7 @@
 , "annal:type_id":      "_field"
 , "rdfs:label":         "Bib_eprint"
 , "rdfs:comment":       "BibJSON(ish) field Bib_eprint"
-, "annal:field_render": "annal:field_render/Text"
+, "annal:field_render": "Text"
 , "annal:value_type":   "annal:Text"
 , "annal:placeholder":  "(Bib_eprint)"
 , "annal:property_uri": "bib:Bib_eprint"

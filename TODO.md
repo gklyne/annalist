@@ -244,7 +244,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Update field definition
        / Create type records
        / Update/add tests cases
-       - development test site is broken - why?  Isolate problem in test before fixing.
+       / development test site is broken - why?  Isolate problem in test before fixing.
    x Enumeration type for value types (text, longtext, etc...); use in fields display
        - This won't work as val;ue types MAY be arbitrary identifiers; 
          i.e. not limited to internal values.

@@ -89,6 +89,8 @@ class AnnalistGenericView(ContentNegotiationView):
     def site_data(self, host=""):
         if not self._site_data:
             self._site_data = self.site(host=host).site_data()
+        if not self._site_data:
+            log.error("views.generic.site_data: failed to load site data")
         return self._site_data
 
     def error(self, values):
@@ -215,6 +217,20 @@ class AnnalistGenericView(ContentNegotiationView):
             auth_scope = "UNKNOWN"
         # return self.authorize(auth_scope, auth_resource)
         return self.authorize(auth_scope)
+
+    def check_site_data(self):
+        """
+        Check thaty site data is present and accessible.  If not, return an HTTP error
+        response, otherwise None.
+        """
+        site_data = self.site_data()
+        if not site_data:
+            return self.error(
+                self.errorvalues(500, "Internal server error", 
+                    "Resource %(request_uri)s: Unable to load Annalist site data"
+                    )
+                )
+        return None
 
     def check_value_supplied(self, val, msg, continuation_url={}, testfn=(lambda v: v)):
         """

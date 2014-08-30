@@ -621,7 +621,7 @@ def layout_classes(width=12):
 
 #   -----------------------------------------------------------------------------
 #
-#   ----- Site-wide entirtiues defined
+#   ----- Site-wide entirties defined
 #
 #   -----------------------------------------------------------------------------
 
@@ -653,5 +653,28 @@ def get_site_fields():
     return (
         { 
         })
+
+def get_site_list_types_sorted():
+    return (
+        [ "Grid"
+        , "List"
+        ])
+
+def get_site_field_types_sorted():
+    return (
+        [ "EntityId"
+        , "EntityTypeId"
+        , "Enum"
+        , "Field"
+        , "Identifier"
+        , "List"
+        , "Placement"
+        , "Slug"
+        , "Text"
+        , "Textarea"
+        , "Type"
+        , "View"
+        ])
+
 
 # End.

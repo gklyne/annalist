@@ -1,11 +1,11 @@
-{ "@id":                "annal:fields/Type_label"
-, "@type":              ["annal:Field"]
-, "annal:id":           "Type_label"
-, "annal:type_id":      "_field"
-, "rdfs:label":         "Label"
-, "rdfs:comment":       "Short string used to describe record type when displayed"
-, "annal:field_render": "annal:field_render/Text"
-, "annal:value_type":   "annal:Text"
-, "annal:placeholder":  "(label)"
-, "annal:property_uri": "rdfs:label"
+{ "@id":                    "annal:fields/Type_label"
+, "@type":                  ["annal:Field"]
+, "annal:id":               "Type_label"
+, "annal:type_id":          "_field"
+, "rdfs:label":             "Label"
+, "rdfs:comment":           "Short string used to describe record type when displayed"
+, "annal:field_render":     "Text"
+, "annal:value_type":       "annal:Text"
+, "annal:placeholder":      "(label)"
+, "annal:property_uri":     "rdfs:label"
 }

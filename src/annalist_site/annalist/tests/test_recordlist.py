@@ -56,6 +56,7 @@ from entity_testentitydata              import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment,
     get_site_types_sorted,
+    get_site_list_types_sorted,
     layout_classes
     )
 
@@ -307,21 +308,23 @@ class RecordListEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow1b = """
+        formrow1b = ("""
             <div class="small-12 medium-6 right columns">
               <div class="row">
                 <div class="%(label_classes)s">
                   <p>List display type</p>
                 </div>
                 <div class="%(input_classes)s">
-                  <select name="List_type">
-                    <option>Grid</option>
-                    <option selected="selected">List</option>
-                  </select>
+                """+
+                  render_select_options(
+                    "List_type",
+                    get_site_list_types_sorted(),
+                    "List")+
+                """
                 </div>
               </div>
             </div>
-            """%field_vals(width=6)
+            """)%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
               <div class="row">

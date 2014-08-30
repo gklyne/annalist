@@ -32,28 +32,24 @@ def get_edit_renderer(renderid):
         a context. This allows you to reference a compiled Template in your context.
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
-    if renderid == "annal:field_render/Text":
+    if renderid == "Text":
         return "field/annalist_edit_text.html"
         # return RenderText()
-    if renderid == "annal:field_render/Slug":
+    if renderid == "Slug":
         return "field/annalist_edit_slug.html"
-    if renderid == "annal:field_render/Placement":
+    if renderid == "Placement":
         return "field/annalist_edit_text.html"
-    if renderid == "annal:field_render/EntityId":
+    if renderid == "EntityId":
         return "field/annalist_edit_entityid.html"    
-    if renderid == "annal:field_render/EntityTypeId":
+    if renderid == "EntityTypeId":
         return "field/annalist_edit_entitytypeid.html"    
-    if renderid == "annal:field_render/Identifier":
+    if renderid == "Identifier":
         return "field/annalist_edit_identifier.html"    
-    if renderid == "annal:field_render/Textarea":
+    if renderid == "Textarea":
         return "field/annalist_edit_textarea.html"
-    if renderid in ["annal:field_render/Type",
-                    "annal:field_render/View", 
-                    "annal:field_render/List", 
-                    "annal:field_render/Field", 
-                    "annal:field_render/Enum"]:
+    if renderid in ["Type", "View", "List", "Field", "Enum"]:
         return "field/annalist_edit_select.html"
-    if renderid == "annal:field_render/View_sel":
+    if renderid == "View_sel":
         return "field/annalist_edit_view_sel.html"
     log.warning("get_edit_renderer: %s not found"%renderid)
     # raise ValueError("get_edit_renderer: %s not found"%renderid)
@@ -73,28 +69,24 @@ def get_view_renderer(renderid):
         a context. This allows you to reference a compiled Template in your context.
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
-    if renderid == "annal:field_render/Text":
+    if renderid == "Text":
         return "field/annalist_view_text.html"
         # return RenderText()
-    if renderid == "annal:field_render/Textarea":
+    if renderid == "Textarea":
         return "field/annalist_view_textarea.html"
-    if renderid == "annal:field_render/Slug":
+    if renderid == "Slug":
         return "field/annalist_view_slug.html"
-    if renderid == "annal:field_render/Placement":
+    if renderid == "Placement":
         return "field/annalist_view_text.html"
-    if renderid == "annal:field_render/EntityId":
+    if renderid == "EntityId":
         return "field/annalist_view_entityid.html"    
-    if renderid == "annal:field_render/EntityTypeId":
+    if renderid == "EntityTypeId":
         return "field/annalist_view_entitytypeid.html"    
-    if renderid == "annal:field_render/Identifier":
+    if renderid == "Identifier":
         return "field/annalist_view_identifier.html"    
-    if renderid in ["annal:field_render/Type",
-                    "annal:field_render/View", 
-                    "annal:field_render/List", 
-                    "annal:field_render/Field", 
-                    "annal:field_render/Enum"]:
+    if renderid in ["Type", "View", "List", "Field", "Enum"]:
         return "field/annalist_view_select.html"
-    if renderid == "annal:field_render/View_sel":
+    if renderid == "View_sel":
         return "field/annalist_view_view_sel.html"
     log.warning("get_view_renderer: %s not found"%renderid)
     # raise ValueError("get_view_renderer: %s not found"%renderid)
@@ -113,23 +105,19 @@ def get_item_renderer(renderid):
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    if renderid == "annal:field_render/Text":
+    if renderid == "Text":
         return "field/annalist_item_text.html"
-    if renderid == "annal:field_render/Slug":
+    if renderid == "Slug":
         return "field/annalist_item_text.html"
-    if renderid == "annal:field_render/EntityId":
+    if renderid == "EntityId":
         return "field/annalist_item_entityid.html"    
-    if renderid == "annal:field_render/EntityTypeId":
+    if renderid == "EntityTypeId":
         return "field/annalist_item_entitytypeid.html"
-    if renderid == "annal:field_render/Identifier":
+    if renderid == "Identifier":
         return "field/annalist_item_identifier.html"
-    if renderid in ["annal:field_render/Type",
-                    "annal:field_render/View", 
-                    "annal:field_render/List", 
-                    "annal:field_render/Field", 
-                    "annal:field_render/Enum"]:
+    if renderid in ["Type", "View", "List", "Field", "Enum"]:
         return "field/annalist_item_entityref.html"
-    # if renderid == "annal:field_render/View_sel":
+    # if renderid == "View_sel":
     #     return "field/annalist_item_entityref.html"
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"

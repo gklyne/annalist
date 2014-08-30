@@ -41,6 +41,7 @@ class SiteView(AnnalistGenericView):
         """
         # log.info("SiteView.get: site_data %r"%(self.site_data()))
         return (
+            self.check_site_data() or
             self.authorize("VIEW") or 
             self.render_html(self.site_data(), 'annalist_site.html') or 
             self.error(self.error406values())

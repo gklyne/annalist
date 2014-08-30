@@ -291,6 +291,7 @@ class EntityRoot(object):
             except IOError, e:
                 if e.errno != errno.ENOENT:
                     raise
+                log.error("EntityRoot._load_values: no file %s"%(body_file))
             except ValueError, e:
                 log.error("EntityRoot._load_values: error loading %s"%(body_file))
                 log.error(e)

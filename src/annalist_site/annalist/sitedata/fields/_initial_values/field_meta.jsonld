@@ -2,7 +2,7 @@
 , "annal:id":           "_initial_values"
 , "rdfs:label":         ""
 , "rdfs:comment":       ""
-, "annal:field_render": "annal:field_render/Text"
+, "annal:field_render": "Text"
 , "annal:value_type":   "annal:Text"
 , "annal:placeholder":  ""
 , "annal:property_uri": ""
