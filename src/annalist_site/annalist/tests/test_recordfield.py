@@ -46,26 +46,15 @@ from entity_testfielddata           import (
     recordfield_entity_view_context_data, recordfield_entity_view_form_data
     )
 from entity_testutils               import (
-    # recordtype_create_values, 
     collection_create_values,
-    # site_dir, 
-    # collection_dir, 
-    # recordtype_dir, recorddata_dir,  entitydata_dir,
-    # collection_edit_url,
-    # recordtype_edit_url,
-    # recordtype_form_data,
-    # entitydata_value_keys, entitydata_create_values, entitydata_values,
-    # entitydata_recordtype_view_context_data, 
-    # # entitydata_context_data, 
-    # entitydata_recordtype_view_form_data,
-    # # entitydata_form_data, 
-    # entitydata_delete_confirm_form_data,
-    site_title
+    site_title,
+    render_select_options
     )
 from entity_testentitydata          import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment,
-    layout_classes
+    layout_classes,
+    get_site_field_types_sorted
     )
 
 #   -----------------------------------------------------------------------------
@@ -146,15 +135,16 @@ class RecordFieldTest(AnnalistTestCase):
         self.assertEqual(set(td.keys()), set(recordfield_load_keys()))
         v = recordfield_read_values(field_id="Field_type")
         v.update(
-            { '@id':                "annal:fields/Field_type"
-            , 'rdfs:label':         "Field value type"
-            , 'rdfs:comment':       "Type (URI or CURIE) of underlying data that is stored in a field."
-            , 'annal:type':         "annal:Field"
-            , 'annal:url':          "http://test.example.com/testsite/c/testcoll/d/_field/Field_type/"
-            , 'annal:value_type':   "annal:Identifier"
-            , 'annal:field_render': "annal:field_render/Identifier"
-            , 'annal:placeholder':  "(field value type)"
-            , 'annal:property_uri': "annal:value_type"
+            { '@id':                    "annal:fields/Field_type"
+            , 'rdfs:label':             "Field value type"
+            , 'rdfs:comment':           "Type (URI or CURIE) of underlying data that is stored in a field."
+            , 'annal:type':             "annal:Field"
+            , 'annal:url':              "http://test.example.com/testsite/c/testcoll/d/_field/Field_type/"
+            , 'annal:value_type':       "annal:Identifier"
+            , 'annal:field_render':     "Identifier"
+            , 'annal:placeholder':      "(field value type)"
+            , 'annal:property_uri':     "annal:value_type"
+            , 'annal:default_value':    "annal:Text"
             })
         self.assertDictionaryMatch(td, v)
         return
@@ -179,7 +169,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.client   = Client(HTTP_HOST=TestHost)
         loggedin      = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        self.no_options = ['(no options)']
+        self.no_options     = ['(no options)']
+        self.render_options = get_site_field_types_sorted()
         return
 
     def tearDown(self):
@@ -267,12 +258,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_help'], field_render_help)
         self.assertEqual(r.context['fields'][2]['field_placeholder'], "(field render type)")
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "annal:field_render")
-        self.assertEqual(r.context['fields'][2]['field_render_view'], "field/annalist_view_identifier.html")
-        self.assertEqual(r.context['fields'][2]['field_render_edit'], "field/annalist_edit_identifier.html")
+        self.assertEqual(r.context['fields'][2]['field_render_view'], "field/annalist_view_select.html")
+        self.assertEqual(r.context['fields'][2]['field_render_edit'], "field/annalist_edit_select.html")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:RenderType")
+        self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][2]['field_value'], field_render)
-        self.assertEqual(r.context['fields'][2]['options'], self.no_options)
+        self.assertEqual(r.context['fields'][2]['options'], self.render_options)
         # 4th field - Label
         field_label_help = (
             "Short string used to label value in form display, or as heading of list column"
@@ -407,7 +398,24 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=6)
-        formrow2 = """
+        formrow2 = ("""
+            <div class="small-12 medium-6 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>Field render type</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                    """+
+                      render_select_options(
+                        "Field_render", 
+                        get_site_field_types_sorted(),
+                        "Text")+
+                    """
+                    </div>
+                </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow3 = """
             <div class="small-12 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
@@ -421,7 +429,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow3 = """
+        formrow4 = """
             <div class="small-12 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
@@ -436,7 +444,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow4 = """
+        formrow5 = """
             <div class="small-12 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
@@ -449,7 +457,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow5 = """
+        formrow6 = """
             <div class="small-12 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
@@ -462,7 +470,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow6 = """
+        formrow7 = """
             <div class="small-12 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
@@ -484,6 +492,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow4, html=True)
         self.assertContains(r, formrow5, html=True)
         self.assertContains(r, formrow6, html=True)
+        self.assertContains(r, formrow7, html=True)
         return
 
     def test_get_new(self):
@@ -505,7 +514,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._check_context_fields(r, 
             field_id="00000001",
             field_type="annal:Text",
-            field_render="annal:field_render/Text",
+            field_render="Text",
             field_label=default_label("testcoll", "_field", "00000001"),
             field_comment=default_comment("testcoll", "_field", "00000001"),
             field_placeholder="",
@@ -553,7 +562,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._check_context_fields(r, 
             field_id="Type_label",
             field_type="annal:Text",
-            field_render="annal:field_render/Text",
+            field_render="Text",
             field_label="Label",
             field_comment="Short string used to describe record type when displayed",
             field_placeholder="(label)",

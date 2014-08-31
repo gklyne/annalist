@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_list_type", "annal:Enum", "annal:Type"]
+, "annal:id":           "_initial_values"
+, "annal:type_id":      "ZZZZ"
+, "rdfs:label":         "annal:list_type/ZZZZ"
+, "rdfs:comment":       ""
+, "annal:uri":          "annal:list_type/ZZZZ"
+}

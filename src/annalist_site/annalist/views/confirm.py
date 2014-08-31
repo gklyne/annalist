@@ -71,18 +71,18 @@ class ConfirmView(AnnalistGenericView):
     def render_form(request,
             action_description="Are you sure you want to do that?", # message describing requested action
             action_params={},
-            complete_action_uri="/",    # URI to to POST to complete action
+            confirmed_action_uri="/",    # URI to to POST to complete action
             cancel_action_uri="/",      # URI to dispatch to cancel action
             title=None):
         """
         Render form that requests a user to confirm an action to be performed and,
-        depending onthe user's response, redirects to 'complete_action_uri' or 
-        'cancerl_action_uri'
+        depending onthe user's response, redirects to 'confirmed_action_uri' or 
+        'cancel_action_uri'
         """
         form_data = (
             { "action_description":     action_description
             , "action_params":          querydict_dumps(action_params)
-            , "complete_action":        complete_action_uri
+            , "confirmed_action":       confirmed_action_uri
             , "cancel_action":          cancel_action_uri
             , "title":                  title
             , "suppress_user":          True
@@ -109,7 +109,7 @@ class ConfirmView(AnnalistGenericView):
         if "confirm" in request.POST:
             action_request      = copy.copy(request)
             action_request.POST = querydict_loads(request.POST["action_params"])
-            view, args, kwargs  = resolve(request.POST["complete_action"])
+            view, args, kwargs  = resolve(request.POST["confirmed_action"])
             return view(action_request, *args, **kwargs)
         return HttpResponseRedirect(request.POST["cancel_action"])
 

@@ -40,7 +40,8 @@ from entity_testutils                   import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_create_values,
-    site_title
+    site_title,
+    render_select_options
     )
 from entity_testlistdata                import (
     recordlist_dir,
@@ -54,6 +55,8 @@ from entity_testlistdata                import (
 from entity_testentitydata              import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment,
+    get_site_types_sorted,
+    get_site_list_types_sorted,
     layout_classes
     )
 
@@ -202,7 +205,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_help="(?list_help)",
             list_url="(?list_url)",
             list_uri="(?list_uri)",
-            list_type="annal:display_type/List",
+            list_type="List",
             list_default_type="Default_type",
             list_default_view="Default_view",
             list_selector="ALL"
@@ -291,7 +294,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'_list' data in collection 'testcoll'</h3>")
         field_vals = default_fields(coll_id="testcoll", type_id="_list", entity_id="00000001")
-        formrow1 = """
+        formrow1a = """
             <div class="small-12 medium-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
@@ -305,6 +308,23 @@ class RecordListEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
+        formrow1b = ("""
+            <div class="small-12 medium-6 right columns">
+              <div class="row">
+                <div class="%(label_classes)s">
+                  <p>List display type</p>
+                </div>
+                <div class="%(input_classes)s">
+                """+
+                  render_select_options(
+                    "List_type",
+                    get_site_list_types_sorted(),
+                    "List")+
+                """
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
               <div class="row">
@@ -335,25 +355,23 @@ class RecordListEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow4 = """
+        formrow4 = ("""
             <div class="small-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
                   <p>Record type</p>
                 </div>
                 <div class="%(input_classes)s">
-                  <select name="List_default_type">
-                    <option>_field</option>
-                    <option>_list</option>
-                    <option>_type</option>
-                    <option>_view</option>
-                    <option selected="selected">Default_type</option>
-                    <option>testtype</option>
-                  </select>
+                """+
+                  render_select_options(
+                    "List_default_type", 
+                    get_site_types_sorted()+["testtype"],
+                    "Default_type")+
+                """
                 </div>
               </div>
             </div>
-            """%field_vals(width=6)
+            """)%field_vals(width=6)
         formrow5 = """
             <div class="small-6 columns">
               <div class="row">
@@ -394,7 +412,8 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """%dict(field_vals(width=12), selector_text=selector_text)
         # log.info(r.content)     #@@
-        self.assertContains(r, formrow1, html=True)
+        self.assertContains(r, formrow1a, html=True)
+        self.assertContains(r, formrow1b, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)
         self.assertContains(r, formrow4, html=True)
@@ -427,7 +446,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_help=default_comment("testcoll", "_list", "00000001"),
             list_url=TestHostUri + recordlist_url("testcoll", "00000001"),
             list_uri=TestHostUri + recordlist_url("testcoll", "00000001"),
-            list_type="annal:display_type/List",
+            list_type="List",
             list_default_type="Default_type",
             list_default_view="Default_view",
             list_selector="ALL"

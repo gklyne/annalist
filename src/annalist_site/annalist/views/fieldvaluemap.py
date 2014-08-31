@@ -26,7 +26,7 @@ log = logging.getLogger(__name__)
 
 from django.conf                        import settings
 
-from annalist.views.fields.render_utils import bound_field
+from annalist.views.fields.bound_field  import bound_field
 
 class FieldValueMap(object):
     """

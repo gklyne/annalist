@@ -144,6 +144,7 @@ class EntityRoot(object):
         self._values[ANNAL.CURIE.type]      = self._values.get(ANNAL.CURIE.type,    self._entitytype)
         self._values[ANNAL.CURIE.uri]       = self._values.get(ANNAL.CURIE.uri,     self.get_view_url())
         self._values[ANNAL.CURIE.url]       = self.get_view_url()
+        # log.info("set_values %r"%(self._values,))
         return self._values
 
     def get_values(self):
@@ -174,8 +175,6 @@ class EntityRoot(object):
     #     """
     #     return self._entitytypes
     #@@
-
-
 
     # I/O helper functions
 
@@ -292,6 +291,7 @@ class EntityRoot(object):
             except IOError, e:
                 if e.errno != errno.ENOENT:
                     raise
+                log.error("EntityRoot._load_values: no file %s"%(body_file))
             except ValueError, e:
                 log.error("EntityRoot._load_values: error loading %s"%(body_file))
                 log.error(e)

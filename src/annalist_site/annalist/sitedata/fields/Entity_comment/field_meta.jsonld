@@ -4,7 +4,7 @@
 , "annal:type_id":      "_field"
 , "rdfs:label":         "Comment"
 , "rdfs:comment":       "Descriptive text about an entity."
-, "annal:field_render": "annal:field_render/Textarea"
+, "annal:field_render": "Textarea"
 , "annal:value_type":   "annal:Longtext"
 , "annal:placeholder":  "(description)"
 , "annal:property_uri": "rdfs:comment"

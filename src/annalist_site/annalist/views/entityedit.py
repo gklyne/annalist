@@ -25,7 +25,7 @@ from annalist.models.recordfield        import RecordField
 from annalist.models.recordtypedata     import RecordTypeData
 from annalist.models.entitydata         import EntityData
 
-from annalist.views.uri_builder         import uri_with_params
+from annalist.views.uri_builder         import uri_base, uri_with_params
 from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.fielddescription    import FieldDescription
 from annalist.views.entityvaluemap      import EntityValueMap
@@ -33,7 +33,8 @@ from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
 from annalist.views.generic             import AnnalistGenericView
 
-from annalist.views.fields.render_utils import bound_field, get_entity_values
+from annalist.views.fields.bound_field  import bound_field
+from annalist.views.fields.render_utils import get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #

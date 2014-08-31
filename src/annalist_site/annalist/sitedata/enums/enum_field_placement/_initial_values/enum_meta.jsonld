@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum", "annal:Field_placement"]
+, "annal:id":           "_term_id"
+, "annal:type_id":      "Enum_field_placement"
+, "rdfs:label":         ""
+, "rdfs:comment":       "Options for field placement: Full-width, Half-width-left, Half-width-right, etc."
+, "annal:uri":          "..."
+}

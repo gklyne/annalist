@@ -19,7 +19,7 @@
       <div class="row">
         {% for field in fields %}
         {% if field.field_id  %}
-        <!-- {{field.field_name}}: {{field.field_render_edit}}</p> -->
+        <!-- {{field.field_name}}: {{field.field_render_edit}} -->
         {% include field.field_render_edit %}
         {% elif field.repeat_id %}
         <div class="small-12 columns">

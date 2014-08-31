@@ -123,7 +123,7 @@ class DisplayInfo(object):
             assert ((self.site and self.collection) is not None)
             assert list_id
             if not RecordList.exists(self.collection, list_id, self.site):
-                log.info("DisplayInfo.get_list_info: RecordList %s not found"%list_id)
+                log.warning("DisplayInfo.get_list_info: RecordList %s not found"%list_id)
                 self.http_response = self.view.error(
                     dict(self.view.error404values(),
                         message=message.RECORD_LIST_NOT_EXISTS%(

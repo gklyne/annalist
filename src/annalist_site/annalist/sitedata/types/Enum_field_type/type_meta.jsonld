@@ -1,0 +1,10 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum", "annal:Type"]
+, "annal:id":           "Enum_field_type"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Enum_field_type"
+, "rdfs:label":         "Field type"
+, "rdfs:comment":       "Field type controlling the kind of data displayed and how it is rendered."
+, "annal:type_view":    "Default_view"
+, "annal:type_list":    "Default_list"
+}

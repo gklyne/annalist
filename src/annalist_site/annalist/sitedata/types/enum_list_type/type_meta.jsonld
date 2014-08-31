@@ -1,0 +1,10 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum", "annal:Type"]
+, "annal:id":           "Enum_list_type"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Enum_list_type"
+, "rdfs:label":         "List display type"
+, "rdfs:comment":       "List display type (e.g. List or Grid)"
+, "annal:type_view":    "Default_view"
+, "annal:type_list":    "Default_list"
+}

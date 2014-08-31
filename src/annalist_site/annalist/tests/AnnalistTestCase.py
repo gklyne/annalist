@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 from django.test import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 
-from annalist.views.fields.render_utils import bound_field
+from annalist.views.fields.bound_field import bound_field
 
 class AnnalistTestCase(TestCase):
     """

@@ -204,7 +204,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
      allows config when no delete authz (no login)
      Also, display of remove-field checkbox is based on "delete" permission. 
    / Save entity edit is not requiring login - should check from POST?
-   / entityedit add test cases for unauthorized config requests (and more?)
+   / Entityedit add test cases for unauthorized config requests (and more?)
    / From type display, want easy retreat to default display for collection
    / View_type display should suppress add-field option.  Similar for View_list and View_field?
    / suppress _initial_values as option when selecting type/view/list
@@ -216,25 +216,60 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / for annal:type, assign local type_id value.  Consider renaming as annal:type_id.
        / annal:type is retained for URI/CURIE of entity class (is this helpful?)
        / list type selectors then use local type_id values.
-   - @type list selector - allow selection by type substring - e.g. coll/type
-   - From list view, continuation URI for new, copy, etc should exclude message parameters
-   - Customize > delete record > confirm : returns to wrong place
+   x @type list selector - allow selection by type substring - e.g. coll/type
    / When not logged in, should still have option to select a different view
+   / From list view, continuation URI for new, copy, etc should exclude message parameters.  In particular, links in rendered fields have the extra stuff.  (But do include ?search param)
+   / Customize > delete record > confirm : returns to wrong place
+   - Generalized enumeration types
+       / Define new RecordEnum class with type_id parameter on constructor; dynamically created directory paths; dynamic class creation?
+       / Test cases for RecordEnum
+       x Add optional type_id to all entity constructors (ignore on existing)
+       / Update entitytypeinfo to support enum types
+       / More test cases?
+       / Review, rationalize type naming and type ids.  Update sitedata.
+       / Update list type field definition
+       / Update tests using list type field definition
+       > Create type records for enumeration types, used for:
+           - locating the default view and/or list id for records of that type
+           - getting entity @type URI/CURIE values while editing
+           - getting a view/edit link to type record
+           - See notes in models.typeinfo
+           - update tests
+   / Enumeration type for list types (list/grid: default list)
+       / Update field definition
+       / Create type record
+       / Update/add tests cases
+   / Enumeration type for field render types (text, testarea, etc...); use in fields display
+       / Create enumeration data
+       / Update field definition
+       / Create type records
+       / Update/add tests cases
+       / development test site is broken - why?  Isolate problem in test before fixing.
+   x Enumeration type for value types (text, longtext, etc...); use in fields display
+       - This won't work as val;ue types MAY be arbitrary identifiers; 
+         i.e. not limited to internal values.
+       - Possible candidate for new render type?
+   - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
+   - Move Bib_* fields to separate "built-in" collection
+       - Can enumeration-like logic be used to support sub-areas in site data?
 9. Extend form-generator
-   / support repeated field group (to support RecordView and BibJSON)
-   - support alternate displays for different subtypes (to support BibJSON)
-   - implement "add repeating field" option to view edit (and entity view?)
-   - identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
+   / Support repeated field group (to support RecordView and BibJSON)
+   - Support alternate displays for different subtypes (to support BibJSON)
+   - New render types: number, date, ...
+   - Options for scoping enumerations (e.g. fields by record_type); select entries with field matching value from containing form?  The goal here is to prevent (say) the Bib_* field entries swamping new view definition options.
+   - Blob and file upload/linking support: images, spreadsheets, ...
+   - Implement "add repeating field" option to view edit (and entity view?)
 10. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching
    - include default view
 11. Code improvement - general
+   - Support import types from another collection
    - review URI for delete type/view/list confirmation
-   - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    ? align type ID values used in local URI construction with type URIs/CURIEs
    - implement full authorization structure (currently just requires authentication for any changes).  Update "no_login" test cases accordingly.
    - improve authorization failure messages cf. AnnalistGenericView.authorize, .form_action_auth, displayinfo.check_authorization, entityedit.save_entity, etc.
+   - Identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
 12. Code improvement - lists
    / move invocation of authentication to the immediate response handler code?
    / refactor list description access out of context handling code (avoid multiple reads)
@@ -387,6 +422,20 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
 
 
 # Notes
+
+## List of types found
+
+"annal:Identifier"
+"annal:List"
+"annal:List_display_type"
+"annal:Longtext"
+"annal:Placement"
+"annal:RenderType"
+"annal:Slug"
+"annal:Text"
+"annal:Type"
+"annal:View"
+
 
 ## Rendering of entity type on form; rationalize rendering logic
 
