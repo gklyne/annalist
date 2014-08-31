@@ -220,7 +220,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / When not logged in, should still have option to select a different view
    / From list view, continuation URI for new, copy, etc should exclude message parameters.  In particular, links in rendered fields have the extra stuff.  (But do include ?search param)
    / Customize > delete record > confirm : returns to wrong place
-   - Generalized enumeration types
+   / Generalized enumeration types
        / Define new RecordEnum class with type_id parameter on constructor; dynamically created directory paths; dynamic class creation?
        / Test cases for RecordEnum
        x Add optional type_id to all entity constructors (ignore on existing)
@@ -229,12 +229,11 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Review, rationalize type naming and type ids.  Update sitedata.
        / Update list type field definition
        / Update tests using list type field definition
-       > Create type records for enumeration types, used for:
+       / Create type records for enumeration types, used for:
            - locating the default view and/or list id for records of that type
            - getting entity @type URI/CURIE values while editing
            - getting a view/edit link to type record
            - See notes in models.typeinfo
-           - update tests
    / Enumeration type for list types (list/grid: default list)
        / Update field definition
        / Create type record
@@ -245,38 +244,41 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Create type records
        / Update/add tests cases
        / development test site is broken - why?  Isolate problem in test before fixing.
-   x Enumeration type for value types (text, longtext, etc...); use in fields display
-       - This won't work as val;ue types MAY be arbitrary identifiers; 
-         i.e. not limited to internal values.
-       - Possible candidate for new render type?
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - Move Bib_* fields to separate "built-in" collection
        - Can enumeration-like logic be used to support sub-areas in site data?
-9. Extend form-generator
+9. Prepare for release
+   - version identifier in system
+   - documentation, online help text
+   - installation package
+   - test with Django 1.7
+   - demo video
+   - demo deployment
+10. Extend form-generator
    / Support repeated field group (to support RecordView and BibJSON)
    - Support alternate displays for different subtypes (to support BibJSON)
    - New render types: number, date, ...
    - Options for scoping enumerations (e.g. fields by record_type); select entries with field matching value from containing form?  The goal here is to prevent (say) the Bib_* field entries swamping new view definition options.
    - Blob and file upload/linking support: images, spreadsheets, ...
    - Implement "add repeating field" option to view edit (and entity view?)
-10. Read-only entity data view
+11. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching
    - include default view
-11. Code improvement - general
+12. Code improvement - general
    - Support import types from another collection
    - review URI for delete type/view/list confirmation
    ? align type ID values used in local URI construction with type URIs/CURIEs
    - implement full authorization structure (currently just requires authentication for any changes).  Update "no_login" test cases accordingly.
    - improve authorization failure messages cf. AnnalistGenericView.authorize, .form_action_auth, displayinfo.check_authorization, entityedit.save_entity, etc.
    - Identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
-12. Code improvement - lists
+13. Code improvement - lists
    / move invocation of authentication to the immediate response handler code?
    / refactor list description access out of context handling code (avoid multiple reads)
    / refactor code from entityeditbase into more specific views where possible
    / rename what is left of entityeditbase -> entityviewbase, or move to generic module
    - use proper indexing to accelerate search (maybe later?)
-13. Code improvement - views
+14. Code improvement - views
    / where possible, migrate methods from editentitybase to subclasses
    / review logic - ideally, form handlers will access data from form, then hand off for processing
    - review record view description form (create data and configure URIs)
@@ -284,13 +286,19 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    - review record list description form (create data and configure URIs)
    / add "new field" logic to entity edit POST handler
    - update to Django 1.7 and re-work field rendering (use code rather than templates?  simplify context generation?)
-14. Display enhancements
+   - Enumeration type for value types (text, longtext, etc...); use in fields display
+       - This won't work immediately as value types MAY be arbitrary identifiers; 
+         i.e. not limited to internal values.
+       - Possible candidate for new render type?
+       - Consider possibly allowing user to add new type URIs, and then using enumeration field?
+       - How to handle selection vs rendering?  May need different enumeration option.
+15. Display enhancements
    / add type links to list view (link to typed list view...?)
        / Update field in default list displays
    / list_view response handler (needs generic view to make sense; view button to redisplay)
-15. Grid view
+16. Grid view
    - to be planned
-16. Generic entity selector (based on canned sparql expressions?)
+17. Generic entity selector (based on canned sparql expressions?)
    / initial, simple non-SPARQL implementation in place - can revisit later
 
 
