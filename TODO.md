@@ -246,6 +246,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / review logic - ideally, form handlers will access data from form, then hand off for processing
    - review record view description form (create data and configure URIs)
    - review field description form (create data and configure URIs)
+   - cross-field default values; e.g. field type defines default for value type via field description
    - review record list description form (create data and configure URIs)
    / add "new field" logic to entity edit POST handler
    - update to Django 1.7 and re-work field rendering (use code rather than templates?  simplify context generation?)
