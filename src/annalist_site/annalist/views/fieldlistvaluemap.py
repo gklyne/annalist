@@ -29,7 +29,7 @@ class FieldListValueMap(object):
     corresponding to a list of field descriptions.
 
     coll    is the collection object holding the field definitions
-    fields  list of field descritpions from a view definition.
+    fields  list of field descriptions from a view definition.
 
     NOTE: The form rendering template iterates over the context field values to be 
     added to the form display.  The constructor for this object appends the current
