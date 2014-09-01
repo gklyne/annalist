@@ -247,6 +247,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    - allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
    - Move Bib_* fields to separate "built-in" collection
        - Can enumeration-like logic be used to support sub-areas in site data?
+       - Alternative might be value-scped enumerations
 9. Prepare for release
    - version identifier in system
    - documentation, online help text

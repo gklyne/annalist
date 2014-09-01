@@ -287,7 +287,7 @@ class EntityRoot(object):
         if body_file:
             try:
                 with open(body_file, "r") as f:
-                    return json.load(f)
+                    return json.load(util.strip_comments(f))
             except IOError, e:
                 if e.errno != errno.ENOENT:
                     raise
