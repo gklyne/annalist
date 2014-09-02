@@ -15,6 +15,10 @@ import re
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitytypeinfo import EntityTypeInfo, get_built_in_type_ids
 
+#   -------------------------------------------------------------------
+#   EntityFinder
+#   -------------------------------------------------------------------
+
 class EntityFinder(object):
     """
     Logic for enumerting entities matching a supplied type, selector and/or search string.
@@ -27,7 +31,7 @@ class EntityFinder(object):
         super(EntityFinder, self).__init__()
         self._coll     = coll
         self._site     = coll.get_site()
-        self._selector = self.compile_selector_filter(selector)  #@@ change to separate class?
+        self._selector = EntitySelector(selector)
         return
 
     def get_collection_type_ids(self):
@@ -75,20 +79,6 @@ class EntityFinder(object):
             return self.get_all_types_entities(self.get_collection_type_ids(), include_sitedata=False)
         return
 
-    def select_entities(self, entities, context={}):
-        """
-        Iterate over selection of entities from supplied iterator, using the
-        selection specification supplied to the constructor of the current object.
-
-        entities    is an iteratyor over entities from which selection is made
-        context     is a dictionary of context values that may be referenced by 
-                    the selector in choosing entities to be returned.
-        """
-        for e in entities:
-            if self._selector(e, context=context):
-                yield e
-        return
-
     def search_entities(self, entities, search):
         """
         Iterate over entities from supplied iterator containing supplied search term.
@@ -99,7 +89,7 @@ class EntityFinder(object):
         return
 
     def get_entities(self, type_id=None, context={}, search=None):
-        entities = self.select_entities(self.get_base_entities(type_id), context=context)
+        entities = self._selector.filter(self.get_base_entities(type_id), context=context)
         if search:
             entities = self.search_entities(entities, search)
         return entities
@@ -127,40 +117,86 @@ class EntityFinder(object):
             return False
         return True
 
-    @classmethod
+#   -------------------------------------------------------------------
+#   EntitySelector
+#   -------------------------------------------------------------------
+
+class EntitySelector(object):
+    """
+    This class implements a selector filter.  It is initialized with a selector
+    expression, and may be invoked as a filter applied to an entity generator,
+    or as a predicater applied to a single entity.
+
+    >>> e  = { 'p:a': '1', 'p:b': '2', 'p:c': '3', '@type': ["http://example.com/type", "foo:bar"] }
+    >>> c  = {}
+    >>> f1 = "[p:a]==1"
+    >>> f2 = "[p:a]==2"
+    >>> f3 = ''
+    >>> f4 = "@type>=http://example.com/type"
+    >>> f5 = "@type>=foo:bar"
+    >>> f6 = "@type>=bar:foo"
+    >>> EntitySelector(f1).select_entity(e, c)
+    True
+    >>> EntitySelector(f2).select_entity(e, c)
+    False
+    >>> EntitySelector(f3).select_entity(e, c)
+    True
+    >>> EntitySelector(f4).select_entity(e, c)
+    True
+    >>> EntitySelector(f5).select_entity(e, c)
+    True
+    >>> EntitySelector(f6).select_entity(e, c)
+    False
+    """
+    def __init__(self, selector):
+        # Returns None if no filter is applied, otherwise a predcicate function
+        self._selector = self.compile_selector_filter(selector)
+        return
+
+    def filter(self, entities, context={}):
+        """
+        Iterate over selection of entities from supplied iterator, using the
+        selection specification supplied to the constructor of the current object.
+
+        entities    is an iterator over entities from which selection is made
+        context     is a dictionary of context values that may be referenced by 
+                    the selector in choosing entities to be returned.
+
+        If no filtering is applied, the supplied iterator is returned as-is.
+        """
+        if self._selector:
+            entities = self._filter(entities, context)
+        return entities
+
+    def _filter(self, entities, context):
+        """
+        Internal helper applies selector to entity iterator, returning a new iterator.
+        """
+        for e in entities:
+            if self._selector(e, context):
+                yield e
+        return
+
+    def select_entity(self, entity, context={}):
+        """
+        Apply selector to an entity, and returns True if the entity is selected
+        """
+        if self._selector:
+            return self._selector(entity, context)
+        return True
+
     def compile_selector_filter(cls, selector):
         """
         Return filter for for testing entities matching a supplied selector.
+
+        Returns None if no selection is performed; i.e. all possible entities are selected.
 
         Selector formats:
             ALL (or blank)              match any entity
             @type>=<uri>/<curie>        entity has indicated type
             [annal:type]==annal:Field   entity type is indicated value
             [<field>]==<value>          entity named field is indicated value
-
-        >>> e  = { 'p:a': '1', 'p:b': '2', 'p:c': '3', '@type': ["http://example.com/type", "foo:bar"] }
-        >>> c  = {}
-        >>> f1 = "[p:a]==1"
-        >>> f2 = "[p:a]==2"
-        >>> f3 = ''
-        >>> f4 = "@type>=http://example.com/type"
-        >>> f5 = "@type>=foo:bar"
-        >>> f6 = "@type>=bar:foo"
-        >>> EntityFinder.compile_selector_filter(f1)(e, c)
-        True
-        >>> EntityFinder.compile_selector_filter(f2)(e, c)
-        False
-        >>> EntityFinder.compile_selector_filter(f3)(e, c)
-        True
-        >>> EntityFinder.compile_selector_filter(f4)(e, c)
-        True
-        >>> EntityFinder.compile_selector_filter(f5)(e, c)
-        True
-        >>> EntityFinder.compile_selector_filter(f6)(e, c)
-        False
         """
-        def match_any(e, context):
-            return True
         def match_type(type_val):
             def match_type_f(e, context):
                 return type_val in e.get('@type',[])
@@ -170,7 +206,7 @@ class EntityFinder(object):
                 return e[field_name] == field_val
             return match_field_f
         if selector in {None, "", "ALL"}:
-            return match_any
+            return None
         #
         # RFC3986:
         #    unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
