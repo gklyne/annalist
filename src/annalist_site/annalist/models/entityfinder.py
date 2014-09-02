@@ -102,39 +102,7 @@ class EntityFinder(object):
         entities = self.select_entities(self.get_base_entities(type_id), context=context)
         if search:
             entities = self.search_entities(entities, search)
-        #@@
-        #
-        # for e in self.get_selected_entities(type_id=type_id, selector=selector):
-        #     if self.entity_contains(e, search):
-        #         yield e
-        #@@
         return entities
-
-
-    #@@
-    # def get_selected_entities(self, type_id=None, selector=None):
-    #     if selector:
-    #         s = self.compile_selector(type_id, selector)
-    #         if s:
-    #             for e in s:
-    #                 yield e
-    #     else:
-    #         for e in self.get_base_entities(type_id):
-    #             yield e
-    #     return
-    #@@
-
-    #@@
-    # def compile_selector(self, type_id, selector):
-    #     """
-    #     Return iterator for entities matching supplied selector.
-    #     """
-    #     ff = self.compile_selector_filter(selector)
-    #     # Test all entitities in collection (not including built-in types)
-    #     for e in self.get_base_entities(type_id):
-    #         if ff(e): yield e
-    #     return
-    #@@
 
     @classmethod
     def entity_contains(cls, e, search):
