@@ -250,8 +250,8 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        x Can enumeration-like logic be used to support sub-areas in site data?
        * Long term is to move Bib_ field types out of site data, and provide easy way to incorporate library fragments into new collections, but for now they are part of the test environment.  See below.
        * Alternative might be value-scoped enumerations
-       - Update EntityFinder logic to support tests comparing with enclosing view fields
-       - Update entity selector call site (just one)
+       / Update EntityFinder logic to support tests comparing with enclosing view fields
+       / Update entity selector call site (just one)
        - Update selector syntax and sitedata
        - Use EntityFinder logic in enumeration selection
        - Then need to introduce biblio record type
