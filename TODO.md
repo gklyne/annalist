@@ -245,9 +245,18 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Update/add tests cases
        / development test site is broken - why?  Isolate problem in test before fixing.
    / allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
-   - Move Bib_* fields to separate "built-in" collection
-       - Can enumeration-like logic be used to support sub-areas in site data?
-       - Alternative might be value-scped enumerations
+   - Don't show Bib_* fields for non-biblio record types 
+       x Move Bib_* fields to separate "built-in" collection
+       x Can enumeration-like logic be used to support sub-areas in site data?
+       * Long term is to move Bib_ field types out of site data, and provide easy way to incorporate library fragments into new collections, but for now they are part of the test environment.  See below.
+       * Alternative might be value-scoped enumerations
+       - Update EntityFinder logic to support tests comparing with enclosing view fields
+       - Update entity selector call site (just one)
+       - Update selector syntax and sitedata
+       - Use EntityFinder logic in enumeration selection
+       - Then need to introduce biblio record type
+       - May want to declare additional/multiple types for entity?
+       - Update test cases
 9. Prepare for release
    - version identifier in system
    - remove dead code
@@ -269,7 +278,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    - update URI dispatching
    - include default view
 12. Code improvement - general
-   - Support import types from another collection
+   - Support import types/views/lists/fields/etc. from another collection
    - review URI for delete type/view/list confirmation
    ? align type ID values used in local URI construction with type URIs/CURIEs
    - implement full authorization structure (currently just requires authentication for any changes).  Update "no_login" test cases accordingly.

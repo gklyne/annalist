@@ -123,8 +123,8 @@ class EntityGenericListView(AnnalistGenericView):
         selector    = listinfo.recordlist.get_values().get('annal:list_entity_selector', "")
         search_for  = request.GET.get('search', "")
         entity_list = (
-            EntityFinder(listinfo.collection)
-                .get_entities(type_id, selector=selector, search=search_for)
+            EntityFinder(listinfo.collection, selector=selector)
+                .get_entities(type_id, search=search_for)
             )
         entityval = { 'annal:list_entities': [ get_entity_values(listinfo, e) for e in entity_list ] }
         # Set up initial view context
