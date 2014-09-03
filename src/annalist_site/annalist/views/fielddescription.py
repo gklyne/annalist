@@ -78,12 +78,6 @@ class FieldDescription(object):
             # log.info("typeref %s: %r"%
             #     (self._field_context['field_options_typeref'], list(self._field_context['field_choices']))
             #     )
-            #@@
-            # typeinfo = EntityTypeInfo(collection._parentsite, collection, self._field_context['field_options_typeref'])
-            # self._field_context['field_choices'] = (
-            #     [tid for tid in typeinfo.enum_entity_ids(usealtparent=True) if tid != "_initial_values"]
-            #     )
-            #@@
         # log.info("FieldDescription: %s"%field_id)
         # log.info("FieldDescription.field %r"%field)
         # log.info("FieldDescription.field_context %r"%(self._field_context,))
