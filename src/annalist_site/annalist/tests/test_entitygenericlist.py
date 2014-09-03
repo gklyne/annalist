@@ -245,6 +245,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-6 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
         # Entities
+        # log.info([e['fields'][0]['field_value'] for e in r.context['entities']])
         self.assertIn('_initial_values', [ e['fields'][0]['field_value'] for e in r.context['entities'] ])
         self.assertEqual(len(r.context['entities']), 55)
         field_entities = (
@@ -259,7 +260,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Field_type',        "annal:Identifier",    "Field value type")
             , ('Field_render',      "annal:Slug",          "Field render type")
             , ('List_comment',      "annal:Longtext",      "Help")
-            , ('List_record_type',  "annal:Type",          "Record type")
+            , ('List_default_type', "annal:Type",          "Record type")
+            , ('List_default_view', "annal:View",          "View")
             , ('Type_label',        "annal:Text",          "Label")
             , ('Type_comment',      "annal:Longtext",      "Comment")
             , ('Type_uri',          "annal:Identifier",    "URI")

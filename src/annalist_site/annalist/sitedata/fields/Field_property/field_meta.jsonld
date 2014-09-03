@@ -1,11 +1,11 @@
-{ "@id":                "annal:fields/Field_property"
-, "@type":              ["annal:Field"]
-, "annal:id":           "Field_property"
-, "annal:type_id":      "_field"
-, "rdfs:label":         "Property"
-, "rdfs:comment":       "Property URI (or CURIE) used to represent this field data in a record"
-, "annal:placeholder":  "(property URI or CURIE)"
-, "annal:field_render_type": "Identifier"
-, "annal:field_value_type":   "annal:Identifier"
-, "annal:property_uri": "annal:property_uri"
+{ "@id":                        "annal:fields/Field_property"
+, "@type":                      ["annal:Field"]
+, "annal:id":                   "Field_property"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Property"
+, "rdfs:comment":               "Property URI (or CURIE) used to represent this field data in a record"
+, "annal:placeholder":          "(property URI or CURIE)"
+, "annal:field_render_type":    "Identifier"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:property_uri":         "annal:property_uri"
 }

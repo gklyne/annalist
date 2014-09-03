@@ -1,11 +1,12 @@
-{ "@id":                        "annal:fields/Type_uri"
-, "@type":                      ["annal:Field"]
-, "annal:id":                   "Type_uri"
-, "annal:type_id":              "_field"
-, "rdfs:label":                 "URI"
-, "rdfs:comment":               "Entity type URI"
-, "annal:field_render_type":         "Identifier"
-, "annal:field_value_type":           "annal:Identifier"
-, "annal:placeholder":          "(URI)"
-, "annal:property_uri":         "annal:uri"
-}
+{ "@id":                            "annal:fields/Type_uri"
+, "@type":                          ["annal:Field"]
+, "annal:id":                       "Type_uri"
+, "annal:type_id":                  "_field"
+, "rdfs:label":                     "URI"
+, "rdfs:comment":                   "Entity type URI"
+, "annal:field_render_type":        "Identifier"
+, "annal:field_value_type":         "annal:Identifier"
+, "annal:placeholder":              "(URI)"
+, "annal:property_uri":             "annal:uri"
+}   
+    

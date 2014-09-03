@@ -1,11 +1,11 @@
-{ "@id":                "annal:fields/Field_placeholder"
-, "@type":              ["annal:Field"]
-, "annal:id":           "Field_placeholder"
-, "annal:type_id":      "_field"
-, "rdfs:label":         "Placeholder"
-, "rdfs:comment":       "Placeholder string displayed in field until actual value is selected"
-, "annal:placeholder":  "(placeholder text)"
-, "annal:field_render_type": "Text"
-, "annal:field_value_type":   "annal:Text"
-, "annal:property_uri": "annal:placeholder"
+{ "@id":                        "annal:fields/Field_placeholder"
+, "@type":                      ["annal:Field"]
+, "annal:id":                   "Field_placeholder"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Placeholder"
+, "rdfs:comment":               "Placeholder string displayed in field until actual value is selected"
+, "annal:placeholder":          "(placeholder text)"
+, "annal:field_render_type":    "Text"
+, "annal:field_value_type":     "annal:Text"
+, "annal:property_uri":         "annal:placeholder"
 }

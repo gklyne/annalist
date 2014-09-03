@@ -1,9 +1,9 @@
-{ "@type":              ["annal:Field"]
-, "annal:id":           "_initial_values"
-, "rdfs:label":         ""
-, "rdfs:comment":       ""
-, "annal:field_render_type": "Text"
-, "annal:field_value_type":   "annal:Text"
-, "annal:placeholder":  ""
-, "annal:property_uri": ""
+{ "@type":                      ["annal:Field"]
+, "annal:id":                   "_initial_values"
+, "rdfs:label":                 ""
+, "rdfs:comment":               ""
+, "annal:field_render_type":    "Text"
+, "annal:field_value_type":     "annal:Text"
+, "annal:placeholder":          ""
+, "annal:property_uri":         ""
 }

@@ -1,14 +1,14 @@
-{ "@id":                    "annal:fields/List_type"
-, "@type":                  ["annal:Field"]
-, "annal:id":               "List_type"
-, "annal:type_id":          "_field"
-, "rdfs:label":             "List display type"
-, "rdfs:comment":           "Type of list display (List or Grid)"
-, "annal:field_render_type":     "Enum"
-, "annal:field_value_type":       "annal:List_type"
-, "annal:placeholder":      "(list type)"
-, "annal:property_uri":     "annal:display_type"
-, "annal:options_typeref":  "Enum_list_type"
-, "annal:field_placement":  "small:0,3"
-, "annal:default_value":    "List"
-}
+{ "@id":                        "annal:fields/List_type"
+, "@type":                      ["annal:Field"]
+, "annal:id":                   "List_type"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "List display type"
+, "rdfs:comment":               "Type of list display (List or Grid)"
+, "annal:field_render_type":    "Enum"
+, "annal:field_value_type":     "annal:List_type"
+, "annal:placeholder":          "(list type)"
+, "annal:property_uri":         "annal:display_type"
+, "annal:options_typeref":      "Enum_list_type"
+, "annal:field_placement":      "small:0,3"
+, "annal:default_value":        "List"
+}   
