@@ -1,11 +1,12 @@
-{ "@id":                "annal:fields/Bib_month"
-, "@type":              ["annal:Field"]
-, "annal:id":           "Bib_month"
-, "annal:type_id":      "_field"
-, "rdfs:label":         "Bib_month"
-, "rdfs:comment":       "BibJSON(ish) field Bib_month"
-, "annal:field_render": "annal:field_render/Text"
-, "annal:value_type":   "annal:Text"
-, "annal:placeholder":  "(Bib_month)"
-, "annal:property_uri": "bib:Bib_month"
+{ "@id":                        "annal:fields/Bib_month"
+, "@type":                      ["annal:Field"]
+, "annal:id":                   "Bib_month"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Bib_month"
+, "rdfs:comment":               "BibJSON(ish) field Bib_month"
+, "annal:field_render_type":    "Text"
+, "annal:field_value_type":     "annal:Text"
+, "annal:placeholder":          "(Bib_month)"
+, "annal:property_uri":         "bib:Bib_month"
+, "annal:field_entity_type":    "annal:BibEntry"
 }

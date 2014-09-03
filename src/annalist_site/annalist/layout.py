@@ -107,6 +107,13 @@ FIELD_META_FILE         = "field_meta.jsonld"
 FIELD_PROV_FILE         = "field_prov.jsonld"
 META_FIELD_REF          = "./"
 
+COLL_ENUM_VIEW          = "d/%(type_id)s/%(id)s/"
+COLL_ENUM_PATH          = "_annalist_collection/enums/%(type_id)s/%(id)s"
+SITE_ENUM_PATH          = "_annalist_site/enums/%(type_id)s/%(id)s"
+ENUM_META_FILE          = "enum_meta.jsonld"
+ENUM_PROV_FILE          = "enum_prov.jsonld"
+META_ENUM_REF           = "./"
+
 COLL_TYPEDATA_VIEW      = "d/%(id)s/"
 COLL_TYPEDATA_PATH      = "d/%(id)s"
 TYPEDATA_META_FILE      = "type_data_meta.jsonld"

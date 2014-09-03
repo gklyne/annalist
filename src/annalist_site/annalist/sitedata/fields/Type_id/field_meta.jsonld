@@ -1,12 +1,13 @@
-{ "@id":                "annal:fields/Type_id"
-, "@type":              ["annal:Field"]
-, "annal:id":           "Type_id"
-, "annal:type_id":      "_field"
-, "rdfs:label":         "Id"
-, "rdfs:comment":       "A short identifier that distinguishes this type from all other types in the same collection."
-, "annal:field_name":   "entity_id"
-, "annal:field_render": "annal:field_render/EntityId"
-, "annal:value_type":   "annal:Slug"
-, "annal:placeholder":  "(type id)"
-, "annal:property_uri": "annal:id"
-}
+{ "@id":                        "annal:fields/Type_id"
+, "@type":                      ["annal:Field"]
+, "annal:id":                   "Type_id"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Id"
+, "rdfs:comment":               "A short identifier that distinguishes this type from all other types in the same collection."
+, "annal:field_name":           "entity_id"
+, "annal:field_render_type":    "EntityId"
+, "annal:field_value_type":     "annal:Slug"
+, "annal:placeholder":          "(type id)"
+, "annal:property_uri":         "annal:id"
+}   
+    

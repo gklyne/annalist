@@ -17,7 +17,7 @@ import collections
 
 from django.conf                        import settings
 
-from annalist.views.fields.render_utils import bound_field
+from annalist.views.fields.bound_field  import bound_field
 
 # Named tuple is base class for SimpleValueMap:
 

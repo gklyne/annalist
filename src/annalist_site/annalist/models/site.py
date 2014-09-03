@@ -80,6 +80,8 @@ class Site(EntityRoot):
         #         view template.  In due course, it may be reveiwed and implemented
         #         using the generic Annalist form generating framework
         site_data = self._load_values()
+        if not site_data:
+            return None
         site_data["title"] = site_data.get(RDFS.CURIE.label, message.SITE_NAME_DEFAULT)
         # log.info("site.site_data: site_data %r"%(site_data))
         colls = collections.OrderedDict()

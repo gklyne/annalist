@@ -8,5 +8,6 @@
   "@id": "./",
   "@type": [
     "annal:EntityData"
-  ]
+  ],
+  "annal:type": "annal:EntityData"
 }

@@ -1,0 +1,10 @@
+{ "@id":                "./"
+, "@type":              ["annal:Type"]
+, "annal:id":           "BibEntry_type"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:BibEntry"
+, "rdfs:label":         "Bibliographic record type"
+, "rdfs:comment":       "Bibliographic record type, adopted as a use case for using Annalist to create BibJSON records."
+, "annal:type_view":    "BibEntry_view"
+, "annal:type_list":    "BibEntry_list"
+}

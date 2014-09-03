@@ -45,6 +45,7 @@ from entity_testutils               import (
     site_view_url,
     collection_edit_url,
     continuation_url_param,
+    confirm_delete_params,
     collection_create_values,
     site_title
     )
@@ -59,7 +60,8 @@ from entity_testentitydata          import (
     entitydata_list_type_url, entitydata_list_all_url,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
-    entitylist_form_data
+    entitylist_form_data,
+    get_site_lists
     )
 
 #   -----------------------------------------------------------------------------
@@ -93,13 +95,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         e4 = EntityData.create(self.testdata2, "entity4", 
             entitydata_create_values("entity4", type_id="testtype2")
             )
-        self.initial_list_ids = (
-            [ "Default_list", "Default_list_all"
-            , "Field_list"
-            , "List_list"
-            , "Type_list"
-            , "View_list"
-            ])
+        self.initial_list_ids = get_site_lists()
         return
 
     def tearDown(self):
@@ -144,15 +140,15 @@ class EntityGenericListViewTest(AnnalistTestCase):
                 </td>
             </tr>
             """%({'base': TestBasePath, 'cont': cont})
-        self.assertContains(r, rowdata, html=True)
         # log.info(r.content)
+        self.assertContains(r, rowdata, html=True)
         # Test context
         self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          None)
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         list_choices = r.context['list_choices']
-        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Default_list_all")
         # Unbound field descriptions
         self.assertEqual(len(r.context['fields']), 3)
@@ -213,7 +209,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         list_choices = r.context['list_choices']
-        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         self.assertEqual(len(r.context['fields']), 3)
@@ -233,7 +229,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_name'], 'Field_type')
         self.assertEqual(r.context['fields'][1]['field_label'], 'Field value type')
         self.assertEqual(r.context['fields'][1]['field_placeholder'], "(field value type)")
-        self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:value_type")
+        self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:field_value_type")
         self.assertEqual(r.context['fields'][1]['field_render_head'], "field/annalist_head_any.html")
         self.assertEqual(r.context['fields'][1]['field_render_item'], "field/annalist_item_identifier.html")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-3 columns")
@@ -249,8 +245,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-6 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
         # Entities
+        # log.info([e['fields'][0]['field_value'] for e in r.context['entities']])
         self.assertIn('_initial_values', [ e['fields'][0]['field_value'] for e in r.context['entities'] ])
-        self.assertEqual(len(r.context['entities']), 57)
+        self.assertEqual(len(r.context['entities']), 55)
         field_entities = (
             { ('Entity_id',         "annal:Slug",          "Id")
             , ('Bib_address',       "annal:Text",          "Bib_address")
@@ -261,9 +258,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Field_comment',     "annal:Longtext",      "Help")
             , ('Field_placement',   "annal:Placement",     "Size/position")
             , ('Field_type',        "annal:Identifier",    "Field value type")
-            , ('Field_render',      "annal:RenderType",    "Field render type")
+            , ('Field_render',      "annal:Slug",          "Field render type")
             , ('List_comment',      "annal:Longtext",      "Help")
-            , ('List_record_type',  "annal:Type",          "Record type")
+            , ('List_default_type', "annal:Type",          "Record type")
+            , ('List_default_view', "annal:View",          "View")
             , ('Type_label',        "annal:Text",          "Label")
             , ('Type_comment',      "annal:Longtext",      "Comment")
             , ('Type_uri',          "annal:Identifier",    "URI")
@@ -289,6 +287,38 @@ class EntityGenericListViewTest(AnnalistTestCase):
                 self.fail("Field %s not found in context"%f[0])
         return
 
+    def test_get_fields_list_no_continuation(self):
+        u = entitydata_list_type_url("testcoll", "_field", list_id="Field_list")
+        r = self.client.get(u+"?foo=bar")
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, site_title("<title>%s</title>"))
+        self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
+        cont = uri_params({"continuation_url": u})
+        rowdata1 = """
+            <tr class="select_row">
+                <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
+                <td class="small-3 columns">annal:Text</td>
+                <td class="small-6 columns">Bib_address</td>
+                <td class="select_row">
+                    <input name="entity_select" value="_field/Bib_address" type="checkbox">
+                </td>
+            </tr>
+            """%(TestBasePath, cont)
+        # log.info(r.content)
+        self.assertContains(r, rowdata1, html=True)
+        # Test context
+        self.assertEqual(r.context['title'],            site_title())
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "_field")
+        self.assertEqual(r.context['continuation_url'], "")
+        list_choices = r.context['list_choices']
+        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
+        self.assertEqual(list_choices['field_value'],   "Field_list")
+        # Fields
+        self.assertEqual(len(r.context['fields']), 3)
+        return
+
     def test_get_fields_list_search(self):
         u = entitydata_list_type_url("testcoll", "_field", list_id="Field_list") + "?search=Bib_&continuation_url=/xyzzy/"
         r = self.client.get(u)
@@ -308,6 +338,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             </tr>
             """%(TestBasePath, cont)
         # log.info(r.content)
+        # If this test fails, check ordering of URI parameters
         self.assertContains(r, rowdata, html=True)
         # Test context
         self.assertEqual(r.context['title'],            site_title())
@@ -316,7 +347,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         self.assertEqual(r.context['search_for'],       "Bib_")
         list_choices = r.context['list_choices']
-        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         self.assertEqual(len(r.context['fields']), 3)
@@ -375,7 +406,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
         list_choices = r.context['list_choices']
-        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         return
 
@@ -584,13 +615,17 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Confirm requested action</h3>")
         self.assertContains(r, "Remove record testtype of type _type in collection testcoll: Are you sure?")
         self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
-        self.assertContains(r, '<input type="hidden" name="complete_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>')
+        self.assertContains(r,
+            '<input type="hidden" name="confirmed_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>', 
+            html=True
+            )
         self.assertEqual(r.context['action_description'], 
             'Remove record testtype of type _type in collection testcoll')
-        self.assertEqual(r.context['complete_action'], 
+        self.assertEqual(r.context['confirmed_action'], 
             '/testsite/c/testcoll/d/_type/!delete_confirmed')
         self.assertEqual(r.context['action_params'], 
-            '{"entity_delete": ["Delete"], "entity_id": ["testtype"], "continuation_url": ["/testsite/c/testcoll/l/Type_list/_type/"]}')
+            confirm_delete_params(button_id="entity_delete", entity_id="testtype", type_id="_type", list_id="Type_list")
+            )
         self.assertEqual(r.context['cancel_action'], 
             '/testsite/c/testcoll/l/Type_list/_type/')
         return
@@ -608,13 +643,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Confirm requested action</h3>")
         self.assertContains(r, "Remove record testtype of type _type in collection testcoll: Are you sure?")
         self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
-        self.assertContains(r, '<input type="hidden" name="complete_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>')
+        self.assertContains(r, '<input type="hidden" name="confirmed_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>', html=True)
         self.assertEqual(r.context['action_description'], 
             'Remove record testtype of type _type in collection testcoll')
-        self.assertEqual(r.context['complete_action'], 
+        self.assertEqual(r.context['confirmed_action'], 
             '/testsite/c/testcoll/d/_type/!delete_confirmed')
         self.assertEqual(r.context['action_params'], 
-            '{"entity_delete": ["Delete"], "entity_id": ["testtype"], "continuation_url": ["/testsite/c/testcoll/l/Type_list/"]}')
+            confirm_delete_params(button_id="entity_delete", entity_id="testtype", type_id=None, list_id="Type_list")
+            )
         self.assertEqual(r.context['cancel_action'], 
             '/testsite/c/testcoll/l/Type_list/')
         return

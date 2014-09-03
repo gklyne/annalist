@@ -1,11 +1,11 @@
-{ "@id":                "annal:fields/View_comment"
-, "@type":              ["annal:Field"]
-, "annal:id":           "View_comment"
-, "annal:type_id":      "_field"
-, "rdfs:label":         "Help"
-, "rdfs:comment":       "Descriptive text about the record view.  This may be used as help or tooltip text in appropriate contexts."
-, "annal:field_render": "annal:field_render/Textarea"
-, "annal:value_type":   "annal:Longtext"
-, "annal:placeholder":  "(description of record view)"
-, "annal:property_uri": "rdfs:comment"
+{ "@id":                        "annal:fields/View_comment"
+, "@type":                      ["annal:Field"]
+, "annal:id":                   "View_comment"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Help"
+, "rdfs:comment":               "Descriptive text about the record view.  This may be used as help or tooltip text in appropriate contexts."
+, "annal:field_render_type":    "Textarea"
+, "annal:field_value_type":     "annal:Longtext"
+, "annal:placeholder":          "(description of record view)"
+, "annal:property_uri":         "rdfs:comment"
 }

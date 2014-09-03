@@ -36,7 +36,8 @@ from entity_testutils               import (
     site_dir, collection_dir, 
     collection_edit_url,
     collection_create_values,
-    site_title
+    site_title,
+    render_select_options
     )
 from entity_testtypedata            import (
     recordtype_edit_url,
@@ -76,7 +77,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        self.type_ids   = ['testtype', 'Default_type', '_type', '_field', '_view', '_list']
+        self.type_ids   = get_site_types_sorted() + ['testtype']
         self.no_options = ['(no options)']
         return
 
@@ -156,12 +157,12 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                     </p>
                   </div>
                   <div class="%(input_classes)s">
-                    <select name="entity_type">
-                        """ +
-                        '\n'.join(["<option>%s</option>"%o for o in get_site_types_sorted()]) +
-                        """
-                        <option selected="selected">testtype</option>
-                    </select>
+                  """+
+                    render_select_options(
+                      "entity_type", 
+                      get_site_types_sorted()+["testtype"],
+                      "testtype")+
+                  """
                   </div>
                 </div>
               </div>
@@ -255,8 +256,8 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_help'],          field_type_help)
         self.assertEqual(r.context['fields'][1]['field_placeholder'],   "(type id)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'],  "annal:type_id")
-        self.assertEqual(r.context['fields'][1]['field_render_view'],   "field/annalist_view_entitytyperef.html")
-        self.assertEqual(r.context['fields'][1]['field_render_edit'],   "field/annalist_edit_entitytyperef.html")
+        self.assertEqual(r.context['fields'][1]['field_render_view'],   "field/annalist_view_entitytypeid.html")
+        self.assertEqual(r.context['fields'][1]['field_render_edit'],   "field/annalist_edit_entitytypeid.html")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 right columns")
         self.assertEqual(r.context['fields'][1]['field_value_type'],    "annal:Slug")
         self.assertEqual(r.context['fields'][1].field_value,            "testtype")
@@ -346,8 +347,8 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_help'],         field_type_help)
         self.assertEqual(r.context['fields'][1]['field_placeholder'],  "(type id)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:type_id")
-        self.assertEqual(r.context['fields'][1]['field_render_view'],  "field/annalist_view_entitytyperef.html")
-        self.assertEqual(r.context['fields'][1]['field_render_edit'],  "field/annalist_edit_entitytyperef.html")
+        self.assertEqual(r.context['fields'][1]['field_render_view'],  "field/annalist_view_entitytypeid.html")
+        self.assertEqual(r.context['fields'][1]['field_render_edit'],  "field/annalist_edit_entitytypeid.html")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 right columns")
         self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][1]['field_value'], "testtype")

@@ -15,6 +15,7 @@ import os.path
 import errno
 import urlparse
 import json
+import StringIO
 
 from django.conf import settings
 
@@ -215,6 +216,26 @@ def entity_url_host(baseuri, entityref):
 def entity_url_path(baseuri, entityref):
     uri = urlparse.urljoin(baseuri, entityref)
     return urlparse.urlparse(uri).path
+
+def strip_comments(f):
+    """
+    Returns a file-like object that returns content from the supplied file-like
+    but with comments removed.
+
+    >>> f1 = StringIO.StringIO("// coment\\ndata\\n// another comment\\n\\n")
+    >>> f2 = strip_comments(f1)
+    >>> f2.read()
+    '\\ndata\\n\\n\\n'
+    """
+    fnc = StringIO.StringIO()
+    sof = fnc.tell()
+    for line in f:
+        if re.match("^\s*//", line):
+            fnc.write("\n")
+        else:
+            fnc.write(line)
+    fnc.seek(sof)
+    return fnc
 
 if __name__ == "__main__":
     import doctest

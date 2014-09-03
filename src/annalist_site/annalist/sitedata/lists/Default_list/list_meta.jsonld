@@ -1,11 +1,11 @@
-{ "@id":                        "./"
+{ "@id":                        "annal:display/Default_list"
 , "@type":                      ["annal:List"]
 , "annal:id":                   "Default_list"
 , "annal:type_id":              "_list"
 , "annal:uri":                  "annal:display/Default_list"
 , "rdfs:label":                 "List one type"
 , "rdfs:comment":               "Default list of entities of given type"
-, "annal:display_type":         "annal:display_type/List"
+, "annal:display_type":         "List"
 , "annal:default_view":         "Default_view"
 , "annal:default_type":         "Default_type"
 , "annal:list_entity_selector": "ALL"

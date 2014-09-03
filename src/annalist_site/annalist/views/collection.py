@@ -254,7 +254,7 @@ class CollectionEditView(AnnalistGenericView):
         http_response = None
         if entity_id:
             # Get user to confirm action before actually doing it
-            complete_action_uri = self.view_uri(
+            confirmed_action_uri = self.view_uri(
                 complete_action_view, coll_id=coll_id
                 )
             message_vals = {'id': entity_id, 'coll_id': coll_id}
@@ -262,7 +262,7 @@ class CollectionEditView(AnnalistGenericView):
                 self.authorize("DELETE") or
                 ConfirmView.render_form(self.request,
                     action_description=     confirm_msg%message_vals,
-                    complete_action_uri=    complete_action_uri,
+                    confirmed_action_uri=   confirmed_action_uri,
                     action_params=          self.request.POST,
                     cancel_action_uri=      self.get_request_path(),
                     title=                  self.site_data()["title"]

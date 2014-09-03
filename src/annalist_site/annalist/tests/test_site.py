@@ -325,7 +325,7 @@ class SiteViewTest(AnnalistTestCase):
         self.assertContains(r, '''<form method="POST" action="'''+TestBasePath+'''/confirm/">''', status_code=200)
         self.assertContains(r, '''<input type="submit" name="confirm" value="Confirm"/>''', html=True)
         self.assertContains(r, '''<input type="submit" name="cancel" value="Cancel"/>''', html=True)
-        self.assertContains(r, '''<input type="hidden" name="complete_action" value="'''+reverse("AnnalistSiteActionView")+'''"/>''', html=True)
+        self.assertContains(r, '''<input type="hidden" name="confirmed_action" value="'''+reverse("AnnalistSiteActionView")+'''"/>''', html=True)
         self.assertContains(r, '''<input type="hidden" name="action_params"   value="{&quot;new_label&quot;: [&quot;&quot;], &quot;new_id&quot;: [&quot;&quot;], &quot;select&quot;: [&quot;coll1&quot;, &quot;coll3&quot;], &quot;remove&quot;: [&quot;Remove selected&quot;]}"/>''', html=True)
         self.assertContains(r, '''<input type="hidden" name="cancel_action"   value="'''+reverse("AnnalistSiteView")+'''"/>''', html=True)
         return
@@ -360,7 +360,7 @@ class SiteActionViewTests(AnnalistTestCase):
             })
         return (
             { action:             action_values[action]
-            , "complete_action":  reverse("AnnalistSiteActionView")
+            , "confirmed_action": reverse("AnnalistSiteActionView")
             , "action_params":    """{"new_label": [""], "new_id": [""], "select": ["coll1", "coll3"], "remove": ["Remove selected"]}"""
             , "cancel_action":    reverse("AnnalistSiteView")
             })

@@ -1,12 +1,12 @@
-{ "@id":                "annal:fields/Field_placement"
-, "@type":              ["annal:Field"]
-, "annal:id":           "Field_placement"
-, "annal:type_id":      "_field"
-, "rdfs:label":         "Size/position"
-, "rdfs:comment":       "Size of displayed field, and hints for its position in a record display. Provides default placement for field when incuded in view."
-, "annal:placeholder":  "(field display size and placement details)"
-, "annal:field_name":   "Field_placement"
-, "annal:field_render": "annal:field_render/Placement"
-, "annal:value_type":   "annal:Placement"
-, "annal:property_uri": "annal:field_placement"
+{ "@id":                        "annal:fields/Field_placement"
+, "@type":                      ["annal:Field"]
+, "annal:id":                   "Field_placement"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Size/position"
+, "rdfs:comment":               "Size of displayed field, and hints for its position in a record display. Provides default placement for field when incuded in view."
+, "annal:placeholder":          "(field display size and placement details)"
+, "annal:field_name":           "Field_placement"
+, "annal:field_render_type":    "Placement"
+, "annal:field_value_type":     "annal:Placement"
+, "annal:property_uri":         "annal:field_placement"
 }

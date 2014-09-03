@@ -14,6 +14,7 @@ from django.http                        import HttpResponse
 from django.http                        import HttpResponseRedirect
 from django.core.urlresolvers           import resolve, reverse
 
+from annalist.views.uri_builder         import continuation_params
 from annalist.views.entitydeletebase    import EntityDeleteConfirmedBaseView
 
 #   -------------------------------------------------------------------------------------------
@@ -41,10 +42,14 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         if "entity_delete" in request.POST:
             entity_id = request.POST['entity_id']
             continuation_url = (
-                request.POST.get('continuation_url', None) or
+                request.POST.get('completion_url', None) or
                 self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
                 )
-            return self.complete_remove_entity(coll_id, type_id, entity_id, continuation_url)
+            continuation_url_params = continuation_params(request.POST.dict())
+            # log.info("continuation_params %r"%(continuation_params,))
+            return self.complete_remove_entity(
+                coll_id, type_id, entity_id, continuation_url, continuation_url_params
+                )
         return self.error(self.error400values())
 
 # End.

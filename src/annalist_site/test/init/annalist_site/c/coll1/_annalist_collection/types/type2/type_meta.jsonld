@@ -10,5 +10,6 @@
   "@type": [
     "annal:Type"
   ],
+  "annal:type": "annal:Type",
   "annal:type_view": "Default_view"
 }

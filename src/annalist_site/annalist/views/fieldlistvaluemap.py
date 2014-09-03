@@ -27,22 +27,30 @@ class FieldListValueMap(object):
     """
     Define an entry to be added to an entity view value mapping table,
     corresponding to a list of field descriptions.
-
-    coll    is the collection object holding the field definitions
-    fields  list of field descritpions from a view definition.
-
-    NOTE: The form rendering template iterates over the context field values to be 
-    added to the form display.  The constructor for this object appends the current
-    field to a list of field value mappings in context field 'fields'.
     """
 
-    def __init__(self, coll, fields=[]):
+    def __init__(self, coll, fields, view_context):
+        """
+        Define an entry to be added to an entity view value mapping table,
+        corresponding to a list of field descriptions.
+
+        collection      is a collection from which data is being rendered.
+        fields          list of field descriptions from a view definition, each
+                        of which is a dictionary with the field description from 
+                        a view or list description.
+        view_context    is a dictionary of additional values that may ube used in assembling
+                        values to be used when rendering the fields.
+
+        NOTE: The form rendering template iterates over the context field values to be 
+        added to the form display.  The constructor for this object appends the current
+        field to a list of field value mappings in context field 'fields'.
+        """
         self.fd = []
         self.fs = []
         for f in fields:
             # log.info("\n********\nFieldListValueMap: field %r\n*********"%(f))
             if 'annal:field_id' in f:
-                field_context = FieldDescription(coll, f)
+                field_context = FieldDescription(coll, f, view_context)
                 log.debug("FieldListValueMap: field_id %s, field_name %s"%
                     (field_context['field_id'], field_context['field_name'])
                     )
@@ -50,7 +58,7 @@ class FieldListValueMap(object):
                 self.fs.append(FieldValueMap(f=field_context))
             elif 'annal:repeat_id' in f:
                 repeat_context  = RepeatDescription(f)  # For repeat controls, button labels, etc.
-                repeatfieldsmap = FieldListValueMap(coll, fields=f['annal:repeat'])
+                repeatfieldsmap = FieldListValueMap(coll, f['annal:repeat'], view_context)
                 repeatvaluesmap = RepeatValuesMap(repeat=repeat_context, fields=repeatfieldsmap)
                 # log.info("\n********\nRepeatValuesMap: repeat_id %s, %r"%(f['annal:repeat_id'], repeatvaluesmap))
                 self.fd.append(repeatvaluesmap.get_structure_description())

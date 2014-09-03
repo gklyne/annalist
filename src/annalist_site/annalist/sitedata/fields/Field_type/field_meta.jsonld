@@ -1,11 +1,12 @@
-{ "@id":                "annal:fields/Field_type"
-, "@type":              ["annal:Field"]
-, "annal:id":           "Field_type"
-, "annal:type_id":      "_field"
-, "rdfs:label":         "Field value type"
-, "rdfs:comment":       "Type (URI or CURIE) of underlying data that is stored in a field."
-, "annal:field_render": "annal:field_render/Identifier"
-, "annal:value_type":   "annal:Identifier"
-, "annal:placeholder":  "(field value type)"
-, "annal:property_uri": "annal:value_type"
+{ "@id":                        "annal:fields/Field_type"
+, "@type":                      ["annal:Field"]
+, "annal:id":                   "Field_type"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Field value type"
+, "rdfs:comment":               "Type (URI or CURIE) of underlying data that is stored in a field."
+, "annal:field_render_type":    "Identifier"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:placeholder":          "(field value type)"
+, "annal:property_uri":         "annal:field_value_type"
+, "annal:default_value":        "annal:Text"
 }

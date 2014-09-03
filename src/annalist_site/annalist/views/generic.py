@@ -44,7 +44,7 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
-from annalist.views.uri_builder     import uri_with_params
+from annalist.views.uri_builder     import uri_with_params, continuation_params
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -89,6 +89,8 @@ class AnnalistGenericView(ContentNegotiationView):
     def site_data(self, host=""):
         if not self._site_data:
             self._site_data = self.site(host=host).site_data()
+        if not self._site_data:
+            log.error("views.generic.site_data: failed to load site data")
         return self._site_data
 
     def error(self, values):
@@ -127,7 +129,8 @@ class AnnalistGenericView(ContentNegotiationView):
         current page.
 
         request_dict    is a request dictionary that is expected to contain a 
-                        continuation_url value to use
+                        to continuation_url value to use, other parameters to be 
+                        included an any continuation back to the current page.
         default_cont    is a default continuation URI to be used for returning from 
                         the current page if the current POST request does not specify
                         a continuation_url query parameter.
@@ -137,15 +140,20 @@ class AnnalistGenericView(ContentNegotiationView):
                         entity).
         """
         # Note: use default if request/form parameter is present but blank:
-        continuation_url  = request_dict.get("continuation_url", None) or default_cont
+        continuation_url    = request_dict.get("continuation_url") or default_cont or None
         if not base_here:
             base_here = self.get_request_path()
         if continuation_url:
             continuation_next = { "continuation_url": continuation_url }
         else:
             continuation_next = {}
-        continuation_here = { "continuation_url": uri_with_params(base_here, continuation_next) }
-        return (continuation_next, continuation_here)
+        continuation_here = uri_with_params(base_here, 
+            continuation_params(continuation_next, request_dict.dict())
+            )
+        # continuation_here   = uri_with_continuation_params(
+        #     base_here, continuation_next, request_dict.dict()
+        #     )
+        return (continuation_next, {"continuation_url": continuation_here})
 
     def info_params(self, info_message, info_head=message.ACTION_COMPLETED):
         """
@@ -154,13 +162,13 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return {"info_head": info_head, "info_message": info_message}
 
-    def redirect_info(self, viewuri, info_message=None, info_head=message.ACTION_COMPLETED):
+    def redirect_info(self, viewuri, view_params={}, info_message=None, info_head=message.ACTION_COMPLETED):
         """
         Redirect to a specified view with an information/confirmation message for display
 
         (see templates/base_generic.html for display details)
         """
-        redirect_uri = uri_with_params(viewuri, self.info_params(info_message, info_head))
+        redirect_uri = uri_with_params(viewuri, view_params, self.info_params(info_message, info_head))
         return HttpResponseRedirect(redirect_uri)
 
     def error_params(self, error_message, error_head=message.INPUT_ERROR):
@@ -170,13 +178,13 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return {"error_head": error_head, "error_message": error_message}
 
-    def redirect_error(self, viewuri, error_message=None, error_head=message.INPUT_ERROR):
+    def redirect_error(self, viewuri, view_params={}, error_message=None, error_head=message.INPUT_ERROR):
         """
         Redirect to a specified view with an error message for display
 
         (see templates/base_generic.html for display details)
         """
-        redirect_uri = uri_with_params(viewuri, self.error_params(error_head, error_message))
+        redirect_uri = uri_with_params(viewuri, view_params, self.error_params(error_head, error_message))
         return HttpResponseRedirect(redirect_uri)
 
     def form_action_auth(self, action, auth_resource):
@@ -209,6 +217,20 @@ class AnnalistGenericView(ContentNegotiationView):
             auth_scope = "UNKNOWN"
         # return self.authorize(auth_scope, auth_resource)
         return self.authorize(auth_scope)
+
+    def check_site_data(self):
+        """
+        Check thaty site data is present and accessible.  If not, return an HTTP error
+        response, otherwise None.
+        """
+        site_data = self.site_data()
+        if not site_data:
+            return self.error(
+                self.errorvalues(500, "Internal server error", 
+                    "Resource %(request_uri)s: Unable to load Annalist site data"
+                    )
+                )
+        return None
 
     def check_value_supplied(self, val, msg, continuation_url={}, testfn=(lambda v: v)):
         """

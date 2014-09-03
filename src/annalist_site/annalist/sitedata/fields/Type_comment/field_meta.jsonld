@@ -1,11 +1,11 @@
-{ "@id":                "annal:fields/Type_comment"
-, "@type":              ["annal:Field"]
-, "annal:id":           "Type_comment"
-, "annal:type_id":      "_field"
-, "rdfs:label":         "Comment"
-, "rdfs:comment":       "Descriptive text about a record type"
-, "annal:field_render": "annal:field_render/Textarea"
-, "annal:value_type":   "annal:Longtext"
-, "annal:placeholder":  "(type description)"
-, "annal:property_uri": "rdfs:comment"
+{ "@id":                        "annal:fields/Type_comment"
+, "@type":                      ["annal:Field"]
+, "annal:id":                   "Type_comment"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Comment"
+, "rdfs:comment":               "Descriptive text about a record type"
+, "annal:field_render_type":    "Textarea"
+, "annal:field_value_type":     "annal:Longtext"
+, "annal:placeholder":          "(type description)"
+, "annal:property_uri":         "rdfs:comment"
 }

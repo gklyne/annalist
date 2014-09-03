@@ -11,6 +11,7 @@ log = logging.getLogger(__name__)
 
 from annalist.models.recordfield        import RecordField
 from annalist.models.entitytypeinfo     import EntityTypeInfo
+from annalist.models.entityfinder       import EntityFinder
 
 from annalist.views.fields.render_utils import get_edit_renderer, get_view_renderer
 from annalist.views.fields.render_utils import get_head_renderer, get_item_renderer
@@ -24,7 +25,7 @@ class FieldDescription(object):
     manipulations involving the field description.
     """
 
-    def __init__(self, collection, field):
+    def __init__(self, collection, field, view_context):
         """
         Creates a field description value to use in a context value when
         rendering a form.  Values defined here are mentioned in field
@@ -32,9 +33,13 @@ class FieldDescription(object):
 
         The FieldDescription object behaves as a dictionary containing the various field attributes.
 
-        collection  is a collection object to which the field is considered to belong.
-        field       is a dictionary with the field description from a view or list description,
-                    containing a field id and placement values.
+        collection      is a collection from which data is being rendered.
+        field           is a dictionary with the field description from a view or list 
+                        description, containing a field id and placement values.
+        view_context    is a dictionary of additional values that may ube used in assembling
+                        values to be used when rendering the field.  In particular, a copy 
+                        of the view description record provides context for some enumeration 
+                        type selections.
         """
         field_id    = field['annal:field_id']                   # Field ID slug in URI
         recordfield = RecordField.load(collection, field_id, collection._parentsite)
@@ -47,32 +52,39 @@ class FieldDescription(object):
         log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
         # log.info("FieldDescription: field['annal:field_placement'] %s"%(field['annal:field_placement']))
         # log.info("FieldDescription: field_placement %r"%(get_placement_classes(field['annal:field_placement']),))
+        field_render_type = recordfield.get('annal:field_render_type', "")
         self._field_context = (
             { 'field_id':               field_id
             , 'field_name':             field_name
             , 'field_placement':        field_placement
-            , 'field_render_head':      get_head_renderer(recordfield.get('annal:field_render', ""))
-            , 'field_render_item':      get_item_renderer(recordfield.get('annal:field_render', ""))
-            , 'field_render_view':      get_view_renderer(recordfield.get('annal:field_render', ""))
-            , 'field_render_edit':      get_edit_renderer(recordfield.get('annal:field_render', ""))
+            , 'field_render_head':      get_head_renderer(field_render_type)
+            , 'field_render_item':      get_item_renderer(field_render_type)
+            , 'field_render_view':      get_view_renderer(field_render_type)
+            , 'field_render_edit':      get_edit_renderer(field_render_type)
             , 'field_label':            recordfield.get('rdfs:label', "")
             , 'field_help':             recordfield.get('rdfs:comment', "")
-            , 'field_value_type':       recordfield.get('annal:value_type', "")
+            , 'field_value_type':       recordfield.get('annal:field_value_type', "")
             , 'field_placeholder':      recordfield.get('annal:placeholder', "")
             , 'field_default_value':    recordfield.get('annal:default_value', None)
             , 'field_property_uri':     recordfield.get('annal:property_uri', "")
             , 'field_options_valkey':   recordfield.get('annal:options_valkey', None)
             , 'field_options_typeref':  recordfield.get('annal:options_typeref', None)
+            , 'field_restrict_values':  recordfield.get('annal:restrict_values', "ALL")
             , 'field_choices':          None
             })
-        if self._field_context['field_options_typeref']:
-            typeinfo = EntityTypeInfo(collection._parentsite, collection, self._field_context['field_options_typeref'])
-            # Note: the options list may be used more than once, so the id generator returned 
-            # must be materialized here as a list
+        type_ref = self._field_context['field_options_typeref']
+        if type_ref:
+            restrict_values = self._field_context['field_restrict_values']
+            entity_finder   = EntityFinder(collection, selector=restrict_values)
+            entities        = entity_finder.get_entities(type_id=type_ref, context=view_context)
+            # Note: the options list may be used more than once, so the id generator
+            # returned must be materialized as a list
             self._field_context['field_choices'] = (
-                [tid for tid in typeinfo.enum_entity_ids(usealtparent=True) if tid != "_initial_values"]
+                [e.get_id() for e in entities if e.get_id() != "_initial_values"]
                 )
-            # log.info(list(self._field_context['field_choices']))
+            # log.info("typeref %s: %r"%
+            #     (self._field_context['field_options_typeref'], list(self._field_context['field_choices']))
+            #     )
         # log.info("FieldDescription: %s"%field_id)
         # log.info("FieldDescription.field %r"%field)
         # log.info("FieldDescription.field_context %r"%(self._field_context,))

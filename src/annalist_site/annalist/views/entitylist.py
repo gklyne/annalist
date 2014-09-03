@@ -33,7 +33,8 @@ from annalist.views.grouprepeatmap      import GroupRepeatMap
 from annalist.views.confirm             import ConfirmView, dict_querydict
 from annalist.views.generic             import AnnalistGenericView
 
-from annalist.views.fields.render_utils import bound_field, get_entity_values
+from annalist.views.fields.bound_field  import bound_field
+from annalist.views.fields.render_utils import get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -43,18 +44,18 @@ from annalist.views.fields.render_utils import bound_field, get_entity_values
 
 # Table used as basis, or initial values, for a dynamically generated entity-value map for list displays
 listentityvaluemap  = (
-        [ SimpleValueMap(c='title',                 e=None,                  f=None               )
-        , SimpleValueMap(c='coll_id',               e=None,                  f=None               )
-        , SimpleValueMap(c='type_id',               e=None,                  f=None               )
-        , SimpleValueMap(c='list_id',               e=None,                  f=None               )
-        , SimpleValueMap(c='list_choices',          e=None,                    f=None               )
-        , SimpleValueMap(c='collection_view',       e=None,                  f=None               )
-        , SimpleValueMap(c='default_view_id',       e=None,                  f=None               )
-        , SimpleValueMap(c='default_view_enable',   e=None,                  f=None               )
-        , SimpleValueMap(c='search_for',            e=None,                  f='search_for'       )
+        [ SimpleValueMap(c='title',                 e=None,                  f=None                  )
+        , SimpleValueMap(c='coll_id',               e=None,                  f=None                  )
+        , SimpleValueMap(c='type_id',               e=None,                  f=None                  )
+        , SimpleValueMap(c='list_id',               e=None,                  f=None                  )
+        , SimpleValueMap(c='list_choices',          e=None,                  f=None                  )
+        , SimpleValueMap(c='collection_view',       e=None,                  f=None                  )
+        , SimpleValueMap(c='default_view_id',       e=None,                  f=None                  )
+        , SimpleValueMap(c='default_view_enable',   e=None,                  f=None                  )
+        , SimpleValueMap(c='search_for',            e=None,                  f='search_for'          )
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
-        , SimpleValueMap(c='continuation_url',      e=None,                  f='continuation_url' )
+        , SimpleValueMap(c='continuation_url',      e=None,                  f='continuation_url'    )
         ])
 
 #   -------------------------------------------------------------------------------------------
@@ -99,7 +100,8 @@ class EntityGenericListView(AnnalistGenericView):
         log.debug("entitylist %r"%listinfo.recordlist.get_values())
         fieldlistmap = FieldListValueMap(
             listinfo.collection, 
-            listinfo.recordlist.get_values()['annal:list_fields']
+            listinfo.recordlist.get_values()['annal:list_fields'],
+            {'list': listinfo.recordlist}
             )
         entitymap.add_map_entry(fieldlistmap)  # one-off for access to field headings
         entitymap.add_map_entry(
@@ -122,30 +124,31 @@ class EntityGenericListView(AnnalistGenericView):
         selector    = listinfo.recordlist.get_values().get('annal:list_entity_selector', "")
         search_for  = request.GET.get('search', "")
         entity_list = (
-            EntityFinder(listinfo.collection)
-                .get_entities(type_id, selector=selector, search=search_for)
+            EntityFinder(listinfo.collection, selector=selector)
+                .get_entities(type_id=type_id, context=listinfo.recordlist, search=search_for)
             )
         entityval = { 'annal:list_entities': [ get_entity_values(listinfo, e) for e in entity_list ] }
         # Set up initial view context
         entityvaluemap = self.get_list_entityvaluemap(listinfo)
-        viewcontext = entityvaluemap.map_value_to_context(entityval,
-            title               = self.site_data()["title"],
-            continuation_url    = request.GET.get('continuation_url', ""),
-            request_url         = self.get_request_path(),
+        listcontext = entityvaluemap.map_value_to_context(entityval,
+            title                 = self.site_data()["title"],
+            request_url           = self.get_request_path(),
+            continuation_url      = request.GET.get('continuation_url', ""),
+            # continuation_search   = search_for or None,
             ### heading             = entity_initial_values['rdfs:label'],
-            coll_id             = coll_id,
-            type_id             = type_id,
-            list_id             = listinfo.list_id,
-            search_for          = search_for,
-            list_choices        = self.get_list_choices_field(listinfo),
-            collection_view     = self.view_uri("AnnalistCollectionView", coll_id=coll_id),
-            default_view_id     = listinfo.recordlist['annal:default_view'],
-            default_view_enable = ("" if list_id else 'disabled="disabled"')
+            coll_id               = coll_id,
+            type_id               = type_id,
+            list_id               = listinfo.list_id,
+            search_for            = search_for,
+            list_choices          = self.get_list_choices_field(listinfo),
+            collection_view       = self.view_uri("AnnalistCollectionView", coll_id=coll_id),
+            default_view_id       = listinfo.recordlist['annal:default_view'],
+            default_view_enable   = ("" if list_id else 'disabled="disabled"')
             )
-        # log.debug("EntityGenericListView.get viewcontext %r"%(viewcontext))
+        # log.debug("EntityGenericListView.get listcontext %r"%(listcontext))
         # Generate and return form data
         return (
-            self.render_html(viewcontext, self._entityformtemplate) or 
+            self.render_html(listcontext, self._entityformtemplate) or 
             self.error(self.error406values())
             )
 
@@ -235,22 +238,24 @@ class EntityGenericListView(AnnalistGenericView):
                     )
                 if not redirect_uri:
                     # Get user to confirm action before actually doing it
-                    complete_action_uri = self.view_uri(
+                    confirmed_action_uri = self.view_uri(
                         "AnnalistEntityDataDeleteView", 
                         coll_id=coll_id, type_id=entity_type
                         )
-                    # log.info("coll_id %s, type_id %s, complete_action_uri %s"%(coll_id, entity_type, complete_action_uri))
+                    # log.info("coll_id %s, type_id %s, confirmed_action_uri %s"%(coll_id, entity_type, confirmed_action_uri))
                     delete_params = dict_querydict(
                         { "entity_delete":      ["Delete"]
                         , "entity_id":          [entity_id]
-                        , "continuation_url":   [self.get_request_path()]
+                        , "completion_url":     [continuation_here['continuation_url']]
+                        , "continuation_url":   [continuation_next.get('continuation_url')]
+                        , "search_for":         [request.POST['search_for']]
                         })
                     message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
                     return (
                         self.form_action_auth("delete", listinfo.collection.get_url()) or
                         ConfirmView.render_form(request,
                             action_description=     message.REMOVE_ENTITY_DATA%message_vals,
-                            complete_action_uri=    complete_action_uri,
+                            confirmed_action_uri=   confirmed_action_uri,
                             action_params=          delete_params,
                             cancel_action_uri=      self.get_request_path(),
                             title=                  self.site_data()["title"]
@@ -323,7 +328,8 @@ class EntityGenericListView(AnnalistGenericView):
         #         or extract this logic and share?  See also entityedit view choices
         field_description = FieldDescription(
             listinfo.collection, 
-            { 'annal:field_id': "List_choice", 'annal:field_placement': "small:0,12;medium:5,5" } 
+            {'annal:field_id': "List_choice", 'annal:field_placement': "small:0,12;medium:5,5"},
+            {}
             )
         entityvals        = { field_description['field_property_uri']: listinfo.list_id }
         options           = field_description['field_choices']

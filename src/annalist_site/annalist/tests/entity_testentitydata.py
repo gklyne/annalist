@@ -189,8 +189,8 @@ def entitydata_context_data(
           , { 'field_label':        'Type'
             , 'field_id':           'Entity_type'
             , 'field_name':         'entity_type'
-            , 'field_render_view':  'field/annalist_view_entitytyperef.html'
-            , 'field_render_edit':  'field/annalist_edit_entitytyperef.html'
+            , 'field_render_view':  'field/annalist_view_entitytypeid.html'
+            , 'field_render_edit':  'field/annalist_edit_entitytypeid.html'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
@@ -261,14 +261,18 @@ def entitydata_form_data(
         form_data_dict['save']              = 'Save'
     return form_data_dict
 
-def entitydata_delete_confirm_form_data(entity_id=None):
+def entitydata_delete_confirm_form_data(entity_id=None, search=None):
     """
     Form data from entity deletion confirmation
     """
-    return (
+    form_data = (
         { 'entity_id':     entity_id,
           'entity_delete': 'Delete'
         })
+    if search:
+        form_data['search'] = search
+    return form_data
+
 
 #   -----------------------------------------------------------------------------
 #
@@ -617,14 +621,16 @@ def layout_classes(width=12):
 
 #   -----------------------------------------------------------------------------
 #
-#   ----- Site-wide entirtiues defined
+#   ----- Site-wide entirties defined
 #
 #   -----------------------------------------------------------------------------
 
 
 def get_site_types_sorted():
     return (
-        [ "_field", "_list", "_type", "_view", "Default_type"
+        [ "_field", "_list", "_type", "_view"
+        , "BibEntry_type", "Default_type"
+        , "Enum_field_type", "Enum_list_type"
         ])
 
 def get_site_types():
@@ -639,12 +645,36 @@ def get_site_views():
 
 def get_site_lists():
     return (
-        { "Default_list", "Default_list_all", "Field_list", "Type_list", "List_list", "View_list"
+        { "BibEntry_list", "Default_list", "Default_list_all"
+        , "Field_list", "Type_list", "List_list", "View_list"
         })
 
 def get_site_fields():
     return (
         { 
         })
+
+def get_site_list_types_sorted():
+    return (
+        [ "Grid"
+        , "List"
+        ])
+
+def get_site_field_types_sorted():
+    return (
+        [ "EntityId"
+        , "EntityTypeId"
+        , "Enum"
+        , "Field"
+        , "Identifier"
+        , "List"
+        , "Placement"
+        , "Slug"
+        , "Text"
+        , "Textarea"
+        , "Type"
+        , "View"
+        ])
+
 
 # End.
