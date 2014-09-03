@@ -140,7 +140,7 @@ class RecordFieldTest(AnnalistTestCase):
             , 'rdfs:comment':               "Type (URI or CURIE) of underlying data that is stored in a field."
             , 'annal:type':                 "annal:Field"
             , 'annal:url':                  "http://test.example.com/testsite/c/testcoll/d/_field/Field_type/"
-            , 'annal:field_value_type':           "annal:Identifier"
+            , 'annal:field_value_type':     "annal:Identifier"
             , 'annal:field_render_type':    "Identifier"
             , 'annal:placeholder':          "(field value type)"
             , 'annal:property_uri':         "annal:field_value_type"

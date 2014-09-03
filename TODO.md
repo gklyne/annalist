@@ -258,10 +258,10 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Introduce biblio record type
        / Introduce biblio record list
        / Update test cases
+       / Field name updates (field_render, value_type)
+       / Update test cases
        - Add fields to restrict bib_* fields to BibEntry views
            - Declare additional/multiple types for entity?
-       - Update test cases
-       - Field name updates (field_render, value_type)
        - Update test cases
 9. Prepare for release 0.1
    - feature freeze
