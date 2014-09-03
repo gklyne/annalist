@@ -254,6 +254,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Update entity selector call site (just one)
        / Update selector syntax and sitedata
        / Use EntityFinder logic in enumeration selection (FieldDescription.py)
+       / Add view context to FieldDescription
        - Introduce biblio record type
        - Declare additional/multiple types for entity?
        - Update test cases

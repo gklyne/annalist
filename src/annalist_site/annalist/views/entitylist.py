@@ -100,7 +100,8 @@ class EntityGenericListView(AnnalistGenericView):
         log.debug("entitylist %r"%listinfo.recordlist.get_values())
         fieldlistmap = FieldListValueMap(
             listinfo.collection, 
-            listinfo.recordlist.get_values()['annal:list_fields']
+            listinfo.recordlist.get_values()['annal:list_fields'],
+            {'list': listinfo.recordlist}
             )
         entitymap.add_map_entry(fieldlistmap)  # one-off for access to field headings
         entitymap.add_map_entry(
@@ -327,7 +328,8 @@ class EntityGenericListView(AnnalistGenericView):
         #         or extract this logic and share?  See also entityedit view choices
         field_description = FieldDescription(
             listinfo.collection, 
-            { 'annal:field_id': "List_choice", 'annal:field_placement': "small:0,12;medium:5,5" } 
+            {'annal:field_id': "List_choice", 'annal:field_placement': "small:0,12;medium:5,5"},
+            {}
             )
         entityvals        = { field_description['field_property_uri']: listinfo.list_id }
         options           = field_description['field_choices']

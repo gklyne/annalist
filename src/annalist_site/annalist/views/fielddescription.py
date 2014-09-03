@@ -25,7 +25,7 @@ class FieldDescription(object):
     manipulations involving the field description.
     """
 
-    def __init__(self, collection, field):
+    def __init__(self, collection, field, view_context):
         """
         Creates a field description value to use in a context value when
         rendering a form.  Values defined here are mentioned in field
@@ -33,9 +33,13 @@ class FieldDescription(object):
 
         The FieldDescription object behaves as a dictionary containing the various field attributes.
 
-        collection  is a collection object to which the field is considered to belong.
-        field       is a dictionary with the field description from a view or list description,
-                    containing a field id and placement values.
+        collection      is a collection from which data is being rendered.
+        field           is a dictionary with the field description from a view or list 
+                        description, containing a field id and placement values.
+        view_context    is a dictionary of additional values that may ube used in assembling
+                        values to be used when rendering the field.  In particular, a copy 
+                        of the view description record provides context for some enumeration 
+                        type selections.
         """
         field_id    = field['annal:field_id']                   # Field ID slug in URI
         recordfield = RecordField.load(collection, field_id, collection._parentsite)
@@ -69,7 +73,7 @@ class FieldDescription(object):
         type_ref = self._field_context['field_options_typeref']
         if type_ref:
             entity_finder = EntityFinder(collection, selector="ALL")
-            entities      = entity_finder.get_entities(type_id=type_ref, context={})
+            entities      = entity_finder.get_entities(type_id=type_ref, context=view_context)
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
             self._field_context['field_choices'] = (

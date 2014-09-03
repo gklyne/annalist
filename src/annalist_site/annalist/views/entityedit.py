@@ -222,7 +222,8 @@ class GenericEntityEditView(AnnalistGenericView):
         log.debug("entityview %r"%viewinfo.recordview.get_values())
         fieldlistmap = FieldListValueMap(
             viewinfo.collection, 
-            viewinfo.recordview.get_values()['annal:view_fields']
+            viewinfo.recordview.get_values()['annal:view_fields'],
+            {'view': viewinfo.recordview}
             )
         entitymap.add_map_entry(fieldlistmap)
         return entitymap
@@ -233,7 +234,7 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         # @@TODO: Possibly create FieldValueMap and return map_entity_to_context value? 
         #         or extract this logic and share?
-        field_description = FieldDescription(viewinfo.collection, { 'annal:field_id': "View_choice" } )
+        field_description = FieldDescription(viewinfo.collection, { 'annal:field_id': "View_choice" }, None)
         entityvals        = { field_description['field_property_uri']: viewinfo.view_id }
         options           = field_description['field_choices']
         return bound_field(field_description, entityvals, options)
