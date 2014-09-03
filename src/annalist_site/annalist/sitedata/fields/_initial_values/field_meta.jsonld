@@ -3,7 +3,7 @@
 , "rdfs:label":         ""
 , "rdfs:comment":       ""
 , "annal:field_render_type": "Text"
-, "annal:value_type":   "annal:Text"
+, "annal:field_value_type":   "annal:Text"
 , "annal:placeholder":  ""
 , "annal:property_uri": ""
 }

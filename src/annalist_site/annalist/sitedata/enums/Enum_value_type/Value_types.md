@@ -1,8 +1,8 @@
-# Values of annal:value_type property
+# Values of annal:field_value_type property
 
 Obtained by:
 
-    grep -rh annal:value_type ./annalist | awk '{print $3}' | sort | uniq
+    grep -rh annal:field_value_type ./annalist | awk '{print $3}' | sort | uniq
 
 Results (reorganized and "attic" values removed)
 

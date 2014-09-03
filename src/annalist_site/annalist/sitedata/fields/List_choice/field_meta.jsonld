@@ -6,7 +6,7 @@
 , "rdfs:comment":           "Choose list to display."
 , "annal:field_name":       "list_choice"
 , "annal:field_render_type":     "List"
-, "annal:value_type":       "annal:Slug"
+, "annal:field_value_type":       "annal:Slug"
 , "annal:placeholder":      "(list id)"
 , "annal:property_uri":     "annal:list"
 , "annal:options_typeref":  "_list"

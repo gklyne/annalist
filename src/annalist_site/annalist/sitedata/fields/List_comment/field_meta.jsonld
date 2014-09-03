@@ -5,7 +5,7 @@
 , "rdfs:label":         "Help"
 , "rdfs:comment":       "Descriptive text about the list view.  This may be used as help or tooltip text in appropriate contexts."
 , "annal:field_render_type": "Textarea"
-, "annal:value_type":   "annal:Longtext"
+, "annal:field_value_type":   "annal:Longtext"
 , "annal:placeholder":  "(description of list view)"
 , "annal:property_uri": "rdfs:comment"
 }

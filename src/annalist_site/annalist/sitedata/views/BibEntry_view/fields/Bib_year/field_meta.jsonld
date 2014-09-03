@@ -5,7 +5,7 @@
 , "rdfs:label":         "Bib_year"
 , "rdfs:comment":       "BibJSON(ish) field Bib_year"
 , "annal:field_render_type": "annal:field_render_type/Text"
-, "annal:value_type":   "annal:Text"
+, "annal:field_value_type":   "annal:Text"
 , "annal:placeholder":  "(Bib_year)"
 , "annal:property_uri": "bib:Bib_year"
 }

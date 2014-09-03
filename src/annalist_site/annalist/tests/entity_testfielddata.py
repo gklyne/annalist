@@ -110,7 +110,7 @@ def recordfield_init_keys():
 def recordfield_value_keys():
     return (recordfield_init_keys() |
         { 'annal:property_uri'
-        , 'annal:value_type'
+        , 'annal:field_value_type'
         , 'annal:field_render_type'
         , 'annal:placeholder'
         , 'annal:default_value'

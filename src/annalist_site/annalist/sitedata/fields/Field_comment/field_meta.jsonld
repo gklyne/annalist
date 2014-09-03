@@ -5,7 +5,7 @@
 , "rdfs:label":         "Help"
 , "rdfs:comment":       "Descriptive text explaining how field is intended to be used.  This text may be used to provide content for a tooltip associated with the field display in a form."
 , "annal:field_render_type": "Textarea"
-, "annal:value_type":   "annal:Longtext"
+, "annal:field_value_type":   "annal:Longtext"
 , "annal:placeholder":  "(field usage commentary or help text)"
 , "annal:property_uri": "rdfs:comment"
 }

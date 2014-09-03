@@ -63,7 +63,7 @@ class FieldDescription(object):
             , 'field_render_edit':      get_edit_renderer(field_render_type)
             , 'field_label':            recordfield.get('rdfs:label', "")
             , 'field_help':             recordfield.get('rdfs:comment', "")
-            , 'field_value_type':       recordfield.get('annal:value_type', "")
+            , 'field_value_type':       recordfield.get('annal:field_value_type', "")
             , 'field_placeholder':      recordfield.get('annal:placeholder', "")
             , 'field_default_value':    recordfield.get('annal:default_value', None)
             , 'field_property_uri':     recordfield.get('annal:property_uri', "")

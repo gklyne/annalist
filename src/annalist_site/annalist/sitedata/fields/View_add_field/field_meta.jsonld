@@ -6,7 +6,7 @@
 , "rdfs:comment":           "Selects whether an 'Add field' button is displayed while editing an entity"
 , "annal:field_name":       "View_add_field"
 , "annal:field_render_type":     "Text"
-, "annal:value_type":       "annal:Text"
+, "annal:field_value_type":       "annal:Text"
 , "annal:placeholder":      "(yes or no)"
 , "annal:property_uri":     "annal:add_field"
 }

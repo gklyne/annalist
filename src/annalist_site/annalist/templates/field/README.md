@@ -14,4 +14,4 @@ where `<context>` is one of:
 * `item` - used to render an element to display a field value in a list
 * `grid` - used to render an element to display a field value in a grid
 
-and `<value-type>` is a value used in a field definition `annal:value_type` vcalue (see `sitedata/fields` for field definitions by field id).
+and `<value-type>` is a value used in a field definition `annal:field_value_type` vcalue (see `sitedata/fields` for field definitions by field id).

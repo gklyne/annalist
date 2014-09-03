@@ -6,7 +6,7 @@
 , "rdfs:comment":           "Choose field to display."
 , "annal:field_name":       "field_choice"
 , "annal:field_render_type":     "View"
-, "annal:value_type":       "annal:Slug"
+, "annal:field_value_type":       "annal:Slug"
 , "annal:placeholder":      "(field id)"
 , "annal:property_uri":     "annal:field"
 , "annal:options_typeref":  "_field"

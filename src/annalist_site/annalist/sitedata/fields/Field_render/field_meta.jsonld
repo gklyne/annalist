@@ -5,7 +5,7 @@
 , "rdfs:label":             "Field render type"
 , "rdfs:comment":           "Field rendering type. This encompasses the actual form of the rendered value, and any defaults or other values that may be applied to the field."
 , "annal:field_render_type":     "Enum"
-, "annal:value_type":       "annal:Slug"
+, "annal:field_value_type":       "annal:Slug"
 , "annal:placeholder":      "(field render type)"
 , "annal:property_uri":     "annal:field_render_type"
 , "annal:options_typeref":  "Enum_field_type"

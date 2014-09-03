@@ -5,7 +5,7 @@
 , "rdfs:label":         "Label"
 , "rdfs:comment":       "Short string used to describe list when displayed"
 , "annal:field_render_type": "Text"
-, "annal:value_type":   "annal:Text"
+, "annal:field_value_type":   "annal:Text"
 , "annal:placeholder":  "(list label)"
 , "annal:property_uri": "rdfs:label"
 }

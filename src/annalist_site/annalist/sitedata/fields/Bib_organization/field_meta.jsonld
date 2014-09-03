@@ -5,7 +5,7 @@
 , "rdfs:label":         "Bib_organization"
 , "rdfs:comment":       "BibJSON(ish) field Bib_organization"
 , "annal:field_render_type": "Text"
-, "annal:value_type":   "annal:Text"
+, "annal:field_value_type":   "annal:Text"
 , "annal:placeholder":  "(Bib_organization)"
 , "annal:property_uri": "bib:Bib_organization"
 }

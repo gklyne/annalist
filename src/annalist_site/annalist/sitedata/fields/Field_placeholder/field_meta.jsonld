@@ -6,6 +6,6 @@
 , "rdfs:comment":       "Placeholder string displayed in field until actual value is selected"
 , "annal:placeholder":  "(placeholder text)"
 , "annal:field_render_type": "Text"
-, "annal:value_type":   "annal:Text"
+, "annal:field_value_type":   "annal:Text"
 , "annal:property_uri": "annal:placeholder"
 }
