@@ -11,6 +11,8 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
+from pyparsing import Word, QuotedString, Literal, Group, Empty, StringEnd, ParseException
+from pyparsing import alphas, alphanums
 
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitytypeinfo import EntityTypeInfo, get_built_in_type_ids
@@ -129,12 +131,12 @@ class EntitySelector(object):
 
     >>> e  = { 'p:a': '1', 'p:b': '2', 'p:c': '3', '@type': ["http://example.com/type", "foo:bar"] }
     >>> c  = {}
-    >>> f1 = "[p:a]==1"
-    >>> f2 = "[p:a]==2"
+    >>> f1 = "'1' == [p:a]"
+    >>> f2 = "[p:a]=='2'"
     >>> f3 = ''
-    >>> f4 = "@type>=http://example.com/type"
-    >>> f5 = "@type>=foo:bar"
-    >>> f6 = "@type>=bar:foo"
+    >>> f4 = "'http://example.com/type' in [@type]"
+    >>> f5 = "'foo:bar' in [@type]"
+    >>> f6 = "'bar:foo' in [@type]"
     >>> EntitySelector(f1).select_entity(e, c)
     True
     >>> EntitySelector(f2).select_entity(e, c)
@@ -185,6 +187,64 @@ class EntitySelector(object):
             return self._selector(entity, context)
         return True
 
+    @classmethod  #@@ @staticmethod, no cls?
+    def parse_selector(cls, selector):
+        """
+        Parse a selector and return list of tokens
+
+        Selector formats:
+            ALL (or blank)              match any entity
+            <val1> == <val2>            values are same
+            <val1> in <val2>            second value is list containing 1st value, 
+                                        or values are same, or val1 is None.
+
+            <val1> and <val2> may be:
+
+            [<field-id>]                refers to field in entity under test
+            <name>[<field-id>]          refers to field of context value, or None if the
+                                        indicated context value or field is not defined.
+            "<string>"                  literal string value.  Quotes within are escaped.
+
+        <field_id> values are URIs or CURIEs, using characters defined by RFC3986,
+        except "[" and "]"
+        
+        RFC3986:
+           unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
+           reserved      = gen-delims / sub-delims
+           gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
+           sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
+                         / "*" / "+" / "," / ";" / "="
+        """
+        def get_value(val_list):
+            if len(val_list) == 1:
+                return { 'type': 'literal', 'name': None, 'field_id': None, 'value': val_list[0] }
+            elif val_list[0] == '[':
+                return { 'type': 'entity',  'name': None,        'field_id': val_list[1], 'value': None }
+            elif val_list[1] == '[':
+                return { 'type': 'context', 'name': val_list[0], 'field_id': val_list[2], 'value': None }
+            else:
+                return { 'type': 'unknown', 'name': None, 'field_id': None, 'value': None }
+        p_name     = Word(alphas+"_", alphanums+"_")
+        p_id       = Word(alphas+"_@", alphanums+"-.~:/?#@!$&'()*+,;=)")
+        p_val      = ( Group( Literal("[") + p_id + Literal("]") )
+                     | Group( p_name + Literal("[") + p_id + Literal("]") )
+                     | Group( QuotedString('"', "\\") )
+                     | Group( QuotedString("'", "\\") )
+                     )
+        p_comp     = (Literal("==") | Literal("in"))
+        p_selector = ( p_val + p_comp + p_val + StringEnd() )
+        try:
+            resultlist = p_selector.parseString(selector).asList()
+        except ParseException:
+            return None
+        resultdict = {}
+        if resultlist:
+            resultdict['val1'] = get_value(resultlist[0])
+            resultdict['comp'] = resultlist[1]
+            resultdict['val2'] = get_value(resultlist[2])
+        return resultdict
+
+    @classmethod  #@@ @staticmethod, no cls?
     def compile_selector_filter(cls, selector):
         """
         Return filter for for testing entities matching a supplied selector.
@@ -193,36 +253,71 @@ class EntitySelector(object):
 
         Selector formats:
             ALL (or blank)              match any entity
-            @type>=<uri>/<curie>        entity has indicated type
-            [annal:type]==annal:Field   entity type is indicated value
-            [<field>]==<value>          entity named field is indicated value
+            <val1> == <val2>            values are same
+            <val1> in <val2>            second value is list containing 1st value, 
+                                        or values are same, or val1 is None.
+
+            <val1> and <val2> may be:
+
+            [<field-id>]                refers to field in entity under test
+            <name>[<field-id>]          refers to field of context value, or None if the
+                                        indicated context value or field is not defined.
+            "<string>"                  literal string value.  Quotes within are escaped.
         """
-        def match_type(type_val):
-            def match_type_f(e, context):
-                return type_val in e.get('@type',[])
-            return match_type_f
-        def match_field(field_name, field_val):
-            def match_field_f(e, context):
-                return e[field_name] == field_val
-            return match_field_f
+        def get_entity(field_id):
+            def get_entity_f(e, c):
+                return e.get(field_id, None)
+            return get_entity_f
+        #
+        def get_context(name, field_id):
+            def get_context_f(e, c):
+                if name in c:
+                    return c[name].get(field_id, None)
+                return None
+            return get_context_f
+        #
+        def get_literal(value):
+            def get_literal_f(e, c):
+                return value
+            return get_literal_f
+        #
+        def get_val_f(selval):
+            if selval['type'] == "entity":
+                return get_entity(selval['field_id'])
+            elif selval['type'] == "context":
+                return get_context(selval['name'], selval['field_id'])
+            elif selval['type'] == "literal":
+                return get_literal(selval['value'])
+            else:
+                raise ValueError("Unrecognized value type from selector (%s)"%selval['type'])
+                assert False, "Unrecognized value type from selector"
+        #
+        def match_eq(v1f, v2f):
+            def match_eq_f(e, c):
+                return v1f(e, c) == v2f(e, c)
+            return match_eq_f
+        #
+        def match_in(v1f, v2f):
+            def match_in_f(e, c):
+                v1 = v1f(e, c)
+                if not v1: return True
+                v2 = v2f(e, c)
+                if isinstance(v2, list):
+                    return v1 in v2
+                return v1 == v2
+            return match_in_f
+        #
         if selector in {None, "", "ALL"}:
             return None
-        #
-        # RFC3986:
-        #    unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
-        #    reserved      = gen-delims / sub-delims
-        #    gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
-        #    sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
-        #                  / "*" / "+" / "," / ";" / "="
-        #
-        # Not matching [ ] ' for now
-        #
-        tm = re.match(r'@type>=((\w|[-.~:/?#@!$&()*+,;=])+)$', selector)
-        if tm:
-            return match_type(tm.group(1))
-        sm = re.match(r'\[((\w|:)+)\]==((\w|:)+)$', selector)
-        if sm:
-            return match_field(sm.group(1), sm.group(3))
+        sel = cls.parse_selector(selector)
+        if not sel:
+            raise ValueError("Unrecognized selector syntax (%s)"%selector)
+        v1f = get_val_f(sel['val1'])
+        v2f = get_val_f(sel['val2'])
+        if sel['comp'] == "==":
+            return match_eq(v1f, v2f)
+        if sel['comp'] == "in":
+            return match_in(v1f, v2f)
         # Drop through: raise error
         raise ValueError("Unrecognized entity selector (%s)"%selector)
 

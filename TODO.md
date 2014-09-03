@@ -252,10 +252,10 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        * Alternative might be value-scoped enumerations
        / Update EntityFinder logic to support tests comparing with enclosing view fields
        / Update entity selector call site (just one)
-       - Update selector syntax and sitedata
+       / Update selector syntax and sitedata
        - Use EntityFinder logic in enumeration selection
-       - Then need to introduce biblio record type
-       - May want to declare additional/multiple types for entity?
+       - Introduce biblio record type
+       - Declare additional/multiple types for entity?
        - Update test cases
 9. Prepare for release
    - version identifier in system
