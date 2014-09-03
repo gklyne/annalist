@@ -11,6 +11,7 @@ log = logging.getLogger(__name__)
 
 from annalist.models.recordfield        import RecordField
 from annalist.models.entitytypeinfo     import EntityTypeInfo
+from annalist.models.entityfinder       import EntityFinder
 
 from annalist.views.fields.render_utils import get_edit_renderer, get_view_renderer
 from annalist.views.fields.render_utils import get_head_renderer, get_item_renderer
@@ -65,16 +66,24 @@ class FieldDescription(object):
             , 'field_options_typeref':  recordfield.get('annal:options_typeref', None)
             , 'field_choices':          None
             })
-        if self._field_context['field_options_typeref']:
-            typeinfo = EntityTypeInfo(collection._parentsite, collection, self._field_context['field_options_typeref'])
-            # Note: the options list may be used more than once, so the id generator returned 
-            # must be materialized here as a list
+        type_ref = self._field_context['field_options_typeref']
+        if type_ref:
+            entity_finder = EntityFinder(collection, selector="ALL")
+            entities      = entity_finder.get_entities(type_id=type_ref, context={})
+            # Note: the options list may be used more than once, so the id generator
+            # returned must be materialized as a list
             self._field_context['field_choices'] = (
-                [tid for tid in typeinfo.enum_entity_ids(usealtparent=True) if tid != "_initial_values"]
+                [e.get_id() for e in entities if e.get_id() != "_initial_values"]
                 )
             # log.info("typeref %s: %r"%
             #     (self._field_context['field_options_typeref'], list(self._field_context['field_choices']))
             #     )
+            #@@
+            # typeinfo = EntityTypeInfo(collection._parentsite, collection, self._field_context['field_options_typeref'])
+            # self._field_context['field_choices'] = (
+            #     [tid for tid in typeinfo.enum_entity_ids(usealtparent=True) if tid != "_initial_values"]
+            #     )
+            #@@
         # log.info("FieldDescription: %s"%field_id)
         # log.info("FieldDescription.field %r"%field)
         # log.info("FieldDescription.field_context %r"%(self._field_context,))
