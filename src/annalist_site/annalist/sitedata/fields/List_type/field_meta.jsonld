@@ -4,7 +4,7 @@
 , "annal:type_id":          "_field"
 , "rdfs:label":             "List display type"
 , "rdfs:comment":           "Type of list display (List or Grid)"
-, "annal:field_render":     "Enum"
+, "annal:field_render_type":     "Enum"
 , "annal:value_type":       "annal:List_type"
 , "annal:placeholder":      "(list type)"
 , "annal:property_uri":     "annal:display_type"

@@ -5,7 +5,7 @@
 , "rdfs:label":             "Id"
 , "rdfs:comment":           "A short identifier that distinguishes this view from all other views in the same collection."
 , "annal:field_name":       "entity_id"
-, "annal:field_render":     "EntityId"
+, "annal:field_render_type":     "EntityId"
 , "annal:value_type":       "annal:Slug"
 , "annal:placeholder":      "(view id)"
 , "annal:property_uri":     "annal:id"

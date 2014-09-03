@@ -4,7 +4,7 @@
 , "annal:type_id":          "_field"
 , "rdfs:label":             "Default view"
 , "rdfs:comment":           "Default view id for this type"
-, "annal:field_render":     "View"
+, "annal:field_render_type":     "View"
 , "annal:value_type":       "annal:View"
 , "annal:placeholder":      "(view id)"
 , "annal:default_value":    "Default_view"

@@ -2,7 +2,7 @@
 , "@type":              ["annal:Enum_field_render", "annal:Enum", "annal:Type"]
 , "annal:id":           "Placement"
 , "annal:type_id":      "Enum_field_render"
-, "rdfs:label":         "annal:field_render/Placement"
+, "rdfs:label":         "annal:field_render_type/Placement"
 , "rdfs:comment":       "A field placement option, which may be rendered as a drop-down selection."
-, "annal:uri":          "annal:field_render/Placement"
+, "annal:uri":          "annal:field_render_type/Placement"
 }

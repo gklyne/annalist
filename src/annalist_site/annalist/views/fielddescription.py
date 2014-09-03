@@ -52,14 +52,15 @@ class FieldDescription(object):
         log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
         # log.info("FieldDescription: field['annal:field_placement'] %s"%(field['annal:field_placement']))
         # log.info("FieldDescription: field_placement %r"%(get_placement_classes(field['annal:field_placement']),))
+        field_render_type = recordfield.get('annal:field_render_type', "")
         self._field_context = (
             { 'field_id':               field_id
             , 'field_name':             field_name
             , 'field_placement':        field_placement
-            , 'field_render_head':      get_head_renderer(recordfield.get('annal:field_render', ""))
-            , 'field_render_item':      get_item_renderer(recordfield.get('annal:field_render', ""))
-            , 'field_render_view':      get_view_renderer(recordfield.get('annal:field_render', ""))
-            , 'field_render_edit':      get_edit_renderer(recordfield.get('annal:field_render', ""))
+            , 'field_render_head':      get_head_renderer(field_render_type)
+            , 'field_render_item':      get_item_renderer(field_render_type)
+            , 'field_render_view':      get_view_renderer(field_render_type)
+            , 'field_render_edit':      get_edit_renderer(field_render_type)
             , 'field_label':            recordfield.get('rdfs:label', "")
             , 'field_help':             recordfield.get('rdfs:comment', "")
             , 'field_value_type':       recordfield.get('annal:value_type', "")

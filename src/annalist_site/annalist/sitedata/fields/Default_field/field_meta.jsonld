@@ -4,7 +4,7 @@
 , "annal:type_id":      "_field"
 , "rdfs:label":         "Default_field"
 , "rdfs:comment":       "Default field type that can be used as a placeholder in view descriptions.  Renders as a simple 1-line text value.  Not really suitable for real data storage."
-, "annal:field_render": "Text"
+, "annal:field_render_type": "Text"
 , "annal:value_type":   "annal:Text"
 , "annal:placeholder":  "(default field type: text value)"
 , "annal:property_uri": "annal:value"

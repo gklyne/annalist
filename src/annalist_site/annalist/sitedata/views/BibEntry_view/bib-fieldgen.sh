@@ -32,7 +32,7 @@ cat >fields/${fid}/field_meta.jsonld <<EOF
 , "annal:type_id":      "_field"
 , "rdfs:label":         "${fid}"
 , "rdfs:comment":       "BibJSON(ish) field ${fid}"
-, "annal:field_render": "annal:field_render/Text"
+, "annal:field_render_type": "annal:field_render_type/Text"
 , "annal:value_type":   "annal:Text"
 , "annal:placeholder":  "(${fid})"
 , "annal:property_uri": "bib:${fid}"

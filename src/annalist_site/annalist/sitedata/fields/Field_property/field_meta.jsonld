@@ -5,7 +5,7 @@
 , "rdfs:label":         "Property"
 , "rdfs:comment":       "Property URI (or CURIE) used to represent this field data in a record"
 , "annal:placeholder":  "(property URI or CURIE)"
-, "annal:field_render": "Identifier"
+, "annal:field_render_type": "Identifier"
 , "annal:value_type":   "annal:Identifier"
 , "annal:property_uri": "annal:property_uri"
 }

@@ -135,16 +135,16 @@ class RecordFieldTest(AnnalistTestCase):
         self.assertEqual(set(td.keys()), set(recordfield_load_keys()))
         v = recordfield_read_values(field_id="Field_type")
         v.update(
-            { '@id':                    "annal:fields/Field_type"
-            , 'rdfs:label':             "Field value type"
-            , 'rdfs:comment':           "Type (URI or CURIE) of underlying data that is stored in a field."
-            , 'annal:type':             "annal:Field"
-            , 'annal:url':              "http://test.example.com/testsite/c/testcoll/d/_field/Field_type/"
-            , 'annal:value_type':       "annal:Identifier"
-            , 'annal:field_render':     "Identifier"
-            , 'annal:placeholder':      "(field value type)"
-            , 'annal:property_uri':     "annal:value_type"
-            , 'annal:default_value':    "annal:Text"
+            { '@id':                        "annal:fields/Field_type"
+            , 'rdfs:label':                 "Field value type"
+            , 'rdfs:comment':               "Type (URI or CURIE) of underlying data that is stored in a field."
+            , 'annal:type':                 "annal:Field"
+            , 'annal:url':                  "http://test.example.com/testsite/c/testcoll/d/_field/Field_type/"
+            , 'annal:value_type':           "annal:Identifier"
+            , 'annal:field_render_type':    "Identifier"
+            , 'annal:placeholder':          "(field value type)"
+            , 'annal:property_uri':         "annal:value_type"
+            , 'annal:default_value':        "annal:Text"
             })
         self.assertDictionaryMatch(td, v)
         return
@@ -257,7 +257,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_label'], 'Field render type')
         self.assertEqual(r.context['fields'][2]['field_help'], field_render_help)
         self.assertEqual(r.context['fields'][2]['field_placeholder'], "(field render type)")
-        self.assertEqual(r.context['fields'][2]['field_property_uri'], "annal:field_render")
+        self.assertEqual(r.context['fields'][2]['field_property_uri'], "annal:field_render_type")
         self.assertEqual(r.context['fields'][2]['field_render_view'], "field/annalist_view_select.html")
         self.assertEqual(r.context['fields'][2]['field_render_edit'], "field/annalist_edit_select.html")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 medium-6 columns")

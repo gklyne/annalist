@@ -4,7 +4,7 @@
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "URI"
 , "rdfs:comment":               "Entity type URI"
-, "annal:field_render":         "Identifier"
+, "annal:field_render_type":         "Identifier"
 , "annal:value_type":           "annal:Identifier"
 , "annal:placeholder":          "(URI)"
 , "annal:property_uri":         "annal:uri"

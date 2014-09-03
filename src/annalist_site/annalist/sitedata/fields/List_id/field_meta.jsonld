@@ -5,7 +5,7 @@
 , "rdfs:label":         "Id"
 , "rdfs:comment":       "A short identifier that distinguishes this field from all other lists in the same collection."
 , "annal:field_name":   "entity_id"
-, "annal:field_render": "Slug"
+, "annal:field_render_type": "Slug"
 , "annal:value_type":   "annal:Slug"
 , "annal:placeholder":  "(list id)"
 , "annal:property_uri": "annal:id"
