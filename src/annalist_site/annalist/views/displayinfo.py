@@ -169,17 +169,18 @@ class DisplayInfo(object):
             self.entity_id = entity_id
         return self.http_response
 
-    def get_entity_data(self):
+    def get_entity_data_not_used(self):
         """
         Retrieve entity data to use for display
         """
         if not self.http_response:
             assert self.entity_id is not None
-            self.entity_data = self.entitytypeinfo.entityclass.load(
+            self.entitydata = self.entitytypeinfo.entityclass.load(
                 self.entitytypeinfo.entityparent, 
                 self.entity_id, 
                 self.entitytypeinfo.entityaltparent)
-            log.debug("DisplayInfo.get_entity_data: %r"%(self.entity_data.get_values()))
+            if self.entitydata:
+                log.debug("DisplayInfo.get_entity_data: %r"%(self.entitydata.get_values()))
         return self.http_response
 
     def check_authorization(self, action):

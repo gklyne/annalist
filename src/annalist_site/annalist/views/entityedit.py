@@ -103,15 +103,10 @@ class GenericEntityEditView(AnnalistGenericView):
             return viewinfo.http_response
 
         # Create local entity object or load values from existing
-        # entity_initial_values = (
-        #     { "rdfs:label":   "Entity '%s' of type '%s' in collection '%s'"%
-        #                       (viewinfo.entity_id, type_id, coll_id)
-        #     , "rdfs:comment": ""
-        #     })
-        typeinfo              = viewinfo.entitytypeinfo
-        entity_initial_values = typeinfo.get_initial_entity_values(viewinfo.entity_id)
-        entity = self.get_entity(viewinfo.entity_id, typeinfo, action, entity_initial_values)
+        typeinfo = viewinfo.entitytypeinfo
+        entity   = self.get_entity(viewinfo.entity_id, typeinfo, action)
         if entity is None:
+            entity_initial_values = typeinfo.get_initial_entity_values(viewinfo.entity_id) #@@
             return self.error(
                 dict(self.error404values(),
                     message=message.DOES_NOT_EXIST%{'id': entity_initial_values['rdfs:label']}
@@ -209,10 +204,11 @@ class GenericEntityEditView(AnnalistGenericView):
         viewinfo.get_type_info(type_id)
         viewinfo.get_view_info(viewinfo.get_view_id(type_id, view_id))
         viewinfo.get_entity_info(action, entity_id)
+        # viewinfo.get_entity_data()
         viewinfo.check_authorization(action)
         return viewinfo
 
-    def get_view_entityvaluemap(self, viewinfo):
+    def get_view_entityvaluemap(self, viewinfo, entity):
         """
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for an indicated view.
@@ -223,7 +219,7 @@ class GenericEntityEditView(AnnalistGenericView):
         fieldlistmap = FieldListValueMap(
             viewinfo.collection, 
             viewinfo.recordview.get_values()['annal:view_fields'],
-            {'view': viewinfo.recordview}
+            {'view': viewinfo.recordview, 'entity': entity}
             )
         entitymap.add_map_entry(fieldlistmap)
         return entitymap
@@ -239,16 +235,13 @@ class GenericEntityEditView(AnnalistGenericView):
         options           = field_description['field_choices']
         return bound_field(field_description, entityvals, options)
 
-    def get_entity(self, entity_id, typeinfo, action, entity_initial_values):
+    def get_entity(self, entity_id, typeinfo, action):
         """
         Create local entity object or load values from existing.
 
         entity_id       entity id to create or load
         typeinfo        EntityTypeInfo object for the entity
         action          is the requested action: new, edit, copy
-        entity_initial_values
-                        is a dictionary of initial values used when 
-                        a new entity is created
 
         returns an object of the appropriate type.
 
@@ -263,6 +256,7 @@ class GenericEntityEditView(AnnalistGenericView):
         entity = None
         if action == "new":
             entity = entityclass(typeinfo.entityparent, entity_id)
+            entity_initial_values = typeinfo.get_initial_entity_values(entity_id)
             entity.set_values(entity_initial_values)
         elif entityclass.exists(typeinfo.entityparent, entity_id, altparent=typeinfo.entityaltparent):
             entity = entityclass.load(typeinfo.entityparent, entity_id, altparent=typeinfo.entityaltparent)
@@ -284,7 +278,7 @@ class GenericEntityEditView(AnnalistGenericView):
         entity_id = entity.get_id()
         coll      = viewinfo.collection
         # Set up initial view context
-        entityvaluemap = self.get_view_entityvaluemap(viewinfo)
+        entityvaluemap = self.get_view_entityvaluemap(viewinfo, entity)
         if add_field:
             add_field_desc = self.find_repeat_id(entityvaluemap, add_field)
             if add_field_desc:
@@ -343,7 +337,10 @@ class GenericEntityEditView(AnnalistGenericView):
         continuation_url = context_extra_values['continuation_url']
         if 'cancel' in form_data:
             return HttpResponseRedirect(continuation_url)
-        entityvaluemap = self.get_view_entityvaluemap(viewinfo)
+
+        typeinfo       = viewinfo.entitytypeinfo
+        orig_entity    = self.get_entity(orig_entity_id, typeinfo, viewinfo.action)
+        entityvaluemap = self.get_view_entityvaluemap(viewinfo, orig_entity)
 
         # Check response has valid id and type
         if not util.valid_id(entity_id):
@@ -362,7 +359,8 @@ class GenericEntityEditView(AnnalistGenericView):
         # Save updated details
         if 'save' in form_data:
             http_response = self.save_entity(entityvaluemap, form_data,
-                entity_id, entity_type_id, orig_entity_id, orig_entity_type_id, 
+                entity_id, entity_type_id,
+                orig_entity_id, orig_entity_type_id, orig_entity,
                 viewinfo, context_extra_values, messages)
             return http_response or HttpResponseRedirect(continuation_url)
 
@@ -377,7 +375,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             return self.invoke_config_edit_view(
                 entityvaluemap, form_data,
-                entity_id, entity_type_id, orig_entity_id, orig_entity_type_id, 
+                entity_id, entity_type_id, 
+                orig_entity_id, orig_entity_type_id,  orig_entity,
                 viewinfo, context_extra_values, messages,
                 view_edit_uri_base, {"add_field": "View_fields"}, continuation_url
                 )
@@ -386,7 +385,8 @@ class GenericEntityEditView(AnnalistGenericView):
         if 'use_view' in form_data:
             # Save entity, then redirect to selected view
             http_response = self.save_entity(entityvaluemap, form_data,
-                entity_id, entity_type_id, orig_entity_id, orig_entity_type_id, 
+                entity_id, entity_type_id, 
+                orig_entity_id, orig_entity_type_id, orig_entity,
                 viewinfo, context_extra_values, messages)
             if http_response:
                 return http_response
@@ -411,7 +411,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             return self.invoke_config_edit_view(
                 entityvaluemap, form_data,
-                entity_id, entity_type_id, orig_entity_id, orig_entity_type_id, 
+                entity_id, entity_type_id, 
+                orig_entity_id, orig_entity_type_id, orig_entity,
                 viewinfo, context_extra_values, messages,
                 view_edit_uri_base, {}, continuation_url
                 )
@@ -422,7 +423,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             return self.invoke_config_edit_view(
                 entityvaluemap, form_data,
-                entity_id, entity_type_id, orig_entity_id, orig_entity_type_id, 
+                entity_id, entity_type_id,
+                orig_entity_id, orig_entity_type_id, orig_entity,
                 viewinfo, context_extra_values, messages,
                 view_edit_uri_base, {}, continuation_url
                 )
@@ -433,7 +435,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             return self.invoke_config_edit_view(
                 entityvaluemap, form_data,
-                entity_id, entity_type_id, orig_entity_id, orig_entity_type_id, 
+                entity_id, entity_type_id,
+                orig_entity_id, orig_entity_type_id, orig_entity,
                 viewinfo, context_extra_values, messages,
                 type_edit_uri_base, {}, continuation_url
                 )
@@ -472,7 +475,8 @@ class GenericEntityEditView(AnnalistGenericView):
 
     def save_entity(self,
             entityvaluemap, form_data,
-            entity_id, entity_type_id, orig_entity_id, orig_entity_type_id, 
+            entity_id, entity_type_id,
+            orig_entity_id, orig_entity_type_id, orig_entity,
             viewinfo, context_extra_values, messages):
         """
         This method contains logic to save entity data modified through a form
@@ -487,7 +491,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if viewinfo.check_authorization(action):
             return viewinfo.http_response
         typeinfo    = viewinfo.entitytypeinfo
-        orig_entity = self.get_entity(orig_entity_id, typeinfo, action, {})
+        # orig_entity = self.get_entity(orig_entity_id, typeinfo, action)   #@@@
         log.debug(
             "save_entity: save, action %s, entity_id %s, orig_entity_id %s"
             %(action, entity_id, orig_entity_id)
@@ -567,7 +571,8 @@ class GenericEntityEditView(AnnalistGenericView):
 
     def invoke_config_edit_view(self, 
             entityvaluemap, form_data,
-            entity_id, entity_type_id, orig_entity_id, orig_entity_type_id, 
+            entity_id, entity_type_id, 
+            orig_entity_id, orig_entity_type_id, orig_entity,
             viewinfo, context_extra_values, messages,
             config_edit_url, url_params, continuation_url):
         """
@@ -585,7 +590,8 @@ class GenericEntityEditView(AnnalistGenericView):
         and displayed in the current view.
         """
         http_response = self.save_entity(entityvaluemap, form_data,
-            entity_id, entity_type_id, orig_entity_id, orig_entity_type_id, 
+            entity_id, entity_type_id, 
+            orig_entity_id, orig_entity_type_id, orig_entity,
             viewinfo, context_extra_values, messages)
         if http_response:
             return http_response

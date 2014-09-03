@@ -69,12 +69,14 @@ class FieldDescription(object):
             , 'field_property_uri':     recordfield.get('annal:property_uri', "")
             , 'field_options_valkey':   recordfield.get('annal:options_valkey', None)
             , 'field_options_typeref':  recordfield.get('annal:options_typeref', None)
+            , 'field_restrict_values':  recordfield.get('annal:restrict_values', "ALL")
             , 'field_choices':          None
             })
         type_ref = self._field_context['field_options_typeref']
         if type_ref:
-            entity_finder = EntityFinder(collection, selector="ALL")
-            entities      = entity_finder.get_entities(type_id=type_ref, context=view_context)
+            restrict_values = self._field_context['field_restrict_values']
+            entity_finder   = EntityFinder(collection, selector=restrict_values)
+            entities        = entity_finder.get_entities(type_id=type_ref, context=view_context)
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
             self._field_context['field_choices'] = (

@@ -263,8 +263,8 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Add fields to restrict bib_* fields to BibEntry views
            x Declare additional/multiple types for entity?
        / Update field selector view
-       - Use field selector in FieldDescription
-       - Update test cases
+       / Use field selector in FieldDescription
+       / Update test cases
 9. Prepare for release 0.1
    - feature freeze
    - version identifier in system
@@ -308,6 +308,9 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
 15. Code improvement - views
    / where possible, migrate methods from editentitybase to subclasses
    / review logic - ideally, form handlers will access data from form, then hand off for processing
+   - extend view edit form to include additional fields used in sitedata
+   - extend field edit form to include additional fields used.
+   - add more 'annal:field_entity_type' constraints for fields that are intended to be used only with specific entity types (e.g. fields, views, etc.)
    - cross-field default values; e.g. field type defines default for value type via field description
    / add "new field" logic to entity edit POST handler
    - update to Django 1.7 and re-work field rendering (use code rather than templates?  simplify context generation?)

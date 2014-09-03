@@ -130,13 +130,17 @@ class EntitySelector(object):
     or as a predicater applied to a single entity.
 
     >>> e  = { 'p:a': '1', 'p:b': '2', 'p:c': '3', '@type': ["http://example.com/type", "foo:bar"] }
-    >>> c  = {}
+    >>> c  = { 'view': { 'v:a': '1', 'v:b': ['2', '3'] } }
     >>> f1 = "'1' == [p:a]"
     >>> f2 = "[p:a]=='2'"
     >>> f3 = ''
     >>> f4 = "'http://example.com/type' in [@type]"
     >>> f5 = "'foo:bar' in [@type]"
     >>> f6 = "'bar:foo' in [@type]"
+    >>> f7 = "[p:a] in view[v:a]"
+    >>> f8 = "[p:b] in view[v:b]"
+    >>> f9 = "[p:a] in view[v:b]"
+    >>> f10 = "[annal:field_entity_type] in view[annal:record_type]"
     >>> EntitySelector(f1).select_entity(e, c)
     True
     >>> EntitySelector(f2).select_entity(e, c)
@@ -149,6 +153,14 @@ class EntitySelector(object):
     True
     >>> EntitySelector(f6).select_entity(e, c)
     False
+    >>> EntitySelector(f7).select_entity(e, c)
+    True
+    >>> EntitySelector(f8).select_entity(e, c)
+    True
+    >>> EntitySelector(f9).select_entity(e, c)
+    False
+    >>> EntitySelector(f10).select_entity(e, c)
+    True
     """
     def __init__(self, selector):
         # Returns None if no filter is applied, otherwise a predcicate function
@@ -225,7 +237,7 @@ class EntitySelector(object):
             else:
                 return { 'type': 'unknown', 'name': None, 'field_id': None, 'value': None }
         p_name     = Word(alphas+"_", alphanums+"_")
-        p_id       = Word(alphas+"_@", alphanums+"-.~:/?#@!$&'()*+,;=)")
+        p_id       = Word(alphas+"_@", alphanums+"_-.~:/?#@!$&'()*+,;=)")
         p_val      = ( Group( Literal("[") + p_id + Literal("]") )
                      | Group( p_name + Literal("[") + p_id + Literal("]") )
                      | Group( QuotedString('"', "\\") )
@@ -271,7 +283,7 @@ class EntitySelector(object):
         #
         def get_context(name, field_id):
             def get_context_f(e, c):
-                if name in c:
+                if name in c and c[name]:
                     return c[name].get(field_id, None)
                 return None
             return get_context_f
