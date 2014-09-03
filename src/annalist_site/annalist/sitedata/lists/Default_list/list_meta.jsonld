@@ -1,4 +1,4 @@
-{ "@id":                        "./"
+{ "@id":                        "annal:display/Default_list"
 , "@type":                      ["annal:List"]
 , "annal:id":                   "Default_list"
 , "annal:type_id":              "_list"

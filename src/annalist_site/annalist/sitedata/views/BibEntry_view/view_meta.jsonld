@@ -68,7 +68,6 @@
   , { "annal:field_id":         "Bib_address"
     , "annal:field_placement":  "small:0,12"
     }
-
   , { "annal:field_id":         "Bib_eprint"
     , "annal:field_placement":  "small:0,12"
     }

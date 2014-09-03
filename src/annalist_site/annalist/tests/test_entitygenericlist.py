@@ -60,7 +60,8 @@ from entity_testentitydata          import (
     entitydata_list_type_url, entitydata_list_all_url,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
-    entitylist_form_data
+    entitylist_form_data,
+    get_site_lists
     )
 
 #   -----------------------------------------------------------------------------
@@ -94,13 +95,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         e4 = EntityData.create(self.testdata2, "entity4", 
             entitydata_create_values("entity4", type_id="testtype2")
             )
-        self.initial_list_ids = (
-            [ "Default_list", "Default_list_all"
-            , "Field_list"
-            , "List_list"
-            , "Type_list"
-            , "View_list"
-            ])
+        self.initial_list_ids = get_site_lists()
         return
 
     def tearDown(self):
@@ -153,7 +148,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          None)
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         list_choices = r.context['list_choices']
-        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Default_list_all")
         # Unbound field descriptions
         self.assertEqual(len(r.context['fields']), 3)
@@ -214,7 +209,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         list_choices = r.context['list_choices']
-        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         self.assertEqual(len(r.context['fields']), 3)
@@ -316,7 +311,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['continuation_url'], "")
         list_choices = r.context['list_choices']
-        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         self.assertEqual(len(r.context['fields']), 3)
@@ -350,7 +345,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         self.assertEqual(r.context['search_for'],       "Bib_")
         list_choices = r.context['list_choices']
-        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         self.assertEqual(len(r.context['fields']), 3)
@@ -409,7 +404,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
         list_choices = r.context['list_choices']
-        self.assertEqual(list(list_choices.options),    self.initial_list_ids)
+        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         return
 

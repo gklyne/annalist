@@ -255,49 +255,58 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Update selector syntax and sitedata
        / Use EntityFinder logic in enumeration selection (FieldDescription.py)
        / Add view context to FieldDescription
-       - Introduce biblio record type
-       - Declare additional/multiple types for entity?
+       / Introduce biblio record type
+       / Introduce biblio record list
+       / Update test cases
+       - Add fields to restrict bib_* fields to BibEntry views
+           - Declare additional/multiple types for entity?
        - Update test cases
-9. Prepare for release
+       - Field name updates (field_render, value_type)
+       - Update test cases
+9. Prepare for release 0.1
+   - feature freeze
    - version identifier in system
    - remove dead code
-   - review TODOs
    - installation package
    - documentation, online help text
    - test with Django 1.7
    - demo video
    - demo deployment
-10. Extend form-generator
+10. Review
+   - review use of "@id" fields - use local URL or fixed URI?
+   - review TODOs
+   - review URI for delete type/view/list confirmation
+   - review field names used in sitedata
+   - review record list description form (create data and configure URIs)
+   - review record view description form (create data and configure URIs)
+   - review field description form (create data and configure URIs)
+11. Extend form-generator
    / Support repeated field group (to support RecordView and BibJSON)
    - Support alternate displays for different subtypes (to support BibJSON)
    - New render types: number, date, ...
    - Options for scoping enumerations (e.g. fields by record_type); select entries with field matching value from containing form?  The goal here is to prevent (say) the Bib_* field entries swamping new view definition options.
    - Blob and file upload/linking support: images, spreadsheets, ...
    - Implement "add repeating field" option to view edit (and entity view?)
-11. Read-only entity data view
+12. Read-only entity data view
    - based on generic entity edit view, but using different render field options
    - update URI dispatching
    - include default view
-12. Code improvement - general
+13. Code improvement - general
    - Support import types/views/lists/fields/etc. from another collection
-   - review URI for delete type/view/list confirmation
    ? align type ID values used in local URI construction with type URIs/CURIEs
    - implement full authorization structure (currently just requires authentication for any changes).  Update "no_login" test cases accordingly.
    - improve authorization failure messages cf. AnnalistGenericView.authorize, .form_action_auth, displayinfo.check_authorization, entityedit.save_entity, etc.
    - Identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
-13. Code improvement - lists
+14. Code improvement - lists
    / move invocation of authentication to the immediate response handler code?
    / refactor list description access out of context handling code (avoid multiple reads)
    / refactor code from entityeditbase into more specific views where possible
    / rename what is left of entityeditbase -> entityviewbase, or move to generic module
    - use proper indexing to accelerate search (maybe later?)
-14. Code improvement - views
+15. Code improvement - views
    / where possible, migrate methods from editentitybase to subclasses
    / review logic - ideally, form handlers will access data from form, then hand off for processing
-   - review record view description form (create data and configure URIs)
-   - review field description form (create data and configure URIs)
    - cross-field default values; e.g. field type defines default for value type via field description
-   - review record list description form (create data and configure URIs)
    / add "new field" logic to entity edit POST handler
    - update to Django 1.7 and re-work field rendering (use code rather than templates?  simplify context generation?)
    - Enumeration type for value types (text, longtext, etc...); use in fields display
@@ -306,13 +315,13 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        - Possible candidate for new render type?
        - Consider possibly allowing user to add new type URIs, and then using enumeration field?
        - How to handle selection vs rendering?  May need different enumeration option.
-15. Display enhancements
+16. Display enhancements
    / add type links to list view (link to typed list view...?)
        / Update field in default list displays
    / list_view response handler (needs generic view to make sense; view button to redisplay)
-16. Grid view
+17. Grid view
    - to be planned
-17. Generic entity selector (based on canned sparql expressions?)
+18. Generic entity selector (based on canned sparql expressions?)
    / initial, simple non-SPARQL implementation in place - can revisit later
 
 

@@ -140,8 +140,9 @@ class RecordListTest(AnnalistTestCase):
         self.assertEqual(set(td.keys()), set(recordlist_load_keys()))
         v = recordlist_read_values(list_id="Default_list")
         v.update(
-            { 'rdfs:label':     'List one type'
-            , 'rdfs:comment':   'Default list of entities of given type'
+            { '@id':            "annal:display/Default_list"
+            , 'rdfs:label':     "List one type"
+            , 'rdfs:comment':   "Default list of entities of given type"
             , 'annal:uri':      "annal:display/Default_list"
             })
         self.assertDictionaryMatch(td, v)
