@@ -82,7 +82,7 @@ annalist.sublime*
 /anenv
 /setupenv
 /src/annalist_root/devel
-/src/annalist_root/test/data
+/src/annalist_root/sampledata/data
 /src/build
 /src/dist
 /src/*.egg-info

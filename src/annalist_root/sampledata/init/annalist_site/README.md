@@ -1,4 +1,4 @@
-src/annalist_root/annalist/test/data/site/
+src/annalist_root/annalist/sampledata/data/site/
 
 This directory contains sample Annalist site data used for testing
 

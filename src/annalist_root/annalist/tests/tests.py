@@ -60,7 +60,7 @@ def createSiteData(src, sitedatasrc, tgt):
 def init_annalist_test_site():
     log.debug("init_annalist_test_site")
     createSiteData(
-        settings.SITE_SRC_ROOT+"/test/init/"+test_layout.SITE_DIR, 
+        settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
         settings.SITE_SRC_ROOT+"/annalist/sitedata",
         TestBaseDir)
     return

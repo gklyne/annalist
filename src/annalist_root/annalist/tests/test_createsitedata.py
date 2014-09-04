@@ -94,7 +94,7 @@ class CreateSiteData(AnnalistTestCase):
 
     def test_CreateDevelSiteData(self):
         createSiteData(
-            settings.SITE_SRC_ROOT+"/test/init/"+test_layout.SITE_DIR, 
+            settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
             settings.SITE_SRC_ROOT+"/annalist/sitedata",
             TestBaseDir)
         develsite = Site("http://localhost:8000/annalist/", TestBaseDir)
@@ -103,7 +103,7 @@ class CreateSiteData(AnnalistTestCase):
 
     def test_CreateTestSiteData(self):
         createSiteData(
-            settings.SITE_SRC_ROOT+"/test/init/"+test_layout.SITE_DIR, 
+            settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
             settings.SITE_SRC_ROOT+"/annalist/sitedata",
             TestBaseDir)
         testsite = Site(TestBaseUri, TestBaseDir)

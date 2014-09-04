@@ -79,7 +79,7 @@ TRACE_FIELD_VALUE   = logging.DEBUG
 ROOT_URLCONF        = 'annalist_site.test_urls'
 
 SETTINGS_MODULE     = __name__
-BASE_DATA_DIR       = SITE_SRC_ROOT+"/test/data"
+BASE_DATA_DIR       = SITE_SRC_ROOT+"/sampledata/data"
 CONFIG_BASE         = os.path.join(os.path.expanduser("~"), ".annalist/")
 
 log.info("Annalist version %s (test configuration)"%(ANNALIST_VERSION))
