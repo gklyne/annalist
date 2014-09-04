@@ -128,7 +128,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
-        # log.info(r.content)
         field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         formrow1 = """
               <!-- editable text field -->

@@ -85,11 +85,11 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertTrue(loggedin)
         self.type_ids   = ['testtype', 'Default_type']
         self.no_options = ['(no options)']
-        self.view_options    = (
+        self.view_options    = sorted(
             [ vid for vid in self.testcoll.child_entity_ids(RecordView, self.testsite) 
                   if vid != "_initial_values"
             ])
-        self.list_options    = (
+        self.list_options    = sorted(
             [ lid for lid in self.testcoll.child_entity_ids(RecordList, self.testsite) 
                   if lid != "_initial_values"
             ])

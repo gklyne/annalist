@@ -253,7 +253,7 @@ class TestEntityTypeSub(Entity):
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
 
-class EntityTest(TestCase):
+class EntityTest(AnnalistTestCase):
     """
     Tests for Entity object interface
     """
@@ -427,18 +427,18 @@ class EntityTest(TestCase):
         e1 = TestEntityType.create(b, "testid1", test_values1)
         e2 = TestEntityType.create(b, "testid2", test_values2)
         eids = list(b.child_entity_ids(TestEntityType))
-        self.assertEqual(eids, ["testid1", "testid2"])
-        es  = b.child_entities(TestEntityType)
-        es1 = es.next()
+        self.assertEqual(sorted(eids), ["testid1", "testid2"])
+        es  = sorted(b.child_entities(TestEntityType), key=(lambda e: e.get_id()))
+        es1 = es[0]
         v1  = es1.get_values()
         # log.info(v1)
         # log.info(test_values1_returned)
         self.assertEqual(set(v1.keys()), set(test_values1_returned.keys()))
-        self.assertEqual(v1, test_values1_returned)
-        es2 = es.next()
+        self.assertDictionaryMatch(v1, test_values1_returned)
+        es2 = es[1]
         v2  = es2.get_values()
         self.assertEqual(set(v2.keys()), set(test_values2_returned.keys()))
-        self.assertEqual(v2, test_values2_returned)
+        self.assertDictionaryMatch(v2, test_values2_returned)
         return
 
     def test_entity_create_remove(self):

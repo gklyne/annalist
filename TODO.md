@@ -270,11 +270,18 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / version identifier in system
    / remove dead code
    / test with Django 1.7
-   - installation package
-   - utility/script for site creation?
+   / installation package
+   / test installation on non-development system
+       / sorting of enumeration lists
+       / sorting of entity lists (by typeid then entityid)
+       / sorting of entity lists enumerated in tests
+       * There could be more test cases that need hardening, but so far all pass on a Linus deployment
+   - utility/script for running tests
+   - utility/script for site creation
+   - utility/script for running server
+   - demo deployment
    - documentation, online help text
    - demo video
-   - demo deployment
 10. Review
    - review use of "@id" fields - use local URL or fixed URI?
    - review TODOs

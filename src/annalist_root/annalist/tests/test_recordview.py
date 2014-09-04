@@ -167,11 +167,11 @@ class RecordViewEditViewTest(AnnalistTestCase):
         loggedin      = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         self.no_options       = ['(no options)']
-        self.field_options    = (
+        self.field_options    = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
                   if fid != "_initial_values"
             ])
-        self.field_options_no_bibentry    = (
+        self.field_options_no_bibentry    = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
                   if fid != "_initial_values" and not fid.startswith("Bib_")
             ])

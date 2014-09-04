@@ -165,11 +165,11 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         loggedin      = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         self.no_options = ['(no options)']
-        self.view_options    = (
+        self.view_options    = sorted(
             [ vid for vid in self.testcoll.child_entity_ids(RecordView, self.testsite) 
                   if vid != "_initial_values"
             ])
-        self.list_options    = (
+        self.list_options    = sorted(
             [ lid for lid in self.testcoll.child_entity_ids(RecordList, self.testsite) 
                   if lid != "_initial_values"
             ])

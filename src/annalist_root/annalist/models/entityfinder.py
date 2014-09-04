@@ -96,6 +96,18 @@ class EntityFinder(object):
             entities = self.search_entities(entities, search)
         return entities
 
+    def get_entities_sorted(self, type_id=None, context={}, search=None):
+        def entity_sort_key(e):
+            type_id   = e.get_type_id() 
+            entity_id = e.get_id()
+            key = ( 0 if type_id.startswith('_')   else 1, type_id, 
+                    0 if entity_id.startswith('_') else 1, entity_id
+                  )
+            # log.info(key)
+            return key
+        entities = self.get_entities(type_id=type_id, context=context, search=search)
+        return sorted(entities, key=entity_sort_key)
+
     @classmethod
     def entity_contains(cls, e, search):
         """

@@ -263,7 +263,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][2]['field_value'], field_render)
-        self.assertEqual(r.context['fields'][2]['options'], self.render_options)
+        self.assertEqual(set(r.context['fields'][2]['options']), set(self.render_options))
         # 4th field - Label
         field_label_help = (
             "Short string used to label value in form display, or as heading of list column"
