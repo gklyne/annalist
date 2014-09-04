@@ -1,22 +1,23 @@
-# Personal deployment (same host) settings
+# Development settings
 #
-# Data is kept in personal directory area
-# Service configuration is kept under personal home directory
+# Data is kept within the project directory
+# (initialize as required, e.g. by copying initial testdata)
+# Service configuration is kept under personal home directory to protect secret keys, etc
 #
 
 from common import *
 
 SETTINGS_MODULE = __name__
-BASE_DATA_DIR   = os.path.expanduser("~")
+BASE_DATA_DIR   = SITE_SRC_ROOT+"/devel"
 CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-TEMPLATE_DEBUG = False
+DEBUG = True
+TEMPLATE_DEBUG = True
 
 import logging
 log = logging.getLogger(__name__)
-log.info("Annalist vertsion %s (personal configuration)"%(ANNALIST_VERSION))
+log.info("Annalist version %s (development configuration)"%(ANNALIST_VERSION))
 log.info("SETTINGS_MODULE: "+SETTINGS_MODULE)
 log.info("BASE_DATA_DIR:   "+BASE_DATA_DIR)
 log.info("CONFIG_BASE:     "+CONFIG_BASE)

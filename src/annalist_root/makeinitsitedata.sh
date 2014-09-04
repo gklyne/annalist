@@ -1,5 +1,9 @@
 # update test data in test/init directory
-BASEDIR=/Users/graham/workspace/github/gklyne/annalist/src/annalist_site
+
+# BASEDIR=/Users/graham/workspace/github/gklyne/annalist/src/annalist_root
+
+# See: http://stackoverflow.com/questions/59895/
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 rm -rf $BASEDIR/test/init/annalist_site/c
 python manage.py test annalist.tests.test_createsitedata.CreateSiteData.test_CreateTestSiteData

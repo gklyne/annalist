@@ -245,7 +245,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Update/add tests cases
        / development test site is broken - why?  Isolate problem in test before fixing.
    / allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
-   - Don't show Bib_* fields for non-biblio record types 
+   / Don't show Bib_* fields for non-biblio record types 
        x Move Bib_* fields to separate "built-in" collection
        x Can enumeration-like logic be used to support sub-areas in site data?
        * Long term is to move Bib_ field types out of site data, and provide easy way to incorporate library fragments into new collections, but for now they are part of the test environment.  See below.
@@ -266,12 +266,13 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Use field selector in FieldDescription
        / Update test cases
 9. Prepare for release 0.1
-   - feature freeze
-   - version identifier in system
-   - remove dead code
+   / feature freeze
+   / version identifier in system
+   / remove dead code
+   / test with Django 1.7
    - installation package
+   - utility/script for site creation?
    - documentation, online help text
-   - test with Django 1.7
    - demo video
    - demo deployment
 10. Review
@@ -295,21 +296,23 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    - include default view
 13. Code improvement - general
    - Support import types/views/lists/fields/etc. from another collection
-   ? align type ID values used in local URI construction with type URIs/CURIEs
-   - implement full authorization structure (currently just requires authentication for any changes).  Update "no_login" test cases accordingly.
-   - improve authorization failure messages cf. AnnalistGenericView.authorize, .form_action_auth, displayinfo.check_authorization, entityedit.save_entity, etc.
+   / Rename src/analist_site to src/annalist.  Code should not be affected, but some scripts/config files may need adjusting.
+   ? Align type ID values used in local URI construction with type URIs/CURIEs
+   - Implement full authorization structure (currently just requires authentication for any changes).  Update "no_login" test cases accordingly.
+   - Improve authorization failure messages cf. AnnalistGenericView.authorize, .form_action_auth, displayinfo.check_authorization, entityedit.save_entity, etc.
    - Identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
 14. Code improvement - lists
    / move invocation of authentication to the immediate response handler code?
    / refactor list description access out of context handling code (avoid multiple reads)
    / refactor code from entityeditbase into more specific views where possible
    / rename what is left of entityeditbase -> entityviewbase, or move to generic module
-   - use proper indexing to accelerate search (maybe later?)
+   - use proper indexing to accelerate search. (ElasticSearch or Jena?)
 15. Code improvement - views
    / where possible, migrate methods from editentitybase to subclasses
    / review logic - ideally, form handlers will access data from form, then hand off for processing
    - extend view edit form to include additional fields used in sitedata
    - extend field edit form to include additional fields used.
+   - note that field selector field enumerations use the currently saved value of the target record type: dynanic changes inthe forkm won't cause immediate updates to the selector drop-downs.  Maybe this should be enhanced using Javascript and hiding values rather than suppressing them?  (low priority)
    - add more 'annal:field_entity_type' constraints for fields that are intended to be used only with specific entity types (e.g. fields, views, etc.)
    - cross-field default values; e.g. field type defines default for value type via field description
    / add "new field" logic to entity edit POST handler
@@ -445,7 +448,7 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
 * Define on-disk structure
     * Directories
     * Files
-    * See https://github.com/gklyne/annalist/blob/develop/src/annalist_site/annalist/layout.py
+    * See https://github.com/gklyne/annalist/blob/develop/src/annalist_root/annalist/layout.py
     * @@NOTE: wean off direct directory access and use HTTP
 * Define data access internal API details for web site
   * First cut in progress

@@ -76,15 +76,15 @@ Note that minimal; information associated with a record type - presentational ra
 
 [http://localhost:8000/annalist/c/coll1/d/type1/entity1/!edit](http://localhost:8000/annalist/c/coll1/d/type1/entity1/!edit)
 
-This form is entitely data driven.  Cf. `src/annalist_site/annalist/sitedata/views/Default_view/view_meta.jsonld`.
+This form is entitely data driven.  Cf. `src/annalist_root/annalist/sitedata/views/Default_view/view_meta.jsonld`.
 
 See also (Manualm URI; this navigation is not yet implemented):
 
 [http://localhost:8000/annalist/c/coll1/v/BibEntry_view/type1/entity1/!edit](http://localhost:8000/annalist/c/coll1/v/BibEntry_view/type1/entity1/!edit)
 
-and its view definition `src/annalist_site/annalist/sitedata/views/BibEntry_view/view_meta.jsonld`.
+and its view definition `src/annalist_root/annalist/sitedata/views/BibEntry_view/view_meta.jsonld`.
 
-The underlying stored data is JSON-LD (or will be) - cf. `src/annalist_site/devel/annalist_site/c/coll1/d/type1/entity1/entity-data.jsonld`.
+The underlying stored data is JSON-LD (or will be) - cf. `src/annalist_root/devel/annalist_site/c/coll1/d/type1/entity1/entity-data.jsonld`.
 
 Views (not types) define structure in data.  Different views may expose different structure in the same data.  The BibJSON example is incomplete: I still need to add alternative- and repeat subgroup displays to capture the full richness of BibJSON.
 

@@ -35,8 +35,8 @@ These instructions are my attempt to capture the steps to get a development copy
     # Create Python virtualenv for testing Annalist
     virtualenv -p python2.7 anenv
     source anenv/bin/activate
-    pip install -r src/annalist_site/requirements/devel.txt 
-    cd src/annalist_site/
+    pip install -r src/annalist_root/requirements/devel.txt 
+    cd src/annalist_root/
 
     # Run tests
     python manage.py test
@@ -44,7 +44,7 @@ These instructions are my attempt to capture the steps to get a development copy
     # Create development site data and run up server
     # To use Google as OAuth2/OpenID Connect provider, register the application as 
     # described in the next section, then:
-    # - Copy project file `src/annalist_site/oauth2/google_oauth2_client_secrets.json.example`
+    # - Copy project file `src/annalist_root/oauth2/google_oauth2_client_secrets.json.example`
     #   to `~/.annalist/providers/google_oauth2_client_secrets.json`
     # - edit `~/.annalist/providers/google_oauth2_client_secrets.json` to include the
     #   application identifier and client secret allocated when the application was
@@ -89,7 +89,7 @@ Annalist uses OAuth2/OpenID Connect authentication to control access to data res
 * The window now displays client id and client secret values.  The button "Download JSON" can be used to download a file that can be used to populate the file `~/.annalist/providers/google_oauth2_client_secrets.json`, but note that Annalist also uses additional field(s) not populated by the Google console.
 
         mkdir -p ~/.annalist/providers
-        cp src/annalist_site/oauth2/google_oauth2_client_secrets.json.example ~/.annalist/providers/
+        cp src/annalist_root/oauth2/google_oauth2_client_secrets.json.example ~/.annalist/providers/
         mv ~/.annalist/providers/google_oauth2_client_secrets.json.example ~/.annalist/providers/google_oauth2_client_secrets.json
         # Now edit the file to include client id and secret values provided by Google
 

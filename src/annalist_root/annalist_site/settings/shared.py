@@ -1,23 +1,22 @@
-# Development settings
+# Shared deployment (separate server host) settings
 #
-# Data is kept within the project directory
-# (initialize as required, e.g. by copying initial testdata)
-# Service configuration is kept under personal home directory to protect secret keys, etc
+# Data is kept under /var directory
+# Configuration is kept under /etc directory
 #
 
 from common import *
 
 SETTINGS_MODULE = __name__
-BASE_DATA_DIR   = SITE_SRC_ROOT+"/devel"
-CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
+BASE_DATA_DIR   = "/var"
+CONFIG_BASE     = "/etc/annalist/"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-TEMPLATE_DEBUG = True
+DEBUG = False
+TEMPLATE_DEBUG = False
 
 import logging
 log = logging.getLogger(__name__)
-log.info("Annalist vertsion %s (development configuration)"%(ANNALIST_VERSION))
+log.info("Annalist version %s (shared service configuration)"%(ANNALIST_VERSION))
 log.info("SETTINGS_MODULE: "+SETTINGS_MODULE)
 log.info("BASE_DATA_DIR:   "+BASE_DATA_DIR)
 log.info("CONFIG_BASE:     "+CONFIG_BASE)

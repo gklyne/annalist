@@ -1,5 +1,9 @@
 # update test data in devel directory.  Data in test/init is remioved and regenerated
-BASEDIR=/Users/graham/workspace/github/gklyne/annalist/src/annalist_site
+# 
+# BASEDIR=/Users/graham/workspace/github/gklyne/annalist/src/annalist_root
+
+# See: http://stackoverflow.com/questions/59895/
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 rm -rf $BASEDIR/test/init/annalist_site/c
 python manage.py test annalist.tests.test_createsitedata.CreateSiteData.test_CreateDevelSiteData
