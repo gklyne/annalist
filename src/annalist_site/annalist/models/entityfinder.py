@@ -141,6 +141,8 @@ class EntitySelector(object):
     >>> f8 = "[p:b] in view[v:b]"
     >>> f9 = "[p:a] in view[v:b]"
     >>> f10 = "[annal:field_entity_type] in view[annal:record_type]"
+    >>> f11 = "foo:bar in [@type]"
+    >>> f12 = "bar:foo in [@type]"
     >>> EntitySelector(f1).select_entity(e, c)
     True
     >>> EntitySelector(f2).select_entity(e, c)
@@ -161,6 +163,10 @@ class EntitySelector(object):
     False
     >>> EntitySelector(f10).select_entity(e, c)
     True
+    >>> EntitySelector(f11).select_entity(e, c)
+    True
+    >>> EntitySelector(f12).select_entity(e, c)
+    False
     """
     def __init__(self, selector):
         # Returns None if no filter is applied, otherwise a predcicate function
@@ -242,6 +248,7 @@ class EntitySelector(object):
                      | Group( p_name + Literal("[") + p_id + Literal("]") )
                      | Group( QuotedString('"', "\\") )
                      | Group( QuotedString("'", "\\") )
+                     | Group( p_id )
                      )
         p_comp     = (Literal("==") | Literal("in"))
         p_selector = ( p_val + p_comp + p_val + StringEnd() )
