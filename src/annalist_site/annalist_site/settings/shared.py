@@ -16,6 +16,7 @@ TEMPLATE_DEBUG = False
 
 import logging
 log = logging.getLogger(__name__)
+log.info("Annalist vertsion %s (shared service configuration)"%(ANNALIST_VERSION))
 log.info("SETTINGS_MODULE: "+SETTINGS_MODULE)
 log.info("BASE_DATA_DIR:   "+BASE_DATA_DIR)
 log.info("CONFIG_BASE:     "+CONFIG_BASE)

@@ -14,7 +14,6 @@ from collections    import OrderedDict, namedtuple
 
 from django.conf                    import settings
 
-# from annalist.models.entity         import EntityRoot, Entity #@@
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
 from render_text                    import RenderText

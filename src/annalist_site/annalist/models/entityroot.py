@@ -239,7 +239,6 @@ class EntityRoot(object):
         3. A tuple is converted to a list
         4. If not already present, the current entity type is added to the list
         """
-        # log.info("types in  %r"%(types,))  #@@
         if types is None:
             types = []
         elif isinstance(types, (tuple, list)):
@@ -248,7 +247,6 @@ class EntityRoot(object):
             types = [types]
         if self._entitytype not in types:
             types.append(self._entitytype)
-        # log.info("types out %r"%(types,))  #@@
         return types
 
     def _save(self):

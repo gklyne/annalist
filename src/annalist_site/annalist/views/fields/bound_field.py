@@ -120,14 +120,6 @@ class bound_field(object):
             cont = self._extras.get("request_url", "")
             if cont:
                 cont = uri_with_params(cont, continuation_params(self._extras))
-                #@@
-                # cont = uri_with_continuation_params(cont, self._extras)
-                # cont = uri_with_params(cont, 
-                #     { 'search':             self._extras.get("search_for") or None
-                #     , 'continuation_url':   self._extras.get("continuation_url") or None
-                #     })
-                #@@
-            # log.info('bound_field.continuation_url %s'%(cont,))  #@@
             return cont
         elif name == "entity_link_continuation":
             return self.entity_link+self.get_continuation_param()

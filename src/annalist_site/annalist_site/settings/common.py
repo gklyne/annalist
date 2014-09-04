@@ -16,6 +16,7 @@ import os
 import django
 import sys
 import logging
+from annalist import __version__
 
 DJANGO_ROOT     = os.path.dirname(os.path.realpath(django.__file__))
 SETTINGS_DIR    = os.path.dirname(os.path.realpath(__file__))
@@ -105,5 +106,7 @@ STATICFILES_DIRS = (
     SITE_SRC_ROOT+"/static/",
     SITE_SRC_ROOT+"/annalist/static/",
 )
+
+ANNALIST_VERSION = __version__
 
 # End.

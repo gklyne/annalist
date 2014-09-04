@@ -31,6 +31,7 @@ import oauth2.views
 
 from utils.ContentNegotiationView   import ContentNegotiationView
 
+import annalist
 from annalist                       import message
 from annalist                       import layout
 from annalist.models.site           import Site
@@ -327,6 +328,7 @@ class AnnalistGenericView(ContentNegotiationView):
         resultdata["auth_update"]   = self.authorize("UPDATE") is None
         resultdata["auth_delete"]   = self.authorize("DELETE") is None
         resultdata["auth_config"]   = self.authorize("CONFIG") is None
+        resultdata["annalist_version"] = annalist.__version__
         template  = loader.get_template(template_name)
         context   = RequestContext(self.request, resultdata)
         log.debug("render_html - data: %r"%(resultdata))
