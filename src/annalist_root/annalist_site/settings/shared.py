@@ -11,8 +11,9 @@ BASE_DATA_DIR   = "/var"
 CONFIG_BASE     = "/etc/annalist/"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-TEMPLATE_DEBUG = False
+DEBUG           = False
+TEMPLATE_DEBUG  = False
+ALLOWED_HOSTS   = ['.annalist.net']     # @@FIXME
 
 import logging
 log = logging.getLogger(__name__)

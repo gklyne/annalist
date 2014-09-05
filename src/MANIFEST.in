@@ -26,3 +26,4 @@ include annalist_root/requirements/*.txt
 include annalist_root/sampledata/*.md
 recursive-include annalist_root/sampledata/data *.md
 recursive-include annalist_root/sampledata/init *.jsonld *.md
+recursive-include annalist_root/sampledata/empty *.jsonld *.md

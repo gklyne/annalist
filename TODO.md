@@ -285,11 +285,14 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / sorting of entity lists enumerated in tests
        * There could be more test cases that need hardening, but so far all pass on a Linus deployment
    - check python version in setup
+   - __init__.py in annalist_root dir causes test failure on Ubuntu 14.04; cf. https://code.djangoproject.com/ticket/22280.   Removing it solves the test case problem, but it was included originally to get the setup.py script to work as intended.  Try removing it and see if we can get kit builder to work.
+   - Login page - link to local Django login & admin pages
    - utility/script for running tests
    - utility/script for site creation
    - utility/script for running server
    - demo deployment
-   - documentation, online help text
+   - documentation
+   - online help text
    - demo video
 10. Review
    - review use of "@id" fields - use local URL or fixed URI?

@@ -23,6 +23,9 @@ from fnmatch import fnmatchcase
 from setuptools import setup, find_packages
 from pip.req import parse_requirements      # See: http://stackoverflow.com/questions/14399534/
 
+if sys.version_info[:2] != (2,7):
+    raise AssertionError("Annalist requires Python 2.7 (found Python %s.%s)"%sys.version_info[:2])
+
 dir_here = os.path.dirname(__file__)
 # sys.path.insert(0, os.path.join(dir_here, "annalist_site"))
 
@@ -81,8 +84,10 @@ setup(
             , 'sampledata/init/annalist_site/c/*/_annalist_collection/types/*/*.jsonld'
             , 'sampledata/init/annalist_site/c/*/_annalist_collection/views/*/*.jsonld'
             , 'sampledata/init/annalist_site/c/*/d/*/*/*.jsonld'
+            , 'sampledata/empty/annalist_site/README.md'
+            , 'sampledata/empty/annalist_site/_annalist_site/*.jsonld'
             , 'sampledata/data/annalist_site/README.md'
-            # , 'sampledata/data/annalist_site/_annalist_site/*.jsonld'
+            , 'sampledata/data/annalist_site/_annalist_site/*.jsonld'
             ]
         , 'annalist_root.annalist':
             [ 'templates/*.html'

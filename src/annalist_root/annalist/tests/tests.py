@@ -30,7 +30,7 @@ TestBasePath    = "/" + settings.TEST_BASE_PATH # e.g. "/testsite"
 TestHostUri     = settings.TEST_HOST_URI        # e.g. "http://test.example.com"
 TestBaseUri     = settings.TEST_BASE_URI        # e.g. "http://test.example.com/testsite"
 
-def createSiteData(src, sitedatasrc, tgt):
+def copySitedata(src, sitedatasrc, tgt):
     """
     Creates a set of Annalist site data by making a copy of a specified
     source tree.
@@ -40,8 +40,8 @@ def createSiteData(src, sitedatasrc, tgt):
     tgt         target directory in which the site data is created
     """
     # Confirm existence of target directory
-    log.debug("createSiteData: src %s"%(src))
-    log.debug("createSiteData: tgt %s"%(tgt))
+    log.debug("copySitedata: src %s"%(src))
+    log.debug("copySitedata: tgt %s"%(tgt))
     assert os.path.exists(src), "Check source directory (%s)"%(src)
     assert os.path.exists(sitedatasrc), "Check site data source directory (%s)"%(sitedatasrc)
     assert tgt.startswith(TestBaseDir)
@@ -59,7 +59,7 @@ def createSiteData(src, sitedatasrc, tgt):
 
 def init_annalist_test_site():
     log.debug("init_annalist_test_site")
-    createSiteData(
+    copySitedata(
         settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
         settings.SITE_SRC_ROOT+"/annalist/sitedata",
         TestBaseDir)

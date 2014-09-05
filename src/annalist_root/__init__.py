@@ -1,5 +1,5 @@
 """
-Annalist site description
+Annalist service files root
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"

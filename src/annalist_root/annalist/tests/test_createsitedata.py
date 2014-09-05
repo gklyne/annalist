@@ -28,7 +28,7 @@ from annalist.models.entitydata     import EntityData
 from annalist.views.defaultedit     import EntityDefaultEditView
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import test_layout, createSiteData
+from tests                          import test_layout, copySitedata
 
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import collection_create_values
@@ -93,7 +93,7 @@ class CreateSiteData(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
 
     def test_CreateDevelSiteData(self):
-        createSiteData(
+        copySitedata(
             settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
             settings.SITE_SRC_ROOT+"/annalist/sitedata",
             TestBaseDir)
@@ -102,7 +102,7 @@ class CreateSiteData(AnnalistTestCase):
         return
 
     def test_CreateTestSiteData(self):
-        createSiteData(
+        copySitedata(
             settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
             settings.SITE_SRC_ROOT+"/annalist/sitedata",
             TestBaseDir)
@@ -118,6 +118,14 @@ class CreateSiteData(AnnalistTestCase):
             testdata, "entity1", 
             entitydata_create_values(testcoll,testtype,"entity1")
             )
+        return
+
+    def test_CreateEmptySiteData(self):
+        copySitedata(
+            settings.SITE_SRC_ROOT+"/sampledata/empty/"+test_layout.SITE_DIR, 
+            settings.SITE_SRC_ROOT+"/annalist/sitedata",
+            TestBaseDir)
+        # develsite = Site("http://localhost:8000/annalist/", TestBaseDir)
         return
 
 # End.
