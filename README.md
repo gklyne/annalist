@@ -3,6 +3,8 @@ annalist
 
 Free-form web data notebook - "Data management for little guys"
 
+_Current status (2014-09-05):  feature freeze for first public prototype release.  Working on installation and setup utilities and documentation._ 
+
 
 Goals
 -----
