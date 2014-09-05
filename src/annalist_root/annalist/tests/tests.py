@@ -1,0 +1,90 @@
+"""
+Annalist tests
+"""
+
+__author__      = "Graham Klyne (GK@ACM.ORG)"
+__copyright__   = "Copyright 2014, G. Klyne"
+__license__     = "MIT (http://opensource.org/licenses/MIT)"
+
+import logging
+log = logging.getLogger(__name__)
+
+import unittest
+import doctest
+import os.path
+import shutil
+
+from django.test import TestCase
+from django.conf import settings
+
+import annalist.util
+import annalist.views.fields.render_utils
+import annalist.views.fields.render_placement
+
+from annalist.layout import Layout
+
+test_layout     = Layout(settings.BASE_DATA_DIR)
+TestBaseDir     = test_layout.SITE_PATH
+TestHost        = settings.TEST_HOST            # e.g. "test.example.com"
+TestBasePath    = "/" + settings.TEST_BASE_PATH # e.g. "/testsite"
+TestHostUri     = settings.TEST_HOST_URI        # e.g. "http://test.example.com"
+TestBaseUri     = settings.TEST_BASE_URI        # e.g. "http://test.example.com/testsite"
+
+def createSiteData(src, sitedatasrc, tgt):
+    """
+    Creates a set of Annalist site data by making a copy of a specified
+    source tree.
+
+    src         source directory containing site collection test data to be copied
+    sitedatasrc source directory containing standard site data to be copied
+    tgt         target directory in which the site data is created
+    """
+    # Confirm existence of target directory
+    log.debug("createSiteData: src %s"%(src))
+    log.debug("createSiteData: tgt %s"%(tgt))
+    assert os.path.exists(src), "Check source directory (%s)"%(src)
+    assert os.path.exists(sitedatasrc), "Check site data source directory (%s)"%(sitedatasrc)
+    assert tgt.startswith(TestBaseDir)
+    shutil.rmtree(tgt, ignore_errors=True)
+    shutil.copytree(src, tgt)
+    sitedatatgt = os.path.join(tgt, test_layout.SITEDATA_DIR)
+    for sdir in ("types", "lists", "views", "fields", "enums"):
+        s = os.path.join(sitedatasrc, sdir)
+        d = os.path.join(sitedatatgt, sdir)
+        shutil.copytree(s, d)
+    # Confirm existence of target directory
+    assert os.path.exists(tgt), "checking target directory created (%s)"%(tgt)
+    assert os.path.exists(sitedatatgt), "checking target sitedata directory created (%s)"%(sitedatatgt)
+    return tgt
+
+def init_annalist_test_site():
+    log.debug("init_annalist_test_site")
+    createSiteData(
+        settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
+        settings.SITE_SRC_ROOT+"/annalist/sitedata",
+        TestBaseDir)
+    return
+
+def load_tests(loader, tests, ignore):
+    log.debug("load_tests")
+    #init_annalist_test_site()
+    # See http://stackoverflow.com/questions/2380527/django-doctests-in-views-py
+    tests.addTests(doctest.DocTestSuite(annalist.util))
+    tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_utils))
+    tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))
+    tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_placement))
+    tests.addTests(doctest.DocTestSuite(annalist.models.entityfinder))
+    return tests
+
+# Test helper functions
+
+def unicode_to_str(u):
+    return str(u) if isinstance(u, unicode) else u
+
+def tuple_to_str(t):
+    return tuple((unicode_to_str(v) for v in t))
+
+def dict_to_str(d):
+    return dict(map(tuple_to_str, d.items()))
+
+# End.

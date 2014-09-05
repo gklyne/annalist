@@ -1,5 +1,13 @@
 # Annalist TODO
 
+   - proposed activity
+   > in progress
+   / completed
+   x rejected
+   * additional note
+
+
+
 ## Initial web application outline plan
 
 Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/mockup
@@ -245,7 +253,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Update/add tests cases
        / development test site is broken - why?  Isolate problem in test before fixing.
    / allow '//' comments in JSON files - strip out before parsing JSON (but leave blank lines)
-   - Don't show Bib_* fields for non-biblio record types 
+   / Don't show Bib_* fields for non-biblio record types 
        x Move Bib_* fields to separate "built-in" collection
        x Can enumeration-like logic be used to support sub-areas in site data?
        * Long term is to move Bib_ field types out of site data, and provide easy way to incorporate library fragments into new collections, but for now they are part of the test environment.  See below.
@@ -266,14 +274,23 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / Use field selector in FieldDescription
        / Update test cases
 9. Prepare for release 0.1
-   - feature freeze
-   - version identifier in system
-   - remove dead code
-   - installation package
-   - documentation, online help text
-   - test with Django 1.7
-   - demo video
+   / feature freeze
+   / version identifier in system
+   / remove dead code
+   / test with Django 1.7
+   / installation package
+   / test installation on non-development system
+       / sorting of enumeration lists
+       / sorting of entity lists (by typeid then entityid)
+       / sorting of entity lists enumerated in tests
+       * There could be more test cases that need hardening, but so far all pass on a Linus deployment
+   - check python version in setup
+   - utility/script for running tests
+   - utility/script for site creation
+   - utility/script for running server
    - demo deployment
+   - documentation, online help text
+   - demo video
 10. Review
    - review use of "@id" fields - use local URL or fixed URI?
    - review TODOs
@@ -286,7 +303,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / Support repeated field group (to support RecordView and BibJSON)
    - Support alternate displays for different subtypes (to support BibJSON)
    - New render types: number, date, ...
-   - Options for scoping enumerations (e.g. fields by record_type); select entries with field matching value from containing form?  The goal here is to prevent (say) the Bib_* field entries swamping new view definition options.
+   / Options for scoping enumerations (e.g. fields by record_type); select entries with field matching value from containing form?  The goal here is to prevent (say) the Bib_* field entries swamping new view definition options.
    - Blob and file upload/linking support: images, spreadsheets, ...
    - Implement "add repeating field" option to view edit (and entity view?)
 12. Read-only entity data view
@@ -295,21 +312,23 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    - include default view
 13. Code improvement - general
    - Support import types/views/lists/fields/etc. from another collection
-   ? align type ID values used in local URI construction with type URIs/CURIEs
-   - implement full authorization structure (currently just requires authentication for any changes).  Update "no_login" test cases accordingly.
-   - improve authorization failure messages cf. AnnalistGenericView.authorize, .form_action_auth, displayinfo.check_authorization, entityedit.save_entity, etc.
+   / Rename src/analist_site to src/annalist.  Code should not be affected, but some scripts/config files may need adjusting.
+   ? Align type ID values used in local URI construction with type URIs/CURIEs
+   - Implement full authorization structure (currently just requires authentication for any changes).  Update "no_login" test cases accordingly.
+   - Improve authorization failure messages cf. AnnalistGenericView.authorize, .form_action_auth, displayinfo.check_authorization, entityedit.save_entity, etc.
    - Identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
 14. Code improvement - lists
    / move invocation of authentication to the immediate response handler code?
    / refactor list description access out of context handling code (avoid multiple reads)
    / refactor code from entityeditbase into more specific views where possible
    / rename what is left of entityeditbase -> entityviewbase, or move to generic module
-   - use proper indexing to accelerate search (maybe later?)
+   - use proper indexing to accelerate search. (ElasticSearch or Jena?)
 15. Code improvement - views
    / where possible, migrate methods from editentitybase to subclasses
    / review logic - ideally, form handlers will access data from form, then hand off for processing
    - extend view edit form to include additional fields used in sitedata
    - extend field edit form to include additional fields used.
+   - note that field selector field enumerations use the currently saved value of the target record type: dynanic changes inthe forkm won't cause immediate updates to the selector drop-downs.  Maybe this should be enhanced using Javascript and hiding values rather than suppressing them?  (low priority)
    - add more 'annal:field_entity_type' constraints for fields that are intended to be used only with specific entity types (e.g. fields, views, etc.)
    - cross-field default values; e.g. field type defines default for value type via field description
    / add "new field" logic to entity edit POST handler
@@ -354,8 +373,8 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
 - think about handling of identifier renaming (re-write data, record equivalence, or ...).  (See also "data storage" below.)
    - when renaming through edit form, update URI if it corresponds to previous ID??
    - need to think about maintaining a list of correspopnding URIs?
-- Use server-internal revectoring?  What about delete multiple?
-- currently there's some inconsistency about this: confirm views are rendered directly (as this allows form parameters to be provided directly), but other form action links are handled by redirection.  Try to be more consistent about this?  Create a more general pattern for handling continuation forms?    Note: redirect means that different view GET function signatures, with values provided in the request URI, are handled in generic fashion.  POST views are more easily handled directly with form parameters as supplied dictionary
+   - Use server-internal revectoring?  What about delete multiple?
+   - currently there's some inconsistency about this: confirm views are rendered directly (as this allows form parameters to be provided directly), but other form action links are handled by redirection.  Try to be more consistent about this?  Create a more general pattern for handling continuation forms?    Note: redirect means that different view GET function signatures, with values provided in the request URI, are handled in generic fashion.  POST views are more easily handled directly with form parameters as supplied dictionary
 - move util.py to utils package, and rename?
 - look into using named tuples instead of dictionaries for rendering
   - cf. http://stackoverflow.com/questions/1336791/
@@ -445,7 +464,7 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
 * Define on-disk structure
     * Directories
     * Files
-    * See https://github.com/gklyne/annalist/blob/develop/src/annalist_site/annalist/layout.py
+    * See https://github.com/gklyne/annalist/blob/develop/src/annalist_root/annalist/layout.py
     * @@NOTE: wean off direct directory access and use HTTP
 * Define data access internal API details for web site
   * First cut in progress
@@ -455,111 +474,3 @@ x can "Confirm" form continue to a DELETE operation?  Can forms reliably do this
 * Implement data access API details
   * Mostly straight HTTP GET, etc.  (Need to investigate access and event linkage - currently using direct file access for concept demonstrator.)
 
-
-# Notes
-
-## List of types found
-
-"annal:Identifier"
-"annal:List"
-"annal:List_display_type"
-"annal:Longtext"
-"annal:Placement"
-"annal:RenderType"
-"annal:Slug"
-"annal:Text"
-"annal:Type"
-"annal:View"
-
-
-## Rendering of entity type on form; rationalize rendering logic
-
-(Changes made as described below)
-
-### Form field rendering for GET
-
-  get:
-
-        entity = self.get_entity(viewinfo.entity_id, typeinfo, action, entity_initial_values)
-
-        return self.form_render(viewinfo, entity, add_field, continuation_uri)
-
-  form_render(self, viewinfo, entity, add_field, continuation_uri):
-
-        viewcontext = entityvaluemap.map_value_to_context(entity, ...)
-
-So, in this case, values are provided as a genuine entity with proper entity_type, etc.
-
-### Form re-rendering for POST
-
-  post:
-        return self.form_response(
-            viewinfo,
-            entity_id, orig_entity_id, 
-            entity_type, orig_entity_type,
-            messages, context_extra_values
-            )
-
-  form_response(self, viewinfo, 
-                entity_id, orig_entity_id, entity_type, orig_entity_type, 
-                messages, context_extra_values):
-
-        return self.form_re_render(entityvaluemap, form_data, context_extra_values, ...)
-
-        form_context = entityvaluemap.map_form_data_to_context(form_data, ...)
-
-  map_form_data_to_context(self, form_data, **kwargs):
-
-        entityvals = self.map_form_data_to_values(form_data)
-
-        context = self.map_value_to_context(entityvals, **kwargs)
-
-In this case, values are provided as a dictionary without proper entity_type, etc.
-
-### Solution
-
-Simplify bound_field so that it works with entity values supplied as a dictionary only.
-
-Vaues may be 1:1 with stored entity values keyed by CURIE or URI, or may be special keys
-that access entity parameters unrelated to the field being rendered, or field parameters
-unrelated to the entity being processed.
-
-A special case is 'field_value' which uses a field definition to select a value from
-the entity data.  Special cases of field_value are 'entity_id', 'entity_type[_id?]' and 'annal:type'.  The first two are clearly bound to the entity access logic.  The third works as a synonym for 'entity_type', so that when an entity is rendered its type drop-down is initialized to the stored 'annal:type' value.
-
-In code paths that supply values from an entity, the special fields should be added to the
-entity values dictionary so they can be referenced directly.  All code paths should add 
-special values to the entity values dictionary as needed.
-
-(later) Options should be re-worked as a more generic entity reference that enumerates 
-the target entity ids on the fly as required, using type information in the field definition.
-
-
-## Handling of entity URI (cf. for Type records)
-
-When creating new type, URI should be based on ID entered, but possible to override by user.  Set URI when saving rather than when creating? (Partially works).
-
-(Changes made as described below)
-
-### Current processing and thoughts
-
-Uses annal:uri property, which is overloaded as an arbitrary entity locator, which in turn gets some special treatment.  This means the type identifier is bound to its Annalist location, which is OK as a default but not always what is required.
-
-Could use a different property URI, and think about generic way to default value on save based on other fields?
-
-Type URI processing involves the following methods:
-
-    - entityvaluemap.map_form_data_to_values
-    - kmap.map_form_to_entity(form_data)
-    - Fieldvaluemap.map_form_to_entity looks like the place to intervene; self.f is a field description.
-    - FieldDescription contains information extracted from _field entity on disk.  Could use special form of 'field_default_value', which is currently used by bound_field in views.fields.render_utils?
-
-### Proposed solution
-
-This proposal generalizes the handling of entity location and identifiers to entities other than type descriptions.
-
-    1. Rename annal:uri to annal:url with current special-case processing logic (to emphasize its role as locator).
-    2. Remove any saved 'annal:uri' values in sitedata if they are also locators.
-    3. Introduce a new 'annal:uri' field which defaults to annal:url when retrieved, but which may be overridden by user input (if the form used allows this).  On saving, if 'annal:uri' is the same as 'annal:url', don't save it (so that if the entity itself is renamed, its 'annal:uri' value will update accordingly)
-
-  For copy operations, the annal:uri field should be reset as the form is rendered.

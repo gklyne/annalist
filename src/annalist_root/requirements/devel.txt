@@ -1,0 +1,6 @@
+# requirements/devel.txt
+# See: http://www.deploydjango.com/django_project_structure/
+-r common.txt
+beautifulsoup4==4.3.2
+# httpretty==0.7.1
+# django-debug-toolbar==0.9.4

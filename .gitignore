@@ -80,8 +80,9 @@ Thumbs.db
 annalist.sublime*
 /pyenv
 /anenv
-/src/annalist_site/devel
-/src/annalist_site/test/data
+/setupenv
+/src/annalist_root/devel
+/src/annalist_root/sampledata/data
 /src/build
 /src/dist
 /src/*.egg-info

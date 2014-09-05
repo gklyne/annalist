@@ -1,0 +1,13 @@
+# requirements/common.txt
+# See: http://www.deploydjango.com/django_project_structure/
+Django==1.7
+wsgiref==0.1.2
+oauth2client==1.2
+httplib2==0.9
+pyparsing==2.0.2
+# RDF stuff:
+# SPARQLWrapper==1.5.2
+# pyparsing==1.5.7    # Does RDFlib need this?
+# html5lib==1.0b3
+# isodate==0.4.9
+# six==1.4.1
