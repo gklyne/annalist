@@ -16,6 +16,6 @@ import sys
 import logging
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
-log.info("Python path:    "+repr(sys.path))
+log.debug("Python path:    "+repr(sys.path))
 
 # End.
