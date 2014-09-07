@@ -16,6 +16,8 @@ This utility provides features for creating and managing annalist instrallations
 
     annalist-manager runserver
 
+    annalist-manager idprovider ...
+
 
 # Command options
 

@@ -92,7 +92,7 @@ class AnnalistGenericView(ContentNegotiationView):
             self._site_data = self.site(host=host).site_data()
         if not self._site_data:
             log.error("views.generic.site_data: failed to load site data (%s)"%
-                      self.site(host=host)._dir_path_uri())
+                      self.site(host=host)._dir_path_uri()[1])
         return self._site_data
 
     def error(self, values):

@@ -27,13 +27,13 @@ if sys.version_info[:2] != (2,7):
     raise AssertionError("Annalist requires Python 2.7 (found Python %s.%s)"%sys.version_info[:2])
 
 dir_here = os.path.dirname(__file__)
-# sys.path.insert(0, os.path.join(dir_here, "annalist_site"))
+sys.path.insert(0, os.path.join(dir_here, "annalist_root"))
 
 # Helper to load README.md, etc.
 def read(fname):
     return codecs.open(os.path.join(dir_here, fname)).read()
 
-PACKAGE         = "annalist_root.annalist"
+PACKAGE         = "annalist"
 PACKAGE_MODULE  = __import__(PACKAGE, globals(), locals(), ['__version__', '__author__'])
 VERSION         = PACKAGE_MODULE.__version__
 AUTHOR          = PACKAGE_MODULE.__author__
@@ -106,7 +106,10 @@ setup(
             , 'sitedata/lists/*/*.jsonld'
             , 'sitedata/types/*/*.jsonld'
             , 'sitedata/views/*/*.jsonld'
-            ],
+            ]
+        , 'annalist_root.oauth2':
+            [ 'templates/*.html'
+            ]
         },
     exclude_package_data = {
         '': ['spike/*'] 

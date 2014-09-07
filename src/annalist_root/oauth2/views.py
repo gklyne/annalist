@@ -206,6 +206,7 @@ class LoginUserView(generic.View):
 
     def get(self, request):
         collect_client_secrets()
+        # @@TODO: check PROVIDER_LIST, report error if none here
         # Retrieve request parameters
         continuation = request.GET.get("continuation", "/no-login-continuation/")
         scope        = request.GET.get("scope",        SCOPE_DEFAULT)
