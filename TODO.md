@@ -288,7 +288,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / __init__.py in annalist_root dir causes test failure on Ubuntu 14.04; cf. https://code.djangoproject.com/ticket/22280.   Removing it solves the test case problem, but it was included originally to get the setup.py script to work as intended.  Try removing it and see if we can get kit builder to work.
    / Login page - link to local Django login & admin pages
    / Fix profile display with local credentials
-   - Logged-in username should appear in top menu; e.g. xxxx profile or xxxx: profile logout
+   / Logged-in username should appear in top menu; e.g. xxxx profile or xxxx: profile logout
    - root URI - redirect to /annalist/site/
    - utility/script for running tests
    - utility/script for site creation

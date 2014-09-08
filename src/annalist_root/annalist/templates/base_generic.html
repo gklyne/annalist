@@ -53,7 +53,9 @@
         <ul class="right">
           {% if not suppress_user %}
             {% if user.is_authenticated %}
-              <li class="active"><a href="{% url 'AnnalistProfileView' %}">Profile</a></li>
+              <li class="active">
+                <a href="{% url 'AnnalistProfileView' %}">User {{ user.username }}</a>
+              </li>
               <li class="active"><a href="{% url 'LogoutUserView' %}">Logout</a></li>
             {% else %}
               <li class="active"><a href="{% url 'AnnalistProfileView' %}">Login</a></li>
