@@ -289,11 +289,11 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / Login page - link to local Django login & admin pages
    / Fix profile display with local credentials
    / Logged-in username should appear in top menu; e.g. xxxx profile or xxxx: profile logout
-   - root URI - redirect to /annalist/site/
+   / root URI - redirect to /annalist/site/
    - utility/script for running tests
    - utility/script for site creation
    - utility/script for running server
-   - need to setup OpenIDConnect providers
+   - how to setup OpenIDConnect providers
    - demo deployment
    - documentation
    - online help text
