@@ -284,9 +284,12 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / sorting of entity lists (by typeid then entityid)
        / sorting of entity lists enumerated in tests
        * There could be more test cases that need hardening, but so far all pass on a Linus deployment
-   - check python version in setup
+   / check python version in setup
    / __init__.py in annalist_root dir causes test failure on Ubuntu 14.04; cf. https://code.djangoproject.com/ticket/22280.   Removing it solves the test case problem, but it was included originally to get the setup.py script to work as intended.  Try removing it and see if we can get kit builder to work.
-   - Login page - link to local Django login & admin pages
+   / Login page - link to local Django login & admin pages
+   / Fix profile display with local credentials
+   - Logged-in username should appear in top menu; e.g. xxxx profile or xxxx: profile logout
+   - root URI - redirect to /annalist/site/
    - utility/script for running tests
    - utility/script for site creation
    - utility/script for running server
@@ -318,6 +321,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    - Support import types/views/lists/fields/etc. from another collection
    / Rename src/analist_site to src/annalist.  Code should not be affected, but some scripts/config files may need adjusting.
    ? Align type ID values used in local URI construction with type URIs/CURIEs
+   - Login continuation should be current page, not always profile
    - Implement full authorization structure (currently just requires authentication for any changes).  Update "no_login" test cases accordingly.
    - Improve authorization failure messages cf. AnnalistGenericView.authorize, .form_action_auth, displayinfo.check_authorization, entityedit.save_entity, etc.
    - Identifier display: try to find label instead of CURIE display; augment sitedata accordingly?

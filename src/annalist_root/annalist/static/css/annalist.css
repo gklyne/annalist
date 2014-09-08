@@ -29,6 +29,11 @@ body > div {
     vertical-align: bottom;
 }
 
+p.djangolinks {
+    font-size: small;
+    color: #666666;
+}
+
 /*
 div.row .row {
     margin: 0 0;
