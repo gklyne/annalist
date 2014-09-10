@@ -40,10 +40,14 @@ def am_runtests(annroot, options):
         print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
     status = am_errors.AM_SUCCESS
+    log.debug("annalist_root: %s"%(annroot))
     with ChangeCurrentDir(annroot):
         # For some reason, tests are not discovered unless run from here
         cmd = "test"
-        subprocess_command = "django-admin %s --pythonpath=%s --settings=%s"%(cmd, annroot, testsettings.modulename)
+        subprocess_command = (
+            "django-admin %s --pythonpath=%s --settings=%s --top-level-directory=%s"%
+            (cmd, annroot, testsettings.modulename, annroot)
+            )
         log.debug("am_initialize subprocess: %s"%subprocess_command)
         # OLD: status = os.system(subprocess_command)
         status = subprocess.call(subprocess_command.split())

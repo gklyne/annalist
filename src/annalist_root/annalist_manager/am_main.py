@@ -20,7 +20,7 @@ import errno
 log = logging.getLogger(__name__)
 
 # if __name__ == "__main__":
-dirhere = os.path.dirname(os.path.abspath(__file__))
+dirhere = os.path.dirname(os.path.realpath(__file__))
 annroot = os.path.dirname(os.path.join(dirhere))
 sys.path.insert(0, annroot)
 # sys.path.insert(0, dirhere)
