@@ -131,6 +131,12 @@
 -->
 {% endblock %}
 
+{% if help_text %}
+  <div class="help">
+    {{ help_text|safe }}
+  </div>
+{% endif %}
+
 <!--
   <div class="footer">
   { % block footer %}

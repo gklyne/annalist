@@ -75,13 +75,45 @@ div.view_label p {
     color: #666666;
 }
 
-dir.row div.column p.caption , div.row div.columns p.caption
+div.row div.column p.caption , div.row div.columns p.caption
 {
     margin-top:  0.25rem;
     margin-left: 0.25rem;
     /*padding: 0.25rem 0;*/
     height: auto;
     font-weight: bold;
+}
+
+div.help > h1 {
+    margin-top: 1rem;
+    border-top: medium solid #CCCCCC;
+    padding-top: 0.75rem;
+    padding-left: 0.75rem;    
+    color: #666666;
+    font-size: 1.25rem;
+}
+
+div.help > h2 {
+    padding-top: 0.75rem;
+    padding-left: 0.75rem;    
+    color: #666666;
+    font-size: 1.125rem;
+}
+
+div.help > h3 {
+    padding-top: 0.5rem;
+    padding-left: 0.75rem;    
+    color: #666666;
+    font-size: 1rem;
+}
+
+div.help > p {
+    margin: 0rem;
+    padding-top: 0.25rem;    
+    padding-bottom: 0.25rem;    
+    padding-left: 0.75rem;    
+    color: #666666;
+    font-size: smaller;
 }
 
 /*

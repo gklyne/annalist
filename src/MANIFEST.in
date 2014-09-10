@@ -11,6 +11,7 @@ include annalist_root/annalist_site/*.md
 include annalist_root/annalist_site/settings/*.py
 recursive-include annalist_root/annalist *.py *.sh *.md *.txt
 recursive-include annalist_root/annalist/templates *.html
+recursive-include annalist_root/annalist/views/help *.md *.html
 recursive-include annalist_root/annalist/static/css *.css
 recursive-include annalist_root/annalist/static/js *.js
 recursive-include annalist_root/annalist/static/images *.png *.jpg

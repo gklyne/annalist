@@ -107,6 +107,10 @@ setup(
             , 'sitedata/types/*/*.jsonld'
             , 'sitedata/views/*/*.jsonld'
             ]
+        , 'annalist_root.annalist.views':
+            [ 'help/*.md'
+            , 'help/*.html'
+            ]
         , 'annalist_root.oauth2':
             [ 'templates/*.html'
             ]

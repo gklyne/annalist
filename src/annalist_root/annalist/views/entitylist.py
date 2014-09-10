@@ -45,6 +45,7 @@ from annalist.views.fields.render_utils import get_entity_values
 # Table used as basis, or initial values, for a dynamically generated entity-value map for list displays
 listentityvaluemap  = (
         [ SimpleValueMap(c='title',                 e=None,                  f=None                  )
+        , SimpleValueMap(c='help_filename',         e=None,                  f=None                  )
         , SimpleValueMap(c='coll_id',               e=None,                  f=None                  )
         , SimpleValueMap(c='type_id',               e=None,                  f=None                  )
         , SimpleValueMap(c='list_id',               e=None,                  f=None                  )
@@ -73,6 +74,7 @@ class EntityGenericListView(AnnalistGenericView):
 
     def __init__(self):
         super(EntityGenericListView, self).__init__()
+        self.help = "entity-list-help"
         return
 
     # Helper functions
@@ -143,7 +145,8 @@ class EntityGenericListView(AnnalistGenericView):
             list_choices          = self.get_list_choices_field(listinfo),
             collection_view       = self.view_uri("AnnalistCollectionView", coll_id=coll_id),
             default_view_id       = listinfo.recordlist['annal:default_view'],
-            default_view_enable   = ("" if list_id else 'disabled="disabled"')
+            default_view_enable   = ("" if list_id else 'disabled="disabled"'),
+            help_filename         = self.help
             )
         # log.debug("EntityGenericListView.get listcontext %r"%(listcontext))
         # Generate and return form data

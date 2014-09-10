@@ -30,6 +30,7 @@ class SiteView(AnnalistGenericView):
     """
     def __init__(self):
         super(SiteView, self).__init__()
+        self.help = "site-help"
         return
 
     # GET
@@ -39,11 +40,13 @@ class SiteView(AnnalistGenericView):
         Create a rendering of the current site home page, containing (among other things)
         a list of defined collections.
         """
+        resultdata = self.site_data()
+        resultdata['help_filename'] = self.help
         # log.info("SiteView.get: site_data %r"%(self.site_data()))
         return (
             self.check_site_data() or
             self.authorize("VIEW") or 
-            self.render_html(self.site_data(), 'annalist_site.html') or 
+            self.render_html(resultdata, 'annalist_site.html') or 
             self.error(self.error406values())
             )
 
@@ -81,11 +84,13 @@ class SiteView(AnnalistGenericView):
             if not new_id:
                 return self.redirect_error(
                     self.view_uri("AnnalistSiteView"), 
-                    error_message=message.MISSING_COLLECTION_ID)
+                    error_message=message.MISSING_COLLECTION_ID
+                    )
             if not util.valid_id(new_id):
                 return self.redirect_error(
                     self.view_uri("AnnalistSiteView"), 
-                    error_message=message.INVALID_COLLECTION_ID%(new_id))
+                    error_message=message.INVALID_COLLECTION_ID%{'coll_id': new_id}
+                    )
             # Create new collection with name and label supplied
             auth_required = self.authorize("CREATE")
             if auth_required:
