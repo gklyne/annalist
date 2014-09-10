@@ -19,11 +19,11 @@ import errno
 
 log = logging.getLogger(__name__)
 
-if __name__ == "__main__":
-    dirhere = os.path.dirname(os.path.abspath(__file__))
-    annroot = os.path.dirname(os.path.join(dirhere))
-    sys.path.insert(0, annroot)
-    # sys.path.insert(0, dirhere)
+# if __name__ == "__main__":
+dirhere = os.path.dirname(os.path.abspath(__file__))
+annroot = os.path.dirname(os.path.join(dirhere))
+sys.path.insert(0, annroot)
+# sys.path.insert(0, dirhere)
 
 import annalist
 

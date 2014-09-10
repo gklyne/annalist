@@ -43,14 +43,14 @@ DESCRIPTION     = "Annalist linked data notebook"
 URL             = "https://github.com/gklyne/annalist"
 
 setup(
-    name=NAME,
-    version=VERSION,
-    description=DESCRIPTION,
-    long_description=read("README.md"),
-    author=AUTHOR,
-    author_email=AUTHOR_EMAIL,
-    license="MIT",
-    url=URL,
+    name = NAME,
+    version = VERSION,
+    description = DESCRIPTION,
+    long_description = read("README.md"),
+    author = AUTHOR,
+    author_email = AUTHOR_EMAIL,
+    license = "MIT",
+    url = URL,
     packages = 
         [ 'annalist_root'
           , 'annalist_root.annalist'
@@ -60,6 +60,7 @@ setup(
             , 'annalist_root.annalist.tests'
           , 'annalist_root.annalist_site'
             , 'annalist_root.annalist_site.settings'
+          , 'annalist_root.annalist_manager'
           , 'annalist_root.utils'
           , 'annalist_root.oauth2'
           , 'annalist_root.miscutils'
@@ -121,7 +122,8 @@ setup(
     data_files = 
         [
         ],
-    classifiers=[
+    classifiers=
+        [
         "Development Status :: 3 - Alpha",
         "Environment :: Web Environment",
         "Intended Audience :: Developers, Researchers",
@@ -129,8 +131,8 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         ],
-    zip_safe=False,
-    install_requires=
+    zip_safe = False,
+    install_requires =
         [ 'Django==1.7'
           , 'wsgiref==0.1.2'
         , 'oauth2client==1.2'
@@ -145,25 +147,13 @@ setup(
         # , 'html5lib==1.0b3'
         # , 'isodate==0.4.9'
         # , 'six==1.4.1'
-        ]
-
-    # entry_points = {
-    #     'console_scripts': [
-    #         ],
-    #     },
+        ],
+    entry_points =
+        {
+        'console_scripts':
+            [ 'annalist-manager = annalist_root.annalist_manager.am_main:runMain',
+            ]
+        }
     )
 
-
-# (Leftover from previous setup?)
-# standard_exclude = ["*.py", "*.pyc", "*$py.class", "*~", ".*", "*.bak"]
-# standard_exclude_directories = [
-#     ".*", "CVS", "_darcs", "./build", "./dist", "EGG-INFO", "*.egg-info"
-# ]
-
-
-# # parse_requirements() returns generator of pip.req.InstallRequirement objects
-# # reqs is a list of requirement; e.g. ['django==1.5.1', 'mezzanine==1.4.6']
-# install_reqs = parse_requirements(os.path.join(dir_here, "requirements/devel.txt"))
-# reqs         = [str(ir.req) for ir in install_reqs]
-
-
+# End.

@@ -290,13 +290,14 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / Fix profile display with local credentials
    / Logged-in username should appear in top menu; e.g. xxxx profile or xxxx: profile logout
    / root URI - redirect to /annalist/site/
-   - utility/script for running tests
-   - utility/script for site creation
-   - utility/script for running server
-   - how to setup OpenIDConnect providers
+   / utility/script for running tests
+   / utility/script for site creation
+   / utility/script for running server
+   - script registration for annalist-manager
+   / online help text (initial)
+   - how to setup OpenIDConnect providers - move to separate document
    - demo deployment
    - documentation
-   - online help text
    - demo video
 10. Review
    - review use of "@id" fields - use local URL or fixed URI?
@@ -325,6 +326,10 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    - Implement full authorization structure (currently just requires authentication for any changes).  Update "no_login" test cases accordingly.
    - Improve authorization failure messages cf. AnnalistGenericView.authorize, .form_action_auth, displayinfo.check_authorization, entityedit.save_entity, etc.
    - Identifier display: try to find label instead of CURIE display; augment sitedata accordingly?
+   - Create configuration for shared deployment behind (say) Apache server
+   - Clean up code for site data creation, rarher than using a hacked test case
+   - Home page: options to edit collection id, label and site description
+   - Use "collectstatic" for non-test, non-development deployments, even when using Django static file serving.
 14. Code improvement - lists
    / move invocation of authentication to the immediate response handler code?
    / refactor list description access out of context handling code (avoid multiple reads)

@@ -1,5 +1,5 @@
 """
-Annalist tests
+Annalist manager
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"

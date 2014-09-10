@@ -78,7 +78,7 @@ Google profile access
 
 Annalist uses OAuth2/OpenID Connect authentication to control access to data resources.  This is currently tested with Google's OAuth2 services.  For this to work, the client application must be registered with Google (via [https://cloud.google.com/console](https://cloud.google.com/console)) and must be permitted to use the [Google+ API](https://developers.google.com/+/api/), as shown:
 
-![Screenshot showing Google+ API enabled for project](https://raw.github.com/gklyne/annalist/develop/notes/figures/Google-APIs-screenshot.png)
+![Screenshot showing Google+ API enabled for project](https://raw.githubusercontent.com/gklyne/annalist/master/documents/notes/figures/Google-APIs-screenshot.png)
 
 * Create new project
 * Under `APIs & Auth > APIs`, enable Google+ and disable all others
