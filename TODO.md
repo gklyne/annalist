@@ -330,6 +330,8 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    - Clean up code for site data creation, rarher than using a hacked test case
    - Home page: options to edit collection id, label and site description
    - Use "collectstatic" for non-test, non-development deployments, even when using Django static file serving.
+   - annalist-manager createsite - allow site description to be provided
+   - annalist-manager runserver - allow IP-addr:port to be provided   
 14. Code improvement - lists
    / move invocation of authentication to the immediate response handler code?
    / refactor list description access out of context handling code (avoid multiple reads)

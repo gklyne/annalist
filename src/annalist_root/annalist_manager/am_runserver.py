@@ -41,7 +41,7 @@ def am_runserver(annroot, userhome, options):
         return am_errors.AM_UNEXPECTEDARGS
     status = am_errors.AM_SUCCESS
     with ChangeCurrentDir(annroot):
-        cmd = "runserver"
+        cmd = "runserver 0.0.0.0:8000"
         subprocess_command = "django-admin %s --pythonpath=%s --settings=%s"%(cmd, annroot, settings.modulename)
         log.debug("am_initialize subprocess: %s"%subprocess_command)
         status = subprocess.call(subprocess_command.split())
