@@ -170,15 +170,15 @@ This section assumes you are logged in to an Annalist system.
 
 To create a new _collection_, which is an Annalist unit of adminstratable and copyable data, enter a short name for the collection (consisting of just letters, digits and/or underscorte (`'_'`) characters) and a one-line label or description (which can contain arbitrary characters) into the text boxes presented:
 
-    ![Front page with details for new collection entered](screenshots/Front-page-collection-details.png)
+![Front page with details for new collection entered](screenshots/Front-page-collection-details.png)
 
 Now click on the 'New' button:
 
-    ![Front page showing new collection created](screenshots/Front-page-collection-created.png)
+![Front page showing new collection created](screenshots/Front-page-collection-created.png)
 
 Click on the link in the Id column to view the new collection:
 
-    ![Initial view of new collection](screenshots/Collection-initial-view.png)
+![Initial view of new collection](screenshots/Collection-initial-view.png)
 
 From this screen, you can start to add data to this collection.  For more information, see [Using Annalist](using-annalist.md)
 
