@@ -6,6 +6,12 @@ Free-form web data notebook - "Data management for little guys"
 _Current status (2014-09-05):  feature freeze for first public prototype release.  Working on installation and setup utilities and documentation._ 
 
 
+Installation
+------------
+
+See [Installing and setting up Annalist](documents/installing-annalist.md).
+
+
 Goals
 -----
 
@@ -23,10 +29,39 @@ The work on Annalist is in its early stages, but I'm committed to open developme
 Note that all the active development takes place on the ["develop" branch](https://github.com/gklyne/annalist/tree/develop).  Tested versions are periodically merged to the default-visible 'master' branch.  In due course, I plan to follow a ["gitflow"-inspired](http://nvie.com/posts/a-successful-git-branching-model/) working style that uses the "master" branch for released, tested software.
 
 
-Installation
-------------
+Technical elements
+------------------
 
-These instructions are my attempt to capture the steps to get a development copy of Annalist running.  The project and instructions are currently work-in-progress, so they may break.
+Note: active development is taking place on the "develop" branch in git - see [https://github.com/gklyne/annalist/tree/develop](https://github.com/gklyne/annalist/tree/develop))
+
+Key technical elements of the intended final design include (with notes reflecting status as of March 2014):
+
+* Serve and access data through a standard web server (current implementation uses direct file access).
+* Access control with 3rd party IDP authentication (current implementation uses OAuth2/OpenID Connect, tested with Google)
+* File based, versioning-friendly, textual data storage model
+    * File format RDF-based (currently using JSON-LD; contexts not yet defined so it's just JSON with RDF potential)
+    * Records/Entities, Attachments (blobs), Collections, Groups (current focus on collections and records/entities - more to come later)
+    * Directory based organization
+    * Separate indexing as and when required
+* User interface
+    * Self-maintained configuration data (many technical elements in place, but still bootstrapping the initial system)
+    * Grid-based flexible layout engine (currently using Zurb Foundation)
+* Bridges for other data sources
+    * Spreadsheet (this is a key goal, to be able to work with existing spreadsheet data)
+    * XML?
+    * _others_?
+
+
+TODO
+----
+
+See: [https://github.com/gklyne/annalist/blob/develop/documents/TODO.txt]() and [github issues](https://github.com/gklyne/annalist/issues).
+
+
+Development installation with Google identity provider
+------------------------------------------------------
+
+The following instructions are a potted version of the steps I use to get a development copy of Annalist running.  The project and instructions are ongoing work-in-progress, so they may break.
 
     # Clone git repository
     cd _workspase_base_
@@ -44,6 +79,7 @@ These instructions are my attempt to capture the steps to get a development copy
     python manage.py test
 
     # Create development site data and run up server
+
     # To use Google as OAuth2/OpenID Connect provider, register the application as 
     # described in the next section, then:
     # - Copy project file `src/annalist_root/oauth2/google_oauth2_client_secrets.json.example`
@@ -78,13 +114,14 @@ Google profile access
 
 Annalist uses OAuth2/OpenID Connect authentication to control access to data resources.  This is currently tested with Google's OAuth2 services.  For this to work, the client application must be registered with Google (via [https://cloud.google.com/console](https://cloud.google.com/console)) and must be permitted to use the [Google+ API](https://developers.google.com/+/api/), as shown:
 
-![Screenshot showing Google+ API enabled for project](https://raw.githubusercontent.com/gklyne/annalist/master/documents/notes/figures/Google-APIs-screenshot.png)
+![Screenshot showing Google+ API enabled for project](documents/screenshots/Google-APIs-screenshot.png)
 
 * Create new project
 * Under `APIs & Auth > APIs`, enable Google+ and disable all others
 * Under `APIs & Auth > Credentials`, Create new Client Id:
   * Select "Web application"
-  * Authorized redirect URI is `http://localhost:8000/annalist/login_done/` (don't omit the trailing "/")
+  * Authorized redirect URI is `http://localhost:8000/annalist/login_done/` (don't omit the trailing "/").
+  * Add an additional authorized redirect URIs using an actual host name if the application is to be accessible from other hosts; e.g. `http://example.org:8000/annalist/login_done/`.  Additional redirect URIs need to be included also in the local configiration file (see below).
   * No authorized Javascript origins (yet)
   * Then click button "Create client ID"
 * Under `APIs & Auth > Consent screen`, fill in a name for the application
@@ -95,31 +132,3 @@ Annalist uses OAuth2/OpenID Connect authentication to control access to data res
         mv ~/.annalist/providers/google_oauth2_client_secrets.json.example ~/.annalist/providers/google_oauth2_client_secrets.json
         # Now edit the file to include client id and secret values provided by Google
 
-
-Technical elements
-------------------
-
-Note: active development is taking place on the "develop" branch in git - see [https://github.com/gklyne/annalist/tree/develop](https://github.com/gklyne/annalist/tree/develop))
-
-Key technical elements of the intended final design include (with notes reflecting status as of March 2014):
-
-* Serve and access data through a standard web server (current implementation uses direct file access).
-* Access control with 3rd party IDP authentication (current implementation uses OAuth2/OpenID Connect, tested with Google)
-* File based, versioning-friendly, textual data storage model
-    * File format RDF-based (currently using JSON-LD; contexts not yet defined so it's just JSON with RDF potential)
-    * Records/Entities, Attachments (blobs), Collections, Groups (current focus on collections and records/entities - more to come later)
-    * Directory based organization
-    * Separate indexing as and when required
-* User interface
-    * Self-maintained configuration data (many technical elements in place, but still bootstrapping the initial system)
-    * Grid-based flexible layout engine (currently using Zurb Foundation)
-* Bridges for other data sources
-    * Spreadsheet (this is a key goal, to be able to work with existing spreadsheet data)
-    * XML?
-    * _others_?
-
-
-TODO
-----
-
-See: [https://github.com/gklyne/annalist/blob/develop/TODO.txt]()
