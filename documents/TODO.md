@@ -295,10 +295,9 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / utility/script for site creation
    / utility/script for running server
    / online help text (initial)
-   - Test installation on Windows
-   - Demo deployment
+   x Test installation on Windows (Fiven up: Windows file system doesn't work reliably; test cases perform erratically, mainly due to inconsistent file system behaviours)
    - Documentation
-       - release notes/introduction;  link from README (about this release); key missing features/issues
+       / release notes/introduction;  link from README (about this release); key missing features/issues
        / installation - link from README
        - getting started - reference installation then walk through demo sequence; link from README (getting started);
        - demo script
@@ -307,5 +306,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        - tidy up README
        - Move remaining TODOs to Roadmap and issues
        - Flesh out roadmap
-   - demo video
+   - Create mailing list
+   - Demo deployment
+   - Demo screencast
 

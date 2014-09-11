@@ -45,8 +45,11 @@ def copySitedata(src, sitedatasrc, tgt):
     assert os.path.exists(src), "Check source directory (%s)"%(src)
     assert os.path.exists(sitedatasrc), "Check site data source directory (%s)"%(sitedatasrc)
     assert tgt.startswith(TestBaseDir)
-    shutil.rmtree(tgt, ignore_errors=True)
-    shutil.copytree(src, tgt)
+    annalist.util.replacetree(src, tgt)
+    #@@
+    # shutil.rmtree(tgt, ignore_errors=True)
+    # shutil.copytree(src, tgt)
+    #@@
     sitedatatgt = os.path.join(tgt, test_layout.SITEDATA_DIR)
     for sdir in ("types", "lists", "views", "fields", "enums"):
         s = os.path.join(sitedatasrc, sdir)
@@ -69,11 +72,15 @@ def load_tests(loader, tests, ignore):
     log.debug("load_tests")
     #init_annalist_test_site()
     # See http://stackoverflow.com/questions/2380527/django-doctests-in-views-py
-    tests.addTests(doctest.DocTestSuite(annalist.util))
-    tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_utils))
-    tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))
-    tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_placement))
-    tests.addTests(doctest.DocTestSuite(annalist.models.entityfinder))
+    if os.name == "posix":
+        # The doctest stuff doesn't seem to work on Windows
+        tests.addTests(doctest.DocTestSuite(annalist.util))
+        tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_utils))
+        tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))
+        tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_placement))
+        tests.addTests(doctest.DocTestSuite(annalist.models.entityfinder))
+    else:
+        log.warning("Skipping doctests for non-posix system")
     return tests
 
 # Test helper functions

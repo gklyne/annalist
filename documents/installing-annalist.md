@@ -1,9 +1,12 @@
 # Installing and setting up Annalist
 
+
 ## Prerequisites
 
+* A Unix-like operating system: Annalist has been tested with MacOS 10.9 and Linux 14.04.  Other versions should be usable.
 * Python 2.7 (see [Python beginners guide / download](https://wiki.python.org/moin/BeginnersGuide/Download)).
 * virtualenv (includes setuptools and pip; see [virtualenv introduction](http://virtualenv.readthedocs.org/en/latest/virtualenv.html)).
+
 
 ## Installing software
 

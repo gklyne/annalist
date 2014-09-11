@@ -340,7 +340,7 @@ class EntityTest(AnnalistTestCase):
         e.set_values(test_values)
         e._save()
         p = TestEntityType.path(r, "testid")
-        self.assertEqual(p, TestBaseDir+"/testid/.sub/manifest.jsonld")
+        self.assertEqual(p, os.path.join(TestBaseDir+"/testid", ".sub/manifest.jsonld"))
         return
 
     def test_entity_create_exists(self):
@@ -468,7 +468,7 @@ class EntityTest(AnnalistTestCase):
         e.set_values(test_values)
         e._save()
         p = TestEntityTypeSub.path(r, "testid")
-        self.assertEqual(p, TestBaseDir+"/sub/testid/.sub/manifest.jsonld")
+        self.assertEqual(p, os.path.join(TestBaseDir+"/sub/testid", ".sub/manifest.jsonld"))
         return
 
     def test_entity_sub_create_exists(self):
@@ -490,7 +490,7 @@ class EntityTest(AnnalistTestCase):
         e = TestEntityTypeSub.create(r, "testid", test_values)
         self.assertTrue(TestEntityTypeSub.exists(r, "testid"))
         p = TestEntityTypeSub.path(r, "testid")
-        self.assertEqual(p, TestBaseDir+"/sub/testid/.sub/manifest.jsonld")
+        self.assertEqual(p, os.path.join(TestBaseDir+"/sub/testid", ".sub/manifest.jsonld"))
         v = e.get_values()
         self.assertEqual(set(v.keys()), set(test_values_returned.keys()))
         self.assertEqual(v, test_values_returned)
