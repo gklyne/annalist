@@ -120,28 +120,30 @@ The following instructions assume abrowser running on the same host as the Annal
 
     An empty list of collections should be displayed, along with some help text:
 
-    ![screenshots/Front-page-initial.png](Initial front page)
+    ![Initial front page](screenshots/Front-page-initial.png)
 
 2.  Select the **Login** item from the top menu bar:
 
-    ![screenshots/Login-initial.png](Initial login page)
+    ![Initial login page](screenshots/Login-initial.png)
 
 3.  Select the Local user credentials 'login' link at the bottom of the page:
 
-    ![screenshots/Login-django.png](Django login page)
+    ![Django login page](screenshots/Login-django.png)
 
 4.  Enter the admin user credentials specified previously when creating the Annalist admin user, and click the 'Login' button:
 
 5.  Click the **Home** link on the tp menu bar to return to the front page:
 
-    ![screenshots/Front-page-admin.png](Initial front page)
+    ![Initial front page](screenshots/Front-page-admin.png)
 
     Note that the front page now shows text entry boxes and a button for creating a new connection.
 
-At this point, the **Admin** link in the page footer can be used to create additional local users via the local administrative interface (which is implemented in the underlying Django web application framework).
+At this point, the **Admin** link in the page footer can be used to create additional local users via the local administrative interface (which is implemented in the underlying Django web application framework).  Or just continue straight to create an initial dara collection.
 
 
 # Create a collection
+
+
 
 
 
