@@ -88,7 +88,6 @@ annalist.sublime*
 /src/dist
 /src/*.egg-info
 
-# Video files
-/presentations/*.mp4
-/presentations/*.screenflow
+# Video and large media files (too large for github)
+/presentations/media/
 
