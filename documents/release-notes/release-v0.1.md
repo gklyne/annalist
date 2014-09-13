@@ -1,6 +1,6 @@
 # Annalist v0.1 release notes
 
-Release 0.1 is the first public prototype of Annalist.  It contains what I hope is sufficient tested functionality for the purposes of early evaluation, but there are significant intended capabilities not yet implemented.
+Release 0.1 is the first public prototype of Annalist.  It contains what I hope is sufficient tested functionality for the purposes of early evaluation, but there are significant intended capabilities not yet implemented, and many refinements to be applied.
 
 
 ## Status
@@ -22,7 +22,7 @@ Key features implemented:
 * ability to create new entity record types, views and listing formats onm-the-fly
 * OAuth2/OpenID Connect authentication, tested with Google+ but should be usable with other OpenID Connect identity providers.
 
-Intended core features not yet fully implemented:
+Intended core features not yet fully implemented but which are intended for the first full release:
 
 * Support for a range of field and data types to work with commonly used data: numbers, dates, etc.
 * Data bridges, in particular for integation with spreadsheet data and other common tabular formats.
@@ -34,7 +34,9 @@ Intended core features not yet fully implemented:
 * Image rendering and other media.
 * Grid view (e.g. for photo+metadata galleries).
 
-There are many other features noted on the project roadmap that are not yet planned forinclusion as core features.  As far as possible, future development will be guided by actual requirements from applications that use the Annalist platform.
+There are also a number of rough edges to rounded off.  Many of the display and presentation choices have been to facilitiate development testing, but are not appropriate for actual use.
+
+There are many other features noted on the project roadmap that are not yet planned for inclusion as core features.  As far as possible, future development will be guided by actual requirements from applications that use the Annalist platform.
 
 
 ## Feedback

@@ -63,13 +63,14 @@ def collect_client_secrets():
         CLIENT_SECRETS = {}
         PROVIDER_LIST  = {}
         clientsecrets_dirname = os.path.join(settings.CONFIG_BASE, "providers/")
-        clientsecrets_files   = os.listdir(clientsecrets_dirname)
-        for f in clientsecrets_files:
-            p = os.path.join(clientsecrets_dirname,f)
-            j = json.load(open(p, "r"))
-            n = j['web']['provider']
-            CLIENT_SECRETS[n] = j['web']
-            PROVIDER_LIST[n]  = p
+        if os.path.isdir(clientsecrets_dirname):
+            clientsecrets_files   = os.listdir(clientsecrets_dirname)
+            for f in clientsecrets_files:
+                p = os.path.join(clientsecrets_dirname,f)
+                j = json.load(open(p, "r"))
+                n = j['web']['provider']
+                CLIENT_SECRETS[n] = j['web']
+                PROVIDER_LIST[n]  = p
     return
 
 def object_to_dict(obj, strip):
@@ -238,6 +239,9 @@ class LoginUserView(generic.View):
         if (login_post_uri is None) or (login_done_uri is None):
             return HttpResponseRedirect(continuation)
         # Display login form
+        default_provider = ""
+        if len(PROVIDER_LIST.keys()) > 0:
+            default_provider = PROVIDER_LIST.keys()[0]
         logindata = (
             { "login_post":     request.session['login_post_uri']
             , "login_done":     request.session['login_done_uri']
@@ -248,7 +252,7 @@ class LoginUserView(generic.View):
             , "message":        message
             , "suppress_user":  True
             # Default provider
-            , "provider":       PROVIDER_LIST.keys()[0]
+            , "provider":       default_provider
             })
         # Render form & return control to browser
         template = loader.get_template('login.html')
