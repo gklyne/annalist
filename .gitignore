@@ -87,3 +87,8 @@ annalist.sublime*
 /src/build
 /src/dist
 /src/*.egg-info
+
+# Video files
+/presentations/*.mp4
+/presentations/*.screenflow
+
