@@ -13,8 +13,11 @@ import re
 import os
 import os.path
 import errno
+import stat
+import time
 import urlparse
 import json
+import shutil
 import StringIO
 
 from django.conf import settings
@@ -236,6 +239,60 @@ def strip_comments(f):
             fnc.write(line)
     fnc.seek(sof)
     return fnc
+
+def removetree(tgt):
+    """
+    Work-around for python problem with shutils tree remove functions on Windows.
+    See:
+        http://stackoverflow.com/questions/23924223/
+        http://stackoverflow.com/questions/1213706/
+        http://stackoverflow.com/questions/1889597/
+        http://bugs.python.org/issue19643
+    """
+    def error_handler(func, path, execinfo):
+        # figure out recovery based on error...
+        e = execinfo[1]
+        if e.errno == errno.ENOENT or not os.path.exists(path):
+            return          # path does not exist
+        if func in (os.rmdir, os.remove) and e.errno == errno.EACCES:
+            try:
+                os.chmod(path, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
+            except Exception as che:
+                log.warning("chmod failed: %s"%che)
+            try:
+                func(path)
+            except Exception as rfe:
+                log.warning("func retry failed: %s"%rfe)
+                if not os.path.existrs(path):
+                    return      # Gone, assume all is well
+                raise
+        if e.errno == errno.ENOTEMPTY:
+            log.warning("Not empty: %s, %s"%(path, tgt))
+            time.sleep(1)
+            removetree(path)    # Retry complete removal
+        log.warning("util.removetree: rmtree path: %s, error: %s"%(path, repr(execinfo)))
+        raise e
+
+    shutil.rmtree(tgt, onerror=error_handler)
+    return
+
+def replacetree(src, tgt):
+    """
+    Work-around for python problem with shutils tree copy functions on Windows.
+    See: http://stackoverflow.com/questions/23924223/
+    """
+    # def error_handler(func, path, execinfo):
+    #     log.warning("util.replacetree: rmtree path: %s, error: %s"%(path, str(execinfo)))
+    #     if os.path.exists(path):
+    #         os.chmod(path, 128)     # or os.chmod(path, stat.S_IWRITE) from "stat" module
+    #         func(path)              # Retry
+    #     # If path doesn't exist, no point in retry
+    #     return
+    # shutil.rmtree(tgt, onerror=error_handler)
+    if os.path.exists(tgt):
+        removetree(tgt)
+    shutil.copytree(src, tgt)
+    return
 
 if __name__ == "__main__":
     import doctest

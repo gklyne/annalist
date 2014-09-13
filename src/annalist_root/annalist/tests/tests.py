@@ -30,7 +30,7 @@ TestBasePath    = "/" + settings.TEST_BASE_PATH # e.g. "/testsite"
 TestHostUri     = settings.TEST_HOST_URI        # e.g. "http://test.example.com"
 TestBaseUri     = settings.TEST_BASE_URI        # e.g. "http://test.example.com/testsite"
 
-def createSiteData(src, sitedatasrc, tgt):
+def copySitedata(src, sitedatasrc, tgt):
     """
     Creates a set of Annalist site data by making a copy of a specified
     source tree.
@@ -40,13 +40,16 @@ def createSiteData(src, sitedatasrc, tgt):
     tgt         target directory in which the site data is created
     """
     # Confirm existence of target directory
-    log.debug("createSiteData: src %s"%(src))
-    log.debug("createSiteData: tgt %s"%(tgt))
+    log.debug("copySitedata: src %s"%(src))
+    log.debug("copySitedata: tgt %s"%(tgt))
     assert os.path.exists(src), "Check source directory (%s)"%(src)
     assert os.path.exists(sitedatasrc), "Check site data source directory (%s)"%(sitedatasrc)
     assert tgt.startswith(TestBaseDir)
-    shutil.rmtree(tgt, ignore_errors=True)
-    shutil.copytree(src, tgt)
+    annalist.util.replacetree(src, tgt)
+    #@@
+    # shutil.rmtree(tgt, ignore_errors=True)
+    # shutil.copytree(src, tgt)
+    #@@
     sitedatatgt = os.path.join(tgt, test_layout.SITEDATA_DIR)
     for sdir in ("types", "lists", "views", "fields", "enums"):
         s = os.path.join(sitedatasrc, sdir)
@@ -59,7 +62,7 @@ def createSiteData(src, sitedatasrc, tgt):
 
 def init_annalist_test_site():
     log.debug("init_annalist_test_site")
-    createSiteData(
+    copySitedata(
         settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
         settings.SITE_SRC_ROOT+"/annalist/sitedata",
         TestBaseDir)
@@ -69,11 +72,15 @@ def load_tests(loader, tests, ignore):
     log.debug("load_tests")
     #init_annalist_test_site()
     # See http://stackoverflow.com/questions/2380527/django-doctests-in-views-py
-    tests.addTests(doctest.DocTestSuite(annalist.util))
-    tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_utils))
-    tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))
-    tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_placement))
-    tests.addTests(doctest.DocTestSuite(annalist.models.entityfinder))
+    if os.name == "posix":
+        # The doctest stuff doesn't seem to work on Windows
+        tests.addTests(doctest.DocTestSuite(annalist.util))
+        tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_utils))
+        tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))
+        tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_placement))
+        tests.addTests(doctest.DocTestSuite(annalist.models.entityfinder))
+    else:
+        log.warning("Skipping doctests for non-posix system")
     return tests
 
 # Test helper functions

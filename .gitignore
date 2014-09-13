@@ -81,6 +81,7 @@ annalist.sublime*
 /pyenv
 /anenv
 /setupenv
+/spike
 /src/annalist_root/devel
 /src/annalist_root/sampledata/data
 /src/build

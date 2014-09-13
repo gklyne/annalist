@@ -2,37 +2,37 @@
 
 {% block content %}
 
-    <div class="row">
-        <div class="large-12 columns">
-            <h3>User profile</h3>
-        </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <h3>User profile</h3>
     </div>
-    
-    <div class="row">
-        <div class="small-2 columns">
-            <p>User</p>
-        </div>
-        <div class="small-10 columns">
-            <p>{{user.username}}</p>
-        </div>
+  </div>
+  
+  <div class="row">
+    <div class="small-2 columns">
+      <p>User</p>
     </div>
+    <div class="small-10 columns">
+      <p>{{user.username}}</p>
+    </div>
+  </div>
 
-    <div class="row">
-        <div class="small-2 columns">
-            <p>Name</p>
-        </div>
-        <div class="small-10 columns">
-            <p>{{user.first_name}} {{user.last_name}}</p>
-        </div>
+  <div class="row">
+    <div class="small-2 columns">
+      <p>Name</p>
     </div>
+    <div class="small-10 columns">
+      <p>{{user.first_name}} {{user.last_name}}</p>
+    </div>
+  </div>
 
-    <div class="row">
-        <div class="small-2 columns">
-            <p>Email</p>
-        </div>
-        <div class="small-10 columns">
-            <p>{{user.email}}</p>
-        </div>
+  <div class="row">
+    <div class="small-2 columns">
+      <p>Email</p>
     </div>
+    <div class="small-10 columns">
+      <p>{{user.email}}</p>
+    </div>
+  </div>
 
 {% endblock %}

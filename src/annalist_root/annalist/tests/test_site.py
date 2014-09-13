@@ -239,7 +239,7 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(homelink.string,   "Home")
         self.assertEqual(homelink['href'],  self.uri)
         menuitems = s.find(class_="top-bar-section").find(class_="right").find_all("li")
-        self.assertEqual(menuitems[0].a.string,     "Profile")
+        self.assertEqual(menuitems[0].a.string,     "User testuser")
         self.assertEqual(menuitems[0].a['href'],    TestBasePath+"/profile/")
         self.assertEqual(menuitems[1].a.string,     "Logout")
         self.assertEqual(menuitems[1].a['href'],    TestBasePath+"/logout/")

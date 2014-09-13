@@ -53,7 +53,9 @@
         <ul class="right">
           {% if not suppress_user %}
             {% if user.is_authenticated %}
-              <li class="active"><a href="{% url 'AnnalistProfileView' %}">Profile</a></li>
+              <li class="active">
+                <a href="{% url 'AnnalistProfileView' %}">User {{ user.username }}</a>
+              </li>
               <li class="active"><a href="{% url 'LogoutUserView' %}">Logout</a></li>
             {% else %}
               <li class="active"><a href="{% url 'AnnalistProfileView' %}">Login</a></li>
@@ -129,6 +131,12 @@
 -->
 {% endblock %}
 
+{% if help_text %}
+  <div class="help">
+    {{ help_text|safe }}
+  </div>
+{% endif %}
+
 <!--
   <div class="footer">
   { % block footer %}
@@ -153,13 +161,20 @@
           <li>
             <a href="/annalist/site/?info_head=Sitemap&amp;info_message=About%20page%20TBD">Sitemap</a>
           </li>
+          <li>
+            <a href="/admin/">Admin</a>
+          </li>
         </ul>
       </div>
       <div class="medium-6 medium-pull-6 columns">
         <p class="copyright">
         {% block footer %}
           <a href="/annalist/" class="logo regular"><img src="{% static 'images/annalist_45_39_px.png' %}"></a>
-          Powered&nbsp;by&nbsp;<a href="https://github.com/gklyne/annalist">Annalist (V{{ annalist_version }})</a>
+          Powered&nbsp;by&nbsp;<a href="https://github.com/gklyne/annalist">Annalist
+          {% if annalist_version %}
+            (V{{ annalist_version }})
+          {% endif %}
+          </a>
         {% endblock %}
         </p>
       </div>

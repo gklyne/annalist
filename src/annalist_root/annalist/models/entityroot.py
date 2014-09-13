@@ -259,10 +259,10 @@ class EntityRoot(object):
         if not self._values:
             raise ValueError("Entity._save without defined entity values")
         (body_dir, body_file) = self._dir_path()
-        log.debug("EntityRoot._save: dir %s, file%s"%(body_dir, body_file))
-        fullpath = os.path.join(settings.SITE_SRC_ROOT, body_file)
+        log.debug("EntityRoot._save: dir %s, file %s"%(body_dir, body_file))
+        fullpath = os.path.join(settings.BASE_DATA_DIR, "annalist_site", body_file)
         # Next is partial protection against code errors
-        if not fullpath.startswith(settings.SITE_SRC_ROOT):
+        if not fullpath.startswith(os.path.join(settings.BASE_DATA_DIR, "annalist_site")):
             raise ValueError("Attempt to create entity file outside Annalist site tree")
         # Create directory (if needed) and save data
         util.ensure_dir(body_dir)

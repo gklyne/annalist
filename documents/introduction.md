@@ -1,5 +1,7 @@
 # Annalist overview
 
+For information about the current release, please refer to the [V0.1 release notes](release-notes/release-v0.1.md)
+
 
 # Background and goals
 

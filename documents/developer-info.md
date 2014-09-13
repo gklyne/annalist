@@ -1,4 +1,4 @@
-# Annalist developer information
+# Developer information
 
 ## Getting source code
 

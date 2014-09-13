@@ -91,7 +91,8 @@ class AnnalistGenericView(ContentNegotiationView):
         if not self._site_data:
             self._site_data = self.site(host=host).site_data()
         if not self._site_data:
-            log.error("views.generic.site_data: failed to load site data")
+            log.error("views.generic.site_data: failed to load site data (%s)"%
+                      self.site(host=host)._dir_path_uri()[1])
         return self._site_data
 
     def error(self, values):
@@ -329,6 +330,14 @@ class AnnalistGenericView(ContentNegotiationView):
         resultdata["auth_delete"]   = self.authorize("DELETE") is None
         resultdata["auth_config"]   = self.authorize("CONFIG") is None
         resultdata["annalist_version"] = annalist.__version__
+        if 'help_filename' in resultdata:
+            help_filepath = os.path.join(
+                settings.SITE_SRC_ROOT, 
+                "annalist/views/help/%s.html"%resultdata['help_filename']
+                )
+            if os.path.isfile(help_filepath):
+                with open(help_filepath, "r") as helpfile:
+                    resultdata['help_text'] = helpfile.read()
         template  = loader.get_template(template_name)
         context   = RequestContext(self.request, resultdata)
         log.debug("render_html - data: %r"%(resultdata))

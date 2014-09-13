@@ -76,7 +76,7 @@ TEST_BASE_URI       = TEST_HOST_URI+"/"+TEST_BASE_PATH
 TRACE_FIELD_VALUE   = logging.DEBUG
 
 # Override root URI configuration for tests
-ROOT_URLCONF        = 'annalist_site.test_urls'
+ROOT_URLCONF        = 'annalist_site.runtests_urls'
 
 SETTINGS_MODULE     = __name__
 BASE_DATA_DIR       = SITE_SRC_ROOT+"/sampledata/data"

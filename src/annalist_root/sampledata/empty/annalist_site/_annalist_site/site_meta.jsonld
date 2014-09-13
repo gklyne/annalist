@@ -1,0 +1,5 @@
+{
+    "@id":      	"../",
+    "rdfs:label": 	"Annalist data notebook site",
+    "rdfs:comment": "Annalist site metadata and site-wide values."
+}
