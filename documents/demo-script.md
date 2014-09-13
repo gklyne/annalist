@@ -54,7 +54,7 @@ Under 'Choose view', select "Instrument_view" and click 'Show view'.
 
 Enter details, including type as "MusicalInstrument"
 
-So far, we have used "Default_list_all" to display the listb of entities, which includes internal details we don't normally want to see.  Click 'Customize'.
+So far, we have used "Default_list_all" to display the list of entities, which includes internal details we don't normally want to see.  Click 'Customize'.
 
 Under 'List views' click 'New'.
 
