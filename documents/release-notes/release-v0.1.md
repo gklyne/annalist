@@ -19,7 +19,7 @@ Key features implemented:
 * simple installation and setup procedure to quickly get a working installation
 * highly configurable form display for entering, presenting and modifying data records
 * disk-based data storage structures based on JSON-LD
-* ability to create new entity record types, views and listing formats onm-the-fly
+* ability to create new entity record types, views and listing formats on-the-fly as data is being prepared
 * OAuth2/OpenID Connect authentication, tested with Google+ but should be usable with other OpenID Connect identity providers.
 
 Intended core features not yet fully implemented but which are intended for the first full release:
@@ -36,20 +36,22 @@ Intended core features not yet fully implemented but which are intended for the 
 
 There are also a number of rough edges to rounded off.  Many of the display and presentation choices have been to facilitiate development testing, but are not appropriate for actual use.
 
-There are many other features noted on the project roadmap that are not yet planned for inclusion as core features.  As far as possible, future development will be guided by actual requirements from applications that use the Annalist platform.
+See the [list of outstanding issues for initial release](https://github.com/gklyne/annalist/issues?q=is%3Aopen+is%3Aissue+milestone%3A%22V0.x+alpha%22) for more details on planned features still to be implemented.
+
+There are many other features noted on the project roadmap that are not yet planned for inclusion as core features in the initial release.  As far as possible, future development will be guided by actual requirements from applications that use the Annalist platform.
 
 
 ## Feedback
 
 The main purpose of this release is to be a viable platform for getting feedback from potential users of the software.  In particular, I'd like to hear:
 
-* If installation and getting a running service on a computeer meeting the indicated prerequisites takes longer than 10 minutes.  What were the stumbling points.
+* If installation and getting a running service on a computer meeting the indicated prerequisites takes longer than 10 minutes.  What were the stumbling points?
 * Any problems that occur whle trying to use the software.
 * Ways in which the software does not meet preferred workflows for collecting data.
 * Any must-have features for the software to be useful.
 * Any other thoughts, ideas, or difficulties you care to report.
 
-If you have a github account, feedback can be provided through the [github issue tracker](https://github.com/gklyne/annalist/settings).  Otherwise, by message to the [annalist-discuss forum](https://groups.google.com/forum/#!forum/annalist-discuss) at Google Groups.
+If you have a github account, feedback can be provided through the [github issue tracker](https://github.com/gklyne/annalist/issues).  Otherwise, by message to the [annalist-discuss forum](https://groups.google.com/forum/#!forum/annalist-discuss) at Google Groups.
 
 
 ## Development
@@ -63,6 +65,8 @@ First public prototype release @@TODO
 
 
 ## Further information
+
+(Many of these documents are still work-in-progress)
 
 * [Annalist overview](../introduction.md)
 * [Installing and setting up Annalist](../installing-annalist.md)
