@@ -64,7 +64,6 @@ setup(
           , 'annalist_root.utils'
           , 'annalist_root.oauth2'
           , 'annalist_root.miscutils'
-            , 'annalist_root.miscutils.test'
         ],
     package_dir = 
         { 'annalist_root':  'annalist_root'
