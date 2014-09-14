@@ -253,7 +253,18 @@ class LoginUserView(generic.View):
             , "suppress_user":  True
             # Default provider
             , "provider":       default_provider
+            , 'help_filename':  'login-help'
             })
+        # Load help text if available
+        # @@NOTE: this next is dependent on data provided by the calling app?
+        if 'help_filename' in logindata:
+            help_filepath = os.path.join(
+                settings.SITE_SRC_ROOT, 
+                "annalist/views/help/%s.html"%logindata['help_filename']
+                )
+            if os.path.isfile(help_filepath):
+                with open(help_filepath, "r") as helpfile:
+                    logindata['help_text'] = helpfile.read()
         # Render form & return control to browser
         template = loader.get_template('login.html')
         context  = RequestContext(self.request, logindata)

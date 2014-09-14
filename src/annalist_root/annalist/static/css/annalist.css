@@ -116,6 +116,15 @@ div.help > p {
     font-size: smaller;
 }
 
+div.help li {
+    margin: 0rem;
+    padding-top: 0.25rem;    
+    padding-bottom: 0rem;    
+    padding-left: 0.75rem;    
+    color: #666666;
+    font-size: smaller;
+}
+
 /*
 div.column p , div.columns p {
     margin-bottom: 0;
