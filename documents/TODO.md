@@ -310,4 +310,8 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / Create mailing list -- see https://groups.google.com/forum/#!forum/annalist-discuss
    > Demo deployment
    / Demo screencast -- see http://annalist.net
+   - Final updates to master
+   - Post kit download
+   - Upload tom PyPI
+   - Post announcement to Google Group, and elsewhere
 
