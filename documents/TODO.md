@@ -284,7 +284,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / sorting of enumeration lists
        / sorting of entity lists (by typeid then entityid)
        / sorting of entity lists enumerated in tests
-       * There could be more test cases that need hardening, but so far all pass on a Linus deployment
+       * There could be more test cases that need hardening, but so far all pass on a Linux deployment
    / check python version in setup
    / __init__.py in annalist_root dir causes test failure on Ubuntu 14.04; cf. https://code.djangoproject.com/ticket/22280.   Removing it solves the test case problem, but it was included originally to get the setup.py script to work as intended.  Try removing it and see if we can get kit builder to work.
    / Login page - link to local Django login & admin pages
@@ -295,18 +295,19 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / utility/script for site creation
    / utility/script for running server
    / online help text (initial)
-   x Test installation on Windows (Fiven up: Windows file system doesn't work reliably; test cases perform erratically, mainly due to inconsistent file system behaviours)
+   x Test installation on Windows (De-prioritized for now. Tests pass, but having problems accessing the settings when running the server. Change directory?)
    - Documentation
        / release notes/introduction;  link from README (about this release); key missing features/issues
        / installation - link from README
-       - getting started - reference installation then walk through demo sequence; link from README (getting started);
-       - demo script
-       - using Annalist - flesh out; link from README
-       - how to setup OpenIDConnect providers - move to separate document; link from installation
+       / getting started - reference installation then walk through demo sequence; link from README (getting started);
+       > demo script (needs cleaning up)
+       / using Annalist - flesh out; link from README
+       - flesh out introduction/overview
+       - how to setup OpenIDConnect providers - move to separate document; link from installation doc
        - tidy up README
-       - Move remaining TODOs to Roadmap and issues
+       / Move remaining TODOs to Roadmap and issues
        - Flesh out roadmap
-   - Create mailing list
-   - Demo deployment
-   - Demo screencast
+   / Create mailing list -- see https://groups.google.com/forum/#!forum/annalist-discuss
+   > Demo deployment
+   / Demo screencast -- see http://annalist.net
 

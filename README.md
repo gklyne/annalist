@@ -14,6 +14,11 @@ Installation
 See [Installing and setting up Annalist](documents/installing-annalist.md).
 
 
+Using Annalist
+--------------
+
+See the 6 minute [demonstration screencast](http://annalist.net/media/annalist-demo-music-instrument-catalogue.mp4), [Getting started with Annalist](documents/getting-started.md) or the [Guide to using Annalist](documents/using-annalist.md)
+
 
 Goals
 -----

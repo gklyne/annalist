@@ -240,6 +240,42 @@ def strip_comments(f):
     fnc.seek(sof)
     return fnc
 
+def renametree_temp(src):
+    """
+    Rename tree to temporary name, and return that name, or 
+    None if the source directory does not exist.
+    """
+    count = 0 
+    while count < 10:      # prevents indefinite loop
+        count += 1
+        tmp = os.path.join(os.path.dirname(src),"_removetree_tmp_%d"%(count))
+        try:
+            os.rename(src, tmp)
+            return tmp      # Success!
+        # except WindowsError as e:
+        #     log.warning(
+        #         "util.renametree_temp: WindowsError: winerror %d, strerror %s, errno %d"%
+        #         (e.winerror, e.strerror, e.errno)
+        #         )
+        #     continue        # Try another temp name
+        except OSError as e:
+            time.sleep(1)
+            if e.errno == errno.EACCES:
+                log.warning("util.renametree_temp: %s EACCES, retrying"%tmp)
+                continue    # Try another temp name
+            if e.errno == errno.ENOTEMPTY:
+                log.warning("util.renametree_temp: %s ENOTEMPTY, retrying"%tmp)
+                continue    # Try another temp name
+            if e.errno == errno.EEXIST:
+                log.warning("util.renametree_temp: %s EEXIST, retrying"%tmp)
+                shutil.rmtree(tmp, ignore_errors=True)  # Try to clean up old files
+                continue    # Try another temp name
+            if e.errno == errno.ENOENT:
+                log.warning("util.renametree_temp: %s ENOENT, skipping"%tmp)
+                break       # 'src' does not exist(?)
+            raise           # Other error: propagaee
+    return None
+
 def removetree(tgt):
     """
     Work-around for python problem with shutils tree remove functions on Windows.
@@ -249,6 +285,8 @@ def removetree(tgt):
         http://stackoverflow.com/questions/1889597/
         http://bugs.python.org/issue19643
     """
+    # shutil.rmtree error handler that attempts recovery on Windows from 
+    # attempts to remove a read-only file or directory (see links above).
     def error_handler(func, path, execinfo):
         # figure out recovery based on error...
         e = execinfo[1]
@@ -258,22 +296,28 @@ def removetree(tgt):
             try:
                 os.chmod(path, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
             except Exception as che:
-                log.warning("chmod failed: %s"%che)
+                log.warning("util.removetree: chmod failed: %s"%che)
             try:
                 func(path)
             except Exception as rfe:
-                log.warning("func retry failed: %s"%rfe)
-                if not os.path.existrs(path):
+                log.warning("util.removetree: 'func' retry failed: %s"%rfe)
+                if not os.path.exists(path):
                     return      # Gone, assume all is well
                 raise
         if e.errno == errno.ENOTEMPTY:
-            log.warning("Not empty: %s, %s"%(path, tgt))
+            log.warning("util.removetree: Not empty: %s, %s"%(path, tgt))
             time.sleep(1)
             removetree(path)    # Retry complete removal
+            return
         log.warning("util.removetree: rmtree path: %s, error: %s"%(path, repr(execinfo)))
         raise e
-
-    shutil.rmtree(tgt, onerror=error_handler)
+    # Workaround for problems on Windows: it appears that the directory
+    # removal does not complete immediately, causing subsequent failures.
+    # Try renaming to a new directory first, so that the tgt is immediately 
+    # available for re-use.
+    tmp = renametree_temp(tgt)
+    if tmp:
+        shutil.rmtree(tmp, onerror=error_handler)
     return
 
 def replacetree(src, tgt):
@@ -281,14 +325,6 @@ def replacetree(src, tgt):
     Work-around for python problem with shutils tree copy functions on Windows.
     See: http://stackoverflow.com/questions/23924223/
     """
-    # def error_handler(func, path, execinfo):
-    #     log.warning("util.replacetree: rmtree path: %s, error: %s"%(path, str(execinfo)))
-    #     if os.path.exists(path):
-    #         os.chmod(path, 128)     # or os.chmod(path, stat.S_IWRITE) from "stat" module
-    #         func(path)              # Retry
-    #     # If path doesn't exist, no point in retry
-    #     return
-    # shutil.rmtree(tgt, onerror=error_handler)
     if os.path.exists(tgt):
         removetree(tgt)
     shutil.copytree(src, tgt)

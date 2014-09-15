@@ -74,6 +74,7 @@ def load_tests(loader, tests, ignore):
     # See http://stackoverflow.com/questions/2380527/django-doctests-in-views-py
     if os.name == "posix":
         # The doctest stuff doesn't seem to work on Windows
+        # (These add a total of 12 tests to the overall test)
         tests.addTests(doctest.DocTestSuite(annalist.util))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_utils))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))

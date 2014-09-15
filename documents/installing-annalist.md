@@ -3,7 +3,7 @@
 
 ## Prerequisites
 
-* A Unix-like operating system: Annalist has been tested with MacOS 10.9 and Linux 14.04.  Other versions should be usable.
+* A Unix-like operating system: Annalist has been tested with MacOS 10.9 and Linux 14.04.  Other versions should be usable.  (The software can be run on Windows, but the procedure to get it running is somewhat more complicated, and is not yet fully tested or documented.)
 * Python 2.7 (see [Python beginners guide / download](https://wiki.python.org/moin/BeginnersGuide/Download)).
 * virtualenv (includes setuptools and pip; see [virtualenv introduction](http://virtualenv.readthedocs.org/en/latest/virtualenv.html)).
 
@@ -106,7 +106,7 @@ The configuration details for using an OpenID Connect provider are stored in a p
 
 Annalist can also allow users to log in using locally stored credentials, which may be useful for quick evaluation deployments but is not the recommended mechanism for normal operational use.
 
-When installing Annalist, an administration account may be created using the `annalist-manager` tool.  When logged in to Annalist using this account, the `admin` link in the footer of most Annalist pages will allow new user accounts to be created via the Django admin interface.  More documentation about using this admin intrefcae is in the [The Django Admin Site](http://www.djangobook.com/en/2.0/chapter06.html), which isChapter 6 of [The Django Book](http://www.djangobook.com/en/2.0/index.html).
+When installing Annalist, an administration account may be created using the `annalist-manager` tool.  When logged in to Annalist using this account, the **Admin** link in the footer of most Annalist pages will allow new user accounts to be created via the Django admin interface.  More documentation about using this admin intrefcae is in the [The Django Admin Site](http://www.djangobook.com/en/2.0/chapter06.html), which isChapter 6 of [The Django Book](http://www.djangobook.com/en/2.0/index.html).
 
 
 ### Initial site setup
@@ -140,7 +140,7 @@ You should now be able to use a browser to view the Annalist server, e.g. at htt
 
 ## Accessing Annalist
 
-The following instructions assume abrowser running on the same host as the Annalistr service.  If a differemnt host is used, replace `localhost` with the name or IP address of the host that is running the Annalist server.
+The following instructions assume a browser running on the same host as the Annalist service.  If a different host is used, replace `localhost` with the name or IP address of the host that is running the Annalist server.
 
 1.  Browse to annalist server at http://localhost:8000 (replacing `localhost` as needed)
 
@@ -158,11 +158,11 @@ The following instructions assume abrowser running on the same host as the Annal
 
 4.  Enter the admin user credentials specified previously when creating the Annalist admin user, and click the 'Login' button:
 
-5.  Click the **Home** link on the tp menu bar to return to the front page:
+5.  Click the **Home** link on the top menu bar to return to the front page:
 
     ![Initial front page](screenshots/Front-page-admin.png)
 
-    Note that the front page now shows text entry boxes and a button for creating a new connection.
+    Note that the front page now shows text entry boxes and a button for creating a new collection.
 
 At this point, the **Admin** link in the page footer can be used to create additional local users via the local administrative interface (which is implemented in the underlying Django web application framework).  Or just continue straight to create an initial dara collection.
 
