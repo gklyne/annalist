@@ -6,7 +6,7 @@ For information about the current release, please refer to the [V0.1 release not
 
 ## Problem statement
 
-For researchers and small research groups:
+**For researchers and small research groups:**
 
 There is currently a significant push for published research to be backed up by publicly accessible, sharable, re-usable datasets.  But publishing re-usable data on the web is not easy, especially for small research groups.  But it is in the nature of research that no two projects have exactly the same requirements, so a tool developed specifically for one projhect is probably not going to be very helpful for another.
 
@@ -18,7 +18,7 @@ Currently, the tool of choice (or necessity) for many researchers is a spreadshe
 
 3.  It is increasingly the case that research builds on not only the outcomes, but also the specific datasets, from other research projects.  Often (e.g. in the field of bioinformatics), results need to be referred to global public genomic databases.  It is highly desirable that datasets be remixable and cross-linkable.
 
-For indivuduals, clubs, small businesses, etc:
+**For indivuduals, clubs, small businesses, etc:**
 
 Many of the above problems may be faced in smaller ways by anyone who uses a computer to store data.
 
@@ -81,6 +81,8 @@ Annalist is also a tool that can be used to organize and collate various kinds o
 
 # Design principles
 
+@@TODO: flech outn with more design/architecture information
+
 flat file storage
 
 small data (storage and referencability of small item descriptions)
@@ -102,7 +104,7 @@ mobile-capable
 
 # Related work and tooling
 
-There is a rough survey of related technolgies and systems performed about mid-2013, which can bee seen in slides 20-28 of [this presentation](../presentations/20130316-annalist-technical-intro.pdf).  The survey uses colour coding of a selection of features, where green indicates the product supports the feature, red that it is believed to not support the feature, and yellow indicating that the status a feature was unknown in that system.
+There is a rough survey of some related technolgies and systems performed about mid-2013, which can be seen in slides 20-28 of [this presentation](../presentations/20130316-annalist-technical-intro.pdf).  The survey uses colour coding of a selection of features, where green indicates the product supports the feature, red that it is believed to not support the feature, and yellow indicating that the status a feature was unknown in that system.
 
 The surveyed systems included:
 
@@ -119,5 +121,5 @@ With the exception of Callimachus, which scored about 60-80%, none of these scor
 
 A tool that I use for a lot of rough data recording is SimpleNote (and Notational Velocity).  This is a pure text tool that addresses many of the desiderata targetted by Annalist, but deals with simpl,e raw text files rather than data.  It would, in theory, be possible top encode the data as test in such a system, but I don't thinkl that would be a truly viable option for any serous data.
 
-Related to some aspects of Annalist's design ios the work on [linked data fragments](http://linkeddatafragments.org) by Ruben Verborgh at iMinds, University of Ghent.  Annalist's use of flat files for storing small frames of data has some resonances with these ideas.  One way in which Annalist differs from the Linked Data Fragments work is that the fragments are used as the native form of stored data, and amalgamation into larger datasets only comes later, if at all.  Also, it is not a goal of Annalist to support high performance querying over large datasets.  I do imagine that Annalist datra records might play well with the developing Linked Data Fragments infrastructure.
+Related to some aspects of Annalist's design is the work on [linked data fragments](http://linkeddatafragments.org) by Ruben Verborgh _et al_ at iMinds, University of Ghent.  Annalist's use of flat files for storing small frames of data has similarities with some of these ideas.  One way in which Annalist differs from the Linked Data Fragments work is that the fragments are used as the native form of stored data, and amalgamation into larger datasets only comes later, if at all.  Also, it is not a goal of Annalist to support high performance querying over large datasets.  It is conceivable that Annalist data records woukld play well with the developing Linked Data Fragments infrastructure.
 
