@@ -300,11 +300,11 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / release notes/introduction;  link from README (about this release); key missing features/issues
        / installation - link from README
        - getting started - reference installation then walk through demo sequence; link from README (getting started);
-       - demo script
+       > demo script
        - using Annalist - flesh out; link from README
        - how to setup OpenIDConnect providers - move to separate document; link from installation
        - tidy up README
-       - Move remaining TODOs to Roadmap and issues
+       / Move remaining TODOs to Roadmap and issues
        - Flesh out roadmap
    - Create mailing list
    - Demo deployment
