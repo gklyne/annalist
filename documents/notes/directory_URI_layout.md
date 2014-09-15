@@ -2,18 +2,11 @@
 Annalist directory layout
 -------------------------
 
-See settings.py
-
-Questions:
-
-* Primary type or multiple types for each entity?
-* How to represent groups within a collection?  Just use multiple associations in a record?
+See layout.py
 
 
-Annalist URI structure
+Annalist URI/directoty structure
 ----------------------
-
-@@NOTE: needs review in light of code; or just fold into code and delete this.
 
 *   $ANNALIST_ROOT/
  
@@ -33,6 +26,9 @@ Annalist URI structure
                 *  :
             * lists/
                 * list-type
+                *  :
+            * fields/
+                * field-type
                 *  :
         * record-type/
             * record-id

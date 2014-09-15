@@ -8,15 +8,15 @@ See [Installing and setting up Annalist](installing-annalist.md) for details.  W
 
 ## Prerequisites
 
-* A Unix-like operating system: Annalist has been tested with MacOS 10.9 and Linux 14.04.  Other versions should be usable.
-* Python 2.7 (see [Python beginners guide / download](https://wiki.python.org/moin/BeginnersGuide/Download)).
-* virtualenv (includes setuptools and pip; see [virtualenv introduction](http://virtualenv.readthedocs.org/en/latest/virtualenv.html)).
+* A Unix-like operating system.
+* Python 2.7.
+* virtualenv.
 
 (The software can be run on Windows, but the procedure to get it running is somewhat more complicated, and is not yet fully tested or documented.)
 
 ## Installation
 
-Download to a working directory from [http://annalist.net/software/Annalist-0.1.2.tar.gz]().
+Download to a working directory from [http://annalist.net/software/Annalist-0.1.2.tar.gz](http://annalist.net/software/Annalist-0.1.2.tar.gz).
 
 In working directory:
 
@@ -46,15 +46,14 @@ See [Installing and setting up Annalist](installing-annalist.md) and [Guide to u
 
 ## Access annalist and create a collection
 
-Browse to [http:/localhost:8000/](), log in using the admin account.
+Browse to [http:/localhost:8000/](http:/localhost:8000/), log in using the admin account.
 
 Fill in a collection name and short description in the boxes displayed, and click 'New'.
 
 ## Create, view and edit data
 
-See the [demonstration screecast](http://annalist.net/media/annalist-demo-music-instrument-catalogue.mp4) for an introduction to using Annalist.
-
 An Annalist _collection_ consists of entity _data records_, _types_, _lists_, _views_ and _fields_.  You can start to create data records using the defaults provided, and add fields to those records as needed.  Lusrt and view descriptions can be added to provide different ways to examine and update the data records.
 
-See the [Guide to using Annalist](using-annalist.md) for details.
+See the [demonstration screecast](http://annalist.net/media/annalist-demo-music-instrument-catalogue.mp4) for an introduction to using Annalist.  The sequence of operations performed by demonstration is described in [documents/demo-script.md](demo-script.md).
 
+See the [Guide to using Annalist](using-annalist.md) for details.
