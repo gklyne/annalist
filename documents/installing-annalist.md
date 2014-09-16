@@ -43,9 +43,9 @@ The following assumes that software is installed under a directory called $WORKS
 
         virtualenv -p python2.7 annenv
 
-3.  Obtain a copy of the Annalist distribution kit, e.g. from @@TODO, and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.2.tar.gz).  Then install it thus:
+3.  Obtain a copy of the Annalist distribution kit, e.g. from @@TODO, and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.3.tar.gz).  Then install it thus:
 
-        pip install $WORKSPACE/Annalist-0.1.2.tar.gz
+        pip install $WORKSPACE/Annalist-0.1.3.tar.gz
 
 4.  Alternatively, install the software from PyPI (@@TODO: will be uploaded to PyPI when the initial release is stabilized):
 
@@ -57,7 +57,7 @@ The following assumes that software is installed under a directory called $WORKS
 
     The output from this command should look something like this:
 
-        INFO:annalist_site.settings.runtests:Annalist version 0.1.2 (test configuration)
+        INFO:annalist_site.settings.runtests:Annalist version 0.1.3 (test configuration)
         INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
         INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /home/annalist/anenv/lib/python2.7/site-packages/annalist_root/sampledata/data
         INFO:annalist_site.settings.runtests:CONFIG_BASE:     /home/annalist/.annalist/
