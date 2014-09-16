@@ -125,7 +125,8 @@ setup(
         [
         "Development Status :: 3 - Alpha",
         "Environment :: Web Environment",
-        "Intended Audience :: Developers, Researchers",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",

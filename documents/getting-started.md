@@ -16,13 +16,13 @@ See [Installing and setting up Annalist](installing-annalist.md) for details.  W
 
 ## Installation
 
-Download to a working directory from [http://annalist.net/software/Annalist-0.1.2.tar.gz](http://annalist.net/software/Annalist-0.1.2.tar.gz).
+Download to a working directory from [http://annalist.net/software/Annalist-0.1.3.tar.gz](http://annalist.net/software/Annalist-0.1.3.tar.gz).
 
 In working directory:
 
     virtualenv annenv
     . annenv/bin/activate
-    pip install Annalist-0.1.2.tar.gz
+    pip install Annalist-0.1.3.tar.gz
 
 ## Check the software installation, and initialize site data
 
