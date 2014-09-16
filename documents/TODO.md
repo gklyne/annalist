@@ -296,17 +296,17 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / utility/script for running server
    / online help text (initial)
    x Test installation on Windows (De-prioritized for now. Tests pass, but having problems accessing the settings when running the server. Change directory?)
-   - Documentation
+   / Documentation
        / release notes/introduction;  link from README (about this release); key missing features/issues
        / installation - link from README
        / getting started - reference installation then walk through demo sequence; link from README (getting started);
        > demo script (needs cleaning up)
        / using Annalist - flesh out; link from README
        / flesh out introduction/overview
-       - how to setup OpenIDConnect providers - move to separate document; link from installation doc
-       - tidy up README
+       / how to setup OpenIDConnect providers - move to separate document; link from installation doc
+       / tidy up README
        / Move remaining TODOs to Roadmap and issues
-       - Flesh out roadmap
+       / Flesh out roadmap
    / Create mailing list -- see https://groups.google.com/forum/#!forum/annalist-discuss
    > Demo deployment
    / Demo screencast -- see http://annalist.net

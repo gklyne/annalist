@@ -16,11 +16,14 @@ Of these, the first three are substantially implemented (though there are lots o
 
 Key features implemented:
 
-* simple installation and setup procedure to quickly get a working installation
-* highly configurable form display for entering, presenting and modifying data records
-* disk-based data storage structures based on JSON-LD
-* ability to create new entity record types, views and listing formats on-the-fly as data is being prepared
-* OAuth2/OpenID Connect authentication, tested with Google+ but should be usable with other OpenID Connect identity providers.
+* Simple installation and setup procedure to quickly get a working installation
+* Highly configurable form interface for entering, presenting and modifying data records, built using self-maintained configuration data (most technical elements are in place, but still adding capabilities to support a wider range of data types)
+* Grid-based responsive layout engine (currently using Zurb Foundation)
+* File based, versioning-friendly, textual data storage model;  data design is RDF-based, and uses JSON-LD elements, but contexts not yet defined so it's just JSON with RDF potential.
+* Ability to create new entity record types, views and listing formats on-the-fly as data is being prepared
+* Authentication with 3rd party IDP authentication (current implementation uses OAuth2/OpenID Connect, tested with Google, but should be usable with other OpenID Connect identity providers).  (Note access control is separate - see "Authorization" below.)
+
+
 
 Intended core features not yet fully implemented but which are intended for the first full release:
 
@@ -30,9 +33,11 @@ Intended core features not yet fully implemented but which are intended for the 
 * Full linked data support, recognizing a range of linked data formats and facilitating the creation of links in and out.  (Links can be created, but it's currently a mostly manual process.)
 * Support for linking to and annotating binary objects such as images.
 * Authorization framework for access control: currently authenticated users have full access, and unauthenticated users have read-only access.
-* Use of HTTP back-end data store.
+* Serve and access data through a standard HTTP server (current implementation uses direct file access).
 * Image rendering and other media.
 * Grid view (e.g. for photo+metadata galleries).
+
+An intended core feature that will probably not make the first release is bridges to other data spources, in particular to allow Annalist to work with existing spreadhseet data.
 
 There are also a number of rough edges to rounded off.  Many of the display and presentation choices have been to facilitiate development testing, but are not appropriate for actual use.
 
