@@ -302,7 +302,7 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
        / getting started - reference installation then walk through demo sequence; link from README (getting started);
        > demo script (needs cleaning up)
        / using Annalist - flesh out; link from README
-       - flesh out introduction/overview
+       / flesh out introduction/overview
        - how to setup OpenIDConnect providers - move to separate document; link from installation doc
        - tidy up README
        / Move remaining TODOs to Roadmap and issues
@@ -310,4 +310,8 @@ Initially guided by mockups per https://github.com/gklyne/annalist/tree/develop/
    / Create mailing list -- see https://groups.google.com/forum/#!forum/annalist-discuss
    > Demo deployment
    / Demo screencast -- see http://annalist.net
+   - Final updates to master
+   - Post kit download
+   - Upload tom PyPI
+   - Post announcement to Google Group, and elsewhere
 
