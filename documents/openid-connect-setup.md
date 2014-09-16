@@ -14,7 +14,11 @@ In outline, the steps are:
 
 4. Log in using third party credentials.
 
-The instructions below assume that Annalist is installed for local access from the computer on which itis installed.  If installed for shared access, the `localhost` domain name in the fllowing steps must be replaced by the full domain name of the host on which it is installed.
+The instructions below assume that Annalist is installed for local access from the computer on which itis installed.  If installed for shared access, the `localhost` domain name in the following steps must be replaced by the full domain name of the host on which it is installed.
+
+Note that being logged in does not necessarily mean you have permissions to access Annalist data;  it simply means that Annalist has an indication of who you are.
+
+(@@NOTE: Currently, the authorization system is not fully implememted, and all authenticated users have full access to the Annalist data, but that will change before the first non-prototype software release.  See [Annalist issue 11](https://github.com/gklyne/annalist/issues/11))
 
 
 ## Register Annalist service with Google

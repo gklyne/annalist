@@ -1,7 +1,8 @@
 # Introduction to Annalist
 
-Linked data notebook software
+Linked data notebook software.
 
+@@TODO: this document mostly duplicates other documents, but some of the ideas are presented differently.  Merge content with [Annalist overview](documents/introduction.md) and delete this file.
 
 ## Background
 
@@ -25,9 +26,9 @@ A software tool for data management that is:
 * **Remixable** - data can be mixed with other sources.  This is achieved mainly by using Linked Data principles and technologies.  Also, provide support for augmenting existing spreadsheet data and make it available as linked data.
 
 
-## Status (as of April 2014)
+## Status (as of September 2014)
 
-Annalist has been in part-time development since January 2014.  Currently, it exists as an early demonstrator, which shows the intended direction of development, but is still well short of being a usable system.  I estimate it is about 50% along the way to being a minimum releasable product.
+Annalist has been in part-time development since January 2014.  Currently, it exists as a demonstration prototype, which shows the intended direction of development, but lacks many features intended released product.
 
 
 ## Tour of early demonstrator features
