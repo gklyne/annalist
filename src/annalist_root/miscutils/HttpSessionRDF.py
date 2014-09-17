@@ -7,10 +7,22 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import re   # Used for link header parsing
 import httplib2
 import urlparse
+import rdflib
 import logging
 
 # Logger for this module
 log = logging.getLogger(__name__)
+
+RDF_CONTENT_TYPES = (
+    { "application/rdf+xml":    "xml"
+    , "text/turtle":            "n3"
+    , "text/n3":                "n3"
+    , "text/nt":                "nt"
+    , "application/json":       "jsonld"
+    , "application/xhtml":      "rdfa"
+    })
+
+ACCEPT_RDF_CONTENT_TYPES = "application/rdf+xml, text/turtle"
 
 def splitValues(txt, sep=",", lq='"<', rq='">'):
     """
@@ -280,5 +292,88 @@ class HTTP_Session(object):
             body=body, ctype=ctype, reqheaders=reqheaders, 
             exthost=exthost)
         return (status, reason, headers, headers['content-location'], data)
+
+    def doRequestRDFFollowRedirect(self, uripath, 
+            method="GET", body=None, ctype=None, reqheaders=None, exthost=False, graph=None):
+        """
+        Perform HTTP request with RDF response, following any redirect returned
+
+        If the request succeeds, return response as an RDF graph,
+        or return fake 9xx status if RDF cannot be parsed.
+        Otherwise return response and content per request.
+        Thus, only 2xx responses include RDF data.
+
+        Parameters:
+            uripath     URI reference of resource to access, resolved against the base URI of
+                        the current HTTP_Session object.
+            method      HTTP method to use (default GET)
+            body        request body to use (default none)
+            ctype       content-type of request body (default none)
+            reqheaders  dictionary of additional header fields to send with the HTTP request
+            exthost     True if a request to a URI with a scheme and/or host different than 
+                        the session base URI is to be respected (default False).
+            graph       an rdflib.Graph object to which any RDF read is added.  If not
+                        provided, a new RDF graph is created and returmned.
+
+        Return:
+             status, reason(text), response headers, final URI, response graph or body
+        """
+        (status, reason, headers, finaluri, data) = self.doRequestFollowRedirect(uripath,
+            method=method, body=body,
+            ctype=ctype, accept=ACCEPT_RDF_CONTENT_TYPES, reqheaders=reqheaders, 
+            exthost=exthost)
+        if status >= 200 and status < 300:
+            content_type = headers["content-type"].split(";",1)[0].strip().lower()
+            if content_type in RDF_CONTENT_TYPES:
+                rdfgraph   = graph if graph != None else rdflib.graph.Graph()
+                baseuri    = self.getpathuri(uripath)
+                bodyformat = RDF_CONTENT_TYPES[content_type]
+                # log.debug("HTTP_Session.doRequestRDF data:\n----\n"+data+"\n------------")
+                try:
+                    # rdfgraph.parse(data=data, location=baseuri, format=bodyformat)
+                    rdfgraph.parse(data=data, publicID=baseuri, format=bodyformat)
+                    data = rdfgraph
+                except Exception, e:
+                    log.info("HTTP_Session.doRequestRDF: %s"%(e))
+                    log.info("HTTP_Session.doRequestRDF parse failure: '%s', '%s'"%(content_type, bodyformat))
+                    # log.debug("HTTP_Session.doRequestRDF data:\n----\n"+data[:200]+"\n------------")
+                    status   = 902
+                    reason   = "RDF (%s) parse failure"%bodyformat
+            else:
+                status   = 901
+                reason   = "Non-RDF content-type returned"
+        return (status, reason, headers, finaluri, data)
+
+    def doRequestRDF(self, uripath, 
+            method="GET", body=None, ctype=None, reqheaders=None, exthost=False, graph=None):
+        """
+        Perform HTTP request with RDF response.
+
+        If the request succeeds, return response as RDF graph,
+        or return fake 9xx status if RDF cannot be parsed.
+        Otherwise return response and content per request.
+        Thus, only 2xx responses include RDF data.
+
+        Parameters:
+            uripath     URI reference of resource to access, resolved against the base URI of
+                        the current HTTP_Session object.
+            method      HTTP method to use (default GET)
+            body        request body to use (default none)
+            ctype       content-type of request body (default none)
+            reqheaders  dictionary of additional header fields to send with the HTTP request
+            exthost     True if a request to a URI with a scheme and/or host different than 
+                        the session base URI is to be respected (default False).
+            graph       an rdflib.Graph object to which any RDF read is added.  If not
+                        provided, a new RDF graph is created and returmned.
+
+        Return:
+             status, reason(text), response headers, response graph or body
+
+        """
+        (status, reason, headers, finaluri, data) = self.doRequestRDFFollowRedirect(uripath,
+            method=method, body=body,
+            ctype=ctype, accept=ACCEPT_RDF_CONTENT_TYPES, reqheaders=reqheaders, 
+            exthost=exthost)
+        return (status, reason, headers, data)
 
 # End.
