@@ -53,6 +53,12 @@ Details of current feature development and status are available in the [TODO lis
 Plans for future features and developments are sketched in the [Development roadmap](documents/roadmap.md).
 
 
+Feedback
+--------
+
+Feedback can be provided via [annalist-discuss forum](https://groups.google.com/forum/#!forum/annalist-discuss) or [github issue tracker](https://github.com/gklyne/annalist/issues).
+
+
 Development
 -----------
 
