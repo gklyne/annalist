@@ -2,6 +2,8 @@
 
 Release 0.1 is the first public prototype of Annalist.  It contains what I hope is sufficient tested functionality for the purposes of early evaluation, but there are significant intended capabilities not yet implemented, and many refinements to be applied.
 
+A summary of issues to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).
+
 
 ## Status
 
@@ -82,7 +84,7 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 ## Version 0.1.3
 
-* First public prototype release @@TODO
+* First public prototype release
 
 ## Version 0.1.2
 

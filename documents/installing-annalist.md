@@ -43,13 +43,13 @@ The following assumes that software is installed under a directory called $WORKS
 
         virtualenv -p python2.7 annenv
 
-3.  Obtain a copy of the Annalist distribution kit, e.g. from @@TODO, and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.3.tar.gz).  Then install it thus:
-
-        pip install $WORKSPACE/Annalist-0.1.3.tar.gz
-
-4.  Alternatively, install the software from PyPI (@@TODO: will be uploaded to PyPI when the initial release is stabilized):
+3.  Install the software from PyPI:
 
         pip install annalist
+
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.3.tar.gz).  Then install it thus:
+
+        pip install $WORKSPACE/Annalist-0.1.3.tar.gz
 
 5.  Finally, test the installed software:
 
@@ -76,7 +76,7 @@ The following assumes that software is installed under a directory called $WORKS
 
 ## Setting up an Annalist site
 
-Before setting up an Annalist configuration, theer are two issues to be aware of.  Or if you just want a quick installation for evaluation purposes, skip ahead to "Initial site setup",
+Before setting up an Annalist configuration, there are two issues to be aware of.  Or if you just want a quick installation for evaluation purposes, skip ahead to "Initial site setup",
 
 ### Annalist site options
 
@@ -97,7 +97,7 @@ Annalist currently supports two user authentication mechanisms: OpenID Connect u
 
 #### OpenID Connect using Google+
 
-Annalist OpenID Connect authentication has been tested with Google+ identity service.  Instructions for configuring a new installation to work with Google+ are in the [Annalist README](https://github.com/gklyne/annalist/blob/master/README.md). (@@TODO: _move to separate document and update link_)
+Annalist OpenID Connect authentication has been tested with Google+ identity service.  Instructions for configuring a new installation to work with Google+ are in [Configuring Annalist to use OpenID Connect](openid-connect-setup.md).
 
 The configuration details for using an OpenID Connect provider are stored in a private area, away from the Annalist source files and site data, since they contain private keying data.  A subdirectory `providers` of the Annalist configuration directory contains a description file for weach supported OpenID Connect provider.  New providers may be supported by adding descrtiption files to this directory.  The provider description for Google may be a useful example for creating descriptions for other providers.  (But be aware that different providers will have different registration procedures, and may require subtlely different forms of configuration information.)
 
@@ -112,6 +112,8 @@ When installing Annalist, an administration account may be created using the `an
 ### Initial site setup
 
 These instructions use the example of a development configuration (`devel`) and a local user database: these options are not suitable for a full deployment, but are probably the least intrusive to use for early evaluation purposes.
+
+NOTE: using the development configuration, data files are stored within the software source code tree, and will be removed when the software is updated.  Use `--personal` instead of `--development` in the sequence below if you want to preserve any data files you create.
 
 1.  The commands must be issued with the annalist python environment activated.  If needed, use a command like this:
 

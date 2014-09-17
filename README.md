@@ -1,11 +1,17 @@
 annalist
 ========
 
-Free-form web data notebook - "Data management for little guys"
+A free-form web data notebook - "Data management for little guys"
 
-_Current status (2014-09-05):  feature freeze for first public prototype release.  Working on installation and setup utilities and documentation._ 
+_Current status (2014-09-16):  first public prototype, released for evaluation and feedback._ 
 
 For information about the current release, please refer to the [V0.1 release notes](documents/release-notes/release-v0.1.md)
+
+
+Quick-start
+-----------
+
+See [Getting started with Annalist](documents/getting-started.md)
 
 
 Installation
@@ -17,7 +23,7 @@ See [Installing and setting up Annalist](documents/installing-annalist.md), and 
 Using Annalist
 --------------
 
-See the 6 minute [demonstration screencast](http://annalist.net/media/annalist-demo-music-instrument-catalogue.mp4), [Getting started with Annalist](documents/getting-started.md) or the [Guide to using Annalist](documents/using-annalist.md)
+See the 6 minute [demonstration screencast](http://annalist.net/media/annalist-demo-music-instrument-catalogue.mp4) or the [Guide to using Annalist](documents/using-annalist.md)
 
 
 Goals
@@ -40,9 +46,9 @@ Note that all the active development takes place on the ["develop" branch](https
 Status
 ------
 
-The [release notes](documents/release-notes/release-v0.1.md) give an summary of the current state of technical features.
+The [release notes](documents/release-notes/release-v0.1.md) give an summary of the current released state of the software.
 
-Details of currebnt feature status are available  in the [TODO list](develop/documents/TODO.md) and [GitHub issues](https://github.com/gklyne/annalist/issues).
+Details of current feature development and status are available in the [TODO list](documents/TODO.md) and [GitHub issues](https://github.com/gklyne/annalist/issues).
 
 Plans for future features and developments are sketched in the [Development roadmap](documents/roadmap.md).
 
@@ -51,4 +57,14 @@ Development
 -----------
 
 Active development is taking place on the "develop" branch in GitHub - see [https://github.com/gklyne/annalist/tree/develop](https://github.com/gklyne/annalist/tree/develop))
+
+
+Acknowledgements
+----------------
+
+Ideas motivating the creation of Annalist arose from discussions with past colleagues in the Zoology department at Oxford University, particularly David Shotton who led the BioImage project, and Helen White-Cooper who patiently explained her processes and data handling needs as a genomic researcher.
+
+David Flanders, formerly of JISC and now at University of Melbourne, provided encouragement and support for the development of software tools to support academic activities, and in particular raising the profile of engineering and management skills needed to create effective software tools for academics.  A previous project, [Shuffl](https://code.google.com/p/shuffl/), conducted under a JISC Rapid Innovation program that he ran, provided many technical and management lessons that have contributed to the development of Annalist.
+
+More recently, work in the European [Wf4Ever project](http://www.wf4ever-project.org), which explored the use of Research Objects to capture details of scientific method along with experimental data, raised many questions about the nature of tools needed to support publication of reproducible and re-usable research data.  The numerous discussions and experiments have informed many of the design ideas and choices that have gone in to Annalist.
 

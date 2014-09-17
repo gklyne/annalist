@@ -2,7 +2,7 @@
 
 Annalist is designed to use third party authentication services based on [OpenID Connect ](http://openid.net/connect/), which is a simple identity layer built over the [OAuth2 proptocol](http://oauth.net/2/).
 
-Currently, Annalist has been tested with identity services provided by Google, but should work with other identity providers.  Tje instructions below arte for settimng up with Google.  Some of the steps for other providers will almost certainly be different, but should follow a similar pattern.
+Currently, Annalist has been tested with identity services provided by Google, but should work with other identity providers.  The instructions below are for setting up with Google.  Some of the steps for other providers will almost certainly be different, but should follow a similar pattern.
 
 In outline, the steps are:
 
@@ -10,15 +10,15 @@ In outline, the steps are:
 
 2. Register the installed Annalist service with the identity provider (Google).
 
-3. Create a local "client secrets" file containing application authentication protocol details provided by the registration process
+3. Create a local "client secrets" file containing application authentication protocol details provided by the registration process.
 
 4. Log in using third party credentials.
 
-The instructions below assume that Annalist is installed for local access from the computer on which itis installed.  If installed for shared access, the `localhost` domain name in the following steps must be replaced by the full domain name of the host on which it is installed.
+The instructions below assume that Annalist is installed for local access from the computer on which it is installed.  If installed for shared access, the `localhost` domain name in the following steps must be replaced by the full domain name of the host on which it is installed.
 
 Note that being logged in does not necessarily mean you have permissions to access Annalist data;  it simply means that Annalist has an indication of who you are.
 
-(@@NOTE: Currently, the authorization system is not fully implememted, and all authenticated users have full access to the Annalist data, but that will change before the first non-prototype software release.  See [Annalist issue 11](https://github.com/gklyne/annalist/issues/11))
+(@@NOTE: Currently, the authorization system is not fully implemented, and all authenticated users have full access to the Annalist data, but that will change before the first non-prototype software release.  See [Annalist issue 11](https://github.com/gklyne/annalist/issues/11))
 
 
 ## Register Annalist service with Google
