@@ -11,8 +11,8 @@ NOTE: information in this document is being migrated to [Github issues](https://
 
 # Towards V0.1.4
 
-- [ ] annalist-manager option to update site data, leaving the rest untouched
-- [ ] annalist-manager initialize: needs to create `.annalist/providers` directory [#27](https://github.com/gklyne/annalist/issues/27).
+- [x] annalist-manager option to update site data, leaving the rest untouched
+- [x] annalist-manager initialize: needs to create `.annalist/providers` directory [#27](https://github.com/gklyne/annalist/issues/27).
 - [ ] Update view and field descriptions [#16](https://github.com/gklyne/annalist/issues/16)
 - [ ] List headings are clutter [#26](https://github.com/gklyne/annalist/issues/26)
 - [ ] 'Select' label for field type is un-obvious [#25](https://github.com/gklyne/annalist/issues/25)

@@ -20,18 +20,16 @@ log = logging.getLogger(__name__)
 from utils.SetcwdContext    import ChangeCurrentDir
 
 from annalist.layout        import Layout
+from annalist.util          import removetree, replacetree
 
 import am_errors
 from am_settings            import am_get_settings
 
 def am_createsite(annroot, userhome, options):
     """
-    Create Annalistr/Django superuser account.  
+    Create Annalist empty site data.
 
-    Once created, this can be used to create additional users through the 
-    site 'admin' link.
-
-    annroot     is the root directory for theannalist software installation.
+    annroot     is the root directory for the Annalist software installation.
     userhome    is the home directory for the host system user issuing the command.
     options     contains options parsed from the command line.
 
@@ -61,7 +59,7 @@ def am_createsite(annroot, userhome, options):
             # --- Remove old site data from target area
             print("Removing old Annalist site at %s"%(sitebasedir))
             log.info("rmtree: %s"%(sitebasedir))
-            shutil.rmtree(sitebasedir, ignore_errors=True)
+            removetree(sitebasedir)
         else:
             print("Old data already exists at %s (use --force lor -f to overwrite)"%(sitebasedir), file=sys.stderr)
             return am_errors.AM_EXISTS
@@ -79,6 +77,44 @@ def am_createsite(annroot, userhome, options):
         d = os.path.join(sitedatatgt, sdir)
         print("- %s -> %s"%(sdir, d))
         shutil.copytree(s, d)
+    return status
+
+def am_updatesite(annroot, userhome, options):
+    """
+    Update site data, leaving user data alone
+
+    annroot     is the root directory for the Annalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    settings = am_get_settings(annroot, userhome, options)
+    if not settings:
+        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+        return am_errors.AM_NOSETTINGS
+    if len(options.args) > 0:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    status = am_errors.AM_SUCCESS
+    sitesettings = importlib.import_module(settings.modulename)
+    sitebasedir  = os.path.join(sitesettings.BASE_DATA_DIR, "annalist_site")
+    # Test if site exists
+    if not os.path.exists(sitebasedir):
+        print("Site %s not found"%(sitebasedir), file=sys.stderr)
+        return am_errors.AM_NOTEXISTS
+    # --- Copy built-in types and views data to target area
+    site_layout = Layout(sitesettings.BASE_DATA_DIR)
+    sitedatasrc = os.path.join(annroot, "annalist/sitedata")
+    sitedatatgt = os.path.join(sitebasedir, site_layout.SITEDATA_DIR)
+    print("Copy Annalist site data from %s to %s"%(sitedatasrc, sitedatatgt))
+    for sdir in ("types", "lists", "views", "fields", "enums"):
+        s = os.path.join(sitedatasrc, sdir)
+        d = os.path.join(sitedatatgt, sdir)
+        print("- %s -> %s"%(sdir, d))
+        replacetree(s, d)
     return status
 
 # End.
