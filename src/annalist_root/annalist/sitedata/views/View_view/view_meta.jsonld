@@ -17,6 +17,9 @@
   , { "annal:field_id":               "View_comment"
     , "annal:field_placement":        "small:0,12"
     }
+  , { "annal:field_id":               "View_type"
+    , "annal:field_placement":        "small:0,12"
+    }
   , { "annal:field_id":               "View_add_field"
     , "annal:field_placement":        "small:0,12;medium:0,6"
     }

@@ -41,7 +41,8 @@ class SiteView(AnnalistGenericView):
         a list of defined collections.
         """
         resultdata = self.site_data()
-        resultdata['help_filename'] = self.help
+        if resultdata:
+            resultdata['help_filename'] = self.help
         # log.info("SiteView.get: site_data %r"%(self.site_data()))
         return (
             self.check_site_data() or
