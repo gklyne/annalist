@@ -177,7 +177,7 @@ class EntityGenericListView(AnnalistGenericView):
         # Not "Close": set up list parameters
         listinfo = self.list_setup(coll_id, type_id, list_id)
         if listinfo.http_response:
-            return http_response
+            return listinfo.http_response
         # Process requested action
         redirect_uri = None
         entity_ids   = request.POST.getlist('entity_select')

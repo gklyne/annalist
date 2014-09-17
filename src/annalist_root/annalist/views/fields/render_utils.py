@@ -46,7 +46,7 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_identifier.html"    
     if renderid == "Textarea":
         return "field/annalist_edit_textarea.html"
-    if renderid in ["Type", "View", "List", "Field", "Enum"]:
+    if renderid in ["Type", "View", "List", "Field", "Enum", "Enum_optional"]:
         return "field/annalist_edit_select.html"
     if renderid == "View_sel":
         return "field/annalist_edit_view_sel.html"
@@ -83,7 +83,7 @@ def get_view_renderer(renderid):
         return "field/annalist_view_entitytypeid.html"    
     if renderid == "Identifier":
         return "field/annalist_view_identifier.html"    
-    if renderid in ["Type", "View", "List", "Field", "Enum"]:
+    if renderid in ["Type", "View", "List", "Field", "Enum", "Enum_optional"]:
         return "field/annalist_view_select.html"
     if renderid == "View_sel":
         return "field/annalist_view_view_sel.html"
@@ -114,7 +114,7 @@ def get_item_renderer(renderid):
         return "field/annalist_item_entitytypeid.html"
     if renderid == "Identifier":
         return "field/annalist_item_identifier.html"
-    if renderid in ["Type", "View", "List", "Field", "Enum"]:
+    if renderid in ["Type", "View", "List", "Field", "Enum", "Enum_optional"]:
         return "field/annalist_item_entityref.html"
     # if renderid == "View_sel":
     #     return "field/annalist_item_entityref.html"

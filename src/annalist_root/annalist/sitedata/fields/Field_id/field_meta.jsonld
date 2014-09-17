@@ -4,7 +4,7 @@
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Id"
 , "rdfs:comment":               "A short identifier that distinguishes this field from all other fields in the same collection.  A given field may occur in a number of different record types and/or views, so is scoped to the containing collection."
-, "annal:field_name":   "entity_id"
+, "annal:field_name":           "entity_id"
 , "annal:field_render_type":    "EntityId"
 , "annal:field_value_type":     "annal:Slug"
 , "annal:placeholder":          "(field id)"

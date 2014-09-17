@@ -247,7 +247,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Entities
         # log.info([e['fields'][0]['field_value'] for e in r.context['entities']])
         self.assertIn('_initial_values', [ e['fields'][0]['field_value'] for e in r.context['entities'] ])
-        self.assertEqual(len(r.context['entities']), 55)
+        self.assertEqual(len(r.context['entities']), 58)
         field_entities = (
             { ('Entity_id',         "annal:Slug",          "Id")
             , ('Bib_address',       "annal:Text",          "Bib_address")
@@ -259,6 +259,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Field_placement',   "annal:Placement",     "Size/position")
             , ('Field_type',        "annal:Identifier",    "Field value type")
             , ('Field_render',      "annal:Slug",          "Field render type")
+            , ('Field_default',     "annal:Text",          "Default")
+            , ('Field_typeref',     "annal:Slug",          "Enum type")
+            , ('Field_restrict',    "annal:Text",          "Enum restriction")
             , ('List_comment',      "annal:Longtext",      "Help")
             , ('List_default_type', "annal:Type",          "Record type")
             , ('List_default_view', "annal:View",          "View")
