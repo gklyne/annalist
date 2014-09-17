@@ -8,6 +8,12 @@ _Current status (2014-09-16):  first public prototype, released for evaluation a
 For information about the current release, please refer to the [V0.1 release notes](documents/release-notes/release-v0.1.md)
 
 
+Quick-start
+-----------
+
+See [Getting started with Annalist](documents/getting-started.md)
+
+
 Installation
 ------------
 
@@ -17,7 +23,7 @@ See [Installing and setting up Annalist](documents/installing-annalist.md), and 
 Using Annalist
 --------------
 
-See the 6 minute [demonstration screencast](http://annalist.net/media/annalist-demo-music-instrument-catalogue.mp4), [Getting started with Annalist](documents/getting-started.md) or the [Guide to using Annalist](documents/using-annalist.md)
+See the 6 minute [demonstration screencast](http://annalist.net/media/annalist-demo-music-instrument-catalogue.mp4) or the [Guide to using Annalist](documents/using-annalist.md)
 
 
 Goals
