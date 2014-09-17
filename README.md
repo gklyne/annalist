@@ -3,7 +3,7 @@ annalist
 
 Free-form web data notebook - "Data management for little guys"
 
-_Current status (2014-09-05):  feature freeze for first public prototype release.  Working on installation and setup utilities and documentation._ 
+_Current status (2014-09-16):  first public prototype, released for evaluation and feedback._ 
 
 For information about the current release, please refer to the [V0.1 release notes](documents/release-notes/release-v0.1.md)
 
@@ -40,9 +40,9 @@ Note that all the active development takes place on the ["develop" branch](https
 Status
 ------
 
-The [release notes](documents/release-notes/release-v0.1.md) give an summary of the current state of technical features.
+The [release notes](documents/release-notes/release-v0.1.md) give an summary of the current released state of the software.
 
-Details of currebnt feature status are available  in the [TODO list](develop/documents/TODO.md) and [GitHub issues](https://github.com/gklyne/annalist/issues).
+Details of current feature development and status are available in the [TODO list](documents/TODO.md) and [GitHub issues](https://github.com/gklyne/annalist/issues).
 
 Plans for future features and developments are sketched in the [Development roadmap](documents/roadmap.md).
 
