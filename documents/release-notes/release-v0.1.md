@@ -84,7 +84,7 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 ## Version 0.1.3
 
-* First public prototype release @@TODO
+* First public prototype release
 
 ## Version 0.1.2
 
