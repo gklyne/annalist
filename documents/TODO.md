@@ -8,8 +8,9 @@
 
 NOTE: information in this document is being migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
 
-(Currently wrapping up first prototype release;  TODOs moved to release notes)
 
-# Towards v0.1.4
+# Towards V0.1.4
 
 - [ ] annalist-manager option to update site data, leaving the rest untouched
+- [ ] annalist-manager initialize: needs to create `.annalist/providers` directory #27
+
