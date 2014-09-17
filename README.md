@@ -1,7 +1,7 @@
 annalist
 ========
 
-Free-form web data notebook - "Data management for little guys"
+A free-form web data notebook - "Data management for little guys"
 
 _Current status (2014-09-16):  first public prototype, released for evaluation and feedback._ 
 
