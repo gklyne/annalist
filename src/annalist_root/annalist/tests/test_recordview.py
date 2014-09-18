@@ -171,7 +171,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
             return ( 
                 fid.startswith("Field_") or 
                 fid.startswith("List_") or
-                fid.startswith("Type_")
+                fid.startswith("Type_") or
+                fid.startswith("View_")
                 )
         self.field_options    = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
