@@ -3,6 +3,7 @@
 , "annal:type_id":              "_list"
 , "rdfs:label":                 ""
 , "rdfs:comment":               ""
+, "annal:record_type":          ""
 , "annal:display_type":         "List"
 , "annal:default_view":         "Default_view"
 , "annal:default_type":         "Default_type"

@@ -4,6 +4,7 @@
 , "annal:type_id":              "_list"
 , "rdfs:label":                 "List bibliographic entries"
 , "rdfs:comment":               "Description of list of views"
+, "annal:record_type":          "annal:BibEntry"
 , "annal:display_type":         "List"
 , "annal:default_view":         "BibEntry_view"
 , "annal:default_type":         "BibEntry_type"

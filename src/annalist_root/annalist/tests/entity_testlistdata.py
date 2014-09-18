@@ -100,6 +100,7 @@ def recordlist_value_keys():
         [ 'annal:id', 'annal:type_id'
         , 'annal:type', 'annal:url', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
+        , 'annal:record_type'
         , 'annal:display_type'
         , 'annal:list_entity_selector'
         , 'annal:default_view'
@@ -118,6 +119,7 @@ def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="Rec
         { 'annal:type':                 "annal:List"
         , 'rdfs:label':                 "%s %s/%s"%(update, coll_id, list_id)
         , 'rdfs:comment':               "%s help for %s/%s"%(update, coll_id, list_id)
+        , 'annal:record_type':          ""
         , "annal:display_type":         "List"
         , "annal:default_view":         "Default_view"
         , "annal:default_type":         "Default_type"

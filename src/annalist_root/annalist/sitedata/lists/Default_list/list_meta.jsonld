@@ -5,6 +5,7 @@
 , "annal:uri":                  "annal:display/Default_list"
 , "rdfs:label":                 "List one type"
 , "rdfs:comment":               "Default list of entities of given type"
+, "annal:record_type":          ""
 , "annal:display_type":         "List"
 , "annal:default_view":         "Default_view"
 , "annal:default_type":         "Default_type"
