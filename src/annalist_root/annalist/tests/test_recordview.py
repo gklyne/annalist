@@ -167,6 +167,12 @@ class RecordViewEditViewTest(AnnalistTestCase):
         loggedin      = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         self.no_options       = ['(no options)']
+        def special_field(fid):
+            return ( 
+                fid.startswith("Field_") or 
+                fid.startswith("List_") or
+                fid.startswith("Type_")
+                )
         self.field_options    = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
                   if fid != "_initial_values"
@@ -177,13 +183,12 @@ class RecordViewEditViewTest(AnnalistTestCase):
             ])
         self.field_options_bib_no_special = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
-                  if fid != "_initial_values" and 
-                     not (fid.startswith("Field_") or fid.startswith("List_"))
+                  if fid != "_initial_values" and not special_field(fid)
             ])
         self.field_options_no_special = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
                   if fid != "_initial_values" and 
-                      not (fid.startswith("Bib_") or fid.startswith("Field_") or fid.startswith("List_"))
+                      not (fid.startswith("Bib_") or special_field(fid))
             ])
         # log.info(self.field_options_no_bibentry)
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_view")
