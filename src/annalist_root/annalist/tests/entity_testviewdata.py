@@ -114,13 +114,13 @@ def recordview_create_values(
         field3_placement="small:0,12"
         ):
     """
-    Entity values used when creating a record type entity
+    Entity values used when creating a record view entity
     """
     view_values = (
         { 'annal:type':         "annal:View"
         , 'rdfs:label':         "%s %s/%s"%(update, coll_id, view_id)
         , 'rdfs:comment':       "%s help for %s in collection %s"%(update, view_id, coll_id)
-        , 'annal:record_type':  "annal:DefaultType"
+        , 'annal:record_type':  ""
         , 'annal:add_field':    "yes"
         , 'annal:view_fields':
           [ { 'annal:field_id':         "Entity_id"
@@ -250,7 +250,7 @@ def recordview_entity_view_form_data(
         , 'View_comment':       '%s description ... (%s/%s)'%(update, coll_id, view_id)
         , 'View_add_field':     'yes'
         , 'orig_id':            'orig_view_id'
-        , 'record_type':        'annal:DefaultType'
+        , 'record_type':        ''
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
         # View fields
         , 'View_fields__0__Field_id':           "Entity_id"
@@ -287,7 +287,8 @@ def recordview_entity_view_form_data(
 
 def recordview_view_context_data(
         coll_id="testcoll", view_id=None, orig_id=None, view_ids=[],
-        action=None, add_field=None, remove_field=None, update="RecordView"
+        action=None, view_record_type="", add_field=None, remove_field=None, 
+        update="RecordView"
     ):
     repeat_fields_data = (
         '{"annal:repeat_entity_values": "annal:view_fields", '+
@@ -310,7 +311,7 @@ def recordview_view_context_data(
         , 'orig_id':            'orig_view_id'
         , 'record_type':        'annal:View'
         , 'fields':
-          [ { 'field_id':           'View_id'
+          [ { 'field_id':           'View_id'           # fields[0]
             , 'field_label':        'Id'
             , 'field_render_view':  'field/annalist_view_entityid.html'
             , 'field_render_edit':  'field/annalist_edit_entityid.html'
@@ -320,7 +321,7 @@ def recordview_view_context_data(
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
-          , { 'field_id':           'View_label'
+          , { 'field_id':           'View_label'        # fields[1]
             , 'field_label':        'Label'
             , 'field_render_view':  'field/annalist_view_text.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
@@ -330,7 +331,7 @@ def recordview_view_context_data(
             , 'field_value':        '%s data ... (%s/%s)'%(update, coll_id, view_id)
             , 'options':            []
             }
-          , { 'field_id':           'View_comment'
+          , { 'field_id':           'View_comment'      # fields[2]
             , 'field_label':        'Help'
             , 'field_render_view':  'field/annalist_view_textarea.html'
             , 'field_render_edit':  'field/annalist_edit_textarea.html'
@@ -340,7 +341,17 @@ def recordview_view_context_data(
             , 'field_value':        '%s description ... (%s/%s)'%(update, coll_id, view_id)
             , 'options':            []
             }
-          , { 'field_id':           'View_add_field'
+          , { 'field_id':           'View_type'         # fields[3]
+            , 'field_label':        'Record type'
+            , 'field_render_view':  'field/annalist_view_identifier.html'
+            , 'field_render_edit':  'field/annalist_edit_identifier.html'
+            , 'field_name':         'View_type'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_value_type':   'annal:Identifier'
+            , 'field_value':        ''
+            , 'options':            []
+            }
+          , { 'field_id':           'View_add_field'    # fields[4]
             , 'field_label':        'Add field?'
             , 'field_render_view':  'field/annalist_view_text.html'
             , 'field_render_edit':  'field/annalist_edit_text.html'
@@ -350,13 +361,13 @@ def recordview_view_context_data(
             , 'field_value':        ''
             , 'options':            []
             }
-          , { "repeat_id":              "View_fields"
+          , { "repeat_id":              "View_fields"   # fields[5]
             , "repeat_context_values":  "repeat"
             , "repeat_label":           "Fields"
             , "repeat_label_add":       "Add field"
             , "repeat_label_delete":    "Remove selected field(s)"
             , "repeat":
-              [ { 'repeat_id': 'View_fields'
+              [ { 'repeat_id': 'View_fields'                # repeat[0]
                 , 'repeat_index': 0
                 , 'repeat_prefix': 'View_fields__0__'
                 , "fields":
@@ -380,7 +391,7 @@ def recordview_view_context_data(
                     }
                   ]
                 }
-              , { 'repeat_id': 'View_fields'
+              , { 'repeat_id': 'View_fields'                # repeat[1]
                 , 'repeat_index': 1
                 , 'repeat_prefix': 'View_fields__1__'
                 , "fields":
@@ -404,7 +415,7 @@ def recordview_view_context_data(
                     }
                   ]
                 }
-              , { 'repeat_id': 'View_fields'
+              , { 'repeat_id': 'View_fields'                # repeat[2]
                 , 'repeat_index': 2
                 , 'repeat_prefix': 'View_fields__2__'
                 , "fields":
@@ -428,9 +439,33 @@ def recordview_view_context_data(
                     }
                   ]
                 }
-              , { 'repeat_id': 'View_fields'
+              , { 'repeat_id': 'View_fields'                # repeat[3]
                 , 'repeat_index': 3
                 , 'repeat_prefix': 'View_fields__3__'
+                , "fields":
+                  [ { 'field_id':           'Field_sel'
+                    , 'field_label':        'Select'
+                    , 'field_render_view':  'field/annalist_view_select.html'
+                    , 'field_render_edit':  'field/annalist_edit_select.html'
+                    , 'field_name':         'Field_id'
+                    , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+                    , 'field_value_type':   'annal:Slug'
+                    , 'field_value':        "View_type"
+                    }
+                  , { 'field_id':           'Field_placement'
+                    , 'field_label':        'Size/position'
+                    , 'field_render_view':  'field/annalist_view_text.html'
+                    , 'field_render_edit':  'field/annalist_edit_text.html'
+                    , 'field_name':         'Field_placement'
+                    , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
+                    , 'field_value_type':   'annal:Placement'
+                    , 'field_value':        'small:0,12'
+                    }
+                  ]
+                }
+              , { 'repeat_id': 'View_fields'                # repeat[4]
+                , 'repeat_index': 4
+                , 'repeat_prefix': 'View_fields__4__'
                 , 'repeat_fields_data': repeat_fields_data
                 }
               ]
@@ -447,11 +482,13 @@ def recordview_view_context_data(
         context_dict['orig_id']     = orig_id
     if action:  
         context_dict['action']      = action
+    if view_record_type:
+        context_dict['fields'][3]['field_value'] = view_record_type
     if add_field:
-        context_dict['fields'][4]['repeat'].append(
+        context_dict['fields'][5]['repeat'].append(
             { 'repeat_id': 'View_fields'
-            , 'repeat_index': 4
-            , 'repeat_prefix': 'View_fields__4__'
+            , 'repeat_index': 5
+            , 'repeat_prefix': 'View_fields__5__'
             , "fields":
               [ { 'field_id':           'Field_sel'
                 , 'field_label':        'Select'
@@ -474,10 +511,10 @@ def recordview_view_context_data(
               ]
             })
     if remove_field:
-        context_dict['fields'][4]['repeat'][2:4] = (
+        context_dict['fields'][5]['repeat'][3:5] = (
             [ { 'repeat_id': 'View_fields'
-              , 'repeat_index': 2
-              , 'repeat_prefix': 'View_fields__2__'
+              , 'repeat_index': 3
+              , 'repeat_prefix': 'View_fields__3__'
               , 'repeat_fields_data': repeat_fields_data
               }
             ])
@@ -487,6 +524,7 @@ def recordview_view_form_data(
         coll_id="testcoll", 
         view_id=None, orig_id=None, 
         action=None, cancel=None,
+        view_record_type="",
         add_field=None,         # True for add field option
         remove_fields=None,     # List of field numbers to remove (as strings)
         update="RecordView"):
@@ -503,7 +541,9 @@ def recordview_view_form_data(
         , 'View_fields__1__Field_placement':    "small:0,12"
         , 'View_fields__2__Field_id':           "View_comment"
         , 'View_fields__2__Field_placement':    "small:0,12"
-        , 'View_fields__3__repeat_fields_data': 
+        , 'View_fields__3__Field_id':           "View_type"
+        , 'View_fields__3__Field_placement':    "small:0,12"
+        , 'View_fields__4__repeat_fields_data': 
             '{ "annal:repeat_id": "View_fields"' +
             ', "annal:repeat_label": "Fields"' +
             ', "annal:repeat_label_add": "Add field"' +
@@ -531,6 +571,8 @@ def recordview_view_form_data(
         form_data_dict['orig_id']       = orig_id
     if action:
         form_data_dict['action']        = action
+    if view_record_type:
+        form_data_dict['record_type']   = view_record_type
     if cancel:
         form_data_dict['cancel']        = "Cancel"
     elif add_field:

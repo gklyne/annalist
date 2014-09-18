@@ -15,11 +15,12 @@ NOTE: information in this document is being migrated to [Github issues](https://
 - [x] annalist-manager initialize: needs to create `.annalist/providers` directory [#27](https://github.com/gklyne/annalist/issues/27).
 - [ ] Update view and field descriptions [#16](https://github.com/gklyne/annalist/issues/16)
     - [x] extend field edit form to include additional fields used.
-    - [ ] extend view edit form to include additional fields used in sitedata
+    - [x] extend view edit form to include additional fields used in sitedata (i.e. record_type)
     - [ ] add more 'annal:field_entity_type' constraints for fields that are intended to be used only with specific entity types (e.g. fields, views, etc.)
 - [ ] List headings are clutter [#26](https://github.com/gklyne/annalist/issues/26)
 - [ ] 'Select' label for field type is un-obvious [#25](https://github.com/gklyne/annalist/issues/25)
 - [ ] New entities are initially populated with useless junk [#24](https://github.com/gklyne/annalist/issues/24)
+- [ ] Change type of entry doesn't delete old record [#29](https://github.com/gklyne/annalist/issues/29)
 - [ ] Authorization [#11](https://github.com/gklyne/annalist/issues/11)
 - [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
 - [ ] Grid view [#7](https://github.com/gklyne/annalist/issues/7)

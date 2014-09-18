@@ -7,7 +7,7 @@
 , "annal:field_name":           "View_type"
 , "annal:field_render_type":    "Identifier"
 , "annal:field_value_type":     "annal:Identifier"
-, "annal:placeholder":          "(record type URI/CURIE)"
+, "annal:placeholder":          "(record type URI/CURIE displayed by view)"
 , "annal:field_placement":      "small:0,12"
 , "annal:property_uri":         "annal:record_type"
 , "annal:default_value":        ""
