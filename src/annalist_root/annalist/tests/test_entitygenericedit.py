@@ -1134,6 +1134,26 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entityedit", update="Updated entity")
         return
 
+    def test_post_edit_entity_blank_label_comment(self):
+        self._create_entity_data("entityedit")
+        e1 = self._check_entity_data_values("entityedit")
+        f  = entitydata_recordtype_view_form_data(entity_id="entityedit", action="edit", update="Updated entity")
+        f['Type_label']   = ""
+        f['Type_comment'] = ""
+        u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityedit", view_id="Type_view")
+        r  = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self._check_entity_data_values("entityedit", update="Updated entity", 
+            update_dict=
+                { 'rdfs:label':   ""
+                , 'rdfs:comment': ""
+                }
+            )
+        return
+
     def test_post_edit_entity_no_login(self):
         self.client.logout()
         f = entitydata_recordtype_view_form_data(entity_id="edittype", action="edit")

@@ -21,7 +21,7 @@ NOTE: information in this document is being migrated to [Github issues](https://
         - [x] Add field manually to internal list descrptions
         - [x] Add field to List_view
     - [x] Remove "Default_field"
-- [ ] Blank value in submitted form is ignored [#30](https://github.com/gklyne/annalist/issues/30)
+- [x] Blank value in submitted form is ignored [#30](https://github.com/gklyne/annalist/issues/30)
 - [ ] List headings are clutter [#26](https://github.com/gklyne/annalist/issues/26)
 - [ ] 'Select' label for field type is un-obvious [#25](https://github.com/gklyne/annalist/issues/25)
 - [ ] New entities are initially populated with useless junk [#24](https://github.com/gklyne/annalist/issues/24)
