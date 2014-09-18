@@ -183,8 +183,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
+        self.assertContains(r, "<title>Collection testcoll</title>")
         field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         formrow1 = """
             <div class="small-12 medium-6 columns">
@@ -313,7 +312,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
@@ -429,7 +427,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
@@ -445,10 +442,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
-        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "entity1")
@@ -645,7 +640,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
@@ -659,7 +653,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
@@ -936,7 +929,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         expect_context = entitydata_recordtype_view_context_data(action="copy")
@@ -949,7 +941,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         expect_context = entitydata_recordtype_view_context_data(
@@ -1230,7 +1221,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context for re-rendered form
@@ -1252,7 +1242,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context for re-rendered form

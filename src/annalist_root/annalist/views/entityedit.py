@@ -14,7 +14,7 @@ from django.http                        import HttpResponse
 from django.http                        import HttpResponseRedirect
 from django.core.urlresolvers           import resolve, reverse
 
-from annalist.identifiers               import ANNAL
+from annalist.identifiers               import RDFS, ANNAL
 from annalist                           import message
 from annalist                           import util
 
@@ -46,6 +46,7 @@ from annalist.views.fields.render_utils import get_entity_values
 baseentityvaluemap  = (
         [ SimpleValueMap(c='title',            e=None,                    f=None               )
         , SimpleValueMap(c='coll_id',          e=None,                    f=None               )
+        , SimpleValueMap(c='coll_label',       e=None,                    f=None               )
         , SimpleValueMap(c='type_id',          e=None,                    f=None               )
         , SimpleValueMap(c='view_choices',     e=None,                    f=None               )
         , SimpleValueMap(c='edit_add_field',   e=None,                    f=None               )
@@ -154,12 +155,14 @@ class GenericEntityEditView(AnnalistGenericView):
         # log.info("continuation_url %s, type_id %s"%(continuation_url, type_id))
         typeinfo        = viewinfo.entitytypeinfo
         context_extra_values = (
-            { 'title':            viewinfo.sitedata["title"]
+            { 'site_title':       viewinfo.sitedata["title"]
+            , 'title':            viewinfo.collection[RDFS.CURIE.label]
             , 'action':           action
             , 'edit_add_field':   viewinfo.recordview.get("annal:add_field", "yes")
             , 'continuation_url': continuation_url
             , 'request_url':      self.get_request_path()
             , 'coll_id':          coll_id
+            , 'coll_label':       viewinfo.collection[RDFS.CURIE.label]
             , 'type_id':          type_id
             , 'view_choices':     self.get_view_choices_field(viewinfo)
             , 'orig_id':          orig_entity_id
@@ -288,12 +291,14 @@ class GenericEntityEditView(AnnalistGenericView):
         if viewinfo.action == "copy":
             entityvals.pop('annal:uri')
         viewcontext = entityvaluemap.map_value_to_context(entityvals,
-            title               = viewinfo.sitedata["title"],
+            site_title          = viewinfo.sitedata["title"],
+            title               = viewinfo.collection[RDFS.CURIE.label],
             action              = viewinfo.action,
             edit_add_field      = viewinfo.recordview.get("annal:add_field", "yes"),
             continuation_url    = continuation_url,
             request_url         = self.get_request_path(),
             coll_id             = coll_id,
+            coll_label          = viewinfo.collection[RDFS.CURIE.label],
             type_id             = type_id,
             view_choices        = self.get_view_choices_field(viewinfo),
             orig_id             = entity_id,

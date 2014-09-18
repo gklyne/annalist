@@ -40,8 +40,7 @@ from AnnalistTestCase                   import AnnalistTestCase
 from entity_testutils                   import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
-    collection_create_values,
-    site_title
+    collection_create_values
     )
 from entity_testtypedata                import (
     recordtype_dir,
@@ -328,7 +327,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content)
-        self.assertContains(r, site_title("<title>%s</title>"))
+        self.assertContains(r, "<title>Collection testcoll</title>")
         self.assertContains(r, "<h3>'_type' data in collection 'testcoll'</h3>")
         field_vals = default_fields(coll_id="testcoll", type_id="_type", entity_id="00000001")
         formrow1 = """
@@ -422,7 +421,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
         type_url = entity_url(type_id="_type", entity_id="00000001")
-        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         self.assertEqual(r.context['entity_id'],        "00000001")
@@ -447,7 +445,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
         type_url = entity_url(type_id="_type", entity_id="Default_type")
-        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         self.assertEqual(r.context['entity_id'],        "Default_type")
@@ -484,7 +481,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
         type_url = entity_url(type_id="_type", entity_id="Default_type")
-        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         self.assertEqual(r.context['entity_id'],        "Default_type")
@@ -556,7 +552,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # print r.content
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         # Test context
         expect_context = recordtype_entity_view_context_data(action="new", update="RecordType")
@@ -571,7 +566,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         # Test context
         expect_context = recordtype_entity_view_context_data(
@@ -620,7 +614,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         expect_context = recordtype_entity_view_context_data(action="copy", update="Updated RecordType")
         self.assertDictionaryMatch(r.context, expect_context)
@@ -634,7 +627,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         expect_context = recordtype_entity_view_context_data(
             type_id="!badtype", orig_id="Default_type", 
@@ -708,7 +700,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         # Test context for re-rendered form
         expect_context = recordtype_entity_view_context_data(action="edit", update="Updated RecordType")
@@ -728,7 +719,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with record type identifier</h3>")
         # Test context
         expect_context = recordtype_entity_view_context_data(

@@ -305,7 +305,7 @@ def recordview_view_context_data(
         '"annal:repeat_label_delete": "Remove selected field(s)"'+
         '}')
     context_dict = (
-        { 'title':              site_title()
+        { 'title':              "Collection %s"%(coll_id)
         , 'coll_id':            coll_id
         , 'type_id':            '_view'
         , 'orig_id':            'orig_view_id'

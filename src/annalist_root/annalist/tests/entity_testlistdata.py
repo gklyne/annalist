@@ -170,7 +170,7 @@ def recordlist_view_context_data(
         action=None, update="RecordList"
     ):
     context_dict = (
-        { 'title':              site_title()
+        { 'title':              "Collection %s"%(coll_id)
         , 'coll_id':            coll_id
         , 'type_id':            '_list'
         , 'orig_id':            'orig_list_id'

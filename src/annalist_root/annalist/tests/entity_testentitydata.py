@@ -171,7 +171,7 @@ def entitydata_context_data(
         action=None, update="Entity"
     ):
     context_dict = (
-        { 'title':              site_title()
+        { 'title':              "Collection testcoll"
         , 'coll_id':            'testcoll'
         , 'type_id':            'testtype'
         , 'orig_id':            'orig_entity_id'
@@ -403,7 +403,7 @@ def entitydata_recordtype_view_context_data(
         action=None, update="Entity"
     ):
     context_dict = (
-        { 'title':              site_title()
+        { 'title':              "Collection testcoll"
         , 'coll_id':            'testcoll'
         , 'type_id':            'testtype'
         , 'orig_id':            'orig_entity_id'

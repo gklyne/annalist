@@ -136,7 +136,7 @@ class EntityGenericListView(AnnalistGenericView):
         # Set up initial view context
         entityvaluemap = self.get_list_entityvaluemap(listinfo)
         listcontext = entityvaluemap.map_value_to_context(entityval,
-            ### title                 = self.site_data()["title"],
+            site_title            = self.site_data()["title"],
             title                 = listinfo.collection[RDFS.CURIE.label],
             request_url           = self.get_request_path(),
             continuation_url      = request.GET.get('continuation_url', ""),
