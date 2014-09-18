@@ -2,7 +2,7 @@
 , "@type":                      ["annal:Field"]
 , "annal:id":                   "Field_sel"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Select"
+, "rdfs:label":                 "Field id"
 , "rdfs:comment":               "A field selector id used in a field description to name a field whose definition defines the entity-to-context-to-form mapping.  In the context, the 'entity' is an entry in a record view description field list.  This is related to but different from the field id field in a field view display."
 , "annal:field_name":           "Field_id"
 , "annal:field_render_type":    "Field"

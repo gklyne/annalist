@@ -267,7 +267,7 @@ def recordlist_view_context_data(
                 , 'repeat_prefix': 'List_fields__0__'
                 , "fields":
                   [ { 'field_id':           'Field_sel'
-                    , 'field_label':        'Select'
+                    , 'field_label':        'Field id'
                     , 'field_render_view':  'field/annalist_view_select.html'
                     , 'field_render_edit':  'field/annalist_edit_select.html'
                     , 'field_name':         'Field_id'
@@ -291,7 +291,7 @@ def recordlist_view_context_data(
                 , 'repeat_prefix': 'List_fields__1__'
                 , "fields":
                   [ { 'field_id':           'Field_sel'
-                    , 'field_label':        'Select'
+                    , 'field_label':        'Field id'
                     , 'field_render_view':  'field/annalist_view_select.html'
                     , 'field_render_edit':  'field/annalist_edit_select.html'
                     , 'field_name':         'Field_id'

@@ -270,7 +270,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Type_uri',          "annal:Identifier",    "URI")
             , ('List_choice',       "annal:Slug",          "List view")
             , ('View_choice',       "annal:Slug",          "Choose view")
-            , ('Field_sel',         "annal:Slug",          "Select")
+            , ('Field_sel',         "annal:Slug",          "Field id")
             })
         for f in field_entities:
             for eid in range(len(r.context['entities'])):
