@@ -8,4 +8,5 @@
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(list label)"
 , "annal:property_uri":         "rdfs:label"
+, "annal:field_entity_type":    "annal:List"
 }

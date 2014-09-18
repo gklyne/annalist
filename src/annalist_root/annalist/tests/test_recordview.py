@@ -171,17 +171,19 @@ class RecordViewEditViewTest(AnnalistTestCase):
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
                   if fid != "_initial_values"
             ])
-        self.field_options_no_bibentry    = sorted(
+        self.field_options_no_bibentry = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
                   if fid != "_initial_values" and not fid.startswith("Bib_")
             ])
-        self.field_options_no_field    = sorted(
+        self.field_options_bib_no_special = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
-                  if fid != "_initial_values" and not fid.startswith("Field_")
+                  if fid != "_initial_values" and 
+                     not (fid.startswith("Field_") or fid.startswith("List_"))
             ])
-        self.field_options_no_bib_field    = sorted(
+        self.field_options_no_special = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
-                  if fid != "_initial_values" and not (fid.startswith("Bib_") or fid.startswith("Field_"))
+                  if fid != "_initial_values" and 
+                      not (fid.startswith("Bib_") or fid.startswith("Field_") or fid.startswith("List_"))
             ])
         # log.info(self.field_options_no_bibentry)
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_view")
@@ -599,7 +601,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_label="", # default_label("testcoll", "_view", "00000001"),
             view_help="", # default_comment("testcoll", "_view", "00000001"),
             view_url=TestHostUri + recordview_url("testcoll", "00000001"),
-            field_options = self.field_options_no_bib_field
+            field_options = self.field_options_no_special
             )
         return
 
@@ -629,7 +631,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_url=view_url,
             view_uri=None,
             view_record_type="",
-            field_options=self.field_options_no_bib_field
+            field_options=self.field_options_no_special
             )
         return
 
@@ -670,7 +672,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_url=TestHostUri+"/testsite/c/testcoll/d/_view/Default_view/",
             view_uri="annal:display/Default_view",
             view_record_type="",
-            field_options=self.field_options_no_bib_field
+            field_options=self.field_options_no_special
             )
         return
 
@@ -769,7 +771,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[0]['fields'][0].field_value_key,        "annal:field_id")
         self.assertEqual(viewfields[0]['fields'][0].field_value,            "Entity_id")
         # log.info(viewfields[0]['fields'][0].options)
-        self.assertEqual(viewfields[0]['fields'][0].options,                self.field_options_no_field)
+        self.assertEqual(viewfields[0]['fields'][0].options,                self.field_options_bib_no_special)
         self.assertEqual(viewfields[0]['fields'][0].field_id,               "Field_sel")
         self.assertEqual(viewfields[0]['fields'][0].field_name,             "Field_id")
         self.assertEqual(viewfields[0]['fields'][0].field_placement.field,  "small-12 medium-6 columns")
