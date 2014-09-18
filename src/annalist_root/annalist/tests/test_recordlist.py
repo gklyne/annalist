@@ -209,7 +209,8 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_type="List",
             list_default_type="Default_type",
             list_default_view="Default_view",
-            list_selector="ALL"
+            list_selector="ALL",
+            list_target_type=""
             ):
         r = response
         #log.info("r.context['fields']: %r"%(r.context['fields'],))
@@ -226,7 +227,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['view_id'],          'List_view')
 
         # Fields
-        self.assertEqual(len(r.context['fields']), 8)
+        self.assertEqual(len(r.context['fields']), 9)
         #
         self.assertEqual(r.context['fields'][0]['field_id'], 'List_id')
         self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
@@ -263,10 +264,15 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][6]['field_label'], 'Selector')
         self.assertEqual(r.context['fields'][6]['field_value'], list_selector)
         #
+        self.assertEqual(r.context['fields'][7]['field_id'], 'List_target_type')
+        self.assertEqual(r.context['fields'][7]['field_name'], 'List_target_type')
+        self.assertEqual(r.context['fields'][7]['field_label'], 'Record type')
+        self.assertEqual(r.context['fields'][7]['field_value'], list_target_type)
+        #
         # Field list (List_id, List_label, List_comment, field descriptions)
-        # log.info("r.context['fields'][7]: %r"%(r.context['fields'][7],))
+        # log.info("r.context['fields'][8]: %r"%(r.context['fields'][8],))
         # log.info("viewfields: %r"%(viewfields,))
-        viewfields = r.context['fields'][7]['repeat']
+        viewfields = r.context['fields'][8]['repeat']
         self.assertEqual(len(viewfields), num_fields)
         if num_fields == 0: return
         self.assertEqual(len(viewfields[0]['fields']), 2)

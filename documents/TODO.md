@@ -13,14 +13,15 @@ NOTE: information in this document is being migrated to [Github issues](https://
 
 - [x] annalist-manager option to update site data, leaving the rest untouched
 - [x] annalist-manager initialize: needs to create `.annalist/providers` directory [#27](https://github.com/gklyne/annalist/issues/27).
-- [ ] Update view and field descriptions [#16](https://github.com/gklyne/annalist/issues/16)
+- [x] Update view and field descriptions [#16](https://github.com/gklyne/annalist/issues/16)
     - [x] extend field edit form to include additional fields used.
     - [x] extend view edit form to include additional fields used in sitedata (i.e. record_type)
     - [x] add more 'annal:field_entity_type' constraints for fields that are intended to be used only with specific entity types (e.g. fields, views, etc.)
-    - [ ] List view also needs 'annal:field_entity_type' to control selection
-        - [ ] Add field manually to internal list descrptions
-        - [ ] Add field to List_view
-        - [ ] Remove "Default_field"
+    - [x] List view also needs 'annal:field_entity_type' to control selection
+        - [x] Add field manually to internal list descrptions
+        - [x] Add field to List_view
+    - [x] Remove "Default_field"
+- [ ] Blank value in submitted form is ignored [#30](https://github.com/gklyne/annalist/issues/30)
 - [ ] List headings are clutter [#26](https://github.com/gklyne/annalist/issues/26)
 - [ ] 'Select' label for field type is un-obvious [#25](https://github.com/gklyne/annalist/issues/25)
 - [ ] New entities are initially populated with useless junk [#24](https://github.com/gklyne/annalist/issues/24)

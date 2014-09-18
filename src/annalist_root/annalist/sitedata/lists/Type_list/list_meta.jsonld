@@ -4,11 +4,11 @@
 , "annal:type_id":              "_list"
 , "rdfs:label":                 "List types"
 , "rdfs:comment":               "Description of list of types"
-, "annal:record_type":          "annal:Type"
 , "annal:display_type":         "List"
 , "annal:default_view":         "Type_view"
 , "annal:default_type":         "_type"
 , "annal:list_entity_selector": "'annal:Type' in [@type]"
+, "annal:record_type":          "annal:Type"
 , "annal:list_fields":
   [ { "annal:field_id":             "Entity_id"
     , "annal:field_placement":      "small:0,3"

@@ -299,8 +299,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['options'], self.no_options)
         # 4th field - type of entity for view
         # log.info("******\n"+repr(r.context['fields'][3]))
-        self.assertEqual(r.context['fields'][3]['field_id'],                'View_type')
-        self.assertEqual(r.context['fields'][3]['field_name'],              'View_type')
+        self.assertEqual(r.context['fields'][3]['field_id'],                'View_target_type')
+        self.assertEqual(r.context['fields'][3]['field_name'],              'View_target_type')
         self.assertEqual(r.context['fields'][3]['field_label'],             'Record type')
         self.assertEqual(r.context['fields'][3]['field_property_uri'],      "annal:record_type")
         self.assertEqual(r.context['fields'][3]['field_render_view'],       "field/annalist_view_identifier.html")
@@ -432,8 +432,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_label'], 'Help')
         # 4th field - rview recoird type
         # log.info("******\n"+repr(r.context['fields'][3]))
-        self.assertEqual(r.context['fields'][3]['field_id'], 'View_type')
-        self.assertEqual(r.context['fields'][3]['field_name'], 'View_type')
+        self.assertEqual(r.context['fields'][3]['field_id'], 'View_target_type')
+        self.assertEqual(r.context['fields'][3]['field_name'], 'View_target_type')
         self.assertEqual(r.context['fields'][3]['field_label'], 'Record type')
         # 5th field - add field
         # log.info("******\n"+repr(r.context['fields'][3]))
@@ -465,7 +465,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(viewfields[2]['fields'][1].field_value,            "small:0,12")
         # View_add_field
         self.assertEqual(viewfields[3]['fields'][0].field_value_key,        "annal:field_id")
-        self.assertEqual(viewfields[3]['fields'][0].field_value,            "View_type")
+        self.assertEqual(viewfields[3]['fields'][0].field_value,            "View_target_type")
         self.assertEqual(viewfields[3]['fields'][1].field_value_key,        "annal:field_placement")
         self.assertEqual(viewfields[3]['fields'][1].field_value,            "small:0,12")
         # View_add_field
@@ -502,7 +502,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # New blank field, if selected
         if num_fields == 7:
             self.assertEqual(viewfields[6]['fields'][0].field_value_key,        "annal:field_id")
-            self.assertEqual(viewfields[6]['fields'][0].field_value,            "Default_field")
+            self.assertEqual(viewfields[6]['fields'][0].field_value,            "")
             self.assertEqual(viewfields[6]['fields'][1].field_value_key,        "annal:field_placement")
             self.assertEqual(viewfields[6]['fields'][1].field_value,            "")
         return

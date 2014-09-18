@@ -4,11 +4,11 @@
 , "annal:type_id":              "_list"
 , "rdfs:label":                 "List bibliographic entries"
 , "rdfs:comment":               "Description of list of views"
-, "annal:record_type":          "annal:BibEntry"
 , "annal:display_type":         "List"
 , "annal:default_view":         "BibEntry_view"
 , "annal:default_type":         "BibEntry_type"
 , "annal:list_entity_selector": "'annal:BibEntry' in [@type]"
+, "annal:record_type":          "annal:BibEntry"
 , "annal:list_fields":
   [ { "annal:field_id":             "Entity_id"
     , "annal:field_placement":      "small:0,3"

@@ -341,11 +341,11 @@ def recordview_view_context_data(
             , 'field_value':        '%s description ... (%s/%s)'%(update, coll_id, view_id)
             , 'options':            []
             }
-          , { 'field_id':           'View_type'         # fields[3]
+          , { 'field_id':           'View_target_type'         # fields[3]
             , 'field_label':        'Record type'
             , 'field_render_view':  'field/annalist_view_identifier.html'
             , 'field_render_edit':  'field/annalist_edit_identifier.html'
-            , 'field_name':         'View_type'
+            , 'field_name':         'View_target_type'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Identifier'
             , 'field_value':        ''
@@ -450,7 +450,7 @@ def recordview_view_context_data(
                     , 'field_name':         'Field_id'
                     , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
                     , 'field_value_type':   'annal:Slug'
-                    , 'field_value':        "View_type"
+                    , 'field_value':        "View_target_type"
                     }
                   , { 'field_id':           'Field_placement'
                     , 'field_label':        'Size/position'
@@ -497,7 +497,7 @@ def recordview_view_context_data(
                 , 'field_name':         'Field_id'
                 , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
                 , 'field_value_type':   'annal:Slug'
-                , 'field_value':        "Default_field"
+                , 'field_value':        ""
                 }
               , { 'field_id':           'Field_placement'
                 , 'field_label':        'Size/position'
@@ -541,7 +541,7 @@ def recordview_view_form_data(
         , 'View_fields__1__Field_placement':    "small:0,12"
         , 'View_fields__2__Field_id':           "View_comment"
         , 'View_fields__2__Field_placement':    "small:0,12"
-        , 'View_fields__3__Field_id':           "View_type"
+        , 'View_fields__3__Field_id':           "View_target_type"
         , 'View_fields__3__Field_placement':    "small:0,12"
         , 'View_fields__4__repeat_fields_data': 
             '{ "annal:repeat_id": "View_fields"' +

@@ -246,6 +246,16 @@ def recordlist_view_context_data(
             , 'field_value':        'ALL'
             , 'options':            []
             }
+          , { 'field_id':           'List_target_type'
+            , 'field_label':        'Record type'
+            , 'field_render_view':  'field/annalist_view_identifier.html'
+            , 'field_render_edit':  'field/annalist_edit_identifier.html'
+            , 'field_name':         'List_target_type'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_value_type':   'annal:Identifier'
+            , 'field_value':        ''
+            , 'options':            []
+            }
           , { "repeat_id":              "List_fields"
             , "repeat_context_values":  "repeat"
             , "repeat_label":           "Fields"
