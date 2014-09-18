@@ -2,7 +2,7 @@
 , "@type":                      ["annal:List"]
 , "annal:id":                   "Default_list_all"
 , "annal:type_id":              "_list"
-, "rdfs:label":                 "List all types"
+, "rdfs:label":                 "List entities with type information"
 , "rdfs:comment":               "Default list of all entities of all types"
 , "annal:display_type":         "List"
 , "annal:default_view":         "Default_view"

@@ -10,7 +10,9 @@
 
   <div class="row">
     <div class="large-12 columns">
-      {% if list_id %}
+      {% if list_label %}
+      <h3>{{list_label}}</h3>
+      {% elif list_id %}
       <h3>List '{{list_id}}' of entities in collection '{{coll_id}}'</h3>
       {% else %}
       <h3>List of entities in collection '{{coll_id}}'</h3>

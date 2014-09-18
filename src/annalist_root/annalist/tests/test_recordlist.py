@@ -141,7 +141,7 @@ class RecordListTest(AnnalistTestCase):
         v = recordlist_read_values(list_id="Default_list")
         v.update(
             { '@id':            "annal:display/Default_list"
-            , 'rdfs:label':     "List one type"
+            , 'rdfs:label':     "List entities"
             , 'rdfs:comment':   "Default list of entities of given type"
             , 'annal:uri':      "annal:display/Default_list"
             })
@@ -482,7 +482,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             action="copy",
             num_fields=2,
             list_id="Default_list",
-            list_label="List one type",
+            list_label="List entities",
             list_help="Default list of entities of given type",
             list_url=TestHostUri+list_url,
             list_uri=None
@@ -525,7 +525,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             action="edit",
             num_fields=2,
             list_id="Default_list",
-            list_label="List one type",
+            list_label="List entities",
             list_help="Default list of entities of given type",
             list_url=TestHostUri+list_url,
             list_uri="annal:display/Default_list"
@@ -573,7 +573,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             action="edit",
             num_fields=2,
             list_id="Default_list",
-            list_label="List one type",
+            list_label="List entities",
             list_help="Default list of entities of given type",
             list_url=TestHostUri+list_url,
             list_uri="annal:display/Default_list"

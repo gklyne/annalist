@@ -3,7 +3,7 @@
 , "annal:id":                   "Default_list"
 , "annal:type_id":              "_list"
 , "annal:uri":                  "annal:display/Default_list"
-, "rdfs:label":                 "List one type"
+, "rdfs:label":                 "List entities"
 , "rdfs:comment":               "Default list of entities of given type"
 , "annal:display_type":         "List"
 , "annal:default_view":         "Default_view"
