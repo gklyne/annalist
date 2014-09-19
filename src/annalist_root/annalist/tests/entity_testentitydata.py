@@ -406,7 +406,7 @@ def entitydata_recordtype_view_context_data(
     context_dict = (
         { 'title':              "Collection testcoll"
         , 'coll_id':            'testcoll'
-        , 'type_id':            'testtype'
+        , 'type_id':            type_id
         , 'orig_id':            'orig_entity_id'
         , 'fields':
           [ { 'field_label':        'Id'
@@ -477,12 +477,14 @@ def entitydata_recordtype_view_form_data(
         , 'orig_id':            'orig_entity_id'
         , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
         })
-    if entity_id:
+    if entity_id and type_id:
         form_data_dict['entity_id']     = entity_id
         form_data_dict['Type_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Type_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Type_uri']      = TestBaseUri + "/c/%s/d/%s/%s/"%(coll_id, type_id, entity_id)
         form_data_dict['orig_id']       = entity_id
+    if type_id:
+        form_data_dict['entity_type']   = type_id
         form_data_dict['orig_type']     = type_id
     if orig_id:
         form_data_dict['orig_id']       = orig_id

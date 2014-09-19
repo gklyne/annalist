@@ -370,6 +370,10 @@ class GenericEntityEditView(AnnalistGenericView):
 
         # Save updated details
         if 'save' in form_data:
+            # log.info(
+            #     "save: entity_id %s, orig_entity_id %s, type_id %s, orig_type_id %s"%
+            #     (entity_id, orig_entity_id, entity_type_id, orig_entity_type_id)
+            #     )
             http_response = self.save_entity(entityvaluemap, form_data,
                 entity_id, entity_type_id,
                 orig_entity_id, orig_entity_type_id, orig_entity,
@@ -499,10 +503,10 @@ class GenericEntityEditView(AnnalistGenericView):
         Returns None if the save completes successfully, otherwise an 
         HTTP response object that reports the nature of the problem.
         """
-        log.debug(
-            "save_entity: save, action %s, entity_id %s, orig_entity_id %s, entity_type_id %s, orig_entity_type_id %s"
-            %(form_data['action'], entity_id, orig_entity_id, entity_type_id, orig_entity_type_id)
-            )
+        # log.info(
+        #     "save_entity: save, action %s, entity_id %s, orig_entity_id %s, entity_type_id %s, orig_entity_type_id %s"
+        #     %(form_data['action'], entity_id, orig_entity_id, entity_type_id, orig_entity_type_id)
+        #     )
         # log.info(
         #     "           orig_entity %r"
         #     %(orig_entity)
@@ -529,6 +533,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
         # Determine new parent for saved entity
         if entity_type_id != orig_entity_type_id:
+            # log.info("new_typeinfo: entity_type_id %s"%(entity_type_id))
             new_typeinfo = EntityTypeInfo(
                 viewinfo.site, viewinfo.collection, entity_type_id, 
                 create_typedata=True
@@ -573,9 +578,12 @@ class GenericEntityEditView(AnnalistGenericView):
         # log.info("entity_values%r"%(entity_values))
         # log.info("new_parent%r"%(new_parent))
         new_typeinfo.entityclass.create(new_parent, entity_id, entity_values)
-        # Remove old entity if rename
+        # Remove old entity if renameoperation
         if entity_id_changed:
-            if typeinfo.entityclass.exists(new_parent, entity_id):    # Precautionary
+            # log.info("new_typeinfo.entityclass %r"%(new_typeinfo.entityclass))
+            # log.info("new_parent %r"%(new_parent))
+            if new_typeinfo.entityclass.exists(new_parent, entity_id):    # Precautionary
+                # log.info("remove %s, %s"%(orig_parent.get_id(), orig_entity_id))
                 typeinfo.entityclass.remove(orig_parent, orig_entity_id)
         return None
 

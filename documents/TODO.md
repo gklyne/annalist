@@ -27,7 +27,9 @@ NOTE: information in this document is being migrated to [Github issues](https://
 - [x] 'Select' label for field type is un-obvious [#25](https://github.com/gklyne/annalist/issues/25)
 - [x] New entities are initially populated with useless junk [#24](https://github.com/gklyne/annalist/issues/24)
     - initialization logic is in models.entitytypeinfo.get_initial_entity_values
-- [ ] Change type of entry doesn't delete old record [#29](https://github.com/gklyne/annalist/issues/29)
+- [x] Change type of entry doesn't delete old record [#29](https://github.com/gklyne/annalist/issues/29)
+    - [x] Fix bug in entityedit (not usinjg new type info to check existence of renamed entity)
+    - [x] Fixed gaps and bug in test code
 - [ ] Default button on view edit form (and others) should be "Save".
 - [ ] Authorization [#11](https://github.com/gklyne/annalist/issues/11)
 - [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)

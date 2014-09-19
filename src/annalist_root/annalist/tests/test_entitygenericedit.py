@@ -1191,13 +1191,37 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             type_id="newtype", orig_type="testtype",
             action="edit"
             )
-        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityedittype", view_id="Type_view")
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityedittype", view_id="Default_view")
         r = self.client.post(u, f)
         # log.info("***********\n"+r.content)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertFalse(EntityData.exists(self.testdata, "entityedittype"))
+        self.assertTrue(EntityData.exists(newtypedata, "entityedittype"))
+        return
+
+    def test_post_edit_entity_new_builtin_type(self):
+        # Test logic for changing type to built-in type (_field)
+        self._create_entity_data("entityedittype")
+        self._check_entity_data_values("entityedittype")
+        self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
+        # Now post edit form submission with new type id sert to "_field"
+        f = entitydata_recordtype_view_form_data(
+            entity_id="entityedittype", orig_id="entityedittype", 
+            type_id="_field", orig_type="testtype",
+            action="edit"
+            )
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityedittype", view_id="Default_view")
+        r = self.client.post(u, f)
+        # log.info("***********\n"+r.content)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertFalse(EntityData.exists(self.testdata, "entityedittype"))
+        self.assertTrue(RecordField.exists(self.testcoll, "entityedittype"))
         return
 
     def test_post_edit_entity_cancel(self):
