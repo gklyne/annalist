@@ -110,6 +110,7 @@ def recordfield_init_keys():
 def recordfield_value_keys():
     return (recordfield_init_keys() |
         { 'annal:property_uri'
+        , 'annal:field_entity_type'
         , 'annal:field_value_type'
         , 'annal:field_render_type'
         , 'annal:placeholder'
@@ -162,7 +163,7 @@ def recordfield_entity_view_context_data(
         action=None, update="Field"
     ):
     context_dict = (
-        { 'title':              site_title()
+        { 'title':              "Collection testcoll"
         , 'coll_id':            'testcoll'
         , 'type_id':            '_field'
         , 'orig_id':            'orig_field_id'

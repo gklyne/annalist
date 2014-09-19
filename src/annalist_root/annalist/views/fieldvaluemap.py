@@ -79,7 +79,7 @@ class FieldValueMap(object):
         if self.e:
             log.debug("FieldValueMap.map_form_to_entity %s, %r"%(self.e, formvals))
             v = formvals.get(self.i, None)
-            if v:
+            if v is not None:
                 entityvals[self.e] = v
         return entityvals
 

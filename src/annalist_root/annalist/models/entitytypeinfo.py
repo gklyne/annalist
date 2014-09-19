@@ -242,10 +242,12 @@ class EntityTypeInfo(object):
         values = (
             { '@type':              ["annal:EntityData"]
             , ANNAL.CURIE.type_id:  self.type_id
-            , RDFS.CURIE.label:     "%s/%s/%s"%
-                                    (self.coll_id, self.type_id, entity_id)
-            , RDFS.CURIE.comment:   "Entity '%s' of type '%s' in collection '%s'"%
-                                    (entity_id, self.type_id, self.coll_id)
+            , RDFS.CURIE.label:     ""
+            , RDFS.CURIE.comment:   ""
+            # , RDFS.CURIE.label:     "%s/%s/%s"%
+            #                         (self.coll_id, self.type_id, entity_id)
+            # , RDFS.CURIE.comment:   "Entity '%s' of type '%s' in collection '%s'"%
+            #                         (entity_id, self.type_id, self.coll_id)
             })
         init_entity = self.get_entity("_initial_values")
         if init_entity:

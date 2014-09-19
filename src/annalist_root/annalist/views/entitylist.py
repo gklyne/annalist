@@ -16,6 +16,7 @@ from django.core.urlresolvers           import resolve, reverse
 
 from annalist                           import message
 from annalist.exceptions                import Annalist_Error
+from annalist.identifiers               import RDFS, ANNAL
 
 from annalist.models.collection         import Collection
 from annalist.models.recordtype         import RecordType
@@ -47,8 +48,10 @@ listentityvaluemap  = (
         [ SimpleValueMap(c='title',                 e=None,                  f=None                  )
         , SimpleValueMap(c='help_filename',         e=None,                  f=None                  )
         , SimpleValueMap(c='coll_id',               e=None,                  f=None                  )
+        , SimpleValueMap(c='coll_label',            e=None,                  f=None                  )
         , SimpleValueMap(c='type_id',               e=None,                  f=None                  )
         , SimpleValueMap(c='list_id',               e=None,                  f=None                  )
+        , SimpleValueMap(c='list_label',            e=None,                  f=None                  )
         , SimpleValueMap(c='list_choices',          e=None,                  f=None                  )
         , SimpleValueMap(c='collection_view',       e=None,                  f=None                  )
         , SimpleValueMap(c='default_view_id',       e=None,                  f=None                  )
@@ -133,14 +136,17 @@ class EntityGenericListView(AnnalistGenericView):
         # Set up initial view context
         entityvaluemap = self.get_list_entityvaluemap(listinfo)
         listcontext = entityvaluemap.map_value_to_context(entityval,
-            title                 = self.site_data()["title"],
+            site_title            = self.site_data()["title"],
+            title                 = listinfo.collection[RDFS.CURIE.label],
             request_url           = self.get_request_path(),
             continuation_url      = request.GET.get('continuation_url', ""),
             # continuation_search   = search_for or None,
             ### heading             = entity_initial_values['rdfs:label'],
             coll_id               = coll_id,
+            coll_label            = listinfo.collection[RDFS.CURIE.label],
             type_id               = type_id,
             list_id               = listinfo.list_id,
+            list_label            = listinfo.recordlist[RDFS.CURIE.label],
             search_for            = search_for,
             list_choices          = self.get_list_choices_field(listinfo),
             collection_view       = self.view_uri("AnnalistCollectionView", coll_id=coll_id),
@@ -177,7 +183,7 @@ class EntityGenericListView(AnnalistGenericView):
         # Not "Close": set up list parameters
         listinfo = self.list_setup(coll_id, type_id, list_id)
         if listinfo.http_response:
-            return http_response
+            return listinfo.http_response
         # Process requested action
         redirect_uri = None
         entity_ids   = request.POST.getlist('entity_select')

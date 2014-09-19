@@ -82,6 +82,51 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 # History
 
+## Version 0.1.4
+
+Cleaning up some simple bugs and presentation problems.
+
+From here on, use convention of even numbers for stable sub-releases and odd numbers for working versions.
+
+* Post-release documentation updates
+* Update annalist_manager with updatesitedata command and to create auth providers directory
+* Updated field view definition to include extra fields used for enumerated type displays, etc.
+* Updated view editing form description.
+* Update field and view description of fields to restrict presentation of field choices
+* Fix problem of ignoring blank value in submitted form (issue #30)
+* Use collection and list labels for headings on entity list page (issue #26)
+* Clean up page and section headings in record editing view
+* Change confusing 'Select' label of field id (Field_sel) dropdown in view description
+* Initialize entity label and comment to blank (issue #24)
+* Fixed problem with rename locally created Default_view (issue #22)
+* Fix that changing type of entity was not deleting old record (issue #29)
+
+### TODOs completed for 0.1.4
+
+- [x] annalist-manager option to update site data, leaving the rest untouched
+- [x] annalist-manager initialize: needs to create `.annalist/providers` directory [#27](https://github.com/gklyne/annalist/issues/27).
+- [x] Update view and field descriptions [#16](https://github.com/gklyne/annalist/issues/16)
+    - [x] extend field edit form to include additional fields used.
+    - [x] extend view edit form to include additional fields used in sitedata (i.e. record_type)
+    - [x] add more 'annal:field_entity_type' constraints for fields that are intended to be used only with specific entity types (e.g. fields, views, etc.)
+    - [x] List view also needs 'annal:field_entity_type' to control selection
+        - [x] Add field manually to internal list descriptions
+        - [x] Add field to List_view
+    - [x] Remove "Default_field"
+- [x] Blank value in submitted form is ignored [#30](https://github.com/gklyne/annalist/issues/30)
+- [x] List headings are clutter [#26](https://github.com/gklyne/annalist/issues/26)
+- [x] Clean up page and section headings in record editing view
+- [x] 'Select' label for field type is un-obvious [#25](https://github.com/gklyne/annalist/issues/25)
+- [x] New entities are initially populated with useless junk [#24](https://github.com/gklyne/annalist/issues/24)
+    - initialization logic is in models.entitytypeinfo.get_initial_entity_values
+- [x] Change type of entry doesn't delete old record [#29](https://github.com/gklyne/annalist/issues/29)
+    - [x] Fix bug in entityedit (not usinjg new type info to check existence of renamed entity)
+    - [x] Fixed gaps and bug in test code
+- [x] Can't rename locally created Default_view [#22](https://github.com/gklyne/annalist/issues/22)
+    - [x] Fix up default action resulting from click on link may need to change later when read only views introduced
+    - [x] Additional authorization check if Save called with unexpected action
+    - [x] Update authorization reporting to say what access (scope) was requested, rather than HTTP method
+
 ## Version 0.1.3
 
 * First public prototype release

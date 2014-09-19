@@ -33,7 +33,7 @@ from am_runtests            import am_runtests
 from am_runserver           import am_runserver
 from am_initialize          import am_initialize
 from am_createuser          import am_createuser
-from am_createsite          import am_createsite
+from am_createsite          import am_createsite, am_updatesite
 from am_help                import am_help, command_summary_help
 
 VERSION = annalist.__version__
@@ -110,12 +110,14 @@ def run(userhome, userconfig, options, progname):
     """
     if options.command.startswith("init"):
         return am_initialize(annroot, userhome, userconfig, options)
+    if options.command.startswith("runt"):
+        return am_runtests(annroot, options)
     if options.command.startswith("createa"):
         return am_createuser(annroot, userhome, options)
     if options.command.startswith("creates"):
         return am_createsite(annroot, userhome, options)
-    if options.command.startswith("runt"):
-        return am_runtests(annroot, options)
+    if options.command.startswith("updates"):
+        return am_updatesite(annroot, userhome, options)
     if options.command.startswith("runs"):
         return am_runserver(annroot, userhome, options)
     if options.command.startswith("help"):

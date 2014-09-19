@@ -20,6 +20,7 @@ from django.core.urlresolvers   import resolve, reverse
 from annalist.util              import valid_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import layout
+from annalist                   import message
 
 from annalist.views.fields.render_placement import (
     get_placement_classes
@@ -171,7 +172,7 @@ def entitydata_context_data(
         action=None, update="Entity"
     ):
     context_dict = (
-        { 'title':              site_title()
+        { 'title':              "Collection testcoll"
         , 'coll_id':            'testcoll'
         , 'type_id':            'testtype'
         , 'orig_id':            'orig_entity_id'
@@ -403,9 +404,9 @@ def entitydata_recordtype_view_context_data(
         action=None, update="Entity"
     ):
     context_dict = (
-        { 'title':              site_title()
+        { 'title':              "Collection testcoll"
         , 'coll_id':            'testcoll'
-        , 'type_id':            'testtype'
+        , 'type_id':            type_id
         , 'orig_id':            'orig_entity_id'
         , 'fields':
           [ { 'field_label':        'Id'
@@ -476,12 +477,14 @@ def entitydata_recordtype_view_form_data(
         , 'orig_id':            'orig_entity_id'
         , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
         })
-    if entity_id:
+    if entity_id and type_id:
         form_data_dict['entity_id']     = entity_id
         form_data_dict['Type_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Type_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Type_uri']      = TestBaseUri + "/c/%s/d/%s/%s/"%(coll_id, type_id, entity_id)
         form_data_dict['orig_id']       = entity_id
+    if type_id:
+        form_data_dict['entity_type']   = type_id
         form_data_dict['orig_type']     = type_id
     if orig_id:
         form_data_dict['orig_id']       = orig_id
@@ -554,10 +557,6 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
 #
 #   -----------------------------------------------------------------------------
 
-default_label_template = "%(coll_id)s/%(type_id)s/%(entity_id)s"
-
-default_comment_template = "Entity '%(entity_id)s' of type '%(type_id)s' in collection '%(coll_id)s'"
-
 def default_fields(coll_id=None, type_id=None, entity_id=None, width=12):
     """
     Returns a function that accepts a field width and returns a dictionary of entity values
@@ -583,13 +582,16 @@ def default_label(coll_id=None, type_id=None, entity_id=None):
     # Note: for built-in types, default values matches corresponding sitedata _initial_values
     if type_id in ["_type", "_view", "_list", "_field"]:
         return ""
-    return default_label_template%dict(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+    return message.ENTITY_DEFAULT_LABEL%dict(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
 
 def default_comment(coll_id=None, type_id=None, entity_id=None):
     # Note: for built-in types, default values matches corresponding sitedata _initial_values
     if type_id in ["_type", "_view", "_list", "_field"]:
         return ""
-    return default_comment_template%dict(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+    return message.ENTITY_DEFAULT_COMMENT%dict(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+
+def error_label(coll_id=None, type_id=None, entity_id=None):
+    return message.ENTITY_MESSAGE_LABEL%dict(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
 
 #   -----------------------------------------------------------------------------
 #

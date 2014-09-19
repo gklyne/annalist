@@ -8,4 +8,5 @@
 , "annal:field_value_type":     "annal:Longtext"
 , "annal:placeholder":          "(description of record view)"
 , "annal:property_uri":         "rdfs:comment"
+, "annal:field_entity_type":    "annal:View"
 }

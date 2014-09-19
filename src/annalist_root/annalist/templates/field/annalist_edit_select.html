@@ -1,7 +1,8 @@
 <!-- field/annalist_edit_select.html -->
 <!-- name:    {{field.field_name}}   -->
-<!-- value:   {{field.field_value}}   -->
+<!-- value:   {{field.field_value}}  -->
 <!-- options: {{field.options}}      -->
+<!-- see also: http://stackoverflow.com/questions/5805059/ -->
 <div class="{{field.field_placement.field}}">
   <div class="row">
     <div class="view_label {{field.field_placement.label}}">
@@ -10,11 +11,19 @@
     <div class="{{field.field_placement.value}}">
       <select name="{{repeat.repeat_prefix}}{{field.field_name}}">
         {% for v in field.options %}
-        {% if v == field.field_value %}
-        <option selected="selected">{{v}}</option>
-        {% else %}
-        <option>{{v}}</option>
-        {% endif %}
+          {% if v == field.field_value %}
+            {% if v == "" %}
+            <option value="" selected="selected">{{field.field_placeholder}}</option>
+            {% else %}
+            <option selected="selected">{{v}}</option>
+            {% endif %}
+          {% else %}
+            {% if v == "" %}
+            <option value="">{{field.field_placeholder}}</option>
+            {% else %}
+            <option>{{v}}</option>
+            {% endif %}
+          {% endif %}
         {% endfor %}
       </select>
     </div>

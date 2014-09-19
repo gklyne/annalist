@@ -100,6 +100,7 @@ def recordlist_value_keys():
         [ 'annal:id', 'annal:type_id'
         , 'annal:type', 'annal:url', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
+        , 'annal:record_type'
         , 'annal:display_type'
         , 'annal:list_entity_selector'
         , 'annal:default_view'
@@ -118,6 +119,7 @@ def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="Rec
         { 'annal:type':                 "annal:List"
         , 'rdfs:label':                 "%s %s/%s"%(update, coll_id, list_id)
         , 'rdfs:comment':               "%s help for %s/%s"%(update, coll_id, list_id)
+        , 'annal:record_type':          ""
         , "annal:display_type":         "List"
         , "annal:default_view":         "Default_view"
         , "annal:default_type":         "Default_type"
@@ -168,7 +170,7 @@ def recordlist_view_context_data(
         action=None, update="RecordList"
     ):
     context_dict = (
-        { 'title':              site_title()
+        { 'title':              "Collection %s"%(coll_id)
         , 'coll_id':            coll_id
         , 'type_id':            '_list'
         , 'orig_id':            'orig_list_id'
@@ -244,6 +246,16 @@ def recordlist_view_context_data(
             , 'field_value':        'ALL'
             , 'options':            []
             }
+          , { 'field_id':           'List_target_type'
+            , 'field_label':        'Record type'
+            , 'field_render_view':  'field/annalist_view_identifier.html'
+            , 'field_render_edit':  'field/annalist_edit_identifier.html'
+            , 'field_name':         'List_target_type'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_value_type':   'annal:Identifier'
+            , 'field_value':        ''
+            , 'options':            []
+            }
           , { "repeat_id":              "List_fields"
             , "repeat_context_values":  "repeat"
             , "repeat_label":           "Fields"
@@ -255,7 +267,7 @@ def recordlist_view_context_data(
                 , 'repeat_prefix': 'List_fields__0__'
                 , "fields":
                   [ { 'field_id':           'Field_sel'
-                    , 'field_label':        'Select'
+                    , 'field_label':        'Field id'
                     , 'field_render_view':  'field/annalist_view_select.html'
                     , 'field_render_edit':  'field/annalist_edit_select.html'
                     , 'field_name':         'Field_id'
@@ -279,7 +291,7 @@ def recordlist_view_context_data(
                 , 'repeat_prefix': 'List_fields__1__'
                 , "fields":
                   [ { 'field_id':           'Field_sel'
-                    , 'field_label':        'Select'
+                    , 'field_label':        'Field id'
                     , 'field_render_view':  'field/annalist_view_select.html'
                     , 'field_render_edit':  'field/annalist_edit_select.html'
                     , 'field_name':         'Field_id'

@@ -79,7 +79,9 @@ class FieldDescription(object):
             entities        = entity_finder.get_entities_sorted(type_id=type_ref, context=view_context)
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
+            # 'Enum_optional' adds a blank entry at the start of the list
             self._field_context['field_choices'] = (
+                ([""] if field_render_type == "Enum_optional" else []) +
                 [e.get_id() for e in entities if e.get_id() != "_initial_values"]
                 )
             # log.info("typeref %s: %r"%

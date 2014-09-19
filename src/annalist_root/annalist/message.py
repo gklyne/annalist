@@ -86,5 +86,8 @@ ENTITY_TYPE_ID_INVALID  = "The entity type identifier is missing or not a valid 
 DEFAULT_VIEW_UPDATED    = "Default list view for collection %(coll_id)s changed to %(list_id)s"
 REMOVE_FIELD_ERROR      = "Problem with remove field(s) request"
 NO_FIELD_SELECTED       = "No field(s) selected"
+ENTITY_MESSAGE_LABEL    = "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
+ENTITY_DEFAULT_LABEL    = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
+ENTITY_DEFAULT_COMMENT  = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
 
 # End.

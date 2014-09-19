@@ -163,7 +163,7 @@ def recordtype_entity_view_context_data(
         action=None, update="RecordType"
     ):
     context_dict = (
-        { 'title':              site_title()
+        { 'title':              "Collection %s"%(coll_id)
         , 'coll_id':            coll_id
         , 'type_id':            '_type'
         , 'orig_id':            'orig_type_id'

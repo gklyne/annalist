@@ -57,7 +57,7 @@ from entity_testentitydata          import (
     entitydata_delete_confirm_form_data,
     entitydata_default_view_context_data, entitydata_default_view_form_data,
     entitydata_recordtype_view_context_data, entitydata_recordtype_view_form_data,
-    default_fields, default_label, default_comment,
+    default_fields, default_label, default_comment, error_label,
     layout_classes
     )
 
@@ -138,8 +138,11 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.client.logout()
         u = entity_url("testcoll", "testtype", "entity1")
         r = self.client.get(u)
-        self.assertEqual(r.status_code,   200)
-        self.assertEqual(r.reason_phrase, "OK")
+        # @@TODO: currently defaults to 'edit' action; later may be 'view'
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        # self.assertEqual(r.status_code,   200)
+        # self.assertEqual(r.reason_phrase, "OK")
         return
 
     def test_post_default_form_use_view_no_login(self):
@@ -183,8 +186,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
+        self.assertContains(r, "<title>Collection testcoll</title>")
         field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         formrow1 = """
             <div class="small-12 medium-6 columns">
@@ -313,7 +315,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
@@ -429,7 +430,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
@@ -445,10 +445,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
-        self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "entity1")
@@ -576,8 +574,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.debug(r.content)
-        def_label = default_label("testcoll", "testtype", "entitynone")
-        self.assertContains(r, "<p>%s does not exist</p>"%def_label, status_code=404)
+        err_label = error_label("testcoll", "testtype", "entitynone")
+        self.assertContains(r, "<p>%s does not exist</p>"%err_label, status_code=404)
         return
 
     #   -----------------------------------------------------------------------------
@@ -645,7 +643,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
@@ -659,7 +656,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
@@ -936,7 +932,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         expect_context = entitydata_recordtype_view_context_data(action="copy")
@@ -949,7 +944,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         expect_context = entitydata_recordtype_view_context_data(
@@ -1134,6 +1128,26 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entityedit", update="Updated entity")
         return
 
+    def test_post_edit_entity_blank_label_comment(self):
+        self._create_entity_data("entityedit")
+        e1 = self._check_entity_data_values("entityedit")
+        f  = entitydata_recordtype_view_form_data(entity_id="entityedit", action="edit", update="Updated entity")
+        f['Type_label']   = ""
+        f['Type_comment'] = ""
+        u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityedit", view_id="Type_view")
+        r  = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self._check_entity_data_values("entityedit", update="Updated entity", 
+            update_dict=
+                { 'rdfs:label':   ""
+                , 'rdfs:comment': ""
+                }
+            )
+        return
+
     def test_post_edit_entity_no_login(self):
         self.client.logout()
         f = entitydata_recordtype_view_form_data(entity_id="edittype", action="edit")
@@ -1177,13 +1191,37 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             type_id="newtype", orig_type="testtype",
             action="edit"
             )
-        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityedittype", view_id="Type_view")
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityedittype", view_id="Default_view")
         r = self.client.post(u, f)
         # log.info("***********\n"+r.content)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertFalse(EntityData.exists(self.testdata, "entityedittype"))
+        self.assertTrue(EntityData.exists(newtypedata, "entityedittype"))
+        return
+
+    def test_post_edit_entity_new_builtin_type(self):
+        # Test logic for changing type to built-in type (_field)
+        self._create_entity_data("entityedittype")
+        self._check_entity_data_values("entityedittype")
+        self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
+        # Now post edit form submission with new type id sert to "_field"
+        f = entitydata_recordtype_view_form_data(
+            entity_id="entityedittype", orig_id="entityedittype", 
+            type_id="_field", orig_type="testtype",
+            action="edit"
+            )
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityedittype", view_id="Default_view")
+        r = self.client.post(u, f)
+        # log.info("***********\n"+r.content)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertFalse(EntityData.exists(self.testdata, "entityedittype"))
+        self.assertTrue(RecordField.exists(self.testcoll, "entityedittype"))
         return
 
     def test_post_edit_entity_cancel(self):
@@ -1210,7 +1248,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context for re-rendered form
@@ -1232,7 +1269,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context for re-rendered form

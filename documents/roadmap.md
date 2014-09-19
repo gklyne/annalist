@@ -1,10 +1,11 @@
 # Development roadmap
 
-@@TODO
+Current status: V0.1.4, bug fixes and presentation improvements to first public protoype.
+
 
 # V1.0 release
 
-@@TODO
+Outsatnding issues leading up to V1.0 release are noted at [issues for V0.x alpha milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).
 
 
 # Desired features, not yet scheduled

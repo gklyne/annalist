@@ -26,6 +26,7 @@ command_summary_help = ("\n"+
     # "  %(prog)s idprovider ...\n"+  #@@ TODO
     "  %(prog)s createadminuser [ CONFIG ]\n"+
     "  %(prog)s createsitedata [ CONFIG ]\n"+
+    "  %(prog)s updatesitedata [ CONFIG ]\n"+
     "  %(prog)s runserver [ CONFIG ]\n"+
     "")
 
@@ -53,7 +54,7 @@ config_options_help = (
 
 def am_help(options, progname):
     """
-    Run Annalistr server tests.
+    Display annalist-manager command help
 
     options     contains options parsed from the command line.
 
@@ -90,7 +91,7 @@ def am_help(options, progname):
             config_options_help+
             "\n"+
             "")
-    elif options.args[0].startswith("create"):
+    elif options.args[0].startswith("createa"):
         help_text = ("\n"+
             "  %(prog)s createadminuser [ CONFIG ]\n"+
             "\n"+
@@ -106,6 +107,33 @@ def am_help(options, progname):
             "Annalist is intended to be used with a federated authentication service,\n"+
             "such as Google+, but setting up such a service can be tricky, and for evaluation\n"+
             "or personal-only use it may be quicker to use locally managed user credentials\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("creates"):
+        help_text = ("\n"+
+            "  %(prog)s createsite [ CONFIG ] [ --force | -f ]\n"+
+            "\n"+
+            "Creates Annalist empty site data.\n"+
+            "\n"+
+            "Creates empty site data (i.e. with no collections) for an Annalist service.\n"+
+            "\n"+
+            "If the site already exists, the command is refused unless the '--force' or '-f'\n"+
+            "option is given.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("updates"):
+        help_text = ("\n"+
+            "  %(prog)s updatesite [ CONFIG ]\n"+
+            "\n"+
+            "Updates the site-wide data in an existing annalist site.\n"+
+            "\n"+
+            "\nExisting collection data is left untouched.\n"+
+            "\n"+
+            "If the site does not exist, the command fails.\n"+
             "\n"+
             config_options_help+
             "\n"+

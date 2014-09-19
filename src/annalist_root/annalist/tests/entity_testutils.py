@@ -153,7 +153,7 @@ def collection_remove_form_data(coll_id_list):
 #
 #   -----------------------------------------------------------------------------
 
-def render_select_options(name, opts, sel):
+def render_select_options(name, opts, sel, placeholder=None):
     """
     >>> print render_select_options("foo", ["aa", "bb", "cc"], "bb")
     <select name="foo">
@@ -161,18 +161,26 @@ def render_select_options(name, opts, sel):
       <option selected="selected">bb</option>
       <option>cc</option>
     </select>
+    >>> print render_select_options("foo", ["", aa", "bb", "cc"], "", placeholder=("select)")
+      <select name="foo">
+        <option value="" selected="selected">(select)</option>
+        <option>aa</option>
+        <option>bb</option>
+        <option>cc</option>
+      </select>
     """
+    def select_option(o):
+        selected = ('' if o != sel else ' selected="selected"')
+        if (placeholder is not None) and (o == ""):
+            return '<option value=""%s>%s</option>'%(selected,placeholder)
+        return '<option%s>%s</option>'%(selected,o)
+    #
     select_template = (
         """<select name="%s">\n"""+
         """  %s\n"""+
         """</select>"""
         )
-    options = ([ 
-        ("""<option>%s</option>""" if o != sel else 
-         """<option selected="selected">%s</option>""")%o
-        for o in opts
-        ])
-    return select_template%(name, "\n  ".join(options))
+    return select_template%(name, "\n  ".join([ select_option(o) for o in opts ]))
 
 if __name__ == "__main__":
     import doctest

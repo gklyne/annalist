@@ -62,7 +62,7 @@ Feedback can be provided via [annalist-discuss forum](https://groups.google.com/
 Development
 -----------
 
-Active development is taking place on the "develop" branch in GitHub - see [https://github.com/gklyne/annalist/tree/develop](https://github.com/gklyne/annalist/tree/develop))
+Active development is taking place on the "develop" branch in GitHub - see [https://github.com/gklyne/annalist/tree/develop](https://github.com/gklyne/annalist/tree/develop)
 
 
 Acknowledgements
