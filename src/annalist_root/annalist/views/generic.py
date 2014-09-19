@@ -302,7 +302,7 @@ class AnnalistGenericView(ContentNegotiationView):
         if scope != "VIEW":
             if not self.request.user.is_authenticated():
                 log.debug("Authorize %s denied"%(scope))
-                return self.error(self.error401values())
+                return self.error(self.error401values(scope=scope))
         return None
 
     @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])

@@ -25,13 +25,17 @@ NOTE: information in this document is being migrated to [Github issues](https://
 - [x] List headings are clutter [#26](https://github.com/gklyne/annalist/issues/26)
 - [x] Clean up page and section headings in record editing view
 - [x] 'Select' label for field type is un-obvious [#25](https://github.com/gklyne/annalist/issues/25)
-- [ ] New entities are initially populated with useless junk [#24](https://github.com/gklyne/annalist/issues/24)
+- [x] New entities are initially populated with useless junk [#24](https://github.com/gklyne/annalist/issues/24)
     - initialization logic is in models.entitytypeinfo.get_initial_entity_values
 - [ ] Change type of entry doesn't delete old record [#29](https://github.com/gklyne/annalist/issues/29)
+- [ ] Default button on view edit form (and others) should be "Save".
 - [ ] Authorization [#11](https://github.com/gklyne/annalist/issues/11)
 - [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
 - [ ] Grid view [#7](https://github.com/gklyne/annalist/issues/7)
-- [ ] Can't rename locally created Default_view [#22](https://github.com/gklyne/annalist/issues/22)
+- [x] Can't rename locally created Default_view [#22](https://github.com/gklyne/annalist/issues/22)
+    - [x] Fix up default action resulting from click on link may need to change later when read only views introduced
+    - [x] Additional authorization check if Save called with unexpected action
+    - [x] Update authorization reporting to say what access (scope) was requested, rather than HTTP method
 - [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - [ ] JSON-LD @contexts support
     - [ ] Alternative RDF formats support

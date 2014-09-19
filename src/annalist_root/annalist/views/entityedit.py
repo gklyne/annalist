@@ -99,6 +99,7 @@ class GenericEntityEditView(AnnalistGenericView):
             "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
+        action   = action or "edit"     # Default action (@@TODO: 'view' when read-only views defined)
         viewinfo = self.view_setup(action, coll_id, type_id, view_id, entity_id)
         if viewinfo.http_response:
             return viewinfo.http_response
@@ -132,12 +133,15 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Handle response from generic entity editing form.
         """
-        log.debug("views.entityedit.post %s"%(self.get_request_path()))
-        log.debug(
+        log.log(settings.TRACE_FIELD_VALUE,
+            "views.entityedit.post %s"%(self.get_request_path())
+            )
+        log.log(settings.TRACE_FIELD_VALUE,
             "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
         # log.info("  form data %r"%(request.POST))
+        action               = request.POST.get('action', action)
         viewinfo = self.view_setup(action, coll_id, type_id, view_id, entity_id)
         if viewinfo.http_response:
             return viewinfo.http_response
@@ -151,7 +155,6 @@ class GenericEntityEditView(AnnalistGenericView):
             self.view_uri('AnnalistEntityDefaultListType', coll_id=coll_id, type_id=type_id)
             )
         view_id              = request.POST.get('view_id', view_id)
-        action               = request.POST.get('action', action)
         # log.info(
         #     "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
         #       (coll_id, type_id, entity_id, view_id, action)
@@ -496,29 +499,27 @@ class GenericEntityEditView(AnnalistGenericView):
         Returns None if the save completes successfully, otherwise an 
         HTTP response object that reports the nature of the problem.
         """
-        action      = form_data['action']
-        if viewinfo.check_authorization(action):
-            return viewinfo.http_response
-        typeinfo    = viewinfo.entitytypeinfo
-        # orig_entity = self.get_entity(orig_entity_id, typeinfo, action)   #@@@
         log.debug(
-            "save_entity: save, action %s, entity_id %s, orig_entity_id %s"
-            %(action, entity_id, orig_entity_id)
-            )
-        log.debug(
-            "                     entity_type_id %s, orig_entity_type_id %s"
-            %(entity_type_id, orig_entity_type_id)
+            "save_entity: save, action %s, entity_id %s, orig_entity_id %s, entity_type_id %s, orig_entity_type_id %s"
+            %(form_data['action'], entity_id, orig_entity_id, entity_type_id, orig_entity_type_id)
             )
         # log.info(
-        #     "                     orig_entity %r"
+        #     "           orig_entity %r"
         #     %(orig_entity)
         #     )
+        action = form_data['action']
+        if not action in ["new", "copy", "edit"]:
+            log.warning("'Save' operation for action '%s'"%(action))
+            # Check "edit" authorization to continue
+            if viewinfo.check_authorization("edit"):
+                return viewinfo.http_response
         entity_id_changed = (
             ( action == "edit" ) and
             ( (entity_id != orig_entity_id) or (entity_type_id != orig_entity_type_id) )
             )
         # Check original parent exists (still)
         #@@ TODO: unless this is a "new" action
+        typeinfo    = viewinfo.entitytypeinfo
         orig_parent = typeinfo.entityparent
         if not orig_parent._exists():
             log.warning("save_entity: not orig_parent._exists()")

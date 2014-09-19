@@ -141,10 +141,9 @@ class ContentNegotiationView(generic.View):
     def error400values(self, message="Bad request to %(request_uri)s"):
         return self.errorvalues(400, "Bad request", message)
 
-    def error401values(self):
-        return self.errorvalues(401, "Unauthorized",
-            "Resource %(request_uri)s requires authentication for %(method)s access"
-            )
+    def error401values(self, scope="%(method)s"):
+        msg = "Resource %s requires authentication for %s access"%("%(request_uri)s", scope)
+        return self.errorvalues(401, "Unauthorized", msg)
 
     def error402values(self):
         return self.errorvalues(402, "Payment required",
