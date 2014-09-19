@@ -11,7 +11,9 @@ NOTE: information in this document is being migrated to [Github issues](https://
 
 # V0.1.5, towards V0.1.6
 
-- [ ] Default button on view edit form (and others) should be "Save".
+- [x] Default button on view edit form (and others) should be "Save".
+    - See http://stackoverflow.com/questions/1963245/.
+    - I found adding a duplicate hidden save button at the top of the <form> element did the trick.
 - [ ] Authorization [#11](https://github.com/gklyne/annalist/issues/11)
 - [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
 - [ ] Grid view [#7](https://github.com/gklyne/annalist/issues/7)
