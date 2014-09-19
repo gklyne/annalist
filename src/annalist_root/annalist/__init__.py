@@ -37,6 +37,7 @@ __license__       = "MIT (http://opensource.org/licenses/MIT)"
                                 # Initialize entity label and comment to blank (issue #24)
                                 # Fixed problem with rename locally created Default_view (issue #22)
                                 # Fix that changing type of entity was not deleting old record (issue #29)
-__version__        = "0.1.4"    # Bump version number
+# __version__        = "0.1.4"    # Bump version number
+__version__        = "0.1.5"    # Bump version number (odd = unstable)
 
 # End.
