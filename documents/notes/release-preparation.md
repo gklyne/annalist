@@ -8,7 +8,7 @@
 - [ ] Documentation updates
 - [ ] Demo screencast update
 - [ ] Add TODO list to release notes, and reset
-- [ ] Bump version and update history
+- [ ] Bump version to even value and update history
 - [ ] Update version number in scripts, documents, etc.
 - [ ] Test again
 - [ ] Post updated kit download
@@ -17,6 +17,7 @@
 - [ ] Final updates to master
 - [ ] Test yet again
 - [ ] Post announcement to Google Group, and elsewhere
+- [ ] Bump version number again (back to odd value)
 
 ## PyPI upload
 

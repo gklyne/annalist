@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: V0.1.3, first public protoype.
+Current status: V0.1.4, bug fixes and presentation improvements to first public protoype.
 
 
 # V1.0 release
