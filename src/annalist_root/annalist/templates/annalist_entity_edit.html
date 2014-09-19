@@ -18,6 +18,8 @@
   <div class="large-12 columns">
     <form method="POST" action="">
       {% csrf_token %}
+      <!-- Hidden button is default when ENTER key is pressed -->
+      <!-- see http://stackoverflow.com/questions/1963245/    -->
       <input type="submit" name="save" value="Save" style="display:none;" />
       <div class="row">
         {% for field in fields %}
