@@ -51,7 +51,7 @@ from entity_testutils               import (
     )
 from entity_testentitydata          import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
-    default_fields, default_label, default_comment,
+    default_fields, default_label, default_comment, error_label,
     layout_classes,
     get_site_types_sorted,
     get_site_field_types_sorted
@@ -617,9 +617,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.info(r.content)
-        def_label = default_label("testcoll", "_field", "fieldnone")
+        err_label = error_label("testcoll", "_field", "fieldnone")
         self.assertContains(r, 
-            "<p>%s does not exist</p>"%(def_label), 
+            "<p>%s does not exist</p>"%(err_label), 
             status_code=404
             )
         return

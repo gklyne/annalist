@@ -53,7 +53,7 @@ from entity_testlistdata                import (
     )
 from entity_testentitydata              import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
-    default_fields, default_label, default_comment,
+    default_fields, default_label, default_comment, error_label,
     get_site_types_sorted,
     get_site_list_types_sorted,
     layout_classes
@@ -492,8 +492,8 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "Not found")
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        def_label = default_label("testcoll", "_list", "nolist")
-        self.assertContains(r, "<p>%s does not exist</p>"%(def_label), status_code=404)
+        err_label = error_label("testcoll", "_list", "nolist")
+        self.assertContains(r, "<p>%s does not exist</p>"%(err_label), status_code=404)
         return
 
     def test_get_edit(self):
@@ -537,8 +537,8 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "Not found")
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        def_label = default_label("testcoll", "_list", "nolist")
-        self.assertContains(r, "<p>%s does not exist</p>"%(def_label), status_code=404)
+        err_label = error_label("testcoll", "_list", "nolist")
+        self.assertContains(r, "<p>%s does not exist</p>"%(err_label), status_code=404)
         return
 
     # Test rendering of view with repeated field structure - in this case, List_view

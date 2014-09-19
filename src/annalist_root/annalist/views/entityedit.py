@@ -107,10 +107,14 @@ class GenericEntityEditView(AnnalistGenericView):
         typeinfo = viewinfo.entitytypeinfo
         entity   = self.get_entity(viewinfo.entity_id, typeinfo, action)
         if entity is None:
-            entity_initial_values = typeinfo.get_initial_entity_values(viewinfo.entity_id) #@@
+            entity_label = (message.ENTITY_MESSAGE_LABEL%
+                { 'coll_id':    viewinfo.coll_id
+                , 'type_id':    viewinfo.type_id
+                , 'entity_id':  viewinfo.entity_id
+                })
             return self.error(
                 dict(self.error404values(),
-                    message=message.DOES_NOT_EXIST%{'id': entity_initial_values['rdfs:label']}
+                    message=message.DOES_NOT_EXIST%{'id': entity_label}
                     )
                 )
         # @@TODO: build context_extra_values here and pass into form_render.

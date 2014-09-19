@@ -26,6 +26,7 @@ NOTE: information in this document is being migrated to [Github issues](https://
 - [x] Clean up page and section headings in record editing view
 - [x] 'Select' label for field type is un-obvious [#25](https://github.com/gklyne/annalist/issues/25)
 - [ ] New entities are initially populated with useless junk [#24](https://github.com/gklyne/annalist/issues/24)
+    - initialization logic is in models.entitytypeinfo.get_initial_entity_values
 - [ ] Change type of entry doesn't delete old record [#29](https://github.com/gklyne/annalist/issues/29)
 - [ ] Authorization [#11](https://github.com/gklyne/annalist/issues/11)
 - [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)

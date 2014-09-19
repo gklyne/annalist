@@ -57,7 +57,7 @@ from entity_testentitydata          import (
     entitydata_delete_confirm_form_data,
     entitydata_default_view_context_data, entitydata_default_view_form_data,
     entitydata_recordtype_view_context_data, entitydata_recordtype_view_form_data,
-    default_fields, default_label, default_comment,
+    default_fields, default_label, default_comment, error_label,
     layout_classes
     )
 
@@ -571,8 +571,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.debug(r.content)
-        def_label = default_label("testcoll", "testtype", "entitynone")
-        self.assertContains(r, "<p>%s does not exist</p>"%def_label, status_code=404)
+        err_label = error_label("testcoll", "testtype", "entitynone")
+        self.assertContains(r, "<p>%s does not exist</p>"%err_label, status_code=404)
         return
 
     #   -----------------------------------------------------------------------------
