@@ -15,29 +15,33 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] annalistuser.py (new)
     - [x] AnnalistUser test suite
     - [x] create _user type
-    - [ ] collection.py - get_user_perms method for now.
+    - [ ] collection.py - just get_user_perms method for now.
     - [ ] get_user_perms test case
-    - [ ] create collection also creates initial user record for creator
+    - [ ] create collection also creates initial user record for creator with all permissions
     - [ ] view description for user
     - [ ] field descriptions for user
     - [ ] list description for user
-    - [ ] add method for getting details of current user (GenericView?).  Use user id to locate, but also check email address when granting permissions.
+    - [ ] add method for getting details of current user (GenericView?).
+        - Use user id to locate, but also check email address when granting permissions.
     - [ ] certain views and/or types need admin/config permission to edit or list or view
     - [ ] update authorization checks
     - [ ] annalist-manager updates to initialize users directory
     - [ ] site-wide permissions (e.g. to create collections) need to be site permissions
     - [ ] ...
 - [ ] Additional test cases [#8](https://github.com/gklyne/annalist/issues/8)
+- [ ] Scan code for all uses of 'annal:xxx' CURIES, and replace with ANNAL.CURIE.xxx references.  (See issue [#4](https://github.com/gklyne/annalist/issues/4))
+- [ ] Add field to view: check property URI is unique
+- [ ] Don't store host name in entity URL fields (this is just a start - see issues [#4](https://github.com/gklyne/annalist/issues/4), [#32](https://github.com/gklyne/annalist/issues/32))
+
+(Release here?)
+
+- [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
+    - [ ] Blob and file upload support: images, spreadsheets, ...
+    - [ ] Field type to link to uploaded file
 - [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
     - [ ] JSON-LD @contexts support
     - [ ] Alternative RDF formats support
-- [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
-    - [ ] Blob and file upload support: images, spreadsheets, ...
-    - [ ] Field type to link to uploaded file
 - [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
-- [ ] Scan code for all uses of 'annal:xxx' CURIES, and replace with ANNAL.CURIE.xxx references.
-- [ ] Add field to view: check property URI is unique
-- [ ] Don't store host name in entity URL fields (just a start - see issue )

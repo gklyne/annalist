@@ -5,35 +5,16 @@ Current status: V0.1.4, bug fixes and presentation improvements to first public 
 
 # V1.0 release
 
-Outsatnding issues leading up to V1.0 release are noted at [issues for V0.x alpha milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).
+Outstanding issues leading up to V1.0 release are noted at [issues for V0.x alpha milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).
+
+More generally, features planned for future releases are recorded in the [issues list](https://github.com/gklyne/annalist/issues).
 
 
 # Desired features, not yet scheduled
 
 ## Web backend storage
 
-The plan fopr Annalist has always been to separate the backend entity storage from the front en d user interface, thereby allowing hosting of data from the Annalist service.  Currently Annalist uses a file-based back-end which is not separately deployable.
-
-Entity access has been isolated in a single module, so the effort required to replace file access with HTTP access should be modest once the design details have been worked out.
-
-Notes:
-
-- replace/augment direct file access with HTTP access
-- Note that it should be possible to take an Annalist site directory and dump it onto any regular HTTP server to publish the raw data.  the Annalisrt web site should still be able to work with that.
-- think about storage of identifier URIs (e.g. record type URIs.)  Should they default to be:
-  (1) relative to self
-  (2) relative to base of site
-  (3) relative to host
-  (4) absolute
-  (5) relative to base of collection
-  Currently, it's (3) or (4), but I think I favour (2) (or (5)?).  The intent is that the URI field
-  can be fixed by explicitly entering an absolute URI, but until then they are allocated
-  per site.  The expectation is that if data are moved, it will be as complete collections
-  to ensure they are accompanied by their associated metadata.  This is easiest with (5), but (2) may be easier to implement.
-- review URI structure and relation to file system layout
-- need to address data access authorization (OpenID?), resource enumeration (WebDAV?), other issues
-- Note that entityroot.set_values currently favours a copy of the URL from the stored/internal data.  Currently this is created with a full URI (including hostname), but need not be.
-- need to address problem of getting HOST part of site URI when initializing a collection; can this logic be shifted to request code instead of __init__?
+(Moved to [issue #32](https://github.com/gklyne/annalist/issues/32))
 
 
 ## Linked data formats and API
