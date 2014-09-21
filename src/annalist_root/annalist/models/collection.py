@@ -25,15 +25,16 @@ log = logging.getLogger(__name__)
 
 from django.conf import settings
 
-from annalist                   import layout
-from annalist.exceptions        import Annalist_Error
-from annalist.identifiers       import ANNAL
-from annalist                   import util
+from annalist                       import layout
+from annalist.exceptions            import Annalist_Error
+from annalist.identifiers           import ANNAL
+from annalist                       import util
 
-from annalist.models.entity     import Entity
-from annalist.models.recordtype import RecordType
-from annalist.models.recordview import RecordView
-from annalist.models.recordlist import RecordList
+from annalist.models.entity         import Entity
+from annalist.models.annalistuser   import AnnalistUser
+from annalist.models.recordtype     import RecordType
+from annalist.models.recordview     import RecordView
+from annalist.models.recordlist     import RecordList
 
 class Collection(Entity):
 
@@ -65,15 +66,28 @@ class Collection(Entity):
 
     # User permissions
 
-    def get_user_perms(self, user_id, user_email):
+    def get_user_permissions(self, user_id, user_uri):
         """
         Get a user permissions record (AnnalistUser).
 
-        To return a value, both the user_id and the user_email must match.  This is to prevent
-        access to records of a deleted account being granted to a new account created with the
+        To return a value, both the user_id and the user_uri (typically a mailto: URI, but
+        may be any *authenticated* identifier) must match.  This is to prevent access to 
+        records of a deleted account being granted to a new account created with the 
         same user_id (username).
+
+        user_id         local identifier for the type to retrieve.
+        user_uri        authenticated identifier associated with the user_id.  That is,
+                        the authentication service used is presumed to confirm that
+                        the identifier belongs to the user currently logged in with
+                        the supplied username.
+
+        returns an AnnalistUser object for the identified user, or None.  This object contains
+                information about permissions granted to the user in the current collection.
         """
-        assert False, "@@TODO"
+        user = AnnalistUser.load(self, user_id, altparent=self._parentsite)
+        if user[ANNAL.CURIE.uri] != user_uri:
+            user = None         # URI mismatch: return None.
+        return user
 
     # Record types
 

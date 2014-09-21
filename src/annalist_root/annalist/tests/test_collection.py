@@ -13,25 +13,26 @@ import unittest
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                import settings
-from django.db                  import models
-from django.http                import QueryDict
-from django.contrib.auth.models import User
-from django.test                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
-from django.test.client         import Client
+from django.conf                    import settings
+from django.db                      import models
+from django.http                    import QueryDict
+from django.contrib.auth.models     import User
+from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
+from django.test.client             import Client
 
-from annalist.identifiers       import ANNAL
-from annalist                   import layout
-from annalist.models.site       import Site
-from annalist.models.collection import Collection
-from annalist.models.recordtype import RecordType
+from annalist.identifiers           import RDF, RDFS, ANNAL
+from annalist                       import layout
+from annalist.models.site           import Site
+from annalist.models.collection     import Collection
+from annalist.models.annalistuser   import AnnalistUser
+from annalist.models.recordtype     import RecordType
 
-from annalist.views.collection  import CollectionEditView
+from annalist.views.collection      import CollectionEditView
 
-from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                      import dict_to_str, init_annalist_test_site
-from AnnalistTestCase           import AnnalistTestCase
-from entity_testutils           import (
+from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from tests                          import dict_to_str, init_annalist_test_site
+from AnnalistTestCase               import AnnalistTestCase
+from entity_testutils               import (
     site_dir, collection_dir,
     site_view_url, 
     collection_view_url, 
@@ -39,6 +40,13 @@ from entity_testutils           import (
     continuation_url_param,
     collection_value_keys, collection_create_values, collection_values,
     site_title
+    )
+from entity_testuserdata            import (
+    # annalistuser_dir,
+    # annalistuser_site_url, annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
+    # annalistuser_value_keys, annalistuser_load_keys,
+    annalistuser_create_values, annalistuser_values, annalistuser_read_values
+    # annalistuser_delete_confirm_form_data
     )
 from entity_testtypedata            import (
     recordtype_edit_url,
@@ -114,6 +122,49 @@ class CollectionTest(AnnalistTestCase):
         c.set_values(self.testcoll_add)
         cd = c.get_values()
         self.assertDictionaryMatch(cd, self.testcoll_add)
+        return
+
+    # User permissions
+
+    def test_get_local_user_permissions(self):
+        c = self.testcoll
+        # Create local permissions
+        usr = AnnalistUser.create(c, "user1", annalistuser_create_values(user_id="user1"))
+        # Test access to permissions defined locally in collection
+        ugp = c.get_user_permissions("user1", "mailto:testuser@example.org")
+        self.assertEqual(ugp[ANNAL.CURIE.id],                 "user1")
+        self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
+        self.assertEqual(ugp[RDFS.CURIE.label],               "Test User")
+        self.assertEqual(ugp[RDFS.CURIE.comment],             "User user1: permissions for Test User in collection testcoll")
+        self.assertEqual(ugp[ANNAL.CURIE.uri],                "mailto:testuser@example.org")
+        self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"])
+        return
+
+    def test_get_local_user_uri_mismatch(self):
+        c = self.testcoll
+        # Create local permissions
+        usr = AnnalistUser.create(c, "user1", annalistuser_create_values(user_id="user1"))
+        # Test access to permissions defined locally in collection
+        ugp = c.get_user_permissions("user1", "mailto:anotheruser@example.org")
+        self.assertIsNone(ugp)
+        return
+
+    def test_get_site_user_permissions(self):
+        # Test access to default permissions defined for the site
+        c   = self.testcoll
+        ugp = c.get_user_permissions("_unknown_user", "annal:User/_unknown_user")
+        self.assertEqual(ugp[ANNAL.CURIE.id],                 "_unknown_user")
+        self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
+        self.assertEqual(ugp[RDFS.CURIE.label],               "Unknown user")
+        self.assertEqual(ugp[RDFS.CURIE.comment],             "Permissions for unauthenticated user.")
+        self.assertEqual(ugp[ANNAL.CURIE.uri],                "annal:User/_unknown_user")
+        self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW"])
+        return
+
+    def test_get_site_user_uri_mismatch(self):
+        c   = self.testcoll
+        ugp = c.get_user_permissions("_unknown_user", "annal:User/_another_user")
+        self.assertIsNone(ugp)
         return
 
     # Record types

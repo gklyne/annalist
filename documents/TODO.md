@@ -15,8 +15,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] annalistuser.py (new)
     - [x] AnnalistUser test suite
     - [x] create _user type
-    - [ ] collection.py - just get_user_perms method for now.
-    - [ ] get_user_perms test case
+    - [x] collection.py - just get_user_perms method for now.
+    - [x] get_user_perms test case in test_collection
     - [ ] create collection also creates initial user record for creator with all permissions
     - [ ] view description for user
     - [ ] field descriptions for user
@@ -45,3 +45,4 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+- [ ] Think about how to handle change of email address (option to remove user from Django database?)
