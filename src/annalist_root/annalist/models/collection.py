@@ -63,6 +63,18 @@ class Collection(Entity):
         """
         return self._parentsite
 
+    # User permissions
+
+    def get_user_perms(self, user_id, user_email):
+        """
+        Get a user permissions record (AnnalistUser).
+
+        To return a value, both the user_id and the user_email must match.  This is to prevent
+        access to records of a deleted account being granted to a new account created with the
+        same user_id (username).
+        """
+        assert False, "@@TODO"
+
     # Record types
 
     def types(self, include_alt=True):

@@ -135,7 +135,7 @@ def recordtype_values(
         { 'annal:id':       type_id
         , 'annal:type_id':  "_type"
         , 'annal:url':      type_url
-        , 'annal:uri':      type_uri
+        , 'annal:uri':      type_uri    # @@TODO: isn't this part of create_values?
         })
     return d
 

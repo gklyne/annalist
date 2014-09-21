@@ -78,7 +78,7 @@ class RecordTypeTest(AnnalistTestCase):
         return
 
     def test_RecordTypeTest(self):
-        self.assertEqual(Collection.__name__, "Collection", "Check Collection class name")
+        self.assertEqual(RecordType.__name__, "RecordType", "Check RecordType class name")
         return
 
     def test_recordtype_init(self):

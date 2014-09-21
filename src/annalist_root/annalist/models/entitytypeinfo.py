@@ -13,10 +13,11 @@ from annalist                       import message
 
 from annalist.identifiers           import ANNAL, RDF, RDFS
 
+from annalist.models.annalistuser   import AnnalistUser
+from annalist.models.recordtype     import RecordType
 from annalist.models.recordview     import RecordView
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
-from annalist.models.recordtype     import RecordType
 from annalist.models.recordenum     import RecordEnumFactory
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
@@ -28,9 +29,21 @@ ENTITY_MESSAGES = (
     , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
     , 'entity_exists':          message.ENTITY_DATA_EXISTS
     , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
+    , 'entity_removed':         message.ENTITY_DATA_REMOVED
     , 'entity_type_heading':    message.ENTITY_TYPE_ID
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-    , 'entity_removed':         message.ENTITY_DATA_REMOVED
+    })
+
+USER_MESSAGES = (
+    { 'parent_heading':         message.COLLECTION_ID
+    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+    , 'entity_heading':         message.ANNALIST_USER_ID
+    , 'entity_invalid_id':      message.ANNALIST_USER_ID_INVALID
+    , 'entity_exists':          message.ANNALIST_USER_EXISTS
+    , 'entity_not_exists':      message.ANNALIST_USER_NOT_EXISTS
+    , 'entity_removed':         message.ANNALIST_USER_REMOVED
+    , 'entity_type_heading':    message.ENTITY_TYPE_ID
+    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
 TYPE_MESSAGES = (
@@ -94,7 +107,8 @@ ENUM_MESSAGES = (
     })
 
 TYPE_CLASS_MAP = (
-    { '_type':              RecordType
+    { '_user':              AnnalistUser
+    , '_type':              RecordType
     , '_list':              RecordList
     , '_view':              RecordView
     , '_field':             RecordField
@@ -103,7 +117,8 @@ TYPE_CLASS_MAP = (
     })
 
 TYPE_MESSAGE_MAP = (
-    { '_type':              TYPE_MESSAGES
+    { '_user':              USER_MESSAGES
+    , '_type':              TYPE_MESSAGES
     , '_list':              LIST_MESSAGES
     , '_view':              VIEW_MESSAGES
     , '_field':             FIELD_MESSAGES
