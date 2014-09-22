@@ -141,7 +141,7 @@ def HttpResponseRedirectWithQuery(redirect_uri, query_params):
     for pname in query_params.keys():
         redirect_uri += nq + pname + "=" + urllib.quote(query_params[pname])
         nq = "&"
-    log.info("redirect_uri: "+redirect_uri)
+    # log.info("redirect_uri: "+redirect_uri)
     return HttpResponseRedirect(redirect_uri)
 
 def HttpResponseRedirectLoginWithMessage(request, message):
@@ -167,7 +167,7 @@ def confirm_authentication(view,
     if view.request.user.is_authenticated():
         storage         = Storage(CredentialsModel, 'id', view.request.user, 'credential')
         view.credential = storage.get()
-        log.info("view.credential %r"%(view.credential,))
+        # log.info("view.credential %r"%(view.credential,))
         if view.credential is not None:
             if not view.credential.invalid:
                 return None         # Valid credential present: proceed...

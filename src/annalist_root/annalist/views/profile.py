@@ -48,7 +48,13 @@ class ProfileView(AnnalistGenericView):
 
     def get(self, request):
         def resultdata():
-            return { 'user': request.user }
+            username, useruri = self.get_user_identity()
+            return (
+                { 'title':      self.site_data()["title"]
+                , 'user':       request.user 
+                , 'username':   username
+                , 'useruri':    useruri
+                })
         return (
             self.authenticate() or 
             self.render_html(resultdata()) or 

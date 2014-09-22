@@ -283,6 +283,16 @@ class AnnalistGenericView(ContentNegotiationView):
             **LOGIN_URIS
             )
 
+    def get_user_identity(self):
+        """
+        returns the username and authenticated URI for the user making the 
+        current request, as a pair (username, URI)
+        """
+        user = self.request.user
+        if user.is_authenticated():
+            return (user.username, "mailto:"+user.email)
+        return ("_unknown_user", "annal:User/_unknown_user")
+
     def authorize(self, scope):
         """
         Return None if user is authorized to perform the requested operation,
@@ -299,6 +309,7 @@ class AnnalistGenericView(ContentNegotiationView):
         For now, require authentication for anything other than VIEW scope.
         """
         log.debug("Authorize %s"%(scope))
+        username, useruri = self.get_user_identity()
         if scope != "VIEW":
             if not self.request.user.is_authenticated():
                 log.debug("Authorize %s denied"%(scope))

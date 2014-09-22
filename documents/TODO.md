@@ -17,12 +17,12 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] create _user type
     - [x] collection.py - just get_user_perms method for now.
     - [x] get_user_perms test case in test_collection
+    - [x] add method for getting details of current authenticated user (GenericView).
+    - [ ] Use user id to locate, but also check email address when granting permissions.
     - [ ] create collection also creates initial user record for creator with all permissions
     - [ ] view description for user
     - [ ] field descriptions for user
     - [ ] list description for user
-    - [ ] add method for getting details of current user (GenericView?).
-        - Use user id to locate, but also check email address when granting permissions.
     - [ ] certain views and/or types need admin/config permission to edit or list or view
     - [ ] update authorization checks
     - [ ] annalist-manager updates to initialize users directory
