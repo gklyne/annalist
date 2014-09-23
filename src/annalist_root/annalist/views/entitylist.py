@@ -149,25 +149,6 @@ class EntityGenericListView(AnnalistGenericView):
             })
         listcontext = entityvaluemap.map_value_to_context(entityval,
             **context_extra_values
-            #@@
-            # site_title            = self.site_data()["title"],
-            # title                 = listinfo.collection[RDFS.CURIE.label],
-            # request_url           = self.get_request_path(),
-            # continuation_url      = request.GET.get('continuation_url', ""),
-            # # continuation_search   = search_for or None,
-            # ### heading             = entity_initial_values['rdfs:label'],
-            # coll_id               = coll_id,
-            # coll_label            = listinfo.collection[RDFS.CURIE.label],
-            # type_id               = type_id,
-            # list_id               = listinfo.list_id,
-            # list_label            = listinfo.recordlist[RDFS.CURIE.label],
-            # search_for            = search_for,
-            # list_choices          = self.get_list_choices_field(listinfo),
-            # collection_view       = self.view_uri("AnnalistCollectionView", coll_id=coll_id),
-            # default_view_id       = listinfo.recordlist['annal:default_view'],
-            # default_view_enable   = ("" if list_id else 'disabled="disabled"'),
-            # help_filename         = self.help
-            #@@      
             )
         listcontext.update(listinfo.context_data())
         # log.debug("EntityGenericListView.get listcontext %r"%(listcontext))

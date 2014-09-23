@@ -44,9 +44,7 @@ from annalist.views.fields.render_utils import get_entity_values
 
 # Table used as basis, or initial values, for a dynamically generated entity-value map
 baseentityvaluemap  = (
-        [ SimpleValueMap(c='title',            e=None,                    f=None               )
-        , SimpleValueMap(c='coll_id',          e=None,                    f=None               )
-        , SimpleValueMap(c='coll_label',       e=None,                    f=None               )
+        [ SimpleValueMap(c='coll_id',          e=None,                    f=None               )
         , SimpleValueMap(c='type_id',          e=None,                    f=None               )
         , SimpleValueMap(c='view_choices',     e=None,                    f=None               )
         , SimpleValueMap(c='edit_add_field',   e=None,                    f=None               )
@@ -463,7 +461,7 @@ class GenericEntityEditView(AnnalistGenericView):
         add_field = self.find_add_field(entityvaluemap, form_data)
         if add_field:
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
-            return self.update_view_fields(add_field, entityvals, entityvaluemap, **context_extra_values)
+            return self.update_view_fields(viewinfo, add_field, entityvals, entityvaluemap, **context_extra_values)
 
         # Remove Field(s)
         # This is invoked by a view-edit view
@@ -476,7 +474,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     error_message=messages['no_field_selected']
                     )
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
-            return self.update_view_fields(remove_field, entityvals, entityvaluemap, **context_extra_values)
+            return self.update_view_fields(viewinfo, remove_field, entityvals, entityvaluemap, **context_extra_values)
 
         # Report unexpected form data
         # This shouldn't happen, but just in case...
@@ -663,7 +661,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 return repeat_desc
         return None
 
-    def update_view_fields(self, field_desc, entityvals, entityvaluemap, **context_extra_values):
+    def update_view_fields(self, viewinfo, field_desc, entityvals, entityvaluemap, **context_extra_values):
         """
         Renders a new form from supplied entity instance data with a repeateds field or 
         field group added or removed.
@@ -672,6 +670,7 @@ class GenericEntityEditView(AnnalistGenericView):
         The new field is saved by invoking 'save' from the displayed form (i.e. a corresponding 
         HTTP POST).
 
+        viewinfo    DisplayInfo object describing the current view.
         field_desc  is a field description for a field or field group to be added
                     or removed.  Fields are removed if the description contains a
                     'remove_fields' field, which contains a list of the repeat index
@@ -693,6 +692,7 @@ class GenericEntityEditView(AnnalistGenericView):
             self.add_entity_field(field_desc, entityvals)
         # log.info("entityvals: %r"%(entityvals,))
         form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
+        form_context.update(viewinfo.context_data())
         return (
             self.render_html(form_context, self._entityformtemplate) or 
             self.error(self.error406values())

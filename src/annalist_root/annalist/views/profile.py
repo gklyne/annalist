@@ -39,15 +39,6 @@ class ProfileView(AnnalistGenericView):
 
     # GET
 
-    #@@
-    # @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
-    # def render_html(self, resultdata):
-    #     resultdata["user"] = self.request.user
-    #     template = loader.get_template('annalist_profile.html')
-    #     context  = RequestContext(self.request, resultdata)
-    #     return HttpResponse(template.render(context))
-    #@@
-
     def get(self, request):
         def resultdata():
             username, useruri = self.get_user_identity()

@@ -352,6 +352,9 @@ class DisplayInfo(object):
     def context_data(self):
         """
         Return dictionary of rendering context data available from the elements assembled.
+
+        Values that are added here to the view context are used for view rendering, and
+        are not passed to the entity value mapping process.
         """
         context = (
             { 'site_title':     self.sitedata["title"]
