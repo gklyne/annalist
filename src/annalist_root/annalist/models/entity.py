@@ -51,7 +51,7 @@ class Entity(EntityRoot):
     _entityref      = None          # Relative reference to entity from body file
     _last_id        = None          # Last ID allocated
 
-    def __init__(self, parent, entityid, altparent=None, idcheck=True):
+    def __init__(self, parent, entityid, altparent=None, idcheck=True, use_altpath=False):
         """
         Initialize a new Entity object, possibly without values.  The created
         entity is not saved to disk at this stage - see ._save() method.
@@ -62,10 +62,15 @@ class Entity(EntityRoot):
                     the alternative path for the entity type: this is used to augment 
                     explicitly created entities in a collection with site-wide 
                     installed metadata entites (i.e. types, views, etc.)
+        idcheck     is set False to skip the valid-identifier check
+        use_altpath is set True if this entity is situated at the alternative
+                    path relative to its parent.
         """
         if idcheck and not util.valid_id(entityid):
             raise ValueError("Invalid entity identifier: %s"%(entityid))
         relpath = self.relpath(entityid)
+        if use_altpath:
+            relpath = self.altpath(entityid)
         super(Entity, self).__init__(parent._entityurl+relpath, parent._entitydir+relpath)
         self._entityviewuri = parent._entityurl+self._entityview%{'id': entityid, 'type_id': self._entitytypeid}
         self._entityalturi  = None
@@ -74,7 +79,7 @@ class Entity(EntityRoot):
             altpath = self.altpath(entityid)
             self._entityalturi = altparent._entityurl+altpath
             self._entityaltdir = altparent._entitydir+altpath
-            self._entityuseuri = None   # URI not known until enmtity is created or accessed
+            self._entityuseuri = None   # URI not known until entity is created or accessed
             log.debug("Entity.__init__: entity alt URI %s, entity alt dir %s"%(self._entityalturi, self._entityaltdir))
         self._entityid = entityid
         log.debug("Entity.__init__: entity_id %s, type_id %s"%(self._entityid, self.get_type_id()))
@@ -182,7 +187,20 @@ class Entity(EntityRoot):
         return
 
     @classmethod
-    def create(cls, parent, entityid, entitybody):
+    def _child_init(cls, parent, entityid, altparent=None, use_altpath=False):
+        """
+        Instantiate a child entity (e.g. for create and load methods)
+        """
+        if use_altpath:
+            e = cls(parent, entityid, use_altpath=use_altpath)
+        elif altparent:
+            e = cls(parent, entityid, altparent=altparent)
+        else:
+            e = cls(parent, entityid)
+        return e
+
+    @classmethod
+    def create(cls, parent, entityid, entitybody, use_altpath=False):
         """
         Method creates a new entityor rewrites an existing entity.
 
@@ -191,28 +209,19 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the new entity - this is 
                     required to be unique among descendents of a common parent.
         entitybody  is a dictionary of values that are stored for the created entity.
+        use_altpath is set True if this entity is situated at the alternative
+                    path relative to its parent.
 
         Returns the created entity as an instance of the supplied class object.
         """
         log.debug("Entity.create: entityid %s"%(entityid))
-        e = cls(parent, entityid)
+        e = cls._child_init(parent, entityid, use_altpath=use_altpath)
         e.set_values(entitybody)
         e._save()
         return e
 
     @classmethod
-    def _child_init(cls, parent, entityid, altparent=None):
-        """
-        Instantiate a child entity (e.g. for create and load methods)
-        """
-        if altparent:
-            e = cls(parent, entityid, altparent=altparent)
-        else:
-            e = cls(parent, entityid)
-        return e
-
-    @classmethod
-    def load(cls, parent, entityid, altparent=None):
+    def load(cls, parent, entityid, altparent=None, use_altpath=False):
         """
         Return an entity with given identifier belonging to some given parent,
         or None if there is not such identity.
@@ -222,6 +231,8 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the entity.
         altparent   is an alternative parent entity to search for the loaded entity, 
                     using the alternative path for the entity type.
+        use_altpath is set True if this entity is situated at the alternative
+                    path relative to its parent.
 
         Returns an instance of the indicated class with data loaded from the
         corresponding Annalist storage, or None if there is no such entity.
@@ -230,7 +241,7 @@ class Entity(EntityRoot):
             (cls._entitytype, parent._entitydir, entityid,
                 altparent._entitydir if altparent else "(no alt)")
             )
-        e = cls._child_init(parent, entityid, altparent=altparent)
+        e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
         v = e._load_values()
         # log.info("entity.load %r"%(v,))
         if v:
@@ -240,7 +251,7 @@ class Entity(EntityRoot):
         return e
 
     @classmethod
-    def exists(cls, parent, entityid, altparent=None):
+    def exists(cls, parent, entityid, altparent=None, use_altpath=False):
         """
         Method tests for existence of identified entity descended from given parent.
 
@@ -249,6 +260,8 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the entity.
         altparent   is an alternative parent entity to search for the tested entity, 
                     using the alternative path for the entity type.
+        use_altpath     is set True if this entity is situated at the alternative
+                    path relative to its parent.
 
         Returns True if the entity exists, as determined by existence of the 
         entity description metadata file.
@@ -256,7 +269,7 @@ class Entity(EntityRoot):
         log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%
             (cls._entitytype, parent._entitydir, entityid)
             )
-        e = cls._child_init(parent, entityid, altparent=altparent)
+        e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
         return e._exists()
 
     @classmethod

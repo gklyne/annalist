@@ -85,7 +85,7 @@ class Collection(Entity):
                 information about permissions granted to the user in the current collection.
         """
         user = AnnalistUser.load(self, user_id, altparent=self._parentsite)
-        if user[ANNAL.CURIE.uri] != user_uri:
+        if user and user[ANNAL.CURIE.uri] != user_uri:
             user = None         # URI mismatch: return None.
         return user
 

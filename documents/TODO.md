@@ -19,14 +19,17 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] get_user_perms test case in test_collection
     - [x] add method for getting details of current authenticated user (GenericView).
     - [x] update authorization method calls to include target collection
-    - [ ] Use user id to locate, but also check email address when granting permissions.
+    - [x] Use user id to locate, but also check email address when granting permissions.
+    - [ ] Create generic view method for accessing user permissions (may supersede collection method)
+    - [ ] Provision for site-wide default permissions
+    - [ ] update authorization logic to use permissions data
     - [ ] create collection also creates initial user record for creator with all permissions
     - [ ] view description for user
     - [ ] field descriptions for user
     - [ ] list description for user
     - [ ] certain views and/or types need admin/config permission to edit or list or view
-    - [ ] update authorization checks
     - [ ] annalist-manager updates to initialize users directory
+    - [ ] annalist-manager option to create site user entry and default site permissions
     - [ ] site-wide permissions (e.g. to create collections) need to be site permissions
     - [ ] ...
 - [ ] Additional test cases [#8](https://github.com/gklyne/annalist/issues/8)

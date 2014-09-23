@@ -140,6 +140,13 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"])
         return
 
+    def test_get_local_user_not_defined(self):
+        c = self.testcoll
+        # Test access to permissions defined locally in collection
+        ugp = c.get_user_permissions("user1", "mailto:testuser@example.org")
+        self.assertIsNone(ugp)
+        return
+
     def test_get_local_user_uri_mismatch(self):
         c = self.testcoll
         # Create local permissions
@@ -150,7 +157,7 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def test_get_site_user_permissions(self):
-        # Test access to default permissions defined for the site
+        # Test access to site permissions for unauthenticated user
         c   = self.testcoll
         ugp = c.get_user_permissions("_unknown_user", "annal:User/_unknown_user")
         self.assertEqual(ugp[ANNAL.CURIE.id],                 "_unknown_user")
