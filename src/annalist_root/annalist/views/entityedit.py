@@ -297,21 +297,21 @@ class GenericEntityEditView(AnnalistGenericView):
         entityvals  = get_entity_values(viewinfo, entity, entity_id)
         if viewinfo.action == "copy":
             entityvals.pop('annal:uri')
-        viewcontext = entityvaluemap.map_value_to_context(entityvals,
-            site_title          = viewinfo.sitedata["title"],
-            title               = viewinfo.collection[RDFS.CURIE.label],
-            action              = viewinfo.action,
-            edit_add_field      = viewinfo.recordview.get("annal:add_field", "yes"),
-            continuation_url    = continuation_url,
-            request_url         = self.get_request_path(),
-            coll_id             = coll_id,
-            coll_label          = viewinfo.collection[RDFS.CURIE.label],
-            type_id             = type_id,
-            view_choices        = self.get_view_choices_field(viewinfo),
-            orig_id             = entity_id,
-            orig_type           = type_id,
-            view_id             = viewinfo.view_id
+        context_extra_values = (
+            { 'edit_add_field':     viewinfo.recordview.get("annal:add_field", "yes")
+            , 'continuation_url':   continuation_url
+            , 'request_url':        self.get_request_path()
+            , 'coll_id':            coll_id
+            , 'type_id':            type_id
+            , 'view_choices':       self.get_view_choices_field(viewinfo)
+            , 'orig_id':            entity_id
+            , 'orig_type':          type_id
+            , 'view_id':            viewinfo.view_id
+            })
+        viewcontext = entityvaluemap.map_value_to_context(entityvals, 
+            **context_extra_values
             )
+        viewcontext.update(viewinfo.context_data())
         # Generate and return form data
         return (
             self.render_html(viewcontext, self._entityformtemplate) or 
@@ -319,7 +319,7 @@ class GenericEntityEditView(AnnalistGenericView):
             )
 
     def form_re_render(self, 
-            entityvaluemap, form_data, context_extra_values={}, 
+            viewinfo, entityvaluemap, form_data, context_extra_values={}, 
             error_head=None, error_message=None):
         """
         Returns re-rendering of form with current values and error message displayed.
@@ -327,6 +327,7 @@ class GenericEntityEditView(AnnalistGenericView):
         form_context = entityvaluemap.map_form_data_to_context(form_data,
             **context_extra_values
             )
+        form_context.update(viewinfo.context_data())
         # log.info("********\nform_context %r"%form_context)
         form_context['error_head']    = error_head
         form_context['error_message'] = error_message
@@ -357,13 +358,13 @@ class GenericEntityEditView(AnnalistGenericView):
         # Check response has valid id and type
         if not util.valid_id(entity_id):
             log.debug("form_response: entity_id not util.valid_id('%s')"%entity_id)
-            return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+            return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                 error_head=messages['entity_heading'],
                 error_message=messages['entity_invalid_id']
                 )
         if not util.valid_id(entity_type_id):
             log.debug("form_response: entity_type_id not util.valid_id('%s')"%entity_type_id)
-            return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+            return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                 error_head=messages['entity_type_heading'],
                 error_message=messages['entity_type_invalid']
                 )
@@ -470,7 +471,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if remove_field:
             if not remove_field['remove_fields']:
                 log.debug("form_response: No field(s) selected for remove_field")
-                return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+                return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                     error_head=messages['remove_field_error'],
                     error_message=messages['no_field_selected']
                     )
@@ -527,7 +528,7 @@ class GenericEntityEditView(AnnalistGenericView):
         orig_parent = typeinfo.entityparent
         if not orig_parent._exists():
             log.warning("save_entity: not orig_parent._exists()")
-            return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+            return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                 error_head=messages['parent_heading'],
                 error_message=messages['parent_missing']
                 )
@@ -545,7 +546,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # Check existence of entity to save according to action performed
         if (action in ["new", "copy"]) or entity_id_changed:
             if typeinfo.entityclass.exists(new_parent, entity_id):
-                return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+                return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                     error_head=messages['entity_heading'],
                     error_message=messages['entity_exists']
                     )
@@ -555,7 +556,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 log.warning("Expected %s/%s not found; action %s, entity_id_changed %r"%
                       (entity_type_id, entity_id, action, entity_id_changed)
                     )
-                return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+                return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                     error_head=messages['entity_heading'],
                     error_message=messages['entity_not_exists']
                     )

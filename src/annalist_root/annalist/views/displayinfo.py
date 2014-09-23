@@ -19,6 +19,7 @@ from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.core.urlresolvers       import resolve, reverse
 
+from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import message
 
 from annalist.models.entitytypeinfo import EntityTypeInfo
@@ -56,6 +57,12 @@ class DisplayInfo(object):
     def __init__(self, view, action):
         self.view           = view
         self.action         = action
+        self.authorizations = (
+            { 'auth_create': False
+            , 'auth_update': False
+            , 'auth_delete': False
+            , 'auth_config': False
+            })
         self.reqhost        = None
         self.site           = None
         self.sitedata       = None
@@ -186,13 +193,19 @@ class DisplayInfo(object):
     def check_authorization(self, action):
         """
         If no error so far, check authorization.  Return None if all is OK,
-        or HttpResonse object 
+        or HttpResonse object.
+
+        Also, save copy of key authorizations for later rendering.
         """
         action = action or "view"
         self.http_response = (
             self.http_response or 
-            self.view.form_action_auth(action, self.collection.get_url())
+            self.view.form_action_auth(action, self.collection)
             )
+        self.authorizations["auth_create"] = self.view.authorize("CREATE", self.collection) is None
+        self.authorizations["auth_update"] = self.view.authorize("UPDATE", self.collection) is None
+        self.authorizations["auth_delete"] = self.view.authorize("DELETE", self.collection) is None
+        self.authorizations["auth_config"] = self.view.authorize("CONFIG", self.collection) is None
         return self.http_response
 
     # Additonal support functions for list views
@@ -290,7 +303,7 @@ class DisplayInfo(object):
                 action=action
                 )
 
-    # Additonal support functions for entity views
+    # Additonal support functions
 
     def get_type_view_id(self, type_id):
         """
@@ -335,5 +348,38 @@ class DisplayInfo(object):
                 entity_id=entity_id,
                 action="edit"
                 )
+
+    def context_data(self):
+        """
+        Return dictionary of rendering context data available from the elements assembled.
+        """
+        context = (
+            { 'site_title':     self.sitedata["title"]
+            , 'title':          self.sitedata["title"]
+            , 'action':         self.action
+            , 'coll_id':        self.coll_id
+            , 'type_id':        self.type_id
+            , 'view_id':        self.view_id
+            , 'list_id':        self.list_id
+            })
+        context.update(self.authorizations)
+        if hasattr(self.view, 'help'):
+            context.update(
+                { 'help_filename':  self.view.help
+                })
+        if self.collection:
+            context.update(
+                { 'title':      self.collection[RDFS.CURIE.label]
+                , 'coll_label': self.collection[RDFS.CURIE.label]
+                })
+        if self.recordview:
+            context.update(
+                { 'view_label': self.recordview[RDFS.CURIE.label]
+                })
+        if self.recordlist:
+            context.update(
+                { 'list_label': self.recordlist[RDFS.CURIE.label]
+                })
+        return context
 
 # End.

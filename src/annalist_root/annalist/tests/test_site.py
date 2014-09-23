@@ -46,9 +46,9 @@ site_data_keys = {'@id', 'rdfs:label', 'rdfs:comment', 'collections', 'title'}
 
 # Initial collection data used for form display
 init_collections = (
-    { 'coll1': collection_values("coll1", hosturi="")
-    , 'coll2': collection_values("coll2", hosturi="")
-    , 'coll3': collection_values("coll3", hosturi="")
+    { 'coll1': collection_values("coll1", hosturi=TestHostUri)
+    , 'coll2': collection_values("coll2", hosturi=TestHostUri)
+    , 'coll3': collection_values("coll3", hosturi=TestHostUri)
     })
 
 class SiteTest(AnnalistTestCase):
@@ -205,11 +205,11 @@ class SiteViewTest(AnnalistTestCase):
         trows = s.form.find_all("div", class_="row")
         self.assertEqual(len(trows), 5)
         self.assertEqual(trows[1].div.p.a.string,  "coll1")
-        self.assertEqual(trows[1].div.p.a['href'], collection_view_url("coll1"))
+        self.assertEqual(trows[1].div.p.a['href'], TestHostUri + collection_view_url("coll1"))
         self.assertEqual(trows[2].div.p.a.string,  "coll2")
-        self.assertEqual(trows[2].div.p.a['href'], collection_view_url("coll2"))
+        self.assertEqual(trows[2].div.p.a['href'], TestHostUri + collection_view_url("coll2"))
         self.assertEqual(trows[3].div.p.a.string,  "coll3")
-        self.assertEqual(trows[3].div.p.a['href'], collection_view_url("coll3"))
+        self.assertEqual(trows[3].div.p.a['href'], TestHostUri + collection_view_url("coll3"))
         return
 
     def test_get_with_login(self):
@@ -248,25 +248,25 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(len(trows), 7)
         tcols1 = trows[1].find_all("div")
         self.assertEqual(tcols1[0].a.string,        "coll1")
-        self.assertEqual(tcols1[0].a['href'],       collection_view_url("coll1"))
+        self.assertEqual(tcols1[0].a['href'],       TestHostUri + collection_view_url("coll1"))
         self.assertEqual(tcols1[2].input['type'],   "checkbox")
         self.assertEqual(tcols1[2].input['name'],   "select")
         self.assertEqual(tcols1[2].input['value'],  "coll1")
         tcols2 = trows[2].find_all("div")
         self.assertEqual(tcols2[0].a.string,        "coll2")
-        self.assertEqual(tcols2[0].a['href'],       collection_view_url("coll2"))
+        self.assertEqual(tcols2[0].a['href'],       TestHostUri + collection_view_url("coll2"))
         self.assertEqual(tcols2[2].input['type'],   "checkbox")
         self.assertEqual(tcols2[2].input['name'],   "select")
         self.assertEqual(tcols2[2].input['value'],  "coll2")
         tcols3 = trows[3].find_all("div")
         self.assertEqual(tcols3[0].a.string,        "coll3")
-        self.assertEqual(tcols3[0].a['href'],       collection_view_url("coll3"))
+        self.assertEqual(tcols3[0].a['href'],       TestHostUri + collection_view_url("coll3"))
         self.assertEqual(tcols3[2].input['type'],   "checkbox")
         self.assertEqual(tcols3[2].input['name'],   "select")
         self.assertEqual(tcols3[2].input['value'],  "coll3")
         tcols4 = trows[4].find_all("div")
         self.assertEqual(tcols4[0].a.string,        "testcoll")
-        self.assertEqual(tcols4[0].a['href'],       collection_view_url("testcoll"))
+        self.assertEqual(tcols4[0].a['href'],       TestHostUri + collection_view_url("testcoll"))
         self.assertEqual(tcols4[2].input['type'],   "checkbox")
         self.assertEqual(tcols4[2].input['name'],   "select")
         self.assertEqual(tcols4[2].input['value'],  "testcoll")
@@ -301,7 +301,7 @@ class SiteViewTest(AnnalistTestCase):
         # Check site now has new colllection
         r = self.client.get(self.uri)
         new_collections = init_collections.copy()
-        new_collections["testnew"] = collection_values("testnew", hosturi="")
+        new_collections["testnew"] = collection_values("testnew", hosturi=TestHostUri)
         colls = r.context['collections']
         for id in new_collections:
             p = "[%s]"%id

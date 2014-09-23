@@ -18,6 +18,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] collection.py - just get_user_perms method for now.
     - [x] get_user_perms test case in test_collection
     - [x] add method for getting details of current authenticated user (GenericView).
+    - [x] updaten authorization method calls to include target collection
     - [ ] Use user id to locate, but also check email address when granting permissions.
     - [ ] create collection also creates initial user record for creator with all permissions
     - [ ] view description for user

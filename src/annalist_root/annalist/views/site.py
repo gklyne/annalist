@@ -21,6 +21,7 @@ from annalist                   import util
 
 from annalist.models.site       import Site
 
+from annalist.views.displayinfo import DisplayInfo
 from annalist.views.generic     import AnnalistGenericView
 from annalist.views.confirm     import ConfirmView
 
@@ -40,13 +41,16 @@ class SiteView(AnnalistGenericView):
         Create a rendering of the current site home page, containing (among other things)
         a list of defined collections.
         """
-        resultdata = self.site_data()
-        if resultdata:
-            resultdata['help_filename'] = self.help
+        viewinfo = DisplayInfo(self, "view")
+        viewinfo.get_site_info(self.get_request_host())
+        viewinfo.check_authorization("view")
+        if viewinfo.http_response:
+            return viewinfo.http_response
+        resultdata = viewinfo.sitedata
+        resultdata.update(viewinfo.context_data())
         # log.info("SiteView.get: site_data %r"%(self.site_data()))
         return (
             self.check_site_data() or
-            self.authorize("VIEW") or 
             self.render_html(resultdata, 'annalist_site.html') or 
             self.error(self.error406values())
             )
@@ -63,7 +67,7 @@ class SiteView(AnnalistGenericView):
             if collections:
                 # Get user to confirm action before actually doing it
                 return (
-                    self.authorize("DELETE") or
+                    self.authorize("DELETE", None) or
                     ConfirmView.render_form(request,
                         action_description=     message.REMOVE_COLLECTIONS%{'ids': ", ".join(collections)},
                         action_params=          request.POST,
@@ -93,7 +97,7 @@ class SiteView(AnnalistGenericView):
                     error_message=message.INVALID_COLLECTION_ID%{'coll_id': new_id}
                     )
             # Create new collection with name and label supplied
-            auth_required = self.authorize("CREATE")
+            auth_required = self.authorize("CREATE", None)
             if auth_required:
                 return auth_required
             coll_meta = (
@@ -124,7 +128,7 @@ class SiteActionView(AnnalistGenericView):
         log.debug("siteactionview.post: %r"%(request.POST))
         if "remove" in request.POST:
             log.debug("Complete remove %r"%(request.POST.getlist("select")))
-            auth_required = self.authorize("DELETE")
+            auth_required = self.authorize("DELETE", None)
             if auth_required:
                 return auth_required
             coll_ids = request.POST.getlist("select")
