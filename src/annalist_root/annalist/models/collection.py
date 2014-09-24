@@ -86,6 +86,9 @@ class Collection(Entity):
         """
         user = AnnalistUser.load(self, user_id, altparent=self._parentsite)
         if user:
+            # log.info("Collection.get_user_permissions: user_id %s, user_uri %s, user %r"%
+            #     (user_id, user_uri, user)
+            #     )
             for f in [RDFS.CURIE.label, RDFS.CURIE.comment, ANNAL.CURIE.uri, ANNAL.CURIE.user_permissions]:
                 if f not in user:
                     user = None

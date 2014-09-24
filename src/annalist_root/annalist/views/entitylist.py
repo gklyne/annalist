@@ -258,7 +258,7 @@ class EntityGenericListView(AnnalistGenericView):
                         })
                     message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
                     return (
-                        self.form_action_auth("delete", listinfo.collection.get_url()) or
+                        self.form_action_auth("delete", listinfo.collection) or
                         ConfirmView.render_form(request,
                             action_description=     message.REMOVE_ENTITY_DATA%message_vals,
                             confirmed_action_uri=   confirmed_action_uri,

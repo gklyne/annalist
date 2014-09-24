@@ -34,6 +34,7 @@ from utils.ContentNegotiationView   import ContentNegotiationView
 import annalist
 from annalist                       import message
 from annalist                       import layout
+from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.models.site           import Site
 from annalist.models.annalistuser   import AnnalistUser
 
@@ -274,7 +275,7 @@ class AnnalistGenericView(ContentNegotiationView):
         Permissions are cached in the view object so that tghe prmissions ecord is read at 
         most once for any HTTP request. 
 
-        collection      the collecrtion for which permissions are required.
+        collection      the collection for which permissions are required.
         user_id         local identifier for the type to retrieve.
         user_uri        authenticated identifier associated with the user_id.  That is,
                         the authentication service used is presumed to confirm that
@@ -283,14 +284,18 @@ class AnnalistGenericView(ContentNegotiationView):
 
         returns an AnnalistUser object containing permissions for the identified user.
         """
-        user_perms = self._user_perms
-        if not user_perms:
+        if not self._user_perms:
+            # if collection:
+            #     log.info("user_id %s (%s), coll_id %s, %r"%
+            #         (user_id, user_uri, collection.get_id(), collection.get_user_permissions(user_id, user_uri))
+            #         )
             user_perms = (
                 (collection and collection.get_user_permissions(user_id, user_uri)) or
                 self.site().get_user_permissions(user_id, user_uri) or
-                self.site().get_user_permissions("_default_user", "annal:User/_default_permissions")
+                self.site().get_user_permissions("_default_permissions", "annal:User/_default_permissions")
                 )
-        return user_perms
+            self._user_perms = user_perms
+        return self._user_perms
 
     def authorize(self, scope, collection):
         """
@@ -303,17 +308,26 @@ class AnnalistGenericView(ContentNegotiationView):
         collection  is the collection to which the requested action is directed,
                     or None if the test is against site-level permissions.
 
-        @@TODO proper authorization framework
-
         For now, require authentication for anything other than VIEW scope.
         """
         log.debug("Authorize %s"%(scope))
-        username, useruri = self.get_user_identity()
-        #@@TODO: revise authz logic here; how to access permissions?
-        if scope != "VIEW":
-            if not self.request.user.is_authenticated():
-                log.debug("Authorize %s denied"%(scope))
-                return self.error(self.error401values(scope=scope))
+        user_id, user_uri = self.get_user_identity()
+        user_perms = self.get_user_permissions(collection, user_id, user_uri)
+        if not user_perms:
+            log.warning("No user permissions found for user_id %s, URI %s"%(user_id, user_uri))
+            return self.error(self.error401values(scope=scope))
+        # user_perms is an AnnalistrUser object
+        coll_id = collection.get_id() if collection else "(No coll)"
+        if scope not in user_perms[ANNAL.CURIE.user_permissions]:
+            if user_id == "_unknown_user":
+                err = self.error401values(scope=scope)
+            else:
+                err = self.error403values(scope=scope)
+            return self.error(err)
+        # if scope != "VIEW":
+        #     if not self.request.user.is_authenticated():
+        #         log.debug("Authorize %s denied"%(scope))
+        #         return self.error(self.error401values(scope=scope))
         return None
 
     def form_action_auth(self, action, auth_collection):

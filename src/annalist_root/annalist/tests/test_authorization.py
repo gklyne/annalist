@@ -81,7 +81,7 @@ class AuthorizationTest(AnnalistTestCase):
             annalistuser_create_values(
                 coll_id="testcoll", user_id="user_admin",
                 user_name="Admin User",
-                user_uri="mailto:user_admin@example.org", 
+                user_uri="mailto:user_admin@%s"%TestHost, 
                 user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
                 )
             )
@@ -89,7 +89,7 @@ class AuthorizationTest(AnnalistTestCase):
             annalistuser_create_values(
                 coll_id="testcoll", user_id="user_config",
                 user_name="Admin User",
-                user_uri="mailto:user_config@example.org", 
+                user_uri="mailto:user_config@%s"%TestHost, 
                 user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"]
                 )
             )
@@ -97,7 +97,7 @@ class AuthorizationTest(AnnalistTestCase):
             annalistuser_create_values(
                 coll_id="testcoll", user_id="user_create",
                 user_name="Admin User",
-                user_uri="mailto:user_create@example.org", 
+                user_uri="mailto:user_create@%s"%TestHost, 
                 user_permissions=["VIEW", "UPDATE", "CREATE"]
                 )
             )
@@ -105,7 +105,7 @@ class AuthorizationTest(AnnalistTestCase):
             annalistuser_create_values(
                 coll_id="testcoll", user_id="user_update",
                 user_name="Admin User",
-                user_uri="mailto:user_update@example.org", 
+                user_uri="mailto:user_update@%s"%TestHost, 
                 user_permissions=["VIEW", "UPDATE"]
                 )
             )
@@ -113,7 +113,7 @@ class AuthorizationTest(AnnalistTestCase):
             annalistuser_create_values(
                 coll_id="testcoll", user_id="user_delete",
                 user_name="Admin User",
-                user_uri="mailto:user_delete@example.org", 
+                user_uri="mailto:user_delete@%s"%TestHost, 
                 user_permissions=["VIEW", "UPDATE", "DELETE"]
                 )
             )
@@ -121,7 +121,7 @@ class AuthorizationTest(AnnalistTestCase):
             annalistuser_create_values(
                 coll_id="testcoll", user_id="user_view",
                 user_name="Admin User",
-                user_uri="mailto:user_view@example.org", 
+                user_uri="mailto:user_view@%s"%TestHost, 
                 user_permissions=["VIEW"]
                 )
             )
@@ -134,7 +134,7 @@ class AuthorizationTest(AnnalistTestCase):
 
     def login_user(self, user_id):
         # Create user identity and log in (authenticate).  Updates the test client object.
-        self.user = User.objects.create_user(user_id, '%s@test.example.org'%(user_id), 'testpassword')
+        self.user = User.objects.create_user(user_id, '%s@%s'%(user_id, TestHost), 'testpassword')
         self.user.save()
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username=user_id, password="testpassword")
@@ -149,7 +149,7 @@ class AuthorizationTest(AnnalistTestCase):
             annalistuser_create_values(
                 coll_id="testcoll", user_id=user_id,
                 user_name="Test User",
-                user_uri="mailto:%s@example.org"%(user_id), 
+                user_uri="mailto:%s@%s"%(user_id, TestHost), 
                 user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
                 )
             )
@@ -173,7 +173,7 @@ class AuthorizationTest(AnnalistTestCase):
         f = annalistuser_view_form_data(action="new",
             coll_id="testcoll", user_id="new_user",
             user_name="New User",
-            user_uri="mailto:new_user@example.org", 
+            user_uri="mailto:new_user@%s"%(TestHost), 
             user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             )
         r = self.client.post(u, f)
@@ -189,7 +189,7 @@ class AuthorizationTest(AnnalistTestCase):
         f = annalistuser_view_form_data(action="copy",
             coll_id="testcoll", user_id="copy_user_new", orig_id="copy_user",
             user_name="Copy User",
-            user_uri="mailto:copy_user_new@example.org", 
+            user_uri="mailto:copy_user_new@%s"%(TestHost), 
             user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             )
         r = self.client.post(u, f)
@@ -204,7 +204,7 @@ class AuthorizationTest(AnnalistTestCase):
         f = annalistuser_view_form_data(action="edit",
             coll_id="testcoll", user_id="edit_user",
             user_name="Edit User",
-            user_uri="mailto:edit_user@example.org", 
+            user_uri="mailto:edit_user@%s"%(TestHost), 
             user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             )
         r = self.client.post(u, f)
