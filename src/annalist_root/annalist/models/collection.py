@@ -27,7 +27,7 @@ from django.conf import settings
 
 from annalist                       import layout
 from annalist.exceptions            import Annalist_Error
-from annalist.identifiers           import ANNAL
+from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import util
 
 from annalist.models.entity         import Entity
@@ -85,6 +85,11 @@ class Collection(Entity):
                 information about permissions granted to the user in the current collection.
         """
         user = AnnalistUser.load(self, user_id, altparent=self._parentsite)
+        if user:
+            for f in [RDFS.CURIE.label, RDFS.CURIE.comment, ANNAL.CURIE.uri, ANNAL.CURIE.user_permissions]:
+                if f not in user:
+                    user = None
+                    break
         if user and user[ANNAL.CURIE.uri] != user_uri:
             user = None         # URI mismatch: return None.
         return user

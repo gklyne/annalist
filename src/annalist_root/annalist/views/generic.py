@@ -35,15 +35,17 @@ import annalist
 from annalist                       import message
 from annalist                       import layout
 from annalist.models.site           import Site
-from annalist.models.sitedata       import SiteData
-from annalist.models.collection     import Collection
-from annalist.models.recordview     import RecordView
-from annalist.models.recordlist     import RecordList
-from annalist.models.recordfield    import RecordField
-from annalist.models.recordtype     import RecordType
-from annalist.models.recordtypedata import RecordTypeData
-from annalist.models.entitydata     import EntityData
-from annalist.models.entitytypeinfo import EntityTypeInfo
+from annalist.models.annalistuser   import AnnalistUser
+
+# from annalist.models.sitedata       import SiteData
+# from annalist.models.collection     import Collection
+# from annalist.models.recordview     import RecordView
+# from annalist.models.recordlist     import RecordList
+# from annalist.models.recordfield    import RecordField
+# from annalist.models.recordtype     import RecordType
+# from annalist.models.recordtypedata import RecordTypeData
+# from annalist.models.entitydata     import EntityData
+# from annalist.models.entitytypeinfo import EntityTypeInfo
 
 from annalist.views.uri_builder     import uri_with_params, continuation_params
 
@@ -72,6 +74,7 @@ class AnnalistGenericView(ContentNegotiationView):
         self._sitebasedir = os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR)
         self._site        = None
         self._site_data   = None
+        self._user_perms  = None
         ## self.credential = None
         return
 
@@ -257,6 +260,38 @@ class AnnalistGenericView(ContentNegotiationView):
             return (user.username, "mailto:"+user.email)
         return ("_unknown_user", "annal:User/_unknown_user")
 
+    def get_user_permissions(self, collection, user_id, user_uri):
+        """
+        Get a user permissions record (AnnalistUser).
+
+        To return a value, both the user_id and the user_uri (typically a mailto: URI, but
+        may be any *authenticated* identifier) must match.  This is to prevent access to 
+        records of a deleted account being granted to a new account created with the 
+        same user_id (username).
+
+        This function returns default permissions if the user details supplied cannot be matched.
+
+        Permissions are cached in the view object so that tghe prmissions ecord is read at 
+        most once for any HTTP request. 
+
+        collection      the collecrtion for which permissions are required.
+        user_id         local identifier for the type to retrieve.
+        user_uri        authenticated identifier associated with the user_id.  That is,
+                        the authentication service used is presumed to confirm that
+                        the identifier belongs to the user currently logged in with
+                        the supplied username.
+
+        returns an AnnalistUser object containing permissions for the identified user.
+        """
+        user_perms = self._user_perms
+        if not user_perms:
+            user_perms = (
+                (collection and collection.get_user_permissions(user_id, user_uri)) or
+                self.site().get_user_permissions(user_id, user_uri) or
+                self.site().get_user_permissions("_default_user", "annal:User/_default_permissions")
+                )
+        return user_perms
+
     def authorize(self, scope, collection):
         """
         Return None if user is authorized to perform the requested operation,
@@ -275,7 +310,6 @@ class AnnalistGenericView(ContentNegotiationView):
         log.debug("Authorize %s"%(scope))
         username, useruri = self.get_user_identity()
         #@@TODO: revise authz logic here; how to access permissions?
-
         if scope != "VIEW":
             if not self.request.user.is_authenticated():
                 log.debug("Authorize %s denied"%(scope))

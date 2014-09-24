@@ -68,9 +68,6 @@ from entity_testentitydata          import (
 #   -----------------------------------------------------------------------------
 
 class GenericEntityEditViewTest(AnnalistTestCase):
-    """
-    Tests for record type edit views
-    """
 
     def setUp(self):
         init_annalist_test_site()

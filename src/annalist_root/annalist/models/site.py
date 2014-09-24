@@ -21,7 +21,7 @@ from django.http                    import HttpResponseRedirect
 from django.conf                    import settings
 from django.core.urlresolvers       import resolve, reverse
 
-from annalist.identifiers           import ANNAL, RDFS
+from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
 from annalist                       import layout
 from annalist                       import message
@@ -71,6 +71,11 @@ class Site(EntityRoot):
         """
         user = AnnalistUser.load(self, user_id, use_altpath=True)
         # log.info("user_id %s, user %r"%(user_id, user))
+        if user:
+            for f in [RDFS.CURIE.label, RDFS.CURIE.comment, ANNAL.CURIE.uri, ANNAL.CURIE.user_permissions]:
+                if f not in user:
+                    user = None
+                    break
         if user and user[ANNAL.CURIE.uri] != user_uri:
             user = None         # URI mismatch: return None.
         return user

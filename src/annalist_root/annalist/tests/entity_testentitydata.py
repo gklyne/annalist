@@ -262,6 +262,15 @@ def entitydata_form_data(
         form_data_dict['save']              = 'Save'
     return form_data_dict
 
+def entitydata_delete_form_data(entity_id=None, type_id="Default_type", list_id="Default_list"):
+    return (
+        { 'list_choice':        list_id
+        , 'continuation_url':   ""
+        , 'search_for':         ""
+        , 'entity_select':      ["%s/%s"%(type_id, entity_id)]
+        , 'delete':             "Delete"
+        })
+
 def entitydata_delete_confirm_form_data(entity_id=None, search=None):
     """
     Form data from entity deletion confirmation

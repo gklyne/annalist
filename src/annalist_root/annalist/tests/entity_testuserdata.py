@@ -28,6 +28,17 @@ from entity_testutils                   import (
     # site_view_url, collection_edit_url, 
     # collection_create_values
     )
+from entity_testentitydata          import (
+    # recorddata_dir,  entitydata_dir,
+    # entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
+    entitydata_list_type_url, entitydata_list_all_url,
+    # entitydata_value_keys, entitydata_create_values, entitydata_values, 
+    # entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
+    # entitylist_form_data,
+    # get_site_lists
+    )
+
+
 
 #   -----------------------------------------------------------------------------
 #
@@ -162,14 +173,56 @@ def annalistuser_read_values(
 
 #   -----------------------------------------------------------------------------
 #
-#   ----- Recordtype delete confirmation form data
+#   ----- User edit form data
 #
 #   -----------------------------------------------------------------------------
 
+def annalistuser_view_form_data(
+        coll_id="testcoll", user_id="testuser",
+        user_name="Test User",
+        user_uri="mailto:testuser@example.org", 
+        user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"],
+        action=None, cancel=None, orig_id=None):
+    form_data_dict = (
+        { 'entity_id':          user_id
+        , 'orig_id':            user_id
+        , 'User_name':          user_name
+        , 'User_description':   'User %s permissions in %s'%(user_id, coll_id)
+        , 'User_uri':           user_uri
+        , 'User_permissions':   user_permissions
+        , 'orig_type':          "_user"
+        , 'continuation_url':   entitydata_list_type_url(coll_id, "_user")
+        })
+    if orig_id:
+        form_data_dict['orig_id']       = orig_id
+    if action:
+        form_data_dict['action']        = action
+    if cancel:
+        form_data_dict['cancel']        = "Cancel"
+    else:
+        form_data_dict['save']          = 'Save'
+    return form_data_dict
+
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- User delete & confirmation form data
+#
+#   -----------------------------------------------------------------------------
+
+def annalistuser_delete_form_data(user_id=None, list_id="Default_list"):
+    return (
+        { 'list_choice':        list_id
+        , 'continuation_url':   ""
+        , 'search_for':         ""
+        , 'entity_select':      ["_user/%s"%(user_id)]
+        , 'delete':             "Delete"
+        })
+
 def annalistuser_delete_confirm_form_data(user_id=None):
     return (
-        { 'userlist':    user_id,
-          'user_delete': 'Delete'
+        { 'entity_id':     user_id,
+          'entity_delete': 'Delete'
         })
 
 # End.

@@ -142,22 +142,28 @@ class CollectionTest(AnnalistTestCase):
 
     def test_get_local_user_not_defined(self):
         c = self.testcoll
-        # Test access to permissions defined locally in collection
         ugp = c.get_user_permissions("user1", "mailto:testuser@example.org")
         self.assertIsNone(ugp)
         return
 
     def test_get_local_user_uri_mismatch(self):
         c = self.testcoll
-        # Create local permissions
         usr = AnnalistUser.create(c, "user1", annalistuser_create_values(user_id="user1"))
-        # Test access to permissions defined locally in collection
         ugp = c.get_user_permissions("user1", "mailto:anotheruser@example.org")
         self.assertIsNone(ugp)
         return
 
+    def test_get_local_user_missing_fields(self):
+        # E.g. what happens if user record is created through default view?  Don't return value.
+        d = annalistuser_create_values(user_id="user1")
+        d.pop(ANNAL.CURIE.user_permissions)
+        c = self.testcoll
+        usr = AnnalistUser.create(c, "user1", d)
+        ugp = c.get_user_permissions("user1", "mailto:testuser@example.org")
+        self.assertIsNone(ugp)
+        return
+
     def test_get_site_user_permissions(self):
-        # Test access to site permissions for unauthenticated user
         c   = self.testcoll
         ugp = c.get_user_permissions("_unknown_user", "annal:User/_unknown_user")
         self.assertEqual(ugp[ANNAL.CURIE.id],                 "_unknown_user")
@@ -173,6 +179,7 @@ class CollectionTest(AnnalistTestCase):
         ugp = c.get_user_permissions("_unknown_user", "annal:User/_another_user")
         self.assertIsNone(ugp)
         return
+
 
     # Record types
 
