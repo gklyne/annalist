@@ -20,8 +20,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] add method for getting details of current authenticated user (GenericView).
     - [x] update authorization method calls to include target collection
     - [x] Use user id to locate, but also check email address when granting permissions.
-    - [ ] Create generic view method for accessing user permissions (may supersede collection method)
-    - [ ] Provision for site-wide default permissions
+    - [x] Create generic view method for accessing user permissions (may supersede collection method)
+    - [x] Provision for site-wide default permissions
+    - [x] Authorization test suite
     - [ ] update authorization logic to use permissions data
     - [ ] create collection also creates initial user record for creator with all permissions
     - [ ] view description for user

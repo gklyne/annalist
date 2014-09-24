@@ -422,46 +422,208 @@ class AuthorizationTest(AnnalistTestCase):
         return
 
     def test_config_user(self):
-        # login
+        self.login_user("user_config")
         # try each function, test result
+        self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.new_user().status_code,               403)
+        self.assertEqual(self.copy_user().status_code,              403)
+        self.assertEqual(self.edit_user().status_code,              403)
+        self.assertEqual(self.delete_user().status_code,            403)
+        self.assertEqual(self.delete_user_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.new_type().status_code,               302)
+        self.assertEqual(self.copy_type().status_code,              302)
+        self.assertEqual(self.edit_type().status_code,              302)
+        self.assertEqual(self.delete_type().status_code,            200)
+        self.assertEqual(self.delete_type_confirmed().status_code,  302)
+        #
+        self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.new_data().status_code,               302)
+        self.assertEqual(self.copy_data().status_code,              302)
+        self.assertEqual(self.edit_data().status_code,              302)
+        self.assertEqual(self.delete_data().status_code,            200)
+        self.assertEqual(self.delete_data_confirmed().status_code,  302)
         return
 
     def test_create_user(self):
-        # login
+        self.login_user("user_create")
         # try each function, test result
+        self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.new_user().status_code,               403)
+        self.assertEqual(self.copy_user().status_code,              403)
+        self.assertEqual(self.edit_user().status_code,              403)
+        self.assertEqual(self.delete_user().status_code,            403)
+        self.assertEqual(self.delete_user_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.new_type().status_code,               403)
+        self.assertEqual(self.copy_type().status_code,              403)
+        self.assertEqual(self.edit_type().status_code,              403)
+        self.assertEqual(self.delete_type().status_code,            403)
+        self.assertEqual(self.delete_type_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.new_data().status_code,               302)
+        self.assertEqual(self.copy_data().status_code,              302)
+        self.assertEqual(self.edit_data().status_code,              302)
+        self.assertEqual(self.delete_data().status_code,            200)
+        self.assertEqual(self.delete_data_confirmed().status_code,  302)
         return
 
     def test_update_user(self):
-        # login
+        self.login_user("user_update")
         # try each function, test result
+        self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.new_user().status_code,               403)
+        self.assertEqual(self.copy_user().status_code,              403)
+        self.assertEqual(self.edit_user().status_code,              403)
+        self.assertEqual(self.delete_user().status_code,            403)
+        self.assertEqual(self.delete_user_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.new_type().status_code,               403)
+        self.assertEqual(self.copy_type().status_code,              403)
+        self.assertEqual(self.edit_type().status_code,              403)
+        self.assertEqual(self.delete_type().status_code,            403)
+        self.assertEqual(self.delete_type_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.new_data().status_code,               403)
+        self.assertEqual(self.copy_data().status_code,              403)
+        self.assertEqual(self.edit_data().status_code,              302)
+        self.assertEqual(self.delete_data().status_code,            403)
+        self.assertEqual(self.delete_data_confirmed().status_code,  403)
         return
 
     def test_delete_user(self):
-        # login
+        self.login_user("user_delete")
         # try each function, test result
+        self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.new_user().status_code,               403)
+        self.assertEqual(self.copy_user().status_code,              403)
+        self.assertEqual(self.edit_user().status_code,              403)
+        self.assertEqual(self.delete_user().status_code,            403)
+        self.assertEqual(self.delete_user_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.new_type().status_code,               403)
+        self.assertEqual(self.copy_type().status_code,              403)
+        self.assertEqual(self.edit_type().status_code,              403)
+        self.assertEqual(self.delete_type().status_code,            403)
+        self.assertEqual(self.delete_type_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.new_data().status_code,               403)
+        self.assertEqual(self.copy_data().status_code,              403)
+        self.assertEqual(self.edit_data().status_code,              302)
+        self.assertEqual(self.delete_data().status_code,            200)
+        self.assertEqual(self.delete_data_confirmed().status_code,  302)
         return
 
     def test_view_user(self):
-        # login
+        self.login_user("user_view")
         # try each function, test result
+        self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.new_user().status_code,               403)
+        self.assertEqual(self.copy_user().status_code,              403)
+        self.assertEqual(self.edit_user().status_code,              403)
+        self.assertEqual(self.delete_user().status_code,            403)
+        self.assertEqual(self.delete_user_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.new_type().status_code,               403)
+        self.assertEqual(self.copy_type().status_code,              403)
+        self.assertEqual(self.edit_type().status_code,              403)
+        self.assertEqual(self.delete_type().status_code,            403)
+        self.assertEqual(self.delete_type_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.new_data().status_code,               403)
+        self.assertEqual(self.copy_data().status_code,              403)
+        self.assertEqual(self.edit_data().status_code,              403)
+        self.assertEqual(self.delete_data().status_code,            403)
+        self.assertEqual(self.delete_data_confirmed().status_code,  403)
         return
 
     def test_default_user(self):
-        # login
+        self.login_user("other_user")
         # try each function, test result
+        self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.new_user().status_code,               403)
+        self.assertEqual(self.copy_user().status_code,              403)
+        self.assertEqual(self.edit_user().status_code,              403)
+        self.assertEqual(self.delete_user().status_code,            403)
+        self.assertEqual(self.delete_user_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.new_type().status_code,               403)
+        self.assertEqual(self.copy_type().status_code,              403)
+        self.assertEqual(self.edit_type().status_code,              403)
+        self.assertEqual(self.delete_type().status_code,            403)
+        self.assertEqual(self.delete_type_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.new_data().status_code,               403)
+        self.assertEqual(self.copy_data().status_code,              403)
+        self.assertEqual(self.edit_data().status_code,              403)
+        self.assertEqual(self.delete_data().status_code,            403)
+        self.assertEqual(self.delete_data_confirmed().status_code,  403)
         return
 
     def test_no_login_user(self):
-        self.assertEqual(self.list_users().status_code, 401)        # Unauthorized (not authenticated)
-        self.assertEqual(self.new_user().status_code, 401)
-        self.assertEqual(self.copy_user().status_code, 401)
-        self.assertEqual(self.edit_user().status_code, 401)
-        self.assertEqual(self.delete_user().status_code, 401)
-        self.assertEqual(self.delete_user_confirmed().status_code, 401)
+        # try each function, test result
+        self.assertEqual(self.list_users().status_code,             401)
+        self.assertEqual(self.new_user().status_code,               401)
+        self.assertEqual(self.copy_user().status_code,              401)
+        self.assertEqual(self.edit_user().status_code,              401)
+        self.assertEqual(self.delete_user().status_code,            401)
+        self.assertEqual(self.delete_user_confirmed().status_code,  401)
+        #
+        self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.new_type().status_code,               401)
+        self.assertEqual(self.copy_type().status_code,              401)
+        self.assertEqual(self.edit_type().status_code,              401)
+        self.assertEqual(self.delete_type().status_code,            401)
+        self.assertEqual(self.delete_type_confirmed().status_code,  401)
+        #
+        self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.new_data().status_code,               401)
+        self.assertEqual(self.copy_data().status_code,              401)
+        self.assertEqual(self.edit_data().status_code,              401)
+        self.assertEqual(self.delete_data().status_code,            401)
+        self.assertEqual(self.delete_data_confirmed().status_code,  401)
         return
 
     def test_list_all(self):
-        # Check that only elements for which there is view permission are displayed in list
-        assert False, "@@TODO - test_list_all"
+        u = entitydata_list_all_url("testcoll", list_id="Default_list_all")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Test context
+        # Entities and bound fields
+        # log.info(r.context['entities'])  #@@
+        # rows = []
+        # for i in range(len(r.context['entities'])):
+        #     efs = r.context['entities'][i]['fields']
+        #     rows.append((efs[0]['field_value'], efs[1]['field_value'], efs[2]['field_value']))
+        # for row in rows:
+        #     log.info("entity_id %s, type_id %s, label %s"%row)
+        self.assertEqual(len(r.context['entities']), 8)
+        entity_fields = (
+            [ ('testtype',    '_type',    'RecordType testtype/testtype')
+            # , ('user_admin',  '_user',    'Admin User')
+            # , ('user_config', '_user',    'Admin User')
+            # , ('user_create', '_user',    'Admin User')
+            # , ('user_delete', '_user',    'Admin User')
+            # , ('user_update', '_user',    'Admin User')
+            # , ('user_view',   '_user',    'Admin User')
+            , ('entity1',     'testtype', 'Entity testcoll/testtype/entity1')
+            ])
+        for eid in range(6):
+            for fid in range(3):
+                item_field = r.context['entities'][eid]['fields'][fid]
+                self.assertEqual(item_field['field_value'],    entity_fields[eid][fid])
+        return
 
 # End.
