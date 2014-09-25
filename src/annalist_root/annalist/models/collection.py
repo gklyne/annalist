@@ -66,6 +66,20 @@ class Collection(Entity):
 
     # User permissions
 
+    def create_user_permissions(self, user_id, user_uri,
+            user_name, user_description,
+            user_permissions=["VIEW"]
+            ):
+        user_values = (
+            { 'annal:type':             "annal:User"
+            , 'rdfs:label':             user_name
+            , 'rdfs:comment':           user_description
+            , 'annal:uri':              user_uri
+            , 'annal:user_permissions': user_permissions
+            })
+        user = AnnalistUser.create(self, user_id, user_values)
+        return user
+
     def get_user_permissions(self, user_id, user_uri):
         """
         Get a user permissions record (AnnalistUser).

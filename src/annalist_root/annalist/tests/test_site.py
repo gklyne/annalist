@@ -25,6 +25,7 @@ from bs4                            import BeautifulSoup
 from annalist                       import layout
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.models.site           import Site
+from annalist.models.site           import Collection
 from annalist.models.annalistuser   import AnnalistUser
 
 from annalist.views.site            import SiteView, SiteActionView
@@ -365,6 +366,16 @@ class SiteViewTest(AnnalistTestCase):
             self.assertEqualPrefix(colls[id]["annal:id"],   id,                                p)
             self.assertEqualPrefix(colls[id]["annal:url"],  new_collections[id]["annal:url"],  p)
             self.assertEqualPrefix(colls[id]["rdfs:label"], new_collections[id]["rdfs:label"], p)
+        # Check new collection has admin permissions for creator
+        new_coll = Collection(self.testsite, "testnew")
+        testuser_perms = new_coll.get_user_permissions("testuser", "mailto:testuser@%s"%TestHost)
+        expect_perms   = ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+        expect_descr   = "User testuser: permissions for Test User in collection testnew"
+        self.assertEqual(testuser_perms[ANNAL.CURIE.id],     "testuser")
+        self.assertEqual(testuser_perms[ANNAL.CURIE.uri],    "mailto:testuser@%s"%TestHost)
+        self.assertEqual(testuser_perms[RDFS.CURIE.label],   "Test User")
+        self.assertEqual(testuser_perms[RDFS.CURIE.comment], expect_descr)
+        self.assertEqual(testuser_perms[ANNAL.CURIE.user_permissions], expect_perms)
         return
 
     def test_post_remove(self):

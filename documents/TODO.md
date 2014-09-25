@@ -24,12 +24,13 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Provision for site-wide default permissions
     - [x] Authorization test suite
     - [x] update authorization logic to use permissions data
-    - [ ] create collection also creates initial user record for creator with all permissions
+    - [x] create collection also creates initial user record for creator with all permissions
+    - [ ] admin-manager create admin user also needs to create site admin permissions for that user
     - [ ] view description for user
     - [ ] field descriptions for user
     - [ ] list description for user
     - [ ] certain views and/or types need admin/config permission to edit or list or view
-    - [ ] annalist-manager updates to initialize users directory
+    - [ ] annalist-manager updates to initialize users directory, but don't wipe existing permissions
     - [ ] annalist-manager option to create site user entry and default site permissions
     - [ ] site-wide permissions (e.g. to create collections) need to be site permissions
     - [ ] ...

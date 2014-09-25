@@ -191,40 +191,19 @@ def render_select_options(name, opts, sel, placeholder=None):
 #
 #   -----------------------------------------------------------------------------
 
-def annalistuser_create_values(
-        coll_id="testcoll", user_id="testuser",
-        user_name="Test User",
-        user_uri="mailto:testuser@example.org", 
-        user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
-        ):
-    """
-    Values used when creating a user record
-
-    NOTE: this function is a duplicate from 'entity_testuserdata'
-    """
-    d = (
-        { 'annal:type':             "annal:User"
-        , 'rdfs:label':             user_name
-        , 'rdfs:comment':           "User %s: permissions for %s in collection %s"%(user_id, user_name, coll_id)
-        , 'annal:uri':              user_uri
-        , 'annal:user_permissions': user_permissions
-        })
-    return d
-
-def create_user_permissions(
-        coll, user_id, 
+def create_user_permissions(parent, 
+        user_id,
         user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"],
         use_altpath=False
         ):
-    user = AnnalistUser.create(coll, user_id,
-        annalistuser_create_values(
-            coll_id="testcoll", user_id=user_id,
-            user_name="Test User",
-            user_uri="mailto:%s@%s"%(user_id, TestHost), 
-            user_permissions=user_permissions
-            ),
-        use_altpath=use_altpath
-        )
+    user_values = (
+        { 'annal:type':             "annal:User"
+        , 'rdfs:label':             "Test User"
+        , 'rdfs:comment':           "User %s: permissions for %s in collection %s"%(user_id, "Test User", parent.get_id())
+        , 'annal:uri':              "mailto:%s@%s"%(user_id, TestHost)
+        , 'annal:user_permissions': user_permissions
+        })
+    user = AnnalistUser.create(parent, user_id, user_values, use_altpath=use_altpath)
     return user
 
 def create_test_user(
@@ -232,9 +211,15 @@ def create_test_user(
         user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"]
         ):
     django_user = User.objects.create_user(user_id, "%s@%s"%(user_id, TestHost), user_pass)
+    django_user.first_name = "Test"
+    django_user.last_name  = "User"
     django_user.save()
     if coll:
-        user_perms = create_user_permissions(coll, "testuser", user_permissions)
+        user_perms = coll.create_user_permissions(
+            "testuser", "mailto:%s@%s"%(user_id, TestHost),
+            "Test User",
+            "User %s: permissions for %s in collection %s"%(user_id, "Test User", coll.get_id()),
+            user_permissions)
     else:
         user_perms = None
     return (django_user, user_perms)

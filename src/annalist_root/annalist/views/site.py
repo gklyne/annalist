@@ -104,7 +104,18 @@ class SiteView(AnnalistGenericView):
                 { RDFS.CURIE.label:    new_label
                 , RDFS.CURIE.comment:  ""
                 })
-            self.site().add_collection(new_id, coll_meta)
+            coll = self.site().add_collection(new_id, coll_meta)
+            # Create full permissions in new collection for creating user
+            user = self.request.user
+            user_id = user.username
+            user_uri = "mailto:"+user.email
+            user_name = "%s %s"%(user.first_name, user.last_name)
+            user_description = "User %s: permissions for %s in collection %s"%(user_id, user_name, new_id)
+            coll.create_user_permissions(
+                user_id, user_uri, 
+                user_name, user_description,
+                user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+                )
             return self.redirect_info(
                 self.view_uri("AnnalistSiteView"), 
                 info_message=message.CREATED_COLLECTION_ID%{'coll_id': new_id}
