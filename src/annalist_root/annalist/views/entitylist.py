@@ -128,9 +128,12 @@ class EntityGenericListView(AnnalistGenericView):
         # Prepare list and entity IDs for rendering form
         selector    = listinfo.recordlist.get_values().get('annal:list_entity_selector', "")
         search_for  = request.GET.get('search', "")
+        user_perms  = self.get_permissions(listinfo.collection)
         entity_list = (
             EntityFinder(listinfo.collection, selector=selector)
-                .get_entities_sorted(type_id=type_id, context=listinfo.recordlist, search=search_for)
+                .get_entities_sorted(
+                    user_perms, type_id=type_id, context=listinfo.recordlist, search=search_for
+                    )
             )
         entityval = { 'annal:list_entities': [ get_entity_values(listinfo, e) for e in entity_list ] }
         # Set up initial view context
@@ -257,8 +260,13 @@ class EntityGenericListView(AnnalistGenericView):
                         , "search_for":         [request.POST['search_for']]
                         })
                     message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
+                    typeinfo = listinfo.entitytypeinfo
+                    if typeinfo is None:
+                        typeinfo = EntityTypeInfo(listinfo.site, listinfo.collection, entity_type)
                     return (
-                        self.form_action_auth("delete", listinfo.collection) or
+                        self.form_action_auth(
+                            "delete", listinfo.collection, typeinfo.permissions_map
+                            ) or
                         ConfirmView.render_form(request,
                             action_description=     message.REMOVE_ENTITY_DATA%message_vals,
                             confirmed_action_uri=   confirmed_action_uri,
@@ -268,7 +276,9 @@ class EntityGenericListView(AnnalistGenericView):
                             )
                         )
             if "default_view" in request.POST:
-                auth_check = self.form_action_auth("config", listinfo.collection.get_url())
+                auth_check = self.form_action_auth(
+                    "config", listinfo.collection, listinfo.entitytypeinfo.permissions_map
+                    )
                 if auth_check:
                     return auth_check
                 listinfo.collection.set_default_list(list_id)

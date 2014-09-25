@@ -297,6 +297,13 @@ class AnnalistGenericView(ContentNegotiationView):
             self._user_perms = user_perms
         return self._user_perms
 
+    def get_permissions(self, collection):
+        """
+        Get permissions for the current user
+        """
+        user_id, user_uri = self.get_user_identity()
+        return self.get_user_permissions(collection, user_id, user_uri)
+
     def authorize(self, scope, collection):
         """
         Return None if user is authorized to perform the requested operation,
@@ -330,7 +337,7 @@ class AnnalistGenericView(ContentNegotiationView):
         #         return self.error(self.error401values(scope=scope))
         return None
 
-    def form_action_auth(self, action, auth_collection):
+    def form_action_auth(self, action, auth_collection, perm_required):
         """
         Check that the requested form action is authorized for the current user.
 
@@ -338,10 +345,15 @@ class AnnalistGenericView(ContentNegotiationView):
         auth_collection is the collection to which the requested action is directed,
                         or None if the test is against site-level permissions
                         (which should be stricter than all collections).
+        perm_required   is a data dependent dictionary that maps from action to
+                        permissions required to perform the action.  The structure
+                        is similar to that of 'action_scope' (below) that provides
+                        a fallback mapping.
 
         Returns None if the desired action is authorized for the current user, otherwise
         an HTTP response value to return an error condition.
         """
+        # @@TODO: in due course, eliminate action_scope.
         action_scope = (
             { "view":   "VIEW"      # View data record
             , "list":   "VIEW"      # ..
@@ -353,7 +365,9 @@ class AnnalistGenericView(ContentNegotiationView):
             , "config": "CONFIG"    # Change collection configuration
             , "admin":  "ADMIN"     # Change users or permissions
             })
-        if action in action_scope:
+        if action in perm_required:
+            auth_scope = perm_required[action]
+        elif action in action_scope:
             auth_scope = action_scope[action]
         else:
             log.warning("form_action_auth: unknown action: %s"%(action))

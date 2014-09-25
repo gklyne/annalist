@@ -106,6 +106,42 @@ ENUM_MESSAGES = (
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
+ADMIN_PERMISSIONS = (
+    { "view":   "ADMIN"     # View user record
+    , "list":   "ADMIN"     # ..
+    , "search": "ADMIN"     # ..
+    , "new":    "ADMIN"     # Create user record
+    , "copy":   "ADMIN"     # ..
+    , "edit":   "ADMIN"     # Update user record
+    , "delete": "ADMIN"     # Delete user record
+    , "config": "CONFIG"    # Change collection configuration
+    , "admin":  "ADMIN"     # Change users or permissions
+    })
+
+CONFIG_PERMISSIONS = (
+    { "view":   "VIEW"      # View config record
+    , "list":   "VIEW"      # ..
+    , "search": "VIEW"      # ..
+    , "new":    "CONFIG"    # Create config record
+    , "copy":   "CONFIG"    # ..
+    , "edit":   "CONFIG"    # Update config record
+    , "delete": "CONFIG"    # Delete config record
+    , "config": "CONFIG"    # Change collection configuration
+    , "admin":  "ADMIN"     # Change users or permissions
+    })
+
+ENTITY_PERMISSIONS = (
+    { "view":   "VIEW"      # View data record
+    , "list":   "VIEW"      # ..
+    , "search": "VIEW"      # ..
+    , "new":    "CREATE"    # Create data record
+    , "copy":   "CREATE"    # ..
+    , "edit":   "UPDATE"    # Update data record
+    , "delete": "DELETE"    # Delete data record
+    , "config": "CONFIG"    # Change collection configuration
+    , "admin":  "ADMIN"     # Change users or permissions
+    })
+
 TYPE_CLASS_MAP = (
     { '_user':              AnnalistUser
     , '_type':              RecordType
@@ -124,6 +160,16 @@ TYPE_MESSAGE_MAP = (
     , '_field':             FIELD_MESSAGES
     , 'Enum_list_type':     ENUM_MESSAGES
     , 'Enum_field_type':    ENUM_MESSAGES
+    })
+
+TYPE_PERMISSIONS_MAP = (
+    { '_user':              ADMIN_PERMISSIONS
+    , '_type':              CONFIG_PERMISSIONS
+    , '_list':              CONFIG_PERMISSIONS
+    , '_view':              CONFIG_PERMISSIONS
+    , '_field':             CONFIG_PERMISSIONS
+    , 'Enum_list_type':     CONFIG_PERMISSIONS
+    , 'Enum_field_type':    CONFIG_PERMISSIONS
     })
 
 def get_built_in_type_ids():
@@ -168,18 +214,20 @@ class EntityTypeInfo(object):
 
         and other values as initialized here.
         """
-        self.entitysite     = site
-        self.entitycoll     = coll
-        self.recordtype     = None
-        self.entityparent   = None
-        self.coll_id        = coll.get_id()
-        self.type_id        = type_id
+        self.entitysite      = site
+        self.entitycoll      = coll
+        self.recordtype      = None
+        self.entityparent    = None
+        self.coll_id         = coll.get_id()
+        self.type_id         = type_id
+        self.permissions_map = None
         if type_id in TYPE_CLASS_MAP:
             self.recordtype      = RecordType.load(coll, type_id, site)
             self.entityparent    = coll
             self.entityaltparent = site
             self.entityclass     = TYPE_CLASS_MAP[type_id]
             self.entitymessages  = TYPE_MESSAGE_MAP[type_id]
+            self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
         else:
             if RecordType.exists(coll, type_id, site):
                 self.recordtype     = RecordType.load(coll, type_id, site)
@@ -190,6 +238,7 @@ class EntityTypeInfo(object):
             self.entityaltparent = None
             self.entityclass     = EntityData
             self.entitymessages  = ENTITY_MESSAGES
+            self.permissions_map = ENTITY_PERMISSIONS
         if not self.recordtype:
             #@@
             # .recordtype is used by views.displayinfo to locate the default
@@ -231,20 +280,21 @@ class EntityTypeInfo(object):
             log.warning("EntityTypeInfo missing entityparent; type_id %s"%(self.type_id))
         return
 
-    def enum_entities(self, usealtparent=False):
+    def enum_entities(self, user_perms=None, usealtparent=False):
         """
         Iterate over entities in collection with current type.
 
         usealtparent    is True if site-wide entities are to be included.
         """
-        altparent = self.entityaltparent if usealtparent else None
-        if self.entityparent:
-            for e in self.entityparent.child_entities(
-                    self.entityclass, 
-                    altparent=altparent):
-                yield e
-        else:
-            log.warning("EntityTypeInfo missing entityparent; type_id %s"%(self.type_id))
+        if not user_perms or self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]:
+            altparent = self.entityaltparent if usealtparent else None
+            if self.entityparent:
+                for e in self.entityparent.child_entities(
+                        self.entityclass, 
+                        altparent=altparent):
+                    yield e
+            else:
+                log.warning("EntityTypeInfo missing entityparent; type_id %s"%(self.type_id))
         return
 
     def get_initial_entity_values(self, entity_id):

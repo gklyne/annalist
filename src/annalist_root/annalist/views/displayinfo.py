@@ -198,10 +198,15 @@ class DisplayInfo(object):
         Also, save copy of key authorizations for later rendering.
         """
         action = action or "view"
+        if self.entitytypeinfo:
+            permissions_map = self.entitytypeinfo.permissions_map
+        else:
+            permissions_map = {}
         self.http_response = (
             self.http_response or 
-            self.view.form_action_auth(action, self.collection)
+            self.view.form_action_auth(action, self.collection, permissions_map)
             )
+        # @@TODO: map this through permissions map, or something...
         self.authorizations["auth_create"] = self.view.authorize("CREATE", self.collection) is None
         self.authorizations["auth_update"] = self.view.authorize("UPDATE", self.collection) is None
         self.authorizations["auth_delete"] = self.view.authorize("DELETE", self.collection) is None

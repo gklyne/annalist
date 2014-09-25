@@ -467,8 +467,8 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.new_data().status_code,               302)
         self.assertEqual(self.copy_data().status_code,              302)
         self.assertEqual(self.edit_data().status_code,              302)
-        self.assertEqual(self.delete_data().status_code,            200)
-        self.assertEqual(self.delete_data_confirmed().status_code,  302)
+        self.assertEqual(self.delete_data().status_code,            403)
+        self.assertEqual(self.delete_data_confirmed().status_code,  403)
         return
 
     def test_update_user(self):
@@ -596,6 +596,7 @@ class AuthorizationTest(AnnalistTestCase):
         return
 
     def test_list_all(self):
+        # Only list things we can view/list
         u = entitydata_list_all_url("testcoll", list_id="Default_list_all")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
@@ -609,7 +610,7 @@ class AuthorizationTest(AnnalistTestCase):
         #     rows.append((efs[0]['field_value'], efs[1]['field_value'], efs[2]['field_value']))
         # for row in rows:
         #     log.info("entity_id %s, type_id %s, label %s"%row)
-        self.assertEqual(len(r.context['entities']), 8)
+        self.assertEqual(len(r.context['entities']), 2)
         entity_fields = (
             [ ('testtype',    '_type',    'RecordType testtype/testtype')
             # , ('user_admin',  '_user',    'Admin User')
@@ -620,7 +621,7 @@ class AuthorizationTest(AnnalistTestCase):
             # , ('user_view',   '_user',    'Admin User')
             , ('entity1',     'testtype', 'Entity testcoll/testtype/entity1')
             ])
-        for eid in range(6):
+        for eid in range(2):
             for fid in range(3):
                 item_field = r.context['entities'][eid]['fields'][fid]
                 self.assertEqual(item_field['field_value'],    entity_fields[eid][fid])
