@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.db                      import models
 from django.http                    import QueryDict
-from django.contrib.auth.models     import User
+# from django.contrib.auth.models     import User
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client             import Client
 
@@ -47,7 +47,8 @@ from entity_testutils               import (
     continuation_url_param,
     confirm_delete_params,
     collection_create_values,
-    site_title
+    site_title,
+    create_test_user, create_user_permissions
     )
 from entity_testtypedata        import (
     recordtype_dir, 
@@ -84,8 +85,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.testtype2 = RecordType.create(self.testcoll, "testtype2", recordtype_create_values("testcoll", "testtype2"))
         self.testdata  = RecordTypeData.create(self.testcoll, "testtype", {})
         self.testdata2 = RecordTypeData.create(self.testcoll, "testtype2", {})
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
+        # self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
+        # self.user.save()
+        create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)

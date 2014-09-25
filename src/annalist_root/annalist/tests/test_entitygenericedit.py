@@ -42,7 +42,8 @@ from entity_testutils               import (
     site_dir, collection_dir, 
     continuation_url_param,
     collection_edit_url,
-    site_title
+    site_title,
+    create_test_user
     )
 from entity_testtypedata        import (
     recordtype_dir, 
@@ -75,11 +76,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client = Client(HTTP_HOST=TestHost)
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         self.type_ids   = ['testtype', 'Default_type']
         self.no_options = ['(no options)']
         self.view_options    = sorted(
@@ -90,6 +86,11 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             [ lid for lid in self.testcoll.child_entity_ids(RecordList, self.testsite) 
                   if lid != "_initial_values"
             ])
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
         return
 
     def tearDown(self):

@@ -29,6 +29,7 @@ from annalist.models.entitydata     import EntityData
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
+from entity_testutils               import create_user_permissions
 from entity_testentitydata          import (
     # recorddata_dir,  entitydata_dir,
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
@@ -60,6 +61,7 @@ from entity_testtypedata                import (
     recordtype_delete_form_data,
     recordtype_delete_confirm_form_data
     )
+
 
 #   -----------------------------------------------------------------------------
 #
@@ -145,15 +147,21 @@ class AuthorizationTest(AnnalistTestCase):
 
     def create_user(self, user_id):
         # Create placeholder for testing
-        user = AnnalistUser.create(self.testcoll, user_id, 
-            annalistuser_create_values(
-                coll_id="testcoll", user_id=user_id,
-                user_name="Test User",
-                user_uri="mailto:%s@%s"%(user_id, TestHost), 
-                user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
-                )
+        return create_user_permissions(
+            self.testcoll, user_id, 
+            ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             )
-        return user
+        #@@
+        # user = AnnalistUser.create(self.testcoll, user_id, 
+        #     annalistuser_create_values(
+        #         coll_id="testcoll", user_id=user_id,
+        #         user_name="Test User",
+        #         user_uri="mailto:%s@%s"%(user_id, TestHost), 
+        #         user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+        #         )
+        #     )
+        # return user
+        #@@
 
     def list_users(self):
         # requires ADMIN

@@ -37,7 +37,8 @@ from entity_testutils               import (
     collection_edit_url,
     collection_create_values,
     site_title,
-    render_select_options
+    render_select_options,
+    create_test_user
     )
 from entity_testtypedata            import (
     recordtype_edit_url,
@@ -72,13 +73,13 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
+        self.type_ids   = get_site_types_sorted() + ['testtype']
+        self.no_options = ['(no options)']
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        self.type_ids   = get_site_types_sorted() + ['testtype']
-        self.no_options = ['(no options)']
         return
 
     def tearDown(self):

@@ -47,7 +47,8 @@ from entity_testfielddata           import (
     )
 from entity_testutils               import (
     collection_create_values,
-    render_select_options
+    render_select_options,
+    create_test_user
     )
 from entity_testentitydata          import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
@@ -164,13 +165,13 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.user     = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client   = Client(HTTP_HOST=TestHost)
-        loggedin      = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         self.no_options     = ['(no options)']
         self.render_options = get_site_field_types_sorted()
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
         return
 
     def tearDown(self):

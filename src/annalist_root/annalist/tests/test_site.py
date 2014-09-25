@@ -36,7 +36,8 @@ from entity_testutils               import (
     site_view_url, collection_view_url, collection_edit_url, 
     collection_value_keys, collection_create_values, collection_values,
     collection_new_form_data, collection_remove_form_data,
-    site_title
+    site_title,
+    create_user_permissions, create_test_user
     )
 from entity_testuserdata            import (
     annalistuser_create_values, annalistuser_values, annalistuser_read_values
@@ -179,13 +180,20 @@ class SiteViewTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
-        self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client     = Client(HTTP_HOST=TestHost)
+        self.testsite   = Site(TestBaseUri, TestBaseDir)
         self.uri        = reverse("AnnalistSiteView")
         self.homeuri    = reverse("AnnalistHomeView")
         self.profileuri = reverse("AnnalistProfileView")
+        # Login and permissions
+        create_test_user(None, "testuser", "testpassword")
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
+        create_user_permissions(
+            self.testsite, "testuser",
+            user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"],
+            use_altpath=True
+            )
         return
 
     def tearDown(self):
@@ -229,6 +237,7 @@ class SiteViewTest(AnnalistTestCase):
         return
 
     def test_get_no_login(self):
+        self.client.logout()
         r = self.client.get(self.uri)
         self.assertFalse(r.context["auth_create"])
         self.assertFalse(r.context["auth_update"])
@@ -262,8 +271,6 @@ class SiteViewTest(AnnalistTestCase):
         return
 
     def test_get_with_login(self):
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         r = self.client.get(self.uri)
         # Preferred way to test main view logic
         self.assertTrue(r.context["auth_create"])
@@ -336,8 +343,6 @@ class SiteViewTest(AnnalistTestCase):
         return
 
     def test_post_add(self):
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         form_data = collection_new_form_data("testnew")
         r = self.client.post(self.uri, form_data)
         self.assertEqual(r.status_code,   302)
@@ -363,8 +368,6 @@ class SiteViewTest(AnnalistTestCase):
         return
 
     def test_post_remove(self):
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         form_data = collection_remove_form_data(["coll1", "coll3"])
         r = self.client.post(self.uri, form_data)
         self.assertEqual(r.status_code,   200)
@@ -394,9 +397,19 @@ class SiteActionViewTests(AnnalistTestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
+        # self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
+        # self.user.save()
+        # self.client = Client(HTTP_HOST=TestHost)
+        # Login and permissions
+        create_test_user(None, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
+        create_user_permissions(
+            self.testsite, "testuser",
+            user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"],
+            use_altpath=True
+            )
         return
 
     def tearDown(self):
@@ -419,8 +432,6 @@ class SiteActionViewTests(AnnalistTestCase):
         return
 
     def test_post_confirmed_remove(self):
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         # Submit positive confirmation
         u = reverse("AnnalistConfirmView")
         r = self.client.post(u, self._conf_data(action="confirm"))
@@ -439,8 +450,6 @@ class SiteActionViewTests(AnnalistTestCase):
         return
  
     def test_post_cancelled_remove(self):
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         u = reverse("AnnalistConfirmView")
         r = self.client.post(u, self._conf_data(action="cancel"))
         self.assertEqual(r.status_code,     302)

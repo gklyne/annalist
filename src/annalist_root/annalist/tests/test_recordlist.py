@@ -40,7 +40,8 @@ from entity_testutils                   import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_create_values,
-    render_select_options
+    render_select_options,
+    create_test_user
     )
 from entity_testlistdata                import (
     recordlist_dir,
@@ -162,13 +163,13 @@ class RecordListEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.user     = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client   = Client(HTTP_HOST=TestHost)
-        loggedin      = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         self.no_options = ['(no options)']
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_list")
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
         return
 
     def tearDown(self):
@@ -813,8 +814,8 @@ class ConfirmRecordListDeleteTests(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)

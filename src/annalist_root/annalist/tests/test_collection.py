@@ -39,7 +39,8 @@ from entity_testutils               import (
     collection_edit_url, 
     continuation_url_param,
     collection_value_keys, collection_create_values, collection_values,
-    site_title
+    site_title,
+    create_test_user
     )
 from entity_testuserdata            import (
     # annalistuser_dir,
@@ -304,11 +305,12 @@ class CollectionEditViewTest(AnnalistTestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
+        self.coll1    = Collection.load(self.testsite, "coll1")
         self.view_url = collection_view_url(coll_id="coll1")
         self.edit_url = collection_edit_url(coll_id="coll1")
         self.continuation = "?" + continuation_url_param(self.edit_url)
+        # Login and permissions
+        create_test_user(self.coll1, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)

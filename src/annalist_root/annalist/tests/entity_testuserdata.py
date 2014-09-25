@@ -39,7 +39,6 @@ from entity_testentitydata          import (
     )
 
 
-
 #   -----------------------------------------------------------------------------
 #
 #   Directory generating functions

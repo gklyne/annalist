@@ -39,7 +39,8 @@ from entity_testutils               import (
     continuation_url_param,
     confirm_delete_params,
     collection_create_values,
-    site_title
+    site_title,
+    create_test_user
     )
 from entity_testtypedata            import (
     recordtype_dir, 
@@ -77,11 +78,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.testtype2 = RecordType.create(self.testcoll, "testtype2", recordtype_create_values("testcoll", "testtype2"))
         self.testdata  = RecordTypeData.create(self.testcoll, "testtype", {})
         self.testdata2 = RecordTypeData.create(self.testcoll, "testtype2", {})
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client = Client(HTTP_HOST=TestHost)
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         e1 = self._create_entity_data("entity1")
         e2 = self._create_entity_data("entity2")
         e3 = self._create_entity_data("entity3")
@@ -89,6 +85,11 @@ class EntityDefaultListViewTest(AnnalistTestCase):
             entitydata_create_values("entity4", type_id="testtype2")
             )
         self.initial_list_ids = get_site_lists()
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
         return
 
     def tearDown(self):

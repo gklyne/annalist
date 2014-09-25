@@ -27,8 +27,7 @@ from annalist.views.entitydelete    import EntityDataDeleteConfirmedView
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
-# from entity_testutils               import (
-#     )
+from entity_testutils               import create_test_user
 from entity_testentitydata          import (
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_all_url, entitydata_list_type_url,
@@ -46,8 +45,8 @@ class ConfirmEntityDataDeleteTests(AnnalistTestCase):
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection(self.testsite, "testcoll")
         self.testdata = RecordTypeData(self.testcoll, "testtype")
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)

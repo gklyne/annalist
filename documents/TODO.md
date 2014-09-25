@@ -23,7 +23,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Create generic view method for accessing user permissions (may supersede collection method)
     - [x] Provision for site-wide default permissions
     - [x] Authorization test suite
-    - [ ] update authorization logic to use permissions data
+    - [x] update authorization logic to use permissions data
     - [ ] create collection also creates initial user record for creator with all permissions
     - [ ] view description for user
     - [ ] field descriptions for user

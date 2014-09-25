@@ -12,14 +12,17 @@ import urlparse
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                import settings
-from django.http                import QueryDict
-from django.utils.http          import urlquote, urlunquote
-from django.core.urlresolvers   import resolve, reverse
+from django.conf                    import settings
+from django.http                    import QueryDict
+from django.utils.http              import urlquote, urlunquote
+from django.core.urlresolvers       import resolve, reverse
+from django.contrib.auth.models     import User
 
-from annalist.util              import valid_id
-from annalist.identifiers       import RDF, RDFS, ANNAL
-from annalist                   import layout
+from annalist.util                  import valid_id
+from annalist.identifiers           import RDF, RDFS, ANNAL
+from annalist                       import layout
+
+from annalist.models.annalistuser   import AnnalistUser
 
 from annalist.views.fields.render_placement import (
     get_placement_classes
@@ -181,6 +184,60 @@ def render_select_options(name, opts, sel, placeholder=None):
         """</select>"""
         )
     return select_template%(name, "\n  ".join([ select_option(o) for o in opts ]))
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- Authorization support
+#
+#   -----------------------------------------------------------------------------
+
+def annalistuser_create_values(
+        coll_id="testcoll", user_id="testuser",
+        user_name="Test User",
+        user_uri="mailto:testuser@example.org", 
+        user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+        ):
+    """
+    Values used when creating a user record
+
+    NOTE: this function is a duplicate from 'entity_testuserdata'
+    """
+    d = (
+        { 'annal:type':             "annal:User"
+        , 'rdfs:label':             user_name
+        , 'rdfs:comment':           "User %s: permissions for %s in collection %s"%(user_id, user_name, coll_id)
+        , 'annal:uri':              user_uri
+        , 'annal:user_permissions': user_permissions
+        })
+    return d
+
+def create_user_permissions(
+        coll, user_id, 
+        user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"],
+        use_altpath=False
+        ):
+    user = AnnalistUser.create(coll, user_id,
+        annalistuser_create_values(
+            coll_id="testcoll", user_id=user_id,
+            user_name="Test User",
+            user_uri="mailto:%s@%s"%(user_id, TestHost), 
+            user_permissions=user_permissions
+            ),
+        use_altpath=use_altpath
+        )
+    return user
+
+def create_test_user(
+        coll, user_id, user_pass="testpassword", 
+        user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"]
+        ):
+    django_user = User.objects.create_user(user_id, "%s@%s"%(user_id, TestHost), user_pass)
+    django_user.save()
+    if coll:
+        user_perms = create_user_permissions(coll, "testuser", user_permissions)
+    else:
+        user_perms = None
+    return (django_user, user_perms)
 
 if __name__ == "__main__":
     import doctest
