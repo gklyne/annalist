@@ -10,9 +10,12 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import logging
-import subprocess
+import importlib
 
 log = logging.getLogger(__name__)
+
+from annalist.layout                import Layout
+from annalist.models.site           import Site
 
 from annalist_manager               import am_errors
 from annalist_manager.am_errors     import Annalist_Manager_Error
@@ -64,5 +67,15 @@ def am_get_settings(annroot, userhome, options):
     except Annalist_Manager_Error:
         return None
     return am_settings
+
+def am_get_site(sitesettings):
+    """
+    Get site object corresponding to supplied settings
+    """
+    site_layout  = Layout(sitesettings.BASE_DATA_DIR)
+    site_dir     = site_layout.SITE_PATH
+    site_uri     = "annalist_site:"
+    site         = Site(site_uri, site_dir)
+    return site
 
 # End.

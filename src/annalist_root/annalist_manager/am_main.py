@@ -32,7 +32,7 @@ import am_errors
 from am_runtests            import am_runtests
 from am_runserver           import am_runserver
 from am_initialize          import am_initialize
-from am_createuser          import am_createuser
+from am_createuser          import am_createadminuser
 from am_createsite          import am_createsite, am_updatesite
 from am_help                import am_help, command_summary_help
 
@@ -108,17 +108,17 @@ def run(userhome, userconfig, options, progname):
     """
     Command line tool to create and submit deposit information packages
     """
-    if options.command.startswith("init"):
-        return am_initialize(annroot, userhome, userconfig, options)
-    if options.command.startswith("runt"):
+    if options.command.startswith("runt"):                  # runtests
         return am_runtests(annroot, options)
-    if options.command.startswith("createa"):
-        return am_createuser(annroot, userhome, options)
-    if options.command.startswith("creates"):
+    if options.command.startswith("init"):                  # initialize (intsllaation, django database)
+        return am_initialize(annroot, userhome, userconfig, options)
+    if options.command.startswith("createa"):               # createadminuser
+        return am_createadminuser(annroot, userhome, options)
+    if options.command.startswith("creates"):               # createsitedata
         return am_createsite(annroot, userhome, options)
-    if options.command.startswith("updates"):
+    if options.command.startswith("updates"):               # updatesitedata
         return am_updatesite(annroot, userhome, options)
-    if options.command.startswith("runs"):
+    if options.command.startswith("runs"):                  # runserver
         return am_runserver(annroot, userhome, options)
     if options.command.startswith("help"):
         return am_help(options, progname)

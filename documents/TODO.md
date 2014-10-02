@@ -25,7 +25,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Authorization test suite
     - [x] update authorization logic to use permissions data
     - [x] create collection also creates initial user record for creator with all permissions
-    - [ ] admin-manager create admin user also needs to create site admin permissions for that user
+    - [x] admin-manager create admin user also needs to create site admin permissions for that user
+        - Note: required change to create Django user programmatically rather than by django-admin utility
     - [ ] view description for user
     - [ ] field descriptions for user
     - [ ] list description for user

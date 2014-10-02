@@ -107,7 +107,7 @@ class Site(EntityRoot):
         """
         # @@TODO: consider using generic view logic for this mapping (and elsewhere?)
         #         This is currently a bit of a kludge, designed to match the site
-        #         view template.  In due course, it may be reveiwed and implemented
+        #         view template.  In due course, it may be reviewed and implemented
         #         using the generic Annalist form generating framework
         site_data = self._load_values()
         if not site_data:
