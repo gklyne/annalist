@@ -25,12 +25,18 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Authorization test suite
     - [x] update authorization logic to use permissions data
     - [x] create collection also creates initial user record for creator with all permissions
-    - [x] admin-manager create admin user also needs to create site admin permissions for that user
+    - [x] annalist-manager create admin user also needs to create site admin permissions for that user
         - Note: required change to create Django user programmatically rather than by django-admin utility
-    - [ ] view description for user
-    - [ ] field descriptions for user
+    - [x] view description for user
+    - [x] field descriptions for user
+    - [ ] field rendering: logic to decode value entered; e.g. for token list
+    - [ ] user view: change stored permissions to list
+        - clarify JSON-LD behaviour for treatment as set vs sequence
+    - [ ] new field render option: annal:field_render_type: TokenList (with value_type annal:TokenList) 
+    - [ ] add test to render existing built-in user
+    - [ ] add tests to check encoding/decoding of user permissions
+    - [x] certain views and/or types need admin/config permission to edit or list or view
     - [ ] list description for user
-    - [ ] certain views and/or types need admin/config permission to edit or list or view
     - [ ] annalist-manager updates to initialize users directory, but don't wipe existing permissions
     - [ ] annalist-manager option to create site user entry and default site permissions
     - [ ] site-wide permissions (e.g. to create collections) need to be site permissions

@@ -43,9 +43,10 @@ from entity_testutils               import (
     continuation_url_param,
     collection_edit_url,
     site_title,
+    render_select_options,
     create_test_user
     )
-from entity_testtypedata        import (
+from entity_testtypedata            import (
     recordtype_dir, 
     recordtype_edit_url,
     recordtype_create_values, 
@@ -59,6 +60,9 @@ from entity_testentitydata          import (
     entitydata_default_view_context_data, entitydata_default_view_form_data,
     entitydata_recordtype_view_context_data, entitydata_recordtype_view_form_data,
     default_fields, default_label, default_comment, error_label,
+    get_site_types, get_site_types_sorted,
+    get_site_views, 
+    get_site_lists,
     layout_classes
     )
 
@@ -262,7 +266,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow6 = """
+        formrow6 = ("""
             <div class="row">
               <div class="%(label_classes)s">
                 <p>Choose view</p>
@@ -270,14 +274,12 @@ class GenericEntityEditViewTest(AnnalistTestCase):
               <div class="%(input_classes)s">
                 <div class="row">
                   <div class="small-9 columns">
-                    <select name="view_choice">
-                      <option>BibEntry_view</option>
-                      <option>Default_view</option>
-                      <option>Field_view</option>
-                      <option>List_view</option>
-                      <option selected="selected">Type_view</option>
-                      <option>View_view</option>
-                    </select>
+                    """+
+                      render_select_options(
+                        "view_choice", 
+                        sorted(get_site_views()),
+                        "Type_view")+
+                    """
                   </div>
                   <div class="small-3 columns">
                     <input type="submit" name="use_view"      value="Show view" />
@@ -285,7 +287,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                 </div>
               </div>
             </div>
-            """%field_vals(width=6)
+            """)%field_vals(width=6)
         formrow7 = """
             <div class="%(button_right_classes)s">
               <div class="row">

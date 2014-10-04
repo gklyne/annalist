@@ -124,7 +124,7 @@ def get_item_renderer(renderid):
 def get_entity_values(displayinfo, entity, entity_id=None):
     """
     Returns an entity values dictionary for a supplied entity, suitable for
-    use with a bound_field object (see above).
+    use with a bound_field object.
     """
     if not entity_id:
         entity_id = entity.get_id()

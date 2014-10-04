@@ -650,8 +650,11 @@ def get_site_types():
 def get_site_views():
     return (
         { "Default_view", "Field_view"
-        , "Type_view", "View_view"
-        , "List_view", "BibEntry_view"
+        , "Type_view"
+        , "View_view"
+        , "List_view"
+        , "User_view"
+        , "BibEntry_view"
         })
 
 def get_site_lists():

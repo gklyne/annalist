@@ -40,7 +40,8 @@ from AnnalistTestCase                   import AnnalistTestCase
 from entity_testutils                   import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
-    collection_create_values
+    collection_create_values,
+    create_test_user
     )
 from entity_testuserdata                import (
     annalistuser_dir,
@@ -58,11 +59,11 @@ from entity_testuserdata                import (
 #     recordtype_entity_view_context_data, 
 #     recordtype_entity_view_form_data, recordtype_delete_confirm_form_data
 #     )
-# from entity_testentitydata              import (
-#     entity_url, entitydata_edit_url, entitydata_list_type_url,
-#     default_fields, default_label, default_comment, error_label,
-#     layout_classes
-#     )
+from entity_testentitydata              import (
+    entity_url, entitydata_edit_url, entitydata_list_type_url,
+    default_fields, default_label, default_comment, error_label,
+    layout_classes
+    )
 
 #   -----------------------------------------------------------------------------
 #
@@ -160,19 +161,33 @@ class AnnalistUserTest(AnnalistTestCase):
 
 class AnnalistUserEditViewTest(AnnalistTestCase):
     """
-    Tests for record type edit views
+    Tests for record user edit view
+
+    This view is generated entirely by generic view code, so opnly the form rendering test is included
+    here to cross-check the form definmition.  Other logic is already tested by the generic form
+    handling tests.
     """
 
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.user     = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client   = Client(HTTP_HOST=TestHost)
-        loggedin      = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
+        #@@
+        # self.user     = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
+        # self.user.save()
+        # self.client   = Client(HTTP_HOST=TestHost)
+        # loggedin      = self.client.login(username="testuser", password="testpassword")
+        # self.assertTrue(loggedin)
+        #@@
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_user")
+        # Login and permissions
+        create_test_user(
+            self.testcoll, "testuser", "testpassword",
+            user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG","ADMIN"]
+            )
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
         return
 
     def tearDown(self):
@@ -185,6 +200,114 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
     #   Form rendering tests
     #   -----------------------------------------------------------------------------
+
+    def test_get_form_rendering(self):
+        u = entitydata_edit_url("new", "testcoll", "_user", view_id="User_view")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "<title>Collection testcoll</title>")
+        self.assertContains(r, "<h3>'_user' data in collection 'testcoll'</h3>")
+        field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="00000001")
+        formrow1 = """
+            <div class="small-12 medium-6 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>User Id</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <input type="text" size="64" name="entity_id" 
+                               placeholder="(user id)" 
+                               value="00000001" />
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=6)
+        formrow2 = """
+            <div class="small-12 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>User name</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <input type="text" size="64" name="User_name" 
+                               placeholder="(user name)"
+                               value="" />
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=12)
+        formrow3 = """
+            <div class="small-12 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>Description</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <textarea cols="64" rows="6" name="User_description" 
+                                  class="small-rows-4 medium-rows-8"
+                                  placeholder="(user description)"
+                                  >
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=12)
+        formrow4 = """
+            <div class="small-12 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>URI</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <input type="text" size="64" name="User_uri" 
+                               placeholder="(User URI - e.g. mailto:local-name@example.com)"
+                               value=""/>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=12)
+        formrow5 = """
+            <div class="small-12 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>Permissions</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <input type="text" size="64" name="User_permissions" 
+                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
+                               value=""/>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=12)
+        formrow6 = ("""
+            <div class="row">
+                <div class="%(space_classes)s">
+                    <div class="row">
+                        <div class="small-12 columns">
+                          &nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div class="%(button_wide_classes)s">
+                    <div class="row">
+                        <div class="%(button_left_classes)s">
+                            <input type="submit" name="save"          value="Save" />
+                            <input type="submit" name="cancel"        value="Cancel" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            """)%field_vals(width=12)
+        # log.info(r.content)
+        self.assertContains(r, formrow1, html=True)
+        self.assertContains(r, formrow2, html=True)
+        self.assertContains(r, formrow3, html=True)
+        self.assertContains(r, formrow4, html=True)
+        self.assertContains(r, formrow5, html=True)
+        self.assertContains(r, formrow6, html=True)
+        return
 
     #   -----------------------------------------------------------------------------
     #   Form response tests

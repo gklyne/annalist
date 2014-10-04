@@ -55,8 +55,10 @@ from entity_testlistdata                import (
 from entity_testentitydata              import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
-    get_site_types_sorted,
+    get_site_types, get_site_types_sorted,
     get_site_list_types_sorted,
+    get_site_views, 
+    get_site_lists,
     layout_classes
     )
 
@@ -377,25 +379,23 @@ class RecordListEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow5 = """
+        formrow5 = ("""
             <div class="small-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
                   <p>View</p>
                 </div>
                 <div class="%(input_classes)s">
-                  <select name="List_default_view">
-                    <option>BibEntry_view</option>
-                    <option selected="selected">Default_view</option>
-                    <option>Field_view</option>
-                    <option>List_view</option>
-                    <option>Type_view</option>
-                    <option>View_view</option>
-                  </select>
+                """+
+                  render_select_options(
+                    "List_default_view", 
+                    sorted(get_site_views()),
+                    "Default_view")+
+                """
                 </div>
               </div>
             </div>
-            """%field_vals(width=6)
+            """)%field_vals(width=6)
         selector_text = (
             "(entity selector; "+
             "e.g. &#39;ALL&#39;, "+
