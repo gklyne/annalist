@@ -108,7 +108,7 @@ def annalistuser_value_keys():
         [ 'annal:id', 'annal:type_id'
         , 'annal:type', 'annal:url', 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
-        , 'annal:uri'
+        , 'annal:user_uri'
         , 'annal:user_permissions'
         ])
     return ks
@@ -129,7 +129,7 @@ def annalistuser_create_values(
         { 'annal:type':             "annal:User"
         , 'rdfs:label':             user_name
         , 'rdfs:comment':           "User %s: permissions for %s in collection %s"%(user_id, user_name, coll_id)
-        , 'annal:uri':              user_uri
+        , 'annal:user_uri':         user_uri
         , 'annal:user_permissions': user_permissions
         })
     return d
@@ -144,13 +144,14 @@ def annalistuser_values(
     Values filled in automatically when a user record is created
     """
     user_url = hosturi + annalistuser_url(coll_id, user_id)
-    if not user_uri:
-        user_uri = user_url
+    # if not user_uri:
+    #     user_uri = user_url
     d = annalistuser_create_values(coll_id, user_id, user_name, user_uri, user_permissions)
     d.update(
         { 'annal:id':       user_id
         , 'annal:type_id':  "_user"
         , 'annal:url':      user_url
+        , 'annal:uri':      user_url
         })
     return d
 

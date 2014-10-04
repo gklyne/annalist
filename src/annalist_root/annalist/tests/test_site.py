@@ -110,7 +110,7 @@ class SiteTest(AnnalistTestCase):
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Test User")
         self.assertEqual(ugp[RDFS.CURIE.comment],             "User user1: permissions for Test User in collection testcoll")
-        self.assertEqual(ugp[ANNAL.CURIE.uri],                "mailto:testuser@example.org")
+        self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "mailto:testuser@example.org")
         self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"])
         return
 
@@ -137,7 +137,7 @@ class SiteTest(AnnalistTestCase):
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Default permissions")
         self.assertEqual(ugp[RDFS.CURIE.comment],             "Default permissions for authenticated user.")
-        self.assertEqual(ugp[ANNAL.CURIE.uri],                "annal:User/_default_permissions")
+        self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "annal:User/_default_permissions")
         self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW"])
         return
 
@@ -371,11 +371,11 @@ class SiteViewTest(AnnalistTestCase):
         testuser_perms = new_coll.get_user_permissions("testuser", "mailto:testuser@%s"%TestHost)
         expect_perms   = ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
         expect_descr   = "User testuser: permissions for Test User in collection testnew"
-        self.assertEqual(testuser_perms[ANNAL.CURIE.id],     "testuser")
-        self.assertEqual(testuser_perms[ANNAL.CURIE.uri],    "mailto:testuser@%s"%TestHost)
-        self.assertEqual(testuser_perms[RDFS.CURIE.label],   "Test User")
-        self.assertEqual(testuser_perms[RDFS.CURIE.comment], expect_descr)
-        self.assertEqual(testuser_perms[ANNAL.CURIE.user_permissions], expect_perms)
+        self.assertEqual(testuser_perms[ANNAL.CURIE.id],                "testuser")
+        self.assertEqual(testuser_perms[RDFS.CURIE.label],              "Test User")
+        self.assertEqual(testuser_perms[RDFS.CURIE.comment],            expect_descr)
+        self.assertEqual(testuser_perms[ANNAL.CURIE.user_uri],          "mailto:testuser@%s"%TestHost)
+        self.assertEqual(testuser_perms[ANNAL.CURIE.user_permissions],  expect_perms)
         return
 
     def test_post_remove(self):

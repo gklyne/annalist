@@ -137,7 +137,7 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Test User")
         self.assertEqual(ugp[RDFS.CURIE.comment],             "User user1: permissions for Test User in collection testcoll")
-        self.assertEqual(ugp[ANNAL.CURIE.uri],                "mailto:testuser@example.org")
+        self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "mailto:testuser@example.org")
         self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"])
         return
 
@@ -171,7 +171,7 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Unknown user")
         self.assertEqual(ugp[RDFS.CURIE.comment],             "Permissions for unauthenticated user.")
-        self.assertEqual(ugp[ANNAL.CURIE.uri],                "annal:User/_unknown_user")
+        self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "annal:User/_unknown_user")
         self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW"])
         return
 

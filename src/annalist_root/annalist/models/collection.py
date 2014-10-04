@@ -74,7 +74,7 @@ class Collection(Entity):
             { 'annal:type':             "annal:User"
             , 'rdfs:label':             user_name
             , 'rdfs:comment':           user_description
-            , 'annal:uri':              user_uri
+            , 'annal:user_uri':         user_uri
             , 'annal:user_permissions': user_permissions
             })
         user = AnnalistUser.create(self, user_id, user_values)
@@ -103,11 +103,11 @@ class Collection(Entity):
             # log.info("Collection.get_user_permissions: user_id %s, user_uri %s, user %r"%
             #     (user_id, user_uri, user)
             #     )
-            for f in [RDFS.CURIE.label, RDFS.CURIE.comment, ANNAL.CURIE.uri, ANNAL.CURIE.user_permissions]:
+            for f in [RDFS.CURIE.label, RDFS.CURIE.comment, ANNAL.CURIE.user_uri, ANNAL.CURIE.user_permissions]:
                 if f not in user:
                     user = None
                     break
-        if user and user[ANNAL.CURIE.uri] != user_uri:
+        if user and user[ANNAL.CURIE.user_uri] != user_uri:
             user = None         # URI mismatch: return None.
         return user
 
