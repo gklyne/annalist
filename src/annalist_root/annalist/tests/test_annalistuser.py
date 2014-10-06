@@ -12,54 +12,47 @@ import unittest
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                        import settings
-from django.db                          import models
-from django.http                        import QueryDict
-from django.core.urlresolvers           import resolve, reverse
-from django.contrib.auth.models         import User
-from django.test                        import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
-from django.test.client                 import Client
+from django.conf                            import settings
+from django.db                              import models
+from django.http                            import QueryDict
+from django.core.urlresolvers               import resolve, reverse
+from django.contrib.auth.models             import User
+from django.test                            import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
+from django.test.client                     import Client
+from django.template                        import Template, Context
 
-from annalist.identifiers               import RDF, RDFS, ANNAL
-from annalist                           import layout
-from annalist.util                      import valid_id
+from annalist.identifiers                   import RDF, RDFS, ANNAL
+from annalist                               import layout
+from annalist.util                          import valid_id
 
-from annalist.models.site               import Site
-from annalist.models.sitedata           import SiteData
-from annalist.models.collection         import Collection
-from annalist.models.annalistuser       import AnnalistUser
-# from annalist.models.recordtype         import AnnalistUser
-# from annalist.models.recordview         import RecordView
-# from annalist.models.recordlist         import RecordList
+from annalist.models.site                   import Site
+from annalist.models.sitedata               import SiteData
+from annalist.models.collection             import Collection
+from annalist.models.annalistuser           import AnnalistUser
+# from annalist.models.recordtype             import AnnalistUser
+# from annalist.models.recordview             import RecordView
+# from annalist.models.recordlist             import RecordList
 
-from annalist.views.annalistuserdelete  import AnnalistUserDeleteConfirmedView
+from annalist.views.annalistuserdelete      import AnnalistUserDeleteConfirmedView
+from annalist.views.fields.render_tokenlist import RenderTokenList
 
-from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                              import init_annalist_test_site
-from AnnalistTestCase                   import AnnalistTestCase
-from entity_testutils                   import (
+from tests                                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from tests                                  import init_annalist_test_site
+from AnnalistTestCase                       import AnnalistTestCase
+from entity_testutils                       import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_create_values,
     create_test_user
     )
-from entity_testuserdata                import (
+from entity_testuserdata                    import (
     annalistuser_dir,
     annalistuser_site_url, annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
     annalistuser_value_keys, annalistuser_load_keys,
     annalistuser_create_values, annalistuser_values, annalistuser_read_values,
     annalistuser_delete_confirm_form_data
     )
-
-# from entity_testtypedata                import (
-#     recordtype_dir,
-#     recordtype_coll_url, recordtype_site_url, recordtype_url, recordtype_edit_url,
-#     recordtype_value_keys, recordtype_load_keys, 
-#     recordtype_create_values, recordtype_values, recordtype_read_values,
-#     recordtype_entity_view_context_data, 
-#     recordtype_entity_view_form_data, recordtype_delete_confirm_form_data
-#     )
-from entity_testentitydata              import (
+from entity_testentitydata                  import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes
@@ -172,18 +165,11 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        #@@
-        # self.user     = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        # self.user.save()
-        # self.client   = Client(HTTP_HOST=TestHost)
-        # loggedin      = self.client.login(username="testuser", password="testpassword")
-        # self.assertTrue(loggedin)
-        #@@
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_user")
         # Login and permissions
         create_test_user(
             self.testcoll, "testuser", "testpassword",
-            user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG","ADMIN"]
+            user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             )
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
@@ -200,6 +186,77 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
     #   Form rendering tests
     #   -----------------------------------------------------------------------------
+
+    def test_object_render(self):
+        # Test new Django 1.7 object-as-template include capability, 
+        # per https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
+        class RenderObject(object):
+            def __init__(self):
+                return
+            def render(self, context):
+                return context['render_value']
+            def __str__(self):
+                return "RenderObject"
+        template = Template("{{render_object}}: {% include render_object %}")
+        context  = Context({ 'render_object': RenderObject(), 'render_value': "Hello world!" })
+        result   = template.render(context)
+        # log.info(result)
+        self.assertEqual(result, "RenderObject: Hello world!")
+        return
+
+    def test_tokenlist_reendering(self):
+        field_placement = (
+            { 'field': "small-12 columns"
+            , 'label': "small-12 medium-2 columns"
+            , 'value': "small-12 medium-10 columns"
+            })
+        field = (
+            { 'field_placement':    field_placement
+            , 'field_label':        "Permissions"
+            , 'field_placeholder':  "(user permissions)"
+            , 'field_name':         "User_permissions"
+            , 'field_value':        ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+            , 'field_value_encoded': "VIEW CREATE UPDATE DELETE CONFIG ADMIN"
+            })
+        context  = Context({'field': field})
+        rendered = RenderTokenList().render(context)
+        self.assertIn('''<div class="small-12 columns">''',                             rendered)
+        self.assertIn('''<div class="row">''',                                          rendered)
+        self.assertIn('''<div class="view_label small-12 medium-2 columns">''',         rendered)
+        self.assertIn('''<p>Permissions</p>''',                                         rendered)
+        self.assertIn('''<div class="small-12 medium-10 columns">''',                   rendered)
+        self.assertIn('''<input type="text" size="64" name="User_permissions" ''',      rendered)
+        self.assertIn('''       placeholder="(user permissions)"''',                    rendered)
+        self.assertIn('''       value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>''',    rendered)
+        return
+
+    def test_included_tokenlist_rendering(self):
+        field_placement = (
+            { 'field': "small-12 columns"
+            , 'label': "small-12 medium-2 columns"
+            , 'value': "small-12 medium-10 columns"
+            })
+        field = (
+            { 'field_placement':        field_placement
+            , 'field_label':            "Permissions"
+            , 'field_placeholder':      "(user permissions)"
+            , 'field_name':             "User_permissions"
+            , 'field_value':            ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+            , 'field_value_encoded':    "VIEW CREATE UPDATE DELETE CONFIG ADMIN"
+            , 'field_render_object':    RenderTokenList()
+            })
+        template = Template("{% include field.field_render_object %}")
+        context  = Context({ 'render_object': RenderTokenList(), 'field': field})
+        rendered = template.render(context)
+        self.assertIn('''<div class="small-12 columns">''',                             rendered)
+        self.assertIn('''<div class="row">''',                                          rendered)
+        self.assertIn('''<div class="view_label small-12 medium-2 columns">''',         rendered)
+        self.assertIn('''<p>Permissions</p>''',                                         rendered)
+        self.assertIn('''<div class="small-12 medium-10 columns">''',                   rendered)
+        self.assertIn('''<input type="text" size="64" name="User_permissions" ''',      rendered)
+        self.assertIn('''       placeholder="(user permissions)"''',                    rendered)
+        self.assertIn('''       value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>''',    rendered)
+        return
 
     def test_get_form_rendering(self):
         u = entitydata_edit_url("new", "testcoll", "_user", view_id="User_view")

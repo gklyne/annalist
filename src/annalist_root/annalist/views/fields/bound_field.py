@@ -132,7 +132,7 @@ class bound_field(object):
                 #         entities has been implemented.
                 #
                 # The handling of annal:Type is something of a hack to return the internal
-                # type-id for an entity rarther than its type URI/CURIE, which is used in 
+                # type-id for an entity rather than its type URI/CURIE, which is used in 
                 # turn by the form renderer to determine the type_id selection on the 
                 # rendered form.  This hack may be rendered unnecessary when the 
                 # entity reference selection is properly generalized.
@@ -147,6 +147,12 @@ class bound_field(object):
                 # Used to populate form field value when no value supplied, or provide per-field default
                 field_val = self._field_description.get('field_default_value', None) or ""
             return field_val
+        elif name == "field_value_encoded":
+            try:
+                return self._field_description['field_value_mapper'].encode(self.field_value)
+            except Exception as e:
+                log.warning("Get 'field_value_encoded' failed: %r: value: %s"%(e, self.field_value))
+            return self.field_value
         elif name == "options":
             return self.get_field_options()
         else:

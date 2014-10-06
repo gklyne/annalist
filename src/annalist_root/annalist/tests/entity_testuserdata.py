@@ -144,8 +144,6 @@ def annalistuser_values(
     Values filled in automatically when a user record is created
     """
     user_url = hosturi + annalistuser_url(coll_id, user_id)
-    # if not user_uri:
-    #     user_uri = user_url
     d = annalistuser_create_values(coll_id, user_id, user_name, user_uri, user_permissions)
     d.update(
         { 'annal:id':       user_id

@@ -10,13 +10,14 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
-from collections    import OrderedDict, namedtuple
+from collections                    import OrderedDict, namedtuple
 
 from django.conf                    import settings
 
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
 from render_text                    import RenderText
+from render_tokenlist               import RenderTokenList
 
 def get_edit_renderer(renderid):
     """
@@ -50,6 +51,9 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_select.html"
     if renderid == "View_sel":
         return "field/annalist_edit_view_sel.html"
+    if renderid == "TokenList":
+        # return "field/annalist_edit_tokenlist.html"
+        return RenderTokenList()
     log.warning("get_edit_renderer: %s not found"%renderid)
     # raise ValueError("get_edit_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
@@ -87,6 +91,9 @@ def get_view_renderer(renderid):
         return "field/annalist_view_select.html"
     if renderid == "View_sel":
         return "field/annalist_view_view_sel.html"
+    if renderid == "TokenList":
+        # return "field/annalist_view_tokenlist.html"
+        return RenderTokenList()
     log.warning("get_view_renderer: %s not found"%renderid)
     # raise ValueError("get_view_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
@@ -120,6 +127,18 @@ def get_item_renderer(renderid):
     #     return "field/annalist_item_entityref.html"
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
+
+def get_value_mapper(renderid):
+    """
+    Returns a value mapper class (with encode and decode methods) which is used to map
+    values between entity fields and textual form fields.
+
+    The default 'RenderText' object returned contains identity mappings.
+    """
+    if renderid == "TokenList":
+        return RenderTokenList()
+    else:
+        return RenderText()
 
 def get_entity_values(displayinfo, entity, entity_id=None):
     """

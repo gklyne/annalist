@@ -13,8 +13,13 @@ from annalist.models.recordfield        import RecordField
 from annalist.models.entitytypeinfo     import EntityTypeInfo
 from annalist.models.entityfinder       import EntityFinder
 
-from annalist.views.fields.render_utils import get_edit_renderer, get_view_renderer
-from annalist.views.fields.render_utils import get_head_renderer, get_item_renderer
+from annalist.views.fields.render_utils import (
+    get_edit_renderer, 
+    get_view_renderer,
+    get_head_renderer, 
+    get_item_renderer,
+    get_value_mapper
+    )
 from annalist.views.fields.render_placement import (
     get_placement_classes
     )
@@ -61,6 +66,7 @@ class FieldDescription(object):
             , 'field_render_item':      get_item_renderer(field_render_type)
             , 'field_render_view':      get_view_renderer(field_render_type)
             , 'field_render_edit':      get_edit_renderer(field_render_type)
+            , 'field_value_mapper':     get_value_mapper(field_render_type)
             , 'field_label':            recordfield.get('rdfs:label', "")
             , 'field_help':             recordfield.get('rdfs:comment', "")
             , 'field_value_type':       recordfield.get('annal:field_value_type', "")

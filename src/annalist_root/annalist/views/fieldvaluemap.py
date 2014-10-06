@@ -75,12 +75,20 @@ class FieldValueMap(object):
         return boundfield
 
     def map_form_to_entity(self, formvals):
+        """
+        Returns singleton or empty dictionary to be included in the resulting entity.
+
+        self.i is the form value key for the value to save.
+
+        self.e is the entity property URI that receives the field value, or None if no 
+        value is saved for this field.
+        """
         entityvals = {}
         if self.e:
             log.debug("FieldValueMap.map_form_to_entity %s, %r"%(self.e, formvals))
             v = formvals.get(self.i, None)
             if v is not None:
-                entityvals[self.e] = v
+                entityvals[self.e] = self.f['field_value_mapper'].decode(v)
         return entityvals
 
     def map_form_to_entity_repeated_item(self, formvals, prefix):
