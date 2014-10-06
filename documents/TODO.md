@@ -31,13 +31,17 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] field descriptions for user
     - [ ] field rendering: logic to decode value entered; e.g. for token list
         - [x] new user rendering tests
-        - [ ] existing user render tests
-        - [ ] existing user update tests (post edit form) - focus on resulting permissions field
+        - [x] existing user render tests
+        - [x] existing user update tests (post edit form) - focus on resulting permissions field
         - [ ] move get_entity_values from 'render_utils' to 'bound_field'
         - [ ] update code to use class for simple text rendering
         - [ ] review use of template files vs. use of inline template text in class
-    - [ ] user view: change stored permissions to list
+    - [x] user view: change stored permissions to list
         - clarify JSON-LD behaviour for treatment as set vs sequence
+        - see: http://www.w3.org/TR/json-ld/#sets-and-lists
+        - e.g. { '@list': ['a', 'b', ... ] }
+        - but note: JSON-LD default is to treat as set, ehich is OK for permissions:
+        - [x] Rename TokenList -> TokenSet
     - [ ] new field render option: annal:field_render_type: TokenList (with value_type annal:TokenList) 
     - [ ] add test to render existing built-in user
     - [ ] add tests to check encoding/decoding of user permissions

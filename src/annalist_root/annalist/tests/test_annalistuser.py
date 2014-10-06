@@ -34,7 +34,7 @@ from annalist.models.annalistuser           import AnnalistUser
 # from annalist.models.recordlist             import RecordList
 
 from annalist.views.annalistuserdelete      import AnnalistUserDeleteConfirmedView
-from annalist.views.fields.render_tokenlist import RenderTokenList
+from annalist.views.fields.render_tokenset  import RenderTokenSet
 
 from tests                                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                                  import init_annalist_test_site
@@ -43,6 +43,7 @@ from entity_testutils                       import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_create_values,
+    create_user_permissions,
     create_test_user
     )
 from entity_testuserdata                    import (
@@ -50,6 +51,7 @@ from entity_testuserdata                    import (
     annalistuser_site_url, annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
     annalistuser_value_keys, annalistuser_load_keys,
     annalistuser_create_values, annalistuser_values, annalistuser_read_values,
+    annalistuser_view_form_data,
     annalistuser_delete_confirm_form_data
     )
 from entity_testentitydata                  import (
@@ -183,6 +185,21 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
     #   Helpers
     #   -----------------------------------------------------------------------------
 
+    def _check_annalist_user_values(self, user_id, user_permissions):
+        "Helper function checks content of annalist user entry with supplied user_id"
+        self.assertTrue(AnnalistUser.exists(self.testcoll, user_id))
+        t = AnnalistUser.load(self.testcoll, user_id)
+        self.assertEqual(t.get_id(), user_id)
+        self.assertEqual(t.get_view_url(), TestHostUri + annalistuser_url("testcoll", user_id))
+        v = annalistuser_values(
+            coll_id="testcoll", user_id=user_id,
+            user_name="User %s"%user_id,
+            user_uri="mailto:%s@example.org"%user_id, 
+            user_permissions=user_permissions
+            )
+        self.assertDictionaryMatch(t.get_values(), v)
+        return t
+
     #   -----------------------------------------------------------------------------
     #   Form rendering tests
     #   -----------------------------------------------------------------------------
@@ -219,7 +236,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             , 'field_value_encoded': "VIEW CREATE UPDATE DELETE CONFIG ADMIN"
             })
         context  = Context({'field': field})
-        rendered = RenderTokenList().render(context)
+        rendered = RenderTokenSet().render(context)
         self.assertIn('''<div class="small-12 columns">''',                             rendered)
         self.assertIn('''<div class="row">''',                                          rendered)
         self.assertIn('''<div class="view_label small-12 medium-2 columns">''',         rendered)
@@ -243,10 +260,10 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             , 'field_name':             "User_permissions"
             , 'field_value':            ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             , 'field_value_encoded':    "VIEW CREATE UPDATE DELETE CONFIG ADMIN"
-            , 'field_render_object':    RenderTokenList()
+            , 'field_render_object':    RenderTokenSet()
             })
         template = Template("{% include field.field_render_object %}")
-        context  = Context({ 'render_object': RenderTokenList(), 'field': field})
+        context  = Context({ 'render_object': RenderTokenSet(), 'field': field})
         rendered = template.render(context)
         self.assertIn('''<div class="small-12 columns">''',                             rendered)
         self.assertIn('''<div class="row">''',                                          rendered)
@@ -258,7 +275,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertIn('''       value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>''',    rendered)
         return
 
-    def test_get_form_rendering(self):
+    def test_get_new_user_form_rendering(self):
         u = entitydata_edit_url("new", "testcoll", "_user", view_id="User_view")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
@@ -366,11 +383,89 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow6, html=True)
         return
 
+    def test_user_permissions_form_rendering(self):
+        # Test rendering of permissions from list in entity
+        u = entitydata_edit_url("edit", "testcoll", "_user", "testuser", view_id="User_view")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="testuser")
+        formrow5 = """
+            <div class="small-12 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>Permissions</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <input type="text" size="64" name="User_permissions" 
+                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
+                               value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=12)
+        # log.info(r.content)
+        self.assertContains(r, formrow5, html=True)
+        return
+
+    def test_bad_user_permissions_form_rendering(self):
+        # Test handling of permissions not stored in entity as a list of values
+        log.info("test_bad_user_permissions_form_rendering; expecting 'encode tokenlist' warning")
+        create_user_permissions(self.testcoll, 
+            "baduserperms",
+            user_permissions="VIEW CREATE UPDATE DELETE"
+            )
+        u = entitydata_edit_url("edit", "testcoll", "_user", "baduserperms", view_id="User_view")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="baduserperms")
+        formrow5 = """
+            <div class="small-12 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>Permissions</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <input type="text" size="64" name="User_permissions" 
+                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
+                               value="VIEW CREATE UPDATE DELETE"/>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=12)
+        # log.info(r.content)
+        self.assertContains(r, formrow5, html=True)
+        return
+
     #   -----------------------------------------------------------------------------
     #   Form response tests
     #   -----------------------------------------------------------------------------
 
+    #   -------- copy user --------
 
+    def test_post_copy_user(self):
+        # The main purpose of this test is to check that user permissions are saved properly
+        self.assertFalse(AnnalistUser.exists(self.testcoll, "copyuser"))
+        f = annalistuser_view_form_data(
+            action="copy", orig_id="_default_permissions",
+            user_id="copyuser",
+            user_name="User copyuser",
+            user_uri="mailto:copyuser@example.org",
+            user_permissions="VIEW CREATE UPDATE DELETE"
+            )
+        u = entitydata_edit_url(
+            "copy", "testcoll", "_user", entity_id="_default_permissions", view_id="User_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], self.continuation_url)
+        # Check that new record type exists
+        self.assertTrue(AnnalistUser.exists(self.testcoll, "copyuser"))
+        self._check_annalist_user_values("copyuser", ["VIEW", "CREATE", "UPDATE", "DELETE"])
+        return
 
 #   -----------------------------------------------------------------------------
 #

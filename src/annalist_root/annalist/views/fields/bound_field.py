@@ -145,7 +145,9 @@ class bound_field(object):
             if field_val is None:
                 # Return default value, or empty string.
                 # Used to populate form field value when no value supplied, or provide per-field default
-                field_val = self._field_description.get('field_default_value', None) or ""
+                field_val = self._field_description.get('field_default_value', None)
+                if field_val is None:
+                    field_val = ""
             return field_val
         elif name == "field_value_encoded":
             try:

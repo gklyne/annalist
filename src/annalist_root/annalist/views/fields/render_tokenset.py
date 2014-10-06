@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 from django.http        import HttpResponse
 from django.template    import Template, Context
 
-class RenderTokenList(object):
+class RenderTokenSet(object):
     """
     Render class for token list field
     """
@@ -23,7 +23,7 @@ class RenderTokenList(object):
         """
         Creates a renderer object for a simple text field
         """
-        super(RenderTokenList, self).__init__()
+        super(RenderTokenSet, self).__init__()
         self.responsetemplate = Template("""
             <!-- views/fields/render_tokenlist.py -->
             <div class="{{field.field_placement.field}}">
@@ -43,21 +43,24 @@ class RenderTokenList(object):
         return
 
     def __str__(self):
-        return "RenderTokenList" # %self.render(Context({}))
+        return "RenderTokenSet" # %self.render(Context({}))
 
     def render(self, context):
         """
         Renders a token list field
         """
         responsebody = self.responsetemplate.render(context)
-        # log.info("RenderTokenList.render: %s"%responsebody)
+        # log.info("RenderTokenSet.render: %s"%responsebody)
         return responsebody
 
     def encode(self, field_value):
         """
         Encodes a token list as a simple string of space-separated values
         """
-        return " ".join(field_value)
+        if isinstance(field_value, (list,tuple)):
+            return " ".join(field_value)
+        log.warning("encode tokenlist: supplied value is not a list or tuple")
+        return str(field_value)
 
     def decode(self, field_value):
         """

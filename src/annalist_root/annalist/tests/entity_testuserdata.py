@@ -179,13 +179,13 @@ def annalistuser_view_form_data(
         coll_id="testcoll", user_id="testuser",
         user_name="Test User",
         user_uri="mailto:testuser@example.org", 
-        user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"],
+        user_permissions="VIEW CREATE UPDATE DELETE CONFIG ADMIN",
         action=None, cancel=None, orig_id=None):
     form_data_dict = (
         { 'entity_id':          user_id
         , 'orig_id':            user_id
         , 'User_name':          user_name
-        , 'User_description':   'User %s permissions in %s'%(user_id, coll_id)
+        , 'User_description':   'User %s: permissions for %s in collection %s'%(user_id, user_name, coll_id)
         , 'User_uri':           user_uri
         , 'User_permissions':   user_permissions
         , 'orig_type':          "_user"
@@ -200,7 +200,6 @@ def annalistuser_view_form_data(
     else:
         form_data_dict['save']          = 'Save'
     return form_data_dict
-
 
 #   -----------------------------------------------------------------------------
 #

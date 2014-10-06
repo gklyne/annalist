@@ -17,7 +17,7 @@ from django.conf                    import settings
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
 from render_text                    import RenderText
-from render_tokenlist               import RenderTokenList
+from render_tokenset                import RenderTokenSet
 
 def get_edit_renderer(renderid):
     """
@@ -53,7 +53,7 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_view_sel.html"
     if renderid == "TokenList":
         # return "field/annalist_edit_tokenlist.html"
-        return RenderTokenList()
+        return RenderTokenSet()
     log.warning("get_edit_renderer: %s not found"%renderid)
     # raise ValueError("get_edit_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
@@ -93,7 +93,7 @@ def get_view_renderer(renderid):
         return "field/annalist_view_view_sel.html"
     if renderid == "TokenList":
         # return "field/annalist_view_tokenlist.html"
-        return RenderTokenList()
+        return RenderTokenSet()
     log.warning("get_view_renderer: %s not found"%renderid)
     # raise ValueError("get_view_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
@@ -136,7 +136,7 @@ def get_value_mapper(renderid):
     The default 'RenderText' object returned contains identity mappings.
     """
     if renderid == "TokenList":
-        return RenderTokenList()
+        return RenderTokenSet()
     else:
         return RenderText()
 

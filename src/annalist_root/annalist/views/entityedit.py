@@ -309,6 +309,7 @@ class GenericEntityEditView(AnnalistGenericView):
         viewcontext = entityvaluemap.map_value_to_context(entityvals, 
             **context_extra_values
             )
+        # log.info("form_render: viewcontext %r"%(viewcontext,)) #@@
         viewcontext.update(viewinfo.context_data())
         # Generate and return form data
         return (
