@@ -49,7 +49,7 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_select.html"
     if renderid == "View_sel":
         return "field/annalist_edit_view_sel.html"
-    if renderid == "TokenList":
+    if renderid == "TokenSet":
         # return "field/annalist_edit_tokenlist.html"
         return RenderTokenSet()
     log.warning("get_edit_renderer: %s not found"%renderid)
@@ -89,7 +89,7 @@ def get_view_renderer(renderid):
         return "field/annalist_view_select.html"
     if renderid == "View_sel":
         return "field/annalist_view_view_sel.html"
-    if renderid == "TokenList":
+    if renderid == "TokenSet":
         # return "field/annalist_view_tokenlist.html"
         return RenderTokenSet()
     log.warning("get_view_renderer: %s not found"%renderid)
@@ -133,7 +133,7 @@ def get_value_mapper(renderid):
 
     The default 'RenderText' object returned contains identity mappings.
     """
-    if renderid == "TokenList":
+    if renderid == "TokenSet":
         return RenderTokenSet()
     else:
         return RenderText()

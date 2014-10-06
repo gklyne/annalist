@@ -29,20 +29,21 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - Note: required change to create Django user programmatically rather than by django-admin utility
     - [x] view description for user
     - [x] field descriptions for user
-    - [ ] field rendering: logic to decode value entered; e.g. for token list
+    - [x] field rendering: logic to decode value entered; e.g. for token list
         - [x] new user rendering tests
         - [x] existing user render tests
         - [x] existing user update tests (post edit form) - focus on resulting permissions field
         - [x] move get_entity_values from 'render_utils' to 'bound_field'
-        - [ ] update code to use class for simple text rendering
-        - [ ] review use of template files vs. use of inline template text in class
+        - [x] WONTDO update code to use class for simple text rendering
+            - NOT YET: current structure doesn't distinguish between edit, view, etc.
+            - Resolve that before updating existing use of separate template files
     - [x] user view: change stored permissions to list
         - clarify JSON-LD behaviour for treatment as set vs sequence
         - see: http://www.w3.org/TR/json-ld/#sets-and-lists
         - e.g. { '@list': ['a', 'b', ... ] }
         - but note: JSON-LD default is to treat as set, ehich is OK for permissions:
         - [x] Rename TokenList -> TokenSet
-    - [ ] new field render option: annal:field_render_type: TokenList (with value_type annal:TokenList) 
+    - [x] new field render option: annal:field_render_type: TokenSet (with value_type annal:TokenSet) 
     - [ ] add test to render existing built-in user
     - [ ] add tests to check encoding/decoding of user permissions
     - [x] certain views and/or types need admin/config permission to edit or list or view
@@ -69,3 +70,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
 - [ ] Think about how to handle change of email address (option to remove user from Django database?)
+- [ ] review use of template files vs. use of inline template text in class
+    - Need to support edit/view/item/head, probably via class inheritance structure
+    - Inline template text should be more efficient as it avoids repeated reading of template files
+    - Inline template text keeps value mapping logioc with template logic
+    - Inline templates may be harder to style effectively; maybe read HTML from file on first use?
