@@ -14,8 +14,6 @@ from collections                    import OrderedDict, namedtuple
 
 from django.conf                    import settings
 
-from annalist.models.entitytypeinfo import EntityTypeInfo
-
 from render_text                    import RenderText
 from render_tokenset                import RenderTokenSet
 
@@ -139,23 +137,6 @@ def get_value_mapper(renderid):
         return RenderTokenSet()
     else:
         return RenderText()
-
-def get_entity_values(displayinfo, entity, entity_id=None):
-    """
-    Returns an entity values dictionary for a supplied entity, suitable for
-    use with a bound_field object.
-    """
-    if not entity_id:
-        entity_id = entity.get_id()
-    type_id    = entity.get_type_id()
-    typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
-    entityvals = entity.get_values().copy()
-    entityvals['entity_id']        = entity_id
-    entityvals['entity_link']      = entity.get_view_url_path()
-    # log.info("type_id %s"%(type_id))
-    entityvals['entity_type_id']   = type_id
-    entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
-    return entityvals
 
 if __name__ == "__main__":
     import doctest

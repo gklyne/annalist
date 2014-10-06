@@ -33,7 +33,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [x] new user rendering tests
         - [x] existing user render tests
         - [x] existing user update tests (post edit form) - focus on resulting permissions field
-        - [ ] move get_entity_values from 'render_utils' to 'bound_field'
+        - [x] move get_entity_values from 'render_utils' to 'bound_field'
         - [ ] update code to use class for simple text rendering
         - [ ] review use of template files vs. use of inline template text in class
     - [x] user view: change stored permissions to list

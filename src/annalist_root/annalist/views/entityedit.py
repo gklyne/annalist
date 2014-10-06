@@ -33,8 +33,7 @@ from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
 from annalist.views.generic             import AnnalistGenericView
 
-from annalist.views.fields.bound_field  import bound_field
-from annalist.views.fields.render_utils import get_entity_values
+from annalist.views.fields.bound_field  import bound_field, get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #

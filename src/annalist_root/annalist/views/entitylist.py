@@ -34,8 +34,7 @@ from annalist.views.grouprepeatmap      import GroupRepeatMap
 from annalist.views.confirm             import ConfirmView, dict_querydict
 from annalist.views.generic             import AnnalistGenericView
 
-from annalist.views.fields.bound_field  import bound_field
-from annalist.views.fields.render_utils import get_entity_values
+from annalist.views.fields.bound_field  import bound_field, get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #
