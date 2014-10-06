@@ -322,7 +322,7 @@ class AnnalistGenericView(ContentNegotiationView):
         user_perms = self.get_user_permissions(collection, user_id, user_uri)
         if not user_perms:
             log.warning("No user permissions found for user_id %s, URI %s"%(user_id, user_uri))
-            return self.error(self.error401values(scope=scope))
+            return self.error(self.error403values(scope=scope))
         # user_perms is an AnnalistrUser object
         coll_id = collection.get_id() if collection else "(No coll)"
         if scope not in user_perms[ANNAL.CURIE.user_permissions]:

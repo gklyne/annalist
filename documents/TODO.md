@@ -44,8 +44,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - but note: JSON-LD default is to treat as set, ehich is OK for permissions:
         - [x] Rename TokenList -> TokenSet
     - [x] new field render option: annal:field_render_type: TokenSet (with value_type annal:TokenSet) 
-    - [ ] add test to render existing built-in user
-    - [ ] add tests to check encoding/decoding of user permissions
+    - [x] add test to render existing built-in user
+    - [x] add tests to check encoding/decoding of user permissions
     - [x] certain views and/or types need admin/config permission to edit or list or view
     - [ ] list description for user
     - [ ] annalist-manager updates to initialize users directory, but don't wipe existing permissions
