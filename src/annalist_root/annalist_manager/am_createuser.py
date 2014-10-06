@@ -104,8 +104,11 @@ def am_createadminuser(annroot, userhome, options):
     #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
     #   https://docs.djangoproject.c om/en/1.7/ref/contrib/auth/#manager-methods    
     user = User.objects.create_user(user_name, user_email, user_password)
-    user.first_name = user_first_name
-    user.last_name  = user_last_name
+    user.first_name   = user_first_name
+    user.last_name    = user_last_name
+    user.is_active    = True
+    user.is_staff     = True
+    user.is_superuser = True
     user.save()
     #@@
     # status = am_errors.AM_SUCCESS
