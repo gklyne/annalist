@@ -260,7 +260,7 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the entity.
         altparent   is an alternative parent entity to search for the tested entity, 
                     using the alternative path for the entity type.
-        use_altpath     is set True if this entity is situated at the alternative
+        use_altpath is set True if this entity is situated at the alternative
                     path relative to its parent.
 
         Returns True if the entity exists, as determined by existence of the 
@@ -273,18 +273,20 @@ class Entity(EntityRoot):
         return e._exists()
 
     @classmethod
-    def remove(cls, parent, entityid):
+    def remove(cls, parent, entityid, use_altpath=False):
         """
         Method removes an entity, deleting its details, data and descendents from Annalist storage.
 
         cls         is the class of the entity to be removed
         parent      is the parent from which the entity is descended.
         entityid    is the local identifier (slug) for the entity.
+        use_altpath is set True if this entity is situated at the alternative
+                    path relative to its parent.
 
-        Returns None on sucess, of a status value indicating a reason for value.
+        Returns None on success, or a status value indicating a reason for value.
         """
         log.debug("Colllection.remove: id %s"%(entityid))
-        e = cls.load(parent, entityid)
+        e = cls.load(parent, entityid, use_altpath=use_altpath)
         if e:
             d = e._entitydir
             # Extra check to guard against accidentally deleting wrong thing
@@ -297,6 +299,5 @@ class Entity(EntityRoot):
         else:
             return Annalist_Error("Entity %s not found"%(entityid))
         return None
-
 
 # End.

@@ -70,7 +70,10 @@ class Site(EntityRoot):
                 information about permissions granted to the user in the current collection.
         """
         user = AnnalistUser.load(self, user_id, use_altpath=True)
-        # log.info("user_id %s, user %r"%(user_id, user))
+        log.debug(
+            "Site.get_user_permissions: user_id %s, user_uri %s, user %r"%
+            (user_id, user_uri, user)
+            )
         if user:
             for f in [RDFS.CURIE.label, RDFS.CURIE.comment, ANNAL.CURIE.user_uri, ANNAL.CURIE.user_permissions]:
                 if f not in user:

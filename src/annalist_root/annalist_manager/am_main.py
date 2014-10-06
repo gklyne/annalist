@@ -32,7 +32,7 @@ import am_errors
 from am_runtests            import am_runtests
 from am_runserver           import am_runserver
 from am_initialize          import am_initialize
-from am_createuser          import am_createadminuser
+from am_createuser          import am_createadminuser, am_deleteuser
 from am_createsite          import am_createsite, am_updatesite
 from am_help                import am_help, command_summary_help
 
@@ -114,6 +114,8 @@ def run(userhome, userconfig, options, progname):
         return am_initialize(annroot, userhome, userconfig, options)
     if options.command.startswith("createa"):               # createadminuser
         return am_createadminuser(annroot, userhome, options)
+    if options.command.startswith("deleteu"):               # deleteuser
+        return am_deleteuser(annroot, userhome, options)
     if options.command.startswith("creates"):               # createsitedata
         return am_createsite(annroot, userhome, options)
     if options.command.startswith("updates"):               # updatesitedata

@@ -24,7 +24,8 @@ command_summary_help = ("\n"+
     "  %(prog)s runtests\n"+
     "  %(prog)s initialize [ CONFIG ]\n"+
     # "  %(prog)s idprovider ...\n"+  #@@ TODO
-    "  %(prog)s createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]\n"+
+    "  %(prog)s createadminuser [ username [ email [ firstname [ lastname ] ] ] ]\n"+
+    "  %(prog)s deleteuser [ username ]\n"+
     "  %(prog)s createsitedata [ CONFIG ]\n"+
     "  %(prog)s updatesitedata [ CONFIG ]\n"+
     "  %(prog)s runserver [ CONFIG ]\n"+

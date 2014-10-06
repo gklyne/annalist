@@ -50,6 +50,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] list description for user
     - [ ] annalist-manager updates to initialize users directory, but don't wipe existing permissions
     - [ ] annalist-manager option to create site user entry and default site permissions
+    - [ ] annalist-manager option to update existing user to admin status
+    - [ ] annalist-manager option to delete existing user
     - [ ] site-wide permissions (e.g. to create collections) need to be site permissions
     - [ ] ...
 - [ ] Additional test cases [#8](https://github.com/gklyne/annalist/issues/8)

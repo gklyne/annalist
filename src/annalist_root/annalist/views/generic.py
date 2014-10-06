@@ -295,6 +295,7 @@ class AnnalistGenericView(ContentNegotiationView):
                 self.site().get_user_permissions("_default_permissions", "annal:User/_default_permissions")
                 )
             self._user_perms = user_perms
+            log.debug("get_user_permissions %r"%(self._user_perms,))
         return self._user_perms
 
     def get_permissions(self, collection):
