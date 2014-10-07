@@ -661,6 +661,7 @@ def get_site_lists():
     return (
         { "BibEntry_list", "Default_list", "Default_list_all"
         , "Field_list", "Type_list", "List_list", "View_list"
+        , "User_list"
         })
 
 def get_site_fields():

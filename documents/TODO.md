@@ -47,13 +47,14 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] add test to render existing built-in user
     - [x] add tests to check encoding/decoding of user permissions
     - [x] certain views and/or types need admin/config permission to edit or list or view
-    - [ ] list description for user
-    - [ ] annalist-manager updates to initialize users directory, but don't wipe existing permissions
+    - [x] list description for user
+    - [ ] annalist-manager updates to initialize site-users directory, but don't wipe existing permissions
     - [ ] annalist-manager option to create site user entry and default site permissions
     - [ ] annalist-manager option to update existing user to admin status
-    - [ ] annalist-manager option to delete existing user
+    - [x] annalist-manager option to delete existing user - handled by generic entity delete
     - [ ] site-wide permissions (e.g. to create collections) need to be site permissions
-    - [ ] ...
+    - [ ] implement delete user handler and tests
+- [ ] List view: option to hide columns on smaller screens (cf. permissions)
 - [ ] Additional test cases [#8](https://github.com/gklyne/annalist/issues/8)
 - [ ] Scan code for all uses of 'annal:xxx' CURIES, and replace with ANNAL.CURIE.xxx references.  (See issue [#4](https://github.com/gklyne/annalist/issues/4))
 - [ ] Add field to view: check property URI is unique

@@ -1,0 +1,24 @@
+{ "@id":                        "annal:display/User_list"
+, "@type":                      ["annal:List"]
+, "annal:id":                   "User_list"
+, "annal:type_id":              "_list"
+, "rdfs:label":                 "List users"
+, "rdfs:comment":               "List of user permissions"
+, "annal:display_type":         "List"
+, "annal:default_view":         "User_view"
+, "annal:default_type":         "_user"
+, "annal:list_entity_selector": "'annal:User' in [@type]"
+, "annal:record_type":          "annal:User"
+, "annal:list_fields":
+  [ { "annal:field_id":             "User_id"
+    , "annal:field_placement":      "small:0,6;medium:0,3"
+    }
+  , { "annal:field_id":             "User_uri"
+    , "annal:field_placement":      "small:6,6;medium:3,4"
+    }
+  , { "annal:field_id":             "User_permissions"
+    , "annal:field_placement":      "small:0,12;medium:7,5"
+    }
+  ]
+}
+ 

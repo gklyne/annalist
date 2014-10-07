@@ -16,6 +16,7 @@ from django.conf                    import settings
 
 from render_text                    import RenderText
 from render_tokenset                import RenderTokenSet
+import render_tokenset
 
 def get_edit_renderer(renderid):
     """
@@ -51,7 +52,7 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_view_sel.html"
     if renderid == "TokenSet":
         # return "field/annalist_edit_tokenlist.html"
-        return RenderTokenSet()
+        return RenderTokenSet(render_tokenset.edit)
     log.warning("get_edit_renderer: %s not found"%renderid)
     # raise ValueError("get_edit_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
@@ -91,7 +92,7 @@ def get_view_renderer(renderid):
         return "field/annalist_view_view_sel.html"
     if renderid == "TokenSet":
         # return "field/annalist_view_tokenlist.html"
-        return RenderTokenSet()
+        return RenderTokenSet(render_tokenset.view)
     log.warning("get_view_renderer: %s not found"%renderid)
     # raise ValueError("get_view_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
@@ -123,6 +124,8 @@ def get_item_renderer(renderid):
         return "field/annalist_item_entityref.html"
     # if renderid == "View_sel":
     #     return "field/annalist_item_entityref.html"
+    if renderid == "TokenSet":
+        return RenderTokenSet(render_tokenset.item)
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
 
@@ -134,7 +137,7 @@ def get_value_mapper(renderid):
     The default 'RenderText' object returned contains identity mappings.
     """
     if renderid == "TokenSet":
-        return RenderTokenSet()
+        return RenderTokenSet("no template")
     else:
         return RenderText()
 
