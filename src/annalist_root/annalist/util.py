@@ -330,6 +330,27 @@ def replacetree(src, tgt):
     shutil.copytree(src, tgt)
     return
 
+def updatetree(src, tgt):
+    """
+    Like replacetree, except that existing files are not removed unless replaced 
+    by a file of the name name in the source tree.
+
+    NOTE: can't use shutil.copytree for this, as that requires that the 
+    destination tree does not exist.
+    """
+    files = os.listdir(src)
+    for f in files:
+        sf = os.path.join(src, f)
+        if os.path.exists(sf) and not os.path.islink(sf):   # Ignore symlinks
+            if os.path.isdir(sf):
+                tf = os.path.join(tgt, f)
+                if not os.path.isdir(tf):
+                    os.makedirs(tf)
+                updatetree(sf, tf)                          # Recursive dir copy
+            else:
+                shutil.copy2(sf, tgt)                       # Copy single file, may overwrite
+    return
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

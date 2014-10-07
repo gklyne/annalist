@@ -48,12 +48,12 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] add tests to check encoding/decoding of user permissions
     - [x] certain views and/or types need admin/config permission to edit or list or view
     - [x] list description for user
-    - [ ] annalist-manager updates to initialize site-users directory, but don't wipe existing permissions
+    - [x] annalist-manager updates to initialize site-users directory, but don't wipe existing user permissions
+    - [x] annalist-manager option to update existing Django user to admin status
     - [ ] annalist-manager option to create site user entry and default site permissions
-    - [ ] annalist-manager option to update existing user to admin status
-    - [x] annalist-manager option to delete existing user - handled by generic entity delete
+    - [x] annalist-manager option to delete existing user
     - [ ] site-wide permissions (e.g. to create collections) need to be site permissions
-    - [ ] implement delete user handler and tests
+    - [x] implement delete user handler and tests - WONTDO: handled by generic entity delete
 - [ ] List view: option to hide columns on smaller screens (cf. permissions)
 - [ ] Additional test cases [#8](https://github.com/gklyne/annalist/issues/8)
 - [ ] Scan code for all uses of 'annal:xxx' CURIES, and replace with ANNAL.CURIE.xxx references.  (See issue [#4](https://github.com/gklyne/annalist/issues/4))

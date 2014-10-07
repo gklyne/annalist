@@ -35,6 +35,7 @@ from annalist.models.annalistuser           import AnnalistUser
 
 from annalist.views.annalistuserdelete      import AnnalistUserDeleteConfirmedView
 from annalist.views.fields.render_tokenset  import RenderTokenSet
+from annalist.views.fields                  import render_tokenset
 
 from tests                                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                                  import init_annalist_test_site
@@ -236,7 +237,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             , 'field_value_encoded': "VIEW CREATE UPDATE DELETE CONFIG ADMIN"
             })
         context  = Context({'field': field})
-        rendered = RenderTokenSet().render(context)
+        rendered = RenderTokenSet(render_tokenset.edit).render(context)
         self.assertIn('''<div class="small-12 columns">''',                             rendered)
         self.assertIn('''<div class="row">''',                                          rendered)
         self.assertIn('''<div class="view_label small-12 medium-2 columns">''',         rendered)
@@ -260,10 +261,10 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             , 'field_name':             "User_permissions"
             , 'field_value':            ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             , 'field_value_encoded':    "VIEW CREATE UPDATE DELETE CONFIG ADMIN"
-            , 'field_render_object':    RenderTokenSet()
+            , 'field_render_object':    RenderTokenSet(render_tokenset.edit)
             })
         template = Template("{% include field.field_render_object %}")
-        context  = Context({ 'render_object': RenderTokenSet(), 'field': field})
+        context  = Context({ 'render_object': RenderTokenSet(render_tokenset.edit), 'field': field})
         rendered = template.render(context)
         self.assertIn('''<div class="small-12 columns">''',                             rendered)
         self.assertIn('''<div class="row">''',                                          rendered)
@@ -496,8 +497,10 @@ class ConfirmAnnalistUserDeleteTests(AnnalistTestCase):
         self.assertEqual(AnnalistUserDeleteConfirmedView.__name__, "AnnalistUserDeleteConfirmedView", "Check AnnalistUserDeleteConfirmedView class name")
         return
 
-    @unittest.skip("@@TODO: Delete user not yet implemented")
-    def test_post_confirmed_remove_user(self):
+    # test disabled - this functionality is handled by generic entity delete, and tested accordingly
+    #                 (there is no special-case logic used, e.g. for the configure page.)
+    # @unittest.skip("@@TODO: Delete user not yet implemented")
+    def no_test_post_confirmed_remove_user(self):
         t = AnnalistUser.create(self.testcoll, "deleteuser", annalistuser_create_values("deleteuser"))
         self.assertTrue(AnnalistUser.exists(self.testcoll, "deleteuser"))
         # Submit positive confirmation

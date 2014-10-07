@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 from utils.SetcwdContext    import ChangeCurrentDir
 
 from annalist.layout        import Layout
-from annalist.util          import removetree, replacetree
+from annalist.util          import removetree, replacetree, updatetree
 
 import am_errors
 from am_settings            import am_get_settings
@@ -113,8 +113,13 @@ def am_updatesite(annroot, userhome, options):
     for sdir in ("types", "lists", "views", "fields", "enums"):
         s = os.path.join(sitedatasrc, sdir)
         d = os.path.join(sitedatatgt, sdir)
-        print("- %s -> %s"%(sdir, d))
+        print("- %s => %s"%(sdir, d))
         replacetree(s, d)
+    for sdir in ("users",):
+        s = os.path.join(sitedatasrc, sdir)
+        d = os.path.join(sitedatatgt, sdir)
+        print("- %s +> %s"%(sdir, d))
+        updatetree(s, d)
     return status
 
 # End.

@@ -122,9 +122,9 @@ def am_createadminuser(annroot, userhome, options):
         )
     return status
 
-def am_deleteuser(annroot, userhome, options):
+def am_updateadminuser(annroot, userhome, options):
     """
-    Delete Annalistr/Django user account.  
+    Update existing Django user to admin status
 
     annroot     is the root directory for theannalist software installation.
     userhome    is the home directory for the host system user issuing the command.
@@ -136,9 +136,6 @@ def am_deleteuser(annroot, userhome, options):
     """
     # see:
     #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
-    #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#manager-methods
-    #   https://docs.python.org/2/library/getpass.html
-    #   raw_input and getpass:  http://packetforger.wordpress.com/2014/03/26/using-pythons-getpass-module/
     status   = am_errors.AM_SUCCESS
     settings = am_get_settings(annroot, userhome, options)
     if not settings:
@@ -153,7 +150,63 @@ def am_deleteuser(annroot, userhome, options):
     from django.contrib.auth.models import User     # import deferred until after sitesettings import
     #
     user_name_regex        = r"^[a-zA-Z0-9@.+_-]+$"
-    user_name_prompt       = "Admin user name:       "
+    user_name_prompt       = "Update user name: "
+    user_name = getargvalue(getarg(options.args, 0), user_name_prompt)
+    while not re.match(user_name_regex, user_name):
+        print("Invalid username %s - re-enter"%user_name, file=sys.stderr)
+        user_name = getargvalue(None, user_name_prompt)
+    # Check username exists
+    userqueryset = User.objects.filter(username=user_name)
+    if not userqueryset:
+        print("User %s does not exist"%user_name, file=sys.stderr)
+        return am_errors.AM_USERNOTEXISTS
+    # Have all the details - now update the user in the Django user database
+    # see:
+    #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
+    #   https://docs.djangoproject.c om/en/1.7/ref/contrib/auth/#manager-methods
+    user = userqueryset[0]
+    user_email        = user.email
+    user_first_name   = user.first_name
+    user_last_name    = user.last_name
+    user.is_staff     = True
+    user.is_superuser = True
+    user.save()
+    # Create site permissions record for admin user
+    site = am_get_site(sitesettings)
+    user = create_user_permissions(
+        site, user_name, user_email, 
+        "%s %s"%(user_first_name, user_last_name), 
+        ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+        )
+    return status
+
+def am_deleteuser(annroot, userhome, options):
+    """
+    Delete Annalistr/Django user account.  
+
+    annroot     is the root directory for theannalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    status   = am_errors.AM_SUCCESS
+    settings = am_get_settings(annroot, userhome, options)
+    if not settings:
+        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+        return am_errors.AM_NOSETTINGS
+    if len(options.args) > 1:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    os.environ['DJANGO_SETTINGS_MODULE'] = settings.modulename
+    django.setup()
+    sitesettings = importlib.import_module(settings.modulename)
+    from django.contrib.auth.models import User     # import deferred until after sitesettings import
+    #
+    user_name_regex        = r"^[a-zA-Z0-9@.+_-]+$"
+    user_name_prompt       = "Delete user name: "
     user_name = getargvalue(getarg(options.args, 0), user_name_prompt)
     while not re.match(user_name_regex, user_name):
         print("Invalid username %s - re-enter"%user_name, file=sys.stderr)
