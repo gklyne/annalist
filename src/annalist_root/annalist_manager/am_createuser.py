@@ -40,12 +40,106 @@ def delete_user_permissions(site, user_id):
     AnnalistUser.remove(site, user_id, use_altpath=True)
     return
 
+def get_site_settings(annroot, userhome, options):
+    """
+    Access site settings, set up correspondingh django configuration and return the settings module
+    """
+    settings = am_get_settings(annroot, userhome, options)
+    if not settings:
+        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+        return None
+    os.environ['DJANGO_SETTINGS_MODULE'] = settings.modulename
+    django.setup()
+    return importlib.import_module(settings.modulename)
+
+def get_user_name(options, prompt_prefix):
+    user_name_regex         = r"^[a-zA-Z0-9@.+_-]+$"
+    user_name_prompt        = "%s name:        "%prompt_prefix
+    user_name = getargvalue(getarg(options.args, 0), user_name_prompt)
+    while not re.match(user_name_regex, user_name):
+        print("Invalid username %s - re-enter"%user_name, file=sys.stderr)
+        user_name = getargvalue(None, user_name_prompt)
+    return user_name
+
+def get_user_details(user_name, options, prompt_prefix):
+    """
+    Get user details (email, first name, last name)
+
+    Returns a dictionary of user details, including the supplied user_name.
+    """
+    user_email_regex        = r"^[A-Za-z0-9.+_-]+@([A-Za-z0-9_-]+)(\.[A-Za-z0-9_-]+)*$"
+    user_email_prompt       = "%s email:       "%prompt_prefix
+    user_first_name_prompt  = "%s first name:  "%prompt_prefix
+    user_last_name_prompt   = "%s last name:   "%prompt_prefix
+    # Get other values
+    user_email = getargvalue(getarg(options.args, 1), user_email_prompt)
+    while not re.match(user_email_regex, user_email):
+        print("Invalid email address %s - re-enter"%user_email, file=sys.stderr)
+        user_email = getargvalue(None, user_email_prompt)
+    user_first_name = getargvalue(getarg(options.args, 2), user_first_name_prompt)
+    user_last_name  = getargvalue(getarg(options.args, 3), user_last_name_prompt)
+    return (
+        { 'name':       user_name
+        , 'email':      user_email
+        , 'first_name': user_first_name
+        , 'last_name':  user_last_name
+        })
+
+def am_get_user_permissions(options, prompt_prefix):
+    """
+    Get user permissions to apply
+    """
+    user_permissions_regex  = r"^([A-Za-z0-9_-]+(\s+[A-Za-z0-9_-]+)*)?$"
+    user_permissions_prompt = "%s permissions: "%prompt_prefix
+    user_permissions = getargvalue(getarg(options.args, 4), user_permissions_prompt)
+    while not re.match(user_permissions_regex, user_permissions):
+        print("Invalid permissions %s - re-enter"%user_permissions, file=sys.stderr)
+        user_permissions = getargvalue(None, user_permissions_prompt)
+    return user_permissions
+
+def create_django_user(user_type, user_details):
+    """
+    Create Django user (prompts for password)
+    """
+    # Get password
+    user_password_prompt    = "Password: "
+    user_password_c_prompt  = "Re-enter password: "
+    user_password   = getsecret(user_password_prompt)
+    user_password_c = getsecret(user_password_c_prompt)
+    while user_password != user_password_c:
+        print("Password values mismatch - try again", file=sys.stderr)
+        user_password   = getsecret(user_password_prompt)
+        user_password_c = getsecret(user_password_c_prompt)
+    # Have all the details - create djano user now
+    # Create the user in the Django user database
+    # see:
+    #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
+    #   https://docs.djangoproject.c om/en/1.7/ref/contrib/auth/#manager-methods
+    from django.contrib.auth.models import User     # import deferred until after sitesettings import
+    user = User.objects.create_user(user_details['name'], user_details['email'], user_password)
+    user.first_name   = user_details['first_name']
+    user.last_name    = user_details['last_name']
+    user.is_active    = True
+    user.is_staff     = user_type in ["staff", "superuser"]
+    user.is_superuser = user_type in ["superuser"]
+    user.save()
+    return am_errors.AM_SUCCESS
+
+def create_site_permissions(sitesettings, user_details, permissions):
+    site   = am_get_site(sitesettings)
+    user   = create_user_permissions(
+        site, user_details['name'], user_details['email'], 
+        "%s %s"%(user_details['first_name'], user_details['last_name']), 
+        permissions
+        )
+    return am_errors.AM_SUCCESS
+
 def am_createadminuser(annroot, userhome, options):
     """
-    Create Annalistr/Django superuser account.  
+    Create Annalist/Django admin/superuser account.  
 
     Once created, this can be used to create additional users through the 
-    site 'admin' link.
+    site 'admin' link, and can also create collections and
 
     annroot     is the root directory for theannalist software installation.
     userhome    is the home directory for the host system user issuing the command.
@@ -55,6 +149,112 @@ def am_createadminuser(annroot, userhome, options):
                 This value is intended to be used as an exit status code
                 for the calling program.
     """
+    prompt_prefix = "Admin user"
+    if len(options.args) > 4:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    sitesettings = get_site_settings(annroot, userhome, options)
+    if not sitesettings:
+        return am_errors.AM_NOSETTINGS
+    user_name = get_user_name(options, prompt_prefix)
+    #
+    from django.contrib.auth.models import User     # import deferred until after sitesettings import
+    if User.objects.filter(username=user_name):
+        print("User %s already exists"%user_name, file=sys.stderr)
+        return am_errors.AM_USEREXISTS
+    user_details = get_user_details(user_name, options, prompt_prefix)
+    status = create_django_user("superuser", user_details)
+    if status == am_errors.AM_SUCCESS:
+        status = create_site_permissions(
+            sitesettings, user_details, 
+            ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+            )
+    return status
+
+def am_updateadminuser(annroot, userhome, options):
+    """
+    Update existing Django user to admin status
+
+    annroot     is the root directory for theannalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    # see:
+    #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
+    prompt_prefix = "Update user"
+    if len(options.args) > 1:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    sitesettings = get_site_settings(annroot, userhome, options)
+    if not sitesettings:
+        return am_errors.AM_NOSETTINGS
+    user_name = get_user_name(options, prompt_prefix)
+    #
+    from django.contrib.auth.models import User     # import deferred until after sitesettings import
+    userqueryset = User.objects.filter(username=user_name)
+    if not userqueryset:
+        print("User %s does not exist"%user_name, file=sys.stderr)
+        return am_errors.AM_USERNOTEXISTS
+    # Have all the details - now update the user in the Django user database
+    # see:
+    #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
+    #   https://docs.djangoproject.c om/en/1.7/ref/contrib/auth/#manager-methods
+    user = userqueryset[0]
+    user.is_staff     = True
+    user.is_superuser = True
+    user.save()
+    user_details = (
+        { 'name':       user_name
+        , 'email':      user.email
+        , 'first_name': user.first_name
+        , 'last_name':  user.last_name
+        })
+    # Create site permissions record for admin user
+    status = create_site_permissions(
+        sitesettings, user_details, 
+        ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+        )
+    return status
+
+def am_deleteuser(annroot, userhome, options):
+    """
+    Delete Annalist/Django user account.  
+
+    annroot     is the root directory for theannalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    prompt_prefix = "Delete user"
+    if len(options.args) > 1:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    sitesettings = get_site_settings(annroot, userhome, options)
+    if not sitesettings:
+        return am_errors.AM_NOSETTINGS
+    user_name = get_user_name(options, prompt_prefix)
+    #
+    from django.contrib.auth.models import User     # import deferred until after sitesettings import
+    userqueryset = User.objects.filter(username=user_name)
+    if not userqueryset:
+        print("User %s does not exist"%user_name, file=sys.stderr)
+        return am_errors.AM_USERNOTEXISTS
+    userqueryset.delete()
+    site = am_get_site(sitesettings)
+    delete_user_permissions(site, user_name)
+    return am_errors.AM_SUCCESS
+
+
+
+
+def delete_me():
     # see:
     #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
     #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#manager-methods
@@ -120,110 +320,6 @@ def am_createadminuser(annroot, userhome, options):
         "%s %s"%(user_first_name, user_last_name), 
         ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
         )
-    return status
-
-def am_updateadminuser(annroot, userhome, options):
-    """
-    Update existing Django user to admin status
-
-    annroot     is the root directory for theannalist software installation.
-    userhome    is the home directory for the host system user issuing the command.
-    options     contains options parsed from the command line.
-
-    returns     0 if all is well, or a non-zero status code.
-                This value is intended to be used as an exit status code
-                for the calling program.
-    """
-    # see:
-    #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
-    status   = am_errors.AM_SUCCESS
-    settings = am_get_settings(annroot, userhome, options)
-    if not settings:
-        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
-        return am_errors.AM_NOSETTINGS
-    if len(options.args) > 1:
-        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
-        return am_errors.AM_UNEXPECTEDARGS
-    os.environ['DJANGO_SETTINGS_MODULE'] = settings.modulename
-    django.setup()
-    sitesettings = importlib.import_module(settings.modulename)
-    from django.contrib.auth.models import User     # import deferred until after sitesettings import
-    #
-    user_name_regex        = r"^[a-zA-Z0-9@.+_-]+$"
-    user_name_prompt       = "Update user name: "
-    user_name = getargvalue(getarg(options.args, 0), user_name_prompt)
-    while not re.match(user_name_regex, user_name):
-        print("Invalid username %s - re-enter"%user_name, file=sys.stderr)
-        user_name = getargvalue(None, user_name_prompt)
-    # Check username exists
-    userqueryset = User.objects.filter(username=user_name)
-    if not userqueryset:
-        print("User %s does not exist"%user_name, file=sys.stderr)
-        return am_errors.AM_USERNOTEXISTS
-    # Have all the details - now update the user in the Django user database
-    # see:
-    #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
-    #   https://docs.djangoproject.c om/en/1.7/ref/contrib/auth/#manager-methods
-    user = userqueryset[0]
-    user_email        = user.email
-    user_first_name   = user.first_name
-    user_last_name    = user.last_name
-    user.is_staff     = True
-    user.is_superuser = True
-    user.save()
-    # Create site permissions record for admin user
-    site = am_get_site(sitesettings)
-    user = create_user_permissions(
-        site, user_name, user_email, 
-        "%s %s"%(user_first_name, user_last_name), 
-        ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
-        )
-    return status
-
-def am_deleteuser(annroot, userhome, options):
-    """
-    Delete Annalistr/Django user account.  
-
-    annroot     is the root directory for theannalist software installation.
-    userhome    is the home directory for the host system user issuing the command.
-    options     contains options parsed from the command line.
-
-    returns     0 if all is well, or a non-zero status code.
-                This value is intended to be used as an exit status code
-                for the calling program.
-    """
-    status   = am_errors.AM_SUCCESS
-    settings = am_get_settings(annroot, userhome, options)
-    if not settings:
-        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
-        return am_errors.AM_NOSETTINGS
-    if len(options.args) > 1:
-        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
-        return am_errors.AM_UNEXPECTEDARGS
-    os.environ['DJANGO_SETTINGS_MODULE'] = settings.modulename
-    django.setup()
-    sitesettings = importlib.import_module(settings.modulename)
-    from django.contrib.auth.models import User     # import deferred until after sitesettings import
-    #
-    user_name_regex        = r"^[a-zA-Z0-9@.+_-]+$"
-    user_name_prompt       = "Delete user name: "
-    user_name = getargvalue(getarg(options.args, 0), user_name_prompt)
-    while not re.match(user_name_regex, user_name):
-        print("Invalid username %s - re-enter"%user_name, file=sys.stderr)
-        user_name = getargvalue(None, user_name_prompt)
-    # Check username exists
-    userqueryset = User.objects.filter(username=user_name)
-    if not userqueryset:
-        print("User %s does not exist"%user_name, file=sys.stderr)
-        return am_errors.AM_USERNOTEXISTS
-    # Have all the details - now delete the user in the Django user database
-    # see:
-    #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
-    #   https://docs.djangoproject.c om/en/1.7/ref/contrib/auth/#manager-methods
-    userqueryset.delete()
-    # Delete site permissions record for user
-    site = am_get_site(sitesettings)
-    delete_user_permissions(site, user_name)
     return status
 
 # End.

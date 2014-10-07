@@ -51,8 +51,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] annalist-manager updates to initialize site-users directory, but don't wipe existing user permissions
     - [x] annalist-manager option to update existing Django user to admin status
     - [ ] annalist-manager option to create site user entry and default site permissions
+    - [ ] what site-level permission is required to create new collection?  Should be CONFIG?  Test case?
     - [x] annalist-manager option to delete existing user
-    - [ ] site-wide permissions (e.g. to create collections) need to be site permissions
+    - [x] site-wide permissions (e.g. to create collections) need to be site permissions
     - [x] implement delete user handler and tests - WONTDO: handled by generic entity delete
 - [ ] List view: option to hide columns on smaller screens (cf. permissions)
 - [ ] Additional test cases [#8](https://github.com/gklyne/annalist/issues/8)
@@ -74,7 +75,15 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
 - [ ] Think about how to handle change of email address (option to remove user from Django database?)
 - [ ] review use of template files vs. use of inline template text in class
-    - Need to support edit/view/item/head, probably via class inheritance structure
-    - Inline template text should be more efficient as it avoids repeated reading of template files
-    - Inline template text keeps value mapping logioc with template logic
-    - Inline templates may be harder to style effectively; maybe read HTML from file on first use?
+    - [x] Need to support edit/view/item/head (NOT: probably via class inheritance structure)
+    - [x] Inline template text should be more efficient as it avoids repeated reading of template files
+    - [x] Inline template text keeps value mapping logic with template logic
+    - [ ] Inline templates may be harder to style effectively; maybe read HTML from file on first use?
+- [ ] Use separate Django database for each configuration
+- [ ] Automated test suite for annalist_manager
+    - [ ] annalist-manager initialize [ CONFIG ]
+    - [ ] annalist-manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ]
+    - [ ] annalist-manager updateadminuser [ username ]
+    - [ ] annalist-manager deleteuser [ username ]
+    - [ ] annalist-manager createsitedata [ CONFIG ]
+    - [ ] annalist-manager updatesitedata [ CONFIG ]
