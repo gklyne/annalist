@@ -8,7 +8,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 * [x] Default button on view edit form (and others) should be "Save".
     - See http://stackoverflow.com/questions/1963245/.
     - I found adding a duplicate hidden save button at the top of the <form> element did the trick.
-- [ ] Authorization [#11](https://github.com/gklyne/annalist/issues/11)
+- [x] Authorization [#11](https://github.com/gklyne/annalist/issues/11)
     - [x] layout.py: add _user defs
     - [x] message.py
     - [x] entitytypeinfo.py
@@ -50,8 +50,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] list description for user
     - [x] annalist-manager updates to initialize site-users directory, but don't wipe existing user permissions
     - [x] annalist-manager option to update existing Django user to admin status
-    - [ ] annalist-manager option to create site user entry and default site permissions
-    - [ ] what site-level permission is required to create new collection?  Should be CONFIG?  Test case?
+    - [x] annalist-manager option to create site user entry and default site permissions
+    - [x] what site-level permission is required to create new collection?
+        - Site-level CREATE/DELETE.  
+        - Add test cases
     - [x] annalist-manager option to delete existing user
     - [x] site-wide permissions (e.g. to create collections) need to be site permissions
     - [x] implement delete user handler and tests - WONTDO: handled by generic entity delete

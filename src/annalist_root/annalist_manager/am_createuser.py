@@ -25,12 +25,12 @@ import am_errors
 from am_settings                    import am_get_settings, am_get_site
 from am_getargvalue                 import getarg, getargvalue, getsecret
 
-def create_user_permissions(site, user_id, user_email, user_name, user_permissions):
+def create_user_permissions(site, user_id, user_uri, user_name, user_comment, user_permissions):
     user_values = (
         { 'annal:type':             "annal:User"
         , 'rdfs:label':             user_name
-        , 'rdfs:comment':           "User %s: site permissions for %s"%(user_id, user_name)
-        , 'annal:user_uri':         "mailto:%s"%(user_email)
+        , 'rdfs:comment':           user_comment
+        , 'annal:user_uri':         "%s"%(user_uri)
         , 'annal:user_permissions': user_permissions
         })
     user = AnnalistUser.create(site, user_id, user_values, use_altpath=True)
@@ -81,17 +81,18 @@ def get_user_details(user_name, options, prompt_prefix):
     return (
         { 'name':       user_name
         , 'email':      user_email
+        , 'uri':        "mailto:%s"%user_email
         , 'first_name': user_first_name
         , 'last_name':  user_last_name
         })
 
-def am_get_user_permissions(options, prompt_prefix):
+def get_user_permissions(options, pos, prompt_prefix):
     """
     Get user permissions to apply
     """
     user_permissions_regex  = r"^([A-Za-z0-9_-]+(\s+[A-Za-z0-9_-]+)*)?$"
     user_permissions_prompt = "%s permissions: "%prompt_prefix
-    user_permissions = getargvalue(getarg(options.args, 4), user_permissions_prompt)
+    user_permissions = getargvalue(getarg(options.args, pos), user_permissions_prompt)
     while not re.match(user_permissions_regex, user_permissions):
         print("Invalid permissions %s - re-enter"%user_permissions, file=sys.stderr)
         user_permissions = getargvalue(None, user_permissions_prompt)
@@ -127,9 +128,18 @@ def create_django_user(user_type, user_details):
 
 def create_site_permissions(sitesettings, user_details, permissions):
     site   = am_get_site(sitesettings)
-    user   = create_user_permissions(
-        site, user_details['name'], user_details['email'], 
-        "%s %s"%(user_details['first_name'], user_details['last_name']), 
+    if not 'label' in user_details:
+        user_details['label'] = (
+            "%(first_name)s %(last_name)s"%user_details
+            )
+    if not 'comment' in user_details:
+        user_details['comment'] = (
+            "User %(name)s: site permissions for %(first_name)s %(last_name)s"%user_details
+            )
+    user = create_user_permissions(
+        site, user_details['name'], user_details['uri'], 
+        user_details['label'],
+        user_details['comment'], 
         permissions
         )
     return am_errors.AM_SUCCESS
@@ -210,6 +220,7 @@ def am_updateadminuser(annroot, userhome, options):
     user_details = (
         { 'name':       user_name
         , 'email':      user.email
+        , 'uri':        "mailto:%s"%user.email
         , 'first_name': user.first_name
         , 'last_name':  user.last_name
         })
@@ -218,6 +229,64 @@ def am_updateadminuser(annroot, userhome, options):
         sitesettings, user_details, 
         ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
         )
+    return status
+
+def am_setdefaultpermissions(annroot, userhome, options):
+    """
+    Set site-wide default permissions for logged in users
+
+    annroot     is the root directory for theannalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    prompt_prefix = "Default "
+    if len(options.args) > 1:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    sitesettings = get_site_settings(annroot, userhome, options)
+    if not sitesettings:
+        return am_errors.AM_NOSETTINGS
+    user_permissions = get_user_permissions(options, 0, prompt_prefix)
+    user_details = (
+        { 'name':       "_default_permissions"
+        , 'uri':        "annal:User/_default_permissions"
+        , 'label':      "Default permissions"
+        , 'comment':    "Default permissions for authenticated user."
+        })
+    status = create_site_permissions(sitesettings, user_details, user_permissions)
+    return status
+
+def am_setpublicpermissions(annroot, userhome, options):
+    """
+    Set site-wide default permissions for unauthenticated public access
+
+    annroot     is the root directory for theannalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    prompt_prefix = "Public access "
+    if len(options.args) > 1:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    sitesettings = get_site_settings(annroot, userhome, options)
+    if not sitesettings:
+        return am_errors.AM_NOSETTINGS
+    user_permissions = get_user_permissions(options, 0, prompt_prefix)
+    user_details = (
+        { 'name':       "_unknown_user"
+        , 'uri':        "annal:User/_unknown_user"
+        , 'label':      "Unknown user"
+        , 'comment':    "Permissions for unauthenticated user."
+        })
+    status = create_site_permissions(sitesettings, user_details, user_permissions)
     return status
 
 def am_deleteuser(annroot, userhome, options):
@@ -316,10 +385,11 @@ def delete_me():
     # Create site permissions record for admin user
     site = am_get_site(sitesettings)
     user = create_user_permissions(
-        site, user_name, user_email, 
+        site, user_name, "mailto:%s"%user_email, 
         "%s %s"%(user_first_name, user_last_name), 
+        "User %s: site permissions for %s %s"%(user_name, user_first_name, user_last_name),
         ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
         )
     return status
 
-# End.
+

@@ -32,7 +32,11 @@ import am_errors
 from am_runtests            import am_runtests
 from am_runserver           import am_runserver
 from am_initialize          import am_initialize
-from am_createuser          import am_createadminuser, am_updateadminuser, am_deleteuser
+from am_createuser          import (
+    am_createadminuser, am_updateadminuser, 
+    am_setdefaultpermissions, am_setpublicpermissions,
+    am_deleteuser
+    )
 from am_createsite          import am_createsite, am_updatesite
 from am_help                import am_help, command_summary_help
 
@@ -116,6 +120,10 @@ def run(userhome, userconfig, options, progname):
         return am_createadminuser(annroot, userhome, options)
     if options.command.startswith("updatea"):               # updateadminuser
         return am_updateadminuser(annroot, userhome, options)
+    if options.command.startswith("setdef"):                # setdefaultpermissions
+        return am_setdefaultpermissions(annroot, userhome, options)
+    if options.command.startswith("setpub"):                # setpublicpermissions
+        return am_setpublicpermissions(annroot, userhome, options)
     if options.command.startswith("deleteu"):               # deleteuser
         return am_deleteuser(annroot, userhome, options)
     if options.command.startswith("creates"):               # createsitedata
@@ -172,5 +180,18 @@ if __name__ == "__main__":
     status = runMain()
     sys.exit(status)
 
-    # End.
+# Tests
+#
+# python am_main.py runtests
+# python am_main.py --config=runtests initialize
+# python am_main.py --config=runtests createadminuser testtestadmin testestadmin@localhost
+# python am_main.py --config=runtests createadminuser testtestadmin testestadmin@localhost
+# python am_main.py --config=runtests deleteuser testtestadmin
+# python am_main.py --config=runtests deleteuser testtestadmin
+# python am_main.py --config=runtests updateadminuser gklyne
+# python am_main.py --config=runtests setdefaultpermissions "VIEW CREATE TEST"
+# python am_main.py --config=runtests setpublicpermissions "VIEW TEST"
+# python am_main.py --config=runtests updatesitedata
+
+# End.
 

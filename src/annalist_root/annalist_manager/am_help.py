@@ -26,6 +26,8 @@ command_summary_help = ("\n"+
     # "  %(prog)s idprovider ...\n"+  #@@ TODO
     "  %(prog)s createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]\n"+
     "  %(prog)s updateadminuser [ username ] [ CONFIG ]\n"+
+    "  %(prog)s setdefaultpermissions [ permissions ] [ CONFIG ]\n"+
+    "  %(prog)s setpublicpermissions [ permissions ] [ CONFIG ]\n"+
     "  %(prog)s deleteuser [ username ] [ CONFIG ]\n"+
     "  %(prog)s createsitedata [ CONFIG ]\n"+
     "  %(prog)s updatesitedata [ CONFIG ]\n"+
@@ -52,6 +54,14 @@ config_options_help = (
     "\n"+
     "The above options may be abbreviated as '-d', '-p', '-s' and '-c' respectively.\n"+
     "If no configuration is explicitly specified, '--personal' is used.\n"+
+    "")
+
+permissions_help = (
+    "The 'permissions' parameter is a list of space-separated permission keywords,\n"+
+    "or may be empty.  If multiple permissions are specified, some form of command-line\n"+
+    "quoting should be used so they are presented as a single argument (e.g. enclose\n"+
+    "the list of keywords in double quoted).\n"+
+    "If not specified on the command line, the user will be prompted for default permissions\n"+
     "")
 
 def am_help(options, progname):
@@ -109,6 +119,54 @@ def am_help(options, progname):
             "Annalist is intended to be used with a federated authentication service,\n"+
             "such as Google+, but setting up such a service can be tricky, and for evaluation\n"+
             "or personal-only use it may be quicker to use locally managed user credentials\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("updatea"):
+        help_text = ("\n"+
+            "  %(prog)s updateadminuser [ username ] [ CONFIG ]\n"+
+            "\n"+
+            "Updates an existing Django user to admin status; i.e. they are assigned 'staff'\n"+
+            "and 'superuser' attributes in the Django user database, and assigned site-wide\n"+
+            "ADMIN permissions in the Annalist site indicated by CONFIG.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("setdef"):
+        help_text = ("\n"+
+            "  %(prog)s setdefaultpermissions [ permissions ] [ CONFIG ]\n"+
+            "\n"+
+            "Sets site-wide default permissions for logged-in users in the\n"+
+            "Annalist site indicated by CONFIG.  These permissions are superseded by\n"+
+            "any permissions defined specifically for a logged-in user, or by\n"+
+            "user '_default_permissions' entry defined for any collection.\n"+
+            "\n"+
+            permissions_help+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("setpub"):
+        help_text = ("\n"+
+            "  %(prog)s setpublicpermissions [ permissions ] [ CONFIG ]\n"+
+            "\n"+
+            "Sets site-wide public access permissions (i.e. for requests where there is no active login)\n"+
+            "in the Annalist site indicated by CONFIG.  These permissions may be superseded by\n"+
+            "'_unknown_user' permissions defined for any specific collection.\n"+
+            "\n"+
+            permissions_help+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("deleteu"):
+        help_text = ("\n"+
+            "  %(prog)s deleteuser [ username ] [ CONFIG ]\n"+
+            "\n"+
+            "Deletes the specified Django user, and also removes any site-wide permissions defined\n"+
+            "for that user in he Annalist site indicated by CONFIG.\n"+
             "\n"+
             config_options_help+
             "\n"+

@@ -15,6 +15,7 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.contrib.auth.models     import User
 from django.test                    import TestCase
+from django.core.urlresolvers       import resolve, reverse
 from django.test.client             import Client
 
 from annalist.identifiers           import ANNAL
@@ -29,7 +30,10 @@ from annalist.models.entitydata     import EntityData
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
-from entity_testutils               import create_user_permissions
+from entity_testutils               import (
+    create_user_permissions,
+    collection_new_form_data, collection_remove_form_data
+    )
 from entity_testentitydata          import (
     # recorddata_dir,  entitydata_dir,
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
@@ -127,6 +131,50 @@ class AuthorizationTest(AnnalistTestCase):
                 user_permissions=["VIEW"]
                 )
             )
+        self.user_site_admin  = AnnalistUser.create(
+            self.testsite, 
+            "user_site_admin", 
+            annalistuser_create_values(
+                coll_id="testcoll", user_id="user_site_admin",
+                user_name="Site_admin User",
+                user_uri="mailto:user_site_admin@%s"%TestHost, 
+                user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+                ),
+            use_altpath=True
+            )
+        self.user_site_create  = AnnalistUser.create(
+            self.testsite, 
+            "user_site_create", 
+            annalistuser_create_values(
+                coll_id="testcoll", user_id="user_site_create",
+                user_name="Site_create User",
+                user_uri="mailto:user_site_create@%s"%TestHost, 
+                user_permissions=["VIEW", "CREATE"]
+                ),
+            use_altpath=True
+            )
+        self.user_site_delete  = AnnalistUser.create(
+            self.testsite, 
+            "user_site_delete", 
+            annalistuser_create_values(
+                coll_id="testcoll", user_id="user_site_delete",
+                user_name="Site_delete User",
+                user_uri="mailto:user_site_delete@%s"%TestHost, 
+                user_permissions=["VIEW", "CREATE", "DELETE"]
+                ),
+            use_altpath=True
+            )
+        self.user_site_view  = AnnalistUser.create(
+            self.testsite, 
+            "user_site_view", 
+            annalistuser_create_values(
+                coll_id="testcoll", user_id="user_site_view",
+                user_name="Site_view User",
+                user_uri="mailto:user_site_view@%s"%TestHost, 
+                user_permissions=["VIEW"]
+                ),
+            use_altpath=True
+            )
         return
 
     def tearDown(self):
@@ -142,6 +190,22 @@ class AuthorizationTest(AnnalistTestCase):
         loggedin = self.client.login(username=user_id, password="testpassword")
         self.assertTrue(loggedin)
         return
+
+    # Create collection: requires site-level CREATE permission
+
+    def create_collection(self):
+        u = reverse("AnnalistSiteView")
+        f = collection_new_form_data("testnew")
+        r = self.client.post(u, f)
+        return r
+
+    # Remove collection: requires site-level DELETE permission
+
+    def remove_collection(self):
+        u = reverse("AnnalistSiteView")
+        f = collection_remove_form_data(["coll1", "coll3"])
+        r = self.client.post(u, f)
+        return r
 
     # User access - requires ADMIN permission
 
@@ -407,6 +471,9 @@ class AuthorizationTest(AnnalistTestCase):
     def test_admin_user(self):
         self.login_user("user_admin")
         # try each function, test result
+        self.assertEqual(self.create_collection().status_code,      403)
+        self.assertEqual(self.remove_collection().status_code,      403)
+        #
         self.assertEqual(self.list_users().status_code,             200)
         self.assertEqual(self.new_user().status_code,               302)
         self.assertEqual(self.copy_user().status_code,              302)
@@ -432,6 +499,9 @@ class AuthorizationTest(AnnalistTestCase):
     def test_config_user(self):
         self.login_user("user_config")
         # try each function, test result
+        self.assertEqual(self.create_collection().status_code,      403)
+        self.assertEqual(self.remove_collection().status_code,      403)
+        #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
@@ -457,6 +527,9 @@ class AuthorizationTest(AnnalistTestCase):
     def test_create_user(self):
         self.login_user("user_create")
         # try each function, test result
+        self.assertEqual(self.create_collection().status_code,      403)
+        self.assertEqual(self.remove_collection().status_code,      403)
+        #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
@@ -482,6 +555,9 @@ class AuthorizationTest(AnnalistTestCase):
     def test_update_user(self):
         self.login_user("user_update")
         # try each function, test result
+        self.assertEqual(self.create_collection().status_code,      403)
+        self.assertEqual(self.remove_collection().status_code,      403)
+        #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
@@ -507,6 +583,9 @@ class AuthorizationTest(AnnalistTestCase):
     def test_delete_user(self):
         self.login_user("user_delete")
         # try each function, test result
+        self.assertEqual(self.create_collection().status_code,      403)
+        self.assertEqual(self.remove_collection().status_code,      403)
+        #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
@@ -532,6 +611,9 @@ class AuthorizationTest(AnnalistTestCase):
     def test_view_user(self):
         self.login_user("user_view")
         # try each function, test result
+        self.assertEqual(self.create_collection().status_code,      403)
+        self.assertEqual(self.remove_collection().status_code,      403)
+        #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
@@ -557,6 +639,9 @@ class AuthorizationTest(AnnalistTestCase):
     def test_default_user(self):
         self.login_user("other_user")
         # try each function, test result
+        self.assertEqual(self.create_collection().status_code,      403)
+        self.assertEqual(self.remove_collection().status_code,      403)
+        #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
@@ -581,6 +666,9 @@ class AuthorizationTest(AnnalistTestCase):
 
     def test_no_login_user(self):
         # try each function, test result
+        self.assertEqual(self.create_collection().status_code,      401)
+        self.assertEqual(self.remove_collection().status_code,      401)
+        #
         self.assertEqual(self.list_users().status_code,             401)
         self.assertEqual(self.new_user().status_code,               401)
         self.assertEqual(self.copy_user().status_code,              401)
@@ -602,6 +690,122 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_data().status_code,            401)
         self.assertEqual(self.delete_data_confirmed().status_code,  401)
         return
+
+    # Test site-level permissions
+
+    def test_site_admin_user(self):
+        self.login_user("user_site_admin")
+        # try each function, test result
+        self.assertEqual(self.create_collection().status_code,      302)
+        self.assertEqual(self.remove_collection().status_code,      200)
+        #
+        self.assertEqual(self.list_users().status_code,             200)
+        self.assertEqual(self.new_user().status_code,               302)
+        self.assertEqual(self.copy_user().status_code,              302)
+        self.assertEqual(self.edit_user().status_code,              302)
+        self.assertEqual(self.delete_user().status_code,            200)
+        self.assertEqual(self.delete_user_confirmed().status_code,  302)
+        #
+        self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.new_type().status_code,               302)
+        self.assertEqual(self.copy_type().status_code,              302)
+        self.assertEqual(self.edit_type().status_code,              302)
+        self.assertEqual(self.delete_type().status_code,            200)
+        self.assertEqual(self.delete_type_confirmed().status_code,  302)
+        #
+        self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.new_data().status_code,               302)
+        self.assertEqual(self.copy_data().status_code,              302)
+        self.assertEqual(self.edit_data().status_code,              302)
+        self.assertEqual(self.delete_data().status_code,            200)
+        self.assertEqual(self.delete_data_confirmed().status_code,  302)
+        return
+
+    def test_site_create_user(self):
+        self.login_user("user_site_create")
+        # try each function, test result
+        self.assertEqual(self.create_collection().status_code,      302)
+        self.assertEqual(self.remove_collection().status_code,      403)
+        #
+        self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.new_user().status_code,               403)
+        self.assertEqual(self.copy_user().status_code,              403)
+        self.assertEqual(self.edit_user().status_code,              403)
+        self.assertEqual(self.delete_user().status_code,            403)
+        self.assertEqual(self.delete_user_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.new_type().status_code,               403)
+        self.assertEqual(self.copy_type().status_code,              403)
+        self.assertEqual(self.edit_type().status_code,              403)
+        self.assertEqual(self.delete_type().status_code,            403)
+        self.assertEqual(self.delete_type_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.new_data().status_code,               302)
+        self.assertEqual(self.copy_data().status_code,              302)
+        self.assertEqual(self.edit_data().status_code,              403)
+        self.assertEqual(self.delete_data().status_code,            403)
+        self.assertEqual(self.delete_data_confirmed().status_code,  403)
+        return
+
+    def test_site_delete_user(self):
+        self.login_user("user_site_delete")
+        # try each function, test result
+        self.assertEqual(self.create_collection().status_code,      302)
+        self.assertEqual(self.remove_collection().status_code,      200)
+        #
+        self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.new_user().status_code,               403)
+        self.assertEqual(self.copy_user().status_code,              403)
+        self.assertEqual(self.edit_user().status_code,              403)
+        self.assertEqual(self.delete_user().status_code,            403)
+        self.assertEqual(self.delete_user_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.new_type().status_code,               403)
+        self.assertEqual(self.copy_type().status_code,              403)
+        self.assertEqual(self.edit_type().status_code,              403)
+        self.assertEqual(self.delete_type().status_code,            403)
+        self.assertEqual(self.delete_type_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.new_data().status_code,               302)
+        self.assertEqual(self.copy_data().status_code,              302)
+        self.assertEqual(self.edit_data().status_code,              403)
+        self.assertEqual(self.delete_data().status_code,            200)
+        self.assertEqual(self.delete_data_confirmed().status_code,  302)
+        return
+
+    def test_site_view_user(self):
+        self.login_user("user_site_view")
+        # try each function, test result
+        self.assertEqual(self.create_collection().status_code,      403)
+        self.assertEqual(self.remove_collection().status_code,      403)
+        #
+        self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.new_user().status_code,               403)
+        self.assertEqual(self.copy_user().status_code,              403)
+        self.assertEqual(self.edit_user().status_code,              403)
+        self.assertEqual(self.delete_user().status_code,            403)
+        self.assertEqual(self.delete_user_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.new_type().status_code,               403)
+        self.assertEqual(self.copy_type().status_code,              403)
+        self.assertEqual(self.edit_type().status_code,              403)
+        self.assertEqual(self.delete_type().status_code,            403)
+        self.assertEqual(self.delete_type_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.new_data().status_code,               403)
+        self.assertEqual(self.copy_data().status_code,              403)
+        self.assertEqual(self.edit_data().status_code,              403)
+        self.assertEqual(self.delete_data().status_code,            403)
+        self.assertEqual(self.delete_data_confirmed().status_code,  403)
+        return
+
+    # Test permissions effect on entity lists
 
     def test_list_all(self):
         # Only list things we can view/list
