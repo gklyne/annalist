@@ -8,7 +8,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 * [x] Default button on view edit form (and others) should be "Save".
     - See http://stackoverflow.com/questions/1963245/.
     - I found adding a duplicate hidden save button at the top of the <form> element did the trick.
-- [x] Authorization [#11](https://github.com/gklyne/annalist/issues/11)
+* [x] Authorization [#11](https://github.com/gklyne/annalist/issues/11)
     - [x] layout.py: add _user defs
     - [x] message.py
     - [x] entitytypeinfo.py
@@ -41,7 +41,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - clarify JSON-LD behaviour for treatment as set vs sequence
         - see: http://www.w3.org/TR/json-ld/#sets-and-lists
         - e.g. { '@list': ['a', 'b', ... ] }
-        - but note: JSON-LD default is to treat as set, ehich is OK for permissions:
+        - but note: JSON-LD default is to treat as set, which is OK for permissions:
         - [x] Rename TokenList -> TokenSet
     - [x] new field render option: annal:field_render_type: TokenSet (with value_type annal:TokenSet) 
     - [x] add test to render existing built-in user
@@ -57,7 +57,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] annalist-manager option to delete existing user
     - [x] site-wide permissions (e.g. to create collections) need to be site permissions
     - [x] implement delete user handler and tests - WONTDO: handled by generic entity delete
-- [ ] List view: option to hide columns on smaller screens (cf. permissions)
+- [x] List view: option to hide columns on smaller screens (cf. permissions)
 - [ ] Additional test cases [#8](https://github.com/gklyne/annalist/issues/8)
 - [ ] Scan code for all uses of 'annal:xxx' CURIES, and replace with ANNAL.CURIE.xxx references.  (See issue [#4](https://github.com/gklyne/annalist/issues/4))
 - [ ] Add field to view: check property URI is unique
