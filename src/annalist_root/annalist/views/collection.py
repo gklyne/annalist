@@ -43,7 +43,6 @@ class CollectionView(AnnalistGenericView):
         """
         Form for displaying the current collection 
         """
-        # @@TODO: later, read and redirect to the currently selected default view
         return HttpResponseRedirect(self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id))
 
 

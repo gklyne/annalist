@@ -19,6 +19,8 @@ from django.contrib.auth.models     import User
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client             import Client
 
+from utils.SuppressLoggingContext   import SuppressLogging
+
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
 
@@ -566,7 +568,33 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['options'], self.list_options)
         return
 
-    def test_get_edit_not_exists(self):
+    def test_get_view_no_collection(self):
+        u = entitydata_edit_url("edit", "no_collection", "_field", entity_id="entity1", view_id="Type_view")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertContains(r, "Collection no_collection does not exist", status_code=404)
+        return
+
+    def test_get_view_no_type(self):
+        u = entitydata_edit_url("edit", "testcoll", "no_type", entity_id="entity1", view_id="Type_view")
+        with SuppressLogging(logging.WARNING):
+            r = self.client.get(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertContains(r, "Record type no_type in collection testcoll does not exist", status_code=404)
+        return
+
+    def test_get_view_no_view(self):
+        u = entitydata_edit_url("edit", "testcoll", "_field", entity_id="entity1", view_id="no_view")
+        with SuppressLogging(logging.WARNING):
+            r = self.client.get(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertContains(r, "Record view no_view in collection testcoll does not exist", status_code=404)
+        return
+
+    def test_get_edit_no_entity(self):
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynone", view_id="Type_view")
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   404)

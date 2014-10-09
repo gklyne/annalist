@@ -26,6 +26,8 @@ from django.http                    import QueryDict
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client             import Client
 
+from utils.SuppressLoggingContext   import SuppressLogging
+
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
 from annalist.models.site           import Site
@@ -411,6 +413,32 @@ class EntityGenericListViewTest(AnnalistTestCase):
         list_choices = r.context['list_choices']
         self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
+        return
+
+    def test_get_list_no_collection(self):
+        u = entitydata_list_type_url("no_collection", "_field", list_id="Field_list")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertContains(r, "Collection no_collection does not exist", status_code=404)
+        return
+
+    def test_get_list_no_type(self):
+        u = entitydata_list_type_url("testcoll", "no_type", list_id="Field_list")
+        with SuppressLogging(logging.WARNING):
+            r = self.client.get(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertContains(r, "Record type no_type in collection testcoll does not exist", status_code=404)
+        return
+
+    def test_get_list_no_list(self):
+        u = entitydata_list_type_url("testcoll", "_field", list_id="no_list")
+        with SuppressLogging(logging.WARNING):
+            r = self.client.get(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertContains(r, "Record list no_list in collection testcoll does not exist", status_code=404)
         return
 
     #   -----------------------------------------------------------------------------

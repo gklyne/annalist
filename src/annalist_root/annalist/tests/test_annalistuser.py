@@ -21,6 +21,8 @@ from django.test                            import TestCase # cf. https://docs.d
 from django.test.client                     import Client
 from django.template                        import Template, Context
 
+from utils.SuppressLoggingContext           import SuppressLogging
+
 from annalist.identifiers                   import RDF, RDFS, ANNAL
 from annalist                               import layout
 from annalist.util                          import valid_id
@@ -411,13 +413,13 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
 
     def test_bad_user_permissions_form_rendering(self):
         # Test handling of permissions not stored in entity as a list of values
-        log.info("test_bad_user_permissions_form_rendering; expecting 'encode tokenlist' warning")
         create_user_permissions(self.testcoll, 
             "baduserperms",
             user_permissions="VIEW CREATE UPDATE DELETE"
             )
         u = entitydata_edit_url("edit", "testcoll", "_user", "baduserperms", view_id="User_view")
-        r = self.client.get(u)
+        with SuppressLogging(logging.WARNING):
+            r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="baduserperms")

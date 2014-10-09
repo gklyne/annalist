@@ -331,12 +331,31 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r['location'], TestHostUri + entitydata_list_all_url(coll_id="coll1"))
         return
 
+    def test_get_view_no_collection(self):
+        u = collection_view_url(coll_id="no_collection")
+        r = self.client.get(u)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        u1 = TestHostUri + entitydata_list_all_url(coll_id="no_collection")
+        self.assertEqual(r['location'], u1)
+        r1 = self.client.get(u1)
+        self.assertEqual(r1.status_code,   404)
+        self.assertEqual(r1.reason_phrase, "Not found")
+        return
+
     def test_get_edit(self):
         r = self.client.get(self.edit_url)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Collection coll1</title>")
         self.assertContains(r, "<h3>Customize collection coll1</h3>")
+        return
+
+    def test_get_edit_no_collection(self):
+        u = collection_edit_url(coll_id="no_collection")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
         return
 
     def test_get_edit_context(self):
