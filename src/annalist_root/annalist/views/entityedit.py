@@ -162,7 +162,7 @@ class GenericEntityEditView(AnnalistGenericView):
             { 'site_title':       viewinfo.sitedata["title"]
             , 'title':            viewinfo.collection[RDFS.CURIE.label]
             , 'action':           action
-            , 'edit_add_field':   viewinfo.recordview.get("annal:add_field", "yes")
+            , 'edit_add_field':   viewinfo.recordview.get(ANNAL.CURIE.add_field, "yes")
             , 'continuation_url': continuation_url
             , 'request_url':      self.get_request_path()
             , 'coll_id':          coll_id
@@ -225,7 +225,7 @@ class GenericEntityEditView(AnnalistGenericView):
         log.debug("entityview %r"%viewinfo.recordview.get_values())
         fieldlistmap = FieldListValueMap(
             viewinfo.collection, 
-            viewinfo.recordview.get_values()['annal:view_fields'],
+            viewinfo.recordview.get_values()[ANNAL.CURIE.view_fields],
             {'view': viewinfo.recordview, 'entity': entity}
             )
         entitymap.add_map_entry(fieldlistmap)
@@ -237,7 +237,7 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         # @@TODO: Possibly create FieldValueMap and return map_entity_to_context value? 
         #         or extract this logic and share?
-        field_description = FieldDescription(viewinfo.collection, { 'annal:field_id': "View_choice" }, None)
+        field_description = FieldDescription(viewinfo.collection, { ANNAL.CURIE.field_id: "View_choice" }, None)
         entityvals        = { field_description['field_property_uri']: viewinfo.view_id }
         options           = field_description['field_choices']
         return bound_field(field_description, entityvals, options)
@@ -293,9 +293,9 @@ class GenericEntityEditView(AnnalistGenericView):
                 self.add_entity_field(add_field_desc, entity)
         entityvals  = get_entity_values(viewinfo, entity, entity_id)
         if viewinfo.action == "copy":
-            entityvals.pop('annal:uri')
+            entityvals.pop(ANNAL.CURIE.uri)
         context_extra_values = (
-            { 'edit_add_field':     viewinfo.recordview.get("annal:add_field", "yes")
+            { 'edit_add_field':     viewinfo.recordview.get(ANNAL.CURIE.add_field, "yes")
             , 'continuation_url':   continuation_url
             , 'request_url':        self.get_request_path()
             , 'coll_id':            coll_id

@@ -222,7 +222,7 @@ class DisplayInfo(object):
         list_id = None
         if type_id:
             if self.entitytypeinfo.recordtype:
-                list_id = self.entitytypeinfo.recordtype.get("annal:type_list", None)
+                list_id = self.entitytypeinfo.recordtype.get(ANNAL.CURIE.type_list, None)
             else:
                 log.warning("DisplayInfo.get_type_list_id no type data for %s"%(type_id))
         return list_id
@@ -244,10 +244,10 @@ class DisplayInfo(object):
         return list_id
 
     def get_list_view_id(self):
-        return self.recordlist.get('annal:default_view', None) or "Default_view"
+        return self.recordlist.get(ANNAL.CURIE.default_view, None) or "Default_view"
 
     def get_list_type_id(self):
-        return self.recordlist.get('annal:default_type', None) or "Default_type"
+        return self.recordlist.get(ANNAL.CURIE.default_type, None) or "Default_type"
 
     def check_collection_entity(self, entity_id, entity_type, msg, continuation_url={}):
         """
@@ -317,7 +317,7 @@ class DisplayInfo(object):
         view_id = None
         if self.type_id:
             if self.entitytypeinfo.recordtype:
-                view_id  = self.entitytypeinfo.recordtype.get("annal:type_view", None)
+                view_id  = self.entitytypeinfo.recordtype.get(ANNAL.CURIE.type_view, None)
             else:
                 log.warning("DisplayInfo.get_type_view_id: no type data for %s"%(self.type_id))
         return view_id

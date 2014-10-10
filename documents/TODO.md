@@ -57,8 +57,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] annalist-manager option to delete existing user
     - [x] site-wide permissions (e.g. to create collections) need to be site permissions
     - [x] implement delete user handler and tests - WONTDO: handled by generic entity delete
-- [x] List view: option to hide columns on smaller screens (cf. permissions)
-- [x] Additional test cases [#8](https://github.com/gklyne/annalist/issues/8)
+* [x] List view: option to hide columns on smaller screens (cf. permissions)
+* [x] Additional test cases [#8](https://github.com/gklyne/annalist/issues/8)
     - [x] Missing resource error reporting in:
         - [x] annalist/views/collection.py (missing collection)
         - [x] annalist/views/recordtype.py (missing type)

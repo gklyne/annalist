@@ -104,12 +104,12 @@ class EntityGenericListView(AnnalistGenericView):
         log.debug("entitylist %r"%listinfo.recordlist.get_values())
         fieldlistmap = FieldListValueMap(
             listinfo.collection, 
-            listinfo.recordlist.get_values()['annal:list_fields'],
+            listinfo.recordlist.get_values()[ANNAL.CURIE.list_fields],
             {'list': listinfo.recordlist}
             )
         entitymap.add_map_entry(fieldlistmap)  # one-off for access to field headings
         entitymap.add_map_entry(
-            GroupRepeatMap(c='entities', e='annal:list_entities', g=[fieldlistmap])
+            GroupRepeatMap(c='entities', e=ANNAL.CURIE.list_entities, g=[fieldlistmap])
             )
         return entitymap
 
@@ -125,7 +125,7 @@ class EntityGenericListView(AnnalistGenericView):
             return listinfo.http_response
         log.debug("list_id %s"%listinfo.list_id)
         # Prepare list and entity IDs for rendering form
-        selector    = listinfo.recordlist.get_values().get('annal:list_entity_selector', "")
+        selector    = listinfo.recordlist.get_values().get(ANNAL.CURIE.list_entity_selector, "")
         search_for  = request.GET.get('search', "")
         user_perms  = self.get_permissions(listinfo.collection)
         entity_list = (
@@ -134,7 +134,7 @@ class EntityGenericListView(AnnalistGenericView):
                     user_perms, type_id=type_id, context=listinfo.recordlist, search=search_for
                     )
             )
-        entityval = { 'annal:list_entities': [ get_entity_values(listinfo, e) for e in entity_list ] }
+        entityval = { ANNAL.CURIE.list_entities: [ get_entity_values(listinfo, e) for e in entity_list ] }
         # Set up initial view context
         entityvaluemap = self.get_list_entityvaluemap(listinfo)
         context_extra_values = (
@@ -146,7 +146,7 @@ class EntityGenericListView(AnnalistGenericView):
             , 'search_for':             search_for
             , 'list_choices':           self.get_list_choices_field(listinfo)
             , 'collection_view':        self.view_uri("AnnalistCollectionView", coll_id=coll_id)
-            , 'default_view_id':        listinfo.recordlist['annal:default_view']
+            , 'default_view_id':        listinfo.recordlist[ANNAL.CURIE.default_view]
             , 'default_view_enable':    ("" if list_id else 'disabled="disabled"')
             })
         listcontext = entityvaluemap.map_value_to_context(entityval,
@@ -343,7 +343,7 @@ class EntityGenericListView(AnnalistGenericView):
         #         or extract this logic and share?  See also entityedit view choices
         field_description = FieldDescription(
             listinfo.collection, 
-            {'annal:field_id': "List_choice", 'annal:field_placement': "small:0,12;medium:5,5"},
+            {ANNAL.CURIE.field_id: "List_choice", ANNAL.CURIE.field_placement: "small:0,12;medium:5,5"},
             {}
             )
         entityvals        = { field_description['field_property_uri']: listinfo.list_id }

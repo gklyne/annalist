@@ -14,6 +14,8 @@ from collections    import OrderedDict, namedtuple
 
 from django.conf                    import settings
 
+from annalist.identifiers           import RDFS, ANNAL
+
 from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.entity         import EntityRoot
 
@@ -128,7 +130,7 @@ class bound_field(object):
             return self.entity_type_link+self.get_continuation_param()
         elif name == "field_value":
             field_val = None
-            if self._key == "annal:type":
+            if self._key == ANNAL.CURIE.type:
                 # @@TODO: remove annal:Type hack when proper selection from enumerated 
                 #         entities has been implemented.
                 #

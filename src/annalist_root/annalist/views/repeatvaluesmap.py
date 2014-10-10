@@ -18,6 +18,8 @@ log = logging.getLogger(__name__)
 
 import json
 
+from annalist.identifiers           import RDFS, ANNAL
+
 class RepeatValuesMap(object):
     """
     Define an entry in an entity value mapping table corresponding to a
@@ -85,7 +87,7 @@ class RepeatValuesMap(object):
             #   }
             repeat_index  = 0
             for repeatedval in entityval[self.e]:
-                if "annal:repeat_id" in repeatedval:    # special case test
+                if ANNAL.CURIE.repeat_id in repeatedval:    # special case test
                     fieldscontext = self.map_repeat_field_data_to_context(repeatedval)
                 else:
                     # log.info("RepeatValuesMap.map_entity_to_context: repeatedval %r"%repeatedval)

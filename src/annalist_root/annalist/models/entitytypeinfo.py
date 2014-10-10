@@ -305,7 +305,7 @@ class EntityTypeInfo(object):
         Failing that, returns system-wide default values.
         """
         values = (
-            { '@type':              ["annal:EntityData"]
+            { '@type':              [ANNAL.CURIE.EntityData]
             , ANNAL.CURIE.type_id:  self.type_id
             , RDFS.CURIE.label:     ""
             , RDFS.CURIE.comment:   ""

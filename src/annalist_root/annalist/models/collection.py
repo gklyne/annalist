@@ -71,11 +71,11 @@ class Collection(Entity):
             user_permissions=["VIEW"]
             ):
         user_values = (
-            { 'annal:type':             "annal:User"
-            , 'rdfs:label':             user_name
-            , 'rdfs:comment':           user_description
-            , 'annal:user_uri':         user_uri
-            , 'annal:user_permissions': user_permissions
+            { ANNAL.CURIE.type:             ANNAL.CURIE.User
+            , RDFS.CURIE.label:             user_name
+            , RDFS.CURIE.comment:           user_description
+            , ANNAL.CURIE.user_uri:         user_uri
+            , ANNAL.CURIE.user_permissions: user_permissions
             })
         user = AnnalistUser.create(self, user_id, user_values)
         return user
@@ -262,7 +262,7 @@ class Collection(Entity):
         """
         Set and save the default list to be displayed for the current collection.
         """
-        self["annal:default_list"] = list_id
+        self[ANNAL.CURIE.default_list] = list_id
         self._save()
         return
 
@@ -270,6 +270,6 @@ class Collection(Entity):
         """
         Return the default list to be displayed for the current collection.
         """
-        return self.get("annal:default_list", None)
+        return self.get(ANNAL.CURIE.default_list, None)
 
 # End.

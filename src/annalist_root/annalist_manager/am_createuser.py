@@ -27,11 +27,11 @@ from am_getargvalue                 import getarg, getargvalue, getsecret
 
 def create_user_permissions(site, user_id, user_uri, user_name, user_comment, user_permissions):
     user_values = (
-        { 'annal:type':             "annal:User"
-        , 'rdfs:label':             user_name
-        , 'rdfs:comment':           user_comment
-        , 'annal:user_uri':         "%s"%(user_uri)
-        , 'annal:user_permissions': user_permissions
+        { ANNAL.CURIE.type:             ANNAL.CURIE.User
+        , RDFS.CURIE.label:             user_name
+        , RDFS.CURIE.comment:           user_comment
+        , ANNAL.CURIE.user_uri:         "%s"%(user_uri)
+        , ANNAL.CURIE.user_permissions: user_permissions
         })
     user = AnnalistUser.create(site, user_id, user_values, use_altpath=True)
     return user

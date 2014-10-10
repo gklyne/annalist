@@ -17,6 +17,8 @@ log = logging.getLogger(__name__)
 
 from django.conf                        import settings
 
+from annalist.identifiers               import RDFS, ANNAL
+
 from annalist.views.fielddescription    import FieldDescription
 from annalist.views.fieldvaluemap       import FieldValueMap
 from annalist.views.repeatdescription   import RepeatDescription
@@ -49,18 +51,17 @@ class FieldListValueMap(object):
         self.fs = []
         for f in fields:
             # log.info("\n********\nFieldListValueMap: field %r\n*********"%(f))
-            if 'annal:field_id' in f:
+            if ANNAL.CURIE.field_id in f:
                 field_context = FieldDescription(coll, f, view_context)
                 log.debug("FieldListValueMap: field_id %s, field_name %s"%
                     (field_context['field_id'], field_context['field_name'])
                     )
                 self.fd.append(field_context.get_structure_description())
                 self.fs.append(FieldValueMap(f=field_context))
-            elif 'annal:repeat_id' in f:
+            elif ANNAL.CURIE.repeat_id in f:
                 repeat_context  = RepeatDescription(f)  # For repeat controls, button labels, etc.
-                repeatfieldsmap = FieldListValueMap(coll, f['annal:repeat'], view_context)
+                repeatfieldsmap = FieldListValueMap(coll, f[ANNAL.CURIE.repeat], view_context)
                 repeatvaluesmap = RepeatValuesMap(repeat=repeat_context, fields=repeatfieldsmap)
-                # log.info("\n********\nRepeatValuesMap: repeat_id %s, %r"%(f['annal:repeat_id'], repeatvaluesmap))
                 self.fd.append(repeatvaluesmap.get_structure_description())
                 self.fs.append(repeatvaluesmap)
             else:
