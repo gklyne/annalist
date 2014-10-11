@@ -525,6 +525,7 @@ def recordview_view_form_data(
         view_id=None, orig_id=None, 
         action=None, cancel=None,
         view_record_type="",
+        extra_field=None,       # Extra field id for some tests (e.g. dup property uri)
         add_field=None,         # True for add field option
         remove_fields=None,     # List of field numbers to remove (as strings)
         update="RecordView"):
@@ -573,6 +574,12 @@ def recordview_view_form_data(
         form_data_dict['action']        = action
     if view_record_type:
         form_data_dict['record_type']   = view_record_type
+    if extra_field:
+        # Insert extra field with supplied Id
+        form_data_dict['View_fields__5__repeat_fields_data'] = form_data_dict['View_fields__4__repeat_fields_data']
+        del form_data_dict['View_fields__4__repeat_fields_data']
+        form_data_dict['View_fields__4__Field_id']        = extra_field
+        form_data_dict['View_fields__4__Field_placement'] = "small:0,12"
     if cancel:
         form_data_dict['cancel']        = "Cancel"
     elif add_field:

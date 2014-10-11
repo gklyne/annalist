@@ -95,5 +95,7 @@ NO_FIELD_SELECTED           = "No field(s) selected"
 ENTITY_MESSAGE_LABEL        = "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
 ENTITY_DEFAULT_LABEL        = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
 ENTITY_DEFAULT_COMMENT      = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
+VIEW_DESCRIPTION_HEADING    = "Problem with view description"
+VIEW_PROPERTY_DUPLICATE     = "Field %(field_id)s repeats use of property %(property_uri)s in view"
 
 # End.

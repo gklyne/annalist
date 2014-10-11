@@ -520,6 +520,7 @@ class GenericEntityEditView(AnnalistGenericView):
             ( action == "edit" ) and
             ( (entity_id != orig_entity_id) or (entity_type_id != orig_entity_type_id) )
             )
+
         # Check original parent exists (still)
         #@@ TODO: unless this is a "new" action
         typeinfo    = viewinfo.entitytypeinfo
@@ -530,6 +531,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 error_head=messages['parent_heading'],
                 error_message=messages['parent_missing']
                 )
+
         # Determine new parent for saved entity
         if entity_type_id != orig_entity_type_id:
             # log.info("new_typeinfo: entity_type_id %s"%(entity_type_id))
@@ -541,6 +543,8 @@ class GenericEntityEditView(AnnalistGenericView):
         else:
             new_typeinfo = typeinfo
             new_parent   = orig_parent
+        # log.info("new_parent%r"%(new_parent))
+
         # Check existence of entity to save according to action performed
         if (action in ["new", "copy"]) or entity_id_changed:
             if typeinfo.entityclass.exists(new_parent, entity_id):
@@ -558,7 +562,8 @@ class GenericEntityEditView(AnnalistGenericView):
                     error_head=messages['entity_heading'],
                     error_message=messages['entity_not_exists']
                     )
-        # Create/update data now
+
+        # Assemble updated values for storage
         # Note: form data is applied as update to original entity data so that
         # values not in view are preserved.
         entity_values  = orig_entity.get_values() if orig_entity else {}
@@ -575,7 +580,27 @@ class GenericEntityEditView(AnnalistGenericView):
         entity_values[ANNAL.CURIE.type]    = new_typeinfo.entityclass._entitytype
         # log.info("orig_entity values%r"%(entity_values))
         # log.info("entity_values%r"%(entity_values))
-        # log.info("new_parent%r"%(new_parent))
+
+        # If saving view description, ensure all property URIs are unique
+        #
+        # @@TODO: this is somehwat ad hoc - is there a better way?
+        # The problem this avoids is that multiple fields with the same property URI would 
+        # be handled confusingly by the view editing logic.
+        if viewinfo.view_id == "View_view":
+            properties = set()
+            for view_field in entity_values[ANNAL.CURIE.view_fields]:
+                field_id = view_field[ANNAL.CURIE.field_id]
+                field    = RecordField.load(viewinfo.collection, field_id, altparent=viewinfo.site)
+                property_uri = field[ANNAL.CURIE.property_uri]
+                if property_uri in properties:
+                    return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
+                        error_head=message.VIEW_DESCRIPTION_HEADING,
+                        error_message=message.VIEW_PROPERTY_DUPLICATE%
+                          { 'field_id':field_id, 'property_uri': property_uri}
+                        )
+                properties.add(property_uri)
+
+        # Create/update stored data now
         new_typeinfo.entityclass.create(new_parent, entity_id, entity_values)
         # Remove old entity if renameoperation
         if entity_id_changed:

@@ -64,8 +64,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [x] annalist/views/recordtype.py (missing type)
         - [x] annalist/views/genericlist.py (missing collection, type, list description)
         - [x] annalist/views/genericedit.py (missing collection, type, view description, entity)
-- [ ] Scan code for all uses of 'annal:xxx' CURIES, and replace with ANNAL.CURIE.xxx references.  (See issue [#4](https://github.com/gklyne/annalist/issues/4))
-- [ ] Add field to view: check property URI is unique
+- [x] Scan code for all uses of 'annal:xxx' CURIES, and replace with ANNAL.CURIE.xxx references.  (See issue [#4](https://github.com/gklyne/annalist/issues/4))
+- [x] Add field to view: check property URI is unique
 - [ ] Don't store host name in entity URL fields (this is just a start - see issues [#4](https://github.com/gklyne/annalist/issues/4), [#32](https://github.com/gklyne/annalist/issues/32))
 
 (Release here?)

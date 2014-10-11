@@ -928,6 +928,19 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
+    def test_post_copy_view_dup_property_uri(self):
+        f = recordview_view_form_data(
+            view_id="copyview", orig_id="Default_view", action="copy", extra_field="Entity_comment"
+            )
+        u = entitydata_edit_url("copy", "testcoll", "_view", entity_id="Default_view", view_id="View_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # log.info(r.content)
+        self.assertContains(r, "<h3>Problem with view description</h3>")
+        self.assertContains(r, "<p>Field Entity_comment repeats use of property rdfs:comment in view</p>")
+        return
+
     #   -------- edit view --------
 
     def test_post_edit_view(self):
