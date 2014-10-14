@@ -46,7 +46,7 @@ class EntityData(Entity):
         """
         super(EntityData, self).__init__(parent, entity_id, altparent=altparent, use_altpath=use_altpath)
         self._entitytypeid  = self._entitytypeid or parent.get_id()
-        self._entityviewuri = parent._entityurl+self._entityview%{'id': entity_id}
+        self._entityviewuri = parent._entityurl+self._entityview%{'type_id': self._entitytypeid, 'id': entity_id}
         log.debug("EntityData: _entityviewuri %s"%(self._entityviewuri))
         return
 
