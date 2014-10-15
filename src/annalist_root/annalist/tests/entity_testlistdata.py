@@ -25,7 +25,11 @@ from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
-from entity_testutils           import collection_dir, site_title
+from entity_testutils           import (
+    collection_dir, 
+    site_title, 
+    collection_entity_view_url
+    )
 from entity_testentitydata      import entitydata_list_type_url
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -59,13 +63,18 @@ def recordlist_url(coll_id, list_id):
     """
     URI for record list description data; also view using default entity view
     """
-    viewname = "AnnalistEntityAccessView"
-    kwargs   = {'coll_id': coll_id, "type_id": "_list"}
-    if valid_id(list_id):
-        kwargs.update({'entity_id': list_id})
-    else:
-        kwargs.update({'entity_id': "___"})
-    return reverse(viewname, kwargs=kwargs)
+    if not valid_id(list_id):
+        list_id = "___"
+    return collection_entity_view_url(coll_id=coll_id, type_id="_list", entity_id=list_id)
+    #@@
+    # viewname = "AnnalistEntityAccessView"
+    # kwargs   = {'coll_id': coll_id, "type_id": "_list"}
+    # if valid_id(list_id):
+    #     kwargs.update({'entity_id': list_id})
+    # else:
+    #     kwargs.update({'entity_id': "___"})
+    # return reverse(viewname, kwargs=kwargs)
+    #@@
 
 def recordlist_edit_url(action=None, coll_id=None, list_id=None):
     """
@@ -137,7 +146,7 @@ def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="Rec
 def recordlist_values(
         coll_id="testcoll", list_id="testlist", list_uri=None,
         update="RecordList", hosturi=TestHostUri):
-    list_url = hosturi + recordlist_url(coll_id, list_id)
+    list_url = recordlist_url(coll_id, list_id)
     if not list_uri:
         list_uri = list_url
     d = recordlist_create_values(coll_id, list_id, update=update).copy()

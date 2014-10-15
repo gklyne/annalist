@@ -30,6 +30,7 @@ from entity_testutils import (
     collection_dir, 
     site_view_url,
     collection_edit_url,
+    collection_entity_view_url,
     site_title
     )
 from tests import (
@@ -64,9 +65,12 @@ def entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
     """
     URI for entity data; also view using default entity view
     """
-    viewname = "AnnalistEntityAccessView"
-    kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
-    return reverse(viewname, kwargs=kwargs)
+    return collection_entity_view_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+    #@@
+    # viewname = "AnnalistEntityAccessView"
+    # kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
+    # return reverse(viewname, kwargs=kwargs)
+    #@@
 
 def entitydata_edit_url(action=None, coll_id="testcoll", type_id=None, entity_id=None, view_id="Default_view"):
     viewname = ( 
@@ -575,6 +579,7 @@ def default_fields(coll_id=None, type_id=None, entity_id=None, width=12):
     def_comment     = default_comment(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
     def_label_esc   = def_label.replace("'", "&#39;")
     def_comment_esc = def_comment.replace("'", "&#39;")
+    def_entity_url  = collection_entity_view_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
     def def_fields(width=12):
         fields = layout_classes(width=width)
         fields.update(
@@ -582,6 +587,7 @@ def default_fields(coll_id=None, type_id=None, entity_id=None, width=12):
             , 'default_comment':     def_comment
             , 'default_label_esc':   def_label_esc
             , 'default_comment_esc': def_comment_esc
+            , 'default_entity_url':  def_entity_url
             })
         return fields
     return def_fields

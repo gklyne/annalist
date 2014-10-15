@@ -37,6 +37,7 @@ from entity_testutils               import (
     site_view_url, 
     collection_view_url, 
     collection_edit_url, 
+    collection_entity_view_url,
     continuation_url_param,
     collection_value_keys, collection_create_values, collection_values,
     site_title,

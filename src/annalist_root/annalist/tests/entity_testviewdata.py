@@ -25,7 +25,11 @@ from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
-from entity_testutils           import collection_dir, site_title
+from entity_testutils           import (
+    collection_dir, 
+    site_title, 
+    collection_entity_view_url
+    )
 from entity_testentitydata      import entitydata_list_type_url
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -59,13 +63,18 @@ def recordview_url(coll_id, view_id):
     """
     URI for record view description data; also view using default entity view
     """
-    viewname = "AnnalistEntityAccessView"
-    kwargs   = {'coll_id': coll_id, "type_id": "_view"}
-    if valid_id(view_id):
-        kwargs.update({'entity_id': view_id})
-    else:
-        kwargs.update({'entity_id': "___"})
-    return reverse(viewname, kwargs=kwargs)
+    if not valid_id(view_id):
+        view_id = "___"
+    return collection_entity_view_url(coll_id=coll_id, type_id="_view", entity_id=view_id)
+    #@@
+    # viewname = "AnnalistEntityAccessView"
+    # kwargs   = {'coll_id': coll_id, "type_id": "_view"}
+    # if valid_id(view_id):
+    #     kwargs.update({'entity_id': view_id})
+    # else:
+    #     kwargs.update({'entity_id': "___"})
+    # return reverse(viewname, kwargs=kwargs)
+    #@@
 
 def recordview_edit_url(action=None, coll_id=None, view_id=None):
     """
@@ -149,7 +158,7 @@ def recordview_values(
     d = recordview_create_values(
         coll_id, view_id, update=update, field3_placement=field3_placement
         ).copy()
-    view_url = hosturi + recordview_url(coll_id, view_id)
+    view_url = recordview_url(coll_id, view_id)
     if not view_uri:
         view_uri = view_url
     d.update(

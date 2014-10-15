@@ -39,6 +39,7 @@ from AnnalistTestCase                   import AnnalistTestCase
 from entity_testutils                   import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
+    collection_entity_view_url,
     collection_create_values,
     render_select_options,
     create_test_user
@@ -433,13 +434,13 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        view_url = entity_url(type_id="_list", entity_id="00000001")
+        list_url = collection_entity_view_url(coll_id="testcoll", type_id="_list", entity_id="00000001")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_list")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+view_url)
-        self.assertEqual(r.context['entity_uri'],       TestHostUri+view_url)
+        self.assertEqual(r.context['entity_url'],       list_url)
+        self.assertEqual(r.context['entity_uri'],       list_url)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -449,8 +450,8 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_id="00000001",
             list_label=default_label("testcoll", "_list", "00000001"),
             list_help=default_comment("testcoll", "_list", "00000001"),
-            list_url=TestHostUri + recordlist_url("testcoll", "00000001"),
-            list_uri=TestHostUri + recordlist_url("testcoll", "00000001"),
+            list_url=list_url,
+            list_uri=list_url,
             list_type="List",
             list_default_type="Default_type",
             list_default_view="Default_view",
@@ -464,12 +465,12 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        list_url = recordlist_url("testcoll", "Default_list")
+        list_url = collection_entity_view_url(coll_id="testcoll", type_id="_list", entity_id="Default_list")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_list")
         self.assertEqual(r.context['entity_id'],        "Default_list")
         self.assertEqual(r.context['orig_id'],          "Default_list")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+list_url)
+        self.assertEqual(r.context['entity_url'],       list_url)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
@@ -480,7 +481,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_id="Default_list",
             list_label="List entities",
             list_help="Default list of entities of given type",
-            list_url=TestHostUri+list_url,
+            list_url=list_url,
             list_uri=None
             )
         return
@@ -506,12 +507,12 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        list_url = recordlist_url("testcoll", "Default_list")
+        list_url = collection_entity_view_url(coll_id="testcoll", type_id="_list", entity_id="Default_list")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_list")
         self.assertEqual(r.context['entity_id'],        "Default_list")
         self.assertEqual(r.context['orig_id'],          "Default_list")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+list_url)
+        self.assertEqual(r.context['entity_url'],       list_url)
         self.assertEqual(r.context['entity_uri'],       "annal:display/Default_list")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "")
@@ -522,7 +523,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_id="Default_list",
             list_label="List entities",
             list_help="Default list of entities of given type",
-            list_url=TestHostUri+list_url,
+            list_url=list_url,
             list_uri="annal:display/Default_list"
             )
         return
@@ -553,12 +554,12 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        list_url = recordlist_url("testcoll", "Default_list")
+        list_url = collection_entity_view_url(coll_id="testcoll", type_id="_list", entity_id="Default_list")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_list")
         self.assertEqual(r.context['entity_id'],        "Default_list")
         self.assertEqual(r.context['orig_id'],          "Default_list")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+list_url)
+        self.assertEqual(r.context['entity_url'],       list_url)
         self.assertEqual(r.context['entity_uri'],       "annal:display/Default_list")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "")
@@ -569,7 +570,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_id="Default_list",
             list_label="List entities",
             list_help="Default list of entities of given type",
-            list_url=TestHostUri+list_url,
+            list_url=list_url,
             list_uri="annal:display/Default_list"
             )
         return

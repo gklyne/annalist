@@ -40,6 +40,7 @@ from AnnalistTestCase                   import AnnalistTestCase
 from entity_testutils                   import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
+    collection_entity_view_url,
     collection_create_values,
     create_test_user
     )
@@ -384,7 +385,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="Type_uri" 
                                placeholder="(URI)"
-                               value="http://test.example.com/testsite/c/testcoll/d/_type/00000001/"/>
+                               value="%(default_entity_url)s"/>
                     </div>
                 </div>
             </div>
@@ -421,13 +422,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        type_url = entity_url(type_id="_type", entity_id="00000001")
+        type_url = collection_entity_view_url(coll_id="testcoll", type_id="_type", entity_id="00000001")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+type_url)
-        self.assertEqual(r.context['entity_uri'],       TestHostUri+type_url)
+        self.assertEqual(r.context['entity_url'],       type_url)
+        self.assertEqual(r.context['entity_uri'],       type_url)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -435,7 +436,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="00000001",
             type_label=default_label("testcoll", "_type", "00000001"),
             type_help=default_comment("testcoll", "_type", "00000001"),
-            type_uri=TestHostUri+type_url
+            type_uri=type_url
             )
         return
 
@@ -445,12 +446,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        type_url = entity_url(type_id="_type", entity_id="Default_type")
+        type_url = collection_entity_view_url(coll_id="testcoll", type_id="_type", entity_id="Default_type")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         self.assertEqual(r.context['entity_id'],        "Default_type")
         self.assertEqual(r.context['orig_id'],          "Default_type")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + type_url)
+        self.assertEqual(r.context['entity_url'],       type_url)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
@@ -481,12 +482,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        type_url = entity_url(type_id="_type", entity_id="Default_type")
+        type_url = collection_entity_view_url(coll_id="testcoll", type_id="_type", entity_id="Default_type")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         self.assertEqual(r.context['entity_id'],        "Default_type")
         self.assertEqual(r.context['orig_id'],          "Default_type")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + type_url)
+        self.assertEqual(r.context['entity_url'],       type_url)
         self.assertEqual(r.context['entity_uri'],       "annal:Default_type")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "")

@@ -31,9 +31,6 @@ from annalist.models.site                   import Site
 from annalist.models.sitedata               import SiteData
 from annalist.models.collection             import Collection
 from annalist.models.annalistuser           import AnnalistUser
-# from annalist.models.recordtype             import AnnalistUser
-# from annalist.models.recordview             import RecordView
-# from annalist.models.recordlist             import RecordList
 
 from annalist.views.annalistuserdelete      import AnnalistUserDeleteConfirmedView
 from annalist.views.fields.render_tokenset  import RenderTokenSet
@@ -45,6 +42,7 @@ from AnnalistTestCase                       import AnnalistTestCase
 from entity_testutils                       import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
+    collection_entity_view_url,
     collection_create_values,
     create_user_permissions,
     create_test_user
@@ -193,7 +191,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertTrue(AnnalistUser.exists(self.testcoll, user_id))
         t = AnnalistUser.load(self.testcoll, user_id)
         self.assertEqual(t.get_id(), user_id)
-        self.assertEqual(t.get_view_url(), TestHostUri + annalistuser_url("testcoll", user_id))
+        self.assertEqual(t.get_view_url_path(), annalistuser_url("testcoll", user_id))
         v = annalistuser_values(
             coll_id="testcoll", user_id=user_id,
             user_name="User %s"%user_id,

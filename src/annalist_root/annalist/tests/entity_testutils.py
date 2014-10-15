@@ -63,6 +63,20 @@ def collection_view_url(coll_id="testcoll"):
 def collection_edit_url(coll_id="testcoll"):
     return reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
 
+def collection_entity_view_url(coll_id="testcoll", type_id=None, entity_id=None):
+    """
+    Return URL for entity belonging to some collection.
+
+    This matches the 'annal:url' value that is stored in saved entity data.
+
+    @TODO: update this testing function when final form of entity URIs is
+           determined, per https://github.com/gklyne/annalist/issues/32 
+    """
+    return reverse(
+        "AnnalistEntityAccessView", 
+        kwargs={'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
+        )
+
 def continuation_url_param(uri, prev_cont=None):
     if prev_cont:
         uri += "?" + prev_cont
@@ -130,8 +144,8 @@ def collection_values(coll_id, update="Collection", hosturi=TestHostUri):
         , 'annal:id':       coll_id
         # , 'annal:type_id':  "_coll"
         , 'annal:type':     "annal:Collection"
-        , 'annal:url':      hosturi + collection_view_url(coll_id=coll_id)
-        , 'annal:uri':      hosturi + collection_view_url(coll_id=coll_id)
+        , 'annal:url':      collection_view_url(coll_id=coll_id)
+        , 'annal:uri':      collection_view_url(coll_id=coll_id)
         })
     return d
 

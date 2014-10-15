@@ -32,6 +32,7 @@ from tests import (
 from entity_testutils import (
     collection_dir, 
     collection_edit_url,
+    collection_entity_view_url,
     site_title
     )
 
@@ -61,15 +62,20 @@ def recordtype_coll_url(site, coll_id="testcoll", type_id="testtype"):
 
 def recordtype_url(coll_id="testcoll", type_id="testtype"):
     """
-    URI for record type description data; also view using default entity view
+    URL for record type description data; also view using default entity view
     """
-    viewname = "AnnalistEntityAccessView"
-    kwargs   = {'coll_id': coll_id, "type_id": "_type"}
-    if valid_id(type_id):
-        kwargs.update({'entity_id': type_id})
-    else:
-        kwargs.update({'entity_id': "___"})
-    return reverse(viewname, kwargs=kwargs)
+    if not valid_id(type_id):
+        type_id = "___"
+    return collection_entity_view_url(coll_id=coll_id, type_id="_type", entity_id=type_id)
+    #@@
+    # viewname = "AnnalistEntityAccessView"
+    # kwargs   = {'coll_id': coll_id, "type_id": "_type"}
+    # if valid_id(type_id):
+    #     kwargs.update({'entity_id': type_id})
+    # else:
+    #     kwargs.update({'entity_id': "___"})
+    # return reverse(viewname, kwargs=kwargs)
+    #@@
 
 def recordtype_edit_url(action=None, coll_id=None, type_id=None):
     """
@@ -127,7 +133,7 @@ def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="Rec
 def recordtype_values(
         coll_id="testcoll", type_id="testtype", type_uri=None,
         update="RecordType", hosturi=TestHostUri):
-    type_url = hosturi + recordtype_url(coll_id, type_id)
+    type_url = recordtype_url(coll_id=coll_id, type_id=type_id)
     if not type_uri:
         type_uri = type_url
     d = recordtype_create_values(coll_id, type_id, update=update).copy()
@@ -232,10 +238,11 @@ def recordtype_entity_view_context_data(
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_type")
         })
     if type_id:
+        type_url = recordtype_url(coll_id=coll_id, type_id=type_id)
         context_dict['fields'][0]['field_value'] = type_id
         context_dict['fields'][1]['field_value'] = '%s %s/%s'%(update, coll_id, type_id)
         context_dict['fields'][2]['field_value'] = '%s help for %s in collection %s'%(update, type_id, coll_id)
-        context_dict['fields'][3]['field_value'] = TestBaseUri + "/c/%s/d/_type/%s/"%(coll_id, type_id)
+        context_dict['fields'][3]['field_value'] = type_url
         context_dict['orig_id']     = type_id
     if orig_id:
         context_dict['orig_id']     = orig_id
@@ -254,11 +261,12 @@ def recordtype_entity_view_form_data(
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_type")
         })
     if type_id:
+        type_url = recordtype_url(coll_id=coll_id, type_id=type_id)
         form_data_dict['entity_id']     = type_id
         form_data_dict['orig_id']       = type_id
         form_data_dict['Type_label']    = '%s %s/%s'%(update, coll_id, type_id)
         form_data_dict['Type_comment']  = '%s help for %s in collection %s'%(update, type_id, coll_id)
-        form_data_dict['Type_uri']      = TestBaseUri + "/c/%s/d/_type/%s/"%(coll_id, type_id)
+        form_data_dict['Type_uri']      = type_url
         form_data_dict['Type_view']     = "Default_view"
         form_data_dict['Type_list']     = "Default_list"
         form_data_dict['orig_type']     = "_type"

@@ -24,18 +24,11 @@ from annalist.util                      import valid_id
 from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 
 from entity_testutils                   import (
-    site_dir, collection_dir
-    # site_view_url, collection_edit_url, 
-    # collection_create_values
+    site_dir, collection_dir,
+    collection_entity_view_url
     )
 from entity_testentitydata          import (
-    # recorddata_dir,  entitydata_dir,
-    # entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_type_url, entitydata_list_all_url,
-    # entitydata_value_keys, entitydata_create_values, entitydata_values, 
-    # entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
-    # entitylist_form_data,
-    # get_site_lists
     )
 
 
@@ -67,13 +60,18 @@ def annalistuser_url(coll_id="testcoll", user_id="testuser"):
     """
     URI for record type description data; also view using default entity view
     """
-    viewname = "AnnalistEntityAccessView"
-    kwargs   = {'coll_id': coll_id, "type_id": "_user"}
-    if valid_id(user_id):
-        kwargs.update({'entity_id': user_id})
-    else:
-        kwargs.update({'entity_id': "___"})
-    return reverse(viewname, kwargs=kwargs)
+    if not valid_id(user_id):
+        user_id = "___"
+    return collection_entity_view_url(coll_id=coll_id, type_id="_user", entity_id=user_id)
+    #@@
+    # viewname = "AnnalistEntityAccessView"
+    # kwargs   = {'coll_id': coll_id, "type_id": "_user"}
+    # if valid_id(user_id):
+    #     kwargs.update({'entity_id': user_id})
+    # else:
+    #     kwargs.update({'entity_id': "___"})
+    # return reverse(viewname, kwargs=kwargs)
+    #@@
 
 def annalistuser_edit_url(action=None, coll_id=None, user_id=None):
     """
@@ -143,7 +141,7 @@ def annalistuser_values(
     """
     Values filled in automatically when a user record is created
     """
-    user_url = hosturi + annalistuser_url(coll_id, user_id)
+    user_url = annalistuser_url(coll_id, user_id)
     d = annalistuser_create_values(coll_id, user_id, user_name, user_uri, user_permissions)
     d.update(
         { 'annal:id':       user_id

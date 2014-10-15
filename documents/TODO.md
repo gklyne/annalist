@@ -67,6 +67,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Scan code for all uses of 'annal:xxx' CURIES, and replace with ANNAL.CURIE.xxx references.  (See issue [#4](https://github.com/gklyne/annalist/issues/4))
 - [x] Add field to view: check property URI is unique
 - [ ] Don't store host name in entity URL fields (this is just a start - see issues [#4](https://github.com/gklyne/annalist/issues/4), [#32](https://github.com/gklyne/annalist/issues/32))
+- [ ] Investigate use of path-only references for copntinuation URIs
+    [ ] would need to resolve when generating Location: header field ...
+    [ ] ... or does Django handle that anyway?)
 
 (Release here?)
 
