@@ -189,6 +189,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
                       not (fid.startswith("Bib_") or special_field(fid))
             ])
         # log.info(self.field_options_no_bibentry)
+        # For checking Location: header values...
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_view")
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")

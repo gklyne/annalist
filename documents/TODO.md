@@ -67,9 +67,14 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Scan code for all uses of 'annal:xxx' CURIES, and replace with ANNAL.CURIE.xxx references.  (See issue [#4](https://github.com/gklyne/annalist/issues/4))
 - [x] Add field to view: check property URI is unique
 - [x] Don't store host name in entity URL fields (this is just a start - see issues [#4](https://github.com/gklyne/annalist/issues/4), [#32](https://github.com/gklyne/annalist/issues/32))
-- [ ] Investigate use of path-only references for copntinuation URIs
-    [ ] would need to resolve when generating Location: header field ...
-    [ ] ... or does Django handle that anyway?)
+- [x] Investigate use of path-only references for copntinuation URIs
+    - [x] would need to resolve when generating Location: header field ...
+    - It turns out that instances of continuation URI with hostname are all used for testing Location: header responses, hence there's nothing to do (except add a few comments).
+- [ ] set base directory for running tests so that annalist_root doesn't appear in test names
+- [ ] Documentation of authorization controls
+- [ ] Test creation of cruising log (again) using real log data
+- [ ] Create some outline user documentation
+- [ ] record new demo screencast
 
 (Release here?)
 
@@ -83,13 +88,14 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
-- [ ] Think about how to handle change of email address (option to remove user from Django database?)
+- [ ] Use separate Django database for each configuration
+- [x] Think about how to handle change of email address (option to remove user from Django database?)
+    - annalist_manager now has deleteuser option
 - [ ] review use of template files vs. use of inline template text in class
     - [x] Need to support edit/view/item/head (NOT: probably via class inheritance structure)
     - [x] Inline template text should be more efficient as it avoids repeated reading of template files
     - [x] Inline template text keeps value mapping logic with template logic
     - [ ] Inline templates may be harder to style effectively; maybe read HTML from file on first use?
-- [ ] Use separate Django database for each configuration
 - [ ] Automated test suite for annalist_manager
     - [ ] annalist-manager initialize [ CONFIG ]
     - [ ] annalist-manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ]

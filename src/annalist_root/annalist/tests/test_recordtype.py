@@ -169,6 +169,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             [ lid for lid in self.testcoll.child_entity_ids(RecordList, self.testsite) 
                   if lid != "_initial_values"
             ])
+        # For checking Location: header values...
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_type")
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")

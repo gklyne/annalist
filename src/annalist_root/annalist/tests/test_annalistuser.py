@@ -168,6 +168,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
+        # For checking Location: header values...
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_user")
         # Login and permissions
         create_test_user(
