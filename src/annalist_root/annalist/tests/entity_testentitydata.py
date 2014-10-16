@@ -65,6 +65,8 @@ def entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
     """
     URI for entity data; also view using default entity view
     """
+    if not valid_id(entity_id):
+        entity_id = "___"
     return collection_entity_view_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
     #@@
     # viewname = "AnnalistEntityAccessView"
@@ -146,7 +148,7 @@ def entitydata_create_values(entity_id, update="Entity", coll_id="testcoll", typ
     """
     Data used when creating entity test data
     """
-    typeuri = hosturi + entity_url(coll_id, "_type", type_id)
+    typeuri = entity_url(coll_id, "_type", type_id)
     types   = [entitydata_type(type_id), typeuri]
     # log.info('entitydata_create_values: types %r'%(types,)) 
     return (
@@ -157,8 +159,8 @@ def entitydata_create_values(entity_id, update="Entity", coll_id="testcoll", typ
         })
 
 def entitydata_values(entity_id, update="Entity", coll_id="testcoll", type_id="testtype", hosturi=TestHostUri):
-    typeuri = hosturi + entity_url(coll_id, "_type", type_id)
-    dataurl = hosturi + entity_url(coll_id, type_id, entity_id)
+    typeuri = entity_url(coll_id, "_type", type_id)
+    dataurl = entity_url(coll_id, type_id, entity_id)
     d = entitydata_create_values(
         entity_id, update=update, coll_id=coll_id, type_id=type_id, hosturi=hosturi
         ).copy() #@@ copy needed here?
@@ -169,6 +171,7 @@ def entitydata_values(entity_id, update="Entity", coll_id="testcoll", type_id="t
         , 'annal:url':      dataurl
         , 'annal:uri':      dataurl
         })
+    # log.info("entitydata_values %r"%(d,))
     return d
 
 def entitydata_context_data(
@@ -367,7 +370,7 @@ def entitydata_default_view_form_data(
         action=None, cancel=None, update="Entity",
         add_view_field=None, use_view=None, 
         new_view=None, new_field=None, new_type=None):
-    # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
+    # log.info("entitydata_default_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (
         { 'Entity_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Entity_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
@@ -469,7 +472,7 @@ def entitydata_recordtype_view_context_data(
         context_dict['fields'][0]['field_value'] = entity_id
         context_dict['fields'][1]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
         context_dict['fields'][2]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
-        context_dict['fields'][3]['field_value'] = TestBaseUri + "/c/%s/d/%s/%s/"%("testcoll", "testtype", entity_id)
+        context_dict['fields'][3]['field_value'] = TestBasePath + "/c/%s/d/%s/%s/"%("testcoll", "testtype", entity_id)
         context_dict['orig_id']     = entity_id
     if orig_id:
         context_dict['orig_id']     = orig_id
@@ -491,10 +494,12 @@ def entitydata_recordtype_view_form_data(
         , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
         })
     if entity_id and type_id:
+        type_url = entity_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+        type_url = type_url.replace("___", entity_id)  # Preserve bad type in form data
         form_data_dict['entity_id']     = entity_id
         form_data_dict['Type_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Type_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
-        form_data_dict['Type_uri']      = TestBaseUri + "/c/%s/d/%s/%s/"%(coll_id, type_id, entity_id)
+        form_data_dict['Type_uri']      = type_url
         form_data_dict['orig_id']       = entity_id
     if type_id:
         form_data_dict['entity_type']   = type_id

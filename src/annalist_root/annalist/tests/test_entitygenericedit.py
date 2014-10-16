@@ -44,6 +44,7 @@ from entity_testutils               import (
     site_dir, collection_dir, 
     continuation_url_param,
     collection_edit_url,
+    collection_entity_view_url,
     site_title,
     render_select_options,
     create_test_user
@@ -115,6 +116,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     def _check_entity_data_values(self, entity_id, type_id="testtype", update="Entity", update_dict=None):
         "Helper function checks content of form-updated record type entry with supplied entity_id"
+        # log.info("_check_entity_data_values: type_id %s, entity_id %s"%(type_id, entity_id))
         typeinfo = EntityTypeInfo(self.testsite, self.testcoll, type_id)
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, entity_id))
         e = typeinfo.entityclass.load(typeinfo.entityparent, entity_id)
@@ -244,7 +246,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="Type_uri"
                                placeholder="(URI)"  
-                               value="http://test.example.com/testsite/c/testcoll/d/testtype/00000001/"/>
+                               value="%(default_entity_url)s"/>
                     </div>
                 </div>
             </div>
@@ -317,11 +319,12 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
+        view_url = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + entity_url(entity_id="00000001"))
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -390,7 +393,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_render_edit'], "field/annalist_edit_identifier.html")
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Identifier")
-        self.assertEqual(r.context['fields'][3]['field_value'], TestBaseUri + "/c/testcoll/d/testtype/00000001/")
+        self.assertEqual(r.context['fields'][3]['field_value'], view_url)
         self.assertEqual(r.context['fields'][3]['options'], self.no_options)
         # 5th field - view id
         view_id_help = (
@@ -432,11 +435,12 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
+        view_url = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + entity_url(entity_id="00000001"))
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "")
         return
@@ -449,11 +453,12 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
+        view_url = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "entity1")
         self.assertEqual(r.context['orig_id'],          "entity1")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + entity_url("testcoll", "testtype", "entity1"))
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -526,7 +531,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_render_edit'], "field/annalist_edit_identifier.html")
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Identifier")
-        self.assertEqual(r.context['fields'][3]['field_value'], TestBaseUri + "/c/testcoll/d/testtype/entity1/")
+        self.assertEqual(r.context['fields'][3]['field_value'], view_url)
         self.assertEqual(r.context['fields'][3]['options'], self.no_options)
         # 5th field - view id
         type_uri_help = (
@@ -708,6 +713,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # Check new entity data created
         self._check_entity_data_values("newentity", type_id="Default_type", update_dict=
             { '@type':          ['annal:Default_type', 'annal:EntityData']
+            , 'annal:uri':      f['Type_uri']   # because using Type_view
             })
         return
 
@@ -726,13 +732,13 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertTrue(RecordType.exists(self.testcoll, type_id))
         return
 
-    def test_new_entity_new_typedata(self):
+    def test_new_entity_new_recorddata(self):
         # Checks logic for creating an entity which may require creation of new recorddata
         self.create_new_type("testcoll", "newtype")
         # Create new entity
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
-        f = entitydata_recordtype_view_form_data(entity_id="newentity", type_id="newtype", action="new")
-        u = entitydata_edit_url("new", "testcoll", "newtype", view_id="Type_view")
+        f = entitydata_default_view_form_data(entity_id="newentity", type_id="newtype", action="new")
+        u = entitydata_edit_url("new", "testcoll", "newtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")

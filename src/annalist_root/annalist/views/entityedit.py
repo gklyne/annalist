@@ -543,7 +543,7 @@ class GenericEntityEditView(AnnalistGenericView):
         else:
             new_typeinfo = typeinfo
             new_parent   = orig_parent
-        # log.info("new_parent%r"%(new_parent))
+        # log.info("new_parent %r"%(new_parent.get_id()))
 
         # Check existence of entity to save according to action performed
         if (action in ["new", "copy"]) or entity_id_changed:
@@ -567,6 +567,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # Note: form data is applied as update to original entity data so that
         # values not in view are preserved.
         entity_values  = orig_entity.get_values() if orig_entity else {}
+        # log.info("orig entity_values %r"%(entity_values,))
         if new_typeinfo.recordtype and ANNAL.CURIE.uri in new_typeinfo.recordtype:
             typeuri = new_typeinfo.recordtype.get(ANNAL.CURIE.uri, None)
             entity_values['@type'] = typeuri   # NOTE: previous types not carried forward
@@ -578,8 +579,7 @@ class GenericEntityEditView(AnnalistGenericView):
         entity_values.update(entityvaluemap.map_form_data_to_values(form_data))
         entity_values[ANNAL.CURIE.type_id] = entity_type_id
         entity_values[ANNAL.CURIE.type]    = new_typeinfo.entityclass._entitytype
-        # log.info("orig_entity values%r"%(entity_values))
-        # log.info("entity_values%r"%(entity_values))
+        # log.info("save entity_values%r"%(entity_values))
 
         # If saving view description, ensure all property URIs are unique
         #
