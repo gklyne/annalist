@@ -10,7 +10,7 @@ A site corresponds to an Annalist installation.  It may contain any number of da
 
 ## Collections
 
-A **collection** is a grouping of data under a single administrative control (i.e. access control is applied at the level of a collection;  there is no fines-grained access control within a collection.)
+A **collection** is a grouping of data under a single administrative control (i.e. access control is applied at the level of a collection;  there is no fine-grained access control within a collection.)
 
 ## Data records
 
