@@ -44,7 +44,7 @@ config_options_help = (
     "           home directory ('~/.annalist/')\n"+
     "--personal selects the 'personal' configuration, which stores all site data\n"+
     "           and configuration data in the activating user's home directory\n"+
-    "           ('~/annalist_site/ and ~/.annalist/')\n"+
+    "           ('~/annalist_site/' and '~/.annalist/')\n"+
     "--shared   selects the 'shared' configuration, which stores all site and configuration\n"+
     "           data in system directories '/var/annalist_site', and configuration.\n"+
     "           data in '/etc/annalist/'\n"+

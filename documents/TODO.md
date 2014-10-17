@@ -72,10 +72,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - It turns out that instances of continuation URI with hostname are all used for testing Location: header responses, hence there's nothing to do (except add a few comments).
 - [x] set base directory for running tests so that annalist_root doesn't appear in test names
     - tried, but doesn't seem to be an easy way to do this (apart, maybe, from creating a new test runner)
-- [ ] Documentation of authorization controls
-- [ ] Review getting started documentation in light of new authz controls
+- [x] Initial documentation of authorization controls
+- [x] Review getting started documentation in light of new authz controls
 - [ ] Test creation of cruising log (again) using real log data
-- [ ] Create some outline user documentation
+- [x] Flesh out the user documentation
 - [ ] record new demo screencast
 
 (Release here?)
@@ -107,3 +107,5 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] annalist-manager createsitedata [ CONFIG ]
     - [ ] annalist-manager updatesitedata [ CONFIG ]
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s). 
+- [ ] 'New' and 'Copy' from list view should bring up new form with id field selected, so that typing a new value replaces the auto-generated ID.
+

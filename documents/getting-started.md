@@ -2,6 +2,7 @@
 
 A 6 minute demonstration screencast can be downloaded at [http://annalist.net](http://annalist.net)
 
+
 # Install and initialize software
 
 See [Installing and setting up Annalist](installing-annalist.md) for details.  What follows is just a very brief summary.
@@ -38,6 +39,31 @@ Enter a username, email address and password for the admin user as prompted.
     annalist-manager runserver
 
 
+# Update an existing installation
+
+> @@TODO: test this
+
+Backup the current installation and site data, just in case.
+
+## Upgrade software and test
+
+Install updated software into existing Python virtual environment:
+
+    source annenv/bin/activate
+    pip install annalist --upgrade
+    annalist-manager runtests
+
+## Update site data
+
+    annalist-manager updatesitedata
+
+Existing user credentials and permissions should not be affected.
+
+## Start the server
+
+    annalist-manager runserver
+
+
 # Accessing and using annalist
 
 See [Installing and setting up Annalist](installing-annalist.md) and [Guide to using Annalist](using-annalist.md) for details.  What follows is just a very brief summary to get started.
@@ -55,3 +81,4 @@ An Annalist _collection_ consists of entity _data records_, _types_, _lists_, _v
 See the [demonstration screecast](http://annalist.net/media/annalist-demo-music-instrument-catalogue.mp4) for an introduction to using Annalist.  The sequence of operations performed by demonstration is described in [documents/demo-script.md](demo-script.md).
 
 See the [Guide to using Annalist](using-annalist.md) for details.
+

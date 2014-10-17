@@ -153,11 +153,11 @@ As noted, permissions (currently) apply to the entire content of an annalist Col
 
 A logged in user with ADMIN permissions over a collection may create further collection-level user permissions from the "List users" view of a collection, which is accessed from the default collection view by selecting `User_list` from the `List view` dropdown, then clicking the `View` button:
 
-![List users view](screenshots/List_users_example.png)
+![List users view](screenshots/List-users-example.png)
 
 A new user permission record can created from here by clicking the `New` button, which displays a form into which user details may be entered:
 
-![User permissions editing view](screenshots/Edit_user_example.png)
+![User permissions editing view](screenshots/Edit-user-example.png)
 
 This form, works like most other Annalist data forms: enter details and click `Save` to create a new user permissions record.
 
@@ -188,6 +188,13 @@ For more information about any command, enter:
 
 `deleteuser` removes a locally defined user, and removes all site-wide permissions associated with that user.
 
+To change the email address and/or password associated with a locally defined user, use:
+
+    annalist_manager deleteuser [ username ] [ CONFIG ]
+
+then
+
+    annalist_manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
 
 ### Default permissions
 
@@ -223,7 +230,20 @@ From this screen, you can start to add data to this collection.
 
 ## Create a data record
 
-Click the **New** button at the foot of any record list page.
+Click the **New** button at the foot of any record list page.  A new form, is displayed for entering details of some new entity.  The initial type of new entity, and the data entry form displayed, are determined based on the list view used, but these can be overridden using thew `Type` and `Choose view` dropdowns.
+
+Example list display:
+
+![List of musical instruments](screenshots/List-musical-instruments.png)
+
+Based on the definition of this list, clicking on `New` briungs up a new form for entering details of a new instrument:
+
+![Edit musical instrument details](screenshots/Edit-musical-instrument.png)
+
+Enter details into the presented form, and click `Save` to create a new record with the details entered:
+
+![Updated list of musical instruments](screenshots/List-musical-instruments-2.png)
+
 
 ## Create a data record initialzed with a copy of an existing record
 
@@ -231,7 +251,7 @@ Select a record list display that includes the record to be copied.
 
 Select the checkbox beside the record to be copied.
 
-Click the **Copy** button at the foot of the record list page.
+Click the **Copy** button at the foot of the record list page.  This brings up a view of the selected record which can be edited as required, and saved as a new record by clinking the `Save` button.  The new record must be given a unique identifier (`Id` field) before it can be saved.
 
 ## Edit an existing data record
 
@@ -239,7 +259,7 @@ Select a record list display that includes the record to be edited.
 
 Select the checkbox beside the record to be edited.
 
-Click the **Edit** button at the foot of the record list page.
+Click the **Edit** button at the foot of the record list page.  This brings up a view of the selected record which can be edited as required, and saved by clinking the `Save` button.
 
 ## Delete an existing data record
 
@@ -275,19 +295,18 @@ The **Search** field can be used to enter a search term to narrow down the list 
 
 The **Set default** button causes the currently displayed list to be made the default display for the current collection.
 
-Finally, the **Customize** button displays a "Customize cillection" page, which has options to create, copy, edit and delete data record types, record views, and list views.
+Finally, the **Customize** button displays a "Customize collection" page, which has options to create, copy, edit and delete data record types, record views, and list views.
 
 
-## Custmize collection page
+## Customize collection page
 
-@@TODO: flesh out
+The default display for a collection, and all the other list views, include a `Customize` button that provides access to a "Customize collection" page, which summarizes the record types, list views and record views defined for a collection, and provides affordances to create, edit or delete them:
+
+![Customize collection view](screenshots/Customize-collection.png)
 
 Has 3 areas for "Record types", "List views" and "Record views".
 
 Each lists currently defined values, and has buttons **New**, **Copy**, **Edit** and **Delete**.
 
-The **Close** button returns to the previopusly displayed list view (which may change if the list definition) has been changed.
-
-
-
+The **Close** button returns to the previously displayed list view (which may change if the list definition) has been changed.
 
