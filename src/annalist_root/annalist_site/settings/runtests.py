@@ -4,6 +4,8 @@
 # Service configuration is kept under personal home directory to protect secret keys, etc
 #
 
+import os
+
 from common import *
 
 import logging
@@ -69,6 +71,10 @@ TEST_HOST_URI       = "http://"+TEST_HOST
 TEST_BASE_PATH      = "testsite"
 TEST_BASE_URI       = TEST_HOST_URI+"/"+TEST_BASE_PATH
 
+# Doesn't seem to be working...
+TEST_DISCOVER_TOP_LEVEL = os.path.join(SITE_SRC_ROOT, "annalist")
+os.chdir(TEST_DISCOVER_TOP_LEVEL)
+
 # Logging level used by selected log statements whose output may be useful
 # for tracing field values displayed in Annalist edit/view forms.
 # Suggested use is to raise level to logging.INFO when running a single named
@@ -90,6 +96,8 @@ log.info("DJANGO_ROOT:     "+DJANGO_ROOT)
 log.info("SITE_CONFIG_DIR: "+SITE_CONFIG_DIR)
 log.info("SITE_SRC_ROOT:   "+SITE_SRC_ROOT)
 log.info("DB PATH:         "+DATABASES['default']['NAME'])
+# log.info("TEST_RUNNER:             "+TEST_RUNNER)
+# log.info("TEST_DISCOVER_TOP_LEVEL: "+TEST_DISCOVER_TOP_LEVEL)
 log.debug("Test debug log")
 
 # End.

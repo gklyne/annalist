@@ -70,8 +70,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Investigate use of path-only references for copntinuation URIs
     - [x] would need to resolve when generating Location: header field ...
     - It turns out that instances of continuation URI with hostname are all used for testing Location: header responses, hence there's nothing to do (except add a few comments).
-- [ ] set base directory for running tests so that annalist_root doesn't appear in test names
+- [x] set base directory for running tests so that annalist_root doesn't appear in test names
+    - tried, but doesn't seem to be an easy way to do this (apart, maybe, from creating a new test runner)
 - [ ] Documentation of authorization controls
+- [ ] Review getting started documentation in light of new authz controls
 - [ ] Test creation of cruising log (again) using real log data
 - [ ] Create some outline user documentation
 - [ ] record new demo screencast
@@ -88,6 +90,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+    - [ ] Shared deployment should generate a new secret key in settings
 - [ ] Use separate Django database for each configuration
 - [x] Think about how to handle change of email address (option to remove user from Django database?)
     - annalist_manager now has deleteuser option

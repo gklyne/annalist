@@ -116,13 +116,88 @@ The intended means of Annalist user authentication is via a third party identity
 
 ## Creating local user credentials
 
-The Annalist software installation includes a step to create an adin user:
+The Annalist software installation includes a step to create an admin user:
 
     annalist-manager createadminuser
 
 Thye username and password created at this step can be used as local credentials to log in to Annalist as described above.
 
 Having logged in using the admin username and password, the **Admin** link in the page footer can be used to create additional local users via the local administrative interface (which is implemented in the underlying Django web application framework).  When logged in to Annalist using this account, the **Admin** link in the footer of most Annalist pages will allow new user accounts to be created via the Django admin interface.  More documentation about using this admin interface can be found in the [The Django Admin Site](http://www.djangobook.com/en/2.0/chapter06.html), which is Chapter 6 of [The Django Book](http://www.djangobook.com/en/2.0/index.html).
+
+
+## Access control and user permissions
+
+Being logged in to Annalist does not, of itself, grant permission to access or modify any Annalist data - except in a very broad sense covered by `_default_permissions` (see below).  That is controlled separately by _user permission_ records, which may be created for any collection ovcerv which the user is granted access permissions.
+
+When a user is logged in to Annalist (using OpenID or local credentials), their session is associated with a user identifier (user_id) and an email address, as well as some descriptive information.  The user_id alone is not a secure basis for access control, as Annalist allows anyone to create a new user_id through the OpenID based login process.  Rather, it is assumed that the associated email address has been properly checked as associated with the logged-in user:  this verification is something that should be handled by any OpenID identity provider (such as Google) worthy of being used as such.  Annalist uses the combination of user_id and email address as a reliable authenticated identifier, with which access permissions are associated.  Different user_ids may bve associated with the same email address, possibly corresponding to different roles of the authenticated user;  each such combination is associated with its own set of permissions. (Technically, Annalist internally uses a mailto: URI as an authenticated user identifier, and uses different forms of URI for some special cases.)
+
+Permissions granted to a user consist of a list of tokens denoting different access rights; e.g. VIEW, CREATE, UPDATE, DELETE, etc.  Permissions are applied at the level of a collection;  a user may have different permissions in different collections.  The permisisons granted form part of the collection metadata, and as such are replicated if an entire collection is copied or moved to a different service.  It is also possible to associate permissions with an entire Annalist site, which means they are applied in any collection for which more specific permissions are not granted;  the user interface for creating site-wide permissions currently takes the form of a limited set of `annalist_manager` commands, and is intended to be used for setting up site-wide defaults and administrative access.
+
+Built-in Annalist permission tokens include:
+
+`ADMIN` - required to create or view user permissions in a collection.  The creator of a collection is automatically granted `ADMIN` permissions over that collection, so they can assign permissions in that collection for other users.
+
+`CONFIG` - required to change the structure of a collection: to create and/or modify record types, views, lists, etc.
+
+`CREATE` - required to create new data in a collection.  Also required at site level to create a new collection.
+
+`UPDATE` - required to edit data records in a collection.
+
+`VIEW` - required to view or read data records in a collection.
+
+`DELETE` - required to remove data records in a collection.  Also required at site level to remove an entire collection.
+
+As noted, permissions (currently) apply to the entire content of an annalist Collection; i.e. a collection is the level of granularity at which access control is enforced.  (The internal design of the authorization system allows for new user-defined tokens to be introduced, and potentially to be associated with record types.  This could be used to provide sub-collection granularity of access cvontrol - e.g. to restrict access to a record type that may contain particularly sensitive data.)
+
+### Creating user permissions in a collection
+
+A logged in user with ADMIN permissions over a collection may create further collection-level user permissions from the "List users" view of a collection, which is accessed from the default collection view by selecting `User_list` from the `List view` dropdown, then clicking the `View` button:
+
+![List users view](screenshots/List_users_example.png)
+
+A new user permission record can created from here by clicking the `New` button, which displays a form into which user details may be entered:
+
+![User permissions editing view](screenshots/Edit_user_example.png)
+
+This form, works like most other Annalist data forms: enter details and click `Save` to create a new user permissions record.
+
+A similar pattern applies for copying, editing or deleting existing user permissions.
+
+
+### Setting site-wide permissions
+
+Annalist site-wide permissions are set using the annalist_manager tool, and cannot be set through the web interface.  The relevant commands are:
+
+    annalist_manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
+    annalist_manager updateadminuser [ username ] [ CONFIG ]
+    annalist_manager setdefaultpermissions [ permissions ] [ CONFIG ]
+    annalist_manager setpublicpermissions [ permissions ] [ CONFIG ]
+    annalist_manager deleteuser [ username ] [ CONFIG ]
+
+For more information about any command, enter:
+
+    annalist_manager help (command)
+
+`createadminuser` creates a new user with site-wide ADMIN permissions (and all other permissions).
+
+`updateadminuser` adds site-wide ADMIN permissions for an existing locally defined user. 
+    
+`setdefaultpermissions` sets site wide default permissions for any logged-in user.  These permissions may be overriden on a per-collection basis (see below).  Default site-level permissions in a new Annalist installation are `CREATE` and `VIEW`, allowing a logged in user to create a new collection, view all data in any collection and add data in any collection.
+
+`setpublicpermissions` sets site wide default permissions for any unauthenticated access.  These permissions may be overriden on a per-collection basis (see below).  Default site-level permissions in a new Annalist installation are `VIEW` only, allowing unauthenticated access to view all data in any collection.
+
+`deleteuser` removes a locally defined user, and removes all site-wide permissions associated with that user.
+
+
+### Default permissions
+
+Annalist specifies two special users for the purpose of defining default access permissions.  As these are not "real" users, they do not have email addresses, so they are assigned Annalist-specified URIs rather than `mailto:` identifiers.
+
+User_id `_default_permissions`, URI `annal:User/_default_permissions`: these permissions are used for any logged-in user for whom specific permissions are not defined.
+
+User_id `_unknown_user`, URI `annal:User/_unknown_user`: these permissions are used for any unauthenticated access, and as such define the level of public access available to a site or collection.
+
+Default permissions may be defined at site-level using the `annalist_manager` commands described above, or for a particular collection by creating user permissions for the indicated user_id and URI through the Annbalist web interface.
 
 
 # Creating an Annalist collection
