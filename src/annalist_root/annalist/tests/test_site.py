@@ -132,12 +132,12 @@ class SiteTest(AnnalistTestCase):
     def test_get_default_user_permissions(self):
         s = self.testsite
         # Test access to default permissions defined in site
-        ugp = s.get_user_permissions("_default_permissions", "annal:User/_default_permissions")
-        self.assertEqual(ugp[ANNAL.CURIE.id],                 "_default_permissions")
+        ugp = s.get_user_permissions("_default_user_perms", "annal:User/_default_user_perms")
+        self.assertEqual(ugp[ANNAL.CURIE.id],                 "_default_user_perms")
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Default permissions")
         self.assertEqual(ugp[RDFS.CURIE.comment],             "Default permissions for authenticated user.")
-        self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "annal:User/_default_permissions")
+        self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "annal:User/_default_user_perms")
         self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW"])
         return
 
@@ -192,7 +192,10 @@ class SiteViewTest(AnnalistTestCase):
         self.assertTrue(loggedin)
         create_user_permissions(
             self.testsite, "testuser",
-            user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"],
+            user_permissions=
+              [ "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"
+              , "CREATE_COLLECTION", "DELETE_COLLECTION"
+              ],
             use_altpath=True
             )
         return
@@ -418,7 +421,10 @@ class SiteActionViewTests(AnnalistTestCase):
         self.assertTrue(loggedin)
         create_user_permissions(
             self.testsite, "testuser",
-            user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"],
+            user_permissions=
+              [ "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"
+              , "CREATE_COLLECTION", "DELETE_COLLECTION"
+              ],
             use_altpath=True
             )
         return

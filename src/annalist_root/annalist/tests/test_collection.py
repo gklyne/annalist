@@ -167,18 +167,18 @@ class CollectionTest(AnnalistTestCase):
 
     def test_get_site_user_permissions(self):
         c   = self.testcoll
-        ugp = c.get_user_permissions("_unknown_user", "annal:User/_unknown_user")
-        self.assertEqual(ugp[ANNAL.CURIE.id],                 "_unknown_user")
+        ugp = c.get_user_permissions("_unknown_user_perms", "annal:User/_unknown_user_perms")
+        self.assertEqual(ugp[ANNAL.CURIE.id],                 "_unknown_user_perms")
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Unknown user")
         self.assertEqual(ugp[RDFS.CURIE.comment],             "Permissions for unauthenticated user.")
-        self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "annal:User/_unknown_user")
+        self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "annal:User/_unknown_user_perms")
         self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW"])
         return
 
     def test_get_site_user_uri_mismatch(self):
         c   = self.testcoll
-        ugp = c.get_user_permissions("_unknown_user", "annal:User/_another_user")
+        ugp = c.get_user_permissions("_unknown_user_perms", "annal:User/_another_user")
         self.assertIsNone(ugp)
         return
 

@@ -142,25 +142,25 @@ class AuthorizationTest(AnnalistTestCase):
                 ),
             use_altpath=True
             )
-        self.user_site_create  = AnnalistUser.create(
+        self.user_site_create_coll  = AnnalistUser.create(
             self.testsite, 
-            "user_site_create", 
+            "user_site_create_coll", 
             annalistuser_create_values(
-                coll_id="testcoll", user_id="user_site_create",
+                coll_id="testcoll", user_id="user_site_create_coll",
                 user_name="Site_create User",
-                user_uri="mailto:user_site_create@%s"%TestHost, 
-                user_permissions=["VIEW", "CREATE"]
+                user_uri="mailto:user_site_create_coll@%s"%TestHost, 
+                user_permissions=["VIEW", "CREATE_COLLECTION"]
                 ),
             use_altpath=True
             )
-        self.user_site_delete  = AnnalistUser.create(
+        self.user_site_delete_coll  = AnnalistUser.create(
             self.testsite, 
-            "user_site_delete", 
+            "user_site_delete_coll", 
             annalistuser_create_values(
-                coll_id="testcoll", user_id="user_site_delete",
+                coll_id="testcoll", user_id="user_site_delete_coll_coll",
                 user_name="Site_delete User",
-                user_uri="mailto:user_site_delete@%s"%TestHost, 
-                user_permissions=["VIEW", "CREATE", "DELETE"]
+                user_uri="mailto:user_site_delete_coll@%s"%TestHost, 
+                user_permissions=["VIEW", "CREATE_COLLECTION", "DELETE_COLLECTION"]
                 ),
             use_altpath=True
             )
@@ -722,7 +722,7 @@ class AuthorizationTest(AnnalistTestCase):
         return
 
     def test_site_create_user(self):
-        self.login_user("user_site_create")
+        self.login_user("user_site_create_coll")
         # try each function, test result
         self.assertEqual(self.create_collection().status_code,      302)
         self.assertEqual(self.remove_collection().status_code,      403)
@@ -742,15 +742,15 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_data().status_code,              200)
-        self.assertEqual(self.new_data().status_code,               302)
-        self.assertEqual(self.copy_data().status_code,              302)
+        self.assertEqual(self.new_data().status_code,               403)
+        self.assertEqual(self.copy_data().status_code,              403)
         self.assertEqual(self.edit_data().status_code,              403)
         self.assertEqual(self.delete_data().status_code,            403)
         self.assertEqual(self.delete_data_confirmed().status_code,  403)
         return
 
     def test_site_delete_user(self):
-        self.login_user("user_site_delete")
+        self.login_user("user_site_delete_coll")
         # try each function, test result
         self.assertEqual(self.create_collection().status_code,      302)
         self.assertEqual(self.remove_collection().status_code,      200)
@@ -770,11 +770,11 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_data().status_code,              200)
-        self.assertEqual(self.new_data().status_code,               302)
-        self.assertEqual(self.copy_data().status_code,              302)
+        self.assertEqual(self.new_data().status_code,               403)
+        self.assertEqual(self.copy_data().status_code,              403)
         self.assertEqual(self.edit_data().status_code,              403)
-        self.assertEqual(self.delete_data().status_code,            200)
-        self.assertEqual(self.delete_data_confirmed().status_code,  302)
+        self.assertEqual(self.delete_data().status_code,            403)
+        self.assertEqual(self.delete_data_confirmed().status_code,  403)
         return
 
     def test_site_view_user(self):

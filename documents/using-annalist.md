@@ -127,7 +127,7 @@ Having logged in using the admin username and password, the **Admin** link in th
 
 ## Access control and user permissions
 
-Being logged in to Annalist does not, of itself, grant permission to access or modify any Annalist data - except in a very broad sense covered by `_default_permissions` (see below).  That is controlled separately by _user permission_ records, which may be created for any collection ovcerv which the user is granted access permissions.
+Being logged in to Annalist does not, of itself, grant permission to access or modify any Annalist data - except in a very broad sense covered by `_default_user_perms` (see below).  That is controlled separately by _user permission_ records, which may be created for any collection ovcerv which the user is granted access permissions.
 
 When a user is logged in to Annalist (using OpenID or local credentials), their session is associated with a user identifier (user_id) and an email address, as well as some descriptive information.  The user_id alone is not a secure basis for access control, as Annalist allows anyone to create a new user_id through the OpenID based login process.  Rather, it is assumed that the associated email address has been properly checked as associated with the logged-in user:  this verification is something that should be handled by any OpenID identity provider (such as Google) worthy of being used as such.  Annalist uses the combination of user_id and email address as a reliable authenticated identifier, with which access permissions are associated.  Different user_ids may bve associated with the same email address, possibly corresponding to different roles of the authenticated user;  each such combination is associated with its own set of permissions. (Technically, Annalist internally uses a mailto: URI as an authenticated user identifier, and uses different forms of URI for some special cases.)
 
@@ -135,17 +135,21 @@ Permissions granted to a user consist of a list of tokens denoting different acc
 
 Built-in Annalist permission tokens include:
 
-`ADMIN` - required to create or view user permissions in a collection.  The creator of a collection is automatically granted `ADMIN` permissions over that collection, so they can assign permissions in that collection for other users.
+`ADMIN` - required to create or view user permissions in a collection.  The creator of a collection is automatically granted `ADMIN` permissions over that collection, so they can assign permissions in that collection for other users.  This permission at site level also allows creation and deletion of collections.
 
 `CONFIG` - required to change the structure of a collection: to create and/or modify record types, views, lists, etc.
 
-`CREATE` - required to create new data in a collection.  Also required at site level to create a new collection.
+`CREATE` - required to create new data in a collection.
 
 `UPDATE` - required to edit data records in a collection.
 
 `VIEW` - required to view or read data records in a collection.
 
-`DELETE` - required to remove data records in a collection.  Also required at site level to remove an entire collection.
+`DELETE` - required to remove data records in a collection.
+
+`CREATE_COLLECTION` - this permission, or `ADMIN`, is required at site level to create a new collection.
+
+`DELETE_COLLECTION` - this permission, or `ADMIN`, is required at site level to remove an existing collection.
 
 As noted, permissions (currently) apply to the entire content of an annalist Collection; i.e. a collection is the level of granularity at which access control is enforced.  (The internal design of the authorization system allows for new user-defined tokens to be introduced, and potentially to be associated with record types.  This could be used to provide sub-collection granularity of access cvontrol - e.g. to restrict access to a record type that may contain particularly sensitive data.)
 
@@ -182,7 +186,7 @@ For more information about any command, enter:
 
 `updateadminuser` adds site-wide ADMIN permissions for an existing locally defined user. 
     
-`setdefaultpermissions` sets site wide default permissions for any logged-in user.  These permissions may be overriden on a per-collection basis (see below).  Default site-level permissions in a new Annalist installation are `CREATE` and `VIEW`, allowing a logged in user to create a new collection, view all data in any collection and add data in any collection.
+`setdefaultpermissions` sets site wide default permissions for any logged-in user.  These permissions may be overriden on a per-collection basis (see below).  Default site-level permissions in a new Annalist installation are just `VIEW`, allowing a user to view all data in any collection.  In some installations, it may be useful to change this to `VIEW` and `CREATE_COLLECTION`, allowing logged-in users to create new collections, which they can then edit.
 
 `setpublicpermissions` sets site wide default permissions for any unauthenticated access.  These permissions may be overriden on a per-collection basis (see below).  Default site-level permissions in a new Annalist installation are `VIEW` only, allowing unauthenticated access to view all data in any collection.
 
@@ -200,9 +204,9 @@ then
 
 Annalist specifies two special users for the purpose of defining default access permissions.  As these are not "real" users, they do not have email addresses, so they are assigned Annalist-specified URIs rather than `mailto:` identifiers.
 
-User_id `_default_permissions`, URI `annal:User/_default_permissions`: these permissions are used for any logged-in user for whom specific permissions are not defined.
+User_id `_default_user_perms`, URI `annal:User/_default_user_perms`: these permissions are used for any logged-in user for whom specific permissions are not defined.
 
-User_id `_unknown_user`, URI `annal:User/_unknown_user`: these permissions are used for any unauthenticated access, and as such define the level of public access available to a site or collection.
+User_id `_unknown_user_perms`, URI `annal:User/_unknown_user_perms`: these permissions are used for any unauthenticated access, and as such define the level of public access available to a site or collection.
 
 Default permissions may be defined at site-level using the `annalist_manager` commands described above, or for a particular collection by creating user permissions for the indicated user_id and URI through the Annbalist web interface.
 

@@ -80,6 +80,18 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 (Release here?)
 
+- [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
+- [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
+    - [ ] Refactor handling of repeat field groups
+    - [ ] Define type for field group (_group)
+    - [ ] Define view for field group (list of fields)
+    - [ ] Define list for field group
+    - [ ] Refdefine view with list of fields?  Not if that impacts usability.
+    - [ ] Define e-v-map for defined list of fields
+    - [ ] Repeat to reference list of fields 
+    - [ ] Eliminate dupliction with list view
+    - [ ] Add option to add repeated field group
+    - [ ] Revisit 
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [ ] Blob and file upload support: images, spreadsheets, ...
     - [ ] Field type to link to uploaded file
@@ -87,7 +99,6 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
     - [ ] JSON-LD @contexts support
     - [ ] Alternative RDF formats support
-- [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared deployment should generate a new secret key in settings
@@ -101,9 +112,11 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Inline templates may be harder to style effectively; maybe read HTML from file on first use?
 - [ ] Automated test suite for annalist_manager
     - [ ] annalist-manager initialize [ CONFIG ]
-    - [ ] annalist-manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ]
-    - [ ] annalist-manager updateadminuser [ username ]
-    - [ ] annalist-manager deleteuser [ username ]
+    - [ ] annalist-manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
+    - [ ] annalist-manager updateadminuser [ username ] [ CONFIG ]
+    - [ ] annalist-manager setdefaultpermissions [ permissions ] [ CONFIG ]
+    - [ ] annalist-manager setpublicpermissions [ permissions ] [ CONFIG ]
+    - [ ] annalist-manager deleteuser [ username ] [ CONFIG ]
     - [ ] annalist-manager createsitedata [ CONFIG ]
     - [ ] annalist-manager updatesitedata [ CONFIG ]
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s). 

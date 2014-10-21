@@ -259,7 +259,7 @@ class AnnalistGenericView(ContentNegotiationView):
         user = self.request.user
         if user.is_authenticated():
             return (user.username, "mailto:"+user.email)
-        return ("_unknown_user", "annal:User/_unknown_user")
+        return ("_unknown_user_perms", "annal:User/_unknown_user_perms")
 
     def get_user_permissions(self, collection, user_id, user_uri):
         """
@@ -292,7 +292,7 @@ class AnnalistGenericView(ContentNegotiationView):
             user_perms = (
                 (collection and collection.get_user_permissions(user_id, user_uri)) or
                 self.site().get_user_permissions(user_id, user_uri) or
-                self.site().get_user_permissions("_default_permissions", "annal:User/_default_permissions")
+                self.site().get_user_permissions("_default_user_perms", "annal:User/_default_user_perms")
                 )
             self._user_perms = user_perms
             log.debug("get_user_permissions %r"%(self._user_perms,))
@@ -318,16 +318,17 @@ class AnnalistGenericView(ContentNegotiationView):
 
         For now, require authentication for anything other than VIEW scope.
         """
-        log.debug("Authorize %s"%(scope))
         user_id, user_uri = self.get_user_identity()
+        coll_id = collection.get_id() if collection else "(site)"
         user_perms = self.get_user_permissions(collection, user_id, user_uri)
         if not user_perms:
             log.warning("No user permissions found for user_id %s, URI %s"%(user_id, user_uri))
             return self.error(self.error403values(scope=scope))
+        # log.info("Authorize %s in %s, %s, %r"%(user_id, coll_id, scope, user_perms[ANNAL.CURIE.user_permissions]))
         # user_perms is an AnnalistrUser object
         coll_id = collection.get_id() if collection else "(No coll)"
         if scope not in user_perms[ANNAL.CURIE.user_permissions]:
-            if user_id == "_unknown_user":
+            if user_id == "_unknown_user_perms":
                 err = self.error401values(scope=scope)
             else:
                 err = self.error403values(scope=scope)

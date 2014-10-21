@@ -141,7 +141,7 @@ def am_help(options, progname):
             "Sets site-wide default permissions for logged-in users in the\n"+
             "Annalist site indicated by CONFIG.  These permissions are superseded by\n"+
             "any permissions defined specifically for a logged-in user, or by\n"+
-            "user '_default_permissions' entry defined for any collection.\n"+
+            "user '_default_user_perms' entry defined for any collection.\n"+
             "\n"+
             permissions_help+
             "\n"+
@@ -154,7 +154,7 @@ def am_help(options, progname):
             "\n"+
             "Sets site-wide public access permissions (i.e. for requests where there is no active login)\n"+
             "in the Annalist site indicated by CONFIG.  These permissions may be superseded by\n"+
-            "'_unknown_user' permissions defined for any specific collection.\n"+
+            "'_unknown_user_perms' permissions defined for any specific collection.\n"+
             "\n"+
             permissions_help+
             "\n"+

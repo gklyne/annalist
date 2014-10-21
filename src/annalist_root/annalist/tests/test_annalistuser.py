@@ -133,17 +133,17 @@ class AnnalistUserTest(AnnalistTestCase):
         return
 
     def test_annalistuser_default_data(self):
-        usr = AnnalistUser.load(self.testcoll, "_unknown_user", altparent=self.testsite)
-        self.assertEqual(usr.get_id(), "_unknown_user")
-        self.assertIn("/c/testcoll/_annalist_collection/users/_unknown_user", usr.get_url())
+        usr = AnnalistUser.load(self.testcoll, "_unknown_user_perms", altparent=self.testsite)
+        self.assertEqual(usr.get_id(), "_unknown_user_perms")
+        self.assertIn("/c/testcoll/_annalist_collection/users/_unknown_user_perms", usr.get_url())
         self.assertEqual(usr.get_type_id(), "_user")
         uld = usr.get_values()
         self.assertEqual(set(uld.keys()), set(annalistuser_load_keys()))
-        uev = annalistuser_read_values(user_id="_unknown_user")
+        uev = annalistuser_read_values(user_id="_unknown_user_perms")
         uev.update(
             { 'rdfs:label':             'Unknown user'
             , 'rdfs:comment':           'Permissions for unauthenticated user.'
-            , 'annal:user_uri':         'annal:User/_unknown_user'
+            , 'annal:user_uri':         'annal:User/_unknown_user_perms'
             , 'annal:user_permissions': ['VIEW']
             })
         self.assertDictionaryMatch(uld, uev)
@@ -450,14 +450,14 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         # The main purpose of this test is to check that user permissions are saved properly
         self.assertFalse(AnnalistUser.exists(self.testcoll, "copyuser"))
         f = annalistuser_view_form_data(
-            action="copy", orig_id="_default_permissions",
+            action="copy", orig_id="_default_user_perms",
             user_id="copyuser",
             user_name="User copyuser",
             user_uri="mailto:copyuser@example.org",
             user_permissions="VIEW CREATE UPDATE DELETE"
             )
         u = entitydata_edit_url(
-            "copy", "testcoll", "_user", entity_id="_default_permissions", view_id="User_view"
+            "copy", "testcoll", "_user", entity_id="_default_user_perms", view_id="User_view"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)

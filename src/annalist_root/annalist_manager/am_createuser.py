@@ -252,8 +252,8 @@ def am_setdefaultpermissions(annroot, userhome, options):
         return am_errors.AM_NOSETTINGS
     user_permissions = get_user_permissions(options, 0, prompt_prefix)
     user_details = (
-        { 'name':       "_default_permissions"
-        , 'uri':        "annal:User/_default_permissions"
+        { 'name':       "_default_user_perms"
+        , 'uri':        "annal:User/_default_user_perms"
         , 'label':      "Default permissions"
         , 'comment':    "Default permissions for authenticated user."
         })
@@ -264,7 +264,7 @@ def am_setpublicpermissions(annroot, userhome, options):
     """
     Set site-wide default permissions for unauthenticated public access
 
-    annroot     is the root directory for theannalist software installation.
+    annroot     is the root directory for the Annalist software installation.
     userhome    is the home directory for the host system user issuing the command.
     options     contains options parsed from the command line.
 
@@ -281,8 +281,8 @@ def am_setpublicpermissions(annroot, userhome, options):
         return am_errors.AM_NOSETTINGS
     user_permissions = get_user_permissions(options, 0, prompt_prefix)
     user_details = (
-        { 'name':       "_unknown_user"
-        , 'uri':        "annal:User/_unknown_user"
+        { 'name':       "_unknown_user_perms"
+        , 'uri':        "annal:User/_unknown_user_perms"
         , 'label':      "Unknown user"
         , 'comment':    "Permissions for unauthenticated user."
         })

@@ -66,8 +66,12 @@ class SiteView(AnnalistGenericView):
             collections = request.POST.getlist("select", [])
             if collections:
                 # Get user to confirm action before actually doing it
+                auth_required = (
+                    self.authorize("ADMIN", None) and           # either of these..
+                    self.authorize("DELETE_COLLECTION", None)
+                    )
                 return (
-                    self.authorize("DELETE", None) or
+                    auth_required or
                     ConfirmView.render_form(request,
                         action_description=     message.REMOVE_COLLECTIONS%{'ids': ", ".join(collections)},
                         action_params=          request.POST,
@@ -97,7 +101,10 @@ class SiteView(AnnalistGenericView):
                     error_message=message.INVALID_COLLECTION_ID%{'coll_id': new_id}
                     )
             # Create new collection with name and label supplied
-            auth_required = self.authorize("CREATE", None)
+            auth_required = (
+                self.authorize("ADMIN", None) and           # either of these..
+                self.authorize("CREATE_COLLECTION", None)
+                )
             if auth_required:
                 return auth_required
             coll_meta = (
@@ -139,7 +146,10 @@ class SiteActionView(AnnalistGenericView):
         log.debug("siteactionview.post: %r"%(request.POST))
         if "remove" in request.POST:
             log.debug("Complete remove %r"%(request.POST.getlist("select")))
-            auth_required = self.authorize("DELETE", None)
+            auth_required = (
+                self.authorize("ADMIN", None) and           # either of these..
+                self.authorize("DELETE_COLLECTION", None)
+                )
             if auth_required:
                 return auth_required
             coll_ids = request.POST.getlist("select")

@@ -73,6 +73,7 @@ setup(
         # , 'oauth2':         'annalist_root/utils'
         # , 'miscutils':      'annalist_root/miscutils'
         },
+    # >>>> REMEMBER to also update MANIFEST.in ... <<<<
     package_data = 
         { 'annalist_root':
             [ '*.sh', '*.txt'
@@ -106,6 +107,7 @@ setup(
             , 'sitedata/lists/*/*.jsonld'
             , 'sitedata/types/*/*.jsonld'
             , 'sitedata/views/*/*.jsonld'
+            , 'sitedata/users/*/*.jsonld'
             ]
         , 'annalist_root.annalist.views':
             [ 'help/*.md'
