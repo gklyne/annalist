@@ -51,7 +51,8 @@ class FieldDescription(object):
         field_id    = field[ANNAL.CURIE.field_id]       # Field ID slug in URI
         recordfield = RecordField.load(collection, field_id, collection._parentsite)
         if recordfield is None:
-            raise ValueError("Can't retrieve definition for field %s"%(field_id))
+            log.warning("Can't retrieve definition for field %s"%(field_id))
+            recordfield = RecordField.load(collection, "Field_missing", collection._parentsite)
         field_name      = recordfield.get(ANNAL.CURIE.field_name, field_id)   # Field name in form
         field_placement = get_placement_classes(
             field.get(ANNAL.CURIE.field_placement, None) or recordfield.get(ANNAL.CURIE.field_placement, "")

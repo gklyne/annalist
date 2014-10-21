@@ -77,6 +77,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Test creation of cruising log (again) using real log data
 - [x] Flesh out the user documentation
 - [ ] record new demo screencast
+- [ ] Seems to be a problem renaming a type for which there are defined values: need to rename the typedata directory too
 
 (Release here?)
 
@@ -103,6 +104,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared deployment should generate a new secret key in settings
 - [ ] Use separate Django database for each configuration
+- [ ] Figure out how to preserve defined users when reinstalling the software.
+    - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
 - [x] Think about how to handle change of email address (option to remove user from Django database?)
     - annalist_manager now has deleteuser option
 - [ ] review use of template files vs. use of inline template text in class
@@ -121,4 +124,29 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] annalist-manager updatesitedata [ CONFIG ]
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s). 
 - [ ] 'New' and 'Copy' from list view should bring up new form with id field selected, so that typing a new value replaces the auto-generated ID.
+- [ ] Provide content for the links in the page footer
+- [ ] 'Add field' can't be followed by 'New field' because of duplicate property used
+- [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
+- [ ] Include date+time in log entries
 
+
+Notes for Future TODOs:
+
+- [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions
+- [ ] Make default values smarter; e.g. field renderer logioc to scan collection data for candidates?
+- [ ] Option to rearrange fields on view form (after restructuring?)
+- [ ] When creating type, default URI to be based on id entered
+- [ ] Allow type definition to include template for new id, e.g. based on current date
+- [ ] Use local prefix for type URI (when prefixes are handled properly); e.g. coll:Type/<id>
+- [ ] Associate a prefix with a collection? 
+- [ ] Provide a way to edit collection metadata (e.g. link from Customize page)
+- [ ] Provide a way to edit site metadata (e.g. via link from site front page)
+- [ ] Provide a way to view/edit site user permissions (e.g. via link from site front page)
+- [ ] Provide a way to view/edit site type/view/list/etc descriptions (e.g. via link from site front page)
+- [ ] Undefined list error display (any error?) - include link to collection in top bar
+- [ ] Help display for view: use commentary text from view descrtiption; thus can tailore help for each view.
+- [ ] Introduce markdown rendering type
+- [ ] Use markdown directly for help text
+- [ ] Consider associating property URI with view rather than/as well as field, so fields can be re-used
+- [ ] Option to auto-generate unique property URI for field in view, maybe using field definition as base
+- [ ] Need easier way to make new entries for fields that are referenced from a record; e.g. a `New value` button as part of an enum field.

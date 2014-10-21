@@ -121,7 +121,7 @@ def get_item_renderer(renderid):
     if renderid == "Identifier":
         return "field/annalist_item_identifier.html"
     if renderid in ["Type", "View", "List", "Field", "Enum", "Enum_optional"]:
-        return "field/annalist_item_entityref.html"
+        return "field/annalist_item_entityid.html"
     # if renderid == "View_sel":
     #     return "field/annalist_item_entityref.html"
     if renderid == "TokenSet":

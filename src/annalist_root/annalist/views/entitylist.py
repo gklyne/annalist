@@ -21,7 +21,7 @@ from annalist.identifiers               import RDFS, ANNAL
 from annalist.models.collection         import Collection
 from annalist.models.recordtype         import RecordType
 from annalist.models.recordtypedata     import RecordTypeData
-from annalist.models.entitytypeinfo     import EntityTypeInfo
+from annalist.models.entitytypeinfo     import EntityTypeInfo, CONFIG_PERMISSIONS
 from annalist.models.entityfinder       import EntityFinder
 
 from annalist.views.uri_builder         import uri_with_params
@@ -275,9 +275,11 @@ class EntityGenericListView(AnnalistGenericView):
                             )
                         )
             if "default_view" in request.POST:
-                auth_check = self.form_action_auth(
-                    "config", listinfo.collection, listinfo.entitytypeinfo.permissions_map
-                    )
+                if listinfo.entitytypeinfo:
+                    permissions_map = listinfo.entitytypeinfo.permissions_map
+                else:
+                    permissions_map = CONFIG_PERMISSIONS
+                auth_check = self.form_action_auth("config", listinfo.collection, permissions_map)
                 if auth_check:
                     return auth_check
                 listinfo.collection.set_default_list(list_id)

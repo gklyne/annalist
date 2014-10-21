@@ -19,6 +19,7 @@ log = logging.getLogger(__name__)
 
 from utils.SetcwdContext    import ChangeCurrentDir
 
+from annalist.identifiers   import ANNAL, RDFS
 from annalist.layout        import Layout
 from annalist.util          import removetree, replacetree, updatetree
 

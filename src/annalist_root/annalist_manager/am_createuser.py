@@ -19,6 +19,7 @@ log = logging.getLogger(__name__)
 
 import django
 
+from annalist.identifiers           import ANNAL, RDFS
 from annalist.models.annalistuser   import AnnalistUser
 
 import am_errors

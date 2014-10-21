@@ -33,6 +33,22 @@ from annalist.views.uri_builder     import uri_with_params
 
 #   -------------------------------------------------------------------------------------------
 #
+#   Table of authorization symbols added to the display context according to 
+#   permissions help by the requesting user
+#
+#   -------------------------------------------------------------------------------------------
+
+authorization_map = (
+    { "auth_create":        ["CREATE"]
+    , "auth_delete":        ["DELETE"]
+    , "auth_update":        ["UPDATE"]
+    , "auth_config":        ["CONFIG"]
+    , "auth_create_coll":   ["CREATE_COLLECTION", "ADMIN"]
+    , "auth_delete_coll":   ["DELETE_COLLECTION", "ADMIN"]
+    })
+
+#   -------------------------------------------------------------------------------------------
+#
 #   Display information class
 #
 #   -------------------------------------------------------------------------------------------
@@ -57,12 +73,7 @@ class DisplayInfo(object):
     def __init__(self, view, action):
         self.view           = view
         self.action         = action
-        self.authorizations = (
-            { 'auth_create': False
-            , 'auth_update': False
-            , 'auth_delete': False
-            , 'auth_config': False
-            })
+        self.authorizations = dict([(k, False) for k in authorization_map])
         self.reqhost        = None
         self.site           = None
         self.sitedata       = None
@@ -206,11 +217,12 @@ class DisplayInfo(object):
             self.http_response or 
             self.view.form_action_auth(action, self.collection, permissions_map)
             )
-        # @@TODO: map this through permissions map, or something...
-        self.authorizations["auth_create"] = self.view.authorize("CREATE", self.collection) is None
-        self.authorizations["auth_update"] = self.view.authorize("UPDATE", self.collection) is None
-        self.authorizations["auth_delete"] = self.view.authorize("DELETE", self.collection) is None
-        self.authorizations["auth_config"] = self.view.authorize("CONFIG", self.collection) is None
+        for k in authorization_map:
+            for p in authorization_map[k]:
+                self.authorizations[k] = (
+                    self.authorizations[k] or 
+                    self.view.authorize(p, self.collection) is None
+                    )
         return self.http_response
 
     # Additonal support functions for list views

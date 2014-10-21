@@ -280,6 +280,8 @@ class SiteViewTest(AnnalistTestCase):
         self.assertTrue(r.context["auth_create"])
         self.assertTrue(r.context["auth_update"])
         self.assertTrue(r.context["auth_delete"])
+        self.assertTrue(r.context["auth_create_coll"])
+        self.assertTrue(r.context["auth_delete_coll"])
         colls = r.context['collections']
         self.assertEqual(len(colls), 4)
         for id in init_collections:

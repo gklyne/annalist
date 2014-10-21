@@ -94,7 +94,7 @@ setup(
             [ 'templates/*.html'
             , 'templates/field/*.html'
             , 'static/css/*.css'
-            , 'static/js/*.css'
+            , 'static/js/*.js'
             , 'static/images/*.png'
             , 'static/images/icons/warning_32.png'
             , 'static/images/icons/search_32.png'

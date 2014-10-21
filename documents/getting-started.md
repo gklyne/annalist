@@ -45,6 +45,8 @@ Enter a username, email address and password for the admin user as prompted.
 
 Backup the current installation and site data, just in case.
 
+NOTE that reinstalling the software currently wipes any locally defined user credentials:  locally defined users must be re-created using the `annalist-manager createadminuser` command and/or through the werbsite `admin` link.
+
 ## Upgrade software and test
 
 Install updated software into existing Python virtual environment:
@@ -55,9 +57,14 @@ Install updated software into existing Python virtual environment:
 
 ## Update site data
 
+    annalist-manager initialize
     annalist-manager updatesitedata
 
-Existing user credentials and permissions should not be affected.
+Locally defined admin user credential should be re-created:
+
+    annalist-manager createadminuser
+
+Existing user permissions are carried over from the previous installation.
 
 ## Start the server
 
