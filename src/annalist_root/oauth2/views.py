@@ -385,8 +385,9 @@ class LoginDoneView(generic.View):
         login(request, authuser)
         storage    = Storage(CredentialsModel, 'id', request.user, 'credential')
         storage.put(credential)
-        log.debug("LoginDoneView: credential:      "+repr(credential.to_json()))
-        log.info("LoginDoneView: id_token:        "+repr(credential.id_token))
+        # Don't normally log the credential/token as they might represent a security leakage:
+        # log.debug("LoginDoneView: credential:      "+repr(credential.to_json()))
+        # log.info("LoginDoneView: id_token:        "+repr(credential.id_token))
         log.info("LoginDoneView: user.username:   "+authuser.username)
         log.info("LoginDoneView: user.first_name: "+authuser.first_name)
         log.info("LoginDoneView: user.last_name:  "+authuser.last_name)

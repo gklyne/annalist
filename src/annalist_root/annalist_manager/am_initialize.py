@@ -16,10 +16,11 @@ import subprocess
 
 log = logging.getLogger(__name__)
 
-from annalist.util      import ensure_dir
+from annalist.util                  import ensure_dir
+from utils.SuppressLoggingContext   import SuppressLogging
 
 import am_errors
-from am_settings        import am_get_settings
+from am_settings                    import am_get_settings
 
 def am_initialize(annroot, userhome, userconfig, options):
     """
@@ -42,7 +43,8 @@ def am_initialize(annroot, userhome, userconfig, options):
         print("Unexpected arguments for initialize: (%s)"%(" ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
     # Get config base directory from settings, and make sure it exists
-    sitesettings = importlib.import_module(settings.modulename)
+    with SuppressLogging(logging.INFO):
+        sitesettings = importlib.import_module(settings.modulename)
     providersdir = os.path.join(sitesettings.CONFIG_BASE, "providers")
     ensure_dir(providersdir)
     # Initialze the database

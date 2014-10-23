@@ -10,7 +10,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import logging
-import importlib
 
 log = logging.getLogger(__name__)
 
@@ -19,8 +18,6 @@ from annalist.models.site           import Site
 
 from annalist_manager               import am_errors
 from annalist_manager.am_errors     import Annalist_Manager_Error
-
-from utils.SetcwdContext            import ChangeCurrentDir
 
 class AnnalistSettings(object):
     """

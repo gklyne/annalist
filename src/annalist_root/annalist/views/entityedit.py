@@ -18,7 +18,7 @@ from annalist.identifiers               import RDFS, ANNAL
 from annalist                           import message
 from annalist                           import util
 
-from annalist.models.entitytypeinfo     import EntityTypeInfo
+from annalist.models.entitytypeinfo     import EntityTypeInfo, get_built_in_type_ids
 from annalist.models.recordtype         import RecordType
 from annalist.models.recordview         import RecordView
 from annalist.models.recordfield        import RecordField
@@ -510,7 +510,8 @@ class GenericEntityEditView(AnnalistGenericView):
         #     "           orig_entity %r"
         #     %(orig_entity)
         #     )
-        action = form_data['action']
+        action   = form_data['action']
+        typeinfo = viewinfo.entitytypeinfo
         if not action in ["new", "copy", "edit"]:
             log.warning("'Save' operation for action '%s'"%(action))
             # Check "edit" authorization to continue
@@ -522,38 +523,37 @@ class GenericEntityEditView(AnnalistGenericView):
             )
 
         # Check original parent exists (still)
-        #@@ TODO: unless this is a "new" action
-        typeinfo    = viewinfo.entitytypeinfo
-        orig_parent = typeinfo.entityparent
-        if not orig_parent._exists():
-            log.warning("save_entity: not orig_parent._exists()")
+        #@@ TODO: unless this is a "new" action?
+        if not typeinfo.parent_exists():
+            log.warning("save_entity: original entity parent does not exist")
             return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                 error_head=messages['parent_heading'],
                 error_message=messages['parent_missing']
                 )
 
-        # Determine new parent for saved entity
+        # Determine type information for saved entity
         if entity_type_id != orig_entity_type_id:
             # log.info("new_typeinfo: entity_type_id %s"%(entity_type_id))
             new_typeinfo = EntityTypeInfo(
                 viewinfo.site, viewinfo.collection, entity_type_id, 
                 create_typedata=True
                 )
-            new_parent   = new_typeinfo.entityparent
         else:
             new_typeinfo = typeinfo
-            new_parent   = orig_parent
-        # log.info("new_parent %r"%(new_parent.get_id()))
 
         # Check existence of entity to save according to action performed
         if (action in ["new", "copy"]) or entity_id_changed:
-            if typeinfo.entityclass.exists(new_parent, entity_id):
+            if new_typeinfo.entity_exists(entity_id):
+                log.warning(
+                    "Entity exists: action %s %s/%s, orig %s/%s"%
+                        (action, entity_type_id, entity_id, orig_entity_type_id, orig_entity_id)
+                    )
                 return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                     error_head=messages['entity_heading'],
                     error_message=messages['entity_exists']
                     )
         else:
-            if not typeinfo.entityclass.exists(orig_parent, entity_id, altparent=typeinfo.entityaltparent):
+            if not typeinfo.entity_exists(entity_id, use_altparent=True):
                 # This shouldn't happen, but just in case...
                 log.warning("Expected %s/%s not found; action %s, entity_id_changed %r"%
                       (entity_type_id, entity_id, action, entity_id_changed)
@@ -601,20 +601,91 @@ class GenericEntityEditView(AnnalistGenericView):
                 properties.add(property_uri)
 
         # Create/update stored data now
-        new_typeinfo.entityclass.create(new_parent, entity_id, entity_values)
-        # Remove old entity if renameoperation
-        if entity_id_changed:
-            # log.info("new_typeinfo.entityclass %r"%(new_typeinfo.entityclass))
-            # log.info("new_parent %r"%(new_parent))
-            if new_typeinfo.entityclass.exists(new_parent, entity_id):    # Precautionary
-                # log.info("remove %s, %s"%(orig_parent.get_id(), orig_entity_id))
-                typeinfo.entityclass.remove(orig_parent, orig_entity_id)
-        # Rename record type data directory if renaming a local type,
-        # and if it existed for the original type
-        # @@@@@@@@@@@@
-        # if entity_id_changed and entity_type_id == "_type" and orig_entity_type_id == "_type":
-        #     if RecordTypeData.exists(viewinfo.collection, orig_entity_id):
-        #         ....
+        #
+        # @@TODO: refactor the following to
+        #     (a) factor out core entity rename logic, 
+        #     (b) separate view-level validation and error repporting from action logic
+
+        if not ("_type" in [entity_type_id, orig_entity_type_id] and entity_id_changed):
+
+            # Normal (non-type) record save
+            new_typeinfo.create_entity(entity_id, entity_values)
+            if entity_id_changed:
+                # Rename entity other than a type: remove old entity
+                if new_typeinfo.entity_exists(entity_id):    # Precautionary
+                    typeinfo.remove_entity(orig_entity_id)
+                else:
+                    log.warning(
+                        "Failed to rename entity %s/%s to %s/%s"%
+                        (orig_type_id, orig_entity_id, entity_type_id, entity_id)
+                        )
+
+        else:
+
+            # Special case for saving type information with new id (rename type)
+            #
+            # Need to update RecordTypeData and record data instances
+            # Don't allow type-rename to or from a type value
+            if entity_type_id != orig_entity_type_id:
+                log.warning("save_entity: attempt to change type of type record")
+                return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
+                    error_head=message.INVALID_OPERATION_ATTEMPTED,
+                    error_message=message.INVALID_TYPE_CHANGE
+                    )
+            # Don't allow renaming built-in type
+            builtin_types = get_built_in_type_ids()
+            if (entity_id in builtin_types) or (orig_entity_id in builtin_types):
+                log.warning("save_entity: attempt to rename or define a built-in type")
+                return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
+                    error_head=message.INVALID_OPERATION_ATTEMPTED,
+                    error_message=message.INVALID_TYPE_RENAME
+                    )
+            # Create new type record
+            new_typeinfo.create_entity(entity_id, entity_values)
+            # Update instances of type
+            src_typeinfo = EntityTypeInfo(
+                viewinfo.site, viewinfo.collection, orig_entity_id
+                )
+            dst_typeinfo = EntityTypeInfo(
+                viewinfo.site, viewinfo.collection, entity_id, 
+                create_typedata=True
+                )
+            if new_typeinfo.entity_exists(entity_id):
+                # Enumerate type instance records and move to new type
+                remove_OK = True
+                for d in src_typeinfo.enum_entities():
+                    data_id   = d.get_id()
+                    data_vals = d.get_values()
+                    # @@TODO: factor out duplication with code above
+                    # @@TODO: review handling of URI, type URI and URL
+                    if dst_typeinfo.recordtype and ANNAL.CURIE.uri in dst_typeinfo.recordtype:
+                        typeuri = dst_typeinfo.recordtype.get(ANNAL.CURIE.uri, None)
+                        data_vals['@type'] = typeuri or None   # NOTE: previous types not carried forward
+                    if ( (ANNAL.CURIE.uri in data_vals) and 
+                         ( data_vals[ANNAL.CURIE.uri] == data_vals.get(ANNAL.CURIE.url, None) ) ):
+                        del data_vals[ANNAL.CURIE.uri]          # Don't save URI if same as (old) URL
+                    data_vals.pop(ANNAL.CURIE.url, None)        # Force re-allocation of URL
+                    data_vals[ANNAL.CURIE.type_id] = entity_id
+                    data_vals[ANNAL.CURIE.type]    = dst_typeinfo.entityclass._entitytype
+                    dst_typeinfo.create_entity(data_id, data_vals)
+                    if dst_typeinfo.entity_exists(data_id):     # Precautionary
+                        # NOTE: assumes that enum_entities is not affected by removal:
+                        src_typeinfo.remove_entity(data_id)
+                    else:
+                        log.warning(
+                            "Failed to rename type %s entity %s to type %s"%
+                            (orig_entity_id, data_id, entity_id)
+                            )
+                        remove_OK = False
+                # Finally, remove old type record:
+                if remove_OK:       # Precautionary
+                    typeinfo.remove_entity(orig_entity_id)
+                    RecordTypeData.remove(typeinfo.entitycoll, orig_entity_id)
+            else:
+                log.warning(
+                    "Failed to rename type %s to type %s"%
+                    (orig_entity_id, entity_id)
+                    )
 
         return None
 

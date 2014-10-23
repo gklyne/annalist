@@ -30,10 +30,10 @@ import annalist
 # from annalist_manager       import am_errors
 import am_errors
 from am_runtests            import am_runtests
-from am_runserver           import am_runserver
+from am_runserver           import am_runserver, am_serverlog
 from am_initialize          import am_initialize
 from am_createuser          import (
-    am_createadminuser, am_updateadminuser, 
+    am_createadminuser, am_defaultadminuser, am_updateadminuser, 
     am_setdefaultpermissions, am_setpublicpermissions,
     am_deleteuser
     )
@@ -118,6 +118,8 @@ def run(userhome, userconfig, options, progname):
         return am_initialize(annroot, userhome, userconfig, options)
     if options.command.startswith("createa"):               # createadminuser
         return am_createadminuser(annroot, userhome, options)
+    if options.command.startswith("defaulta"):              # defaultadminuser
+        return am_defaultadminuser(annroot, userhome, options)
     if options.command.startswith("updatea"):               # updateadminuser
         return am_updateadminuser(annroot, userhome, options)
     if options.command.startswith("setdef"):                # setdefaultpermissions
@@ -132,6 +134,8 @@ def run(userhome, userconfig, options, progname):
         return am_updatesite(annroot, userhome, options)
     if options.command.startswith("runs"):                  # runserver
         return am_runserver(annroot, userhome, options)
+    if options.command.startswith("serv"):                  # serverlog
+        return am_serverlog(annroot, userhome, options)
     if options.command.startswith("help"):
         return am_help(options, progname)
     print("Un-recognised sub-command: %s"%(options.command), file=sys.stderr)

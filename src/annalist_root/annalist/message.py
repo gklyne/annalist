@@ -97,5 +97,8 @@ ENTITY_DEFAULT_LABEL        = ""    # "Entity %(type_id)s/%(entity_id)s in colle
 ENTITY_DEFAULT_COMMENT      = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
 VIEW_DESCRIPTION_HEADING    = "Problem with view description"
 VIEW_PROPERTY_DUPLICATE     = "Field %(field_id)s repeats use of property %(property_uri)s in view"
+INVALID_OPERATION_ATTEMPTED = "Attempt to peform invalid operation"
+INVALID_TYPE_CHANGE         = "Change of record type to or from '_type' is not supported"
+INVALID_TYPE_RENAME         = "Renaming of Annalist built-in types is not supported"
 
 # End.

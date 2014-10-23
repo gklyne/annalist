@@ -40,7 +40,7 @@ class EntityFinder(object):
         """
         Returns iterator over possible type ids in current collection.
 
-        Each type is returned as an EntityTypeInfo object.
+        Each type is returned as a candidate type identifier string
         """
         for t in get_built_in_type_ids():
             yield t

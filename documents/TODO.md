@@ -77,7 +77,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Test creation of cruising log (again) using real log data
 - [x] Flesh out the user documentation
 - [ ] record new demo screencast
-- [ ] Seems to be a problem renaming a type for which there are defined values: need to rename the typedata directory too
+- [x] Seems to be a problem renaming a type for which there are defined values: need to rename the typedata directory too.  See Issue [#34](https://github.com/gklyne/annalist/issues/34)
+- [ ] Create new type: leave type URI field blank.
 
 (Release here?)
 

@@ -28,6 +28,7 @@ from annalist                           import layout
 from annalist.models.site               import Site
 from annalist.models.sitedata           import SiteData
 from annalist.models.collection         import Collection
+from annalist.models.entitydata         import EntityData
 from annalist.models.recordtype         import RecordType
 from annalist.models.recordtypedata     import RecordTypeData
 from annalist.models.recordview         import RecordView
@@ -186,11 +187,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     #   Helpers
     #   -----------------------------------------------------------------------------
 
-    def _create_record_type(self, type_id):
+    def _create_record_type(self, type_id, entity_id="testentity"):
         "Helper function creates record type entry with supplied type_id"
         t = RecordType.create(self.testcoll, type_id, recordtype_create_values(type_id=type_id))
         d = RecordTypeData.create(self.testcoll, type_id, {})
-        return t    
+        e = EntityData.create(d, entity_id, {})
+        return (t, d, e)
 
     def _check_record_type_values(self, type_id, update="RecordType"):
         "Helper function checks content of record type entry with supplied type_id"
@@ -661,11 +663,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def test_post_edit_type_new_id(self):
         # Check logic applied when type is renamed
-        self._create_record_type("edittype1")
+        (t, d1, e1) = self._create_record_type("edittype1", entity_id="typeentity")
         self.assertTrue(RecordType.exists(self.testcoll, "edittype1"))
         self.assertFalse(RecordType.exists(self.testcoll, "edittype2"))
         self.assertTrue(RecordTypeData.exists(self.testcoll, "edittype1"))
         self.assertFalse(RecordTypeData.exists(self.testcoll, "edittype2"))
+        self.assertTrue(EntityData.exists(d1, "typeentity"))
         self._check_record_type_values("edittype1")
         f = recordtype_entity_view_form_data(
             type_id="edittype2", orig_id="edittype1", 
@@ -682,8 +685,11 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertTrue(RecordType.exists(self.testcoll, "edittype2"))
         self._check_record_type_values("edittype2", update="Updated RecordType")
         # Check that type data directory has been renamed
-        self.assertFalse(RecordTypeData.exists(self.testcoll, "edittype1"))
+        self.assertTrue(RecordTypeData.exists(self.testcoll, "edittype1"))
         self.assertTrue(RecordTypeData.exists(self.testcoll, "edittype2"))
+        self.assertFalse(EntityData.exists(d1, "typeentity"))
+        d2 = RecordTypeData.load(self.testcoll, "edittype2")
+        self.assertTrue(EntityData.exists(d2, "typeentity"))
         return
 
     def test_post_edit_type_cancel(self):

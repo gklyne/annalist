@@ -231,10 +231,10 @@ class EntityTypeInfo(object):
         else:
             if RecordType.exists(coll, type_id, site):
                 self.recordtype     = RecordType.load(coll, type_id, site)
-                if create_typedata and not RecordTypeData.exists(coll, type_id):
-                    self.entityparent   = RecordTypeData.create(coll, type_id, {})
-                else:
-                    self.entityparent   = RecordTypeData(coll, type_id)
+            if create_typedata and not RecordTypeData.exists(coll, type_id):
+                self.entityparent   = RecordTypeData.create(coll, type_id, {})
+            else:
+                self.entityparent   = RecordTypeData(coll, type_id)
             self.entityaltparent = None
             self.entityclass     = EntityData
             self.entitymessages  = ENTITY_MESSAGES
@@ -248,8 +248,41 @@ class EntityTypeInfo(object):
             #
             # Used in render_utils to get link to type record
             #@@
-            log.warning("EntityTypeInfo: RecordType %s not found"%type_id)
+            log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
         return
+
+    def parent_exists(self):
+        """
+        Test for existence of parent entity for the current type.
+        """
+        return self.entityparent._exists()
+
+    def entity_exists(self, entity_id, use_altparent=False):
+        """
+        Test for existence of identified entity of the current type.
+        """
+        altparent = self.entityaltparent if use_altparent else None
+        return self.entityclass.exists(self.entityparent, entity_id, altparent=altparent)
+
+    def create_entity(self, entity_id, entity_values):
+        """
+        Creates and returns an entity for the current type, with the supplied values.
+        """
+        log.debug(
+            "create_entity id %s, parent %s, values %r"%
+            (entity_id, self.entityparent, entity_values)
+            )
+        return self.entityclass.create(self.entityparent, entity_id, entity_values)
+
+    def remove_entity(self, entity_id):
+        """
+        Remove identified entity for the current type.
+        """
+        log.debug(
+            "remove_entity id %s, parent %s"%
+            (entity_id, self.entityparent)
+            )
+        return self.entityclass.remove(self.entityparent, entity_id)
 
     def get_entity(self, entity_id):
         """
@@ -277,7 +310,7 @@ class EntityTypeInfo(object):
                     altparent=altparent):
                 yield eid
         else:
-            log.warning("EntityTypeInfo missing entityparent; type_id %s"%(self.type_id))
+            log.warning("EntityTypeInfo.enum_entity_ids: missing entityparent; type_id %s"%(self.type_id))
         return
 
     def enum_entities(self, user_perms=None, usealtparent=False):
@@ -294,7 +327,7 @@ class EntityTypeInfo(object):
                         altparent=altparent):
                     yield e
             else:
-                log.warning("EntityTypeInfo missing entityparent; type_id %s"%(self.type_id))
+                log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
         return
 
     def get_initial_entity_values(self, entity_id):
@@ -309,10 +342,6 @@ class EntityTypeInfo(object):
             , ANNAL.CURIE.type_id:  self.type_id
             , RDFS.CURIE.label:     ""
             , RDFS.CURIE.comment:   ""
-            # , RDFS.CURIE.label:     "%s/%s/%s"%
-            #                         (self.coll_id, self.type_id, entity_id)
-            # , RDFS.CURIE.comment:   "Entity '%s' of type '%s' in collection '%s'"%
-            #                         (entity_id, self.type_id, self.coll_id)
             })
         init_entity = self.get_entity("_initial_values")
         if init_entity:
