@@ -609,6 +609,13 @@ class GenericEntityEditView(AnnalistGenericView):
             if new_typeinfo.entityclass.exists(new_parent, entity_id):    # Precautionary
                 # log.info("remove %s, %s"%(orig_parent.get_id(), orig_entity_id))
                 typeinfo.entityclass.remove(orig_parent, orig_entity_id)
+        # Rename record type data directory if renaming a local type,
+        # and if it existed for the original type
+        # @@@@@@@@@@@@
+        # if entity_id_changed and entity_type_id == "_type" and orig_entity_type_id == "_type":
+        #     if RecordTypeData.exists(viewinfo.collection, orig_entity_id):
+        #         ....
+
         return None
 
     def invoke_config_edit_view(self, 

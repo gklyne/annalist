@@ -29,6 +29,7 @@ from annalist.models.site               import Site
 from annalist.models.sitedata           import SiteData
 from annalist.models.collection         import Collection
 from annalist.models.recordtype         import RecordType
+from annalist.models.recordtypedata     import RecordTypeData
 from annalist.models.recordview         import RecordView
 from annalist.models.recordlist         import RecordList
 
@@ -188,6 +189,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     def _create_record_type(self, type_id):
         "Helper function creates record type entry with supplied type_id"
         t = RecordType.create(self.testcoll, type_id, recordtype_create_values(type_id=type_id))
+        d = RecordTypeData.create(self.testcoll, type_id, {})
         return t    
 
     def _check_record_type_values(self, type_id, update="RecordType"):
@@ -658,7 +660,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_post_edit_type_new_id(self):
+        # Check logic applied when type is renamed
         self._create_record_type("edittype1")
+        self.assertTrue(RecordType.exists(self.testcoll, "edittype1"))
+        self.assertFalse(RecordType.exists(self.testcoll, "edittype2"))
+        self.assertTrue(RecordTypeData.exists(self.testcoll, "edittype1"))
+        self.assertFalse(RecordTypeData.exists(self.testcoll, "edittype2"))
         self._check_record_type_values("edittype1")
         f = recordtype_entity_view_form_data(
             type_id="edittype2", orig_id="edittype1", 
@@ -672,7 +679,11 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record type exists and old does not
         self.assertFalse(RecordType.exists(self.testcoll, "edittype1"))
+        self.assertTrue(RecordType.exists(self.testcoll, "edittype2"))
         self._check_record_type_values("edittype2", update="Updated RecordType")
+        # Check that type data directory has been renamed
+        self.assertFalse(RecordTypeData.exists(self.testcoll, "edittype1"))
+        self.assertTrue(RecordTypeData.exists(self.testcoll, "edittype2"))
         return
 
     def test_post_edit_type_cancel(self):

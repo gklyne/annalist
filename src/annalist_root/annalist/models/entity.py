@@ -202,7 +202,7 @@ class Entity(EntityRoot):
     @classmethod
     def create(cls, parent, entityid, entitybody, use_altpath=False):
         """
-        Method creates a new entityor rewrites an existing entity.
+        Method creates a new entity or rewrites an existing entity.
 
         cls         is a class value used to construct the new entity value
         parent      is the parent entity from which the new entity is descended.
