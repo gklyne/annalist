@@ -123,7 +123,7 @@ class DisplayInfo(object):
             if type_id:
                 self.type_id        = type_id
                 self.entitytypeinfo = EntityTypeInfo(self.site, self.collection, type_id)
-                if not self.entitytypeinfo.entityparent:
+                if not self.entitytypeinfo.recordtype:
                     # log.warning("DisplayInfo.get_type_data: RecordType %s not found"%type_id)
                     self.http_response = self.view.error(
                         dict(self.view.error404values(),

@@ -685,7 +685,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertTrue(RecordType.exists(self.testcoll, "edittype2"))
         self._check_record_type_values("edittype2", update="Updated RecordType")
         # Check that type data directory has been renamed
-        self.assertTrue(RecordTypeData.exists(self.testcoll, "edittype1"))
+        self.assertFalse(RecordTypeData.exists(self.testcoll, "edittype1"))
         self.assertTrue(RecordTypeData.exists(self.testcoll, "edittype2"))
         self.assertFalse(EntityData.exists(d1, "typeentity"))
         d2 = RecordTypeData.load(self.testcoll, "edittype2")
