@@ -137,7 +137,7 @@ class RecordViewTest(AnnalistTestCase):
         self.assertIn("/c/testcoll/_annalist_collection/views/Default_view", t.get_url())
         self.assertEqual(t.get_type_id(), "_view")
         td = t.get_values()
-        self.assertEqual(set(td.keys()), set(recordview_load_keys()))
+        self.assertEqual(set(td.keys()), set(recordview_load_keys(view_uri=True)))
         v = recordview_read_values(view_id="Default_view")
         v.update(
             { 'rdfs:label':     'Default record view'
@@ -595,7 +595,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
         self.assertEqual(r.context['entity_url'],       view_url)
-        self.assertEqual(r.context['entity_uri'],       view_url)
+        self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
@@ -755,7 +755,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_id'],        "BibEntry_view")
         self.assertEqual(r.context['orig_id'],          "BibEntry_view")
         self.assertEqual(r.context['entity_url'],       view_url)
-        self.assertEqual(r.context['entity_uri'],       view_url)
+        self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_url'], "")

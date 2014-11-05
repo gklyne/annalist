@@ -104,10 +104,10 @@ def recordlist_edit_url(action=None, coll_id=None, list_id=None):
 #
 #   -----------------------------------------------------------------------------
 
-def recordlist_value_keys():
-    return set(
+def recordlist_value_keys(list_uri=False):
+    keys = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url', 'annal:uri'
+        , 'annal:type', 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:record_type'
         , 'annal:display_type'
@@ -116,15 +116,19 @@ def recordlist_value_keys():
         , 'annal:default_type'
         , 'annal:list_fields'
         ])
+    if list_uri:
+        keys.add('annal:uri')
+    return keys
 
-def recordlist_load_keys():
-    return recordlist_value_keys() | {'@id', '@type'}
+def recordlist_load_keys(list_uri=False):
+    return recordlist_value_keys(list_uri=list_uri) | {'@id', '@type'}
 
-def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="RecordList"):
+def recordlist_create_values(
+        coll_id="testcoll", list_id="testlist", list_uri=None, update="RecordList"):
     """
     Entity values used when creating a record type entity
     """
-    return (
+    d = (
         { 'annal:type':                 "annal:List"
         , 'rdfs:label':                 "%s %s/%s"%(update, coll_id, list_id)
         , 'rdfs:comment':               "%s help for %s/%s"%(update, coll_id, list_id)
@@ -142,19 +146,19 @@ def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="Rec
             }
           ]
         })
+    if list_uri:
+        d['annal:uri'] = list_uri
+    return d
 
 def recordlist_values(
         coll_id="testcoll", list_id="testlist", list_uri=None,
         update="RecordList", hosturi=TestHostUri):
     list_url = recordlist_url(coll_id, list_id)
-    if not list_uri:
-        list_uri = list_url
-    d = recordlist_create_values(coll_id, list_id, update=update).copy()
+    d = recordlist_create_values(coll_id, list_id, list_uri=list_uri, update=update).copy()
     d.update(
         { 'annal:id':       list_id
         , 'annal:type_id':  "_list"
         , 'annal:url':      list_url
-        , 'annal:uri':      list_uri
         })
     return d
 

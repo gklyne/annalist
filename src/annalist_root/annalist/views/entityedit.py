@@ -568,14 +568,19 @@ class GenericEntityEditView(AnnalistGenericView):
         # values not in view are preserved.
         entity_values  = orig_entity.get_values() if orig_entity else {}
         # log.info("orig entity_values %r"%(entity_values,))
-        if new_typeinfo.recordtype and ANNAL.CURIE.uri in new_typeinfo.recordtype:
-            typeuri = new_typeinfo.recordtype.get(ANNAL.CURIE.uri, None)
-            entity_values['@type'] = typeuri   # NOTE: previous types not carried forward
-        if ( (ANNAL.CURIE.uri in entity_values) and 
-             ( ( entity_values[ANNAL.CURIE.uri] == entity_values.get(ANNAL.CURIE.url, None) ) or 
-               ( action == "copy" ) ) ):
-            del entity_values[ANNAL.CURIE.uri]          # Don't save URI if same as URL, or if copying
-        entity_values.pop(ANNAL.CURIE.url, None)        # Force re-allocation of URL
+        #@@
+        # if new_typeinfo.recordtype and ANNAL.CURIE.uri in new_typeinfo.recordtype:
+        #     typeuri = new_typeinfo.recordtype.get(ANNAL.CURIE.uri, None)
+        #     entity_values['@type'] = typeuri   # NOTE: previous types not carried forward
+        # if ( (ANNAL.CURIE.uri in entity_values) and 
+        #      ( ( entity_values[ANNAL.CURIE.uri] == entity_values.get(ANNAL.CURIE.url, None) ) or 
+        #        ( action == "copy" ) ) ):
+        #     del entity_values[ANNAL.CURIE.uri]          # Don't save URI if same as URL, or if copying
+        #@@
+        if action == "copy":
+            entity_values.pop(ANNAL.CURIE.uri, None)      # Force new URI on copy
+        # @@TODO: remove next - ANNAL.CURIE.url gets updated on save anyway
+        entity_values.pop(ANNAL.CURIE.url, None)    # Force re-allocation of URL
         entity_values.update(entityvaluemap.map_form_data_to_values(form_data))
         entity_values[ANNAL.CURIE.type_id] = entity_type_id
         entity_values[ANNAL.CURIE.type]    = new_typeinfo.entityclass._entitytype
@@ -656,14 +661,17 @@ class GenericEntityEditView(AnnalistGenericView):
                 for d in src_typeinfo.enum_entities():
                     data_id   = d.get_id()
                     data_vals = d.get_values()
+                    #@@
                     # @@TODO: factor out duplication with code above
                     # @@TODO: review handling of URI, type URI and URL
-                    if dst_typeinfo.recordtype and ANNAL.CURIE.uri in dst_typeinfo.recordtype:
-                        typeuri = dst_typeinfo.recordtype.get(ANNAL.CURIE.uri, None)
-                        data_vals['@type'] = typeuri or None   # NOTE: previous types not carried forward
-                    if ( (ANNAL.CURIE.uri in data_vals) and 
-                         ( data_vals[ANNAL.CURIE.uri] == data_vals.get(ANNAL.CURIE.url, None) ) ):
-                        del data_vals[ANNAL.CURIE.uri]          # Don't save URI if same as (old) URL
+                    # if dst_typeinfo.recordtype and ANNAL.CURIE.uri in dst_typeinfo.recordtype:
+                    #     typeuri = dst_typeinfo.recordtype.get(ANNAL.CURIE.uri, None)
+                    #     data_vals['@type'] = typeuri or None   # NOTE: previous types not carried forward
+                    # if ( (ANNAL.CURIE.uri in data_vals) and 
+                    #      ( data_vals[ANNAL.CURIE.uri] == data_vals.get(ANNAL.CURIE.url, None) ) ):
+                    #     del data_vals[ANNAL.CURIE.uri]          # Don't save URI if same as (old) URL
+                    #@@
+                    # @@TODO: remove next - ANNAL.CURIE.url gets updated on save anyway
                     data_vals.pop(ANNAL.CURIE.url, None)        # Force re-allocation of URL
                     data_vals[ANNAL.CURIE.type_id] = entity_id
                     data_vals[ANNAL.CURIE.type]    = dst_typeinfo.entityclass._entitytype
@@ -688,6 +696,29 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
 
         return None
+
+    # def store_entity_type_uri(self, entity_values, entity_typeinfo):
+    #     """
+    #     Sort out entity URI and entity type URI(s), in preparation to save.
+
+    #     The '@type' and 'annal:URI' fields in the supplied entity_values are updated
+
+    #     entity_values   an entity values dictionary whose '@type' and 'annal:uri' 
+    #                     fields may be updated.
+    #     entity_typeinfo an EntityTypeInfo object describing the type with which the
+    #                     entity is to be saved.
+    #     """
+    #     if entity_typeinfo.recordtype:
+    #         typeuris = []
+    #         if ANNAL.CURIE.uri in entity_typeinfo.recordtype:
+    #             typeuris = [entity_typeinfo.recordtype[ANNAL.CURIE.uri]]
+    #         else:
+    #             typeuris = []
+    #         entity_values['@type'] = typeuris   # NOTE: previous types not carried forward
+    #     if ( (ANNAL.CURIE.uri in entity_values) and 
+    #          (entity_values[ANNAL.CURIE.uri] == entity_values.get(ANNAL.CURIE.url, None) ) ):
+    #         del entity_values[ANNAL.CURIE.uri]  # Don't save URI if same as URL
+    #     return entity_values
 
     def invoke_config_edit_view(self, 
             entityvaluemap, form_data,

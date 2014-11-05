@@ -272,6 +272,17 @@ class EntityTypeInfo(object):
             "create_entity id %s, parent %s, values %r"%
             (entity_id, self.entityparent, entity_values)
             )
+        # Set type URI for entity; previous types are not carried forwards
+        typeuri = None
+        if self.recordtype:
+            if ANNAL.CURIE.uri in self.recordtype:
+                typeuri = self.recordtype[ANNAL.CURIE.uri]
+            else:
+                typeuri = self.recordtype[ANNAL.CURIE.url]
+        entity_values['@type'] = typeuri    # NOTE: previous type not carried forward
+        # Don't save entity URI if same as URL
+        if entity_values.get(ANNAL.CURIE.uri) == entity_values.get(ANNAL.CURIE.url):
+            entity_values.pop(ANNAL.CURIE.uri, None)
         return self.entityclass.create(self.entityparent, entity_id, entity_values)
 
     def remove_entity(self, entity_id):
@@ -349,7 +360,7 @@ class EntityTypeInfo(object):
             values.pop("@id", None)
             values.pop(ANNAL.CURIE.id,  None)
             values.pop(ANNAL.CURIE.url, None)
-            values.pop(ANNAL.CURIE.uri, None)
+            #@@ values.pop(ANNAL.CURIE.uri, None)
         values[ANNAL.CURIE.id] = entity_id
         return values
 

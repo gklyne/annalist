@@ -106,15 +106,18 @@ def recordfield_edit_url(action=None, coll_id=None, field_id=None):
 #
 #   -----------------------------------------------------------------------------
 
-def recordfield_init_keys():
-    return set(
+def recordfield_init_keys(field_uri=False):
+    keys = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url', 'annal:uri'
+        , 'annal:type', 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         ])
+    if field_uri:
+        keys.add('annal:uri')
+    return keys
 
-def recordfield_value_keys():
-    return (recordfield_init_keys() |
+def recordfield_value_keys(field_uri=False):
+    return (recordfield_init_keys(field_uri=field_uri) |
         { 'annal:property_uri'
         , 'annal:field_entity_type'
         , 'annal:field_value_type'
@@ -123,8 +126,8 @@ def recordfield_value_keys():
         , 'annal:default_value'
         })
 
-def recordfield_load_keys():
-    return recordfield_value_keys() | {'@id', '@type'}
+def recordfield_load_keys(field_uri=False):
+    return recordfield_value_keys(field_uri=field_uri) | {'@id', '@type'}
 
 def recordfield_create_values(coll_id="testcoll", field_id="testfield", update="Field"):
     """
@@ -136,7 +139,7 @@ def recordfield_create_values(coll_id="testcoll", field_id="testfield", update="
         })
 
 def recordfield_values(
-        coll_id="testcoll", field_id="testfield",
+        coll_id="testcoll", field_id="testfield", field_uri=None,
         update="Field", hosturi=TestHostUri):
     d = recordfield_create_values(coll_id, field_id, update=update).copy()
     d.update(
@@ -144,8 +147,9 @@ def recordfield_values(
         , 'annal:type_id':  "_field"
         , 'annal:type':     "annal:Field"
         , 'annal:url':      recordfield_url(coll_id, field_id)
-        , 'annal:uri':      recordfield_url(coll_id, field_id)
         })
+    if field_uri:
+        d['annal:uri'] = field_uri
     return d
 
 def recordfield_read_values(

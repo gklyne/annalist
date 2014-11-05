@@ -133,43 +133,56 @@ def entitydata_type(type_id):
     else:
         return "annal:EntityData"
 
-def entitydata_value_keys():
+def entitydata_value_keys(entity_uri=False):
     """
     Keys in default view entity data
     """
-    return (
+    keys = (
         [ '@type'
         , 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url', 'annal:uri'
+        , 'annal:type', 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         ])
+    if entity_uri:
+        keys.add('annal:uri')
+    return keys
 
-def entitydata_create_values(entity_id, update="Entity", coll_id="testcoll", type_id="testtype", hosturi=TestHostUri):
+def entitydata_create_values(
+        entity_id, update="Entity", coll_id="testcoll", type_id="testtype", 
+        entity_uri=None, typeuri=None, hosturi=TestHostUri):
     """
     Data used when creating entity test data
     """
-    typeuri = entity_url(coll_id, "_type", type_id)
+    if typeuri is None:
+        typeuri = entity_url(coll_id, "_type", type_id)
     types   = [entitydata_type(type_id), typeuri]
     # log.info('entitydata_create_values: types %r'%(types,)) 
-    return (
+    d = (
         { '@type':          types
         , 'annal:type':     types[0]
         , 'rdfs:label':     '%s testcoll/%s/%s'%(update, type_id, entity_id)
         , 'rdfs:comment':   '%s coll testcoll, type %s, entity %s'%(update, type_id, entity_id)
         })
+    if entity_uri:
+        d['annal:uri'] = entity_uri
+    return d
 
-def entitydata_values(entity_id, update="Entity", coll_id="testcoll", type_id="testtype", hosturi=TestHostUri):
+def entitydata_values(
+        entity_id, update="Entity", 
+        coll_id="testcoll", type_id="testtype", 
+        entity_uri=None,
+        typeuri=None, hosturi=TestHostUri):
     typeuri = entity_url(coll_id, "_type", type_id)
     dataurl = entity_url(coll_id, type_id, entity_id)
     d = entitydata_create_values(
-        entity_id, update=update, coll_id=coll_id, type_id=type_id, hosturi=hosturi
+        entity_id, update=update, coll_id=coll_id, type_id=type_id, 
+        entity_uri=entity_uri, typeuri=typeuri, hosturi=hosturi
         ).copy() #@@ copy needed here?
     d.update(
         { '@id':            './'
         , 'annal:id':       entity_id
         , 'annal:type_id':  type_id
         , 'annal:url':      dataurl
-        , 'annal:uri':      dataurl
         })
     # log.info("entitydata_values %r"%(d,))
     return d

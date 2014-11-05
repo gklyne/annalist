@@ -142,27 +142,27 @@ def collection_values(coll_id, update="Collection", hosturi=TestHostUri):
         { '@id':            "../"
         , '@type':          ["annal:Collection"]
         , 'annal:id':       coll_id
-        # , 'annal:type_id':  "_coll"
+        #@@ , 'annal:type_id':  "_coll"
         , 'annal:type':     "annal:Collection"
         , 'annal:url':      collection_view_url(coll_id=coll_id)
-        , 'annal:uri':      collection_view_url(coll_id=coll_id)
+        #@@ , 'annal:uri':      collection_view_url(coll_id=coll_id)
         })
     return d
 
 def collection_new_form_data(coll_id, update="Collection"):
-        return (
-            { "new":        "New collection"
-            , "new_id":     coll_id
-            , "new_label":  "%s %s"%(update, coll_id)
-            })
+    return (
+        { "new":        "New collection"
+        , "new_id":     coll_id
+        , "new_label":  "%s %s"%(update, coll_id)
+        })
 
 def collection_remove_form_data(coll_id_list):
-        return (
-            { "remove":     "Remove selected"
-            , "new_id":     ""
-            , "new_label":  ""
-            , "select":     coll_id_list
-            })
+    return (
+        { "remove":     "Remove selected"
+        , "new_id":     ""
+        , "new_label":  ""
+        , "select":     coll_id_list
+        })
 
 #   -----------------------------------------------------------------------------
 #

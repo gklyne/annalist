@@ -104,22 +104,24 @@ def recordview_edit_url(action=None, coll_id=None, view_id=None):
 #
 #   -----------------------------------------------------------------------------
 
-def recordview_value_keys():
+def recordview_value_keys(view_uri=False):
     keys = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url', 'annal:uri'
+        , 'annal:type', 'annal:url'
         , 'annal:record_type'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:add_field'
         , 'annal:view_fields'
         ])
+    if view_uri:
+        keys.add('annal:uri')
     return keys
 
-def recordview_load_keys():
-    return recordview_value_keys() | {"@id", '@type'}
+def recordview_load_keys(view_uri=False):
+    return recordview_value_keys(view_uri=view_uri) | {"@id", '@type'}
 
 def recordview_create_values(
-        coll_id="testcoll", view_id="testview", update="RecordView", uri=None, 
+        coll_id="testcoll", view_id="testview", update="RecordView", view_uri=None, 
         field3_placement="small:0,12"
         ):
     """
@@ -148,24 +150,25 @@ def recordview_create_values(
         })
     if field3_placement:
         view_values['annal:view_fields'][3]['annal:field_placement'] = field3_placement
-    if uri:
-        view_values['annal:uri'] = uri
+    if view_uri:
+        view_values['annal:uri'] = view_uri
     return view_values
 
 def recordview_values(
         coll_id="testcoll", view_id="testtype", view_uri=None, 
         update="RecordView", hosturi=TestHostUri, field3_placement="small:0,12"):
     d = recordview_create_values(
-        coll_id, view_id, update=update, field3_placement=field3_placement
+        coll_id, view_id, update=update, view_uri=view_uri, field3_placement=field3_placement
         ).copy()
     view_url = recordview_url(coll_id, view_id)
-    if not view_uri:
-        view_uri = view_url
+    #@@
+    # if not view_uri:
+    #     view_uri = view_url
+    #@@    
     d.update(
         { 'annal:id':       view_id
         , 'annal:type_id':  "_view"
         , 'annal:url':      view_url
-        , 'annal:uri':      view_uri
         })
     return d
 

@@ -104,7 +104,7 @@ def annalistuser_edit_url(action=None, coll_id=None, user_id=None):
 def annalistuser_value_keys():
     ks = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url', 'annal:uri'
+        , 'annal:type', 'annal:url' #@@ , 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:user_uri'
         , 'annal:user_permissions'
@@ -147,7 +147,7 @@ def annalistuser_values(
         { 'annal:id':       user_id
         , 'annal:type_id':  "_user"
         , 'annal:url':      user_url
-        , 'annal:uri':      user_url
+        #@@ , 'annal:uri':      user_url
         })
     return d
 

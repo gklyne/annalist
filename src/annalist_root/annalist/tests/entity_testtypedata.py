@@ -67,15 +67,6 @@ def recordtype_url(coll_id="testcoll", type_id="testtype"):
     if not valid_id(type_id):
         type_id = "___"
     return collection_entity_view_url(coll_id=coll_id, type_id="_type", entity_id=type_id)
-    #@@
-    # viewname = "AnnalistEntityAccessView"
-    # kwargs   = {'coll_id': coll_id, "type_id": "_type"}
-    # if valid_id(type_id):
-    #     kwargs.update({'entity_id': type_id})
-    # else:
-    #     kwargs.update({'entity_id': "___"})
-    # return reverse(viewname, kwargs=kwargs)
-    #@@
 
 def recordtype_edit_url(action=None, coll_id=None, type_id=None):
     """
@@ -105,17 +96,19 @@ def recordtype_edit_url(action=None, coll_id=None, type_id=None):
 #
 #   -----------------------------------------------------------------------------
 
-def recordtype_value_keys():
+def recordtype_value_keys(type_uri=False):
     ks = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url', 'annal:uri'
+        , 'annal:type', 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:type_view', 'annal:type_list'
         ])
+    if type_uri:
+        ks.add('annal:uri')
     return ks
 
-def recordtype_load_keys():
-    return recordtype_value_keys() | {'@id', '@type'}
+def recordtype_load_keys(type_uri=False):
+    return recordtype_value_keys(type_uri=type_uri) | {'@id', '@type'}
 
 def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="RecordType"):
     """
@@ -134,15 +127,19 @@ def recordtype_values(
         coll_id="testcoll", type_id="testtype", type_uri=None,
         update="RecordType", hosturi=TestHostUri):
     type_url = recordtype_url(coll_id=coll_id, type_id=type_id)
-    if not type_uri:
-        type_uri = type_url
+    #@@
+    # if not type_uri:
+    #     type_uri = type_url
+    #@@
     d = recordtype_create_values(coll_id, type_id, update=update).copy()
     d.update(
         { 'annal:id':       type_id
         , 'annal:type_id':  "_type"
         , 'annal:url':      type_url
-        , 'annal:uri':      type_uri    # @@TODO: isn't this part of create_values?
+        # , 'annal:uri':      type_uri    # @@TODO: isn't this part of create_values?
         })
+    if type_uri:
+        d['annal:uri'] = type_uri
     return d
 
 def recordtype_read_values(

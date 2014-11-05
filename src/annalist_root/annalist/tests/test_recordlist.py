@@ -140,7 +140,7 @@ class RecordListTest(AnnalistTestCase):
         self.assertIn("/c/testcoll/_annalist_collection/lists/Default_list", t.get_url())
         self.assertEqual(t.get_type_id(), "_list")
         td = t.get_values()
-        self.assertEqual(set(td.keys()), set(recordlist_load_keys()))
+        self.assertEqual(set(td.keys()), set(recordlist_load_keys(list_uri=True)))
         v = recordlist_read_values(list_id="Default_list")
         v.update(
             { '@id':            "annal:display/Default_list"
@@ -440,7 +440,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
         self.assertEqual(r.context['entity_url'],       list_url)
-        self.assertEqual(r.context['entity_uri'],       list_url)
+        self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -451,7 +451,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_label=default_label("testcoll", "_list", "00000001"),
             list_help=default_comment("testcoll", "_list", "00000001"),
             list_url=list_url,
-            list_uri=list_url,
+            list_uri=None,
             list_type="List",
             list_default_type="Default_type",
             list_default_view="Default_view",

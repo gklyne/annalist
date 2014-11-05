@@ -142,7 +142,7 @@ class EntityRoot(object):
         self._values[ANNAL.CURIE.type_id]   = self._values.get(ANNAL.CURIE.type_id, self._entitytypeid)
         self._values[ANNAL.CURIE.type]      = self._values.get(ANNAL.CURIE.type,    self._entitytype)
         urlref = self.get_view_url_path()
-        self._values[ANNAL.CURIE.uri]       = self._values.get(ANNAL.CURIE.uri,     urlref)
+        #@@ self._values[ANNAL.CURIE.uri]       = self._values.get(ANNAL.CURIE.uri,     urlref)
         self._values[ANNAL.CURIE.url]       = urlref
         # log.info("set_values %r"%(self._values,))
         return self._values

@@ -246,7 +246,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="Type_uri"
                                placeholder="(URI)"  
-                               value="%(default_entity_url)s"/>
+                               value=""/>
                     </div>
                 </div>
             </div>
@@ -393,7 +393,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_render_edit'], "field/annalist_edit_identifier.html")
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Identifier")
-        self.assertEqual(r.context['fields'][3]['field_value'], view_url)
+        self.assertEqual(r.context['fields'][3]['field_value'], "")
         self.assertEqual(r.context['fields'][3]['options'], self.no_options)
         # 5th field - view id
         view_id_help = (

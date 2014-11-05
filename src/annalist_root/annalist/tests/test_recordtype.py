@@ -137,7 +137,7 @@ class RecordTypeTest(AnnalistTestCase):
         self.assertIn("/c/testcoll/_annalist_collection/types/Default_type", t.get_url())
         self.assertEqual(t.get_type_id(), "_type")
         td = t.get_values()
-        self.assertEqual(set(td.keys()), set(recordtype_load_keys()))
+        self.assertEqual(set(td.keys()), set(recordtype_load_keys(type_uri=True)))
         v = recordtype_read_values(type_id="Default_type")
         v.update(
             { 'rdfs:label':     'Default record type'
@@ -390,7 +390,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="Type_uri" 
                                placeholder="(URI)"
-                               value="%(default_entity_url)s"/>
+                               value=""/>
                     </div>
                 </div>
             </div>
@@ -433,7 +433,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
         self.assertEqual(r.context['entity_url'],       type_url)
-        self.assertEqual(r.context['entity_uri'],       type_url)
+        self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -441,7 +441,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="00000001",
             type_label=default_label("testcoll", "_type", "00000001"),
             type_help=default_comment("testcoll", "_type", "00000001"),
-            type_uri=type_url
+            type_uri=""
             )
         return
 
