@@ -15,6 +15,13 @@ DEBUG           = False
 TEMPLATE_DEBUG  = False
 ALLOWED_HOSTS   = ['.annalist.net']     # @@FIXME
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DATA_DIR, 'annalist_site/_annalist_site/db.sqlite3'),
+    }
+}
+
 LOGGING_FILE    = '/var/log/annalist/annalist.log'
 LOGGING = {
     'version': 1,

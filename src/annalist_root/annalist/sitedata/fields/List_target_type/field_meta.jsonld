@@ -2,8 +2,8 @@
 , "@type":                      ["annal:Field"]
 , "annal:id":                   "List_target_type"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Record type"
-, "rdfs:comment":               "Type (URI or CURIE) of record displayed using this list."
+, "rdfs:label":                 "Record type URI"
+, "rdfs:comment":               "Type (URI or CURIE) of record displayed using this list.  Used to determine field choices appropriate to this list view."
 , "annal:field_name":           "List_target_type"
 , "annal:field_render_type":    "Identifier"
 , "annal:field_value_type":     "annal:Identifier"

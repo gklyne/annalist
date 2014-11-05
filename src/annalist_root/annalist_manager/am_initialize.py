@@ -46,7 +46,9 @@ def am_initialize(annroot, userhome, userconfig, options):
     with SuppressLogging(logging.INFO):
         sitesettings = importlib.import_module(settings.modulename)
     providersdir = os.path.join(sitesettings.CONFIG_BASE, "providers")
+    databasedir  = os.path.dirname(sitesettings.DATABASES['default']['NAME'])
     ensure_dir(providersdir)
+    ensure_dir(databasedir)
     # Initialze the database
     status = am_errors.AM_SUCCESS
     subprocess_command = "django-admin migrate --pythonpath=%s --settings=%s"%(annroot, settings.modulename)

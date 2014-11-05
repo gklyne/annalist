@@ -1,6 +1,6 @@
 # Getting started with Annalist
 
-A 6 minute demonstration screencast can be downloaded at [http://annalist.net](http://annalist.net)
+A number of demonstration screencast videos, and accompanying scripts, can be found by browsing to the [demonstration/evaluation scripts](./demo-script.md) page.
 
 
 # Install and initialize software

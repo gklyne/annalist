@@ -74,11 +74,13 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - tried, but doesn't seem to be an easy way to do this (apart, maybe, from creating a new test runner)
 - [x] Initial documentation of authorization controls
 - [x] Review getting started documentation in light of new authz controls
-- [ ] Test creation of cruising log (again) using real log data
 - [x] Flesh out the user documentation
-- [ ] record new demo screencast
+- [x] record new demo screencasts
 - [x] Seems to be a problem renaming a type for which there are defined values: need to rename the typedata directory too.  See Issue [#34](https://github.com/gklyne/annalist/issues/34)
 - [ ] Create new type: leave type URI field blank.
+- [ ] Test creation of cruising log (again) using real log data
+- [ ] BUG: if default list description is deleted, collection cannot display.  Should revert to default default?
+- [ ] BUG: deleting type with existing records causes Server Error 500.
 
 (Release here?)
 
@@ -91,7 +93,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Refdefine view with list of fields?  Not if that impacts usability.
     - [ ] Define e-v-map for defined list of fields
     - [ ] Repeat to reference list of fields 
-    - [ ] Eliminate dupliction with list view
+    - [ ] Eliminate duplication with list view
     - [ ] Add option to add repeated field group
     - [ ] Revisit 
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
@@ -151,3 +153,5 @@ Notes for Future TODOs:
 - [ ] Consider associating property URI with view rather than/as well as field, so fields can be re-used
 - [ ] Option to auto-generate unique property URI for field in view, maybe using field definition as base
 - [ ] Need easier way to make new entries for fields that are referenced from a record; e.g. a `New value` button as part of an enum field.
+- [ ] Instead of separate link on the login page, have "Local" as a login service option.
+- [ ] Entity edit view: "New field" -> "New field type"
