@@ -447,5 +447,5 @@ Initially guided by mockups per https://github.com/gklyne/annalist/blob/master/d
     - [x] Update front page link at annalist.net
     - [x] Upload to PyPI
     - [x] Final updates to master
-    - [ ] Post announcement to Google Group, and elsewhere
+    - [x] Post announcement to Google Group, and elsewhere
 

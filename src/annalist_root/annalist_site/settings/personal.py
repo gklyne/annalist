@@ -6,6 +6,8 @@
 
 from common import *
 
+ANNALIST_VERSION_MSG = "Annalist version %s (personal configuration)"%(ANNALIST_VERSION)
+
 SETTINGS_MODULE = __name__
 BASE_DATA_DIR   = os.path.expanduser("~")
 CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
@@ -64,7 +66,7 @@ LOGGING = {
         # Might as well log any errors anywhere else in Django
         'django': {
             'handlers': ['logfile'],
-            'level': 'ERROR',
+            'level': 'INFO',
             'propagate': False,
         },
         'annalist_site': {
@@ -87,7 +89,8 @@ LOGGING = {
 
 import logging
 log = logging.getLogger(__name__)
-log.info("Annalist version %s (personal configuration)"%(ANNALIST_VERSION))
+# log.info("Annalist version %s (personal configuration)"%(ANNALIST_VERSION))
+log.info(ANNALIST_VERSION_MSG)
 log.debug("SETTINGS_MODULE:  "+SETTINGS_MODULE)
 log.debug("BASE_DATA_DIR:    "+BASE_DATA_DIR)
 log.debug("CONFIG_BASE:      "+CONFIG_BASE)

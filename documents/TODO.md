@@ -106,7 +106,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared deployment should generate a new secret key in settings
-- [ ] Use separate Django database for each configuration
+- [x] Use separate Django database for each configuration
 - [ ] Figure out how to preserve defined users when reinstalling the software.
     - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
 - [x] Think about how to handle change of email address (option to remove user from Django database?)
@@ -130,6 +130,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Provide content for the links in the page footer
 - [ ] 'Add field' can't be followed by 'New field' because of duplicate property used
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
+    - [x] annalist-manager serverlog command returns log file name
+    - [ ] site link to view log
 - [ ] Include date+time in log entries
 
 

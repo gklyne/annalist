@@ -11,6 +11,8 @@ from common import *
 import logging
 log = logging.getLogger(__name__)
 
+ANNALIST_VERSION_MSG = "Annalist version %s (test configuration)"%(ANNALIST_VERSION)
+
 # Override authentication backend to use local database only
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -91,7 +93,8 @@ SETTINGS_MODULE     = __name__
 BASE_DATA_DIR       = SITE_SRC_ROOT+"/sampledata/data"
 CONFIG_BASE         = os.path.join(os.path.expanduser("~"), ".annalist/")
 
-log.info("Annalist version %s (test configuration)"%(ANNALIST_VERSION))
+log.info(ANNALIST_VERSION_MSG)
+# log.info("Annalist version %s (test configuration)"%(ANNALIST_VERSION))
 log.info("SETTINGS_MODULE: "+SETTINGS_MODULE)
 log.info("BASE_DATA_DIR:   "+BASE_DATA_DIR)
 log.info("CONFIG_BASE:     "+CONFIG_BASE)
