@@ -23,7 +23,9 @@ See [Installing and setting up Annalist](documents/installing-annalist.md), and 
 Using Annalist
 --------------
 
-See the 6 minute [demonstration screencast](http://annalist.net/media/annalist-demo-music-instrument-catalogue.mp4) or the [Guide to using Annalist](documents/using-annalist.md)
+See the [Guide to using Annalist](documents/using-annalist.md)
+
+There are also a number of demonstration screencast videos, and accompanying scripts, which can be found at [demonstration/evaluation scripts](./demo-script.md) page.
 
 
 Goals

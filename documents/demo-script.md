@@ -2,11 +2,11 @@
 
 The following introductory screencast vodeos can be downloaded from [annalist.net](http://annalist.net):
 
-1. [Initializing Annalist site data](http://annalist.net/media/annalist-site-setup.mp4) (1m47s) - shows the procedure for first-time initialization of new Annalist site data using the `annalistr-manager` utility.
-2. [Log in and and create first collection](http://annalist.net/media/annalist-login-create-collection.mp4) (3m32s) - 
-3. [Initial entry of data in a new collection](http://annalist.net/media/annallist-create-configure-data-records.mp4) (3m32s) - 
-4. [Configure types and record views in a data collection](http://annalist.net/media/annallist-configure-type-view-records.mp4) (3m46s)
-5. [Configure list view and default display](http://annalist.net/media/annallist-configure-default-list-record.mp4) (3m51s)
+1. [Initializing Annalist site data](http://annalist.net/media/annalist-site-setup.mp4) (1m47s) - shows the procedure for first-time initialization of new Annalist site data using the `annalist-manager` utility.
+2. [Log in and and create first collection](http://annalist.net/media/annalist-login-create-collection.mp4) (3m32s) - steps through an initial login using the `admin` user created previously, create a new collection and create permissions for a Google-authenticated user to modify that collection.
+3. [Initial entry of data in a new collection](http://annalist.net/media/annallist-create-configure-data-records.mp4) (3m32s) - covers adding data to a new collection, and adding data record fields beyond the initial default fields.
+4. [Configure types and record views in a data collection](http://annalist.net/media/annallist-configure-type-view-records.mp4) (3m46s) - customize a collectionto reflect the data it contains through the addition of record types and record views.
+5. [Configure list view and default display](http://annalist.net/media/annallist-configure-default-list-record.mp4) (3m51s) - customize collection content listings and defaults to simplify the entry of new data.
 6. [Using multiple record types](http://annalist.net/media/@@TODO.mp4) (@@TODO)
 
 Scripts for the above demonstration sequences, to allow the seuqnce to be performed locally, can be found below.
