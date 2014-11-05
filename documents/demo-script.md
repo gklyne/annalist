@@ -1,6 +1,6 @@
 # Simple demonstration/evaluation scripts
 
-The following introductory screencast vodeos can be downloaded from [annalist.net](http://annalist.net):
+The following introductory screencast videos can be downloaded from [annalist.net](http://annalist.net):
 
 1. [Initializing Annalist site data](http://annalist.net/media/annalist-site-setup.mp4) (1m47s) - shows the procedure for first-time initialization of new Annalist site data using the `annalist-manager` utility.
 2. [Log in and and create first collection](http://annalist.net/media/annalist-login-create-collection.mp4) (3m32s) - steps through an initial login using the `admin` user created previously, create a new collection and create permissions for a Google-authenticated user to modify that collection.
@@ -9,7 +9,7 @@ The following introductory screencast vodeos can be downloaded from [annalist.ne
 5. [Configure list view and default display](http://annalist.net/media/annallist-configure-default-list-record.mp4) (3m51s) - customize collection content listings and defaults to simplify the entry of new data.
 6. [Using multiple record types](http://annalist.net/media/@@TODO.mp4) (@@TODO)
 
-Scripts for the above demonstration sequences, to allow the seuqnce to be performed locally, can be found below.
+Scripts for the above demonstration sequences, to allow the operations shown to be performed locally, can be found below.
 
 The [original 6 minute demonstration screencast](http://annalist.net/media/orig-annalist-demo-music-instrument-catalogue.mp4) can also be downloaded, but this is based on earlier software and differs in several ways from the current software.
 

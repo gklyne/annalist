@@ -25,7 +25,7 @@ Using Annalist
 
 See the [Guide to using Annalist](documents/using-annalist.md)
 
-There are also a number of demonstration screencast videos, and accompanying scripts, which can be found at [demonstration/evaluation scripts](./demo-script.md) page.
+There are also a number of demonstration screencast videos, and accompanying scripts, which can be found at [demonstration/evaluation scripts](documents/demo-script.md) page.
 
 
 Goals
