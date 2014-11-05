@@ -256,7 +256,7 @@ def recordlist_view_context_data(
             , 'options':            []
             }
           , { 'field_id':           'List_target_type'
-            , 'field_label':        'Record type'
+            , 'field_label':        'Record type URI'
             , 'field_render_view':  'field/annalist_view_identifier.html'
             , 'field_render_edit':  'field/annalist_edit_identifier.html'
             , 'field_name':         'List_target_type'

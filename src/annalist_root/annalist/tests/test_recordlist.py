@@ -268,7 +268,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         #
         self.assertEqual(r.context['fields'][7]['field_id'], 'List_target_type')
         self.assertEqual(r.context['fields'][7]['field_name'], 'List_target_type')
-        self.assertEqual(r.context['fields'][7]['field_label'], 'Record type')
+        self.assertEqual(r.context['fields'][7]['field_label'], 'Record type URI')
         self.assertEqual(r.context['fields'][7]['field_value'], list_target_type)
         #
         # Field list (List_id, List_label, List_comment, field descriptions)
