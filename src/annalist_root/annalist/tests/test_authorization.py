@@ -215,17 +215,6 @@ class AuthorizationTest(AnnalistTestCase):
             self.testcoll, user_id, 
             ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             )
-        #@@
-        # user = AnnalistUser.create(self.testcoll, user_id, 
-        #     annalistuser_create_values(
-        #         coll_id="testcoll", user_id=user_id,
-        #         user_name="Test User",
-        #         user_uri="mailto:%s@%s"%(user_id, TestHost), 
-        #         user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
-        #         )
-        #     )
-        # return user
-        #@@
 
     def list_users(self):
         # requires ADMIN

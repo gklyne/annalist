@@ -68,15 +68,6 @@ def recordfield_url(coll_id, field_id):
     if not valid_id(field_id):
         field_id = "___"
     return collection_entity_view_url(coll_id=coll_id, type_id="_field", entity_id=field_id)
-    #@@
-    # viewname = "AnnalistEntityAccessView"
-    # kwargs   = {'coll_id': coll_id, "type_id": "_field"}
-    # if valid_id(field_id):
-    #     kwargs.update({'entity_id': field_id})
-    # else:
-    #     kwargs.update({'entity_id': "___"})
-    # return reverse(viewname, kwargs=kwargs)
-    #@@
 
 def recordfield_edit_url(action=None, coll_id=None, field_id=None):
     """

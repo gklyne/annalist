@@ -66,15 +66,6 @@ def recordlist_url(coll_id, list_id):
     if not valid_id(list_id):
         list_id = "___"
     return collection_entity_view_url(coll_id=coll_id, type_id="_list", entity_id=list_id)
-    #@@
-    # viewname = "AnnalistEntityAccessView"
-    # kwargs   = {'coll_id': coll_id, "type_id": "_list"}
-    # if valid_id(list_id):
-    #     kwargs.update({'entity_id': list_id})
-    # else:
-    #     kwargs.update({'entity_id': "___"})
-    # return reverse(viewname, kwargs=kwargs)
-    #@@
 
 def recordlist_edit_url(action=None, coll_id=None, list_id=None):
     """

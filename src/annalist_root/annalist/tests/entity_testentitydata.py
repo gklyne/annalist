@@ -68,11 +68,6 @@ def entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
     if not valid_id(entity_id):
         entity_id = "___"
     return collection_entity_view_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
-    #@@
-    # viewname = "AnnalistEntityAccessView"
-    # kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
-    # return reverse(viewname, kwargs=kwargs)
-    #@@
 
 def entitydata_edit_url(action=None, coll_id="testcoll", type_id=None, entity_id=None, view_id="Default_view"):
     viewname = ( 
@@ -429,7 +424,7 @@ def entitydata_default_view_form_data(
 # Used in test_entitygenericedit - move?
 
 def entitydata_recordtype_view_context_data(
-        entity_id=None, orig_id=None, type_id="testtype", type_ids=[],
+        entity_id=None, orig_id=None, type_id="testtype", type_uri=None, type_ids=[],
         action=None, update="Entity"
     ):
     context_dict = (
@@ -475,7 +470,7 @@ def entitydata_recordtype_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_uri'
             , 'field_value_type':   'annal:Identifier'
-            # , 'field_value':      (Supplied separately)
+            , 'field_value':        ""
             , 'options':            []
             }
           ]
@@ -485,8 +480,9 @@ def entitydata_recordtype_view_context_data(
         context_dict['fields'][0]['field_value'] = entity_id
         context_dict['fields'][1]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
         context_dict['fields'][2]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
-        context_dict['fields'][3]['field_value'] = TestBasePath + "/c/%s/d/%s/%s/"%("testcoll", "testtype", entity_id)
-        context_dict['orig_id']     = entity_id
+        context_dict['orig_id']                  = entity_id
+    if type_uri:
+        context_dict['fields'][3]['field_value'] = type_uri # TestBasePath + "/c/%s/d/%s/%s/"%("testcoll", "testtype", entity_id)
     if orig_id:
         context_dict['orig_id']     = orig_id
     if action:  
@@ -495,7 +491,7 @@ def entitydata_recordtype_view_context_data(
 
 def entitydata_recordtype_view_form_data(
         coll_id="testcoll", 
-        type_id="testtype", orig_type=None,
+        type_id="testtype", orig_type=None, type_uri=None,
         entity_id=None, orig_id=None, 
         action=None, cancel=None, update="Entity",
         add_view_field=None):
@@ -512,11 +508,13 @@ def entitydata_recordtype_view_form_data(
         form_data_dict['entity_id']     = entity_id
         form_data_dict['Type_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Type_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
-        form_data_dict['Type_uri']      = type_url
+        form_data_dict['Type_uri']      = "" # type_url
         form_data_dict['orig_id']       = entity_id
     if type_id:
         form_data_dict['entity_type']   = type_id
         form_data_dict['orig_type']     = type_id
+    if type_uri:
+        form_data_dict['Type_uri']      = type_uri        
     if orig_id:
         form_data_dict['orig_id']       = orig_id
     if orig_type:

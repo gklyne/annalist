@@ -196,6 +196,7 @@ class GenericEntityEditView(AnnalistGenericView):
             })
         # Process form response and respond accordingly
         #@@ TODO: this should be redundant - create as-needed, not before
+        #         as of 2014-11-07, removing this causes test failures
         if not typeinfo.entityparent._exists():
             # Create RecordTypeData when not already exists
             RecordTypeData.create(viewinfo.collection, typeinfo.entityparent.get_id(), {})
@@ -245,7 +246,10 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         # @@TODO: Possibly create FieldValueMap and return map_entity_to_context value? 
         #         or extract this logic and share?
-        field_description = FieldDescription(viewinfo.collection, { ANNAL.CURIE.field_id: "View_choice" }, None)
+        field_description = FieldDescription(viewinfo.collection, 
+            { ANNAL.CURIE.field_id: "View_choice" }, 
+            None
+            )
         entityvals        = { field_description['field_property_uri']: viewinfo.view_id }
         options           = field_description['field_choices']
         return bound_field(field_description, entityvals, options)
@@ -576,19 +580,8 @@ class GenericEntityEditView(AnnalistGenericView):
         # values not in view are preserved.
         entity_values  = orig_entity.get_values() if orig_entity else {}
         # log.info("orig entity_values %r"%(entity_values,))
-        #@@
-        # if new_typeinfo.recordtype and ANNAL.CURIE.uri in new_typeinfo.recordtype:
-        #     typeuri = new_typeinfo.recordtype.get(ANNAL.CURIE.uri, None)
-        #     entity_values['@type'] = typeuri   # NOTE: previous types not carried forward
-        # if ( (ANNAL.CURIE.uri in entity_values) and 
-        #      ( ( entity_values[ANNAL.CURIE.uri] == entity_values.get(ANNAL.CURIE.url, None) ) or 
-        #        ( action == "copy" ) ) ):
-        #     del entity_values[ANNAL.CURIE.uri]          # Don't save URI if same as URL, or if copying
-        #@@
         if action == "copy":
             entity_values.pop(ANNAL.CURIE.uri, None)      # Force new URI on copy
-        # @@TODO: remove next - ANNAL.CURIE.url gets updated on save anyway
-        entity_values.pop(ANNAL.CURIE.url, None)    # Force re-allocation of URL
         entity_values.update(entityvaluemap.map_form_data_to_values(form_data))
         entity_values[ANNAL.CURIE.type_id] = entity_type_id
         entity_values[ANNAL.CURIE.type]    = new_typeinfo.entityclass._entitytype
@@ -669,18 +662,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 for d in src_typeinfo.enum_entities():
                     data_id   = d.get_id()
                     data_vals = d.get_values()
-                    #@@
-                    # @@TODO: factor out duplication with code above
-                    # @@TODO: review handling of URI, type URI and URL
-                    # if dst_typeinfo.recordtype and ANNAL.CURIE.uri in dst_typeinfo.recordtype:
-                    #     typeuri = dst_typeinfo.recordtype.get(ANNAL.CURIE.uri, None)
-                    #     data_vals['@type'] = typeuri or None   # NOTE: previous types not carried forward
-                    # if ( (ANNAL.CURIE.uri in data_vals) and 
-                    #      ( data_vals[ANNAL.CURIE.uri] == data_vals.get(ANNAL.CURIE.url, None) ) ):
-                    #     del data_vals[ANNAL.CURIE.uri]          # Don't save URI if same as (old) URL
-                    #@@
-                    # @@TODO: remove next - ANNAL.CURIE.url gets updated on save anyway
-                    data_vals.pop(ANNAL.CURIE.url, None)        # Force re-allocation of URL
                     data_vals[ANNAL.CURIE.type_id] = entity_id
                     data_vals[ANNAL.CURIE.type]    = dst_typeinfo.entityclass._entitytype
                     dst_typeinfo.create_entity(data_id, data_vals)

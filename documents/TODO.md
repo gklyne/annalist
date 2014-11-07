@@ -80,7 +80,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Create new type: leave type URI field blank.
 - [x] BUG: if default list description is deleted, collection cannot display.  Should revert to default default? [#36](https://github.com/gklyne/annalist/issues/36)
 - [x] BUG: deleting type with existing records causes Server Error 500.  [#34](https://github.com/gklyne/annalist/issues/34)
-- [ ] Clean out old code, especially check @@TODOs in `entityedit.save_entity`
+- [x] Clean out old code, especially check @@TODOs in `entityedit.save_entity`
 - [ ] Test creation of cruising log (again) using real log data
 
 (Release here?)

@@ -240,14 +240,12 @@ class EntityTypeInfo(object):
             self.entitymessages  = ENTITY_MESSAGES
             self.permissions_map = ENTITY_PERMISSIONS
         if not self.recordtype:
-            #@@
             # .recordtype is used by views.displayinfo to locate the default
             # view and/or list id for examining records of a particular type.
             #
             # Also used in entityedit for getting @type URI/CURIE values.
             #
             # Used in render_utils to get link to type record
-            #@@
             log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
         return
 
@@ -273,11 +271,12 @@ class EntityTypeInfo(object):
             (entity_id, self.entityparent, entity_values)
             )
         # Set type URI for entity; previous types are not carried forwards
+        # If type does not define a URI, use type URL
         typeuri = None
         if self.recordtype:
             if ANNAL.CURIE.uri in self.recordtype:
                 typeuri = self.recordtype[ANNAL.CURIE.uri]
-            else:
+            if not typeuri:
                 typeuri = self.recordtype[ANNAL.CURIE.url]
         entity_values['@type'] = typeuri    # NOTE: previous type not carried forward
         # Don't save entity URI if same as URL
@@ -360,7 +359,6 @@ class EntityTypeInfo(object):
             values.pop("@id", None)
             values.pop(ANNAL.CURIE.id,  None)
             values.pop(ANNAL.CURIE.url, None)
-            #@@ values.pop(ANNAL.CURIE.uri, None)
         values[ANNAL.CURIE.id] = entity_id
         return values
 

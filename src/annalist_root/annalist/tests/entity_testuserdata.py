@@ -63,15 +63,6 @@ def annalistuser_url(coll_id="testcoll", user_id="testuser"):
     if not valid_id(user_id):
         user_id = "___"
     return collection_entity_view_url(coll_id=coll_id, type_id="_user", entity_id=user_id)
-    #@@
-    # viewname = "AnnalistEntityAccessView"
-    # kwargs   = {'coll_id': coll_id, "type_id": "_user"}
-    # if valid_id(user_id):
-    #     kwargs.update({'entity_id': user_id})
-    # else:
-    #     kwargs.update({'entity_id': "___"})
-    # return reverse(viewname, kwargs=kwargs)
-    #@@
 
 def annalistuser_edit_url(action=None, coll_id=None, user_id=None):
     """
@@ -104,7 +95,7 @@ def annalistuser_edit_url(action=None, coll_id=None, user_id=None):
 def annalistuser_value_keys():
     ks = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url' #@@ , 'annal:uri'
+        , 'annal:type', 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:user_uri'
         , 'annal:user_permissions'
@@ -147,7 +138,6 @@ def annalistuser_values(
         { 'annal:id':       user_id
         , 'annal:type_id':  "_user"
         , 'annal:url':      user_url
-        #@@ , 'annal:uri':      user_url
         })
     return d
 

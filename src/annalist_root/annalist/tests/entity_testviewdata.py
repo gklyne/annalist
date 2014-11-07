@@ -66,15 +66,6 @@ def recordview_url(coll_id, view_id):
     if not valid_id(view_id):
         view_id = "___"
     return collection_entity_view_url(coll_id=coll_id, type_id="_view", entity_id=view_id)
-    #@@
-    # viewname = "AnnalistEntityAccessView"
-    # kwargs   = {'coll_id': coll_id, "type_id": "_view"}
-    # if valid_id(view_id):
-    #     kwargs.update({'entity_id': view_id})
-    # else:
-    #     kwargs.update({'entity_id': "___"})
-    # return reverse(viewname, kwargs=kwargs)
-    #@@
 
 def recordview_edit_url(action=None, coll_id=None, view_id=None):
     """
@@ -161,10 +152,6 @@ def recordview_values(
         coll_id, view_id, update=update, view_uri=view_uri, field3_placement=field3_placement
         ).copy()
     view_url = recordview_url(coll_id, view_id)
-    #@@
-    # if not view_uri:
-    #     view_uri = view_url
-    #@@    
     d.update(
         { 'annal:id':       view_id
         , 'annal:type_id':  "_view"

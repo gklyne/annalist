@@ -142,10 +142,8 @@ def collection_values(coll_id, update="Collection", hosturi=TestHostUri):
         { '@id':            "../"
         , '@type':          ["annal:Collection"]
         , 'annal:id':       coll_id
-        #@@ , 'annal:type_id':  "_coll"
         , 'annal:type':     "annal:Collection"
         , 'annal:url':      collection_view_url(coll_id=coll_id)
-        #@@ , 'annal:uri':      collection_view_url(coll_id=coll_id)
         })
     return d
 

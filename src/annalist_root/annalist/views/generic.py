@@ -333,12 +333,6 @@ class AnnalistGenericView(ContentNegotiationView):
             else:
                 err = self.error403values(scope=scope)
             return self.error(err)
-        #@@ (original)
-        # if scope != "VIEW":
-        #     if not self.request.user.is_authenticated():
-        #         log.debug("Authorize %s denied"%(scope))
-        #         return self.error(self.error401values(scope=scope))
-        #@@
         return None
 
     def form_action_auth(self, action, auth_collection, perm_required):

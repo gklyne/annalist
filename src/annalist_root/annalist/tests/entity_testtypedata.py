@@ -127,10 +127,6 @@ def recordtype_values(
         coll_id="testcoll", type_id="testtype", type_uri=None,
         update="RecordType", hosturi=TestHostUri):
     type_url = recordtype_url(coll_id=coll_id, type_id=type_id)
-    #@@
-    # if not type_uri:
-    #     type_uri = type_url
-    #@@
     d = recordtype_create_values(coll_id, type_id, update=update).copy()
     d.update(
         { 'annal:id':       type_id
