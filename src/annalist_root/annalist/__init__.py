@@ -7,6 +7,9 @@ __author_email__  = "GK@ACM.ORG"
 __copyright__     = "Copyright 2014, G. Klyne"
 __license__       = "MIT (http://opensource.org/licenses/MIT)"
 
+# https://docs.djangoproject.com/en/dev/ref/applications/
+default_app_config = 'annalist.apps.AnnalistConfig'
+
 # Version 0.1: initial public prototype
 #__version__        = "0.1.1"    # Feature freeze
 #__version__        = "0.1.2"    # Test with Django 1.7

@@ -19,6 +19,7 @@ AUTHENTICATION_BACKENDS = (
     )
 
 # Override logging setings for tests
+LOGGING_FILE = SITE_SRC_ROOT+'/annalist.log'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -43,9 +44,15 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
+        },
+        'logfile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': LOGGING_FILE,
+            'formatter': 'timed'
         },
         'null': {
             'class': 'logging.NullHandler',
@@ -57,15 +64,15 @@ LOGGING = {
         #      'level': 'INFO',
         #  },
         'annalist': {
-            'handlers': ['console'],
+            'handlers': ['console', 'logfile'],
             'level': 'INFO',
             'propagate': False
         },
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console', 'logfile'],
         },
         'py.warnings': {
-            'handlers': ['console'],
+            'handlers': ['console', 'logfile'],
         },
     }
 }

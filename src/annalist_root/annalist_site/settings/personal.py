@@ -24,7 +24,7 @@ DATABASES = {
     }
 }
 
-LOGGING_FILE    = SITE_SRC_ROOT+'/annalist.log'
+LOGGING_FILE = SITE_SRC_ROOT+'/annalist.log'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -52,6 +52,7 @@ LOGGING = {
         # Log to a text file that can be rotated by logrotate
         'logfile': {
             'class': 'logging.handlers.WatchedFileHandler',
+            'level': 'INFO',
             'filename': LOGGING_FILE,
             'formatter': 'timed'
         },
@@ -63,6 +64,11 @@ LOGGING = {
         #     'level': 'ERROR',
         #     'propagate': True,
         # },
+        'django.request': {
+            'handlers': ['logfile'],
+            'level': 'INFO',
+            'propagate': True,
+        },
         # Might as well log any errors anywhere else in Django
         'django': {
             'handlers': ['logfile'],
