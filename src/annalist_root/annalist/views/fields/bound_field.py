@@ -243,7 +243,10 @@ def get_entity_values(displayinfo, entity, entity_id=None):
     entityvals['entity_link']      = entity.get_view_url_path()
     # log.info("type_id %s"%(type_id))
     entityvals['entity_type_id']   = type_id
-    entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
+    if typeinfo.recordtype:
+        entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
+    # else:
+    #     entityvals['entity_type_link'] = ...
     return entityvals
 
 if __name__ == "__main__":
