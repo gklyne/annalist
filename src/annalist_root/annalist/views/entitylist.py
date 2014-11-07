@@ -243,6 +243,12 @@ class EntityGenericListView(AnnalistGenericView):
                         message.SITE_ENTITY_FOR_DELETE%{'id': entity_id},
                         continuation_url=continuation_next
                         )
+                    or
+                    self.check_delete_type_values(listinfo,
+                        entity_id, entity_type,
+                        message.TYPE_VALUES_FOR_DELETE%{'type_id': entity_id},
+                        continuation_url=continuation_next
+                        )
                     )
                 if not redirect_uri:
                     # Get user to confirm action before actually doing it
@@ -351,5 +357,28 @@ class EntityGenericListView(AnnalistGenericView):
         entityvals        = { field_description['field_property_uri']: listinfo.list_id }
         options           = field_description['field_choices']
         return bound_field(field_description, entityvals, options)
+
+    def check_delete_type_values(
+            self, listinfo, entity_id, entity_type, msg, continuation_url=None
+            ):
+        """
+        Checks for attempt to delete type with existing values
+
+        Returns redirect URI to display error, or None if no error
+        """
+        if entity_type == "_type":
+            typeinfo = EntityTypeInfo(
+                listinfo.site, listinfo.collection, entity_id
+                )
+            if next(typeinfo.enum_entities(), None) is not None:
+                return (
+                    # Type has valu7es: redisplay form with error message
+                    uri_with_params(
+                        listinfo.view.get_request_path(),
+                        listinfo.view.error_params(msg),
+                        continuation_url
+                        )
+                    )
+        return None
 
 # End.

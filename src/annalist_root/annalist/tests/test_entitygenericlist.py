@@ -638,52 +638,54 @@ class EntityGenericListViewTest(AnnalistTestCase):
     #   -------- delete --------
 
     def test_post_delete_type_entity(self):
-        f = entitylist_form_data("delete", entities=["_type/testtype"])
+        testtypedelete = RecordType.create(self.testcoll, "testtypedelete", recordtype_create_values("testcoll", "testtypedelete"))
+        testdatadelete = RecordTypeData.create(self.testcoll, "testtypedelete", {})
+        f = entitylist_form_data("delete", entities=["_type/testtypedelete"])
         u = entitydata_list_type_url("testcoll", "_type", list_id="Type_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Confirm requested action</h3>")
-        self.assertContains(r, "Remove record testtype of type _type in collection testcoll: Are you sure?")
+        self.assertContains(r, "Remove record testtypedelete of type _type in collection testcoll: Are you sure?")
         self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
         self.assertContains(r,
             '<input type="hidden" name="confirmed_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>', 
             html=True
             )
         self.assertEqual(r.context['action_description'], 
-            'Remove record testtype of type _type in collection testcoll')
+            'Remove record testtypedelete of type _type in collection testcoll')
         self.assertEqual(r.context['confirmed_action'], 
             '/testsite/c/testcoll/d/_type/!delete_confirmed')
         self.assertEqual(r.context['action_params'], 
-            confirm_delete_params(button_id="entity_delete", entity_id="testtype", type_id="_type", list_id="Type_list")
+            confirm_delete_params(button_id="entity_delete", entity_id="testtypedelete", type_id="_type", list_id="Type_list")
             )
         self.assertEqual(r.context['cancel_action'], 
             '/testsite/c/testcoll/l/Type_list/_type/')
         return
 
-    def test_post_delete_all_entity(self):
-        f = entitylist_form_data("delete", entities=["_type/testtype"])
+    def test_post_delete_type_not_exists(self):
+        f = entitylist_form_data("delete", entities=["_type/sitetype"])
         u = entitydata_list_all_url("testcoll", list_id="Type_list")
         r = self.client.post(u, f)
-        self.assertEqual(r.status_code,   200)
-        self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Confirm requested action</h3>")
-        # print "**********"
-        # print r.content
-        # print "**********"
-        self.assertContains(r, "<h3>Confirm requested action</h3>")
-        self.assertContains(r, "Remove record testtype of type _type in collection testcoll: Are you sure?")
-        self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
-        self.assertContains(r, '<input type="hidden" name="confirmed_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>', html=True)
-        self.assertEqual(r.context['action_description'], 
-            'Remove record testtype of type _type in collection testcoll')
-        self.assertEqual(r.context['confirmed_action'], 
-            '/testsite/c/testcoll/d/_type/!delete_confirmed')
-        self.assertEqual(r.context['action_params'], 
-            confirm_delete_params(button_id="entity_delete", entity_id="testtype", type_id=None, list_id="Type_list")
-            )
-        self.assertEqual(r.context['cancel_action'], 
-            '/testsite/c/testcoll/l/Type_list/')
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        l = r['location']
+        self.assertIn(u, l)
+        self.assertIn("error_head=Problem%20with%20input", l)
+        # Absent entity assumed to be site level
+        self.assertIn("error_message=Cannot%20remove%20site%20built-in%20entity%20sitetype", l)
+        return
+
+    def test_post_delete_type_entity_with_values(self):
+        f = entitylist_form_data("delete", entities=["_type/testtype"])
+        u = entitydata_list_type_url("testcoll", "_type", list_id="Type_list")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        l = r['location']
+        self.assertIn(u, l)
+        self.assertIn("error_head=Problem%20with%20input", l)
+        self.assertIn("error_message=Cannot%20remove%20type%20testtype%20with%20existing%20values", l)
         return
 
     def test_post_delete_site_entity(self):
