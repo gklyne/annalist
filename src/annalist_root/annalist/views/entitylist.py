@@ -119,7 +119,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         Create a form for listing entities.
         """
-        log.debug("entitylist.get: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
+        log.info("views.entitylist.get:  coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
         listinfo = self.list_setup(coll_id, type_id, list_id)
         if listinfo.http_response:
             return listinfo.http_response
@@ -166,7 +166,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         Handle response from dynamically generated list display form.
         """
-        log.debug("entitylist.post: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
+        log.info("views.entitylist.post: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
         # log.info("  %s"%(self.get_request_path()))
         # log.info("  form data %r"%(request.POST))
         continuation_next, continuation_here = self.continuation_urls(

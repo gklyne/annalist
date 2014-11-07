@@ -78,9 +78,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] record new demo screencasts
 - [x] Seems to be a problem renaming a type for which there are defined values: need to rename the typedata directory too.  See Issue [#34](https://github.com/gklyne/annalist/issues/34)
 - [x] Create new type: leave type URI field blank.
-- [ ] Test creation of cruising log (again) using real log data
-- [ ] BUG: if default list description is deleted, collection cannot display.  Should revert to default default?
+- [x] BUG: if default list description is deleted, collection cannot display.  Should revert to default default? [#36](https://github.com/gklyne/annalist/issues/36)
 - [ ] BUG: deleting type with existing records causes Server Error 500.
+- [ ] Test creation of cruising log (again) using real log data
 
 (Release here?)
 
