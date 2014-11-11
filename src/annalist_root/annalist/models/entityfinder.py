@@ -18,6 +18,26 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitytypeinfo import EntityTypeInfo, get_built_in_type_ids
 
 #   -------------------------------------------------------------------
+#   Auxilliary fiunctions
+#   -------------------------------------------------------------------
+
+def order_entity_key(entity):
+    """
+    Function returns sort key for ordering entities by type and entity id
+
+    Use with `sorted`, thus:
+
+        sorted(entities, order_entity_key)
+    """
+    type_id   = entity.get_type_id() 
+    entity_id = entity.get_id()
+    key = ( 0 if type_id.startswith('_')   else 1, type_id, 
+            0 if entity_id.startswith('_') else 1, entity_id
+          )
+    # log.info(key)
+    return key
+
+#   -------------------------------------------------------------------
 #   EntityFinder
 #   -------------------------------------------------------------------
 
@@ -102,18 +122,10 @@ class EntityFinder(object):
         return entities
 
     def get_entities_sorted(self, user_permissions=None, type_id=None, context={}, search=None):
-        def entity_sort_key(e):
-            type_id   = e.get_type_id() 
-            entity_id = e.get_id()
-            key = ( 0 if type_id.startswith('_')   else 1, type_id, 
-                    0 if entity_id.startswith('_') else 1, entity_id
-                  )
-            # log.info(key)
-            return key
         entities = self.get_entities(
             user_permissions, type_id=type_id, context=context, search=search
             )
-        return sorted(entities, key=entity_sort_key)
+        return sorted(entities, key=order_entity_key)
 
     @classmethod
     def entity_contains(cls, e, search):

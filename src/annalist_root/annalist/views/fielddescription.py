@@ -6,6 +6,8 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import collections
+
 import logging
 log = logging.getLogger(__name__)
 
@@ -79,7 +81,8 @@ class FieldDescription(object):
             , 'field_options_valkey':   recordfield.get(ANNAL.CURIE.options_valkey, None)
             , 'field_options_typeref':  recordfield.get(ANNAL.CURIE.options_typeref, None)
             , 'field_restrict_values':  recordfield.get(ANNAL.CURIE.restrict_values, "ALL")
-            , 'field_choices':          None
+            , 'field_choice_labels':    None
+            , 'field_choice_links':     None
             })
         type_ref = self._field_context['field_options_typeref']
         if type_ref:
@@ -88,11 +91,18 @@ class FieldDescription(object):
             entities        = entity_finder.get_entities_sorted(type_id=type_ref, context=view_context)
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
+            # Uses collections.OrderedfDict to preserve entity ordering
             # 'Enum_optional' adds a blank entry at the start of the list
-            self._field_context['field_choices'] = (
-                ([""] if field_render_type == "Enum_optional" else []) +
-                [e.get_id() for e in entities if e.get_id() != "_initial_values"]
-                )
+            self._field_context['field_choice_labels'] = collections.OrderedDict()
+            self._field_context['field_choice_links']  = collections.OrderedDict()
+            if field_render_type == "Enum_optional":
+                self._field_context['field_choice_labels'][''] = ""
+                self._field_context['field_choice_links']['']  = None
+            for e in entities:
+                eid = e.get_id()
+                if eid != "_initial_values":
+                    self._field_context['field_choice_labels'][eid] = eid   # @@TODO: be smarter about label?
+                    self._field_context['field_choice_links'][eid]  = e.get_view_url_path()
             # log.info("typeref %s: %r"%
             #     (self._field_context['field_options_typeref'], list(self._field_context['field_choices']))
             #     )

@@ -251,8 +251,10 @@ class GenericEntityEditView(AnnalistGenericView):
             None
             )
         entityvals        = { field_description['field_property_uri']: viewinfo.view_id }
-        options           = field_description['field_choices']
-        return bound_field(field_description, entityvals, options)
+        option_labels     = field_description['field_choice_labels']
+        if option_labels is not None:
+            option_labels = option_labels.values()
+        return bound_field(field_description, entityvals, option_labels)
 
     def get_entity(self, entity_id, typeinfo, action):
         """
