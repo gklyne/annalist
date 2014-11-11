@@ -232,7 +232,7 @@ def am_updateadminuser(annroot, userhome, options):
     """
     Update existing Django user to admin status
 
-    annroot     is the root directory for theannalist software installation.
+    annroot     is the root directory for the Annalist software installation.
     userhome    is the home directory for the host system user issuing the command.
     options     contains options parsed from the command line.
 
@@ -264,6 +264,7 @@ def am_updateadminuser(annroot, userhome, options):
     user.is_staff     = True
     user.is_superuser = True
     user.save()
+    # Create site permissions record for admin user
     user_details = (
         { 'name':       user_name
         , 'email':      user.email
@@ -271,7 +272,6 @@ def am_updateadminuser(annroot, userhome, options):
         , 'first_name': user.first_name
         , 'last_name':  user.last_name
         })
-    # Create site permissions record for admin user
     status = create_site_permissions(
         sitesettings, user_details, 
         ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]

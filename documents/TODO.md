@@ -82,6 +82,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: deleting type with existing records causes Server Error 500.  [#34](https://github.com/gklyne/annalist/issues/34)
 - [x] Clean out old code, especially check @@TODOs in `entityedit.save_entity`
 - [ ] Test creation of cruising log (again) using real log data
+    - [ ] BUG: place name links to daily log record, not place record
 
 (Release here?)
 
@@ -133,8 +134,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
     - [ ] site link to view log
-- [ ] Include date+time in log entries
-
+- [x] Include date+time in log entries
+- [ ] Usability issues arising from creating cruising log
+    - [ ] Want option to create linked record directly from other record entry field (issue #??).
+    - [ ] Fields should default to previous value entered.  How to save these?
 
 Notes for Future TODOs:
 
