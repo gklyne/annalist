@@ -82,7 +82,10 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 # History
 
-## Version 0.1.5
+## Version 0.1.6
+
+The main new feature in this release is an authorization (access control) framework;
+There are also numerous small improvements and bug-fixes:
 
 * Implemented authorization framework
 * Updated `annalist-manager` to set up initial/default perissions needed to start working with Annalist
@@ -101,11 +104,10 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 * Some small usability improvements
 * Address some areas of technical debt
 
-### TODOs completed for 0.1.5
+## Version 0.1.5
 
-- [x] Default button on view edit form (and others) should be "Save".
-    - See http://stackoverflow.com/questions/1963245/.
-    - I found adding a duplicate hidden save button at the top of the <form> element did the trick.
+TODOs completed:
+
 - [x] Authorization [#11](https://github.com/gklyne/annalist/issues/11)
     - [x] layout.py: add _user defs
     - [x] message.py
@@ -155,6 +157,9 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
     - [x] annalist-manager option to delete existing user
     - [x] site-wide permissions (e.g. to create collections) need to be site permissions
     - [x] implement delete user handler and tests - WONTDO: handled by generic entity delete
+- [x] Default button on view edit form (and others) should be "Save".
+    - See http://stackoverflow.com/questions/1963245/.
+    - I found adding a duplicate hidden save button at the top of the <form> element did the trick.
 - [x] List view: option to hide columns on smaller screens (cf. permissions)
 - [x] Additional test cases [#8](https://github.com/gklyne/annalist/issues/8)
     - [x] Missing resource error reporting in:
@@ -186,7 +191,6 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 - [x] Think about how to handle change of email address (option to remove user from Django database?)
     - annalist_manager now has deleteuser option
 - [x] Include date+time in log entries
-
 
 
 ## Version 0.1.4

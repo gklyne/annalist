@@ -4,14 +4,14 @@
 
 - [x] Feature freeze
 - [x] Test
-- [ ] Demo deployment; test
+- [x] Demo deployment; test
 - [x] Documentation updates
 - [x] Demo screencast update
 - [x] Add TODO list to release notes, and reset
-- [ ] Bump version to even value and update history
-- [ ] Update version number in scripts, documents, etc.
-- [ ] Test again
-- [ ] Post updated kit download
+- [x] Bump version to even value and update history
+- [x] Update version number in scripts, documents, etc.
+- [x] Test again
+- [ ] Create and post updated kit download to annalist.net
 - [ ] Update front page link at annalist.net
 - [ ] Upload to PyPI (see below)
 - [ ] Final updates to master

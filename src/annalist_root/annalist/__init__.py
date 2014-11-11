@@ -41,7 +41,7 @@ default_app_config = 'annalist.apps.AnnalistConfig'
                                 # Fixed problem with rename locally created Default_view (issue #22)
                                 # Fix that changing type of entity was not deleting old record (issue #29)
 # __version__        = "0.1.4"  # Bump version number
-__version__        = "0.1.5"  # Bump version number (odd = unstable)
+# __version__        = "0.1.5"  # Bump version number (odd = unstable)
                                 # Implemented authorization framework
                                 # More new commands in `annalist-manager`
                                 # List view option to hide columns on smaller screens
@@ -57,6 +57,6 @@ __version__        = "0.1.5"  # Bump version number (odd = unstable)
                                 # Improve log file handling; include timestamps
                                 # Some small usability improvements
                                 # Address some areas of technical debt
-# __version__        = "0.1.6"    # Bump version number for release
+__version__        = "0.1.6"    # Bump version number for release
 
 # End.
