@@ -702,6 +702,7 @@ def get_site_field_types_sorted():
         [ "EntityId"
         , "EntityTypeId"
         , "Enum"
+        , "Enum_optional"
         , "Field"
         , "Identifier"
         , "List"
