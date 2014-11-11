@@ -2,12 +2,12 @@
 
 ## Summary of release tasks
 
-- [ ] Feature freeze
-- [ ] Test
+- [x] Feature freeze
+- [x] Test
 - [ ] Demo deployment; test
-- [ ] Documentation updates
-- [ ] Demo screencast update
-- [ ] Add TODO list to release notes, and reset
+- [x] Documentation updates
+- [x] Demo screencast update
+- [x] Add TODO list to release notes, and reset
 - [ ] Bump version to even value and update history
 - [ ] Update version number in scripts, documents, etc.
 - [ ] Test again
