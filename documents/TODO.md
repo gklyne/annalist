@@ -82,7 +82,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: deleting type with existing records causes Server Error 500.  [#34](https://github.com/gklyne/annalist/issues/34)
 - [x] Clean out old code, especially check @@TODOs in `entityedit.save_entity`
 - [ ] Test creation of cruising log (again) using real log data
-    - [ ] BUG: place name links to daily log record, not place record
+    - [x] BUG: place name links to daily log record, not place record [#37](https://github.com/gklyne/annalist/issues/37)
+    - [ ] Provide option for optiional enumerated value in field definitions (Enum_optional per render_utils)
 
 (Release here?)
 

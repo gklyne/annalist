@@ -151,16 +151,28 @@ class bound_field(object):
                     field_val = ""
             return field_val
         elif name == "field_value_encoded":
+            # Used to present non-test value as text for display
             try:
                 return self._field_description['field_value_mapper'].encode(self.field_value)
             except Exception as e:
                 log.warning("Get 'field_value_encoded' failed: %r: value: %s"%(e, self.field_value))
             return self.field_value
+        elif name == "field_value_link":
+            # Used to get link corresponding to a value, if such exists
+            return self.get_field_link()
         elif name == "options":
             return self.get_field_options()
         else:
             # log.info("bound_field[%s] -> %r"%(name, self._field_description[name]))
             return self._field_description[name]
+
+    def get_field_link(self):
+        # Return link corresponding to field value, or None
+        links = self._field_description['field_choice_links']
+        v     = self.field_value
+        if links and v in links:
+            return links[v]
+        return None
 
     def get_field_options(self):
         options = self._field_description['field_choice_labels']
@@ -189,6 +201,7 @@ class bound_field(object):
         yield "entity_type_link_continuation"
         yield "continuation_url"
         yield "field_value"
+        yield "field_value_link"
         yield "options"
         for k in self._field_description:
             yield k

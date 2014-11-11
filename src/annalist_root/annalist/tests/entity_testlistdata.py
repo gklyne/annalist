@@ -117,7 +117,7 @@ def recordlist_load_keys(list_uri=False):
 def recordlist_create_values(
         coll_id="testcoll", list_id="testlist", list_uri=None, update="RecordList"):
     """
-    Entity values used when creating a record type entity
+    Entity values used when creating a record list entity
     """
     d = (
         { 'annal:type':                 "annal:List"

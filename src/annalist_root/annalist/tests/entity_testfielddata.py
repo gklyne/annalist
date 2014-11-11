@@ -122,7 +122,7 @@ def recordfield_load_keys(field_uri=False):
 
 def recordfield_create_values(coll_id="testcoll", field_id="testfield", update="Field"):
     """
-    Entity values used when creating a record type entity
+    Entity values used when creating a record field entity
     """
     return (
         { 'rdfs:label':     "%s %s/_field/%s"%(update, coll_id, field_id)
