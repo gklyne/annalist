@@ -78,7 +78,6 @@ class FieldDescription(object):
             , 'field_placeholder':      recordfield.get(ANNAL.CURIE.placeholder, "")
             , 'field_default_value':    recordfield.get(ANNAL.CURIE.default_value, None)
             , 'field_property_uri':     recordfield.get(ANNAL.CURIE.property_uri, "")
-            , 'field_options_valkey':   recordfield.get(ANNAL.CURIE.options_valkey, None)
             , 'field_options_typeref':  recordfield.get(ANNAL.CURIE.options_typeref, None)
             , 'field_restrict_values':  recordfield.get(ANNAL.CURIE.restrict_values, "ALL")
             , 'field_choice_labels':    None

@@ -76,9 +76,9 @@ class bound_field(object):
     "<ul><li>key: def</li><li>val: default</li><li>field_description: {'field_property_uri': 'def', 'field_id': 'def_id', 'field_type': 'def_type'}</li></ul>"
     """
 
-    __slots__ = ("_field_description", "_entityvals", "_key", "_options", "_extras")
+    __slots__ = ("_field_description", "_entityvals", "_key", "_extras")
 
-    def __init__(self, field_description, entityvals, options=None, extras=None):
+    def __init__(self, field_description, entityvals, extras=None):
         """
         Initialize a bound_field object.
 
@@ -87,7 +87,6 @@ class bound_field(object):
         entityvals          is an entity values dictionary from which a value to be 
                             rendered is obtained.  The specific field value used is 
                             defined by the combination with `field_description`.  
-        options             for enumeration/select type fields, a list of allowable values
         extras              if supplied, a supplementary value dictionary that may be probed
                             for values that are not provided by the entity itself.  
                             Can be used to specify default values for an entity.
@@ -95,7 +94,6 @@ class bound_field(object):
         self._field_description = field_description
         self._entityvals        = entityvals
         self._key               = self._field_description['field_property_uri']
-        self._options           = options
         self._extras            = extras
         eid = entityvals.get('entity_id', "@@@render_utils.__init__@@@")
         log.log(settings.TRACE_FIELD_VALUE,
@@ -165,8 +163,9 @@ class bound_field(object):
             return self._field_description[name]
 
     def get_field_options(self):
-        # log.info("get_field_options: %r"%(list(self._options),))
-        return self._options
+        options = self._field_description['field_choice_labels']
+        options = options.values() if options is not None else ["(no options)"]
+        return options
 
     def get_continuation_param(self):
         cparam = self.continuation_url

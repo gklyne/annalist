@@ -52,24 +52,11 @@ class FieldValueMap(object):
         Returns a dictionary-like of values to be added to the display context 
         under construction
         """
-        options = ["(no options)"]
-        options_choices = self.f.get('field_choice_labels', None)
-        options_key     = self.f.get('field_options_valkey', None)
-        if options_choices:
-            # Note: the options list may be used in more than one field, 
-            # so any generator supplied must be materialized here
-            options = options_choices.values()
-        elif options_key:
-            if extras and options_key in extras:
-                options = extras[options_key]
-            else:
-                options = ['(missing options)']
         # log.info("map entity %s to context %s, vals %r"%(self.e, self.i, entityvals))
         # log.info("map_entity_to_context: bound_field: extras %r"%(extras,))
         boundfield = bound_field(
             field_description=self.f, 
             entityvals=entityvals,
-            options=options,
             extras=extras
             )
         return boundfield

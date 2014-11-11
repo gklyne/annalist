@@ -355,10 +355,7 @@ class EntityGenericListView(AnnalistGenericView):
             {}
             )
         entityvals        = { field_description['field_property_uri']: listinfo.list_id }
-        option_labels     = field_description['field_choice_labels']
-        if option_labels is not None:
-            option_labels = option_labels.values()
-        return bound_field(field_description, entityvals, option_labels)
+        return bound_field(field_description, entityvals)
 
     def check_delete_type_values(
             self, listinfo, entity_id, entity_type, msg, continuation_url=None
