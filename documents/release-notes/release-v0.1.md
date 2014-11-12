@@ -24,8 +24,7 @@ Key features implemented:
 * File based, versioning-friendly, textual data storage model;  data design is RDF-based, and uses JSON-LD elements, but contexts not yet defined so it's just JSON with RDF potential.
 * Ability to create new entity record types, views and listing formats on-the-fly as data is being prepared
 * Authentication with 3rd party IDP authentication (current implementation uses OAuth2/OpenID Connect, tested with Google, but should be usable with other OpenID Connect identity providers).  (Note access control is separate - see "Authorization" below.)
-* Authorization framework for access control: currently authenticated users have full access, and unauthenticated users have read-only access.
-
+* Authorization framework for access control, applied mainly per-collection but with site-wide defaults.
 
 Intended core features not yet fully implemented but which are intended for the first full release:
 
