@@ -47,9 +47,9 @@ The following assumes that software is installed under a directory called $WORKS
 
         pip install annalist
 
-4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.4.tar.gz).  Then install it thus:
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.6.tar.gz).  Then install it thus:
 
-        pip install $WORKSPACE/Annalist-0.1.4.tar.gz
+        pip install $WORKSPACE/Annalist-0.1.6.tar.gz
 
 5.  Finally, test the installed software:
 
@@ -57,7 +57,7 @@ The following assumes that software is installed under a directory called $WORKS
 
     The output from this command should look something like this:
 
-        INFO:annalist_site.settings.runtests:Annalist version 0.1.4 (test configuration)
+        INFO:annalist_site.settings.runtests:Annalist version 0.1.6 (test configuration)
         INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
         INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /home/annalist/anenv/lib/python2.7/site-packages/annalist_root/sampledata/data
         INFO:annalist_site.settings.runtests:CONFIG_BASE:     /home/annalist/.annalist/
