@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+
+<!-- index.html file for annalist.net demo host -->
+<!-- @@TODO: some proper styling?               -->
+
+
+<head>
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <title>annalist.net - Annalist demonstration system</title>
+<head/>
+
+<body>
+
+<div id="header">
+  <!-- rightheader 
+  <div id="rightheader">
+  <p>2014-Nov-12<br /> 
+    Hey <strong><a href="">Username</a></strong>, <a href="#">Logout</a> </p>
+  </div>
+  -->
+  <!-- topheader -->
+  <div id="topheader">
+    <h1 id="title">
+      <a href="#">annalist.net</a> - 
+      <a htref="...">Annalist</a> demonstration system
+      <span>0.1.6</span>
+    </h1>
+  </div>
+  <!-- navigation -->
+  <div id="navigation">
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="//annalist.net:8000/">Annalist demo server</a></li>
+    </ul>          
+  </div>
+</div>
+<!-- header ends here -->
+
+
+<div id="content">
+
+  <h1>Welcome to annalist.net</h1>
+
+  <p>
+    <a href="//annalist.net:8000/">Annalist demo server</a> (v0.1.6) can be used on HTTP port 8000
+    (currently not accessible outside the Oxford University network)
+  </p>
+
+  <p>
+    Source code and documentation is available from the <a href="https://github.com/gklyne/annalist">Annalist GitHub repository (github.com/gklyne/annalist)</a>.
+  </p>
+
+  <h2>Other resources on this server</h2>
+
+  <h3>Demonstration videos</h3>
+
+  <ul class="green">
+    <li>
+      <a href="media/annalist-site-setup.mp4">Initializing Annalist site data</a> 
+      (1m47s) - shows the procedure for first-time initialization of new Annalist site data using the <code>annalist-manager</code> utility.
+    </li>
+    <li>
+      <a href="media/annalist-login-create-collection.mp4">Log in and and create first collection</a> 
+      (3m32s) - steps through an initial login using the <code>admin</code> user created previously, create a new collection and create permissions for a Google-authenticated user to modify that collection.
+    </li>
+    <li>
+      <a href="media/annallist-create-configure-data-records.mp4">Initial entry of data in a new collection</a> 
+      (3m32s) - covers adding data to a new collection, and adding data record fields beyond the initial default fields.
+    </li>
+    <li>
+      <a href="media/annallist-configure-type-view-records.mp4">Configure types and record views in a data collection</a> 
+      (3m46s) - customize a collectionto reflect the data it contains through the addition of record types and record views.
+    </li>
+    <li>
+      <a href="media/annallist-configure-default-list-record.mp4">Configure list view and default display</a> (3m51s) - customize collection content listings and defaults to simplify the entry of new data.
+    </li>
+    <!--
+    <li>
+      <a href="media/@@TODO.mp4">Using multiple record types</a> 
+      (@@TODO)
+    </li>
+    -->
+    <!--
+    <li><a href="...">...</a>: ...</li>
+    -->
+  </ul>
+
+  <p>
+    Scripts for the above demonstration sequences, to allow the operations shown to be performed locally, can be found at <a href="https://github.com/gklyne/annalist/blob/master/documents/demo-script.md">github.com/gklyne/annalist/blob/master/documents/demo-script.md</a>.
+  </p>
+
+  <p>
+    There is also the <a href="media/annalist-demo-music-instrument-catalogue.mp4">Original demonstration screencast</a>: 6 minute video showing Annalist used to create and start populating a simple catalogue of musical instruments.
+  </p>
+
+  <h3>Software download</h3>
+
+  <p>
+    The easiest way to obftain the software is generally to install it from <a href="https://pypi.python.org/pypi/Annalist">PyPI</a> using the Python <code>pip</code> utility.  See the Annalist <a href="https://github.com/gklyne/annalist/blob/master/documents/getting-started.md">getting started</a> page.
+  </p>
+
+  <ul class="green">
+    <li>
+      <a href="software/Annalist-0.1.6.tar.gz">Annalist-0.1.6</a>: 
+      Downloadable software installation kit.  Needs Python 2.7, <code>virtualenv</code> and <code>pip</code>.  Install using <code>pip</code> into a newly created virtual environment.
+    </li>
+    <li>
+      <a href="software/Annalist-0.1.4.tar.gz">Annalist-0.1.4</a> (older release). 
+    </li>
+  </ul>
+
+</div>
+      
+<!-- footer -->
+<div id="footer">
+  <div id="footer_bg">
+    <!-- right bottom link -->
+    <div id="design">
+      Template by 
+      <!-- <a href="http://www.alexandru.es">atrandafir</a> : broken link --> 
+      <a href="https://twitter.com/atrandafir">@atrandafir</a>
+    </div>
+    <!-- copyright -->
+    <p>
+      Designed with &lt;xhtml/&gt; and {css}
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

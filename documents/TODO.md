@@ -21,6 +21,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Field type to link to uploaded file
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared deployment should generate a new secret key in settings
+    - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
+    - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
 - [ ] Figure out how to preserve defined users when reinstalling the software.
     - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
 - [ ] Automated test suite for annalist_manager

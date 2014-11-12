@@ -11,15 +11,15 @@
 - [x] Bump version to even value and update history
 - [x] Update version number in scripts, documents, etc.
 - [x] Test again
-- [ ] Create and post updated kit download to annalist.net
-- [ ] Update front page link at annalist.net
+- [x] Create and post updated kit download to annalist.net
+- [x] Update front page link at annalist.net
 - [ ] Upload to PyPI (see below)
 - [ ] Final updates to master
 - [ ] Test yet again
 - [ ] Post announcement to Google Group, and elsewhere
 - [ ] Bump version number again (back to odd value)
 
-## PyPI upload
+## Build kit and PyPI upload
 
 Local:
 

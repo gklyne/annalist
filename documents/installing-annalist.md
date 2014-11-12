@@ -8,7 +8,38 @@
 * virtualenv (includes setuptools and pip; see [virtualenv introduction](http://virtualenv.readthedocs.org/en/latest/virtualenv.html)).
 
 
-## Installing software
+## Upgrading an existing installation
+
+Stop any existing annalist server.  Look for background processes running `annalist-manager` or `django-admin`.  There may be up to three separate background processes that need to be stopped.
+
+The installation instructions below can then be used to update an Annalist software installation, except that step 2 may be skipped if re-using an existing virtual environment.
+
+The annalist user database will need to be initialized or migrated:
+
+    annalist-manager initialize [ CONFIG ]
+
+If upgrading from a version 0.1.4 or earlier, recreate an admin user:
+
+    annalist-manager defaultadminuser [ CONFIG ]
+
+To update site-wide data for an existing Annalist site, use:
+
+    annalist-manager updatesitedata [ CONFIG ]
+
+Then start the server as before.
+
+e.g.
+
+    annalist-manager initialize --development
+    annalist-manager defaultadminuser --development
+      Creating user admin
+      Password:
+      Re-enter password:
+    annalist-manager updatesitedata --development
+    annalist-manager runserver --development
+
+
+## New software installation
 
 The following assumes that software is installed under a directory called $WORKSPACE; i.e. Annalist software is installed to $WORKSPACE/annalist.  This could be a user home directory.
 
@@ -33,7 +64,7 @@ The following assumes that software is installed under a directory called $WORKS
     In this case, you will need to use the `-p` option when running `virtualenv` to create a python environment for Annalist (see below).
 
 
-2.  Go to the workspace directory, create a Python virtual environment and activate it (i.e. make it the current Python environment).  This avids having the Annalist installation stomp over any otrher python installation, and makes it very easy to discard if or when it is not required.
+2.  Go to the workspace directory, create a Python virtual environment and activate it (i.e. make it the current Python environment).  This avoids having the Annalist installation stomp over any other Python installation, and makes it very easy to discard if or when it is not required.
 
         cd $WORKSPACE
         virtualenv annenv
