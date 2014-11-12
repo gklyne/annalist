@@ -16,7 +16,7 @@
 - [x] Upload to PyPI (see below)
 - [x] Final updates to master
 - [x] Test yet again
-- [ ] On develop branch, bump version number again (back to odd value)
+- [x] On develop branch, bump version number again (back to odd value)
 - [ ] Post announcement to Google Group, and elsewhere
 
 ## Build kit and PyPI upload
