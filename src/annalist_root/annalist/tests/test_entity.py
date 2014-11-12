@@ -86,11 +86,9 @@ class EntityRootTest(TestCase):
             { 'annal:id':       None
             , 'annal:type_id':  None
             , 'annal:type':     'annal:EntityRoot'
-            , 'annal:url':      TestBaseUri+'/'
-            , 'annal:uri':      TestBaseUri+'/'
+            , 'annal:url':      TestBasePath+'/'
             , 'type':           'annal:EntityRoot'
             , 'title':          'Name collection coll1'
-            # , 'uri':            '/annalist/coll1'
             })
         test_values2 = (
             { 'id':             'TestId'
@@ -102,12 +100,10 @@ class EntityRootTest(TestCase):
             { 'annal:id':       None
             , 'annal:type_id':  None
             , 'annal:type':     'annal:EntityRoot'
-            , 'annal:url':      TestBaseUri+'/'
-            , 'annal:uri':      TestBaseUri+'/'
+            , 'annal:url':      TestBasePath+'/'
             , 'id':             'TestId'
             , 'type':           'annal:EntityRoot'
             , 'rdfs:label':     'Name collection coll2'
-            # , 'uri':            '/annalist/coll2'
             })
         e = EntityRoot(TestBaseUri, TestBaseDir)
         self.assertEqual(e.get_values(),    None)
@@ -128,21 +124,17 @@ class EntityRootTest(TestCase):
             , 'annal:type_id':  None
             , 'annal:type':     'annal:EntityRoot'
             , 'type':           'annal:EntityRoot'
-            , 'annal:url':      TestBaseUri+'/'
-            , 'annal:uri':      TestBaseUri+'/'
+            , 'annal:url':      TestBasePath+'/'
             , 'title':          'Name collection coll1'
-            # , 'uri':            '/annalist/coll1'
             })
         test_values2_returned = (
             { 'annal:id':       None
             , 'annal:type_id':  None
             , 'annal:type':     'annal:EntityRoot'
-            , 'annal:url':      TestBaseUri+'/'
-            , 'annal:uri':      TestBaseUri+'/'
+            , 'annal:url':      TestBasePath+'/'
             , 'id':             'testid'
             , 'type':           'annal:EntityRoot'
             , 'title':          'new title'
-            # , 'uri':            '/annalist/coll2'
             })
         e = EntityRoot(TestBaseUri, TestBaseDir)
         self.assertEqual(e.get_values(),    None)
@@ -183,11 +175,9 @@ class EntityRootTest(TestCase):
             , 'annal:id':       'testId'
             , 'annal:type_id':  None
             , 'annal:type':     'test:EntityRootType'
-            , 'annal:url':      TestBaseUri+'/'
-            , 'annal:uri':      TestBaseUri+'/'
+            , 'annal:url':      TestBasePath+'/'
             , 'title':          'Name collection coll1'
             , 'type':           'annal:EntityRoot'
-            # , 'uri':            '/annalist/coll1'
             })
         e = TestEntityRootType(TestBaseUri, TestBaseDir)
         e.set_id("testId")
@@ -265,6 +255,59 @@ class EntityTest(AnnalistTestCase):
     def tearDown(self):
         return
 
+    #   ----------------------------------------
+    #
+    #   Helpers
+    #
+    #   ----------------------------------------
+
+    def values_created(self, entity_type='test:EntityType', entity_title='Name entity test'):
+        return (
+            { 'type':   entity_type
+            , 'title':  entity_title
+            })
+
+    def values_returned(self, 
+            entity_id='testid', entity_type='test:EntityType', 
+            entity_title=None, 
+            entity_parent_path=""
+            ):
+        entity_url = TestBasePath+entity_parent_path+'/%s/'%entity_id
+        vals = (
+            { 'annal:id':       entity_id
+            , 'annal:type_id':  None
+            , 'annal:type':     entity_type
+            , 'annal:url':      entity_url
+            , 'type':           entity_type
+            })
+        if entity_title:
+            vals.update(
+                { 'title':          entity_title
+                })
+        return vals
+
+    def values_reloaded(self, 
+            entity_id='testid', entity_type='test:EntityType', 
+            entity_title=None, 
+            entity_parent_path=""
+            ):
+        vals = self.values_returned(
+            entity_id=entity_id, entity_type=entity_type, 
+            entity_title=entity_title,
+            entity_parent_path=entity_parent_path
+            )
+        vals.update(
+            { '@id':    '../'
+            , '@type':  [entity_type]
+            })
+        return vals
+
+    #   ----------------------------------------
+    #
+    #   Tests
+    #
+    #   ----------------------------------------
+
     def test_EntityTest(self):
         self.assertEqual(EntityTest.__name__, "EntityTest", "Check class name")
         return
@@ -308,14 +351,11 @@ class EntityTest(AnnalistTestCase):
         e = TestEntityType(r, "testid")
         self.assertEqual(e.get("foo",  "bar"),    "bar")
         self.assertEqual(e.get("type", "notype"), "notype")
-        test_values = (
-            { 'type':   'annal:EntityRoot'
-            })
-        e.set_values(test_values)
+        e.set_values({'type': 'annal:EntityRoot'})
         self.assertEqual(e.get("foo",  "bar"),    "bar")
         self.assertEqual(e.get("type", "notype"), "annal:EntityRoot")
         expect_keys = set(
-            ['annal:id', 'annal:type_id', 'annal:type', 'annal:url', 'annal:uri'
+            ['annal:id', 'annal:type_id', 'annal:type', 'annal:url'
             , 'type'
             ])
         self.assertEqual(set(e.keys()), expect_keys)
@@ -323,18 +363,14 @@ class EntityTest(AnnalistTestCase):
             [ ('annal:id',      'testid')
             , ('annal:type_id',  None)
             , ('annal:type',    'test:EntityType')
-            , ('annal:url',     TestBaseUri+'/testid/')
-            , ('annal:uri',     TestBaseUri+'/testid/')
-            , ('type', 'annal:EntityRoot')
+            , ('annal:url',     TestBasePath+'/testid/')
+            , ('type',          'annal:EntityRoot')
             ])
         self.assertEqual(set(e.items()), expect_items)
         return
 
     def test_entity_path(self):
-        test_values = (
-            { 'type':   'annal:EntityRoot'
-            , 'title':  'Name collection coll1'
-            })
+        test_values = ({})
         r = EntityRoot(TestBaseUri, TestBaseDir)
         e = TestEntityType(r, "testid")
         e.set_values(test_values)
@@ -344,19 +380,10 @@ class EntityTest(AnnalistTestCase):
         return
 
     def test_entity_create_exists(self):
-        test_values = (
-            { 'type':   'test:EntityType'
-            , 'title':  'Name entity test'
-            })
-        test_values_returned = (
-            { 'annal:id':       'testid'
-            , 'annal:type_id':  None
-            , 'annal:type':     'test:EntityType'
-            , 'annal:url':      TestBaseUri+'/testid/'
-            , 'annal:uri':      TestBaseUri+'/testid/'
-            , 'title':          'Name entity test'
-            , 'type':           'test:EntityType'
-            })
+        test_values = self.values_created(entity_type='test:EntityType', entity_title='Name entity test')
+        test_values_returned = self.values_returned(
+            entity_id='testid', entity_type='test:EntityType', entity_title='Name entity test'
+            )
         r = EntityRoot(TestBaseUri, TestBaseDir)
         self.assertFalse(TestEntityType.exists(r, "testid"))
         e = TestEntityType.create(r, "testid", test_values)
@@ -367,21 +394,10 @@ class EntityTest(AnnalistTestCase):
         return
 
     def test_entity_create_load(self):
-        test_values = (
-            { 'type':   'test:EntityType'
-            , 'title':  'Name entity test2'
-            })
-        test_values_returned = (
-            { '@id':            '../'
-            , '@type':          ['test:EntityType']
-            , 'annal:id':       'testid2'
-            , 'annal:type_id':  None
-            , 'annal:type':     'test:EntityType'
-            , 'annal:url':      TestBaseUri+'/testid2/'
-            , 'annal:uri':      TestBaseUri+'/testid2/'
-            , 'title':          'Name entity test2'
-            , 'type':           'test:EntityType'
-            })
+        test_values = self.values_created(entity_type='test:EntityType', entity_title='Name entity test2')
+        test_values_returned = self.values_reloaded(
+            entity_id='testid2', entity_type='test:EntityType', entity_title='Name entity test2'
+            )
         r = EntityRoot(TestBaseUri, TestBaseDir)
         e = TestEntityType.create(r, "testid2", test_values)
         e2 = TestEntityType.load(r, "testid2")
@@ -391,37 +407,16 @@ class EntityTest(AnnalistTestCase):
         return
 
     def test_entity_children(self):
-        test_values1 = (
-            { 'type':   'test:EntityType'
-            , 'title':  'Name entity test1'
-            })
-        test_values1_returned = (
-            { '@id':            '../'
-            , '@type':          ['test:EntityType']
-            , 'annal:id':       'testid1'
-            , 'annal:type_id':  None
-            , 'annal:id':       'testid1'
-            , 'annal:type':     'test:EntityType'
-            , 'annal:url':      TestBaseUri+'/testbase/testid1/'
-            , 'annal:uri':      TestBaseUri+'/testbase/testid1/'
-            , 'title':          'Name entity test1'
-            , 'type':           'test:EntityType'
-            })
-        test_values2 = (
-            { 'type':   'test:EntityType'
-            , 'title':  'Name entity test2'
-            })
-        test_values2_returned = (
-            { '@id':            '../'
-            , '@type':          ['test:EntityType']
-            , 'annal:id':       'testid2'
-            , 'annal:type_id':  None
-            , 'annal:type':     'test:EntityType'
-            , 'annal:url':      TestBaseUri+'/testbase/testid2/'
-            , 'annal:uri':      TestBaseUri+'/testbase/testid2/'
-            , 'title':          'Name entity test2'
-            , 'type':           'test:EntityType'
-            })
+        test_values1 = self.values_created(entity_type='test:EntityType', entity_title='Name entity test1')
+        test_values1_returned = self.values_reloaded(
+            entity_id='testid1', entity_type='test:EntityType', entity_title='Name entity test1',
+            entity_parent_path="/testbase"
+            )
+        test_values2 = self.values_created(entity_type='test:EntityType', entity_title='Name entity test2')
+        test_values2_returned = self.values_reloaded(
+            entity_id='testid2', entity_type='test:EntityType', entity_title='Name entity test2',
+            entity_parent_path="/testbase"
+            )
         r  = EntityRoot(TestBaseUri, TestBaseDir)
         b  = TestEntityType.create(r, "testbase", {})
         e1 = TestEntityType.create(b, "testid1", test_values1)
@@ -442,10 +437,7 @@ class EntityTest(AnnalistTestCase):
         return
 
     def test_entity_create_remove(self):
-        test_values = (
-            { 'type':   'test:EntityType'
-            , 'title':  'Name entity test'
-            })
+        test_values = self.values_created(entity_type='test:EntityType', entity_title='Name entity test')
         r = EntityRoot(TestBaseUri, TestBaseDir)
         self.assertFalse(TestEntityType.exists(r, "testid3"))
         e = TestEntityType.create(r, "testid3", test_values)
@@ -458,10 +450,7 @@ class EntityTest(AnnalistTestCase):
     # an explcit relative path from parent to entity.
 
     def test_entity_sub_path(self):
-        test_values = (
-            { 'type':   'annal:EntityRoot'
-            , 'title':  'Name collection coll1'
-            })
+        test_values = self.values_created(entity_type='annal:EntityRoot', entity_title='Name collection coll1')
         r = EntityRoot(TestBaseUri, TestBaseDir)
         e = TestEntityTypeSub(r, "testid")
         self.assertEqual(e._entitydir, TestBaseDir+"/sub/testid/")
@@ -472,19 +461,11 @@ class EntityTest(AnnalistTestCase):
         return
 
     def test_entity_sub_create_exists(self):
-        test_values = (
-            { 'type':   'test:EntityType'
-            , 'title':  'Name entity test'
-            })
-        test_values_returned = (
-            { 'annal:id':       'testid'
-            , 'annal:type_id':  None
-            , 'annal:type':     'test:EntityTypeSub'
-            , 'annal:url':      TestBaseUri+'/sub/testid/'
-            , 'annal:uri':      TestBaseUri+'/sub/testid/'
-            , 'title':          'Name entity test'
-            , 'type':           'test:EntityType'
-            })
+        test_values = self.values_created(entity_type='test:EntityTypeSub', entity_title='Name entity test')
+        test_values_returned = self.values_returned(
+            entity_id='testid', entity_type='test:EntityTypeSub', entity_title='Name entity test',
+            entity_parent_path="/sub"
+            )
         r = EntityRoot(TestBaseUri, TestBaseDir)
         self.assertFalse(TestEntityTypeSub.exists(r, "testid"))
         e = TestEntityTypeSub.create(r, "testid", test_values)
@@ -497,21 +478,12 @@ class EntityTest(AnnalistTestCase):
         return
 
     def test_entity_sub_create_load(self):
-        test_values = (
-            { 'type':   'test:EntityTypeSub'
-            , 'title':  'Name entity test2'
-            })
-        test_values_returned = (
-            { '@id':            '../'
-            , '@type':          ['test:EntityTypeSub']
-            , 'annal:id':       'testid2'
-            , 'annal:type_id':  None
-            , 'annal:type':     'test:EntityTypeSub'
-            , 'annal:url':      TestBaseUri+'/sub/testid2/'
-            , 'annal:uri':      TestBaseUri+'/sub/testid2/'
-            , 'title':          'Name entity test2'
-            , 'type':           'test:EntityTypeSub'
-            })
+        test_values = self.values_created(entity_type='test:EntityTypeSub', entity_title='Name entity test2')
+        test_values_returned = self.values_reloaded(
+            entity_id='testid2', entity_type='test:EntityTypeSub', entity_title='Name entity test2',
+            entity_parent_path="/sub"
+            )
+
         r = EntityRoot(TestBaseUri, TestBaseDir)
         e = TestEntityTypeSub.create(r, "testid2", test_values)
         e2 = TestEntityTypeSub.load(r, "testid2")
@@ -521,10 +493,7 @@ class EntityTest(AnnalistTestCase):
         return
 
     def test_entity_sub_create_remove(self):
-        test_values = (
-            { 'type':   'test:EntityTypeSub'
-            , 'title':  'Name entity test'
-            })
+        test_values = self.values_created(entity_type='test:EntityTypeSub', entity_title='Name entity test')
         r = EntityRoot(TestBaseUri, TestBaseDir)
         self.assertFalse(TestEntityTypeSub.exists(r, "testid3"))
         e = TestEntityTypeSub.create(r, "testid3", test_values)
@@ -534,10 +503,7 @@ class EntityTest(AnnalistTestCase):
         return
 
     def test_entity_allocate_id(self):
-        test_values = (
-            { 'type':   'test:EntityType'
-            , 'title':  'Name entity test'
-            })
+        test_values = self.values_created(entity_type='test:EntityType', entity_title='Name entity test')
         r = EntityRoot(TestBaseUri, TestBaseDir)
         eid = TestEntityType.allocate_new_id(r)
         self.assertEqual(eid, "00000001")

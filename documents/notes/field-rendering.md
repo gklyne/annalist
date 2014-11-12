@@ -1,6 +1,16 @@
 # Annalist field rendering
 
-(Notes for documentation)
+## Notes for using object renderers rather than templates
+
+Use of template files vs. use of inline template text in renderer class
+
+- Need to support edit/view/item/head uses of field, probably via class inheritance structure
+- Inline template text should be more efficient as it avoids repeated reading of template files
+- Inline template text keeps value mapping logioc with template logic
+- Inline templates may be harder to style effectively; maybe read HTML from file on first use?
+
+
+## Notes for documentation
 
 Annalist remndering of fields on a form goes through several pieces.  (At some stage, the logic should be brought into a less dispersed state.)
 

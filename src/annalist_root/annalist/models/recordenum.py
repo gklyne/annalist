@@ -21,8 +21,9 @@ from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
 from annalist                   import util
 from annalist.models.entity     import Entity
+from annalist.models.entitydata import EntityData
 
-class RecordEnumBase(Entity):
+class RecordEnumBase(EntityData):
 
     _entitytype     = ANNAL.CURIE.Enum
     _entitytypeid   = "_enum"

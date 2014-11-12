@@ -2,24 +2,24 @@
 
 ## Summary of release tasks
 
-- [ ] Feature freeze
-- [ ] Test
-- [ ] Demo deployment; test
-- [ ] Documentation updates
-- [ ] Demo screencast update
-- [ ] Add TODO list to release notes, and reset
-- [ ] Bump version to even value and update history
-- [ ] Update version number in scripts, documents, etc.
-- [ ] Test again
-- [ ] Post updated kit download
-- [ ] Update front page link at annalist.net
-- [ ] Upload to PyPI
+- [x] Feature freeze
+- [x] Test
+- [x] Demo deployment; test
+- [x] Documentation updates
+- [x] Demo screencast update
+- [x] Add TODO list to release notes, and reset
+- [x] Bump version to even value and update history
+- [x] Update version number in scripts, documents, etc.
+- [x] Test again
+- [x] Create and post updated kit download to annalist.net
+- [x] Update front page link at annalist.net
+- [x] Upload to PyPI (see below)
 - [ ] Final updates to master
 - [ ] Test yet again
 - [ ] Post announcement to Google Group, and elsewhere
 - [ ] Bump version number again (back to odd value)
 
-## PyPI upload
+## Build kit and PyPI upload
 
 Local:
 

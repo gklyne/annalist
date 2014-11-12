@@ -14,3 +14,8 @@ A _Linked Data Notebook_, supporting collection, organization and sharing of str
 * Flexible data: new record types and fields can be added as-required.
 * Sharable data: use textual, easy to read file formats that can be shared by web, email, file transfer, version management system, memory stick, etc.
 * Remixable data: records that can be first class participants in a wider ecosystem of linked data, with links in and links out.
+
+Status
+------
+
+For current release status, see https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md

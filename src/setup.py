@@ -73,6 +73,7 @@ setup(
         # , 'oauth2':         'annalist_root/utils'
         # , 'miscutils':      'annalist_root/miscutils'
         },
+    # >>>> REMEMBER to also update MANIFEST.in ... <<<<
     package_data = 
         { 'annalist_root':
             [ '*.sh', '*.txt'
@@ -93,7 +94,7 @@ setup(
             [ 'templates/*.html'
             , 'templates/field/*.html'
             , 'static/css/*.css'
-            , 'static/js/*.css'
+            , 'static/js/*.js'
             , 'static/images/*.png'
             , 'static/images/icons/warning_32.png'
             , 'static/images/icons/search_32.png'
@@ -106,6 +107,7 @@ setup(
             , 'sitedata/lists/*/*.jsonld'
             , 'sitedata/types/*/*.jsonld'
             , 'sitedata/views/*/*.jsonld'
+            , 'sitedata/users/*/*.jsonld'
             ]
         , 'annalist_root.annalist.views':
             [ 'help/*.md'

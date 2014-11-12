@@ -46,12 +46,8 @@ def copySitedata(src, sitedatasrc, tgt):
     assert os.path.exists(sitedatasrc), "Check site data source directory (%s)"%(sitedatasrc)
     assert tgt.startswith(TestBaseDir)
     annalist.util.replacetree(src, tgt)
-    #@@
-    # shutil.rmtree(tgt, ignore_errors=True)
-    # shutil.copytree(src, tgt)
-    #@@
     sitedatatgt = os.path.join(tgt, test_layout.SITEDATA_DIR)
-    for sdir in ("types", "lists", "views", "fields", "enums"):
+    for sdir in ("users", "types", "lists", "views", "fields", "enums"):
         s = os.path.join(sitedatasrc, sdir)
         d = os.path.join(sitedatatgt, sdir)
         shutil.copytree(s, d)

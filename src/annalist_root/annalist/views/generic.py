@@ -34,16 +34,19 @@ from utils.ContentNegotiationView   import ContentNegotiationView
 import annalist
 from annalist                       import message
 from annalist                       import layout
+from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.models.site           import Site
-from annalist.models.sitedata       import SiteData
-from annalist.models.collection     import Collection
-from annalist.models.recordview     import RecordView
-from annalist.models.recordlist     import RecordList
-from annalist.models.recordfield    import RecordField
-from annalist.models.recordtype     import RecordType
-from annalist.models.recordtypedata import RecordTypeData
-from annalist.models.entitydata     import EntityData
-from annalist.models.entitytypeinfo import EntityTypeInfo
+from annalist.models.annalistuser   import AnnalistUser
+
+# from annalist.models.sitedata       import SiteData
+# from annalist.models.collection     import Collection
+# from annalist.models.recordview     import RecordView
+# from annalist.models.recordlist     import RecordList
+# from annalist.models.recordfield    import RecordField
+# from annalist.models.recordtype     import RecordType
+# from annalist.models.recordtypedata import RecordTypeData
+# from annalist.models.entitydata     import EntityData
+# from annalist.models.entitytypeinfo import EntityTypeInfo
 
 from annalist.views.uri_builder     import uri_with_params, continuation_params
 
@@ -61,11 +64,6 @@ LOGIN_URIS = None   # Populated by first call of `authenticate`
 #
 #   -------------------------------------------------------------------------------------------
 
-# @@TODO:   refactor this class out of existence?  Or at least dramatically slimmed.
-#           Focus content on message display and auth* functions.
-#           There is logic here that really belongs in view- or list- classes.
-#           Maybe move logic when hand-coded pasges are replaced with data-driven pages.
-
 class AnnalistGenericView(ContentNegotiationView):
     """
     Common base class for Annalist views
@@ -77,6 +75,7 @@ class AnnalistGenericView(ContentNegotiationView):
         self._sitebasedir = os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR)
         self._site        = None
         self._site_data   = None
+        self._user_perms  = None
         ## self.credential = None
         return
 
@@ -189,37 +188,6 @@ class AnnalistGenericView(ContentNegotiationView):
         redirect_uri = uri_with_params(viewuri, view_params, self.error_params(error_head, error_message))
         return HttpResponseRedirect(redirect_uri)
 
-    def form_action_auth(self, action, auth_resource):
-        """
-        Check that the requested form action is authorized for the current user.
-
-        action          is the requested action: new, edit, copy, etc.
-        auth_resource   is the resource URI to which the requested action is directed.
-                        NOTE: This may be the URI of the parent of the resource
-                        being accessed or manipulated.
-
-        Returns None if the desired action is authorized for the current user, otherwise
-        an HTTP response value to return an error condition.
-        """
-        action_scope = (
-            { "view":   "VIEW"
-            , "list":   "VIEW"
-            , "search": "VIEW"
-            , "new":    "CREATE"
-            , "copy":   "CREATE"
-            , "edit":   "UPDATE"
-            , "delete": "DELETE"
-            , "config": "CONFIG"
-            , "admin":  "ADMIN"
-            })
-        if action in action_scope:
-            auth_scope = action_scope[action]
-        else:
-            log.warning("form_action_auth: unknown action: %s"%(action))
-            auth_scope = "UNKNOWN"
-        # return self.authorize(auth_scope, auth_resource)
-        return self.authorize(auth_scope)
-
     def check_site_data(self):
         """
         Check thaty site data is present and accessible.  If not, return an HTTP error
@@ -283,7 +251,61 @@ class AnnalistGenericView(ContentNegotiationView):
             **LOGIN_URIS
             )
 
-    def authorize(self, scope):
+    def get_user_identity(self):
+        """
+        returns the username and authenticated URI for the user making the 
+        current request, as a pair (username, URI)
+        """
+        user = self.request.user
+        if user.is_authenticated():
+            return (user.username, "mailto:"+user.email)
+        return ("_unknown_user_perms", "annal:User/_unknown_user_perms")
+
+    def get_user_permissions(self, collection, user_id, user_uri):
+        """
+        Get a user permissions record (AnnalistUser).
+
+        To return a value, both the user_id and the user_uri (typically a mailto: URI, but
+        may be any *authenticated* identifier) must match.  This is to prevent access to 
+        records of a deleted account being granted to a new account created with the 
+        same user_id (username).
+
+        This function returns default permissions if the user details supplied cannot be matched.
+
+        Permissions are cached in the view object so that tghe prmissions ecord is read at 
+        most once for any HTTP request. 
+
+        collection      the collection for which permissions are required.
+        user_id         local identifier for the type to retrieve.
+        user_uri        authenticated identifier associated with the user_id.  That is,
+                        the authentication service used is presumed to confirm that
+                        the identifier belongs to the user currently logged in with
+                        the supplied username.
+
+        returns an AnnalistUser object containing permissions for the identified user.
+        """
+        if not self._user_perms:
+            # if collection:
+            #     log.info("user_id %s (%s), coll_id %s, %r"%
+            #         (user_id, user_uri, collection.get_id(), collection.get_user_permissions(user_id, user_uri))
+            #         )
+            user_perms = (
+                (collection and collection.get_user_permissions(user_id, user_uri)) or
+                self.site().get_user_permissions(user_id, user_uri) or
+                self.site().get_user_permissions("_default_user_perms", "annal:User/_default_user_perms")
+                )
+            self._user_perms = user_perms
+            log.debug("get_user_permissions %r"%(self._user_perms,))
+        return self._user_perms
+
+    def get_permissions(self, collection):
+        """
+        Get permissions for the current user
+        """
+        user_id, user_uri = self.get_user_identity()
+        return self.get_user_permissions(collection, user_id, user_uri)
+
+    def authorize(self, scope, collection):
         """
         Return None if user is authorized to perform the requested operation,
         otherwise appropriate 401 Authorization Required or 403 Forbidden response.
@@ -291,19 +313,65 @@ class AnnalistGenericView(ContentNegotiationView):
 
         scope       indication of the operation  requested to be performed.
                     e.g. "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", ...
-
-        @@TODO add resource parameter
-
-        @@TODO proper authorization framework
+        collection  is the collection to which the requested action is directed,
+                    or None if the test is against site-level permissions.
 
         For now, require authentication for anything other than VIEW scope.
         """
-        log.debug("Authorize %s"%(scope))
-        if scope != "VIEW":
-            if not self.request.user.is_authenticated():
-                log.debug("Authorize %s denied"%(scope))
-                return self.error(self.error401values(scope=scope))
+        user_id, user_uri = self.get_user_identity()
+        coll_id = collection.get_id() if collection else "(site)"
+        user_perms = self.get_user_permissions(collection, user_id, user_uri)
+        if not user_perms:
+            log.warning("No user permissions found for user_id %s, URI %s"%(user_id, user_uri))
+            return self.error(self.error403values(scope=scope))
+        # log.info("Authorize %s in %s, %s, %r"%(user_id, coll_id, scope, user_perms[ANNAL.CURIE.user_permissions]))
+        # user_perms is an AnnalistrUser object
+        coll_id = collection.get_id() if collection else "(No coll)"
+        if scope not in user_perms[ANNAL.CURIE.user_permissions]:
+            if user_id == "_unknown_user_perms":
+                err = self.error401values(scope=scope)
+            else:
+                err = self.error403values(scope=scope)
+            return self.error(err)
         return None
+
+    def form_action_auth(self, action, auth_collection, perm_required):
+        """
+        Check that the requested form action is authorized for the current user.
+
+        action          is the requested action: new, edit, copy, etc.
+        auth_collection is the collection to which the requested action is directed,
+                        or None if the test is against site-level permissions
+                        (which should be stricter than all collections).
+        perm_required   is a data dependent dictionary that maps from action to
+                        permissions required to perform the action.  The structure
+                        is similar to that of 'action_scope' (below) that provides
+                        a fallback mapping.
+
+        Returns None if the desired action is authorized for the current user, otherwise
+        an HTTP response value to return an error condition.
+        """
+        # @@TODO: in due course, eliminate action_scope.
+        action_scope = (
+            { "view":   "VIEW"      # View data record
+            , "list":   "VIEW"      # ..
+            , "search": "VIEW"      # ..
+            , "new":    "CREATE"    # Create data record
+            , "copy":   "CREATE"    # ..
+            , "edit":   "UPDATE"    # Update data record
+            , "delete": "DELETE"    # Delete datra record
+            , "config": "CONFIG"    # Change collection configuration
+            , "admin":  "ADMIN"     # Change users or permissions
+            })
+        if action in perm_required:
+            auth_scope = perm_required[action]
+        elif action in action_scope:
+            auth_scope = action_scope[action]
+        else:
+            log.warning("form_action_auth: unknown action: %s"%(action))
+            auth_scope = "UNKNOWN"
+        # return self.authorize(auth_scope, auth_resource)
+        return self.authorize(auth_scope, auth_collection)
 
     @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
     def render_html(self, resultdata, template_name):
@@ -325,10 +393,6 @@ class AnnalistGenericView(ContentNegotiationView):
         uri_param_val("info_message",    None)
         uri_param_val("error_head",      message.INPUT_ERROR) 
         uri_param_val("error_message",   None)
-        resultdata["auth_create"]   = self.authorize("CREATE") is None
-        resultdata["auth_update"]   = self.authorize("UPDATE") is None
-        resultdata["auth_delete"]   = self.authorize("DELETE") is None
-        resultdata["auth_config"]   = self.authorize("CONFIG") is None
         resultdata["annalist_version"] = annalist.__version__
         if 'help_filename' in resultdata:
             help_filepath = os.path.join(

@@ -13,10 +13,11 @@ from annalist                       import message
 
 from annalist.identifiers           import ANNAL, RDF, RDFS
 
+from annalist.models.annalistuser   import AnnalistUser
+from annalist.models.recordtype     import RecordType
 from annalist.models.recordview     import RecordView
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
-from annalist.models.recordtype     import RecordType
 from annalist.models.recordenum     import RecordEnumFactory
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
@@ -28,9 +29,21 @@ ENTITY_MESSAGES = (
     , 'entity_invalid_id':      message.ENTITY_DATA_ID_INVALID
     , 'entity_exists':          message.ENTITY_DATA_EXISTS
     , 'entity_not_exists':      message.ENTITY_DATA_NOT_EXISTS
+    , 'entity_removed':         message.ENTITY_DATA_REMOVED
     , 'entity_type_heading':    message.ENTITY_TYPE_ID
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
-    , 'entity_removed':         message.ENTITY_DATA_REMOVED
+    })
+
+USER_MESSAGES = (
+    { 'parent_heading':         message.COLLECTION_ID
+    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+    , 'entity_heading':         message.ANNALIST_USER_ID
+    , 'entity_invalid_id':      message.ANNALIST_USER_ID_INVALID
+    , 'entity_exists':          message.ANNALIST_USER_EXISTS
+    , 'entity_not_exists':      message.ANNALIST_USER_NOT_EXISTS
+    , 'entity_removed':         message.ANNALIST_USER_REMOVED
+    , 'entity_type_heading':    message.ENTITY_TYPE_ID
+    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
 TYPE_MESSAGES = (
@@ -93,8 +106,45 @@ ENUM_MESSAGES = (
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
+ADMIN_PERMISSIONS = (
+    { "view":   "ADMIN"     # View user record
+    , "list":   "ADMIN"     # ..
+    , "search": "ADMIN"     # ..
+    , "new":    "ADMIN"     # Create user record
+    , "copy":   "ADMIN"     # ..
+    , "edit":   "ADMIN"     # Update user record
+    , "delete": "ADMIN"     # Delete user record
+    , "config": "CONFIG"    # Change collection configuration
+    , "admin":  "ADMIN"     # Change users or permissions
+    })
+
+CONFIG_PERMISSIONS = (
+    { "view":   "VIEW"      # View config record
+    , "list":   "VIEW"      # ..
+    , "search": "VIEW"      # ..
+    , "new":    "CONFIG"    # Create config record
+    , "copy":   "CONFIG"    # ..
+    , "edit":   "CONFIG"    # Update config record
+    , "delete": "CONFIG"    # Delete config record
+    , "config": "CONFIG"    # Change collection configuration
+    , "admin":  "ADMIN"     # Change users or permissions
+    })
+
+ENTITY_PERMISSIONS = (
+    { "view":   "VIEW"      # View data record
+    , "list":   "VIEW"      # ..
+    , "search": "VIEW"      # ..
+    , "new":    "CREATE"    # Create data record
+    , "copy":   "CREATE"    # ..
+    , "edit":   "UPDATE"    # Update data record
+    , "delete": "DELETE"    # Delete data record
+    , "config": "CONFIG"    # Change collection configuration
+    , "admin":  "ADMIN"     # Change users or permissions
+    })
+
 TYPE_CLASS_MAP = (
-    { '_type':              RecordType
+    { '_user':              AnnalistUser
+    , '_type':              RecordType
     , '_list':              RecordList
     , '_view':              RecordView
     , '_field':             RecordField
@@ -103,12 +153,23 @@ TYPE_CLASS_MAP = (
     })
 
 TYPE_MESSAGE_MAP = (
-    { '_type':              TYPE_MESSAGES
+    { '_user':              USER_MESSAGES
+    , '_type':              TYPE_MESSAGES
     , '_list':              LIST_MESSAGES
     , '_view':              VIEW_MESSAGES
     , '_field':             FIELD_MESSAGES
     , 'Enum_list_type':     ENUM_MESSAGES
     , 'Enum_field_type':    ENUM_MESSAGES
+    })
+
+TYPE_PERMISSIONS_MAP = (
+    { '_user':              ADMIN_PERMISSIONS
+    , '_type':              CONFIG_PERMISSIONS
+    , '_list':              CONFIG_PERMISSIONS
+    , '_view':              CONFIG_PERMISSIONS
+    , '_field':             CONFIG_PERMISSIONS
+    , 'Enum_list_type':     CONFIG_PERMISSIONS
+    , 'Enum_field_type':    CONFIG_PERMISSIONS
     })
 
 def get_built_in_type_ids():
@@ -153,39 +214,85 @@ class EntityTypeInfo(object):
 
         and other values as initialized here.
         """
-        self.entitysite     = site
-        self.entitycoll     = coll
-        self.recordtype     = None
-        self.entityparent   = None
-        self.coll_id        = coll.get_id()
-        self.type_id        = type_id
+        self.entitysite      = site
+        self.entitycoll      = coll
+        self.recordtype      = None
+        self.entityparent    = None
+        self.coll_id         = coll.get_id()
+        self.type_id         = type_id
+        self.permissions_map = None
         if type_id in TYPE_CLASS_MAP:
             self.recordtype      = RecordType.load(coll, type_id, site)
             self.entityparent    = coll
             self.entityaltparent = site
             self.entityclass     = TYPE_CLASS_MAP[type_id]
             self.entitymessages  = TYPE_MESSAGE_MAP[type_id]
+            self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
         else:
             if RecordType.exists(coll, type_id, site):
                 self.recordtype     = RecordType.load(coll, type_id, site)
-                if create_typedata and not RecordTypeData.exists(coll, type_id):
-                    self.entityparent   = RecordTypeData.create(coll, type_id, {})
-                else:
-                    self.entityparent   = RecordTypeData(coll, type_id)
+            if create_typedata and not RecordTypeData.exists(coll, type_id):
+                self.entityparent   = RecordTypeData.create(coll, type_id, {})
+            else:
+                self.entityparent   = RecordTypeData(coll, type_id)
             self.entityaltparent = None
             self.entityclass     = EntityData
             self.entitymessages  = ENTITY_MESSAGES
+            self.permissions_map = ENTITY_PERMISSIONS
         if not self.recordtype:
-            #@@
             # .recordtype is used by views.displayinfo to locate the default
             # view and/or list id for examining records of a particular type.
             #
             # Also used in entityedit for getting @type URI/CURIE values.
             #
             # Used in render_utils to get link to type record
-            #@@
-            log.warning("EntityTypeInfo: RecordType %s not found"%type_id)
+            log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
         return
+
+    def parent_exists(self):
+        """
+        Test for existence of parent entity for the current type.
+        """
+        return self.entityparent._exists()
+
+    def entity_exists(self, entity_id, use_altparent=False):
+        """
+        Test for existence of identified entity of the current type.
+        """
+        altparent = self.entityaltparent if use_altparent else None
+        return self.entityclass.exists(self.entityparent, entity_id, altparent=altparent)
+
+    def create_entity(self, entity_id, entity_values):
+        """
+        Creates and returns an entity for the current type, with the supplied values.
+        """
+        log.debug(
+            "create_entity id %s, parent %s, values %r"%
+            (entity_id, self.entityparent, entity_values)
+            )
+        # Set type URI for entity; previous types are not carried forwards
+        # If type does not define a URI, use type URL
+        typeuri = None
+        if self.recordtype:
+            if ANNAL.CURIE.uri in self.recordtype:
+                typeuri = self.recordtype[ANNAL.CURIE.uri]
+            if not typeuri:
+                typeuri = self.recordtype[ANNAL.CURIE.url]
+        entity_values['@type'] = typeuri    # NOTE: previous type not carried forward
+        # Don't save entity URI if same as URL
+        if entity_values.get(ANNAL.CURIE.uri) == entity_values.get(ANNAL.CURIE.url):
+            entity_values.pop(ANNAL.CURIE.uri, None)
+        return self.entityclass.create(self.entityparent, entity_id, entity_values)
+
+    def remove_entity(self, entity_id):
+        """
+        Remove identified entity for the current type.
+        """
+        log.debug(
+            "remove_entity id %s, parent %s"%
+            (entity_id, self.entityparent)
+            )
+        return self.entityclass.remove(self.entityparent, entity_id)
 
     def get_entity(self, entity_id):
         """
@@ -213,23 +320,24 @@ class EntityTypeInfo(object):
                     altparent=altparent):
                 yield eid
         else:
-            log.warning("EntityTypeInfo missing entityparent; type_id %s"%(self.type_id))
+            log.warning("EntityTypeInfo.enum_entity_ids: missing entityparent; type_id %s"%(self.type_id))
         return
 
-    def enum_entities(self, usealtparent=False):
+    def enum_entities(self, user_perms=None, usealtparent=False):
         """
         Iterate over entities in collection with current type.
 
         usealtparent    is True if site-wide entities are to be included.
         """
-        altparent = self.entityaltparent if usealtparent else None
-        if self.entityparent:
-            for e in self.entityparent.child_entities(
-                    self.entityclass, 
-                    altparent=altparent):
-                yield e
-        else:
-            log.warning("EntityTypeInfo missing entityparent; type_id %s"%(self.type_id))
+        if not user_perms or self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]:
+            altparent = self.entityaltparent if usealtparent else None
+            if self.entityparent:
+                for e in self.entityparent.child_entities(
+                        self.entityclass, 
+                        altparent=altparent):
+                    yield e
+            else:
+                log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
         return
 
     def get_initial_entity_values(self, entity_id):
@@ -240,14 +348,10 @@ class EntityTypeInfo(object):
         Failing that, returns system-wide default values.
         """
         values = (
-            { '@type':              ["annal:EntityData"]
+            { '@type':              [ANNAL.CURIE.EntityData]
             , ANNAL.CURIE.type_id:  self.type_id
             , RDFS.CURIE.label:     ""
             , RDFS.CURIE.comment:   ""
-            # , RDFS.CURIE.label:     "%s/%s/%s"%
-            #                         (self.coll_id, self.type_id, entity_id)
-            # , RDFS.CURIE.comment:   "Entity '%s' of type '%s' in collection '%s'"%
-            #                         (entity_id, self.type_id, self.coll_id)
             })
         init_entity = self.get_entity("_initial_values")
         if init_entity:
@@ -255,7 +359,6 @@ class EntityTypeInfo(object):
             values.pop("@id", None)
             values.pop(ANNAL.CURIE.id,  None)
             values.pop(ANNAL.CURIE.url, None)
-            values.pop(ANNAL.CURIE.uri, None)
         values[ANNAL.CURIE.id] = entity_id
         return values
 

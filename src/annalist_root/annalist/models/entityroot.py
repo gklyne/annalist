@@ -47,8 +47,8 @@ class EntityRoot(object):
         cls._entityref      relative reference to entity from body file
         self._entityid      ID of entity; may be None for "root" entities (e.g. site?)
         self._entityurl     URI at which entity is accessed
-        self._entityurlhost URI host at which entity is accessed (per HTTP host: header)
-        self._entityurlpath URI absolute path at which entity is accessed
+        # self._entityurlhost URI host at which entity is accessed (per HTTP host: header)
+        # self._entityurlpath URI absolute path at which entity is accessed
         self._entitydir     directory where entity is stored
         self._values        dictionary of values in entity body
     """
@@ -67,15 +67,12 @@ class EntityRoot(object):
         entitydir   is the base directory containing the entity
         """
         self._entityid      = None
-        # self._entitytypes   = []  #@@
         self._entityurl     = entityurl if entityurl.endswith("/") else entityurl + "/"
         self._entitydir     = entitydir if entitydir.endswith("/") else entitydir + "/"
         self._entityalturl  = None
         self._entityaltdir  = None
         self._entityuseurl  = self._entityurl
         self._values        = None
-        self._entityurlhost = util.entity_url_host(self._entityurl, "")
-        self._entityurlpath = util.entity_url_path(self._entityurl, "")
         log.debug("EntityRoot.__init__: entity URI %s, entity dir %s"%(self._entityurl, self._entitydir))
         return
 
@@ -130,7 +127,6 @@ class EntityRoot(object):
         """
         Return URL path used to view entity data.  This is the URI-path of the URL
         returned by get_view_url (above)
-
         """
         return util.entity_url_path(self.get_view_url(), "")
 
@@ -142,8 +138,8 @@ class EntityRoot(object):
         self._values[ANNAL.CURIE.id]        = self._values.get(ANNAL.CURIE.id,      self._entityid)
         self._values[ANNAL.CURIE.type_id]   = self._values.get(ANNAL.CURIE.type_id, self._entitytypeid)
         self._values[ANNAL.CURIE.type]      = self._values.get(ANNAL.CURIE.type,    self._entitytype)
-        self._values[ANNAL.CURIE.uri]       = self._values.get(ANNAL.CURIE.uri,     self.get_view_url())
-        self._values[ANNAL.CURIE.url]       = self.get_view_url()
+        urlref = self.get_view_url_path()
+        self._values[ANNAL.CURIE.url]       = urlref
         # log.info("set_values %r"%(self._values,))
         return self._values
 
@@ -152,29 +148,6 @@ class EntityRoot(object):
         Return collection metadata values
         """
         return self._values
-
-    #@@
-    # def set_types(self, types):
-    #     """
-    #     Set user-supplied type(s).  The supplied value may be a URI, CURIE or list/tuple of same.
-    #     """
-    #     if types is None:
-    #         self._entitytypes = []
-    #     elif isinstance(types, (tuple, list)):
-    #         self._entitytypes = types
-    #     else:
-    #         self._entitytypes = [types]
-    #     # log.info("set_types %r"%(types,))
-    #     return self._entitytypes
-
-    # def get_types(self, types):
-    #     """
-    #     Get user-supplied type(s).
-    #
-    #     Returns a sequence of URIs and/or CURIES, which may be empty.
-    #     """
-    #     return self._entitytypes
-    #@@
 
     # I/O helper functions
 

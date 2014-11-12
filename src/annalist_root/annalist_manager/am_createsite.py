@@ -17,13 +17,15 @@ import shutil
 
 log = logging.getLogger(__name__)
 
-from utils.SetcwdContext    import ChangeCurrentDir
+from utils.SetcwdContext            import ChangeCurrentDir
+from utils.SuppressLoggingContext   import SuppressLogging
 
-from annalist.layout        import Layout
-from annalist.util          import removetree, replacetree
+from annalist.identifiers           import ANNAL, RDFS
+from annalist.layout                import Layout
+from annalist.util                  import removetree, replacetree, updatetree
 
 import am_errors
-from am_settings            import am_get_settings
+from am_settings                    import am_get_settings
 
 def am_createsite(annroot, userhome, options):
     """
@@ -51,7 +53,8 @@ def am_createsite(annroot, userhome, options):
         return am_errors.AM_UNEXPECTEDARGS
     status = am_errors.AM_SUCCESS
     emptysitedir = os.path.join(annroot, "sampledata/empty/annalist_site")
-    sitesettings = importlib.import_module(settings.modulename)
+    with SuppressLogging(logging.INFO):
+        sitesettings = importlib.import_module(settings.modulename)
     sitebasedir  = os.path.join(sitesettings.BASE_DATA_DIR, "annalist_site")
     # Test if old site exists
     if os.path.exists(sitebasedir):
@@ -72,7 +75,7 @@ def am_createsite(annroot, userhome, options):
     sitedatasrc = os.path.join(annroot, "annalist/sitedata")
     sitedatatgt = os.path.join(sitebasedir, site_layout.SITEDATA_DIR)
     print("Copy Annalist site data from %s to %s"%(sitedatasrc, sitedatatgt))
-    for sdir in ("types", "lists", "views", "fields", "enums"):
+    for sdir in ("types", "lists", "views", "fields", "enums", "users"):
         s = os.path.join(sitedatasrc, sdir)
         d = os.path.join(sitedatatgt, sdir)
         print("- %s -> %s"%(sdir, d))
@@ -99,7 +102,8 @@ def am_updatesite(annroot, userhome, options):
         print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
     status = am_errors.AM_SUCCESS
-    sitesettings = importlib.import_module(settings.modulename)
+    with SuppressLogging(logging.INFO):
+        sitesettings = importlib.import_module(settings.modulename)
     sitebasedir  = os.path.join(sitesettings.BASE_DATA_DIR, "annalist_site")
     # Test if site exists
     if not os.path.exists(sitebasedir):
@@ -113,8 +117,13 @@ def am_updatesite(annroot, userhome, options):
     for sdir in ("types", "lists", "views", "fields", "enums"):
         s = os.path.join(sitedatasrc, sdir)
         d = os.path.join(sitedatatgt, sdir)
-        print("- %s -> %s"%(sdir, d))
+        print("- %s => %s"%(sdir, d))
         replacetree(s, d)
+    for sdir in ("users",):
+        s = os.path.join(sitedatasrc, sdir)
+        d = os.path.join(sitedatatgt, sdir)
+        print("- %s +> %s"%(sdir, d))
+        updatetree(s, d)
     return status
 
 # End.

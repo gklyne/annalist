@@ -41,7 +41,9 @@ from AnnalistTestCase                   import AnnalistTestCase
 from entity_testutils                   import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
-    collection_create_values
+    collection_entity_view_url,
+    collection_create_values,
+    create_test_user
     )
 from entity_testviewdata                import (
     recordview_dir,
@@ -135,7 +137,7 @@ class RecordViewTest(AnnalistTestCase):
         self.assertIn("/c/testcoll/_annalist_collection/views/Default_view", t.get_url())
         self.assertEqual(t.get_type_id(), "_view")
         td = t.get_values()
-        self.assertEqual(set(td.keys()), set(recordview_load_keys()))
+        self.assertEqual(set(td.keys()), set(recordview_load_keys(view_uri=True)))
         v = recordview_read_values(view_id="Default_view")
         v.update(
             { 'rdfs:label':     'Default record view'
@@ -160,18 +162,14 @@ class RecordViewEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.user     = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client   = Client(HTTP_HOST=TestHost)
-        loggedin      = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         self.no_options       = ['(no options)']
         def special_field(fid):
             return ( 
                 fid.startswith("Field_") or 
                 fid.startswith("List_") or
                 fid.startswith("Type_") or
-                fid.startswith("View_")
+                fid.startswith("View_") or
+                fid.startswith("User_")
                 )
         self.field_options    = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
@@ -191,7 +189,13 @@ class RecordViewEditViewTest(AnnalistTestCase):
                       not (fid.startswith("Bib_") or special_field(fid))
             ])
         # log.info(self.field_options_no_bibentry)
+        # For checking Location: header values...
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_view")
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
         return
 
     def tearDown(self):
@@ -404,12 +408,13 @@ class RecordViewEditViewTest(AnnalistTestCase):
         r = response
         #log.info("r.context['fields']: %r"%(r.context['fields'],))
         # Common structure
+        view_url = collection_entity_view_url("testcoll", "_view", "View_view")
         self.assertEqual(r.context['entity_id'],        'View_view')
         self.assertEqual(r.context['orig_id'],          'View_view')
         self.assertEqual(r.context['type_id'],          '_view')
         self.assertEqual(r.context['orig_type'],        '_view')
         self.assertEqual(r.context['coll_id'],          'testcoll')
-        self.assertEqual(r.context['entity_url'],       TestHostUri + "/testsite/c/testcoll/d/_view/View_view/")
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['entity_uri'],       "annal:display/View_view")
         self.assertEqual(r.context['action'],           action)
         self.assertEqual(r.context['view_id'],          'View_view')
@@ -584,13 +589,13 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        view_url = entity_url(type_id="_view", entity_id="00000001")
+        view_url = collection_entity_view_url(coll_id="testcoll", type_id="_view", entity_id="00000001")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+view_url)
-        self.assertEqual(r.context['entity_uri'],       TestHostUri+view_url)
+        self.assertEqual(r.context['entity_url'],       view_url)
+        self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
@@ -601,7 +606,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="00000001",
             view_label="", # default_label("testcoll", "_view", "00000001"),
             view_help="", # default_comment("testcoll", "_view", "00000001"),
-            view_url=TestHostUri + recordview_url("testcoll", "00000001"),
+            view_url=recordview_url("testcoll", "00000001"),
             field_options = self.field_options_no_special
             )
         return
@@ -612,7 +617,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        view_url = TestHostUri+recordview_url("testcoll", "Default_view")
+        view_url = collection_entity_view_url(coll_id="testcoll", type_id="_view", entity_id="Default_view")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "Default_view")
@@ -653,11 +658,12 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
+        view_url = collection_entity_view_url(coll_id="testcoll", type_id="_view", entity_id="Default_view")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "Default_view")
         self.assertEqual(r.context['orig_id'],          "Default_view")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+"/testsite/c/testcoll/d/_view/Default_view/")
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['entity_uri'],       "annal:display/Default_view")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['edit_add_field'],   "no")
@@ -668,7 +674,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="Default_view",
             view_label="Default record view",
             view_help="Default record view, applied when no view is specified when creating a record.",
-            view_url=TestHostUri+"/testsite/c/testcoll/d/_view/Default_view/",
+            view_url=view_url,
             view_uri="annal:display/Default_view",
             view_record_type="",
             field_options=self.field_options_no_special
@@ -697,11 +703,12 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
+        view_url = collection_entity_view_url(coll_id="testcoll", type_id="_view", entity_id="View_view")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "View_view")
         self.assertEqual(r.context['orig_id'],          "View_view")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+"/testsite/c/testcoll/d/_view/View_view/")
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['entity_uri'],       "annal:display/View_view")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "")
@@ -719,11 +726,12 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
+        view_url = collection_entity_view_url(coll_id="testcoll", type_id="_view", entity_id="View_view")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "View_view")
         self.assertEqual(r.context['orig_id'],          "View_view")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+"/testsite/c/testcoll/d/_view/View_view/")
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['entity_uri'],       "annal:display/View_view")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "")
@@ -741,13 +749,13 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        view_url = entity_url(type_id="_view", entity_id="BibEntry_view")
+        view_url = collection_entity_view_url("testcoll", "_view", "BibEntry_view")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "BibEntry_view")
         self.assertEqual(r.context['orig_id'],          "BibEntry_view")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+view_url)
-        self.assertEqual(r.context['entity_uri'],       TestHostUri+view_url)
+        self.assertEqual(r.context['entity_url'],       view_url)
+        self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_url'], "")
@@ -924,6 +932,19 @@ class RecordViewEditViewTest(AnnalistTestCase):
             update="Updated RecordView"
             )
         self.assertDictionaryMatch(r.context, expect_context)
+        return
+
+    def test_post_copy_view_dup_property_uri(self):
+        f = recordview_view_form_data(
+            view_id="copyview", orig_id="Default_view", action="copy", extra_field="Entity_comment"
+            )
+        u = entitydata_edit_url("copy", "testcoll", "_view", entity_id="Default_view", view_id="View_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # log.info(r.content)
+        self.assertContains(r, "<h3>Problem with view description</h3>")
+        self.assertContains(r, "<p>Field Entity_comment repeats use of property rdfs:comment in view</p>")
         return
 
     #   -------- edit view --------
@@ -1140,8 +1161,8 @@ class ConfirmRecordViewDeleteTests(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)

@@ -30,9 +30,13 @@ import annalist
 # from annalist_manager       import am_errors
 import am_errors
 from am_runtests            import am_runtests
-from am_runserver           import am_runserver
+from am_runserver           import am_runserver, am_serverlog
 from am_initialize          import am_initialize
-from am_createuser          import am_createuser
+from am_createuser          import (
+    am_createadminuser, am_defaultadminuser, am_updateadminuser, 
+    am_setdefaultpermissions, am_setpublicpermissions,
+    am_deleteuser
+    )
 from am_createsite          import am_createsite, am_updatesite
 from am_help                import am_help, command_summary_help
 
@@ -108,18 +112,30 @@ def run(userhome, userconfig, options, progname):
     """
     Command line tool to create and submit deposit information packages
     """
-    if options.command.startswith("init"):
-        return am_initialize(annroot, userhome, userconfig, options)
-    if options.command.startswith("runt"):
+    if options.command.startswith("runt"):                  # runtests
         return am_runtests(annroot, options)
-    if options.command.startswith("createa"):
-        return am_createuser(annroot, userhome, options)
-    if options.command.startswith("creates"):
+    if options.command.startswith("init"):                  # initialize (intsllaation, django database)
+        return am_initialize(annroot, userhome, userconfig, options)
+    if options.command.startswith("createa"):               # createadminuser
+        return am_createadminuser(annroot, userhome, options)
+    if options.command.startswith("defaulta"):              # defaultadminuser
+        return am_defaultadminuser(annroot, userhome, options)
+    if options.command.startswith("updatea"):               # updateadminuser
+        return am_updateadminuser(annroot, userhome, options)
+    if options.command.startswith("setdef"):                # setdefaultpermissions
+        return am_setdefaultpermissions(annroot, userhome, options)
+    if options.command.startswith("setpub"):                # setpublicpermissions
+        return am_setpublicpermissions(annroot, userhome, options)
+    if options.command.startswith("deleteu"):               # deleteuser
+        return am_deleteuser(annroot, userhome, options)
+    if options.command.startswith("creates"):               # createsitedata
         return am_createsite(annroot, userhome, options)
-    if options.command.startswith("updates"):
+    if options.command.startswith("updates"):               # updatesitedata
         return am_updatesite(annroot, userhome, options)
-    if options.command.startswith("runs"):
+    if options.command.startswith("runs"):                  # runserver
         return am_runserver(annroot, userhome, options)
+    if options.command.startswith("serv"):                  # serverlog
+        return am_serverlog(annroot, userhome, options)
     if options.command.startswith("help"):
         return am_help(options, progname)
     print("Un-recognised sub-command: %s"%(options.command), file=sys.stderr)
@@ -168,5 +184,18 @@ if __name__ == "__main__":
     status = runMain()
     sys.exit(status)
 
-    # End.
+# Tests
+#
+# python am_main.py runtests
+# python am_main.py --config=runtests initialize
+# python am_main.py --config=runtests createadminuser testtestadmin testestadmin@localhost
+# python am_main.py --config=runtests createadminuser testtestadmin testestadmin@localhost
+# python am_main.py --config=runtests deleteuser testtestadmin
+# python am_main.py --config=runtests deleteuser testtestadmin
+# python am_main.py --config=runtests updateadminuser gklyne
+# python am_main.py --config=runtests setdefaultpermissions "VIEW CREATE TEST"
+# python am_main.py --config=runtests setpublicpermissions "VIEW TEST"
+# python am_main.py --config=runtests updatesitedata
+
+# End.
 

@@ -1,5 +1,9 @@
 {% extends "base_generic.html" %}
 
+{% block title %}{{ title }}{% endblock %}
+
+{% block heading %}{{ title }}{% endblock %}
+
 {% block content %}
 
   <div class="row">
@@ -13,7 +17,8 @@
       <p>User</p>
     </div>
     <div class="small-10 columns">
-      <p>{{user.username}}</p>
+      <!-- <p>{{user.username}}</p> -->
+      <p>{{username}}</p>
     </div>
   </div>
 
@@ -31,7 +36,7 @@
       <p>Email</p>
     </div>
     <div class="small-10 columns">
-      <p>{{user.email}}</p>
+      <p><a href="{{useruri}}">{{user.email}}</a></p>
     </div>
   </div>
 

@@ -9,6 +9,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from annalist.identifiers           import RDFS, ANNAL
+
 class RepeatDescription(object):
     """
     Describes information relating to a repeated field group used with entity-value maps when
@@ -27,12 +29,12 @@ class RepeatDescription(object):
         repeat      is the repeated field description in the view description.
         """
         self._repeat_context = (
-            { 'repeat_id':              repeat['annal:repeat_id']
-            , 'repeat_label':           repeat['annal:repeat_label']
-            , 'repeat_label_add':       repeat['annal:repeat_label_add']
-            , 'repeat_label_delete':    repeat['annal:repeat_label_delete']
-            , 'repeat_entity_values':   repeat['annal:repeat_entity_values']
-            , 'repeat_context_values':  repeat['annal:repeat_context_values']
+            { 'repeat_id':              repeat[ANNAL.CURIE.repeat_id]
+            , 'repeat_label':           repeat[ANNAL.CURIE.repeat_label]
+            , 'repeat_label_add':       repeat[ANNAL.CURIE.repeat_label_add]
+            , 'repeat_label_delete':    repeat[ANNAL.CURIE.repeat_label_delete]
+            , 'repeat_entity_values':   repeat[ANNAL.CURIE.repeat_entity_values]
+            , 'repeat_context_values':  repeat[ANNAL.CURIE.repeat_context_values]
             })
         return
 

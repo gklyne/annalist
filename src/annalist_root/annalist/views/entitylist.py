@@ -21,7 +21,7 @@ from annalist.identifiers               import RDFS, ANNAL
 from annalist.models.collection         import Collection
 from annalist.models.recordtype         import RecordType
 from annalist.models.recordtypedata     import RecordTypeData
-from annalist.models.entitytypeinfo     import EntityTypeInfo
+from annalist.models.entitytypeinfo     import EntityTypeInfo, CONFIG_PERMISSIONS
 from annalist.models.entityfinder       import EntityFinder
 
 from annalist.views.uri_builder         import uri_with_params
@@ -34,8 +34,7 @@ from annalist.views.grouprepeatmap      import GroupRepeatMap
 from annalist.views.confirm             import ConfirmView, dict_querydict
 from annalist.views.generic             import AnnalistGenericView
 
-from annalist.views.fields.bound_field  import bound_field
-from annalist.views.fields.render_utils import get_entity_values
+from annalist.views.fields.bound_field  import bound_field, get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -105,12 +104,12 @@ class EntityGenericListView(AnnalistGenericView):
         log.debug("entitylist %r"%listinfo.recordlist.get_values())
         fieldlistmap = FieldListValueMap(
             listinfo.collection, 
-            listinfo.recordlist.get_values()['annal:list_fields'],
+            listinfo.recordlist.get_values()[ANNAL.CURIE.list_fields],
             {'list': listinfo.recordlist}
             )
         entitymap.add_map_entry(fieldlistmap)  # one-off for access to field headings
         entitymap.add_map_entry(
-            GroupRepeatMap(c='entities', e='annal:list_entities', g=[fieldlistmap])
+            GroupRepeatMap(c='entities', e=ANNAL.CURIE.list_entities, g=[fieldlistmap])
             )
         return entitymap
 
@@ -120,40 +119,40 @@ class EntityGenericListView(AnnalistGenericView):
         """
         Create a form for listing entities.
         """
-        log.debug("entitylist.get: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
+        log.info("views.entitylist.get:  coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
         listinfo = self.list_setup(coll_id, type_id, list_id)
         if listinfo.http_response:
             return listinfo.http_response
         log.debug("list_id %s"%listinfo.list_id)
         # Prepare list and entity IDs for rendering form
-        selector    = listinfo.recordlist.get_values().get('annal:list_entity_selector', "")
+        selector    = listinfo.recordlist.get_values().get(ANNAL.CURIE.list_entity_selector, "")
         search_for  = request.GET.get('search', "")
+        user_perms  = self.get_permissions(listinfo.collection)
         entity_list = (
             EntityFinder(listinfo.collection, selector=selector)
-                .get_entities_sorted(type_id=type_id, context=listinfo.recordlist, search=search_for)
+                .get_entities_sorted(
+                    user_perms, type_id=type_id, context=listinfo.recordlist, search=search_for
+                    )
             )
-        entityval = { 'annal:list_entities': [ get_entity_values(listinfo, e) for e in entity_list ] }
+        entityval = { ANNAL.CURIE.list_entities: [ get_entity_values(listinfo, e) for e in entity_list ] }
         # Set up initial view context
         entityvaluemap = self.get_list_entityvaluemap(listinfo)
+        context_extra_values = (
+            { 'continuation_url':       request.GET.get('continuation_url', "")
+            , 'request_url':            self.get_request_path()
+            , 'coll_id':                coll_id
+            , 'type_id':                type_id
+            , 'list_id':                listinfo.list_id
+            , 'search_for':             search_for
+            , 'list_choices':           self.get_list_choices_field(listinfo)
+            , 'collection_view':        self.view_uri("AnnalistCollectionView", coll_id=coll_id)
+            , 'default_view_id':        listinfo.recordlist[ANNAL.CURIE.default_view]
+            , 'default_view_enable':    ("" if list_id else 'disabled="disabled"')
+            })
         listcontext = entityvaluemap.map_value_to_context(entityval,
-            site_title            = self.site_data()["title"],
-            title                 = listinfo.collection[RDFS.CURIE.label],
-            request_url           = self.get_request_path(),
-            continuation_url      = request.GET.get('continuation_url', ""),
-            # continuation_search   = search_for or None,
-            ### heading             = entity_initial_values['rdfs:label'],
-            coll_id               = coll_id,
-            coll_label            = listinfo.collection[RDFS.CURIE.label],
-            type_id               = type_id,
-            list_id               = listinfo.list_id,
-            list_label            = listinfo.recordlist[RDFS.CURIE.label],
-            search_for            = search_for,
-            list_choices          = self.get_list_choices_field(listinfo),
-            collection_view       = self.view_uri("AnnalistCollectionView", coll_id=coll_id),
-            default_view_id       = listinfo.recordlist['annal:default_view'],
-            default_view_enable   = ("" if list_id else 'disabled="disabled"'),
-            help_filename         = self.help
+            **context_extra_values
             )
+        listcontext.update(listinfo.context_data())
         # log.debug("EntityGenericListView.get listcontext %r"%(listcontext))
         # Generate and return form data
         return (
@@ -167,7 +166,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         Handle response from dynamically generated list display form.
         """
-        log.debug("entitylist.post: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
+        log.info("views.entitylist.post: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
         # log.info("  %s"%(self.get_request_path()))
         # log.info("  form data %r"%(request.POST))
         continuation_next, continuation_here = self.continuation_urls(
@@ -244,6 +243,12 @@ class EntityGenericListView(AnnalistGenericView):
                         message.SITE_ENTITY_FOR_DELETE%{'id': entity_id},
                         continuation_url=continuation_next
                         )
+                    or
+                    self.check_delete_type_values(listinfo,
+                        entity_id, entity_type,
+                        message.TYPE_VALUES_FOR_DELETE%{'type_id': entity_id},
+                        continuation_url=continuation_next
+                        )
                     )
                 if not redirect_uri:
                     # Get user to confirm action before actually doing it
@@ -260,8 +265,13 @@ class EntityGenericListView(AnnalistGenericView):
                         , "search_for":         [request.POST['search_for']]
                         })
                     message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
+                    typeinfo = listinfo.entitytypeinfo
+                    if typeinfo is None:
+                        typeinfo = EntityTypeInfo(listinfo.site, listinfo.collection, entity_type)
                     return (
-                        self.form_action_auth("delete", listinfo.collection.get_url()) or
+                        self.form_action_auth(
+                            "delete", listinfo.collection, typeinfo.permissions_map
+                            ) or
                         ConfirmView.render_form(request,
                             action_description=     message.REMOVE_ENTITY_DATA%message_vals,
                             confirmed_action_uri=   confirmed_action_uri,
@@ -271,7 +281,11 @@ class EntityGenericListView(AnnalistGenericView):
                             )
                         )
             if "default_view" in request.POST:
-                auth_check = self.form_action_auth("config", listinfo.collection.get_url())
+                if listinfo.entitytypeinfo:
+                    permissions_map = listinfo.entitytypeinfo.permissions_map
+                else:
+                    permissions_map = CONFIG_PERMISSIONS
+                auth_check = self.form_action_auth("config", listinfo.collection, permissions_map)
                 if auth_check:
                     return auth_check
                 listinfo.collection.set_default_list(list_id)
@@ -337,11 +351,33 @@ class EntityGenericListView(AnnalistGenericView):
         #         or extract this logic and share?  See also entityedit view choices
         field_description = FieldDescription(
             listinfo.collection, 
-            {'annal:field_id': "List_choice", 'annal:field_placement': "small:0,12;medium:5,5"},
+            {ANNAL.CURIE.field_id: "List_choice", ANNAL.CURIE.field_placement: "small:0,12;medium:5,5"},
             {}
             )
         entityvals        = { field_description['field_property_uri']: listinfo.list_id }
-        options           = field_description['field_choices']
-        return bound_field(field_description, entityvals, options)
+        return bound_field(field_description, entityvals)
+
+    def check_delete_type_values(
+            self, listinfo, entity_id, entity_type, msg, continuation_url=None
+            ):
+        """
+        Checks for attempt to delete type with existing values
+
+        Returns redirect URI to display error, or None if no error
+        """
+        if entity_type == "_type":
+            typeinfo = EntityTypeInfo(
+                listinfo.site, listinfo.collection, entity_id
+                )
+            if next(typeinfo.enum_entities(), None) is not None:
+                return (
+                    # Type has valu7es: redisplay form with error message
+                    uri_with_params(
+                        listinfo.view.get_request_path(),
+                        listinfo.view.error_params(msg),
+                        continuation_url
+                        )
+                    )
+        return None
 
 # End.

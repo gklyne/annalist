@@ -31,7 +31,7 @@ class EntityData(Entity):
     _entityfile     = layout.ENTITY_DATA_FILE
     _entityref      = layout.DATA_ENTITY_REF
 
-    def __init__(self, parent, entity_id, altparent=None):
+    def __init__(self, parent, entity_id, altparent=None, use_altpath=False):
         """
         Initialize a new Entity Data object, without metadata.
 
@@ -41,10 +41,12 @@ class EntityData(Entity):
                     the alternative path for the entity type: this is used to augment 
                     explicitly created entities in a collection with site-wide 
                     installed metadata entites (i.e. types, views, etc.)
+        use_altpath is set True if this entity is situated at the alternative
+                    path relative to its parent.
         """
-        super(EntityData, self).__init__(parent, entity_id, altparent=altparent)
+        super(EntityData, self).__init__(parent, entity_id, altparent=altparent, use_altpath=use_altpath)
         self._entitytypeid  = self._entitytypeid or parent.get_id()
-        self._entityviewuri = parent._entityurl+self._entityview%{'id': entity_id}
+        self._entityviewuri = parent._entityurl+self._entityview%{'type_id': self._entitytypeid, 'id': entity_id}
         log.debug("EntityData: _entityviewuri %s"%(self._entityviewuri))
         return
 

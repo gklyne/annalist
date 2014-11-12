@@ -6,6 +6,8 @@
 
 from common import *
 
+ANNALIST_VERSION_MSG = "Annalist version %s (personal configuration)"%(ANNALIST_VERSION)
+
 SETTINGS_MODULE = __name__
 BASE_DATA_DIR   = os.path.expanduser("~")
 CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
@@ -15,10 +17,28 @@ DEBUG           = False
 TEMPLATE_DEBUG  = False
 ALLOWED_HOSTS   = ['*']     # Insecure: use e.g. ['.annalist.net']
 
-LOGGING_FILE    = SITE_SRC_ROOT+'/annalist.log'
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DATA_DIR, 'annalist_site/_annalist_site/db.sqlite3'),
+    }
+}
+
+LOGGING_FILE = SITE_SRC_ROOT+'/annalist.log'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'timed': {
+            'format': '%(levelname)s %(asctime)s %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'handlers': {
         # Include the default Django email handler for errors
         # This is what you'd get without configuring logging at all.
@@ -27,11 +47,14 @@ LOGGING = {
             'level': 'ERROR',
              # But the emails are plain text by default - HTML is nicer
             'include_html': True,
+            'formatter': 'verbose'
         },
         # Log to a text file that can be rotated by logrotate
         'logfile': {
             'class': 'logging.handlers.WatchedFileHandler',
-            'filename': LOGGING_FILE
+            'level': 'INFO',
+            'filename': LOGGING_FILE,
+            'formatter': 'timed'
         },
     },
     'loggers': {
@@ -41,10 +64,15 @@ LOGGING = {
         #     'level': 'ERROR',
         #     'propagate': True,
         # },
+        'django.request': {
+            'handlers': ['logfile'],
+            'level': 'INFO',
+            'propagate': True,
+        },
         # Might as well log any errors anywhere else in Django
         'django': {
             'handlers': ['logfile'],
-            'level': 'ERROR',
+            'level': 'INFO',
             'propagate': False,
         },
         'annalist_site': {
@@ -67,15 +95,16 @@ LOGGING = {
 
 import logging
 log = logging.getLogger(__name__)
-log.info("Annalist version %s (personal configuration)"%(ANNALIST_VERSION))
-log.info("SETTINGS_MODULE:  "+SETTINGS_MODULE)
-log.info("BASE_DATA_DIR:    "+BASE_DATA_DIR)
-log.info("CONFIG_BASE:      "+CONFIG_BASE)
-log.info("DJANGO_ROOT:      "+DJANGO_ROOT)
-log.info("SITE_CONFIG_DIR:  "+SITE_CONFIG_DIR)
-log.info("SITE_SRC_ROOT:    "+SITE_SRC_ROOT)
-log.info("STATICFILES_DIRS: "+STATICFILES_DIRS[1])
-log.info("DB PATH:          "+DATABASES['default']['NAME'])
-log.info("ALLOWED_HOSTS:    "+",".join(ALLOWED_HOSTS))
-log.info("LOGGING_FILE:     "+LOGGING_FILE)
+# log.info("Annalist version %s (personal configuration)"%(ANNALIST_VERSION))
+log.info(ANNALIST_VERSION_MSG)
+log.debug("SETTINGS_MODULE:  "+SETTINGS_MODULE)
+log.debug("BASE_DATA_DIR:    "+BASE_DATA_DIR)
+log.debug("CONFIG_BASE:      "+CONFIG_BASE)
+log.debug("DJANGO_ROOT:      "+DJANGO_ROOT)
+log.debug("SITE_CONFIG_DIR:  "+SITE_CONFIG_DIR)
+log.debug("SITE_SRC_ROOT:    "+SITE_SRC_ROOT)
+log.debug("STATICFILES_DIRS: "+STATICFILES_DIRS[1])
+log.debug("DB PATH:          "+DATABASES['default']['NAME'])
+log.debug("ALLOWED_HOSTS:    "+",".join(ALLOWED_HOSTS))
+log.debug("LOGGING_FILE:     "+LOGGING_FILE)
 # End.

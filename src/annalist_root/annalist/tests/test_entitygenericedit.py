@@ -19,6 +19,8 @@ from django.contrib.auth.models     import User
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client             import Client
 
+from utils.SuppressLoggingContext   import SuppressLogging
+
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
 
@@ -42,9 +44,12 @@ from entity_testutils               import (
     site_dir, collection_dir, 
     continuation_url_param,
     collection_edit_url,
-    site_title
+    collection_entity_view_url,
+    site_title,
+    render_select_options,
+    create_test_user
     )
-from entity_testtypedata        import (
+from entity_testtypedata            import (
     recordtype_dir, 
     recordtype_edit_url,
     recordtype_create_values, 
@@ -58,6 +63,9 @@ from entity_testentitydata          import (
     entitydata_default_view_context_data, entitydata_default_view_form_data,
     entitydata_recordtype_view_context_data, entitydata_recordtype_view_form_data,
     default_fields, default_label, default_comment, error_label,
+    get_site_types, get_site_types_sorted,
+    get_site_views, 
+    get_site_lists,
     layout_classes
     )
 
@@ -68,9 +76,6 @@ from entity_testentitydata          import (
 #   -----------------------------------------------------------------------------
 
 class GenericEntityEditViewTest(AnnalistTestCase):
-    """
-    Tests for record type edit views
-    """
 
     def setUp(self):
         init_annalist_test_site()
@@ -78,11 +83,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client = Client(HTTP_HOST=TestHost)
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         self.type_ids   = ['testtype', 'Default_type']
         self.no_options = ['(no options)']
         self.view_options    = sorted(
@@ -93,6 +93,11 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             [ lid for lid in self.testcoll.child_entity_ids(RecordList, self.testsite) 
                   if lid != "_initial_values"
             ])
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
         return
 
     def tearDown(self):
@@ -111,6 +116,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     def _check_entity_data_values(self, entity_id, type_id="testtype", update="Entity", update_dict=None):
         "Helper function checks content of form-updated record type entry with supplied entity_id"
+        # log.info("_check_entity_data_values: type_id %s, entity_id %s"%(type_id, entity_id))
         typeinfo = EntityTypeInfo(self.testsite, self.testcoll, type_id)
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, entity_id))
         e = typeinfo.entityclass.load(typeinfo.entityparent, entity_id)
@@ -240,7 +246,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="Type_uri"
                                placeholder="(URI)"  
-                               value="http://test.example.com/testsite/c/testcoll/d/testtype/00000001/"/>
+                               value=""/>
                     </div>
                 </div>
             </div>
@@ -264,7 +270,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow6 = """
+        formrow6 = ("""
             <div class="row">
               <div class="%(label_classes)s">
                 <p>Choose view</p>
@@ -272,14 +278,12 @@ class GenericEntityEditViewTest(AnnalistTestCase):
               <div class="%(input_classes)s">
                 <div class="row">
                   <div class="small-9 columns">
-                    <select name="view_choice">
-                      <option>BibEntry_view</option>
-                      <option>Default_view</option>
-                      <option>Field_view</option>
-                      <option>List_view</option>
-                      <option selected="selected">Type_view</option>
-                      <option>View_view</option>
-                    </select>
+                    """+
+                      render_select_options(
+                        "view_choice", 
+                        sorted(get_site_views()),
+                        "Type_view")+
+                    """
                   </div>
                   <div class="small-3 columns">
                     <input type="submit" name="use_view"      value="Show view" />
@@ -287,7 +291,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                 </div>
               </div>
             </div>
-            """%field_vals(width=6)
+            """)%field_vals(width=6)
         formrow7 = """
             <div class="%(button_right_classes)s">
               <div class="row">
@@ -315,11 +319,12 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
+        view_url = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + entity_url(entity_id="00000001"))
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -388,7 +393,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_render_edit'], "field/annalist_edit_identifier.html")
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Identifier")
-        self.assertEqual(r.context['fields'][3]['field_value'], TestBaseUri + "/c/testcoll/d/testtype/00000001/")
+        self.assertEqual(r.context['fields'][3]['field_value'], "")
         self.assertEqual(r.context['fields'][3]['options'], self.no_options)
         # 5th field - view id
         view_id_help = (
@@ -430,11 +435,12 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
+        view_url = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + entity_url(entity_id="00000001"))
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "")
         return
@@ -447,11 +453,12 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
+        view_url = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "entity1")
         self.assertEqual(r.context['orig_id'],          "entity1")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + entity_url("testcoll", "testtype", "entity1"))
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -524,7 +531,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_render_edit'], "field/annalist_edit_identifier.html")
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Identifier")
-        self.assertEqual(r.context['fields'][3]['field_value'], TestBaseUri + "/c/testcoll/d/testtype/entity1/")
+        self.assertEqual(r.context['fields'][3]['field_value'], view_url)
         self.assertEqual(r.context['fields'][3]['options'], self.no_options)
         # 5th field - view id
         type_uri_help = (
@@ -566,7 +573,33 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['options'], self.list_options)
         return
 
-    def test_get_edit_not_exists(self):
+    def test_get_view_no_collection(self):
+        u = entitydata_edit_url("edit", "no_collection", "_field", entity_id="entity1", view_id="Type_view")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertContains(r, "Collection no_collection does not exist", status_code=404)
+        return
+
+    def test_get_view_no_type(self):
+        u = entitydata_edit_url("edit", "testcoll", "no_type", entity_id="entity1", view_id="Type_view")
+        with SuppressLogging(logging.WARNING):
+            r = self.client.get(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertContains(r, "Record type no_type in collection testcoll does not exist", status_code=404)
+        return
+
+    def test_get_view_no_view(self):
+        u = entitydata_edit_url("edit", "testcoll", "_field", entity_id="entity1", view_id="no_view")
+        with SuppressLogging(logging.WARNING):
+            r = self.client.get(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertContains(r, "Record view no_view in collection testcoll does not exist", status_code=404)
+        return
+
+    def test_get_edit_no_entity(self):
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynone", view_id="Type_view")
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   404)
@@ -680,6 +713,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # Check new entity data created
         self._check_entity_data_values("newentity", type_id="Default_type", update_dict=
             { '@type':          ['annal:Default_type', 'annal:EntityData']
+            , 'annal:uri':      f['Type_uri']   # because using Type_view
             })
         return
 
@@ -698,13 +732,13 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertTrue(RecordType.exists(self.testcoll, type_id))
         return
 
-    def test_new_entity_new_typedata(self):
+    def test_new_entity_new_recorddata(self):
         # Checks logic for creating an entity which may require creation of new recorddata
         self.create_new_type("testcoll", "newtype")
         # Create new entity
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
-        f = entitydata_recordtype_view_form_data(entity_id="newentity", type_id="newtype", action="new")
-        u = entitydata_edit_url("new", "testcoll", "newtype", view_id="Type_view")
+        f = entitydata_default_view_form_data(entity_id="newentity", type_id="newtype", action="new")
+        u = entitydata_edit_url("new", "testcoll", "newtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")

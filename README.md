@@ -23,7 +23,9 @@ See [Installing and setting up Annalist](documents/installing-annalist.md), and 
 Using Annalist
 --------------
 
-See the 6 minute [demonstration screencast](http://annalist.net/media/annalist-demo-music-instrument-catalogue.mp4) or the [Guide to using Annalist](documents/using-annalist.md)
+See the [Guide to using Annalist](documents/using-annalist.md)
+
+There are also a number of demonstration screencast videos, and accompanying scripts, which can be found at [demonstration/evaluation scripts](documents/demo-script.md) page.
 
 
 Goals
@@ -68,7 +70,7 @@ Active development is taking place on the "develop" branch in GitHub - see [http
 Acknowledgements
 ----------------
 
-Ideas motivating the creation of Annalist arose from discussions with past colleagues in the Zoology department at Oxford University, particularly David Shotton who led the BioImage project, and Helen White-Cooper who patiently explained her processes and data handling needs as a genomic researcher.
+Ideas motivating the creation of Annalist arose from discussions with past colleagues in the Zoology department at Oxford University, particularly Dr David Shotton who led the BioImage project, and Dr Helen White-Cooper who patiently explained her processes and data handling needs as a genomic researcher.
 
 David Flanders, formerly of JISC and now at University of Melbourne, provided encouragement and support for the development of software tools to support academic activities, and in particular raising the profile of engineering and management skills needed to create effective software tools for academics.  A previous project, [Shuffl](https://code.google.com/p/shuffl/), conducted under a JISC Rapid Innovation program that he ran, provided many technical and management lessons that have contributed to the development of Annalist.
 

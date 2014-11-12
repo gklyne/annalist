@@ -21,6 +21,7 @@ from annalist                   import util
 
 from annalist.models.site       import Site
 
+from annalist.views.displayinfo import DisplayInfo
 from annalist.views.generic     import AnnalistGenericView
 from annalist.views.confirm     import ConfirmView
 
@@ -40,13 +41,16 @@ class SiteView(AnnalistGenericView):
         Create a rendering of the current site home page, containing (among other things)
         a list of defined collections.
         """
-        resultdata = self.site_data()
-        if resultdata:
-            resultdata['help_filename'] = self.help
+        viewinfo = DisplayInfo(self, "view")
+        viewinfo.get_site_info(self.get_request_host())
+        viewinfo.check_authorization("view")
+        if viewinfo.http_response:
+            return viewinfo.http_response
+        resultdata = viewinfo.sitedata
+        resultdata.update(viewinfo.context_data())
         # log.info("SiteView.get: site_data %r"%(self.site_data()))
         return (
             self.check_site_data() or
-            self.authorize("VIEW") or 
             self.render_html(resultdata, 'annalist_site.html') or 
             self.error(self.error406values())
             )
@@ -62,8 +66,12 @@ class SiteView(AnnalistGenericView):
             collections = request.POST.getlist("select", [])
             if collections:
                 # Get user to confirm action before actually doing it
+                auth_required = (
+                    self.authorize("ADMIN", None) and           # either of these..
+                    self.authorize("DELETE_COLLECTION", None)
+                    )
                 return (
-                    self.authorize("DELETE") or
+                    auth_required or
                     ConfirmView.render_form(request,
                         action_description=     message.REMOVE_COLLECTIONS%{'ids': ", ".join(collections)},
                         action_params=          request.POST,
@@ -93,14 +101,28 @@ class SiteView(AnnalistGenericView):
                     error_message=message.INVALID_COLLECTION_ID%{'coll_id': new_id}
                     )
             # Create new collection with name and label supplied
-            auth_required = self.authorize("CREATE")
+            auth_required = (
+                self.authorize("ADMIN", None) and           # either of these..
+                self.authorize("CREATE_COLLECTION", None)
+                )
             if auth_required:
                 return auth_required
             coll_meta = (
                 { RDFS.CURIE.label:    new_label
                 , RDFS.CURIE.comment:  ""
                 })
-            self.site().add_collection(new_id, coll_meta)
+            coll = self.site().add_collection(new_id, coll_meta)
+            # Create full permissions in new collection for creating user
+            user = self.request.user
+            user_id = user.username
+            user_uri = "mailto:"+user.email
+            user_name = "%s %s"%(user.first_name, user.last_name)
+            user_description = "User %s: permissions for %s in collection %s"%(user_id, user_name, new_id)
+            coll.create_user_permissions(
+                user_id, user_uri, 
+                user_name, user_description,
+                user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+                )
             return self.redirect_info(
                 self.view_uri("AnnalistSiteView"), 
                 info_message=message.CREATED_COLLECTION_ID%{'coll_id': new_id}
@@ -124,7 +146,10 @@ class SiteActionView(AnnalistGenericView):
         log.debug("siteactionview.post: %r"%(request.POST))
         if "remove" in request.POST:
             log.debug("Complete remove %r"%(request.POST.getlist("select")))
-            auth_required = self.authorize("DELETE")
+            auth_required = (
+                self.authorize("ADMIN", None) and           # either of these..
+                self.authorize("DELETE_COLLECTION", None)
+                )
             if auth_required:
                 return auth_required
             coll_ids = request.POST.getlist("select")

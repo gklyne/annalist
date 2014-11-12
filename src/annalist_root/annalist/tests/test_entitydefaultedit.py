@@ -37,7 +37,8 @@ from entity_testutils               import (
     collection_edit_url,
     collection_create_values,
     site_title,
-    render_select_options
+    render_select_options,
+    create_test_user
     )
 from entity_testtypedata            import (
     recordtype_edit_url,
@@ -72,13 +73,13 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
+        self.type_ids   = get_site_types_sorted() + ['testtype']
+        self.no_options = ['(no options)']
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
-        self.type_ids   = get_site_types_sorted() + ['testtype']
-        self.no_options = ['(no options)']
         return
 
     def tearDown(self):
@@ -215,11 +216,12 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
+        view_url = entity_url(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + entity_url(entity_id="00000001"))
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -255,7 +257,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_property_uri'],  "annal:type_id")
         self.assertEqual(r.context['fields'][1]['field_render_view'],   "field/annalist_view_entitytypeid.html")
         self.assertEqual(r.context['fields'][1]['field_render_edit'],   "field/annalist_edit_entitytypeid.html")
-        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 right columns")
+        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 columns right")
         self.assertEqual(r.context['fields'][1]['field_value_type'],    "annal:Slug")
         self.assertEqual(r.context['fields'][1].field_value,            "testtype")
         self.assertEqual(r.context['fields'][1]['field_value'],         "testtype")
@@ -306,11 +308,12 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Collection testcoll</title>")
         # Test context
+        view_url = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "entity1")
         self.assertEqual(r.context['orig_id'],          "entity1")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + entity_url("testcoll", "testtype", "entity1"))
+        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -344,7 +347,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:type_id")
         self.assertEqual(r.context['fields'][1]['field_render_view'],  "field/annalist_view_entitytypeid.html")
         self.assertEqual(r.context['fields'][1]['field_render_edit'],  "field/annalist_edit_entitytypeid.html")
-        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 right columns")
+        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 columns right")
         self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][1]['field_value'], "testtype")
         self.assertEqual(set(r.context['fields'][1]['options']), set(self.type_ids))

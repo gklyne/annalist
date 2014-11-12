@@ -28,7 +28,9 @@ from annalist                           import layout
 from annalist.models.site               import Site
 from annalist.models.sitedata           import SiteData
 from annalist.models.collection         import Collection
+from annalist.models.entitydata         import EntityData
 from annalist.models.recordtype         import RecordType
+from annalist.models.recordtypedata     import RecordTypeData
 from annalist.models.recordview         import RecordView
 from annalist.models.recordlist         import RecordList
 
@@ -40,7 +42,9 @@ from AnnalistTestCase                   import AnnalistTestCase
 from entity_testutils                   import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
-    collection_create_values
+    collection_entity_view_url,
+    collection_create_values,
+    create_test_user
     )
 from entity_testtypedata                import (
     recordtype_dir,
@@ -78,7 +82,7 @@ class RecordTypeTest(AnnalistTestCase):
         return
 
     def test_RecordTypeTest(self):
-        self.assertEqual(Collection.__name__, "Collection", "Check Collection class name")
+        self.assertEqual(RecordType.__name__, "RecordType", "Check RecordType class name")
         return
 
     def test_recordtype_init(self):
@@ -133,7 +137,7 @@ class RecordTypeTest(AnnalistTestCase):
         self.assertIn("/c/testcoll/_annalist_collection/types/Default_type", t.get_url())
         self.assertEqual(t.get_type_id(), "_type")
         td = t.get_values()
-        self.assertEqual(set(td.keys()), set(recordtype_load_keys()))
+        self.assertEqual(set(td.keys()), set(recordtype_load_keys(type_uri=True)))
         v = recordtype_read_values(type_id="Default_type")
         v.update(
             { 'rdfs:label':     'Default record type'
@@ -158,11 +162,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.user     = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client   = Client(HTTP_HOST=TestHost)
-        loggedin      = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         self.no_options = ['(no options)']
         self.view_options    = sorted(
             [ vid for vid in self.testcoll.child_entity_ids(RecordView, self.testsite) 
@@ -172,7 +171,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             [ lid for lid in self.testcoll.child_entity_ids(RecordList, self.testsite) 
                   if lid != "_initial_values"
             ])
+        # For checking Location: header values...
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_type")
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
         return
 
     def tearDown(self):
@@ -182,10 +187,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     #   Helpers
     #   -----------------------------------------------------------------------------
 
-    def _create_record_type(self, type_id):
+    def _create_record_type(self, type_id, entity_id="testentity"):
         "Helper function creates record type entry with supplied type_id"
         t = RecordType.create(self.testcoll, type_id, recordtype_create_values(type_id=type_id))
-        return t    
+        d = RecordTypeData.create(self.testcoll, type_id, {})
+        e = EntityData.create(d, entity_id, {})
+        return (t, d, e)
 
     def _check_record_type_values(self, type_id, update="RecordType"):
         "Helper function checks content of record type entry with supplied type_id"
@@ -383,7 +390,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="Type_uri" 
                                placeholder="(URI)"
-                               value="http://test.example.com/testsite/c/testcoll/d/_type/00000001/"/>
+                               value=""/>
                     </div>
                 </div>
             </div>
@@ -420,13 +427,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        type_url = entity_url(type_id="_type", entity_id="00000001")
+        type_url = collection_entity_view_url(coll_id="testcoll", type_id="_type", entity_id="00000001")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+type_url)
-        self.assertEqual(r.context['entity_uri'],       TestHostUri+type_url)
+        self.assertEqual(r.context['entity_url'],       type_url)
+        self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -434,7 +441,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="00000001",
             type_label=default_label("testcoll", "_type", "00000001"),
             type_help=default_comment("testcoll", "_type", "00000001"),
-            type_uri=TestHostUri+type_url
+            type_uri=""
             )
         return
 
@@ -444,12 +451,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        type_url = entity_url(type_id="_type", entity_id="Default_type")
+        type_url = collection_entity_view_url(coll_id="testcoll", type_id="_type", entity_id="Default_type")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         self.assertEqual(r.context['entity_id'],        "Default_type")
         self.assertEqual(r.context['orig_id'],          "Default_type")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + type_url)
+        self.assertEqual(r.context['entity_url'],       type_url)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
@@ -480,12 +487,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        type_url = entity_url(type_id="_type", entity_id="Default_type")
+        type_url = collection_entity_view_url(coll_id="testcoll", type_id="_type", entity_id="Default_type")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         self.assertEqual(r.context['entity_id'],        "Default_type")
         self.assertEqual(r.context['orig_id'],          "Default_type")
-        self.assertEqual(r.context['entity_url'],       TestHostUri + type_url)
+        self.assertEqual(r.context['entity_url'],       type_url)
         self.assertEqual(r.context['entity_uri'],       "annal:Default_type")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "")
@@ -655,7 +662,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_post_edit_type_new_id(self):
-        self._create_record_type("edittype1")
+        # Check logic applied when type is renamed
+        (t, d1, e1) = self._create_record_type("edittype1", entity_id="typeentity")
+        self.assertTrue(RecordType.exists(self.testcoll, "edittype1"))
+        self.assertFalse(RecordType.exists(self.testcoll, "edittype2"))
+        self.assertTrue(RecordTypeData.exists(self.testcoll, "edittype1"))
+        self.assertFalse(RecordTypeData.exists(self.testcoll, "edittype2"))
+        self.assertTrue(EntityData.exists(d1, "typeentity"))
         self._check_record_type_values("edittype1")
         f = recordtype_entity_view_form_data(
             type_id="edittype2", orig_id="edittype1", 
@@ -669,7 +682,14 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record type exists and old does not
         self.assertFalse(RecordType.exists(self.testcoll, "edittype1"))
+        self.assertTrue(RecordType.exists(self.testcoll, "edittype2"))
         self._check_record_type_values("edittype2", update="Updated RecordType")
+        # Check that type data directory has been renamed
+        self.assertFalse(RecordTypeData.exists(self.testcoll, "edittype1"))
+        self.assertTrue(RecordTypeData.exists(self.testcoll, "edittype2"))
+        self.assertFalse(EntityData.exists(d1, "typeentity"))
+        d2 = RecordTypeData.load(self.testcoll, "edittype2")
+        self.assertTrue(EntityData.exists(d2, "typeentity"))
         return
 
     def test_post_edit_type_cancel(self):
@@ -745,8 +765,8 @@ class ConfirmRecordTypeDeleteTests(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)

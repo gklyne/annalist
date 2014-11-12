@@ -30,6 +30,7 @@ from entity_testutils import (
     collection_dir, 
     site_view_url,
     collection_edit_url,
+    collection_entity_view_url,
     site_title
     )
 from tests import (
@@ -64,9 +65,9 @@ def entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
     """
     URI for entity data; also view using default entity view
     """
-    viewname = "AnnalistEntityAccessView"
-    kwargs   = {'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
-    return reverse(viewname, kwargs=kwargs)
+    if not valid_id(entity_id):
+        entity_id = "___"
+    return collection_entity_view_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
 
 def entitydata_edit_url(action=None, coll_id="testcoll", type_id=None, entity_id=None, view_id="Default_view"):
     viewname = ( 
@@ -127,44 +128,58 @@ def entitydata_type(type_id):
     else:
         return "annal:EntityData"
 
-def entitydata_value_keys():
+def entitydata_value_keys(entity_uri=False):
     """
     Keys in default view entity data
     """
-    return (
+    keys = (
         [ '@type'
         , 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url', 'annal:uri'
+        , 'annal:type', 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         ])
+    if entity_uri:
+        keys.add('annal:uri')
+    return keys
 
-def entitydata_create_values(entity_id, update="Entity", coll_id="testcoll", type_id="testtype", hosturi=TestHostUri):
+def entitydata_create_values(
+        entity_id, update="Entity", coll_id="testcoll", type_id="testtype", 
+        entity_uri=None, typeuri=None, hosturi=TestHostUri):
     """
     Data used when creating entity test data
     """
-    typeuri = hosturi + entity_url(coll_id, "_type", type_id)
+    if typeuri is None:
+        typeuri = entity_url(coll_id, "_type", type_id)
     types   = [entitydata_type(type_id), typeuri]
     # log.info('entitydata_create_values: types %r'%(types,)) 
-    return (
+    d = (
         { '@type':          types
         , 'annal:type':     types[0]
         , 'rdfs:label':     '%s testcoll/%s/%s'%(update, type_id, entity_id)
         , 'rdfs:comment':   '%s coll testcoll, type %s, entity %s'%(update, type_id, entity_id)
         })
+    if entity_uri:
+        d['annal:uri'] = entity_uri
+    return d
 
-def entitydata_values(entity_id, update="Entity", coll_id="testcoll", type_id="testtype", hosturi=TestHostUri):
-    typeuri = hosturi + entity_url(coll_id, "_type", type_id)
-    dataurl = hosturi + entity_url(coll_id, type_id, entity_id)
+def entitydata_values(
+        entity_id, update="Entity", 
+        coll_id="testcoll", type_id="testtype", 
+        entity_uri=None,
+        typeuri=None, hosturi=TestHostUri):
+    typeuri = entity_url(coll_id, "_type", type_id)
+    dataurl = entity_url(coll_id, type_id, entity_id)
     d = entitydata_create_values(
-        entity_id, update=update, coll_id=coll_id, type_id=type_id, hosturi=hosturi
+        entity_id, update=update, coll_id=coll_id, type_id=type_id, 
+        entity_uri=entity_uri, typeuri=typeuri, hosturi=hosturi
         ).copy() #@@ copy needed here?
     d.update(
         { '@id':            './'
         , 'annal:id':       entity_id
         , 'annal:type_id':  type_id
         , 'annal:url':      dataurl
-        , 'annal:uri':      dataurl
         })
+    # log.info("entitydata_values %r"%(d,))
     return d
 
 def entitydata_context_data(
@@ -262,6 +277,15 @@ def entitydata_form_data(
         form_data_dict['save']              = 'Save'
     return form_data_dict
 
+def entitydata_delete_form_data(entity_id=None, type_id="Default_type", list_id="Default_list"):
+    return (
+        { 'list_choice':        list_id
+        , 'continuation_url':   ""
+        , 'search_for':         ""
+        , 'entity_select':      ["%s/%s"%(type_id, entity_id)]
+        , 'delete':             "Delete"
+        })
+
 def entitydata_delete_confirm_form_data(entity_id=None, search=None):
     """
     Form data from entity deletion confirmation
@@ -354,7 +378,7 @@ def entitydata_default_view_form_data(
         action=None, cancel=None, update="Entity",
         add_view_field=None, use_view=None, 
         new_view=None, new_field=None, new_type=None):
-    # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
+    # log.info("entitydata_default_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (
         { 'Entity_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Entity_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
@@ -400,7 +424,7 @@ def entitydata_default_view_form_data(
 # Used in test_entitygenericedit - move?
 
 def entitydata_recordtype_view_context_data(
-        entity_id=None, orig_id=None, type_id="testtype", type_ids=[],
+        entity_id=None, orig_id=None, type_id="testtype", type_uri=None, type_ids=[],
         action=None, update="Entity"
     ):
     context_dict = (
@@ -446,7 +470,7 @@ def entitydata_recordtype_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_uri'
             , 'field_value_type':   'annal:Identifier'
-            # , 'field_value':      (Supplied separately)
+            , 'field_value':        ""
             , 'options':            []
             }
           ]
@@ -456,8 +480,9 @@ def entitydata_recordtype_view_context_data(
         context_dict['fields'][0]['field_value'] = entity_id
         context_dict['fields'][1]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
         context_dict['fields'][2]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
-        context_dict['fields'][3]['field_value'] = TestBaseUri + "/c/%s/d/%s/%s/"%("testcoll", "testtype", entity_id)
-        context_dict['orig_id']     = entity_id
+        context_dict['orig_id']                  = entity_id
+    if type_uri:
+        context_dict['fields'][3]['field_value'] = type_uri # TestBasePath + "/c/%s/d/%s/%s/"%("testcoll", "testtype", entity_id)
     if orig_id:
         context_dict['orig_id']     = orig_id
     if action:  
@@ -466,7 +491,7 @@ def entitydata_recordtype_view_context_data(
 
 def entitydata_recordtype_view_form_data(
         coll_id="testcoll", 
-        type_id="testtype", orig_type=None,
+        type_id="testtype", orig_type=None, type_uri=None,
         entity_id=None, orig_id=None, 
         action=None, cancel=None, update="Entity",
         add_view_field=None):
@@ -478,14 +503,18 @@ def entitydata_recordtype_view_form_data(
         , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
         })
     if entity_id and type_id:
+        type_url = entity_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+        type_url = type_url.replace("___", entity_id)  # Preserve bad type in form data
         form_data_dict['entity_id']     = entity_id
         form_data_dict['Type_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Type_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
-        form_data_dict['Type_uri']      = TestBaseUri + "/c/%s/d/%s/%s/"%(coll_id, type_id, entity_id)
+        form_data_dict['Type_uri']      = "" # type_url
         form_data_dict['orig_id']       = entity_id
     if type_id:
         form_data_dict['entity_type']   = type_id
         form_data_dict['orig_type']     = type_id
+    if type_uri:
+        form_data_dict['Type_uri']      = type_uri        
     if orig_id:
         form_data_dict['orig_id']       = orig_id
     if orig_type:
@@ -566,6 +595,7 @@ def default_fields(coll_id=None, type_id=None, entity_id=None, width=12):
     def_comment     = default_comment(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
     def_label_esc   = def_label.replace("'", "&#39;")
     def_comment_esc = def_comment.replace("'", "&#39;")
+    def_entity_url  = collection_entity_view_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
     def def_fields(width=12):
         fields = layout_classes(width=width)
         fields.update(
@@ -573,6 +603,7 @@ def default_fields(coll_id=None, type_id=None, entity_id=None, width=12):
             , 'default_comment':     def_comment
             , 'default_label_esc':   def_label_esc
             , 'default_comment_esc': def_comment_esc
+            , 'default_entity_url':  def_entity_url
             })
         return fields
     return def_fields
@@ -630,7 +661,7 @@ def layout_classes(width=12):
 
 def get_site_types_sorted():
     return (
-        [ "_field", "_list", "_type", "_view"
+        [ "_field", "_list", "_type", "_user", "_view"
         , "BibEntry_type", "Default_type"
         , "Enum_field_type", "Enum_list_type"
         ])
@@ -641,14 +672,18 @@ def get_site_types():
 def get_site_views():
     return (
         { "Default_view", "Field_view"
-        , "Type_view", "View_view"
-        , "List_view", "BibEntry_view"
+        , "Type_view"
+        , "View_view"
+        , "List_view"
+        , "User_view"
+        , "BibEntry_view"
         })
 
 def get_site_lists():
     return (
         { "BibEntry_list", "Default_list", "Default_list_all"
         , "Field_list", "Type_list", "List_list", "View_list"
+        , "User_list"
         })
 
 def get_site_fields():
@@ -667,6 +702,7 @@ def get_site_field_types_sorted():
         [ "EntityId"
         , "EntityTypeId"
         , "Enum"
+        , "Enum_optional"
         , "Field"
         , "Identifier"
         , "List"

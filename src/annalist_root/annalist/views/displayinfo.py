@@ -19,6 +19,7 @@ from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.core.urlresolvers       import resolve, reverse
 
+from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import message
 
 from annalist.models.entitytypeinfo import EntityTypeInfo
@@ -29,6 +30,22 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
 
 from annalist.views.uri_builder     import uri_with_params
+
+#   -------------------------------------------------------------------------------------------
+#
+#   Table of authorization symbols added to the display context according to 
+#   permissions help by the requesting user
+#
+#   -------------------------------------------------------------------------------------------
+
+authorization_map = (
+    { "auth_create":        ["CREATE"]
+    , "auth_delete":        ["DELETE"]
+    , "auth_update":        ["UPDATE"]
+    , "auth_config":        ["CONFIG"]
+    , "auth_create_coll":   ["CREATE_COLLECTION", "ADMIN"]
+    , "auth_delete_coll":   ["DELETE_COLLECTION", "ADMIN"]
+    })
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -56,6 +73,7 @@ class DisplayInfo(object):
     def __init__(self, view, action):
         self.view           = view
         self.action         = action
+        self.authorizations = dict([(k, False) for k in authorization_map])
         self.reqhost        = None
         self.site           = None
         self.sitedata       = None
@@ -105,7 +123,7 @@ class DisplayInfo(object):
             if type_id:
                 self.type_id        = type_id
                 self.entitytypeinfo = EntityTypeInfo(self.site, self.collection, type_id)
-                if not self.entitytypeinfo.entityparent:
+                if not self.entitytypeinfo.recordtype:
                     # log.warning("DisplayInfo.get_type_data: RecordType %s not found"%type_id)
                     self.http_response = self.view.error(
                         dict(self.view.error404values(),
@@ -186,13 +204,25 @@ class DisplayInfo(object):
     def check_authorization(self, action):
         """
         If no error so far, check authorization.  Return None if all is OK,
-        or HttpResonse object 
+        or HttpResonse object.
+
+        Also, save copy of key authorizations for later rendering.
         """
         action = action or "view"
+        if self.entitytypeinfo:
+            permissions_map = self.entitytypeinfo.permissions_map
+        else:
+            permissions_map = {}
         self.http_response = (
             self.http_response or 
-            self.view.form_action_auth(action, self.collection.get_url())
+            self.view.form_action_auth(action, self.collection, permissions_map)
             )
+        for k in authorization_map:
+            for p in authorization_map[k]:
+                self.authorizations[k] = (
+                    self.authorizations[k] or 
+                    self.view.authorize(p, self.collection) is None
+                    )
         return self.http_response
 
     # Additonal support functions for list views
@@ -204,7 +234,7 @@ class DisplayInfo(object):
         list_id = None
         if type_id:
             if self.entitytypeinfo.recordtype:
-                list_id = self.entitytypeinfo.recordtype.get("annal:type_list", None)
+                list_id = self.entitytypeinfo.recordtype.get(ANNAL.CURIE.type_list, None)
             else:
                 log.warning("DisplayInfo.get_type_list_id no type data for %s"%(type_id))
         return list_id
@@ -226,10 +256,10 @@ class DisplayInfo(object):
         return list_id
 
     def get_list_view_id(self):
-        return self.recordlist.get('annal:default_view', None) or "Default_view"
+        return self.recordlist.get(ANNAL.CURIE.default_view, None) or "Default_view"
 
     def get_list_type_id(self):
-        return self.recordlist.get('annal:default_type', None) or "Default_type"
+        return self.recordlist.get(ANNAL.CURIE.default_type, None) or "Default_type"
 
     def check_collection_entity(self, entity_id, entity_type, msg, continuation_url={}):
         """
@@ -290,7 +320,7 @@ class DisplayInfo(object):
                 action=action
                 )
 
-    # Additonal support functions for entity views
+    # Additonal support functions
 
     def get_type_view_id(self, type_id):
         """
@@ -299,7 +329,7 @@ class DisplayInfo(object):
         view_id = None
         if self.type_id:
             if self.entitytypeinfo.recordtype:
-                view_id  = self.entitytypeinfo.recordtype.get("annal:type_view", None)
+                view_id  = self.entitytypeinfo.recordtype.get(ANNAL.CURIE.type_view, None)
             else:
                 log.warning("DisplayInfo.get_type_view_id: no type data for %s"%(self.type_id))
         return view_id
@@ -335,5 +365,41 @@ class DisplayInfo(object):
                 entity_id=entity_id,
                 action="edit"
                 )
+
+    def context_data(self):
+        """
+        Return dictionary of rendering context data available from the elements assembled.
+
+        Values that are added here to the view context are used for view rendering, and
+        are not passed to the entity value mapping process.
+        """
+        context = (
+            { 'site_title':     self.sitedata["title"]
+            , 'title':          self.sitedata["title"]
+            , 'action':         self.action
+            , 'coll_id':        self.coll_id
+            , 'type_id':        self.type_id
+            , 'view_id':        self.view_id
+            , 'list_id':        self.list_id
+            })
+        context.update(self.authorizations)
+        if hasattr(self.view, 'help'):
+            context.update(
+                { 'help_filename':  self.view.help
+                })
+        if self.collection:
+            context.update(
+                { 'title':      self.collection[RDFS.CURIE.label]
+                , 'coll_label': self.collection[RDFS.CURIE.label]
+                })
+        if self.recordview:
+            context.update(
+                { 'view_label': self.recordview[RDFS.CURIE.label]
+                })
+        if self.recordlist:
+            context.update(
+                { 'list_label': self.recordlist[RDFS.CURIE.label]
+                })
+        return context
 
 # End.

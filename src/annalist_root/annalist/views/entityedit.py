@@ -18,7 +18,7 @@ from annalist.identifiers               import RDFS, ANNAL
 from annalist                           import message
 from annalist                           import util
 
-from annalist.models.entitytypeinfo     import EntityTypeInfo
+from annalist.models.entitytypeinfo     import EntityTypeInfo, get_built_in_type_ids
 from annalist.models.recordtype         import RecordType
 from annalist.models.recordview         import RecordView
 from annalist.models.recordfield        import RecordField
@@ -33,8 +33,7 @@ from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
 from annalist.views.generic             import AnnalistGenericView
 
-from annalist.views.fields.bound_field  import bound_field
-from annalist.views.fields.render_utils import get_entity_values
+from annalist.views.fields.bound_field  import bound_field, get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -44,9 +43,7 @@ from annalist.views.fields.render_utils import get_entity_values
 
 # Table used as basis, or initial values, for a dynamically generated entity-value map
 baseentityvaluemap  = (
-        [ SimpleValueMap(c='title',            e=None,                    f=None               )
-        , SimpleValueMap(c='coll_id',          e=None,                    f=None               )
-        , SimpleValueMap(c='coll_label',       e=None,                    f=None               )
+        [ SimpleValueMap(c='coll_id',          e=None,                    f=None               )
         , SimpleValueMap(c='type_id',          e=None,                    f=None               )
         , SimpleValueMap(c='view_choices',     e=None,                    f=None               )
         , SimpleValueMap(c='edit_add_field',   e=None,                    f=None               )
@@ -92,13 +89,17 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Create a form for editing an entity.
         """
-        log.log(settings.TRACE_FIELD_VALUE,
-            "views.entityedit.get %s"%(self.get_request_path())
-            )
-        log.log(settings.TRACE_FIELD_VALUE,
-            "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
+        log.info(
+            "views.entityedit.get:  coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
+        # log.log(settings.TRACE_FIELD_VALUE,
+        #     "views.entityedit.get %s"%(self.get_request_path())
+        #     )
+        # log.log(settings.TRACE_FIELD_VALUE,
+        #     "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
+        #       (coll_id, type_id, entity_id, view_id, action)
+        #     )
         action   = action or "edit"     # Default action (@@TODO: 'view' when read-only views defined)
         viewinfo = self.view_setup(action, coll_id, type_id, view_id, entity_id)
         if viewinfo.http_response:
@@ -133,13 +134,17 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Handle response from generic entity editing form.
         """
-        log.log(settings.TRACE_FIELD_VALUE,
-            "views.entityedit.post %s"%(self.get_request_path())
-            )
-        log.log(settings.TRACE_FIELD_VALUE,
-            "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
+        log.info(
+            "views.entityedit.post: coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
+        # log.log(settings.TRACE_FIELD_VALUE,
+        #     "views.entityedit.post %s"%(self.get_request_path())
+        #     )
+        # log.log(settings.TRACE_FIELD_VALUE,
+        #     "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
+        #       (coll_id, type_id, entity_id, view_id, action)
+        #     )
         # log.info("  form data %r"%(request.POST))
         action               = request.POST.get('action', action)
         viewinfo = self.view_setup(action, coll_id, type_id, view_id, entity_id)
@@ -165,7 +170,7 @@ class GenericEntityEditView(AnnalistGenericView):
             { 'site_title':       viewinfo.sitedata["title"]
             , 'title':            viewinfo.collection[RDFS.CURIE.label]
             , 'action':           action
-            , 'edit_add_field':   viewinfo.recordview.get("annal:add_field", "yes")
+            , 'edit_add_field':   viewinfo.recordview.get(ANNAL.CURIE.add_field, "yes")
             , 'continuation_url': continuation_url
             , 'request_url':      self.get_request_path()
             , 'coll_id':          coll_id
@@ -191,6 +196,7 @@ class GenericEntityEditView(AnnalistGenericView):
             })
         # Process form response and respond accordingly
         #@@ TODO: this should be redundant - create as-needed, not before
+        #         as of 2014-11-07, removing this causes test failures
         if not typeinfo.entityparent._exists():
             # Create RecordTypeData when not already exists
             RecordTypeData.create(viewinfo.collection, typeinfo.entityparent.get_id(), {})
@@ -228,7 +234,7 @@ class GenericEntityEditView(AnnalistGenericView):
         log.debug("entityview %r"%viewinfo.recordview.get_values())
         fieldlistmap = FieldListValueMap(
             viewinfo.collection, 
-            viewinfo.recordview.get_values()['annal:view_fields'],
+            viewinfo.recordview.get_values()[ANNAL.CURIE.view_fields],
             {'view': viewinfo.recordview, 'entity': entity}
             )
         entitymap.add_map_entry(fieldlistmap)
@@ -240,10 +246,12 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         # @@TODO: Possibly create FieldValueMap and return map_entity_to_context value? 
         #         or extract this logic and share?
-        field_description = FieldDescription(viewinfo.collection, { 'annal:field_id': "View_choice" }, None)
+        field_description = FieldDescription(viewinfo.collection, 
+            { ANNAL.CURIE.field_id: "View_choice" }, 
+            None
+            )
         entityvals        = { field_description['field_property_uri']: viewinfo.view_id }
-        options           = field_description['field_choices']
-        return bound_field(field_description, entityvals, options)
+        return bound_field(field_description, entityvals)
 
     def get_entity(self, entity_id, typeinfo, action):
         """
@@ -296,22 +304,23 @@ class GenericEntityEditView(AnnalistGenericView):
                 self.add_entity_field(add_field_desc, entity)
         entityvals  = get_entity_values(viewinfo, entity, entity_id)
         if viewinfo.action == "copy":
-            entityvals.pop('annal:uri')
-        viewcontext = entityvaluemap.map_value_to_context(entityvals,
-            site_title          = viewinfo.sitedata["title"],
-            title               = viewinfo.collection[RDFS.CURIE.label],
-            action              = viewinfo.action,
-            edit_add_field      = viewinfo.recordview.get("annal:add_field", "yes"),
-            continuation_url    = continuation_url,
-            request_url         = self.get_request_path(),
-            coll_id             = coll_id,
-            coll_label          = viewinfo.collection[RDFS.CURIE.label],
-            type_id             = type_id,
-            view_choices        = self.get_view_choices_field(viewinfo),
-            orig_id             = entity_id,
-            orig_type           = type_id,
-            view_id             = viewinfo.view_id
+            entityvals.pop(ANNAL.CURIE.uri)
+        context_extra_values = (
+            { 'edit_add_field':     viewinfo.recordview.get(ANNAL.CURIE.add_field, "yes")
+            , 'continuation_url':   continuation_url
+            , 'request_url':        self.get_request_path()
+            , 'coll_id':            coll_id
+            , 'type_id':            type_id
+            , 'view_choices':       self.get_view_choices_field(viewinfo)
+            , 'orig_id':            entity_id
+            , 'orig_type':          type_id
+            , 'view_id':            viewinfo.view_id
+            })
+        viewcontext = entityvaluemap.map_value_to_context(entityvals, 
+            **context_extra_values
             )
+        # log.info("form_render: viewcontext %r"%(viewcontext,)) #@@
+        viewcontext.update(viewinfo.context_data())
         # Generate and return form data
         return (
             self.render_html(viewcontext, self._entityformtemplate) or 
@@ -319,7 +328,7 @@ class GenericEntityEditView(AnnalistGenericView):
             )
 
     def form_re_render(self, 
-            entityvaluemap, form_data, context_extra_values={}, 
+            viewinfo, entityvaluemap, form_data, context_extra_values={}, 
             error_head=None, error_message=None):
         """
         Returns re-rendering of form with current values and error message displayed.
@@ -327,6 +336,7 @@ class GenericEntityEditView(AnnalistGenericView):
         form_context = entityvaluemap.map_form_data_to_context(form_data,
             **context_extra_values
             )
+        form_context.update(viewinfo.context_data())
         # log.info("********\nform_context %r"%form_context)
         form_context['error_head']    = error_head
         form_context['error_message'] = error_message
@@ -357,13 +367,13 @@ class GenericEntityEditView(AnnalistGenericView):
         # Check response has valid id and type
         if not util.valid_id(entity_id):
             log.debug("form_response: entity_id not util.valid_id('%s')"%entity_id)
-            return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+            return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                 error_head=messages['entity_heading'],
                 error_message=messages['entity_invalid_id']
                 )
         if not util.valid_id(entity_type_id):
             log.debug("form_response: entity_type_id not util.valid_id('%s')"%entity_type_id)
-            return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+            return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                 error_head=messages['entity_type_heading'],
                 error_message=messages['entity_type_invalid']
                 )
@@ -462,7 +472,7 @@ class GenericEntityEditView(AnnalistGenericView):
         add_field = self.find_add_field(entityvaluemap, form_data)
         if add_field:
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
-            return self.update_view_fields(add_field, entityvals, entityvaluemap, **context_extra_values)
+            return self.update_view_fields(viewinfo, add_field, entityvals, entityvaluemap, **context_extra_values)
 
         # Remove Field(s)
         # This is invoked by a view-edit view
@@ -470,12 +480,12 @@ class GenericEntityEditView(AnnalistGenericView):
         if remove_field:
             if not remove_field['remove_fields']:
                 log.debug("form_response: No field(s) selected for remove_field")
-                return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+                return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                     error_head=messages['remove_field_error'],
                     error_message=messages['no_field_selected']
                     )
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
-            return self.update_view_fields(remove_field, entityvals, entityvaluemap, **context_extra_values)
+            return self.update_view_fields(viewinfo, remove_field, entityvals, entityvaluemap, **context_extra_values)
 
         # Report unexpected form data
         # This shouldn't happen, but just in case...
@@ -511,7 +521,8 @@ class GenericEntityEditView(AnnalistGenericView):
         #     "           orig_entity %r"
         #     %(orig_entity)
         #     )
-        action = form_data['action']
+        action   = form_data['action']
+        typeinfo = viewinfo.entitytypeinfo
         if not action in ["new", "copy", "edit"]:
             log.warning("'Save' operation for action '%s'"%(action))
             # Check "edit" authorization to continue
@@ -521,71 +532,181 @@ class GenericEntityEditView(AnnalistGenericView):
             ( action == "edit" ) and
             ( (entity_id != orig_entity_id) or (entity_type_id != orig_entity_type_id) )
             )
+
         # Check original parent exists (still)
-        #@@ TODO: unless this is a "new" action
-        typeinfo    = viewinfo.entitytypeinfo
-        orig_parent = typeinfo.entityparent
-        if not orig_parent._exists():
-            log.warning("save_entity: not orig_parent._exists()")
-            return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+        #@@ TODO: unless this is a "new" action?
+        if not typeinfo.parent_exists():
+            log.warning("save_entity: original entity parent does not exist")
+            return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                 error_head=messages['parent_heading'],
                 error_message=messages['parent_missing']
                 )
-        # Determine new parent for saved entity
+
+        # Determine type information for saved entity
         if entity_type_id != orig_entity_type_id:
             # log.info("new_typeinfo: entity_type_id %s"%(entity_type_id))
             new_typeinfo = EntityTypeInfo(
                 viewinfo.site, viewinfo.collection, entity_type_id, 
                 create_typedata=True
                 )
-            new_parent   = new_typeinfo.entityparent
         else:
             new_typeinfo = typeinfo
-            new_parent   = orig_parent
+
         # Check existence of entity to save according to action performed
         if (action in ["new", "copy"]) or entity_id_changed:
-            if typeinfo.entityclass.exists(new_parent, entity_id):
-                return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+            if new_typeinfo.entity_exists(entity_id):
+                log.warning(
+                    "Entity exists: action %s %s/%s, orig %s/%s"%
+                        (action, entity_type_id, entity_id, orig_entity_type_id, orig_entity_id)
+                    )
+                return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                     error_head=messages['entity_heading'],
                     error_message=messages['entity_exists']
                     )
         else:
-            if not typeinfo.entityclass.exists(orig_parent, entity_id, altparent=typeinfo.entityaltparent):
+            if not typeinfo.entity_exists(entity_id, use_altparent=True):
                 # This shouldn't happen, but just in case...
                 log.warning("Expected %s/%s not found; action %s, entity_id_changed %r"%
                       (entity_type_id, entity_id, action, entity_id_changed)
                     )
-                return self.form_re_render(entityvaluemap, form_data, context_extra_values,
+                return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                     error_head=messages['entity_heading'],
                     error_message=messages['entity_not_exists']
                     )
-        # Create/update data now
+
+        # Assemble updated values for storage
         # Note: form data is applied as update to original entity data so that
         # values not in view are preserved.
         entity_values  = orig_entity.get_values() if orig_entity else {}
-        if new_typeinfo.recordtype and ANNAL.CURIE.uri in new_typeinfo.recordtype:
-            typeuri = new_typeinfo.recordtype.get(ANNAL.CURIE.uri, None)
-            entity_values['@type'] = typeuri   # NOTE: previous types not carried forward
-        if ( (ANNAL.CURIE.uri in entity_values) and 
-             ( ( entity_values[ANNAL.CURIE.uri] == entity_values.get(ANNAL.CURIE.url, None) ) or 
-               ( action == "copy" ) ) ):
-            del entity_values[ANNAL.CURIE.uri]          # Don't save URI if same as URL, or if copying
-        entity_values.pop(ANNAL.CURIE.url, None)        # Force re-allocation of URL
+        # log.info("orig entity_values %r"%(entity_values,))
+        if action == "copy":
+            entity_values.pop(ANNAL.CURIE.uri, None)      # Force new URI on copy
         entity_values.update(entityvaluemap.map_form_data_to_values(form_data))
         entity_values[ANNAL.CURIE.type_id] = entity_type_id
         entity_values[ANNAL.CURIE.type]    = new_typeinfo.entityclass._entitytype
-        # log.info("orig_entity values%r"%(entity_values))
-        # log.info("entity_values%r"%(entity_values))
-        # log.info("new_parent%r"%(new_parent))
-        new_typeinfo.entityclass.create(new_parent, entity_id, entity_values)
-        # Remove old entity if renameoperation
-        if entity_id_changed:
-            # log.info("new_typeinfo.entityclass %r"%(new_typeinfo.entityclass))
-            # log.info("new_parent %r"%(new_parent))
-            if new_typeinfo.entityclass.exists(new_parent, entity_id):    # Precautionary
-                # log.info("remove %s, %s"%(orig_parent.get_id(), orig_entity_id))
-                typeinfo.entityclass.remove(orig_parent, orig_entity_id)
+        # log.info("save entity_values%r"%(entity_values))
+
+        # If saving view description, ensure all property URIs are unique
+        #
+        # @@TODO: this is somehwat ad hoc - is there a better way?
+        # The problem this avoids is that multiple fields with the same property URI would 
+        # be handled confusingly by the view editing logic.
+        if viewinfo.view_id == "View_view":
+            properties = set()
+            for view_field in entity_values[ANNAL.CURIE.view_fields]:
+                field_id = view_field[ANNAL.CURIE.field_id]
+                field    = RecordField.load(viewinfo.collection, field_id, altparent=viewinfo.site)
+                property_uri = field[ANNAL.CURIE.property_uri]
+                if property_uri in properties:
+                    return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
+                        error_head=message.VIEW_DESCRIPTION_HEADING,
+                        error_message=message.VIEW_PROPERTY_DUPLICATE%
+                          { 'field_id':field_id, 'property_uri': property_uri}
+                        )
+                properties.add(property_uri)
+
+        # Create/update stored data now
+        #
+        # @@TODO: refactor the following to
+        #     (a) factor out core entity rename logic, 
+        #     (b) separate view-level validation and error repporting from action logic
+
+        if not ("_type" in [entity_type_id, orig_entity_type_id] and entity_id_changed):
+
+            # Normal (non-type) record save
+            new_typeinfo.create_entity(entity_id, entity_values)
+            if entity_id_changed:
+                # Rename entity other than a type: remove old entity
+                if new_typeinfo.entity_exists(entity_id):    # Precautionary
+                    typeinfo.remove_entity(orig_entity_id)
+                else:
+                    log.warning(
+                        "Failed to rename entity %s/%s to %s/%s"%
+                        (orig_type_id, orig_entity_id, entity_type_id, entity_id)
+                        )
+
+        else:
+
+            # Special case for saving type information with new id (rename type)
+            #
+            # Need to update RecordTypeData and record data instances
+            # Don't allow type-rename to or from a type value
+            if entity_type_id != orig_entity_type_id:
+                log.warning("save_entity: attempt to change type of type record")
+                return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
+                    error_head=message.INVALID_OPERATION_ATTEMPTED,
+                    error_message=message.INVALID_TYPE_CHANGE
+                    )
+            # Don't allow renaming built-in type
+            builtin_types = get_built_in_type_ids()
+            if (entity_id in builtin_types) or (orig_entity_id in builtin_types):
+                log.warning("save_entity: attempt to rename or define a built-in type")
+                return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
+                    error_head=message.INVALID_OPERATION_ATTEMPTED,
+                    error_message=message.INVALID_TYPE_RENAME
+                    )
+            # Create new type record
+            new_typeinfo.create_entity(entity_id, entity_values)
+            # Update instances of type
+            src_typeinfo = EntityTypeInfo(
+                viewinfo.site, viewinfo.collection, orig_entity_id
+                )
+            dst_typeinfo = EntityTypeInfo(
+                viewinfo.site, viewinfo.collection, entity_id, 
+                create_typedata=True
+                )
+            if new_typeinfo.entity_exists(entity_id):
+                # Enumerate type instance records and move to new type
+                remove_OK = True
+                for d in src_typeinfo.enum_entities():
+                    data_id   = d.get_id()
+                    data_vals = d.get_values()
+                    data_vals[ANNAL.CURIE.type_id] = entity_id
+                    data_vals[ANNAL.CURIE.type]    = dst_typeinfo.entityclass._entitytype
+                    dst_typeinfo.create_entity(data_id, data_vals)
+                    if dst_typeinfo.entity_exists(data_id):     # Precautionary
+                        # NOTE: assumes that enum_entities is not affected by removal:
+                        src_typeinfo.remove_entity(data_id)
+                    else:
+                        log.warning(
+                            "Failed to rename type %s entity %s to type %s"%
+                            (orig_entity_id, data_id, entity_id)
+                            )
+                        remove_OK = False
+                # Finally, remove old type record:
+                if remove_OK:       # Precautionary
+                    typeinfo.remove_entity(orig_entity_id)
+                    RecordTypeData.remove(typeinfo.entitycoll, orig_entity_id)
+            else:
+                log.warning(
+                    "Failed to rename type %s to type %s"%
+                    (orig_entity_id, entity_id)
+                    )
+
         return None
+
+    # def store_entity_type_uri(self, entity_values, entity_typeinfo):
+    #     """
+    #     Sort out entity URI and entity type URI(s), in preparation to save.
+
+    #     The '@type' and 'annal:URI' fields in the supplied entity_values are updated
+
+    #     entity_values   an entity values dictionary whose '@type' and 'annal:uri' 
+    #                     fields may be updated.
+    #     entity_typeinfo an EntityTypeInfo object describing the type with which the
+    #                     entity is to be saved.
+    #     """
+    #     if entity_typeinfo.recordtype:
+    #         typeuris = []
+    #         if ANNAL.CURIE.uri in entity_typeinfo.recordtype:
+    #             typeuris = [entity_typeinfo.recordtype[ANNAL.CURIE.uri]]
+    #         else:
+    #             typeuris = []
+    #         entity_values['@type'] = typeuris   # NOTE: previous types not carried forward
+    #     if ( (ANNAL.CURIE.uri in entity_values) and 
+    #          (entity_values[ANNAL.CURIE.uri] == entity_values.get(ANNAL.CURIE.url, None) ) ):
+    #         del entity_values[ANNAL.CURIE.uri]  # Don't save URI if same as URL
+    #     return entity_values
 
     def invoke_config_edit_view(self, 
             entityvaluemap, form_data,
@@ -662,7 +783,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 return repeat_desc
         return None
 
-    def update_view_fields(self, field_desc, entityvals, entityvaluemap, **context_extra_values):
+    def update_view_fields(self, viewinfo, field_desc, entityvals, entityvaluemap, **context_extra_values):
         """
         Renders a new form from supplied entity instance data with a repeateds field or 
         field group added or removed.
@@ -671,6 +792,7 @@ class GenericEntityEditView(AnnalistGenericView):
         The new field is saved by invoking 'save' from the displayed form (i.e. a corresponding 
         HTTP POST).
 
+        viewinfo    DisplayInfo object describing the current view.
         field_desc  is a field description for a field or field group to be added
                     or removed.  Fields are removed if the description contains a
                     'remove_fields' field, which contains a list of the repeat index
@@ -692,6 +814,7 @@ class GenericEntityEditView(AnnalistGenericView):
             self.add_entity_field(field_desc, entityvals)
         # log.info("entityvals: %r"%(entityvals,))
         form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
+        form_context.update(viewinfo.context_data())
         return (
             self.render_html(form_context, self._entityformtemplate) or 
             self.error(self.error406values())

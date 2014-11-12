@@ -78,7 +78,7 @@ def recordenum_create_values(
         })
 
 def recordenum_values(enum_id, coll_id="testcoll", type_id="testtype", update="Enum", hosturi=TestHostUri):
-    enumurl = hosturi + recordenum_view_url(enum_id, coll_id=coll_id, type_id=type_id)
+    enumurl = recordenum_view_url(enum_id, coll_id=coll_id, type_id=type_id)
     d = recordenum_create_values(
         enum_id, coll_id=coll_id, type_id=type_id, update=update, hosturi=hosturi
         ).copy() #@@ copy needed here?

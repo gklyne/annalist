@@ -39,8 +39,10 @@ from AnnalistTestCase                   import AnnalistTestCase
 from entity_testutils                   import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
+    collection_entity_view_url,
     collection_create_values,
-    render_select_options
+    render_select_options,
+    create_test_user
     )
 from entity_testlistdata                import (
     recordlist_dir,
@@ -54,8 +56,10 @@ from entity_testlistdata                import (
 from entity_testentitydata              import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
-    get_site_types_sorted,
+    get_site_types, get_site_types_sorted,
     get_site_list_types_sorted,
+    get_site_views, 
+    get_site_lists,
     layout_classes
     )
 
@@ -136,7 +140,7 @@ class RecordListTest(AnnalistTestCase):
         self.assertIn("/c/testcoll/_annalist_collection/lists/Default_list", t.get_url())
         self.assertEqual(t.get_type_id(), "_list")
         td = t.get_values()
-        self.assertEqual(set(td.keys()), set(recordlist_load_keys()))
+        self.assertEqual(set(td.keys()), set(recordlist_load_keys(list_uri=True)))
         v = recordlist_read_values(list_id="Default_list")
         v.update(
             { '@id':            "annal:display/Default_list"
@@ -162,13 +166,13 @@ class RecordListEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.user     = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client   = Client(HTTP_HOST=TestHost)
-        loggedin      = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         self.no_options = ['(no options)']
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_list")
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
         return
 
     def tearDown(self):
@@ -264,7 +268,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         #
         self.assertEqual(r.context['fields'][7]['field_id'], 'List_target_type')
         self.assertEqual(r.context['fields'][7]['field_name'], 'List_target_type')
-        self.assertEqual(r.context['fields'][7]['field_label'], 'Record type')
+        self.assertEqual(r.context['fields'][7]['field_label'], 'Record type URI')
         self.assertEqual(r.context['fields'][7]['field_value'], list_target_type)
         #
         # Field list (List_id, List_label, List_comment, field descriptions)
@@ -376,25 +380,23 @@ class RecordListEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow5 = """
+        formrow5 = ("""
             <div class="small-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
                   <p>View</p>
                 </div>
                 <div class="%(input_classes)s">
-                  <select name="List_default_view">
-                    <option>BibEntry_view</option>
-                    <option selected="selected">Default_view</option>
-                    <option>Field_view</option>
-                    <option>List_view</option>
-                    <option>Type_view</option>
-                    <option>View_view</option>
-                  </select>
+                """+
+                  render_select_options(
+                    "List_default_view", 
+                    sorted(get_site_views()),
+                    "Default_view")+
+                """
                 </div>
               </div>
             </div>
-            """%field_vals(width=6)
+            """)%field_vals(width=6)
         selector_text = (
             "(entity selector; "+
             "e.g. &#39;ALL&#39;, "+
@@ -432,13 +434,13 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        view_url = entity_url(type_id="_list", entity_id="00000001")
+        list_url = collection_entity_view_url(coll_id="testcoll", type_id="_list", entity_id="00000001")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_list")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+view_url)
-        self.assertEqual(r.context['entity_uri'],       TestHostUri+view_url)
+        self.assertEqual(r.context['entity_url'],       list_url)
+        self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -448,8 +450,8 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_id="00000001",
             list_label=default_label("testcoll", "_list", "00000001"),
             list_help=default_comment("testcoll", "_list", "00000001"),
-            list_url=TestHostUri + recordlist_url("testcoll", "00000001"),
-            list_uri=TestHostUri + recordlist_url("testcoll", "00000001"),
+            list_url=list_url,
+            list_uri=None,
             list_type="List",
             list_default_type="Default_type",
             list_default_view="Default_view",
@@ -463,12 +465,12 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        list_url = recordlist_url("testcoll", "Default_list")
+        list_url = collection_entity_view_url(coll_id="testcoll", type_id="_list", entity_id="Default_list")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_list")
         self.assertEqual(r.context['entity_id'],        "Default_list")
         self.assertEqual(r.context['orig_id'],          "Default_list")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+list_url)
+        self.assertEqual(r.context['entity_url'],       list_url)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
@@ -479,7 +481,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_id="Default_list",
             list_label="List entities",
             list_help="Default list of entities of given type",
-            list_url=TestHostUri+list_url,
+            list_url=list_url,
             list_uri=None
             )
         return
@@ -505,12 +507,12 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        list_url = recordlist_url("testcoll", "Default_list")
+        list_url = collection_entity_view_url(coll_id="testcoll", type_id="_list", entity_id="Default_list")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_list")
         self.assertEqual(r.context['entity_id'],        "Default_list")
         self.assertEqual(r.context['orig_id'],          "Default_list")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+list_url)
+        self.assertEqual(r.context['entity_url'],       list_url)
         self.assertEqual(r.context['entity_uri'],       "annal:display/Default_list")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "")
@@ -521,7 +523,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_id="Default_list",
             list_label="List entities",
             list_help="Default list of entities of given type",
-            list_url=TestHostUri+list_url,
+            list_url=list_url,
             list_uri="annal:display/Default_list"
             )
         return
@@ -552,12 +554,12 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        list_url = recordlist_url("testcoll", "Default_list")
+        list_url = collection_entity_view_url(coll_id="testcoll", type_id="_list", entity_id="Default_list")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_list")
         self.assertEqual(r.context['entity_id'],        "Default_list")
         self.assertEqual(r.context['orig_id'],          "Default_list")
-        self.assertEqual(r.context['entity_url'],       TestHostUri+list_url)
+        self.assertEqual(r.context['entity_url'],       list_url)
         self.assertEqual(r.context['entity_uri'],       "annal:display/Default_list")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "")
@@ -568,7 +570,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_id="Default_list",
             list_label="List entities",
             list_help="Default list of entities of given type",
-            list_url=TestHostUri+list_url,
+            list_url=list_url,
             list_uri="annal:display/Default_list"
             )
         return
@@ -813,8 +815,8 @@ class ConfirmRecordListDeleteTests(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
+        # Login and permissions
+        create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)

@@ -25,7 +25,11 @@ from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
-from entity_testutils           import collection_dir, site_title
+from entity_testutils           import (
+    collection_dir, 
+    site_title, 
+    collection_entity_view_url
+    )
 from entity_testentitydata      import entitydata_list_type_url
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -59,13 +63,9 @@ def recordlist_url(coll_id, list_id):
     """
     URI for record list description data; also view using default entity view
     """
-    viewname = "AnnalistEntityAccessView"
-    kwargs   = {'coll_id': coll_id, "type_id": "_list"}
-    if valid_id(list_id):
-        kwargs.update({'entity_id': list_id})
-    else:
-        kwargs.update({'entity_id': "___"})
-    return reverse(viewname, kwargs=kwargs)
+    if not valid_id(list_id):
+        list_id = "___"
+    return collection_entity_view_url(coll_id=coll_id, type_id="_list", entity_id=list_id)
 
 def recordlist_edit_url(action=None, coll_id=None, list_id=None):
     """
@@ -95,10 +95,10 @@ def recordlist_edit_url(action=None, coll_id=None, list_id=None):
 #
 #   -----------------------------------------------------------------------------
 
-def recordlist_value_keys():
-    return set(
+def recordlist_value_keys(list_uri=False):
+    keys = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url', 'annal:uri'
+        , 'annal:type', 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:record_type'
         , 'annal:display_type'
@@ -107,15 +107,19 @@ def recordlist_value_keys():
         , 'annal:default_type'
         , 'annal:list_fields'
         ])
+    if list_uri:
+        keys.add('annal:uri')
+    return keys
 
-def recordlist_load_keys():
-    return recordlist_value_keys() | {'@id', '@type'}
+def recordlist_load_keys(list_uri=False):
+    return recordlist_value_keys(list_uri=list_uri) | {'@id', '@type'}
 
-def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="RecordList"):
+def recordlist_create_values(
+        coll_id="testcoll", list_id="testlist", list_uri=None, update="RecordList"):
     """
-    Entity values used when creating a record type entity
+    Entity values used when creating a record list entity
     """
-    return (
+    d = (
         { 'annal:type':                 "annal:List"
         , 'rdfs:label':                 "%s %s/%s"%(update, coll_id, list_id)
         , 'rdfs:comment':               "%s help for %s/%s"%(update, coll_id, list_id)
@@ -133,19 +137,19 @@ def recordlist_create_values(coll_id="testcoll", list_id="testlist", update="Rec
             }
           ]
         })
+    if list_uri:
+        d['annal:uri'] = list_uri
+    return d
 
 def recordlist_values(
         coll_id="testcoll", list_id="testlist", list_uri=None,
         update="RecordList", hosturi=TestHostUri):
-    list_url = hosturi + recordlist_url(coll_id, list_id)
-    if not list_uri:
-        list_uri = list_url
-    d = recordlist_create_values(coll_id, list_id, update=update).copy()
+    list_url = recordlist_url(coll_id, list_id)
+    d = recordlist_create_values(coll_id, list_id, list_uri=list_uri, update=update).copy()
     d.update(
         { 'annal:id':       list_id
         , 'annal:type_id':  "_list"
         , 'annal:url':      list_url
-        , 'annal:uri':      list_uri
         })
     return d
 
@@ -247,7 +251,7 @@ def recordlist_view_context_data(
             , 'options':            []
             }
           , { 'field_id':           'List_target_type'
-            , 'field_label':        'Record type'
+            , 'field_label':        'Record type URI'
             , 'field_render_view':  'field/annalist_view_identifier.html'
             , 'field_render_edit':  'field/annalist_edit_identifier.html'
             , 'field_name':         'List_target_type'

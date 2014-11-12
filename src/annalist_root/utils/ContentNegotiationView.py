@@ -150,10 +150,14 @@ class ContentNegotiationView(generic.View):
             "Resource %(request_uri)s: payment required"
             )
 
-    def error403values(self):
-        return self.errorvalues(403, "Forbidden", 
-            "Forbidden %(method)s access to resource %(request_uri)s"
-            )
+    # def error403values(self):
+    #     return self.errorvalues(403, "Forbidden", 
+    #         "Forbidden %(method)s access to resource %(request_uri)s"
+    #         )
+
+    def error403values(self, scope="%(method)s"):
+        msg = "No %s access permission for resource %s"%(scope, "%(request_uri)s")
+        return self.errorvalues(403, "Forbidden", msg)
 
     def error404values(self):
         return self.errorvalues(404, "Not found", 

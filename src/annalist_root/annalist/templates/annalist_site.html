@@ -37,14 +37,14 @@
                         <p>{{v.title}}</p>
                     </div>
                     <div class="small-2 columns">
-                        {% if auth_delete %}
+                        {% if auth_delete_coll %}
                         <p><input type="checkbox" name="select" value="{{c}}" class="right" /></p>
                         {% endif %}
                     </div>
                 </div>
                 {% endfor %}
 
-                {% if auth_delete %}
+                {% if auth_delete_coll %}
                 <div class="row">
                     <div class="small-3 columns right">
                         <input type="submit" value="Remove selected" name="remove" class="right" />
@@ -52,7 +52,7 @@
                 </div>
                 {% endif %}
 
-                {% if auth_create %}
+                {% if auth_create_coll %}
                 <div class="row">
                     <div class="small-3 columns">
                         <input type="text" size="32" name="new_id" value=""/>
@@ -60,11 +60,9 @@
                     <div class="small-7 columns">
                         <input type="text" size="64" name="new_label" value=""/>
                     </div>
-                    {% if auth_delete %}
                     <div class="small-2 columns">
                         <input type="submit" value="New" name="new" class="right" />
                     </div>
-                    {% endif %}
                 </div>
                 {% endif %}
 

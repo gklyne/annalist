@@ -14,6 +14,9 @@ from collections    import OrderedDict, namedtuple
 
 from django.conf                    import settings
 
+from annalist.identifiers           import RDFS, ANNAL
+
+from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.entity         import EntityRoot
 
 from annalist.views.uri_builder     import uri_params, uri_with_params, continuation_params
@@ -73,9 +76,9 @@ class bound_field(object):
     "<ul><li>key: def</li><li>val: default</li><li>field_description: {'field_property_uri': 'def', 'field_id': 'def_id', 'field_type': 'def_type'}</li></ul>"
     """
 
-    __slots__ = ("_field_description", "_entityvals", "_key", "_options", "_extras")
+    __slots__ = ("_field_description", "_entityvals", "_key", "_extras")
 
-    def __init__(self, field_description, entityvals, options=None, extras=None):
+    def __init__(self, field_description, entityvals, extras=None):
         """
         Initialize a bound_field object.
 
@@ -84,7 +87,6 @@ class bound_field(object):
         entityvals          is an entity values dictionary from which a value to be 
                             rendered is obtained.  The specific field value used is 
                             defined by the combination with `field_description`.  
-        options             for enumeration/select type fields, a list of allowable values
         extras              if supplied, a supplementary value dictionary that may be probed
                             for values that are not provided by the entity itself.  
                             Can be used to specify default values for an entity.
@@ -92,7 +94,6 @@ class bound_field(object):
         self._field_description = field_description
         self._entityvals        = entityvals
         self._key               = self._field_description['field_property_uri']
-        self._options           = options
         self._extras            = extras
         eid = entityvals.get('entity_id', "@@@render_utils.__init__@@@")
         log.log(settings.TRACE_FIELD_VALUE,
@@ -127,12 +128,12 @@ class bound_field(object):
             return self.entity_type_link+self.get_continuation_param()
         elif name == "field_value":
             field_val = None
-            if self._key == "annal:type":
+            if self._key == ANNAL.CURIE.type:
                 # @@TODO: remove annal:Type hack when proper selection from enumerated 
                 #         entities has been implemented.
                 #
                 # The handling of annal:Type is something of a hack to return the internal
-                # type-id for an entity rarther than its type URI/CURIE, which is used in 
+                # type-id for an entity rather than its type URI/CURIE, which is used in 
                 # turn by the form renderer to determine the type_id selection on the 
                 # rendered form.  This hack may be rendered unnecessary when the 
                 # entity reference selection is properly generalized.
@@ -145,17 +146,38 @@ class bound_field(object):
             if field_val is None:
                 # Return default value, or empty string.
                 # Used to populate form field value when no value supplied, or provide per-field default
-                field_val = self._field_description.get('field_default_value', None) or ""
+                field_val = self._field_description.get('field_default_value', None)
+                if field_val is None:
+                    field_val = ""
             return field_val
+        elif name == "field_value_encoded":
+            # Used to present non-test value as text for display
+            try:
+                return self._field_description['field_value_mapper'].encode(self.field_value)
+            except Exception as e:
+                log.warning("Get 'field_value_encoded' failed: %r: value: %s"%(e, self.field_value))
+            return self.field_value
+        elif name == "field_value_link":
+            # Used to get link corresponding to a value, if such exists
+            return self.get_field_link()
         elif name == "options":
             return self.get_field_options()
         else:
             # log.info("bound_field[%s] -> %r"%(name, self._field_description[name]))
             return self._field_description[name]
 
+    def get_field_link(self):
+        # Return link corresponding to field value, or None
+        links = self._field_description['field_choice_links']
+        v     = self.field_value
+        if links and v in links:
+            return links[v]
+        return None
+
     def get_field_options(self):
-        # log.info("get_field_options: %r"%(list(self._options),))
-        return self._options
+        options = self._field_description['field_choice_labels']
+        options = options.values() if options is not None else ["(no options)"]
+        return options
 
     def get_continuation_param(self):
         cparam = self.continuation_url
@@ -179,6 +201,7 @@ class bound_field(object):
         yield "entity_type_link_continuation"
         yield "continuation_url"
         yield "field_value"
+        yield "field_value_link"
         yield "options"
         for k in self._field_description:
             yield k
@@ -217,6 +240,26 @@ class bound_field(object):
             "<li>val: %s</li>"%(self.field_value,)+
             "<li>field_description: %r</li>"%(self._field_description,)+
             "</ul>")
+
+def get_entity_values(displayinfo, entity, entity_id=None):
+    """
+    Returns an entity values dictionary for a supplied entity, suitable for
+    use with a bound_field object.
+    """
+    if not entity_id:
+        entity_id = entity.get_id()
+    type_id    = entity.get_type_id()
+    typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
+    entityvals = entity.get_values().copy()
+    entityvals['entity_id']        = entity_id
+    entityvals['entity_link']      = entity.get_view_url_path()
+    # log.info("type_id %s"%(type_id))
+    entityvals['entity_type_id']   = type_id
+    if typeinfo.recordtype:
+        entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
+    # else:
+    #     entityvals['entity_type_link'] = ...
+    return entityvals
 
 if __name__ == "__main__":
     import doctest

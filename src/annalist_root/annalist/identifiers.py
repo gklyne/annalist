@@ -84,11 +84,26 @@ Annalist namespace terms
 """
 ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
     [ "EntityRoot", "Entity"
-    , "Site", "SiteData", "Collection", "Type", "View", "List", "Entity"
+    , "Site", "SiteData", "Collection", "Entity", "EntityRoot"
     , "Collection_Types", "Collection_Views", "Collection_Lists"
-    , "Type", "View", "List", "Field", "Enum"
     , "Type_Data", "EntityData"
+    # Entity types
+    , "User", "Type", "View", "List", "Field", "Enum"
+    , "Text", "Longtext", "Slug", "Identifier", "Placement"
+    , "Default_type"
+    # Properties
     , "id", "type_id", "type", "label", "help", "url", "uri", "record_type"
+    , "type_list", "type_view"
+    , "user_uri", "user_permissions"
+    , "list_entity_selector", "add_field"
+    , "list_entities", "list_fields"
+    , "view_fields"
+    , "placeholder", "default_value", "property_uri", "options_valkey", "options_typeref"
+    , "restrict_values"
+    , "repeat", "repeat_id", "repeat_label", "repeat_label_add", "repeat_label_delete"
+    , "repeat_entity_values", "repeat_context_values"
+    , "default_type", "default_view" , "default_list"
+    , "field_id", "field_name", "field_placement", "field_value_type", "field_render_type"
     ])
 
 # End.

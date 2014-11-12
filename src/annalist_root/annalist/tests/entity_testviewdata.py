@@ -25,7 +25,11 @@ from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
-from entity_testutils           import collection_dir, site_title
+from entity_testutils           import (
+    collection_dir, 
+    site_title, 
+    collection_entity_view_url
+    )
 from entity_testentitydata      import entitydata_list_type_url
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -59,13 +63,9 @@ def recordview_url(coll_id, view_id):
     """
     URI for record view description data; also view using default entity view
     """
-    viewname = "AnnalistEntityAccessView"
-    kwargs   = {'coll_id': coll_id, "type_id": "_view"}
-    if valid_id(view_id):
-        kwargs.update({'entity_id': view_id})
-    else:
-        kwargs.update({'entity_id': "___"})
-    return reverse(viewname, kwargs=kwargs)
+    if not valid_id(view_id):
+        view_id = "___"
+    return collection_entity_view_url(coll_id=coll_id, type_id="_view", entity_id=view_id)
 
 def recordview_edit_url(action=None, coll_id=None, view_id=None):
     """
@@ -95,22 +95,24 @@ def recordview_edit_url(action=None, coll_id=None, view_id=None):
 #
 #   -----------------------------------------------------------------------------
 
-def recordview_value_keys():
+def recordview_value_keys(view_uri=False):
     keys = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url', 'annal:uri'
+        , 'annal:type', 'annal:url'
         , 'annal:record_type'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:add_field'
         , 'annal:view_fields'
         ])
+    if view_uri:
+        keys.add('annal:uri')
     return keys
 
-def recordview_load_keys():
-    return recordview_value_keys() | {"@id", '@type'}
+def recordview_load_keys(view_uri=False):
+    return recordview_value_keys(view_uri=view_uri) | {"@id", '@type'}
 
 def recordview_create_values(
-        coll_id="testcoll", view_id="testview", update="RecordView", uri=None, 
+        coll_id="testcoll", view_id="testview", update="RecordView", view_uri=None, 
         field3_placement="small:0,12"
         ):
     """
@@ -139,24 +141,21 @@ def recordview_create_values(
         })
     if field3_placement:
         view_values['annal:view_fields'][3]['annal:field_placement'] = field3_placement
-    if uri:
-        view_values['annal:uri'] = uri
+    if view_uri:
+        view_values['annal:uri'] = view_uri
     return view_values
 
 def recordview_values(
         coll_id="testcoll", view_id="testtype", view_uri=None, 
         update="RecordView", hosturi=TestHostUri, field3_placement="small:0,12"):
     d = recordview_create_values(
-        coll_id, view_id, update=update, field3_placement=field3_placement
+        coll_id, view_id, update=update, view_uri=view_uri, field3_placement=field3_placement
         ).copy()
-    view_url = hosturi + recordview_url(coll_id, view_id)
-    if not view_uri:
-        view_uri = view_url
+    view_url = recordview_url(coll_id, view_id)
     d.update(
         { 'annal:id':       view_id
         , 'annal:type_id':  "_view"
         , 'annal:url':      view_url
-        , 'annal:uri':      view_uri
         })
     return d
 
@@ -525,6 +524,7 @@ def recordview_view_form_data(
         view_id=None, orig_id=None, 
         action=None, cancel=None,
         view_record_type="",
+        extra_field=None,       # Extra field id for some tests (e.g. dup property uri)
         add_field=None,         # True for add field option
         remove_fields=None,     # List of field numbers to remove (as strings)
         update="RecordView"):
@@ -573,6 +573,12 @@ def recordview_view_form_data(
         form_data_dict['action']        = action
     if view_record_type:
         form_data_dict['record_type']   = view_record_type
+    if extra_field:
+        # Insert extra field with supplied Id
+        form_data_dict['View_fields__5__repeat_fields_data'] = form_data_dict['View_fields__4__repeat_fields_data']
+        del form_data_dict['View_fields__4__repeat_fields_data']
+        form_data_dict['View_fields__4__Field_id']        = extra_field
+        form_data_dict['View_fields__4__Field_placement'] = "small:0,12"
     if cancel:
         form_data_dict['cancel']        = "Cancel"
     elif add_field:

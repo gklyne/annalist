@@ -12,32 +12,38 @@ import unittest
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                import settings
-from django.db                  import models
-from django.http                import QueryDict
-from django.core.urlresolvers   import resolve, reverse
-from django.contrib.auth.models import User
-from django.test                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
-from django.test.client         import Client
+from django.conf                    import settings
+from django.db                      import models
+from django.http                    import QueryDict
+from django.core.urlresolvers       import resolve, reverse
+from django.contrib.auth.models     import User
+from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
+from django.test.client             import Client
 
-from bs4                        import BeautifulSoup
+from bs4                            import BeautifulSoup
 
-from annalist                   import layout
-from annalist.identifiers       import ANNAL
-from annalist.models.site       import Site
+from annalist                       import layout
+from annalist.identifiers           import RDF, RDFS, ANNAL
+from annalist.models.site           import Site
+from annalist.models.site           import Collection
+from annalist.models.annalistuser   import AnnalistUser
 
-from annalist.views.site        import SiteView, SiteActionView
+from annalist.views.site            import SiteView, SiteActionView
 
-from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                      import dict_to_str, init_annalist_test_site
-from AnnalistTestCase           import AnnalistTestCase
-from entity_testutils           import (
+from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from tests                          import dict_to_str, init_annalist_test_site
+from AnnalistTestCase               import AnnalistTestCase
+from entity_testutils               import (
     site_view_url, collection_view_url, collection_edit_url, 
     collection_value_keys, collection_create_values, collection_values,
     collection_new_form_data, collection_remove_form_data,
-    site_title
+    site_title,
+    create_user_permissions, create_test_user
     )
-from entity_testtypedata        import (
+from entity_testuserdata            import (
+    annalistuser_create_values, annalistuser_values, annalistuser_read_values
+    )
+from entity_testtypedata            import (
     recordtype_url, recordtype_edit_url
     )
 
@@ -46,9 +52,9 @@ site_data_keys = {'@id', 'rdfs:label', 'rdfs:comment', 'collections', 'title'}
 
 # Initial collection data used for form display
 init_collections = (
-    { 'coll1': collection_values("coll1", hosturi="")
-    , 'coll2': collection_values("coll2", hosturi="")
-    , 'coll3': collection_values("coll3", hosturi="")
+    { 'coll1': collection_values("coll1", hosturi=TestHostUri)
+    , 'coll2': collection_values("coll2", hosturi=TestHostUri)
+    , 'coll3': collection_values("coll3", hosturi=TestHostUri)
     })
 
 class SiteTest(AnnalistTestCase):
@@ -92,6 +98,51 @@ class SiteTest(AnnalistTestCase):
         self.assertDictionaryMatch(sd["collections"]["coll1"], self.coll1)
         return
 
+    # User permissions
+
+    def test_get_user_permissions(self):
+        s = self.testsite
+        # Create local permissions
+        usr = AnnalistUser.create(s, "user1", annalistuser_create_values(user_id="user1"), use_altpath=True)
+        # Test access to permissions defined in site
+        ugp = s.get_user_permissions("user1", "mailto:testuser@example.org")
+        self.assertEqual(ugp[ANNAL.CURIE.id],                 "user1")
+        self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
+        self.assertEqual(ugp[RDFS.CURIE.label],               "Test User")
+        self.assertEqual(ugp[RDFS.CURIE.comment],             "User user1: permissions for Test User in collection testcoll")
+        self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "mailto:testuser@example.org")
+        self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"])
+        return
+
+    def test_get_local_user_not_defined(self):
+        s = self.testsite
+        ugp = s.get_user_permissions("user1", "mailto:testuser@example.org")
+        self.assertIsNone(ugp)
+        return
+
+    def test_get_user_uri_mismatch(self):
+        s = self.testsite
+        # Create local permissions
+        usr = AnnalistUser.create(s, "user1", annalistuser_create_values(user_id="user1"))
+        # Test access to permissions defined locally in collection
+        ugp = s.get_user_permissions("user1", "mailto:anotheruser@example.org")
+        self.assertIsNone(ugp)
+        return
+
+    def test_get_default_user_permissions(self):
+        s = self.testsite
+        # Test access to default permissions defined in site
+        ugp = s.get_user_permissions("_default_user_perms", "annal:User/_default_user_perms")
+        self.assertEqual(ugp[ANNAL.CURIE.id],                 "_default_user_perms")
+        self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
+        self.assertEqual(ugp[RDFS.CURIE.label],               "Default permissions")
+        self.assertEqual(ugp[RDFS.CURIE.comment],             "Default permissions for authenticated user.")
+        self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "annal:User/_default_user_perms")
+        self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW"])
+        return
+
+    # Collections
+
     def test_collections_dict(self):
         colls = self.testsite.collections_dict()
         self.assertEquals(colls.keys(),["coll1","coll2","coll3","testcoll"])
@@ -130,13 +181,23 @@ class SiteViewTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
-        self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client     = Client(HTTP_HOST=TestHost)
+        self.testsite   = Site(TestBaseUri, TestBaseDir)
         self.uri        = reverse("AnnalistSiteView")
         self.homeuri    = reverse("AnnalistHomeView")
         self.profileuri = reverse("AnnalistProfileView")
+        # Login and permissions
+        create_test_user(None, "testuser", "testpassword")
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
+        create_user_permissions(
+            self.testsite, "testuser",
+            user_permissions=
+              [ "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"
+              , "CREATE_COLLECTION", "DELETE_COLLECTION"
+              ],
+            use_altpath=True
+            )
         return
 
     def tearDown(self):
@@ -180,6 +241,7 @@ class SiteViewTest(AnnalistTestCase):
         return
 
     def test_get_no_login(self):
+        self.client.logout()
         r = self.client.get(self.uri)
         self.assertFalse(r.context["auth_create"])
         self.assertFalse(r.context["auth_update"])
@@ -213,13 +275,13 @@ class SiteViewTest(AnnalistTestCase):
         return
 
     def test_get_with_login(self):
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         r = self.client.get(self.uri)
         # Preferred way to test main view logic
         self.assertTrue(r.context["auth_create"])
         self.assertTrue(r.context["auth_update"])
         self.assertTrue(r.context["auth_delete"])
+        self.assertTrue(r.context["auth_create_coll"])
+        self.assertTrue(r.context["auth_delete_coll"])
         colls = r.context['collections']
         self.assertEqual(len(colls), 4)
         for id in init_collections:
@@ -287,8 +349,6 @@ class SiteViewTest(AnnalistTestCase):
         return
 
     def test_post_add(self):
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         form_data = collection_new_form_data("testnew")
         r = self.client.post(self.uri, form_data)
         self.assertEqual(r.status_code,   302)
@@ -301,7 +361,7 @@ class SiteViewTest(AnnalistTestCase):
         # Check site now has new colllection
         r = self.client.get(self.uri)
         new_collections = init_collections.copy()
-        new_collections["testnew"] = collection_values("testnew", hosturi="")
+        new_collections["testnew"] = collection_values("testnew", hosturi=TestHostUri)
         colls = r.context['collections']
         for id in new_collections:
             p = "[%s]"%id
@@ -311,11 +371,19 @@ class SiteViewTest(AnnalistTestCase):
             self.assertEqualPrefix(colls[id]["annal:id"],   id,                                p)
             self.assertEqualPrefix(colls[id]["annal:url"],  new_collections[id]["annal:url"],  p)
             self.assertEqualPrefix(colls[id]["rdfs:label"], new_collections[id]["rdfs:label"], p)
+        # Check new collection has admin permissions for creator
+        new_coll = Collection(self.testsite, "testnew")
+        testuser_perms = new_coll.get_user_permissions("testuser", "mailto:testuser@%s"%TestHost)
+        expect_perms   = ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+        expect_descr   = "User testuser: permissions for Test User in collection testnew"
+        self.assertEqual(testuser_perms[ANNAL.CURIE.id],                "testuser")
+        self.assertEqual(testuser_perms[RDFS.CURIE.label],              "Test User")
+        self.assertEqual(testuser_perms[RDFS.CURIE.comment],            expect_descr)
+        self.assertEqual(testuser_perms[ANNAL.CURIE.user_uri],          "mailto:testuser@%s"%TestHost)
+        self.assertEqual(testuser_perms[ANNAL.CURIE.user_permissions],  expect_perms)
         return
 
     def test_post_remove(self):
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         form_data = collection_remove_form_data(["coll1", "coll3"])
         r = self.client.post(self.uri, form_data)
         self.assertEqual(r.status_code,   200)
@@ -345,9 +413,22 @@ class SiteActionViewTests(AnnalistTestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
+        # self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
+        # self.user.save()
+        # self.client = Client(HTTP_HOST=TestHost)
+        # Login and permissions
+        create_test_user(None, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
+        create_user_permissions(
+            self.testsite, "testuser",
+            user_permissions=
+              [ "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"
+              , "CREATE_COLLECTION", "DELETE_COLLECTION"
+              ],
+            use_altpath=True
+            )
         return
 
     def tearDown(self):
@@ -370,8 +451,6 @@ class SiteActionViewTests(AnnalistTestCase):
         return
 
     def test_post_confirmed_remove(self):
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         # Submit positive confirmation
         u = reverse("AnnalistConfirmView")
         r = self.client.post(u, self._conf_data(action="confirm"))
@@ -390,8 +469,6 @@ class SiteActionViewTests(AnnalistTestCase):
         return
  
     def test_post_cancelled_remove(self):
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
         u = reverse("AnnalistConfirmView")
         r = self.client.post(u, self._conf_data(action="cancel"))
         self.assertEqual(r.status_code,     302)

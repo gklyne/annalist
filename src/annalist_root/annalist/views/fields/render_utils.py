@@ -10,13 +10,13 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
-from collections    import OrderedDict, namedtuple
+from collections                    import OrderedDict, namedtuple
 
 from django.conf                    import settings
 
-from annalist.models.entitytypeinfo import EntityTypeInfo
-
 from render_text                    import RenderText
+from render_tokenset                import RenderTokenSet
+import render_tokenset
 
 def get_edit_renderer(renderid):
     """
@@ -50,6 +50,9 @@ def get_edit_renderer(renderid):
         return "field/annalist_edit_select.html"
     if renderid == "View_sel":
         return "field/annalist_edit_view_sel.html"
+    if renderid == "TokenSet":
+        # return "field/annalist_edit_tokenlist.html"
+        return RenderTokenSet(render_tokenset.edit)
     log.warning("get_edit_renderer: %s not found"%renderid)
     # raise ValueError("get_edit_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
@@ -87,6 +90,9 @@ def get_view_renderer(renderid):
         return "field/annalist_view_select.html"
     if renderid == "View_sel":
         return "field/annalist_view_view_sel.html"
+    if renderid == "TokenSet":
+        # return "field/annalist_view_tokenlist.html"
+        return RenderTokenSet(render_tokenset.view)
     log.warning("get_view_renderer: %s not found"%renderid)
     # raise ValueError("get_view_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
@@ -115,28 +121,23 @@ def get_item_renderer(renderid):
     if renderid == "Identifier":
         return "field/annalist_item_identifier.html"
     if renderid in ["Type", "View", "List", "Field", "Enum", "Enum_optional"]:
-        return "field/annalist_item_entityref.html"
-    # if renderid == "View_sel":
-    #     return "field/annalist_item_entityref.html"
+        return "field/annalist_item_select.html"
+    if renderid == "TokenSet":
+        return RenderTokenSet(render_tokenset.item)
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
 
-def get_entity_values(displayinfo, entity, entity_id=None):
+def get_value_mapper(renderid):
     """
-    Returns an entity values dictionary for a supplied entity, suitable for
-    use with a bound_field object (see above).
+    Returns a value mapper class (with encode and decode methods) which is used to map
+    values between entity fields and textual form fields.
+
+    The default 'RenderText' object returned contains identity mappings.
     """
-    if not entity_id:
-        entity_id = entity.get_id()
-    type_id    = entity.get_type_id()
-    typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
-    entityvals = entity.get_values().copy()
-    entityvals['entity_id']        = entity_id
-    entityvals['entity_link']      = entity.get_view_url_path()
-    # log.info("type_id %s"%(type_id))
-    entityvals['entity_type_id']   = type_id
-    entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
-    return entityvals
+    if renderid == "TokenSet":
+        return RenderTokenSet("no template")
+    else:
+        return RenderText()
 
 if __name__ == "__main__":
     import doctest

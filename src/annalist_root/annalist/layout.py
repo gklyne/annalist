@@ -42,15 +42,9 @@ log = logging.getLogger(__name__)
 #                 field_meta.jsonld
 #                 field_prov.jsonld
 #                :
-#             bridges/
-#               (bridge-description (incl path mapping in collection) - @@TBD)
+#             users/  @@TBD
+#               user-description
 #                :
-#             user-groups/  @@TBD
-#               group-description
-#                :
-#             access/  @@TBD
-#               default-access
-#               (more details to work through - keep it simple for starters)
 #           d/
 #             <type-id>/
 #               <entity-id>/
@@ -106,6 +100,13 @@ SITE_FIELD_PATH         = "_annalist_site/fields/%(id)s"
 FIELD_META_FILE         = "field_meta.jsonld"
 FIELD_PROV_FILE         = "field_prov.jsonld"
 META_FIELD_REF          = "./"
+
+COLL_USER_VIEW         = "d/_user/%(id)s/"
+COLL_USER_PATH         = "_annalist_collection/users/%(id)s"
+SITE_USER_PATH         = "_annalist_site/users/%(id)s"
+USER_META_FILE         = "user_meta.jsonld"
+USER_PROV_FILE         = "user_prov.jsonld"
+META_USER_REF          = "./"
 
 COLL_ENUM_VIEW          = "d/%(type_id)s/%(id)s/"
 COLL_ENUM_PATH          = "_annalist_collection/enums/%(type_id)s/%(id)s"

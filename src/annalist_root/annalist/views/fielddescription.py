@@ -6,15 +6,24 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import collections
+
 import logging
 log = logging.getLogger(__name__)
+
+from annalist.identifiers               import RDFS, ANNAL
 
 from annalist.models.recordfield        import RecordField
 from annalist.models.entitytypeinfo     import EntityTypeInfo
 from annalist.models.entityfinder       import EntityFinder
 
-from annalist.views.fields.render_utils import get_edit_renderer, get_view_renderer
-from annalist.views.fields.render_utils import get_head_renderer, get_item_renderer
+from annalist.views.fields.render_utils import (
+    get_edit_renderer, 
+    get_view_renderer,
+    get_head_renderer, 
+    get_item_renderer,
+    get_value_mapper
+    )
 from annalist.views.fields.render_placement import (
     get_placement_classes
     )
@@ -41,18 +50,19 @@ class FieldDescription(object):
                         of the view description record provides context for some enumeration 
                         type selections.
         """
-        field_id    = field['annal:field_id']                   # Field ID slug in URI
+        field_id    = field[ANNAL.CURIE.field_id]       # Field ID slug in URI
         recordfield = RecordField.load(collection, field_id, collection._parentsite)
         if recordfield is None:
-            raise ValueError("Can't retrieve definition for field %s"%(field_id))
-        field_name      = recordfield.get("annal:field_name", field_id)   # Field name in form
+            log.warning("Can't retrieve definition for field %s"%(field_id))
+            recordfield = RecordField.load(collection, "Field_missing", collection._parentsite)
+        field_name      = recordfield.get(ANNAL.CURIE.field_name, field_id)   # Field name in form
         field_placement = get_placement_classes(
-            field.get('annal:field_placement', None) or recordfield.get('annal:field_placement', "")
+            field.get(ANNAL.CURIE.field_placement, None) or recordfield.get(ANNAL.CURIE.field_placement, "")
             )
         log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
         # log.info("FieldDescription: field['annal:field_placement'] %s"%(field['annal:field_placement']))
         # log.info("FieldDescription: field_placement %r"%(get_placement_classes(field['annal:field_placement']),))
-        field_render_type = recordfield.get('annal:field_render_type', "")
+        field_render_type = recordfield.get(ANNAL.CURIE.field_render_type, "")
         self._field_context = (
             { 'field_id':               field_id
             , 'field_name':             field_name
@@ -61,16 +71,17 @@ class FieldDescription(object):
             , 'field_render_item':      get_item_renderer(field_render_type)
             , 'field_render_view':      get_view_renderer(field_render_type)
             , 'field_render_edit':      get_edit_renderer(field_render_type)
-            , 'field_label':            recordfield.get('rdfs:label', "")
-            , 'field_help':             recordfield.get('rdfs:comment', "")
-            , 'field_value_type':       recordfield.get('annal:field_value_type', "")
-            , 'field_placeholder':      recordfield.get('annal:placeholder', "")
-            , 'field_default_value':    recordfield.get('annal:default_value', None)
-            , 'field_property_uri':     recordfield.get('annal:property_uri', "")
-            , 'field_options_valkey':   recordfield.get('annal:options_valkey', None)
-            , 'field_options_typeref':  recordfield.get('annal:options_typeref', None)
-            , 'field_restrict_values':  recordfield.get('annal:restrict_values', "ALL")
-            , 'field_choices':          None
+            , 'field_value_mapper':     get_value_mapper(field_render_type)
+            , 'field_label':            recordfield.get(RDFS.CURIE.label, "")
+            , 'field_help':             recordfield.get(RDFS.CURIE.comment, "")
+            , 'field_value_type':       recordfield.get(ANNAL.CURIE.field_value_type, "")
+            , 'field_placeholder':      recordfield.get(ANNAL.CURIE.placeholder, "")
+            , 'field_default_value':    recordfield.get(ANNAL.CURIE.default_value, None)
+            , 'field_property_uri':     recordfield.get(ANNAL.CURIE.property_uri, "")
+            , 'field_options_typeref':  recordfield.get(ANNAL.CURIE.options_typeref, None)
+            , 'field_restrict_values':  recordfield.get(ANNAL.CURIE.restrict_values, "ALL")
+            , 'field_choice_labels':    None
+            , 'field_choice_links':     None
             })
         type_ref = self._field_context['field_options_typeref']
         if type_ref:
@@ -79,11 +90,18 @@ class FieldDescription(object):
             entities        = entity_finder.get_entities_sorted(type_id=type_ref, context=view_context)
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
+            # Uses collections.OrderedfDict to preserve entity ordering
             # 'Enum_optional' adds a blank entry at the start of the list
-            self._field_context['field_choices'] = (
-                ([""] if field_render_type == "Enum_optional" else []) +
-                [e.get_id() for e in entities if e.get_id() != "_initial_values"]
-                )
+            self._field_context['field_choice_labels'] = collections.OrderedDict()
+            self._field_context['field_choice_links']  = collections.OrderedDict()
+            if field_render_type == "Enum_optional":
+                self._field_context['field_choice_labels'][''] = ""
+                self._field_context['field_choice_links']['']  = None
+            for e in entities:
+                eid = e.get_id()
+                if eid != "_initial_values":
+                    self._field_context['field_choice_labels'][eid] = eid   # @@TODO: be smarter about label?
+                    self._field_context['field_choice_links'][eid]  = e.get_view_url_path()
             # log.info("typeref %s: %r"%
             #     (self._field_context['field_options_typeref'], list(self._field_context['field_choices']))
             #     )

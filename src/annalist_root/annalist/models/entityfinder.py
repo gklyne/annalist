@@ -18,6 +18,26 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitytypeinfo import EntityTypeInfo, get_built_in_type_ids
 
 #   -------------------------------------------------------------------
+#   Auxilliary fiunctions
+#   -------------------------------------------------------------------
+
+def order_entity_key(entity):
+    """
+    Function returns sort key for ordering entities by type and entity id
+
+    Use with `sorted`, thus:
+
+        sorted(entities, order_entity_key)
+    """
+    type_id   = entity.get_type_id() 
+    entity_id = entity.get_id()
+    key = ( 0 if type_id.startswith('_')   else 1, type_id, 
+            0 if entity_id.startswith('_') else 1, entity_id
+          )
+    # log.info(key)
+    return key
+
+#   -------------------------------------------------------------------
 #   EntityFinder
 #   -------------------------------------------------------------------
 
@@ -40,7 +60,7 @@ class EntityFinder(object):
         """
         Returns iterator over possible type ids in current collection.
 
-        Each type is returned as an EntityTypeInfo object.
+        Each type is returned as a candidate type identifier string
         """
         for t in get_built_in_type_ids():
             yield t
@@ -48,37 +68,40 @@ class EntityFinder(object):
             yield t
         return
 
-    def get_type_entities(self, type_id, include_sitedata=False):
+    def get_type_entities(self, type_id, user_permissions=None, include_sitedata=False):
         """
         Iterate over entities from collection matching the supplied type.
 
         If `include_sitedata` is True, include instances of supplied type_id
         that are defined in site-wide data as well as those in the collection.
         """
-        entitytypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
-        for e in entitytypeinfo.enum_entities(usealtparent=include_sitedata):
+        entitytypeinfo = EntityTypeInfo(self._site, self._coll, type_id)        
+        for e in entitytypeinfo.enum_entities(user_permissions, usealtparent=include_sitedata):
             yield e
         return
 
-    def get_all_types_entities(self, types, include_sitedata=False):
+    def get_all_types_entities(self, types, user_permissions=None, include_sitedata=False):
         """
         Iterate mover all entities of all types from a supplied type iterator
         """
+        assert user_permissions is not None
         for t in types:
-            for e in self.get_type_entities(t, include_sitedata=include_sitedata):
+            for e in self.get_type_entities(t, user_permissions, include_sitedata=include_sitedata):
                 yield e
         return
 
-    def get_base_entities(self, type_id=None):
+    def get_base_entities(self, type_id=None, user_permissions=None):
         """
         Iterate over base entities from collection, matching the supplied type id if supplied.
 
         If a type_id is supplied, site data values are included.
         """
         if type_id:
-            return self.get_type_entities(type_id, include_sitedata=True)
+            return self.get_type_entities(type_id, user_permissions, include_sitedata=True)
         else:
-            return self.get_all_types_entities(self.get_collection_type_ids(), include_sitedata=False)
+            return self.get_all_types_entities(
+                self.get_collection_type_ids(), user_permissions, include_sitedata=False
+                )
         return
 
     def search_entities(self, entities, search):
@@ -90,23 +113,19 @@ class EntityFinder(object):
                 yield e
         return
 
-    def get_entities(self, type_id=None, context={}, search=None):
-        entities = self._selector.filter(self.get_base_entities(type_id), context=context)
+    def get_entities(self, user_permissions=None, type_id=None, context={}, search=None):
+        entities = self._selector.filter(
+            self.get_base_entities(type_id, user_permissions), context=context
+            )
         if search:
             entities = self.search_entities(entities, search)
         return entities
 
-    def get_entities_sorted(self, type_id=None, context={}, search=None):
-        def entity_sort_key(e):
-            type_id   = e.get_type_id() 
-            entity_id = e.get_id()
-            key = ( 0 if type_id.startswith('_')   else 1, type_id, 
-                    0 if entity_id.startswith('_') else 1, entity_id
-                  )
-            # log.info(key)
-            return key
-        entities = self.get_entities(type_id=type_id, context=context, search=search)
-        return sorted(entities, key=entity_sort_key)
+    def get_entities_sorted(self, user_permissions=None, type_id=None, context={}, search=None):
+        entities = self.get_entities(
+            user_permissions, type_id=type_id, context=context, search=search
+            )
+        return sorted(entities, key=order_entity_key)
 
     @classmethod
     def entity_contains(cls, e, search):

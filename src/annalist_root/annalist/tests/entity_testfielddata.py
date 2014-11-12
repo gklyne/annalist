@@ -30,7 +30,8 @@ from tests import (
     )
 from entity_testutils               import (
     collection_dir, 
-    site_title
+    site_title,
+    collection_entity_view_url
     )
 from entity_testentitydata          import (
     entitydata_list_type_url
@@ -64,13 +65,9 @@ def recordfield_url(coll_id, field_id):
     """
     URI for record field description data; also view using default entity view
     """
-    viewname = "AnnalistEntityAccessView"
-    kwargs   = {'coll_id': coll_id, "type_id": "_field"}
-    if valid_id(field_id):
-        kwargs.update({'entity_id': field_id})
-    else:
-        kwargs.update({'entity_id': "___"})
-    return reverse(viewname, kwargs=kwargs)
+    if not valid_id(field_id):
+        field_id = "___"
+    return collection_entity_view_url(coll_id=coll_id, type_id="_field", entity_id=field_id)
 
 def recordfield_edit_url(action=None, coll_id=None, field_id=None):
     """
@@ -100,15 +97,18 @@ def recordfield_edit_url(action=None, coll_id=None, field_id=None):
 #
 #   -----------------------------------------------------------------------------
 
-def recordfield_init_keys():
-    return set(
+def recordfield_init_keys(field_uri=False):
+    keys = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url', 'annal:uri'
+        , 'annal:type', 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         ])
+    if field_uri:
+        keys.add('annal:uri')
+    return keys
 
-def recordfield_value_keys():
-    return (recordfield_init_keys() |
+def recordfield_value_keys(field_uri=False):
+    return (recordfield_init_keys(field_uri=field_uri) |
         { 'annal:property_uri'
         , 'annal:field_entity_type'
         , 'annal:field_value_type'
@@ -117,12 +117,12 @@ def recordfield_value_keys():
         , 'annal:default_value'
         })
 
-def recordfield_load_keys():
-    return recordfield_value_keys() | {'@id', '@type'}
+def recordfield_load_keys(field_uri=False):
+    return recordfield_value_keys(field_uri=field_uri) | {'@id', '@type'}
 
 def recordfield_create_values(coll_id="testcoll", field_id="testfield", update="Field"):
     """
-    Entity values used when creating a record type entity
+    Entity values used when creating a record field entity
     """
     return (
         { 'rdfs:label':     "%s %s/_field/%s"%(update, coll_id, field_id)
@@ -130,16 +130,17 @@ def recordfield_create_values(coll_id="testcoll", field_id="testfield", update="
         })
 
 def recordfield_values(
-        coll_id="testcoll", field_id="testfield",
+        coll_id="testcoll", field_id="testfield", field_uri=None,
         update="Field", hosturi=TestHostUri):
     d = recordfield_create_values(coll_id, field_id, update=update).copy()
     d.update(
         { 'annal:id':       field_id
         , 'annal:type_id':  "_field"
         , 'annal:type':     "annal:Field"
-        , 'annal:url':      hosturi + recordfield_url(coll_id, field_id)
-        , 'annal:uri':      hosturi + recordfield_url(coll_id, field_id)
+        , 'annal:url':      recordfield_url(coll_id, field_id)
         })
+    if field_uri:
+        d['annal:uri'] = field_uri
     return d
 
 def recordfield_read_values(
@@ -263,7 +264,6 @@ def recordfield_entity_view_context_data(
         context_dict['fields'][0]['field_value'] = field_id
         context_dict['fields'][3]['field_value'] = '%s testcoll/_field/%s'%(update,field_id)
         context_dict['fields'][4]['field_value'] = '%s help for %s in collection testcoll'%(update,field_id)
-        # context_dict['fields'][5]['field_value'] = TestBaseUri + "/c/%s/d/%s/%s/"%("testcoll", "_field", field_id)
         context_dict['orig_id']     = field_id
     if orig_id:
         context_dict['orig_id']     = orig_id
@@ -283,10 +283,11 @@ def recordfield_entity_view_form_data(
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_field")
         })
     if field_id:
+        field_url = recordfield_url(coll_id=coll_id, field_id=field_id)
         form_data_dict['entity_id']     = field_id
         form_data_dict['Field_label']   = '%s %s/%s/%s'%(update, coll_id, "_field", field_id)
         form_data_dict['Field_comment'] = '%s help for %s in collection %s'%(update, field_id, coll_id)
-        form_data_dict['Field_uri']     = TestBaseUri + "/c/%s/d/%s/%s/"%(coll_id, "_field", field_id)
+        form_data_dict['Field_uri']     = field_url
         form_data_dict['orig_id']       = field_id
         form_data_dict['orig_type']     = "_field"
     if orig_id:

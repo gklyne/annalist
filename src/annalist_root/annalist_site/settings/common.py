@@ -110,5 +110,6 @@ STATICFILES_DIRS = (
 )
 
 ANNALIST_VERSION = __version__
+ANNALIST_VERSION_MSG = "Annalist version %s (common configuration)"%(ANNALIST_VERSION)
 
 # End.

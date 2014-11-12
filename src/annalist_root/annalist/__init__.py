@@ -7,6 +7,9 @@ __author_email__  = "GK@ACM.ORG"
 __copyright__     = "Copyright 2014, G. Klyne"
 __license__       = "MIT (http://opensource.org/licenses/MIT)"
 
+# https://docs.djangoproject.com/en/dev/ref/applications/
+default_app_config = 'annalist.apps.AnnalistConfig'
+
 # Version 0.1: initial public prototype
 #__version__        = "0.1.1"    # Feature freeze
 #__version__        = "0.1.2"    # Test with Django 1.7
@@ -37,6 +40,23 @@ __license__       = "MIT (http://opensource.org/licenses/MIT)"
                                 # Initialize entity label and comment to blank (issue #24)
                                 # Fixed problem with rename locally created Default_view (issue #22)
                                 # Fix that changing type of entity was not deleting old record (issue #29)
-__version__        = "0.1.4"    # Bump version number
+# __version__        = "0.1.4"  # Bump version number
+# __version__        = "0.1.5"  # Bump version number (odd = unstable)
+                                # Implemented authorization framework
+                                # More new commands in `annalist-manager`
+                                # List view option to hide columns on smaller screens
+                                # Extend test suite covereage
+                                # When adding field to view: check property URI is unique
+                                # Documentation updates and new screencasts
+                                # When renaming type, rename insrances to new type
+                                # Prevent deleting type with instances present
+                                # If specified default list not found, revert to built-in default
+                                # Fix bug in entity reference field links (was linking to self, not target record)
+                                # Add optional enumeration to available field render types
+                                # Use separate Django database for each configuration
+                                # Improve log file handling; include timestamps
+                                # Some small usability improvements
+                                # Address some areas of technical debt
+__version__        = "0.1.6"    # Bump version number for release
 
 # End.

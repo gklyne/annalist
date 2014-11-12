@@ -16,20 +16,21 @@ import traceback
 import logging
 log = logging.getLogger(__name__)
 
-from django.http                import HttpResponse
-from django.http                import HttpResponseRedirect
-from django.conf                import settings
-from django.core.urlresolvers   import resolve, reverse
+from django.http                    import HttpResponse
+from django.http                    import HttpResponseRedirect
+from django.conf                    import settings
+from django.core.urlresolvers       import resolve, reverse
 
-from annalist.identifiers       import ANNAL, RDFS
-from annalist.exceptions        import Annalist_Error, EntityNotFound_Error
-from annalist                   import layout
-from annalist                   import message
+from annalist.identifiers           import RDF, RDFS, ANNAL
+from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
+from annalist                       import layout
+from annalist                       import message
 
-from annalist.models.entityroot import EntityRoot
-from annalist.models.sitedata   import SiteData
-from annalist.models.collection import Collection
-from annalist                   import util
+from annalist.models.annalistuser   import AnnalistUser
+from annalist.models.entityroot     import EntityRoot
+from annalist.models.sitedata       import SiteData
+from annalist.models.collection     import Collection
+from annalist                       import util
 
 class Site(EntityRoot):
 
@@ -49,6 +50,38 @@ class Site(EntityRoot):
         super(Site, self).__init__(host+sitebaseuri, sitebasedir)
         self._sitedata = SiteData(self)
         return
+
+    def get_user_permissions(self, user_id, user_uri):
+        """
+        Get a site-wide user permissions record (AnnalistUser).
+
+        To return a value, both the user_id and the user_uri (typically a mailto: URI, but
+        may be any *authenticated* identifier) must match.  This is to prevent access to 
+        records of a deleted account being granted to a new account created with the 
+        same user_id (username).
+
+        user_id         local identifier for the type to retrieve.
+        user_uri        authenticated identifier associated with the user_id.  That is,
+                        the authentication service used is presumed to confirm that
+                        the identifier belongs to the user currently logged in with
+                        the supplied username.
+
+        returns an AnnalistUser object for the identified user, or None.  This object contains
+                information about permissions granted to the user in the current collection.
+        """
+        user = AnnalistUser.load(self, user_id, use_altpath=True)
+        log.debug(
+            "Site.get_user_permissions: user_id %s, user_uri %s, user %r"%
+            (user_id, user_uri, user)
+            )
+        if user:
+            for f in [RDFS.CURIE.label, RDFS.CURIE.comment, ANNAL.CURIE.user_uri, ANNAL.CURIE.user_permissions]:
+                if f not in user:
+                    user = None
+                    break
+        if user and user[ANNAL.CURIE.user_uri] != user_uri:
+            user = None         # URI mismatch: return None.
+        return user
 
     def collections(self):
         """
@@ -77,7 +110,7 @@ class Site(EntityRoot):
         """
         # @@TODO: consider using generic view logic for this mapping (and elsewhere?)
         #         This is currently a bit of a kludge, designed to match the site
-        #         view template.  In due course, it may be reveiwed and implemented
+        #         view template.  In due course, it may be reviewed and implemented
         #         using the generic Annalist form generating framework
         site_data = self._load_values()
         if not site_data:

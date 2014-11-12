@@ -43,7 +43,6 @@ class CollectionView(AnnalistGenericView):
         """
         Form for displaying the current collection 
         """
-        # @@TODO: later, read and redirect to the currently selected default view
         return HttpResponseRedirect(self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id))
 
 
@@ -55,14 +54,14 @@ class CollectionEditView(AnnalistGenericView):
         super(CollectionEditView, self).__init__()
         return
 
-    def collection_view_setup(self, coll_id):
+    def collection_view_setup(self, coll_id, action):
         """
         Assemble display information for collection view request handler
         """
-        viewinfo = DisplayInfo(self, "view")
+        viewinfo = DisplayInfo(self, action)
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
-        viewinfo.check_authorization("view")
+        viewinfo.check_authorization(action)
         return viewinfo
 
     # GET
@@ -74,16 +73,15 @@ class CollectionEditView(AnnalistGenericView):
         def resultdata(viewinfo):
             coll = viewinfo.collection
             context = (
-                { 'title':              self.site_data()["title"]
-                , 'continuation_url':   continuation_next.get('continuation_url', "")
-                , 'coll_id':            coll_id
+                { 'continuation_url':   continuation_next.get('continuation_url', "")
                 , 'types':              sorted( [t.get_id() for t in coll.types(include_alt=False)] )
                 , 'lists':              sorted( [l.get_id() for l in coll.lists(include_alt=False)] )
                 , 'views':              sorted( [v.get_id() for v in coll.views(include_alt=False)] )
                 , 'select_rows':        "6"
                 })
+            context.update(viewinfo.context_data())
             return context
-        viewinfo = self.collection_view_setup(coll_id)
+        viewinfo = self.collection_view_setup(coll_id, "view")
         if viewinfo.http_response:
             return viewinfo.http_response
         continuation_next, continuation_here = self.continuation_urls(
@@ -112,6 +110,12 @@ class CollectionEditView(AnnalistGenericView):
             request.POST,
             None  # self.view_uri("AnnalistSiteView")
             )
+        if "close" in request.POST:
+            redirect_uri = continuation_next.get('continuation_url', self.view_uri("AnnalistSiteView"))
+        # Check "config" authorization
+        viewinfo = self.collection_view_setup(coll_id, "config")
+        if viewinfo.http_response:
+            return viewinfo.http_response
         # Record types
         type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:
@@ -190,9 +194,6 @@ class CollectionEditView(AnnalistGenericView):
                 message.REMOVE_RECORD_VIEW, 
                 "AnnalistRecordViewDeleteView",
                 continuation_next)
-        # Others
-        if "close" in request.POST:
-            redirect_uri = continuation_next.get('continuation_url', self.view_uri("AnnalistSiteView"))
         # Invoke selected view and/or render status response
         if redirect_uri:
             http_response = http_response or HttpResponseRedirect(redirect_uri)
@@ -259,7 +260,6 @@ class CollectionEditView(AnnalistGenericView):
                 )
             message_vals = {'id': entity_id, 'coll_id': coll_id}
             http_response = (
-                self.authorize("DELETE") or
                 ConfirmView.render_form(self.request,
                     action_description=     confirm_msg%message_vals,
                     confirmed_action_uri=   confirmed_action_uri,

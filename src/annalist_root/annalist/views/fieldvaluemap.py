@@ -52,35 +52,30 @@ class FieldValueMap(object):
         Returns a dictionary-like of values to be added to the display context 
         under construction
         """
-        options = ["(no options)"]
-        options_choices = self.f.get('field_choices', None)
-        options_key     = self.f.get('field_options_valkey', None)
-        if options_choices:
-            # Note: the options list may be used in more than one field, 
-            # so any generator supplied must be materialized here
-            options = list(options_choices)
-        elif options_key:
-            if extras and options_key in extras:
-                options = extras[options_key]
-            else:
-                options = ['(missing options)']
         # log.info("map entity %s to context %s, vals %r"%(self.e, self.i, entityvals))
         # log.info("map_entity_to_context: bound_field: extras %r"%(extras,))
         boundfield = bound_field(
             field_description=self.f, 
             entityvals=entityvals,
-            options=options,
             extras=extras
             )
         return boundfield
 
     def map_form_to_entity(self, formvals):
+        """
+        Returns singleton or empty dictionary to be included in the resulting entity.
+
+        self.i is the form value key for the value to save.
+
+        self.e is the entity property URI that receives the field value, or None if no 
+        value is saved for this field.
+        """
         entityvals = {}
         if self.e:
             log.debug("FieldValueMap.map_form_to_entity %s, %r"%(self.e, formvals))
             v = formvals.get(self.i, None)
             if v is not None:
-                entityvals[self.e] = v
+                entityvals[self.e] = self.f['field_value_mapper'].decode(v)
         return entityvals
 
     def map_form_to_entity_repeated_item(self, formvals, prefix):

@@ -6,6 +6,8 @@
 
 from common import *
 
+ANNALIST_VERSION_MSG = "Annalist version %s (shared service configuration)"%(ANNALIST_VERSION)
+
 SETTINGS_MODULE = __name__
 BASE_DATA_DIR   = "/var"
 CONFIG_BASE     = "/etc/annalist/"
@@ -14,6 +16,13 @@ CONFIG_BASE     = "/etc/annalist/"
 DEBUG           = False
 TEMPLATE_DEBUG  = False
 ALLOWED_HOSTS   = ['.annalist.net']     # @@FIXME
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DATA_DIR, 'annalist_site/_annalist_site/db.sqlite3'),
+    }
+}
 
 LOGGING_FILE    = '/var/log/annalist/annalist.log'
 LOGGING = {
@@ -63,7 +72,8 @@ LOGGING = {
 
 import logging
 log = logging.getLogger(__name__)
-log.info("Annalist version %s (shared service configuration)"%(ANNALIST_VERSION))
+log.info(ANNALIST_VERSION_MSG)
+# log.info("Annalist version %s (shared service configuration)"%(ANNALIST_VERSION))
 log.info("SETTINGS_MODULE: "+SETTINGS_MODULE)
 log.info("BASE_DATA_DIR:   "+BASE_DATA_DIR)
 log.info("CONFIG_BASE:     "+CONFIG_BASE)
