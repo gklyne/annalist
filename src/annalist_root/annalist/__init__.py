@@ -11,8 +11,8 @@ __license__       = "MIT (http://opensource.org/licenses/MIT)"
 default_app_config = 'annalist.apps.AnnalistConfig'
 
 # Version 0.1: initial public prototype
-#__version__        = "0.1.1"    # Feature freeze
-#__version__        = "0.1.2"    # Test with Django 1.7
+#__version__        = "0.1.1"   # Feature freeze
+#__version__        = "0.1.2"   # Test with Django 1.7
                                 # Initial installation kit
                                 # Apply sorting to entity lists to make test cases more robust across systems
                                 # Setup scripts to initialize installation and site data
@@ -24,7 +24,7 @@ default_app_config = 'annalist.apps.AnnalistConfig'
                                 # util.removetree hack to allow test suite to run on Windows
                                 # Initial documentation
                                 # Demonstration screencast
-#__version__        = "0.1.3"    # Bump version number
+#__version__        = "0.1.3"   # Bump version number
                                 # Post-release documentation updates
                                 # Update annalist_manager with updatesitedata command and 
                                 #   to create auth providers directory
@@ -57,6 +57,7 @@ default_app_config = 'annalist.apps.AnnalistConfig'
                                 # Improve log file handling; include timestamps
                                 # Some small usability improvements
                                 # Address some areas of technical debt
-__version__        = "0.1.6"    # Bump version number for release
+#__version__        = "0.1.6"   # Bump version number for release
+__version__        = "0.1.7"  # Bump version number (odd = unstable)
 
 # End.

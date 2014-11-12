@@ -14,10 +14,10 @@
 - [x] Create and post updated kit download to annalist.net
 - [x] Update front page link at annalist.net
 - [x] Upload to PyPI (see below)
-- [ ] Final updates to master
-- [ ] Test yet again
+- [x] Final updates to master
+- [x] Test yet again
+- [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Post announcement to Google Group, and elsewhere
-- [ ] Bump version number again (back to odd value)
 
 ## Build kit and PyPI upload
 
