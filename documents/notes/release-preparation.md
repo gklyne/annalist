@@ -13,7 +13,7 @@
 - [x] Test again
 - [x] Create and post updated kit download to annalist.net
 - [x] Update front page link at annalist.net
-- [ ] Upload to PyPI (see below)
+- [x] Upload to PyPI (see below)
 - [ ] Final updates to master
 - [ ] Test yet again
 - [ ] Post announcement to Google Group, and elsewhere
