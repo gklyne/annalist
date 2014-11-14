@@ -25,6 +25,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
 - [ ] Figure out how to preserve defined users when reinstalling the software.
     - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
+- [ ] `annalist-manager` help to proivide list of permissions
 - [ ] Automated test suite for annalist_manager
     - [ ] annalist-manager initialize [ CONFIG ]
     - [ ] annalist-manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
@@ -50,6 +51,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] JSON-LD @contexts support
     - [ ] Alternative RDF formats support
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
+- [ ] Review concurrent access issues; document assumptions
+- [ ] Use site/collection data to populate help panes on displays; use Markdown.
 - [ ] review use of template files vs. use of inline template text in class
     - [x] Need to support edit/view/item/head (NOT: probably via class inheritance structure)
     - [x] Inline template text should be more efficient as it avoids repeated reading of template files
