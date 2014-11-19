@@ -5,6 +5,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 # V0.1.7, towards V0.1.8
 
+- [ ] Add button to annalist.net page: https://github.com/BetaNYC/getDataButton
 - [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
     - [ ] Refactor handling of repeat field groups
     - [ ] Define type for field group (_group)
