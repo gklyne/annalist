@@ -151,7 +151,7 @@ class bound_field(object):
                     field_val = ""
             return field_val
         elif name == "field_value_encoded":
-            # Used to present non-test value as text for display
+            # Used to present non-text value as text for display
             try:
                 return self._field_description['field_value_mapper'].encode(self.field_value)
             except Exception as e:

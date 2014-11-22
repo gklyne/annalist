@@ -23,8 +23,8 @@ def get_edit_renderer(renderid):
     Returns an field edit renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
 
-    This version returns the name of a template to render the form.
-    With future versions of Django (>=1.7), and alternative is to return an
+    The original version returns the name of a template to render the form.
+    With versions of Django >=1.7, an alternative is to return an
     object with a `.render(context)` method that returns a string to be
     included in the resulting page:
         The variable may also be any object with a render() method that accepts 

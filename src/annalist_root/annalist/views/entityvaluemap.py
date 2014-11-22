@@ -35,8 +35,11 @@ class EntityValueMap(object):
                     and returns a partial dictionary of corressponding entity 
                     value fields.
 
-        See classes SimpleValueMap, FieldValue, FieldListValueMap, RepeatedValuesMap, 
-        etc., for possible entries in an entity/value map.
+        See classes SimpleValueMap, FieldValue, FieldListValueMap, 
+        RepeatedValuesMap, etc., for possible entries in an entity/value map.
+
+        NOTE: mapping from context to form data is handled by templates 
+        and/or field renderers.
         """
         super(EntityValueMap, self).__init__()
         self._map = copy.copy(basemap)
