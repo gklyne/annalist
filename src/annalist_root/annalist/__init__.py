@@ -57,6 +57,7 @@ default_app_config = 'annalist.apps.AnnalistConfig'
                                 # Improve log file handling; include timestamps
                                 # Some small usability improvements
                                 # Address some areas of technical debt
-__version__        = "0.1.6"    # Bump version number for release
+#__version__        = "0.1.6"   # Bump version number for release
+__version__        = "0.1.6a"   # Hotfix: server error copying view without URI field
 
 # End.
