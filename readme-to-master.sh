@@ -23,7 +23,6 @@ if [ -f README.md ]; then
 
         echo "git checkout problem (uncommitted files?) - aborting"
 
-
     fi
 
 else
