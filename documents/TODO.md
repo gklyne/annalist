@@ -192,7 +192,7 @@ the repeated field descriptions is pushed down into a field description.
 , "annal:record_type":  "annal:View"
 , "rdfs:label":         "View description for record view description"
 , "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record view description"
-, "annal:add_field":    "yes"
+, "annal:add_field":    "no"
 , "annal:view_fields":
   [ { "annal:field_id":               "View_id"
     , "annal:field_placement":        "small:0,12;medium:0,6"
@@ -247,6 +247,7 @@ Single view-field description (stored as view):
 , "annal:record_type":  "annal:Field_desc"
 , "rdfs:label":                 "View field description"
 , "rdfs:comment":               "This resource describes a single field description used when displaying and/or editing a record view description"
+, "annal:add_field":    "no"
 , "annal:view_fields":
   [ { "annal:field_id":             "Field_sel"
     , "annal:field_uri":            "annal:field_id"

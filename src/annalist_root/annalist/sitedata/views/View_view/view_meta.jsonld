@@ -23,20 +23,8 @@
   , { "annal:field_id":               "View_add_field"
     , "annal:field_placement":        "small:0,12;medium:0,6"
     }
-  , { "annal:repeat_id":              "View_fields"
-    , "annal:repeat_label":           "Fields"
-    , "annal:repeat_label_add":       "Add field"
-    , "annal:repeat_label_delete":    "Remove selected field(s)"
-    , "annal:repeat_entity_values":   "annal:view_fields"
-    , "annal:repeat_context_values":  "repeat"
-    , "annal:repeat":
-      [ { "annal:field_id":               "Field_sel"
-        , "annal:field_placement":        "small:0,12; medium:0,6"
-        }
-      , { "annal:field_id":               "Field_placement"
-        , "annal:field_placement":        "small:0,12; medium:6,6"
-        }
-      ]
+  , { "annal:field_id":               "View_repeat_fields"}
+    , "annal:field_placement":        "small:0,12"
     }
   ]
 }
