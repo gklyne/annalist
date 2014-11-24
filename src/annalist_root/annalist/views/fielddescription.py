@@ -59,6 +59,7 @@ class FieldDescription(object):
             log.warning("Can't retrieve definition for field %s"%(field_id))
             recordfield = RecordField.load(collection, "Field_missing", collection._parentsite)
         field_name      = recordfield.get(ANNAL.CURIE.field_name, field_id)   # Field name in form
+        field_label     = recordfield.get(RDFS.CURIE.label, "")
         field_property  = (
             field.get(ANNAL.CURIE.property_uri, None) or 
             recordfield.get(ANNAL.CURIE.property_uri, "")
@@ -74,6 +75,8 @@ class FieldDescription(object):
         self._field_context = (
             { 'field_id':                   field_id
             , 'field_name':                 field_name
+            , 'field_label':                field_label
+            , 'field_help':                 recordfield.get(RDFS.CURIE.comment, "")
             , 'field_property_uri':         field_property
             , 'field_placement':            field_placement
             , 'field_render_head':          get_head_renderer(field_render_type)
@@ -81,8 +84,6 @@ class FieldDescription(object):
             , 'field_render_view':          get_view_renderer(field_render_type)
             , 'field_render_edit':          get_edit_renderer(field_render_type)
             , 'field_value_mapper':         get_value_mapper(field_render_type)
-            , 'field_label':                recordfield.get(RDFS.CURIE.label, "")
-            , 'field_help':                 recordfield.get(RDFS.CURIE.comment, "")
             , 'field_value_type':           recordfield.get(ANNAL.CURIE.field_value_type, "")
             , 'field_placeholder':          recordfield.get(ANNAL.CURIE.placeholder, "")
             , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
@@ -92,6 +93,10 @@ class FieldDescription(object):
             , 'field_choice_links':         None
             , 'field_group_viewref':        recordfield.get(ANNAL.CURIE.group_viewref, None)
             , 'field_group_details':        None
+            , 'group_label':                None
+            , 'group_add_label':            None
+            , 'group_delete_label':         None
+            , 'group_fields':               None
             })
         # If field references type, pull in copy of type id and link values
         type_ref = self._field_context['field_options_typeref']
@@ -122,14 +127,17 @@ class FieldDescription(object):
             group_view = RecordView.load(collection, group_ref, collection._parentsite)
             if not group_view:
                 raise EntityNotFound_Error("View %s used in field %s"%(group_ref, field_id))
-            group_label = group_view.get(RDFS.CURIE.label, group_ref)
+            group_label = field_label or group_view.get(RDFS.CURIE.label, group_ref)
             group_fields = []
+            repeat_index = 0
             for subfield in group_view[ANNAL.CURIE.view_fields]:
-                group_fields.append(
-                    FieldDescription(collection, subfield, view_context)
-                    )
-            self._field_context['field_group_details'] = (
-                { 'group_label':        group_label
+                f = FieldDescription(collection, subfield, view_context)
+                f._field_context['repeat_index'] = repeat_index
+                group_fields.append(f)
+                repeat_index += 1
+            self._field_context.update(
+                { 'group_id':           field_id
+                , 'group_label':        group_label
                 , 'group_add_label':    recordfield.get(ANNAL.CURIE.repeat_label_add, "Add "+group_label)
                 , 'group_delete_label': recordfield.get(ANNAL.CURIE.repeat_label_delete, "Remove "+group_label)
                 , 'group_fields':       group_fields

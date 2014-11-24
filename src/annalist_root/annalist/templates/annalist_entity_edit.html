@@ -21,6 +21,7 @@
       <!-- Hidden button is default when ENTER key is pressed -->
       <!-- see http://stackoverflow.com/questions/1963245/    -->
       <input type="submit" name="save" value="Save" style="display:none;" />
+
       <div class="row">
         {% for field in fields %}
         {% if field.field_id  %}
@@ -34,6 +35,7 @@
           {% comment %}
             <div class="small-12 columns"><div class="row">{{field}}</div></div>
           {% endcomment %}
+
           {% for repeat in field.repeat %}
             {% if repeat.repeat_fields_data %}
             <input type="hidden" name="{{repeat.repeat_prefix}}repeat_fields_data" 
@@ -56,6 +58,7 @@
             </div>
             {% endif %}
           {% endfor %}
+
           <div class="small-12 columns">
             <div class="row">
               <div class="small-2 columns">
@@ -69,9 +72,11 @@
               </div>
             </div>
           </div>
+
         {% endif %}
         {% endfor %}
       </div>
+
       <div class="row">
         <div class="medium-2 columns show-for-medium-up">
           <div class="row">

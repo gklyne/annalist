@@ -17,6 +17,8 @@ from django.conf                    import settings
 from render_text                    import RenderText
 from render_tokenset                import RenderTokenSet
 import render_tokenset
+from render_repeatgroup                import RenderRepeatGroup
+import render_repeatgroup
 
 def get_edit_renderer(renderid):
     """
@@ -53,6 +55,8 @@ def get_edit_renderer(renderid):
     if renderid == "TokenSet":
         # return "field/annalist_edit_tokenlist.html"
         return RenderTokenSet(render_tokenset.edit)
+    if renderid == "RepeatGroup":
+        return RenderRepeatGroup(render_repeatgroup.edit)
     log.warning("get_edit_renderer: %s not found"%renderid)
     # raise ValueError("get_edit_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
@@ -93,6 +97,8 @@ def get_view_renderer(renderid):
     if renderid == "TokenSet":
         # return "field/annalist_view_tokenlist.html"
         return RenderTokenSet(render_tokenset.view)
+    if renderid == "RepeatGroup":
+        return RenderRepeatGroup(render_repeatgroup.view)
     log.warning("get_view_renderer: %s not found"%renderid)
     # raise ValueError("get_view_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
@@ -124,6 +130,8 @@ def get_item_renderer(renderid):
         return "field/annalist_item_select.html"
     if renderid == "TokenSet":
         return RenderTokenSet(render_tokenset.item)
+    if renderid == "RepeatGroup":
+        return RenderRepeatGroup(render_repeatgroup.item)
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
 
