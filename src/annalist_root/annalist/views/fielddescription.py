@@ -15,6 +15,7 @@ from annalist.identifiers               import RDFS, ANNAL
 from annalist.exceptions                import EntityNotFound_Error
 
 from annalist.models.recordfield        import RecordField
+from annalist.models.recordview         import RecordView
 from annalist.models.entitytypeinfo     import EntityTypeInfo
 from annalist.models.entityfinder       import EntityFinder
 
@@ -87,11 +88,9 @@ class FieldDescription(object):
             , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
             , 'field_options_typeref':      recordfield.get(ANNAL.CURIE.options_typeref, None)
             , 'field_restrict_values':      recordfield.get(ANNAL.CURIE.restrict_values, "ALL")
-            , 'field_group_viewref':        recordfield.get(ANNAL.CURIE.group_viewref, None)
-            , 'field_repeat_label_add':     None
-            , 'field_repeat_label_delete':  None
             , 'field_choice_labels':        None
             , 'field_choice_links':         None
+            , 'field_group_viewref':        recordfield.get(ANNAL.CURIE.group_viewref, None)
             , 'field_group_details':        None
             })
         # If field references type, pull in copy of type id and link values
@@ -123,7 +122,7 @@ class FieldDescription(object):
             group_view = RecordView.load(collection, group_ref, collection._parentsite)
             if not group_view:
                 raise EntityNotFound_Error("View %s used in field %s"%(group_ref, field_id))
-            group_label = group_view.get('ANNAL.RDFS.label', group_ref)
+            group_label = group_view.get(RDFS.CURIE.label, group_ref)
             group_fields = []
             for subfield in group_view[ANNAL.CURIE.view_fields]:
                 group_fields.append(
