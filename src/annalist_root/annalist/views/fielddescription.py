@@ -12,6 +12,7 @@ import logging
 log = logging.getLogger(__name__)
 
 from annalist.identifiers               import RDFS, ANNAL
+from annalist.exceptions                import EntityNotFound_Error
 
 from annalist.models.recordfield        import RecordField
 from annalist.models.entitytypeinfo     import EntityTypeInfo
@@ -30,7 +31,7 @@ from annalist.views.fields.render_placement import (
 
 class FieldDescription(object):
     """
-    Describes an entity view field used with entity-value maps, and methods to perform 
+    Describes an entity view field, and methods to perform 
     manipulations involving the field description.
     """
 
@@ -40,12 +41,13 @@ class FieldDescription(object):
         rendering a form.  Values defined here are mentioned in field
         rendering templates.
 
-        The FieldDescription object behaves as a dictionary containing the various field attributes.
+        The FieldDescription object behaves as a dictionary containing the 
+        various field attributes.
 
         collection      is a collection from which data is being rendered.
         field           is a dictionary with the field description from a view or list 
                         description, containing a field id and placement values.
-        view_context    is a dictionary of additional values that may ube used in assembling
+        view_context    is a dictionary of additional values that may be used in assembling
                         values to be used when rendering the field.  In particular, a copy 
                         of the view description record provides context for some enumeration 
                         type selections.
@@ -56,33 +58,43 @@ class FieldDescription(object):
             log.warning("Can't retrieve definition for field %s"%(field_id))
             recordfield = RecordField.load(collection, "Field_missing", collection._parentsite)
         field_name      = recordfield.get(ANNAL.CURIE.field_name, field_id)   # Field name in form
+        field_property  = (
+            field.get(ANNAL.CURIE.property_uri, None) or 
+            recordfield.get(ANNAL.CURIE.property_uri, "")
+            )
         field_placement = get_placement_classes(
-            field.get(ANNAL.CURIE.field_placement, None) or recordfield.get(ANNAL.CURIE.field_placement, "")
+            field.get(ANNAL.CURIE.field_placement, None) or 
+            recordfield.get(ANNAL.CURIE.field_placement, "")
             )
         log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
         # log.info("FieldDescription: field['annal:field_placement'] %s"%(field['annal:field_placement']))
         # log.info("FieldDescription: field_placement %r"%(get_placement_classes(field['annal:field_placement']),))
         field_render_type = recordfield.get(ANNAL.CURIE.field_render_type, "")
         self._field_context = (
-            { 'field_id':               field_id
-            , 'field_name':             field_name
-            , 'field_placement':        field_placement
-            , 'field_render_head':      get_head_renderer(field_render_type)
-            , 'field_render_item':      get_item_renderer(field_render_type)
-            , 'field_render_view':      get_view_renderer(field_render_type)
-            , 'field_render_edit':      get_edit_renderer(field_render_type)
-            , 'field_value_mapper':     get_value_mapper(field_render_type)
-            , 'field_label':            recordfield.get(RDFS.CURIE.label, "")
-            , 'field_help':             recordfield.get(RDFS.CURIE.comment, "")
-            , 'field_value_type':       recordfield.get(ANNAL.CURIE.field_value_type, "")
-            , 'field_placeholder':      recordfield.get(ANNAL.CURIE.placeholder, "")
-            , 'field_default_value':    recordfield.get(ANNAL.CURIE.default_value, None)
-            , 'field_property_uri':     recordfield.get(ANNAL.CURIE.property_uri, "")
-            , 'field_options_typeref':  recordfield.get(ANNAL.CURIE.options_typeref, None)
-            , 'field_restrict_values':  recordfield.get(ANNAL.CURIE.restrict_values, "ALL")
-            , 'field_choice_labels':    None
-            , 'field_choice_links':     None
+            { 'field_id':                   field_id
+            , 'field_name':                 field_name
+            , 'field_property_uri':         field_property
+            , 'field_placement':            field_placement
+            , 'field_render_head':          get_head_renderer(field_render_type)
+            , 'field_render_item':          get_item_renderer(field_render_type)
+            , 'field_render_view':          get_view_renderer(field_render_type)
+            , 'field_render_edit':          get_edit_renderer(field_render_type)
+            , 'field_value_mapper':         get_value_mapper(field_render_type)
+            , 'field_label':                recordfield.get(RDFS.CURIE.label, "")
+            , 'field_help':                 recordfield.get(RDFS.CURIE.comment, "")
+            , 'field_value_type':           recordfield.get(ANNAL.CURIE.field_value_type, "")
+            , 'field_placeholder':          recordfield.get(ANNAL.CURIE.placeholder, "")
+            , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
+            , 'field_options_typeref':      recordfield.get(ANNAL.CURIE.options_typeref, None)
+            , 'field_restrict_values':      recordfield.get(ANNAL.CURIE.restrict_values, "ALL")
+            , 'field_group_viewref':        recordfield.get(ANNAL.CURIE.group_viewref, None)
+            , 'field_repeat_label_add':     None
+            , 'field_repeat_label_delete':  None
+            , 'field_choice_labels':        None
+            , 'field_choice_links':         None
+            , 'field_group_details':        None
             })
+        # If field references type, pull in copy of type id and link values
         type_ref = self._field_context['field_options_typeref']
         if type_ref:
             restrict_values = self._field_context['field_restrict_values']
@@ -105,6 +117,24 @@ class FieldDescription(object):
             # log.info("typeref %s: %r"%
             #     (self._field_context['field_options_typeref'], list(self._field_context['field_choices']))
             #     )
+        # If field references view, pull in details from view, including field details
+        group_ref = self._field_context['field_group_viewref']
+        if group_ref:
+            group_view = RecordView.load(collection, group_ref, collection._parentsite)
+            if not group_view:
+                raise EntityNotFound_Error("View %s used in field %s"%(group_ref, field_id))
+            group_label = group_view.get('ANNAL.RDFS.label', group_ref)
+            group_fields = []
+            for subfield in group_view[ANNAL.CURIE.view_fields]:
+                group_fields.append(
+                    FieldDescription(collection, subfield, view_context)
+                    )
+            self._field_context['field_group_details'] = (
+                { 'group_label':        group_label
+                , 'group_add_label':    recordfield.get(ANNAL.CURIE.repeat_label_add, "Add "+group_label)
+                , 'group_delete_label': recordfield.get(ANNAL.CURIE.repeat_label_delete, "Remove "+group_label)
+                , 'group_fields':       group_fields
+                })
         # log.info("FieldDescription: %s"%field_id)
         # log.info("FieldDescription.field %r"%field)
         # log.info("FieldDescription.field_context %r"%(self._field_context,))
@@ -130,7 +160,6 @@ class FieldDescription(object):
             "  , 'field_property_uri': %r\n"%(self._field_context["field_property_uri"])+
             "  })"
             )
-        # return repr(self._field_context)
 
     # Define methods to facilitate access to values using dictionary operations
     # on the FieldDescription object

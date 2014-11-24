@@ -34,7 +34,7 @@ class EntityNotFound_Error(Annalist_Error):
     Annalist entity (resource) not found error.
 
     Typically raised when a required file is missing.  
-    The offending filename should be used for rhe exception value.
+    The offending filename should be used for the exception value.
     """
 
     def __init__(self, value=None, msg="Entity not found"):
