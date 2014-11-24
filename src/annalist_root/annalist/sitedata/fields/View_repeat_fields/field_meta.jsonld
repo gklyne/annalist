@@ -1,0 +1,19 @@
+{ "@id":                        "annal:fields/View_repeat_fields"
+, "@type":                      ["annal:Field"]
+, "annal:id":                   "View_repeat_fields"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Fields"
+, "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a record view description"
+, "annal:field_render_type":    "RepeatGroup"
+, "annal:field_value_type":     "annal:Field_group"
+, "annal:placeholder":          "(repeat field description)"
+, "annal:property_uri":         "annal:view_fields"
+  // Type of entity that may contain field (omit for any type)
+, "annal:field_entity_type":    "annal:View"
+  // Reference to description of repeated field
+, "annal:group_viewref":        "View_field_view"
+, "annal:repeat_label_add":     "Add field"
+, "annal:repeat_label_delete":  "Remove selected field(s)"
+  // Field of parent (or view?) controls inclusion of add-field buttons on form
+, "annal:add_field_sentinel":   "annal:add_field"
+}

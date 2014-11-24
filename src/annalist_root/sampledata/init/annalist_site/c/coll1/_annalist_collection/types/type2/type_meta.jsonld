@@ -2,7 +2,7 @@
   "rdfs:label": "RecordType coll1/type2",
   "rdfs:comment": "RecordType help for type2 in collection coll1",
   "annal:type_id": "_type",
-  "annal:uri": "/testsite/c/coll1/d/_type/type2/",
+  "annal:type_view": "Default_view",
   "annal:url": "/testsite/c/coll1/d/_type/type2/",
   "annal:type_list": "Default_list",
   "annal:id": "type2",
@@ -10,6 +10,5 @@
   "@type": [
     "annal:Type"
   ],
-  "annal:type": "annal:Type",
-  "annal:type_view": "Default_view"
+  "annal:type": "annal:Type"
 }

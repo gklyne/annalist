@@ -32,11 +32,34 @@ The process of presenting amnd processing a form for editing an entity goes as f
 Fields in a view description are processed as described below.
 Keys `entity_id` and `entity_type` are special cases, as they are used to form the name of a saved entity and, as such, are recognized specially by the form rendering and response handling code.  Other keys are treated without interpretation. (?)
 
-The examples that follow are for (simplified) display and editing of a record view description.  As such, they are somewhat confusingly self-referential as the data partially describes its own rendering.
+# Revised form rendering and decoding
 
+## View mapping table structure
 
+```
+EntityValueMap                          GenericEntityEditView.get_view_entityvaluemap
+  FieldListValueMap                     
+      FieldDescription*                 FieldListValueMap.__init__
+      FieldValueMap*
+      FieldValueMap* or
+      (RepeatValuesMap + FieldListValueMap)*
+  SimpleValueMap                        GenericEntityEditView.baseentityvaluemap
+  StableValuerMap
+
+FieldDescription references renderer
+
+FieldValueMap.map_entity_to_context returns bound_field object
+
+FieldValueMap.map_form_to_entity uses FieldDescription['field_value_mapper'].decode(formval)
+
+GenericEntityEditView.get_view_entityvaluemap is called from form_render and form_response)
+```
 
 # Field description example
+
+The examples that follow are for (simplified) display and editing of a record view description.  As such, they are somewhat confusingly self-referential as the data partially describes its own rendering.
+
+Details of context structure are no longer current - repeated fields are handled by a new "RepeatGroup" render type coupled with a view that describes the repeated fields (cf. fields `View_repeat_fields` and `List_repreat_fields`, which are used with views `View_field_view` and `View_field_view`).  New repeating field structures may now be defined for user-defined data (cf. work-in-progress on `BibEntry_view`).
 
 ## Entity
 

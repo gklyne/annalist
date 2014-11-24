@@ -114,6 +114,9 @@ class EntityFinder(object):
         return
 
     def get_entities(self, user_permissions=None, type_id=None, context={}, search=None):
+        if context is None:
+            # Use empty dictionary here to prevent errors when entity is missing
+            context = {}
         entities = self._selector.filter(
             self.get_base_entities(type_id, user_permissions), context=context
             )

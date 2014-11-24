@@ -6,23 +6,31 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 # V0.1.7, towards V0.1.8
 
 - [x] Add button to annalist.net page: https://github.com/BetaNYC/getDataButton
-- [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
-    - [ ] Revise representation of repeat field structures in view description: repeat description to be part of root of repeat structure, not an ad ho0c field at the end.  This should remove some special cases from the code.
-    - [ ] Think about fields that return subgraph
-        - how to splice subgraph into parent - "lambda nodes"?
-        - does field APi support this? Check.
-    - [ ] Refactor handling of repeat field groups
-    - [ ] Define type for field group (_group?  Or use _view?)  
-    - [ ] Define view for field group (list of fields)
-    - [ ] Define list for field group
-    - [ ] Redefine view with list of fields?  Not if that impacts usability.
-    - [ ] Define e-v-map for defined list of fields
-    - [ ] Repeat to reference list of fields 
-    - [ ] Eliminate duplication with list view
-    - [ ] Add option to add repeated field group
+- [x] Extend form-generator capabilities [issue #2](https://github.com/gklyne/annalist/issues/2)
+    - [x] Revise representation of repeat field structures in view description: repeat description to be part of root of repeat structure, not an ad ho0c field at the end.  This should remove some special cases from the code.
+    - [x] Refactor handling of repeat field groups
+    - [x] Define type for field group (_group?  Or use _view?)
+    - [x] Use _list rather than _view? (no: list has much more bound-in semantics)
+    - [x] Rename 'View_field' to (say) 'View_field_view' (cf. previous use _list)
+    - [x] Define view for field group (list of fields)
+    - [?] Define list for field group
+    - [x] Redefine view with list of fields?  Not if that impacts usability.
+    - [x] Define e-v-map for defined list of fields
+    - [x] Repeat to reference list of fields 
+- [ ] Eliminate duplication with list view - rework list to use same repeating mechanism as view
+    - First step is to make something that works without `subgroupvaluemap`, and identify the problem areas
+    - then...
+- [ ] Use distinguished names for internally-generated context keys (e.g. '_fields')
+- [ ] Simplify template now that repat fields are handled by a field renderer
+- [ ] Try to make mapping classes more consistent in their return types for sub-context values
+- [ ] Try eliminating `view_context` parameter from `FieldListValueMap` constructor - it appears to be unused
 - [ ] Add field for `annal:field_entity_type` property in field view
+- [ ] Add/test option to add repeated field group
 - [ ] Revisit definitions for BibJSON view
 - [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  (defer?)
+- [ ] Think about fields that return subgraph (defer?)
+    - how to splice subgraph into parent - "lambda nodes"?
+    - does field API support this? Check.
 
 (sub-release?)
 
@@ -192,7 +200,7 @@ the repeated field descriptions is pushed down into a field description.
 , "annal:record_type":  "annal:View"
 , "rdfs:label":         "View description for record view description"
 , "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record view description"
-, "annal:add_field":    "yes"
+, "annal:add_field":    "no"
 , "annal:view_fields":
   [ { "annal:field_id":               "View_id"
     , "annal:field_placement":        "small:0,12;medium:0,6"
@@ -247,6 +255,7 @@ Single view-field description (stored as view):
 , "annal:record_type":  "annal:Field_desc"
 , "rdfs:label":                 "View field description"
 , "rdfs:comment":               "This resource describes a single field description used when displaying and/or editing a record view description"
+, "annal:add_field":    "no"
 , "annal:view_fields":
   [ { "annal:field_id":             "Field_sel"
     , "annal:field_uri":            "annal:field_id"

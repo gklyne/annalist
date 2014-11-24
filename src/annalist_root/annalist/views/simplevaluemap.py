@@ -65,6 +65,9 @@ class SimpleValueMap(_SimpleValueMap_tuple):
             , 'form_field':     self.f
             })
 
+    def get_field_description(self):
+        return None
+
 class StableValueMap(SimpleValueMap):
     """
     Like SimpleValueMap, except that no value is returned from the 

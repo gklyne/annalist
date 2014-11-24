@@ -65,7 +65,7 @@ LOGGING = {
         #  },
         'annalist': {
             'handlers': ['console', 'logfile'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': False
         },
         'django': {

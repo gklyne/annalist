@@ -242,7 +242,7 @@ def recordfield_entity_view_context_data(
             , 'field_render_edit':  'field/annalist_edit_identifier.html'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Identifier'
-            , 'field_placeholder':  "(property URI or CURIE)"
+            , 'field_placeholder':  "(field property URI or CURIE)"
             , 'field_value':        ''
             , 'options':            []
             }
