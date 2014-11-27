@@ -14,79 +14,94 @@ log = logging.getLogger(__name__)
 from django.http        import HttpResponse
 from django.template    import Template, Context
 
-edit = ("""
-    <!-- views.fields.render_repeatgroup.edit_template -->
-    <div class="small-12 columns">
-      <p class="caption">{{field.group_label}}</p>
-    </div>
+from annalist.views.fields.bound_field  import bound_field
 
-    {% for f in field.group_fields %}
-      <div class="small-12 columns">
-        <div class="row selectable">
-          <div class="small-2 columns">
-            {% if auth_config %}
-            <input type="checkbox" name="{{field.group_id}}__select_fields"
-                   value="{{f.repeat_index}}" class="right" />
-            {% endif %}
-          </div>
-          <div class="small-10 columns">
-            {% for field in f.fields %}
-            {% include field.field_render_edit %}
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-    {% endfor %}
-
-    <div class="small-12 columns">
-      <div class="row">
-        <div class="small-2 columns">
-          &nbsp;
-        </div>
-        <div class="small-10 columns">
-          <input type="submit" name="{{field.group_id}}__remove" 
-                 value="{{field.repeat_label_delete}}" />
-          <input type="submit" name="{{field.group_id}}__add"    
-                 value="{{field.repeat_label_add}}" />
-        </div>
-      </div>
-    </div>
-    """)
-
-view = ("""
-    <!-- views.fields.render_repeatgroup.view_template -->
-    <div class="{{field.field_placement.field}}">
-        <div class="row">
-            <div class="view_label {{field.field_placement.label}}">
-                <p>{{field.field_label}}</p>
+edit = (
+    { 'repeatgroup_caption':
+        """
+        <!-- views.fields.render_repeatgroup.edit_template -->
+        <div class="small-12 columns">
+          <p class="caption">{{field.field_label}}</p>
+        </div>"""
+    , 'repeatgroup_body':
+        # Context values:
+        #   repeat_index - index of value presented
+        #   repeat_bound_fields is list of bound fields to process for this value
+        """
+        <div class="small-12 columns">
+          <div class="row selectable">
+            <div class="small-2 columns">
+              {% if auth_config %}
+              <input type="checkbox" name="{{field.group_id}}__select_fields"
+                     value="{{repeat_index}}" class="right" />
+              {% endif %}
             </div>
-            <div class="{{field.field_placement.value}}">
-                <p>{{field.field_value_encoded}}</p>
+            <div class="small-10 columns">
+              {% for f in repeat_bound_fields %}
+              {% include f.field_render_edit with field=f %}
+              {% endfor %}
             </div>
-        </div>
-    </div>
-    """)
+          </div>
+        </div>"""
+    , 'repeatgroup_buttons':
+        """
+        <div class="small-12 columns">
+          <div class="row">
+            <div class="small-2 columns">
+              &nbsp;
+            </div>
+            <div class="small-10 columns">
+              <input type="submit" name="{{field.group_id}}__remove" 
+                     value="{{field.group_delete_label}}" />
+              <input type="submit" name="{{field.group_id}}__add"    
+                     value="{{field.group_add_label}}" />
+            </div>
+          </div>
+        </div> """
+    })
 
-item = ("""
-    <!-- views.fields.render_repeatgroup.view_template -->
-    <td class="{{field.field_placement.field}}">
-    {{ field.field_value_encoded|default:"&nbsp;" }}
-    </td>
-    """)
+view = (
+    { 'repeatgroup_caption':
+        """
+        <!-- views.fields.render_repeatgroup.view_template -->
+        <div class="small-12 columns">
+          <p class="caption">{{field.field_label}}</p>
+        </div>"""
+    , 'repeatgroup_body':
+        # Context values:
+        #   repeat_id - id of repeated group
+        #   repeat_index - index of value presented
+        #   repeat_prefix - index of value presented
+        #   repeat_bound_fields is list of bound fields to process for this value
+        """
+        <div class="small-12 columns">
+          <div class="row selectable">
+            <div class="small-12 columns">
+              {% for f in repeat_bound_fields %}
+              {% include f.field_render_view with field=f %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>"""
+    , 'repeatgroup_buttons':
+        """"""
+    })
 
 class RenderRepeatGroup(object):
   """
   Render class for repeated field group
   """
 
-  def __init__(self, template=None):
+  def __init__(self, templates=None):
     # Later, may introduce a template_file= option to read from templates directory
     """
     Creates a renderer object for a simple text field
     """
     super(RenderRepeatGroup, self).__init__()
-    assert template is not None, "RenderRepeatGroup template must be supplied (.edit, .view or .item)"
-    self._template = Template(template)
+    assert templates is not None, "RenderRepeatGroup template must be supplied (.edit, .view or .item)"
+    self._template_caption = Template(templates['repeatgroup_caption'])
+    self._template_body    = Template(templates['repeatgroup_body'])
+    self._template_buttons = Template(templates['repeatgroup_buttons'])
     return
 
   def __str__(self):
@@ -103,33 +118,29 @@ class RenderRepeatGroup(object):
 
     `context['field']` is a `bound_field` value that combines the field 
     definition, entity values and additional context information.  
-    The entity values are either the entire entity that is currently 
-    being rendered, or one of a set of repeated field groups, augmented
-    with indexing information that can be used to generate unique 
-    field names in the generated form.
+    The entity value is either the entire entity that is currently 
+    being rendered, or a list of repeated values that are each formatted
+    using the supplied body template.
     """
-
-    # @@ 
-    # Need to clarify what the incoming context looks like.
-    # If the repeated entity structures have not been unrolled, then we need some 
-    # distinguished value in the context to guide the process.  For normal fields, the
-    # value '.field' is a bound_field value combining an entity values record with the 
-    # field description.  For top level repeat structures, this can still work.  If 
-    # there are nested structures then recursive calls must provide scoped/component
-    # context values
-
-    # 1. Group caption
-
-    # 2. Iterate over groups from entity body
-    #
-    #    For each group, generate unique field names using group id and repeat index,
-    #    and render fields:
-    #    (a) render Group select checkbox (and up/down buttons in due course?)
-    #    (b) for each field, render that field
-
-    # 3. Create affordances for adding and removing groups using labels provided
-
-    return responsebody
+    response_parts  = [self._template_caption.render(context)]
+    repeat_index = 0
+    for g in context['field']['field_value']:
+        r = [ bound_field(f, g) for f in context['field']['group_fields'] ]
+        repeat_id = context.get('repeat_prefix', "") + context['field']['group_id']
+        repeat_dict = (
+            {
+            'repeat_id':            repeat_id,
+            'repeat_index':         str(repeat_index),
+            'repeat_prefix':        repeat_id+("__%d__"%repeat_index),
+            'repeat_bound_fields':  r
+            })
+        # @@TODO: rationalize this to eliminate 'repeat' item
+        #         (currently included for compatibility with old field renderers)
+        with context.push(repeat_dict, repeat=repeat_dict):
+            response_parts.append(self._template_body.render(context))
+        repeat_index += 1
+    response_parts.append(self._template_buttons.render(context))
+    return "".join(response_parts)
 
   # def encode(self, field_value):
   #   """

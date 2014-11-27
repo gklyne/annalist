@@ -1,7 +1,6 @@
 {
   "rdfs:label": "Entity testcoll/testtype/entity1",
   "rdfs:comment": "Entity coll testcoll, type testtype, entity entity1",
-  "annal:uri": "/testsite/c/testcoll/d/testtype/entity1/",
   "annal:url": "/testsite/c/testcoll/d/testtype/entity1/",
   "annal:type_id": "testtype",
   "annal:id": "entity1",

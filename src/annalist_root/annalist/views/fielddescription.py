@@ -72,7 +72,7 @@ class FieldDescription(object):
         # log.info("FieldDescription: field['annal:field_placement'] %s"%(field['annal:field_placement']))
         # log.info("FieldDescription: field_placement %r"%(get_placement_classes(field['annal:field_placement']),))
         field_render_type = recordfield.get(ANNAL.CURIE.field_render_type, "")
-        self._field_context = (
+        self._field_desc = (
             { 'field_id':                   field_id
             , 'field_name':                 field_name
             , 'field_label':                field_label
@@ -92,37 +92,36 @@ class FieldDescription(object):
             , 'field_choice_labels':        None
             , 'field_choice_links':         None
             , 'field_group_viewref':        recordfield.get(ANNAL.CURIE.group_viewref, None)
-            , 'field_group_details':        None
             , 'group_label':                None
             , 'group_add_label':            None
             , 'group_delete_label':         None
             , 'group_fields':               None
             })
         # If field references type, pull in copy of type id and link values
-        type_ref = self._field_context['field_options_typeref']
+        type_ref = self._field_desc['field_options_typeref']
         if type_ref:
-            restrict_values = self._field_context['field_restrict_values']
+            restrict_values = self._field_desc['field_restrict_values']
             entity_finder   = EntityFinder(collection, selector=restrict_values)
             entities        = entity_finder.get_entities_sorted(type_id=type_ref, context=view_context)
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
             # Uses collections.OrderedfDict to preserve entity ordering
             # 'Enum_optional' adds a blank entry at the start of the list
-            self._field_context['field_choice_labels'] = collections.OrderedDict()
-            self._field_context['field_choice_links']  = collections.OrderedDict()
+            self._field_desc['field_choice_labels'] = collections.OrderedDict()
+            self._field_desc['field_choice_links']  = collections.OrderedDict()
             if field_render_type == "Enum_optional":
-                self._field_context['field_choice_labels'][''] = ""
-                self._field_context['field_choice_links']['']  = None
+                self._field_desc['field_choice_labels'][''] = ""
+                self._field_desc['field_choice_links']['']  = None
             for e in entities:
                 eid = e.get_id()
                 if eid != "_initial_values":
-                    self._field_context['field_choice_labels'][eid] = eid   # @@TODO: be smarter about label?
-                    self._field_context['field_choice_links'][eid]  = e.get_view_url_path()
+                    self._field_desc['field_choice_labels'][eid] = eid   # @@TODO: be smarter about label?
+                    self._field_desc['field_choice_links'][eid]  = e.get_view_url_path()
             # log.info("typeref %s: %r"%
-            #     (self._field_context['field_options_typeref'], list(self._field_context['field_choices']))
+            #     (self._field_desc['field_options_typeref'], list(self._field_desc['field_choices']))
             #     )
         # If field references view, pull in details from view, including field details
-        group_ref = self._field_context['field_group_viewref']
+        group_ref = self._field_desc['field_group_viewref']
         if group_ref:
             group_view = RecordView.load(collection, group_ref, collection._parentsite)
             if not group_view:
@@ -132,10 +131,8 @@ class FieldDescription(object):
             repeat_index = 0
             for subfield in group_view[ANNAL.CURIE.view_fields]:
                 f = FieldDescription(collection, subfield, view_context)
-                f._field_context['repeat_index'] = repeat_index
                 group_fields.append(f)
-                repeat_index += 1
-            self._field_context.update(
+            self._field_desc.update(
                 { 'group_id':           field_id
                 , 'group_label':        group_label
                 , 'group_add_label':    recordfield.get(ANNAL.CURIE.repeat_label_add, "Add "+group_label)
@@ -144,27 +141,29 @@ class FieldDescription(object):
                 })
         # log.info("FieldDescription: %s"%field_id)
         # log.info("FieldDescription.field %r"%field)
-        # log.info("FieldDescription.field_context %r"%(self._field_context,))
-        # log.info("FieldDescription.field_placement %r"%(self._field_context['field_placement'],))
+        # log.info("FieldDescription.field_context %r"%(self._field_desc,))
+        # log.info("FieldDescription.field_placement %r"%(self._field_desc['field_placement'],))
         return
 
     def get_structure_description(self):
         """
         Helper function returns field description information
         (field selector and placement).
+
+        @@TODO: redundant?
         """
         return (
-            { 'field_id':           self._field_context['field_id']
-            , 'field_placement':    self._field_context['field_placement']
-            , 'field_property_uri': self._field_context['field_property_uri']
+            { 'field_id':           self._field_desc['field_id']
+            , 'field_placement':    self._field_desc['field_placement']
+            , 'field_property_uri': self._field_desc['field_property_uri']
             })
 
     def __repr__(self):
         return (
             "FieldDescription("+
-            "  { 'field_id': %r\n"%(self._field_context["field_id"])+
-            "  , 'field_name': %r\n"%(self._field_context["field_name"])+
-            "  , 'field_property_uri': %r\n"%(self._field_context["field_property_uri"])+
+            "  { 'field_id': %r\n"%(self._field_desc["field_id"])+
+            "  , 'field_name': %r\n"%(self._field_desc["field_name"])+
+            "  , 'field_property_uri': %r\n"%(self._field_desc["field_property_uri"])+
             "  })"
             )
 
@@ -175,38 +174,38 @@ class FieldDescription(object):
         """
         Return collection metadata value keys
         """
-        return self._field_context.keys()
+        return self._field_desc.keys()
 
     def items(self):
         """
         Return collection metadata value fields
         """
-        return self._field_context.items()
+        return self._field_desc.items()
 
     def get(self, key, default):
         """
         Equivalent to dict.get() function
         """
-        return self[key] if self._field_context and key in self._field_context else default
+        return self[key] if self._field_desc and key in self._field_desc else default
 
     def __getitem__(self, k):
         """
         Allow direct indexing to access collection metadata value fields
         """
-        return self._field_context[k]
+        return self._field_desc[k]
 
     def __setitem__(self, k, v):
         """
         Allow direct indexing to update collection metadata value fields
         """
-        self._field_context[k] = v
+        self._field_desc[k] = v
         return
 
     def __iter__(self):
         """
         Iterator over dictionary keys
         """
-        for k in self._field_context:
+        for k in self._field_desc:
             yield k
         return
 
