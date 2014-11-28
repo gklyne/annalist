@@ -298,8 +298,8 @@ class FieldDescriptionTest(AnnalistTestCase):
               ''' placeholder="(field display size and placement details)"'''+
               ''' value="small:0,12"/>'''
             # Buttons
-            , '''<input type="submit" name="View_repeat_fields__remove" value="" />'''
-            , '''<input type="submit" name="View_repeat_fields__add" value="" />'''
+            , '''<input type="submit" name="View_repeat_fields__remove" value="Remove selected field(s)" />'''
+            , '''<input type="submit" name="View_repeat_fields__add" value="Add field" />'''
             ])
         for e in expect_elements:
             self.assertIn(e, rendered_text)

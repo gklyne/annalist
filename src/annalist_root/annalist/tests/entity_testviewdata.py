@@ -543,22 +543,6 @@ def recordview_view_form_data(
         , 'View_fields__2__Field_placement':    "small:0,12"
         , 'View_fields__3__Field_id':           "View_target_type"
         , 'View_fields__3__Field_placement':    "small:0,12"
-        , 'View_fields__4__repeat_fields_data': 
-            '{ "annal:repeat_id": "View_fields"' +
-            ', "annal:repeat_label": "Fields"' +
-            ', "annal:repeat_label_add": "Add field"' +
-            ', "annal:repeat_label_delete": "Remove selected field(s)"' +
-            ', "annal:repeat_entity_values": "annal:view_fields"' +
-            ', "annal:repeat_context_values": "repeat"' +
-            ', "annal:repeat": ' +
-                '[ { "annal:field_placement": "small:0,12; medium:0,6"' +
-                  ', "annal:field_id": "Field_sel"' +
-                  '}' +
-                ', { "annal:field_placement": "small:0,12; medium:6,6"' +
-                  ', "annal:field_id": "Field_placement"' +
-                  '}' +
-                ']' +
-            '}'
         })
     if view_id:
         form_data_dict['entity_id']     = view_id
@@ -575,18 +559,16 @@ def recordview_view_form_data(
         form_data_dict['record_type']   = view_record_type
     if extra_field:
         # Insert extra field with supplied Id
-        form_data_dict['View_fields__5__repeat_fields_data'] = form_data_dict['View_fields__4__repeat_fields_data']
-        del form_data_dict['View_fields__4__repeat_fields_data']
-        form_data_dict['View_fields__4__Field_id']        = extra_field
-        form_data_dict['View_fields__4__Field_placement'] = "small:0,12"
+        form_data_dict['View_repeat_fields__4__Field_id']        = extra_field
+        form_data_dict['View_repeat_fields__4__Field_placement'] = "small:0,12"
     if cancel:
         form_data_dict['cancel']        = "Cancel"
     elif add_field:
-        form_data_dict['View_fields__add']           = "Add field"
+        form_data_dict['View_repeat_fields__add'] = "Add field"
     elif remove_fields:
-        form_data_dict['View_fields__remove']        = "Remove field"
+        form_data_dict['View_repeat_fields__remove'] = "Remove field"
         if remove_fields != "no-selection":
-            form_data_dict['View_fields__select_fields'] = remove_fields
+            form_data_dict['View_repeat_fields__select_fields'] = remove_fields
     else:
         form_data_dict['save']          = 'Save'
     return form_data_dict

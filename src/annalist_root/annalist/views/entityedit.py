@@ -391,6 +391,7 @@ class GenericEntityEditView(AnnalistGenericView):
             return http_response or HttpResponseRedirect(continuation_url)
 
         # Add field from entity view (as opposed to view description view)
+        # See below call of 'find_add_field' for adding field in view description
         if 'add_view_field' in form_data:
             view_edit_uri_base = self.view_uri("AnnalistEntityEditView",
                 coll_id=viewinfo.coll_id,
@@ -496,6 +497,8 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         log.warning("Unexpected form data %s"%(err_values))
         log.warning("Continue to %s"%(continuation_url))
+        for k, v in form_data.items():
+            log.info("  form[%s] = %r"%(k,v))
         redirect_uri = uri_with_params(continuation_url, err_values)
         return HttpResponseRedirect(redirect_uri)
 
