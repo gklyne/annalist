@@ -47,42 +47,46 @@ class FieldListValueMap(object):
         added to the form display.  The constructor for this object appends the current
         field to a list of field value mappings in context field 'fields'.
         """
-        self.fd = []
-        self.fs = []
+        self.fd = []        # List of field descriptions
+        self.fm = []        # List of field value maps
         for f in fields:
             # log.info("\n********\nFieldListValueMap: field %r\n*********"%(f))
-            if ANNAL.CURIE.field_id in f:
-                field_context = FieldDescription(coll, f, view_context)
-                log.debug("FieldListValueMap: field_id %s, field_name %s"%
-                    (field_context['field_id'], field_context['field_name'])
-                    )
-                self.fd.append(field_context.get_structure_description())
-                self.fs.append(FieldValueMap(f=field_context))
-            elif ANNAL.CURIE.repeat_id in f:
-                repeat_context  = RepeatDescription(f)  # For repeat controls, button labels, etc.
-                repeatfieldsmap = FieldListValueMap(coll, f[ANNAL.CURIE.repeat], view_context)
-                repeatvaluesmap = RepeatValuesMap(repeat=repeat_context, fields=repeatfieldsmap)
-                self.fd.append(repeatvaluesmap.get_structure_description())
-                self.fs.append(repeatvaluesmap)
+            # @@TODO: check for common logic here and FieldDescription field_group_viewref processing
+            field_desc = FieldDescription(coll, f, view_context)
+            log.debug("FieldListValueMap: field_id %s, field_name %s"%
+                (field_desc['field_id'], field_desc['field_name'])
+                )
+            self.fd.append(field_desc)
+            if field_desc.is_repeat_group():
+                repeatfieldsmap = FieldListValueMap(coll, field_desc.group_view_fields(), view_context)
+                repeatvaluesmap = RepeatValuesMap(repeat=field_desc, fields=repeatfieldsmap)
+                self.fm.append(repeatvaluesmap)
             else:
-                assert False, "Unknown/unsupported field values:"+repr(f)
+                self.fd.append(field_desc)
+                self.fm.append(FieldValueMap(f=field_desc))
+            # elif ANNAL.CURIE.repeat_id in f:
+            #     repeatfieldsmap = FieldListValueMap(coll, f[ANNAL.CURIE.repeat], view_context)
+            #     repeatvaluesmap = RepeatValuesMap(repeat=repeat_context, fields=repeatfieldsmap)
+            #     self.fm.append(repeatvaluesmap)
+            # else:
+            #     assert False, "Unknown/unsupported field values:"+repr(f)
         return
 
     def __repr__(self):
         return (
-            "FieldListValueMap.fs: %r\n"%(self.fs)
+            "FieldListValueMap.fm: %r\n"%(self.fm)
             )
 
     def map_entity_to_context(self, entityvals, extras=None):
         listcontext = []
-        for f in self.fs:
+        for f in self.fm:
             fv = f.map_entity_to_context(entityvals, extras=extras)
             listcontext.append(fv)
         return { 'fields': listcontext }
 
     def map_form_to_entity(self, formvals):
         vals = {}
-        for f in self.fs:
+        for f in self.fm:
             vals.update(f.map_form_to_entity(formvals))
         return vals
 
@@ -100,7 +104,7 @@ class FieldListValueMap(object):
         """
         vals = {}
         prefix_seen = False
-        for f in self.fs:
+        for f in self.fm:
             v = f.map_form_to_entity_repeated_item(formvals, prefix)
             if v is not None:
                 vals.update(v)
@@ -115,5 +119,8 @@ class FieldListValueMap(object):
             { 'field_type':     'FieldListValueMap'
             , 'field_list':     self.fd 
             })
+
+    def get_field_description(self):
+        return None
 
 # End.

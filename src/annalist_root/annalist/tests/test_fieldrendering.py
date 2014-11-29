@@ -86,57 +86,53 @@ class FieldDescriptionTest(AnnalistTestCase):
         # with a list of entity values to be formatted.
         repeatgroup_context = Context(
             { 'field':
-              # ----- Repeated field values, as presented by bound_field
-              { 'field_value':
-                [ { "annal:field_id":         "Entity_id"
-                  , "annal:field_placement":  "small:0,12;medium:0,6"
-                  , "repeat_index":           "@@repeat_index_0@@"
-                  }
-                , { "annal:field_id":         "Entity_type"
-                  , "annal:field_placement":  "small:0,12;medium:6,6right"
-                  , "repeat_index":           "@@repeat_index_1@@"
-                  }
-                , { "annal:field_id":         "Entity_label"
-                  , "annal:field_placement":  "small:0,12"
-                  , "annal:property_uri":     "rdfs:label;"
-                  , "repeat_index":           "@@repeat_index_2@@"
-                  }
-                , { "annal:field_id":         "Entity_comment"
-                  , "annal:field_placement":  "small:0,12"
-                  , "annal:property_uri":     "rdfs:comment"
-                  , "repeat_index":           "@@repeat_index_3@@"
-                  }
-                ]
-              # ----- Field description -----
-              , 'field_id':                   'View_repeat_fields'
-              , 'field_name':                 'View_repeat_fields'
-              , 'field_label':                'Fields'
-              , 'field_help':                 'This resource descibes the repeated field description used when displaying and/or editing a record view description'
-              , 'field_placeholder':          '(repeat field description)'
-              , 'field_placement':            get_placement_classes("small:0,12")
-              , 'field_property_uri':         'annal:view_fields'
-              , 'field_value_type':           'annal:Field_group'
-              # , 'field_default_value':        None
-              , 'field_group_viewref':        'View_field'
-              , 'field_render_head':          'field/annalist_head_any.html'
-              , 'field_render_item':          'field/annalist_item_none.html' 
-              , 'field_render_view':          RenderRepeatGroup(render_repeatgroup.view) 
-              , 'field_render_edit':          RenderRepeatGroup(render_repeatgroup.edit) 
-              # , 'field_value_mapper':         RenderText()
-              # , 'field_choice_labels':        None
-              # , 'field_choice_links':         None
-              # , 'field_options_typeref':      None
-              # , 'field_restrict_values':      'ALL'
-              , 'group_id':                   'View_repeat_fields'
-              , 'group_label':                'Fields'
-              , 'group_add_label':            'Add field'
-              , 'group_delete_label':         'Remove selected field(s)'
-              , 'group_fields':
-                  [ FieldDescription(self.testcoll, { ANNAL.CURIE.field_id: "Field_sel" },        {})
-                  , FieldDescription(self.testcoll, { ANNAL.CURIE.field_id: "Field_property" },   {})
-                  , FieldDescription(self.testcoll, { ANNAL.CURIE.field_id: "Field_placement" },  {})
+                # ----- Repeated field values, as presented by bound_field
+                { 'field_value':
+                  [ { "annal:field_id":         "Entity_id"
+                    , "annal:field_placement":  "small:0,12;medium:0,6"
+                    }
+                  , { "annal:field_id":         "Entity_type"
+                    , "annal:field_placement":  "small:0,12;medium:6,6right"
+                    }
+                  , { "annal:field_id":         "Entity_label"
+                    , "annal:field_placement":  "small:0,12"
+                    , "annal:property_uri":     "rdfs:label"
+                    }
+                  , { "annal:field_id":         "Entity_comment"
+                    , "annal:field_placement":  "small:0,12"
+                    , "annal:property_uri":     "rdfs:comment"
+                    }
                   ]
-              }
+                # ----- Field description -----
+                , 'field_id':                   'View_repeat_fields'
+                , 'field_name':                 'View_repeat_fields'
+                , 'field_label':                'Fields'
+                , 'field_help':                 'This resource descibes the repeated field description used when displaying and/or editing a record view description'
+                , 'field_placeholder':          '(repeat field description)'
+                , 'field_placement':            get_placement_classes("small:0,12")
+                , 'field_property_uri':         'annal:view_fields'
+                , 'field_value_type':           'annal:Field_group'
+                # , 'field_default_value':        None
+                , 'field_group_viewref':        'View_field'
+                , 'field_render_head':          'field/annalist_head_any.html'
+                , 'field_render_item':          'field/annalist_item_none.html' 
+                , 'field_render_view':          RenderRepeatGroup(render_repeatgroup.view) 
+                , 'field_render_edit':          RenderRepeatGroup(render_repeatgroup.edit) 
+                # , 'field_value_mapper':         RenderText()
+                # , 'field_choice_labels':        None
+                # , 'field_choice_links':         None
+                # , 'field_options_typeref':      None
+                # , 'field_restrict_values':      'ALL'
+                , 'group_id':                   'View_repeat_fields'
+                , 'group_label':                'Fields'
+                , 'group_add_label':            'Add field'
+                , 'group_delete_label':         'Remove selected field(s)'
+                , 'group_fields':
+                    [ FieldDescription(self.testcoll, { ANNAL.CURIE.field_id: "Field_sel" },        {})
+                    , FieldDescription(self.testcoll, { ANNAL.CURIE.field_id: "Field_property" },   {})
+                    , FieldDescription(self.testcoll, { ANNAL.CURIE.field_id: "Field_placement" },  {})
+                    ]
+                }
             # ----- other values -----
             , 'auth_config':                  True
             })

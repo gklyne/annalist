@@ -79,6 +79,7 @@ class FieldDescription(object):
             , 'field_help':                 recordfield.get(RDFS.CURIE.comment, "")
             , 'field_property_uri':         field_property
             , 'field_placement':            field_placement
+            , 'field_render_type':          field_render_type
             , 'field_render_head':          get_head_renderer(field_render_type)
             , 'field_render_item':          get_item_renderer(field_render_type)
             , 'field_render_view':          get_view_renderer(field_render_type)
@@ -95,7 +96,8 @@ class FieldDescription(object):
             , 'group_label':                None
             , 'group_add_label':            None
             , 'group_delete_label':         None
-            , 'group_fields':               None
+            , 'group_view':                 None
+            , 'group_field_descs':          None
             })
         # If field references type, pull in copy of type id and link values
         type_ref = self._field_desc['field_options_typeref']
@@ -127,17 +129,17 @@ class FieldDescription(object):
             if not group_view:
                 raise EntityNotFound_Error("View %s used in field %s"%(group_ref, field_id))
             group_label = field_label or group_view.get(RDFS.CURIE.label, group_ref)
-            group_fields = []
-            repeat_index = 0
+            group_field_descs = []
             for subfield in group_view[ANNAL.CURIE.view_fields]:
                 f = FieldDescription(collection, subfield, view_context)
-                group_fields.append(f)
+                group_field_descs.append(f)
             self._field_desc.update(
                 { 'group_id':           field_id
                 , 'group_label':        group_label
                 , 'group_add_label':    recordfield.get(ANNAL.CURIE.repeat_label_add, "Add "+group_label)
                 , 'group_delete_label': recordfield.get(ANNAL.CURIE.repeat_label_delete, "Remove "+group_label)
-                , 'group_fields':       group_fields
+                , 'group_view':         group_view
+                , 'group_field_descs':  group_field_descs
                 })
         # log.info("FieldDescription: %s"%field_id)
         # log.info("FieldDescription.field %r"%field)
@@ -145,18 +147,40 @@ class FieldDescription(object):
         # log.info("FieldDescription.field_placement %r"%(self._field_desc['field_placement'],))
         return
 
-    def get_structure_description(self):
+    def group_ref(self):
         """
-        Helper function returns field description information
-        (field selector and placement).
+        If the field itself contains or uses a group of fields, returns an
+        reference (currently, a view_id) for the field group.
+        """
+        return self._field_desc['field_group_viewref']
 
-        @@TODO: redundant?
+    def group_view_fields(self):
         """
-        return (
-            { 'field_id':           self._field_desc['field_id']
-            , 'field_placement':    self._field_desc['field_placement']
-            , 'field_property_uri': self._field_desc['field_property_uri']
-            })
+        If the field itself contains or uses a group of fields, returns a
+        list of field descriptions.
+        """
+        return self._field_desc['group_view'][ANNAL.CURIE.view_fields]
+
+    def group_field_descs(self):
+        """
+        If the field itself contains or uses a group of fields, returns a
+        list of field descriptions.
+        """
+        return self._field_desc['group_field_descs']
+
+    def is_repeat_group(self):
+        """
+        Returns true if this is a repeating field, in which case the field value
+        is assumed to be a list of values to be rendered.
+        """
+        return self._field_desc['field_render_type'] == "RepeatGroup"
+
+    #@@
+    # def get_structure_description(self):
+    #     """
+    #     Helper function returns field description information
+    #     """
+    #     return self._field_desc
 
     def __repr__(self):
         return (

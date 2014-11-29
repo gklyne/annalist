@@ -219,7 +219,7 @@ class bound_field(object):
             )
 
     def __repr__(self):
-        return self.shortrepr()
+        return self.fullrepr()
 
     def shortrepr(self):
         return (
@@ -231,9 +231,9 @@ class bound_field(object):
 
     def fullrepr(self):
         return (
-            "bound_field({'field':%r, 'vals':%r, 'key':%r, 'field_value':%r, 'extras':%r})"%
+            "bound_field({'field':%r, 'vals':%r, 'field_value':%r, 'extras':%r})"%
             (self._field_description, dict(self._entityvals.items()), 
-                self._key, self.field_value, self._extras) 
+                self.field_value, self._extras) 
             )
 
     def htmlrepr(self):

@@ -164,6 +164,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_choice_links':         expect_choice_links
             , 'field_restrict_values':      '[annal:field_entity_type] in entity[annal:record_type]'
             , 'field_group_viewref':        None
+            , 'field_render_type':          '...'
             , 'field_render_head':          'field/annalist_head_any.html'
             , 'field_render_item':          'field/annalist_item_select.html'
             , 'field_render_view':          'field/annalist_view_select.html'
@@ -200,6 +201,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_group_viewref':        'View_field'
             })
         self.assertDictionaryMatch(fd, expect_field_desc)
+        self.assertEqual(fd['field_render_type'], "RepeatGroup")
         self.assertEqual(fd['field_render_head'], "field/annalist_head_any.html")
         self.assertEqual(fd['field_render_item'], "field/annalist_item_none.html")
         self.assertIsInstance(fd['field_render_view'], RenderRepeatGroup)

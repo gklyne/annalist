@@ -49,8 +49,8 @@ class FieldValueMap(object):
 
     def map_entity_to_context(self, entityvals, extras=None):
         """
-        Returns a dictionary-like of values to be added to the display context 
-        under construction
+        Returns a bound_field, which is a dictionary-like of values to be added 
+        to the display context under construction
         """
         # log.info("map entity %s to context %s, vals %r"%(self.e, self.i, entityvals))
         # log.info("map_entity_to_context: bound_field: extras %r"%(extras,))
@@ -99,5 +99,8 @@ class FieldValueMap(object):
             , 'entity_field':   self.e
             , 'form_field':     self.i
             })
+
+    def get_field_description(self):
+        return self.f
 
 # End.
