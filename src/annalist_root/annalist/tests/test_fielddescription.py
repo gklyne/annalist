@@ -198,7 +198,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_choice_labels':        None
             , 'field_choice_links':         None
             , 'field_restrict_values':      'ALL'
-            , 'field_group_viewref':        'View_field'
+            , 'field_group_viewref':        'View_field_view'
             })
         self.assertDictionaryMatch(fd, expect_field_desc)
         self.assertEqual(fd['field_render_type'], "RepeatGroup")

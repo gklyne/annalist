@@ -678,7 +678,7 @@ def get_site_views_sorted():
         , "List_view"
         , "Type_view"
         , "User_view"
-        , "View_field"
+        , "View_field_view"
         , "View_view"
         ])
 

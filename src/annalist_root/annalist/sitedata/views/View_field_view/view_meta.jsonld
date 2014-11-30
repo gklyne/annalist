@@ -1,8 +1,8 @@
-{ "@id":                "annal:display/View_field"
+{ "@id":                "annal:display/View_field_view"
 , "@type":              ["annal:View"]
-, "annal:id":           "View_field"
+, "annal:id":           "View_field_view"
 , "annal:type_id":      "_view"
-, "annal:uri":          "annal:display/View_field"
+, "annal:uri":          "annal:display/View_field_view"
 , "annal:record_type":  "annal:Field_desc"
 , "rdfs:label":         "View field description"
 , "rdfs:comment":       "This resource describes a sub-view single field description used when displaying and/or editing a record view description"

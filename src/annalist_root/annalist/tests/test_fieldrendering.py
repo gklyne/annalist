@@ -113,7 +113,7 @@ class FieldDescriptionTest(AnnalistTestCase):
                 , 'field_property_uri':         'annal:view_fields'
                 , 'field_value_type':           'annal:Field_group'
                 # , 'field_default_value':        None
-                , 'field_group_viewref':        'View_field'
+                , 'field_group_viewref':        'View_field_view'
                 , 'field_render_head':          'field/annalist_head_any.html'
                 , 'field_render_item':          'field/annalist_item_none.html' 
                 , 'field_render_view':          RenderRepeatGroup(render_repeatgroup.view) 
