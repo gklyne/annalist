@@ -669,15 +669,20 @@ def get_site_types_sorted():
 def get_site_types():
     return set(get_site_types_sorted())
 
-def get_site_views():
+def get_site_views_sorted():
     return (
-        { "Default_view", "Field_view"
-        , "Type_view"
-        , "View_view"
+        [ "BibEntry_view"
+        , "Default_view"
+        , "Field_view"
         , "List_view"
+        , "Type_view"
         , "User_view"
-        , "BibEntry_view"
-        })
+        , "View_field"
+        , "View_view"
+        ])
+
+def get_site_views():
+    return set(get_site_views_sorted())
 
 def get_site_lists():
     return (

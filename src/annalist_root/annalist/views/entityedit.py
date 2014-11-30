@@ -888,7 +888,7 @@ class GenericEntityEditView(AnnalistGenericView):
         return
 
     def remove_entity_field(self, remove_field_desc, entity):
-        repeatvals_key = remove_field_desc['repeat_entity_values']
+        repeatvals_key = remove_field_desc['field_property_uri']
         old_repeatvals = entity[repeatvals_key]
         new_repeatvals = []
         for i in range(len(old_repeatvals)):

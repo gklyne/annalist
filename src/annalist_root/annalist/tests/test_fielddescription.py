@@ -164,7 +164,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_choice_links':         expect_choice_links
             , 'field_restrict_values':      '[annal:field_entity_type] in entity[annal:record_type]'
             , 'field_group_viewref':        None
-            , 'field_render_type':          '...'
+            , 'field_render_type':          'Field'
             , 'field_render_head':          'field/annalist_head_any.html'
             , 'field_render_item':          'field/annalist_item_select.html'
             , 'field_render_view':          'field/annalist_view_select.html'
@@ -216,7 +216,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'group_delete_label': "Remove selected field(s)"
             })
         self.assertDictionaryMatch(fd, expect_group_details)
-        self.assertEqual(len(fd['group_fields']), 3)
+        self.assertEqual(len(fd['group_field_descs']), 3)
         # Field type selector
         expect_field0_placement = Placement(
             field='small-12 medium-4 columns', 
@@ -231,11 +231,11 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_property_uri':         ANNAL.CURIE.field_id
             , 'field_placement':            expect_field0_placement
             })
-        self.assertDictionaryMatch(fd['group_fields'][0], expect_field0_desc)
-        self.assertEqual(fd['group_fields'][0]['field_render_head'], "field/annalist_head_any.html")
-        self.assertEqual(fd['group_fields'][0]['field_render_item'], "field/annalist_item_select.html")
-        self.assertEqual(fd['group_fields'][0]['field_render_view'], "field/annalist_view_select.html")
-        self.assertEqual(fd['group_fields'][0]['field_render_edit'], "field/annalist_edit_select.html")
+        self.assertDictionaryMatch(fd['group_field_descs'][0], expect_field0_desc)
+        self.assertEqual(fd['group_field_descs'][0]['field_render_head'], "field/annalist_head_any.html")
+        self.assertEqual(fd['group_field_descs'][0]['field_render_item'], "field/annalist_item_select.html")
+        self.assertEqual(fd['group_field_descs'][0]['field_render_view'], "field/annalist_view_select.html")
+        self.assertEqual(fd['group_field_descs'][0]['field_render_edit'], "field/annalist_edit_select.html")
         # Field property URI
         expect_field1_placement = Placement(
             field='small-12 medium-4 columns', 
@@ -250,11 +250,11 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_property_uri':         ANNAL.CURIE.property_uri
             , 'field_placement':            expect_field1_placement
             })
-        self.assertDictionaryMatch(fd['group_fields'][1], expect_field1_desc)
-        self.assertEqual(fd['group_fields'][1]['field_render_head'], "field/annalist_head_any.html")
-        self.assertEqual(fd['group_fields'][1]['field_render_item'], "field/annalist_item_identifier.html")
-        self.assertEqual(fd['group_fields'][1]['field_render_view'], "field/annalist_view_identifier.html")
-        self.assertEqual(fd['group_fields'][1]['field_render_edit'], "field/annalist_edit_identifier.html")
+        self.assertDictionaryMatch(fd['group_field_descs'][1], expect_field1_desc)
+        self.assertEqual(fd['group_field_descs'][1]['field_render_head'], "field/annalist_head_any.html")
+        self.assertEqual(fd['group_field_descs'][1]['field_render_item'], "field/annalist_item_identifier.html")
+        self.assertEqual(fd['group_field_descs'][1]['field_render_view'], "field/annalist_view_identifier.html")
+        self.assertEqual(fd['group_field_descs'][1]['field_render_edit'], "field/annalist_edit_identifier.html")
         # Field placement (within group)
         expect_field2_placement = Placement(
             field='small-12 medium-4 columns', 
@@ -269,11 +269,11 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_property_uri':         ANNAL.CURIE.field_placement
             , 'field_placement':            expect_field2_placement
             })
-        self.assertDictionaryMatch(fd['group_fields'][2], expect_field2_desc)
-        self.assertEqual(fd['group_fields'][2]['field_render_head'], "field/annalist_head_any.html")
-        self.assertEqual(fd['group_fields'][2]['field_render_item'], "field/annalist_item_none.html")
-        self.assertEqual(fd['group_fields'][2]['field_render_view'], "field/annalist_view_text.html")
-        self.assertEqual(fd['group_fields'][2]['field_render_edit'], "field/annalist_edit_text.html")
+        self.assertDictionaryMatch(fd['group_field_descs'][2], expect_field2_desc)
+        self.assertEqual(fd['group_field_descs'][2]['field_render_head'], "field/annalist_head_any.html")
+        self.assertEqual(fd['group_field_descs'][2]['field_render_item'], "field/annalist_item_none.html")
+        self.assertEqual(fd['group_field_descs'][2]['field_render_view'], "field/annalist_view_text.html")
+        self.assertEqual(fd['group_field_descs'][2]['field_render_edit'], "field/annalist_edit_text.html")
         return
 
 # End.

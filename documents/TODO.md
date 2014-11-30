@@ -7,13 +7,14 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 - [x] Add button to annalist.net page: https://github.com/BetaNYC/getDataButton
 - [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
-    - [ ] Revise representation of repeat field structures in view description: repeat description to be part of root of repeat structure, not an ad ho0c field at the end.  This should remove some special cases from the code.
+    - [x] Revise representation of repeat field structures in view description: repeat description to be part of root of repeat structure, not an ad ho0c field at the end.  This should remove some special cases from the code.
     - [ ] Think about fields that return subgraph
         - how to splice subgraph into parent - "lambda nodes"?
         - does field APi support this? Check.
-    - [ ] Refactor handling of repeat field groups
-    - [ ] Define type for field group (_group?  Or use _view?)  
-    - [ ] Define view for field group (list of fields)
+    - [x] Refactor handling of repeat field groups
+    - [x] Define type for field group (_group?  Or use _view?)
+    - [ ] Use _list rather than _view?
+    - [x] Define view for field group (list of fields)
     - [ ] Define list for field group
     - [ ] Redefine view with list of fields?  Not if that impacts usability.
     - [ ] Define e-v-map for defined list of fields

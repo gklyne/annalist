@@ -273,7 +273,7 @@ class FieldDescriptionTest(AnnalistTestCase):
               ''' </select>'''
             , '''<input type="text" size="64" name="View_repeat_fields__2__Field_property"'''+
               ''' placeholder="(field property URI or CURIE)"'''+
-              ''' value="rdfs:label;"/>'''
+              ''' value="rdfs:label"/>'''
             , '''<input type="text" size="64" name="View_repeat_fields__2__Field_placement"'''+
               ''' placeholder="(field display size and placement details)"'''+
               ''' value="small:0,12"/>'''
