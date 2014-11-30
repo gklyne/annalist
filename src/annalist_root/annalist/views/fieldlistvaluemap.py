@@ -50,12 +50,12 @@ class FieldListValueMap(object):
         self.fd = []        # List of field descriptions
         self.fm = []        # List of field value maps
         for f in fields:
-            # log.info("\n********\nFieldListValueMap: field %r\n*********"%(f))
+            log.debug("FieldListValueMap: field %r"%(f,))
             # @@TODO: check for common logic here and FieldDescription field_group_viewref processing
             field_desc = FieldDescription(coll, f, view_context)
-            log.debug("FieldListValueMap: field_id %s, field_name %s"%
-                (field_desc['field_id'], field_desc['field_name'])
-                )
+            # log.debug("FieldListValueMap: field_id %s, field_name %s"%
+            #     (field_desc['field_id'], field_desc['field_name'])
+            #     )
             self.fd.append(field_desc)
             if field_desc.is_repeat_group():
                 repeatfieldsmap = FieldListValueMap(coll, field_desc.group_view_fields(), view_context)

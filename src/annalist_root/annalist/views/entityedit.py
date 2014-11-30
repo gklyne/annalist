@@ -156,14 +156,14 @@ class GenericEntityEditView(AnnalistGenericView):
             "views.entityedit.post: coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
-        # log.log(settings.TRACE_FIELD_VALUE,
-        #     "views.entityedit.post %s"%(self.get_request_path())
-        #     )
-        # log.log(settings.TRACE_FIELD_VALUE,
-        #     "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
-        #       (coll_id, type_id, entity_id, view_id, action)
-        #     )
-        # log.info("  form data %r"%(request.POST))
+        log.log(settings.TRACE_FIELD_VALUE,
+            "views.entityedit.post %s"%(self.get_request_path())
+            )
+        log.log(settings.TRACE_FIELD_VALUE,
+            "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
+              (coll_id, type_id, entity_id, view_id, action)
+            )
+        log.debug("  form data %r"%(request.POST))
         action               = request.POST.get('action', action)
         viewinfo = self.view_setup(action, coll_id, type_id, view_id, entity_id)
         if viewinfo.http_response:
@@ -249,7 +249,7 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         # Locate and read view description
         entitymap = EntityValueMap(baseentityvaluemap)
-        log.debug("entityview %r"%viewinfo.recordview.get_values())
+        log.debug("entityview: %r"%viewinfo.recordview.get_values())
         fieldlistmap = FieldListValueMap(
             viewinfo.collection, 
             viewinfo.recordview.get_values()[ANNAL.CURIE.view_fields],

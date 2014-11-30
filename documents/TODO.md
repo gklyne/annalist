@@ -10,10 +10,11 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Revise representation of repeat field structures in view description: repeat description to be part of root of repeat structure, not an ad ho0c field at the end.  This should remove some special cases from the code.
     - [ ] Think about fields that return subgraph
         - how to splice subgraph into parent - "lambda nodes"?
-        - does field APi support this? Check.
+        - does field API support this? Check.
     - [x] Refactor handling of repeat field groups
     - [x] Define type for field group (_group?  Or use _view?)
-    - [ ] Use _list rather than _view?
+    - [x] Use _list rather than _view? (no: list has much more bound-in semantics)
+    - [ ] Rename 'View_field' to (say) 'View_field_view' (cf. previous use _list)
     - [x] Define view for field group (list of fields)
     - [ ] Define list for field group
     - [ ] Redefine view with list of fields?  Not if that impacts usability.

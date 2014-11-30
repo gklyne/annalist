@@ -518,6 +518,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_value'], type_comment_value)
         self.assertEqual(r.context['fields'][2]['options'], self.no_options)
         # 4th field - URI
+        # (NOTE: blank unless explcicit value specified)
         type_uri_help = (
             "Entity type URI"
             )
@@ -531,7 +532,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_render_edit'], "field/annalist_edit_identifier.html")
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Identifier")
-        self.assertEqual(r.context['fields'][3]['field_value'], view_url)
+        self.assertEqual(r.context['fields'][3]['field_value'], "")
         self.assertEqual(r.context['fields'][3]['options'], self.no_options)
         # 5th field - view id
         type_uri_help = (

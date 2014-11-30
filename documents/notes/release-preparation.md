@@ -3,6 +3,7 @@
 ## Summary of release tasks
 
 - [ ] Feature freeze
+- [ ] Regenerate test data (`makeinitsitedata.sh`/`maketestsitedata.sh`)
 - [ ] Test
 - [ ] Demo deployment; test
 - [ ] Documentation updates

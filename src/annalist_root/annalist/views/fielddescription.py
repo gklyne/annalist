@@ -53,7 +53,10 @@ class FieldDescription(object):
                         of the view description record provides context for some enumeration 
                         type selections.
         """
-        field_id    = field[ANNAL.CURIE.field_id]       # Field ID slug in URI
+        #@@TODO: for resilience, revert this when all tests pass?
+        # field_id    = field.get(ANNAL.CURIE.field_id, "Field_id_missing")  # Field ID slug in URI
+        #@@
+        field_id    = field[ANNAL.CURIE.field_id]
         recordfield = RecordField.load(collection, field_id, collection._parentsite)
         if recordfield is None:
             log.warning("Can't retrieve definition for field %s"%(field_id))

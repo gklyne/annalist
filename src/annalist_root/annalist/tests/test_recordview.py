@@ -355,7 +355,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
     # covererd by the Default_view case.
     def _check_record_view_context_fields(self, response, action="", num_fields=6):
         r = response
-        log.info("r.context['fields']: %r"%(r.context['fields'],))
+        # log.info("r.context['fields']: %r"%(r.context['fields'],))
         # Common structure
         view_url = collection_entity_view_url("testcoll", "_view", "View_view")
         self.assertEqual(r.context['entity_id'],        'View_view')
@@ -1077,8 +1077,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # self.assertIn("http://test.example.com/testsite/c/testcoll/v/View_view/_view/View_view/!edit", l)
         # self.assertIn(u, l)
         # self.assertIn("add_field=View_repeat_fields", l)
-        for i in [5]:
-            log.info("**** context['fields'][%d] %r"%(i, r.context['fields'][i]))
+        # for i in [5]:
+        #     log.info("**** context['fields'][%d] %r"%(i, r.context['fields'][i]))
         expect_context = recordview_view_context_data(
             view_id="addfieldview", orig_id="addfieldview", 
             action="edit",

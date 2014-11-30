@@ -674,6 +674,7 @@ def get_site_views_sorted():
         [ "BibEntry_view"
         , "Default_view"
         , "Field_view"
+        , "List_field_view"
         , "List_view"
         , "Type_view"
         , "User_view"
