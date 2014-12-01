@@ -69,13 +69,13 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='entity_url',       e=ANNAL.CURIE.url,         f='entity_url'       )
         , SimpleValueMap(c='entity_uri',       e=ANNAL.CURIE.uri,         f='entity_uri'       )
         , SimpleValueMap(c='record_type',      e=ANNAL.CURIE.record_type, f='record_type'      )
-        # Field data is handled separately during processing of the form description
-        # Form and interaction control (hidden fields)
         , SimpleValueMap(c='view_id',          e=None,                    f='view_id'          )
         , SimpleValueMap(c='orig_id',          e=None,                    f='orig_id'          )
         , SimpleValueMap(c='orig_type',        e=None,                    f='orig_type'        )
         , SimpleValueMap(c='action',           e=None,                    f='action'           )
         , SimpleValueMap(c='continuation_url', e=None,                    f='continuation_url' )
+        # Field data is handled separately during processing of the form description
+        # Form and interaction control (hidden fields)
         ])
 
 #   -------------------------------------------------------------------------------------------

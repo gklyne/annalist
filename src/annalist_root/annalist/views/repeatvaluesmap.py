@@ -7,6 +7,11 @@ a list of values.
 When the mapping function `map_entity_to_context` is called, the supplied `entityvals` 
 is expected to be an iterator (list, tuple, etc.) of entities or dictionary values 
 to be processed for display.
+
+When decoding values from a form, different logic is required to extract a
+repeating structure from the flat namespace used for form data.  See method 
+`map_form_to_entity`, along with `FieldListValueMap.map_form_to_entity_repeated_items` 
+for more details. 
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -49,6 +54,7 @@ class RepeatValuesMap(object):
         Returns a bound_field, which is a dictionary-like of values to be added 
         to the display context under construction
         """
+        # @@TODO: repeats FieldValueMap - make subclass?
         # log.info("*** map entity %s to context %s, vals %r"%(self.e, self.f, entityvals))
         # log.info("map_entity_to_context: bound_field: extras %r"%(extras,))
         boundfield = bound_field(

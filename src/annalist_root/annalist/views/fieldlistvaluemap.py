@@ -23,7 +23,6 @@ from annalist.views.fielddescription    import FieldDescription
 from annalist.views.fieldvaluemap       import FieldValueMap
 from annalist.views.repeatdescription   import RepeatDescription
 from annalist.views.repeatvaluesmap     import RepeatValuesMap
-from annalist.views.subgroupvaluemap    import SubgroupValueMap
 
 class FieldListValueMap(object):
     """
@@ -64,12 +63,6 @@ class FieldListValueMap(object):
             else:
                 self.fd.append(field_desc)
                 self.fm.append(FieldValueMap(f=field_desc))
-            # elif ANNAL.CURIE.repeat_id in f:
-            #     repeatfieldsmap = FieldListValueMap(coll, f[ANNAL.CURIE.repeat], view_context)
-            #     repeatvaluesmap = RepeatValuesMap(repeat=repeat_context, fields=repeatfieldsmap)
-            #     self.fm.append(repeatvaluesmap)
-            # else:
-            #     assert False, "Unknown/unsupported field values:"+repr(f)
         return
 
     def __repr__(self):
