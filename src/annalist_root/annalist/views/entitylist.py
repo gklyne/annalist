@@ -26,10 +26,11 @@ from annalist.models.entityfinder       import EntityFinder
 
 from annalist.views.uri_builder         import uri_with_params
 from annalist.views.displayinfo         import DisplayInfo
-from annalist.views.fielddescription    import FieldDescription
+from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 from annalist.views.entityvaluemap      import EntityValueMap
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
+from annalist.views.fieldvaluemap       import FieldValueMap
 from annalist.views.repeatvaluesmap     import RepeatValuesMap
 from annalist.views.grouprepeatmap      import GroupRepeatMap
 from annalist.views.confirm             import ConfirmView, dict_querydict
@@ -112,20 +113,40 @@ class EntityGenericListView(AnnalistGenericView):
 
         fieldlistmap = FieldListValueMap( # 'fields'
             listinfo.collection, 
-            listinfo.recordlist.get_values()[ANNAL.CURIE.list_fields],
+            listinfo.recordlist[ANNAL.CURIE.list_fields],
             extra_context
             )
-        entitymap.add_map_entry(fieldlistmap)  # one-off for access to field headings
-        entitymap.add_map_entry(
-            GroupRepeatMap(c='entities', e=ANNAL.CURIE.list_entities, g=[fieldlistmap])
-            )
-        # repeatrows_descr = FieldDescription(
-        #     listinfo.collection, 
-        #     repeatrows_view_descr, 
-        #     extra_context
-        #     )
-        # repeatvaluesmap = RepeatValuesMap(repeatrows_descr, fieldlistmap)
-        # entitymap.add_map_entry(repeatvaluesmap)
+        entitymap.add_map_entry(fieldlistmap)  # For access to field headings
+
+        if True: # Old style
+
+            entitymap.add_map_entry(
+                GroupRepeatMap(c='entities', e=ANNAL.CURIE.list_entities, g=[fieldlistmap])
+                )
+        else:
+
+            repeatrows_field_descr = (
+                { "annal:id":                   "List_rows"
+                , "rdfs:label":                 "Fields"
+                , "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a record view description"
+                , "annal:field_name":           "List_rows"
+                , "annal:field_render_type":    "RepeatGroup"
+                , "annal:property_uri":         "annal:list_entities"
+                , "annal:group_viewref":        "List_fields"
+                })
+            repeatrows_group_descr = (
+                { "annal:id":           "List_fields"
+                , "rdfs:label":         "List fields description"
+                , "annal:view_fields":  listinfo.recordlist[ANNAL.CURIE.list_fields]
+                })
+            repeatrows_descr = FieldDescription(
+                listinfo.collection, 
+                repeatrows_field_descr,
+                group_view=repeatrows_group_descr,
+                view_context=extra_context,
+                )
+            entitymap.add_map_entry(FieldValueMap(c="List_rows", f=repeatrows_descr))
+
         return entitymap
 
     # GET
@@ -365,7 +386,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         # @@TODO: Possibly create FieldValueMap and return map_entity_to_context value? 
         #         or extract this logic and share?  See also entityedit view choices
-        field_description = FieldDescription(
+        field_description = field_description_from_view_field(
             listinfo.collection, 
             {ANNAL.CURIE.field_id: "List_choice", ANNAL.CURIE.field_placement: "small:0,12;medium:5,5"},
             {}

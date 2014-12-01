@@ -65,10 +65,10 @@ class GroupRepeatMap(_GroupRepeatMap_tuple):
 
     def get_structure_description(self):
         return (
-            { 'field_type':     'GroupRepeatMap'
-            , 'entity_field':   self.e
-            , 'context_field':  self.c
-            , 'group_fields':   self.g.get_structure_description()
+            { 'field_type':         'GroupRepeatMap'
+            , 'entity_field':       self.e
+            , 'context_field':      self.c
+            , 'group_field_descs':  self.g.get_structure_description()
             })
 
 # End.

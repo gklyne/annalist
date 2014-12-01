@@ -66,6 +66,9 @@
                 </tr>
               </thead>
               <tbody>
+              {% if List_rows %}
+                {% include List_rows.field_render_item with field=List_rows %}
+              {% else %}
               {% for entity in entities %}
                 <tr class="select_row">
                 {% for field in entity.fields %}
@@ -77,6 +80,7 @@
                 </td>
                 </tr>
               {% endfor %}
+              {% endif %}
               </tbody>
             </table>
           </div>

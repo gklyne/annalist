@@ -32,12 +32,14 @@ class RepeatValuesMap(object):
     Define an entry in an entity value mapping table corresponding to a
     group of fields that is repeated for multiple values in an entity.  
 
+    c       request context field name for the field value mapping entry
     repeat  is a `FieldDescription` value describing the repeated data.
     fields  a `FieldListValueMap` object describing a set of fields to be 
             displayed for each repeated value.
     """
 
-    def __init__(self, repeat=None, fields=None):
+    def __init__(self, c=None, repeat=None, fields=None):
+        self.c = c
         self.r = repeat
         self.f = fields
         self.e = repeat["field_property_uri"]
@@ -62,7 +64,7 @@ class RepeatValuesMap(object):
             entityvals=entityvals,
             extras=extras
             )
-        return boundfield
+        return { self.c: boundfield }
 
     def map_form_to_entity(self, formvals):
         # log.info(repr(formvals))

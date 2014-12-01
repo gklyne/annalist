@@ -19,7 +19,7 @@ from django.conf                        import settings
 
 from annalist.identifiers               import RDFS, ANNAL
 
-from annalist.views.fielddescription    import FieldDescription
+from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 from annalist.views.fieldvaluemap       import FieldValueMap
 from annalist.views.repeatdescription   import RepeatDescription
 from annalist.views.repeatvaluesmap     import RepeatValuesMap
@@ -51,18 +51,20 @@ class FieldListValueMap(object):
         for f in fields:
             log.debug("FieldListValueMap: field %r"%(f,))
             # @@TODO: check for common logic here and FieldDescription field_group_viewref processing
-            field_desc = FieldDescription(coll, f, view_context)
+            field_desc = field_description_from_view_field(coll, f, view_context)
             # log.debug("FieldListValueMap: field_id %s, field_name %s"%
             #     (field_desc['field_id'], field_desc['field_name'])
             #     )
             self.fd.append(field_desc)
             if field_desc.is_repeat_group():
                 repeatfieldsmap = FieldListValueMap(coll, field_desc.group_view_fields(), view_context)
-                repeatvaluesmap = RepeatValuesMap(repeat=field_desc, fields=repeatfieldsmap)
+                repeatvaluesmap = RepeatValuesMap(c='_fieldvaluemap_',
+                    repeat=field_desc, fields=repeatfieldsmap
+                    )
                 self.fm.append(repeatvaluesmap)
             else:
                 self.fd.append(field_desc)
-                self.fm.append(FieldValueMap(f=field_desc))
+                self.fm.append(FieldValueMap(c='_fieldvaluemap_', f=field_desc))
         return
 
     def __repr__(self):
@@ -74,7 +76,7 @@ class FieldListValueMap(object):
         listcontext = []
         for f in self.fm:
             fv = f.map_entity_to_context(entityvals, extras=extras)
-            listcontext.append(fv)
+            listcontext.append(fv['_fieldvaluemap_'])
         return { 'fields': listcontext }
 
     def map_form_to_entity(self, formvals):

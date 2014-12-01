@@ -17,7 +17,7 @@ from django.template    import Template, Context
 from annalist.views.fields.bound_field  import bound_field
 
 edit = (
-    { 'repeatgroup_caption':
+    { 'repeatgroup_head':
         """
         <!-- views.fields.render_repeatgroup.edit_template -->
         <div class="small-12 columns">
@@ -43,7 +43,7 @@ edit = (
             </div>
           </div>
         </div>"""
-    , 'repeatgroup_buttons':
+    , 'repeatgroup_tail':
         """
         <div class="small-12 columns">
           <div class="row">
@@ -61,7 +61,7 @@ edit = (
     })
 
 view = (
-    { 'repeatgroup_caption':
+    { 'repeatgroup_head':
         """
         <!-- views.fields.render_repeatgroup.view_template -->
         <div class="small-12 columns">
@@ -83,7 +83,35 @@ view = (
             </div>
           </div>
         </div>"""
-    , 'repeatgroup_buttons':
+    , 'repeatgroup_tail':
+        """"""
+    })
+
+item = (
+    { 'repeatgroup_head':
+        """"""
+    , 'repeatgroup_body':
+        # Context values:
+        #   repeat_id - id of repeated group
+        #   repeat_index - index of value presented
+        #   repeat_prefix - index of value presented
+        #   repeat_bound_fields is list of bound fields to process for this value
+        """
+        <tr class="select_row">
+          {% for f in repeat_bound_fields %}
+          <!-- f.entity_link {{f.entity_link}} -->
+          <!-- f.entity_type_link {{f.entity_type_link}} -->
+          <!-- f.entity_link_continuation {{f.entity_link_continuation}} -->
+          <!-- f.entity_type_link_continuation {{f.entity_type_link_continuation}} -->
+          {% include f.field_render_item with field=f %}
+          {% endfor %}
+          <td class="select_row">
+            <input type="checkbox" name="entity_select" 
+                   value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
+          </td>
+        </tr>
+        """
+    , 'repeatgroup_tail':
         """"""
     })
 
@@ -99,9 +127,9 @@ class RenderRepeatGroup(object):
     """
     super(RenderRepeatGroup, self).__init__()
     assert templates is not None, "RenderRepeatGroup template must be supplied (.edit, .view or .item)"
-    self._template_caption = Template(templates['repeatgroup_caption'])
-    self._template_body    = Template(templates['repeatgroup_body'])
-    self._template_buttons = Template(templates['repeatgroup_buttons'])
+    self._template_head = Template(templates['repeatgroup_head'])
+    self._template_body = Template(templates['repeatgroup_body'])
+    self._template_tail = Template(templates['repeatgroup_tail'])
     return
 
   def __str__(self):
@@ -111,7 +139,7 @@ class RenderRepeatGroup(object):
     """
     Renders a repeating field group.
 
-    `context`   is a dictionary-like object that provises information for the
+    `context`   is a dictionary-like object that provides information for the
                 rendering operation.
 
     returns a string that is incorporated into the resulting web page.
@@ -122,24 +150,26 @@ class RenderRepeatGroup(object):
     being rendered, or a list of repeated values that are each formatted
     using the supplied body template.
     """
-    response_parts  = [self._template_caption.render(context)]
+    response_parts  = [self._template_head.render(context)]
     repeat_index = 0
+    # @@TODO: devise cleaner mechanism
+    x = context['field']['_extras']
     for g in context['field']['field_value']:
-        r = [ bound_field(f, g) for f in context['field']['group_fields'] ]
+        r = [ bound_field(f, g, extras=x) for f in context['field']['group_field_descs'] ]
         repeat_id = context.get('repeat_prefix', "") + context['field']['group_id']
         repeat_dict = (
-            {
-            'repeat_id':            repeat_id,
-            'repeat_index':         str(repeat_index),
-            'repeat_prefix':        repeat_id+("__%d__"%repeat_index),
-            'repeat_bound_fields':  r
+            { 'repeat_id':            repeat_id
+            , 'repeat_index':         str(repeat_index)
+            , 'repeat_prefix':        repeat_id+("__%d__"%repeat_index)
+            , 'repeat_bound_fields':  r
+            , 'repeat_entity':        g
             })
         # @@TODO: rationalize this to eliminate 'repeat' item
         #         (currently included for compatibility with old field renderers)
         with context.push(repeat_dict, repeat=repeat_dict):
             response_parts.append(self._template_body.render(context))
         repeat_index += 1
-    response_parts.append(self._template_buttons.render(context))
+    response_parts.append(self._template_tail.render(context))
     return "".join(response_parts)
 
   # def encode(self, field_value):

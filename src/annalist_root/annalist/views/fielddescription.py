@@ -35,8 +35,11 @@ class FieldDescription(object):
     Describes an entity view field, and methods to perform 
     manipulations involving the field description.
     """
-
-    def __init__(self, collection, field, view_context):
+    def __init__(self, 
+            collection, recordfield, view_context=None, 
+            field_property=None, field_placement=None, 
+            group_view=None
+            ):
         """
         Creates a field description value to use in a context value when
         rendering a form.  Values defined here are mentioned in field
@@ -46,42 +49,33 @@ class FieldDescription(object):
         various field attributes.
 
         collection      is a collection from which data is being rendered.
-        field           is a dictionary with the field description from a view or list 
-                        description, containing a field id and placement values.
-        view_context    is a dictionary of additional values that may be used in assembling
+        recordfield     is a RecordField value or dictionary containing details of
+                        the field for which a descriptor is constructed.
+        view_context    @@TODO: drop this?
+                        is a dictionary of additional values that may be used in assembling
                         values to be used when rendering the field.  In particular, a copy 
                         of the view description record provides context for some enumeration 
                         type selections.
+        field_property  if supplied, overrides the field property URI from `recordfield`
+        field_placement if supplied, overrides field placement from `recordfield`
+        group_view      if the field itself references a list of fields, this is a
+                        RecordView value or dictionary containing the referenced list 
+                        of fields.
         """
-        #@@TODO: for resilience, revert this when all tests pass?
-        # field_id    = field.get(ANNAL.CURIE.field_id, "Field_id_missing")  # Field ID slug in URI
-        #@@
-        field_id    = field[ANNAL.CURIE.field_id]
-        recordfield = RecordField.load(collection, field_id, collection._parentsite)
-        if recordfield is None:
-            log.warning("Can't retrieve definition for field %s"%(field_id))
-            recordfield = RecordField.load(collection, "Field_missing", collection._parentsite)
-        field_name      = recordfield.get(ANNAL.CURIE.field_name, field_id)   # Field name in form
-        field_label     = recordfield.get(RDFS.CURIE.label, "")
-        field_property  = (
-            field.get(ANNAL.CURIE.property_uri, None) or 
-            recordfield.get(ANNAL.CURIE.property_uri, "")
-            )
-        field_placement = get_placement_classes(
-            field.get(ANNAL.CURIE.field_placement, None) or 
-            recordfield.get(ANNAL.CURIE.field_placement, "")
-            )
-        log.debug("recordfield   %r"%(recordfield and recordfield.get_values()))
-        # log.info("FieldDescription: field['annal:field_placement'] %s"%(field['annal:field_placement']))
-        # log.info("FieldDescription: field_placement %r"%(get_placement_classes(field['annal:field_placement']),))
-        field_render_type = recordfield.get(ANNAL.CURIE.field_render_type, "")
-        self._field_desc = (
+        log.debug("FieldDescription recordfield: %r"%(recordfield,))
+        field_id            = recordfield.get(ANNAL.CURIE.id,         "_missing_id_")
+        field_name          = recordfield.get(ANNAL.CURIE.field_name, field_id)  # Field name in form
+        field_label         = recordfield.get(RDFS.CURIE.label, "")
+        field_property      = field_property or recordfield.get(ANNAL.CURIE.property_uri, "")
+        field_placement     = field_placement or recordfield.get(ANNAL.CURIE.field_placement, "")
+        field_render_type   = recordfield.get(ANNAL.CURIE.field_render_type, "")
+        self._field_desc    = (
             { 'field_id':                   field_id
             , 'field_name':                 field_name
             , 'field_label':                field_label
             , 'field_help':                 recordfield.get(RDFS.CURIE.comment, "")
             , 'field_property_uri':         field_property
-            , 'field_placement':            field_placement
+            , 'field_placement':            get_placement_classes(field_placement)
             , 'field_render_type':          field_render_type
             , 'field_render_head':          get_head_renderer(field_render_type)
             , 'field_render_item':          get_item_renderer(field_render_type)
@@ -126,15 +120,13 @@ class FieldDescription(object):
             #     (self._field_desc['field_options_typeref'], list(self._field_desc['field_choices']))
             #     )
         # If field references view, pull in details from view, including field details
-        group_ref = self._field_desc['field_group_viewref']
-        if group_ref:
-            group_view = RecordView.load(collection, group_ref, collection._parentsite)
-            if not group_view:
-                raise EntityNotFound_Error("View %s used in field %s"%(group_ref, field_id))
-            group_label = field_label or group_view.get(RDFS.CURIE.label, group_ref)
+        if group_view:
+            group_label = (field_label or 
+                group_view.get(RDFS.CURIE.label, self._field_desc['field_group_viewref'])
+                )
             group_field_descs = []
             for subfield in group_view[ANNAL.CURIE.view_fields]:
-                f = FieldDescription(collection, subfield, view_context)
+                f = field_description_from_view_field(collection, subfield, view_context)
                 group_field_descs.append(f)
             self._field_desc.update(
                 { 'group_id':           field_id
@@ -144,9 +136,8 @@ class FieldDescription(object):
                 , 'group_view':         group_view
                 , 'group_field_descs':  group_field_descs
                 })
-        # log.info("FieldDescription: %s"%field_id)
-        # log.info("FieldDescription.field %r"%field)
-        # log.info("FieldDescription.field_context %r"%(self._field_desc,))
+        # log.debug("FieldDescription: %s"%field_id)
+        # log.info("FieldDescription._field_desc %r"%(self._field_desc,))
         # log.info("FieldDescription.field_placement %r"%(self._field_desc['field_placement'],))
         return
 
@@ -235,5 +226,52 @@ class FieldDescription(object):
         for k in self._field_desc:
             yield k
         return
+
+def field_description_from_view_field(collection, field, view_context):
+    """
+    Returns a field description value created using information from
+    a field reference in a view description record (i.e. a dictionary
+    containing a field id value and optional field property URI and
+    placement values.  (The optional values, if not provided, are 
+    obtained from the referenced field descriptionb)
+
+    collection      is a collection from which data is being rendered.
+    field           is a dictionary with the field description from a view or list 
+                    description, containing a field id and placement values.
+    view_context    is a dictionary of additional values that may be used in assembling
+                    values to be used when rendering the field.  In particular, a copy 
+                    of the view description record provides context for some enumeration 
+                    type selections.
+    """
+    #@@TODO: for resilience, revert this when all tests pass?
+    # field_id    = field.get(ANNAL.CURIE.field_id, "Field_id_missing")  # Field ID slug in URI
+    #@@
+    field_id    = field[ANNAL.CURIE.field_id]
+    recordfield = RecordField.load(collection, field_id, collection._parentsite)
+    if recordfield is None:
+        log.warning("Can't retrieve definition for field %s"%(field_id))
+        recordfield = RecordField.load(collection, "Field_missing", collection._parentsite)
+    field_property  = (
+        field.get(ANNAL.CURIE.property_uri, None) or 
+        recordfield.get(ANNAL.CURIE.property_uri, "")
+        )
+    field_placement = get_placement_classes(
+        field.get(ANNAL.CURIE.field_placement, None) or 
+        recordfield.get(ANNAL.CURIE.field_placement, "")
+        )
+    # If field references view, pull in details from view, including field details
+    group_ref = recordfield.get(ANNAL.CURIE.group_viewref, None)
+    if group_ref:
+        group_view = RecordView.load(collection, group_ref, collection._parentsite)
+        if not group_view:
+            raise EntityNotFound_Error("View %s used in field %s"%(group_ref, field_id))
+    else:
+        group_view = None
+    return FieldDescription(
+        collection, recordfield, view_context=None, 
+        field_property=field.get(ANNAL.CURIE.property_uri, None),
+        field_placement=field.get(ANNAL.CURIE.field_placement, None), 
+        group_view=group_view
+        )
 
 # End.

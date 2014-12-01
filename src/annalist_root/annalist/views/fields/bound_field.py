@@ -118,6 +118,9 @@ class bound_field(object):
         elif name == "field_placeholder":
             return self._field_description.get('field_placeholder', "@@bound_field.field_placeholder@@")
         elif name == "continuation_url":
+            if self._extras is None:
+                log.warning("bound_field.continuation_url - no extra context provided")
+                return ""
             cont = self._extras.get("request_url", "")
             if cont:
                 cont = uri_with_params(cont, continuation_params(self._extras))
@@ -186,7 +189,7 @@ class bound_field(object):
         cparam = self.continuation_url
         if cparam:
             cparam = uri_params({'continuation_url': cparam})
-        # log.info('bound_field.get_continuation_param %s'%(cparam,))  #@@
+        log.debug('bound_field.get_continuation_param %s'%(cparam,))  #@@
         return cparam
 
     def __getitem__(self, name):

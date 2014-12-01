@@ -34,6 +34,7 @@ class FieldValueMap(object):
     field value and description, which is added to a list of such fields
     in the indicated context variable.
 
+    c       request context field name for the field value mapping entry
     f       field description structure (cf. `FieldDescription`)
 
     NOTE: The form rendering template iterates over the context field values to be 
@@ -41,7 +42,8 @@ class FieldValueMap(object):
     field to a list of field value mappings at the indcated context field.
     """
 
-    def __init__(self, f=None):
+    def __init__(self, c=None, f=None):
+        self.c = c
         self.f = f
         self.e = f['field_property_uri']    # entity data key
         self.i = f['field_name']            # field data key
@@ -59,7 +61,7 @@ class FieldValueMap(object):
             entityvals=entityvals,
             extras=extras
             )
-        return boundfield
+        return { self.c: boundfield }
 
     def map_form_to_entity(self, formvals):
         """

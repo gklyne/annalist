@@ -20,7 +20,7 @@ from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist.models.site               import Site
 from annalist.models.collection         import Collection
 
-from annalist.views.fielddescription    import FieldDescription
+from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 
 from annalist.views.fields.render_placement     import Placement
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
@@ -59,7 +59,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def test_Field_InitialValues(self):
-        fd = FieldDescription(
+        fd = field_description_from_view_field(
             self.testcoll, 
             { ANNAL.CURIE.field_id: "_initial_values" }, 
             {}
@@ -93,7 +93,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def test_Field_id(self):
-        fd = FieldDescription(
+        fd = field_description_from_view_field(
             self.testcoll, 
             { ANNAL.CURIE.field_id: "Field_id" }, 
             {}
@@ -126,7 +126,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def test_Field_sel(self):
-        fd = FieldDescription(
+        fd = field_description_from_view_field(
             self.testcoll, 
             { ANNAL.CURIE.field_id: "Field_sel" }, 
             {}
@@ -175,7 +175,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def test_View_repeat_fields(self):
-        fd = FieldDescription(
+        fd = field_description_from_view_field(
             self.testcoll, 
             { ANNAL.CURIE.field_id: "View_repeat_fields" }, 
             {}
@@ -203,7 +203,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         self.assertDictionaryMatch(fd, expect_field_desc)
         self.assertEqual(fd['field_render_type'], "RepeatGroup")
         self.assertEqual(fd['field_render_head'], "field/annalist_head_any.html")
-        self.assertEqual(fd['field_render_item'], "field/annalist_item_none.html")
+        self.assertIsInstance(fd['field_render_item'], RenderRepeatGroup)
         self.assertIsInstance(fd['field_render_view'], RenderRepeatGroup)
         self.assertIsInstance(fd['field_render_edit'], RenderRepeatGroup)
         # self.assertEqual(fd['field_render_item'], "field/annalist_item_none.html")

@@ -20,6 +20,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Eliminate duplication with list view - rework list to use same repeating mechanism as view
     - First step is to make something that works without `subgroupvaluemap`, and identify the problem areas
     - then...
+- [ ] Provide clean mechanism to propagate extra context to bound fields in repeat group rendering
 - [ ] Use distinguished names for internally-generated context keys (e.g. '_fields')
 - [ ] Simplify template now that repat fields are handled by a field renderer
 - [ ] Try to make mapping classes more consistent in their return types for sub-context values
