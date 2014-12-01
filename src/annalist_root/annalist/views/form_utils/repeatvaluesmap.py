@@ -25,53 +25,40 @@ import json
 
 from annalist.identifiers               import RDFS, ANNAL
 
-from annalist.views.fields.bound_field  import bound_field
+from annalist.views.form_utils.fieldvaluemap    import FieldValueMap
+from annalist.views.fields.bound_field          import bound_field
 
-class RepeatValuesMap(object):
+class RepeatValuesMap(FieldValueMap):
     """
     Define an entry in an entity value mapping table corresponding to a
     group of fields that is repeated for multiple values in an entity.  
 
-    repeat  is a `FieldDescription` value describing the repeated data.
-    fields  a `FieldListValueMap` object describing a set of fields to be 
-            displayed for each repeated value.
+    c           request context field name for the field value mapping entry
+    f           is a `FieldDescription` value describing the repeated data.
+    fieldlist   a `FieldListValueMap` object describing a set of fields to be 
+                displayed for each repeated value.
     """
 
-    def __init__(self, repeat=None, fields=None):
-        self.r = repeat
-        self.f = fields
-        self.e = repeat["field_property_uri"]
+    def __init__(self, c=None, f=None, fieldlist=None):
+        super(RepeatValuesMap, self).__init__(c=c, f=f)
+        self.fieldlist = fieldlist
         return
 
     def __repr__(self):
         return (
-            "RepeatValuesMap.r: %r\n"%(self.r)+
-            "RepeatValuesMap.f: %r\n"%(self.f)
+            super(RepeatValuesMap, self).__repr__()+
+            "RepeatValuesMap.fieldlist: %r\n"%(self.fieldlist)
             )
-
-    def map_entity_to_context(self, entityvals, extras=None):
-        """
-        Returns a bound_field, which is a dictionary-like of values to be added 
-        to the display context under construction
-        """
-        # @@TODO: repeats FieldValueMap - make subclass?
-        # log.info("*** map entity %s to context %s, vals %r"%(self.e, self.f, entityvals))
-        # log.info("map_entity_to_context: bound_field: extras %r"%(extras,))
-        boundfield = bound_field(
-            field_description=self.r, 
-            entityvals=entityvals,
-            extras=extras
-            )
-        return boundfield
 
     def map_form_to_entity(self, formvals):
         # log.info(repr(formvals))
-        prefix_template = self.r['group_id']+"__%d__"
+        # @@TODO: use field_name (self.i) for prefix?
+        prefix_template = self.f['group_id']+"__%d__"
         prefix_n        = 0
         repeatvals      = []
         while True:
             prefix = prefix_template%prefix_n
-            rvals = self.f.map_form_to_entity_repeated_items(formvals, prefix)
+            rvals = self.fieldlist.map_form_to_entity_repeated_items(formvals, prefix)
             if rvals:
                 repeatvals.append(rvals)
             else:
@@ -84,11 +71,10 @@ class RepeatValuesMap(object):
         Helper function returns structure description information
         """
         return (
-            { 'field_type':    "RepeatValuesMap"
-            , 'field_descr':   self.r
+            { 'field_type':     "RepeatValuesMap"
+            , 'field_descr':    self.f
+            , 'entity_field':   self.e
+            , 'form_field':     self.i
             })
-
-    def get_field_description(self):
-        return self.r
 
 # End.

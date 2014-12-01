@@ -19,10 +19,9 @@ from django.conf                        import settings
 
 from annalist.identifiers               import RDFS, ANNAL
 
-from annalist.views.fielddescription    import FieldDescription
-from annalist.views.fieldvaluemap       import FieldValueMap
-from annalist.views.repeatdescription   import RepeatDescription
-from annalist.views.repeatvaluesmap     import RepeatValuesMap
+from annalist.views.form_utils.fielddescription import FieldDescription, field_description_from_view_field
+from annalist.views.form_utils.fieldvaluemap    import FieldValueMap
+from annalist.views.form_utils.repeatvaluesmap  import RepeatValuesMap
 
 class FieldListValueMap(object):
     """
@@ -30,39 +29,54 @@ class FieldListValueMap(object):
     corresponding to a list of field descriptions.
     """
 
-    def __init__(self, coll, fields, view_context):
+    def __init__(self, c, coll, fields, view_context):
         """
         Define an entry to be added to an entity view value mapping table,
         corresponding to a list of field descriptions.
 
+        c               name of field used for this value in display context
         collection      is a collection from which data is being rendered.
         fields          list of field descriptions from a view definition, each
                         of which is a dictionary with the field description from 
                         a view or list description.
-        view_context    is a dictionary of additional values that may be used in assembling
-                        values to be used when rendering the fields.
+        view_context    is a dictionary of additional values that may be used in
+                        assembling values to be used when rendering the fields.
+                        Specifically, this are currently used in calls of
+                        `EntityFinder` for building filtered lists of entities
+                        used to populate enumerated field values.  Fields in
+                        the supplied context currently used are `entity` for the
+                        entity value being rendered, and `view` for the view record
+                        used to render that value
+                        (cf. GenericEntityEditView.get_view_entityvaluemap)
 
-        NOTE: The form rendering template iterates over the context field values to be 
-        added to the form display.  The constructor for this object appends the current
-        field to a list of field value mappings in context field 'fields'.
+        The form rendering template iterates over the field descriptions to be
+        added to the form display.  The constructor for this object appends the 
+        current field to a list of field value mappings, with a `map_entity_to_context`
+        method that assigns a list of values from the supplied entity to a context 
+        field named by parameter `c`.
         """
+        self.c  = c         # Context field name for values mapped from entity
         self.fd = []        # List of field descriptions
         self.fm = []        # List of field value maps
         for f in fields:
             log.debug("FieldListValueMap: field %r"%(f,))
             # @@TODO: check for common logic here and FieldDescription field_group_viewref processing
-            field_desc = FieldDescription(coll, f, view_context)
+            field_desc = field_description_from_view_field(coll, f, view_context)
             # log.debug("FieldListValueMap: field_id %s, field_name %s"%
             #     (field_desc['field_id'], field_desc['field_name'])
             #     )
             self.fd.append(field_desc)
             if field_desc.is_repeat_group():
-                repeatfieldsmap = FieldListValueMap(coll, field_desc.group_view_fields(), view_context)
-                repeatvaluesmap = RepeatValuesMap(repeat=field_desc, fields=repeatfieldsmap)
+                repeatfieldsmap = FieldListValueMap('_unused_fieldlistvaluemap_', 
+                    coll, field_desc.group_view_fields(), view_context
+                    )
+                repeatvaluesmap = RepeatValuesMap(c='_fieldlistvaluemap_',
+                    f=field_desc, fieldlist=repeatfieldsmap
+                    )
                 self.fm.append(repeatvaluesmap)
             else:
                 self.fd.append(field_desc)
-                self.fm.append(FieldValueMap(f=field_desc))
+                self.fm.append(FieldValueMap(c='_fieldlistvaluemap_', f=field_desc))
         return
 
     def __repr__(self):
@@ -70,12 +84,12 @@ class FieldListValueMap(object):
             "FieldListValueMap.fm: %r\n"%(self.fm)
             )
 
-    def map_entity_to_context(self, entityvals, extras=None):
+    def map_entity_to_context(self, entityvals, context_extra_values=None):
         listcontext = []
         for f in self.fm:
-            fv = f.map_entity_to_context(entityvals, extras=extras)
-            listcontext.append(fv)
-        return { 'fields': listcontext }
+            fv = f.map_entity_to_context(entityvals, context_extra_values=context_extra_values)
+            listcontext.append(fv['_fieldlistvaluemap_'])
+        return { self.c: listcontext }
 
     def map_form_to_entity(self, formvals):
         vals = {}

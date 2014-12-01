@@ -440,7 +440,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # log.info(r.content)
+        # log.info("*** New view content: "+r.content)
         self.assertContains(r, "<title>Collection testcoll</title>")
         field_vals = default_fields(coll_id="testcoll", type_id="_view", entity_id="00000001")
         formrow1 = """
@@ -451,7 +451,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="entity_id" 
-                        placeholder="(view id)" value="00000001"/>
+                        placeholder="(view id)" value="%(entity_id)s"/>
                     </div>
                 </div>
             </div>
@@ -499,10 +499,142 @@ class RecordViewEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=6)
+        formrow5 = """
+            <div class="small-12 medium-4 columns">
+              <div class="row">
+                <div class="%(label_classes)s">
+                  <p>Field id</p>
+                </div>
+                <div class="%(input_classes)s">
+                  <select name="View_repeat_fields__0__Field_id">
+                    <option>Entity_comment</option>
+                    <option selected="selected">Entity_id</option>
+                    <option>Entity_label</option>
+                    <option>Entity_type</option>
+                    <option>Field_property</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=4)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)
         self.assertContains(r, formrow4, html=True)
+        self.assertContains(r, formrow5, html=True)
+        return
+
+    def test_get_form_rendering_view_bibentry(self):
+        u = entitydata_edit_url(
+            "edit", "testcoll", "_view", entity_id="BibEntry_view", 
+            view_id="View_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # log.info("*** BibEntry_view content: "+r.content)
+        self.assertContains(r, "<title>Collection testcoll</title>")
+        field_vals = default_fields(coll_id="testcoll", type_id="_view", entity_id="BibEntry_view")
+        formrow1 = """
+            <div class="small-12 medium-6 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>Id</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <input type="text" size="64" name="entity_id" 
+                        placeholder="(view id)" value="%(entity_id)s"/>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=6)
+        formrow2 = """
+            <div class="small-12 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>Label</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <input type="text" size="64" name="View_label"
+                               placeholder="(view label)" 
+                               value="Bibliographic metadata"/>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=12)
+        formrow3 = """
+            <div class="small-12 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>Help</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <textarea cols="64" rows="6" name="View_comment" 
+                                  class="small-rows-4 medium-rows-8"
+                                  placeholder="(description of record view)">
+                            Bibliography entries each contain some subset of standard data entries.
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=12)
+        formrow4 = """
+            <div class="small-12 medium-6 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>Add field?</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <input type="text" size="64" name="View_add_field" 
+                        placeholder="(yes or no)" value="yes"/>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=6)
+        formrow5 = """
+            <div class="small-12 medium-4 columns">
+              <div class="row">
+                <div class="%(label_classes)s">
+                  <p>Field id</p>
+                </div>
+                <div class="%(input_classes)s">
+                  <select name="View_repeat_fields__0__Field_id">
+                    <option>Bib_address</option>
+                    <option>Bib_author</option>
+                    <option>Bib_booktitle</option>
+                    <option>Bib_chapter</option>
+                    <option>Bib_edition</option>
+                    <option>Bib_editor</option>
+                    <option>Bib_eprint</option>
+                    <option>Bib_howpublished</option>
+                    <option>Bib_institution</option>
+                    <option>Bib_journal</option>
+                    <option>Bib_month</option>
+                    <option>Bib_number</option>
+                    <option>Bib_organization</option>
+                    <option>Bib_pages</option>
+                    <option>Bib_publisher</option>
+                    <option>Bib_school</option>
+                    <option>Bib_title</option>
+                    <option>Bib_type</option>
+                    <option>Bib_url</option>
+                    <option>Bib_volume</option>
+                    <option>Bib_year</option>
+                    <option>Entity_comment</option>
+                    <option selected="selected">Entity_id</option>
+                    <option>Entity_label</option>
+                    <option>Entity_type</option>
+                    <option>Field_property</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=4)
+        self.assertContains(r, formrow1, html=True)
+        self.assertContains(r, formrow2, html=True)
+        self.assertContains(r, formrow3, html=True)
+        self.assertContains(r, formrow4, html=True)
+        self.assertContains(r, formrow5, html=True)
         return
 
     def test_get_new(self):
@@ -682,7 +814,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_url'], "")
         # Skip checking fields 0-4 - that's already been covered
-        # log.info(r.context['fields'])
+        # log.info("*** fields[5]: "+repr(r.context['fields'][5]['options']))
         # @@TODO: revise for more useful BibEntry structure
         expect_field_data = (
             [ { 'annal:field_placement': 'small:0,12;medium:0,6'
@@ -769,6 +901,10 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_value'], expect_field_data)
         self.assertEqual(r.context['fields'][5]['options'], self.no_options)
         return
+
+
+
+
 
     #   -----------------------------------------------------------------------------
     #   Form response tests

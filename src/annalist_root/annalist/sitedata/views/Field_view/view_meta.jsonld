@@ -34,6 +34,9 @@
   , { "annal:field_id":         "Field_default"
     , "annal:field_placement":  "small:0,12"
     }
+  , { "annal:field_id":         "Field_entity_type"
+    , "annal:field_placement":  "small:0,12"
+    }
   , { "annal:field_id":         "Field_typeref"
     , "annal:field_placement":  "small:0,6"
     }

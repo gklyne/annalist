@@ -34,6 +34,7 @@ class FieldValueMap(object):
     field value and description, which is added to a list of such fields
     in the indicated context variable.
 
+    c       request context field name for the field value mapping entry
     f       field description structure (cf. `FieldDescription`)
 
     NOTE: The form rendering template iterates over the context field values to be 
@@ -41,25 +42,34 @@ class FieldValueMap(object):
     field to a list of field value mappings at the indcated context field.
     """
 
-    def __init__(self, f=None):
+    def __init__(self, c=None, f=None):
+        self.c = c
         self.f = f
         self.e = f['field_property_uri']    # entity data key
         self.i = f['field_name']            # field data key
         return
 
-    def map_entity_to_context(self, entityvals, extras=None):
+    def __repr__(self):
+        return (
+            "FieldValueMap.c: %r\n"%(self.c)+
+            "FieldValueMap.f: %r\n"%(self.f)+
+            "FieldValueMap.e: %s\n"%(self.e)+
+            "FieldValueMap.i: %s\n"%(self.i)
+            )
+
+    def map_entity_to_context(self, entityvals, context_extra_values=None):
         """
         Returns a bound_field, which is a dictionary-like of values to be added 
         to the display context under construction
         """
         # log.info("map entity %s to context %s, vals %r"%(self.e, self.i, entityvals))
-        # log.info("map_entity_to_context: bound_field: extras %r"%(extras,))
+        # log.info("map_entity_to_context: bound_field: context_extra_values %r"%(context_extra_values,))
         boundfield = bound_field(
             field_description=self.f, 
             entityvals=entityvals,
-            extras=extras
+            context_extra_values=context_extra_values
             )
-        return boundfield
+        return { self.c: boundfield }
 
     def map_form_to_entity(self, formvals):
         """

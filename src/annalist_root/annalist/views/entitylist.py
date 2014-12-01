@@ -26,14 +26,15 @@ from annalist.models.entityfinder       import EntityFinder
 
 from annalist.views.uri_builder         import uri_with_params
 from annalist.views.displayinfo         import DisplayInfo
-from annalist.views.fielddescription    import FieldDescription
+from annalist.views.confirm             import ConfirmView, dict_querydict
+from annalist.views.generic             import AnnalistGenericView
+
+from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 from annalist.views.entityvaluemap      import EntityValueMap
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
+from annalist.views.fieldvaluemap       import FieldValueMap
 from annalist.views.repeatvaluesmap     import RepeatValuesMap
-from annalist.views.grouprepeatmap      import GroupRepeatMap
-from annalist.views.confirm             import ConfirmView, dict_querydict
-from annalist.views.generic             import AnnalistGenericView
 
 from annalist.views.fields.bound_field  import bound_field, get_entity_values
 
@@ -95,7 +96,7 @@ class EntityGenericListView(AnnalistGenericView):
         listinfo.check_authorization("list")
         return listinfo
 
-    def get_list_entityvaluemap(self, listinfo, extra_context):
+    def get_list_entityvaluemap(self, listinfo, context_extra_values):
         """
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for an indicated list display.
@@ -109,23 +110,36 @@ class EntityGenericListView(AnnalistGenericView):
         # 2. 'entities': (context receives a bound field that displays entry for each entity)
 
         # NOTE - supplied entity has single field 'annal:list_entities' (see 'get')
+        #        entitylist template uses 'fields' from context to display headings
 
-        fieldlistmap = FieldListValueMap( # 'fields'
+        fieldlistmap = FieldListValueMap('fields',
             listinfo.collection, 
-            listinfo.recordlist.get_values()[ANNAL.CURIE.list_fields],
-            extra_context
+            listinfo.recordlist[ANNAL.CURIE.list_fields],
+            None
             )
-        entitymap.add_map_entry(fieldlistmap)  # one-off for access to field headings
-        entitymap.add_map_entry(
-            GroupRepeatMap(c='entities', e=ANNAL.CURIE.list_entities, g=[fieldlistmap])
+        entitymap.add_map_entry(fieldlistmap)  # For access to field headings
+
+        repeatrows_field_descr = (
+            { "annal:id":                   "List_rows"
+            , "rdfs:label":                 "Fields"
+            , "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a record view description"
+            , "annal:field_name":           "List_rows"
+            , "annal:field_render_type":    "RepeatGroup"
+            , "annal:property_uri":         "_list_entities_"
+            , "annal:group_viewref":        "List_fields"
+            })
+        repeatrows_group_descr = (
+            { "annal:id":           "List_fields"
+            , "rdfs:label":         "List fields description"
+            , "annal:view_fields":  listinfo.recordlist[ANNAL.CURIE.list_fields]
+            })
+        repeatrows_descr = FieldDescription(
+            listinfo.collection, 
+            repeatrows_field_descr,
+            group_view=repeatrows_group_descr
             )
-        # repeatrows_descr = FieldDescription(
-        #     listinfo.collection, 
-        #     repeatrows_view_descr, 
-        #     extra_context
-        #     )
-        # repeatvaluesmap = RepeatValuesMap(repeatrows_descr, fieldlistmap)
-        # entitymap.add_map_entry(repeatvaluesmap)
+        entitymap.add_map_entry(FieldValueMap(c="List_rows", f=repeatrows_descr))
+
         return entitymap
 
     # GET
@@ -149,7 +163,7 @@ class EntityGenericListView(AnnalistGenericView):
                     user_perms, type_id=type_id, context=listinfo.recordlist, search=search_for
                     )
             )
-        entityvallist = { ANNAL.CURIE.list_entities: [ get_entity_values(listinfo, e) for e in entity_list ] }
+        entityvallist = { '_list_entities_': [ get_entity_values(listinfo, e) for e in entity_list ] }
         # Set up initial view context
         context_extra_values = (
             { 'continuation_url':       request.GET.get('continuation_url', "")
@@ -365,9 +379,10 @@ class EntityGenericListView(AnnalistGenericView):
         """
         # @@TODO: Possibly create FieldValueMap and return map_entity_to_context value? 
         #         or extract this logic and share?  See also entityedit view choices
-        field_description = FieldDescription(
+        field_description = field_description_from_view_field(
             listinfo.collection, 
-            {ANNAL.CURIE.field_id: "List_choice", ANNAL.CURIE.field_placement: "small:0,12;medium:5,5"},
+            { ANNAL.CURIE.field_id: "List_choice"
+            , ANNAL.CURIE.field_placement: "small:0,12;medium:5,5" },
             {}
             )
         entityvals        = { field_description['field_property_uri']: listinfo.list_id }

@@ -27,11 +27,12 @@ from annalist.models.entitydata         import EntityData
 
 from annalist.views.uri_builder         import uri_base, uri_with_params
 from annalist.views.displayinfo         import DisplayInfo
-from annalist.views.fielddescription    import FieldDescription
+from annalist.views.generic             import AnnalistGenericView
+
+from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 from annalist.views.entityvaluemap      import EntityValueMap
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
-from annalist.views.generic             import AnnalistGenericView
 
 from annalist.views.fields.bound_field  import bound_field, get_entity_values
 
@@ -242,18 +243,21 @@ class GenericEntityEditView(AnnalistGenericView):
         viewinfo.check_authorization(action)
         return viewinfo
 
-    def get_view_entityvaluemap(self, viewinfo, extra_context):
+    def get_view_entityvaluemap(self, viewinfo, entity_values):
         """
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for an indicated view.
+
+        The 3rd parameter to `FieldListValueMap` is used for EntityFinder
+        invocations used to populate enumerated field options.
         """
         # Locate and read view description
         entitymap = EntityValueMap(baseentityvaluemap)
         log.debug("entityview: %r"%viewinfo.recordview.get_values())
-        fieldlistmap = FieldListValueMap(
+        fieldlistmap = FieldListValueMap('fields',
             viewinfo.collection, 
             viewinfo.recordview.get_values()[ANNAL.CURIE.view_fields],
-            extra_context
+            {'view': viewinfo.recordview, 'entity': entity_values}
             )
         entitymap.add_map_entry(fieldlistmap)
         return entitymap
@@ -264,7 +268,8 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         # @@TODO: Possibly create FieldValueMap and return map_entity_to_context value? 
         #         or extract this logic and share?
-        field_description = FieldDescription(viewinfo.collection, 
+        field_description = field_description_from_view_field(
+            viewinfo.collection, 
             { ANNAL.CURIE.field_id: "View_choice" }, 
             None
             )

@@ -27,7 +27,7 @@ from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist.models.site               import Site
 from annalist.models.collection         import Collection
 
-from annalist.views.fielddescription    import FieldDescription
+from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 
 from annalist.views.fields.render_text          import RenderText
 from annalist.views.fields.render_placement     import Placement, get_placement_classes
@@ -82,8 +82,8 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def get_repeatgroup_context(self):
-        # This context is essentially a bound_field value, combining the repeat group description
-        # with a list of entity values to be formatted.
+        # context['field'] is essentially a bound_field value, combining the repeat group
+        # description with a list of entity values to be formatted.
         repeatgroup_context = Context(
             { 'field':
                 # ----- Repeated field values, as presented by bound_field
@@ -127,11 +127,18 @@ class FieldDescriptionTest(AnnalistTestCase):
                 , 'group_label':                'Fields'
                 , 'group_add_label':            'Add field'
                 , 'group_delete_label':         'Remove selected field(s)'
-                , 'group_fields':
-                    [ FieldDescription(self.testcoll, { ANNAL.CURIE.field_id: "Field_sel" },        {})
-                    , FieldDescription(self.testcoll, { ANNAL.CURIE.field_id: "Field_property" },   {})
-                    , FieldDescription(self.testcoll, { ANNAL.CURIE.field_id: "Field_placement" },  {})
+                , 'group_field_descs':
+                    [ field_description_from_view_field(
+                        self.testcoll, { ANNAL.CURIE.field_id: "Field_sel" },        {}
+                        )
+                    , field_description_from_view_field(
+                        self.testcoll, { ANNAL.CURIE.field_id: "Field_property" },   {}
+                        )
+                    , field_description_from_view_field(
+                        self.testcoll, { ANNAL.CURIE.field_id: "Field_placement" },  {}
+                        )
                     ]
+                , 'context_extra_values':       {}
                 }
             # ----- other values -----
             , 'auth_config':                  True
@@ -216,7 +223,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def test_RenderRepeatGroupEdit(self):
-        fieldrender = RenderRepeatGroup(render_repeatgroup.edit)
+        fieldrender   = RenderRepeatGroup(render_repeatgroup.edit)
         rendered_text = fieldrender.render(self.get_repeatgroup_context())
         # print "\n**************\n"
         # print rendered_text
