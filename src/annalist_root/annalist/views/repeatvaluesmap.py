@@ -41,9 +41,6 @@ class RepeatValuesMap(FieldValueMap):
 
     def __init__(self, c=None, f=None, fieldlist=None):
         super(RepeatValuesMap, self).__init__(c=c, f=f)
-        # self.c = c
-        # self.f = f
-        # self.e = f["field_property_uri"]
         self.fieldlist = fieldlist
         return
 
@@ -52,21 +49,6 @@ class RepeatValuesMap(FieldValueMap):
             super(RepeatValuesMap, self).__repr__()+
             "RepeatValuesMap.fieldlist: %r\n"%(self.fieldlist)
             )
-
-    # def map_entity_to_context(self, entityvals, context_extra_values=None):
-    #     """
-    #     Returns a bound_field, which is a dictionary-like of values to be added 
-    #     to the display context under construction
-    #     """
-    #     # @@TODO: repeats FieldValueMap - make subclass?
-    #     # log.info("*** map entity %s to context %s, vals %r"%(self.e, self.fieldlist, entityvals))
-    #     # log.info("map_entity_to_context: bound_field: context_extra_values %r"%(context_extra_values,))
-    #     boundfield = bound_field(
-    #         field_description=self.f, 
-    #         entityvals=entityvals,
-    #         context_extra_values=context_extra_values
-    #         )
-    #     return { self.c: boundfield }
 
     def map_form_to_entity(self, formvals):
         # log.info(repr(formvals))
@@ -92,8 +74,5 @@ class RepeatValuesMap(FieldValueMap):
             { 'field_type':    "RepeatValuesMap"
             , 'field_descr':   self.f
             })
-
-    def get_field_description(self):
-        return self.f
 
 # End.

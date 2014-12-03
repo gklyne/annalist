@@ -119,7 +119,7 @@ class EntityGenericListView(AnnalistGenericView):
             )
         entitymap.add_map_entry(fieldlistmap)  # For access to field headings
 
-        if False: # Old style
+        if True: # Old style
 
             entitymap.add_map_entry(
                 GroupRepeatMap(c='entities', e='_list_entities_', g=[fieldlistmap])

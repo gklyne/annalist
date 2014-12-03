@@ -281,7 +281,7 @@ def context_list_item_field(context, entity, fid):
         fd = context['List_rows']['group_field_descs'][fid]
         return bound_field(fd, entity)
     elif 'fields' in entity:
-        return entity['fields']
+        return entity['fields'][fid]
     log.warning("No field value found: context %r, entity %r"%(context.keys(), entity.keys()))
     return None
 
