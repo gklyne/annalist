@@ -168,13 +168,6 @@ class FieldDescription(object):
         """
         return self._field_desc['field_render_type'] == "RepeatGroup"
 
-    #@@
-    # def get_structure_description(self):
-    #     """
-    #     Helper function returns field description information
-    #     """
-    #     return self._field_desc
-
     def __repr__(self):
         return (
             "FieldDescription("+

@@ -147,7 +147,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                 </td>
             </tr>
             """%({'base': TestBasePath, 'cont': cont})
-        log.info(r.content)
+        # log.info(r.content)
         # log.info(r.context["fields"])
         # log.info(r.context["List_rows"])
         self.assertContains(r, rowdata, html=True)

@@ -32,7 +32,6 @@ from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
 from annalist.views.fieldvaluemap       import FieldValueMap
 from annalist.views.repeatvaluesmap     import RepeatValuesMap
-from annalist.views.grouprepeatmap      import GroupRepeatMap
 from annalist.views.confirm             import ConfirmView, dict_querydict
 from annalist.views.generic             import AnnalistGenericView
 
@@ -119,34 +118,27 @@ class EntityGenericListView(AnnalistGenericView):
             )
         entitymap.add_map_entry(fieldlistmap)  # For access to field headings
 
-        if True: # Old style
-
-            entitymap.add_map_entry(
-                GroupRepeatMap(c='entities', e='_list_entities_', g=[fieldlistmap])
-                )
-        else:
-
-            repeatrows_field_descr = (
-                { "annal:id":                   "List_rows"
-                , "rdfs:label":                 "Fields"
-                , "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a record view description"
-                , "annal:field_name":           "List_rows"
-                , "annal:field_render_type":    "RepeatGroup"
-                , "annal:property_uri":         "_list_entities_"
-                , "annal:group_viewref":        "List_fields"
-                })
-            repeatrows_group_descr = (
-                { "annal:id":           "List_fields"
-                , "rdfs:label":         "List fields description"
-                , "annal:view_fields":  listinfo.recordlist[ANNAL.CURIE.list_fields]
-                })
-            repeatrows_descr = FieldDescription(
-                listinfo.collection, 
-                repeatrows_field_descr,
-                group_view=repeatrows_group_descr,
-                view_context=context_extra_values
-                )
-            entitymap.add_map_entry(FieldValueMap(c="List_rows", f=repeatrows_descr))
+        repeatrows_field_descr = (
+            { "annal:id":                   "List_rows"
+            , "rdfs:label":                 "Fields"
+            , "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a record view description"
+            , "annal:field_name":           "List_rows"
+            , "annal:field_render_type":    "RepeatGroup"
+            , "annal:property_uri":         "_list_entities_"
+            , "annal:group_viewref":        "List_fields"
+            })
+        repeatrows_group_descr = (
+            { "annal:id":           "List_fields"
+            , "rdfs:label":         "List fields description"
+            , "annal:view_fields":  listinfo.recordlist[ANNAL.CURIE.list_fields]
+            })
+        repeatrows_descr = FieldDescription(
+            listinfo.collection, 
+            repeatrows_field_descr,
+            group_view=repeatrows_group_descr,
+            view_context=context_extra_values
+            )
+        entitymap.add_map_entry(FieldValueMap(c="List_rows", f=repeatrows_descr))
 
         return entitymap
 

@@ -136,7 +136,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 </td>
             </tr>
             """%({'base': TestBasePath, 'cont': cont})
-        log.info(r.content)
+        # log.info(r.content)
         self.assertContains(r, rowdata, html=True)
         # Test context
         # self.assertEqual(r.context['title'],            site_title())

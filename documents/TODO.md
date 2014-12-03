@@ -17,14 +17,12 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Redefine view with list of fields?  Not if that impacts usability.
     - [x] Define e-v-map for defined list of fields
     - [x] Repeat to reference list of fields 
-- [ ] Eliminate duplication with list view - rework list to use same repeating mechanism as view
-    - First step is to make something that works without `subgroupvaluemap`, and identify the problem areas
-    - then...
+- [x] Eliminate duplication with list view - rework list to use same repeating mechanism as view
 - [ ] Provide clean mechanism to propagate extra context to bound fields in repeat group rendering
 - [ ] Use distinguished names for internally-generated context keys (e.g. '_fields')
 - [ ] Simplify template now that repat fields are handled by a field renderer
-- [ ] Try to make mapping classes more consistent in their return types for sub-context values
-- [ ] Try eliminating `view_context` parameter from `FieldListValueMap` constructor - it appears to be unused
+- [x] Try to make mapping classes more consistent in their return types for sub-context values
+- [ ] Try eliminating `view_context` parameter from `FieldListValueMap` constructor - it appears to be unused (or is it... used for generating enumerated type lists?)
 - [ ] Add field for `annal:field_entity_type` property in field view
 - [ ] Add/test option to add repeated field group
 - [ ] Revisit definitions for BibJSON view

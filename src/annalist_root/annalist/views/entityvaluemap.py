@@ -87,8 +87,8 @@ class EntityValueMap(object):
         """
         Map values from form data to view context for form re-rendering.
 
-        Values defined in the supplied form data take priority, and the keyword arguments provide
-        values where the form data does not.
+        Values defined in the supplied form data take priority, and the 
+        keyword arguments provide values where the form data does not.
         """
         # log.info("\n*********\nmap_form_data_to_context: form_data: %r"%form_data)
         entityvals = self.map_form_data_to_values(form_data)

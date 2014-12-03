@@ -21,7 +21,6 @@ from annalist.identifiers               import RDFS, ANNAL
 
 from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 from annalist.views.fieldvaluemap       import FieldValueMap
-from annalist.views.repeatdescription   import RepeatDescription
 from annalist.views.repeatvaluesmap     import RepeatValuesMap
 
 class FieldListValueMap(object):
