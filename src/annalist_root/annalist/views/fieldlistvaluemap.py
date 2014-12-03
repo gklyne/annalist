@@ -63,7 +63,7 @@ class FieldListValueMap(object):
                     coll, field_desc.group_view_fields(), view_context
                     )
                 repeatvaluesmap = RepeatValuesMap(c='_fieldlistvaluemap_',
-                    repeat=field_desc, fields=repeatfieldsmap
+                    f=field_desc, fieldlist=repeatfieldsmap
                     )
                 self.fm.append(repeatvaluesmap)
             else:

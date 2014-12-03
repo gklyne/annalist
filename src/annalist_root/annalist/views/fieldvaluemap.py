@@ -49,6 +49,14 @@ class FieldValueMap(object):
         self.i = f['field_name']            # field data key
         return
 
+    def __repr__(self):
+        return (
+            "FieldValueMap.c: %r\n"%(self.c)+
+            "FieldValueMap.f: %r\n"%(self.f)+
+            "FieldValueMap.e: %s\n"%(self.e)+
+            "FieldValueMap.i: %s\n"%(self.i)
+            )
+
     def map_entity_to_context(self, entityvals, context_extra_values=None):
         """
         Returns a bound_field, which is a dictionary-like of values to be added 

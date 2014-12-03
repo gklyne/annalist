@@ -180,7 +180,6 @@ class RenderRepeatGroup(object):
         response_parts  = [self._template_head.render(context)]
         repeat_index = 0
         # @@TODO: devise cleaner mechanism to propagate additional display context to iner bound_fields
-        #         (Here, we pick the internal value from the supplied bound-field object)
         x = context['field']['context_extra_values']
         log.info("RenderRepeatGroup.render: %r"%(context['field']))
         for g in context['field']['field_value']:
@@ -194,7 +193,7 @@ class RenderRepeatGroup(object):
                 , 'repeat_bound_fields':  r
                 , 'repeat_entity':        g
                 })
-            # @@TODO: rationalize this to eliminate 'repeat' item
+            # @@TODO: rationalize this to eliminate 'repeat_dict' keyword item (second param)
             #         (currently included for compatibility with old field renderers)
             with context.push(repeat_dict, repeat=repeat_dict):
                 response_parts.append(self._template_body.render(context))
