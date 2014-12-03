@@ -30,11 +30,12 @@ class FieldListValueMap(object):
     corresponding to a list of field descriptions.
     """
 
-    def __init__(self, coll, fields, view_context):
+    def __init__(self, c, coll, fields, view_context):
         """
         Define an entry to be added to an entity view value mapping table,
         corresponding to a list of field descriptions.
 
+        c               name of field used for this value in display context
         collection      is a collection from which data is being rendered.
         fields          list of field descriptions from a view definition, each
                         of which is a dictionary with the field description from 
@@ -46,6 +47,7 @@ class FieldListValueMap(object):
         added to the form display.  The constructor for this object appends the current
         field to a list of field value mappings in context field 'fields'.
         """
+        self.c  = c         # Context field name for values mapped from entity
         self.fd = []        # List of field descriptions
         self.fm = []        # List of field value maps
         for f in fields:
@@ -57,14 +59,16 @@ class FieldListValueMap(object):
             #     )
             self.fd.append(field_desc)
             if field_desc.is_repeat_group():
-                repeatfieldsmap = FieldListValueMap(coll, field_desc.group_view_fields(), view_context)
-                repeatvaluesmap = RepeatValuesMap(c='_fieldvaluemap_',
+                repeatfieldsmap = FieldListValueMap('_unused_fieldlistvaluemap_', 
+                    coll, field_desc.group_view_fields(), view_context
+                    )
+                repeatvaluesmap = RepeatValuesMap(c='_fieldlistvaluemap_',
                     repeat=field_desc, fields=repeatfieldsmap
                     )
                 self.fm.append(repeatvaluesmap)
             else:
                 self.fd.append(field_desc)
-                self.fm.append(FieldValueMap(c='_fieldvaluemap_', f=field_desc))
+                self.fm.append(FieldValueMap(c='_fieldlistvaluemap_', f=field_desc))
         return
 
     def __repr__(self):
@@ -76,8 +80,8 @@ class FieldListValueMap(object):
         listcontext = []
         for f in self.fm:
             fv = f.map_entity_to_context(entityvals, context_extra_values=context_extra_values)
-            listcontext.append(fv['_fieldvaluemap_'])
-        return { 'fields': listcontext }
+            listcontext.append(fv['_fieldlistvaluemap_'])
+        return { self.c: listcontext }
 
     def map_form_to_entity(self, formvals):
         vals = {}

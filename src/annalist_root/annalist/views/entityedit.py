@@ -250,7 +250,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # Locate and read view description
         entitymap = EntityValueMap(baseentityvaluemap)
         log.debug("entityview: %r"%viewinfo.recordview.get_values())
-        fieldlistmap = FieldListValueMap(
+        fieldlistmap = FieldListValueMap('fields',
             viewinfo.collection, 
             viewinfo.recordview.get_values()[ANNAL.CURIE.view_fields],
             context_extra_values

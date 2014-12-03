@@ -33,7 +33,7 @@ class GroupRepeatMap(_GroupRepeatMap_tuple):
     group of fields that is repeated for multiple entities.  
 
     c       request context field name for the repeated groups.
-    e       name of entity value field containing list of entities  
+    e       name of entity value field containing list of entities
     g       a group of field descriptions to be repeated for each provided entity.
             The value supplied is in the form of an entity value map, and the named
             context field is populated with a list of "sub-context" values, each of

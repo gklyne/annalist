@@ -110,11 +110,9 @@ class EntityGenericListView(AnnalistGenericView):
         # 2. 'entities': (context receives a bound field that displays entry for each entity)
 
         # NOTE - supplied entity has single field 'annal:list_entities' (see 'get')
-        # @@TODO: use internal name for this, e.g. _list_entities_
-        # @@TODO: use internal name for 'fields', e.g. _list_entity_fields_
-        #         supply context name param to FieldListValueMap
+        #        entitylist template uses 'fields' from context to display headings
 
-        fieldlistmap = FieldListValueMap( # 'fields'
+        fieldlistmap = FieldListValueMap('fields',
             listinfo.collection, 
             listinfo.recordlist[ANNAL.CURIE.list_fields],
             context_extra_values
@@ -124,7 +122,7 @@ class EntityGenericListView(AnnalistGenericView):
         if False: # Old style
 
             entitymap.add_map_entry(
-                GroupRepeatMap(c='entities', e=ANNAL.CURIE.list_entities, g=[fieldlistmap])
+                GroupRepeatMap(c='entities', e='_list_entities_', g=[fieldlistmap])
                 )
         else:
 
@@ -134,7 +132,7 @@ class EntityGenericListView(AnnalistGenericView):
                 , "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a record view description"
                 , "annal:field_name":           "List_rows"
                 , "annal:field_render_type":    "RepeatGroup"
-                , "annal:property_uri":         "annal:list_entities"
+                , "annal:property_uri":         "_list_entities_"
                 , "annal:group_viewref":        "List_fields"
                 })
             repeatrows_group_descr = (
@@ -173,7 +171,7 @@ class EntityGenericListView(AnnalistGenericView):
                     user_perms, type_id=type_id, context=listinfo.recordlist, search=search_for
                     )
             )
-        entityvallist = { ANNAL.CURIE.list_entities: [ get_entity_values(listinfo, e) for e in entity_list ] }
+        entityvallist = { '_list_entities_': [ get_entity_values(listinfo, e) for e in entity_list ] }
         # Set up initial view context
         context_extra_values = (
             { 'continuation_url':       request.GET.get('continuation_url', "")
