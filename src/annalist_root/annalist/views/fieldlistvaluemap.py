@@ -72,10 +72,10 @@ class FieldListValueMap(object):
             "FieldListValueMap.fm: %r\n"%(self.fm)
             )
 
-    def map_entity_to_context(self, entityvals, extras=None):
+    def map_entity_to_context(self, entityvals, context_extra_values=None):
         listcontext = []
         for f in self.fm:
-            fv = f.map_entity_to_context(entityvals, extras=extras)
+            fv = f.map_entity_to_context(entityvals, context_extra_values=context_extra_values)
             listcontext.append(fv['_fieldvaluemap_'])
         return { 'fields': listcontext }
 

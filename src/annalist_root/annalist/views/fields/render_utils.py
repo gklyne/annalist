@@ -132,8 +132,6 @@ def get_item_renderer(renderid):
         return RenderTokenSet(render_tokenset.item)
     if renderid == "RepeatGroup":
         return RenderRepeatGroup(render_repeatgroup.item)
-    # if renderid == "RepeatGroup":
-    #     return RenderRepeatGroup(render_repeatgroup.item)
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
 

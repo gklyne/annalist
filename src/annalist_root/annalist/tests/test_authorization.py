@@ -32,7 +32,9 @@ from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     create_user_permissions,
-    collection_new_form_data, collection_remove_form_data
+    collection_new_form_data, collection_remove_form_data,
+    context_list_entities,
+    context_list_item_fields, context_list_item_field_value
     )
 from entity_testentitydata          import (
     # recorddata_dir,  entitydata_dir,
@@ -804,28 +806,16 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
         # Entities and bound fields
-        # log.info(r.context['entities'])  #@@
-        # rows = []
-        # for i in range(len(r.context['entities'])):
-        #     efs = r.context['entities'][i]['fields']
-        #     rows.append((efs[0]['field_value'], efs[1]['field_value'], efs[2]['field_value']))
-        # for row in rows:
-        #     log.info("entity_id %s, type_id %s, label %s"%row)
-        self.assertEqual(len(r.context['entities']), 2)
+        entities = context_list_entities(r.context)
+        self.assertEqual(len(entities), 2)
         entity_fields = (
             [ ('testtype',    '_type',    'RecordType testtype/testtype')
-            # , ('user_admin',  '_user',    'Admin User')
-            # , ('user_config', '_user',    'Admin User')
-            # , ('user_create', '_user',    'Admin User')
-            # , ('user_delete', '_user',    'Admin User')
-            # , ('user_update', '_user',    'Admin User')
-            # , ('user_view',   '_user',    'Admin User')
             , ('entity1',     'testtype', 'Entity testcoll/testtype/entity1')
             ])
         for eid in range(2):
             for fid in range(3):
-                item_field = r.context['entities'][eid]['fields'][fid]
-                self.assertEqual(item_field['field_value'],    entity_fields[eid][fid])
+                item_field_value = context_list_item_field_value(r.context, entities[eid], fid)
+                self.assertEqual(item_field_value, entity_fields[eid][fid])
         return
 
 # End.

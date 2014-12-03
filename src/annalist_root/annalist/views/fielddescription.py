@@ -51,8 +51,7 @@ class FieldDescription(object):
         collection      is a collection from which data is being rendered.
         recordfield     is a RecordField value or dictionary containing details of
                         the field for which a descriptor is constructed.
-        view_context    @@TODO: drop this?
-                        is a dictionary of additional values that may be used in assembling
+        view_context    is a dictionary of additional values that may be used in assembling
                         values to be used when rendering the field.  In particular, a copy 
                         of the view description record provides context for some enumeration 
                         type selections.
@@ -227,7 +226,7 @@ class FieldDescription(object):
             yield k
         return
 
-def field_description_from_view_field(collection, field, view_context):
+def field_description_from_view_field(collection, field, view_context=None):
     """
     Returns a field description value created using information from
     a field reference in a view description record (i.e. a dictionary
@@ -268,7 +267,7 @@ def field_description_from_view_field(collection, field, view_context):
     else:
         group_view = None
     return FieldDescription(
-        collection, recordfield, view_context=None, 
+        collection, recordfield, view_context=view_context, 
         field_property=field.get(ANNAL.CURIE.property_uri, None),
         field_placement=field.get(ANNAL.CURIE.field_placement, None), 
         group_view=group_view

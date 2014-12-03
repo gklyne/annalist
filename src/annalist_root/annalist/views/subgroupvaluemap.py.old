@@ -33,8 +33,12 @@ class SubgroupValueMap(object):
     def __repr__(self):
         return "FieldListValueMap(c=%s, %r)"%(self.c, self.valuemap)
 
-    def map_entity_to_context(self, entityvals, extras=None):
-        return { self.c: self.valuemap.map_entity_to_context(entityvals, extras=extras) }
+    def map_entity_to_context(self, entityvals, context_extra_values=None):
+        return (
+            { self.c: self.valuemap.map_entity_to_context(
+                entityvals, context_extra_values=context_extra_values
+                ) 
+            }
 
     def map_form_to_entity(self, formvals):
         return self.valuemap.map_form_to_entity(formvals)

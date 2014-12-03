@@ -40,7 +40,10 @@ from entity_testutils               import (
     confirm_delete_params,
     collection_create_values,
     site_title,
-    create_test_user
+    create_test_user,
+    context_list_entities,
+    context_list_head_fields,
+    context_list_item_fields, context_list_item_field_value
     )
 from entity_testtypedata            import (
     recordtype_dir, 
@@ -133,7 +136,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 </td>
             </tr>
             """%({'base': TestBasePath, 'cont': cont})
-        # log.info(r.content)
+        log.info(r.content)
         self.assertContains(r, rowdata, html=True)
         # Test context
         # self.assertEqual(r.context['title'],            site_title())
@@ -184,7 +187,8 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_value'], "")
         self.assertEqual(r.context['fields'][2]['entity_type_id'], "")
         # Entities and bound fields
-        self.assertEqual(len(r.context['entities']), 6)
+        entities = context_list_entities(r.context)
+        self.assertEqual(len(entities), 6)
         entity_fields = (
             [ {'entity_type_id': "_type",     'annal:id': "testtype",  'rdfs:label': "RecordType testcoll/testtype"}
             , {'entity_type_id': "_type",     'annal:id': "testtype2", 'rdfs:label': "RecordType testcoll/testtype2"}
@@ -196,8 +200,10 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         field_keys = ('annal:id', 'entity_type_id', 'rdfs:label')
         for eid in range(6):
             for fid in range(3):
-                item_field = r.context['entities'][eid]['fields'][fid]
-                head_field = r.context['fields'][fid]
+                item_field = context_list_item_fields(r.context, entities[eid])[fid]
+                head_field = context_list_head_fields(r.context)[fid]
+                # log.info("Item field: %r"%(item_field,))
+                # log.info("Head field: %r"%(head_field,))
                 # Check that row field descriptions match corresponding heading feld descriptions
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
@@ -264,12 +270,13 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][0]['field_value'], "")
         # Entities
-        self.assertEqual(len(r.context['entities']), 3)
+        entities = context_list_entities(r.context)
+        self.assertEqual(len(entities), 3)
         field_val = ("entity%d", "Entity testcoll/testtype/entity%d")
         for eid in range(3):
             for fid in range(2):
-                item_field = r.context['entities'][eid]['fields'][fid]
-                head_field = r.context['fields'][fid]
+                item_field = context_list_item_fields(r.context, entities[eid])[fid]
+                head_field = context_list_head_fields(r.context)[fid]
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
                         'field_property_uri', 'field_render_head',

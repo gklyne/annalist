@@ -96,7 +96,7 @@ class EntityGenericListView(AnnalistGenericView):
         listinfo.check_authorization("list")
         return listinfo
 
-    def get_list_entityvaluemap(self, listinfo, extra_context):
+    def get_list_entityvaluemap(self, listinfo, context_extra_values):
         """
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for an indicated list display.
@@ -110,15 +110,18 @@ class EntityGenericListView(AnnalistGenericView):
         # 2. 'entities': (context receives a bound field that displays entry for each entity)
 
         # NOTE - supplied entity has single field 'annal:list_entities' (see 'get')
+        # @@TODO: use internal name for this, e.g. _list_entities_
+        # @@TODO: use internal name for 'fields', e.g. _list_entity_fields_
+        #         supply context name param to FieldListValueMap
 
         fieldlistmap = FieldListValueMap( # 'fields'
             listinfo.collection, 
             listinfo.recordlist[ANNAL.CURIE.list_fields],
-            extra_context
+            context_extra_values
             )
         entitymap.add_map_entry(fieldlistmap)  # For access to field headings
 
-        if True: # Old style
+        if False: # Old style
 
             entitymap.add_map_entry(
                 GroupRepeatMap(c='entities', e=ANNAL.CURIE.list_entities, g=[fieldlistmap])
@@ -143,7 +146,7 @@ class EntityGenericListView(AnnalistGenericView):
                 listinfo.collection, 
                 repeatrows_field_descr,
                 group_view=repeatrows_group_descr,
-                view_context=extra_context,
+                view_context=context_extra_values
                 )
             entitymap.add_map_entry(FieldValueMap(c="List_rows", f=repeatrows_descr))
 

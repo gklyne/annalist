@@ -49,17 +49,17 @@ class FieldValueMap(object):
         self.i = f['field_name']            # field data key
         return
 
-    def map_entity_to_context(self, entityvals, extras=None):
+    def map_entity_to_context(self, entityvals, context_extra_values=None):
         """
         Returns a bound_field, which is a dictionary-like of values to be added 
         to the display context under construction
         """
         # log.info("map entity %s to context %s, vals %r"%(self.e, self.i, entityvals))
-        # log.info("map_entity_to_context: bound_field: extras %r"%(extras,))
+        # log.info("map_entity_to_context: bound_field: context_extra_values %r"%(context_extra_values,))
         boundfield = bound_field(
             field_description=self.f, 
             entityvals=entityvals,
-            extras=extras
+            context_extra_values=context_extra_values
             )
         return { self.c: boundfield }
 

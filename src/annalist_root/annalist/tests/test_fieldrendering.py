@@ -138,7 +138,7 @@ class FieldDescriptionTest(AnnalistTestCase):
                         self.testcoll, { ANNAL.CURIE.field_id: "Field_placement" },  {}
                         )
                     ]
-                , '_extras':                    {}
+                , 'context_extra_values':       {}
                 }
             # ----- other values -----
             , 'auth_config':                  True
@@ -223,7 +223,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def test_RenderRepeatGroupEdit(self):
-        fieldrender = RenderRepeatGroup(render_repeatgroup.edit)
+        fieldrender   = RenderRepeatGroup(render_repeatgroup.edit)
         rendered_text = fieldrender.render(self.get_repeatgroup_context())
         # print "\n**************\n"
         # print rendered_text

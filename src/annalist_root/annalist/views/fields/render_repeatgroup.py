@@ -8,6 +8,8 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import sys
+import traceback
 import logging
 log = logging.getLogger(__name__)
 
@@ -89,7 +91,9 @@ view = (
 
 item = (
     { 'repeatgroup_head':
-        """"""
+        """
+        <!-- views.fields.render_repeatgroup.item_template -->
+        """
     , 'repeatgroup_body':
         # Context values:
         #   repeat_id - id of repeated group
@@ -125,6 +129,7 @@ class RenderRepeatGroup(object):
     """
     Creates a renderer object for a simple text field
     """
+    log.info("RenderRepeatGroup.render: __init__ %r"%(templates))
     super(RenderRepeatGroup, self).__init__()
     assert templates is not None, "RenderRepeatGroup template must be supplied (.edit, .view or .item)"
     self._template_head = Template(templates['repeatgroup_head'])
@@ -133,7 +138,27 @@ class RenderRepeatGroup(object):
     return
 
   def __str__(self):
-    return "RenderRepeatGroup" # %self.render(Context({}))
+    # Minimal context for rendering repeat group...
+    context = Context(
+      { 'field':
+        { 'context_extra_values': {}
+        , 'field_value':
+          [ { 'entity_id': "test_id"
+            , 'test_uri':  "test value 1"
+            }
+          , { 'entity_id': "test_id"
+            , 'test_uri':  "test value 2"
+            }
+          ]
+        , 'group_field_descs':
+          [ { 'field_property_uri': "test_uri"
+            , 'field_id':           "test_field_id"
+            }
+          ]
+        , 'group_id': "test_group_id"
+        }
+      })
+    return "RenderRepeatGroup %r, %s"%(self._template_head,self.render(context))
 
   def render(self, context):
     """
@@ -150,26 +175,42 @@ class RenderRepeatGroup(object):
     being rendered, or a list of repeated values that are each formatted
     using the supplied body template.
     """
-    response_parts  = [self._template_head.render(context)]
-    repeat_index = 0
-    # @@TODO: devise cleaner mechanism
-    x = context['field']['_extras']
-    for g in context['field']['field_value']:
-        r = [ bound_field(f, g, extras=x) for f in context['field']['group_field_descs'] ]
-        repeat_id = context.get('repeat_prefix', "") + context['field']['group_id']
-        repeat_dict = (
-            { 'repeat_id':            repeat_id
-            , 'repeat_index':         str(repeat_index)
-            , 'repeat_prefix':        repeat_id+("__%d__"%repeat_index)
-            , 'repeat_bound_fields':  r
-            , 'repeat_entity':        g
-            })
-        # @@TODO: rationalize this to eliminate 'repeat' item
-        #         (currently included for compatibility with old field renderers)
-        with context.push(repeat_dict, repeat=repeat_dict):
-            response_parts.append(self._template_body.render(context))
-        repeat_index += 1
-    response_parts.append(self._template_tail.render(context))
+    log.info("RenderRepeatGroup.render")
+    try:
+        response_parts  = [self._template_head.render(context)]
+        repeat_index = 0
+        # @@TODO: devise cleaner mechanism to propagate additional display context to iner bound_fields
+        #         (Here, we pick the internal value from the supplied bound-field object)
+        x = context['field']['context_extra_values']
+        log.info("RenderRepeatGroup.render: %r"%(context['field']))
+        for g in context['field']['field_value']:
+            log.info("RenderRepeatGroup.render: %r"%(g))
+            r = [ bound_field(f, g, context_extra_values=x) for f in context['field']['group_field_descs'] ]
+            repeat_id = context.get('repeat_prefix', "") + context['field']['group_id']
+            repeat_dict = (
+                { 'repeat_id':            repeat_id
+                , 'repeat_index':         str(repeat_index)
+                , 'repeat_prefix':        repeat_id+("__%d__"%repeat_index)
+                , 'repeat_bound_fields':  r
+                , 'repeat_entity':        g
+                })
+            # @@TODO: rationalize this to eliminate 'repeat' item
+            #         (currently included for compatibility with old field renderers)
+            with context.push(repeat_dict, repeat=repeat_dict):
+                response_parts.append(self._template_body.render(context))
+            repeat_index += 1
+        response_parts.append(self._template_tail.render(context))
+    except Exception as e:
+        log.exception("Exception in RenderRepeatGroup.render")
+        ex_type, ex, tb = sys.exc_info()
+        traceback.print_tb(tb)
+        response_parts = (
+            ["Exception in RenderRepeatGroup.render"]+
+            [repr(e)]+
+            traceback.format_exception(ex_type, ex, tb)+
+            ["***"]
+            )
+        del tb
     return "".join(response_parts)
 
   # def encode(self, field_value):

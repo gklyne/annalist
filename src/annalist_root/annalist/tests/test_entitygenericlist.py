@@ -50,7 +50,10 @@ from entity_testutils               import (
     confirm_delete_params,
     collection_create_values,
     site_title,
-    create_test_user, create_user_permissions
+    create_test_user, create_user_permissions,
+    context_list_entities,
+    context_list_head_fields, context_list_item_fields,
+    context_list_item_field, context_list_item_field_value
     )
 from entity_testtypedata        import (
     recordtype_dir, 
@@ -157,13 +160,15 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Default_list_all")
         # Unbound field descriptions
-        self.assertEqual(len(r.context['fields']), 3)
-        self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_id')
-        self.assertEqual(r.context['fields'][1]['field_id'], 'Entity_type')
-        self.assertEqual(r.context['fields'][2]['field_id'], 'Entity_label')
+        head_fields = context_list_head_fields(r.context)
+        self.assertEqual(len(head_fields), 3)
+        self.assertEqual(head_fields[0]['field_id'], 'Entity_id')
+        self.assertEqual(head_fields[1]['field_id'], 'Entity_type')
+        self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities and bound fields
-        # log.info(r.context['entities'])  #@@
-        self.assertEqual(len(r.context['entities']), 6)
+        # log.info(entities)  #@@
+        entities = context_list_entities(r.context)
+        self.assertEqual(len(entities), 6)
         entity_fields = (
             [ {'entity_type_id': "_type",     'annal:id': "testtype",  'rdfs:label': "RecordType testcoll/testtype"}
             , {'entity_type_id': "_type",     'annal:id': "testtype2", 'rdfs:label': "RecordType testcoll/testtype2"}
@@ -174,9 +179,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
             ])
         field_keys = ('annal:id', 'entity_type_id', 'rdfs:label')
         for eid in range(6):
+            item_fields = context_list_item_fields(r.context, entities[eid])
             for fid in range(3):
-                item_field = r.context['entities'][eid]['fields'][fid]
-                head_field = r.context['fields'][fid]
+                item_field = item_fields[fid]
+                head_field = head_fields[fid]
                 # Check that row field descriptions match corresponding heading feld descriptions
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
@@ -218,42 +224,44 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
-        self.assertEqual(len(r.context['fields']), 3)
+        head_fields = context_list_head_fields(r.context)
+        self.assertEqual(len(head_fields), 3)
         # 1st field
-        self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_id')
-        self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
-        self.assertEqual(r.context['fields'][0]['field_placeholder'], "(entity id)")
-        self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
-        self.assertEqual(r.context['fields'][0]['field_render_head'], "field/annalist_head_any.html")
-        self.assertEqual(r.context['fields'][0]['field_render_item'], "field/annalist_item_entityid.html")
-        self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-3 columns")
-        self.assertEqual(r.context['fields'][0]['field_value_type'], "annal:Slug")
-        self.assertEqual(r.context['fields'][0]['field_value'], "")
+        self.assertEqual(head_fields[0]['field_id'], 'Entity_id')
+        self.assertEqual(head_fields[0]['field_name'], 'entity_id')
+        self.assertEqual(head_fields[0]['field_label'], 'Id')
+        self.assertEqual(head_fields[0]['field_placeholder'], "(entity id)")
+        self.assertEqual(head_fields[0]['field_property_uri'], "annal:id")
+        self.assertEqual(head_fields[0]['field_render_head'], "field/annalist_head_any.html")
+        self.assertEqual(head_fields[0]['field_render_item'], "field/annalist_item_entityid.html")
+        self.assertEqual(head_fields[0]['field_placement'].field, "small-3 columns")
+        self.assertEqual(head_fields[0]['field_value_type'], "annal:Slug")
+        self.assertEqual(head_fields[0]['field_value'], "")
         # 2nd field
-        self.assertEqual(r.context['fields'][1]['field_id'], 'Field_type')
-        self.assertEqual(r.context['fields'][1]['field_name'], 'Field_type')
-        self.assertEqual(r.context['fields'][1]['field_label'], 'Field value type')
-        self.assertEqual(r.context['fields'][1]['field_placeholder'], "(field value type)")
-        self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:field_value_type")
-        self.assertEqual(r.context['fields'][1]['field_render_head'], "field/annalist_head_any.html")
-        self.assertEqual(r.context['fields'][1]['field_render_item'], "field/annalist_item_identifier.html")
-        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-3 columns")
-        self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Identifier")
+        self.assertEqual(head_fields[1]['field_id'], 'Field_type')
+        self.assertEqual(head_fields[1]['field_name'], 'Field_type')
+        self.assertEqual(head_fields[1]['field_label'], 'Field value type')
+        self.assertEqual(head_fields[1]['field_placeholder'], "(field value type)")
+        self.assertEqual(head_fields[1]['field_property_uri'], "annal:field_value_type")
+        self.assertEqual(head_fields[1]['field_render_head'], "field/annalist_head_any.html")
+        self.assertEqual(head_fields[1]['field_render_item'], "field/annalist_item_identifier.html")
+        self.assertEqual(head_fields[1]['field_placement'].field, "small-3 columns")
+        self.assertEqual(head_fields[1]['field_value_type'], "annal:Identifier")
         # 3rd field
-        self.assertEqual(r.context['fields'][2]['field_id'], 'Entity_label')
-        self.assertEqual(r.context['fields'][2]['field_name'], 'Entity_label')
-        self.assertEqual(r.context['fields'][2]['field_label'], 'Label')
-        self.assertEqual(r.context['fields'][2]['field_placeholder'], "(label)")
-        self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:label")
-        self.assertEqual(r.context['fields'][2]['field_render_head'], "field/annalist_head_any.html")
-        self.assertEqual(r.context['fields'][2]['field_render_item'], "field/annalist_item_text.html")
-        self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-6 columns")
-        self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
+        self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
+        self.assertEqual(head_fields[2]['field_name'], 'Entity_label')
+        self.assertEqual(head_fields[2]['field_label'], 'Label')
+        self.assertEqual(head_fields[2]['field_placeholder'], "(label)")
+        self.assertEqual(head_fields[2]['field_property_uri'], "rdfs:label")
+        self.assertEqual(head_fields[2]['field_render_head'], "field/annalist_head_any.html")
+        self.assertEqual(head_fields[2]['field_render_item'], "field/annalist_item_text.html")
+        self.assertEqual(head_fields[2]['field_placement'].field, "small-6 columns")
+        self.assertEqual(head_fields[2]['field_value_type'], "annal:Text")
         # Entities
-        # log.info([e['fields'][0]['field_value'] for e in r.context['entities']])
-        self.assertIn('_initial_values', [ e['fields'][0]['field_value'] for e in r.context['entities'] ])
-        self.assertEqual(len(r.context['entities']), 70)
+        entities = context_list_entities(r.context)
+        self.assertEqual(len(entities), 70)
+        entity_ids = [ context_list_item_field_value(r.context, e, 0) for e in entities ]
+        self.assertIn('_initial_values', entity_ids)
         field_entities = (
             { ('Entity_id',         "annal:Slug",          "Id")
             , ('Bib_address',       "annal:Text",          "Bib_address")
@@ -279,12 +287,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Field_sel',         "annal:Slug",          "Field id")
             })
         for f in field_entities:
-            for eid in range(len(r.context['entities'])):
-                item_fields = r.context['entities'][eid]['fields']
+            for eid in range(len(entities)):
+                item_fields = context_list_item_fields(r.context, entities[eid])
                 if item_fields[0]['field_value'] == f[0]:
                     for fid in range(3):
-                        item_field = r.context['entities'][eid]['fields'][fid]
-                        head_field = r.context['fields'][fid]
+                        item_field = item_fields[fid]
+                        head_field = head_fields[fid]
                         for fkey in (
                                 'field_id', 'field_name', 'field_label', 
                                 'field_property_uri', 'field_render_head',
@@ -324,7 +332,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
-        self.assertEqual(len(r.context['fields']), 3)
+        head_fields = context_list_head_fields(r.context)
+        self.assertEqual(len(head_fields), 3)
         return
 
     def test_get_fields_list_search(self):
@@ -357,12 +366,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
-        self.assertEqual(len(r.context['fields']), 3)
-        self.assertEqual(r.context['fields'][0]['field_id'], 'Entity_id')
-        self.assertEqual(r.context['fields'][1]['field_id'], 'Field_type')
-        self.assertEqual(r.context['fields'][2]['field_id'], 'Entity_label')
+        head_fields = context_list_head_fields(r.context)
+        self.assertEqual(len(head_fields), 3)
+        self.assertEqual(head_fields[0]['field_id'], 'Entity_id')
+        self.assertEqual(head_fields[1]['field_id'], 'Field_type')
+        self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities
-        self.assertEqual(len(r.context['entities']), 21)
+        entities = context_list_entities(r.context)
+        self.assertEqual(len(entities), 21)
         field_entities = (
             { ('Bib_address',       "annal:Text",          "Bib_address")
             , ('Bib_author',        "annal:Text",          "Bib_author")
@@ -387,12 +398,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Bib_year',          "annal:Text",          "Bib_year")
             })
         for f in field_entities:
-            for eid in range(len(r.context['entities'])):
-                item_fields = r.context['entities'][eid]['fields']
+            for eid in range(len(entities)):
+                item_fields = context_list_item_fields(r.context, entities[eid])
                 if item_fields[0]['field_value'] == f[0]:
                     for fid in range(3):
-                        item_field = r.context['entities'][eid]['fields'][fid]
-                        head_field = r.context['fields'][fid]
+                        item_field = item_fields[fid]
+                        head_field = head_fields[fid]
                         for fkey in (
                                 'field_id', 'field_name', 'field_label', 
                                 'field_property_uri', 'field_render_head',

@@ -297,7 +297,7 @@ class EntitySelector(object):
             resultdict['val2'] = get_value(resultlist[2])
         return resultdict
 
-    @classmethod  #@@ @staticmethod, no cls?
+    @classmethod  #@@TODO: @staticmethod, no cls?
     def compile_selector_filter(cls, selector):
         """
         Return filter for for testing entities matching a supplied selector.

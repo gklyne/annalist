@@ -51,18 +51,18 @@ class RepeatValuesMap(object):
             "RepeatValuesMap.f: %r\n"%(self.f)
             )
 
-    def map_entity_to_context(self, entityvals, extras=None):
+    def map_entity_to_context(self, entityvals, context_extra_values=None):
         """
         Returns a bound_field, which is a dictionary-like of values to be added 
         to the display context under construction
         """
         # @@TODO: repeats FieldValueMap - make subclass?
         # log.info("*** map entity %s to context %s, vals %r"%(self.e, self.f, entityvals))
-        # log.info("map_entity_to_context: bound_field: extras %r"%(extras,))
+        # log.info("map_entity_to_context: bound_field: context_extra_values %r"%(context_extra_values,))
         boundfield = bound_field(
             field_description=self.r, 
             entityvals=entityvals,
-            extras=extras
+            context_extra_values=context_extra_values
             )
         return { self.c: boundfield }
 
