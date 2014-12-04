@@ -381,7 +381,8 @@ class EntityGenericListView(AnnalistGenericView):
         #         or extract this logic and share?  See also entityedit view choices
         field_description = field_description_from_view_field(
             listinfo.collection, 
-            {ANNAL.CURIE.field_id: "List_choice", ANNAL.CURIE.field_placement: "small:0,12;medium:5,5"},
+            { ANNAL.CURIE.field_id: "List_choice"
+            , ANNAL.CURIE.field_placement: "small:0,12;medium:5,5" },
             {}
             )
         entityvals        = { field_description['field_property_uri']: listinfo.list_id }

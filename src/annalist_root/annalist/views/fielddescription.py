@@ -100,7 +100,9 @@ class FieldDescription(object):
         if type_ref:
             restrict_values = self._field_desc['field_restrict_values']
             entity_finder   = EntityFinder(collection, selector=restrict_values)
-            entities        = entity_finder.get_entities_sorted(type_id=type_ref, context=view_context)
+            entities        = entity_finder.get_entities_sorted(
+                type_id=type_ref, context=view_context
+                )
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
             # Uses collections.OrderedfDict to preserve entity ordering

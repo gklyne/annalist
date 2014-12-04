@@ -71,8 +71,10 @@ class RepeatValuesMap(FieldValueMap):
         Helper function returns structure description information
         """
         return (
-            { 'field_type':    "RepeatValuesMap"
-            , 'field_descr':   self.f
+            { 'field_type':     "RepeatValuesMap"
+            , 'field_descr':    self.f
+            , 'entity_field':   self.e
+            , 'form_field':     self.i
             })
 
 # End.

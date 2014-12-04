@@ -19,10 +19,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Repeat to reference list of fields 
 - [x] Eliminate duplication with list view - rework list to use same repeating mechanism as view
 - [ ] Provide clean mechanism to propagate extra context to bound fields in repeat group rendering
+- [ ] Try eliminating `view_context` parameter from `FieldListValueMap` constructor - it appears to be unused (or is it... used for generating enumerated type lists?  Used by FieldDescription/field_description_from_view_field)
 - [ ] Use distinguished names for internally-generated context keys (e.g. '_fields')
 - [ ] Simplify template now that repat fields are handled by a field renderer
 - [x] Try to make mapping classes more consistent in their return types for sub-context values
-- [ ] Try eliminating `view_context` parameter from `FieldListValueMap` constructor - it appears to be unused (or is it... used for generating enumerated type lists?)
 - [ ] Add field for `annal:field_entity_type` property in field view
 - [ ] Add/test option to add repeated field group
 - [ ] Revisit definitions for BibJSON view

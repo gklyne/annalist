@@ -242,7 +242,7 @@ class GenericEntityEditView(AnnalistGenericView):
         viewinfo.check_authorization(action)
         return viewinfo
 
-    def get_view_entityvaluemap(self, viewinfo, context_extra_values):
+    def get_view_entityvaluemap(self, viewinfo, entity_values):
         """
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for an indicated view.
@@ -253,7 +253,7 @@ class GenericEntityEditView(AnnalistGenericView):
         fieldlistmap = FieldListValueMap('fields',
             viewinfo.collection, 
             viewinfo.recordview.get_values()[ANNAL.CURIE.view_fields],
-            context_extra_values
+            entity_values
             )
         entitymap.add_map_entry(fieldlistmap)
         return entitymap

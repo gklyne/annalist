@@ -39,8 +39,8 @@ class FieldListValueMap(object):
         fields          list of field descriptions from a view definition, each
                         of which is a dictionary with the field description from 
                         a view or list description.
-        view_context    is a dictionary of additional values that may be used in assembling
-                        values to be used when rendering the fields.
+        view_context    is a dictionary of additional values that may be used in
+                        assembling values to be used when rendering the fields.
 
         NOTE: The form rendering template iterates over the context field values to be 
         added to the form display.  The constructor for this object appends the current

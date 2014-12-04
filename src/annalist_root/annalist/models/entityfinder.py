@@ -269,13 +269,13 @@ class EntitySelector(object):
         """
         def get_value(val_list):
             if len(val_list) == 1:
-                return { 'type': 'literal', 'name': None, 'field_id': None, 'value': val_list[0] }
+                return { 'type': 'literal', 'name': None,        'field_id': None,        'value': val_list[0] }
             elif val_list[0] == '[':
                 return { 'type': 'entity',  'name': None,        'field_id': val_list[1], 'value': None }
             elif val_list[1] == '[':
                 return { 'type': 'context', 'name': val_list[0], 'field_id': val_list[2], 'value': None }
             else:
-                return { 'type': 'unknown', 'name': None, 'field_id': None, 'value': None }
+                return { 'type': 'unknown', 'name': None,        'field_id': None,        'value': None }
         p_name     = Word(alphas+"_", alphanums+"_")
         p_id       = Word(alphas+"_@", alphanums+"_-.~:/?#@!$&'()*+,;=)")
         p_val      = ( Group( Literal("[") + p_id + Literal("]") )
