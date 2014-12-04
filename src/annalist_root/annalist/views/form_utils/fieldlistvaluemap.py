@@ -19,9 +19,9 @@ from django.conf                        import settings
 
 from annalist.identifiers               import RDFS, ANNAL
 
-from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
-from annalist.views.fieldvaluemap       import FieldValueMap
-from annalist.views.repeatvaluesmap     import RepeatValuesMap
+from annalist.views.form_utils.fielddescription import FieldDescription, field_description_from_view_field
+from annalist.views.form_utils.fieldvaluemap    import FieldValueMap
+from annalist.views.form_utils.repeatvaluesmap  import RepeatValuesMap
 
 class FieldListValueMap(object):
     """

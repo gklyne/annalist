@@ -25,8 +25,8 @@ import json
 
 from annalist.identifiers               import RDFS, ANNAL
 
-from annalist.views.fieldvaluemap       import FieldValueMap
-from annalist.views.fields.bound_field  import bound_field
+from annalist.views.form_utils.fieldvaluemap    import FieldValueMap
+from annalist.views.fields.bound_field          import bound_field
 
 class RepeatValuesMap(FieldValueMap):
     """
