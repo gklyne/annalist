@@ -23,7 +23,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Use distinguished names for internally-generated context keys (e.g. '_fields')
 - [x] Simplify list template now that repeat fields are handled by a field renderer
 - [x] Try to make mapping classes more consistent in their return types for sub-context values
-- [ ] Raise error if required view_context information is missing for EntityFinder
+- [x] Raise error if required view_context information is missing for EntityFinder
 - [ ] Add field for `annal:field_entity_type` property in field view
 - [ ] Improve display of view fields: put field names in header of repeat-group
 

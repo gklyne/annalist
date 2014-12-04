@@ -113,10 +113,11 @@ class EntityFinder(object):
                 yield e
         return
 
-    def get_entities(self, user_permissions=None, type_id=None, context={}, search=None):
-        if context is None:
-            # Use empty dictionary here to prevent errors when entity is missing
-            context = {}
+    def get_entities(self, user_permissions=None, type_id=None, context=None, search=None):
+        """
+        Get list of entities of the specified type, matching search term and visible to supplied
+        user permissions.
+        """
         entities = self._selector.filter(
             self.get_base_entities(type_id, user_permissions), context=context
             )
@@ -207,7 +208,7 @@ class EntitySelector(object):
         self._selector = self.compile_selector_filter(selector)
         return
 
-    def filter(self, entities, context={}):
+    def filter(self, entities, context=None):
         """
         Iterate over selection of entities from supplied iterator, using the
         selection specification supplied to the constructor of the current object.
@@ -324,6 +325,7 @@ class EntitySelector(object):
         #
         def get_context(name, field_id):
             def get_context_f(e, c):
+                # Raises error if context value not supplied
                 if name in c and c[name]:
                     return c[name].get(field_id, None)
                 return None
