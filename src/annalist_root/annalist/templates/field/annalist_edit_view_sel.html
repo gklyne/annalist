@@ -7,7 +7,7 @@
     <div class="{{field.field_placement.value}}">
       <div class="row">
         <div class="small-9 columns">
-          <select name="{{repeat.repeat_prefix}}{{field.field_name}}">
+          <select name="{{repeat_prefix}}{{field.field_name}}">
             {% for v in field.options %}
               {% if v == field.field_value %}
               <option selected="selected">{{v}}</option>
