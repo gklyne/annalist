@@ -247,6 +247,9 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for an indicated view.
+
+        The 3rd parameter to `FieldListValueMap` is used for EntityFinder
+        invocations used to populate enumerated field options.
         """
         # Locate and read view description
         entitymap = EntityValueMap(baseentityvaluemap)
@@ -254,7 +257,7 @@ class GenericEntityEditView(AnnalistGenericView):
         fieldlistmap = FieldListValueMap('fields',
             viewinfo.collection, 
             viewinfo.recordview.get_values()[ANNAL.CURIE.view_fields],
-            entity_values
+            {'view': viewinfo.recordview, 'entity': entity_values}
             )
         entitymap.add_map_entry(fieldlistmap)
         return entitymap

@@ -18,14 +18,18 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Define e-v-map for defined list of fields
     - [x] Repeat to reference list of fields 
 - [x] Eliminate duplication with list view - rework list to use same repeating mechanism as view
-- [ ] Provide clean mechanism to propagate extra context to bound fields in repeat group rendering
-- [ ] Try eliminating `view_context` parameter from `FieldListValueMap` constructor - it appears to be unused (or is it... used for generating enumerated type lists?  Used by FieldDescription/field_description_from_view_field)
-- [ ] Use distinguished names for internally-generated context keys (e.g. '_fields')
-- [ ] Simplify template now that repat fields are handled by a field renderer
+- [x] Provide clean(er) mechanism to propagate extra context to bound fields in repeat group rendering
+- [x] Try eliminating `view_context` parameter from `FieldListValueMap` constructor - turns out that it's needed for generating enumerated type lists based on target type of view, but code has been rationalized and slightly simplified and relevant comments added.
+- [x] Use distinguished names for internally-generated context keys (e.g. '_fields')
+- [x] Simplify list template now that repeat fields are handled by a field renderer
 - [x] Try to make mapping classes more consistent in their return types for sub-context values
+- [ ] Raise error if required view_context information is missing for EntityFinder
 - [ ] Add field for `annal:field_entity_type` property in field view
-- [ ] Add/test option to add repeated field group
-- [ ] Revisit definitions for BibJSON view
+- [ ] Improve display of view fields: put field names in header of repeat-group
+
+- [ ] Revisit definitions for BibJSON view; confirm that repeat field groups can be created
+- [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh?
+
 - [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  (defer?)
 - [ ] Think about fields that return subgraph (defer?)
     - how to splice subgraph into parent - "lambda nodes"?

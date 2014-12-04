@@ -1,0 +1,24 @@
+{
+  "rdfs:label": "Admin User",
+  "rdfs:comment": "User admin: site permissions for Admin User",
+  "annal:user_uri": "mailto:admin@localhost",
+  "annal:type_id": "_user",
+  "annal:uri": "annalist_site:/d/_user/admin/",
+  "annal:url": "annalist_site:/d/_user/admin/",
+  "annal:user_permissions": [
+    "VIEW",
+    "CREATE",
+    "UPDATE",
+    "DELETE",
+    "CONFIG",
+    "CREATE_COLL",
+    "DELETE_COLL",
+    "ADMIN"
+  ],
+  "annal:id": "admin",
+  "@id": "./",
+  "@type": [
+    "annal:User"
+  ],
+  "annal:type": "annal:User"
+}

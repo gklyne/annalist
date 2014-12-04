@@ -115,7 +115,7 @@ class EntityGenericListView(AnnalistGenericView):
         fieldlistmap = FieldListValueMap('fields',
             listinfo.collection, 
             listinfo.recordlist[ANNAL.CURIE.list_fields],
-            context_extra_values
+            None
             )
         entitymap.add_map_entry(fieldlistmap)  # For access to field headings
 
@@ -136,8 +136,7 @@ class EntityGenericListView(AnnalistGenericView):
         repeatrows_descr = FieldDescription(
             listinfo.collection, 
             repeatrows_field_descr,
-            group_view=repeatrows_group_descr,
-            view_context=context_extra_values
+            group_view=repeatrows_group_descr
             )
         entitymap.add_map_entry(FieldValueMap(c="List_rows", f=repeatrows_descr))
 

@@ -41,10 +41,19 @@ class FieldListValueMap(object):
                         a view or list description.
         view_context    is a dictionary of additional values that may be used in
                         assembling values to be used when rendering the fields.
+                        Specifically, this are currently used in calls of
+                        `EntityFinder` for building filtered lists of entities
+                        used to populate enumerated field values.  Fields in
+                        the supplied context currently used are `entity` for the
+                        entity value being rendered, and `view` for the view record
+                        used to render that value
+                        (cf. GenericEntityEditView.get_view_entityvaluemap)
 
-        NOTE: The form rendering template iterates over the context field values to be 
-        added to the form display.  The constructor for this object appends the current
-        field to a list of field value mappings in context field 'fields'.
+        The form rendering template iterates over the field descriptions to be
+        added to the form display.  The constructor for this object appends the 
+        current field to a list of field value mappings, with a `map_entity_to_context`
+        method that assigns a list of values from the supplied entity to a context 
+        field named by parameter `c`.
         """
         self.c  = c         # Context field name for values mapped from entity
         self.fd = []        # List of field descriptions

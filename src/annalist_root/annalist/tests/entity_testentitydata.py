@@ -599,7 +599,10 @@ def default_fields(coll_id=None, type_id=None, entity_id=None, width=12):
     def def_fields(width=12):
         fields = layout_classes(width=width)
         fields.update(
-            { 'default_label':       def_label
+            { 'coll_id':             coll_id
+            , 'type_id':             type_id
+            , 'entity_id':           entity_id
+            , 'default_label':       def_label
             , 'default_comment':     def_comment
             , 'default_label_esc':   def_label_esc
             , 'default_comment_esc': def_comment_esc
@@ -631,7 +634,14 @@ def error_label(coll_id=None, type_id=None, entity_id=None):
 #   -----------------------------------------------------------------------------
 
 def layout_classes(width=12):
-    if width == 6:
+    if width == 4:
+        class_dict = (
+            { 'label_classes':          "view_label small-12 medium-6 columns"
+            , 'input_classes':          "small-12 medium-6 columns"
+            # , 'button_left_classes':    "small-12 medium-6  columns"
+            # , 'button_right_classes':   "small-12 medium-6 columns medium-text-right"
+            })
+    elif width == 6:
         class_dict = (
             { 'label_classes':          "view_label small-12 medium-4 columns"
             , 'input_classes':          "small-12 medium-8 columns"
