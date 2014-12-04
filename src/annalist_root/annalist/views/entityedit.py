@@ -29,12 +29,12 @@ from annalist.views.uri_builder         import uri_base, uri_with_params
 from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.generic             import AnnalistGenericView
 
-from annalist.views.form_utils.fielddescription     import FieldDescription, field_description_from_view_field
-from annalist.views.form_utils.entityvaluemap       import EntityValueMap
-from annalist.views.form_utils.simplevaluemap       import SimpleValueMap, StableValueMap
-from annalist.views.form_utils.fieldlistvaluemap    import FieldListValueMap
+from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
+from annalist.views.entityvaluemap      import EntityValueMap
+from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
+from annalist.views.fieldlistvaluemap   import FieldListValueMap
 
-from annalist.views.fields.bound_field              import bound_field, get_entity_values
+from annalist.views.fields.bound_field  import bound_field, get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #
