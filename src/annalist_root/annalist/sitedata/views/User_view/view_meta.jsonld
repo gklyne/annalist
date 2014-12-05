@@ -1,8 +1,9 @@
 { "@id":                "./"
 , "@type":              ["annal:View"]
-, "annal:id":           "Default_view"
 , "annal:type_id":      "_view"
+, "annal:id":           "Default_view"
 , "annal:uri":          "annal:display/Default_view"
+, "annal:record_type":  "annal:User"
 , "rdfs:label":         "Default record view"
 , "rdfs:comment":       "Default record view, applied when no view is specified when creating a record."
 , "annal:record_type":  ""

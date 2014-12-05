@@ -10,77 +10,46 @@
   [ { "annal:field_id":         "Entity_id"
     , "annal:field_placement":  "small:0,12;medium:0,6"
     }
-  , { "annal:field_id":         "Entity_type"
-    , "annal:field_placement":  "small:0,12;medium:6,6right"
-    }
-  , { "annal:field_id":         "Entity_label"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Entity_comment"
-    , "annal:field_placement":  "small:0,12"
-    }
+//  , { "annal:field_id":         "Entity_type"
+//    , "annal:field_placement":  "small:0,12;medium:6,6right"
+//    }
+//  , { "annal:field_id":         "Entity_label"
+//    , "annal:field_placement":  "small:0,12"
+//    }
+//  , { "annal:field_id":         "Entity_comment"
+//    , "annal:field_placement":  "small:0,12"
+//    }
   , { "annal:field_id":         "Bib_type"
-    , "annal:field_placement":  "small:0,12"
+    , "annal:field_placement":  "small:0,12;medium:6,6right"
     }
   , { "annal:field_id":         "Bib_title"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_author"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Bib_editor"
-    , "annal:field_placement":  "small:0,12"
-    }
   , { "annal:field_id":         "Bib_month"
-    , "annal:field_placement":  "small:0,12"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
     }
   , { "annal:field_id":         "Bib_year"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "Bib_authors"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_url"
+  , { "annal:field_id":         "Bib_editors"
     , "annal:field_placement":  "small:0,12"
     }
-
   , { "annal:field_id":         "Bib_journal"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_volume"
+  , { "annal:field_id":         "Bib_bookentry"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_number"
+  , { "annal:field_id":         "Bib_publication_details"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_pages"
+  , { "annal:field_id":         "Bib_identifiers"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_booktitle"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Bib_chapter"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Bib_edition"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Bib_publisher"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Bib_address"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Bib_eprint"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Bib_howpublished"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Bib_institution"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Bib_organization"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Bib_school"
+  , { "annal:field_id":         "Bib_license"
     , "annal:field_placement":  "small:0,12"
     }
   ]

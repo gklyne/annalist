@@ -2,11 +2,11 @@
 , "@type":                      ["annal:Field"]
 , "annal:id":                   "Bib_school"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Bib_school"
-, "rdfs:comment":               "BibJSON(ish) field Bib_school"
+, "rdfs:label":                 "School"
+, "rdfs:comment":               "The school where the thesis was written"
 , "annal:field_render_type":    "Text"
 , "annal:field_value_type":     "annal:Text"
-, "annal:placeholder":          "(Bib_school)"
-, "annal:property_uri":         "bib:Bib_school"
+, "annal:placeholder":          "(school where the thesis was written)"
+, "annal:property_uri":         "bib:school"
 , "annal:field_entity_type":    "annal:BibEntry"
 }

@@ -26,7 +26,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Raise error if required view_context information is missing for EntityFinder
 - [x] Add field for `annal:field_entity_type` property in field view
 - [ ] Revisit definitions for BibJSON view; confirm that repeat field groups can be created
-
+    - [ ] Bib_type field should be enumeration
+    - [ ] Month, year on same line
 - [ ] Improve display of view fields: put field names in header of repeat-group
     - view, edit, colhead, colview, coledit render options; template gets to choose
     - think how this plays with responsive content
@@ -40,6 +41,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.
 - [ ] Generalize collection/site hierarchy to use a "search path" of imported collections (defer)
+- [ ] Review field placement and layout grid density (16col instead of 12col?)
 
 (sub-release?)
 
@@ -115,4 +117,101 @@ Notes for Future TODOs:
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] Entity edit view: "New field" -> "New field type"
 
+
+# BibJSON structures
+
+(later:  copy to documentation/notes directory)
+
+cf. http://okfnlabs.org/bibjson/
+
+## Simple string fields
+
+address: Publisher's address (usually just the city, but can be the full address for lesser-known publishers)
+
+[annote: An annotation for annotated bibliography styles (not typical) @@ use rdfs:comment?
+
+booktitle: The title of the book, if only part of it is being cited
+
+chapter: The chapter number
+
+edition: The edition of a book, long form (such as "First" or "Second")
+
+editor: (see Bib_person_field_view below)
+
+eprint: A specification of an electronic publication, often a preprint or a technical report @@handle as identifier/link?
+
+howpublished: How it was published, if the publishing method is nonstandard
+
+institution: The institution that was involved in the publishing, but not necessarily the publisher
+
+journal: (see Bib_journal_field_view below)
+
+[key: A hidden field used for specifying or overriding the alphabetical order of entries (when the "author" and "editor" fields are missing).]
+
+month: The month of publication (or, if unpublished, the month of creation)
+
+[note: Miscellaneous extra information @@ use rdfs:comment?]
+
+number: The "(issue) number" of a journal, magazine, or tech-report, if applicable. (Most 
+publications have a "volume", but no "number" field.)
+
+organization: The conference sponsor
+
+pages: Page numbers, separated either by commas or double-hyphens.
+
+publisher: The publisher's name
+
+school: The school where the thesis was written
+
+series: The series of books the book was published in (e.g. "The Hardy Boys" or "Lecture Notes in Computer Science") @@ field missing
+
+title: The title of the work
+
+type: The field overriding the default type of publication (e.g. "Research Note" for techreport, "{PhD} dissertation" for phdthesis, "Section" for inbook/incollection)
+
+volume: The volume of a journal or multi-volume book
+
+year: The year of publication (or, if unpublished, the year of creation)
+
+
+## Object fields
+
+### Bib_person_field_view
+
+author: [list] The name(s) of the author(s)
+editor: [list] The name(s) of the editor(s)
+
+    id:
+    name:
+    alternate:
+    firstname:
+    lastname:
+
+
+### Bib_journal_field_view
+
+journal: [object] The journal or magazine the work was published in
+    id:
+    name:
+    shortcode:
+
+
+### Bib_license_field_view
+
+license is a list of objects
+license:
+    type:
+    url:
+    description:
+    jurisdiction:
+
+
+### Bib_identifier_field_view
+
+identifier is a list of objects
+identifier:
+    id:
+    type: (e.g. DOI, crossref,)
+    url:
+    anchor:
 
