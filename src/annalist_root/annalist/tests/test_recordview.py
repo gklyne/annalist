@@ -600,25 +600,26 @@ class RecordViewEditViewTest(AnnalistTestCase):
                 <div class="%(input_classes)s">
                   <select name="View_repeat_fields__0__Field_id">
                     <option>Bib_address</option>
-                    <option>Bib_author</option>
-                    <option>Bib_booktitle</option>
-                    <option>Bib_chapter</option>
-                    <option>Bib_edition</option>
-                    <option>Bib_editor</option>
+                    <option>Bib_authors</option>
+                    <option>Bib_bookentry</option>
+                    <option>Bib_editors</option>
                     <option>Bib_eprint</option>
                     <option>Bib_howpublished</option>
+                    <option>Bib_identifiers</option>
                     <option>Bib_institution</option>
                     <option>Bib_journal</option>
+                    <option>Bib_license</option>
                     <option>Bib_month</option>
+                    <option>Bib_note</option>
                     <option>Bib_number</option>
                     <option>Bib_organization</option>
                     <option>Bib_pages</option>
+                    <option>Bib_publication_details</option>
                     <option>Bib_publisher</option>
                     <option>Bib_school</option>
                     <option>Bib_title</option>
                     <option>Bib_type</option>
                     <option>Bib_url</option>
-                    <option>Bib_volume</option>
                     <option>Bib_year</option>
                     <option>Entity_comment</option>
                     <option selected="selected">Entity_id</option>
@@ -814,83 +815,48 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['edit_add_field'],   "no")
         self.assertEqual(r.context['continuation_url'], "")
         # Skip checking fields 0-4 - that's already been covered
-        # log.info("*** fields[5]: "+repr(r.context['fields'][5]['options']))
+        # log.info("*** fields[5]['options']:     "+repr(r.context['fields'][5]['options']))
+        # log.info("*** fields[5]['field_value']: "+repr(r.context['fields'][5]['field_value']))
         # @@TODO: revise for more useful BibEntry structure
         expect_field_data = (
-            [ { 'annal:field_placement': 'small:0,12;medium:0,6'
-              , 'annal:field_id':        'Entity_id'
+            [ { 'annal:field_placement':    'small:0,12;medium:0,6'
+              , 'annal:field_id':           'Entity_id'
               }
-            , { 'annal:field_placement': 'small:0,12;medium:6,6right'
-              , 'annal:field_id':        'Entity_type'
+            , { 'annal:field_placement':    'small:0,12;medium:6,6right'
+              , 'annal:field_id':           'Bib_type'
               }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Entity_label'
+            , { 'annal:field_placement':    'small:0,12'
+              , 'annal:field_id':           'Bib_title'
               }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Entity_comment'
+            , { 'annal:field_placement':    'small:0,12;medium:0,6'
+              , 'annal:field_id':           'Bib_month'
               }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_type'
+            , { 'annal:field_placement':    'small:0,12;medium:6,6'
+              , 'annal:field_id':           'Bib_year'
               }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_title'
+            , { 'annal:field_placement':    'small:0,12'
+              , 'annal:field_id':           'Bib_authors'
               }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_author'
+            , { 'annal:field_placement':    'small:0,12'
+              , 'annal:field_id':           'Bib_editors'
               }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_editor'
+            , { 'annal:field_placement':    'small:0,12'
+              , 'annal:field_id':           'Bib_journal'
               }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_month'
+            , { 'annal:field_placement':    'small:0,12'
+              , 'annal:field_id':           'Bib_bookentry'
               }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_year'
+            , { 'annal:field_placement':    'small:0,12'
+              , 'annal:field_id':           'Bib_publication_details'
               }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_url'
+            , { 'annal:field_placement':    'small:0,12'
+              , 'annal:field_id':           'Bib_identifiers'
               }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_journal'
+            , { 'annal:field_placement':    'small:0,12'
+              , 'annal:field_id':           'Bib_license'
               }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_volume'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_number'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_pages'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_booktitle'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_chapter'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_edition'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_publisher'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_address'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_eprint'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_howpublished'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_institution'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_organization'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        'Bib_school'
+            , { 'annal:field_placement':    'small:0,12'
+              , 'annal:field_id':           'Bib_note'
               }
             ])
         self.assertEqual(r.context['fields'][5]['field_id'], 'View_repeat_fields')
@@ -901,10 +867,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_value'], expect_field_data)
         self.assertEqual(r.context['fields'][5]['options'], self.no_options)
         return
-
-
-
-
 
     #   -----------------------------------------------------------------------------
     #   Form response tests
@@ -1326,3 +1288,83 @@ class ConfirmRecordViewDeleteTests(AnnalistTestCase):
         return
 
 # End.
+
+# Old BibEntry fields:
+#
+#             [ { 'annal:field_placement': 'small:0,12;medium:0,6'
+#               , 'annal:field_id':        'Entity_id'
+#               }
+#             , { 'annal:field_placement': 'small:0,12;medium:6,6right'
+#               , 'annal:field_id':        'Entity_type'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Entity_label'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Entity_comment'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_type'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_title'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_author'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_editor'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_month'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_year'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_url'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_journal'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_volume'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_number'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_pages'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_booktitle'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_chapter'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_edition'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_publisher'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_address'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_eprint'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_howpublished'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_institution'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_organization'
+#               }
+#             , { 'annal:field_placement': 'small:0,12'
+#               , 'annal:field_id':        'Bib_school'
+#               }
+#             ])
+

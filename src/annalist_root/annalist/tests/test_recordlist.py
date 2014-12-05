@@ -58,7 +58,7 @@ from entity_testentitydata              import (
     default_fields, default_label, default_comment, error_label,
     get_site_types, get_site_types_sorted,
     get_site_list_types_sorted,
-    get_site_views, 
+    get_site_field_groups, 
     get_site_lists,
     layout_classes
     )
@@ -387,7 +387,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "List_default_view", 
-                    sorted(get_site_views()),
+                    sorted(get_site_field_groups()),
                     "Default_view")+
                 """
                 </div>

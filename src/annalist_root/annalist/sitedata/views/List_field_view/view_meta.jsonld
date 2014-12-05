@@ -1,7 +1,7 @@
 { "@id":                "annal:display/List_field_view"
-, "@type":              ["annal:View"]
-, "annal:id":           "List_field_view"
+, "@type":              ["annal:Field_group"]
 , "annal:type_id":      "_view"
+, "annal:id":           "List_field_view"
 , "annal:uri":          "annal:display/List_field_view"
 , "annal:record_type":  "annal:Field_desc"
 , "rdfs:label":         "List field description"

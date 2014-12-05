@@ -207,7 +207,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             <tr class="select_row">
                 <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
                 <td class="small-3 columns">annal:Text</td>
-                <td class="small-6 columns">Bib_address</td>
+                <td class="small-6 columns">Address</td>
                 <td class="select_row">
                     <input name="entity_select" value="_field/Bib_address" type="checkbox">
                 </td>
@@ -259,14 +259,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_value_type'], "annal:Text")
         # Entities
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 71)
+        self.assertEqual(len(entities), 86)
         entity_ids = [ context_list_item_field_value(r.context, e, 0) for e in entities ]
         self.assertIn('_initial_values', entity_ids)
         field_entities = (
             { ('Entity_id',         "annal:Slug",          "Id")
-            , ('Bib_address',       "annal:Text",          "Bib_address")
-            , ('Bib_author',        "annal:Text",          "Bib_author")
-            , ('Bib_booktitle',     "annal:Text",          "Bib_booktitle")
+            , ('Bib_address',       "annal:Text",          "Address")
+            , ('Bib_authors',       "bib:Authors",         "Author(s)")
+            , ('Bib_booktitle',     "annal:Text",          "Book title")
             , ('Entity_type',       "annal:Slug",          "Type")
             , ('Entity_label',      "annal:Text",          "Label")
             , ('Field_comment',     "annal:Longtext",      "Help")
@@ -314,15 +314,15 @@ class EntityGenericListViewTest(AnnalistTestCase):
         cont = uri_params({"continuation_url": u})
         rowdata1 = """
             <tr class="select_row">
-                <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
-                <td class="small-3 columns">annal:Text</td>
-                <td class="small-6 columns">Bib_address</td>
-                <td class="select_row">
-                    <input name="entity_select" value="_field/Bib_address" type="checkbox">
-                </td>
+              <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
+              <td class="small-3 columns">annal:Text</td>
+              <td class="small-6 columns">Address</td>
+              <td class="select_row">
+                <input name="entity_select" value="_field/Bib_address" type="checkbox">
+              </td>
             </tr>
             """%(TestBasePath, cont)
-        # log.info(r.content)
+        # log.info("*** r.content: "+r.content)
         self.assertContains(r, rowdata1, html=True)
         # Test context
         self.assertEqual(r.context['coll_id'],          "testcoll")
@@ -346,12 +346,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
         cont = uri_params({"continuation_url": u})
         rowdata = """
             <tr class="select_row">
-                <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
-                <td class="small-3 columns">annal:Text</td>
-                <td class="small-6 columns">Bib_address</td>
-                <td class="select_row">
-                    <input name="entity_select" value="_field/Bib_address" type="checkbox">
-                </td>
+              <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
+              <td class="small-3 columns">annal:Text</td>
+              <td class="small-6 columns">Address</td>
+              <td class="select_row">
+                <input name="entity_select" value="_field/Bib_address" type="checkbox">
+              </td>
             </tr>
             """%(TestBasePath, cont)
         # log.info(r.content)
@@ -373,29 +373,29 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 21)
+        self.assertEqual(len(entities), 36)
         field_entities = (
-            { ('Bib_address',       "annal:Text",          "Bib_address")
-            , ('Bib_author',        "annal:Text",          "Bib_author")
-            , ('Bib_booktitle',     "annal:Text",          "Bib_booktitle")
-            , ('Bib_chapter',       "annal:Text",          "Bib_chapter")
-            , ('Bib_edition',       "annal:Text",          "Bib_edition")
-            , ('Bib_editor',        "annal:Text",          "Bib_editor")
+            { ('Bib_address',       "annal:Text",          "Address")
+            , ('Bib_authors',       "bib:Authors",         "Author(s)")
+            , ('Bib_booktitle',     "annal:Text",          "Book title")
+            , ('Bib_chapter',       "annal:Text",          "Chapter")
+            , ('Bib_edition',       "annal:Text",          "Edition")
+            , ('Bib_editors',       "bib:Editors",         "Editor(s)")
             , ('Bib_eprint',        "annal:Text",          "Bib_eprint")
-            , ('Bib_howpublished',  "annal:Text",          "Bib_howpublished")
-            , ('Bib_institution',   "annal:Text",          "Bib_institution")
-            , ('Bib_journal',       "annal:Text",          "Bib_journal")
-            , ('Bib_month',         "annal:Text",          "Bib_month")
-            , ('Bib_number',        "annal:Text",          "Bib_number")
-            , ('Bib_organization',  "annal:Text",          "Bib_organization")
-            , ('Bib_pages',         "annal:Text",          "Bib_pages")
-            , ('Bib_publisher',     "annal:Text",          "Bib_publisher")
-            , ('Bib_school',        "annal:Text",          "Bib_school")
-            , ('Bib_title',         "annal:Text",          "Bib_title")
-            , ('Bib_type',          "annal:Text",          "Bib_type")
-            , ('Bib_url',           "annal:Text",          "Bib_url")
-            , ('Bib_volume',        "annal:Text",          "Bib_volume")
-            , ('Bib_year',          "annal:Text",          "Bib_year")
+            , ('Bib_howpublished',  "annal:Text",          "How published")
+            , ('Bib_institution',   "annal:Text",          "Institution")
+            , ('Bib_journal',       "bib:Journal",         "Journal")
+            , ('Bib_month',         "annal:Text",          "Month")
+            , ('Bib_number',        "annal:Text",          "Number")
+            , ('Bib_organization',  "annal:Text",          "Organization")
+            , ('Bib_pages',         "annal:Text",          "Pages")
+            , ('Bib_publisher',     "annal:Text",          "Publisher")
+            , ('Bib_school',        "annal:Text",          "School")
+            , ('Bib_title',         "annal:Text",          "Title")
+            , ('Bib_type',          "annal:Slug",          "Type")
+            , ('Bib_url',           "annal:Text",          "URL")
+            , ('Bib_volume',        "annal:Text",          "Volume")
+            , ('Bib_year',          "annal:Text",          "Year")
             })
         for f in field_entities:
             for eid in range(len(entities)):

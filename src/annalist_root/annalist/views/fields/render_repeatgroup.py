@@ -23,7 +23,7 @@ edit = (
         """
         <!-- views.fields.render_repeatgroup.edit_template -->
         <div class="small-12 columns">
-          <p class="caption">{{field.field_label}}</p>
+          <p class="grouplabel">{{field.field_label}}</p>
         </div>"""
     , 'repeatgroup_body':
         # Context values:
@@ -67,7 +67,7 @@ view = (
         """
         <!-- views.fields.render_repeatgroup.view_template -->
         <div class="small-12 columns">
-          <p class="caption">{{field.field_label}}</p>
+          <p class="grouplabel">{{field.field_label}}</p>
         </div>"""
     , 'repeatgroup_body':
         # Context values:

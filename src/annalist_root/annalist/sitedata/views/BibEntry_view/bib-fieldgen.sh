@@ -26,16 +26,16 @@ do
 
 mkdir -p fields/${fid}
 cat >fields/${fid}/field_meta.jsonld <<EOF
-{ "@id":                "annal:fields/${fid}"
-, "@type":              ["annal:Field"]
-, "annal:id":           "${fid}"
-, "annal:type_id":      "_field"
-, "rdfs:label":         "${fid}"
-, "rdfs:comment":       "BibJSON(ish) field ${fid}"
-, "annal:field_render_type": "annal:field_render_type/Text"
-, "annal:field_value_type":   "annal:Text"
-, "annal:placeholder":  "(${fid})"
-, "annal:property_uri": "bib:${fid}"
+{ "@id":                        "annal:fields/${fid}"
+, "@type":                      ["annal:Field"]
+, "annal:type_id":              "_field"
+, "annal:id":                   "${fid}"
+, "rdfs:label":                 "${fid}"
+, "rdfs:comment":               "BibJSON(ish) field ${fid}"
+, "annal:field_render_type":    "annal:field_render_type/Text"
+, "annal:field_value_type":     "annal:Text"
+, "annal:placeholder":          "(${fid})"
+, "annal:property_uri":         "bib:${fid}"
 }
 EOF
 

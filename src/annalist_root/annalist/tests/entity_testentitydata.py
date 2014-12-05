@@ -673,7 +673,7 @@ def get_site_types_sorted():
     return (
         [ "_field", "_list", "_type", "_user", "_view"
         , "BibEntry_type", "Default_type"
-        , "Enum_field_type", "Enum_list_type"
+        , "Enum_bib_type", "Enum_field_type", "Enum_list_type"
         ])
 
 def get_site_types():
@@ -684,6 +684,26 @@ def get_site_views_sorted():
         [ "BibEntry_view"
         , "Default_view"
         , "Field_view"
+        , "List_view"
+        , "Type_view"
+        , "User_view"
+        , "View_view"
+        ])
+
+def get_site_views():
+    return set(get_site_views_sorted())
+
+def get_site_field_groups_sorted():
+    return (
+        [ "BibEntry_view"
+        , "Bib_book_field_view"
+        , "Bib_identifier_field_view"
+        , "Bib_journal_field_view"
+        , "Bib_license_field_view"
+        , "Bib_person_field_view"
+        , "Bib_publication_field_view"
+        , "Default_view"
+        , "Field_view"
         , "List_field_view"
         , "List_view"
         , "Type_view"
@@ -692,15 +712,24 @@ def get_site_views_sorted():
         , "View_view"
         ])
 
-def get_site_views():
-    return set(get_site_views_sorted())
+def get_site_field_groups():
+    return set(get_site_field_groups_sorted())
+
+def get_site_lists_sorted():
+    return (
+        [ "BibEntry_list"
+        , "Default_list"
+        , "Default_list_all"
+        , "Field_group_list"
+        , "Field_list"
+        , "List_list"
+        , "Type_list"
+        , "User_list"
+        , "View_list"
+        ])
 
 def get_site_lists():
-    return (
-        { "BibEntry_list", "Default_list", "Default_list_all"
-        , "Field_list", "Type_list", "List_list", "View_list"
-        , "User_list"
-        })
+    return set(get_site_lists_sorted())
 
 def get_site_fields():
     return (

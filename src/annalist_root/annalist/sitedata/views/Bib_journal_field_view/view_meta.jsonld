@@ -1,0 +1,27 @@
+{ "@id":                "annal:display/Bib_journal_field_view"
+, "@type":              ["annal:Field_group"]
+, "annal:id":           "Bib_journal_field_view"
+, "annal:type_id":      "_view"
+, "annal:uri":          "annal:display/Bib_journal_field_view"
+, "annal:record_type":  "annal:Field_desc"
+, "rdfs:label":         "BibEntry journal fields"
+, "rdfs:comment":       "Group of fields describing a journal in a BibEntry record"
+, "annal:add_field":    "no"
+, "annal:view_fields":
+  [ { "annal:field_id":         "Bib_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "Bib_shortcode"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "Bib_name"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "Bib_volume"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "Bib_number"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  ]
+}

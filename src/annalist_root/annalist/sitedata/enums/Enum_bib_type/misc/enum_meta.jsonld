@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_bib_type", "annal:Enum", "annal:Type"]
+, "annal:id":           "misc"
+, "annal:type_id":      "Enum_bib_type"
+, "rdfs:label":         "Misc."
+, "rdfs:comment":       "For use when nothing else fits.  Other fields: author, title, howpublished, month, year, note."
+, "annal:uri":          "annal:bib_type/misc"
+}
