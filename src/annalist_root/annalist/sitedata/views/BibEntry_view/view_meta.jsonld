@@ -52,5 +52,8 @@
   , { "annal:field_id":         "Bib_license"
     , "annal:field_placement":  "small:0,12"
     }
+  , { "annal:field_id":         "Bib_note"
+    , "annal:field_placement":  "small:0,12"
+    }
   ]
 }

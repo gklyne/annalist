@@ -610,6 +610,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
                     <option>Bib_journal</option>
                     <option>Bib_license</option>
                     <option>Bib_month</option>
+                    <option>Bib_note</option>
                     <option>Bib_number</option>
                     <option>Bib_organization</option>
                     <option>Bib_pages</option>
@@ -853,6 +854,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
               }
             , { 'annal:field_placement':    'small:0,12'
               , 'annal:field_id':           'Bib_license'
+              }
+            , { 'annal:field_placement':    'small:0,12'
+              , 'annal:field_id':           'Bib_note'
               }
             ])
         self.assertEqual(r.context['fields'][5]['field_id'], 'View_repeat_fields')
