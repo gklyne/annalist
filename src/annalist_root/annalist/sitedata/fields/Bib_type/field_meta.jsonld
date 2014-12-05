@@ -2,11 +2,11 @@
 , "@type":                      ["annal:Field"]
 , "annal:id":                   "Bib_type"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Bib_type"
-, "rdfs:comment":               "BibJSON(ish) field Bib_type"
+, "rdfs:label":                 "Type"
+, "rdfs:comment":               "The type of publication (e.g. 'eserch Note'fortechreport, 'PhD dissertation'forphdthesis, 'ecton'forinbook/incollection)"
 , "annal:field_render_type":    "Text"
 , "annal:field_value_type":     "annal:Text"
-, "annal:placeholder":          "(Bib_type)"
+, "annal:placeholder":          "(type of publication)"
 , "annal:property_uri":         "bib:Bib_type"
 , "annal:field_entity_type":    "annal:BibEntry"
 }

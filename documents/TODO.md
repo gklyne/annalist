@@ -27,7 +27,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Add field for `annal:field_entity_type` property in field view
 - [ ] Revisit definitions for BibJSON view; confirm that repeat field groups can be created
     - [ ] Bib_type field should be enumeration
-    - [ ] Month, year on same line
+    - [x] Month, year on same line
+    - [ ] Restrict viewref field to views that are not subsidiary field groups
 - [ ] Improve display of view fields: put field names in header of repeat-group
     - view, edit, colhead, colview, coledit render options; template gets to choose
     - think how this plays with responsive content

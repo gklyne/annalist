@@ -682,6 +682,12 @@ def get_site_types():
 def get_site_views_sorted():
     return (
         [ "BibEntry_view"
+        , "Bib_book_field_view"
+        , "Bib_identifier_field_view"
+        , "Bib_journal_field_view"
+        , "Bib_license_field_view"
+        , "Bib_person_field_view"
+        , "Bib_publication_field_view"
         , "Default_view"
         , "Field_view"
         , "List_field_view"
