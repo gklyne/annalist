@@ -392,7 +392,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Bib_publisher',     "annal:Text",          "Publisher")
             , ('Bib_school',        "annal:Text",          "School")
             , ('Bib_title',         "annal:Text",          "Title")
-            , ('Bib_type',          "annal:Text",          "Type")
+            , ('Bib_type',          "annal:Slug",          "Type")
             , ('Bib_url',           "annal:Text",          "URL")
             , ('Bib_volume',        "annal:Text",          "Volume")
             , ('Bib_year',          "annal:Text",          "Year")

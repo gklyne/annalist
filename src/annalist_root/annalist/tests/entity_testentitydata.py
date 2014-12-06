@@ -673,7 +673,7 @@ def get_site_types_sorted():
     return (
         [ "_field", "_list", "_type", "_user", "_view"
         , "BibEntry_type", "Default_type"
-        , "Enum_field_type", "Enum_list_type"
+        , "Enum_bib_type", "Enum_field_type", "Enum_list_type"
         ])
 
 def get_site_types():

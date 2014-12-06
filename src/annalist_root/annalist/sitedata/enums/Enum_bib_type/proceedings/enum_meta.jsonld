@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_bib_type", "annal:Enum", "annal:Type"]
+, "annal:id":           "proceedings"
+, "annal:type_id":      "Enum_bib_type"
+, "rdfs:label":         "Proceedings"
+, "rdfs:comment":       "The proceedings of a conference.  Other fields: title, year, editor, volume/number, series, address, month, publisher, organization, note."
+, "annal:uri":          "annal:bib_type/proceedings"
+}

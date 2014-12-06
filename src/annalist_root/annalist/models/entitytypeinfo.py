@@ -150,6 +150,7 @@ TYPE_CLASS_MAP = (
     , '_field':             RecordField
     , 'Enum_list_type':     RecordEnumFactory('Enum_list_type',  'Enum_list_type')
     , 'Enum_field_type':    RecordEnumFactory('Enum_field_type', 'Enum_field_type')
+    , 'Enum_bib_type':      RecordEnumFactory('Enum_bib_type',   'Enum_bib_type')
     })
 
 TYPE_MESSAGE_MAP = (
@@ -160,6 +161,7 @@ TYPE_MESSAGE_MAP = (
     , '_field':             FIELD_MESSAGES
     , 'Enum_list_type':     ENUM_MESSAGES
     , 'Enum_field_type':    ENUM_MESSAGES
+    , 'Enum_bib_type':      ENUM_MESSAGES
     })
 
 TYPE_PERMISSIONS_MAP = (
@@ -170,6 +172,7 @@ TYPE_PERMISSIONS_MAP = (
     , '_field':             CONFIG_PERMISSIONS
     , 'Enum_list_type':     CONFIG_PERMISSIONS
     , 'Enum_field_type':    CONFIG_PERMISSIONS
+    , 'Enum_bib_type':      CONFIG_PERMISSIONS
     })
 
 def get_built_in_type_ids():
