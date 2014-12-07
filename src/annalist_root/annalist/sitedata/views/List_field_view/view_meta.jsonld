@@ -1,5 +1,5 @@
 { "@id":                "annal:display/List_field_view"
-, "@type":              ["annal:View"]
+, "@type":              ["annal:Field_group"]
 , "annal:type_id":      "_view"
 , "annal:id":           "List_field_view"
 , "annal:uri":          "annal:display/List_field_view"

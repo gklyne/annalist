@@ -55,8 +55,10 @@ from entity_testentitydata          import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes,
-    get_site_types_sorted,
-    get_site_views_sorted,
+    get_site_types, get_site_types_sorted,
+    get_site_views, get_site_views_sorted,
+    get_site_lists, get_site_lists_sorted,
+    get_site_field_groups, get_site_field_groups_sorted, 
     get_site_field_types_sorted
     )
 
@@ -169,7 +171,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.no_options     = ['(no options)']
-        self.view_options   = get_site_views_sorted()
+        self.view_options   = get_site_field_groups_sorted()
         self.render_options = get_site_field_types_sorted()
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
@@ -586,7 +588,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     """+
                       render_select_options(
                         "Field_viewref", 
-                        [""] + get_site_views_sorted(),
+                        [""] + get_site_field_groups_sorted(),
                         "",
                         placeholder="(no view selected)")+
                     """

@@ -1,5 +1,5 @@
 { "@id":                "annal:display/Bib_journal_field_view"
-, "@type":              ["annal:View"]
+, "@type":              ["annal:Field_group"]
 , "annal:id":           "Bib_journal_field_view"
 , "annal:type_id":      "_view"
 , "annal:uri":          "annal:display/Bib_journal_field_view"

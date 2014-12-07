@@ -28,7 +28,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Revisit definitions for BibJSON view; confirm that repeat field groups can be created
     - [x] Bib_type field should be enumeration
     - [x] Month, year on same line
-    - [ ] Restrict view choices field to views that are not subsidiary field groups
+    - [x] Restrict view choices field to views that are not subsidiary field groups
     - [ ] Think about mechanism for a common field (e.g. rdfs:label) to return a specified field value (e.g. bib:title).  "Alias" field render type?
 - [ ] Improve display of view fields: put field names in header of repeat-group
     - view, edit, colhead, colview, coledit render options; template gets to choose
@@ -43,7 +43,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.
 - [ ] Generalize collection/site hierarchy to use a "search path" of imported collections (defer)
+- [ ] Enumerated values are hard-wired into entitytypeinfo - move them to regular type/data files in site data?  Hmmm... currently, it seems all _annalist_site values need to be hard-wired in entitytypeinfo; maybe look to use collection "search path" logic instead (see above)
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
+- [ ] Improve list column layout, avoid values overflowing column and overlapping next (e.g. with long identifiers - cf. http://localhost:8000/annalist/c/coll1/l/Default_list_all/_view/)
 
 (sub-release?)
 

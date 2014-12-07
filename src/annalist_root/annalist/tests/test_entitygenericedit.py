@@ -64,8 +64,9 @@ from entity_testentitydata          import (
     entitydata_recordtype_view_context_data, entitydata_recordtype_view_form_data,
     default_fields, default_label, default_comment, error_label,
     get_site_types, get_site_types_sorted,
-    get_site_views, 
-    get_site_lists,
+    get_site_views, get_site_views_sorted,
+    get_site_lists, get_site_lists_sorted,
+    get_site_field_groups, get_site_field_groups_sorted, 
     layout_classes
     )
 
