@@ -257,16 +257,15 @@ def get_entity_values(displayinfo, entity, entity_id=None):
     if not entity_id:
         entity_id = entity.get_id()
     type_id    = entity.get_type_id()
-    typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
     entityvals = entity.get_values().copy()
-    entityvals['entity_id']        = entity_id
-    entityvals['entity_link']      = entity.get_view_url_path()
+    entityvals['entity_id']      = entity_id
+    entityvals['entity_link']    = entity.get_view_url_path()
     # log.info("type_id %s"%(type_id))
-    entityvals['entity_type_id']   = type_id
+    entityvals['entity_type_id'] = type_id
+    typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
     if typeinfo.recordtype:
         entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
-    # else:
-    #     entityvals['entity_type_link'] = ...
+        # @@other type-related info; e.g., aliases - populate 
     return entityvals
 
 if __name__ == "__main__":
