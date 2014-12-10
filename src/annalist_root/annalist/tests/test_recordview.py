@@ -268,8 +268,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_help'], view_id_help)
         self.assertEqual(r.context['fields'][0]['field_placeholder'], "(view id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
-        self.assertEqual(r.context['fields'][0]['field_render_view'], "field/annalist_view_entityid.html")
-        self.assertEqual(r.context['fields'][0]['field_render_edit'], "field/annalist_edit_entityid.html")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][0]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][0]['field_value'], view_id)
@@ -284,8 +282,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_help'], view_label_help)
         self.assertEqual(r.context['fields'][1]['field_placeholder'], "(view label)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "rdfs:label")
-        self.assertEqual(r.context['fields'][1]['field_render_view'], "field/annalist_view_text.html")
-        self.assertEqual(r.context['fields'][1]['field_render_edit'], "field/annalist_edit_text.html")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][1]['field_value'], view_label)
@@ -296,8 +292,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_name'], 'View_comment')
         self.assertEqual(r.context['fields'][2]['field_label'], 'Help')
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:comment")
-        self.assertEqual(r.context['fields'][2]['field_render_view'],   "field/annalist_view_textarea.html")
-        self.assertEqual(r.context['fields'][2]['field_render_edit'],   "field/annalist_edit_textarea.html")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Longtext")
         self.assertEqual(r.context['fields'][2]['field_value'], view_help)
@@ -308,8 +302,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_name'],              'View_target_type')
         self.assertEqual(r.context['fields'][3]['field_label'],             'Record type')
         self.assertEqual(r.context['fields'][3]['field_property_uri'],      "annal:record_type")
-        self.assertEqual(r.context['fields'][3]['field_render_view'],       "field/annalist_view_identifier.html")
-        self.assertEqual(r.context['fields'][3]['field_render_edit'],       "field/annalist_edit_identifier.html")
         self.assertEqual(r.context['fields'][3]['field_placement'].field,   "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value_type'],        "annal:Identifier")
         self.assertEqual(r.context['fields'][3]['field_value'],             view_record_type)
@@ -320,8 +312,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_name'], 'View_add_field')
         self.assertEqual(r.context['fields'][4]['field_label'], 'Add field?')
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:add_field")
-        self.assertEqual(r.context['fields'][4]['field_render_view'],   "field/annalist_view_text.html")
-        self.assertEqual(r.context['fields'][4]['field_render_edit'],   "field/annalist_edit_text.html")
         self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][4]['field_value'], 'yes')
@@ -1288,83 +1278,4 @@ class ConfirmRecordViewDeleteTests(AnnalistTestCase):
         return
 
 # End.
-
-# Old BibEntry fields:
-#
-#             [ { 'annal:field_placement': 'small:0,12;medium:0,6'
-#               , 'annal:field_id':        'Entity_id'
-#               }
-#             , { 'annal:field_placement': 'small:0,12;medium:6,6right'
-#               , 'annal:field_id':        'Entity_type'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Entity_label'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Entity_comment'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_type'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_title'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_author'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_editor'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_month'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_year'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_url'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_journal'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_volume'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_number'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_pages'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_booktitle'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_chapter'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_edition'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_publisher'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_address'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_eprint'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_howpublished'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_institution'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_organization'
-#               }
-#             , { 'annal:field_placement': 'small:0,12'
-#               , 'annal:field_id':        'Bib_school'
-#               }
-#             ])
-
+#........1.........2.........3.........4.........5.........6.........7.........8

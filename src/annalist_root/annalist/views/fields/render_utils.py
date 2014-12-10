@@ -16,9 +16,58 @@ from django.conf                    import settings
 
 from render_text                    import RenderText
 from render_tokenset                import RenderTokenSet
+from render_fieldvalue              import RenderFieldValue
+from render_tokenset                import RenderTokenSet
 import render_tokenset
-from render_repeatgroup                import RenderRepeatGroup
+from render_repeatgroup             import RenderRepeatGroup
 import render_repeatgroup
+
+_field_renderers = {}
+
+_field_view_files = (
+    { "Text":           "field/annalist_view_text.html"
+    , "Textarea":       "field/annalist_view_textarea.html"
+    , "Slug":           "field/annalist_view_slug.html"
+    , "Placement":      "field/annalist_view_text.html"
+    , "EntityId":       "field/annalist_view_entityid.html"    
+    , "EntityTypeId":   "field/annalist_view_entitytypeid.html"    
+    , "Identifier":     "field/annalist_view_identifier.html"    
+    , "Type":           "field/annalist_view_select.html"
+    , "View":           "field/annalist_view_select.html"
+    , "List":           "field/annalist_view_select.html"
+    , "Field":          "field/annalist_view_select.html"
+    , "Enum":           "field/annalist_view_select.html"
+    , "Enum_optional":  "field/annalist_view_select.html"
+    , "View_sel":       "field/annalist_view_view_sel.html"
+    })
+
+_field_edit_files = (
+    { "Text":           "field/annalist_edit_text.html"
+    , "Textarea":       "field/annalist_edit_textarea.html"
+    , "Slug":           "field/annalist_edit_slug.html"
+    , "Placement":      "field/annalist_edit_text.html"
+    , "EntityId":       "field/annalist_edit_entityid.html"    
+    , "EntityTypeId":   "field/annalist_edit_entitytypeid.html"    
+    , "Identifier":     "field/annalist_edit_identifier.html"    
+    , "Type":           "field/annalist_edit_select.html"
+    , "View":           "field/annalist_edit_select.html"
+    , "List":           "field/annalist_edit_select.html"
+    , "Field":          "field/annalist_edit_select.html"
+    , "Enum":           "field/annalist_edit_select.html"
+    , "Enum_optional":  "field/annalist_edit_select.html"
+    , "View_sel":       "field/annalist_edit_view_sel.html"
+    })
+
+def get_field_renderer(renderid):
+    if renderid not in _field_renderers:
+        if ( (renderid in _field_view_files) or
+             (renderid in _field_edit_files) ):
+            viewfile = _field_view_files.get(renderid, None)
+            editfile = _field_edit_files.get(renderid, None)
+            _field_renderers[renderid] = RenderFieldValue(
+                viewfile=viewfile, editfile=editfile
+                )
+    return _field_renderers.get(renderid, None)
 
 def get_edit_renderer(renderid):
     """
@@ -33,34 +82,19 @@ def get_edit_renderer(renderid):
         a context. This allows you to reference a compiled Template in your context.
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
-    if renderid == "Text":
-        return "field/annalist_edit_text.html"
-        # return RenderText()
-    if renderid == "Slug":
-        return "field/annalist_edit_slug.html"
-    if renderid == "Placement":
-        return "field/annalist_edit_text.html"
-    if renderid == "EntityId":
-        return "field/annalist_edit_entityid.html"    
-    if renderid == "EntityTypeId":
-        return "field/annalist_edit_entitytypeid.html"    
-    if renderid == "Identifier":
-        return "field/annalist_edit_identifier.html"    
-    if renderid == "Textarea":
-        return "field/annalist_edit_textarea.html"
-    if renderid in ["Type", "View", "List", "Field", "Enum", "Enum_optional"]:
-        return "field/annalist_edit_select.html"
-    if renderid == "View_sel":
-        return "field/annalist_edit_view_sel.html"
     if renderid == "TokenSet":
         # return "field/annalist_edit_tokenlist.html"
         return RenderTokenSet(render_tokenset.edit)
     if renderid == "RepeatGroup":
         return RenderRepeatGroup(render_repeatgroup.edit)
+    renderer = get_field_renderer(renderid)
+    if renderer:
+        return renderer.labeledit()
     log.warning("get_edit_renderer: %s not found"%renderid)
     # raise ValueError("get_edit_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
-    return "field/annalist_edit_text.html"
+    renderer = get_field_renderer("Text")
+    return renderer.labeledit()
 
 def get_view_renderer(renderid):
     """
@@ -75,40 +109,26 @@ def get_view_renderer(renderid):
         a context. This allows you to reference a compiled Template in your context.
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
-    if renderid == "Text":
-        return "field/annalist_view_text.html"
-        # return RenderText()
-    if renderid == "Textarea":
-        return "field/annalist_view_textarea.html"
-    if renderid == "Slug":
-        return "field/annalist_view_slug.html"
-    if renderid == "Placement":
-        return "field/annalist_view_text.html"
-    if renderid == "EntityId":
-        return "field/annalist_view_entityid.html"    
-    if renderid == "EntityTypeId":
-        return "field/annalist_view_entitytypeid.html"    
-    if renderid == "Identifier":
-        return "field/annalist_view_identifier.html"    
-    if renderid in ["Type", "View", "List", "Field", "Enum", "Enum_optional"]:
-        return "field/annalist_view_select.html"
-    if renderid == "View_sel":
-        return "field/annalist_view_view_sel.html"
     if renderid == "TokenSet":
         # return "field/annalist_view_tokenlist.html"
         return RenderTokenSet(render_tokenset.view)
     if renderid == "RepeatGroup":
         return RenderRepeatGroup(render_repeatgroup.view)
+    renderer = get_field_renderer(renderid)
+    if renderer:
+        return renderer.labelview()
     log.warning("get_view_renderer: %s not found"%renderid)
-    # raise ValueError("get_view_renderer: %s not found"%renderid)
+    # raise ValueError("get_edit_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
-    return "field/annalist_view_text.html"
+    renderer = get_field_renderer("Text")
+    return renderer.labelview()
 
 def get_head_renderer(renderid):
     """
     Returns a field list heading renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
+    # @@TODO: use field renderer
     return "field/annalist_head_any.html"
 
 def get_item_renderer(renderid):
@@ -116,22 +136,13 @@ def get_item_renderer(renderid):
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    if renderid == "Text":
-        return "field/annalist_item_text.html"
-    if renderid == "Slug":
-        return "field/annalist_item_text.html"
-    if renderid == "EntityId":
-        return "field/annalist_item_entityid.html"    
-    if renderid == "EntityTypeId":
-        return "field/annalist_item_entitytypeid.html"
-    if renderid == "Identifier":
-        return "field/annalist_item_identifier.html"
-    if renderid in ["Type", "View", "List", "Field", "Enum", "Enum_optional"]:
-        return "field/annalist_item_select.html"
     if renderid == "TokenSet":
         return RenderTokenSet(render_tokenset.item)
     if renderid == "RepeatGroup":
         return RenderRepeatGroup(render_repeatgroup.item)
+    renderer = get_field_renderer(renderid)
+    if renderer:
+        return renderer.view()
     log.debug("get_item_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
 
