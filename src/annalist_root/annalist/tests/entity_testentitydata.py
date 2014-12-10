@@ -195,8 +195,7 @@ def entitydata_context_data(
           [ { 'field_label':        'Id'
             , 'field_id':           'Entity_id'
             , 'field_name':         'entity_id'
-            , 'field_render_view':  'field/annalist_view_entityid.html'
-            , 'field_render_edit':  'field/annalist_edit_entityid.html'
+            , 'field_render_type':  'EntityId'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
@@ -205,8 +204,7 @@ def entitydata_context_data(
           , { 'field_label':        'Type'
             , 'field_id':           'Entity_type'
             , 'field_name':         'entity_type'
-            , 'field_render_view':  'field/annalist_view_entitytypeid.html'
-            , 'field_render_edit':  'field/annalist_edit_entitytypeid.html'
+            , 'field_render_type':  'EntityTypeId'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
@@ -215,8 +213,7 @@ def entitydata_context_data(
           , { 'field_label':        'Label'
             , 'field_id':           'Entity_label'
             , 'field_name':         'Entity_label'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_type':  'Text'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Text'
             , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
@@ -225,8 +222,7 @@ def entitydata_context_data(
           , { 'field_label':        'Comment'
             , 'field_id':           'Entity_comment'
             , 'field_name':         'Entity_comment'
-            , 'field_render_view':  'field/annalist_view_textarea.html'
-            , 'field_render_edit':  'field/annalist_edit_textarea.html'
+            , 'field_render_type':  'Textarea'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Longtext'
             , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
@@ -316,8 +312,6 @@ def entitydata_default_view_context_data(
         , 'orig_id':            'orig_entity_id'
         , 'fields':
           [ { 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_entityid.html'
-            , 'field_render_edit':  'field/annalist_edit_entityid.html'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_id':           'Entity_id'
@@ -326,8 +320,6 @@ def entitydata_default_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Type'
-            , 'field_render_view':  'field/annalist_view_select.html'
-            , 'field_render_edit':  'field/annalist_edit_select.html'
             , 'field_name':         'entity_type'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
             , 'field_id':           'Entity_type'
@@ -336,8 +328,6 @@ def entitydata_default_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Label'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Entity_label'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Entity_label'
@@ -346,8 +336,6 @@ def entitydata_default_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Comment'
-            , 'field_render_view':  'field/annalist_view_textarea.html'
-            , 'field_render_edit':  'field/annalist_edit_textarea.html'
             , 'field_name':         'Entity_comment'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Entity_comment'
@@ -434,8 +422,6 @@ def entitydata_recordtype_view_context_data(
         , 'orig_id':            'orig_entity_id'
         , 'fields':
           [ { 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_entityid.html'
-            , 'field_render_edit':  'field/annalist_edit_entityid.html'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_id':           'Type_id'
@@ -444,8 +430,6 @@ def entitydata_recordtype_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Label'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Type_label'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_label'
@@ -454,8 +438,6 @@ def entitydata_recordtype_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Comment'
-            , 'field_render_view':  'field/annalist_view_textarea.html'
-            , 'field_render_edit':  'field/annalist_edit_textarea.html'
             , 'field_name':         'Type_comment'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_comment'
@@ -464,8 +446,6 @@ def entitydata_recordtype_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'URI'
-            , 'field_render_view':  'field/annalist_view_identifier.html'
-            , 'field_render_edit':  'field/annalist_edit_identifier.html'
             , 'field_name':         'Type_uri'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_uri'

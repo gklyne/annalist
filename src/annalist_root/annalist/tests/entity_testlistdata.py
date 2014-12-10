@@ -190,8 +190,7 @@ def recordlist_view_context_data(
         , 'fields':
           [ { 'field_id':           'List_id'                   # fields[0]
             , 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_slug.html'
-            , 'field_render_edit':  'field/annalist_edit_slug.html'
+            , 'field_render_type':  'Slug'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Slug'
@@ -200,8 +199,7 @@ def recordlist_view_context_data(
             }
           , { 'field_id':           'List_type'                 # fields[1]
             , 'field_label':        'List display type'
-            , 'field_render_view':  'field/annalist_view_select.html'
-            , 'field_render_edit':  'field/annalist_edit_select.html'
+            , 'field_render_type':  'Enum'
             , 'field_name':         'List_type'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6right')
             , 'field_value_type':   'annal:List_type'
@@ -210,8 +208,7 @@ def recordlist_view_context_data(
             }
           , { 'field_id':           'List_label'                # fields[2]
             , 'field_label':        'Label'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_type':  'Text'
             , 'field_name':         'List_label'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Text'
@@ -220,8 +217,7 @@ def recordlist_view_context_data(
             }
           , { 'field_id':           'List_comment'              # fields[3]
             , 'field_label':        'Help'
-            , 'field_render_view':  'field/annalist_view_textarea.html'
-            , 'field_render_edit':  'field/annalist_edit_textarea.html'
+            , 'field_render_type':  'Textarea'
             , 'field_name':         'List_comment'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Longtext'
@@ -230,8 +226,7 @@ def recordlist_view_context_data(
             }
           , { 'field_id':           'List_default_type'         # fields[4]
             , 'field_label':        'Record type'
-            , 'field_render_view':  'field/annalist_view_select.html'
-            , 'field_render_edit':  'field/annalist_edit_select.html'
+            , 'field_render_type':  'Type'
             , 'field_name':         'List_default_type'
             , 'field_placement':    get_placement_classes('small:0,6')
             , 'field_value_type':   'annal:Type'
@@ -240,8 +235,7 @@ def recordlist_view_context_data(
             }
           , { 'field_id':           'List_default_view'         # fields[5]
             , 'field_label':        'View'
-            , 'field_render_view':  'field/annalist_view_select.html'
-            , 'field_render_edit':  'field/annalist_edit_select.html'
+            , 'field_render_type':  'View'
             , 'field_name':         'List_default_view'
             , 'field_placement':    get_placement_classes('small:6,6')
             , 'field_value_type':   'annal:View'
@@ -250,8 +244,7 @@ def recordlist_view_context_data(
             }
           , { 'field_id':           'List_entity_selector'      # fields[6]
             , 'field_label':        'Selector'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_type':  'Text'
             , 'field_name':         'List_entity_selector'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Text'
@@ -260,8 +253,7 @@ def recordlist_view_context_data(
             }
           , { 'field_id':           'List_target_type'          # fields[7]
             , 'field_label':        'Record type URI'
-            , 'field_render_view':  'field/annalist_view_identifier.html'
-            , 'field_render_edit':  'field/annalist_edit_identifier.html'
+            , 'field_render_type':  'Identifier'
             , 'field_name':         'List_target_type'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Identifier'

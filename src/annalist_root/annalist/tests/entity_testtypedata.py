@@ -168,9 +168,8 @@ def recordtype_entity_view_context_data(
         , 'orig_id':            'orig_type_id'
         , 'fields':
           [ { 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_entityid.html'
-            , 'field_render_edit':  'field/annalist_edit_entityid.html'
             , 'field_name':         'entity_id'
+            , 'field_render_type':  'EntityId'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_id':           'Type_id'
             , 'field_value_type':   'annal:Slug'
@@ -178,9 +177,8 @@ def recordtype_entity_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Label'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Type_label'
+            , 'field_render_type':  'Text'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_label'
             , 'field_value_type':   'annal:Text'
@@ -188,9 +186,8 @@ def recordtype_entity_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Comment'
-            , 'field_render_view':  'field/annalist_view_textarea.html'
-            , 'field_render_edit':  'field/annalist_edit_textarea.html'
             , 'field_name':         'Type_comment'
+            , 'field_render_type':  'Textarea'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_comment'
             , 'field_value_type':   'annal:Longtext'
@@ -198,9 +195,8 @@ def recordtype_entity_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'URI'
-            , 'field_render_view':  'field/annalist_view_identifier.html'
-            , 'field_render_edit':  'field/annalist_edit_identifier.html'
             , 'field_name':         'Type_uri'
+            , 'field_render_type':  'Identifier'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_uri'
             , 'field_value_type':   'annal:Identifier'
@@ -208,9 +204,8 @@ def recordtype_entity_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Default view'
-            , 'field_render_view':  'field/annalist_view_select.html'
-            , 'field_render_edit':  'field/annalist_edit_select.html'
             , 'field_name':         'Type_view'
+            , 'field_render_type':  'View'
             , 'field_placement':    get_placement_classes('small:0,6')
             , 'field_id':           'Type_view'
             , 'field_value_type':   'annal:View'
@@ -218,9 +213,8 @@ def recordtype_entity_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Default list'
-            , 'field_render_view':  'field/annalist_view_select.html'
-            , 'field_render_edit':  'field/annalist_edit_select.html'
             , 'field_name':         'Type_list'
+            , 'field_render_type':  'List'
             , 'field_placement':    get_placement_classes('small:6,6')
             , 'field_id':           'Type_list'
             , 'field_value_type':   'annal:List'

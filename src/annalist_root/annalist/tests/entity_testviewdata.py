@@ -318,8 +318,6 @@ def recordview_view_context_data(
         , 'fields':
           [ { 'field_id':           'View_id'           # fields[0]
             , 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_entityid.html'
-            , 'field_render_edit':  'field/annalist_edit_entityid.html'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Slug'
@@ -328,8 +326,6 @@ def recordview_view_context_data(
             }
           , { 'field_id':           'View_label'        # fields[1]
             , 'field_label':        'Label'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'View_label'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Text'
@@ -338,8 +334,6 @@ def recordview_view_context_data(
             }
           , { 'field_id':           'View_comment'      # fields[2]
             , 'field_label':        'Help'
-            , 'field_render_view':  'field/annalist_view_textarea.html'
-            , 'field_render_edit':  'field/annalist_edit_textarea.html'
             , 'field_name':         'View_comment'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Longtext'
@@ -348,8 +342,6 @@ def recordview_view_context_data(
             }
           , { 'field_id':           'View_target_type'   # fields[3]
             , 'field_label':        'Record type'
-            , 'field_render_view':  'field/annalist_view_identifier.html'
-            , 'field_render_edit':  'field/annalist_edit_identifier.html'
             , 'field_name':         'View_target_type'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Identifier'
@@ -358,8 +350,6 @@ def recordview_view_context_data(
             }
           , { 'field_id':           'View_add_field'    # fields[4]
             , 'field_label':        'Add field?'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'View_add_field'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Text'
