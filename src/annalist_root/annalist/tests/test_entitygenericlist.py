@@ -138,14 +138,21 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
         rowdata = """
-            <tr class="select_row">
-                <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></td>
-                <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/_type/testtype/%(cont)s">testtype</a></td>
-                <td class="small-8 columns">Entity testcoll/testtype/entity1</td>
-                <td class="select_row">
-                    <input type="checkbox" name="entity_select" value="testtype/entity1" />
-                </td>
-            </tr>
+            <div class="trow row select_row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select_box" name="entity_select"
+                       value="testtype/entity1" />
+              </div>
+              <div class="small-11 columns">
+                <div class="row">
+                    <div class="small-3 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></div>
+                    <div class="small-2 columns"><a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">testtype</a></div>
+                    <div class="small-7 columns">
+                    Entity testcoll/testtype/entity1
+                    </div>
+                </div>
+              </div>
+            </div>
             """%({'base': TestBasePath, 'cont': cont})
         # log.info(r.content)
         # log.info(r.context["fields"])
@@ -200,19 +207,25 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
+        # log.info(r.content) #@@
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata1 = """
-            <tr class="select_row">
-                <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
-                <td class="small-3 columns">annal:Text</td>
-                <td class="small-6 columns">Address</td>
-                <td class="select_row">
-                    <input name="entity_select" value="_field/Bib_address" type="checkbox">
-                </td>
-            </tr>
-            """%(TestBasePath, cont)
+            <div class="trow row select_row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select_box" name="entity_select"
+                       value="_field/Bib_address" />
+              </div>
+              <div class="small-11 columns">
+                <div class="row">
+                    <div class="small-3 columns"><a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a></div>
+                    <div class="small-3 columns">annal:Text</div>
+                    <div class="small-6 columns">Address</div>
+                </div>
+              </div>
+            </div>
+            """%({'base': TestBasePath, 'cont': cont})
         # log.info(r.content)
         self.assertContains(r, rowdata1, html=True)
         # Test context
@@ -313,15 +326,20 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata1 = """
-            <tr class="select_row">
-              <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
-              <td class="small-3 columns">annal:Text</td>
-              <td class="small-6 columns">Address</td>
-              <td class="select_row">
-                <input name="entity_select" value="_field/Bib_address" type="checkbox">
-              </td>
-            </tr>
-            """%(TestBasePath, cont)
+            <div class="trow row select_row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select_box" name="entity_select"
+                       value="_field/Bib_address" />
+              </div>
+              <div class="small-11 columns">
+                <div class="row">
+                    <div class="small-3 columns"><a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a></div>
+                    <div class="small-3 columns">annal:Text</div>
+                    <div class="small-6 columns">Address</div>
+                </div>
+              </div>
+            </div>
+            """%({'base': TestBasePath, 'cont': cont})
         # log.info("*** r.content: "+r.content)
         self.assertContains(r, rowdata1, html=True)
         # Test context
@@ -345,15 +363,20 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata = """
-            <tr class="select_row">
-              <td class="small-3 columns"><a href="%s/c/testcoll/d/_field/Bib_address/%s">Bib_address</a></td>
-              <td class="small-3 columns">annal:Text</td>
-              <td class="small-6 columns">Address</td>
-              <td class="select_row">
-                <input name="entity_select" value="_field/Bib_address" type="checkbox">
-              </td>
-            </tr>
-            """%(TestBasePath, cont)
+            <div class="trow row select_row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select_box" name="entity_select"
+                       value="_field/Bib_address" />
+              </div>
+              <div class="small-11 columns">
+                <div class="row">
+                    <div class="small-3 columns"><a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a></div>
+                    <div class="small-3 columns">annal:Text</div>
+                    <div class="small-6 columns">Address</div>
+                </div>
+              </div>
+            </div>
+            """%({'base': TestBasePath, 'cont': cont})
         # log.info(r.content)
         # If this test fails, check ordering of URI parameters
         self.assertContains(r, rowdata, html=True)

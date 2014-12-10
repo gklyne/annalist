@@ -126,15 +126,32 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>List entities with type information</h3>", html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         cont = uri_params({"continuation_url": u})
+        # rowdata = """
+        #     <tr class="select_row">
+        #         <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></td>
+        #         <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/_type/testtype/%(cont)s">testtype</a></td>
+        #         <td class="small-8 columns">Entity testcoll/testtype/entity1</td>
+        #         <td class="select_row">
+        #             <input type="checkbox" name="entity_select" value="testtype/entity1" />
+        #         </td>
+        #     </tr>
+        #     """%({'base': TestBasePath, 'cont': cont})
         rowdata = """
-            <tr class="select_row">
-                <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></td>
-                <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/_type/testtype/%(cont)s">testtype</a></td>
-                <td class="small-8 columns">Entity testcoll/testtype/entity1</td>
-                <td class="select_row">
-                    <input type="checkbox" name="entity_select" value="testtype/entity1" />
-                </td>
-            </tr>
+            <div class="trow row select_row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select_box" name="entity_select"
+                       value="testtype/entity1" />
+              </div>
+              <div class="small-11 columns">
+                <div class="row">
+                    <div class="small-3 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></div>
+                    <div class="small-2 columns"><a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">testtype</a></div>
+                    <div class="small-7 columns">
+                    Entity testcoll/testtype/entity1
+                    </div>
+                </div>
+              </div>
+            </div>
             """%({'base': TestBasePath, 'cont': cont})
         # log.info(r.content)
         self.assertContains(r, rowdata, html=True)
@@ -158,7 +175,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_head'], "field/annalist_head_any.html")
         self.assertEqual(r.context['fields'][0]['field_render_item'], "field/annalist_item_entityid.html")
-        self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-2 columns")
+        self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-3 columns")
         self.assertEqual(r.context['fields'][0]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][0]['field_value'], "")
         self.assertEqual(r.context['fields'][0]['entity_type_id'], "")
@@ -182,7 +199,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:label")
         self.assertEqual(r.context['fields'][2]['field_render_head'], "field/annalist_head_any.html")
         self.assertEqual(r.context['fields'][2]['field_render_item'], "field/annalist_item_text.html")
-        self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-8 columns")
+        self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-7 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][2]['field_value'], "")
         self.assertEqual(r.context['fields'][2]['entity_type_id'], "")
@@ -226,14 +243,21 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>List entities</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata = """
-            <tr class="select_row">
-                <td class="small-3 columns"><a href="%s/c/testcoll/d/testtype/entity1/%s">entity1</a></td>
-                <td class="small-9 columns">Entity testcoll/testtype/entity1</td>
-                <td class="select_row">
-                    <input type="checkbox" name="entity_select" value="testtype/entity1" />
-                </td>
-            </tr>
-            """%(TestBasePath, cont)
+            <div class="trow row select_row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select_box" name="entity_select"
+                       value="testtype/entity1" />
+              </div>
+              <div class="small-11 columns">
+                <div class="row">
+                    <div class="small-3 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></div>
+                    <div class="small-9 columns">
+                    Entity testcoll/testtype/entity1
+                    </div>
+                </div>
+              </div>
+            </div>
+            """%({'base': TestBasePath, 'cont': cont})
         self.assertContains(r, rowdata, html=True)
         # log.info(r.content)
         # Test context

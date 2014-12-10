@@ -34,17 +34,11 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 (sub-release?)
 
-- [ ] Think about mechanism for a common field (e.g. rdfs:label) to return a specified field value (e.g. bib:title).  "Alias" field render type?  Use JSON-LD @context; e.g.
-
-        @context {
-          'bib:label': 'rdfs:label'
-        }
-
-    The context should be separate from the data, used for local aliasing for form generation.
+- [ ] Think about mechanism for a common field (e.g. rdfs:label) to return a specified field value (e.g. bib:title).  Associate aliases with record type, used when constructing view/list context.
 - [ ] Improve display of view fields: put field names in header of repeat-group
     - view, edit, head, colview, coledit render options; template gets to choose
     - think how this plays with responsive content.
-- [ ] Improve list column layout, avoid values overflowing column and overlapping next (e.g. with long identifiers - cf. http://localhost:8000/annalist/c/coll1/l/Default_list_all/_view/)
+- [x] Improve list column layout, avoid values overflowing column and overlapping next (e.g. with long identifiers - cf. http://localhost:8000/annalist/c/coll1/l/Default_list_all/_view/)
 
 - [ ] Generalize collection/site hierarchy to use a "search path" of imported collections
 - [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  (defer?)

@@ -11,13 +11,13 @@
 , "annal:record_type":          ""
 , "annal:list_fields":
   [ { "annal:field_id":             "Entity_id"
-    , "annal:field_placement":      "small:0,2"
+    , "annal:field_placement":      "small:0,3"
     }
   , { "annal:field_id":             "Entity_type"
     , "annal:field_placement":      "small:0,2"
     }
   , { "annal:field_id":             "Entity_label"
-    , "annal:field_placement":      "small:4,8"
+    , "annal:field_placement":      "small:4,7"
     }
   ]
 }
