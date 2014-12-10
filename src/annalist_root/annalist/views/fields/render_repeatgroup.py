@@ -18,6 +18,11 @@ from django.template    import Template, Context
 
 from annalist.views.fields.bound_field  import bound_field
 
+# @@TODO: rationalize this..
+# Currently, 'edit' has layout details for repeated view within an edit view, and
+# 'item' has layout for list view.  Probably should separate these more clearly
+# into 'list', 'edit', 'view', and add appropriate entries in render_utils
+
 edit = (
     { 'repeatgroup_head':
         """
@@ -62,9 +67,10 @@ edit = (
         </div> """
     })
 
-view = (
+view = (      # @@TODO ratonalize (see above; not currently used)
     { 'repeatgroup_head':
         """
+        @@TODO: FIXME render_repeatgroup.view.repeatgroup_head@@
         <!-- views.fields.render_repeatgroup.view_template -->
         <div class="small-12 columns">
           <p class="grouplabel">{{field.field_label}}</p>
@@ -76,6 +82,7 @@ view = (
         #   repeat_prefix - index of value presented
         #   repeat_bound_fields is list of bound fields to process for this value
         """
+        @@TODO: FIXME render_repeatgroup.view.repeatgroup_body@@
         <div class="small-12 columns">
           <div class="row selectable">
             <div class="small-12 columns">
@@ -86,7 +93,9 @@ view = (
           </div>
         </div>"""
     , 'repeatgroup_tail':
-        """"""
+        """
+        @@TODO: FIXME render_repeatgroup.view.repeatgroup_tail@@
+        """
     })
 
 item = (
@@ -107,15 +116,19 @@ item = (
         #   repeat_bound_fields is list of bound fields to process for this value
         # -
         """
-        <tr class="select_row">
-          {% for f in repeat_bound_fields %}
-          {% include f.field_render_item with field=f %}
-          {% endfor %}
-          <td class="select_row">
-            <input type="checkbox" name="entity_select" 
-                   value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
-          </td>
-        </tr>
+            <div class="trow row select_row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select_box" name="entity_select" 
+                       value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
+              </div>
+              <div class="small-11 columns">
+                <div class="row">
+                {% for f in repeat_bound_fields %}
+                {% include f.field_render_item with field=f %}
+                {% endfor %}
+                </div>
+              </div>
+            </div>
         """
     , 'repeatgroup_tail':
         """"""

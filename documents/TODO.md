@@ -25,27 +25,30 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Try to make mapping classes more consistent in their return types for sub-context values
 - [x] Raise error if required view_context information is missing for EntityFinder
 - [x] Add field for `annal:field_entity_type` property in field view
-- [ ] Revisit definitions for BibJSON view; confirm that repeat field groups can be created
+- [x] Revisit definitions for BibJSON view; confirm that repeat field groups can be created
     - [x] Bib_type field should be enumeration
     - [x] Month, year on same line
     - [x] Restrict view choices field to views that are not subsidiary field groups
-    - [ ] Think about mechanism for a common field (e.g. rdfs:label) to return a specified field value (e.g. bib:title).  "Alias" field render type?
-- [ ] Improve display of view fields: put field names in header of repeat-group
-    - view, edit, colhead, colview, coledit render options; template gets to choose
-    - think how this plays with responsive content
 
 (merge rework-form-manager to develop branch)
 
-- [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?
+(sub-release?)
 
+- [ ] Think about mechanism for a common field (e.g. rdfs:label) to return a specified field value (e.g. bib:title).  Associate aliases with record type, used when constructing view/list context.
+- [ ] Improve display of view fields: put field names in header of repeat-group
+    - view, edit, head, colview, coledit render options; template gets to choose
+    - think how this plays with responsive content.
+- [x] Improve list column layout, avoid values overflowing column and overlapping next (e.g. with long identifiers - cf. http://localhost:8000/annalist/c/coll1/l/Default_list_all/_view/)
+
+- [ ] Generalize collection/site hierarchy to use a "search path" of imported collections
 - [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  (defer?)
+- [ ] Enumerated values are hard-wired into entitytypeinfo - move them to regular type/data files in site data?  Hmmm... currently, it seems all _annalist_site values need to be hard-wired in entitytypeinfo; maybe look to use collection "search path" logic instead (see above)
+
+- [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?
 - [ ] Think about fields that return subgraph (defer?)
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.
-- [ ] Generalize collection/site hierarchy to use a "search path" of imported collections (defer)
-- [ ] Enumerated values are hard-wired into entitytypeinfo - move them to regular type/data files in site data?  Hmmm... currently, it seems all _annalist_site values need to be hard-wired in entitytypeinfo; maybe look to use collection "search path" logic instead (see above)
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
-- [ ] Improve list column layout, avoid values overflowing column and overlapping next (e.g. with long identifiers - cf. http://localhost:8000/annalist/c/coll1/l/Default_list_all/_view/)
 
 (sub-release?)
 
