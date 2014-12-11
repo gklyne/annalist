@@ -24,7 +24,10 @@
     <div class="small-12 columns">
       <form method="POST" action="">
         {% csrf_token %}
+
+        <!-- - - - - -  search and list view selection - - - - - -->
         <div class="row">
+          <!-- Search term entry -->
           <div class="small-12 medium-5 columns">
             <div class="row">
               <div class="view_label small-12 medium-3 columns">
@@ -35,11 +38,11 @@
               </div>
             </div>
           </div>
-          <!--
-          -->
+          <!-- List view entrty -->
           {% with field=list_choices %}
           {% include field.field_render_edit %}
           {% endwith %}
+          <!-- View (refresh) button -->
           <div class="small-12 medium-2 columns text-right">
             <div class="row">
               <div class="small-12 columns right">

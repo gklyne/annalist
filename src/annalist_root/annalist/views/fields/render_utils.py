@@ -89,12 +89,12 @@ def get_edit_renderer(renderid):
         return RenderRepeatGroup(render_repeatgroup.edit)
     renderer = get_field_renderer(renderid)
     if renderer:
-        return renderer.labeledit()
+        return renderer.label_edit()
     log.warning("get_edit_renderer: %s not found"%renderid)
     # raise ValueError("get_edit_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
     renderer = get_field_renderer("Text")
-    return renderer.labeledit()
+    return renderer.label_edit()
 
 def get_view_renderer(renderid):
     """
@@ -116,12 +116,12 @@ def get_view_renderer(renderid):
         return RenderRepeatGroup(render_repeatgroup.view)
     renderer = get_field_renderer(renderid)
     if renderer:
-        return renderer.labelview()
+        return renderer.label_view()
     log.warning("get_view_renderer: %s not found"%renderid)
     # raise ValueError("get_edit_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
     renderer = get_field_renderer("Text")
-    return renderer.labelview()
+    return renderer.label_view()
 
 def get_head_renderer(renderid):
     """

@@ -78,11 +78,11 @@ class RenderFieldValue(object):
     fields, this class will construct new rendferers for usingthose values in
     different contexts:
   
-      * labelview:  labeled value display, not editable
-      * labeledit:  labeled value edit control
-      * itemhead:   value label or nothing, depending on media context
-      * itemview:   labeled or unlabeled value display, depending on media context
-      * itemedit:   labeled or unlabeled value edit control, depending on media context
+      * label_view: labeled value display, not editable
+      * label_edit: labeled value edit control
+      * item_head:  value label or nothing, depending on media context
+      * item_view:  labeled or unlabeled value display, depending on media context
+      * item_edit:  labeled or unlabeled value edit control, depending on media context
       * label:      value label
       * view:       unlabeled value display control
       * edit:       unlabeled value edit control
@@ -100,13 +100,13 @@ class RenderFieldValue(object):
         super(RenderFieldValue, self).__init__()
         self._viewfile          = viewfile
         self._editfile          = editfile
-        self._viewtemplate      = None
-        self._edittemplate      = None
-        self._render_labelview  = None
-        self._render_labeledit  = None
-        self._render_itemhead   = None
-        self._render_itemview   = None
-        self._render_itemedit   = None
+        self._view_template     = None
+        self._edit_template     = None
+        self._render_label_view = None
+        self._render_label_edit = None
+        self._render_item_head  = None
+        self._render_item_view  = None
+        self._render_item_edit  = None
         self._render_label      = None
         self._render_view       = None
         self._render_edit       = None
@@ -137,21 +137,21 @@ class RenderFieldValue(object):
             )
         return source
 
-    def _get_viewtemplate(self):
-        if not self._viewtemplate:
-            self._viewtemplate = self._get_template(
+    def _get_view_template(self):
+        if not self._view_template:
+            self._view_template = self._get_template(
                 self._viewfile, 
                 "Can't get view template"
                 )
-        return self._viewtemplate
+        return self._view_template
 
-    def _get_edittemplate(self):
-        if not self._edittemplate:
-            self._edittemplate = self._get_template(
+    def _get_edit_template(self):
+        if not self._edit_template:
+            self._edit_template = self._get_template(
                 self._editfile, 
                 "Can't get edit template"
                 )
-        return self._edittemplate
+        return self._edit_template
 
     def _get_renderer(self, fieldtemplate, wrappertemplate):
         pass
@@ -163,16 +163,16 @@ class RenderFieldValue(object):
         Returns a renderer object to display a field label from the 
         supplied `context['field']` value.
         """
-        if not self._render_labelview:
-            self._render_labelview = Template(label_template)
-        return self._render_labelview
+        if not self._render_label_view:
+            self._render_label_view = Template(label_template)
+        return self._render_label_view
 
     def view(self):
         """
         Returns a renderer object to display a non-editable field value.
         """
         if not self._render_view:
-            t = value_wrapper_template%(self._get_viewtemplate())
+            t = value_wrapper_template%(self._get_view_template())
             self._render_view = Template(t)
         return self._render_view
 
@@ -181,48 +181,48 @@ class RenderFieldValue(object):
         Returns a renderer object to display an editable field value.
         """
         if not self._render_edit:
-            t = value_wrapper_template%(self._get_edittemplate())
+            t = value_wrapper_template%(self._get_edit_template())
             self._render_edit = Template(t)
         return self._render_edit
 
-    def labelview(self):
+    def label_view(self):
         """
         Returns a renderer object to display a labeled non-editable field value.
         """
-        if not self._render_labelview:
-            t = label_wrapper_template%(self._get_viewtemplate())
-            self._render_labelview = Template(t)
-        return self._render_labelview
+        if not self._render_label_view:
+            t = label_wrapper_template%(self._get_view_template())
+            self._render_label_view = Template(t)
+        return self._render_label_view
 
-    def labeledit(self):
+    def label_edit(self):
         """
         Returns a renderer object to display an editable field value.
         """
-        if not self._render_labeledit:
-            t = label_wrapper_template%(self._get_edittemplate())
-            self._render_labeledit = Template(t)
-        return self._render_labeledit
+        if not self._render_label_edit:
+            t = label_wrapper_template%(self._get_edit_template())
+            self._render_label_edit = Template(t)
+        return self._render_label_edit
 
-    def itemhead(self):
+    def item_head(self):
         """
         Returns a renderer object to display nothing on small media, or
         a field label used as a column header on larger media.
         """
-        if not self._render_itemhead:
-            self._render_itemhead = Template(itemlabel_template)
-        return self._render_itemhead
+        if not self._render_item_head:
+            self._render_item_head = Template(itemlabel_template)
+        return self._render_item_head
 
-    def itemview(self):
-        if not self._render_itemview:
-            t = itemlabel_wrapper_template%(self._get_viewtemplate())
-            self._render_itemview = Template(t)
-        return self._render_itemview
+    def item_view(self):
+        if not self._render_item_view:
+            t = itemlabel_wrapper_template%(self._get_view_template())
+            self._render_item_view = Template(t)
+        return self._render_item_view
 
-    def itemedit(self):
-        if not self._render_itemedit:
-            t = itemlabel_wrapper_template%(self._get_edittemplate())
-            self._render_itemedit = Template(t)
-        return self._render_itemedit
+    def item_edit(self):
+        if not self._render_item_edit:
+            t = itemlabel_wrapper_template%(self._get_edit_template())
+            self._render_item_edit = Template(t)
+        return self._render_item_edit
 
 # End.
 #........1.........2.........3.........4.........5.........6.........7.........8

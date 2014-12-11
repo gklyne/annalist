@@ -29,16 +29,23 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Bib_type field should be enumeration
     - [x] Month, year on same line
     - [x] Restrict view choices field to views that are not subsidiary field groups
+- [x] Improve list column layout, avoid values overflowing column and overlapping next (e.g. with long identifiers - cf. http://localhost:8000/annalist/c/coll1/l/Default_list_all/_view/) (PART FIX - made id column wider)
+- [ ] Improve display of view fields: put field names in header of repeat-group
+    - [x] Reworked field rendering to support more options
+    - [ ] List display remove header rendering from template, handle in repeat
+        - if this can't easily be done with existing structure, defer until RepeatRow done
+        - eventually, repeat row logic for list and repeat rows within view should
+          be same logic
+    - [ ] Introduce new render type RepeatRow, sharing code with RepeatGroup
+    - [ ] Work through field rendering options for RepeatRow:
+        - use same fields in bound_field?
+    - [ ] Rework field description used by view view to use new field rendering options
 
 (merge rework-form-manager to develop branch)
 
 (sub-release?)
 
 - [ ] Think about mechanism for a common field (e.g. rdfs:label) to return a specified field value (e.g. bib:title).  Associate aliases with record type, used when constructing view/list context.
-- [ ] Improve display of view fields: put field names in header of repeat-group
-    - view, edit, head, colview, coledit render options; template gets to choose
-    - think how this plays with responsive content.
-- [x] Improve list column layout, avoid values overflowing column and overlapping next (e.g. with long identifiers - cf. http://localhost:8000/annalist/c/coll1/l/Default_list_all/_view/)
 
 - [ ] Generalize collection/site hierarchy to use a "search path" of imported collections
 - [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  (defer?)
