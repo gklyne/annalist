@@ -35,7 +35,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] List display remove header rendering from template, handle in repeat
         1. [x] Put header column logic in repeat group item renderer
         2. [x] Update list template
-    - [ ] Introduce new render type RepeatRow, sharing code with RepeatGroup
+    - [x] Introduce new render type RepeatRow, sharing code with RepeatGroup
+    - [x] Move row selection from template (uses .item) to editlist (uses RepeatGroup)
     - [ ] Work through field rendering options for RepeatRow:
         - use same fields in bound_field?
     - [ ] Rework field description used by view view to use new field rendering options

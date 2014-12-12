@@ -18,29 +18,24 @@ from django.template    import Template, Context
 
 from annalist.views.fields.bound_field  import bound_field
 
-# @@TODO: rationalize this..
-# Currently, 'edit' has layout details for repeated view within an edit view, and
-# 'item' has layout for list view.  Probably should separate these more clearly
-# into 'list', 'edit', 'view', and add appropriate entries in render_utils
-
-edit = (
-    { 'repeatgroup_head':
+edit_group = (
+    { 'head':
         """
-        <!-- views.fields.render_repeatgroup.edit -->
+        <!-- views.fields.render_repeatgroup.edit_group -->
         <div class="small-12 columns">
           <p class="grouplabel">{{field.field_label}}</p>
         </div>"""
-    , 'repeatgroup_body':
+    , 'body':
         # Context values:
         #   repeat_index - index of value presented
         #   repeat_bound_fields is list of bound fields to process for this value
         """
         <div class="small-12 columns">
           <div class="row selectable">
-            <div class="small-2 columns">
+            <div class="small-2 columns checkbox_in_edit_padding">
               {% if auth_config %}
               <input type="checkbox" name="{{field.group_id}}__select_fields"
-                     value="{{repeat_index}}" class="right" />
+                     value="{{repeat_index}}" class="right"></input>
               {% endif %}
             </div>
             <div class="small-10 columns">
@@ -50,7 +45,7 @@ edit = (
             </div>
           </div>
         </div>"""
-    , 'repeatgroup_tail':
+    , 'tail':
         """
         <div class="small-12 columns">
           <div class="row">
@@ -67,22 +62,22 @@ edit = (
         </div> """
     })
 
-view = (      # @@TODO ratonalize (see above; not currently used)
-    { 'repeatgroup_head':
+view_group = (      # @@TODO ratonalize (see above; not currently used)
+    { 'head':
         """
-        @@TODO: FIXME render_repeatgroup.view.repeatgroup_head@@
-        <!-- views.fields.render_repeatgroup.view -->
+        @@TODO: FIXME render_repeatgroup.view_group.head@@
+        <!-- views.fields.render_repeatgroup.view_group -->
         <div class="small-12 columns">
           <p class="grouplabel">{{field.field_label}}</p>
         </div>"""
-    , 'repeatgroup_body':
+    , 'body':
         # Context values:
         #   repeat_id - id of repeated group
         #   repeat_index - index of value presented
         #   repeat_prefix - index of value presented
         #   repeat_bound_fields is list of bound fields to process for this value
         """
-        @@TODO: FIXME render_repeatgroup.view.repeatgroup_body@@
+        @@TODO: FIXME render_repeatgroup.view_group.body@@
         <div class="small-12 columns">
           <div class="row selectable">
             <div class="small-12 columns">
@@ -92,16 +87,17 @@ view = (      # @@TODO ratonalize (see above; not currently used)
             </div>
           </div>
         </div>"""
-    , 'repeatgroup_tail':
-        """
-        @@TODO: FIXME render_repeatgroup.view.repeatgroup_tail@@
-        """
+    # , 'tail':
+    #     """
+    #     @@TODO: FIXME render_repeatgroup.view_group.tail@@
+    #     """
     })
 
-item = (
-    { 'repeatgroup_head':
+edit_row = (
+    { 'head':
         """
-            <!-- views.fields.render_repeatgroup.item -->
+        @@TODO: FIXME render_repeatgroup.edit_row.head@@
+            <!-- views.fields.render_repeatgroup.view_row -->
             <div class="thead row">
               <div class="small-1 columns">
                 <th>&nbsp;</th>
@@ -109,13 +105,65 @@ item = (
               <div class="small-11 columns">
                 <div class="row">
                   {% for f in field.group_field_descs %}
-                    {% include f.field_render_head with field=f %}
+                  {% include f.field_render_head with field=f %}
                   {% endfor %}
                 </div>
               </div>
             </div>
         """
-    , 'repeatgroup_body':
+    , 'body':
+        # Context values:
+        #   repeat_id - id of repeated group
+        #   repeat_index - index of value presented
+        #   repeat_prefix - index of value presented
+        # -
+        #   <!-- f.entity_link {{f.entity_link}} -->
+        #   <!-- f.entity_type_link {{f.entity_type_link}} -->
+        #   <!-- f.entity_link_continuation {{f.entity_link_continuation}} -->
+        #   <!-- f.entity_type_link_continuation {{f.entity_type_link_continuation}} -->
+        #   repeat_bound_fields is list of bound fields to process for this value
+        # -
+        """
+        @@TODO: FIXME render_repeatgroup.edit_row.body@@
+            <div class="trow row select_row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select_box" name="entity_select" 
+                       value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
+                &nbsp;
+              </div>
+              <div class="small-11 columns">
+                <div class="row">
+                  {% for f in repeat_bound_fields %}
+                  {% include f.field_render_coledit with field=f %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+        """
+    , 'tail':
+        """
+        @@TODO: FIXME render_repeatgroup.edit_row.tail@@
+        """
+    })
+
+view_row = (
+    { 'head':
+        """
+            <!-- views.fields.render_repeatgroup.view_row -->
+            <div class="thead row">
+              <div class="small-1 columns">
+                <th>&nbsp;</th>
+              </div>
+              <div class="small-11 columns">
+                <div class="row">
+                  {% for f in field.group_field_descs %}
+                  {% include f.field_render_colhead with field=f %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+        """
+    , 'body':
         # Context values:
         #   repeat_id - id of repeated group
         #   repeat_index - index of value presented
@@ -132,18 +180,19 @@ item = (
               <div class="small-1 columns">
                 <input type="checkbox" class="select_box" name="entity_select" 
                        value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
+                &nbsp;
               </div>
               <div class="small-11 columns">
                 <div class="row">
-                {% for f in repeat_bound_fields %}
-                {% include f.field_render_item with field=f %}
-                {% endfor %}
+                  {% for f in repeat_bound_fields %}
+                  {% include f.field_render_colview with field=f %}
+                  {% endfor %}
                 </div>
               </div>
             </div>
         """
-    , 'repeatgroup_tail':
-        """"""
+    # , 'tail':
+    #     """"""
     })
 
 class RenderRepeatGroup(object):
@@ -159,9 +208,9 @@ class RenderRepeatGroup(object):
     # log.info("RenderRepeatGroup: __init__ %r"%(templates))
     super(RenderRepeatGroup, self).__init__()
     assert templates is not None, "RenderRepeatGroup template must be supplied (.edit, .view or .item)"
-    self._template_head = Template(templates['repeatgroup_head'])
-    self._template_body = Template(templates['repeatgroup_body'])
-    self._template_tail = Template(templates['repeatgroup_tail'])
+    self._template_head = Template(templates.get('head', ""))
+    self._template_body = Template(templates.get('body', "@@missing body@@"))
+    self._template_tail = Template(templates.get('tail', ""))
     return
 
   def __str__(self):

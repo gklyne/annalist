@@ -170,7 +170,12 @@ div.columns > select
 div.columns input[type="checkbox"]
 {
     margin-top: 0rem ;
-    /* vertical-align: middle; */
+    /* vertical-align: middle;  -- tried this, doesn't work across 'div's */
+}
+
+div.columns.checkbox_in_edit_padding input[type="checkbox"]
+{   /* Hack to get checkboxes to align sensibly in row of field group */
+    margin-top: 0.75rem ;
 }
 
 /*
@@ -241,6 +246,15 @@ div.row.table div.trow div.columns
 {   /* Text size and styling for row content */
     font-size: 0.875rem;
 } 
+
+/*
+div.row .columns ,
+div.row .column
+{
+    height: 100%;
+    vertical-align: middle;
+}
+*/
 
 /* Messages */
 

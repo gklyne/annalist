@@ -22,8 +22,8 @@ from annalist.models.entityfinder       import EntityFinder
 from annalist.views.fields.render_utils import (
     get_edit_renderer, 
     get_view_renderer,
-    get_head_renderer, 
-    get_item_renderer,
+    get_colhead_renderer, 
+    get_colview_renderer,
     get_value_mapper
     )
 from annalist.views.fields.render_placement import (
@@ -76,10 +76,10 @@ class FieldDescription(object):
             , 'field_property_uri':         field_property
             , 'field_placement':            get_placement_classes(field_placement)
             , 'field_render_type':          field_render_type
-            , 'field_render_head':          get_head_renderer(field_render_type)
-            , 'field_render_item':          get_item_renderer(field_render_type)
             , 'field_render_view':          get_view_renderer(field_render_type)
             , 'field_render_edit':          get_edit_renderer(field_render_type)
+            , 'field_render_colhead':       get_colhead_renderer(field_render_type)
+            , 'field_render_colview':       get_colview_renderer(field_render_type)
             , 'field_value_mapper':         get_value_mapper(field_render_type)
             , 'field_value_type':           recordfield.get(ANNAL.CURIE.field_value_type, "")
             , 'field_placeholder':          recordfield.get(ANNAL.CURIE.placeholder, "")

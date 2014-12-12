@@ -45,13 +45,13 @@ label_wrapper_template = (
     """</div>"""
     )
 
-itemlabel_template = (
+col_label_template = (
     """<div class="{{field.field_placement.field}} hide-for-small-only">"""+
     """{{field.field_label}}"""+
     """</div>"""
     )
 
-itemlabel_wrapper_template = (
+col_label_wrapper_template = (
     """<div class="{{field.field_placement.field}}">\n"""+
     """  <div class="row show-for-small-only">\n"""+
     """    <div class="view_label small-12 columns">\n"""+
@@ -80,9 +80,9 @@ class RenderFieldValue(object):
   
       * label_view: labeled value display, not editable
       * label_edit: labeled value edit control
-      * item_head:  value label or nothing, depending on media context
-      * item_view:  labeled or unlabeled value display, depending on media context
-      * item_edit:  labeled or unlabeled value edit control, depending on media context
+      * col_head:   value label or nothing, depending on media context
+      * col_view:   labeled or unlabeled value display, depending on media context
+      * col_edit:   labeled or unlabeled value edit control, depending on media context
       * label:      value label
       * view:       unlabeled value display control
       * edit:       unlabeled value edit control
@@ -104,9 +104,9 @@ class RenderFieldValue(object):
         self._edit_template     = None
         self._render_label_view = None
         self._render_label_edit = None
-        self._render_item_head  = None
-        self._render_item_view  = None
-        self._render_item_edit  = None
+        self._render_col_head   = None
+        self._render_col_view   = None
+        self._render_col_edit   = None
         self._render_label      = None
         self._render_view       = None
         self._render_edit       = None
@@ -203,26 +203,34 @@ class RenderFieldValue(object):
             self._render_label_edit = Template(t)
         return self._render_label_edit
 
-    def item_head(self):
+    def col_head(self):
         """
         Returns a renderer object to display nothing on small media, or
         a field label used as a column header on larger media.
         """
-        if not self._render_item_head:
-            self._render_item_head = Template(itemlabel_template)
-        return self._render_item_head
+        if not self._render_col_head:
+            self._render_col_head = Template(col_label_template)
+        return self._render_col_head
 
-    def item_view(self):
-        if not self._render_item_view:
-            t = itemlabel_wrapper_template%(self._get_view_template())
-            self._render_item_view = Template(t)
-        return self._render_item_view
+    def col_view(self):
+        """
+        Returns a renderer object to display a non-editable field,
+        labeled on a small display, and unlabelled for a larger display
+        """
+        if not self._render_col_view:
+            t = col_label_wrapper_template%(self._get_view_template())
+            self._render_col_view = Template(t)
+        return self._render_col_view
 
-    def item_edit(self):
-        if not self._render_item_edit:
-            t = itemlabel_wrapper_template%(self._get_edit_template())
-            self._render_item_edit = Template(t)
-        return self._render_item_edit
+    def col_edit(self):
+        """
+        Returns a renderer object to display an editable field,
+        labeled on a small display, and unlabelled for a larger display
+        """
+        if not self._render_col_edit:
+            t = col_label_wrapper_template%(self._get_edit_template())
+            self._render_col_edit = Template(t)
+        return self._render_col_edit
 
 # End.
 #........1.........2.........3.........4.........5.........6.........7.........8

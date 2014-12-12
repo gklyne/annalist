@@ -112,17 +112,8 @@ class FieldDescriptionTest(AnnalistTestCase):
                 , 'field_placement':            get_placement_classes("small:0,12")
                 , 'field_property_uri':         'annal:view_fields'
                 , 'field_value_type':           'annal:Field_group'
-                # , 'field_default_value':        None
                 , 'field_group_viewref':        'View_field_view'
-                , 'field_render_head':          'field/annalist_head_any.html'
-                , 'field_render_item':          'field/annalist_item_none.html' 
-                , 'field_render_view':          RenderRepeatGroup(render_repeatgroup.view) 
-                , 'field_render_edit':          RenderRepeatGroup(render_repeatgroup.edit) 
-                # , 'field_value_mapper':         RenderText()
-                # , 'field_choice_labels':        None
-                # , 'field_choice_links':         None
-                # , 'field_options_typeref':      None
-                # , 'field_restrict_values':      'ALL'
+                , 'field_render_type':          'RepeatGroup'
                 , 'group_id':                   'View_repeat_fields'
                 , 'group_label':                'Fields'
                 , 'group_add_label':            'Add field'
@@ -223,7 +214,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def test_RenderRepeatGroupEdit(self):
-        fieldrender   = RenderRepeatGroup(render_repeatgroup.edit)
+        fieldrender   = RenderRepeatGroup(render_repeatgroup.edit_group)
         rendered_text = fieldrender.render(self.get_repeatgroup_context())
         # print "\n**************\n"
         # print rendered_text

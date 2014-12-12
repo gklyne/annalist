@@ -86,7 +86,9 @@ def get_edit_renderer(renderid):
         # return "field/annalist_edit_tokenlist.html"
         return RenderTokenSet(render_tokenset.edit)
     if renderid == "RepeatGroup":
-        return RenderRepeatGroup(render_repeatgroup.edit)
+        return RenderRepeatGroup(render_repeatgroup.edit_group)
+    if renderid == "RepeatRow":
+        return RenderRepeatGroup(render_repeatgroup.edit_row)
     renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.label_edit()
@@ -113,7 +115,9 @@ def get_view_renderer(renderid):
         # return "field/annalist_view_tokenlist.html"
         return RenderTokenSet(render_tokenset.view)
     if renderid == "RepeatGroup":
-        return RenderRepeatGroup(render_repeatgroup.view)
+        return RenderRepeatGroup(render_repeatgroup.view_group)
+    if renderid == "RepeatRow":
+        return RenderRepeatGroup(render_repeatgroup.view_row)
     renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.label_view()
@@ -123,7 +127,7 @@ def get_view_renderer(renderid):
     renderer = get_field_renderer("Text")
     return renderer.label_view()
 
-def get_head_renderer(renderid):
+def get_colhead_renderer(renderid):
     """
     Returns a field list heading renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
@@ -131,7 +135,22 @@ def get_head_renderer(renderid):
     # @@TODO: use field renderer
     return "field/annalist_head_any.html"
 
-def get_item_renderer(renderid):
+def get_coledit_renderer(renderid):
+    """
+    Returns a field list row-item renderer object that can be referenced in a 
+    Django template "{% include ... %}" element.
+    """
+    # if renderid == "TokenSet":
+    #     return RenderTokenSet(render_tokenset.item)
+    if renderid == "RepeatGroup":
+        return RenderRepeatGroup(render_repeatgroup.view_row)
+    renderer = get_field_renderer(renderid)
+    if renderer:
+        return renderer.col_edit()
+    log.debug("get_coledit_renderer: %s not found"%renderid)
+    return "field/annalist_item_none.html"
+
+def get_colview_renderer(renderid):
     """
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
@@ -139,7 +158,7 @@ def get_item_renderer(renderid):
     if renderid == "TokenSet":
         return RenderTokenSet(render_tokenset.item)
     if renderid == "RepeatGroup":
-        return RenderRepeatGroup(render_repeatgroup.item)
+        return RenderRepeatGroup(render_repeatgroup.view_row)
     renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.view()
