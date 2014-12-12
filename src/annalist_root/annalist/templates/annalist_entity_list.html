@@ -60,21 +60,6 @@
         <!-- - - - - -  table data - - - - - -->
         <div class="table row">
           <div class="small-12 columns">
-            <!-- - - - - -  headers - - - - - -->
-            <!-- @@TODO use List_rows.field_render_head? -->
-            <div class="thead row">
-              <div class="small-1 columns">
-                <th>&nbsp;</th>
-              </div>
-              <div class="small-11 columns">
-                <div class="row">
-                  {% for field in fields %}
-                    {% include field.field_render_head %}
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-            <!-- - - - - -  row data (see render_repeatgroup) - - - - - -->
             {% include List_rows.field_render_item with field=List_rows %}
           </div>
         </div>

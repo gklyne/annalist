@@ -26,7 +26,7 @@ from annalist.views.fields.bound_field  import bound_field
 edit = (
     { 'repeatgroup_head':
         """
-        <!-- views.fields.render_repeatgroup.edit_template -->
+        <!-- views.fields.render_repeatgroup.edit -->
         <div class="small-12 columns">
           <p class="grouplabel">{{field.field_label}}</p>
         </div>"""
@@ -71,7 +71,7 @@ view = (      # @@TODO ratonalize (see above; not currently used)
     { 'repeatgroup_head':
         """
         @@TODO: FIXME render_repeatgroup.view.repeatgroup_head@@
-        <!-- views.fields.render_repeatgroup.view_template -->
+        <!-- views.fields.render_repeatgroup.view -->
         <div class="small-12 columns">
           <p class="grouplabel">{{field.field_label}}</p>
         </div>"""
@@ -101,7 +101,19 @@ view = (      # @@TODO ratonalize (see above; not currently used)
 item = (
     { 'repeatgroup_head':
         """
-        <!-- views.fields.render_repeatgroup.item_template -->
+            <!-- views.fields.render_repeatgroup.item -->
+            <div class="thead row">
+              <div class="small-1 columns">
+                <th>&nbsp;</th>
+              </div>
+              <div class="small-11 columns">
+                <div class="row">
+                  {% for f in field.group_field_descs %}
+                    {% include f.field_render_head with field=f %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
         """
     , 'repeatgroup_body':
         # Context values:

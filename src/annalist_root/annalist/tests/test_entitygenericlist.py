@@ -193,7 +193,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                 # Check that row field descriptions match corresponding heading feld descriptions
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
-                        'field_property_uri', 'field_render_head',
+                        'field_property_uri', 'field_render_type',
                         'field_placement', 'field_value_type'):
                     self.assertEqual(item_field[fkey], head_field[fkey])
                 # Check row field values
@@ -305,7 +305,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                         head_field = head_fields[fid]
                         for fkey in (
                                 'field_id', 'field_name', 'field_label', 
-                                'field_property_uri', 'field_render_head',
+                                'field_property_uri', 'field_render_type',
                                 'field_placement', 'field_value_type'):
                             self.assertEqual(item_field[fkey], head_field[fkey])
                         self.assertEqual(item_field['field_value'], f[fid])
@@ -426,7 +426,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                         head_field = head_fields[fid]
                         for fkey in (
                                 'field_id', 'field_name', 'field_label', 
-                                'field_property_uri', 'field_render_head',
+                                'field_property_uri', 'field_render_type',
                                 'field_placement', 'field_value_type'):
                             self.assertEqual(item_field[fkey], head_field[fkey])
                         self.assertEqual(item_field['field_value'], f[fid])
