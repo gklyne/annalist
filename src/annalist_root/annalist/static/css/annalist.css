@@ -41,20 +41,21 @@ div.row .row {
 }
 */
 
-div.row .columns {
+div.row .columns ,
+div.row .column 
+{   /* Outermost column padding */
     padding: 0 0.75rem;
 }
 
-div.row .columns .row{
+div.row .columns .row
+{   /* Remove outermost column padding for row within column */
     padding: 0 -0.75rem;
 }
 
-div.row .columns .row .columns {
+div.row .columns .row .columns
+{   /* padding left and right around inner columns */
     margin: 0 0;
-    padding: 0 0.75rem;
-    /*
-    padding: 0 0.75rem;
-    */
+    padding: 0 0.5rem;  /* was 0.75 */
 }
 
 div.row.headings {
@@ -62,20 +63,16 @@ div.row.headings {
     font-weight: bold;
 }
 
-div.column > p , div.columns > p 
+div.column  > p , 
+div.columns > p 
 {
     margin: 0.25rem 0 0 0;
     /*padding: 0.25rem 0;*/
     height: auto;
 }
 
-div.view_label p {
-    margin: 0.5rem 0 0 0;
-    font-size: small;
-    color: #666666;
-}
-
-div.row div.column p.caption , div.row div.columns p.caption
+div.row div.column  p.caption , 
+div.row div.columns p.caption
 {
     margin-top:  0.25rem;
     margin-left: 0.25rem;
@@ -84,11 +81,19 @@ div.row div.column p.caption , div.row div.columns p.caption
     font-weight: bold;
 }
 
-div.row div.column p.grouplabel , div.row div.columns p.grouplabel
+div.row div.column  p.grouplabel , 
+div.row div.columns p.grouplabel
 {
     margin-top:  0.25rem;
-    margin-left: 0.25rem;
     height: auto;
+    font-size: small;
+    color: #666666;
+}
+
+div.row div.column.view-label  p,
+div.row div.columns.view-label p
+{
+    margin-top:  0.25rem;
     font-size: small;
     color: #666666;
 }
@@ -169,7 +174,12 @@ div.columns > select
 div.columns input[type="checkbox"]
 {
     margin-top: 0rem ;
-    /* vertical-align: middle; */
+    /* vertical-align: middle;  -- tried this, doesn't work across 'div's */
+}
+
+div.columns.checkbox-in-edit-padding input[type="checkbox"]
+{   /* Hack to get checkboxes to align sensibly in row of field group */
+    margin-top: 0.75rem ;
 }
 
 /*
@@ -206,11 +216,11 @@ div.row.table div.row.tfoot
     background: whitesmoke;
 }
 
-div.row.table div.row.thead .columns .row .columns ,
-div.row.table div.row.tfoot .columns .row .columns 
+div.row.table div.row.thead .columns .row .columns.view-label ,
+div.row.table div.row.tfoot .columns .row .columns.view-label 
 {   /* List headings (and footers?) text styling and psacing */
-    padding-top: 0.5rem;
-    padding-bottom: 0.625rem;
+    /* padding-top: 0.5rem; */
+    /* padding-bottom: 0.625rem; */
     text-align: left;
     font-weight: bold;
     font-size: 0.875rem;
@@ -240,6 +250,15 @@ div.row.table div.trow div.columns
 {   /* Text size and styling for row content */
     font-size: 0.875rem;
 } 
+
+/*
+div.row .columns ,
+div.row .column
+{
+    height: 100%;
+    vertical-align: middle;
+}
+*/
 
 /* Messages */
 

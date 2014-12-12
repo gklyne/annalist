@@ -404,7 +404,7 @@ class AnnalistGenericView(ContentNegotiationView):
                     resultdata['help_text'] = helpfile.read()
         template  = loader.get_template(template_name)
         context   = RequestContext(self.request, resultdata)
-        log.debug("render_html - data: %r"%(resultdata))
+        # log.debug("render_html - data: %r"%(resultdata))
         return HttpResponse(template.render(context))
 
     # Default view methods return 405 Forbidden

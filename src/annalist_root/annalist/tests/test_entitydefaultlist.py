@@ -127,19 +127,19 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         cont = uri_params({"continuation_url": u})
         # rowdata = """
-        #     <tr class="select_row">
+        #     <tr class="select-row">
         #         <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></td>
         #         <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/_type/testtype/%(cont)s">testtype</a></td>
         #         <td class="small-8 columns">Entity testcoll/testtype/entity1</td>
-        #         <td class="select_row">
+        #         <td class="select-row">
         #             <input type="checkbox" name="entity_select" value="testtype/entity1" />
         #         </td>
         #     </tr>
         #     """%({'base': TestBasePath, 'cont': cont})
         rowdata = """
-            <div class="trow row select_row">
+            <div class="trow row select-row">
               <div class="small-1 columns">
-                <input type="checkbox" class="select_box" name="entity_select"
+                <input type="checkbox" class="select-box right" name="entity_select"
                        value="testtype/entity1" />
               </div>
               <div class="small-11 columns">
@@ -221,7 +221,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 # Check that row field descriptions match corresponding heading feld descriptions
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
-                        'field_property_uri', 'field_render_head',
+                        'field_property_uri', 'field_render_type',
                         'field_placement', 'field_value_type'):
                     self.assertEqual(item_field[fkey], head_field[fkey])
                 # Check row field values
@@ -240,9 +240,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>List entities</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata = """
-            <div class="trow row select_row">
+            <div class="trow row select-row">
               <div class="small-1 columns">
-                <input type="checkbox" class="select_box" name="entity_select"
+                <input type="checkbox" class="select-box right" name="entity_select"
                        value="testtype/entity1" />
               </div>
               <div class="small-11 columns">
@@ -298,7 +298,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 head_field = context_list_head_fields(r.context)[fid]
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
-                        'field_property_uri', 'field_render_head',
+                        'field_property_uri', 'field_render_type',
                         'field_placement', 'field_value_type'):
                     self.assertEqual(item_field[fkey], head_field[fkey])
                 self.assertEqual(item_field['field_value'], field_val[fid]%(eid+1))

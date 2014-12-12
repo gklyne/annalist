@@ -191,9 +191,9 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_group_viewref':        'View_field_view'
             })
         self.assertDictionaryMatch(fd, expect_field_desc)
-        self.assertEqual(fd['field_render_type'], "RepeatGroup")
-        self.assertEqual(fd['field_render_head'], "field/annalist_head_any.html")
-        self.assertIsInstance(fd['field_render_item'], RenderRepeatGroup)
+        self.assertEqual(fd['field_render_type'], "RepeatGroupRow")
+        self.assertEqual(fd['field_render_colhead'], "field/annalist_head_any.html")
+        self.assertEqual(fd['field_render_colview'], "field/annalist_item_none.html")
         self.assertIsInstance(fd['field_render_view'], RenderRepeatGroup)
         self.assertIsInstance(fd['field_render_edit'], RenderRepeatGroup)
         expect_group_details = (

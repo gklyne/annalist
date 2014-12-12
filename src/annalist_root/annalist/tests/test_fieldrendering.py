@@ -112,17 +112,8 @@ class FieldDescriptionTest(AnnalistTestCase):
                 , 'field_placement':            get_placement_classes("small:0,12")
                 , 'field_property_uri':         'annal:view_fields'
                 , 'field_value_type':           'annal:Field_group'
-                # , 'field_default_value':        None
                 , 'field_group_viewref':        'View_field_view'
-                , 'field_render_head':          'field/annalist_head_any.html'
-                , 'field_render_item':          'field/annalist_item_none.html' 
-                , 'field_render_view':          RenderRepeatGroup(render_repeatgroup.view) 
-                , 'field_render_edit':          RenderRepeatGroup(render_repeatgroup.edit) 
-                # , 'field_value_mapper':         RenderText()
-                # , 'field_choice_labels':        None
-                # , 'field_choice_links':         None
-                # , 'field_options_typeref':      None
-                # , 'field_restrict_values':      'ALL'
+                , 'field_render_type':          'RepeatGroup'
                 , 'group_id':                   'View_repeat_fields'
                 , 'group_label':                'Fields'
                 , 'group_add_label':            'Add field'
@@ -177,7 +168,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_elements = (
             [ '''<div class="small-12 columns">'''
             , '''<div class="row">'''
-            , '''<div class="view_label small-12 medium-2 columns"> <p>test label</p> </div>'''
+            , '''<div class="view-label small-12 medium-2 columns"> <p>test label</p> </div>'''
             , '''<div class="small-12 medium-10 columns">'''
             , '''<input type="text" size="64" name="prefix_test_field" '''+
               '''placeholder="(test placeholder)" value="aa bb cc"/>'''
@@ -194,7 +185,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_elements = (
             [ '''<div class="small-12 columns">'''
             , '''<div class="row">'''
-            , '''<div class="view_label small-12 medium-2 columns"> <p>test label</p> </div>'''
+            , '''<div class="view-label small-12 medium-2 columns"> <p>test label</p> </div>'''
             , '''<div class="small-12 medium-10 columns"> <p>aa bb cc</p> </div>'''
             ])
         for e in expect_elements:
@@ -223,7 +214,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def test_RenderRepeatGroupEdit(self):
-        fieldrender   = RenderRepeatGroup(render_repeatgroup.edit)
+        fieldrender   = RenderRepeatGroup(render_repeatgroup.edit_group)
         rendered_text = fieldrender.render(self.get_repeatgroup_context())
         # print "\n**************\n"
         # print rendered_text
@@ -247,7 +238,7 @@ class FieldDescriptionTest(AnnalistTestCase):
               ''' <option>Field_property</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_repeat_fields__0__Field_property"'''+
-              ''' placeholder="(field property URI or CURIE)"'''+
+              ''' placeholder="(field URI or CURIE)"'''+
               ''' value=""/>'''
             , '''<input type="text" size="64" name="View_repeat_fields__0__Field_placement"'''+
               ''' placeholder="(field display size and placement details)"'''+
@@ -263,7 +254,7 @@ class FieldDescriptionTest(AnnalistTestCase):
               ''' <option>Field_property</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_repeat_fields__1__Field_property"'''+
-              ''' placeholder="(field property URI or CURIE)"'''+
+              ''' placeholder="(field URI or CURIE)"'''+
               ''' value=""/>'''
             , '''<input type="text" size="64" name="View_repeat_fields__1__Field_placement"'''+
               ''' placeholder="(field display size and placement details)"'''+
@@ -279,7 +270,7 @@ class FieldDescriptionTest(AnnalistTestCase):
               ''' <option>Field_property</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_repeat_fields__2__Field_property"'''+
-              ''' placeholder="(field property URI or CURIE)"'''+
+              ''' placeholder="(field URI or CURIE)"'''+
               ''' value="rdfs:label"/>'''
             , '''<input type="text" size="64" name="View_repeat_fields__2__Field_placement"'''+
               ''' placeholder="(field display size and placement details)"'''+
@@ -295,7 +286,7 @@ class FieldDescriptionTest(AnnalistTestCase):
               ''' <option>Field_property</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_repeat_fields__3__Field_property"'''+
-              ''' placeholder="(field property URI or CURIE)"'''+
+              ''' placeholder="(field URI or CURIE)"'''+
               ''' value="rdfs:comment"/>'''
             , '''<input type="text" size="64" name="View_repeat_fields__3__Field_placement"'''+
               ''' placeholder="(field display size and placement details)"'''+

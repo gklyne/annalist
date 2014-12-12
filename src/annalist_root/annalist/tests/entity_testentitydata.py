@@ -616,21 +616,21 @@ def error_label(coll_id=None, type_id=None, entity_id=None):
 def layout_classes(width=12):
     if width == 4:
         class_dict = (
-            { 'label_classes':          "view_label small-12 medium-6 columns"
+            { 'label_classes':          "view-label small-12 medium-6 columns"
             , 'input_classes':          "small-12 medium-6 columns"
             # , 'button_left_classes':    "small-12 medium-6  columns"
             # , 'button_right_classes':   "small-12 medium-6 columns medium-text-right"
             })
     elif width == 6:
         class_dict = (
-            { 'label_classes':          "view_label small-12 medium-4 columns"
+            { 'label_classes':          "view-label small-12 medium-4 columns"
             , 'input_classes':          "small-12 medium-8 columns"
             , 'button_left_classes':    "small-12 medium-6 columns"
             , 'button_right_classes':   "small-12 medium-6 columns medium-text-right"
             })
     elif width == 12:
         class_dict = (
-            { 'label_classes':          "view_label small-12 medium-2 columns"
+            { 'label_classes':          "view-label small-12 medium-2 columns"
             , 'input_classes':          "small-12 medium-10 columns"
             , 'space_classes':          "medium-2 columns show-for-medium-up"
             , 'button_half_classes':    "small-12 medium-5 columns"

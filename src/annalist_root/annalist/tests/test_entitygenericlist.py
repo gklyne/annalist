@@ -138,9 +138,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
         rowdata = """
-            <div class="trow row select_row">
+            <div class="trow row select-row">
               <div class="small-1 columns">
-                <input type="checkbox" class="select_box" name="entity_select"
+                <input type="checkbox" class="select-box right" name="entity_select"
                        value="testtype/entity1" />
               </div>
               <div class="small-11 columns">
@@ -193,7 +193,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                 # Check that row field descriptions match corresponding heading feld descriptions
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
-                        'field_property_uri', 'field_render_head',
+                        'field_property_uri', 'field_render_type',
                         'field_placement', 'field_value_type'):
                     self.assertEqual(item_field[fkey], head_field[fkey])
                 # Check row field values
@@ -212,9 +212,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata1 = """
-            <div class="trow row select_row">
+            <div class="trow row select-row">
               <div class="small-1 columns">
-                <input type="checkbox" class="select_box" name="entity_select"
+                <input type="checkbox" class="select-box right" name="entity_select"
                        value="_field/Bib_address" />
               </div>
               <div class="small-11 columns">
@@ -305,7 +305,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                         head_field = head_fields[fid]
                         for fkey in (
                                 'field_id', 'field_name', 'field_label', 
-                                'field_property_uri', 'field_render_head',
+                                'field_property_uri', 'field_render_type',
                                 'field_placement', 'field_value_type'):
                             self.assertEqual(item_field[fkey], head_field[fkey])
                         self.assertEqual(item_field['field_value'], f[fid])
@@ -323,9 +323,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata1 = """
-            <div class="trow row select_row">
+            <div class="trow row select-row">
               <div class="small-1 columns">
-                <input type="checkbox" class="select_box" name="entity_select"
+                <input type="checkbox" class="select-box right" name="entity_select"
                        value="_field/Bib_address" />
               </div>
               <div class="small-11 columns">
@@ -360,9 +360,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata = """
-            <div class="trow row select_row">
+            <div class="trow row select-row">
               <div class="small-1 columns">
-                <input type="checkbox" class="select_box" name="entity_select"
+                <input type="checkbox" class="select-box right" name="entity_select"
                        value="_field/Bib_address" />
               </div>
               <div class="small-11 columns">
@@ -426,7 +426,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                         head_field = head_fields[fid]
                         for fkey in (
                                 'field_id', 'field_name', 'field_label', 
-                                'field_property_uri', 'field_render_head',
+                                'field_property_uri', 'field_render_type',
                                 'field_placement', 'field_value_type'):
                             self.assertEqual(item_field[fkey], head_field[fkey])
                         self.assertEqual(item_field['field_value'], f[fid])
