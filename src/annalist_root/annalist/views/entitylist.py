@@ -124,7 +124,7 @@ class EntityGenericListView(AnnalistGenericView):
             , "rdfs:label":                 "Fields"
             , "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a record view description"
             , "annal:field_name":           "List_rows"
-            , "annal:field_render_type":    "RepeatRow"
+            , "annal:field_render_type":    "RepeatListRow"
             , "annal:property_uri":         "_list_entities_"
             , "annal:group_viewref":        "List_fields"
             })

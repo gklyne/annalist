@@ -30,16 +30,15 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Month, year on same line
     - [x] Restrict view choices field to views that are not subsidiary field groups
 - [x] Improve list column layout, avoid values overflowing column and overlapping next (e.g. with long identifiers - cf. http://localhost:8000/annalist/c/coll1/l/Default_list_all/_view/) (PART FIX - made id column wider)
-- [ ] Improve display of view fields: put field names in header of repeat-group
+- [x] Improve display of view fields: put field names in header of repeat-group
     - [x] Reworked field rendering to support more options
     - [x] List display remove header rendering from template, handle in repeat
         1. [x] Put header column logic in repeat group item renderer
         2. [x] Update list template
-    - [x] Introduce new render type RepeatRow, sharing code with RepeatGroup
+    - [x] Introduce new render type Repeat*Row, sharing code with RepeatGroup
     - [x] Move row selection from template (uses .item) to editlist (uses RepeatGroup)
-    - [ ] Work through field rendering options for RepeatRow:
-        - use same fields in bound_field?
-    - [ ] Rework field description used by view view to use new field rendering options
+    - [x] Work through field rendering options for Repeat*Row:
+    - [x] Rework field description used by view view to use new field rendering options
     - NOTES:
         - eventually, repeat row logic for list and repeat rows within view should
           be same logic

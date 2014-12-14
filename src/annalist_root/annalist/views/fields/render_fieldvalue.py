@@ -1,5 +1,9 @@
 """
+RenderFieldValue class for returning field renderers.  This class works for fields that can be 
+rendered using simple templates that are provided as files in the project templkates directory.
 
+The class provides for wrapping the value rendering templates in various ways so that they can
+be appliued in a range of different contexts.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -21,8 +25,8 @@ from django.template.loaders.app_directories    import Loader
 #   ------------------------------------------------------------
 
 label_template = (
-    """<div class="{{field.field_placement.field}}">"""+
-    """{{field.field_label}}"""+
+    """<div class="view-label {{field.field_placement.field}}">"""+
+    """  <p>{{field.field_label}}</p>"""+
     """</div>"""
     )
 
@@ -35,7 +39,7 @@ value_wrapper_template = (
 label_wrapper_template = (
     """<div class="{{field.field_placement.field}}">\n"""+
     """  <div class="row">\n"""+
-    """    <div class="view_label {{field.field_placement.label}}">\n"""+
+    """    <div class="view-label {{field.field_placement.label}}">\n"""+
     """      <p>{{field.field_label}}</p>\n"""+
     """    </div>\n"""+
     """    <div class="{{field.field_placement.value}}">\n"""+
@@ -46,15 +50,15 @@ label_wrapper_template = (
     )
 
 col_label_template = (
-    """<div class="{{field.field_placement.field}} hide-for-small-only">"""+
-    """{{field.field_label}}"""+
+    """<div class="view-label {{field.field_placement.field}}">"""+
+    """  <p>{{field.field_label}}</p>"""+
     """</div>"""
     )
 
 col_label_wrapper_template = (
     """<div class="{{field.field_placement.field}}">\n"""+
     """  <div class="row show-for-small-only">\n"""+
-    """    <div class="view_label small-12 columns">\n"""+
+    """    <div class="view-label small-12 columns">\n"""+
     """      <p>{{field.field_label}}</p>\n"""+
     """    </div>\n"""+
     """  </div>\n"""+

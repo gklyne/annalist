@@ -18,7 +18,7 @@ edit = ("""
     <!-- views.fields.render_tokenlist.edit_template -->
     <div class="{{field.field_placement.field}}">
       <div class="row">
-        <div class="view_label {{field.field_placement.label}}">
+        <div class="view-label {{field.field_placement.label}}">
           <p>{{field.field_label}}</p>
         </div>
         <div class="{{field.field_placement.value}}">
@@ -35,7 +35,7 @@ view = ("""
     <!-- views.fields.render_tokenlist.view_template -->
     <div class="{{field.field_placement.field}}">
         <div class="row">
-            <div class="view_label {{field.field_placement.label}}">
+            <div class="view-label {{field.field_placement.label}}">
                 <p>{{field.field_label}}</p>
             </div>
             <div class="{{field.field_placement.value}}">

@@ -358,7 +358,7 @@ def recordview_view_context_data(
             }
           , { "field_id":           "View_repeat_fields"   # fields[5]
             , 'field_label':        'Fields'
-            , 'field_render_type':  'RepeatGroup'
+            , 'field_render_type':  'RepeatGroupRow'
             , 'field_name':         'View_repeat_fields'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Field_group'

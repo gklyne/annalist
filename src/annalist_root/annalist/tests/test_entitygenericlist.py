@@ -138,9 +138,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
         rowdata = """
-            <div class="trow row select_row">
+            <div class="trow row select-row">
               <div class="small-1 columns">
-                <input type="checkbox" class="select_box" name="entity_select"
+                <input type="checkbox" class="select-box right" name="entity_select"
                        value="testtype/entity1" />
               </div>
               <div class="small-11 columns">
@@ -212,9 +212,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata1 = """
-            <div class="trow row select_row">
+            <div class="trow row select-row">
               <div class="small-1 columns">
-                <input type="checkbox" class="select_box" name="entity_select"
+                <input type="checkbox" class="select-box right" name="entity_select"
                        value="_field/Bib_address" />
               </div>
               <div class="small-11 columns">
@@ -323,9 +323,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata1 = """
-            <div class="trow row select_row">
+            <div class="trow row select-row">
               <div class="small-1 columns">
-                <input type="checkbox" class="select_box" name="entity_select"
+                <input type="checkbox" class="select-box right" name="entity_select"
                        value="_field/Bib_address" />
               </div>
               <div class="small-11 columns">
@@ -360,9 +360,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata = """
-            <div class="trow row select_row">
+            <div class="trow row select-row">
               <div class="small-1 columns">
-                <input type="checkbox" class="select_box" name="entity_select"
+                <input type="checkbox" class="select-box right" name="entity_select"
                        value="_field/Bib_address" />
               </div>
               <div class="small-11 columns">

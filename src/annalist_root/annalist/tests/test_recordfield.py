@@ -499,7 +499,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="Field_property" 
-                        placeholder="(field property URI or CURIE)" value=""/>
+                        placeholder="(field URI or CURIE)" value=""/>
                     </div>
                 </div>
             </div>

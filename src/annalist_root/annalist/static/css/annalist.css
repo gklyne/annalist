@@ -63,20 +63,16 @@ div.row.headings {
     font-weight: bold;
 }
 
-div.column > p , div.columns > p 
+div.column  > p , 
+div.columns > p 
 {
     margin: 0.25rem 0 0 0;
     /*padding: 0.25rem 0;*/
     height: auto;
 }
 
-div.view_label p {
-    margin: 0.5rem 0 0 0;
-    font-size: small;
-    color: #666666;
-}
-
-div.row div.column p.caption , div.row div.columns p.caption
+div.row div.column  p.caption , 
+div.row div.columns p.caption
 {
     margin-top:  0.25rem;
     margin-left: 0.25rem;
@@ -85,11 +81,19 @@ div.row div.column p.caption , div.row div.columns p.caption
     font-weight: bold;
 }
 
-div.row div.column p.grouplabel , div.row div.columns p.grouplabel
+div.row div.column  p.grouplabel , 
+div.row div.columns p.grouplabel
 {
     margin-top:  0.25rem;
-    margin-left: 0.25rem;
     height: auto;
+    font-size: small;
+    color: #666666;
+}
+
+div.row div.column.view-label  p,
+div.row div.columns.view-label p
+{
+    margin-top:  0.25rem;
     font-size: small;
     color: #666666;
 }
@@ -173,7 +177,7 @@ div.columns input[type="checkbox"]
     /* vertical-align: middle;  -- tried this, doesn't work across 'div's */
 }
 
-div.columns.checkbox_in_edit_padding input[type="checkbox"]
+div.columns.checkbox-in-edit-padding input[type="checkbox"]
 {   /* Hack to get checkboxes to align sensibly in row of field group */
     margin-top: 0.75rem ;
 }
@@ -212,11 +216,11 @@ div.row.table div.row.tfoot
     background: whitesmoke;
 }
 
-div.row.table div.row.thead .columns .row .columns ,
-div.row.table div.row.tfoot .columns .row .columns 
+div.row.table div.row.thead .columns .row .columns.view-label ,
+div.row.table div.row.tfoot .columns .row .columns.view-label 
 {   /* List headings (and footers?) text styling and psacing */
-    padding-top: 0.5rem;
-    padding-bottom: 0.625rem;
+    /* padding-top: 0.5rem; */
+    /* padding-bottom: 0.625rem; */
     text-align: left;
     font-weight: bold;
     font-size: 0.875rem;

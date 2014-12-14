@@ -430,7 +430,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # log.info("*** New view content: "+r.content)
         self.assertContains(r, "<title>Collection testcoll</title>")
         field_vals = default_fields(coll_id="testcoll", type_id="_view", entity_id="00000001")
         formrow1 = """
@@ -491,11 +490,13 @@ class RecordViewEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow5 = """
             <div class="small-12 medium-4 columns">
-              <div class="row">
-                <div class="%(label_classes)s">
+              <div class="row show-for-small-only">
+                <div class="view-label small-12 columns">
                   <p>Field id</p>
                 </div>
-                <div class="%(input_classes)s">
+              </div>
+              <div class="row">
+                <div class="small-12 columns">
                   <select name="View_repeat_fields__0__Field_id">
                     <option>Entity_comment</option>
                     <option selected="selected">Entity_id</option>
@@ -507,11 +508,20 @@ class RecordViewEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=4)
+        formrow6 = """
+            <div class="small-1 columns checkbox-in-edit-padding">
+              <input type="checkbox" class="select-box right" 
+                     name="View_repeat_fields__select_fields"
+                     value="0" />
+            </div>        
+            """
+        # log.info("*** View content: "+r.content)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)
         self.assertContains(r, formrow4, html=True)
         self.assertContains(r, formrow5, html=True)
+        self.assertContains(r, formrow6, html=True)
         return
 
     def test_get_form_rendering_view_bibentry(self):
@@ -522,7 +532,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # log.info("*** BibEntry_view content: "+r.content)
         self.assertContains(r, "<title>Collection testcoll</title>")
         field_vals = default_fields(coll_id="testcoll", type_id="_view", entity_id="BibEntry_view")
         formrow1 = """
@@ -583,11 +592,13 @@ class RecordViewEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow5 = """
             <div class="small-12 medium-4 columns">
-              <div class="row">
-                <div class="%(label_classes)s">
+              <div class="row show-for-small-only">
+                <div class="view-label small-12 columns">
                   <p>Field id</p>
                 </div>
-                <div class="%(input_classes)s">
+              </div>
+              <div class="row">
+                <div class="small-12 columns">
                   <select name="View_repeat_fields__0__Field_id">
                     <option>Bib_address</option>
                     <option>Bib_authors</option>
@@ -621,11 +632,20 @@ class RecordViewEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=4)
+        formrow6 = """
+            <div class="small-1 columns checkbox-in-edit-padding">
+              <input type="checkbox" class="select-box right" 
+                     name="View_repeat_fields__select_fields"
+                     value="0" />
+            </div>        
+            """
+        # log.info("*** BibEntry_view content: "+r.content)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)
         self.assertContains(r, formrow4, html=True)
         self.assertContains(r, formrow5, html=True)
+        self.assertContains(r, formrow6, html=True)
         return
 
     def test_get_new(self):

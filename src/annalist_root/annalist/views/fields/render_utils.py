@@ -87,12 +87,15 @@ def get_edit_renderer(renderid):
         return RenderTokenSet(render_tokenset.edit)
     if renderid == "RepeatGroup":
         return RenderRepeatGroup(render_repeatgroup.edit_group)
-    if renderid == "RepeatRow":
-        return RenderRepeatGroup(render_repeatgroup.edit_row)
+    # @@TODO: not currently used
+    # if renderid == "RepeatListRow":
+    #     return RenderRepeatGroup(render_repeatgroup.edit_listrow)
+    if renderid == "RepeatGroupRow":
+        return RenderRepeatGroup(render_repeatgroup.edit_grouprow)
     renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.label_edit()
-    log.warning("get_edit_renderer: %s not found"%renderid)
+    log.debug("get_edit_renderer: %s not found"%renderid)
     # raise ValueError("get_edit_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
     renderer = get_field_renderer("Text")
@@ -116,14 +119,15 @@ def get_view_renderer(renderid):
         return RenderTokenSet(render_tokenset.view)
     if renderid == "RepeatGroup":
         return RenderRepeatGroup(render_repeatgroup.view_group)
-    if renderid == "RepeatRow":
-        return RenderRepeatGroup(render_repeatgroup.view_row)
+    if renderid == "RepeatListRow":
+        return RenderRepeatGroup(render_repeatgroup.view_listrow)
+    if renderid == "RepeatGroupRow":
+        return RenderRepeatGroup(render_repeatgroup.view_grouprow)
     renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.label_view()
-    log.warning("get_view_renderer: %s not found"%renderid)
-    # raise ValueError("get_edit_renderer: %s not found"%renderid)
     # Default to simple text for unknown renderer type
+    log.warning("get_view_renderer: %s not found"%renderid)
     renderer = get_field_renderer("Text")
     return renderer.label_view()
 
@@ -132,7 +136,10 @@ def get_colhead_renderer(renderid):
     Returns a field list heading renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    # @@TODO: use field renderer
+    renderer = get_field_renderer(renderid)
+    if renderer:
+        return renderer.col_head()
+    log.debug("get_colhead_renderer: %s not found"%renderid)
     return "field/annalist_head_any.html"
 
 def get_coledit_renderer(renderid):
@@ -142,8 +149,8 @@ def get_coledit_renderer(renderid):
     """
     # if renderid == "TokenSet":
     #     return RenderTokenSet(render_tokenset.item)
-    if renderid == "RepeatGroup":
-        return RenderRepeatGroup(render_repeatgroup.view_row)
+    # if renderid == "RepeatGroup":
+    #     return RenderRepeatGroup(render_repeatgroup.view_row)
     renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.col_edit()
@@ -155,14 +162,14 @@ def get_colview_renderer(renderid):
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    if renderid == "TokenSet":
-        return RenderTokenSet(render_tokenset.item)
-    if renderid == "RepeatGroup":
-        return RenderRepeatGroup(render_repeatgroup.view_row)
+    # if renderid == "TokenSet":
+    #     return RenderTokenSet(render_tokenset.item)
+    # if renderid == "RepeatGroup":
+    #     return RenderRepeatGroup(render_repeatgroup.view_row)
     renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.view()
-    log.debug("get_item_renderer: %s not found"%renderid)
+    log.debug("get_colview_renderer: %s not found"%renderid)
     return "field/annalist_item_none.html"
 
 def get_value_mapper(renderid):
