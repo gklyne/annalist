@@ -39,22 +39,6 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Move row selection from template (uses .item) to editlist (uses RepeatGroup)
     - [x] Work through field rendering options for Repeat*Row:
     - [x] Rework field description used by view view to use new field rendering options
-    - NOTES:
-        - eventually, repeat row logic for list and repeat rows within view should
-          be same logic
-        - Currently, RepeatGroup doesn't have a .head/.label option.
-        - Currently, entity_list uses RepeatGroup.field_render_item to render just the field contents.  This *could* be augmented to include headers in its repeatgroup_head field.
-            - annalist_entity_list.html: List_rows.field_render_item
-            - form_utils.FieldDescription: 'group_field_descs' := (field descrs)
-            - form_utils.FieldDescription: render_utils.get_item_renderer(...)
-            - fields.render_repeatgroup: RenderRepeatGroup(render_repeatgroup.item)
-            - render_repeatgroup.item invokes f.field_render_item for each field f
-        - currently, view field list uses ...
-            - annalist_entity_edit: field.field_render_edit for each field
-            - form_utils.FieldDescription: render_utils.get_edit_renderer(...)
-            - fields.render_repeatgroup: RenderRepeatGroup(render_repeatgroup.edit)
-            - render_repeatgroup.edit invokes f.field_render_edit for each field f
-        - eventually, looking to eliminate head/item values from bound field, but stick with them for initial refactoring.  Change test cases to reference render_type.
 
 (merge rework-form-manager to develop branch)
 
@@ -71,6 +55,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
+- [ ] Rationalize common fields to reduce duplication
 
 (sub-release?)
 
