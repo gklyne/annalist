@@ -3,7 +3,7 @@
 , "annal:id":           "View_field_view"
 , "annal:type_id":      "_view"
 , "annal:uri":          "annal:display/View_field_view"
-, "annal:record_type":  "annal:Field_desc"
+, "annal:record_type":  "annal:View"
 , "rdfs:label":         "View field description"
 , "rdfs:comment":       "This resource describes a sub-view single field description used when displaying and/or editing a record view description"
 , "annal:add_field":    "no"

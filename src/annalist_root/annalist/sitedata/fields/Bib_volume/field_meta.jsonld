@@ -8,5 +8,5 @@
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(volume name or number)"
 , "annal:property_uri":         "bib:volume"
-, "annal:field_entity_type":    "annal:BibEntry_field"
+, "annal:field_entity_type":    "annal:BibEntry"
 }

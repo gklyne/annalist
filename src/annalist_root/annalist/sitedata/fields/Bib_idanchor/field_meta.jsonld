@@ -8,5 +8,5 @@
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(URL anchow value)"
 , "annal:property_uri":         "bib:anchor"
-, "annal:field_entity_type":    "annal:BibEntry_field"
+, "annal:field_entity_type":    "annal:BibEntry"
 }

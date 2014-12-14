@@ -3,7 +3,7 @@
 , "annal:id":           "Bib_publication_field_view"
 , "annal:type_id":      "_view"
 , "annal:uri":          "annal:display/Bib_publication_field_view"
-, "annal:record_type":  "annal:Field_desc"
+, "annal:record_type":  "annal:BibEntry"
 , "rdfs:label":         "BibEntry publication detail fields"
 , "rdfs:comment":       "Group of fields describing publication details in a BibEntry record"
 , "annal:add_field":    "no"

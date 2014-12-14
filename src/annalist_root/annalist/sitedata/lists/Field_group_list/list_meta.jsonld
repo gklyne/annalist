@@ -11,10 +11,10 @@
 , "annal:record_type":          "annal:Field_group"
 , "annal:list_fields":
   [ { "annal:field_id":             "Entity_id"
-    , "annal:field_placement":      "small:0,3"
+    , "annal:field_placement":      "small:0,4"
     }
   , { "annal:field_id":             "Entity_label"
-    , "annal:field_placement":      "small:3,9"
+    , "annal:field_placement":      "small:4,8"
     }
   ]
 }

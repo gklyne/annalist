@@ -3,7 +3,7 @@
 , "annal:id":           "Bib_identifier_field_view"
 , "annal:type_id":      "_view"
 , "annal:uri":          "annal:display/Bib_identifier_field_view"
-, "annal:record_type":  "annal:Field_desc"
+, "annal:record_type":  "annal:BibEntry"
 , "rdfs:label":         "BibEntry identifier fields"
 , "rdfs:comment":       "Group of fields describing an identifier or reference in a BibEntry record.  Bib_type is the type of identifier, such as 'DOI', 'crossref', 'link', etc."
 , "annal:add_field":    "no"

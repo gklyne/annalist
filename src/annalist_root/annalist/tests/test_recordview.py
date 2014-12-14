@@ -601,16 +601,28 @@ class RecordViewEditViewTest(AnnalistTestCase):
                 <div class="small-12 columns">
                   <select name="View_repeat_fields__0__Field_id">
                     <option>Bib_address</option>
+                    <option>Bib_alternate</option>
                     <option>Bib_authors</option>
                     <option>Bib_bookentry</option>
+                    <option>Bib_booktitle</option>
+                    <option>Bib_chapter</option>
+                    <option>Bib_description</option>
+                    <option>Bib_edition</option>
                     <option>Bib_editors</option>
                     <option>Bib_eprint</option>
+                    <option>Bib_firstname</option>
                     <option>Bib_howpublished</option>
+                    <option>Bib_id</option>
+                    <option>Bib_idanchor</option>
                     <option>Bib_identifiers</option>
+                    <option>Bib_idtype</option>
                     <option>Bib_institution</option>
                     <option>Bib_journal</option>
+                    <option>Bib_jurisdiction</option>
+                    <option>Bib_lastname</option>
                     <option>Bib_license</option>
                     <option>Bib_month</option>
+                    <option>Bib_name</option>
                     <option>Bib_note</option>
                     <option>Bib_number</option>
                     <option>Bib_organization</option>
@@ -618,9 +630,11 @@ class RecordViewEditViewTest(AnnalistTestCase):
                     <option>Bib_publication_details</option>
                     <option>Bib_publisher</option>
                     <option>Bib_school</option>
+                    <option>Bib_shortcode</option>
                     <option>Bib_title</option>
                     <option>Bib_type</option>
                     <option>Bib_url</option>
+                    <option>Bib_volume</option>
                     <option>Bib_year</option>
                     <option>Entity_comment</option>
                     <option selected="selected">Entity_id</option>

@@ -40,16 +40,17 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Work through field rendering options for Repeat*Row:
     - [x] Rework field description used by view view to use new field rendering options
 - [x] merge rework-form-manager to develop branch
-- [ ] Test software installaton
+- [x] Bugfix: e.g. 'Bib_person_field_view' does not show appropriate field options
+- [ ] Test software installaton from merged branch
 - [ ] Test new capabilities to define view with repeating fields - make sure it is doable
 - [ ] Test adding more data to cruising log
 - [ ] Test upgrade of existing deployment
 - [ ] Deploy updates to annalist.net
+- [ ] New sub-release
 
-(sub-release)
+(later)
 
 - [ ] Think about mechanism for a common field (e.g. rdfs:label) to return a specified field value (e.g. bib:title).  Associate aliases with record type, used when constructing view/list context.
-
 - [ ] Generalize collection/site hierarchy to use a "search path" of imported collections
 - [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  (defer?)
 - [ ] Enumerated values are hard-wired into entitytypeinfo - move them to regular type/data files in site data?  Hmmm... currently, it seems all _annalist_site values need to be hard-wired in entitytypeinfo; maybe look to use collection "search path" logic instead (see above)
@@ -85,6 +86,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
+- [ ] Tests for sitedata: using Beautifiul soup (maybe), create table-driven tests for checking field contents for various rendered pages (lists and views), abstracted away from details of rendering and layout.  For example, test that correct field options are displayed for different views.
 - [ ] 'New' and 'Copy' from list view should bring up new form with id field selected, so that typing a new value replaces the auto-generated ID.
 - [ ] 'Add field' can't be followed by 'New field' because of duplicate property used
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)

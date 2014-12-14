@@ -3,7 +3,7 @@
 , "annal:type_id":      "_view"
 , "annal:id":           "List_field_view"
 , "annal:uri":          "annal:display/List_field_view"
-, "annal:record_type":  "annal:Field_desc"
+, "annal:record_type":  "annal:List"
 , "rdfs:label":         "List field description"
 , "rdfs:comment":       "This resource describes a list field as presented within a list view"
 , "annal:add_field":    "no"
