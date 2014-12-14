@@ -6,23 +6,60 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 # V0.1.7, towards V0.1.8
 
 - [x] Add button to annalist.net page: https://github.com/BetaNYC/getDataButton
-- [ ] Extend form-generator capabilities [#2](https://github.com/gklyne/annalist/issues/2)
-    - [ ] Revise representation of repeat field structures in view description: repeat description to be part of root of repeat structure, not an ad ho0c field at the end.  This should remove some special cases from the code.
-    - [ ] Think about fields that return subgraph
-        - how to splice subgraph into parent - "lambda nodes"?
-        - does field APi support this? Check.
-    - [ ] Refactor handling of repeat field groups
-    - [ ] Define type for field group (_group?  Or use _view?)  
-    - [ ] Define view for field group (list of fields)
-    - [ ] Define list for field group
-    - [ ] Redefine view with list of fields?  Not if that impacts usability.
-    - [ ] Define e-v-map for defined list of fields
-    - [ ] Repeat to reference list of fields 
-    - [ ] Eliminate duplication with list view
-    - [ ] Add option to add repeated field group
-- [ ] Add field for `annal:field_entity_type` property in field view
-- [ ] Revisit definitions for BibJSON view
+- [x] Extend form-generator capabilities [issue #2](https://github.com/gklyne/annalist/issues/2)
+    - [x] Revise representation of repeat field structures in view description: repeat description to be part of root of repeat structure, not an ad ho0c field at the end.  This should remove some special cases from the code.
+    - [x] Refactor handling of repeat field groups
+    - [x] Define type for field group (_group?  Or use _view?)
+    - [x] Use _list rather than _view? (NO: list has much more bound-in semantics)
+    - [x] Rename 'View_field' to (say) 'View_field_view' (cf. previous use _list)
+    - [x] Define view for field group (list of fields)
+    - [x] Define list for field groups (not needed as views used for field-groups)
+    - [x] Redefine view with list of fields?  Not if that impacts usability.
+    - [x] Define e-v-map for defined list of fields
+    - [x] Repeat to reference list of fields 
+- [x] Eliminate duplication with list view - rework list to use same repeating mechanism as view
+- [x] Provide clean(er) mechanism to propagate extra context to bound fields in repeat group rendering
+- [x] Try eliminating `view_context` parameter from `FieldListValueMap` constructor - turns out that it's needed for generating enumerated type lists based on target type of view, but code has been rationalized and slightly simplified and relevant comments added.
+- [x] Use distinguished names for internally-generated context keys (e.g. '_fields')
+- [x] Simplify list template now that repeat fields are handled by a field renderer
+- [x] Try to make mapping classes more consistent in their return types for sub-context values
+- [x] Raise error if required view_context information is missing for EntityFinder
+- [x] Add field for `annal:field_entity_type` property in field view
+- [x] Revisit definitions for BibJSON view; confirm that repeat field groups can be created
+    - [x] Bib_type field should be enumeration
+    - [x] Month, year on same line
+    - [x] Restrict view choices field to views that are not subsidiary field groups
+- [x] Improve list column layout, avoid values overflowing column and overlapping next (e.g. with long identifiers - cf. http://localhost:8000/annalist/c/coll1/l/Default_list_all/_view/) (PART FIX - made id column wider)
+- [x] Improve display of view fields: put field names in header of repeat-group
+    - [x] Reworked field rendering to support more options
+    - [x] List display remove header rendering from template, handle in repeat
+        1. [x] Put header column logic in repeat group item renderer
+        2. [x] Update list template
+    - [x] Introduce new render type Repeat*Row, sharing code with RepeatGroup
+    - [x] Move row selection from template (uses .item) to editlist (uses RepeatGroup)
+    - [x] Work through field rendering options for Repeat*Row:
+    - [x] Rework field description used by view view to use new field rendering options
+- [x] merge rework-form-manager to develop branch
+- [ ] Test software installaton
+- [ ] Test new capabilities to define view with repeating fields - make sure it is doable
+- [ ] Test adding more data to cruising log
+- [ ] Test upgrade of existing deployment
+- [ ] Deploy updates to annalist.net
+
+(sub-release)
+
+- [ ] Think about mechanism for a common field (e.g. rdfs:label) to return a specified field value (e.g. bib:title).  Associate aliases with record type, used when constructing view/list context.
+
+- [ ] Generalize collection/site hierarchy to use a "search path" of imported collections
 - [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  (defer?)
+- [ ] Enumerated values are hard-wired into entitytypeinfo - move them to regular type/data files in site data?  Hmmm... currently, it seems all _annalist_site values need to be hard-wired in entitytypeinfo; maybe look to use collection "search path" logic instead (see above)
+
+- [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?
+- [ ] Think about fields that return subgraph (defer?)
+    - how to splice subgraph into parent - "lambda nodes"?
+    - does field API support this? Check.
+- [ ] Review field placement and layout grid density (16col instead of 12col?)
+- [ ] Rationalize common fields to reduce duplication
 
 (sub-release?)
 
@@ -45,6 +82,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] annalist-manager deleteuser [ username ] [ CONFIG ]
     - [ ] annalist-manager createsitedata [ CONFIG ]
     - [ ] annalist-manager updatesitedata [ CONFIG ]
+- [ ] annalist-manager options for users, consider:
+    - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
+    - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 - [ ] 'New' and 'Copy' from list view should bring up new form with id field selected, so that typing a new value replaces the auto-generated ID.
 - [ ] 'Add field' can't be followed by 'New field' because of duplicate property used
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
@@ -69,13 +109,13 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Inline template text keeps value mapping logic with template logic
     - [ ] Inline templates may be harder to style effectively; maybe read HTML from file on first use?
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
-- [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s). 
 - [ ] Provide content for the links in the page footer
 
 Notes for Future TODOs:
 
+- [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s). 
 - [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions
-- [ ] Make default values smarter; e.g. field renderer logioc to scan collection data for candidates?
+- [ ] Make default values smarter; e.g. field renderer logic to scan collection data for candidates?
 - [ ] Option to rearrange fields on view form (after restructuring?)
 - [ ] When creating type, default URI to be based on id entered
 - [ ] Allow type definition to include template for new id, e.g. based on current date
@@ -96,202 +136,6 @@ Notes for Future TODOs:
 - [ ] Entity edit view: "New field" -> "New field type"
 
 
-# Repeated field reprentation:
-
-## Current
-
-View description
-
-```
-{ "@id":                "annal:display/View_view"
-, "@type":              ["annal:View"]
-, "annal:id":           "View_view"
-, "annal:type_id":      "_view"
-, "annal:uri":          "annal:display/View_view"
-, "annal:record_type":  "annal:View"
-, "rdfs:label":         "View description for record view description"
-, "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record view description"
-, "annal:add_field":    "no"
-, "annal:view_fields":
-  [ { "annal:field_id":               "View_id"
-    , "annal:field_placement":        "small:0,12;medium:0,6"
-    }
-  , { "annal:field_id":               "View_label"
-    , "annal:field_placement":        "small:0,12"
-    }
-  , { "annal:field_id":               "View_comment"
-    , "annal:field_placement":        "small:0,12"
-    }
-  , { "annal:field_id":               "View_target_type"
-    , "annal:field_placement":        "small:0,12"
-    }
-  , { "annal:field_id":               "View_add_field"
-    , "annal:field_placement":        "small:0,12;medium:0,6"
-    }
-  , { "annal:repeat_id":              "View_fields"
-    , "annal:repeat_label":           "Fields"
-    , "annal:repeat_label_add":       "Add field"
-    , "annal:repeat_label_delete":    "Remove selected field(s)"
-    , "annal:repeat_entity_values":   "annal:view_fields"
-    , "annal:repeat_context_values":  "repeat"
-    , "annal:repeat":
-      [ { "annal:field_id":               "Field_sel"
-        , "annal:field_placement":        "small:0,12; medium:0,6"
-        }
-      , { "annal:field_id":               "Field_placement"
-        , "annal:field_placement":        "small:0,12; medium:6,6"
-        }
-      ]
-    }
-  ]
-}
-```
-
-Default_view description:
-
-```
-{ "@id":                "./"
-, "@type":              ["annal:View"]
-, "annal:id":           "Default_view"
-, "annal:type_id":      "_view"
-, "annal:uri":          "annal:display/Default_view"
-, "rdfs:label":         "Default record view"
-, "rdfs:comment":       "Default record view, applied when no view is specified when creating a record."
-, "annal:record_type":  ""
-, "annal:add_field":    "yes"
-, "annal:view_fields":
-  [ { "annal:field_id":         "Entity_id"
-    , "annal:field_placement":  "small:0,12;medium:0,6"
-    }
-  , { "annal:field_id":         "Entity_type"
-    , "annal:field_placement":  "small:0,12;medium:6,6right"
-    }
-  , { "annal:field_id":         "Entity_label"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Entity_comment"
-    , "annal:field_placement":  "small:0,12"
-    }
-  ]
-}
-```
-
-## Revised
-
-View description
-
-The field descriptions here have a uniform format.  The definition of 
-the repeated field descriptions is pushed down into a field description.
-
-```
-{ "@id":                "annal:display/View_view"
-, "@type":              ["annal:View"]
-, "annal:id":           "View_view"
-, "annal:type_id":      "_view"
-, "annal:uri":          "annal:display/View_view"
-, "annal:record_type":  "annal:View"
-, "rdfs:label":         "View description for record view description"
-, "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record view description"
-, "annal:add_field":    "yes"
-, "annal:view_fields":
-  [ { "annal:field_id":               "View_id"
-    , "annal:field_placement":        "small:0,12;medium:0,6"
-    }
-  , { "annal:field_id":               "View_label"
-    , "annal:field_placement":        "small:0,12"
-    }
-  , { "annal:field_id":               "View_comment"
-    , "annal:field_placement":        "small:0,12"
-    }
-  , { "annal:field_id":               "View_target_type"
-    , "annal:field_placement":        "small:0,12"
-    }
-  , { "annal:field_id":               "View_repeat_fields"}
-    , "annal:field_placement":        "small:0,12"
-    }
-  ]
-}
-```
-
-Repeated view-fields description:
-
-```
-{ "@id":                        "annal:fields/View_repeat_fields"
-, "@type":                      ["annal:Field"]
-, "annal:id":                   "View_repeat_fields"
-, "annal:type_id":              "_field"
-, "rdfs:label":                 "Fields"
-, "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a record view description"
-, "annal:field_render_type":    "Repeat"
-, "annal:field_value_type":     "annal:List"
-, "annal:placeholder":          "(repeat field description)"
-, "annal:property_uri":         "annal:view_fields"
-  # Type of entity that may contain field (omit for any type)
-, "annal:field_entity_type":    "annal:View"
-  # Reference to description of repeated field
-, "annal:view_ref":             "View_field_description"
-, "annal:repeat_label_add":     "Add field"
-, "annal:repeat_label_delete":  "Remove selected field(s)"
-# , "annal:add_field_sentinel":   "annal:add_field"
-}
-```
-
-Single view-field description (stored as view):
-
-```
-{ "@id":                "annal:display/View_field_desc"
-, "@type":              ["annal:View"]
-, "annal:id":           "View_field_desc"
-, "annal:type_id":      "_view"
-, "annal:uri":          "annal:display/View_field_desc"
-, "annal:record_type":  "annal:Field_desc"
-, "rdfs:label":                 "View field description"
-, "rdfs:comment":               "This resource describes a single field description used when displaying and/or editing a record view description"
-, "annal:view_fields":
-  [ { "annal:field_id":             "Field_sel"
-    , "annal:field_uri":            "annal:field_id"
-    , "annal:field_placement":      "small:0,12; medium:0,4"
-    }
-  , { "annal:field_id":             "Field_uri"
-    , "annal:field_uri":            "annal:field_uri"
-    , "annal:field_placement":      "small:0,12; medium:4,4"
-    }
-  , { "annal:field_id":             "Field_placement"
-    , "annal:field_uri":            "annal:field_placement"
-    , "annal:field_placement":      "small:0,12; medium:8,4"
-    }
-  ]
-}
-```
-
-
-Default_view description:
-
-```
-{ "@id":                "./"
-, "@type":              ["annal:View"]
-, "annal:id":           "Default_view"
-, "annal:type_id":      "_view"
-, "annal:uri":          "annal:display/Default_view"
-, "rdfs:label":         "Default record view"
-, "rdfs:comment":       "Default record view, applied when no view is specified when creating a record."
-, "annal:record_type":  ""
-, "annal:add_field":    "yes"
-, "annal:view_fields":
-  [ { "annal:field_id":         "Entity_id"
-    , "annal:field_placement":  "small:0,12;medium:0,6"
-    }
-  , { "annal:field_id":         "Entity_type"
-    , "annal:field_placement":  "small:0,12;medium:6,6right"
-    }
-  , { "annal:field_id":         "Entity_label"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "Entity_comment"
-    , "annal:field_placement":  "small:0,12"
-    }
-  ]
-}
-```
-
-
+<!-- 
+.........1.........2.........3.........4.........5.........6.........7.........8
+-->

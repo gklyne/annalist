@@ -27,11 +27,12 @@ from annalist.models.entitydata         import EntityData
 
 from annalist.views.uri_builder         import uri_base, uri_with_params
 from annalist.views.displayinfo         import DisplayInfo
-from annalist.views.fielddescription    import FieldDescription
+from annalist.views.generic             import AnnalistGenericView
+
+from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 from annalist.views.entityvaluemap      import EntityValueMap
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
-from annalist.views.generic             import AnnalistGenericView
 
 from annalist.views.fields.bound_field  import bound_field, get_entity_values
 
@@ -40,6 +41,24 @@ from annalist.views.fields.bound_field  import bound_field, get_entity_values
 #   Mapping table data (not view-specific)
 #
 #   -------------------------------------------------------------------------------------------
+
+# View mapping table structure
+#
+# EntityValueMap                          GenericEntityEditView.get_view_entityvaluemap
+#   FieldListValueMap                     
+#       FieldDescription*                 FieldListValueMap.__init__
+#       FieldValueMap*
+#       FieldValueMap* or
+#       (RepeatValuesMap + FieldListValueMap)*
+#
+# FieldDescription references renderer
+#
+# FieldValueMap.map_entity_to_context returns bound_field object
+#
+# FieldValueMap.map_form_to_entity uses FieldDescription['field_value_mapper'].decode(formval)
+#
+# GenericEntityEditView.get_view_entityvaluemap is called from form_render and form_response)
+#
 
 # Table used as basis, or initial values, for a dynamically generated entity-value map
 baseentityvaluemap  = (
@@ -51,13 +70,13 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='entity_url',       e=ANNAL.CURIE.url,         f='entity_url'       )
         , SimpleValueMap(c='entity_uri',       e=ANNAL.CURIE.uri,         f='entity_uri'       )
         , SimpleValueMap(c='record_type',      e=ANNAL.CURIE.record_type, f='record_type'      )
-        # Field data is handled separately during processing of the form description
-        # Form and interaction control (hidden fields)
         , SimpleValueMap(c='view_id',          e=None,                    f='view_id'          )
         , SimpleValueMap(c='orig_id',          e=None,                    f='orig_id'          )
         , SimpleValueMap(c='orig_type',        e=None,                    f='orig_type'        )
         , SimpleValueMap(c='action',           e=None,                    f='action'           )
         , SimpleValueMap(c='continuation_url', e=None,                    f='continuation_url' )
+        # Field data is handled separately during processing of the form description
+        # Form and interaction control (hidden fields)
         ])
 
 #   -------------------------------------------------------------------------------------------
@@ -138,14 +157,14 @@ class GenericEntityEditView(AnnalistGenericView):
             "views.entityedit.post: coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
-        # log.log(settings.TRACE_FIELD_VALUE,
-        #     "views.entityedit.post %s"%(self.get_request_path())
-        #     )
-        # log.log(settings.TRACE_FIELD_VALUE,
-        #     "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
-        #       (coll_id, type_id, entity_id, view_id, action)
-        #     )
-        # log.info("  form data %r"%(request.POST))
+        log.log(settings.TRACE_FIELD_VALUE,
+            "views.entityedit.post %s"%(self.get_request_path())
+            )
+        log.log(settings.TRACE_FIELD_VALUE,
+            "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
+              (coll_id, type_id, entity_id, view_id, action)
+            )
+        log.debug("  form data %r"%(request.POST))
         action               = request.POST.get('action', action)
         viewinfo = self.view_setup(action, coll_id, type_id, view_id, entity_id)
         if viewinfo.http_response:
@@ -224,18 +243,21 @@ class GenericEntityEditView(AnnalistGenericView):
         viewinfo.check_authorization(action)
         return viewinfo
 
-    def get_view_entityvaluemap(self, viewinfo, entity):
+    def get_view_entityvaluemap(self, viewinfo, entity_values):
         """
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for an indicated view.
+
+        The 3rd parameter to `FieldListValueMap` is used for EntityFinder
+        invocations used to populate enumerated field options.
         """
         # Locate and read view description
         entitymap = EntityValueMap(baseentityvaluemap)
-        log.debug("entityview %r"%viewinfo.recordview.get_values())
-        fieldlistmap = FieldListValueMap(
+        log.debug("entityview: %r"%viewinfo.recordview.get_values())
+        fieldlistmap = FieldListValueMap('fields',
             viewinfo.collection, 
             viewinfo.recordview.get_values()[ANNAL.CURIE.view_fields],
-            {'view': viewinfo.recordview, 'entity': entity}
+            {'view': viewinfo.recordview, 'entity': entity_values}
             )
         entitymap.add_map_entry(fieldlistmap)
         return entitymap
@@ -246,7 +268,8 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         # @@TODO: Possibly create FieldValueMap and return map_entity_to_context value? 
         #         or extract this logic and share?
-        field_description = FieldDescription(viewinfo.collection, 
+        field_description = field_description_from_view_field(
+            viewinfo.collection, 
             { ANNAL.CURIE.field_id: "View_choice" }, 
             None
             )
@@ -267,17 +290,18 @@ class GenericEntityEditView(AnnalistGenericView):
         otherwise a new entity object is created but not yet saved.
         """
         entityclass = typeinfo.entityclass
-        log.debug(
-            "get_entity id %s, parent %s, action %s, altparent %s"%
-            (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
-            )
+        # log.info(
+        #     "get_entity id %s, parent %s, action %s, altparent %s"%
+        #     (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
+        #     )
         entity = None
-        if action == "new":
-            entity = entityclass(typeinfo.entityparent, entity_id)
-            entity_initial_values = typeinfo.get_initial_entity_values(entity_id)
-            entity.set_values(entity_initial_values)
-        elif entityclass.exists(typeinfo.entityparent, entity_id, altparent=typeinfo.entityaltparent):
-            entity = entityclass.load(typeinfo.entityparent, entity_id, altparent=typeinfo.entityaltparent)
+        if util.valid_id(entity_id):
+            if action == "new":
+                entity = entityclass(typeinfo.entityparent, entity_id)
+                entity_initial_values = typeinfo.get_initial_entity_values(entity_id)
+                entity.set_values(entity_initial_values)
+            elif entityclass.exists(typeinfo.entityparent, entity_id, altparent=typeinfo.entityaltparent):
+                entity = entityclass.load(typeinfo.entityparent, entity_id, altparent=typeinfo.entityaltparent)
         if entity is None:
             parent_id = typeinfo.entityaltparent.get_id() if typeinfo.entityaltparent else "(none)"
             log.debug(
@@ -296,6 +320,7 @@ class GenericEntityEditView(AnnalistGenericView):
         entity_id = entity.get_id()
         coll      = viewinfo.collection
         # Set up initial view context
+        # @@TODO: entity needed here?
         entityvaluemap = self.get_view_entityvaluemap(viewinfo, entity)
         if add_field:
             add_field_desc = self.find_repeat_id(entityvaluemap, add_field)
@@ -355,6 +380,9 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Handle POST response from entity edit form.
         """
+        log.info("form_response entity_id %s, orig_entity_id %s, entity_type_id %s, orig_entity_type_id %s"%
+            (entity_id, orig_entity_id, entity_type_id, orig_entity_type_id)
+            )
         form_data        = self.request.POST    
         continuation_url = context_extra_values['continuation_url']
         if 'cancel' in form_data:
@@ -362,6 +390,7 @@ class GenericEntityEditView(AnnalistGenericView):
 
         typeinfo       = viewinfo.entitytypeinfo
         orig_entity    = self.get_entity(orig_entity_id, typeinfo, viewinfo.action)
+        # log.info("orig_entity %r"%(orig_entity.get_values(),))
         entityvaluemap = self.get_view_entityvaluemap(viewinfo, orig_entity)
 
         # Check response has valid id and type
@@ -391,6 +420,7 @@ class GenericEntityEditView(AnnalistGenericView):
             return http_response or HttpResponseRedirect(continuation_url)
 
         # Add field from entity view (as opposed to view description view)
+        # See below call of 'find_add_field' for adding field in view description
         if 'add_view_field' in form_data:
             view_edit_uri_base = self.view_uri("AnnalistEntityEditView",
                 coll_id=viewinfo.coll_id,
@@ -467,15 +497,14 @@ class GenericEntityEditView(AnnalistGenericView):
                 type_edit_uri_base, {}, continuation_url
                 )
 
-        # Add new instance of repeating field
-        # This is invoked by a view-edit view
+        # Add new instance of repeating field, and redisplay
         add_field = self.find_add_field(entityvaluemap, form_data)
+        # log.info("*** Add field: "+repr(add_field))
         if add_field:
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
             return self.update_view_fields(viewinfo, add_field, entityvals, entityvaluemap, **context_extra_values)
 
-        # Remove Field(s)
-        # This is invoked by a view-edit view
+        # Remove Field(s), and redisplay
         remove_field = self.find_remove_field(entityvaluemap, form_data)
         if remove_field:
             if not remove_field['remove_fields']:
@@ -496,6 +525,8 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         log.warning("Unexpected form data %s"%(err_values))
         log.warning("Continue to %s"%(continuation_url))
+        for k, v in form_data.items():
+            log.info("  form[%s] = %r"%(k,v))
         redirect_uri = uri_with_params(continuation_url, err_values)
         return HttpResponseRedirect(redirect_uri)
 
@@ -746,12 +777,13 @@ class GenericEntityEditView(AnnalistGenericView):
 
     def find_add_field(self, entityvaluemap, form_data):
         """
-        Locate add field option in form data and,if present, return a description of the field to
-        be added.
+        Locate any add field option in form data and, if present, return a description of 
+        the field to be added.
         """
         for repeat_desc in self.find_repeat_fields(entityvaluemap):
             # log.info("find_add_field: %r"%repeat_desc)
-            if repeat_desc['repeat_id']+"__add" in form_data:
+            # log.info("find_add_field - trying %s"%(repeat_desc['group_id']+"__add"))
+            if repeat_desc['group_id']+"__add" in form_data:
                 return repeat_desc
         return None
 
@@ -762,8 +794,8 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         for repeat_desc in self.find_repeat_fields(entityvaluemap):
             # log.info("find_remove_field: %r"%repeat_desc)
-            if repeat_desc['repeat_id']+"__remove" in form_data:
-                remove_fields_key = repeat_desc['repeat_id']+"__select_fields"
+            if repeat_desc['group_id']+"__remove" in form_data:
+                remove_fields_key = repeat_desc['group_id']+"__select_fields"
                 if remove_fields_key in form_data:
                     repeat_desc['remove_fields'] = form_data[remove_fields_key]
                 else:
@@ -779,13 +811,13 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         for repeat_desc in self.find_repeat_fields(entityvaluemap):
             # log.info("find_add_field: %r"%repeat_desc)
-            if repeat_desc['repeat_id'] == repeat_id:
+            if repeat_desc['group_id'] == repeat_id:
                 return repeat_desc
         return None
 
     def update_view_fields(self, viewinfo, field_desc, entityvals, entityvaluemap, **context_extra_values):
         """
-        Renders a new form from supplied entity instance data with a repeateds field or 
+        Renders a new form from supplied entity instance data with a repeated field or 
         field group added or removed.
 
         The change is not saved to permanent storage, and is used to render a form display.
@@ -824,67 +856,44 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Iterate over repeat field groups in the current view.
 
-        Each value found is returned as a field structure description; e.g.
-
-            { 'field_type': 'RepeatValuesMap',
-            , 'repeat_entity_values':  'annal:list_fields'
-            , 'repeat_id':             'List_fields'
-            , 'repeat_label_add':      'Add field'
-            , 'repeat_label_delete':   'Remove selected field(s)'
-            , 'repeat_label':          'Fields'
-            , 'repeat_context_values': 'repeat'
-            , 'repeat_fields_description':
-                {
-                'field_type': 'FieldListValueMap',
-                'field_list': 
-                  [ { 'field_id':           'Field_sel'
-                    , 'field_placement':    Placement(field = 'small-12 medium-6 columns', ...)
-                    , 'field_property_uri': 'annal:field_id'
-                    }
-                  , { 'field_id':           'Field_placement'
-                    , 'field_placement':    Placement(field = 'small-12 medium-6 columns', ...),
-                    , 'field_property_uri': 'annal:field_placement'                  
-                    }
-                  ]
-                }
-            }
+        Each value found is returned as a field description dictionary (cf. FieldDescription).
         """
         def _find_repeat_fields(fieldmap):
-            for kmap in fieldmap:
-                field_desc = kmap.get_structure_description()
-                if field_desc['field_type'] == "FieldListValueMap":
-                    for fd in _find_repeat_fields(kmap.fs):
+            # Always called with list of field descriptions
+            for field_desc in fieldmap:
+                viewref    = field_desc.group_ref()
+                if viewref is not None:
+                    log.info("find_repeat_fields %s"%(viewref))
+                    if field_desc.is_repeat_group():
+                        yield field_desc
+                    for fd in _find_repeat_fields(field_desc['group_field_descs']):
                         # log.info("find_repeat_field FieldListValueMap yield %r"%(fd))
                         yield fd
-                if field_desc['field_type'] == "RepeatValuesMap":
-                    # log.info("find_repeat_field RepeatValuesMap yield %r"%(field_desc))
-                    yield field_desc
-        return _find_repeat_fields(entityvaluemap)
+        for evmapitem in entityvaluemap:
+            # log.info("find_repeat_fields evmapitem %r"%(evmapitem,))
+            itemdesc = evmapitem.get_structure_description()
+            # log.info("**** find_repeat_fields itemdesc %r"%(itemdesc,))
+            if itemdesc['field_type'] == "FieldListValueMap":
+                return _find_repeat_fields(itemdesc['field_list'])
+        return None
 
     def add_entity_field(self, add_field_desc, entity):
         """
         Add a described repeat field group to the supplied entity values.
 
         See 'find_repeat_fields' for information about the field description.
-
-        e.g. each 'f' below is like this:
-
-            { 'field_id':           'Field_sel'
-            , 'field_placement':    Placement(field = 'small-12 medium-6 columns', ...)
-            , 'field_property_uri': 'annal:field_id'
-            }
-
-        being generated from a 'FieldDescription' value.
         """
+        # log.info("*** add_field_desc %r"%(add_field_desc,))
+        # log.info("*** entity %r"%(entity,))
         field_val = dict(
             [ (f['field_property_uri'], None)
-              for f in add_field_desc['repeat_fields_description']['field_list']
+              for f in add_field_desc['group_field_descs']
             ])
-        entity[add_field_desc['repeat_entity_values']].append(field_val)
+        entity[add_field_desc['field_property_uri']].append(field_val)
         return
 
     def remove_entity_field(self, remove_field_desc, entity):
-        repeatvals_key = remove_field_desc['repeat_entity_values']
+        repeatvals_key = remove_field_desc['field_property_uri']
         old_repeatvals = entity[repeatvals_key]
         new_repeatvals = []
         for i in range(len(old_repeatvals)):

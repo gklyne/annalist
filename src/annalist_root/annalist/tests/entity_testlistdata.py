@@ -173,151 +173,103 @@ def recordlist_view_context_data(
         coll_id="testcoll", list_id=None, orig_id=None, view_ids=[],
         action=None, update="RecordList"
     ):
+    list_fields = (
+        [ { "annal:field_id":         "Entity_id"
+          , "annal:field_placement":  "small:0,3"
+          }
+        , { "annal:field_id":         "Entity_label"
+          , "annal:field_placement":  "small:3,9"
+          }
+        ])
     context_dict = (
         { 'title':              "Collection %s"%(coll_id)
         , 'coll_id':            coll_id
         , 'type_id':            '_list'
         , 'orig_id':            'orig_list_id'
-        # , 'record_type':        'annal:View'
+        , 'continuation_url':   entitydata_list_type_url(coll_id, "_list")
         , 'fields':
-          [ { 'field_id':           'List_id'
+          [ { 'field_id':           'List_id'                   # fields[0]
             , 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_slug.html'
-            , 'field_render_edit':  'field/annalist_edit_slug.html'
+            , 'field_render_type':  'Slug'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately, below)
             , 'options':            []
             }
-          , { 'field_id':           'List_type'
+          , { 'field_id':           'List_type'                 # fields[1]
             , 'field_label':        'List display type'
-            , 'field_render_view':  'field/annalist_view_select.html'
-            , 'field_render_edit':  'field/annalist_edit_select.html'
+            , 'field_render_type':  'Enum'
             , 'field_name':         'List_type'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6right')
             , 'field_value_type':   'annal:List_type'
             , 'field_value':        'List'
             , 'options':            [] # ['list', 'grid']
             }
-          , { 'field_id':           'List_label'
+          , { 'field_id':           'List_label'                # fields[2]
             , 'field_label':        'Label'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_type':  'Text'
             , 'field_name':         'List_label'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Text'
             # , 'field_value':      (Supplied separately, below)
             , 'options':            []
             }
-          , { 'field_id':           'List_comment'
+          , { 'field_id':           'List_comment'              # fields[3]
             , 'field_label':        'Help'
-            , 'field_render_view':  'field/annalist_view_textarea.html'
-            , 'field_render_edit':  'field/annalist_edit_textarea.html'
+            , 'field_render_type':  'Textarea'
             , 'field_name':         'List_comment'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Longtext'
             # , 'field_value':      (Supplied separately, below)
             , 'options':            []
             }
-          , { 'field_id':           'List_default_type'
+          , { 'field_id':           'List_default_type'         # fields[4]
             , 'field_label':        'Record type'
-            , 'field_render_view':  'field/annalist_view_select.html'
-            , 'field_render_edit':  'field/annalist_edit_select.html'
+            , 'field_render_type':  'Type'
             , 'field_name':         'List_default_type'
             , 'field_placement':    get_placement_classes('small:0,6')
             , 'field_value_type':   'annal:Type'
             , 'field_value':        'Default_type'
             , 'options':            []
             }
-          , { 'field_id':           'List_default_view'
+          , { 'field_id':           'List_default_view'         # fields[5]
             , 'field_label':        'View'
-            , 'field_render_view':  'field/annalist_view_select.html'
-            , 'field_render_edit':  'field/annalist_edit_select.html'
+            , 'field_render_type':  'View'
             , 'field_name':         'List_default_view'
             , 'field_placement':    get_placement_classes('small:6,6')
             , 'field_value_type':   'annal:View'
             , 'field_value':        'Default_view'
             , 'options':            []
             }
-          , { 'field_id':           'List_entity_selector'
+          , { 'field_id':           'List_entity_selector'      # fields[6]
             , 'field_label':        'Selector'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_type':  'Text'
             , 'field_name':         'List_entity_selector'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Text'
             , 'field_value':        'ALL'
             , 'options':            []
             }
-          , { 'field_id':           'List_target_type'
+          , { 'field_id':           'List_target_type'          # fields[7]
             , 'field_label':        'Record type URI'
-            , 'field_render_view':  'field/annalist_view_identifier.html'
-            , 'field_render_edit':  'field/annalist_edit_identifier.html'
+            , 'field_render_type':  'Identifier'
             , 'field_name':         'List_target_type'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Identifier'
             , 'field_value':        ''
             , 'options':            []
             }
-          , { "repeat_id":              "List_fields"
-            , "repeat_context_values":  "repeat"
-            , "repeat_label":           "Fields"
-            , "repeat_label_add":       "Add field"
-            , "repeat_label_delete":    "Remove selected field(s)"
-            , "repeat":
-              [ { 'repeat_id': 'List_fields'
-                , 'repeat_index': 0
-                , 'repeat_prefix': 'List_fields__0__'
-                , "fields":
-                  [ { 'field_id':           'Field_sel'
-                    , 'field_label':        'Field id'
-                    , 'field_render_view':  'field/annalist_view_select.html'
-                    , 'field_render_edit':  'field/annalist_edit_select.html'
-                    , 'field_name':         'Field_id'
-                    , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-                    , 'field_value_type':   'annal:Slug'
-                    , 'field_value':        "Entity_id"
-                    }
-                  , { 'field_id':           'Field_placement'
-                    , 'field_label':        'Size/position'
-                    , 'field_render_view':  'field/annalist_view_text.html'
-                    , 'field_render_edit':  'field/annalist_edit_text.html'
-                    , 'field_name':         'Field_placement'
-                    , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
-                    , 'field_value_type':   'annal:Placement'
-                    , 'field_value':        'small:0,3'
-                    }
-                  ]
-                }
-              , { 'repeat_id': 'List_fields'
-                , 'repeat_index': 1
-                , 'repeat_prefix': 'List_fields__1__'
-                , "fields":
-                  [ { 'field_id':           'Field_sel'
-                    , 'field_label':        'Field id'
-                    , 'field_render_view':  'field/annalist_view_select.html'
-                    , 'field_render_edit':  'field/annalist_edit_select.html'
-                    , 'field_name':         'Field_id'
-                    , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-                    , 'field_value_type':   'annal:Slug'
-                    , 'field_value':        "Entity_label"
-                    }
-                  , { 'field_id':           'Field_placement'
-                    , 'field_label':        'Size/position'
-                    , 'field_render_view':  'field/annalist_view_text.html'
-                    , 'field_render_edit':  'field/annalist_edit_text.html'
-                    , 'field_name':         'Field_placement'
-                    , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
-                    , 'field_value_type':   'annal:Placement'
-                    , 'field_value':        'small:3,9'
-                    }
-                  ]
-                }
-              ]
+          , { "field_id":           "List_repeat_fields"        # fields[8]
+            , 'field_label':        'Fields'
+            , 'field_render_type':  'RepeatGroupRow'
+            , 'field_name':         'List_repeat_fields'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            , 'field_value_type':   'annal:Field_group'
+            , 'field_value':        list_fields
+            , 'options':            []
             }
           ]
-        , 'continuation_url':   entitydata_list_type_url(coll_id, "_list")
         })
     if list_id:
         context_dict['fields'][0]['field_value'] = list_id
@@ -344,10 +296,10 @@ def recordlist_view_form_data(
         , 'List_default_view':      'Default_view'
         , 'List_entity_selector':   'ALL'
         # List repeating fields
-        , 'List_fields__0__Field_id':           "Entity_id"
-        , 'List_fields__0__Field_placement':    "small:0,3"
-        , 'List_fields__1__Field_id':           "Entity_label"
-        , 'List_fields__1__Field_placement':    "small:3,9"
+        , 'List_repeat_fields__0__Field_id':           "Entity_id"
+        , 'List_repeat_fields__0__Field_placement':    "small:0,3"
+        , 'List_repeat_fields__1__Field_id':           "Entity_label"
+        , 'List_repeat_fields__1__Field_placement':    "small:3,9"
         # Hidden fields
         , 'action':                 '@@TBD@@'
         , 'view_id':                'List_view'

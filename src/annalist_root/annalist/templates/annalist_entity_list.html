@@ -24,7 +24,10 @@
     <div class="small-12 columns">
       <form method="POST" action="">
         {% csrf_token %}
+
+        <!-- - - - - -  search and list view selection - - - - - -->
         <div class="row">
+          <!-- Search term entry -->
           <div class="small-12 medium-5 columns">
             <div class="row">
               <div class="view_label small-12 medium-3 columns">
@@ -35,11 +38,11 @@
               </div>
             </div>
           </div>
-          <!--
-          -->
+          <!-- List view entrty -->
           {% with field=list_choices %}
           {% include field.field_render_edit %}
           {% endwith %}
+          <!-- View (refresh) button -->
           <div class="small-12 medium-2 columns text-right">
             <div class="row">
               <div class="small-12 columns right">
@@ -53,34 +56,14 @@
             </div>
           </div>
         </div>
-        <!-- - - - - -  row data here - - - - - -->
-        <div class="row">
+
+        <!-- - - - - -  table data - - - - - -->
+        <div class="table row">
           <div class="small-12 columns">
-            <table width="100%">
-              <thead>
-                <tr>
-                {% for field in fields %}
-                  {% include field.field_render_head %}
-                {% endfor %}
-                <th>&nbsp;</th>
-                </tr>
-              </thead>
-              <tbody>
-              {% for entity in entities %}
-                <tr class="select_row">
-                {% for field in entity.fields %}
-                  {% include field.field_render_item %}
-                {% endfor %}
-                <td class="select_row">
-                   <input type="checkbox" name="entity_select" 
-                          value="{{entity.type_id}}/{{entity.entity_id}}" />
-                </td>
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table>
+            {% include List_rows.field_render_view with field=List_rows %}
           </div>
         </div>
+        <!-- - - - - -  table ends - - - - - -->
 
         <div class="row">
           <div class="small-12 columns">

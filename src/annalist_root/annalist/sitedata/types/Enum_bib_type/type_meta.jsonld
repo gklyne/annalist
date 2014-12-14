@@ -1,0 +1,10 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum", "annal:Type"]
+, "annal:id":           "Enum_bib_type"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Enum_bib_type"
+, "rdfs:label":         "Bibliographic entry type"
+, "rdfs:comment":       "Bibliographic entry type (e.g. article, book, inproceedings, etc.)"
+, "annal:type_view":    "Default_view"
+, "annal:type_list":    "Default_list"
+}

@@ -65,7 +65,7 @@ class bound_field(object):
     True
     >>> field_def.field_value == ""
     True
-    >>> field_def = bound_field(field_def_desc, entity, extras={"def": "default"})
+    >>> field_def = bound_field(field_def_desc, entity, context_extra_values={"def": "default"})
     >>> field_def.field_type
     'def_type'
     >>> field_def.field_value
@@ -78,28 +78,28 @@ class bound_field(object):
 
     __slots__ = ("_field_description", "_entityvals", "_key", "_extras")
 
-    def __init__(self, field_description, entityvals, extras=None):
+    def __init__(self, field_description, entityvals, context_extra_values=None):
         """
         Initialize a bound_field object.
 
-        field_description   is a dictionary-like object describing a display
-                            field.  See `FieldDescription` class for more details.
-        entityvals          is an entity values dictionary from which a value to be 
-                            rendered is obtained.  The specific field value used is 
-                            defined by the combination with `field_description`.  
-        extras              if supplied, a supplementary value dictionary that may be probed
-                            for values that are not provided by the entity itself.  
-                            Can be used to specify default values for an entity.
+        field_description       is a dictionary-like object describing a display
+                                field.  See `FieldDescription` class for more details.
+        entityvals              is an entity values dictionary from which a value to be 
+                                rendered is obtained.  The specific field value used is 
+                                defined by the combination with `field_description`.  
+        context_extra_values    if supplied, a supplementary value dictionary that may be
+                                probed for values that are not provided by the entity itself.  
+                                Can be used to specify default values for an entity.
         """
         self._field_description = field_description
         self._entityvals        = entityvals
         self._key               = self._field_description['field_property_uri']
-        self._extras            = extras
+        self._extras            = context_extra_values
         eid = entityvals.get('entity_id', "@@@render_utils.__init__@@@")
-        log.log(settings.TRACE_FIELD_VALUE,
-            "bound_field: field_id %s, entity_id %s, value_key %s, value %s"%
-            (field_description['field_id'], eid, self._key, self['field_value'])
-            )
+        # log.log(settings.TRACE_FIELD_VALUE,
+        #     "bound_field: field_id %s, entity_id %s, value_key %s, value %s"%
+        #     (field_description['field_id'], eid, self._key, self['field_value'])
+        #     )
         return
 
     def __getattr__(self, name):
@@ -115,9 +115,14 @@ class bound_field(object):
             return self._entityvals.get(name, "")
         elif name == "field_value_key":
             return self._key
+        elif name == "context_extra_values":
+            return self._extras
         elif name == "field_placeholder":
             return self._field_description.get('field_placeholder', "@@bound_field.field_placeholder@@")
         elif name == "continuation_url":
+            if self._extras is None:
+                log.warning("bound_field.continuation_url - no extra context provided")
+                return ""
             cont = self._extras.get("request_url", "")
             if cont:
                 cont = uri_with_params(cont, continuation_params(self._extras))
@@ -160,6 +165,9 @@ class bound_field(object):
         elif name == "field_value_link":
             # Used to get link corresponding to a value, if such exists
             return self.get_field_link()
+        elif name == "field_description":
+            # Used to get link corresponding to a value, if such exists
+            return self._field_description
         elif name == "options":
             return self.get_field_options()
         else:
@@ -183,7 +191,7 @@ class bound_field(object):
         cparam = self.continuation_url
         if cparam:
             cparam = uri_params({'continuation_url': cparam})
-        # log.info('bound_field.get_continuation_param %s'%(cparam,))  #@@
+        log.debug('bound_field.get_continuation_param %s'%(cparam,))  #@@
         return cparam
 
     def __getitem__(self, name):
@@ -211,12 +219,12 @@ class bound_field(object):
         return dict(self._field_description.items(), 
             entity=dict(self._entityvals.items()), 
             field_value=self.field_value, 
-            extras=self._extras, 
+            context_extra_values=self._extras, 
             key=self._key
             )
 
     def __repr__(self):
-        return self.shortrepr()
+        return self.fullrepr()
 
     def shortrepr(self):
         return (
@@ -228,9 +236,9 @@ class bound_field(object):
 
     def fullrepr(self):
         return (
-            "bound_field({'field':%r, 'vals':%r, 'key':%r, 'field_value':%r, 'extras':%r})"%
+            "bound_field({'field':%r, 'vals':%r, 'field_value':%r, 'extras':%r})"%
             (self._field_description, dict(self._entityvals.items()), 
-                self._key, self.field_value, self._extras) 
+                self.field_value, self._extras) 
             )
 
     def htmlrepr(self):
@@ -249,16 +257,15 @@ def get_entity_values(displayinfo, entity, entity_id=None):
     if not entity_id:
         entity_id = entity.get_id()
     type_id    = entity.get_type_id()
-    typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
     entityvals = entity.get_values().copy()
-    entityvals['entity_id']        = entity_id
-    entityvals['entity_link']      = entity.get_view_url_path()
+    entityvals['entity_id']      = entity_id
+    entityvals['entity_link']    = entity.get_view_url_path()
     # log.info("type_id %s"%(type_id))
-    entityvals['entity_type_id']   = type_id
+    entityvals['entity_type_id'] = type_id
+    typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
     if typeinfo.recordtype:
         entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
-    # else:
-    #     entityvals['entity_type_link'] = ...
+        # @@other type-related info; e.g., aliases - populate 
     return entityvals
 
 if __name__ == "__main__":

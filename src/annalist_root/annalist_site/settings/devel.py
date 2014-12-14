@@ -20,17 +20,19 @@ TEMPLATE_DEBUG = True
 #     'django.contrib.staticfiles',
 #     )
 
-import logging
-log = logging.getLogger(__name__)
+LOGGING_FILE = "None (output to console)"
+
+# import logging
+# log = logging.getLogger(__name__)
 # log.info("Annalist version %s (development configuration)"%(ANNALIST_VERSION))
-log.info(ANNALIST_VERSION_MSG)
-log.info("SETTINGS_MODULE:  "+SETTINGS_MODULE)
-log.info("BASE_DATA_DIR:    "+BASE_DATA_DIR)
-log.info("CONFIG_BASE:      "+CONFIG_BASE)
-log.info("DJANGO_ROOT:      "+DJANGO_ROOT)
-log.info("SITE_CONFIG_DIR:  "+SITE_CONFIG_DIR)
-log.info("SITE_SRC_ROOT:    "+SITE_SRC_ROOT)
-log.info("STATICFILES_DIRS: "+STATICFILES_DIRS[1])
-log.info("DB PATH:          "+DATABASES['default']['NAME'])
+# log.info(ANNALIST_VERSION_MSG)
+# log.info("SETTINGS_MODULE:  "+SETTINGS_MODULE)
+# log.info("BASE_DATA_DIR:    "+BASE_DATA_DIR)
+# log.info("CONFIG_BASE:      "+CONFIG_BASE)
+# log.info("DJANGO_ROOT:      "+DJANGO_ROOT)
+# log.info("SITE_CONFIG_DIR:  "+SITE_CONFIG_DIR)
+# log.info("SITE_SRC_ROOT:    "+SITE_SRC_ROOT)
+# log.info("STATICFILES_DIRS: "+STATICFILES_DIRS[1])
+# log.info("DB PATH:          "+DATABASES['default']['NAME'])
 
 # End.

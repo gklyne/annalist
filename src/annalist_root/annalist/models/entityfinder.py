@@ -113,7 +113,11 @@ class EntityFinder(object):
                 yield e
         return
 
-    def get_entities(self, user_permissions=None, type_id=None, context={}, search=None):
+    def get_entities(self, user_permissions=None, type_id=None, context=None, search=None):
+        """
+        Get list of entities of the specified type, matching search term and visible to supplied
+        user permissions.
+        """
         entities = self._selector.filter(
             self.get_base_entities(type_id, user_permissions), context=context
             )
@@ -204,7 +208,7 @@ class EntitySelector(object):
         self._selector = self.compile_selector_filter(selector)
         return
 
-    def filter(self, entities, context={}):
+    def filter(self, entities, context=None):
         """
         Iterate over selection of entities from supplied iterator, using the
         selection specification supplied to the constructor of the current object.
@@ -266,13 +270,13 @@ class EntitySelector(object):
         """
         def get_value(val_list):
             if len(val_list) == 1:
-                return { 'type': 'literal', 'name': None, 'field_id': None, 'value': val_list[0] }
+                return { 'type': 'literal', 'name': None,        'field_id': None,        'value': val_list[0] }
             elif val_list[0] == '[':
                 return { 'type': 'entity',  'name': None,        'field_id': val_list[1], 'value': None }
             elif val_list[1] == '[':
                 return { 'type': 'context', 'name': val_list[0], 'field_id': val_list[2], 'value': None }
             else:
-                return { 'type': 'unknown', 'name': None, 'field_id': None, 'value': None }
+                return { 'type': 'unknown', 'name': None,        'field_id': None,        'value': None }
         p_name     = Word(alphas+"_", alphanums+"_")
         p_id       = Word(alphas+"_@", alphanums+"_-.~:/?#@!$&'()*+,;=)")
         p_val      = ( Group( Literal("[") + p_id + Literal("]") )
@@ -294,7 +298,7 @@ class EntitySelector(object):
             resultdict['val2'] = get_value(resultlist[2])
         return resultdict
 
-    @classmethod  #@@ @staticmethod, no cls?
+    @classmethod  #@@TODO: @staticmethod, no cls?
     def compile_selector_filter(cls, selector):
         """
         Return filter for for testing entities matching a supplied selector.
@@ -321,6 +325,7 @@ class EntitySelector(object):
         #
         def get_context(name, field_id):
             def get_context_f(e, c):
+                # Raises error if context value not supplied
                 if name in c and c[name]:
                     return c[name].get(field_id, None)
                 return None
