@@ -2,11 +2,11 @@
 , "@type":                      ["annal:List"]
 , "annal:id":                   "Field_group_list"
 , "annal:type_id":              "_list"
-, "rdfs:label":                 "List views"
-, "rdfs:comment":               "Description of list of views"
+, "rdfs:label":                 "List field groups"
+, "rdfs:comment":               "Description of list of field groups"
 , "annal:display_type":         "List"
-, "annal:default_view":         "View_view"
-, "annal:default_type":         "_view"
+, "annal:default_view":         "Field_group_view"
+, "annal:default_type":         "_group"
 , "annal:list_entity_selector": "'annal:Field_group' in [@type]"
 , "annal:record_type":          "annal:Field_group"
 , "annal:list_fields":
@@ -18,4 +18,3 @@
     }
   ]
 }
- 

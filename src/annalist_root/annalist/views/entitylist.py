@@ -126,12 +126,12 @@ class EntityGenericListView(AnnalistGenericView):
             , "annal:field_name":           "List_rows"
             , "annal:field_render_type":    "RepeatListRow"
             , "annal:property_uri":         "_list_entities_"
-            , "annal:group_viewref":        "List_fields"
+            , "annal:group_ref":            "List_fields"
             })
         repeatrows_group_descr = (
             { "annal:id":           "List_fields"
             , "rdfs:label":         "List fields description"
-            , "annal:view_fields":  listinfo.recordlist[ANNAL.CURIE.list_fields]
+            , "annal:group_fields": listinfo.recordlist[ANNAL.CURIE.list_fields]
             })
         repeatrows_descr = FieldDescription(
             listinfo.collection, 

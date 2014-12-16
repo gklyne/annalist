@@ -14,8 +14,8 @@ log = logging.getLogger(__name__)
 from annalist.identifiers               import RDFS, ANNAL
 from annalist.exceptions                import EntityNotFound_Error
 
+from annalist.models.recordgroup        import RecordGroup
 from annalist.models.recordfield        import RecordField
-from annalist.models.recordview         import RecordView
 from annalist.models.entitytypeinfo     import EntityTypeInfo
 from annalist.models.entityfinder       import EntityFinder
 
@@ -59,7 +59,7 @@ class FieldDescription(object):
         field_property  if supplied, overrides the field property URI from `recordfield`
         field_placement if supplied, overrides field placement from `recordfield`
         group_view      if the field itself references a list of fields, this is a
-                        RecordView value or dictionary containing the referenced list 
+                        RecordGroup value or dictionary containing the referenced list 
                         of fields.
         """
         log.debug("FieldDescription recordfield: %r"%(recordfield,))
@@ -90,7 +90,7 @@ class FieldDescription(object):
             , 'field_restrict_values':      recordfield.get(ANNAL.CURIE.restrict_values, "ALL")
             , 'field_choice_labels':        None
             , 'field_choice_links':         None
-            , 'field_group_viewref':        recordfield.get(ANNAL.CURIE.group_viewref, None)
+            , 'field_group_ref':            recordfield.get(ANNAL.CURIE.group_ref, None)
             , 'group_label':                None
             , 'group_add_label':            None
             , 'group_delete_label':         None
@@ -122,13 +122,13 @@ class FieldDescription(object):
             # log.info("typeref %s: %r"%
             #     (self._field_desc['field_options_typeref'], list(self._field_desc['field_choices']))
             #     )
-        # If field references view, pull in details from view, including field details
+        # If field references group, pull in field details
         if group_view:
             group_label = (field_label or 
-                group_view.get(RDFS.CURIE.label, self._field_desc['field_group_viewref'])
+                group_view.get(RDFS.CURIE.label, self._field_desc['field_group_ref'])
                 )
             group_field_descs = []
-            for subfield in group_view[ANNAL.CURIE.view_fields]:
+            for subfield in group_view[ANNAL.CURIE.group_fields]:
                 f = field_description_from_view_field(collection, subfield, view_context)
                 group_field_descs.append(f)
             self._field_desc.update(
@@ -147,21 +147,21 @@ class FieldDescription(object):
     def group_ref(self):
         """
         If the field itself contains or uses a group of fields, returns an
-        reference (currently, a view_id) for the field group.
+        reference (a group_id) for the field group, or None
         """
-        return self._field_desc['field_group_viewref']
+        return self._field_desc['field_group_ref']
 
     def group_view_fields(self):
         """
         If the field itself contains or uses a group of fields, returns a
-        list of field descriptions.
+        RecoirdGroupvalue or dictionary describiung the fields field.
         """
-        return self._field_desc['group_view'][ANNAL.CURIE.view_fields]
+        return self._field_desc['group_view'][ANNAL.CURIE.group_fields]
 
     def group_field_descs(self):
         """
         If the field itself contains or uses a group of fields, returns a
-        list of field descriptions.
+        list of field descriptions as a list of FieldDescriptiopn values.
         """
         return self._field_desc['group_field_descs']
 
@@ -179,6 +179,7 @@ class FieldDescription(object):
             "  { 'field_id': %r\n"%(self._field_desc["field_id"])+
             "  , 'field_name': %r\n"%(self._field_desc["field_name"])+
             "  , 'field_property_uri': %r\n"%(self._field_desc["field_property_uri"])+
+            "  , 'group_ref': %r"%(self._field_desc["field_group_ref"])+
             "  })"
             )
 
@@ -256,12 +257,12 @@ def field_description_from_view_field(collection, field, view_context=None):
         field.get(ANNAL.CURIE.field_placement, None) or 
         recordfield.get(ANNAL.CURIE.field_placement, "")
         )
-    # If field references view, pull in details from view, including field details
-    group_ref = recordfield.get(ANNAL.CURIE.group_viewref, None)
+    # If field references group, pull in field details
+    group_ref = recordfield.get(ANNAL.CURIE.group_ref, None)
     if group_ref:
-        group_view = RecordView.load(collection, group_ref, collection._parentsite)
+        group_view = RecordGroup.load(collection, group_ref, collection._parentsite)
         if not group_view:
-            raise EntityNotFound_Error("View %s used in field %s"%(group_ref, field_id))
+            raise EntityNotFound_Error("Group %s used in field %s"%(group_ref, field_id))
     else:
         group_view = None
     return FieldDescription(

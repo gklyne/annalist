@@ -72,7 +72,7 @@ from entity_testentitydata          import (
 #   -----------------------------------------------------------------------------
 
 site_types = get_site_types()
-site_views = get_site_field_groups()
+site_views = get_site_views()
 site_lists = get_site_lists()
 
 class CollectionTest(AnnalistTestCase):

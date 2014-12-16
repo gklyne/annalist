@@ -112,7 +112,7 @@ class FieldDescriptionTest(AnnalistTestCase):
                 , 'field_placement':            get_placement_classes("small:0,12")
                 , 'field_property_uri':         'annal:view_fields'
                 , 'field_value_type':           'annal:Field_group'
-                , 'field_group_viewref':        'View_field_view'
+                , 'field_group_ref':            'View_field_view'
                 , 'field_render_type':          'RepeatGroup'
                 , 'group_id':                   'View_repeat_fields'
                 , 'group_label':                'Fields'

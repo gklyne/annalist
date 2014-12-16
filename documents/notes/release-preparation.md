@@ -2,9 +2,16 @@
 
 ## Summary of release tasks
 
-- [ ] Feature freeze
-- [ ] Regenerate test data (`makeinitsitedata.sh`/`maketestsitedata.sh`)
-- [ ] Test
+- [x] Feature freeze
+- [x] Delete contents of build directory (ensure any old files are removed)
+- [x] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
+- [x] Local install
+- [x] Run test suite
+- [ ] Update site data in local 'personal' installation
+    - `annalist-manager initialize`
+    - `annalist-manager updatesitedata`
+- [ ] Test 'personal' deployment in actual use
+    - `annalist-manager runserver`
 - [ ] Demo deployment; test
 - [ ] Documentation updates
 - [ ] Demo screencast update

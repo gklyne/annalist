@@ -43,7 +43,7 @@
   , { "annal:field_id":         "Field_restrict"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Field_viewref"
+  , { "annal:field_id":         "Field_groupref"
     , "annal:field_placement":  "small:0,6"
     }
   , { "annal:field_id":         "Field_repeat_label_add"

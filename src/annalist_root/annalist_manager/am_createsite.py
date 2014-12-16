@@ -75,7 +75,7 @@ def am_createsite(annroot, userhome, options):
     sitedatasrc = os.path.join(annroot, "annalist/sitedata")
     sitedatatgt = os.path.join(sitebasedir, site_layout.SITEDATA_DIR)
     print("Copy Annalist site data from %s to %s"%(sitedatasrc, sitedatatgt))
-    for sdir in ("types", "lists", "views", "fields", "enums", "users"):
+    for sdir in ("types", "lists", "views", "groups", "fields", "enums", "users"):
         s = os.path.join(sitedatasrc, sdir)
         d = os.path.join(sitedatatgt, sdir)
         print("- %s -> %s"%(sdir, d))
@@ -114,7 +114,7 @@ def am_updatesite(annroot, userhome, options):
     sitedatasrc = os.path.join(annroot, "annalist/sitedata")
     sitedatatgt = os.path.join(sitebasedir, site_layout.SITEDATA_DIR)
     print("Copy Annalist site data from %s to %s"%(sitedatasrc, sitedatatgt))
-    for sdir in ("types", "lists", "views", "fields", "enums"):
+    for sdir in ("types", "lists", "views", "groups", "fields", "enums"):
         s = os.path.join(sitedatasrc, sdir)
         d = os.path.join(sitedatatgt, sdir)
         print("- %s => %s"%(sdir, d))

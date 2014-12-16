@@ -82,7 +82,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_options_typeref':      None
             , 'field_choice_links':         None
             , 'field_restrict_values':      'ALL'
-            , 'field_group_viewref':        None
+            , 'field_group_ref':            None
             , 'field_render_type':          'Text'
             })
         # print repr(fd)
@@ -112,7 +112,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_options_typeref':      None
             , 'field_choice_links':         None
             , 'field_restrict_values':      'ALL'
-            , 'field_group_viewref':        None
+            , 'field_group_ref':            None
             , 'field_render_type':          'EntityId'
             })
         # print repr(fd)
@@ -157,7 +157,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_choice_labels':        expect_choice_labels
             , 'field_choice_links':         expect_choice_links
             , 'field_restrict_values':      '[annal:field_entity_type] in entity[annal:record_type]'
-            , 'field_group_viewref':        None
+            , 'field_group_ref':            None
             , 'field_render_type':          'Field'
             })
         # print repr(fd)
@@ -188,7 +188,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_choice_labels':        None
             , 'field_choice_links':         None
             , 'field_restrict_values':      'ALL'
-            , 'field_group_viewref':        'View_field_view'
+            , 'field_group_ref':            'View_field_group'
             })
         self.assertDictionaryMatch(fd, expect_field_desc)
         self.assertEqual(fd['field_render_type'], "RepeatGroupRow")

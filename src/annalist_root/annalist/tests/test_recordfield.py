@@ -171,7 +171,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.no_options     = ['(no options)']
-        self.view_options   = get_site_field_groups_sorted()
+        self.view_options   = get_site_views_sorted()
+        self.group_options  = get_site_field_groups_sorted()
         self.render_options = get_site_field_types_sorted()
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
@@ -358,15 +359,15 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][11]['field_value'], field_restrict)
         self.assertEqual(r.context['fields'][11]['options'], self.no_options)
         # 12th field - enumeration restriction (for select rendering)
-        self.assertEqual(r.context['fields'][12]['field_id'], 'Field_viewref')
-        self.assertEqual(r.context['fields'][12]['field_name'], 'Field_viewref')
+        self.assertEqual(r.context['fields'][12]['field_id'], 'Field_groupref')
+        self.assertEqual(r.context['fields'][12]['field_name'], 'Field_groupref')
         self.assertEqual(r.context['fields'][12]['field_label'], 'View fields')
-        self.assertEqual(r.context['fields'][12]['field_property_uri'], "annal:group_viewref")
+        self.assertEqual(r.context['fields'][12]['field_property_uri'], "annal:group_ref")
         self.assertEqual(r.context['fields'][12]['field_render_type'], "Enum_optional")
         self.assertEqual(r.context['fields'][12]['field_placement'].field, "small-6 columns")
         self.assertEqual(r.context['fields'][12]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][12]['field_value'], field_viewref)
-        self.assertEqual(r.context['fields'][12]['options'], [""] + self.view_options)
+        self.assertEqual(r.context['fields'][12]['options'], [""] + self.group_options)
         # 13th field - enumeration restriction (for select rendering)
         self.assertEqual(r.context['fields'][13]['field_id'], 'Field_repeat_label_add')
         self.assertEqual(r.context['fields'][13]['field_name'], 'Field_repeat_label_add')
@@ -572,7 +573,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 <div class="%(input_classes)s">
                     """+
                       render_select_options(
-                        "Field_viewref", 
+                        "Field_groupref", 
                         [""] + get_site_field_groups_sorted(),
                         "",
                         placeholder="(no view selected)")+

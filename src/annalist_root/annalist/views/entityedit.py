@@ -859,16 +859,27 @@ class GenericEntityEditView(AnnalistGenericView):
         Each value found is returned as a field description dictionary (cf. FieldDescription).
         """
         def _find_repeat_fields(fieldmap):
+            if fieldmap is None:
+                log.warning("entityedit.find_repeat_fields: fieldmap is None")
+                return
             # Always called with list of field descriptions
             for field_desc in fieldmap:
-                viewref    = field_desc.group_ref()
-                if viewref is not None:
-                    log.info("find_repeat_fields %s"%(viewref))
+                log.debug("find_repeat_fields: field_desc %r"%(field_desc))
+                groupref    = field_desc.group_ref()
+                if groupref is not None:
+                    if not util.valid_id(groupref):
+                        # this is for resilience in the face of bad data
+                        log.warning(
+                            "invalid group_ref %s in field description for %s"%
+                            (groupref, field_desc['field_id'])
+                            )
+                    log.info("find_repeat_fields: groupref %s"%(groupref))
                     if field_desc.is_repeat_group():
                         yield field_desc
                     for fd in _find_repeat_fields(field_desc['group_field_descs']):
                         # log.info("find_repeat_field FieldListValueMap yield %r"%(fd))
                         yield fd
+            return
         for evmapitem in entityvaluemap:
             # log.info("find_repeat_fields evmapitem %r"%(evmapitem,))
             itemdesc = evmapitem.get_structure_description()

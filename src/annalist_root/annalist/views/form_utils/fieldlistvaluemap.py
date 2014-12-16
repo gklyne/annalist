@@ -60,7 +60,7 @@ class FieldListValueMap(object):
         self.fm = []        # List of field value maps
         for f in fields:
             log.debug("FieldListValueMap: field %r"%(f,))
-            # @@TODO: check for common logic here and FieldDescription field_group_viewref processing
+            # @@TODO: check for common logic here and FieldDescription field_group_ref processing
             field_desc = field_description_from_view_field(coll, f, view_context)
             # log.debug("FieldListValueMap: field_id %s, field_name %s"%
             #     (field_desc['field_id'], field_desc['field_name'])

@@ -651,7 +651,7 @@ def layout_classes(width=12):
 
 def get_site_types_sorted():
     return (
-        [ "_field", "_list", "_type", "_user", "_view"
+        [ "_field", "_group", "_list", "_type", "_user", "_view"
         , "BibEntry_type", "Default_type"
         , "Enum_bib_type", "Enum_field_type", "Enum_list_type"
         ])
@@ -663,6 +663,7 @@ def get_site_views_sorted():
     return (
         [ "BibEntry_view"
         , "Default_view"
+        , "Field_group_view"
         , "Field_view"
         , "List_view"
         , "Type_view"
@@ -675,21 +676,15 @@ def get_site_views():
 
 def get_site_field_groups_sorted():
     return (
-        [ "BibEntry_view"
-        , "Bib_book_field_view"
-        , "Bib_identifier_field_view"
-        , "Bib_journal_field_view"
-        , "Bib_license_field_view"
-        , "Bib_person_field_view"
-        , "Bib_publication_field_view"
-        , "Default_view"
-        , "Field_view"
-        , "List_field_view"
-        , "List_view"
-        , "Type_view"
-        , "User_view"
-        , "View_field_view"
-        , "View_view"
+        [ "Bib_book_group"
+        , "Bib_identifier_group"
+        , "Bib_journal_group"
+        , "Bib_license_group"
+        , "Bib_person_group"
+        , "Bib_publication_group"
+        , "Group_field_group"
+        , "List_field_group"
+        , "View_field_group"
         ])
 
 def get_site_field_groups():
@@ -732,6 +727,8 @@ def get_site_field_types_sorted():
         , "Identifier"
         , "List"
         , "Placement"
+        , "RepeatGroup"
+        , "RepeatGroupRow"
         , "Slug"
         , "Text"
         , "Textarea"
