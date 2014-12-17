@@ -67,14 +67,35 @@ def collection_entity_view_url(coll_id="testcoll", type_id=None, entity_id=None)
     Return URL for entity belonging to some collection.
 
     This matches the 'annal:url' value that is stored in saved entity data.
-
-    @TODO: update this testing function when final form of entity URIs is
-           determined, per https://github.com/gklyne/annalist/issues/32 
     """
     return reverse(
         "AnnalistEntityAccessView", 
         kwargs={'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
         )
+
+def collection_entity_list_url(coll_id="testcoll", list_id=None, type_id=None):
+    """
+    Return URL for entity list in collection some collection.
+
+    url(r'^c/(?P<coll_id>\w{0,32})/l/$',
+                            EntityDefaultListView.as_view(),
+                            name='AnnalistEntityDefaultList'),
+    url(r'^c/(?P<coll_id>\w{0,32})/l/(?P<list_id>\w{0,32})/$',
+                            EntityGenericListView.as_view(),
+                            name='AnnalistEntityGenericList'),
+    url(r'^c/(?P<coll_id>\w{0,32})/l/(?P<list_id>\w{0,32})/(?P<type_id>\w{0,32})/$',
+                            EntityGenericListView.as_view(),
+                            name='AnnalistEntityGenericList'),
+
+    """
+    view = "AnnalistEntityDefaultList"
+    args = {'coll_id': coll_id}
+    if list_id is not None:
+        view = "AnnalistEntityGenericList"
+        args['list_id'] = list_id
+    if type_id is not None:
+        args['type_id'] = type_id
+    return reverse(view, kwargs=args)
 
 def continuation_url_param(uri, prev_cont=None):
     if prev_cont:
