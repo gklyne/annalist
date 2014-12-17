@@ -43,9 +43,7 @@ from entity_testentitydata          import (
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_context_data, entitydata_form_data, 
     entitydata_delete_form_data,
-    entitydata_delete_confirm_form_data,
-    # entitylist_form_data,
-    # get_site_lists
+    entitydata_delete_confirm_form_data
     )
 from entity_testuserdata            import (
     annalistuser_dir,
@@ -57,12 +55,7 @@ from entity_testuserdata            import (
     annalistuser_delete_confirm_form_data
     )
 from entity_testtypedata                import (
-    # recordtype_dir,
-    # recordtype_coll_url, recordtype_site_url, recordtype_url, recordtype_edit_url,
-    # recordtype_value_keys, recordtype_load_keys, 
     recordtype_create_values, 
-    # recordtype_values, recordtype_read_values,
-    # recordtype_entity_view_context_data, 
     recordtype_entity_view_form_data,
     recordtype_delete_form_data,
     recordtype_delete_confirm_form_data

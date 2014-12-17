@@ -41,12 +41,12 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Rework field description used by view view to use new field rendering options
 - [x] merge rework-form-manager to develop branch
 - [x] Bugfix: e.g. 'Bib_person_field_view' does not show appropriate field options
-- [ ] Bug: create field group does not show up on field group list
-- [ ] Need test coverage for FieldDescription with a field group
+- [x] Bug: create field group does not show up on field group list
+- [x] Need test coverage for FieldDescription with a field group
 - [ ] Tests for sitedata: using Beautifiul soup (maybe), create table-driven tests for checking field contents for various rendered pages (lists and views), abstracted away from details of rendering and layout.  For example, test that correct field options are displayed for different views.
-    - [ ] Move functions from entity_testentitydata to entiry_testsitedata
-    - [ ] Add functions for groups
-    - [ ] Define new test_sitedata module with functions for testing valuyes in view rendering via BeautifulSoup
+    - [x] Move site data functions from entity_testentitydata to entity_testsitedata
+    - [x] Add functions for groups
+    - [ ] Define new test_sitedata module with functions for testing values in view rendering via BeautifulSoup
     - [ ] Create test cases for each of the main views on site data
     - [ ] Remove tests from other test sites that duplicate these tests (esp test_record* tests)
 - [ ] Test software installaton from merged branch
