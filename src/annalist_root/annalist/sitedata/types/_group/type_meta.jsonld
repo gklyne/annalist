@@ -1,5 +1,5 @@
 { "@id":                "./"
-, "@type":              ["annal:Field_group"]
+, "@type":              ["annal:Type"]
 , "annal:id":           "_group"
 , "annal:type_id":      "_type"
 , "annal:uri":          "annal:Field_group"

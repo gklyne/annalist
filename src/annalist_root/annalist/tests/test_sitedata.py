@@ -199,41 +199,46 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_view[ANNAL.CURIE.type_id],        "_view")
         self.assertEqual(type_view[ANNAL.CURIE.record_type],    type_uri)
         self.assertIn(ANNAL.CURIE.add_field,                    type_view)
-        # Read fields used in list display
-        for f in type_list[ANNAL.CURIE.list_fields]:
-            field_id   = f[ANNAL.CURIE.field_id]
-            list_field = RecordField.load(self.coll1, field_id, self.testsite)
-        self.assertEqual(list_field["@type"],                   [ANNAL.CURIE.Field])
-        self.assertEqual(list_field[ANNAL.CURIE.id],            field_id)
-        self.assertEqual(list_field[ANNAL.CURIE.type_id],       "_field")
-        self.assertIn(ANNAL.CURIE.property_uri,                 list_field)
-        self.assertIn(ANNAL.CURIE.field_render_type,            list_field)
-        self.assertIn(ANNAL.CURIE.field_value_type,             list_field)
-        # @@TODO: update all fields
-        self.assertIn(ANNAL.CURIE.field_placement,              list_field)
-        # field_name is present inly if different from field_id
-        # self.assertIn(ANNAL.CURIE.field_name,                   list_field)
-        # Read fields used in view/edit display
-        for f in type_view[ANNAL.CURIE.view_fields]:
-            field_id   = f[ANNAL.CURIE.field_id]
-            view_field = RecordField.load(self.coll1, field_id, self.testsite)
-        self.assertEqual(view_field["@type"],                   [ANNAL.CURIE.Field])
-        self.assertEqual(view_field[ANNAL.CURIE.id],            field_id)
-        self.assertEqual(view_field[ANNAL.CURIE.type_id],       "_field")
-        self.assertIn(ANNAL.CURIE.property_uri,                 view_field)
-        self.assertIn(ANNAL.CURIE.field_render_type,            view_field)
-        self.assertIn(ANNAL.CURIE.field_value_type,             view_field)
-        self.assertIn(ANNAL.CURIE.field_placement,              view_field)
-        self.assertIn(ANNAL.CURIE.placeholder,                  view_field)
-        self.assertIn(ANNAL.CURIE.default_value,                view_field)
-        # @@TODO: update all fields
-        self.assertIn(ANNAL.CURIE.field_placement,              view_field)
-        if ANNAL.CURIE.field_entity_type in view_field:
-            self.assertEqual(view_field[ANNAL.CURIE.field_entity_type], type_uri)
-        # field_name is present inly if different from field_id
-        # self.assertIn(ANNAL.CURIE.field_name,                   view_field)
+        # Read and check fields used in list and view displays
+        self.check_type_fields(type_id, type_uri, type_list[ANNAL.CURIE.list_fields])
+        self.check_type_fields(type_id, type_uri, type_view[ANNAL.CURIE.view_fields])
         return
 
+    # Test consistency of field descriptions for a given type
+    def check_type_fields(self, type_id, type_uri, view_fields):
+        for f in view_fields:
+            field_id   = f[ANNAL.CURIE.field_id]
+            view_field = RecordField.load(self.coll1, field_id, self.testsite)
+            self.assertEqual(view_field["@type"],                   [ANNAL.CURIE.Field])
+            self.assertEqual(view_field[ANNAL.CURIE.id],            field_id)
+            self.assertEqual(view_field[ANNAL.CURIE.type_id],       "_field")
+            self.assertIn(ANNAL.CURIE.property_uri,                 view_field)
+            self.assertIn(ANNAL.CURIE.field_render_type,            view_field)
+            self.assertIn(ANNAL.CURIE.field_value_type,             view_field)
+            self.assertIn(ANNAL.CURIE.field_placement,              view_field)
+            self.assertIn(ANNAL.CURIE.placeholder,                  view_field)
+            self.assertIn(ANNAL.CURIE.default_value,                view_field)
+            self.assertIn(ANNAL.CURIE.field_placement,              view_field)
+            if ANNAL.CURIE.field_entity_type in view_field:
+                self.assertEqual(view_field[ANNAL.CURIE.field_entity_type], type_uri)
+            if view_field[ANNAL.CURIE.field_value_type] in ["RepeatGroup", "RepeatGroupRow"]:
+                # Check extra fields
+                group_id = view_field[ANNAL.CURIE.group_ref]
+                self.assertIn(ANNAL.CURIE.repeat_label_add,         view_field)
+                self.assertIn(ANNAL.CURIE.repeat_label_delete,      view_field)
+                # Check field group
+                field_group = RecordGroup.load(self.coll1, group_id, self.testsite)
+                self.assertEqual(field_group["@type"],                  [ANNAL.CURIE.Field_group])
+                self.assertEqual(field_group[ANNAL.CURIE.id],           group_id)
+                self.assertEqual(field_group[ANNAL.CURIE.type_id],      "_group")
+                self.assertEqual(field_group[ANNAL.CURIE.record_type],  type_uri)
+                self.check_type_fields(type_id, type_uri, field_group[ANNAL.CURIE.group_fields])
+                # field_name is present inly if different from field_id
+                # self.assertIn(ANNAL.CURIE.field_name,                   list_field)
+
+                # @@TODO: If enum type, look for typeref
+
+        return
 
     # ----------------------------------
     # Test cases
@@ -376,7 +381,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         return
 
     # Test type / list / view / field consistency for RecordType
-    def test_recordtype_list_view(self):
+    def test_recordtype_type_list_view(self):
         self.check_type_list_view("_type", "Type_list", "Type_view", ANNAL.CURIE.Type)
         return
 
@@ -385,24 +390,36 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     # Create/edit type using type view
 
     # Test type / list / view / field consistency for RecordList
+    def test_recordlist_type_list_view(self):
+        self.check_type_list_view("_list", "List_list", "List_view", ANNAL.CURIE.List)
+        return
 
     # List lists using list list
 
     # Create/edit list using list view
 
     # Test type / list / view / field consistency for RecordView
+    def test_recordlist_type_view_view(self):
+        self.check_type_list_view("_view", "View_list", "View_view", ANNAL.CURIE.View)
+        return
 
     # List lists using view list
 
     # Create/edit view using view view
 
     # Test type / list / view / field consistency for RecordGroup
+    def test_recordlist_type_group_view(self):
+        self.check_type_list_view("_group", "Field_group_list", "Field_group_view", ANNAL.CURIE.Field_group)
+        return
 
     # List groups using group list
 
     # Create/edit group using group view
 
     # Test type / list / view / field consistency for RecordField
+    def test_recordlist_type_field_view(self):
+        self.check_type_list_view("_field", "Field_list", "Field_view", ANNAL.CURIE.Field)
+        return
 
     # List fields using field list
 
