@@ -41,10 +41,10 @@ class SimpleValueMap(_SimpleValueMap_tuple):
             subcontext[self.c] = entityvals.get(self.e, 
                 context_extra_values and context_extra_values.get(self.c, None)
                 )
-            log.log(settings.TRACE_FIELD_VALUE,
-                "SimpleValueMap.map_entity_to_context: entitykey %s, contextkey %s, value %s"%
-                (self.e, self.c, subcontext[self.c])
-                )
+            # log.log(settings.TRACE_FIELD_VALUE,
+            #     "SimpleValueMap.map_entity_to_context: entitykey %s, contextkey %s, value %s"%
+            #     (self.e, self.c, subcontext[self.c])
+            #     )
         return subcontext
 
     def map_form_to_entity(self, formvals):

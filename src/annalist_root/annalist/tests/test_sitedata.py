@@ -209,35 +209,37 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         for f in view_fields:
             field_id   = f[ANNAL.CURIE.field_id]
             view_field = RecordField.load(self.coll1, field_id, self.testsite)
-            self.assertEqual(view_field["@type"],                   [ANNAL.CURIE.Field])
-            self.assertEqual(view_field[ANNAL.CURIE.id],            field_id)
-            self.assertEqual(view_field[ANNAL.CURIE.type_id],       "_field")
-            self.assertIn(ANNAL.CURIE.property_uri,                 view_field)
-            self.assertIn(ANNAL.CURIE.field_render_type,            view_field)
-            self.assertIn(ANNAL.CURIE.field_value_type,             view_field)
-            self.assertIn(ANNAL.CURIE.field_placement,              view_field)
-            self.assertIn(ANNAL.CURIE.placeholder,                  view_field)
-            self.assertIn(ANNAL.CURIE.default_value,                view_field)
-            self.assertIn(ANNAL.CURIE.field_placement,              view_field)
-            if ANNAL.CURIE.field_entity_type in view_field:
-                self.assertEqual(view_field[ANNAL.CURIE.field_entity_type], type_uri)
-            if view_field[ANNAL.CURIE.field_value_type] in ["RepeatGroup", "RepeatGroupRow"]:
-                # Check extra fields
-                group_id = view_field[ANNAL.CURIE.group_ref]
-                self.assertIn(ANNAL.CURIE.repeat_label_add,         view_field)
-                self.assertIn(ANNAL.CURIE.repeat_label_delete,      view_field)
-                # Check field group
-                field_group = RecordGroup.load(self.coll1, group_id, self.testsite)
-                self.assertEqual(field_group["@type"],                  [ANNAL.CURIE.Field_group])
-                self.assertEqual(field_group[ANNAL.CURIE.id],           group_id)
-                self.assertEqual(field_group[ANNAL.CURIE.type_id],      "_group")
-                self.assertEqual(field_group[ANNAL.CURIE.record_type],  type_uri)
-                self.check_type_fields(type_id, type_uri, field_group[ANNAL.CURIE.group_fields])
-                # field_name is present inly if different from field_id
-                # self.assertIn(ANNAL.CURIE.field_name,                   list_field)
-
+            field_type = view_field[ANNAL.CURIE.field_render_type]
+            try:
+                self.assertEqual(view_field["@type"],                   [ANNAL.CURIE.Field])
+                self.assertEqual(view_field[ANNAL.CURIE.id],            field_id)
+                self.assertEqual(view_field[ANNAL.CURIE.type_id],       "_field")
+                self.assertIn(ANNAL.CURIE.property_uri,                 view_field)
+                self.assertIn(ANNAL.CURIE.field_render_type,            view_field)
+                self.assertIn(ANNAL.CURIE.field_value_type,             view_field)
+                self.assertIn(ANNAL.CURIE.field_placement,              view_field)
+                self.assertIn(ANNAL.CURIE.placeholder,                  view_field)
+                self.assertIn(ANNAL.CURIE.default_value,                view_field)
+                self.assertIn(ANNAL.CURIE.field_placement,              view_field)
+                if ANNAL.CURIE.field_entity_type in view_field:
+                    self.assertEqual(view_field[ANNAL.CURIE.field_entity_type], type_uri)
+                if field_type in ["RepeatGroup", "RepeatGroupRow"]:
+                    # Check extra fields
+                    group_id = view_field[ANNAL.CURIE.group_ref]
+                    self.assertIn(ANNAL.CURIE.repeat_label_add,         view_field)
+                    self.assertIn(ANNAL.CURIE.repeat_label_delete,      view_field)
+                    # Check field group
+                    field_group = RecordGroup.load(self.coll1, group_id, self.testsite)
+                    self.assertEqual(field_group["@type"],                  [ANNAL.CURIE.Field_group])
+                    self.assertEqual(field_group[ANNAL.CURIE.id],           group_id)
+                    self.assertEqual(field_group[ANNAL.CURIE.type_id],      "_group")
+                    self.check_type_fields(type_id, type_uri, field_group[ANNAL.CURIE.group_fields])
+                    # field_name is present inly if different from field_id
+                    # self.assertIn(ANNAL.CURIE.field_name,                   list_field)
                 # @@TODO: If enum type, look for typeref
-
+            except Exception as e:
+                log.warning("check_type_fields error %s, field_id %s, render_type %s"%(e, field_id, field_type))
+                raise
         return
 
     # ----------------------------------

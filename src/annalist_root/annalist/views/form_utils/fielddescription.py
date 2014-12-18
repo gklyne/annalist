@@ -62,7 +62,7 @@ class FieldDescription(object):
                         RecordGroup value or dictionary containing the referenced list 
                         of fields.
         """
-        log.debug("FieldDescription recordfield: %r"%(recordfield,))
+        # log.debug("FieldDescription recordfield: %r"%(recordfield,))
         field_id            = recordfield.get(ANNAL.CURIE.id,         "_missing_id_")
         field_name          = recordfield.get(ANNAL.CURIE.field_name, field_id)  # Field name in form
         field_label         = recordfield.get(RDFS.CURIE.label, "")

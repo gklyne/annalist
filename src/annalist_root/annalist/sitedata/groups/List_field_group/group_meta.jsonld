@@ -1,6 +1,6 @@
 { "@id":                "annal:display/List_field_group"
 , "@type":              ["annal:Field_group"]
-, "annal:type_id":      "_view"
+, "annal:type_id":      "_group"
 , "annal:id":           "List_field_group"
 , "annal:uri":          "annal:display/List_field_group"
 , "annal:record_type":  "annal:List"
