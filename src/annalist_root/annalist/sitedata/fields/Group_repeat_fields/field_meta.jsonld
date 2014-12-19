@@ -10,7 +10,6 @@
 , "annal:placeholder":          "(field group list of fields)"
 , "annal:property_uri":         "annal:group_fields"
 , "annal:field_placement":      "small:0,12"
-, "annal:default_value":        ""
   // Reference to description of repeated field
 , "annal:group_ref":            "Group_field_group"
 , "annal:repeat_label_add":     "Add field"

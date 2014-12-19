@@ -698,7 +698,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_comment="Short string used to describe record type when displayed",
             field_placeholder="(label)",
             field_property="rdfs:label",
-            field_placement="",
+            field_placement="small:0,12",
             field_entity_type="annal:Type"
             )
         return

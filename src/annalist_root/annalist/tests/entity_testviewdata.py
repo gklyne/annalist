@@ -353,7 +353,7 @@ def recordview_view_context_data(
             , 'field_name':         'View_add_field'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Text'
-            , 'field_value':        ''
+            , 'field_value':        'yes'
             , 'options':            []
             }
           , { "field_id":           "View_repeat_fields"   # fields[5]

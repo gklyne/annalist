@@ -219,9 +219,12 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 self.assertIn(ANNAL.CURIE.field_value_type,             view_field)
                 self.assertIn(ANNAL.CURIE.field_placement,              view_field)
                 self.assertIn(ANNAL.CURIE.placeholder,                  view_field)
-                self.assertIn(ANNAL.CURIE.default_value,                view_field)
                 self.assertIn(ANNAL.CURIE.field_placement,              view_field)
                 if ANNAL.CURIE.field_entity_type in view_field:
+                    # @@TODO: need to rethink this for. e.g., Field_sel, il View, List and Group records
+                    # Currently have removed annal:field_entity_type from Field_sel, Field_property,
+                    # Field_placement so they may now show up for all view forms.  Check this.
+                    # Two problems: (a) how to handle ikn app, (b) how to test?
                     self.assertEqual(view_field[ANNAL.CURIE.field_entity_type], type_uri)
                 if field_type in ["RepeatGroup", "RepeatGroupRow"]:
                     # Check extra fields
@@ -233,7 +236,10 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                     self.assertEqual(field_group["@type"],                  [ANNAL.CURIE.Field_group])
                     self.assertEqual(field_group[ANNAL.CURIE.id],           group_id)
                     self.assertEqual(field_group[ANNAL.CURIE.type_id],      "_group")
-                    self.check_type_fields(type_id, type_uri, field_group[ANNAL.CURIE.group_fields])
+                    self.check_type_fields(
+                        "_group", ANNAL.CURIE.Field_group, field_group[ANNAL.CURIE.group_fields]
+                        )
+                    # self.check_type_fields(type_id, type_uri, field_group[ANNAL.CURIE.group_fields])
                     # field_name is present inly if different from field_id
                     # self.assertIn(ANNAL.CURIE.field_name,                   list_field)
                 # @@TODO: If enum type, look for typeref

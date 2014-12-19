@@ -96,9 +96,9 @@ class FieldDescriptionTest(AnnalistTestCase):
             {}
             )
         expect_placement = Placement(
-            field = 'small-12 columns', 
-            label = 'small-12 medium-2 columns', 
-            value = 'small-12 medium-10 columns'
+            field = 'small-6 columns', 
+            label = 'small-12 medium-4 columns', 
+            value = 'small-12 medium-8 columns'
             )
         expect_field_desc = (
             { 'field_id':                   'Field_id'
@@ -119,10 +119,10 @@ class FieldDescriptionTest(AnnalistTestCase):
         self.assertDictionaryMatch(fd, expect_field_desc)
         return
 
-    def test_Field_sel(self):
+    def test_Group_field_sel(self):
         fd = field_description_from_view_field(
             self.testcoll, 
-            { ANNAL.CURIE.field_id: "Field_sel" }, 
+            { ANNAL.CURIE.field_id: "Group_field_sel" }, 
             {}
             )
         expect_placement = Placement(
@@ -135,7 +135,6 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'Entity_id'
             , 'Entity_label'
             , 'Entity_type'
-            , 'Field_property'
             ])
         expect_choice_labels = OrderedDict(
             [ (id, id) for id in expect_choice_ids]
@@ -145,7 +144,7 @@ class FieldDescriptionTest(AnnalistTestCase):
               for id in expect_choice_ids
             ])
         expect_field_desc = (
-            { 'field_id':                   'Field_sel'
+            { 'field_id':                   'Group_field_sel'
             , 'field_name':                 'Field_id'
             , 'field_value_type':           ANNAL.CURIE.Slug
             , 'field_label':                'Field id'
@@ -211,7 +210,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             value='small-12 medium-6 columns'
             )
         expect_field0_desc = (
-            { 'field_id':                   'Field_sel'
+            { 'field_id':                   'Group_field_sel'
             , 'field_name':                 'Field_id'
             , 'field_value_type':           ANNAL.CURIE.Slug
             , 'field_label':                'Field id'
@@ -227,7 +226,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             value='small-12 medium-6 columns'
             )
         expect_field1_desc = (
-            { 'field_id':                   'Field_property'
+            { 'field_id':                   'Group_field_property'
             , 'field_name':                 'Field_property'
             , 'field_value_type':           ANNAL.CURIE.Identifier
             , 'field_label':                'Property'
@@ -243,7 +242,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             value='small-12 medium-6 columns'
             )
         expect_field2_desc = (
-            { 'field_id':                   'Field_placement'
+            { 'field_id':                   'Group_field_placement'
             , 'field_name':                 'Field_placement'
             , 'field_value_type':           ANNAL.CURIE.Placement
             , 'field_label':                'Size/position'

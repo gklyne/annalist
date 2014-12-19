@@ -49,9 +49,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Define new test_sitedata module with functions for testing values in view rendering via BeautifulSoup
     - [ ] Create test cases for each of the main views on site data
     - [ ] Remove tests from other test sites that duplicate these tests (esp test_record* tests)
-- [ ] Test software installaton from merged branch
-- [ ] Test new capabilities to define view with repeating fields - make sure it is doable
-- [ ] Test adding more data to cruising log
+- [x] Test software installaton from merged branch
+- [>] Test new capabilities to define view with repeating fields - make sure it is doable
+- [x] Test adding more data to cruising log
+- [ ] Rename: Field_sel, copy: Field_property, Field_placement -> Group_field_* (these are options for Field_group_view only)
 - [ ] Test upgrade of existing deployment
 - [ ] Deploy updates to annalist.net
 - [ ] New sub-release

@@ -120,13 +120,13 @@ class FieldDescriptionTest(AnnalistTestCase):
                 , 'group_delete_label':         'Remove selected field(s)'
                 , 'group_field_descs':
                     [ field_description_from_view_field(
-                        self.testcoll, { ANNAL.CURIE.field_id: "Field_sel" },        {}
+                        self.testcoll, { ANNAL.CURIE.field_id: "Group_field_sel" },        {}
                         )
                     , field_description_from_view_field(
-                        self.testcoll, { ANNAL.CURIE.field_id: "Field_property" },   {}
+                        self.testcoll, { ANNAL.CURIE.field_id: "Group_field_property" },   {}
                         )
                     , field_description_from_view_field(
-                        self.testcoll, { ANNAL.CURIE.field_id: "Field_placement" },  {}
+                        self.testcoll, { ANNAL.CURIE.field_id: "Group_field_placement" },  {}
                         )
                     ]
                 , 'context_extra_values':       {}
@@ -235,7 +235,6 @@ class FieldDescriptionTest(AnnalistTestCase):
               ''' <option selected="selected">Entity_id</option>'''+
               ''' <option>Entity_label</option>'''+
               ''' <option>Entity_type</option>'''+
-              ''' <option>Field_property</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_repeat_fields__0__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -251,7 +250,6 @@ class FieldDescriptionTest(AnnalistTestCase):
               ''' <option>Entity_id</option>'''+
               ''' <option>Entity_label</option>'''+
               ''' <option selected="selected">Entity_type</option>'''+
-              ''' <option>Field_property</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_repeat_fields__1__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -267,7 +265,6 @@ class FieldDescriptionTest(AnnalistTestCase):
               ''' <option>Entity_id</option>'''+
               ''' <option selected="selected">Entity_label</option>'''+
               ''' <option>Entity_type</option>'''+
-              ''' <option>Field_property</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_repeat_fields__2__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -283,7 +280,6 @@ class FieldDescriptionTest(AnnalistTestCase):
               ''' <option>Entity_id</option>'''+
               ''' <option>Entity_label</option>'''+
               ''' <option>Entity_type</option>'''+
-              ''' <option>Field_property</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_repeat_fields__3__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+

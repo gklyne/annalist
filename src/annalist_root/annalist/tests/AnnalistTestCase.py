@@ -76,12 +76,12 @@ class AnnalistTestCase(TestCase):
                                ):
                                 self.assertDictionaryMatch(
                                     actual_dict[k][i], expect_dict[k][i], 
-                                    prefix="Key %s[%d]: "%(k,i)
+                                    prefix=prefix+"Key %s[%d]: "%(k,i)
                                     )
                             else:
                                 self.assertEqual(
                                     actual_dict[k][i], expect_dict[k][i],
-                                    "Key %s[%d]: %r != %r"%(k, i, actual_dict[k], expect_dict[k])
+                                    prefix+"Key %s[%d]: %r != %r"%(k, i, actual_dict[k], expect_dict[k])
                                     )
                 else:
                     self.fail("Key %s expected list, got %r instead of %r"%(k, actual_dict[k], expect_dict[k]))

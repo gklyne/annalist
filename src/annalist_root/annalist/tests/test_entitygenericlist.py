@@ -277,7 +277,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_value_type'], "annal:Text")
         # Entities
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 90)
+        self.assertEqual(len(entities), 93)
         entity_ids = [ context_list_item_field_value(r.context, e, 0) for e in entities ]
         self.assertIn('_initial_values', entity_ids)
         field_entities = (
@@ -302,7 +302,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Type_uri',          "annal:Identifier",    "URI")
             , ('List_choice',       "annal:Slug",          "List view")
             , ('View_choice',       "annal:Slug",          "Choose view")
-            , ('Field_sel',         "annal:Slug",          "Field id")
+            , ('Group_field_sel',   "annal:Slug",          "Field id")
             })
         for f in field_entities:
             for eid in range(len(entities)):

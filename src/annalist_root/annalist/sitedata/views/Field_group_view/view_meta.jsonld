@@ -17,6 +17,9 @@
   , { "annal:field_id":               "Group_comment"
     , "annal:field_placement":        "small:0,12"
     }
+  , { "annal:field_id":               "Group_target_type"
+    , "annal:field_placement":        "small:0,12"
+    }
   , { "annal:field_id":               "Group_repeat_fields"
     , "annal:field_placement":        "small:0,12"
     }

@@ -358,6 +358,7 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Returns re-rendering of form with current values and error message displayed.
         """
+        # log.info("********\nform_data %r"%form_data)
         form_context = entityvaluemap.map_form_data_to_context(form_data,
             **context_extra_values
             )

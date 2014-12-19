@@ -112,6 +112,7 @@ def recordfield_value_keys(field_uri=False):
         { 'annal:property_uri'
         , 'annal:field_entity_type'
         , 'annal:field_value_type'
+        , 'annal:field_placement'
         , 'annal:field_render_type'
         , 'annal:placeholder'
         , 'annal:default_value'

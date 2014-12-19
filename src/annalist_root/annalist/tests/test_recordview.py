@@ -502,7 +502,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
                     <option selected="selected">Entity_id</option>
                     <option>Entity_label</option>
                     <option>Entity_type</option>
-                    <option>Field_property</option>
                   </select>
                 </div>
               </div>
@@ -640,7 +639,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
                     <option selected="selected">Entity_id</option>
                     <option>Entity_label</option>
                     <option>Entity_type</option>
-                    <option>Field_property</option>
                   </select>
                 </div>
               </div>
@@ -946,6 +944,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             action="new", update="RecordView",
             view_record_type='annal:View'
             )
+        # print repr(r.context[-1]['fields'][-1]['field_value'])
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
