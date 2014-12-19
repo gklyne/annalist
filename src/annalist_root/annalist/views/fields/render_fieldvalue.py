@@ -26,7 +26,7 @@ from django.template.loaders.app_directories    import Loader
 
 label_template = (
     """<div class="view-label {{field.field_placement.field}}">"""+
-    """  <p>{{field.field_label}}</p>"""+
+    """  <p>{{field.field_label|default:"&nbsp;"}}</p>"""+
     """</div>"""
     )
 

@@ -50,9 +50,11 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Create test cases for each of the main views on site data
     - [ ] Remove tests from other test sites that duplicate these tests (esp test_record* tests)
 - [x] Test software installaton from merged branch
-- [>] Test new capabilities to define view with repeating fields - make sure it is doable
+- [x] Test new capabilities to define view with repeating fields - make sure it is doable
 - [x] Test adding more data to cruising log
-- [ ] Rename: Field_sel, copy: Field_property, Field_placement -> Group_field_* (these are options for Field_group_view only)
+- [x] Rename: Field_sel Group_field_sel (option for Field_group_view only)
+- [x] Copy: Field_property, Field_placement -> Group_field_* (options for Field_group_view)
+- [ ] Select new list view: drop type from URI?
 - [ ] Test upgrade of existing deployment
 - [ ] Deploy updates to annalist.net
 - [ ] New sub-release

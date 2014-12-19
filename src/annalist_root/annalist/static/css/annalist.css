@@ -91,7 +91,9 @@ div.row div.columns p.grouplabel
 }
 
 div.row div.column.view-label  p,
-div.row div.columns.view-label p
+div.row div.columns.view-label p,
+div.row div.column.view-label,
+div.row div.columns.view-label
 {
     margin-top:  0.25rem;
     font-size: small;
@@ -225,7 +227,7 @@ div.row.table div.row.tfoot .columns .row .columns.view-label
     font-weight: bold;
     font-size: 0.875rem;
     display: table-cell;
-    color: #222;  /* 222222 */
+    color: #222222;  /* 222222 */
 }
 
 div.row.table div.trow

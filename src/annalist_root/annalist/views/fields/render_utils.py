@@ -147,8 +147,8 @@ def get_coledit_renderer(renderid):
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    # if renderid == "TokenSet":
-    #     return RenderTokenSet(render_tokenset.item)
+    if renderid == "TokenSet":
+        return RenderTokenSet(render_tokenset.item)
     # if renderid == "RepeatGroup":
     #     return RenderRepeatGroup(render_repeatgroup.view_row)
     renderer = get_field_renderer(renderid)
@@ -162,8 +162,8 @@ def get_colview_renderer(renderid):
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    # if renderid == "TokenSet":
-    #     return RenderTokenSet(render_tokenset.item)
+    if renderid == "TokenSet":
+        return RenderTokenSet(render_tokenset.item)
     # if renderid == "RepeatGroup":
     #     return RenderRepeatGroup(render_repeatgroup.view_row)
     renderer = get_field_renderer(renderid)

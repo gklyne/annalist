@@ -198,7 +198,10 @@ class FieldDescriptionTest(AnnalistTestCase):
         # replace runs of whitespace/newlines with single space:
         rendered_text = re.sub(r'\s+', " ", rendered_text)
         expect_elements = (
-            [ '''<td class="small-12 columns"> aa bb cc </td>'''
+            [ '''<div class="view-label small-12 columns">'''+
+              ''' aa bb cc'''+
+              '''</div>'''
+
             ])
         for e in expect_elements:
             self.assertIn(e, rendered_text)

@@ -15,7 +15,7 @@ from django.http        import HttpResponse
 from django.template    import Template, Context
 
 edit = ("""
-    <!-- views.fields.render_tokenlist.edit_template -->
+    <!-- views.fields.render_tokenset.edit -->
     <div class="{{field.field_placement.field}}">
       <div class="row">
         <div class="view-label {{field.field_placement.label}}">
@@ -32,7 +32,7 @@ edit = ("""
     """)
 
 view = ("""
-    <!-- views.fields.render_tokenlist.view_template -->
+    <!-- views.fields.render_tokenset.view -->
     <div class="{{field.field_placement.field}}">
         <div class="row">
             <div class="view-label {{field.field_placement.label}}">
@@ -45,12 +45,11 @@ view = ("""
     </div>
     """)
 
-item = ("""
-    <!-- views.fields.render_tokenlist.view_template -->
-    <td class="{{field.field_placement.field}}">
-    {{ field.field_value_encoded|default:"&nbsp;" }}
-    </td>
-    """)
+item = (
+    """<div class="view-label {{field.field_placement.field}}">"""+
+    """  {{ field.field_value_encoded|default:"&nbsp;" }}"""+
+    """</div>"""
+    )
 
 class RenderTokenSet(object):
   """
