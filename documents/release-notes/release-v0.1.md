@@ -80,6 +80,10 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 # History
 
+## Version 0.1.8a
+
+This is a patch release for bug https://github.com/gklyne/annalist/issues/39.  This bug causes a server error to be reported if a user logs in with an ill-formed user_id.
+
 ## Version 0.1.8
 
 The main new feature in this release is full support for views containing repeated fields (e.g. a bibliographic entry containing multiple authors).  These can be displayed as a repeating group of fields formatted similarly to non-repeating fields (`RepeatGroup` render type) or as a repeating row of values with column headings (`RepeatGroupRow` render type).  With this enhancement, the core web presentation engine is substantially complete, with further capablities to be provided by adding new field renderers.
