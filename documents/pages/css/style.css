@@ -149,7 +149,7 @@
 	}
 	#footer #footer_bg {
 		background: url(../img/footer_bg.gif) repeat-x left bottom #85C329;
-		padding: 15px 15px 25px 15px;
+		padding: 8px 15px 8px 15px;
 		border-top: 1px solid #7BB425;
 	}
 
@@ -321,6 +321,26 @@
 	text-align: center;
 	margin-bottom: 15px;
 	background: #eeeeee;
+	}
+
+/* #footer_bg p paragraphs
+-----------------------------*/
+	#footer_bg p {
+		font-size: 1em;
+		margin: 0;
+		padding: 0 0 5px 0;
+	}
+
+/* #footer_bg p a links in footer
+------------------------------------*/
+	#footer_bg p a:link, #footer_bg p a:visited, 
+	.table a:link, .table a:visited,
+	.link a {
+		color: #CBF28F;
+		text-decoration: none;
+	}
+	#footer_bg p a:hover, .table a:hover, .link a:hover {
+		text-decoration: underline;
 	}
 
 /* .small_input smaller text in inputs/combos

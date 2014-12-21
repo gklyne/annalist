@@ -96,7 +96,7 @@ def get_placement_classes(placement):
             label=format_class(label_width),
             value=format_class(value_width)
             )
-    log.debug("get_placement_class %s, returns %s"%(placement,c))
+    # log.debug("get_placement_class %s, returns %s"%(placement,c))
     return c
 
 if __name__ == "__main__":

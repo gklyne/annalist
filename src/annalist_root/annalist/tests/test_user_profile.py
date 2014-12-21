@@ -28,16 +28,7 @@ from annalist.views.profile     import ProfileView
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                      import dict_to_str, init_annalist_test_site
 from AnnalistTestCase           import AnnalistTestCase
-from entity_testutils           import (
-#     site_view_url, collection_view_url, collection_edit_url, 
-#     collection_value_keys, collection_create_values, collection_values,
-#     collection_new_form_data, collection_remove_form_data,
-    site_title
-    )
-# from entity_testtypedata        import (
-#     recordtype_url, recordtype_edit_url
-#     )
-
+from entity_testutils           import site_title
 
 class UserProfileTest(AnnalistTestCase):
     """

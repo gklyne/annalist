@@ -23,7 +23,6 @@ from django.test.client             import Client
 
 from annalist.identifiers           import ANNAL
 from annalist.models.entity         import EntityRoot, Entity
-# from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
@@ -31,30 +30,20 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
 from annalist.models.entitytypeinfo import EntityTypeInfo
-# from annalist.models.recordtypedata import RecordTypeData
-# from annalist.models.entitydata     import EntityData
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
-    # site_dir, collection_dir, 
-    # site_title,
-    # render_select_options,
-    # collection_entity_view_url,
     create_test_user,
-    create_user_permissions
+    create_user_permissions,
+    context_list_entities,
+    context_list_head_fields,
+    context_list_item_fields
     )
 from entity_testentitydata          import (
-    # recorddata_dir,  entitydata_dir,
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_type_url, entitydata_list_all_url,
-    # entitydata_value_keys, entitydata_create_values, entitydata_values, 
-    # entitydata_context_data, entitydata_form_data, 
-    # entitydata_delete_form_data,
-    # entitydata_delete_confirm_form_data,
-    # entitylist_form_data,
-    # get_site_lists
     )
 
 #   -----------------------------------------------------------------------------
@@ -270,22 +259,24 @@ class LinkedRecordTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        self.assertEqual(len(r.context['entities']), 2)
-        self.assertEqual(len(r.context['fields']), 3)
-        for i, esrc, etgt in ((0, "testsrc1", "testtgt1"), (1, "testsrc2", "testtgt2")):
-            entc = r.context['entities'][i]
-            self.assertEqual(len(entc['fields']), 3)
-            self.assertEqual(entc['entity_id'], esrc)
-            self.assertEqual(entc['type_id'],   "testsrc_type")
-            self.assertEqual(entc['fields'][0].field_id,         "Entity_id")
-            self.assertEqual(entc['fields'][0].field_value,      esrc)
-            self.assertEqual(entc['fields'][0].field_value_link, None)
-            self.assertEqual(entc['fields'][1].field_id,         "testtgtref_field")
-            self.assertEqual(entc['fields'][1].field_value,      etgt)
-            self.assertEqual(entc['fields'][1].field_value_link, "/testsite/c/testcoll/d/testtgt_type/%s/"%etgt)
-            self.assertEqual(entc['fields'][2].field_id,         "Entity_label")
-            self.assertEqual(entc['fields'][2].field_value,      "testsrc_entity %s label"%esrc)
-            self.assertEqual(entc['fields'][2].field_value_link, None)
+        entities    = context_list_entities(r.context)
+        head_fields = context_list_head_fields(r.context)
+        self.assertEqual(len(entities),    2)
+        self.assertEqual(len(head_fields), 3)
+        for entc, esrc, etgt in ((entities[0], "testsrc1", "testtgt1"), (entities[1], "testsrc2", "testtgt2")):
+            item_fields = context_list_item_fields(r.context, entc)
+            self.assertEqual(len(item_fields), 3)
+            self.assertEqual(entc['entity_id'],               esrc)
+            self.assertEqual(entc['entity_type_id'],          "testsrc_type")
+            self.assertEqual(item_fields[0].field_id,         "Entity_id")
+            self.assertEqual(item_fields[0].field_value,      esrc)
+            self.assertEqual(item_fields[0].field_value_link, None)
+            self.assertEqual(item_fields[1].field_id,         "testtgtref_field")
+            self.assertEqual(item_fields[1].field_value,      etgt)
+            self.assertEqual(item_fields[1].field_value_link, "/testsite/c/testcoll/d/testtgt_type/%s/"%etgt)
+            self.assertEqual(item_fields[2].field_id,         "Entity_label")
+            self.assertEqual(item_fields[2].field_value,      "testsrc_entity %s label"%esrc)
+            self.assertEqual(item_fields[2].field_value_link, None)
         return
 
 # End.

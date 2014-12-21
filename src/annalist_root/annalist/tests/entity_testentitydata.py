@@ -195,8 +195,7 @@ def entitydata_context_data(
           [ { 'field_label':        'Id'
             , 'field_id':           'Entity_id'
             , 'field_name':         'entity_id'
-            , 'field_render_view':  'field/annalist_view_entityid.html'
-            , 'field_render_edit':  'field/annalist_edit_entityid.html'
+            , 'field_render_type':  'EntityId'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
@@ -205,8 +204,7 @@ def entitydata_context_data(
           , { 'field_label':        'Type'
             , 'field_id':           'Entity_type'
             , 'field_name':         'entity_type'
-            , 'field_render_view':  'field/annalist_view_entitytypeid.html'
-            , 'field_render_edit':  'field/annalist_edit_entitytypeid.html'
+            , 'field_render_type':  'EntityTypeId'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
@@ -215,8 +213,7 @@ def entitydata_context_data(
           , { 'field_label':        'Label'
             , 'field_id':           'Entity_label'
             , 'field_name':         'Entity_label'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
+            , 'field_render_type':  'Text'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Text'
             , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
@@ -225,8 +222,7 @@ def entitydata_context_data(
           , { 'field_label':        'Comment'
             , 'field_id':           'Entity_comment'
             , 'field_name':         'Entity_comment'
-            , 'field_render_view':  'field/annalist_view_textarea.html'
-            , 'field_render_edit':  'field/annalist_edit_textarea.html'
+            , 'field_render_type':  'Textarea'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Longtext'
             , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
@@ -316,8 +312,6 @@ def entitydata_default_view_context_data(
         , 'orig_id':            'orig_entity_id'
         , 'fields':
           [ { 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_entityid.html'
-            , 'field_render_edit':  'field/annalist_edit_entityid.html'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_id':           'Entity_id'
@@ -326,8 +320,6 @@ def entitydata_default_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Type'
-            , 'field_render_view':  'field/annalist_view_select.html'
-            , 'field_render_edit':  'field/annalist_edit_select.html'
             , 'field_name':         'entity_type'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
             , 'field_id':           'Entity_type'
@@ -336,8 +328,6 @@ def entitydata_default_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Label'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Entity_label'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Entity_label'
@@ -346,8 +336,6 @@ def entitydata_default_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Comment'
-            , 'field_render_view':  'field/annalist_view_textarea.html'
-            , 'field_render_edit':  'field/annalist_edit_textarea.html'
             , 'field_name':         'Entity_comment'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Entity_comment'
@@ -434,8 +422,6 @@ def entitydata_recordtype_view_context_data(
         , 'orig_id':            'orig_entity_id'
         , 'fields':
           [ { 'field_label':        'Id'
-            , 'field_render_view':  'field/annalist_view_entityid.html'
-            , 'field_render_edit':  'field/annalist_edit_entityid.html'
             , 'field_name':         'entity_id'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_id':           'Type_id'
@@ -444,8 +430,6 @@ def entitydata_recordtype_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Label'
-            , 'field_render_view':  'field/annalist_view_text.html'
-            , 'field_render_edit':  'field/annalist_edit_text.html'
             , 'field_name':         'Type_label'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_label'
@@ -454,8 +438,6 @@ def entitydata_recordtype_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'Comment'
-            , 'field_render_view':  'field/annalist_view_textarea.html'
-            , 'field_render_edit':  'field/annalist_edit_textarea.html'
             , 'field_name':         'Type_comment'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_comment'
@@ -464,8 +446,6 @@ def entitydata_recordtype_view_context_data(
             , 'options':            []
             }
           , { 'field_label':        'URI'
-            , 'field_render_view':  'field/annalist_view_identifier.html'
-            , 'field_render_edit':  'field/annalist_edit_identifier.html'
             , 'field_name':         'Type_uri'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_uri'
@@ -599,7 +579,10 @@ def default_fields(coll_id=None, type_id=None, entity_id=None, width=12):
     def def_fields(width=12):
         fields = layout_classes(width=width)
         fields.update(
-            { 'default_label':       def_label
+            { 'coll_id':             coll_id
+            , 'type_id':             type_id
+            , 'entity_id':           entity_id
+            , 'default_label':       def_label
             , 'default_comment':     def_comment
             , 'default_label_esc':   def_label_esc
             , 'default_comment_esc': def_comment_esc
@@ -631,16 +614,23 @@ def error_label(coll_id=None, type_id=None, entity_id=None):
 #   -----------------------------------------------------------------------------
 
 def layout_classes(width=12):
-    if width == 6:
+    if width == 4:
         class_dict = (
-            { 'label_classes':          "view_label small-12 medium-4 columns"
+            { 'label_classes':          "view-label small-12 medium-6 columns"
+            , 'input_classes':          "small-12 medium-6 columns"
+            # , 'button_left_classes':    "small-12 medium-6  columns"
+            # , 'button_right_classes':   "small-12 medium-6 columns medium-text-right"
+            })
+    elif width == 6:
+        class_dict = (
+            { 'label_classes':          "view-label small-12 medium-4 columns"
             , 'input_classes':          "small-12 medium-8 columns"
             , 'button_left_classes':    "small-12 medium-6 columns"
             , 'button_right_classes':   "small-12 medium-6 columns medium-text-right"
             })
     elif width == 12:
         class_dict = (
-            { 'label_classes':          "view_label small-12 medium-2 columns"
+            { 'label_classes':          "view-label small-12 medium-2 columns"
             , 'input_classes':          "small-12 medium-10 columns"
             , 'space_classes':          "medium-2 columns show-for-medium-up"
             , 'button_half_classes':    "small-12 medium-5 columns"
@@ -651,68 +641,5 @@ def layout_classes(width=12):
     else:
         assert False, "Unexpected width %r"%width
     return class_dict
-
-#   -----------------------------------------------------------------------------
-#
-#   ----- Site-wide entirties defined
-#
-#   -----------------------------------------------------------------------------
-
-
-def get_site_types_sorted():
-    return (
-        [ "_field", "_list", "_type", "_user", "_view"
-        , "BibEntry_type", "Default_type"
-        , "Enum_field_type", "Enum_list_type"
-        ])
-
-def get_site_types():
-    return set(get_site_types_sorted())
-
-def get_site_views():
-    return (
-        { "Default_view", "Field_view"
-        , "Type_view"
-        , "View_view"
-        , "List_view"
-        , "User_view"
-        , "BibEntry_view"
-        })
-
-def get_site_lists():
-    return (
-        { "BibEntry_list", "Default_list", "Default_list_all"
-        , "Field_list", "Type_list", "List_list", "View_list"
-        , "User_list"
-        })
-
-def get_site_fields():
-    return (
-        { 
-        })
-
-def get_site_list_types_sorted():
-    return (
-        [ "Grid"
-        , "List"
-        ])
-
-def get_site_field_types_sorted():
-    return (
-        [ "EntityId"
-        , "EntityTypeId"
-        , "Enum"
-        , "Enum_optional"
-        , "Field"
-        , "Identifier"
-        , "List"
-        , "Placement"
-        , "Slug"
-        , "Text"
-        , "Textarea"
-        , "Type"
-        , "View"
-        ])
-
 
 # End.

@@ -402,4 +402,33 @@ class DisplayInfo(object):
                 })
         return context
 
+    def __str__(self):
+        attrs = (
+            [ "view"
+            , "action"
+            , "authorizations"
+            , "reqhost"
+            , "site"
+            , "sitedata"
+            , "coll_id"
+            , "collection"
+            , "type_id"
+            , "entitytypeinfo"
+            , "list_id"
+            , "recordlist"
+            , "view_id"
+            , "recordview"
+            , "entity_id"
+            ])
+        fields = ["DisplayInfo("]
+        for attr in attrs:
+            val = getattr(self, attr, None)
+            if val is not None:
+                fields.append("%s: %r"%(attr, val))
+        fields.append(")")
+        return ("\n  ".join(fields))
+
+    def __repr__(self):
+        return str(self)
+
 # End.

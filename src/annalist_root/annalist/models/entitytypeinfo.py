@@ -15,8 +15,9 @@ from annalist.identifiers           import ANNAL, RDF, RDFS
 
 from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.recordtype     import RecordType
-from annalist.models.recordview     import RecordView
 from annalist.models.recordlist     import RecordList
+from annalist.models.recordview     import RecordView
+from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordenum     import RecordEnumFactory
 from annalist.models.recordtypedata import RecordTypeData
@@ -58,6 +59,18 @@ TYPE_MESSAGES = (
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
+LIST_MESSAGES = (
+    { 'parent_heading':         message.COLLECTION_ID
+    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+    , 'entity_heading':         message.RECORD_LIST_ID
+    , 'entity_invalid_id':      message.RECORD_LIST_ID_INVALID
+    , 'entity_exists':          message.RECORD_LIST_EXISTS
+    , 'entity_not_exists':      message.RECORD_LIST_NOT_EXISTS
+    , 'entity_removed':         message.RECORD_LIST_REMOVED
+    , 'entity_type_heading':    message.ENTITY_TYPE_ID
+    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+    })
+
 VIEW_MESSAGES = (
     { 'parent_heading':         message.COLLECTION_ID
     , 'parent_missing':         message.COLLECTION_NOT_EXISTS
@@ -70,14 +83,14 @@ VIEW_MESSAGES = (
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
-LIST_MESSAGES = (
+GROUP_MESSAGES = (
     { 'parent_heading':         message.COLLECTION_ID
     , 'parent_missing':         message.COLLECTION_NOT_EXISTS
-    , 'entity_heading':         message.RECORD_LIST_ID
-    , 'entity_invalid_id':      message.RECORD_LIST_ID_INVALID
-    , 'entity_exists':          message.RECORD_LIST_EXISTS
-    , 'entity_not_exists':      message.RECORD_LIST_NOT_EXISTS
-    , 'entity_removed':         message.RECORD_LIST_REMOVED
+    , 'entity_heading':         message.RECORD_GROUP_ID
+    , 'entity_invalid_id':      message.RECORD_GROUP_ID_INVALID
+    , 'entity_exists':          message.RECORD_GROUP_EXISTS
+    , 'entity_not_exists':      message.RECORD_GROUP_NOT_EXISTS
+    , 'entity_removed':         message.RECORD_GROUP_REMOVED
     , 'entity_type_heading':    message.ENTITY_TYPE_ID
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
@@ -147,9 +160,11 @@ TYPE_CLASS_MAP = (
     , '_type':              RecordType
     , '_list':              RecordList
     , '_view':              RecordView
+    , '_group':             RecordGroup
     , '_field':             RecordField
     , 'Enum_list_type':     RecordEnumFactory('Enum_list_type',  'Enum_list_type')
     , 'Enum_field_type':    RecordEnumFactory('Enum_field_type', 'Enum_field_type')
+    , 'Enum_bib_type':      RecordEnumFactory('Enum_bib_type',   'Enum_bib_type')
     })
 
 TYPE_MESSAGE_MAP = (
@@ -157,9 +172,11 @@ TYPE_MESSAGE_MAP = (
     , '_type':              TYPE_MESSAGES
     , '_list':              LIST_MESSAGES
     , '_view':              VIEW_MESSAGES
+    , '_group':             GROUP_MESSAGES
     , '_field':             FIELD_MESSAGES
     , 'Enum_list_type':     ENUM_MESSAGES
     , 'Enum_field_type':    ENUM_MESSAGES
+    , 'Enum_bib_type':      ENUM_MESSAGES
     })
 
 TYPE_PERMISSIONS_MAP = (
@@ -167,9 +184,11 @@ TYPE_PERMISSIONS_MAP = (
     , '_type':              CONFIG_PERMISSIONS
     , '_list':              CONFIG_PERMISSIONS
     , '_view':              CONFIG_PERMISSIONS
+    , '_group':             CONFIG_PERMISSIONS
     , '_field':             CONFIG_PERMISSIONS
     , 'Enum_list_type':     CONFIG_PERMISSIONS
     , 'Enum_field_type':    CONFIG_PERMISSIONS
+    , 'Enum_bib_type':      CONFIG_PERMISSIONS
     })
 
 def get_built_in_type_ids():

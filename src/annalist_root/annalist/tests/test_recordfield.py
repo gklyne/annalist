@@ -29,9 +29,6 @@ from annalist                       import layout
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordfield    import RecordField
-# from annalist.models.recordtype     import RecordType
-# from annalist.models.recordtypedata import RecordTypeData
-# from annalist.models.entitydata     import EntityData
 
 from annalist.views.entityedit      import GenericEntityEditView
 
@@ -54,9 +51,16 @@ from entity_testutils               import (
 from entity_testentitydata          import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
-    layout_classes,
-    get_site_types_sorted,
-    get_site_field_types_sorted
+    layout_classes
+    )
+from entity_testsitedata            import (
+    get_site_types, get_site_types_sorted,
+    get_site_lists, get_site_lists_sorted,
+    get_site_list_types, get_site_list_types_sorted,
+    get_site_views, get_site_views_sorted,
+    get_site_field_groups, get_site_field_groups_sorted, 
+    get_site_fields, get_site_fields_sorted, 
+    get_site_field_types, get_site_field_types_sorted, 
     )
 
 #   -----------------------------------------------------------------------------
@@ -168,6 +172,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.no_options     = ['(no options)']
+        self.view_options   = get_site_views_sorted()
+        self.group_options  = get_site_field_groups_sorted()
         self.render_options = get_site_field_types_sorted()
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
@@ -212,11 +218,15 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_property="(?field_property)",
             field_placement="(?field_placement)",
             field_default="",
+            field_entity_type="",
             field_typeref="",
-            field_restrict=""
+            field_restrict="",
+            field_viewref="",
+            field_repeat_label_add="",
+            field_repeat_label_delete=""
             ):
         r = response
-        self.assertEqual(len(r.context['fields']), 11)
+        self.assertEqual(len(r.context['fields']), 15)
         # 1st field - Id
         field_id_help = (
             "A short identifier that distinguishes this field from all other fields in the same collection.  "+
@@ -229,8 +239,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_help'], field_id_help)
         self.assertEqual(r.context['fields'][0]['field_placeholder'], "(field id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
-        self.assertEqual(r.context['fields'][0]['field_render_view'], "field/annalist_view_entityid.html")
-        self.assertEqual(r.context['fields'][0]['field_render_edit'], "field/annalist_edit_entityid.html")
+        self.assertEqual(r.context['fields'][0]['field_render_type'], "EntityId")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][0]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][0]['field_value'], field_id)
@@ -245,8 +254,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_help'], field_type_help)
         self.assertEqual(r.context['fields'][1]['field_placeholder'], "(field value type)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:field_value_type")
-        self.assertEqual(r.context['fields'][1]['field_render_view'], "field/annalist_view_identifier.html")
-        self.assertEqual(r.context['fields'][1]['field_render_edit'], "field/annalist_edit_identifier.html")
+        self.assertEqual(r.context['fields'][1]['field_render_type'], "Identifier")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 columns right")
         self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Identifier")
         self.assertEqual(r.context['fields'][1]['field_value'], field_type)
@@ -256,8 +264,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_name'], 'Field_render')
         self.assertEqual(r.context['fields'][2]['field_label'], 'Field render type')
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "annal:field_render_type")
-        self.assertEqual(r.context['fields'][2]['field_render_view'], "field/annalist_view_select.html")
-        self.assertEqual(r.context['fields'][2]['field_render_edit'], "field/annalist_edit_select.html")
+        self.assertEqual(r.context['fields'][2]['field_render_type'], "Enum")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][2]['field_value'], field_render)
@@ -267,8 +274,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_name'], 'Field_label')
         self.assertEqual(r.context['fields'][3]['field_label'], 'Label')
         self.assertEqual(r.context['fields'][3]['field_property_uri'], "rdfs:label")
-        self.assertEqual(r.context['fields'][3]['field_render_view'], "field/annalist_view_text.html")
-        self.assertEqual(r.context['fields'][3]['field_render_edit'], "field/annalist_edit_text.html")
+        self.assertEqual(r.context['fields'][3]['field_render_type'], "Text")
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][3]['field_value'], field_label)
@@ -278,8 +284,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_name'], 'Field_comment')
         self.assertEqual(r.context['fields'][4]['field_label'], 'Help')
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "rdfs:comment")
-        self.assertEqual(r.context['fields'][4]['field_render_view'],   "field/annalist_view_textarea.html")
-        self.assertEqual(r.context['fields'][4]['field_render_edit'],   "field/annalist_edit_textarea.html")
+        self.assertEqual(r.context['fields'][4]['field_render_type'], "Textarea")
         self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:Longtext")
         self.assertEqual(r.context['fields'][4]['field_value'], field_comment)
@@ -289,8 +294,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_name'], 'Field_placeholder')
         self.assertEqual(r.context['fields'][5]['field_label'], 'Placeholder')
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:placeholder")
-        self.assertEqual(r.context['fields'][5]['field_render_view'], "field/annalist_view_text.html")
-        self.assertEqual(r.context['fields'][5]['field_render_edit'], "field/annalist_edit_text.html")
+        self.assertEqual(r.context['fields'][5]['field_render_type'], "Text")
         self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][5]['field_value'], field_placeholder)
@@ -300,8 +304,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][6]['field_name'], 'Field_property')
         self.assertEqual(r.context['fields'][6]['field_label'], 'Property')
         self.assertEqual(r.context['fields'][6]['field_property_uri'], "annal:property_uri")
-        self.assertEqual(r.context['fields'][6]['field_render_view'], "field/annalist_view_identifier.html")
-        self.assertEqual(r.context['fields'][6]['field_render_edit'], "field/annalist_edit_identifier.html")
+        self.assertEqual(r.context['fields'][6]['field_render_type'], "Identifier")
         self.assertEqual(r.context['fields'][6]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][6]['field_value_type'], "annal:Identifier")
         self.assertEqual(r.context['fields'][6]['field_value'], field_property)
@@ -311,8 +314,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][7]['field_name'], 'Field_placement')
         self.assertEqual(r.context['fields'][7]['field_label'], 'Size/position')
         self.assertEqual(r.context['fields'][7]['field_property_uri'], "annal:field_placement")
-        self.assertEqual(r.context['fields'][7]['field_render_view'], "field/annalist_view_text.html")
-        self.assertEqual(r.context['fields'][7]['field_render_edit'], "field/annalist_edit_text.html")
+        self.assertEqual(r.context['fields'][7]['field_render_type'], "Placement")
         self.assertEqual(r.context['fields'][7]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][7]['field_value_type'], "annal:Placement")
         self.assertEqual(r.context['fields'][7]['field_value'], field_placement)
@@ -322,34 +324,71 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][8]['field_name'], 'Field_default')
         self.assertEqual(r.context['fields'][8]['field_label'], 'Default')
         self.assertEqual(r.context['fields'][8]['field_property_uri'], "annal:default_value")
-        self.assertEqual(r.context['fields'][8]['field_render_view'], "field/annalist_view_text.html")
-        self.assertEqual(r.context['fields'][8]['field_render_edit'], "field/annalist_edit_text.html")
+        self.assertEqual(r.context['fields'][8]['field_render_type'], "Text")
         self.assertEqual(r.context['fields'][8]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][8]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][8]['field_value'], field_default)
         self.assertEqual(r.context['fields'][8]['options'], self.no_options)
         # 10th field - enumeration type (for select rendering)
-        self.assertEqual(r.context['fields'][9]['field_id'], 'Field_typeref')
-        self.assertEqual(r.context['fields'][9]['field_name'], 'Field_typeref')
-        self.assertEqual(r.context['fields'][9]['field_label'], 'Enum type')
-        self.assertEqual(r.context['fields'][9]['field_property_uri'], "annal:options_typeref")
-        self.assertEqual(r.context['fields'][9]['field_render_view'], "field/annalist_view_select.html")
-        self.assertEqual(r.context['fields'][9]['field_render_edit'], "field/annalist_edit_select.html")
-        self.assertEqual(r.context['fields'][9]['field_placement'].field, "small-6 columns")
-        self.assertEqual(r.context['fields'][9]['field_value_type'], "annal:Slug")
-        self.assertEqual(r.context['fields'][9]['field_value'], field_typeref)
-        self.assertEqual(r.context['fields'][9]['options'], [""]+get_site_types_sorted()+["testtype"])
+        self.assertEqual(r.context['fields'][9]['field_id'], 'Field_entity_type')
+        self.assertEqual(r.context['fields'][9]['field_name'], 'Field_entity_type')
+        self.assertEqual(r.context['fields'][9]['field_label'], 'Entity type')
+        self.assertEqual(r.context['fields'][9]['field_property_uri'], "annal:field_entity_type")
+        self.assertEqual(r.context['fields'][9]['field_render_type'], "Identifier")
+        self.assertEqual(r.context['fields'][9]['field_placement'].field, "small-12 columns")
+        self.assertEqual(r.context['fields'][9]['field_value_type'], "annal:Identifier")
+        self.assertEqual(r.context['fields'][9]['field_value'], field_entity_type)
+        self.assertEqual(r.context['fields'][9]['options'], self.no_options)
+        # 10th field - enumeration type (for select rendering)
+        self.assertEqual(r.context['fields'][10]['field_id'], 'Field_typeref')
+        self.assertEqual(r.context['fields'][10]['field_name'], 'Field_typeref')
+        self.assertEqual(r.context['fields'][10]['field_label'], 'Enum type')
+        self.assertEqual(r.context['fields'][10]['field_property_uri'], "annal:options_typeref")
+        self.assertEqual(r.context['fields'][10]['field_render_type'], "Enum_optional")
+        self.assertEqual(r.context['fields'][10]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][10]['field_value_type'], "annal:Slug")
+        self.assertEqual(r.context['fields'][10]['field_value'], field_typeref)
+        self.assertEqual(r.context['fields'][10]['options'], [""]+get_site_types_sorted()+["testtype"])
         # 11th field - enumeration restriction (for select rendering)
-        self.assertEqual(r.context['fields'][10]['field_id'], 'Field_restrict')
-        self.assertEqual(r.context['fields'][10]['field_name'], 'Field_restrict')
-        self.assertEqual(r.context['fields'][10]['field_label'], 'Enum restriction')
-        self.assertEqual(r.context['fields'][10]['field_property_uri'], "annal:restrict_values")
-        self.assertEqual(r.context['fields'][10]['field_render_view'], "field/annalist_view_text.html")
-        self.assertEqual(r.context['fields'][10]['field_render_edit'], "field/annalist_edit_text.html")
-        self.assertEqual(r.context['fields'][10]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][10]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][10]['field_value'], field_restrict)
-        self.assertEqual(r.context['fields'][10]['options'], self.no_options)
+        self.assertEqual(r.context['fields'][11]['field_id'], 'Field_restrict')
+        self.assertEqual(r.context['fields'][11]['field_name'], 'Field_restrict')
+        self.assertEqual(r.context['fields'][11]['field_label'], 'Enum restriction')
+        self.assertEqual(r.context['fields'][11]['field_property_uri'], "annal:restrict_values")
+        self.assertEqual(r.context['fields'][11]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][11]['field_placement'].field, "small-12 columns")
+        self.assertEqual(r.context['fields'][11]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][11]['field_value'], field_restrict)
+        self.assertEqual(r.context['fields'][11]['options'], self.no_options)
+        # 12th field - enumeration restriction (for select rendering)
+        self.assertEqual(r.context['fields'][12]['field_id'], 'Field_groupref')
+        self.assertEqual(r.context['fields'][12]['field_name'], 'Field_groupref')
+        self.assertEqual(r.context['fields'][12]['field_label'], 'View fields')
+        self.assertEqual(r.context['fields'][12]['field_property_uri'], "annal:group_ref")
+        self.assertEqual(r.context['fields'][12]['field_render_type'], "Enum_optional")
+        self.assertEqual(r.context['fields'][12]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][12]['field_value_type'], "annal:Slug")
+        self.assertEqual(r.context['fields'][12]['field_value'], field_viewref)
+        self.assertEqual(r.context['fields'][12]['options'], [""] + self.group_options)
+        # 13th field - enumeration restriction (for select rendering)
+        self.assertEqual(r.context['fields'][13]['field_id'], 'Field_repeat_label_add')
+        self.assertEqual(r.context['fields'][13]['field_name'], 'Field_repeat_label_add')
+        self.assertEqual(r.context['fields'][13]['field_label'], 'Add fields label')
+        self.assertEqual(r.context['fields'][13]['field_property_uri'], "annal:repeat_label_add")
+        self.assertEqual(r.context['fields'][13]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][13]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][13]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][13]['field_value'], field_repeat_label_add)
+        self.assertEqual(r.context['fields'][13]['options'], self.no_options)
+        # 14th field - enumeration restriction (for select rendering)
+        self.assertEqual(r.context['fields'][14]['field_id'], 'Field_repeat_label_delete')
+        self.assertEqual(r.context['fields'][14]['field_name'], 'Field_repeat_label_delete')
+        self.assertEqual(r.context['fields'][14]['field_label'], 'Delete fields label')
+        self.assertEqual(r.context['fields'][14]['field_property_uri'], "annal:repeat_label_delete")
+        self.assertEqual(r.context['fields'][14]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][14]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][14]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][14]['field_value'], field_repeat_label_delete)
+        self.assertEqual(r.context['fields'][14]['options'], self.no_options)
         return
 
     #   -----------------------------------------------------------------------------
@@ -462,7 +501,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="Field_property" 
-                        placeholder="(property URI or CURIE)" value=""/>
+                        placeholder="(field URI or CURIE)" value=""/>
                     </div>
                 </div>
             </div>
@@ -526,6 +565,52 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
+        formrow11 = ("""
+            <div class="small-6 columns">
+              <div class="row">
+                <div class="%(label_classes)s">
+                  <p>View fields</p>
+                </div>
+                <div class="%(input_classes)s">
+                    """+
+                      render_select_options(
+                        "Field_groupref", 
+                        [""] + get_site_field_groups_sorted(),
+                        "",
+                        placeholder="(no field group selected)")+
+                    """
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow12col1 = """
+            <div class="small-6 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>Add fields label</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <input type="text" size="64" name="Field_repeat_label_add"
+                               placeholder="(add repeat field(s) button label)"
+                               value=""/>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=6)
+        formrow12col2 = """
+            <div class="small-6 columns">
+                <div class="row">
+                    <div class="%(label_classes)s">
+                        <p>Delete fields label</p>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <input type="text" size="64" name="Field_repeat_label_delete"
+                               placeholder="(delete field(s) button label)"
+                               value=""/>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=6)
         # log.info(r.content)   #@@
         self.assertContains(r, formrow1col1, html=True)
         self.assertContains(r, formrow1col2, html=True)
@@ -538,6 +623,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow8, html=True)
         self.assertContains(r, formrow9, html=True)
         self.assertContains(r, formrow10, html=True)
+        self.assertContains(r, formrow11, html=True)
+        self.assertContains(r, formrow12col1, html=True)
+        self.assertContains(r, formrow12col2, html=True)
         return
 
     def test_get_new(self):
@@ -563,7 +651,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_comment=default_comment("testcoll", "_field", "00000001"),
             field_placeholder="",
             field_property="",
-            field_placement=""
+            field_placement="",
+            field_entity_type=""
             )
         return
 
@@ -609,7 +698,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_comment="Short string used to describe record type when displayed",
             field_placeholder="(label)",
             field_property="rdfs:label",
-            field_placement=""
+            field_placement="small:0,12",
+            field_entity_type="annal:Type"
             )
         return
 

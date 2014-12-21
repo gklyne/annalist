@@ -47,7 +47,7 @@ def copySitedata(src, sitedatasrc, tgt):
     assert tgt.startswith(TestBaseDir)
     annalist.util.replacetree(src, tgt)
     sitedatatgt = os.path.join(tgt, test_layout.SITEDATA_DIR)
-    for sdir in ("users", "types", "lists", "views", "fields", "enums"):
+    for sdir in ("users", "types", "lists", "views", "groups", "fields", "enums"):
         s = os.path.join(sitedatasrc, sdir)
         d = os.path.join(sitedatatgt, sdir)
         shutil.copytree(s, d)

@@ -4,6 +4,6 @@ This page lists entities records in a collection, and provides options for them 
 
 To **create a new entity record**, click on the 'New' button.  A new form will be presented allowing data values to be entered.
 
-To **copy** or **edit** an entity record, click on the coprresponding checkbox on the right of the list, and then click 'Copy' or 'Edit'.  A form will be presented allowing data values to be modified ort entered.  To **delete** an enttiy record, click on the coprresponding checkbox on the right of the list, and then click 'delete'.  Options to create, copy, edit and/or delete entity records are displayed only for logged-in users.
+To **copy** or **edit** an entity record, click on the beside the corresponding entry, and then click 'Copy' or 'Edit'.  A form will be presented allowing data values to be modified or entered.  To **delete** an entity record, click on the checkbox beside the entry to be deleted, and then click 'delete'.  Options to create, copy, edit and/or delete entity records are displayed only for logged-in users.
 
 The 'Customize' button displays a new form that allows entity types, lists and/or views to be created, modified or deleted.

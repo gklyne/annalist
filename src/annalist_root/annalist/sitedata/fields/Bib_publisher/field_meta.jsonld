@@ -2,11 +2,11 @@
 , "@type":                      ["annal:Field"]
 , "annal:id":                   "Bib_publisher"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Bib_publisher"
-, "rdfs:comment":               "BibJSON(ish) field Bib_publisher"
+, "rdfs:label":                 "Publisher"
+, "rdfs:comment":               "BibJSON(ish) Name of publisher"
 , "annal:field_render_type":    "Text"
 , "annal:field_value_type":     "annal:Text"
-, "annal:placeholder":          "(Bib_publisher)"
-, "annal:property_uri":         "bib:Bib_publisher"
+, "annal:placeholder":          "(name of publisher)"
+, "annal:property_uri":         "bib:publisher"
 , "annal:field_entity_type":    "annal:BibEntry"
 }

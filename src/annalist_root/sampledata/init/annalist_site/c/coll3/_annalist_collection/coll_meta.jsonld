@@ -1,7 +1,6 @@
 {
   "rdfs:label": "Collection coll3",
   "rdfs:comment": "Description of Collection coll3",
-  "annal:uri": "/testsite/c/coll3/",
   "annal:url": "/testsite/c/coll3/",
   "annal:type_id": "_collection",
   "annal:id": "coll3",

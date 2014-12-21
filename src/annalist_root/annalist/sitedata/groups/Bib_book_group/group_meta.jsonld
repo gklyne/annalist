@@ -1,0 +1,27 @@
+{ "@id":                "annal:display/Bib_book_group"
+, "@type":              ["annal:Field_group"]
+, "annal:id":           "Bib_book_group"
+, "annal:type_id":      "_group"
+, "annal:uri":          "annal:display/Bib_book_group"
+, "annal:record_type":  "annal:BibEntry"
+, "rdfs:label":         "BibEntry book fields"
+, "rdfs:comment":       "Group of fields describing a book entry in a BibEntry record"
+, "annal:add_field":    "no"
+, "annal:group_fields":
+  [ { "annal:field_id":         "Bib_booktitle"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "Bib_volume"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "Bib_chapter"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "Bib_pages"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "Bib_edition"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

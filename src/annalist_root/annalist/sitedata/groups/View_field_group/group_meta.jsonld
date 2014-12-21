@@ -1,0 +1,24 @@
+{ "@id":                "annal:display/View_field_group"
+, "@type":              ["annal:Field_group"]
+, "annal:id":           "View_field_group"
+, "annal:type_id":      "_group"
+, "annal:uri":          "annal:display/View_field_group"
+, "annal:record_type":  "annal:Field_group"
+, "rdfs:label":         "View field description"
+, "rdfs:comment":       "This resource describes a sub-view single field description used when displaying and/or editing a record view description"
+, "annal:add_field":    "no"
+, "annal:group_fields":
+  [ { "annal:field_id":         "Group_field_sel"
+    , "annal:property_uri":     "annal:field_id"
+    , "annal:field_placement":  "small:0,12; medium:0,4"
+    }
+  , { "annal:field_id":         "Group_field_property"
+    , "annal:property_uri":     "annal:property_uri"
+    , "annal:field_placement":  "small:0,12; medium:4,4"
+    }
+  , { "annal:field_id":         "Group_field_placement"
+    , "annal:property_uri":     "annal:field_placement"
+    , "annal:field_placement":  "small:0,12; medium:8,4"
+    }
+  ]
+}

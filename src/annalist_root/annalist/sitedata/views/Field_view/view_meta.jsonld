@@ -1,7 +1,7 @@
 { "@id":                "annal:display/Field_view"
 , "@type":              ["annal:View"]
-, "annal:id":           "Field_view"
 , "annal:type_id":      "_view"
+, "annal:id":           "Field_view"
 , "annal:record_type":  "annal:Field"
 , "rdfs:label":         "View description for view field description"
 , "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing fields in a record view"
@@ -34,11 +34,23 @@
   , { "annal:field_id":         "Field_default"
     , "annal:field_placement":  "small:0,12"
     }
+  , { "annal:field_id":         "Field_entity_type"
+    , "annal:field_placement":  "small:0,12"
+    }
   , { "annal:field_id":         "Field_typeref"
     , "annal:field_placement":  "small:0,6"
     }
   , { "annal:field_id":         "Field_restrict"
     , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "Field_groupref"
+    , "annal:field_placement":  "small:0,6"
+    }
+  , { "annal:field_id":         "Field_repeat_label_add"
+    , "annal:field_placement":  "small:0,6"
+    }
+  , { "annal:field_id":         "Field_repeat_label_delete"
+    , "annal:field_placement":  "small:6,6"
     }
   ]
 }

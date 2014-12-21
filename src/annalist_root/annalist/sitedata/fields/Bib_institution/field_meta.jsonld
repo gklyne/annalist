@@ -2,11 +2,11 @@
 , "@type":                      ["annal:Field"]
 , "annal:id":                   "Bib_institution"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Bib_institution"
-, "rdfs:comment":               "BibJSON(ish) field Bib_institution"
+, "rdfs:label":                 "Institution"
+, "rdfs:comment":               "The institution that was involved in the publishing, but not necessarily the publisher"
 , "annal:field_render_type":    "Text"
 , "annal:field_value_type":     "annal:Text"
-, "annal:placeholder":          "(Bib_institution)"
-, "annal:property_uri":         "bib:Bib_institution"
+, "annal:placeholder":          "(institution involkved in publication)"
+, "annal:property_uri":         "bib:institution"
 , "annal:field_entity_type":    "annal:BibEntry"
 }

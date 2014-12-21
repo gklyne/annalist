@@ -8,4 +8,6 @@
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(label)"
 , "annal:property_uri":         "rdfs:label"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
 }

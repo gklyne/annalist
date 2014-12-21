@@ -32,7 +32,9 @@ from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     create_user_permissions,
-    collection_new_form_data, collection_remove_form_data
+    collection_new_form_data, collection_remove_form_data,
+    context_list_entities,
+    context_list_item_fields, context_list_item_field_value
     )
 from entity_testentitydata          import (
     # recorddata_dir,  entitydata_dir,
@@ -41,9 +43,7 @@ from entity_testentitydata          import (
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     entitydata_context_data, entitydata_form_data, 
     entitydata_delete_form_data,
-    entitydata_delete_confirm_form_data,
-    # entitylist_form_data,
-    # get_site_lists
+    entitydata_delete_confirm_form_data
     )
 from entity_testuserdata            import (
     annalistuser_dir,
@@ -55,12 +55,7 @@ from entity_testuserdata            import (
     annalistuser_delete_confirm_form_data
     )
 from entity_testtypedata                import (
-    # recordtype_dir,
-    # recordtype_coll_url, recordtype_site_url, recordtype_url, recordtype_edit_url,
-    # recordtype_value_keys, recordtype_load_keys, 
     recordtype_create_values, 
-    # recordtype_values, recordtype_read_values,
-    # recordtype_entity_view_context_data, 
     recordtype_entity_view_form_data,
     recordtype_delete_form_data,
     recordtype_delete_confirm_form_data
@@ -804,28 +799,16 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
         # Entities and bound fields
-        # log.info(r.context['entities'])  #@@
-        # rows = []
-        # for i in range(len(r.context['entities'])):
-        #     efs = r.context['entities'][i]['fields']
-        #     rows.append((efs[0]['field_value'], efs[1]['field_value'], efs[2]['field_value']))
-        # for row in rows:
-        #     log.info("entity_id %s, type_id %s, label %s"%row)
-        self.assertEqual(len(r.context['entities']), 2)
+        entities = context_list_entities(r.context)
+        self.assertEqual(len(entities), 2)
         entity_fields = (
             [ ('testtype',    '_type',    'RecordType testtype/testtype')
-            # , ('user_admin',  '_user',    'Admin User')
-            # , ('user_config', '_user',    'Admin User')
-            # , ('user_create', '_user',    'Admin User')
-            # , ('user_delete', '_user',    'Admin User')
-            # , ('user_update', '_user',    'Admin User')
-            # , ('user_view',   '_user',    'Admin User')
             , ('entity1',     'testtype', 'Entity testcoll/testtype/entity1')
             ])
         for eid in range(2):
             for fid in range(3):
-                item_field = r.context['entities'][eid]['fields'][fid]
-                self.assertEqual(item_field['field_value'],    entity_fields[eid][fid])
+                item_field_value = context_list_item_field_value(r.context, entities[eid], fid)
+                self.assertEqual(item_field_value, entity_fields[eid][fid])
         return
 
 # End.

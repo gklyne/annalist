@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: V0.1.6, authorization added.  Bug fixes and presentation improvements to V0.1.4.
+Current status: V0.1.8; updates from V0.1.6 include data view/edit form generator improvements to support repeating fields, and several smaller bug fixes and display improvements.
 
 
 # V1.0 release

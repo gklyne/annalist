@@ -15,10 +15,10 @@ from django.http        import HttpResponse
 from django.template    import Template, Context
 
 edit = ("""
-    <!-- views.fields.render_tokenlist.edit_template -->
+    <!-- views.fields.render_tokenset.edit -->
     <div class="{{field.field_placement.field}}">
       <div class="row">
-        <div class="view_label {{field.field_placement.label}}">
+        <div class="view-label {{field.field_placement.label}}">
           <p>{{field.field_label}}</p>
         </div>
         <div class="{{field.field_placement.value}}">
@@ -32,10 +32,10 @@ edit = ("""
     """)
 
 view = ("""
-    <!-- views.fields.render_tokenlist.view_template -->
+    <!-- views.fields.render_tokenset.view -->
     <div class="{{field.field_placement.field}}">
         <div class="row">
-            <div class="view_label {{field.field_placement.label}}">
+            <div class="view-label {{field.field_placement.label}}">
                 <p>{{field.field_label}}</p>
             </div>
             <div class="{{field.field_placement.value}}">
@@ -45,12 +45,11 @@ view = ("""
     </div>
     """)
 
-item = ("""
-    <!-- views.fields.render_tokenlist.view_template -->
-    <td class="{{field.field_placement.field}}">
-    {{ field.field_value_encoded|default:"&nbsp;" }}
-    </td>
-    """)
+item = (
+    """<div class="view-label {{field.field_placement.field}}">"""+
+    """  {{ field.field_value_encoded|default:"&nbsp;" }}"""+
+    """</div>"""
+    )
 
 class RenderTokenSet(object):
   """
@@ -60,7 +59,7 @@ class RenderTokenSet(object):
   def __init__(self, template=None):
     # Later, may introduce a template_file= option to read from templates directory
     """
-    Creates a renderer object for a simple text field
+    Creates a renderer object for a string of space-separated values
     """
     super(RenderTokenSet, self).__init__()
     assert template is not None, "RenderTokenSet template must be supplied (.edit, .view or .item)"
@@ -80,7 +79,7 @@ class RenderTokenSet(object):
 
   def encode(self, field_value):
     """
-    Encodes a token list as a simple string of space-separated values
+    Encodes a token list as a string of space-separated values
     """
     if isinstance(field_value, (list,tuple)):
       return " ".join(field_value)

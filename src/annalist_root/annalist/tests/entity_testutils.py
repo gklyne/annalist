@@ -24,9 +24,8 @@ from annalist                       import layout
 
 from annalist.models.annalistuser   import AnnalistUser
 
-from annalist.views.fields.render_placement import (
-    get_placement_classes
-    )
+from annalist.views.fields.bound_field      import bound_field, get_entity_values
+from annalist.views.fields.render_placement import get_placement_classes
 
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -68,14 +67,63 @@ def collection_entity_view_url(coll_id="testcoll", type_id=None, entity_id=None)
     Return URL for entity belonging to some collection.
 
     This matches the 'annal:url' value that is stored in saved entity data.
-
-    @TODO: update this testing function when final form of entity URIs is
-           determined, per https://github.com/gklyne/annalist/issues/32 
     """
     return reverse(
         "AnnalistEntityAccessView", 
         kwargs={'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
         )
+
+def collection_entity_edit_url(
+        coll_id="testcoll", type_id=None, entity_id=None, 
+        view_id=None, action=None
+        ):
+    """
+    Return URL for edit view of entity
+
+    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/!(?P<action>new)$',
+                            GenericEntityEditView.as_view(),
+                            name='AnnalistEntityNewView'),
+    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>copy)$',
+                            GenericEntityEditView.as_view(),
+                            name='AnnalistEntityEditView'),
+    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>edit)$',
+                            GenericEntityEditView.as_view(),
+                            name='AnnalistEntityEditView'),
+    """
+    viewname = ( 
+        'AnnalistEntityNewView'             if action == "new" else
+        'AnnalistEntityEditView'
+        )
+    args = {'action': action, 'coll_id': coll_id, 'view_id': view_id}
+    if type_id:
+        args.update({'type_id': type_id})
+    if entity_id:
+        args.update({'entity_id': entity_id})
+    return reverse(viewname, kwargs=args)
+
+def collection_entity_list_url(coll_id="testcoll", list_id=None, type_id=None):
+    """
+    Return URL for entity list in collection some collection.
+
+    url(r'^c/(?P<coll_id>\w{0,32})/l/$',
+                            EntityDefaultListView.as_view(),
+                            name='AnnalistEntityDefaultList'),
+    url(r'^c/(?P<coll_id>\w{0,32})/l/(?P<list_id>\w{0,32})/$',
+                            EntityGenericListView.as_view(),
+                            name='AnnalistEntityGenericList'),
+    url(r'^c/(?P<coll_id>\w{0,32})/l/(?P<list_id>\w{0,32})/(?P<type_id>\w{0,32})/$',
+                            EntityGenericListView.as_view(),
+                            name='AnnalistEntityGenericList'),
+
+    """
+    view = "AnnalistEntityDefaultList"
+    args = {'coll_id': coll_id}
+    if list_id is not None:
+        view = "AnnalistEntityGenericList"
+        args['list_id'] = list_id
+    if type_id is not None:
+        args['type_id'] = type_id
+    return reverse(view, kwargs=args)
 
 def continuation_url_param(uri, prev_cont=None):
     if prev_cont:
@@ -235,6 +283,64 @@ def create_test_user(
     else:
         user_perms = None
     return (django_user, user_perms)
+
+#   -----------------------------------------------------------------------------
+#
+#   ----- Context access utilities
+#
+#   -----------------------------------------------------------------------------
+
+def context_list_entities(context):
+    """
+    Returns list of entities to be displayed in list view
+    """
+    # log.info(context['List_rows'])
+    if 'List_rows' in context:
+        return context['List_rows']['field_value']
+    elif 'entities' in context:
+        return context['entities']
+    log.warning("No entity list found in context %r"%(context.keys()))
+    return None
+
+def context_list_head_fields(context):
+    """
+    Returns unbound field description used for accessing header information.
+    """
+    return context['fields']
+
+def context_list_item_fields(context, entity):
+    """
+    Returns indicated field to be displayed as a bound_field value
+    """
+    # log.info(context['List_rows'])
+    if 'List_rows' in context:
+        fds = context['List_rows']['group_field_descs']
+        return [ bound_field(fd, entity) for fd in fds ]
+    elif 'fields' in entity:
+        return entity['fields']
+    log.warning("No field value found: context %r, entity %r"%(context.keys(), entity.keys()))
+    return None
+
+def context_list_item_field(context, entity, fid):
+    """
+    Returns indicated field to be displayed as a bound_field value
+    """
+    # log.info(context['List_rows'])
+    if 'List_rows' in context:
+        fd = context['List_rows']['group_field_descs'][fid]
+        return bound_field(fd, entity)
+    elif 'fields' in entity:
+        return entity['fields'][fid]
+    log.warning("No field value found: context %r, entity %r"%(context.keys(), entity.keys()))
+    return None
+
+def context_list_item_field_value(context, entity, fid):
+    """
+    Returns value of indicated field
+    """
+    return context_list_item_field(context, entity, fid)['field_value']
+
+#   -----------------------------------------------------------------------------
 
 if __name__ == "__main__":
     import doctest

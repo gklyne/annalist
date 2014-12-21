@@ -61,8 +61,16 @@ from entity_testlistdata            import (
     recordlist_create_values, recordlist_read_values,
     )
 from entity_testentitydata          import (
-    entitydata_list_all_url,
-    get_site_types, get_site_views, get_site_lists
+    entitydata_list_all_url
+    )
+from entity_testsitedata            import (
+    get_site_types, get_site_types_sorted,
+    get_site_lists, get_site_lists_sorted,
+    get_site_list_types, get_site_list_types_sorted,
+    get_site_views, get_site_views_sorted,
+    get_site_field_groups, get_site_field_groups_sorted, 
+    get_site_fields, get_site_fields_sorted, 
+    get_site_field_types, get_site_field_types_sorted, 
     )
 
 #   -----------------------------------------------------------------------------

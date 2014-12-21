@@ -47,6 +47,13 @@ Record and list views are build up using **fields**, which associate a data reco
 The available field renderers are defined by Annalist, and the range of rendering options is expected to increase as the software is developed.  Currently, there are three main types of renderer:  single-line text (Text), multiline text (TextArea) and enumeration, pwhich presents a selection of identifiers of some other defined type.
 
 
+## Field groups
+
+Some types of field (notably those using `RepeatGroup` and `RepeatGroupRow` render types) make reference to a "Field group" (somewtimes just called a "Group").  A field group is a separately-defined list of fields that may be incorporated into a record view.
+
+Field groups are central to the handling of fields that may appear multiple times in a view.  For example, to define a bibliography record which may contain multiple author descriptions, the fields describing an author are defined as a frield group, and the bibliography record can refer to tghis field group using an appropriate render type.
+
+
 ## Entities
 
 Data records, types, views, lists, fields and more are all handled internally as **entities**, which are always associated with a data type.  data types, views, lists and fields are associated with the special data types `_typr`, `_view`, `_list` and `_field` respectively.  Using these predefined types, their descriptions can be processed using the same facilities that are used to create, modify and view user data records.
