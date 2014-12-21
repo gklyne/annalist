@@ -124,6 +124,8 @@ OAUTH2 and OpenID Connect
 - http://openid.net/connect/
 - http://openid.net/2013/07/30/openid-connect-server-in-a-nutshell/
 
+- https://pypi.python.org/pypi/django-oauth-tokens/0.4.4 (to investigate - handles registration?)
+
 JSON tokens
 
 - http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-13

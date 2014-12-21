@@ -32,8 +32,8 @@
 - [x] Create and post updated kit download to annalist.net
     - use `src/newkit_to_annalist_net.sh`
 - [x] Update front page link at annalist.net
-- [ ] Commit changes
-- [ ] Upload to PyPI (see below)
+- [x] Commit changes
+- [x] Upload to PyPI (see below)
 - [ ] Merge final updates to master
 - [ ] Test again on master branch
 - [ ] On develop branch, bump version number again (back to odd value)
