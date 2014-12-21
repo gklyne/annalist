@@ -24,10 +24,14 @@ More details can be found in the "History" section of the [release notes](https:
 
 To research-object:
 
-I've just released Annalist 0.1.8.  This is the version I intend to demonstrate at FORCE2015 next month.
+I've just released Annalist 0.1.8.  
+
+This is the version I intend to demonstrate at FORCE2015 next month.
+
+It is still a prototype release, with some important functions not completed, and usability improvements needed in some areas.  The main addition in this release is support for presentation of forms with repeating field groups (e.g. a bibliographic entry containing multiple authors).
 
 The full announcement is at:
-https://groups.google.com/@@@
+https://groups.google.com/forum/#!topic/annalist-discuss/JoDYIxzwPPI
 
 Release notes (see "history" section for details) at:
 https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md
@@ -38,8 +42,5 @@ https://github.com/gklyne/annalist
 Live demonstrator:
 http://annalist.net/ and http://demo.annalist.net/
 
-This is still a prototype release, with some important functions not completed, and usability improvements needed in some areas.  The main addition in this release is support for presentation of forms with repeating field groups (e.g. a bibliographic entry containing multiple authors).
-
 #g
 --
-

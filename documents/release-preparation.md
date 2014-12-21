@@ -2,42 +2,42 @@
 
 ## Summary of release tasks
 
-- [x] Feature freeze
-- [x] Delete contents of build directory (ensure any old files are removed)
-- [x] Clean old .pyc files - `clean.sh`
-- [x] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
-- [x] Local install
-- [x] Run test suite
-- [x] Update site data in local 'personal' installation
+- [ ] Feature freeze
+- [ ] Delete contents of build directory (ensure any old files are removed)
+- [ ] Clean old .pyc files - `clean.sh`
+- [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
+- [ ] Local install
+- [ ] Run test suite
+- [ ] Update site data in local 'personal' installation
     - `annalist-manager initialize`
     - `annalist-manager updatesitedata`
-- [x] Test 'personal' deployment in actual use
+- [ ] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
-- [x] Demo deployment; test
-- [x] Documentation updates
-- [-] Demo screencast update
-- [x] Add TODO list to release notes, and reset
-- [x] Bump version to even value and update history
+- [ ] Demo deployment; test
+- [ ] Documentation updates
+- [ ] Demo screencast update
+- [ ] Add TODO list to release notes, and reset
+- [ ] Bump version to even value and update history
 - [ ] Update version number in scripts, documents, etc.
-    - [x] TODO
-    - [x] Release notes
-    - [x] documents/installing-annalist.md
-    - [x] documents/release-notes/announce_0.1.*.md
-    - [x] documents/roadmap.md
-    - [x] documents/pages/index.html
-    - [x] src/annalist_root/annalist/__init__.py
-    - [x] src/newkit_to_annalist_net.sh
-    - [x] src/newkit_to_conina_ubuntu.sh
-- [x] Create new local installation and test again
-- [x] Create and post updated kit download to annalist.net
+    - [ ] TODO
+    - [ ] Release notes
+    - [ ] documents/installing-annalist.md
+    - [ ] documents/release-notes/announce_0.1.*.md
+    - [ ] documents/roadmap.md
+    - [ ] documents/pages/index.html
+    - [ ] src/annalist_root/annalist/__init__.py
+    - [ ] src/newkit_to_annalist_net.sh
+    - [ ] src/newkit_to_conina_ubuntu.sh
+- [ ] Create new local installation and test again
+- [ ] Create and post updated kit download to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [x] Update front page link at annalist.net
-- [x] Commit changes
-- [x] Upload to PyPI (see below)
-- [x] Merge final updates to master
-- [x] Test again on master branch
-- [x] Push master branch
-- [x] On develop branch, bump version number again (back to odd value)
+- [ ] Update front page link at annalist.net
+- [ ] Commit changes
+- [ ] Upload to PyPI (see below)
+- [ ] Merge final updates to master
+- [ ] Test again on master branch
+- [ ] Push master branch
+- [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Commit and push changes
 - [ ] Post announcement to Google Group, and elsewhere
 
