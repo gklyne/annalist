@@ -254,8 +254,4 @@ class ContentNegotiationView(generic.View):
             "Resource %(request_uri)s: Unavailable for legal reasons"
             )
 
-
-
-
-
 # End.

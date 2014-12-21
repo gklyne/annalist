@@ -18,7 +18,10 @@ from django.test                    import TestCase
 from django.core.urlresolvers       import resolve, reverse
 from django.test.client             import Client
 
+from utils.SuppressLoggingContext   import SuppressLogging
+
 from annalist.identifiers           import ANNAL
+
 from annalist.models.entity         import EntityRoot, Entity
 from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.site           import Site
@@ -185,6 +188,12 @@ class AuthorizationTest(AnnalistTestCase):
         loggedin = self.client.login(username=user_id, password="testpassword")
         self.assertTrue(loggedin)
         return
+
+    # View site home page
+    def view_site_home_page(self):
+        u = reverse("AnnalistSiteView")
+        r = self.client.get(u)
+        return r
 
     # Create collection: requires site-level CREATE permission
 
@@ -452,9 +461,16 @@ class AuthorizationTest(AnnalistTestCase):
 
     # Tests
 
+    def test_bad_user_id(self):
+        self.login_user("user-bad-name")
+        with SuppressLogging(logging.WARNING):
+            self.assertEqual(self.view_site_home_page().status_code, 400)
+        return
+
     def test_admin_user(self):
         self.login_user("user_admin")
         # try each function, test result
+        self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
         #
@@ -483,6 +499,7 @@ class AuthorizationTest(AnnalistTestCase):
     def test_config_user(self):
         self.login_user("user_config")
         # try each function, test result
+        self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
         #
@@ -511,6 +528,7 @@ class AuthorizationTest(AnnalistTestCase):
     def test_create_user(self):
         self.login_user("user_create")
         # try each function, test result
+        self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
         #
@@ -539,6 +557,7 @@ class AuthorizationTest(AnnalistTestCase):
     def test_update_user(self):
         self.login_user("user_update")
         # try each function, test result
+        self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
         #
@@ -567,6 +586,7 @@ class AuthorizationTest(AnnalistTestCase):
     def test_delete_user(self):
         self.login_user("user_delete")
         # try each function, test result
+        self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
         #
@@ -595,6 +615,7 @@ class AuthorizationTest(AnnalistTestCase):
     def test_view_user(self):
         self.login_user("user_view")
         # try each function, test result
+        self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
         #
@@ -623,6 +644,7 @@ class AuthorizationTest(AnnalistTestCase):
     def test_default_user(self):
         self.login_user("other_user")
         # try each function, test result
+        self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
         #
@@ -650,6 +672,7 @@ class AuthorizationTest(AnnalistTestCase):
 
     def test_no_login_user(self):
         # try each function, test result
+        self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      401)
         self.assertEqual(self.remove_collection().status_code,      401)
         #

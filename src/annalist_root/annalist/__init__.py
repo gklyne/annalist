@@ -65,6 +65,7 @@ default_app_config = 'annalist.apps.AnnalistConfig'
                                 # Some presentation improvements
                                 # Various smaller bug fixes
 #__version__        = "0.1.8"   # Bump version number for release
+#__version__        = "0.1.8a"  # Hotfix: https://github.com/gklyne/annalist/issues/39 (bad username causes server error)
 __version__        = "0.1.9"   # Bump version number (odd = unstable)
 
 # End.
