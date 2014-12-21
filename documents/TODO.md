@@ -3,78 +3,19 @@
 NOTE: this document is used for short-term working notes; longer-term planning information has been migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
 
 
-# V0.1.7, towards V0.1.8
+# V0.1.9, towards V0.1.10
 
-- [x] Add button to annalist.net page: https://github.com/BetaNYC/getDataButton
-- [x] Extend form-generator capabilities [issue #2](https://github.com/gklyne/annalist/issues/2)
-    - [x] Revise representation of repeat field structures in view description: repeat description to be part of root of repeat structure, not an ad ho0c field at the end.  This should remove some special cases from the code.
-    - [x] Refactor handling of repeat field groups
-    - [x] Define type for field group (_group?  Or use _view?)
-    - [x] Use _list rather than _view? (NO: list has much more bound-in semantics)
-    - [x] Rename 'View_field' to (say) 'View_field_view' (cf. previous use _list)
-    - [x] Define view for field group (list of fields)
-    - [x] Define list for field groups (not needed as views used for field-groups)
-    - [x] Redefine view with list of fields?  Not if that impacts usability.
-    - [x] Define e-v-map for defined list of fields
-    - [x] Repeat to reference list of fields 
-- [x] Eliminate duplication with list view - rework list to use same repeating mechanism as view
-- [x] Provide clean(er) mechanism to propagate extra context to bound fields in repeat group rendering
-- [x] Try eliminating `view_context` parameter from `FieldListValueMap` constructor - turns out that it's needed for generating enumerated type lists based on target type of view, but code has been rationalized and slightly simplified and relevant comments added.
-- [x] Use distinguished names for internally-generated context keys (e.g. '_fields')
-- [x] Simplify list template now that repeat fields are handled by a field renderer
-- [x] Try to make mapping classes more consistent in their return types for sub-context values
-- [x] Raise error if required view_context information is missing for EntityFinder
-- [x] Add field for `annal:field_entity_type` property in field view
-- [x] Revisit definitions for BibJSON view; confirm that repeat field groups can be created
-    - [x] Bib_type field should be enumeration
-    - [x] Month, year on same line
-    - [x] Restrict view choices field to views that are not subsidiary field groups
-- [x] Improve list column layout, avoid values overflowing column and overlapping next (e.g. with long identifiers - cf. http://localhost:8000/annalist/c/coll1/l/Default_list_all/_view/) (PART FIX - made id column wider)
-- [x] Improve display of view fields: put field names in header of repeat-group
-    - [x] Reworked field rendering to support more options
-    - [x] List display remove header rendering from template, handle in repeat
-        1. [x] Put header column logic in repeat group item renderer
-        2. [x] Update list template
-    - [x] Introduce new render type Repeat*Row, sharing code with RepeatGroup
-    - [x] Move row selection from template (uses .item) to editlist (uses RepeatGroup)
-    - [x] Work through field rendering options for Repeat*Row:
-    - [x] Rework field description used by view view to use new field rendering options
-- [x] merge rework-form-manager to develop branch
-- [x] Bugfix: e.g. 'Bib_person_field_view' does not show appropriate field options
-- [x] Bug: create field group does not show up on field group list
-- [x] Need test coverage for FieldDescription with a field group
-- [x] Tests for sitedata: using Beautifiul soup (maybe), create table-driven tests for checking field contents for various rendered pages (lists and views), abstracted away from details of rendering and layout.  For example, test that correct field options are displayed for different views.
-    - [x] Move site data functions from entity_testentitydata to entity_testsitedata
-    - [x] Add functions for groups
-    - [x] Define new test_sitedata module with functions for testing values in view rendering via BeautifulSoup
-    - [x] Create test cases for each of the main views on site data
-    - [x] Remove tests from other test sites that duplicate these tests (esp test_record* tests) (do this later, progressively)
-- [x] Test software installaton from merged branch
-- [x] Test new capabilities to define view with repeating fields - make sure it is doable
-- [x] Test adding more data to cruising log
-- [x] Rename: Field_sel Group_field_sel (option for Field_group_view only)
-- [x] Copy: Field_property, Field_placement -> Group_field_* (options for Field_group_view)
-- [x] Test upgrade of existing deployment
-- [x] Deploy updates to annalist.net
-- [x] New sub-release - bump version to 0.1.8
-
-
-# V0.1.9, towards V0.1.8
-
-- [ ] Think about mechanism for a common field (e.g. rdfs:label) to return a specified field value (e.g. bib:title).  Associate aliases with record type, used when constructing view/list context.
-- [ ] Generalize collection/site hierarchy to use a "search path" of imported collections
-- [ ] Select new list view: drop type from URI? (e.g. when changing to view of different type)
-- [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  (defer?)
-- [ ] Enumerated values are hard-wired into entitytypeinfo - move them to regular type/data files in site data?  Hmmm... currently, it seems all _annalist_site values need to be hard-wired in entitytypeinfo; maybe look to use collection "search path" logic instead (see above)
-
+- [ ] Bug: https://github.com/gklyne/annalist/issues/39
+- [ ] Think about mechanism for a common field (e.g. rdfs:label) to return a specified field value (e.g. bib:title).  Associate aliases with record type, used when constructing view/list context.  This will allow BibEntry title to show in defaul list.
 - [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?
-- [ ] Think about fields that return subgraph (defer?)
-    - how to splice subgraph into parent - "lambda nodes"?
-    - does field API support this? Check.
-- [ ] Review field placement and layout grid density (16col instead of 12col?)
-- [ ] Rationalize common fields to reduce duplication
+- [ ] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
+- [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
+- [ ] Select new list view: drop type from URI? (e.g. when changing to view of different type)
+- [ ] Generalize collection/site hierarchy to use a "search path" of imported collections.  See also next item.
+- [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  The currenmt mechanism of using an explciit type to display site-wide values is probably confusing.
+- [ ] Enumerated values are hard-wired into entitytypeinfo - move them to regular type/data files in site data?  Hmmm... currently, it seems all _annalist_site values need to be hard-wired in entitytypeinfo; maybe look to use collection "search path" logic instead (see above).
 
-(sub-release?)
+(next sub-release?)
 
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [ ] Blob and file upload support: images, spreadsheets, ...
@@ -123,6 +64,11 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Inline templates may be harder to style effectively; maybe read HTML from file on first use?
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Provide content for the links in the page footer
+- [ ] Think about fields that return subgraph (defer?)
+    - how to splice subgraph into parent - "lambda nodes"?
+    - does field API support this? Check.
+- [ ] Review field placement and layout grid density (16col instead of 12col?)
+- [ ] Rationalize common fields to reduce duplication? 
 
 Notes for Future TODOs:
 

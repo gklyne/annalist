@@ -36,7 +36,10 @@
 - [ ] Upload to PyPI (see below)
 - [ ] Merge final updates to master
 - [ ] Test again on master branch
-- [ ] Push master branch
+- [ ] Tag release on master branch
+    - `git tag -a release-1.y.z`
+- [ ] Push master branch, and tags
+    - `git push --tags`
 - [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Commit and push changes
 - [ ] Post announcement to Google Group, and elsewhere
