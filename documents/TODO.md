@@ -43,26 +43,27 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Bugfix: e.g. 'Bib_person_field_view' does not show appropriate field options
 - [x] Bug: create field group does not show up on field group list
 - [x] Need test coverage for FieldDescription with a field group
-- [ ] Tests for sitedata: using Beautifiul soup (maybe), create table-driven tests for checking field contents for various rendered pages (lists and views), abstracted away from details of rendering and layout.  For example, test that correct field options are displayed for different views.
+- [x] Tests for sitedata: using Beautifiul soup (maybe), create table-driven tests for checking field contents for various rendered pages (lists and views), abstracted away from details of rendering and layout.  For example, test that correct field options are displayed for different views.
     - [x] Move site data functions from entity_testentitydata to entity_testsitedata
     - [x] Add functions for groups
-    - [ ] Define new test_sitedata module with functions for testing values in view rendering via BeautifulSoup
-    - [ ] Create test cases for each of the main views on site data
-    - [ ] Remove tests from other test sites that duplicate these tests (esp test_record* tests)
+    - [x] Define new test_sitedata module with functions for testing values in view rendering via BeautifulSoup
+    - [x] Create test cases for each of the main views on site data
+    - [x] Remove tests from other test sites that duplicate these tests (esp test_record* tests) (do this later, progressively)
 - [x] Test software installaton from merged branch
 - [x] Test new capabilities to define view with repeating fields - make sure it is doable
 - [x] Test adding more data to cruising log
 - [x] Rename: Field_sel Group_field_sel (option for Field_group_view only)
 - [x] Copy: Field_property, Field_placement -> Group_field_* (options for Field_group_view)
-- [ ] Select new list view: drop type from URI?
-- [ ] Test upgrade of existing deployment
-- [ ] Deploy updates to annalist.net
-- [ ] New sub-release
+- [x] Test upgrade of existing deployment
+- [x] Deploy updates to annalist.net
+- [x] New sub-release - bump version to 0.1.8
 
-(later)
+
+# V0.1.9, towards V0.1.8
 
 - [ ] Think about mechanism for a common field (e.g. rdfs:label) to return a specified field value (e.g. bib:title).  Associate aliases with record type, used when constructing view/list context.
 - [ ] Generalize collection/site hierarchy to use a "search path" of imported collections
+- [ ] Select new list view: drop type from URI? (e.g. when changing to view of different type)
 - [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  (defer?)
 - [ ] Enumerated values are hard-wired into entitytypeinfo - move them to regular type/data files in site data?  Hmmm... currently, it seems all _annalist_site values need to be hard-wired in entitytypeinfo; maybe look to use collection "search path" logic instead (see above)
 
