@@ -201,7 +201,6 @@ class FieldDescriptionTest(AnnalistTestCase):
             [ '''<div class="view-label small-12 columns">'''+
               ''' aa bb cc'''+
               '''</div>'''
-
             ])
         for e in expect_elements:
             self.assertIn(e, rendered_text)

@@ -577,7 +577,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                         "Field_groupref", 
                         [""] + get_site_field_groups_sorted(),
                         "",
-                        placeholder="(no view selected)")+
+                        placeholder="(no field group selected)")+
                     """
                 </div>
               </div>

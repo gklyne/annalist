@@ -15,7 +15,7 @@ presentation of views that have been manually checked for correctness that
 may be caused by changes to the underlying site data structures.
 It is not intended to check details of web page presentation.
 
-(The first couple of tests also check aspects of the test site data setiup.)
+(The first couple of tests also check aspects of the test site data setup.)
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -35,13 +35,7 @@ from django.test.client         import Client
 
 from bs4                        import BeautifulSoup
 
-# from miscutils.MockHttpResources import MockHttpFileResources, MockHttpDictResources
-
-# from annalist.identifiers       import ANNAL
-# from annalist.models.entity     import EntityRoot, Entity
-
 from annalist.identifiers           import RDF, RDFS, ANNAL
-# from annalist                       import layout
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
@@ -60,7 +54,7 @@ from entity_testutils import (
     collection_edit_url,
     collection_entity_list_url,
     collection_entity_view_url,
-    # collection_entity_edit_url,  @@TODO?
+    collection_entity_edit_url,
     create_user_permissions, create_test_user
     )
 from entity_testsitedata            import (
@@ -72,27 +66,6 @@ from entity_testsitedata            import (
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
-
-# Test assertion summary from http://docs.python.org/2/library/unittest.html#test-cases
-#
-# Method                    Checks that             New in
-# assertEqual(a, b)         a == b   
-# assertNotEqual(a, b)      a != b   
-# assertTrue(x)             bool(x) is True  
-# assertFalse(x)            bool(x) is False     
-# assertIs(a, b)            a is b                  2.7
-# assertIsNot(a, b)         a is not b              2.7
-# assertIsNone(x)           x is None               2.7
-# assertIsNotNone(x)        x is not None           2.7
-# assertIn(a, b)            a in b                  2.7
-# assertNotIn(a, b)         a not in b              2.7
-# assertIsInstance(a, b)    isinstance(a, b)        2.7
-# assertNotIsInstance(a, b) not isinstance(a, b)    2.7
-#
-# From AnnalistTestCase:
-# self.assertMatch(string, pattern, msg=None)
-# self.assertDictionaryMatch(actual_dict, expect_dict, prefix="")
-
 
 #   -----------------------------------------------------------------------------
 #
@@ -107,16 +80,57 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
-        self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.coll1    = Collection.load(self.testsite, "coll1")
+        self.testsite  = Site(TestBaseUri, TestBaseDir)
+        self.coll1     = Collection.load(self.testsite, "coll1")
+        self.types_expected = get_site_types_sorted() + ["type1", "type2"]
+        self.lists_expected = get_site_lists_sorted() + ['list1', 'list2']
+        self.views_expected = get_site_views_sorted() + ["view1", "view2"]
+        self.list_types_expected = ["Grid", "List"]
+        self.render_types_expected = (
+            [ "EntityId"
+            , "EntityTypeId"
+            , "Enum"
+            , "Enum_optional"
+            , "Field"
+            , "Identifier"
+            , "List"
+            , "Placement"
+            , "RepeatGroup"
+            , "RepeatGroupRow"
+            , "Slug"
+            , "Text"
+            , "Textarea"
+            , "Type"
+            , "View"
+            ])
+        self.grouprefs_expected = (
+            [ "Bib_book_group"
+            , "Bib_identifier_group"
+            , "Bib_journal_group"
+            , "Bib_license_group"
+            , "Bib_person_group"
+            , "Bib_publication_group"
+            , "Group_field_group"
+            , "List_field_group"
+            , "View_field_group"
+            ])
+        # Login with admin permissions
+        permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+        create_test_user(
+            self.coll1, 
+            "testuser", "testpass", user_permissions=permissions
+            )
+        self.client = Client(HTTP_HOST=TestHost)
+        loggedin = self.client.login(username="testuser", password="testpass")
+        self.assertTrue(loggedin)
         return
 
     def tearDown(self):
         return
 
-    # ----------------------------------
+    # --------------------------------------------------------------------------
     # Helper functions
-    # ----------------------------------
+    # --------------------------------------------------------------------------
 
     # Dereference URI and return BeautifulSoup object for the returned HTML
     def get_page(self, uri):
@@ -129,9 +143,18 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         return s
 
     # Test named input has specified type and value
-    def check_input_type_value(self, s, name, input_type, input_value=None, input_text=None):
-        input_elem = s.form.find("input", attrs={"name": name})
-        self.assertEqual(input_elem['type'], input_type)
+    def check_input_type_value(self, 
+            s, name, 
+            input_type, input_value=None, input_text=None):
+        tag_name = "input"
+        tag_type = input_type
+        if input_type == "textarea":
+            tag_name = "textarea"
+            tag_type = None
+        input_elem = s.form.find(attrs={"name": name})
+        self.assertEqual(input_elem.name, tag_name)
+        if tag_type:
+            self.assertEqual(input_elem['type'], tag_type)
         if input_value is not None:
             self.assertEqual(input_elem['value'], input_value)
         if input_text is not None:
@@ -140,11 +163,14 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     # Test named input is <select> with specified options and selected value
     def check_select_field(self, s, name, options, selection):
-        select_elem = s.form.find("select", attrs={"name": name})
+        select_elem = s.find("select", attrs={"name": name})
         options_here = [o.string for o in select_elem.find_all("option")]
         self.assertEqual(options_here, options)
         if selection is not None:
-            self.assertEqual(select_elem.find("option", selected=True).string, selection)
+            self.assertEqual(
+                select_elem.find("option", selected=True).string, 
+                selection
+                )
         return
 
     # row_data:
@@ -163,8 +189,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     # </div>
     #
     def check_row_column(self, row_data, colnum, row_expected):
-        # print "*****"
-        # print row_data
         if row_expected[colnum] is not None:
             e = row_expected[colnum]
             f = (row_data
@@ -185,6 +209,21 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             self.assertEqual(e[0], f.find("input", class_="select-box")["value"])
             for j in range(len(trows_expected[i][1])):
                 self.check_row_column(trows[i], j, trows_expected[i][1])
+        return
+
+    def check_view_fields(self, s, expect_fields, expect_field_choices):
+        trows = s.find_all("div", class_="select-row")
+        self.assertEqual(len(trows), len(expect_fields))
+        for i in range(len(trows)):
+            tcols = trows[i].select("div.columns div.row div.columns")
+            self.assertEqual(trows[i].div.input['type'],  "checkbox")
+            self.assertEqual(trows[i].div.input['name'],  "View_repeat_fields__select_fields")
+            self.assertEqual(trows[i].div.input['value'], str(i))
+            self.check_select_field(
+                tcols[0], "View_repeat_fields__%d__Field_id"%i, 
+                expect_field_choices, expect_fields[i]
+                )
+        return
 
     # Test consistency of type / list / view / field descriptions
     def check_type_list_view(self, type_id, list_id, view_id, type_uri):
@@ -225,46 +264,49 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_field = RecordField.load(self.coll1, field_id, self.testsite)
             field_type = view_field[ANNAL.CURIE.field_render_type]
             try:
-                self.assertEqual(view_field["@type"],                   [ANNAL.CURIE.Field])
-                self.assertEqual(view_field[ANNAL.CURIE.id],            field_id)
-                self.assertEqual(view_field[ANNAL.CURIE.type_id],       "_field")
-                self.assertIn(ANNAL.CURIE.property_uri,                 view_field)
-                self.assertIn(ANNAL.CURIE.field_render_type,            view_field)
-                self.assertIn(ANNAL.CURIE.field_value_type,             view_field)
-                self.assertIn(ANNAL.CURIE.field_placement,              view_field)
-                self.assertIn(ANNAL.CURIE.placeholder,                  view_field)
-                self.assertIn(ANNAL.CURIE.field_placement,              view_field)
+                self.assertEqual(view_field["@type"], [ANNAL.CURIE.Field])
+                self.assertEqual(view_field[ANNAL.CURIE.id],      field_id)
+                self.assertEqual(view_field[ANNAL.CURIE.type_id], "_field")
+                self.assertIn(ANNAL.CURIE.property_uri,           view_field)
+                self.assertIn(ANNAL.CURIE.field_render_type,      view_field)
+                self.assertIn(ANNAL.CURIE.field_value_type,       view_field)
+                self.assertIn(ANNAL.CURIE.field_placement,        view_field)
+                self.assertIn(ANNAL.CURIE.placeholder,            view_field)
+                self.assertIn(ANNAL.CURIE.field_placement,        view_field)
                 if ANNAL.CURIE.field_entity_type in view_field:
-                    # @@TODO: need to rethink this for. e.g., Field_sel, il View, List and Group records
-                    # Currently have removed annal:field_entity_type from Field_sel, Field_property,
-                    # Field_placement so they may now show up for all view forms.  Check this.
-                    # Two problems: (a) how to handle ikn app, (b) how to test?
-                    self.assertEqual(view_field[ANNAL.CURIE.field_entity_type], type_uri)
+                    # @@TODO: make this trequired?
+                    self.assertEqual(
+                        view_field[ANNAL.CURIE.field_entity_type], type_uri
+                        )
                 if field_type in ["RepeatGroup", "RepeatGroupRow"]:
                     # Check extra fields
                     group_id = view_field[ANNAL.CURIE.group_ref]
-                    self.assertIn(ANNAL.CURIE.repeat_label_add,         view_field)
-                    self.assertIn(ANNAL.CURIE.repeat_label_delete,      view_field)
+                    self.assertIn(ANNAL.CURIE.repeat_label_add,    view_field)
+                    self.assertIn(ANNAL.CURIE.repeat_label_delete, view_field)
                     # Check field group
                     field_group = RecordGroup.load(self.coll1, group_id, self.testsite)
-                    self.assertEqual(field_group["@type"],                  [ANNAL.CURIE.Field_group])
-                    self.assertEqual(field_group[ANNAL.CURIE.id],           group_id)
-                    self.assertEqual(field_group[ANNAL.CURIE.type_id],      "_group")
+                    self.assertEqual(field_group["@type"], [ANNAL.CURIE.Field_group])
+                    self.assertEqual(field_group[ANNAL.CURIE.id],      group_id)
+                    self.assertEqual(field_group[ANNAL.CURIE.type_id], "_group")
                     self.check_type_fields(
                         "_group", ANNAL.CURIE.Field_group, field_group[ANNAL.CURIE.group_fields]
                         )
-                    # self.check_type_fields(type_id, type_uri, field_group[ANNAL.CURIE.group_fields])
-                    # field_name is present inly if different from field_id
-                    # self.assertIn(ANNAL.CURIE.field_name,                   list_field)
-                # @@TODO: If enum type, look for typeref
+                    # field_name is present only if different from field_id
+                    # self.assertIn(ANNAL.CURIE.field_name,  list_field)
+                enum_types = (
+                    [ "Type", "View", "List", "Field"
+                    , "Enum", "Enum_optional"
+                    ])
+                if field_type in enum_types:
+                    self.assertIn(ANNAL.CURIE.options_typeref, view_field)
             except Exception as e:
                 log.warning("check_type_fields error %s, field_id %s, render_type %s"%(e, field_id, field_type))
                 raise
         return
 
-    # ----------------------------------
+    # --------------------------------------------------------------------------
     # Test cases
-    # ----------------------------------
+    # --------------------------------------------------------------------------
 
     # Site front page
     def test_site_view(self):
@@ -290,8 +332,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(s.title.string, "Collection coll1")
         self.assertEqual(s.h3.string, "List entities with type information")
         self.check_input_type_value(s, "search_for", "text", "")
-        options_expected = get_site_lists_sorted() + ['list1', 'list2']
-        self.check_select_field(s, "list_choice", options_expected, "Default_list_all")
+        self.check_select_field(s, "list_choice", self.lists_expected, "Default_list_all")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
         self.assertEqual(thead[0].p.string, "Id")
@@ -323,8 +364,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(s.title.string, "Collection coll1")
         self.assertEqual(s.h3.string, "List entities with type information")
         self.check_input_type_value(s, "search_for", "text", "")
-        options_expected = get_site_lists_sorted() + ['list1', 'list2']
-        self.check_select_field(s, "list_choice", options_expected, "Default_list_all")
+        self.check_select_field(s, "list_choice", self.lists_expected, "Default_list_all")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
         self.assertEqual(thead[0].p.string, "Id")
@@ -332,20 +372,24 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[2].p.string, "Label")
 
         trows_expected = (
-            [ [ "_list/list1",   ["list1", "_list", "RecordList coll1/list1"] ]
-            , [ "_list/list2",   ["list2", "_list", "RecordList coll1/list2"] ]
-            , [ "_type/type1",   ["type1", "_type", "RecordType coll1/type1"] ]
-            , [ "_type/type2",   ["type2", "_type", "RecordType coll1/type2"] ]
-            , [ "_view/view1",   ["view1", "_view", "RecordView coll1/view1"] ]
-            , [ "_view/view2",   ["view2", "_view", "RecordView coll1/view2"] ]
-            , [ "type1/entity1", ["entity1", "type1", "Entity coll1/type1/entity1"] ]
-            , [ "type1/entity2", ["entity2", "type1", "Entity coll1/type1/entity2"] ]
-            , [ "type1/entity3", ["entity3", "type1", "Entity coll1/type1/entity3"] ]
-            , [ "type2/entity1", ["entity1", "type2", "Entity coll1/type2/entity1"] ]
-            , [ "type2/entity2", ["entity2", "type2", "Entity coll1/type2/entity2"] ]
-            , [ "type2/entity3", ["entity3", "type2", "Entity coll1/type2/entity3"] ]
+            [ [ "_list/list1",    ["list1", "_list", "RecordList coll1/list1"] ]
+            , [ "_list/list2",    ["list2", "_list", "RecordList coll1/list2"] ]
+            , [ "_type/type1",    ["type1", "_type", "RecordType coll1/type1"] ]
+            , [ "_type/type2",    ["type2", "_type", "RecordType coll1/type2"] ]
+            , [ "_user/testuser", ["testuser", "_user", "Test User"] ]
+            , [ "_view/view1",    ["view1", "_view", "RecordView coll1/view1"] ]
+            , [ "_view/view2",    ["view2", "_view", "RecordView coll1/view2"] ]
+            , [ "type1/entity1",  ["entity1", "type1", "Entity coll1/type1/entity1"] ]
+            , [ "type1/entity2",  ["entity2", "type1", "Entity coll1/type1/entity2"] ]
+            , [ "type1/entity3",  ["entity3", "type1", "Entity coll1/type1/entity3"] ]
+            , [ "type2/entity1",  ["entity1", "type2", "Entity coll1/type2/entity1"] ]
+            , [ "type2/entity2",  ["entity2", "type2", "Entity coll1/type2/entity2"] ]
+            , [ "type2/entity3",  ["entity3", "type2", "Entity coll1/type2/entity3"] ]
             ])
         self.check_list_row_data(s, trows_expected)
+
+        # @@TODO: check entity and type links
+        #         check_list_row_links?  or add 3rd element to each trows_expected
         return
 
     # Default list
@@ -356,29 +400,33 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(s.title.string, "Collection coll1")
         self.assertEqual(s.h3.string, "List entities")
         self.check_input_type_value(s, "search_for", "text", "")
-        options_expected = get_site_lists_sorted() + ['list1', 'list2']
-        self.check_select_field(s, "list_choice", options_expected, "Default_list")
+        self.check_select_field(s, "list_choice", self.lists_expected, "Default_list")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
         self.assertEqual(thead[0].p.string, "Id")
         self.assertEqual(thead[1].p.string, "Label")
 
         trows_expected = (
-            [ [ "_list/list1",   ["list1", "RecordList coll1/list1"] ]
-            , [ "_list/list2",   ["list2", "RecordList coll1/list2"] ]
-            , [ "_type/type1",   ["type1", "RecordType coll1/type1"] ]
-            , [ "_type/type2",   ["type2", "RecordType coll1/type2"] ]
-            , [ "_view/view1",   ["view1", "RecordView coll1/view1"] ]
-            , [ "_view/view2",   ["view2", "RecordView coll1/view2"] ]
-            , [ "type1/entity1", ["entity1", "Entity coll1/type1/entity1"] ]
-            , [ "type1/entity2", ["entity2", "Entity coll1/type1/entity2"] ]
-            , [ "type1/entity3", ["entity3", "Entity coll1/type1/entity3"] ]
-            , [ "type2/entity1", ["entity1", "Entity coll1/type2/entity1"] ]
-            , [ "type2/entity2", ["entity2", "Entity coll1/type2/entity2"] ]
-            , [ "type2/entity3", ["entity3", "Entity coll1/type2/entity3"] ]
+            [ [ "_list/list1",    ["list1", "RecordList coll1/list1"] ]
+            , [ "_list/list2",    ["list2", "RecordList coll1/list2"] ]
+            , [ "_type/type1",    ["type1", "RecordType coll1/type1"] ]
+            , [ "_type/type2",    ["type2", "RecordType coll1/type2"] ]
+            , [ "_user/testuser", ["testuser", "Test User"] ]
+            , [ "_view/view1",    ["view1", "RecordView coll1/view1"] ]
+            , [ "_view/view2",    ["view2", "RecordView coll1/view2"] ]
+            , [ "type1/entity1",  ["entity1", "Entity coll1/type1/entity1"] ]
+            , [ "type1/entity2",  ["entity2", "Entity coll1/type1/entity2"] ]
+            , [ "type1/entity3",  ["entity3", "Entity coll1/type1/entity3"] ]
+            , [ "type2/entity1",  ["entity1", "Entity coll1/type2/entity1"] ]
+            , [ "type2/entity2",  ["entity2", "Entity coll1/type2/entity2"] ]
+            , [ "type2/entity3",  ["entity3", "Entity coll1/type2/entity3"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return
+
+    # --------------------------------------------------------------------------
+    # Test site data for types
+    # --------------------------------------------------------------------------
 
     # Test type / list / view / field consistency for RecordType
     def test_recordtype_type_list_view(self):
@@ -393,8 +441,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(s.title.string, "Collection coll1")
         self.assertEqual(s.h3.string, "List types")
         self.check_input_type_value(s, "search_for", "text", "")
-        options_expected = get_site_lists_sorted() + ['list1', 'list2']
-        self.check_select_field(s, "list_choice", options_expected, "Type_list")
+        self.check_select_field(s, "list_choice", self.lists_expected, "Type_list")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
         self.assertEqual(thead[0].p.string, "Id")
@@ -420,6 +467,78 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         return
 
     # Create/edit type using type view
+    def test_type_edit_new(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_type",
+            view_id="Type_view", action="new"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", None)
+        self.check_input_type_value(s, "Type_label", "text", None)
+        self.check_input_type_value(s, "Type_comment", "textarea", None)
+        self.check_input_type_value(s, "Type_uri", "text", None)
+        self.check_select_field(s, "Type_view",   self.views_expected, "Default_view")
+        self.check_select_field(s, "Type_list",   self.lists_expected, "Default_list")
+        self.check_select_field(s, "view_choice", self.views_expected, "Type_view")
+        return
+
+    # Edit/view type view
+    def test_view_edit_type_view(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_view", entity_id="Type_view",
+            view_id="View_view", action="edit"
+            )
+        s = self.get_page(u)
+        expect_field_choices = (
+            [ "Entity_comment"
+            , "Entity_id"
+            , "Entity_label"
+            , "Entity_type"
+            , "Type_comment"
+            , "Type_id"
+            , "Type_label"
+            , "Type_list"
+            , "Type_uri"
+            , "Type_view"
+            ])
+        expect_fields = (
+            [ "Type_id"
+            , "Type_label"
+            , "Type_comment"
+            , "Type_uri"
+            , "Type_view"
+            , "Type_list"
+            ])
+        self.check_view_fields(s, expect_fields, expect_field_choices)
+        self.check_select_field(s, "view_choice", self.views_expected, "View_view")
+        return
+
+    # Edit/view type list
+    def test_view_edit_type_list(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_list", entity_id="Type_list",
+            view_id="List_view", action="edit"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", "Type_list")
+        self.check_input_type_value(s, "List_label", "text", None)
+        self.check_input_type_value(s, "List_comment", "textarea", None)
+        self.check_input_type_value(s, "List_entity_selector", "text", "'annal:Type' in [@type]")
+        self.check_input_type_value(s, "List_target_type", "text", "annal:Type")
+        self.check_select_field(
+            s, "List_type", self.list_types_expected, "List"
+            )
+        self.check_select_field(
+            s, "List_default_type", self.types_expected, "_type"
+            )
+        self.check_select_field(
+            s, "List_default_view", self.views_expected, "Type_view"
+            )
+        return
+
+    # --------------------------------------------------------------------------
+    # Test site data for lists
+    # --------------------------------------------------------------------------
 
     # Test type / list / view / field consistency for RecordList
     def test_recordlist_type_list_view(self):
@@ -434,8 +553,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(s.title.string, "Collection coll1")
         self.assertEqual(s.h3.string, "List lists")
         self.check_input_type_value(s, "search_for", "text", "")
-        options_expected = get_site_lists_sorted() + ['list1', 'list2']
-        self.check_select_field(s, "list_choice", options_expected, "List_list")
+        self.check_select_field(s, "list_choice", self.lists_expected, "List_list")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
         self.assertEqual(thead[0].p.string, "Id")
@@ -459,6 +577,85 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         return
 
     # Create/edit list using list view
+    def test_list_edit_new(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_list",
+            view_id="List_view", action="new"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", None)
+        self.check_input_type_value(s, "List_label", "text", None)
+        self.check_input_type_value(s, "List_comment", "textarea", None)
+        self.check_select_field(s, "List_default_type", self.types_expected, "Default_type")
+        self.check_select_field(s, "List_default_view", self.views_expected, "Default_view")
+        self.check_input_type_value(s, "List_entity_selector", "text", "ALL")
+        self.check_input_type_value(s, "List_target_type", "text", "")
+        self.check_select_field(s, "view_choice", self.views_expected, "List_view")
+        return
+
+    # Edit/view list view
+    def test_view_edit_list_view(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_view", entity_id="List_view",
+            view_id="View_view", action="edit"
+            )
+        s = self.get_page(u)
+        expect_field_choices = (
+            [ "Entity_comment"
+            , "Entity_id"
+            , "Entity_label"
+            , "Entity_type"
+            , "List_comment"
+            , "List_default_type"
+            , "List_default_view"
+            , "List_entity_selector"
+            , "List_id"
+            , "List_label"
+            , "List_repeat_fields"
+            , "List_target_type"
+            , "List_type"
+            ])
+        expect_fields = (
+            [ "List_id"
+            , "List_type"
+            , "List_label"
+            , "List_comment"
+            , "List_default_type"
+            , "List_default_view"
+            , "List_entity_selector"
+            , "List_target_type"
+            , "List_repeat_fields"
+            ])
+        self.check_view_fields(s, expect_fields, expect_field_choices)
+        self.check_select_field(s, "view_choice", self.views_expected, "View_view")
+        return
+
+    # Edit/view list list
+    def test_view_edit_list_list(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_list", entity_id="List_list",
+            view_id="List_view", action="edit"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", "List_list")
+        self.check_input_type_value(s, "List_label", "text", None)
+        self.check_input_type_value(s, "List_comment", "textarea", None)
+        self.check_input_type_value(s, "List_entity_selector", "text", "'annal:List' in [@type]")
+        self.check_input_type_value(s, "List_target_type", "text", "annal:List")
+        self.check_select_field(
+            s, "List_type", self.list_types_expected, "List"
+            )
+        self.check_select_field(
+            s, "List_default_type", self.types_expected, "_list"
+            )
+        self.check_select_field(
+            s, "List_default_view", self.views_expected, "List_view"
+            )
+        return
+
+    # --------------------------------------------------------------------------
+    # Test site data for views
+    # --------------------------------------------------------------------------
 
     # Test type / list / view / field consistency for RecordView
     def test_recordlist_type_view_view(self):
@@ -473,8 +670,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(s.title.string, "Collection coll1")
         self.assertEqual(s.h3.string, "List views")
         self.check_input_type_value(s, "search_for", "text", "")
-        options_expected = get_site_lists_sorted() + ['list1', 'list2']
-        self.check_select_field(s, "list_choice", options_expected, "View_list")
+        self.check_select_field(s, "list_choice", self.lists_expected, "View_list")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
         self.assertEqual(thead[0].p.string, "Id")
@@ -497,6 +693,81 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         return
 
     # Create/edit view using view view
+    def test_view_edit_new(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_view",
+            view_id="View_view", action="new"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", None)
+        self.check_input_type_value(s, "View_label", "text", None)
+        self.check_input_type_value(s, "View_comment", "textarea", None)
+        self.check_input_type_value(s, "View_target_type", "text", None)
+        self.check_input_type_value(s, "View_add_field", "text", None)
+        self.check_select_field(s, "view_choice", self.views_expected, "View_view")
+        return
+
+    # Edit/view view view
+    def test_view_edit_view_view(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_view", entity_id="View_view",
+            view_id="View_view", action="edit"
+            )
+        s = self.get_page(u)
+        expect_field_choices = (
+            [ "Entity_comment"
+            , "Entity_id"
+            , "Entity_label"
+            , "Entity_type"
+            , "View_add_field"
+            , "View_comment"
+            , "View_id"
+            , "View_label"
+            , "View_repeat_fields"
+            , "View_target_type"
+            ])
+        expect_fields = (
+            [ "View_id"
+            , "View_label"
+            , "View_comment"
+            , "View_target_type"
+            , "View_add_field"
+            , "View_repeat_fields"
+            ])
+        self.check_view_fields(s, expect_fields, expect_field_choices)
+        self.check_select_field(s, "view_choice", self.views_expected, "View_view")
+        return
+
+    # Edit/view view list
+    def test_view_edit_view_list(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_list", entity_id="View_list",
+            view_id="List_view", action="edit"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", "View_list")
+        self.check_input_type_value(s, "List_label", "text", None)
+        self.check_input_type_value(s, "List_comment", "textarea", None)
+        self.check_select_field(
+            s, "List_type", self.list_types_expected, "List"
+            )
+        self.check_select_field(
+            s, "List_default_type", self.types_expected, "_view"
+            )
+        self.check_select_field(
+            s, "List_default_view", self.views_expected, "View_view"
+            )
+        self.check_input_type_value(
+            s, "List_entity_selector", "text", "'annal:View' in [@type]"
+            )
+        self.check_input_type_value(
+            s, "List_target_type", "text", "annal:View"
+            )
+        return
+
+    # --------------------------------------------------------------------------
+    # Test site data for field groups
+    # --------------------------------------------------------------------------
 
     # Test type / list / view / field consistency for RecordGroup
     def test_recordlist_type_group_view(self):
@@ -511,8 +782,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(s.title.string, "Collection coll1")
         self.assertEqual(s.h3.string, "List field groups")
         self.check_input_type_value(s, "search_for", "text", "")
-        options_expected = get_site_lists_sorted() + ['list1', 'list2']
-        self.check_select_field(s, "list_choice", options_expected, "Field_group_list")
+        self.check_select_field(s, "list_choice", self.lists_expected, "Field_group_list")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
         self.assertEqual(thead[0].p.string, "Id")
@@ -533,6 +803,83 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         return
 
     # Create/edit group using group view
+    def test_group_edit_new(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_group",
+            view_id="Field_group_view", action="new"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", None)
+        self.check_input_type_value(s, "Group_label", "text", None)
+        self.check_input_type_value(s, "Group_comment", "textarea", None)
+        self.check_input_type_value(s, "Group_target_type", "text", None)
+        self.check_select_field(
+            s, "view_choice", self.views_expected, "Field_group_view"
+            )
+        return
+
+    # Edit/view group view
+    def test_view_edit_group_view(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_view", entity_id="Field_group_view",
+            view_id="View_view", action="edit"
+            )
+        s = self.get_page(u)
+        expect_field_choices = (
+            [ "Entity_comment"
+            , "Entity_id"
+            , "Entity_label"
+            , "Entity_type"
+            , "Group_comment"
+            , "Group_field_placement"
+            , "Group_field_property"
+            , "Group_field_sel"
+            , "Group_id"
+            , "Group_label"
+            , "Group_repeat_fields"
+            , "Group_target_type"
+            ])
+        expect_fields = (
+            [ "Group_id"
+            , "Group_label"
+            , "Group_comment"
+            , "Group_target_type"
+            , "Group_repeat_fields"
+            ])
+        self.check_view_fields(s, expect_fields, expect_field_choices)
+        self.check_select_field(s, "view_choice", self.views_expected, "View_view")
+        return
+
+    # Edit/view group list
+    def test_view_edit_group_list(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_list", entity_id="Field_group_list",
+            view_id="List_view", action="edit"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", "Field_group_list")
+        self.check_input_type_value(s, "List_label", "text", None)
+        self.check_input_type_value(s, "List_comment", "textarea", None)
+        self.check_input_type_value(
+            s, "List_entity_selector", "text", "'annal:Field_group' in [@type]"
+            )
+        self.check_input_type_value(
+            s, "List_target_type", "text", "annal:Field_group"
+            )
+        self.check_select_field(
+            s, "List_type", self.list_types_expected, "List"
+            )
+        self.check_select_field(
+            s, "List_default_type", self.types_expected, "_group"
+            )
+        self.check_select_field(
+            s, "List_default_view", self.views_expected, "Field_group_view"
+            )
+        return
+
+    # --------------------------------------------------------------------------
+    # Test site data for record fields
+    # --------------------------------------------------------------------------
 
     # Test type / list / view / field consistency for RecordField
     def test_recordlist_type_field_view(self):
@@ -547,8 +894,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(s.title.string, "Collection coll1")
         self.assertEqual(s.h3.string, "List fields")
         self.check_input_type_value(s, "search_for", "text", "")
-        options_expected = get_site_lists_sorted() + ['list1', 'list2']
-        self.check_select_field(s, "list_choice", options_expected, "Field_list")
+        self.check_select_field(s, "list_choice", self.lists_expected, "Field_list")
 
         thead = (
             s.form.find("div", class_="thead")
@@ -657,6 +1003,115 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_list_row_data(s, trows_expected)
 
     # Create/edit field using field view
+    def test_field_edit_new(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_field",
+            view_id="Field_view", action="new"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", None)
+        self.check_input_type_value(s, "Field_type", "text", "annal:Text")
+        self.check_input_type_value(s, "Field_label", "text", "")
+        self.check_input_type_value(s, "Field_comment", "textarea", None)
+        self.check_input_type_value(s, "Field_placeholder", "text", "")
+        self.check_input_type_value(s, "Field_property", "text", "")
+        self.check_input_type_value(s, "Field_placement", "text", "")
+        self.check_input_type_value(s, "Field_default", "text", None)
+        self.check_input_type_value(s, "Field_entity_type", "text", "")
+        self.check_input_type_value(s, "Field_restrict", "text", "")
+        self.check_select_field(
+            s, "Field_render",   self.render_types_expected, "Text"
+            )
+        self.check_select_field(
+            s, "Field_typeref", 
+            ["(no type selected)"]+self.types_expected, 
+            "(no type selected)"
+            )
+        self.check_select_field(
+            s, "Field_groupref",
+            ["(no field group selected)"]+self.grouprefs_expected, 
+            "(no field group selected)"
+            )
+        self.check_select_field(
+            s, "view_choice", self.views_expected, "Field_view"
+            )
+        return
+
+    # Edit/view field view
+    def test_view_edit_field_view(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_view", entity_id="Field_view",
+            view_id="View_view", action="edit"
+            )
+        s = self.get_page(u)
+        expect_field_choices = (
+            [ "Entity_comment"
+            , "Entity_id"
+            , "Entity_label"
+            , "Entity_type"
+            , "Field_comment"
+            , "Field_default"
+            , "Field_entity_type"
+            , "Field_groupref"
+            , "Field_id"
+            , "Field_label"
+            , "Field_missing"
+            , "Field_placeholder"
+            , "Field_placement"
+            , "Field_property"
+            , "Field_render"
+            , "Field_repeat_label_add"
+            , "Field_repeat_label_delete"
+            , "Field_restrict"
+            , "Field_type"
+            , "Field_typeref"
+            ])
+        expect_fields = (
+            [ "Field_id"
+            , "Field_type"
+            , "Field_render"
+            , "Field_label"
+            , "Field_comment"
+            , "Field_placeholder"
+            , "Field_property"
+            , "Field_placement"
+            , "Field_default"
+            , "Field_entity_type"
+            , "Field_typeref"
+            , "Field_restrict"
+            , "Field_groupref"
+            , "Field_repeat_label_add"
+            , "Field_repeat_label_delete"
+            ])
+        self.check_view_fields(s, expect_fields, expect_field_choices)
+        self.check_select_field(s, "view_choice", self.views_expected, "View_view")
+        return
+
+    # Edit/view field list
+    def test_view_edit_field_list(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_list", entity_id="Field_list",
+            view_id="List_view", action="edit"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", "Field_list")
+        self.check_input_type_value(s, "List_label", "text", None)
+        self.check_input_type_value(s, "List_comment", "textarea", None)
+        self.check_input_type_value(s, "List_target_type", "text", "annal:Field")
+        self.check_input_type_value(
+            s, "List_entity_selector", "text", "'annal:Field' in [@type]"
+            )
+        self.check_select_field(
+            s, "List_default_type", self.types_expected, "_field"
+            )
+        self.check_select_field(
+            s, "List_default_view", self.views_expected, "Field_view"
+            )
+        return
+
+    # --------------------------------------------------------------------------
+    # Test site data for user permissions
+    # --------------------------------------------------------------------------
 
     # Test type / list / view / field consistency for user
     def test_recorduser_type_field_view(self):
@@ -665,23 +1120,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     # List users using user list
     def test_user_list(self):
-        user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
-        create_test_user(
-            self.coll1, 
-            "testuser", "testpassword", user_permissions=user_permissions
-            )
-        self.client = Client(HTTP_HOST=TestHost)
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
-
         u = collection_entity_list_url(coll_id="coll1", list_id="User_list", type_id="_user")
         s = self.get_page(u)
 
         self.assertEqual(s.title.string, "Collection coll1")
         self.assertEqual(s.h3.string, "List users")
         self.check_input_type_value(s, "search_for", "text", "")
-        options_expected = get_site_lists_sorted() + ['list1', 'list2']
-        self.check_select_field(s, "list_choice", options_expected, "User_list")
+        self.check_select_field(s, "list_choice", self.lists_expected, "User_list")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
         self.assertEqual(thead[0].p.string, "User Id")
@@ -712,13 +1157,69 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_list_row_data(s, trows_expected)
 
     # Create/edit user using user view
+    def test_user_edit_new(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_user",
+            view_id="User_view", action="new"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", None)
+        self.check_input_type_value(s, "User_name", "text", None)
+        self.check_input_type_value(s, "User_description", "textarea", None)
+        self.check_input_type_value(s, "User_uri", "text", None)
+        self.check_input_type_value(s, "User_permissions", "text", None)
+        self.check_select_field(s, "view_choice", self.views_expected, "User_view")
+        return
 
-    # @@TODO: Check that predefined enumerations used are covered in the above:
-    #         field render type, list display type, value type, etc.
+    # Edit/view user view
+    def test_view_edit_user_view(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_view", entity_id="User_view",
+            view_id="View_view", action="edit"
+            )
+        s = self.get_page(u)
+        expect_field_choices = (
+            [ "Entity_comment"
+            , "Entity_id"
+            , "Entity_label"
+            , "Entity_type"
+            , "User_description"
+            , "User_id"
+            , "User_name"
+            , "User_permissions"
+            , "User_uri"
+            ])
+        expect_fields = (
+            [ "User_id"
+            , "User_name"
+            , "User_description"
+            , "User_uri"
+            , "User_permissions"
+            ])
+        self.check_view_fields(s, expect_fields, expect_field_choices)
+        self.check_select_field(s, "view_choice", self.views_expected, "View_view")
+        return
 
-
-
-
-
+    # Edit/view user list
+    def test_view_edit_user_list(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_list", entity_id="User_list",
+            view_id="List_view", action="edit"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", "User_list")
+        self.check_input_type_value(s, "List_label", "text", None)
+        self.check_input_type_value(s, "List_comment", "textarea", None)
+        self.check_input_type_value(s, "List_target_type", "text", "annal:User")
+        self.check_input_type_value(
+            s, "List_entity_selector", "text", "'annal:User' in [@type]"
+            )
+        self.check_select_field(
+            s, "List_default_type", self.types_expected, "_user"
+            )
+        self.check_select_field(
+            s, "List_default_view", self.views_expected, "User_view"
+            )
+        return
 
 # End.

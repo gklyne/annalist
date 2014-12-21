@@ -73,6 +73,34 @@ def collection_entity_view_url(coll_id="testcoll", type_id=None, entity_id=None)
         kwargs={'coll_id': coll_id, 'type_id': type_id, 'entity_id': entity_id}
         )
 
+def collection_entity_edit_url(
+        coll_id="testcoll", type_id=None, entity_id=None, 
+        view_id=None, action=None
+        ):
+    """
+    Return URL for edit view of entity
+
+    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/!(?P<action>new)$',
+                            GenericEntityEditView.as_view(),
+                            name='AnnalistEntityNewView'),
+    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>copy)$',
+                            GenericEntityEditView.as_view(),
+                            name='AnnalistEntityEditView'),
+    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>edit)$',
+                            GenericEntityEditView.as_view(),
+                            name='AnnalistEntityEditView'),
+    """
+    viewname = ( 
+        'AnnalistEntityNewView'             if action == "new" else
+        'AnnalistEntityEditView'
+        )
+    args = {'action': action, 'coll_id': coll_id, 'view_id': view_id}
+    if type_id:
+        args.update({'type_id': type_id})
+    if entity_id:
+        args.update({'entity_id': entity_id})
+    return reverse(viewname, kwargs=args)
+
 def collection_entity_list_url(coll_id="testcoll", list_id=None, type_id=None):
     """
     Return URL for entity list in collection some collection.
