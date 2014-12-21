@@ -34,10 +34,11 @@
 - [x] Update front page link at annalist.net
 - [x] Commit changes
 - [x] Upload to PyPI (see below)
-- [ ] Merge final updates to master
-- [ ] Test again on master branch
-- [ ] On develop branch, bump version number again (back to odd value)
-- [ ] Commit changes
+- [x] Merge final updates to master
+- [x] Test again on master branch
+- [x] Push master branch
+- [x] On develop branch, bump version number again (back to odd value)
+- [ ] Commit and push changes
 - [ ] Post announcement to Google Group, and elsewhere
 
 ## Build kit and PyPI upload
