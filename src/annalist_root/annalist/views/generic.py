@@ -34,19 +34,10 @@ from utils.ContentNegotiationView   import ContentNegotiationView
 import annalist
 from annalist                       import message
 from annalist                       import layout
+from annalist                       import util
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.models.site           import Site
 from annalist.models.annalistuser   import AnnalistUser
-
-# from annalist.models.sitedata       import SiteData
-# from annalist.models.collection     import Collection
-# from annalist.models.recordview     import RecordView
-# from annalist.models.recordlist     import RecordList
-# from annalist.models.recordfield    import RecordField
-# from annalist.models.recordtype     import RecordType
-# from annalist.models.recordtypedata import RecordTypeData
-# from annalist.models.entitydata     import EntityData
-# from annalist.models.entitytypeinfo import EntityTypeInfo
 
 from annalist.views.uri_builder     import uri_with_params, continuation_params
 
@@ -320,6 +311,10 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         user_id, user_uri = self.get_user_identity()
         coll_id = collection.get_id() if collection else "(site)"
+        if not util.valid_id(user_id):
+            log.warning("Invalid user_id %s, URI %s"%(user_id, user_uri))
+            message="Bad request to %(request_uri)s: invalid user_id: '"+user_id+"'"
+            return self.error(self.error400values(message=message))
         user_perms = self.get_user_permissions(collection, user_id, user_uri)
         if not user_perms:
             log.warning("No user permissions found for user_id %s, URI %s"%(user_id, user_uri))

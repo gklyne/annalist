@@ -10,6 +10,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 # @@TODO: define a view decorator to apply OAuth2 authentication requirement
 
 import os
+import re
 import json
 import copy
 import uuid
@@ -347,6 +348,9 @@ class LoginDoneView(generic.View):
         if not userid:
             log.info("No User ID specified")
             return HttpResponseRedirectLoginWithMessage(request, "No User ID specified")
+        if not re.match(r"\w+$", userid):
+            return HttpResponseRedirectLoginWithMessage(request, 
+                "User ID must consist of letters, digits and '_' chacacters (%s)"%(userid))
         # Save copy of current user details, if defined
         try:
             olduser = User.objects.get(username=userid)
@@ -365,7 +369,8 @@ class LoginDoneView(generic.View):
         #
         # The user id is entered by the user on the login form, and is used as a key to
         # access authenticated user details in the Django user database.  The user id 
-        # itself is not checked by the Oauth2 login flow.
+        # itself is not checked by the Oauth2 login flow, other than for checking that
+        # it containbs only work characters
         #
         # Instead, we trust that the associated email address has been confirmed by the 
         # OAuth2 provider, and don't allow login where the email adress differs from any 
