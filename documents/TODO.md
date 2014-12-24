@@ -2,6 +2,14 @@
 
 NOTE: this document is used for short-term working notes; longer-term planning information has been migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
 
+# Documentation
+
+1. Diagrams to support demos
+
+2. Illustrated tour of the user interface
+
+3. HOWTOs for certain tasks
+
 
 # V0.1.9, towards V0.1.10
 
@@ -68,7 +76,17 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
-- [ ] Rationalize common fields to reduce duplication? 
+- [ ] Rationalize common fields to reduce duplication?
+- [ ] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
+- [ ] Create a "wizard-like" (or one-form) interface for creating field+field-group set.
+- [ ] Simplify repetitive data entry; e.g.
+    - Use-case: create bibliographic author details from just full name entered
+    - [ ] derived field (possibly hidden) with a rule to guide its creation from other fields in a view
+    - [ ] default value from other field (possibly from a derived field)
+    - [ ] initial value/identifier templates (e.g. create ID from current date)
+        - NOTE: default and initial values behave differently
+    - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
+
 
 Notes for Future TODOs:
 
