@@ -10,6 +10,7 @@ import logging
 log = logging.getLogger(__name__)
 
 from annalist                       import message
+from annalist                       import util
 
 from annalist.identifiers           import ANNAL, RDF, RDFS
 
@@ -313,18 +314,46 @@ class EntityTypeInfo(object):
             )
         return self.entityclass.remove(self.entityparent, entity_id)
 
-    def get_entity(self, entity_id):
+    def get_entity(self, entity_id, action="view"):
         """
         Loads and returns an entity for the current type, or 
         returns None if the entity does not exist.
+
+        If `action` is "new" then a new entity is initialized (but not saved).
         """
         log.debug(
-            "get_entity id %s, parent %s, altparent %s"%
-            (entity_id, self.entityparent, self.entityaltparent)
+            "get_entity id %s, parent %s, altparent %s, action %s"%
+            (entity_id, self.entityparent, self.entityaltparent, action)
             )
-        if self.entityclass.exists(self.entityparent, entity_id, altparent=self.entityaltparent):
-            return self.entityclass.load(self.entityparent, entity_id, altparent=self.entityaltparent)
-        return None
+        entity = None
+        if util.valid_id(entity_id):
+            if action == "new":
+                entity = self.entityclass(self.entityparent, entity_id)
+                entity_initial_values = self.get_initial_entity_values(entity_id)
+                entity.set_values(entity_initial_values)
+            elif self.entityclass.exists(self.entityparent, entity_id, altparent=self.entityaltparent):
+                entity = self.entityclass.load(self.entityparent, entity_id, altparent=self.entityaltparent)
+        return entity
+
+    def get_entity_with_aliases(self, entity_id, action="view"):
+        """
+        Loads and returns an entity for the current type, or 
+        returns None if the entity does not exist.
+
+        If `action` is "new" then a new entity is initialized (but not saved).
+
+        Field aliases defined in the associated record type are populated
+        in the value returned.
+        """
+        entity = self.get_entity(entity_id, action=action)
+        # Fill in field aliases
+        if entity and ANNAL.CURIE.field_aliases in self.recordtype:
+            for alias in self.recordtype[ANNAL.CURIE.field_aliases]:
+                tgt = alias[ANNAL.CURIE.alias_target]
+                src = alias[ANNAL.CURIE.alias_source]
+                if entity.get(tgt, None) in [None, ""]:
+                    entity[tgt] = entity.get(src, "")
+        return entity
 
     def enum_entity_ids(self, usealtparent=False):
         """
@@ -351,10 +380,16 @@ class EntityTypeInfo(object):
         if not user_perms or self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]:
             altparent = self.entityaltparent if usealtparent else None
             if self.entityparent:
-                for e in self.entityparent.child_entities(
+                for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
                         altparent=altparent):
-                    yield e
+                    yield self.get_entity_with_aliases(eid)
+                #@@
+                # for e in self.entityparent.child_entities(
+                #         self.entityclass, 
+                #         altparent=altparent):
+                #     yield e
+                #@@
             else:
                 log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
         return

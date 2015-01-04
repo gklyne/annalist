@@ -99,7 +99,6 @@ def recordview_value_keys(view_uri=False):
     keys = set(
         [ 'annal:id', 'annal:type_id'
         , 'annal:type', 'annal:url'
-        , 'annal:record_type'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:add_field'
         , 'annal:view_fields'
@@ -122,7 +121,6 @@ def recordview_create_values(
         { 'annal:type':         "annal:View"
         , 'rdfs:label':         "%s %s/%s"%(update, coll_id, view_id)
         , 'rdfs:comment':       "%s help for %s in collection %s"%(update, view_id, coll_id)
-        , 'annal:record_type':  ""
         , 'annal:add_field':    "yes"
         , 'annal:view_fields':
           [ { 'annal:field_id':         "Entity_id"

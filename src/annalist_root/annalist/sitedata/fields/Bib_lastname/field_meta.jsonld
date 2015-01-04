@@ -8,5 +8,5 @@
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(last name)"
 , "annal:property_uri":         "bib:lastname"
-, "annal:field_entity_type":    "annal:BibEntry"
+, "annal:field_entity_type":    "bib:BibEntry"
 }

@@ -112,6 +112,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "Bib_publication_group"
             , "Group_field_group"
             , "List_field_group"
+            , "Type_alias_group"
             , "View_field_group"
             ])
         # Login with admin permissions
@@ -494,6 +495,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "Entity_id"
             , "Entity_label"
             , "Entity_type"
+            , "Type_aliases"
             , "Type_comment"
             , "Type_id"
             , "Type_label"
@@ -508,6 +510,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "Type_uri"
             , "Type_view"
             , "Type_list"
+            , "Type_aliases"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)
         self.check_select_field(s, "view_choice", self.views_expected, "View_view")
@@ -797,6 +800,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_group/Bib_publication_group", ["Bib_publication_group", "BibEntry publication detail fields"] ]
             , [ "_group/Group_field_group",     ["Group_field_group",     "Group field description"] ]
             , [ "_group/List_field_group",      ["List_field_group",      "List field description"] ]
+            , [ "_group/Type_alias_group",      ["Type_alias_group",      "Field alias"] ]
             , [ "_group/View_field_group",      ["View_field_group",      "View field description"] ]
             ])
         self.check_list_row_data(s, trows_expected)
@@ -838,6 +842,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "Group_label"
             , "Group_repeat_fields"
             , "Group_target_type"
+            , "Type_alias_source"
+            , "Type_alias_target"
             ])
         expect_fields = (
             [ "Group_id"
@@ -981,6 +987,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/List_repeat_fields",        ["List_repeat_fields"                 ] ]
             , [ "_field/List_target_type",          ["List_target_type"                   ] ]
             , [ "_field/List_type",                 ["List_type"                          ] ]
+            , [ "_field/Type_alias_source",         ["Type_alias_source"                  ] ]
+            , [ "_field/Type_alias_target",         ["Type_alias_target"                  ] ]
+            , [ "_field/Type_aliases",              ["Type_aliases"                       ] ]
             , [ "_field/Type_comment",              ["Type_comment"                       ] ]
             , [ "_field/Type_id",                   ["Type_id"                            ] ]
             , [ "_field/Type_label",                ["Type_label"                         ] ]

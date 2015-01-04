@@ -285,7 +285,7 @@ class EntitySelector(object):
                      | Group( QuotedString("'", "\\") )
                      | Group( p_id )
                      )
-        p_comp     = (Literal("==") | Literal("in"))
+        p_comp     = ( Literal("==") | Literal("in") )
         p_selector = ( p_val + p_comp + p_val + StringEnd() )
         try:
             resultlist = p_selector.parseString(selector).asList()
@@ -319,11 +319,13 @@ class EntitySelector(object):
             "<string>"                  literal string value.  Quotes within are escaped.
         """
         def get_entity(field_id):
+            "Get field from entity tested by filter"
             def get_entity_f(e, c):
                 return e.get(field_id, None)
             return get_entity_f
         #
         def get_context(name, field_id):
+            "Get field from named value in current display context"
             def get_context_f(e, c):
                 # Raises error if context value not supplied
                 if name in c and c[name]:
@@ -332,6 +334,7 @@ class EntitySelector(object):
             return get_context_f
         #
         def get_literal(value):
+            "Get literal value specified directly in selector string"
             def get_literal_f(e, c):
                 return value
             return get_literal_f

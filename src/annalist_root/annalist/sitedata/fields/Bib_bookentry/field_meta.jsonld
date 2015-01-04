@@ -9,7 +9,7 @@
 , "annal:field_value_type":     "bib:BookEntry"
 , "annal:placeholder":          "(Bib_bookentry)"
 , "annal:property_uri":         "bib:bookentry"
-, "annal:field_entity_type":    "annal:BibEntry"
+, "annal:field_entity_type":    "bib:BibEntry"
   // Reference to description of journal field
 , "annal:group_ref":            "Bib_book_group"
 , "annal:repeat_label_add":     "Add book"

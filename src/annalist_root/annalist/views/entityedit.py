@@ -289,23 +289,17 @@ class GenericEntityEditView(AnnalistGenericView):
         If an existing entity is accessed, values are read from storage, 
         otherwise a new entity object is created but not yet saved.
         """
-        entityclass = typeinfo.entityclass
         # log.info(
         #     "get_entity id %s, parent %s, action %s, altparent %s"%
         #     (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
         #     )
-        entity = None
-        if util.valid_id(entity_id):
-            if action == "new":
-                entity = entityclass(typeinfo.entityparent, entity_id)
-                entity_initial_values = typeinfo.get_initial_entity_values(entity_id)
-                entity.set_values(entity_initial_values)
-            elif entityclass.exists(typeinfo.entityparent, entity_id, altparent=typeinfo.entityaltparent):
-                entity = entityclass.load(typeinfo.entityparent, entity_id, altparent=typeinfo.entityaltparent)
+        entity = typeinfo.get_entity_with_aliases(entity_id, action)
         if entity is None:
-            parent_id = typeinfo.entityaltparent.get_id() if typeinfo.entityaltparent else "(none)"
+            parent_id    = typeinfo.entityparent.get_id()
+            altparent_id = typeinfo.entityaltparent.get_id() if typeinfo.entityaltparent else "(none)"
             log.debug(
-                "Entity not found: parent %s, entity_id %s"%(parent_id, entity_id)
+                "Entity not found: parent %s, altparent %s, entity_id %s"%
+                (parent_id, altparent_id, entity_id)
                 )
         return entity
 
@@ -416,7 +410,7 @@ class GenericEntityEditView(AnnalistGenericView):
             #     )
             http_response = self.save_entity(entityvaluemap, form_data,
                 entity_id, entity_type_id,
-                orig_entity_id, orig_entity_type_id, orig_entity,
+                orig_entity_id, orig_entity_type_id,
                 viewinfo, context_extra_values, messages)
             return http_response or HttpResponseRedirect(continuation_url)
 
@@ -443,7 +437,7 @@ class GenericEntityEditView(AnnalistGenericView):
             # Save entity, then redirect to selected view
             http_response = self.save_entity(entityvaluemap, form_data,
                 entity_id, entity_type_id, 
-                orig_entity_id, orig_entity_type_id, orig_entity,
+                orig_entity_id, orig_entity_type_id,
                 viewinfo, context_extra_values, messages)
             if http_response:
                 return http_response
@@ -534,7 +528,7 @@ class GenericEntityEditView(AnnalistGenericView):
     def save_entity(self,
             entityvaluemap, form_data,
             entity_id, entity_type_id,
-            orig_entity_id, orig_entity_type_id, orig_entity,
+            orig_entity_id, orig_entity_type_id, 
             viewinfo, context_extra_values, messages):
         """
         This method contains logic to save entity data modified through a form
@@ -548,10 +542,6 @@ class GenericEntityEditView(AnnalistGenericView):
         # log.info(
         #     "save_entity: save, action %s, entity_id %s, orig_entity_id %s, entity_type_id %s, orig_entity_type_id %s"
         #     %(form_data['action'], entity_id, orig_entity_id, entity_type_id, orig_entity_type_id)
-        #     )
-        # log.info(
-        #     "           orig_entity %r"
-        #     %(orig_entity)
         #     )
         action   = form_data['action']
         typeinfo = viewinfo.entitytypeinfo
@@ -607,9 +597,12 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
 
         # Assemble updated values for storage
+        #
         # Note: form data is applied as update to original entity data so that
-        # values not in view are preserved.
-        entity_values  = orig_entity.get_values() if orig_entity else {}
+        # values not in view are preserved.  Use original entity values without 
+        # field aliases as basis for new value.
+        orig_entity   = typeinfo.get_entity(entity_id, action)
+        entity_values = orig_entity.get_values() if orig_entity else {}
         # log.info("orig entity_values %r"%(entity_values,))
         if action == "copy":
             entity_values.pop(ANNAL.CURIE.uri, None)      # Force new URI on copy
@@ -762,7 +755,7 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         http_response = self.save_entity(entityvaluemap, form_data,
             entity_id, entity_type_id, 
-            orig_entity_id, orig_entity_type_id, orig_entity,
+            orig_entity_id, orig_entity_type_id,
             viewinfo, context_extra_values, messages)
         if http_response:
             return http_response

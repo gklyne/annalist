@@ -2,7 +2,7 @@
 , "@type":              ["annal:View"]
 , "annal:id":           "BibEntry_view"
 , "annal:type_id":      "_view"
-, "annal:record_type":  "annal:BibEntry"
+, "annal:record_type":  "bib:BibEntry"
 , "rdfs:label":         "Bibliographic metadata"
 , "rdfs:comment":       "Bibliography entries each contain some subset of standard data entries."
 , "annal:add_field":    "yes"

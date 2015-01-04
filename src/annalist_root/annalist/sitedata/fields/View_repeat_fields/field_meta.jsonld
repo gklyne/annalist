@@ -14,6 +14,4 @@
 , "annal:group_ref":            "View_field_group"
 , "annal:repeat_label_add":     "Add field"
 , "annal:repeat_label_delete":  "Remove selected field(s)"
-  // Field of parent (or view?) controls inclusion of add-field buttons on form
-, "annal:add_field_sentinel":   "annal:add_field"
 }

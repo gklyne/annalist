@@ -136,6 +136,7 @@ site_field_groups = (
     , "Bib_publication_group"
     , "Group_field_group"
     , "List_field_group"
+    , "Type_alias_group"
     , "View_field_group"
     ])
 

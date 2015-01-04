@@ -5,10 +5,10 @@
 , "rdfs:label":                 "List bibliographic entries"
 , "rdfs:comment":               "Description of list of views"
 , "annal:display_type":         "List"
-, "annal:record_type":          "annal:BibEntry"
+, "annal:record_type":          "bib:BibEntry"
 , "annal:default_view":         "BibEntry_view"
 , "annal:default_type":         "BibEntry_type"
-, "annal:list_entity_selector": "'annal:BibEntry' in [@type]"
+, "annal:list_entity_selector": "'bib:BibEntry' in [@type]"
 , "annal:list_fields":
   [ { "annal:field_id":             "Entity_id"
     , "annal:field_placement":      "small:0,3"

@@ -25,5 +25,8 @@
   , { "annal:field_id":         "Type_list"
     , "annal:field_placement":  "small:6,6"
     }
+  , { "annal:field_id":         "Type_aliases"
+    , "annal:field_placement":  "small:0,12"
+    }
   ]
 }
