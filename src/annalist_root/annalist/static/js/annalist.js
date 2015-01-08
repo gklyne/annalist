@@ -14,6 +14,8 @@ annalist = {
         if (window.matchMedia(Foundation.media_queries['medium']).matches){
             $(".medium-size-8").attr("size", 8);
             $(".medium-rows-8").attr("rows", 8);
+            $(".medium-size-12").attr("size", 12);
+            $(".medium-rows-12").attr("rows", 12);
             $(".medium-add-margin").attr("width", "95%")
         };
     }

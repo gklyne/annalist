@@ -302,9 +302,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             <div class="%(button_right_classes)s">
               <div class="row">
                 <div class="small-12 columns">
-                  <input type="submit" name="new_view"      value="New view" />
-                  <input type="submit" name="new_field"     value="New field" />
                   <input type="submit" name="new_type"      value="New type" />
+                  <input type="submit" name="new_view"      value="New view" />
+                  <input type="submit" name="new_field"     value="New field type" />
                 </div>
               </div>
             </div>

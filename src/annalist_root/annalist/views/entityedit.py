@@ -492,6 +492,11 @@ class GenericEntityEditView(AnnalistGenericView):
                 type_edit_uri_base, {}, continuation_url
                 )
 
+        # Add new value to type used for enumerated value field
+        # @@TODO: cf. find_new_enum below and 'new_*' logic above
+        # @@TODO: subsume 'new_*' logic above into this option
+        # @@TODO: updates to invoke_config_edit_view
+
         # Add new instance of repeating field, and redisplay
         add_field = self.find_add_field(entityvaluemap, form_data)
         # log.info("*** Add field: "+repr(add_field))
@@ -759,6 +764,7 @@ class GenericEntityEditView(AnnalistGenericView):
             viewinfo, context_extra_values, messages)
         if http_response:
             return http_response
+        # @@TODO: get permission required mfrom typeinfo of entity to be created
         if viewinfo.check_authorization("config"):
             return viewinfo.http_response
         (continuation_next, continuation_here) = self.continuation_urls(
@@ -783,8 +789,9 @@ class GenericEntityEditView(AnnalistGenericView):
 
     def find_remove_field(self, entityvaluemap, form_data):
         """
-        Locate remove field option in form data and, if present, return a description of the field to
-        be removed, with the list of member indexes to be removed added as element 'remove_fields'.
+        Locate remove field option in form data and, if present, return a description of 
+        the field to be removed, with the list of member indexes to be removed added as 
+        element 'remove_fields'.
         """
         for repeat_desc in self.find_repeat_fields(entityvaluemap):
             # log.info("find_remove_field: %r"%repeat_desc)
@@ -796,6 +803,14 @@ class GenericEntityEditView(AnnalistGenericView):
                     repeat_desc['remove_fields'] = []
                 return repeat_desc
         return None
+
+    def find_new_enum(self, entityvaluemap, form_data):
+        """
+        Locate add enumerated value option in form data and, if present, return a 
+        description of the enumerated field for which a new value is to be created.
+        """
+        assert False, "@@TODO find_new_enum"
+        return
 
     def find_repeat_id(self, entityvaluemap, repeat_id):
         """
@@ -850,7 +865,8 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Iterate over repeat field groups in the current view.
 
-        Each value found is returned as a field description dictionary (cf. FieldDescription).
+        Each value found is returned as a field description dictionary 
+        (cf. FieldDescription).
         """
         def _find_repeat_fields(fieldmap):
             if fieldmap is None:
@@ -905,6 +921,16 @@ class GenericEntityEditView(AnnalistGenericView):
             if str(i) not in remove_field_desc['remove_fields']:
                 new_repeatvals.append(old_repeatvals[i])
         entity[repeatvals_key] = new_repeatvals
+        return
+
+    def find_enum_fields(self, entityvaluemap):
+        """
+        Iterate over enumerated-value fields in the current view.
+
+        Each value found is returned as a field description dictionary 
+        (cf. FieldDescription).
+        """
+        assert False, "@@TODO find_enum_fields"
         return
 
 # End.
