@@ -429,7 +429,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 entity_id, entity_type_id, 
                 orig_entity_id, orig_entity_type_id,  orig_entity,
                 viewinfo, context_extra_values, messages,
-                view_edit_uri_base, {"add_field": "View_fields"}, continuation_url
+                view_edit_uri_base, "config",
+                {"add_field": "View_fields"}, continuation_url
                 )
 
         # Update or define new view or type (invoked from generic entity editing view)
@@ -465,7 +466,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 entity_id, entity_type_id, 
                 orig_entity_id, orig_entity_type_id, orig_entity,
                 viewinfo, context_extra_values, messages,
-                view_edit_uri_base, {}, continuation_url
+                view_edit_uri_base,  "config",
+                {}, continuation_url
                 )
 
         if 'new_field' in form_data:
@@ -477,7 +479,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 entity_id, entity_type_id,
                 orig_entity_id, orig_entity_type_id, orig_entity,
                 viewinfo, context_extra_values, messages,
-                view_edit_uri_base, {}, continuation_url
+                view_edit_uri_base,  "config",
+                {}, continuation_url
                 )
 
         if 'new_type' in form_data:
@@ -489,13 +492,32 @@ class GenericEntityEditView(AnnalistGenericView):
                 entity_id, entity_type_id,
                 orig_entity_id, orig_entity_type_id, orig_entity,
                 viewinfo, context_extra_values, messages,
-                type_edit_uri_base, {}, continuation_url
+                type_edit_uri_base,  "config",
+                {}, continuation_url
                 )
 
         # Add new value to type used for enumerated value field
-        # @@TODO: cf. find_new_enum below and 'new_*' logic above
         # @@TODO: subsume 'new_*' logic above into this option
-        # @@TODO: updates to invoke_config_edit_view
+        new_enum = self.find_new_enum(entityvaluemap, form_data)
+        if new_enum:
+            enum_type_id  = new_enum['field_options_typeref']
+            enum_typeinfo = EntityTypeInfo(
+                viewinfo.site, viewinfo.collection, enum_type_id
+                )
+            enum_edit_uri_base = self.view_uri("AnnalistEntityNewView",
+                coll_id=viewinfo.coll_id, 
+                view_id=enum_typeinfo.get_default_view_id(), 
+                type_id=enum_type_id, 
+                action="new"
+                )
+            return self.invoke_config_edit_view(
+                entityvaluemap, form_data,
+                entity_id, entity_type_id,
+                orig_entity_id, orig_entity_type_id, orig_entity,
+                viewinfo, context_extra_values, messages,
+                enum_edit_uri_base, "new",
+                {}, continuation_url
+                )
 
         # Add new instance of repeating field, and redisplay
         add_field = self.find_add_field(entityvaluemap, form_data)
@@ -743,7 +765,8 @@ class GenericEntityEditView(AnnalistGenericView):
             entity_id, entity_type_id, 
             orig_entity_id, orig_entity_type_id, orig_entity,
             viewinfo, context_extra_values, messages,
-            config_edit_url, url_params, continuation_url):
+            config_edit_url, config_edit_perm,
+            url_params, continuation_url):
         """
         Common logic for invoking a configuration resource edit while editing
         some other resource:
@@ -765,7 +788,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if http_response:
             return http_response
         # @@TODO: get permission required mfrom typeinfo of entity to be created
-        if viewinfo.check_authorization("config"):
+        if viewinfo.check_authorization(config_edit_perm):
             return viewinfo.http_response
         (continuation_next, continuation_here) = self.continuation_urls(
             form_data, continuation_url, 
@@ -808,9 +831,14 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Locate add enumerated value option in form data and, if present, return a 
         description of the enumerated field for which a new value is to be created.
+
+        Field 'field_options_typeref' of the returned value is the type_id of the 
+        enumerated value type.
         """
-        assert False, "@@TODO find_new_enum"
-        return
+        for enum_desc in self.find_enum_fields(entityvaluemap):
+            if enum_desc['field_name']+"__new" in form_data:
+                return enum_desc
+        return None
 
     def find_repeat_id(self, entityvaluemap, repeat_id):
         """
@@ -930,7 +958,41 @@ class GenericEntityEditView(AnnalistGenericView):
         Each value found is returned as a field description dictionary 
         (cf. FieldDescription).
         """
-        assert False, "@@TODO find_enum_fields"
+        # @@TODO: factor out field enumeration logic, share with find_repeat_fields
+        def _find_enum_fields(fieldmap):
+            if fieldmap is None:
+                log.warning("entityedit.find_enum_fields: fieldmap is None")
+                return
+            # Always called with list of field descriptions
+            for field_desc in fieldmap:
+                log.debug("find_enum_fields: field_desc %r"%(field_desc))
+                groupref    = field_desc.group_ref()
+                if field_desc.is_enum_field():
+                    log.info("find_enum_fields: enum field name %s"%(field_desc['field_name']))
+                    yield field_desc
+                if groupref is not None:
+                    if not util.valid_id(groupref):
+                        # this is for resilience in the face of bad data
+                        log.warning(
+                            "invalid group_ref %s in field description for %s"%
+                            (groupref, field_desc['field_id'])
+                            )
+                    log.info("find_enum_fields: groupref %s"%(groupref))
+                    # if field_desc.is_repeat_group():
+                    #     yield field_desc
+                    for fd in _find_enum_fields(field_desc['group_field_descs']):
+                        # log.info("find_repeat_field FieldListValueMap yield %r"%(fd))
+                        yield fd
+            return
+        for evmapitem in entityvaluemap:
+            # Data entry fields are always presented within a top-level FieldListValueMap
+            # cf. self.get_view_entityvaluemap.
+            #
+            # log.info("find_enum_fields evmapitem %r"%(evmapitem,))
+            itemdesc = evmapitem.get_structure_description()
+            # log.info("**** find_enum_fields itemdesc %r"%(itemdesc,))
+            if itemdesc['field_type'] == "FieldListValueMap":
+                return _find_enum_fields(itemdesc['field_list'])
         return
 
 # End.

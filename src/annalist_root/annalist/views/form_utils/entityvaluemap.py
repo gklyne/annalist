@@ -24,7 +24,7 @@ class EntityValueMap(object):
 
         basemap is a static list of the initial (base) fields that are covered
                 by this EntityValueMap.  Each entry in this list provides at 
-                least these two methods:
+                least these three methods:
                 map_entity_to_context:
                     accepts a dictionary-like value containing entity values,
                     and extra/default value keyword parameters, and returns a 
@@ -34,6 +34,10 @@ class EntityValueMap(object):
                     accepts a dictionary-like value containing form data values, 
                     and returns a partial dictionary of corressponding entity 
                     value fields.
+                get_structure_description:
+                    returns a simple directory describing the field structure.
+                    Common to all is member 'field_type', which indicates the type
+                    if field map entry.  Other fields are dependent onthe type.
 
         See classes SimpleValueMap, FieldValue, FieldListValueMap, 
         RepeatedValuesMap, etc., for possible entries in an entity/value map.

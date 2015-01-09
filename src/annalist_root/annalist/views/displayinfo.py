@@ -322,17 +322,20 @@ class DisplayInfo(object):
 
     # Additonal support functions
 
-    def get_type_view_id(self, type_id):
-        """
-        Get default view id for given type
-        """
-        view_id = None
-        if self.type_id:
-            if self.entitytypeinfo.recordtype:
-                view_id  = self.entitytypeinfo.recordtype.get(ANNAL.CURIE.type_view, None)
-            else:
-                log.warning("DisplayInfo.get_type_view_id: no type data for %s"%(self.type_id))
-        return view_id
+    #@@
+    # def get_type_view_id(self, type_id):
+    #     """
+    #     Get default view id for given type
+    #     """
+    #     # @@TODO: remove this
+    #     view_id = None
+    #     if self.type_id:
+    #         if self.entitytypeinfo.recordtype:
+    #             view_id  = self.entitytypeinfo.recordtype.get(ANNAL.CURIE.type_view, None)
+    #         else:
+    #             log.warning("DisplayInfo.get_type_view_id: no type data for %s"%(self.type_id))
+    #     return view_id
+    #@@
 
     def get_view_id(self, type_id, view_id):
         """
@@ -341,9 +344,10 @@ class DisplayInfo(object):
         if not self.http_response:
             view_id = (
                 view_id or 
-                self.get_type_view_id(type_id) or
+                self.entitytypeinfo.get_default_view_id()
+                # self.get_type_view_id(type_id) or
                 # self.collection.get_default_view() or
-                "Default_view"
+                # "Default_view"
                 )
             if not view_id:
                 log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))

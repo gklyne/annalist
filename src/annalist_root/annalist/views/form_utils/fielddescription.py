@@ -173,11 +173,25 @@ class FieldDescription(object):
         repeat_render_types = ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"]
         return self._field_desc['field_render_type'] in repeat_render_types
 
+    def is_enum_field(self):
+        """
+        Returns true if this is an enumerated-value field, in which case the
+        'field_options_typeref' field is assumed to the type_id of the value 
+        type to be enumerated.
+        """
+        enum_render_types = (
+            [ "EntityTypeId"
+            , "Type", "View", "List", "Field"
+            , "Enum", "Enum_optional"
+            ])
+        return self._field_desc['field_render_type'] in enum_render_types
+
     def __repr__(self):
         return (
             "FieldDescription("+
             "  { 'field_id': %r\n"%(self._field_desc["field_id"])+
             "  , 'field_name': %r\n"%(self._field_desc["field_name"])+
+            "  , 'field_render_type': %r\n"%(self._field_desc["field_render_type"])+
             "  , 'field_property_uri': %r\n"%(self._field_desc["field_property_uri"])+
             "  , 'group_ref': %r"%(self._field_desc["field_group_ref"])+
             "  })"

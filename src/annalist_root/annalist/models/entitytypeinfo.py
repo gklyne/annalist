@@ -416,4 +416,15 @@ class EntityTypeInfo(object):
         values[ANNAL.CURIE.id] = entity_id
         return values
 
+    def get_default_view_id(self):
+        """
+        Returns the default view id for the current record type
+        """
+        view_id = None
+        if self.recordtype:
+            view_id = self.recordtype.get(ANNAL.CURIE.type_view, None)
+        else:
+            log.warning("EntityTypeInfo.get_default_view_id: no type data for %s"%(self.type_id))
+        return view_id or "Default_view"
+
 # End.
