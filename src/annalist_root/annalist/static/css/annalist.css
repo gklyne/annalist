@@ -253,6 +253,17 @@ div.row.table div.trow div.columns
     font-size: 0.875rem;
 } 
 
+div.small-9.columns.less_new_button
+{
+    /* width: calc(100%-8em); */
+}
+
+div.row .columns .row div.small-3.columns.new_button
+{
+    padding-left: 0;
+    /* width: 6em; */
+}
+
 /*
 div.row .columns ,
 div.row .column

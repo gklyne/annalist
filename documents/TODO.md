@@ -14,10 +14,12 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Bug: https://github.com/gklyne/annalist/issues/39 (hotfix 0.1.8a)
 - [x] Add mechanism to alias a common field (e.g. rdfs:label) to return some other specified field value (e.g. bib:title).  Associate aliases with record type, used when constructing view/list context.
 - [ ] Option to create linked record directly from other record entry field (issue #23). Propose enum type renderer should include a "New" button that launches new view to enter new value of appropriate type.
-    - [ ] Add new logic in views.entityedit
-    - [ ] Create enumeration renderer: update template or replace withj renderer class to add extra "New" button to enumerated value fields
-    - [ ] Create test case for new option (should be able to adapt, e.g., "New view" test case?)
+    - [x] Add new logic in views.entityedit
+    - [x] Create enumeration renderer: update template or replace with renderer class to add extra "New" button to enumerated value fields
+    - [x] Create test case for new option (should be able to adapt, e.g., "New view" test case?)
+    - [ ] Create test case for new button on field selector in _view edit
     - [ ] Consider removing "New type", "New view" and "New field type" buttons, and corresponding test cases.
+    - [ ] Eliminate type-specific render types
 - [ ] Usability issues arising from creating cruising log
     - [ ] 'Add field' can't be followed by 'New field' because of duplicate property used
         - consider using Enum_optional logic so the field selector id isn't automatically filled in;  ignore blank field ids when processing;  ensure field with blank id is still saved with view/group.

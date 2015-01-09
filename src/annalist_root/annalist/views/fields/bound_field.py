@@ -165,6 +165,9 @@ class bound_field(object):
         elif name == "field_value_link":
             # Used to get link corresponding to a value, if such exists
             return self.get_field_link()
+        elif name == "field_value_link_continuation":
+            # Used to get link corresponding to a value, if such exists
+            return self.get_field_link()+self.get_continuation_param()
         elif name == "field_description":
             # Used to get link corresponding to a value, if such exists
             return self._field_description
