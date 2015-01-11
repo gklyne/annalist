@@ -646,9 +646,13 @@ class GenericEntityEditView(AnnalistGenericView):
         if viewinfo.view_id == "View_view":
             properties = set()
             for view_field in entity_values[ANNAL.CURIE.view_fields]:
-                field_id = view_field[ANNAL.CURIE.field_id]
-                field    = RecordField.load(viewinfo.collection, field_id, altparent=viewinfo.site)
-                property_uri = field[ANNAL.CURIE.property_uri]
+                field_id     = view_field[ANNAL.CURIE.field_id]
+                property_uri = view_field.get(ANNAL.CURIE.property_uri, None)
+                if not property_uri:
+                    field = RecordField.load(
+                        viewinfo.collection, field_id, altparent=viewinfo.site
+                        )
+                    property_uri = field[ANNAL.CURIE.property_uri]
                 if property_uri in properties:
                     return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
                         error_head=message.VIEW_DESCRIPTION_HEADING,

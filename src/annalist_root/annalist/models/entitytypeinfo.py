@@ -331,7 +331,9 @@ class EntityTypeInfo(object):
                 entity = self.entityclass(self.entityparent, entity_id)
                 entity_initial_values = self.get_initial_entity_values(entity_id)
                 entity.set_values(entity_initial_values)
-            elif self.entityclass.exists(self.entityparent, entity_id, altparent=self.entityaltparent):
+            elif self.entityclass.exists(
+                    self.entityparent, entity_id, altparent=self.entityaltparent
+                    ):
                 entity = self.entityclass.load(self.entityparent, entity_id, altparent=self.entityaltparent)
         return entity
 

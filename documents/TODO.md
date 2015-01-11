@@ -18,7 +18,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Create enumeration renderer: update template or replace with renderer class to add extra "New" button to enumerated value fields
     - [x] Create test case for new option (should be able to adapt, e.g., "New view" test case?)
     - [x] Create test case for new button on field selector in _view edit
-- [ ] BUG: View property-override in field list is not working, or is not recognized by by the duplicate property check.  See also issue (below) about 'Add field' followed by 'New field'.
+- [x] BUG: View property-override in field list is not working, or is not recognized by by the duplicate property check.  See also issue (below) about 'Add field' followed by 'New field'.
 - [ ] Usability issues arising from creating cruising log
     - [ ] 'Add field' can't be followed by 'New field' because of duplicate property used
         - consider using Enum_optional logic so the field selector id isn't automatically filled in;  ignore blank field ids when processing;  ensure field with blank id is still saved with view/group.
