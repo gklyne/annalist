@@ -253,15 +253,42 @@ div.row.table div.trow div.columns
     font-size: 0.875rem;
 } 
 
-div.small-9.columns.less_new_button
+/* Buttons, and special styling for enum_new button */
+
+div.row .columns .row div.less_new_button
 {
     /* width: calc(100%-8em); */
 }
 
-div.row .columns .row div.small-3.columns.new_button
+div.row .columns .row div.new_button
 {
     padding-left: 0;
     /* width: 6em; */
+}
+
+div.row div.new_button button
+{   /* Override Foundation styling */
+    display: inline-block;
+    position: relative;
+    background-color: #F0F0F0;
+    border-color: #888;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 0.375rem;
+    color: #000000;
+    cursor: default;
+    font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: normal;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 0.375rem;
+    margin-bottom: 0;
+    padding-top: 0px;
+    padding-bottom: 0;
+    padding-right: 0.25rem;
+    padding-left: 0.25rem;
 }
 
 /*
