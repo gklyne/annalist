@@ -197,7 +197,7 @@ def recordlist_view_context_data(
             }
           , { 'field_id':           'List_type'                 # fields[1]
             , 'field_label':        'List display type'
-            , 'field_render_type':  'Enum'
+            , 'field_render_type':  'Enum_choice'
             , 'field_name':         'List_type'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6right')
             , 'field_value_type':   'annal:List_type'

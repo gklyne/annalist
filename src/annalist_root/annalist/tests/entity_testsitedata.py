@@ -60,8 +60,8 @@ site_types = (
     , "BibEntry_type"
     , "Default_type"
     , "Enum_bib_type"
-    , "Enum_field_type"
     , "Enum_list_type"
+    , "Enum_render_type"
     ])
 
 def get_site_types_sorted():
@@ -148,7 +148,15 @@ def get_site_field_groups():
 
 #   ----- Fields -----
 
-site_fields = (
+site_default_entity_fields = (
+    [ "_initial_values"
+    , "Entity_comment"
+    , "Entity_id"
+    , "Entity_label"
+    , "Entity_type"
+    ])
+
+site_bibentry_fields = (
     [ "_initial_values"
     , "Bib_address"
     , "Bib_alternate"
@@ -186,10 +194,10 @@ site_fields = (
     , "Bib_url"
     , "Bib_volume"
     , "Bib_year"
-    , "Entity_comment"
-    , "Entity_id"
-    , "Entity_label"
-    , "Entity_type"
+    ])
+
+site_field_fields = (
+    [ "_initial_values"
     , "Field_comment"
     , "Field_default"
     , "Field_entity_type"
@@ -206,6 +214,10 @@ site_fields = (
     , "Field_restrict"
     , "Field_type"
     , "Field_typeref"
+    ])
+
+site_group_fields = (
+    [ "_initial_values"
     , "Group_comment"
     , "Group_field_sel"
     , "Group_field_placement"
@@ -213,6 +225,10 @@ site_fields = (
     , "Group_id"
     , "Group_label"
     , "Group_repeat_fields"
+    ])
+
+site_list_fields = (
+    [ "_initial_values"
     , "List_choice"
     , "List_comment"
     , "List_default_type"
@@ -223,17 +239,29 @@ site_fields = (
     , "List_repeat_fields"
     , "List_target_type"
     , "List_type"
+    ])
+
+site_type_fields = (
+    [ "_initial_values"
     , "Type_comment"
     , "Type_id"
     , "Type_label"
     , "Type_list"
     , "Type_uri"
     , "Type_view"
+    ])
+
+site_user_fields = (
+    [ "_initial_values"
     , "User_description"
     , "User_id"
     , "User_name"
     , "User_permissions"
     , "User_uri"
+    ])
+
+site_view_fields = (
+    [ "_initial_values"
     , "View_add_field"
     , "View_choice"
     , "View_comment"
@@ -243,11 +271,35 @@ site_fields = (
     , "View_target_type"
     ])
 
+site_fields = (
+    [ "_initial_values" ] +
+    site_bibentry_fields[1:] +
+    site_default_entity_fields[1:] +
+    site_field_fields[1:] +
+    site_group_fields[1:] +
+    site_list_fields[1:] +
+    site_type_fields[1:] +
+    site_user_fields[1:] +
+    site_view_fields[1:] +
+    [])
+
 def get_site_fields_sorted():
     return site_fields[1:]
 
 def get_site_fields():
     return set(site_fields[1:])
+
+def get_site_default_entity_fields_sorted():
+    return site_default_entity_fields[1:]
+
+def get_site_default_entity_fields():
+    return set(site_default_entity_fields[1:])
+
+def get_site_bibentry_fields_sorted():
+    return site_bibentry_fields[1:] + site_default_entity_fields[1:]
+
+def get_site_bibentry_fields():
+    return set(site_bibentry_fields[1:] + site_default_entity_fields[1:])
 
 #   ----- Field render types -----
 
@@ -256,6 +308,7 @@ site_field_types = (
     , "EntityId"
     , "EntityTypeId"
     , "Enum"
+    , "Enum_choice"
     , "Enum_optional"
     , "Field"
     , "Identifier"

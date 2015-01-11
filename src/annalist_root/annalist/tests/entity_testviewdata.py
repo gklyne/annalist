@@ -245,7 +245,9 @@ def recordview_entity_view_context_data(
 def recordview_entity_view_form_data(
         coll_id="testcoll", 
         view_id=None, orig_id=None, 
-        action=None, cancel=None, update="RecordView", field3_placement="small:0,12"):
+        action=None, cancel=None, update="RecordView", 
+        field3_placement="small:0,12",
+        new_enum=None):
     form_data_dict = (
         { 'View_label':         '%s data ... (%s/%s)'%(update, coll_id, view_id)
         , 'View_comment':       '%s description ... (%s/%s)'%(update, coll_id, view_id)
@@ -276,6 +278,8 @@ def recordview_entity_view_form_data(
         form_data_dict['action']        = action
     if cancel:
         form_data_dict['cancel']        = "Cancel"
+    elif new_enum:
+        form_data_dict[new_enum]        = new_enum
     else:
         form_data_dict['save']          = 'Save'
     return form_data_dict

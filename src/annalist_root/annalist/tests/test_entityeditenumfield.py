@@ -45,6 +45,11 @@ from entity_testutils               import (
 from entity_testtypedata            import (
     recordtype_create_values, 
     )
+from entity_testviewdata            import (
+    recordview_url, 
+    recordview_create_values, recordview_values,
+    recordview_entity_view_form_data, 
+    )
 from entity_testentitydata          import (
     entity_url, entitydata_edit_url, 
     entitydata_value_keys, entitydata_create_values, entitydata_values,
@@ -104,6 +109,37 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         # log.info(e.get_values())
         self.assertDictionaryMatch(e.get_values(), v)
         return e
+
+    def _create_record_view(self, view_id):
+        "Helper function creates record view entry with supplied view_id"
+        t = RecordView.create(
+            self.testcoll, view_id, recordview_create_values(view_id=view_id)
+            )
+        return t
+
+    def _check_record_view_values(
+            self, view_id, view_uri=None, update="RecordView", 
+            num_fields=4,
+            update_dict=None,
+            ):
+        "Helper function checks content of record view entry with supplied view_id"
+        self.assertTrue(RecordView.exists(self.testcoll, view_id))
+        t = RecordView.load(self.testcoll, view_id)
+        self.assertEqual(t.get_id(), view_id)
+        self.assertEqual(t.get_view_url(), TestHostUri + recordview_url("testcoll", view_id))
+        v = recordview_values(
+            view_id=view_id, view_uri=view_uri, update=update, 
+            num_fields=num_fields,
+            )
+        if update_dict:
+            v.update(update_dict)
+            for k in update_dict:
+                if update_dict[k] is None:
+                    v.pop(k, None)
+        # log.info("*** actual: %r"%(t.get_values(),))
+        # log.info("*** expect: %r"%(v,))
+        self.assertDictionaryMatch(t.get_values(), v)
+        return t
 
     #   -----------------------------------------------------------------------------
     #   Form response tests
@@ -205,7 +241,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         return
 
     def test_post_new_entity_enum_type_new(self):
-        self.assertFalse(EntityData.exists(self.testdata, "entitynewview"))
+        self.assertFalse(EntityData.exists(self.testdata, "entitynewtype"))
         f = entitydata_default_view_form_data(
                 entity_id="entitynewtype", action="new", update="Updated entity", 
                 new_enum="entity_type__new"
@@ -390,6 +426,36 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   401)
         self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
+    #   -------- edit view: tests 'new' button on enumeration in repeated value --------
+
+    def test_post_edit_view_enum_field_new(self):
+        self._create_record_view("editview")
+        self._check_record_view_values("editview")
+        f = recordview_entity_view_form_data(
+            view_id="editview", orig_id="editview", 
+            action="edit", update="Updated RecordView",
+            new_enum="View_repeat_fields__3__Field_id__new"
+            )
+        u = entitydata_edit_url(
+            "edit", "testcoll", "_view", 
+            entity_id="editview", view_id="View_view"
+            )
+        r = self.client.post(u, f)
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        w = entitydata_edit_url(
+            "edit", "testcoll", "_view", entity_id="editview", 
+            view_id="View_view"
+            )
+        c = continuation_url_param(w)
+        self.assertIn(TestHostUri+v, r['location'])
+        self.assertIn(c, r['location'])
+        self._check_record_view_values("editview", update="Updated RecordView")
         return
 
 # End.

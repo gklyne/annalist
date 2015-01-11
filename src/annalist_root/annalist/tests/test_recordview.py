@@ -43,6 +43,7 @@ from entity_testutils                   import (
     site_view_url, collection_edit_url, 
     collection_entity_view_url,
     collection_create_values,
+    render_select_options,
     create_test_user
     )
 from entity_testviewdata                import (
@@ -59,6 +60,10 @@ from entity_testentitydata              import (
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
+from entity_testsitedata                import (
+    get_site_default_entity_fields_sorted,
+    get_site_bibentry_fields_sorted
+    ) 
 
 #   -----------------------------------------------------------------------------
 #
@@ -488,7 +493,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=6)
-        formrow5 = """
+        formrow5 = ("""
             <div class="small-12 medium-4 columns">
               <div class="row show-for-small-only">
                 <div class="view-label small-12 columns">
@@ -497,16 +502,16 @@ class RecordViewEditViewTest(AnnalistTestCase):
               </div>
               <div class="row">
                 <div class="small-12 columns">
-                  <select name="View_repeat_fields__0__Field_id">
-                    <option>Entity_comment</option>
-                    <option selected="selected">Entity_id</option>
-                    <option>Entity_label</option>
-                    <option>Entity_type</option>
-                  </select>
+                  """+
+                    render_select_options(
+                      "View_repeat_fields__0__Field_id", "Field id",
+                      get_site_default_entity_fields_sorted(),
+                      "Entity_id")+
+                  """
                 </div>
               </div>
             </div>
-            """%field_vals(width=4)
+            """)%field_vals(width=4)
         formrow6 = """
             <div class="small-1 columns checkbox-in-edit-padding">
               <input type="checkbox" class="select-box right" 
@@ -589,7 +594,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=6)
-        formrow5 = """
+        formrow5 = ("""
             <div class="small-12 medium-4 columns">
               <div class="row show-for-small-only">
                 <div class="view-label small-12 columns">
@@ -598,52 +603,16 @@ class RecordViewEditViewTest(AnnalistTestCase):
               </div>
               <div class="row">
                 <div class="small-12 columns">
-                  <select name="View_repeat_fields__0__Field_id">
-                    <option>Bib_address</option>
-                    <option>Bib_alternate</option>
-                    <option>Bib_authors</option>
-                    <option>Bib_bookentry</option>
-                    <option>Bib_booktitle</option>
-                    <option>Bib_chapter</option>
-                    <option>Bib_description</option>
-                    <option>Bib_edition</option>
-                    <option>Bib_editors</option>
-                    <option>Bib_eprint</option>
-                    <option>Bib_firstname</option>
-                    <option>Bib_howpublished</option>
-                    <option>Bib_id</option>
-                    <option>Bib_idanchor</option>
-                    <option>Bib_identifiers</option>
-                    <option>Bib_idtype</option>
-                    <option>Bib_institution</option>
-                    <option>Bib_journal</option>
-                    <option>Bib_jurisdiction</option>
-                    <option>Bib_lastname</option>
-                    <option>Bib_license</option>
-                    <option>Bib_month</option>
-                    <option>Bib_name</option>
-                    <option>Bib_note</option>
-                    <option>Bib_number</option>
-                    <option>Bib_organization</option>
-                    <option>Bib_pages</option>
-                    <option>Bib_publication_details</option>
-                    <option>Bib_publisher</option>
-                    <option>Bib_school</option>
-                    <option>Bib_shortcode</option>
-                    <option>Bib_title</option>
-                    <option>Bib_type</option>
-                    <option>Bib_url</option>
-                    <option>Bib_volume</option>
-                    <option>Bib_year</option>
-                    <option>Entity_comment</option>
-                    <option selected="selected">Entity_id</option>
-                    <option>Entity_label</option>
-                    <option>Entity_type</option>
-                  </select>
+                  """+
+                    render_select_options(
+                      "View_repeat_fields__0__Field_id", "Field id",
+                      get_site_bibentry_fields_sorted(),
+                      "Entity_id")+
+                  """
                 </div>
               </div>
             </div>
-            """%field_vals(width=4)
+            """)%field_vals(width=4)
         formrow6 = """
             <div class="small-1 columns checkbox-in-edit-padding">
               <input type="checkbox" class="select-box right" 

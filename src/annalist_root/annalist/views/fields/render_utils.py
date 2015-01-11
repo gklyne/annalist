@@ -38,8 +38,10 @@ _field_view_files = (
     , "List":           "field/annalist_view_select.html"
     , "Field":          "field/annalist_view_select.html"
     , "Enum":           "field/annalist_view_select.html"
+    , "Enum_choice":    "field/annalist_view_choice.html"
     , "Enum_optional":  "field/annalist_view_select.html"
     , "View_sel":       "field/annalist_view_view_sel.html"
+    , "List_sel":       "field/annalist_view_choice.html"
     })
 
 _field_edit_files = (
@@ -56,8 +58,10 @@ _field_edit_files = (
     , "List":           "field/annalist_edit_select.html"
     , "Field":          "field/annalist_edit_select.html"
     , "Enum":           "field/annalist_edit_select.html"
+    , "Enum_choice":    "field/annalist_edit_choice.html"
     , "Enum_optional":  "field/annalist_edit_select.html"
     , "View_sel":       "field/annalist_edit_view_sel.html"
+    , "List_sel":       "field/annalist_edit_choice.html"
     })
 
 def get_field_renderer(renderid):

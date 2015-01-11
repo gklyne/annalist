@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
+, "annal:id":           "RepeatGroup"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "Repeating field group"
+, "rdfs:comment":       "Field consists of a group of sub-fields, which may be repeated zero or more times in the containing form.  Each field is rendered with a label to the left of the field value."
+, "annal:uri":          "annal:field_render_type/RepeatGroup"
+}

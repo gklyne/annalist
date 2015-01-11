@@ -193,7 +193,7 @@ def recordfield_entity_view_context_data(
           , { 'field_label':        'Field render type'
             , 'field_id':           'Field_render'
             , 'field_name':         'Field_render'
-            , 'field_render_type':  'Enum'
+            , 'field_render_type':  'Enum_choice'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Slug'
             , 'field_placeholder':  '(field render type)'

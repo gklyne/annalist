@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
+, "annal:id":           "Textarea"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "annal:field_render_type/Textarea"
+, "rdfs:comment":       "Field rendered as multiple lines of text"
+, "annal:uri":          "annal:field_render_type/Textarea"
+}

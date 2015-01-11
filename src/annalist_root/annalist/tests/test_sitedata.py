@@ -90,6 +90,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             [ "EntityId"
             , "EntityTypeId"
             , "Enum"
+            , "Enum_choice"
             , "Enum_optional"
             , "Field"
             , "Identifier"
@@ -449,20 +450,20 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].p.string, "Label")
 
         trows_expected = (
-            [ [ "_type/_field",             ["_field",          "Field description type"] ]
-            , [ "_type/_group",             ["_group",          "Field group type"] ]
-            , [ "_type/_initial_values",    ["_initial_values", None] ]
-            , [ "_type/_list",              ["_list",           "List description type"] ]
-            , [ "_type/_type",              ["_type",           "Type description type"] ]
-            , [ "_type/_user",              ["_user",           "User permissions type"] ]
-            , [ "_type/_view",              ["_view",           "View description type"] ]
-            , [ "_type/BibEntry_type",      ["BibEntry_type",   "Bibliographic record type"] ]
-            , [ "_type/Default_type",       ["Default_type",    "Default record type"] ]
-            , [ "_type/Enum_bib_type",      ["Enum_bib_type",   "Bibliographic entry type"] ]
-            , [ "_type/Enum_field_type",    ["Enum_field_type", "Field type"] ]
-            , [ "_type/Enum_list_type",     ["Enum_list_type",  "List display type"] ]
-            , [ "_type/type1",              ["type1",           "RecordType coll1/type1"] ]
-            , [ "_type/type2",              ["type2",           "RecordType coll1/type2"] ]
+            [ [ "_type/_field",           ["_field",           "Field description type"] ]
+            , [ "_type/_group",           ["_group",           "Field group type"] ]
+            , [ "_type/_initial_values",  ["_initial_values",  None] ]
+            , [ "_type/_list",            ["_list",            "List description type"] ]
+            , [ "_type/_type",            ["_type",            "Type description type"] ]
+            , [ "_type/_user",            ["_user",            "User permissions type"] ]
+            , [ "_type/_view",            ["_view",            "View description type"] ]
+            , [ "_type/BibEntry_type",    ["BibEntry_type",    "Bibliographic record type"] ]
+            , [ "_type/Default_type",     ["Default_type",     "Default record type"] ]
+            , [ "_type/Enum_bib_type",    ["Enum_bib_type",    "Bibliographic entry type"] ]
+            , [ "_type/Enum_list_type",   ["Enum_list_type",   "List display type"] ]
+            , [ "_type/Enum_render_type", ["Enum_render_type", "Field render type"] ]
+            , [ "_type/type1",            ["type1",            "RecordType coll1/type1"] ]
+            , [ "_type/type2",            ["type2",            "RecordType coll1/type2"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return

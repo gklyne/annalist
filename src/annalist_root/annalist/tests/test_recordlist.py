@@ -42,6 +42,7 @@ from entity_testutils                   import (
     collection_entity_view_url,
     collection_create_values,
     render_select_options,
+    render_choice_options,
     create_test_user
     )
 from entity_testlistdata                import (
@@ -326,7 +327,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                 </div>
                 <div class="%(input_classes)s">
                 """+
-                  render_select_options(
+                  render_choice_options(
                     "List_type",
                     get_site_list_types_sorted(),
                     "List")+
@@ -374,7 +375,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                 <div class="%(input_classes)s">
                 """+
                   render_select_options(
-                    "List_default_type", 
+                    "List_default_type", "Record type",
                     get_site_types_sorted()+["testtype"],
                     "Default_type")+
                 """
@@ -391,7 +392,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                 <div class="%(input_classes)s">
                 """+
                   render_select_options(
-                    "List_default_view", 
+                    "List_default_view", "View",
                     sorted(get_site_views()),
                     "Default_view")+
                 """

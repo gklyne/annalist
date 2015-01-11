@@ -216,21 +216,47 @@ def collection_remove_form_data(coll_id_list):
 #
 #   -----------------------------------------------------------------------------
 
-def render_select_options(name, opts, sel, placeholder=None):
+def render_select_options(name, label, opts, sel, placeholder=None):
     """
-    >>> print render_select_options("foo", ["aa", "bb", "cc"], "bb")
-    <select name="foo">
-      <option>aa</option>
-      <option selected="selected">bb</option>
-      <option>cc</option>
-    </select>
-    >>> print render_select_options("foo", ["", aa", "bb", "cc"], "", placeholder=("select)")
-      <select name="foo">
-        <option value="" selected="selected">(select)</option>
-        <option>aa</option>
-        <option>bb</option>
-        <option>cc</option>
-      </select>
+    Cf. `templates.field.annalist_edit_select.html`
+
+    >>> print render_select_options("foo", "foo_label", ["aa", "bb", "cc"], "bb")
+    <div class="row">
+      <div class="small-10 columns less_new_button">
+        <select name="foo">
+          <option>aa</option>
+          <option selected="selected">bb</option>
+          <option>cc</option>
+        </select>
+      </div>
+      <div class="small-2 columns new_button left small-text-right">
+        <button type="submit" 
+                name="foo__new" 
+                value="New"
+                title="Define new foo_label">
+          +
+        </button>
+      </div>
+    </div>
+    >>> print render_select_options("foo", "foo_label", ["", aa", "bb", "cc"], "", placeholder=("select)")
+    <div class="row">
+      <div class="small-10 columns less_new_button">
+          <select name="foo">
+            <option value="" selected="selected">(select)</option>
+            <option>aa</option>
+            <option>bb</option>
+            <option>cc</option>
+          </select>
+      </div>
+      <div class="small-2 columns new_button left small-text-right">
+        <button type="submit" 
+                name="foo__new" 
+                value="New"
+                title="Define new foo_label">
+          +
+        </button>
+      </div>
+    </div>
     """
     def select_option(o):
         selected = ('' if o != sel else ' selected="selected"')
@@ -239,11 +265,62 @@ def render_select_options(name, opts, sel, placeholder=None):
         return '<option%s>%s</option>'%(selected,o)
     #
     select_template = (
-        """<select name="%s">\n"""+
-        """  %s\n"""+
-        """</select>"""
-        )
-    return select_template%(name, "\n  ".join([ select_option(o) for o in opts ]))
+        """<div class="row">\n"""+
+        """  <div class="small-10 columns less_new_button">\n"""+
+        """    <select name="%(name)s">\n"""+
+        """      %(options)s\n"""+
+        """    </select>"""+
+        """  </div>\n"""+
+        """  <div class="small-2 columns new_button left small-text-right">\n"""+
+        """    <button type="submit" \n"""+
+        """            name="%(name)s__new" \n"""+
+        """            value="New"\n"""+
+        """            title="Define new %(label)s">\n"""+
+        """      +\n"""+
+        """    </button>\n"""+
+        """  </div>\n"""+
+        """</div>\n"""+
+        "")
+    return select_template%(
+        { 'name':       name
+        , 'label':      label
+        , 'options':    "\n  ".join([ select_option(o) for o in opts ])
+        })
+
+def render_choice_options(name, opts, sel, placeholder=None):
+    """
+    Cf. `templates.field.annalist_edit_choice.html`.
+    Like select, biut wiothout the "New" button.
+
+    >>> print render_choice_options("foo", "foo_label", ["aa", "bb", "cc"], "bb")
+    <select name="foo">
+      <option>aa</option>
+      <option selected="selected">bb</option>
+      <option>cc</option>
+    </select>
+    >>> print render_choice_options("foo", "foo_label", ["", aa", "bb", "cc"], "", placeholder=("select)")
+    <select name="foo">
+      <option value="" selected="selected">(select)</option>
+      <option>aa</option>
+      <option>bb</option>
+      <option>cc</option>
+    </select>
+    """
+    def select_option(o):
+        selected = ('' if o != sel else ' selected="selected"')
+        if (placeholder is not None) and (o == ""):
+            return '<option value=""%s>%s</option>'%(selected,placeholder)
+        return '<option%s>%s</option>'%(selected,o)
+    #
+    select_template = (
+        """<select name="%(name)s">\n"""+
+        """  %(options)s\n"""+
+        """</select>"""+
+        "")
+    return select_template%(
+        { 'name':       name
+        , 'options':    "\n  ".join([ select_option(o) for o in opts ])
+        })
 
 #   -----------------------------------------------------------------------------
 #

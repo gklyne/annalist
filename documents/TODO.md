@@ -13,13 +13,12 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 - [x] Bug: https://github.com/gklyne/annalist/issues/39 (hotfix 0.1.8a)
 - [x] Add mechanism to alias a common field (e.g. rdfs:label) to return some other specified field value (e.g. bib:title).  Associate aliases with record type, used when constructing view/list context.
-- [ ] Option to create linked record directly from other record entry field (issue #23). Propose enum type renderer should include a "New" button that launches new view to enter new value of appropriate type.
+- [x] Option to create linked record directly from other record entry field (issue #23). Propose enum type renderer should include a "New" button that launches new view to enter new value of appropriate type.
     - [x] Add new logic in views.entityedit
     - [x] Create enumeration renderer: update template or replace with renderer class to add extra "New" button to enumerated value fields
     - [x] Create test case for new option (should be able to adapt, e.g., "New view" test case?)
-    - [ ] Create test case for new button on field selector in _view edit
-    - [ ] Consider removing "New type", "New view" and "New field type" buttons, and corresponding test cases.
-    - [ ] Eliminate type-specific render types
+    - [x] Create test case for new button on field selector in _view edit
+- [ ] BUG: View property-override in field list is not working, or is not recognized by by the duplicate property check.  See also issue (below) about 'Add field' followed by 'New field'.
 - [ ] Usability issues arising from creating cruising log
     - [ ] 'Add field' can't be followed by 'New field' because of duplicate property used
         - consider using Enum_optional logic so the field selector id isn't automatically filled in;  ignore blank field ids when processing;  ensure field with blank id is still saved with view/group.
@@ -31,6 +30,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  The current mechanism of using an explciit type to display site-wide values is probably confusing.
 - [ ] 'New' and 'Copy' from list view should bring up new form with id field selected, so that typing a new value replaces the auto-generated ID.
 - [ ] `annalist-manager` help to provide list of permission tokens
+- [ ] Use `annalist_edit_choice.html` instead of annalist_edit_view_sel.html - update view template.  Cf. View_+sel vs List_sel render types.
+- [ ] Consider removing "New type", "New view" and "New field type" buttons, and corresponding test cases.
  
 (sub-release?)
 
@@ -78,6 +79,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Inline template text keeps value mapping logic with template logic
     - [ ] Inline templates may be harder to style effectively; maybe read HTML from file on first use?
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
+- [ ] Eliminate type-specific render types
 
 
 Usability notes:

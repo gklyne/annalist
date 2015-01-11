@@ -1,12 +1,11 @@
 {
-  "annal:display_type": "List",
   "rdfs:label": "RecordList coll2/list2",
   "rdfs:comment": "RecordList help for coll2/list2",
   "annal:default_view": "Default_view",
   "annal:default_type": "Default_type",
   "annal:type_id": "_list",
   "annal:list_entity_selector": "ALL",
-  "annal:record_type": "",
+  "annal:display_type": "List",
   "annal:list_fields": [
     {
       "annal:field_placement": "small:0,3",

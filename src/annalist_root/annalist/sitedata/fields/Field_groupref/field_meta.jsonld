@@ -2,7 +2,7 @@
 , "@type":                      ["annal:Field"]
 , "annal:id":                   "Field_groupref"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "View fields"
+, "rdfs:label":                 "Field group"
 , "rdfs:comment":               "Reference to view whose fields are used for a composite field."
 , "annal:field_name":           "Field_groupref"
 , "annal:field_render_type":    "Enum_optional"

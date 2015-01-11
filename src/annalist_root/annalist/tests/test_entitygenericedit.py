@@ -47,6 +47,7 @@ from entity_testutils               import (
     collection_entity_view_url,
     site_title,
     render_select_options,
+    render_choice_options,
     create_test_user
     )
 from entity_testtypedata            import (
@@ -285,8 +286,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                 <div class="row">
                   <div class="small-9 columns">
                     """+
-                      render_select_options(
-                        "view_choice", 
+                      render_choice_options(
+                        "view_choice",
                         sorted(get_site_views()),
                         "Type_view")+
                     """

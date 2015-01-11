@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
+, "annal:id":           "Text"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "annal:field_render_type/Text"
+, "rdfs:comment":       "Field rendered as single line of text"
+, "annal:uri":          "annal:field_render_type/Text"
+}
