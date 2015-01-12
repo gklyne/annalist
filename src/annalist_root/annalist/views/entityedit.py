@@ -1030,10 +1030,15 @@ class GenericEntityEditView(AnnalistGenericView):
                             "invalid group_ref %s in field description for %s"%
                             (groupref, field_desc['field_id'])
                             )
-                    group_fields   = field_desc['group_field_descs']
-                    new_group_list = group_list + [field_desc['group_id']]
-                    for fd in _find_enum_fields(group_fields, new_group_list):
-                        yield fd
+                    else:
+                        log.info(
+                            "Group field desc %s: %s"%
+                            (groupref, field_desc['field_id'])
+                            )
+                        group_fields   = field_desc['group_field_descs']
+                        new_group_list = group_list + [field_desc['group_id']]
+                        for fd in _find_enum_fields(group_fields, new_group_list):
+                            yield fd
             return
         for evmapitem in entityvaluemap:
             # Data entry fields are always presented within a top-level FieldListValueMap

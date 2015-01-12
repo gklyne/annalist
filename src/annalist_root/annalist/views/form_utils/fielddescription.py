@@ -193,6 +193,7 @@ class FieldDescription(object):
             "  , 'field_name': %r\n"%(self._field_desc["field_name"])+
             "  , 'field_render_type': %r\n"%(self._field_desc["field_render_type"])+
             "  , 'field_property_uri': %r\n"%(self._field_desc["field_property_uri"])+
+            "  , 'type_ref': %r"%(self._field_desc["field_options_typeref"])+
             "  , 'group_ref': %r"%(self._field_desc["field_group_ref"])+
             "  })"
             )

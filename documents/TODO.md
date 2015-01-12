@@ -21,6 +21,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Create test case for new button on field selector in _view edit
 - [x] BUG: View property-override in field list is not working, or is not recognized by by the duplicate property check.  See also issue (below) about 'Add field' followed by 'New field'.
 - [x] BUG: New linl on repeated field value creates entity of wrong type: e.g. _type not Place.
+- [x] BUG: Add segment in CruisingLog gives 500 server error
+- [ ] BUG: annalist-manager updatesitedata not clearing out old enumeration types (?)
+- [ ] BUG: pip uninstall not clearing out old sample data, causing test failures.  Looks like a problem with the build process, not clearing out old files.  How to fix?
 - [ ] Usability issues arising from creating cruising log
     - [ ] 'Add field' can't be followed by 'New field' because of duplicate property used
         - consider using Enum_optional logic so the field selector id isn't automatically filled in;  ignore blank field ids when processing;  ensure field with blank id is still saved with view/group.
