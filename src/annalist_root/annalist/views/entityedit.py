@@ -885,8 +885,8 @@ class GenericEntityEditView(AnnalistGenericView):
                     stop_all = False
                     index   += 1
             return (stop_all, None)
-        s, result = _scan_groups("", field_desc["group_list"])
-        return result
+        matched, result = _scan_groups("", field_desc["group_list"])
+        return result if matched else None
 
     def find_repeat_id(self, entityvaluemap, repeat_id):
         """

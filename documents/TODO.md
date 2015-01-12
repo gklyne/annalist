@@ -2,6 +2,7 @@
 
 NOTE: this document is used for short-term working notes; longer-term planning information has been migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
 
+
 # Documentation
 
 - [ ] HOWTOs for common tasks; task-oriented documentation
@@ -19,19 +20,21 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Create test case for new option (should be able to adapt, e.g., "New view" test case?)
     - [x] Create test case for new button on field selector in _view edit
 - [x] BUG: View property-override in field list is not working, or is not recognized by by the duplicate property check.  See also issue (below) about 'Add field' followed by 'New field'.
+- [x] BUG: New linl on repeated field value creates entity of wrong type: e.g. _type not Place.
 - [ ] Usability issues arising from creating cruising log
     - [ ] 'Add field' can't be followed by 'New field' because of duplicate property used
         - consider using Enum_optional logic so the field selector id isn't automatically filled in;  ignore blank field ids when processing;  ensure field with blank id is still saved with view/group.
-    - [x] Fields should default to previous value entered.  How to save these?  E.g. when creating a new entity, default field values may be from the last such record entered.  In practice, I'm achieving this by copying the previous record, so maybe it's not such a problem.
-    - [ ] Entity edit view: "New field" -> "New field type" (or drop it completely?)
-- [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?
+    - [x] Entity edit view: "New field" -> "New field type"
+- [ ] Refactor button locating logic in edit form response handler
+- [ ] Review field description is_enumeration (?) - use `has_new_button` for fields with `new` button
+- [ ] Use `annalist_edit_choice.html` instead of annalist_edit_view_sel.html - update view template.  Cf. View_sel vs List_sel render types.
+- [ ] Consider removing "New type", "New view" and "New field type" buttons, and corresponding test cases.
 - [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
 - [ ] Select new list view: drop type_id from URI? (e.g. when changing to view of different type)
 - [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  The current mechanism of using an explciit type to display site-wide values is probably confusing.
 - [ ] 'New' and 'Copy' from list view should bring up new form with id field selected, so that typing a new value replaces the auto-generated ID.
+- [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?
 - [ ] `annalist-manager` help to provide list of permission tokens
-- [ ] Use `annalist_edit_choice.html` instead of annalist_edit_view_sel.html - update view template.  Cf. View_+sel vs List_sel render types.
-- [ ] Consider removing "New type", "New view" and "New field type" buttons, and corresponding test cases.
  
 (sub-release?)
 
