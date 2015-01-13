@@ -43,7 +43,8 @@ def valid_id(id):
         [ "_annalist_site"
         , "_annalist_collection"
         ])
-    if id and re.match(r"\w+$", id):
+    # cf. urls.py:
+    if id and re.match(r"\w{1,32}$", id):
         return id not in reserved
     return False
 

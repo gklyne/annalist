@@ -582,6 +582,23 @@ class GenericEntityEditView(AnnalistGenericView):
             ( (entity_id != orig_entity_id) or (entity_type_id != orig_entity_type_id) )
             )
 
+        # Check for valid entity nid and type id
+        # @@TODO: factor out repeated re-rendering logic
+        if not util.valid_id(entity_id):
+            log.warning("save_entity: invalid entity_id (%s)"%(entity_id))
+            return self.form_re_render(
+                viewinfo, entityvaluemap, form_data, context_extra_values,
+                error_head=message.ENTITY_DATA_ID,
+                error_message=message.ENTITY_DATA_ID_INVALID
+                )
+        if not util.valid_id(entity_type_id):
+            log.warning("save_entity: invalid entity_type_id (%s)"%(entity_type_id))
+            return self.form_re_render(
+                viewinfo, entityvaluemap, form_data, context_extra_values,
+                error_head=message.ENTITY_TYPE_ID,
+                error_message=message.ENTITY_TYPE_ID_INVALID
+                )
+
         # Check original parent exists (still)
         #@@ TODO: unless this is a "new" action?
         if not typeinfo.parent_exists():

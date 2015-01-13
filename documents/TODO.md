@@ -25,6 +25,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: annalist-manager updatesitedata not clearing out old enumeration types.  Not there.  See next.
 - [x] BUG: pip uninstall not clearing out old sample data, causing test failures.  Looks like a problem with the build process, not clearing out old files.  How to fix?
     - python setup.py clean --all
+- [x] BUG: ID too long is ccepted but then can't access (404 response).  Need to id validity check before saving.
 - [ ] Usability issues arising from creating cruising log
     - [ ] 'Add field' can't be followed by 'New field' because of duplicate property used
         - consider using Enum_optional logic so the field selector id isn't automatically filled in;  ignore blank field ids when processing;  ensure field with blank id is still saved with view/group.
@@ -87,26 +88,29 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Inline templates may be harder to style effectively; maybe read HTML from file on first use?
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Eliminate type-specific render types
+- [ ] Review length restriction on entity/type ids: does it serve any purpose?
 
 
 Usability notes:
 
 - [ ] Need easier way to make new entries for fields that are referenced from a record; e.g. a `New value` button as part of an enum field.
-- [ ] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
-- [ ] Create a "wizard-like" (or one-form) interface for creating field+field-group set.
-    - needs to create (a) individual fields in group, (b) field group and (c) field referring to group.
-- [ ] Procedure for creating type + view definition + list definition + field definitions from a simple overview description
+- [ ] Introduce notion of "Task", based on form, but linked to "script" action.
+    - [ ] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
+        - test by creating contacts/supplies listy for CruisingLog
+    - [ ] Create a "wizard-like" (or one-form) interface for creating field+field-group set.
+        - needs to create (a) individual fields in group, (b) field group and (c) field referring to group.
+    - [ ] Procedure for creating type + view definition + list definition + field definitions from a simple overview description
+    - [ ] Procedure for creating enumeration type from simple description of options
+    - [ ] Procedure to migrate textual type annotations to enumeration types
+    - [ ] Simplify repetitive data entry; e.g.
+        - Use-case: create bibliographic author details from just full name entered
+        - [ ] derived field (possibly hidden) with a rule to guide its creation from other fields in a view
+        - [ ] default value from other field (possibly from a derived field)
+        - [ ] initial value/identifier templates (e.g. create ID from current date)
+            - NOTE: default and initial values behave differently
+        - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
 - [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?
 - [ ] Use pop-up text based on field comment to tell user how a field value is used
-- [ ] Procedure for creating enumeration type from simple description of options
-- [ ] Procedure to miugrate textual type annotations to enumeration types
-- [ ] Simplify repetitive data entry; e.g.
-    - Use-case: create bibliographic author details from just full name entered
-    - [ ] derived field (possibly hidden) with a rule to guide its creation from other fields in a view
-    - [ ] default value from other field (possibly from a derived field)
-    - [ ] initial value/identifier templates (e.g. create ID from current date)
-        - NOTE: default and initial values behave differently
-    - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
 - [ ] Option to re-order fields on view form
 - [ ] When creating type, default URI to be based on id entered
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
@@ -141,5 +145,8 @@ Notes for Future TODOs:
 - [ ] Think about fields that return subgraph
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.
+- [ ] For rendering of additional info, think about template-based URIs filled in from other data.  (e.g. URI to pull an mage from CLAROS, or Google graph API like)
+- [ ] Generate form-level DIFF displays from git JSON diffs
+
 
 ----
