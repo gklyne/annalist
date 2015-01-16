@@ -6,8 +6,11 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import sys
 import logging
 log = logging.getLogger(__name__)
+
+from itertools import izip_longest
 
 from django.conf                        import settings
 from django.http                        import HttpResponse
@@ -559,7 +562,7 @@ class GenericEntityEditView(AnnalistGenericView):
             viewinfo, context_extra_values, messages):
         """
         This method contains logic to save entity data modified through a form
-        intrerface.  If an entity is being edited (as oppoosed to created or copied)
+        interface.  If an entity is being edited (as opposed to created or copied)
         and the entity id or type have been changed, then new entity data is written 
         and the original entity data is removed.
 
@@ -646,7 +649,8 @@ class GenericEntityEditView(AnnalistGenericView):
         # values not in view are preserved.  Use original entity values without 
         # field aliases as basis for new value.
         orig_entity   = typeinfo.get_entity(entity_id, action)
-        entity_values = orig_entity.get_values() if orig_entity else {}
+        orig_values   = orig_entity.get_values() if orig_entity else {}
+        entity_values = orig_values.copy()
         # log.info("orig entity_values %r"%(entity_values,))
         if action == "copy":
             entity_values.pop(ANNAL.CURIE.uri, None)      # Force new URI on copy
@@ -656,27 +660,16 @@ class GenericEntityEditView(AnnalistGenericView):
         # log.info("save entity_values%r"%(entity_values))
 
         # If saving view description, ensure all property URIs are unique
-        #
-        # @@TODO: this is somehwat ad hoc - is there a better way?
-        # The problem this avoids is that multiple fields with the same property URI would 
-        # be handled confusingly by the view editing logic.
         if viewinfo.view_id == "View_view":
-            properties = set()
-            for view_field in entity_values[ANNAL.CURIE.view_fields]:
-                field_id     = view_field[ANNAL.CURIE.field_id]
-                property_uri = view_field.get(ANNAL.CURIE.property_uri, None)
-                if not property_uri:
-                    field = RecordField.load(
-                        viewinfo.collection, field_id, altparent=viewinfo.site
-                        )
-                    property_uri = field[ANNAL.CURIE.property_uri]
-                if property_uri in properties:
-                    return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
-                        error_head=message.VIEW_DESCRIPTION_HEADING,
-                        error_message=message.VIEW_PROPERTY_DUPLICATE%
-                          { 'field_id':field_id, 'property_uri': property_uri}
-                        )
-                properties.add(property_uri)
+            dup_property_vals = self.check_view_property_uris(
+                viewinfo, entity_values, orig_values
+                )
+            if dup_property_vals:
+                return self.form_re_render(
+                    viewinfo, entityvaluemap, form_data, context_extra_values,
+                    error_head=message.VIEW_DESCRIPTION_HEADING,
+                    error_message=message.VIEW_PROPERTY_DUPLICATE%dup_property_vals
+                    )
 
         # Create/update stored data now
         #
@@ -758,28 +751,84 @@ class GenericEntityEditView(AnnalistGenericView):
 
         return None
 
-    # def store_entity_type_uri(self, entity_values, entity_typeinfo):
-    #     """
-    #     Sort out entity URI and entity type URI(s), in preparation to save.
+    def check_view_property_uris(self, viewinfo, entity_values, orig_values):
+        """
+        This function is called when saving a view description to check that
+        all property URIs are unique.
 
-    #     The '@type' and 'annal:URI' fields in the supplied entity_values are updated
+        If a field type is referenced more than once, without an overriding
+        property URI in the view, duplicate properties are resolved by
+        auto-generating a unique URI based on the field-defined URI.
 
-    #     entity_values   an entity values dictionary whose '@type' and 'annal:uri' 
-    #                     fields may be updated.
-    #     entity_typeinfo an EntityTypeInfo object describing the type with which the
-    #                     entity is to be saved.
-    #     """
-    #     if entity_typeinfo.recordtype:
-    #         typeuris = []
-    #         if ANNAL.CURIE.uri in entity_typeinfo.recordtype:
-    #             typeuris = [entity_typeinfo.recordtype[ANNAL.CURIE.uri]]
-    #         else:
-    #             typeuris = []
-    #         entity_values['@type'] = typeuris   # NOTE: previous types not carried forward
-    #     if ( (ANNAL.CURIE.uri in entity_values) and 
-    #          (entity_values[ANNAL.CURIE.uri] == entity_values.get(ANNAL.CURIE.url, None) ) ):
-    #         del entity_values[ANNAL.CURIE.uri]  # Don't save URI if same as URL
-    #     return entity_values
+        If a view-defined property URI clashes with a previously used URI, 
+        an error is returned.
+
+        If the field type for a field has changed from the original entity,
+        and there is an auto-generated property URI in the view description,
+        the view-defined property is reset.
+
+        returns None if thereare no duplicated property URIs, or a dictionary
+        of values to be used to generate an error report.
+        """
+        # @@TODO: this is somehwat ad hoc - is there a better way?
+        # The problem this avoids is that multiple fields with the same property URI 
+        # would be handled confusingly by the view editing logic.
+        properties = set()
+        entity_orig_fields = izip_longest(
+            entity_values[ANNAL.CURIE.view_fields], 
+            orig_values.get(ANNAL.CURIE.view_fields,[]),
+            fillvalue={'annal:field_id': None}
+            )
+        for view_field, orig_field in entity_orig_fields:
+            field_id      = view_field[ANNAL.CURIE.field_id]
+            orig_field_id = orig_field[ANNAL.CURIE.field_id] or field_id
+            field = RecordField.load(
+                viewinfo.collection, field_id, altparent=viewinfo.site
+                )
+            field_property_uri = field[ANNAL.CURIE.property_uri]
+            view_property_uri  = view_field.get(ANNAL.CURIE.property_uri, None)
+            # Check for autogenerated property URI (check against original field type)
+            orig_property_uri = orig_field.get(ANNAL.CURIE.property_uri, None)
+            log.info(
+                "check_view_property_uris: "+
+                "orig_property_uri %s, view_property_uri %s, field_property_uri %s"%
+                (orig_property_uri, view_property_uri, field_property_uri)
+                )
+            if view_property_uri and (view_property_uri == orig_property_uri):
+                # Property URI not changed in form
+                orig_field_descr = RecordField.load(
+                    viewinfo.collection, orig_field_id, altparent=viewinfo.site
+                    )
+                orig_field_property_uri = orig_field_descr[ANNAL.CURIE.property_uri]
+                log.info(
+                    "check_view_property_uris: "+
+                    "orig_field_id %s, orig_field_property_uri %s"%
+                    (orig_field_id, orig_field_property_uri)
+                    )
+                if view_property_uri.startswith(orig_field_property_uri+"_"):
+                    # Auto-generated property URI here: reset it
+                    view_property_uri = None
+                    view_field[ANNAL.CURIE.property_uri] = None
+            # Try to avoid clash by autogenerating a property URI in the view
+            log.info(
+                "check_view_property_uris: "+
+                "view_property_uri %s, field_property_uri %s, properties %r"%
+                (view_property_uri, field_property_uri, properties)
+                )
+            if not view_property_uri and (field_property_uri in properties):
+                i = 2
+                while True:
+                    view_property_uri = field_property_uri + "_" + str(i)
+                    if view_property_uri not in properties:
+                        # Add auto-generated property URI to field
+                        view_field[ANNAL.CURIE.property_uri] = view_property_uri
+                        break
+                    i += 1
+            property_uri = view_property_uri or field_property_uri
+            if property_uri in properties:
+                return { 'field_id':field_id, 'property_uri': property_uri}
+            properties.add(property_uri)
+        return None
 
     def invoke_config_edit_view(self, 
             entityvaluemap, form_data,

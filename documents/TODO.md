@@ -20,18 +20,21 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Create test case for new option (should be able to adapt, e.g., "New view" test case?)
     - [x] Create test case for new button on field selector in _view edit
 - [x] BUG: View property-override in field list is not working, or is not recognized by by the duplicate property check.  See also issue (below) about 'Add field' followed by 'New field'.
-- [x] BUG: New linl on repeated field value creates entity of wrong type: e.g. _type not Place.
-- [x] BUG: Add segment in CruisingLog gives 500 server error
+- [x] BUG: '+' button on repeated field value creates entity of wrong type: e.g. _type not Place.  Was bug in enumeration scanning logic.
+- [x] BUG: Add segment in CruisingLog gives 500 server error.
 - [x] BUG: annalist-manager updatesitedata not clearing out old enumeration types.  Not there.  See next.
 - [x] BUG: pip uninstall not clearing out old sample data, causing test failures.  Looks like a problem with the build process, not clearing out old files.  How to fix?
     - python setup.py clean --all
 - [x] BUG: ID too long is ccepted but then can't access (404 response).  Need to id validity check before saving.
-- [ ] Usability issues arising from creating cruising log
-    - [ ] 'Add field' can't be followed by 'New field' because of duplicate property used
+- [x] Usability issues arising from creating cruising log
+    - [x] 'Add field' can't be followed by 'New field' because of duplicate property used
         - consider using Enum_optional logic so the field selector id isn't automatically filled in;  ignore blank field ids when processing;  ensure field with blank id is still saved with view/group.
+        - chosen fix is to auto-generate a property URI in the view description based on the field property URI but with a _2, _3, etc suffix.  If there is an existing view-defined property URI that clashes, reject the update as now.
+        - what to do if the render type is changed?  Ideally, remove any auto-generated property URI, but preserve manually entered values.
     - [x] Entity edit view: "New field" -> "New field type"
 - [ ] Refactor button locating logic in edit form response handler
 - [ ] Review field description is_enumeration (?) - use `has_new_button` for fields with `new` button
+- [ ] revoew field description and detection of repeatred field-group references. 
 - [ ] Use `annalist_edit_choice.html` instead of annalist_edit_view_sel.html - update view template.  Cf. View_sel vs List_sel render types.
 - [ ] Consider removing "New type", "New view" and "New field type" buttons, and corresponding test cases.
 - [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
@@ -44,6 +47,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 (sub-release?)
 
 - [ ] New render types: Markdown, Boolean (checkbox), Link (hyperlink)
+- [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [ ] Blob and file upload support: images, spreadsheets, ...
     - [ ] Field type to link to uploaded file
@@ -114,16 +118,20 @@ Usability notes:
 - [ ] Option to re-order fields on view form
 - [ ] When creating type, default URI to be based on id entered
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
+- [ ] List display paging
 
 
 Notes for Future TODOs:
 
-(Consider moving these in expanded form to the issues list.)
+(Collecting ideas here: consider expand them in the GitHub issues list.)
 
 - [ ] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
 - [ ] Review site/collection data organization
     - [ ] Generalize collection/site hierarchy to use a "search path" of imported collections.  See also next item.
     - [ ] Enumerated values are hard-wired into models.entitytypeinfo - move them to regular type/data files in site data?  Hmmm... currently, it seems all _annalist_site values need to be hard-wired in entitytypeinfo; maybe look to use collection "search path" logic instead (see above).
+    - [ ] Think about implementing site data as a distinguished collection, thereby exploiting the access control framework for site metadata updates.
+    - [ ] _annalist_core for software-defined values, and _annalist_site for local overrides?
+    - [ ] Refer collection management permissions (create/update/etc) to _annalist_site collection - this will make it easier to define top-level permnissions through Annalist itself, rather than relying on annalist-manager.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
 - [ ] Rationalize common fields to reduce duplication?
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s). 
@@ -147,6 +155,9 @@ Notes for Future TODOs:
     - does field API support this? Check.
 - [ ] For rendering of additional info, think about template-based URIs filled in from other data.  (e.g. URI to pull an mage from CLAROS, or Google graph API like)
 - [ ] Generate form-level DIFF displays from git JSON diffs
+- [ ] 3D rendering - checkmout JSMOL - http://wiki.jmol.org/index.php/JSmol
+- [ ] Visualize data structures from view definitions; generate OWL descriptions; etc.
+- [ ] Remixing spreadsheets: spreadsheet generation from queries as well as ingesting through data bridges.
 
 
 ----
