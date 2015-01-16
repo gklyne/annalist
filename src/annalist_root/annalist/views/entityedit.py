@@ -905,54 +905,14 @@ class GenericEntityEditView(AnnalistGenericView):
         Field 'field_options_typeref' of the returned value is the type_id of the 
         enumerated value type.
         """
-        for enum_desc in self.find_enum_fields(entityvaluemap):
+        def is_enum_f(fd):
+            # For some reason, FieldDescription.is_enum_field doesn't work
+            return fd.is_enum_field()
+        for enum_desc in self.find_fields(entityvaluemap, is_enum_f):
             enum_new = self.form_data_contains(form_data, enum_desc, "new")
             if enum_new:
                 return enum_desc
         return None
-
-    def form_data_contains(self, form_data, field_desc, postfix):
-        """
-        Tests to see if the form data contains a result field corresponding to 
-        the supplied field descriptor (as returned by 'find_enum_fields') with a 
-        postfix value as supplied.
-
-        Returns the full name of the field found, or None.
-        """
-        log.info("form_data_contains: field_desc %r"%field_desc)
-        field_name         = field_desc['field_name']
-        field_name_postfix = "new"
-        def _scan_groups(prefix, group_list):
-            """
-            return (stop, result)
-            where:
-              'stop'   is True if there are no more possible results to try.
-              'result' is the final result to return if `more` is false.
-            """
-            stop_all   = True
-            if group_list == []:
-                try_field = prefix + field_name
-                log.info("form_data_contains: try_field %s"%try_field)
-                if try_field in form_data:
-                    try_postfix = try_field + "__" + field_name_postfix
-                    return (try_postfix in form_data, try_postfix)
-            else:
-                group_head = group_list[0]
-                group_tail = group_list[1:]
-                index      = 0
-                while True:
-                    next_prefix = "%s%s__%d__"%(prefix, group_head, index)
-                    (stop, result) = _scan_groups(next_prefix, group_tail)
-                    if stop:
-                        if result:
-                            return (True, result)
-                        else:
-                            break
-                    stop_all = False
-                    index   += 1
-            return (stop_all, None)
-        matched, result = _scan_groups("", field_desc["group_list"])
-        return result if matched else None
 
     def find_repeat_id(self, entityvaluemap, repeat_id):
         """
@@ -1010,36 +970,9 @@ class GenericEntityEditView(AnnalistGenericView):
         Each value found is returned as a field description dictionary 
         (cf. FieldDescription).
         """
-        # @@TODO: factor out field enumeration logic, share with find_enum_fields
-        def _find_repeat_fields(fieldmap):
-            if fieldmap is None:
-                log.warning("entityedit.find_repeat_fields: fieldmap is None")
-                return
-            # Always called with list of field descriptions
-            for field_desc in fieldmap:
-                log.debug("find_repeat_fields: field_desc %r"%(field_desc))
-                groupref    = field_desc.group_ref()
-                if groupref is not None:
-                    if not util.valid_id(groupref):
-                        # this is for resilience in the face of bad data
-                        log.warning(
-                            "invalid group_ref %s in field description for %s"%
-                            (groupref, field_desc['field_id'])
-                            )
-                    log.info("find_repeat_fields: groupref %s"%(groupref))
-                    if field_desc.is_repeat_group():
-                        yield field_desc
-                    for fd in _find_repeat_fields(field_desc['group_field_descs']):
-                        # log.info("find_repeat_field FieldListValueMap yield %r"%(fd))
-                        yield fd
-            return
-        for evmapitem in entityvaluemap:
-            # log.info("find_repeat_fields evmapitem %r"%(evmapitem,))
-            itemdesc = evmapitem.get_structure_description()
-            # log.info("**** find_repeat_fields itemdesc %r"%(itemdesc,))
-            if itemdesc['field_type'] == "FieldListValueMap":
-                return _find_repeat_fields(itemdesc['field_list'])
-        return None
+        def is_repeat_f(fd):
+            return fd.is_repeat_group()
+        return self.find_fields(entityvaluemap, is_repeat_f)
 
     def add_entity_field(self, add_field_desc, entity):
         """
@@ -1066,55 +999,101 @@ class GenericEntityEditView(AnnalistGenericView):
         entity[repeatvals_key] = new_repeatvals
         return
 
-    def find_enum_fields(self, entityvaluemap):
+    def find_fields(self, entityvaluemap, filter_f):
         """
-        Iterate over enumerated-value fields in the current view.
+        Iterate over fields that satisfy the supplied predicate
 
-        Each value found is returned as a field description dictionary 
-        (cf. FieldDescription).
+        entityvaluemap  is the list of entity-value map entries for the current view
+        filter_f        is a predicate that is applied to field description values, 
+                        and returns True for those that are to be returned.
+
+        returns a generator of FieldDescription values from the supplied entity 
+        value map that satisfy the supplied predicate.
         """
-        # @@TODO: factor out field enumeration logic, share with find_repeat_fields
-        def _find_enum_fields(fieldmap, group_list):
+        # Recursive helper function walks through list of field descriptions, 
+        # including those that are nested in field group descriptions.
+        def _find_fields(fieldmap, group_list):
             if fieldmap is None:
-                log.warning("entityedit.find_enum_fields: fieldmap is None")
+                log.warning("entityedit.find_fields: fieldmap is None")
                 return
             # Always called with list of field descriptions
             for field_desc in fieldmap:
-                log.debug("find_enum_fields: field_desc %r"%(field_desc))
-                groupref = field_desc.group_ref()
-                if field_desc.is_enum_field():
+                log.debug("find_fields: field_desc %r"%(field_desc))
+                if filter_f(field_desc):
                     field_desc['group_list'] = group_list
                     log.info(
-                        "find_enum_fields: enum field name %s, prefixes %r"%
+                        "entityedit.find_fields: field name %s, prefixes %r"%
                         (field_desc['field_name'], group_list)
                         )
                     yield field_desc
+                groupref = field_desc.group_ref()
                 if groupref is not None:
                     if not util.valid_id(groupref):
                         # this is for resilience in the face of bad data
                         log.warning(
-                            "invalid group_ref %s in field description for %s"%
+                            "entityedit.find_fields: invalid group_ref %s in field description for %s"%
                             (groupref, field_desc['field_id'])
                             )
                     else:
                         log.info(
-                            "Group field desc %s: %s"%
+                            "entityedit.find_fields: Group field desc %s: %s"%
                             (groupref, field_desc['field_id'])
                             )
                         group_fields   = field_desc['group_field_descs']
                         new_group_list = group_list + [field_desc['group_id']]
-                        for fd in _find_enum_fields(group_fields, new_group_list):
+                        for fd in _find_fields(group_fields, new_group_list):
                             yield fd
             return
+        # Entry point: locate list of fields and return generator
         for evmapitem in entityvaluemap:
             # Data entry fields are always presented within a top-level FieldListValueMap
             # cf. self.get_view_entityvaluemap.
-            #
-            # log.info("find_enum_fields evmapitem %r"%(evmapitem,))
             itemdesc = evmapitem.get_structure_description()
-            # log.info("**** find_enum_fields itemdesc %r"%(itemdesc,))
             if itemdesc['field_type'] == "FieldListValueMap":
-                return _find_enum_fields(itemdesc['field_list'], [])
+                return _find_fields(itemdesc['field_list'], [])
         return
+
+    def form_data_contains(self, form_data, field_desc, postfix):
+        """
+        Tests to see if the form data contains a result field corresponding to 
+        the supplied field descriptor (as returned by 'find_fields') with a 
+        postfix value as supplied.
+
+        Returns the full name of the field found, or None.
+        """
+        log.info("form_data_contains: field_desc %r"%field_desc)
+        field_name         = field_desc['field_name']
+        field_name_postfix = "new"
+        def _scan_groups(prefix, group_list):
+            """
+            return (stop, result)
+            where:
+              'stop'   is True if there are no more possible results to try.
+              'result' is the final result to return if `more` is false.
+            """
+            stop_all   = True
+            if group_list == []:
+                try_field = prefix + field_name
+                log.info("form_data_contains: try_field %s"%try_field)
+                if try_field in form_data:
+                    try_postfix = try_field + "__" + field_name_postfix
+                    return (try_postfix in form_data, try_postfix)
+            else:
+                group_head = group_list[0]
+                group_tail = group_list[1:]
+                index      = 0
+                while True:
+                    next_prefix = "%s%s__%d__"%(prefix, group_head, index)
+                    (stop, result) = _scan_groups(next_prefix, group_tail)
+                    if stop:
+                        if result:
+                            return (True, result)
+                        else:
+                            break
+                    stop_all = False
+                    index   += 1
+            return (stop_all, None)
+        matched, result = _scan_groups("", field_desc["group_list"])
+        return result if matched else None
 
 # End.

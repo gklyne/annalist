@@ -32,9 +32,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - chosen fix is to auto-generate a property URI in the view description based on the field property URI but with a _2, _3, etc suffix.  If there is an existing view-defined property URI that clashes, reject the update as now.
         - what to do if the render type is changed?  Ideally, remove any auto-generated property URI, but preserve manually entered values.
     - [x] Entity edit view: "New field" -> "New field type"
-- [ ] Refactor button locating logic in edit form response handler
+- [x] Refactor button locating logic in edit form response handler
 - [ ] Review field description is_enumeration (?) - use `has_new_button` for fields with `new` button
-- [ ] revoew field description and detection of repeatred field-group references. 
+- [ ] review field description and detection of repeated field-group references. 
 - [ ] Use `annalist_edit_choice.html` instead of annalist_edit_view_sel.html - update view template.  Cf. View_sel vs List_sel render types.
 - [ ] Consider removing "New type", "New view" and "New field type" buttons, and corresponding test cases.
 - [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
