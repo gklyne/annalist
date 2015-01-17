@@ -1094,8 +1094,8 @@ class GenericEntityEditView(AnnalistGenericView):
                         (field_desc['field_name'], group_list)
                         )
                     yield field_desc
-                groupref = field_desc.group_ref()
-                if groupref is not None:
+                if field_desc.has_field_group_ref():
+                    groupref = field_desc.group_ref()
                     if not util.valid_id(groupref):
                         # this is for resilience in the face of bad data
                         log.warning(

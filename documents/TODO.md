@@ -35,7 +35,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Refactor button locating logic in edit form response handler
 - [x] Refactor and clean up entity save code in edit form response handler
 - [x] Review field description is_enum_field - use `has_new_button` for fields with `new` button
-- [ ] review field description and detection of repeated field-group references. 
+- [x] review field description and detection of repeated field-group references. 
 - [ ] Use `annalist_edit_choice.html` instead of annalist_edit_view_sel.html - update view template.  Cf. View_sel vs List_sel render types.
 - [ ] Consider removing "New type", "New view" and "New field type" buttons, and corresponding test cases.
 - [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
