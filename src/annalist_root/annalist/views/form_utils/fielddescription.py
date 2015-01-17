@@ -182,9 +182,21 @@ class FieldDescription(object):
         enum_render_types = (
             [ "EntityTypeId"
             , "Type", "View", "List", "Field"
-            , "Enum", "Enum_optional"
+            , "Enum", "Enum_optional", "Enum_choice"
             ])
         return self._field_desc['field_render_type'] in enum_render_types
+
+    def has_new_button(self):
+        """
+        Returns true if this field has a control (a 'new' or +' button)')
+        that invokes a new form to create a new entity.
+        """
+        new_render_types = (
+            [ "EntityTypeId"
+            , "Type", "View", "List", "Field"
+            , "Enum", "Enum_optional"
+            ])
+        return self._field_desc['field_render_type'] in new_render_types
 
     def __repr__(self):
         return (
