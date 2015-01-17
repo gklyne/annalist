@@ -40,7 +40,7 @@ _field_view_files = (
     , "Enum":           "field/annalist_view_select.html"
     , "Enum_choice":    "field/annalist_view_choice.html"
     , "Enum_optional":  "field/annalist_view_select.html"
-    , "View_sel":       "field/annalist_view_view_sel.html"
+    , "View_choice":    "field/annalist_view_view_choice.html"
     , "List_sel":       "field/annalist_view_choice.html"
     })
 
@@ -60,7 +60,7 @@ _field_edit_files = (
     , "Enum":           "field/annalist_edit_select.html"
     , "Enum_choice":    "field/annalist_edit_choice.html"
     , "Enum_optional":  "field/annalist_edit_select.html"
-    , "View_sel":       "field/annalist_edit_view_sel.html"
+    , "View_choice":    "field/annalist_edit_view_choice.html"
     , "List_sel":       "field/annalist_edit_choice.html"
     })
 
