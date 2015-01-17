@@ -672,83 +672,151 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
 
         # Create/update stored data now
-        #
-        # @@TODO: refactor the following to
-        #     (a) factor out core entity rename logic, 
-        #     (b) separate view-level validation and error repporting from action logic
-
-        if not ("_type" in [entity_type_id, orig_entity_type_id] and entity_id_changed):
-
-            # Normal (non-type) record save
-            new_typeinfo.create_entity(entity_id, entity_values)
-            if entity_id_changed:
-                # Rename entity other than a type: remove old entity
-                if new_typeinfo.entity_exists(entity_id):    # Precautionary
-                    typeinfo.remove_entity(orig_entity_id)
-                else:
-                    log.warning(
-                        "Failed to rename entity %s/%s to %s/%s"%
-                        (orig_type_id, orig_entity_id, entity_type_id, entity_id)
-                        )
-
+        if not entity_id_changed:
+            # Normal (non-type) entity create or update, no renaming
+            err_vals = self.create_update_entity(new_typeinfo, entity_id, entity_values)
+        elif "_type" not in [entity_type_id, orig_entity_type_id]:
+            # Non-type record rename
+            err_vals = self.rename_entity(
+                typeinfo, orig_entity_id, new_typeinfo, entity_id, entity_values
+                )
         else:
-
-            # Special case for saving type information with new id (rename type)
-            #
-            # Need to update RecordTypeData and record data instances
-            # Don't allow type-rename to or from a type value
-            if entity_type_id != orig_entity_type_id:
-                log.warning("save_entity: attempt to change type of type record")
-                return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
-                    error_head=message.INVALID_OPERATION_ATTEMPTED,
-                    error_message=message.INVALID_TYPE_CHANGE
-                    )
-            # Don't allow renaming built-in type
-            builtin_types = get_built_in_type_ids()
-            if (entity_id in builtin_types) or (orig_entity_id in builtin_types):
-                log.warning("save_entity: attempt to rename or define a built-in type")
-                return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
-                    error_head=message.INVALID_OPERATION_ATTEMPTED,
-                    error_message=message.INVALID_TYPE_RENAME
-                    )
-            # Create new type record
-            new_typeinfo.create_entity(entity_id, entity_values)
-            # Update instances of type
-            src_typeinfo = EntityTypeInfo(
-                viewinfo.site, viewinfo.collection, orig_entity_id
+            err_vals = self.rename_entity_type(
+                viewinfo, 
+                typeinfo, orig_entity_id, 
+                new_typeinfo, entity_id, entity_values
                 )
-            dst_typeinfo = EntityTypeInfo(
-                viewinfo.site, viewinfo.collection, entity_id, 
-                create_typedata=True
+        if err_vals:
+            return self.form_re_render(
+                viewinfo, entityvaluemap, form_data, context_extra_values,
+                error_head=err_vals[0],
+                error_message=err_vals[1]
                 )
-            if new_typeinfo.entity_exists(entity_id):
-                # Enumerate type instance records and move to new type
-                remove_OK = True
-                for d in src_typeinfo.enum_entities():
-                    data_id   = d.get_id()
-                    data_vals = d.get_values()
-                    data_vals[ANNAL.CURIE.type_id] = entity_id
-                    data_vals[ANNAL.CURIE.type]    = dst_typeinfo.entityclass._entitytype
-                    dst_typeinfo.create_entity(data_id, data_vals)
-                    if dst_typeinfo.entity_exists(data_id):     # Precautionary
-                        # NOTE: assumes that enum_entities is not affected by removal:
-                        src_typeinfo.remove_entity(data_id)
-                    else:
-                        log.warning(
-                            "Failed to rename type %s entity %s to type %s"%
-                            (orig_entity_id, data_id, entity_id)
-                            )
-                        remove_OK = False
-                # Finally, remove old type record:
-                if remove_OK:       # Precautionary
-                    typeinfo.remove_entity(orig_entity_id)
-                    RecordTypeData.remove(typeinfo.entitycoll, orig_entity_id)
-            else:
-                log.warning(
-                    "Failed to rename type %s to type %s"%
-                    (orig_entity_id, entity_id)
-                    )
 
+        return None
+
+    def rename_entity_type(self,
+            viewinfo,
+            old_typeinfo, old_type_id, 
+            new_typeinfo, new_type_id, type_data
+            ):
+        """
+        Save a renamed type entity.
+
+        This involves renaming all of the instances of the type to
+        the new type (with new type id and in new location).
+
+        Returns None if the operation succeeds, or error message
+        details to be displayed as a pair of values for the message 
+        heading and the message body.
+        """
+        # NOTE: old RecordData instance is not removed.
+
+        # Don't allow type-rename to or from a type value
+        if old_typeinfo.type_id != new_typeinfo.type_id:
+            log.warning(
+                "EntityEdit.rename_entity_type: attempt to change type of type record"
+                )
+            return (message.INVALID_OPERATION_ATTEMPTED, message.INVALID_TYPE_CHANGE)
+        # Don't allow renaming built-in type
+        builtin_types = get_built_in_type_ids()
+        if (new_type_id in builtin_types) or (old_type_id in builtin_types):
+            log.warning(
+                "EntityEdit.rename_entity_type: attempt to rename or define a built-in type"
+                )
+            return (message.INVALID_OPERATION_ATTEMPTED, message.INVALID_TYPE_RENAME)
+
+        # Create new type record
+        new_typeinfo.create_entity(new_type_id, type_data)
+
+        # Update instances of type
+        src_typeinfo = EntityTypeInfo(
+            viewinfo.site, viewinfo.collection, old_type_id
+            )
+        dst_typeinfo = EntityTypeInfo(
+            viewinfo.site, viewinfo.collection, new_type_id, 
+            create_typedata=True
+            )
+        if new_typeinfo.entity_exists(new_type_id):
+            # Enumerate type instance records and move to new type
+            remove_OK = True
+            for d in src_typeinfo.enum_entities():
+                data_id   = d.get_id()
+                data_vals = d.get_values()
+                data_vals[ANNAL.CURIE.type_id] = new_type_id
+                data_vals[ANNAL.CURIE.type]    = dst_typeinfo.entityclass._entitytype
+                if self.rename_entity(
+                    src_typeinfo, data_id, 
+                    dst_typeinfo, data_id, data_vals
+                    ):
+                    remove_OK = False
+            # Finally, remove old type record:
+            if remove_OK:       # Precautionary
+                new_typeinfo.remove_entity(old_type_id)
+                RecordTypeData.remove(new_typeinfo.entitycoll, old_type_id)
+        else:
+            log.warning(
+                "Failed to rename type %s to type %s"%
+                (old_type_id, new_type_id)
+                )
+            return (
+                message.SYSTEM_ERROR, 
+                message.RENAME_TYPE_FAILED%(old_type_id, new_type_id)
+                )
+        return None
+
+    def rename_entity(self,
+            old_typeinfo, old_entity_id, 
+            new_typeinfo, new_entity_id, entity_values
+            ):
+        """
+        Save a renamed entity.
+
+        Renaming may involve changing the type (hence location) of the entity,
+        and/or the entity_id
+
+        The new entity is saved and checked before the original entity is deleted.
+
+        Returns None if the operation succeeds, or error message
+        details to be displayed as a pair of values for the message 
+        heading and the message body.
+        """
+        new_typeinfo.create_entity(new_entity_id, entity_values)
+        if new_typeinfo.entity_exists(new_entity_id):    # Precautionary
+            old_typeinfo.remove_entity(old_entity_id)
+        else:
+            log.warning(
+                "EntityEdit.rename_entity: Failed to rename entity %s/%s to %s/%s"%
+                    (old_typeinfo.type_id, old_entity_id, 
+                     new_typeinfo.type_id, new_entity_id)
+                )
+            return (
+                message.SYSTEM_ERROR, 
+                message.RENAME_ENTITY_FAILED%
+                    (old_typeinfo.type_id, old_entity_id, 
+                     new_typeinfo.type_id, new_entity_id)
+                )
+        return None
+
+    def create_update_entity(self, typeinfo, entity_id, entity_values):
+        """
+        Create or update an entity.
+
+        Returns None if the operation succeeds, or error message
+        details to be displayed as a pair of values for the message 
+        heading and the message body.
+        """
+        typeinfo.create_entity(entity_id, entity_values)
+        if not typeinfo.entity_exists(entity_id):
+            log.warning(
+                "EntityEdit.create_update_entity: Failed to create/update entity %s/%s"%
+                    (typeinfo.type_id, entity_id)
+                )
+            return (
+                message.SYSTEM_ERROR, 
+                message.CREATE_ENTITY_FAILED%
+                    (typeinfo.type_id, entity_id)
+                )
         return None
 
     def check_view_property_uris(self, viewinfo, entity_values, orig_values):

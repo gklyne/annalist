@@ -376,22 +376,18 @@ class EntityTypeInfo(object):
     def enum_entities(self, user_perms=None, usealtparent=False):
         """
         Iterate over entities in collection with current type.
+        Returns entities with alias fields instantiated.
 
         usealtparent    is True if site-wide entities are to be included.
         """
-        if not user_perms or self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]:
+        if (not user_perms or 
+            self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
             altparent = self.entityaltparent if usealtparent else None
             if self.entityparent:
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
                         altparent=altparent):
                     yield self.get_entity_with_aliases(eid)
-                #@@
-                # for e in self.entityparent.child_entities(
-                #         self.entityclass, 
-                #         altparent=altparent):
-                #     yield e
-                #@@
             else:
                 log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
         return

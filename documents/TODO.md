@@ -33,6 +33,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - what to do if the render type is changed?  Ideally, remove any auto-generated property URI, but preserve manually entered values.
     - [x] Entity edit view: "New field" -> "New field type"
 - [x] Refactor button locating logic in edit form response handler
+- [x] Refactor and clean up entity save code in edit form response handler
 - [ ] Review field description is_enumeration (?) - use `has_new_button` for fields with `new` button
 - [ ] review field description and detection of repeated field-group references. 
 - [ ] Use `annalist_edit_choice.html` instead of annalist_edit_view_sel.html - update view template.  Cf. View_sel vs List_sel render types.

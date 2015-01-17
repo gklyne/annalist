@@ -107,5 +107,8 @@ VIEW_PROPERTY_DUPLICATE     = "Field %(field_id)s repeats use of property %(prop
 INVALID_OPERATION_ATTEMPTED = "Attempt to peform invalid operation"
 INVALID_TYPE_CHANGE         = "Change of record type to or from '_type' is not supported"
 INVALID_TYPE_RENAME         = "Renaming of Annalist built-in types is not supported"
+CREATE_ENTITY_FAILED        = "Problem creating/updating entity %s/%s (see log for more info)"
+RENAME_ENTITY_FAILED        = "Problem renaming entity %s/%s to %s/%s (see log for more info)"
+RENAME_TYPE_FAILED          = "Problem renaming type %s to %s (see log for more info)"
 
 # End.
