@@ -973,10 +973,10 @@ class GenericEntityEditView(AnnalistGenericView):
         Field 'field_options_typeref' of the returned value is the type_id of the 
         enumerated value type.
         """
-        def is_enum_f(fd):
-            # For some reason, FieldDescription.is_enum_field doesn't work
-            return fd.is_enum_field()
-        for enum_desc in self.find_fields(entityvaluemap, is_enum_f):
+        def is_new_f(fd):
+            # Using FieldDescription method directly doesn't work
+            return fd.has_new_button()
+        for enum_desc in self.find_fields(entityvaluemap, is_new_f):
             enum_new = self.form_data_contains(form_data, enum_desc, "new")
             if enum_new:
                 return enum_desc
@@ -1094,8 +1094,8 @@ class GenericEntityEditView(AnnalistGenericView):
                         (field_desc['field_name'], group_list)
                         )
                     yield field_desc
-                groupref = field_desc.group_ref()
-                if groupref is not None:
+                if field_desc.has_field_group_ref():
+                    groupref = field_desc.group_ref()
                     if not util.valid_id(groupref):
                         # this is for resilience in the face of bad data
                         log.warning(

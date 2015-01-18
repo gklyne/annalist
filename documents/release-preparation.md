@@ -42,7 +42,7 @@
     - `git push --tags`
 - [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Commit and push changes
-- [ ] Post announcement to Google Group, and elsewhere
+- [ ] Post announcement to Google Group, Twitter and elsewhere
 
 ## Build kit and PyPI upload
 

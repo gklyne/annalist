@@ -209,10 +209,12 @@ class EntityGenericListView(AnnalistGenericView):
             return HttpResponseRedirect(
                 continuation_next.get('continuation_url', self.view_uri("AnnalistSiteView"))
                 )
+
         # Not "Close": set up list parameters
         listinfo = self.list_setup(coll_id, type_id, list_id)
         if listinfo.http_response:
             return listinfo.http_response
+
         # Process requested action
         redirect_uri = None
         entity_ids   = request.POST.getlist('entity_select')
@@ -338,8 +340,10 @@ class EntityGenericListView(AnnalistGenericView):
                     { 'coll_id': coll_id
                     , 'list_id': request.POST['list_choice']
                     })
-                if type_id:
-                    list_uri_params.update({'type_id': type_id})
+                #@@
+                # if type_id:
+                #     list_uri_params.update({'type_id': type_id})
+                #@@
                 redirect_uri = (
                     uri_with_params(
                         self.view_uri("AnnalistEntityGenericList", **list_uri_params),

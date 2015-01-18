@@ -34,16 +34,19 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Entity edit view: "New field" -> "New field type"
 - [x] Refactor button locating logic in edit form response handler
 - [x] Refactor and clean up entity save code in edit form response handler
-- [ ] Review field description is_enumeration (?) - use `has_new_button` for fields with `new` button
-- [ ] review field description and detection of repeated field-group references. 
-- [ ] Use `annalist_edit_choice.html` instead of annalist_edit_view_sel.html - update view template.  Cf. View_sel vs List_sel render types.
-- [ ] Consider removing "New type", "New view" and "New field type" buttons, and corresponding test cases.
-- [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
-- [ ] Select new list view: drop type_id from URI? (e.g. when changing to view of different type)
+- [x] Review field description is_enum_field - use `has_new_button` for fields with `new` button
+- [x] review field description and detection of repeated field-group references. 
+- [x] Select new list view: drop type_id from URI? (e.g. when changing to view of different type)
 - [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  The current mechanism of using an explciit type to display site-wide values is probably confusing.
 - [ ] 'New' and 'Copy' from list view should bring up new form with id field selected, so that typing a new value replaces the auto-generated ID.
+- [ ] Consider removing "New type", "New view" and "New field type" buttons, but keep corresponding test cases so they can be reinstated).  Tie logic in to new enumerated-value handling.
+- [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
 - [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?
+- [x] Remove `/annalist_root/sampledata/data/` from distribution kit data so that test suite can run in Docker container.  (Otherwise, can't rename old data directory due to "Invalid cross-device link" error)
 - [ ] `annalist-manager` help to provide list of permission tokens
+- [ ] `annalist-manager` createsitedata should also create collections directory
+- [ ] `annalist-manager` option to write version string to stdout?
+- [ ] Installation instructions need to be clear about ordering of create, initialize, defaultadmin
  
 (sub-release?)
 
@@ -159,6 +162,9 @@ Notes for Future TODOs:
 - [ ] 3D rendering - checkmout JSMOL - http://wiki.jmol.org/index.php/JSmol
 - [ ] Visualize data structures from view definitions; generate OWL descriptions; etc.
 - [ ] Remixing spreadsheets: spreadsheet generation from queries as well as ingesting through data bridges.
+- [ ] git/github integration
+    - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
+    - [ ] internal options to save history in per-collection git repo
 
 
 ----

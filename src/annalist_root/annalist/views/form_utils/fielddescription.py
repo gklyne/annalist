@@ -167,8 +167,9 @@ class FieldDescription(object):
 
     def is_repeat_group(self):
         """
-        Returns true if this is a repeating field, in which case the field value
-        is assumed to be a list of values to be rendered.
+        Returns true if this is a repeating field, in which case the field
+        value is assumed to be a list of values to be rendered, and to
+        have buttons for adding and removing values.
         """
         repeat_render_types = ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"]
         return self._field_desc['field_render_type'] in repeat_render_types
@@ -182,9 +183,31 @@ class FieldDescription(object):
         enum_render_types = (
             [ "EntityTypeId"
             , "Type", "View", "List", "Field"
-            , "Enum", "Enum_optional"
+            , "Enum", "Enum_optional", "Enum_choice"
             ])
         return self._field_desc['field_render_type'] in enum_render_types
+
+    def has_new_button(self):
+        """
+        Returns true if this field has a control (a 'new' or +' button)')
+        that invokes a new form to create a new entity.
+        """
+        new_render_types = (
+            [ "EntityTypeId"
+            , "Type", "View", "List", "Field"
+            , "Enum", "Enum_optional"
+            ])
+        return self._field_desc['field_render_type'] in new_render_types
+
+    def has_field_group_ref(self):
+        """
+        Returns true if this field contains a reference to a field group,
+        which in turn references further field descriptions.
+
+        (Currently, this function duplicates `is_repeat_group`.)
+        """
+        field_group_types = ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"]
+        return self._field_desc['field_render_type'] in field_group_types
 
     def __repr__(self):
         return (
