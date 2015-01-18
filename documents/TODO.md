@@ -42,8 +42,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Consider removing "New type", "New view" and "New field type" buttons, but keep corresponding test cases so they can be reinstated).  Tie logic in to new enumerated-value handling.
 - [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
 - [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?
+- [x] Remove `/annalist_root/sampledata/data/` from distribution kit data so that test suite can run in Docker container.  (Otherwise, can't rename old data directory due to "Invalid cross-device link" error)
 - [ ] `annalist-manager` help to provide list of permission tokens
 - [ ] `annalist-manager` createsitedata should also create collections directory
+- [ ] `annalist-manager` option to write version string to stdout?
 - [ ] Installation instructions need to be clear about ordering of create, initialize, defaultadmin
  
 (sub-release?)
