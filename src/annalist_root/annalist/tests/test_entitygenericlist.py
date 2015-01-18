@@ -780,7 +780,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_list_type_url("testcoll", "_type", list_id="View_list")
+        v = TestHostUri + entitydata_list_all_url("testcoll", list_id="View_list")
+        # v = TestHostUri + entitydata_list_type_url("testcoll", "_type", list_id="View_list")
         self.assertIn(v, r['location'])
         self.assertNotIn("continuation_url", r['location'])
         return
@@ -793,7 +794,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_list_type_url("testcoll", "testtype", list_id="Default_list")
+        # v = TestHostUri + entitydata_list_type_url("testcoll", "testtype", list_id="Default_list")
+        v = TestHostUri + entitydata_list_all_url("testcoll", list_id="Default_list")
         c = continuation_url_param("/xyzxy/")
         s = "search=search%26term"
         self.assertIn(v, r['location'])

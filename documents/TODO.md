@@ -36,11 +36,11 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Refactor and clean up entity save code in edit form response handler
 - [x] Review field description is_enum_field - use `has_new_button` for fields with `new` button
 - [x] review field description and detection of repeated field-group references. 
-- [ ] Consider removing "New type", "New view" and "New field type" buttons, and corresponding test cases.
-- [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
-- [ ] Select new list view: drop type_id from URI? (e.g. when changing to view of different type)
+- [x] Select new list view: drop type_id from URI? (e.g. when changing to view of different type)
 - [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  The current mechanism of using an explciit type to display site-wide values is probably confusing.
 - [ ] 'New' and 'Copy' from list view should bring up new form with id field selected, so that typing a new value replaces the auto-generated ID.
+- [ ] Consider removing "New type", "New view" and "New field type" buttons, but keep corresponding test cases so they can be reinstated).  Tie logic in to new enumerated-value handling.
+- [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
 - [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?
 - [ ] `annalist-manager` help to provide list of permission tokens
 - [ ] `annalist-manager` createsitedata should also create collections directory
