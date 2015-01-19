@@ -334,7 +334,7 @@ class EntityGenericListView(AnnalistGenericView):
                         continuation_next
                         )
                     )
-            if "view" in request.POST:
+            if ("view" in request.POST) or ("view_all" in request.POST):
                 action = "list"         
                 search = request.POST['search_for']
                 params = continuation_next
@@ -344,6 +344,8 @@ class EntityGenericListView(AnnalistGenericView):
                     { 'coll_id': coll_id
                     , 'list_id': request.POST['list_choice']
                     })
+                if "view_all" in request.POST:
+                    list_uri_params['scope']  = "all"
                 #@@
                 # if type_id:
                 #     list_uri_params.update({'type_id': type_id})

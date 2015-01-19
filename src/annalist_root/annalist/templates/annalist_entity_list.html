@@ -30,7 +30,7 @@
           <!-- Search term entry -->
           <div class="small-12 medium-5 columns">
             <div class="row">
-              <div class="view_label small-12 medium-3 columns">
+              <div class="view-label small-12 medium-3 columns">
                 <p>Search</p>
               </div>
               <div class="small-12 medium-9 columns end">
@@ -46,7 +46,10 @@
           <div class="small-12 medium-2 columns text-right">
             <div class="row">
               <div class="small-12 columns right">
-                <input type="submit" name="view" value="View" />
+                <input type="submit" name="view" value="View" 
+                       title="View entities from current collection" />
+                <input type="submit" name="view_all" value="View all" 
+                       title="View collection and site-wide entities" />
                 <!--
                 <button type="submit" name="search" value="Search">
                 <img src="{% static 'images/icons/search_32.png' %}"/>

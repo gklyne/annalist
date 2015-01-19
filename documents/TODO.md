@@ -37,7 +37,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Review field description is_enum_field - use `has_new_button` for fields with `new` button
 - [x] review field description and detection of repeated field-group references. 
 - [x] Select new list view: drop type_id from URI? (e.g. when changing to view of different type)
-- [ ] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  The current mechanism of using an explciit type to display site-wide values is probably confusing.
+- [x] Consider use of "hidden" flags on views, types, fields, etc. to avoid cluttering UI with internal details?  The current mechanism of using an explciit type to display site-wide values is probably confusing.
+    - Implmentation adds 'scope' flag to list URIs (!all), and adds "View all" button to list views to select the wider scope.
 - [ ] 'New' and 'Copy' from list view should bring up new form with id field selected, so that typing a new value replaces the auto-generated ID.
 - [ ] Consider removing "New type", "New view" and "New field type" buttons, but keep corresponding test cases so they can be reinstated).  Tie logic in to new enumerated-value handling.
 - [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
