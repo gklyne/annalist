@@ -68,39 +68,41 @@ class EntityFinder(object):
             yield t
         return
 
-    def get_type_entities(self, type_id, user_permissions=None, include_sitedata=False):
+    def get_type_entities(self, type_id, user_permissions, scope):
         """
         Iterate over entities from collection matching the supplied type.
 
-        If `include_sitedata` is True, include instances of supplied type_id
-        that are defined in site-wide data as well as those in the collection.
+        'scope' is used to determine the extend of data top be included in the listing:
+        a value of 'all' means that site-wide entyioties are icnluded in the listing.
+        Otherwise only collection entities are included.        
         """
-        entitytypeinfo = EntityTypeInfo(self._site, self._coll, type_id)        
+        entitytypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
+        include_sitedata = (scope == "all")
         for e in entitytypeinfo.enum_entities(user_permissions, usealtparent=include_sitedata):
             yield e
         return
 
-    def get_all_types_entities(self, types, user_permissions=None, include_sitedata=False):
+    def get_all_types_entities(self, types, user_permissions, scope):
         """
         Iterate mover all entities of all types from a supplied type iterator
         """
         assert user_permissions is not None
         for t in types:
-            for e in self.get_type_entities(t, user_permissions, include_sitedata=include_sitedata):
+            for e in self.get_type_entities(t, user_permissions, scope):
                 yield e
         return
 
-    def get_base_entities(self, type_id=None, user_permissions=None):
+    def get_base_entities(self, type_id=None, user_permissions=None, scope=None):
         """
         Iterate over base entities from collection, matching the supplied type id if supplied.
 
         If a type_id is supplied, site data values are included.
         """
         if type_id:
-            return self.get_type_entities(type_id, user_permissions, include_sitedata=True)
+            return self.get_type_entities(type_id, user_permissions, scope)
         else:
             return self.get_all_types_entities(
-                self.get_collection_type_ids(), user_permissions, include_sitedata=False
+                self.get_collection_type_ids(), user_permissions, scope
                 )
         return
 
@@ -113,21 +115,30 @@ class EntityFinder(object):
                 yield e
         return
 
-    def get_entities(self, user_permissions=None, type_id=None, context=None, search=None):
+    def get_entities(self, 
+        user_permissions=None, type_id=None, scope=None, context=None, search=None
+        ):
         """
-        Get list of entities of the specified type, matching search term and visible to supplied
-        user permissions.
+        Get list of entities of the specified type, matching search term and visible to 
+        supplied user permissions.
         """
         entities = self._selector.filter(
-            self.get_base_entities(type_id, user_permissions), context=context
+            self.get_base_entities(type_id, user_permissions, scope), context=context
             )
         if search:
             entities = self.search_entities(entities, search)
         return entities
 
-    def get_entities_sorted(self, user_permissions=None, type_id=None, context={}, search=None):
+    def get_entities_sorted(self, 
+        user_permissions=None, type_id=None, scope=None, context={}, search=None
+        ):
+        """
+        Get sorted list of entities of the specified type, matching search term and 
+        visible to supplied user permissions.
+        """
         entities = self.get_entities(
-            user_permissions, type_id=type_id, context=context, search=search
+            user_permissions, type_id=type_id, scope=scope, 
+            context=context, search=search
             )
         return sorted(entities, key=order_entity_key)
 

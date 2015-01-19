@@ -41,6 +41,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] 'New' and 'Copy' from list view should bring up new form with id field selected, so that typing a new value replaces the auto-generated ID.
 - [ ] Consider removing "New type", "New view" and "New field type" buttons, but keep corresponding test cases so they can be reinstated).  Tie logic in to new enumerated-value handling.
 - [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
+- [ ] Implement renderer for field placement field
 - [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?
 - [x] Remove `/annalist_root/sampledata/data/` from distribution kit data so that test suite can run in Docker container.  (Otherwise, can't rename old data directory due to "Invalid cross-device link" error)
 - [ ] `annalist-manager` help to provide list of permission tokens

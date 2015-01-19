@@ -136,6 +136,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_get_default_all_list(self):
+        # List all entities in current collection
         u = entitydata_list_all_url("testcoll", list_id="Default_list_all") + "?continuation_url=/xyzzy/"
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
@@ -210,8 +211,100 @@ class EntityGenericListViewTest(AnnalistTestCase):
                 self.assertEqual(item_field['entity_type_id'], entity_fields[eid]['entity_type_id'])
         return
 
+    def test_get_default_all_scope_all_list(self):
+        # List all entities in current collection and site-wiude
+        # This repeats parts of the previous test but with scope='all'
+        u = entitydata_list_all_url(
+            "testcoll", list_id="Default_list_all", scope="all"
+            ) + "?continuation_url=/xyzzy/"
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "Collection testcoll")
+        self.assertContains(r, "<h3>List entities with type information</h3>", html=True)
+        # Test context
+        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          None)
+        list_choices = r.context['list_choices']
+        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
+        self.assertEqual(list_choices['field_value'],   "Default_list_all")
+        # Unbound field descriptions
+        head_fields = context_list_head_fields(r.context)
+        self.assertEqual(len(head_fields), 3)
+        self.assertEqual(head_fields[0]['field_id'], 'Entity_id')
+        self.assertEqual(head_fields[1]['field_id'], 'Entity_type')
+        self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
+        # Entities and bound fields
+        entities = context_list_entities(r.context)
+        self.assertEqual(len(entities), 178)    # Will change with site data
+        return
+
+    def test_get_types_list(self):
+        # List types in current collection
+        u = entitydata_list_type_url(
+            "testcoll", "_type", list_id="Type_list", scope=None
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # log.info(r.content) #@@
+        # Test context
+        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "_type")
+        # Fields
+        head_fields = context_list_head_fields(r.context)
+        self.assertEqual(len(head_fields), 2)
+        # 1st field
+        self.assertEqual(head_fields[0]['field_id'], 'Entity_id')
+        self.assertEqual(head_fields[0]['field_name'], 'entity_id')
+        # 2nd field
+        self.assertEqual(head_fields[1]['field_id'], 'Entity_label')
+        self.assertEqual(head_fields[1]['field_name'], 'Entity_label')
+        # Entities
+        entities   = context_list_entities(r.context)
+        listed_entities = { e['entity_id']: e for e in entities }
+        # self.assertIn('_initial_values', listed_entities)
+        type_entities = {"testtype", "testtype2"}
+        self.assertEqual(set(listed_entities.keys()), type_entities)
+        return
+
+    def test_get_types_scope_all_list(self):
+        # List types in current collection and site-wide
+        u = entitydata_list_type_url(
+            "testcoll", "_type", list_id="Type_list", scope="all"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # log.info(r.content) #@@
+        # Test context
+        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "_type")
+        # Fields
+        head_fields = context_list_head_fields(r.context)
+        self.assertEqual(len(head_fields), 2)
+        # 1st field
+        self.assertEqual(head_fields[0]['field_id'], 'Entity_id')
+        self.assertEqual(head_fields[0]['field_name'], 'entity_id')
+        # 2nd field
+        self.assertEqual(head_fields[1]['field_id'], 'Entity_label')
+        self.assertEqual(head_fields[1]['field_name'], 'Entity_label')
+        # Entities
+        entities   = context_list_entities(r.context)
+        listed_entities = { e['entity_id']: e for e in entities }
+        self.assertIn('_initial_values', listed_entities)
+        type_entities = get_site_types() | {"_initial_values", "testtype", "testtype2"}
+        self.assertEqual(set(listed_entities.keys()), type_entities)
+        return
+
     def test_get_fields_list(self):
-        u = entitydata_list_type_url("testcoll", "_field", list_id="Field_list")+"?continuation_url=/xyzzy/"
+        # List fields in current collection
+        u = entitydata_list_type_url(
+            "testcoll", "_field", list_id="Field_list", scope="all"
+            )+"?continuation_url=/xyzzy/"
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -322,7 +415,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_get_fields_list_no_continuation(self):
-        u = entitydata_list_type_url("testcoll", "_field", list_id="Field_list")
+        u = entitydata_list_type_url(
+            "testcoll", "_field", list_id="Field_list", scope="all"
+            )
         r = self.client.get(u+"?foo=bar")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -359,7 +454,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_get_fields_list_search(self):
-        u = entitydata_list_type_url("testcoll", "_field", list_id="Field_list") + "?search=Bib_&continuation_url=/xyzzy/"
+        u = entitydata_list_type_url(
+            "testcoll", "_field", list_id="Field_list", scope="all"
+            ) + "?search=Bib_&continuation_url=/xyzzy/"
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")

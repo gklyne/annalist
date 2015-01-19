@@ -56,12 +56,15 @@ from annalist.views.entitydelete        import EntityDataDeleteConfirmedView
 # persistent resources.
 
 urlpatterns = patterns('',
+
+    # Site pages
     url(r'^$',              AnnalistHomeView.as_view(), name='AnnalistHomeView'),
     url(r'^site/$',         SiteView.as_view(),         name='AnnalistSiteView'),
     url(r'^site/!action$',  SiteActionView.as_view(),   name='AnnalistSiteActionView'),
     url(r'^profile/$',      ProfileView.as_view(),      name='AnnalistProfileView'),
     url(r'^confirm/$',      ConfirmView.as_view(),      name='AnnalistConfirmView'),
 
+    # Special forms
     url(r'^c/(?P<coll_id>\w{0,32})/$',
                             CollectionView.as_view(),
                             name='AnnalistCollectionView'),
@@ -81,10 +84,18 @@ urlpatterns = patterns('',
                             RecordListDeleteConfirmedView.as_view(),
                             name='AnnalistRecordListDeleteView'),
 
+    # Default/API access lists and data
+    # (these may content negotiate for various formats)
     url(r'^c/(?P<coll_id>\w{0,32})/d/$',
                             EntityDefaultListView.as_view(),
                             name='AnnalistEntityDefaultListAll'),
+    url(r'^c/(?P<coll_id>\w{0,32})/d/!(?P<scope>all)$',
+                            EntityDefaultListView.as_view(),
+                            name='AnnalistEntityDefaultListAll'),
     url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/$',
+                            EntityDefaultListView.as_view(),
+                            name='AnnalistEntityDefaultListType'),
+    url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/!(?P<scope>all)$',
                             EntityDefaultListView.as_view(),
                             name='AnnalistEntityDefaultListType'),
     url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/!delete_confirmed$',
@@ -94,16 +105,27 @@ urlpatterns = patterns('',
                             EntityDefaultEditView.as_view(),
                             name='AnnalistEntityAccessView'),
 
+    # Specified list views
     url(r'^c/(?P<coll_id>\w{0,32})/l/$',
+                            EntityDefaultListView.as_view(),
+                            name='AnnalistEntityDefaultList'),
+    url(r'^c/(?P<coll_id>\w{0,32})/l/!(?P<scope>all)$',
                             EntityDefaultListView.as_view(),
                             name='AnnalistEntityDefaultList'),
     url(r'^c/(?P<coll_id>\w{0,32})/l/(?P<list_id>\w{0,32})/$',
                             EntityGenericListView.as_view(),
                             name='AnnalistEntityGenericList'),
+    url(r'^c/(?P<coll_id>\w{0,32})/l/(?P<list_id>\w{0,32})/!(?P<scope>all)$',
+                            EntityGenericListView.as_view(),
+                            name='AnnalistEntityGenericList'),
     url(r'^c/(?P<coll_id>\w{0,32})/l/(?P<list_id>\w{0,32})/(?P<type_id>\w{0,32})/$',
                             EntityGenericListView.as_view(),
                             name='AnnalistEntityGenericList'),
+    url(r'^c/(?P<coll_id>\w{0,32})/l/(?P<list_id>\w{0,32})/(?P<type_id>\w{0,32})/!(?P<scope>all)$',
+                            EntityGenericListView.as_view(),
+                            name='AnnalistEntityGenericList'),
 
+    # Specied entity edit/view forms
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityDataView'),

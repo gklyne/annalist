@@ -437,7 +437,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     # List types using type list
     def test_type_list(self):
-        u = collection_entity_list_url(coll_id="coll1", list_id="Type_list", type_id="_type")
+        u = collection_entity_list_url(
+            coll_id="coll1", list_id="Type_list", type_id="_type", scope="all"
+            )
         s = self.get_page(u)
 
         self.assertEqual(s.title.string, "Collection coll1")
@@ -445,7 +447,11 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "Type_list")
 
-        thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
+        thead = (
+            s.form.find("div", class_="thead")
+                  .find("div", class_="row")
+                  .find_all("div", class_="columns")
+            )
         self.assertEqual(thead[0].p.string, "Id")
         self.assertEqual(thead[1].p.string, "Label")
 
@@ -551,7 +557,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     # List lists using list list
     def test_list_list(self):
-        u = collection_entity_list_url(coll_id="coll1", list_id="List_list", type_id="_list")
+        u = collection_entity_list_url(
+            coll_id="coll1", list_id="List_list", type_id="_list", scope='all'
+            )
         s = self.get_page(u)
 
         self.assertEqual(s.title.string, "Collection coll1")
@@ -668,7 +676,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     # List views using view list
     def test_view_list(self):
-        u = collection_entity_list_url(coll_id="coll1", list_id="View_list", type_id="_view")
+        u = collection_entity_list_url(
+            coll_id="coll1", list_id="View_list", type_id="_view", scope='all'
+            )
         s = self.get_page(u)
 
         self.assertEqual(s.title.string, "Collection coll1")
@@ -780,7 +790,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     # List groups using group list
     def test_group_list(self):
-        u = collection_entity_list_url(coll_id="coll1", list_id="Field_group_list", type_id="_group")
+        u = collection_entity_list_url(
+            coll_id="coll1", list_id="Field_group_list", type_id="_group", scope="all"
+            )
         s = self.get_page(u)
 
         self.assertEqual(s.title.string, "Collection coll1")
@@ -895,7 +907,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     # List fields using field list
     def test_field_list(self):
-        u = collection_entity_list_url(coll_id="coll1", list_id="Field_list", type_id="_field")
+        u = collection_entity_list_url(
+            coll_id="coll1", list_id="Field_list", type_id="_field", scope="all"
+            )
         s = self.get_page(u)
 
         self.assertEqual(s.title.string, "Collection coll1")
@@ -1130,7 +1144,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     # List users using user list
     def test_user_list(self):
-        u = collection_entity_list_url(coll_id="coll1", list_id="User_list", type_id="_user")
+        u = collection_entity_list_url(
+            coll_id="coll1", list_id="User_list", type_id="_user", scope="all"
+            )
         s = self.get_page(u)
 
         self.assertEqual(s.title.string, "Collection coll1")

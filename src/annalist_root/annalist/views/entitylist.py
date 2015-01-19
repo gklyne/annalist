@@ -144,11 +144,14 @@ class EntityGenericListView(AnnalistGenericView):
 
     # GET
 
-    def get(self, request, coll_id=None, type_id=None, list_id=None):
+    def get(self, request, coll_id=None, type_id=None, list_id=None, scope=None):
         """
         Create a form for listing entities.
         """
-        log.info("views.entitylist.get:  coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
+        log.info(
+            "views.entitylist.get:  coll_id %s, type_id %s, list_id %s, scope %s"%
+            (coll_id, type_id, list_id, scope)
+            )
         listinfo = self.list_setup(coll_id, type_id, list_id)
         if listinfo.http_response:
             return listinfo.http_response
@@ -160,7 +163,8 @@ class EntityGenericListView(AnnalistGenericView):
         entity_list = (
             EntityFinder(listinfo.collection, selector=selector)
                 .get_entities_sorted(
-                    user_perms, type_id=type_id, context=listinfo.recordlist, search=search_for
+                    user_perms, type_id=type_id, scope=scope,
+                    context=listinfo.recordlist, search=search_for
                     )
             )
         entityvallist = { '_list_entities_': [ get_entity_values(listinfo, e) for e in entity_list ] }
@@ -192,7 +196,7 @@ class EntityGenericListView(AnnalistGenericView):
 
     # POST
 
-    def post(self, request, coll_id=None, type_id=None, list_id=None):
+    def post(self, request, coll_id=None, type_id=None, list_id=None, scope=None):
         """
         Handle response from dynamically generated list display form.
         """

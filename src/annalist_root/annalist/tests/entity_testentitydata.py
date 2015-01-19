@@ -81,22 +81,26 @@ def entitydata_edit_url(action=None, coll_id="testcoll", type_id=None, entity_id
         kwargs.update({'entity_id': entity_id})
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_list_all_url(coll_id="testcoll", list_id=None):
+def entitydata_list_all_url(coll_id="testcoll", list_id=None, scope=None):
     if list_id:
         viewname = "AnnalistEntityGenericList"
         kwargs   = {'list_id': list_id, 'coll_id': coll_id}
     else:
         viewname = "AnnalistEntityDefaultListAll"
         kwargs   = {'coll_id': coll_id}
+    if scope is not None:
+        kwargs['scope'] = scope
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_list_type_url(coll_id="testcoll", type_id="testtype", list_id=None):
+def entitydata_list_type_url(coll_id="testcoll", type_id="testtype", list_id=None, scope=None):
     if list_id:
         viewname = "AnnalistEntityGenericList"
         kwargs   = {'list_id': list_id, 'coll_id': coll_id, 'type_id': type_id}
     else:
         viewname = "AnnalistEntityDefaultListType"
         kwargs   = {'coll_id': coll_id, 'type_id': type_id}
+    if scope is not None:
+        kwargs['scope'] = scope
     return reverse(viewname, kwargs=kwargs)
 
 def entitydata_delete_confirm_url(coll_id="testcoll", type_id="testtype"):

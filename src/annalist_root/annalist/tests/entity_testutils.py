@@ -101,7 +101,7 @@ def collection_entity_edit_url(
         args.update({'entity_id': entity_id})
     return reverse(viewname, kwargs=args)
 
-def collection_entity_list_url(coll_id="testcoll", list_id=None, type_id=None):
+def collection_entity_list_url(coll_id="testcoll", list_id=None, type_id=None, scope=None):
     """
     Return URL for entity list in collection some collection.
 
@@ -123,6 +123,8 @@ def collection_entity_list_url(coll_id="testcoll", list_id=None, type_id=None):
         args['list_id'] = list_id
     if type_id is not None:
         args['type_id'] = type_id
+    if scope is not None:
+        args['scope'] = scope
     return reverse(view, kwargs=args)
 
 def continuation_url_param(uri, prev_cont=None):

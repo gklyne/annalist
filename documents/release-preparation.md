@@ -34,10 +34,12 @@
 - [ ] Update front page link at annalist.net
 - [ ] Commit changes
 - [ ] Upload to PyPI (see below)
+- [ ] Create Docker image, test
+- [ ] Push docker image to DockerHub
 - [ ] Merge final updates to master
 - [ ] Test again on master branch
 - [ ] Tag release on master branch
-    - `git tag -a release-1.y.z`
+    - `git tag -a release-x.y.z`
 - [ ] Push master branch, and tags
     - `git push --tags`
 - [ ] On develop branch, bump version number again (back to odd value)
