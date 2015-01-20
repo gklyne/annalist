@@ -42,7 +42,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] 'New' and 'Copy' from list view should bring up new form with id field selected, so that typing a new value replaces the auto-generated ID.
 - [ ] Consider removing "New type", "New view" and "New field type" buttons, but keep corresponding test cases so they can be reinstated).  Tie logic in to new enumerated-value handling.
     - [x] refactor logic for new-entity from entity edit view
-    - [ ] consider renaming 'View_repeat_fields' back to just 'View_fields'
+    - [x] rename 'View_repeat_fields' back to just 'View_fields'
     - [ ] hide new type, view, field type buttons in edit template OR add "New field group"
 - [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
 - [ ] Implement renderer for field placement field

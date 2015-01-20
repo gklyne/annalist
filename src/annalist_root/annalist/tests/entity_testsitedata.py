@@ -265,9 +265,9 @@ site_view_fields = (
     , "View_add_field"
     , "View_choice"
     , "View_comment"
+    , "View_fields"
     , "View_id"
     , "View_label"
-    , "View_repeat_fields"
     , "View_target_type"
     ])
 

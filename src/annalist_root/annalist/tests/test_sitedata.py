@@ -219,10 +219,10 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         for i in range(len(trows)):
             tcols = trows[i].select("div.columns div.row div.columns")
             self.assertEqual(trows[i].div.input['type'],  "checkbox")
-            self.assertEqual(trows[i].div.input['name'],  "View_repeat_fields__select_fields")
+            self.assertEqual(trows[i].div.input['name'],  "View_fields__select_fields")
             self.assertEqual(trows[i].div.input['value'], str(i))
             self.check_select_field(
-                tcols[0], "View_repeat_fields__%d__Field_id"%i, 
+                tcols[0], "View_fields__%d__Field_id"%i, 
                 expect_field_choices, expect_fields[i]
                 )
         return
@@ -735,9 +735,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "Entity_type"
             , "View_add_field"
             , "View_comment"
+            , "View_fields"
             , "View_id"
             , "View_label"
-            , "View_repeat_fields"
             , "View_target_type"
             ])
         expect_fields = (
@@ -746,7 +746,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "View_comment"
             , "View_target_type"
             , "View_add_field"
-            , "View_repeat_fields"
+            , "View_fields"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)
         self.check_select_field(s, "view_choice", self.views_expected, "View_view")
@@ -1019,9 +1019,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/View_add_field",            ["View_add_field"                     ] ]
             , [ "_field/View_choice",               ["View_choice"                        ] ]
             , [ "_field/View_comment",              ["View_comment"                       ] ]
+            , [ "_field/View_fields",               ["View_fields"                        ] ]
             , [ "_field/View_id",                   ["View_id"                            ] ]
             , [ "_field/View_label",                ["View_label"                         ] ]
-            , [ "_field/View_repeat_fields",        ["View_repeat_fields"                 ] ]
             , [ "_field/View_target_type",          ["View_target_type"                   ] ]
             ])
         self.check_list_row_data(s, trows_expected)

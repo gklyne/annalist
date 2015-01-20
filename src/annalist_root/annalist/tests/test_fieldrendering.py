@@ -104,8 +104,8 @@ class FieldDescriptionTest(AnnalistTestCase):
                     }
                   ]
                 # ----- Field description -----
-                , 'field_id':                   'View_repeat_fields'
-                , 'field_name':                 'View_repeat_fields'
+                , 'field_id':                   'View_fields'
+                , 'field_name':                 'View_fields'
                 , 'field_label':                'Fields'
                 , 'field_help':                 'This resource descibes the repeated field description used when displaying and/or editing a record view description'
                 , 'field_placeholder':          '(repeat field description)'
@@ -114,7 +114,7 @@ class FieldDescriptionTest(AnnalistTestCase):
                 , 'field_value_type':           'annal:Field_group'
                 , 'field_group_ref':            'View_field_view'
                 , 'field_render_type':          'RepeatGroup'
-                , 'group_id':                   'View_repeat_fields'
+                , 'group_id':                   'View_fields'
                 , 'group_label':                'Fields'
                 , 'group_add_label':            'Add field'
                 , 'group_delete_label':         'Remove selected field(s)'
@@ -230,68 +230,68 @@ class FieldDescriptionTest(AnnalistTestCase):
             , '''<p>Property</p>'''
             , '''<p>Size/position</p>'''
             # 1st field
-            , '''<input type="checkbox" name="View_repeat_fields__select_fields"'''+
+            , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="0" class="right" />'''
-            , '''<select name="View_repeat_fields__0__Field_id">'''+
+            , '''<select name="View_fields__0__Field_id">'''+
               ''' <option>Entity_comment</option>'''+
               ''' <option selected="selected">Entity_id</option>'''+
               ''' <option>Entity_label</option>'''+
               ''' <option>Entity_type</option>'''+
               ''' </select>'''
-            , '''<input type="text" size="64" name="View_repeat_fields__0__Field_property"'''+
+            , '''<input type="text" size="64" name="View_fields__0__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value=""/>'''
-            , '''<input type="text" size="64" name="View_repeat_fields__0__Field_placement"'''+
+            , '''<input type="text" size="64" name="View_fields__0__Field_placement"'''+
               ''' placeholder="(field display size and placement details)"'''+
               ''' value="small:0,12;medium:0,6"/>'''
             # 2nd field
-            , '''<input type="checkbox" name="View_repeat_fields__select_fields"'''+
+            , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="1" class="right" />'''
-            , '''<select name="View_repeat_fields__1__Field_id">'''+
+            , '''<select name="View_fields__1__Field_id">'''+
               ''' <option>Entity_comment</option>'''+
               ''' <option>Entity_id</option>'''+
               ''' <option>Entity_label</option>'''+
               ''' <option selected="selected">Entity_type</option>'''+
               ''' </select>'''
-            , '''<input type="text" size="64" name="View_repeat_fields__1__Field_property"'''+
+            , '''<input type="text" size="64" name="View_fields__1__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value=""/>'''
-            , '''<input type="text" size="64" name="View_repeat_fields__1__Field_placement"'''+
+            , '''<input type="text" size="64" name="View_fields__1__Field_placement"'''+
               ''' placeholder="(field display size and placement details)"'''+
               ''' value="small:0,12;medium:6,6right"/>'''
              # 3rd field
-            , '''<input type="checkbox" name="View_repeat_fields__select_fields"'''+
+            , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="2" class="right" />'''
-            , '''<select name="View_repeat_fields__2__Field_id">'''+
+            , '''<select name="View_fields__2__Field_id">'''+
               ''' <option>Entity_comment</option>'''+
               ''' <option>Entity_id</option>'''+
               ''' <option selected="selected">Entity_label</option>'''+
               ''' <option>Entity_type</option>'''+
               ''' </select>'''
-            , '''<input type="text" size="64" name="View_repeat_fields__2__Field_property"'''+
+            , '''<input type="text" size="64" name="View_fields__2__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value="rdfs:label"/>'''
-            , '''<input type="text" size="64" name="View_repeat_fields__2__Field_placement"'''+
+            , '''<input type="text" size="64" name="View_fields__2__Field_placement"'''+
               ''' placeholder="(field display size and placement details)"'''+
               ''' value="small:0,12"/>'''
             # 4th field
-            , '''<input type="checkbox" name="View_repeat_fields__select_fields"'''+
+            , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="3" class="right" />'''
-            , ''' <select name="View_repeat_fields__3__Field_id">'''+
+            , ''' <select name="View_fields__3__Field_id">'''+
               ''' <option selected="selected">Entity_comment</option>'''+
               ''' <option>Entity_id</option>'''+
               ''' <option>Entity_label</option>'''+
               ''' <option>Entity_type</option>'''+
               ''' </select>'''
-            , '''<input type="text" size="64" name="View_repeat_fields__3__Field_property"'''+
+            , '''<input type="text" size="64" name="View_fields__3__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value="rdfs:comment"/>'''
-            , '''<input type="text" size="64" name="View_repeat_fields__3__Field_placement"'''+
+            , '''<input type="text" size="64" name="View_fields__3__Field_placement"'''+
               ''' placeholder="(field display size and placement details)"'''+
               ''' value="small:0,12"/>'''
             # Buttons
-            , '''<input type="submit" name="View_repeat_fields__remove" value="Remove selected field(s)" />'''
-            , '''<input type="submit" name="View_repeat_fields__add" value="Add field" />'''
+            , '''<input type="submit" name="View_fields__remove" value="Remove selected field(s)" />'''
+            , '''<input type="submit" name="View_fields__add" value="Add field" />'''
             ])
         for e in expect_elements:
             self.assertIn(e, rendered_text)

@@ -257,10 +257,10 @@ def recordview_entity_view_context_data(
             , 'field_value':        'yes'
             , 'options':            []
             }
-          , { "field_id":           "View_repeat_fields"   # fields[5]
+          , { "field_id":           "View_fields"   # fields[5]
             , 'field_label':        'Fields'
             , 'field_render_type':  'RepeatGroupRow'
-            , 'field_name':         'View_repeat_fields'
+            , 'field_name':         'View_fields'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Field_group'
             , 'field_value':        view_fields
@@ -308,23 +308,23 @@ def recordview_entity_view_form_data(
         , 'record_type':        'annal:View'
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
         # View fields
-        , 'View_repeat_fields__0__Field_id':           "Entity_id"
-        , 'View_repeat_fields__0__Field_placement':    "small:0,12;medium:0,6"
-        , 'View_repeat_fields__1__Field_id':           "Entity_type"
-        , 'View_repeat_fields__1__Field_placement':    "small:0,12;medium:6,6right"
-        , 'View_repeat_fields__2__Field_id':           "Entity_label"
-        , 'View_repeat_fields__2__Field_property':     "rdfs:label"
-        , 'View_repeat_fields__2__Field_placement':    "small:0,12"
-        , 'View_repeat_fields__3__Field_id':           "Entity_comment"
-        , 'View_repeat_fields__3__Field_property':     "rdfs:comment"
-        , 'View_repeat_fields__3__Field_placement':    field3_placement
+        , 'View_fields__0__Field_id':           "Entity_id"
+        , 'View_fields__0__Field_placement':    "small:0,12;medium:0,6"
+        , 'View_fields__1__Field_id':           "Entity_type"
+        , 'View_fields__1__Field_placement':    "small:0,12;medium:6,6right"
+        , 'View_fields__2__Field_id':           "Entity_label"
+        , 'View_fields__2__Field_property':     "rdfs:label"
+        , 'View_fields__2__Field_placement':    "small:0,12"
+        , 'View_fields__3__Field_id':           "Entity_comment"
+        , 'View_fields__3__Field_property':     "rdfs:comment"
+        , 'View_fields__3__Field_placement':    field3_placement
         })
     if extra_field:
         # Insert extra field with supplied Id
-        form_data_dict['View_repeat_fields__4__Field_id']        = extra_field
-        form_data_dict['View_repeat_fields__4__Field_placement'] = "small:0,12"
+        form_data_dict['View_fields__4__Field_id']        = extra_field
+        form_data_dict['View_fields__4__Field_placement'] = "small:0,12"
         if extra_field_uri:
-            form_data_dict['View_repeat_fields__4__Field_property'] = extra_field_uri
+            form_data_dict['View_fields__4__Field_property'] = extra_field_uri
     if view_id:
         form_data_dict['entity_id']     = view_id
         form_data_dict['orig_id']       = view_id
@@ -339,11 +339,11 @@ def recordview_entity_view_form_data(
     if cancel:
         form_data_dict['cancel']        = "Cancel"
     elif add_field:
-        form_data_dict['View_repeat_fields__add'] = "Add field"
+        form_data_dict['View_fields__add'] = "Add field"
     elif remove_fields:
-        form_data_dict['View_repeat_fields__remove'] = "Remove field"
+        form_data_dict['View_fields__remove'] = "Remove field"
         if remove_fields != "no-selection":
-            form_data_dict['View_repeat_fields__select_fields'] = remove_fields
+            form_data_dict['View_fields__select_fields'] = remove_fields
     elif new_enum:
         form_data_dict[new_enum]        = new_enum
     else:

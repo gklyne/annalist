@@ -433,7 +433,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 orig_entity_id, orig_entity_type_id,  orig_entity,
                 viewinfo, context_extra_values, messages,
                 view_edit_uri_base, "config",
-                {"add_field": "View_repeat_fields"}, continuation_url
+                {"add_field": "View_fields"}, continuation_url
                 )
 
         # Update or define new view or type (invoked from generic entity editing view)

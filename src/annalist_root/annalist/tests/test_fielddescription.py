@@ -163,10 +163,10 @@ class FieldDescriptionTest(AnnalistTestCase):
         self.assertDictionaryMatch(fd, expect_field_desc)
         return
 
-    def test_View_repeat_fields(self):
+    def test_View_fields(self):
         fd = field_description_from_view_field(
             self.testcoll, 
-            { ANNAL.CURIE.field_id: "View_repeat_fields" }, 
+            { ANNAL.CURIE.field_id: "View_fields" }, 
             {}
             )
         expect_placement = Placement(
@@ -175,8 +175,8 @@ class FieldDescriptionTest(AnnalistTestCase):
             value = 'small-12 medium-10 columns'
             )
         expect_field_desc = (
-            { 'field_id':                   'View_repeat_fields'
-            , 'field_name':                 'View_repeat_fields'
+            { 'field_id':                   'View_fields'
+            , 'field_name':                 'View_fields'
             , 'field_value_type':           ANNAL.CURIE.Field_group
             , 'field_label':                'Fields'
             , 'field_property_uri':         ANNAL.CURIE.view_fields
@@ -196,7 +196,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         self.assertIsInstance(fd['field_render_view'], RenderRepeatGroup)
         self.assertIsInstance(fd['field_render_edit'], RenderRepeatGroup)
         expect_group_details = (
-            { 'group_id':           "View_repeat_fields"
+            { 'group_id':           "View_fields"
             , 'group_label':        "Fields"
             , 'group_add_label':    "Add field"
             , 'group_delete_label': "Remove selected field(s)"

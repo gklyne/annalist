@@ -1,6 +1,6 @@
-{ "@id":                        "annal:fields/View_repeat_fields"
+{ "@id":                        "annal:fields/View_fields"
 , "@type":                      ["annal:Field"]
-, "annal:id":                   "View_repeat_fields"
+, "annal:id":                   "View_fields"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Fields"
 , "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a record view description"
