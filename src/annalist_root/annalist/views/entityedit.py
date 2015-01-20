@@ -433,10 +433,12 @@ class GenericEntityEditView(AnnalistGenericView):
                 orig_entity_id, orig_entity_type_id,  orig_entity,
                 viewinfo, context_extra_values, messages,
                 view_edit_uri_base, "config",
-                {"add_field": "View_fields"}, continuation_url
+                {"add_field": "View_repeat_fields"}, continuation_url
                 )
 
         # Update or define new view or type (invoked from generic entity editing view)
+        # Save current entity and redirect to view edit with new field added, and
+        # current page as continuation.
         if 'use_view' in form_data:
             # Save entity, then redirect to selected view
             http_response = self.save_entity(entityvaluemap, form_data,
@@ -460,67 +462,79 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             return HttpResponseRedirect(redirect_uri)
 
-        if 'new_view' in form_data:
-            view_edit_uri_base = self.view_uri("AnnalistEntityNewView",
-                coll_id=viewinfo.coll_id, view_id="View_view", type_id="_view", action="new"
+        # New entity buttons:  these may use explicit button ids per the table below,
+        # or may be part of an enumered-value field used to create a new instance of
+        # the indicated value.
+        new_button_map = (
+            { 'new_type':  
+                { 'type_id':  "_type"
+                , 'view_id':  "Type_view"
+                }
+            , 'new_view':
+                { 'type_id':  "_view"
+                , 'view_id':  "View_view"
+                }
+            , 'new_field':
+                { 'type_id':  "_field"
+                , 'view_id':  "Field_view"
+                }
+            , 'new_group':
+                { 'type_id':  "_group"
+                , 'view_id':  "Field_group_view"
+                }
+            })
+        new_type_id = None
+        for button_id in new_button_map.keys():
+            if button_id in form_data:
+                new_type_id = new_button_map[button_id]['type_id']
+                new_view_id = new_button_map[button_id]['view_id']
+                break
+
+        new_enum = self.find_new_enum(entityvaluemap, form_data)
+        if new_enum:
+            new_type_id  = new_enum['field_options_typeref']
+            new_typeinfo = EntityTypeInfo(
+                viewinfo.site, viewinfo.collection, new_type_id
+                )
+            new_view_id  = new_typeinfo.get_default_view_id()
+
+        if new_type_id is not None:
+            new_edit_uri_base = self.view_uri("AnnalistEntityNewView",
+                coll_id=viewinfo.coll_id, 
+                view_id=new_view_id, type_id=new_type_id, 
+                action="new"
                 )
             return self.invoke_config_edit_view(
                 entityvaluemap, form_data,
                 entity_id, entity_type_id, 
                 orig_entity_id, orig_entity_type_id, orig_entity,
                 viewinfo, context_extra_values, messages,
-                view_edit_uri_base,  "config",
+                new_edit_uri_base, "new",
                 {}, continuation_url
                 )
 
-        if 'new_field' in form_data:
-            view_edit_uri_base = self.view_uri("AnnalistEntityNewView",
-                coll_id=viewinfo.coll_id, view_id="Field_view", type_id="_field", action="new"
-                )
-            return self.invoke_config_edit_view(
-                entityvaluemap, form_data,
-                entity_id, entity_type_id,
-                orig_entity_id, orig_entity_type_id, orig_entity,
-                viewinfo, context_extra_values, messages,
-                view_edit_uri_base,  "config",
-                {}, continuation_url
-                )
-
-        if 'new_type' in form_data:
-            type_edit_uri_base = self.view_uri("AnnalistEntityNewView",
-                coll_id=viewinfo.coll_id, view_id="Type_view", type_id="_type", action="new"
-                )
-            return self.invoke_config_edit_view(
-                entityvaluemap, form_data,
-                entity_id, entity_type_id,
-                orig_entity_id, orig_entity_type_id, orig_entity,
-                viewinfo, context_extra_values, messages,
-                type_edit_uri_base,  "config",
-                {}, continuation_url
-                )
-
-        # Add new value to type used for enumerated value field
-        # @@TODO: subsume 'new_*' logic above into this option
-        new_enum = self.find_new_enum(entityvaluemap, form_data)
-        if new_enum:
-            enum_type_id  = new_enum['field_options_typeref']
-            enum_typeinfo = EntityTypeInfo(
-                viewinfo.site, viewinfo.collection, enum_type_id
-                )
-            enum_edit_uri_base = self.view_uri("AnnalistEntityNewView",
-                coll_id=viewinfo.coll_id, 
-                view_id=enum_typeinfo.get_default_view_id(), 
-                type_id=enum_type_id, 
-                action="new"
-                )
-            return self.invoke_config_edit_view(
-                entityvaluemap, form_data,
-                entity_id, entity_type_id,
-                orig_entity_id, orig_entity_type_id, orig_entity,
-                viewinfo, context_extra_values, messages,
-                enum_edit_uri_base, "new",
-                {}, continuation_url
-                )
+        # # Add new value to type used for enumerated value field
+        # # @@TODO: subsume 'new_*' logic above into this option
+        # new_enum = self.find_new_enum(entityvaluemap, form_data)
+        # if new_enum:
+        #     enum_type_id  = new_enum['field_options_typeref']
+        #     enum_typeinfo = EntityTypeInfo(
+        #         viewinfo.site, viewinfo.collection, enum_type_id
+        #         )
+        #     enum_edit_uri_base = self.view_uri("AnnalistEntityNewView",
+        #         coll_id=viewinfo.coll_id, 
+        #         view_id=enum_typeinfo.get_default_view_id(), 
+        #         type_id=enum_type_id, 
+        #         action="new"
+        #         )
+        #     return self.invoke_config_edit_view(
+        #         entityvaluemap, form_data,
+        #         entity_id, entity_type_id,
+        #         orig_entity_id, orig_entity_type_id, orig_entity,
+        #         viewinfo, context_extra_values, messages,
+        #         enum_edit_uri_base, "new",
+        #         {}, continuation_url
+        #         )
 
         # Add new instance of repeating field, and redisplay
         add_field = self.find_add_field(entityvaluemap, form_data)

@@ -721,7 +721,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
         f = entitydata_recordtype_view_form_data(
                 entity_id="entityaddfield", action="new",
-                add_view_field="View_fields"
+                add_view_field="View_repeat_fields"
                 )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -730,7 +730,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         v = TestHostUri + entitydata_edit_url("edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityaddfield", view_id="Type_view")
         c = continuation_url_param(w)
-        a = "add_field=View_fields"
+        a = "add_field=View_repeat_fields"
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self.assertIn(a, r['location'])
@@ -741,7 +741,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.client.logout()
         f = entitydata_recordtype_view_form_data(
                 entity_id="entityaddfield", action="new",
-                add_view_field="View_fields"
+                add_view_field="View_repeat_fields"
                 )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
         r = self.client.post(u, f)
@@ -940,7 +940,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entyity1")
         f = entitydata_recordtype_view_form_data(
                 entity_id="entityaddfield", action="copy", update="Updated entity", 
-                add_view_field="View_fields"
+                add_view_field="View_repeat_fields"
                 )
         u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1", view_id="Type_view")
         r = self.client.post(u, f)
@@ -950,7 +950,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         v = TestHostUri + entitydata_edit_url("edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityaddfield", view_id="Type_view")
         c = continuation_url_param(w)
-        a = "add_field=View_fields"
+        a = "add_field=View_repeat_fields"
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self.assertIn(a, r['location'])
@@ -961,7 +961,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.client.logout()
         f = entitydata_recordtype_view_form_data(
                 entity_id="entityaddfield", action="copy", update="Updated entity", 
-                add_view_field="View_fields"
+                add_view_field="View_repeat_fields"
                 )
         u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1", view_id="Type_view")
         r = self.client.post(u, f)
@@ -1268,7 +1268,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         e1 = self._check_entity_data_values("entityaddfield")
         f  = entitydata_recordtype_view_form_data(
                 entity_id="entityaddfield", action="edit", update="Updated entity", 
-                add_view_field="View_fields"
+                add_view_field="View_repeat_fields"
                 )
         u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityaddfield", view_id="Type_view")
         r  = self.client.post(u, f)
@@ -1277,7 +1277,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         v = TestHostUri + entitydata_edit_url("edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view")
         c = continuation_url_param(u)
-        a = "add_field=View_fields"
+        a = "add_field=View_repeat_fields"
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self.assertIn(a, r['location'])
@@ -1288,7 +1288,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.client.logout()
         f = entitydata_recordtype_view_form_data(
                 entity_id="entityaddfield", action="edit", update="Updated entity", 
-                add_view_field="View_fields"
+                add_view_field="View_repeat_fields"
                 )
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityaddfield", view_id="Type_view")
         r = self.client.post(u, f)

@@ -41,6 +41,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - Implmentation adds 'scope' flag to list URIs (!all), and adds "View all" button to list views to select the wider scope.
 - [x] 'New' and 'Copy' from list view should bring up new form with id field selected, so that typing a new value replaces the auto-generated ID.
 - [ ] Consider removing "New type", "New view" and "New field type" buttons, but keep corresponding test cases so they can be reinstated).  Tie logic in to new enumerated-value handling.
+    - consider renaming 'View_repeat_fields' back tp just 'View_fields'
 - [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
 - [ ] Implement renderer for field placement field
 - [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?
