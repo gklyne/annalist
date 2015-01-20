@@ -462,9 +462,14 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             return HttpResponseRedirect(redirect_uri)
 
-        # New entity buttons:  these may use explicit button ids per the table below,
-        # or may be part of an enumered-value field used to create a new instance of
-        # the indicated value.
+        # New entity buttons
+        #
+        # These may use explicit button ids per the table below, or may be part of
+        # an enumered-value field used to create a new enumerated value instance.
+        #
+        # In all cases, the current entity is saved and the browser is redirected 
+        # to a new page to enter details of a new entity of the appropriate type.
+        #
         new_button_map = (
             { 'new_type':  
                 { 'type_id':  "_type"
@@ -512,29 +517,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 new_edit_uri_base, "new",
                 {}, continuation_url
                 )
-
-        # # Add new value to type used for enumerated value field
-        # # @@TODO: subsume 'new_*' logic above into this option
-        # new_enum = self.find_new_enum(entityvaluemap, form_data)
-        # if new_enum:
-        #     enum_type_id  = new_enum['field_options_typeref']
-        #     enum_typeinfo = EntityTypeInfo(
-        #         viewinfo.site, viewinfo.collection, enum_type_id
-        #         )
-        #     enum_edit_uri_base = self.view_uri("AnnalistEntityNewView",
-        #         coll_id=viewinfo.coll_id, 
-        #         view_id=enum_typeinfo.get_default_view_id(), 
-        #         type_id=enum_type_id, 
-        #         action="new"
-        #         )
-        #     return self.invoke_config_edit_view(
-        #         entityvaluemap, form_data,
-        #         entity_id, entity_type_id,
-        #         orig_entity_id, orig_entity_type_id, orig_entity,
-        #         viewinfo, context_extra_values, messages,
-        #         enum_edit_uri_base, "new",
-        #         {}, continuation_url
-        #         )
 
         # Add new instance of repeating field, and redisplay
         add_field = self.find_add_field(entityvaluemap, form_data)
