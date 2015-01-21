@@ -313,26 +313,6 @@ class RenderRepeatGroup(object):
     return
 
   def __str__(self):
-    # Minimal context for rendering repeat group...
-    # context = Context(
-    #   { 'field':
-    #     { 'context_extra_values': {}
-    #     , 'field_value':
-    #       [ { 'entity_id': "test_id"
-    #         , 'test_uri':  "test value 1"
-    #         }
-    #       , { 'entity_id': "test_id"
-    #         , 'test_uri':  "test value 2"
-    #         }
-    #       ]
-    #     , 'group_field_descs':
-    #       [ { 'field_property_uri': "test_uri"
-    #         , 'field_id':           "test_field_id"
-    #         }
-    #       ]
-    #     , 'group_id': "test_group_id"
-    #     }
-    #   })
     return "RenderRepeatGroup %r"%(self._template_head)
     # return "RenderRepeatGroup %r, %s"%(self._template_head,self.render(context))
 

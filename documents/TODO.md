@@ -113,6 +113,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Inline template text should be more efficient as it avoids repeated reading of template files
     - [x] Inline template text keeps value mapping logic with template logic
     - [ ] Inline templates may be harder to style effectively; maybe read HTML from file on first use?
+    - [ ] Re-work field rendering to be based on common base of `RenderFieldValue2`
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Eliminate type-specific render types
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?

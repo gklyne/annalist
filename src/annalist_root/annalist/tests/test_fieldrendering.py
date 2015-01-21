@@ -35,6 +35,7 @@ from annalist.views.fields                      import render_tokenset
 from annalist.views.fields.render_tokenset      import RenderTokenSet
 from annalist.views.fields                      import render_repeatgroup
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
+from annalist.views.fields.render_fieldvalue2   import RenderFieldValue2
 
 from tests                  import init_annalist_test_site
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -55,6 +56,19 @@ tokenset_context = Context(
       , 'field_label':            "test label"
       , 'field_placeholder':      "(test placeholder)"
       , 'field_value_encoded':    "aa bb cc"
+      }
+    , 'repeat':
+      { 'repeat_prefix': "prefix_"
+      }
+    })
+
+intvalue_context = Context(
+    { 'field':
+      { 'field_placement':        get_placement_classes("small:0,12")
+      , 'field_name':             "test_field"
+      , 'field_label':            "test label"
+      , 'field_placeholder':      "(test placeholder)"
+      , 'field_value':            42
       }
     , 'repeat':
       { 'repeat_prefix': "prefix_"
@@ -295,6 +309,102 @@ class FieldDescriptionTest(AnnalistTestCase):
             ])
         for e in expect_elements:
             self.assertIn(e, rendered_text)
+        return
+
+    def test_RenderFieldValue2(self):
+        class render_int_view(object):
+            def render(self, context):
+                return str(context['field']['field_value'])
+        class render_int_edit(object):
+            def render(self, context):
+                return (
+                    ('''<input type="text" size="64" '''+
+                        '''name="%(repeat_prefix)s%(field_name)s" '''+
+                        '''placeholder="%(field_placeholder)s" '''+
+                        '''value="%(field_value)d"/>''')%
+                    { 'field_value':        context['field']['field_value']
+                    , 'field_name':         context['field']['field_name']
+                    , 'field_placeholder':  context['field']['field_placeholder']
+                    , 'repeat_prefix':      context['repeat']['repeat_prefix']
+                    })
+        fieldrender = RenderFieldValue2(render_int_view(), render_int_edit())
+        rendered_label      = fieldrender.label().render(intvalue_context)
+        self.assertEqual(
+            rendered_label, 
+            '''<div class="view-label small-12 columns">  <p>test label</p></div>'''
+            )
+        rendered_view       = fieldrender.view().render(intvalue_context)
+        self.assertEqual(
+            rendered_view, 
+            "42"
+            )
+        rendered_edit       = fieldrender.edit().render(intvalue_context)
+        self.assertEqual(
+            rendered_edit, 
+            '''<input type="text" size="64" name="prefix_test_field" '''+
+            '''placeholder="(test placeholder)" value="42"/>'''
+            )
+        rendered_label_view = fieldrender.label_view().render(intvalue_context)
+        self.assertEqual(
+            rendered_label_view, 
+            '''<div class="view-label small-12 columns">  '''+
+            '''<p>test label</p>'''+
+            '''</div>'''
+            )
+        rendered_label_edit = fieldrender.label_edit().render(intvalue_context)
+        self.assertEqual(
+            rendered_label_edit, 
+            '''<div class="small-12 columns">\n'''+
+            '''  <div class="row">\n'''+
+            '''    <div class="view-label small-12 medium-2 columns">\n'''+
+            '''      <p>test label</p>\n'''+
+            '''    </div>\n'''+
+            '''    <div class="small-12 medium-10 columns">\n'''+
+            '''      <input type="text" size="64" name="prefix_test_field" '''+
+                         '''placeholder="(test placeholder)" value="42"/>\n'''+
+            '''    </div>\n'''+
+            '''  </div>\n'''+
+            '''</div>'''
+            )
+        rendered_col_head   = fieldrender.col_head().render(intvalue_context)
+        self.assertEqual(
+            rendered_col_head, 
+            '''<div class="view-label small-12 columns">  '''+
+            '''<p>test label</p></div>'''
+            )
+        rendered_col_view   = fieldrender.col_view().render(intvalue_context)
+        self.assertEqual(
+            rendered_col_view, 
+            '''<div class="small-12 columns">\n'''+
+            '''  <div class="row show-for-small-only">\n'''+
+            '''    <div class="view-label small-12 columns">\n'''+
+            '''      <p>test label</p>\n'''+
+            '''    </div>\n'''+
+            '''  </div>\n'''+
+            '''  <div class="row">\n'''+
+            '''    <div class="small-12 columns">\n'''+
+            '''      42\n'''
+            '''    </div>\n'''+
+            '''  </div>\n'''+
+            '''</div>'''
+            )
+        rendered_col_edit   = fieldrender.col_edit().render(intvalue_context)
+        self.assertEqual(
+            rendered_col_edit, 
+            '''<div class="small-12 columns">\n'''+
+            '''  <div class="row show-for-small-only">\n'''+
+            '''    <div class="view-label small-12 columns">\n'''+
+            '''      <p>test label</p>\n'''+
+            '''    </div>\n'''+
+            '''  </div>\n'''+
+            '''  <div class="row">\n'''+
+            '''    <div class="small-12 columns">\n'''+
+            '''      <input type="text" size="64" name="prefix_test_field" '''+
+                         '''placeholder="(test placeholder)" value="42"/>\n'''+
+            '''    </div>\n'''+
+            '''  </div>\n'''+
+            '''</div>'''
+            )
         return
 
 # End.
