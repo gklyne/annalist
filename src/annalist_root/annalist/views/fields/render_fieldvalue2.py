@@ -108,14 +108,24 @@ class RenderFieldValue2(object):
         """
         Creates a renderer factory for a value field.
 
-        viewrender      is a render object that displays a field value
-        editrender      is a render object that displays a field value in a
-                        form control that allows the value to be edited.
+        viewrenderer    is a render object that displays a field value,
+                        or a string containing a value display template file name
+        editrenderer    is a render object that displays a field value in a
+                        form control that allows the value to be edited,
+                        or a string containing a value editing template file name
         """
         # log.info("RenderFieldValue2: viewrender %s, editrender %s"%(viewrender, editfile))
         super(RenderFieldValue2, self).__init__()
-        self._viewrenderer      = viewrenderer
-        self._editrenderer      = editrenderer
+        # Save value renderers
+        if isinstance(viewrenderer, (str, unicode)):
+            self._viewrenderer  = Template(viewrenderer)
+        else:
+            self._viewrenderer  = viewrenderer
+        if isinstance(editrenderer, (str, unicode)):
+            self._editrenderer  = Template(editrenderer)
+        else:
+            self._editrenderer  = editrenderer
+        # Initialize various renderer caches
         self._render_label_view = None
         self._render_label_edit = None
         self._render_col_head   = None
@@ -230,6 +240,23 @@ class RenderFieldValue2(object):
                 col_label_wrapper_template, self._editrenderer
                 )
         return self._render_col_edit
+
+
+# Helper function for caller to get template content.
+# This uses the configured Django templatre loader.
+
+def get_template(templatefile, failmsg):
+    """
+    Retrieve template source from the supplied filename
+    """
+    assert templatefile, "%s: no template filename"%failmsg
+    # Instantiate a template loader
+    loader = Loader()
+    # Source: actual source code read from template file
+    # File path: absolute file path of template file
+    source, file_path = loader.load_template_source(templatefile)
+    return source
+
 
 # End.
 #........1.........2.........3.........4.........5.........6.........7.........8

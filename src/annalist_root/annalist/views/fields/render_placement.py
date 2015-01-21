@@ -1,5 +1,5 @@
 """
-This module contains utilities for use in conjunction with field renderers.
+This module contains support for field placement rendering
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -11,6 +11,8 @@ log = logging.getLogger(__name__)
 
 import re
 from collections                    import OrderedDict, namedtuple
+
+
 
 Placement = namedtuple("Placement", ['field', 'label', 'value'])
 

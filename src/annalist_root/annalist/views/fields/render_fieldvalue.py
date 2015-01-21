@@ -135,7 +135,7 @@ class RenderFieldValue(object):
     # Helpers
 
     def _get_template(self, templatefile, failmsg):
-        assert templatefile, "%s: no template filename"
+        assert templatefile, "%s: no template filename"%failmsg
         # Instantiate a template loader
         loader = Loader()
         # Source: actual source code read from template file
