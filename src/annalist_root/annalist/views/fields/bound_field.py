@@ -173,6 +173,12 @@ class bound_field(object):
             return self._field_description
         elif name == "options":
             return self.get_field_options()
+        #@@
+        # elif name == "field_name":
+        #     return self._field_description.get_field_name()
+        # elif name == "field_property_uri":
+        #     return self._field_description.get_field_property_uri()
+        #@@
         else:
             # log.info("bound_field[%s] -> %r"%(name, self._field_description[name]))
             return self._field_description[name]

@@ -306,6 +306,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                   <input type="submit" name="new_type"      value="New type" />
                   <input type="submit" name="new_view"      value="New view" />
                   <input type="submit" name="new_field"     value="New field type" />
+                  <input type="submit" name="new_group"     value="New field group" />
                 </div>
               </div>
             </div>
@@ -317,7 +318,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow4, html=True)
         self.assertContains(r, formrow5, html=True)
         self.assertContains(r, formrow6, html=True)
-        self.assertContains(r, formrow7, html=True)
+        # New buttons hidden (for now)
+        # self.assertContains(r, formrow7, html=True)
         return
 
     def test_get_new(self):

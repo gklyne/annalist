@@ -71,19 +71,21 @@
         {% with field=view_choices %}
         {% include field.field_render_edit %}
         {% endwith %}
-  
+
+        {% comment "New type/view/field/group buttons suppressed for now" %}
         {% if auth_config %}
         <div class="small-12 medium-6 columns medium-text-right">
           <div class="row">
             <div class="small-12 columns">
-              <!-- <input type="submit" name="use_view"      value="Show view" /> -->
               <input type="submit" name="new_type"      value="New type" />
               <input type="submit" name="new_view"      value="New view" />
               <input type="submit" name="new_field"     value="New field type" />
+              <input type="submit" name="new_group"     value="New field group" />
             </div>
           </div>
         </div>
         {% endif %}
+        {% endcomment %}  
  
     </div>
   

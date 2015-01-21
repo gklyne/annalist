@@ -45,8 +45,8 @@ class FieldValueMap(object):
     def __init__(self, c=None, f=None):
         self.c = c
         self.f = f
-        self.e = f['field_property_uri']    # entity data key
-        self.i = f['field_name']            # field data key
+        self.e = f.get_field_property_uri()     # entity data key
+        self.i = f.get_field_name()             # field data key
         return
 
     def __repr__(self):

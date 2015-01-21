@@ -166,6 +166,19 @@ def entitydata_create_values(
         d['annal:uri'] = entity_uri
     return d
 
+def entitydata_values_add_field(data, property_uri, dup_index, value):
+    """
+    Add field to data; if duplicate then reformat appropriately.
+
+    Updates and returns supplied entity value dictionary.
+    """
+    if property_uri in data:
+        suffix = "__%d"%dup_index
+    else:
+        suffix = ""
+    data[property_uri+suffix] = value
+    return data
+
 def entitydata_values(
         entity_id, update="Entity", 
         coll_id="testcoll", type_id="testtype", 
@@ -247,6 +260,39 @@ def entitydata_context_data(
         context_dict['action']      = action
     return context_dict
 
+def entitydata_context_add_field(
+    context_dict, field_id, dup_index, field_value,
+        field_name= 'Entity_comment',
+        field_label='Comment',
+        field_render_type= 'Textarea',
+        field_placement='small:0,12',
+        field_value_type= 'annal:Longtext',
+        field_options=[]
+        ):
+    """
+    Add field value to context; if duplicate then reformat appropriately.
+
+    Field details default to Entity_comment
+
+    Updates and returns supplied context dictionary.
+    """
+    field_ids = [ f['field_id'] for f in context_dict['fields'] ]
+    if field_id in field_ids:
+        suffix = "__%d"%dup_index
+    else:
+        suffix = ""
+    context_dict['fields'].append(
+        { 'field_id':           field_id
+        , 'field_value':        field_value
+        , 'field_name':         field_name+suffix
+        , 'field_label':        field_label
+        , 'field_render_type':  field_render_type
+        , 'field_placement':    get_placement_classes(field_placement)
+        , 'field_value_type':   field_value_type
+        , 'options':            field_options
+        })
+    return context_dict
+
 def entitydata_form_data(
         entity_id=None, orig_id=None, 
         type_id="testtype", orig_type=None,
@@ -275,6 +321,19 @@ def entitydata_form_data(
         form_data_dict['cancel']            = "Cancel"
     else:
         form_data_dict['save']              = 'Save'
+    return form_data_dict
+
+def entitydata_form_add_field(form_data_dict, field_name, dup_index, value):
+    """
+    Add field value to form data; if duplicate then reformat appropriately.
+
+    Updates and returns supplied form data dictionary.
+    """
+    if field_name in form_data_dict:
+        suffix = "__%d"%dup_index
+    else:
+        suffix = ""
+    form_data_dict[field_name+suffix] = value
     return form_data_dict
 
 def entitydata_delete_form_data(entity_id=None, type_id="Default_type", list_id="Default_list"):

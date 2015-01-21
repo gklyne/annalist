@@ -55,16 +55,15 @@ class FieldListValueMap(object):
         method that assigns a list of values from the supplied entity to a context 
         field named by parameter `c`.
         """
-        self.c  = c         # Context field name for values mapped from entity
-        self.fd = []        # List of field descriptions
-        self.fm = []        # List of field value maps
+        self.c      = c         # Context field name for values mapped from entity
+        self.fd     = []        # List of field descriptions
+        self.fm     = []        # List of field value maps
+        properties  = None      # Used to detect and disambiguate duplicate properties
         for f in fields:
             log.debug("FieldListValueMap: field %r"%(f,))
             # @@TODO: check for common logic here and FieldDescription field_group_ref processing
             field_desc = field_description_from_view_field(coll, f, view_context)
-            # log.debug("FieldListValueMap: field_id %s, field_name %s"%
-            #     (field_desc['field_id'], field_desc['field_name'])
-            #     )
+            properties = field_desc.resolve_duplicates(properties)
             self.fd.append(field_desc)
             if field_desc.is_repeat_group():
                 repeatfieldsmap = FieldListValueMap('_unused_fieldlistvaluemap_', 

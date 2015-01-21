@@ -182,6 +182,18 @@ def recordview_read_values(
         })
     return d
 
+def recordview_values_add_field(view_data, 
+    field_id="Entity_comment", 
+    field_property_uri="rdfs:comment",
+    field_placement="small:0,12"
+    ):
+    view_data['annal:view_fields'].append(
+        { 'annal:field_id':         field_id
+        , 'annal:property_uri':     field_property_uri
+        , 'annal:field_placement':  field_placement
+        })
+    return view_data
+
 #   -----------------------------------------------------------------------------
 #
 #   ----- Data in recordview view for default entity data

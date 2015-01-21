@@ -44,6 +44,20 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] refactor logic for new-entity from entity edit view
     - [x] rename 'View_repeat_fields' back to just 'View_fields'
     - [ ] hide new type, view, field type buttons in edit template OR add "New field group"
+- [x] BUG: save entity where view has same field id with different properties is not working properly.  Second value is saved to both fields.  It turns out the field property URI in view description is only a partial fix to the duplicated fields problem, and the approach needs to be re-thought.
+    - [x] Verify problem in test case - TestEntityEditDupFieldTest
+        - [x] Create a view with duplicate field id
+        - [x] Create entity with values for duplicate field id - the exact representation will be up for grabs.  For now use suffix for those after the first - later may consider using a list of values.
+        - [x] Render entity in view, check context used to generate form.
+        - [x] Submit form with values for duplicate fields.  Again, the exact representation will be up for grabs, but for now use a suffix for fields after the first.
+        - [x] Will need function to create test entity data with dup field vals; this will isolate representation of dup fields in an entity
+        - [x] Will need function to create test form data with dup field vals; this will isolate representation of dup fields in a form
+    - [x] Fix problem.
+        - [x] Introduce suffix into FieldDescription when building EntityValueMap.
+        - [x] Update field_name and field_property_uri values to include suffix.  Also add acvcess functions.
+        - [x] No error if field definition is repeated in view (or group).  (Good - that code was pig ugly!)
+        - [x] FieldListValueMap invoke conflict resolution logic in FieldDescription.
+        - [x] Where possible, replace direct access to field name and property URI to use new access methods.  (bound_field still uses direct indexing because test code uses faked FieldDescription structure.)
 - [ ] RepeatGroup renderer - use placeholder beside label as way to explain content?
 - [ ] Implement renderer for field placement field
 - [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?

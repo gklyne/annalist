@@ -97,6 +97,8 @@ class FieldDescription(object):
             , 'group_view':                 None
             , 'group_field_descs':          None
             })
+        self._field_suffix_index = 0    # No dup
+        self._field_suffix       = ""
         # If field references type, pull in copy of type id and link values
         type_ref = self._field_desc['field_options_typeref']
         if type_ref:
@@ -143,6 +145,49 @@ class FieldDescription(object):
         # log.info("FieldDescription._field_desc %r"%(self._field_desc,))
         # log.info("FieldDescription.field_placement %r"%(self._field_desc['field_placement'],))
         return
+
+    def resolve_duplicates(self, properties):
+        """
+        Resolve duplicate property URIs that appear in a common context corresponding to
+        the supplied `properties` diuctionary.  If there is a clash, assign a suffix that
+        can be added to the field_id and field_property_uri to make them unique.
+
+        The properties paramneter should be initialized to None by the calling program,
+        and updated to the return value of this method each time it is called.
+        """
+        if properties is None:
+            properties = (set(), set())
+        i      = 0
+        if ( (self._field_desc['field_name']         in properties[0]) or
+             (self._field_desc['field_property_uri'] in properties[1]) ):
+            i = 1
+            suffix = ""
+            while ( (self._field_desc['field_name']+suffix         in properties[0]) or
+                    (self._field_desc['field_property_uri']+suffix in properties[1]) ):
+                i += 1
+                suffix = "__%d"%i
+            self._field_suffix_index                = i
+            self._field_suffix                      = suffix
+            # Only use suffix for values that actually clash:
+            if self._field_desc['field_name'] in properties[0]:
+                self._field_desc['field_name']         += suffix 
+            if self._field_desc['field_property_uri'] in properties[1]:
+                self._field_desc['field_property_uri'] += suffix 
+        properties[0].add(self._field_desc['field_name'])
+        properties[1].add(self._field_desc['field_property_uri'])
+        return properties
+
+    def get_field_name(self):
+        """
+        Returns form field name to be used for the described field
+        """
+        return self._field_desc['field_name']
+
+    def get_field_property_uri(self):
+        """
+        Returns form field property URI to be used for the described field
+        """
+        return self._field_desc['field_property_uri']
 
     def group_ref(self):
         """
@@ -213,9 +258,9 @@ class FieldDescription(object):
         return (
             "FieldDescription("+
             "  { 'field_id': %r\n"%(self._field_desc["field_id"])+
-            "  , 'field_name': %r\n"%(self._field_desc["field_name"])+
+            "  , 'field_name': %r\n"%(self.get_field_name())+
             "  , 'field_render_type': %r\n"%(self._field_desc["field_render_type"])+
-            "  , 'field_property_uri': %r\n"%(self._field_desc["field_property_uri"])+
+            "  , 'field_property_uri': %r\n"%(self.get_field_property_uri())+
             "  , 'type_ref': %r"%(self._field_desc["field_options_typeref"])+
             "  , 'group_ref': %r"%(self._field_desc["field_group_ref"])+
             "  })"
