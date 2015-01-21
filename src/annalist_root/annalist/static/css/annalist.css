@@ -81,13 +81,23 @@ div.row div.columns p.caption
     font-weight: bold;
 }
 
-div.row div.column  p.grouplabel , 
-div.row div.columns p.grouplabel
+div.row div.column  p.group-label , 
+div.row div.columns p.group-label
 {
     margin-top:  0.25rem;
     height: auto;
     font-size: small;
     color: #666666;
+}
+
+div.row div.column  p.group-placeholder , 
+div.row div.columns p.group-placeholder
+{
+    margin-top:  0.25rem;
+    height: auto;
+    font-size: small;
+    font-style: italic;
+    color: #989898;
 }
 
 div.row div.column.view-label  p,

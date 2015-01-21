@@ -18,13 +18,13 @@ from django.template    import Template, Context
 
 from annalist.views.fields.bound_field  import bound_field
 
-view_group = (      # @@TODO rationalize (see above; not currently used)
+view_group = (      # @@TODO rationalize (see other; not currently used)
     { 'head':
         """
         @@TODO: FIXME render_repeatgroup.view_group.head@@
         <!-- views.fields.render_repeatgroup.view_group -->
         <div class="small-12 columns">
-          <p class="grouplabel">{{field.field_label}}</p>
+          <p class="group-label">{{field.field_label}}</p>
         </div>"""
     , 'body':
         """
@@ -46,10 +46,12 @@ view_group = (      # @@TODO rationalize (see above; not currently used)
 
 edit_group = (
     { 'head':
-        """
-        <!-- views.fields.render_repeatgroup.edit_group -->
-        <div class="small-12 columns">
-          <p class="grouplabel">{{field.field_label}}</p>
+        """<!-- views.fields.render_repeatgroup.edit_group -->
+        <div class="small-2 columns">
+          <p class="group-label">{{field.field_label}}</p>
+        </div>
+        <div class="small-10 columns">
+          <p class="group-placeholder">{{field.field_placeholder}}</p>
         </div>"""
     , 'body':
         """
@@ -128,7 +130,7 @@ edit_listrow = (
           <div class="small-12 columns">
             <div class="row">
               <div class="small-12 columns">
-                <p class="grouplabel">{{field.field_label}}</p>
+                <p class="group-label">{{field.field_label}}</p>
               </div>
             </div>
             <div class="row">
@@ -179,7 +181,7 @@ view_grouprow = (
         <!-- views.fields.render_repeatgroup.view_grouprow -->
         <div class="row">
           <div class="small-12 medium-2 columns">
-            <p class="grouplabel">{{field.field_label}}</p>
+            <p class="group-label">{{field.field_label}}</p>
           </div>
           <div class="small-12 medium-10 columns hide-for-small-only">
             <div class="row">
@@ -230,7 +232,7 @@ edit_grouprow = (
         <div class="small-12 columns">
           <div class="row">
             <div class="small-12 medium-2 columns">
-              <p class="grouplabel">{{field.field_label}}</p>
+              <p class="group-label">{{field.field_label}}</p>
             </div>
             <div class="small-12 medium-10 columns hide-for-small-only">
               <div class="row">

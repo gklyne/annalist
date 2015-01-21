@@ -6,7 +6,7 @@
 , "rdfs:comment":               "BibJSON(ish) field for authors"
 , "annal:field_render_type":    "RepeatGroup"
 , "annal:field_value_type":     "bib:Authors"
-, "annal:placeholder":          "(Bib_authors)"
+, "annal:placeholder":          "Author(s) of article"
 , "annal:property_uri":         "bib:author"
 , "annal:field_entity_type":    "bib:BibEntry"
   // Reference to description of repeated author field
