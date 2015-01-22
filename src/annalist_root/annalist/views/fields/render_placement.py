@@ -10,9 +10,154 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
-from collections                    import OrderedDict, namedtuple
+from collections    import OrderedDict, namedtuple
 
+from annalist.views.fields.render_fieldvalue    import RenderFieldValue
 
+#   ----------------------------------------------------------------------------
+#
+#   Field placement field renderer
+#
+#   ----------------------------------------------------------------------------
+
+# Enumerated placem,ent options.
+# '.' and '#' here are placeholders for symbols that will be used to show
+# that a grid column is unoccupied or occupied respectively by the field.
+placement_occupancy = OrderedDict(
+    [ ("small:0,12"           , "############ (0/12)")
+    , ("small:0,12;medium:0,6", "######...... (0/6)")
+    , ("small:0,12;medium:6,6", "......###### (6/6)")
+    , ("small:0,12;medium:0,4", "####........ (0/4)")
+    , ("small:0,12;medium:4,4", "....####.... (4/4)")
+    , ("small:0,12;medium:8,4", "........#### (8/4)")
+    , ("small:0,12;medium:0,3", "###......... (0/3)")
+    , ("small:0,12;medium:3,3", "...###...... (3/3)")
+    , ("small:0,12;medium:6,3", "......###... (6/3)")
+    , ("small:0,12;medium:9,3", ".........### (9/3)")
+    ])
+
+def option_symbol(occupied):
+    return (
+        "&block;" if occupied == "#" else 
+        "&blk14;" if occupied == "." else occupied
+        )
+
+def option_body(occupancy):
+    """
+    Returns an option body string corresponding to a supplied occupancy string
+    """
+    return "".join([ option_symbol(c) for c in occupancy ])
+
+def get_placement_options():
+    return [ option_body(placement_occupancy[o]) for o in placement_occupancy ]
+    # return placement_occupancy.keys()
+
+def get_placement_value_option_dict():
+    return { o: option_body(placement_occupancy[o]) for o in placement_occupancy }
+
+def get_placement_option_value_dict():
+    return { option_body(placement_occupancy[o]) : o for o in placement_occupancy }
+
+def placement_display_text(placement, placeholder="(select...)"):
+    if placement in placement_occupancy:
+        display_text = option_body(placement_occupancy[placement])
+    elif placement == "":
+        display_text = placeholder
+    else:
+        display_text = placement
+    return display_text
+
+def placement_display_span(placement):
+    return (
+        '''<span class="placement-text">%s</span>'''%
+        placement_display_text(placement)
+        )
+
+def placement_option(placement, placeholder, placement_selected="False"):
+    body_text = placement_display_text(placement, placeholder=placeholder)
+    if placement_selected:
+        selected = ''' selected="selected"'''
+    else:
+        selected = ""
+    return (
+        '''<option value="%s"%s>%s</option>'''%
+        (placement, selected, body_text)
+        )
+
+def get_context_value(context, key, default):
+    if key in context:
+        return context[key]
+    return default
+
+def get_context_field_value(context, key, default):
+    field = get_context_value(context, 'field', {})
+    return get_context_value(field, key, default)
+
+def get_field_value(context, default):
+    return get_context_field_value(context, 'field_value', default)
+
+class placement_view_renderer(object):
+
+    def render(self, context):
+        """
+        Render field placement for viewing.
+        """
+        placement = get_field_value(context, "&nbsp;")
+        if placement in placement_occupancy:
+            return placement_display_span(placement)
+        # Not predefined value - return string
+        return placement        
+
+class placement_edit_renderer(object):
+
+    def render(self, context):
+        """
+        Render field placement for editing
+        """
+        repeat_prefix     = get_context_value(context, 'repeat_prefix', "")
+        placement         = get_field_value(context, "")
+        field_name        = get_context_field_value(
+            context, 'field_name', "_unknown_"
+            )
+        field_placeholder = get_context_field_value(
+            context, 'field_placeholder', "small:0,12"
+            )
+        option_elem = placement_option(
+            "", field_placeholder, placement_selected=(placement=="")
+            )
+        pref = (
+            [ '''<select class="placement-text" name="%s%s">'''%
+                  (repeat_prefix, field_name)
+            , "  "+option_elem
+            ])
+        opts = []
+        if placement != "" and placement not in placement_occupancy:
+            option_elem = placement_option(
+                placement, field_placeholder, placement_selected=True
+                )
+            opts.append("  "+option_elem)
+        for opt in placement_occupancy:
+            option_elem = placement_option(
+                opt, field_placeholder, placement_selected=(placement==opt)
+                )
+            opts.append("  "+option_elem)
+        suff = ['''</select>''']
+        return '\n'.join(pref+opts+suff)
+
+def get_field_placement_renderer():
+    """
+    Return field renderer object for field placement values
+    """
+    return RenderFieldValue(
+        view_renderer=placement_view_renderer(), 
+        edit_renderer=placement_edit_renderer()
+        )
+
+#   ----------------------------------------------------------------------------
+#
+#   Internal representation of field placement and placement string parser
+#
+#   ----------------------------------------------------------------------------
 
 Placement = namedtuple("Placement", ['field', 'label', 'value'])
 

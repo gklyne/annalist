@@ -10,6 +10,6 @@
 , "annal:placeholder":          "(type id)"
 , "annal:property_uri":         "annal:type_id"
 , "annal:options_typeref":      "_type"
-, "annal:field_placement":      "small:6,6right"
+, "annal:field_placement":      "small:0,12;medium:6,6"
 , "annal:default_value":        ""
 }

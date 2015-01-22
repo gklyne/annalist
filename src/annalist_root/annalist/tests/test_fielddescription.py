@@ -245,7 +245,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             { 'field_id':                   'Group_field_placement'
             , 'field_name':                 'Field_placement'
             , 'field_value_type':           ANNAL.CURIE.Placement
-            , 'field_label':                'Size/position'
+            , 'field_label':                'Position/size'
             , 'field_render_type':          'Placement'
             , 'field_property_uri':         ANNAL.CURIE.field_placement
             , 'field_placement':            expect_field2_placement

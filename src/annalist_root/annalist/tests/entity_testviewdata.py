@@ -128,7 +128,7 @@ def recordview_create_values(
             , 'annal:field_placement':  "small:0,12;medium:0,6"
             }
           , { 'annal:field_id':         "Entity_type"
-            , 'annal:field_placement':  "small:0,12;medium:6,6right"
+            , 'annal:field_placement':  "small:0,12;medium:6,6"
             }
           , { 'annal:field_id':         "Entity_label"
             , 'annal:field_placement':  "small:0,12"
@@ -211,7 +211,7 @@ def recordview_entity_view_context_data(
             , 'annal:field_placement':  "small:0,12;medium:0,6"
             }
           , { 'annal:field_id':         "Entity_type"
-            , 'annal:field_placement':  "small:0,12;medium:6,6right"
+            , 'annal:field_placement':  "small:0,12;medium:6,6"
             }
           , { 'annal:field_id':         "Entity_label"
             , 'annal:property_uri':     "rdfs:label"
@@ -323,7 +323,7 @@ def recordview_entity_view_form_data(
         , 'View_fields__0__Field_id':           "Entity_id"
         , 'View_fields__0__Field_placement':    "small:0,12;medium:0,6"
         , 'View_fields__1__Field_id':           "Entity_type"
-        , 'View_fields__1__Field_placement':    "small:0,12;medium:6,6right"
+        , 'View_fields__1__Field_placement':    "small:0,12;medium:6,6"
         , 'View_fields__2__Field_id':           "Entity_label"
         , 'View_fields__2__Field_property':     "rdfs:label"
         , 'View_fields__2__Field_placement':    "small:0,12"

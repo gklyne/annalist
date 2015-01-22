@@ -17,6 +17,7 @@ from django.conf                    import settings
 from render_text                    import RenderText
 from render_tokenset                import RenderTokenSet
 from render_fieldvalue              import RenderFieldValue
+from render_placement               import get_field_placement_renderer
 from render_tokenset                import RenderTokenSet
 import render_tokenset
 from render_repeatgroup             import RenderRepeatGroup
@@ -28,9 +29,8 @@ _field_view_files = (
     { "Text":           "field/annalist_view_text.html"
     , "Textarea":       "field/annalist_view_textarea.html"
     , "Slug":           "field/annalist_view_slug.html"
-    , "Placement":      "field/annalist_view_text.html"
+    # , "Placement":      "field/annalist_view_text.html"
     , "EntityId":       "field/annalist_view_entityid.html"
-    # , "EntityTypeId":   "field/annalist_view_entitytypeid.html"
     , "EntityTypeId":   "field/annalist_view_select.html"
     , "Identifier":     "field/annalist_view_identifier.html"
     , "Type":           "field/annalist_view_select.html"
@@ -48,9 +48,8 @@ _field_edit_files = (
     { "Text":           "field/annalist_edit_text.html"
     , "Textarea":       "field/annalist_edit_textarea.html"
     , "Slug":           "field/annalist_edit_slug.html"
-    , "Placement":      "field/annalist_edit_text.html"
+    # , "Placement":      "field/annalist_edit_text.html"
     , "EntityId":       "field/annalist_edit_entityid.html"
-    # , "EntityTypeId":   "field/annalist_edit_entitytypeid.html"
     , "EntityTypeId":   "field/annalist_edit_select.html"
     , "Identifier":     "field/annalist_edit_identifier.html"
     , "Type":           "field/annalist_edit_select.html"
@@ -91,6 +90,8 @@ def get_edit_renderer(renderid):
     if renderid == "TokenSet":
         # return "field/annalist_edit_tokenlist.html"
         return RenderTokenSet(render_tokenset.edit)
+    if renderid == "Placement":
+        return get_field_placement_renderer().label_edit()
     if renderid == "RepeatGroup":
         return RenderRepeatGroup(render_repeatgroup.edit_group)
     # @@TODO: not currently used
@@ -129,7 +130,10 @@ def get_view_renderer(renderid):
         return RenderRepeatGroup(render_repeatgroup.view_listrow)
     if renderid == "RepeatGroupRow":
         return RenderRepeatGroup(render_repeatgroup.view_grouprow)
-    renderer = get_field_renderer(renderid)
+    if renderid == "Placement":
+        renderer = get_field_placement_renderer()
+    else:
+        renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.label_view()
     # Default to simple text for unknown renderer type
@@ -142,7 +146,10 @@ def get_colhead_renderer(renderid):
     Returns a field list heading renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    renderer = get_field_renderer(renderid)
+    if renderid == "Placement":
+        renderer = get_field_placement_renderer()
+    else:
+        renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.col_head()
     log.debug("get_colhead_renderer: %s not found"%renderid)
@@ -157,7 +164,10 @@ def get_coledit_renderer(renderid):
         return RenderTokenSet(render_tokenset.item)
     # if renderid == "RepeatGroup":
     #     return RenderRepeatGroup(render_repeatgroup.view_row)
-    renderer = get_field_renderer(renderid)
+    if renderid == "Placement":
+        renderer = get_field_placement_renderer()
+    else:
+        renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.col_edit()
     log.debug("get_coledit_renderer: %s not found"%renderid)
@@ -172,7 +182,10 @@ def get_colview_renderer(renderid):
         return RenderTokenSet(render_tokenset.item)
     # if renderid == "RepeatGroup":
     #     return RenderRepeatGroup(render_repeatgroup.view_row)
-    renderer = get_field_renderer(renderid)
+    if renderid == "Placement":
+        renderer = get_field_placement_renderer()
+    else:
+        renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.view()
     log.debug("get_colview_renderer: %s not found"%renderid)

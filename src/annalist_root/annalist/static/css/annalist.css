@@ -8,30 +8,36 @@
  */
 
 
-body {
+/*  ------------------------------------------------------------------------- 
+
+    General layout
+
+    ------------------------------------------------------------------------- */
+
+body 
+{
     margin:         0;
 }
 
-body > div {
+body > div 
+{
     padding-left:   0.9375rem;
     padding-right:  0.9375rem;    
 }
 
-.top {
+.top 
+{
     vertical-align: top;
 }
 
-.middle {
+.middle 
+{
     vertical-align: middle;
 }
 
-.bottom {
+.bottom 
+{
     vertical-align: bottom;
-}
-
-p.djangolinks {
-    font-size: small;
-    color: #666666;
 }
 
 /*
@@ -58,7 +64,14 @@ div.row .columns .row .columns
     padding: 0 0.5rem;  /* was 0.75 */
 }
 
-div.row.headings {
+/*  ------------------------------------------------------------------------- 
+
+    More specific formatting options
+
+    ------------------------------------------------------------------------- */
+
+div.row.headings 
+{
     padding-bottom: 0.5rem;
     font-weight: bold;
 }
@@ -163,6 +176,12 @@ h2.page-heading {
     padding: 0 0.9375rem;
 }
 
+p.djangolinks 
+{
+    font-size: small;
+    color: #666666;
+}
+
 div.alert-box p {
     margin-bottom: 0.25rem;
 }
@@ -210,6 +229,13 @@ div.columns > select {
 div.columns > input[type=submit] {
     padding-left: 1rem;
     padding-right: 1rem;
+}
+
+span.placement-text ,
+select.placement-text ,
+option.placement-text
+{
+    font-family:"Lucida Console", monospace;
 }
 
 /* Table layout used for lists of entities */
@@ -312,15 +338,6 @@ div.row div.new_button button
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
 }
 
-/*
-div.row .columns ,
-div.row .column
-{
-    height: 100%;
-    vertical-align: middle;
-}
-*/
-
 /* Messages */
 
 .error {
@@ -339,6 +356,12 @@ div.row .column
     padding-bottom: 0.5rem;
     font-style: italic;
 }
+
+/*  ------------------------------------------------------------------------- 
+
+    Top and bottom navigation, adapted from ZURB Foundation examples
+
+    ------------------------------------------------------------------------- */
 
 /* Top bar */
 
@@ -385,4 +408,4 @@ div.row .column
     color: #777777; 
     }
 
-
+/* End */

@@ -320,7 +320,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow1b = ("""
-            <div class="small-12 medium-6 right columns">
+            <div class="small-12 medium-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
                   <p>List display type</p>

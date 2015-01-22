@@ -156,7 +156,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow2 = ("""
               <!-- record type dropdown -->
-              <div class="small-12 medium-6 right columns">
+              <div class="small-12 medium-6 columns">
                 <div class="row">
                   <div class="%(label_classes)s">
                     <p>
@@ -246,7 +246,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_placeholder'],   "(entity id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'],  "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_type'],   "EntityId")
-        self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][0]['field_value_type'],    "annal:Slug")
         self.assertEqual(r.context['fields'][0].field_value,            "00000001")
         self.assertEqual(r.context['fields'][0]['field_value'],         "00000001")
@@ -263,7 +262,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_placeholder'],   "(type id)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'],  "annal:type_id")
         self.assertEqual(r.context['fields'][1]['field_render_type'],   "EntityTypeId")
-        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 columns right")
         self.assertEqual(r.context['fields'][1]['field_value_type'],    "annal:Slug")
         self.assertEqual(r.context['fields'][1].field_value,            "testtype")
         self.assertEqual(r.context['fields'][1]['field_value'],         "testtype")
@@ -281,7 +279,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_placeholder'],   "(label)")
         self.assertEqual(r.context['fields'][2]['field_property_uri'],  "rdfs:label")
         self.assertEqual(r.context['fields'][2]['field_render_type'],   "Text")
-        self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'],    "annal:Text")
         self.assertEqual(r.context['fields'][2]['field_value'],         field_label_value)
         self.assertEqual(r.context['fields'][2]['entity_type_id'],      "testtype")
@@ -298,7 +295,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_placeholder'],   "(description)")
         self.assertEqual(r.context['fields'][3]['field_property_uri'],  "rdfs:comment")
         self.assertEqual(r.context['fields'][3]['field_render_type'],   "Textarea")
-        self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value_type'],    "annal:Longtext")
         self.assertEqual(r.context['fields'][3]['field_value'],         field_comment_value)
         self.assertEqual(r.context['fields'][3]['entity_type_id'],      "testtype")
@@ -334,7 +330,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_placeholder'], "(entity id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_type'],  "EntityId")
-        self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][0]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][0]['field_value'], "entity1")
         self.assertEqual(r.context['fields'][0]['options'], self.no_options)
@@ -349,7 +344,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_placeholder'],  "(type id)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:type_id")
         self.assertEqual(r.context['fields'][1]['field_render_type'],  "EntityTypeId")
-        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 columns right")
         self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][1]['field_value'], "testtype")
         self.assertEqual(set(r.context['fields'][1]['options']), set(self.type_ids))
@@ -367,7 +361,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_placeholder'], "(label)")
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:label")
         self.assertEqual(r.context['fields'][2]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][2]['field_value'], field_label_value)
         self.assertEqual(r.context['fields'][2]['options'], self.no_options)
@@ -385,7 +378,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_placeholder'], "(description)")
         self.assertEqual(r.context['fields'][3]['field_property_uri'], "rdfs:comment")
         self.assertEqual(r.context['fields'][3]['field_render_type'],  "Textarea")
-        self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Longtext")
         self.assertEqual(r.context['fields'][3]['field_value'], field_comment_value)
         self.assertEqual(r.context['fields'][3]['options'], self.no_options)

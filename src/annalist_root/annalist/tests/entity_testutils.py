@@ -289,7 +289,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
         , 'options':    "\n  ".join([ select_option(o) for o in opts ])
         })
 
-def render_choice_options(name, opts, sel, placeholder=None):
+def render_choice_options(name, opts, sel, placeholder=None, select_class=None, value_dict={}):
     """
     Cf. `templates.field.annalist_edit_choice.html`.
     Like select, biut wiothout the "New" button.
@@ -312,16 +312,19 @@ def render_choice_options(name, opts, sel, placeholder=None):
         selected = ('' if o != sel else ' selected="selected"')
         if (placeholder is not None) and (o == ""):
             return '<option value=""%s>%s</option>'%(selected,placeholder)
-        return '<option%s>%s</option>'%(selected,o)
+        v = value_dict.get(o, None)
+        value = ('' if v is None else ' value="%s"'%v)
+        return '<option%s%s>%s</option>'%(selected,value,o)
     #
     select_template = (
-        """<select name="%(name)s">\n"""+
+        """<select %(select_class)s name="%(name)s">\n"""+
         """  %(options)s\n"""+
         """</select>"""+
         "")
     return select_template%(
-        { 'name':       name
-        , 'options':    "\n  ".join([ select_option(o) for o in opts ])
+        { 'name':           name
+        , 'options':        "\n  ".join([ select_option(o) for o in opts ])
+        , 'select_class':   '''class="%s"'''%select_class if select_class is not None else ""
         })
 
 #   -----------------------------------------------------------------------------

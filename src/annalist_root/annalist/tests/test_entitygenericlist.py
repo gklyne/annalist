@@ -380,7 +380,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Entity_type',       "annal:Slug",          "Type")
             , ('Entity_label',      "annal:Text",          "Label")
             , ('Field_comment',     "annal:Longtext",      "Help")
-            , ('Field_placement',   "annal:Placement",     "Size/position")
+            , ('Field_placement',   "annal:Placement",     "Position/size")
             , ('Field_type',        "annal:Identifier",    "Field value type")
             , ('Field_render',      "annal:Slug",          "Field render type")
             , ('Field_default',     "annal:Text",          "Default")

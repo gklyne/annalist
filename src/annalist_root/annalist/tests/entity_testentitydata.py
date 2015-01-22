@@ -222,7 +222,7 @@ def entitydata_context_data(
             , 'field_id':           'Entity_type'
             , 'field_name':         'entity_type'
             , 'field_render_type':  'EntityTypeId'
-            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
+            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
             , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately)
             , 'options':            []
@@ -384,7 +384,7 @@ def entitydata_default_view_context_data(
             }
           , { 'field_label':        'Type'
             , 'field_name':         'entity_type'
-            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
+            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
             , 'field_id':           'Entity_type'
             , 'field_value_type':   'annal:Text'
             # , 'field_value':      (Supplied separately)

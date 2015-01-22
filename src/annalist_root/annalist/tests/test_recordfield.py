@@ -17,20 +17,21 @@ import unittest
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                    import settings
-from django.db                      import models
-from django.http                    import QueryDict
-from django.contrib.auth.models     import User
-from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
-from django.test.client             import Client
+from django.conf                            import settings
+from django.db                              import models
+from django.http                            import QueryDict
+from django.contrib.auth.models             import User
+from django.test                            import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
+from django.test.client                     import Client
+        
+from annalist.identifiers                   import RDF, RDFS, ANNAL
+from annalist                               import layout
+from annalist.models.site                   import Site
+from annalist.models.collection             import Collection
+from annalist.models.recordfield            import RecordField
 
-from annalist.identifiers           import RDF, RDFS, ANNAL
-from annalist                       import layout
-from annalist.models.site           import Site
-from annalist.models.collection     import Collection
-from annalist.models.recordfield    import RecordField
-
-from annalist.views.entityedit      import GenericEntityEditView
+from annalist.views.entityedit              import GenericEntityEditView
+from annalist.views.fields.render_placement import get_placement_options, get_placement_option_value_dict
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
@@ -242,7 +243,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_name'], 'Field_type')
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:field_value_type")
         self.assertEqual(r.context['fields'][1]['field_render_type'], "Identifier")
-        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 medium-6 columns right")
         self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Identifier")
         self.assertEqual(r.context['fields'][1]['field_value'], field_type)
         self.assertEqual(r.context['fields'][1]['options'], self.no_options)
@@ -251,61 +251,54 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_name'], 'Field_render')
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "annal:field_render_type")
         self.assertEqual(r.context['fields'][2]['field_render_type'], "Enum_choice")
-        self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][2]['field_value'], field_render)
         self.assertEqual(set(r.context['fields'][2]['options']), set(self.render_options))
-        # 4th field - Label
-        self.assertEqual(r.context['fields'][3]['field_id'], 'Field_label')
-        self.assertEqual(r.context['fields'][3]['field_name'], 'Field_label')
-        self.assertEqual(r.context['fields'][3]['field_property_uri'], "rdfs:label")
-        self.assertEqual(r.context['fields'][3]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][3]['field_value'], field_label)
+        # 4th field - placement (default)
+        self.assertEqual(r.context['fields'][3]['field_id'], 'Field_placement')
+        self.assertEqual(r.context['fields'][3]['field_name'], 'Field_placement')
+        self.assertEqual(r.context['fields'][3]['field_property_uri'], "annal:field_placement")
+        self.assertEqual(r.context['fields'][3]['field_render_type'], "Placement")
+        self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Placement")
+        self.assertEqual(r.context['fields'][3]['field_value'], field_placement)
         self.assertEqual(r.context['fields'][3]['options'], self.no_options)
-        # 5th field - comment
-        self.assertEqual(r.context['fields'][4]['field_id'], 'Field_comment')
-        self.assertEqual(r.context['fields'][4]['field_name'], 'Field_comment')
-        self.assertEqual(r.context['fields'][4]['field_property_uri'], "rdfs:comment")
-        self.assertEqual(r.context['fields'][4]['field_render_type'], "Textarea")
-        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:Longtext")
-        self.assertEqual(r.context['fields'][4]['field_value'], field_comment)
+        # 5th field - Label
+        self.assertEqual(r.context['fields'][4]['field_id'], 'Field_label')
+        self.assertEqual(r.context['fields'][4]['field_name'], 'Field_label')
+        self.assertEqual(r.context['fields'][4]['field_property_uri'], "rdfs:label")
+        self.assertEqual(r.context['fields'][4]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][4]['field_value'], field_label)
         self.assertEqual(r.context['fields'][4]['options'], self.no_options)
-        # 6th field - URI
-        self.assertEqual(r.context['fields'][5]['field_id'], 'Field_placeholder')
-        self.assertEqual(r.context['fields'][5]['field_name'], 'Field_placeholder')
-        self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:placeholder")
-        self.assertEqual(r.context['fields'][5]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][5]['field_value'], field_placeholder)
+        # 6th field - comment
+        self.assertEqual(r.context['fields'][5]['field_id'], 'Field_comment')
+        self.assertEqual(r.context['fields'][5]['field_name'], 'Field_comment')
+        self.assertEqual(r.context['fields'][5]['field_property_uri'], "rdfs:comment")
+        self.assertEqual(r.context['fields'][5]['field_render_type'], "Textarea")
+        self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:Longtext")
+        self.assertEqual(r.context['fields'][5]['field_value'], field_comment)
         self.assertEqual(r.context['fields'][5]['options'], self.no_options)
-        # 7th field - Field_property
-        self.assertEqual(r.context['fields'][6]['field_id'], 'Field_property')
-        self.assertEqual(r.context['fields'][6]['field_name'], 'Field_property')
-        self.assertEqual(r.context['fields'][6]['field_property_uri'], "annal:property_uri")
-        self.assertEqual(r.context['fields'][6]['field_render_type'], "Identifier")
-        self.assertEqual(r.context['fields'][6]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][6]['field_value_type'], "annal:Identifier")
-        self.assertEqual(r.context['fields'][6]['field_value'], field_property)
+        # 7th field - URI
+        self.assertEqual(r.context['fields'][6]['field_id'], 'Field_placeholder')
+        self.assertEqual(r.context['fields'][6]['field_name'], 'Field_placeholder')
+        self.assertEqual(r.context['fields'][6]['field_property_uri'], "annal:placeholder")
+        self.assertEqual(r.context['fields'][6]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][6]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][6]['field_value'], field_placeholder)
         self.assertEqual(r.context['fields'][6]['options'], self.no_options)
-        # 8th field - placement (default)
-        self.assertEqual(r.context['fields'][7]['field_id'], 'Field_placement')
-        self.assertEqual(r.context['fields'][7]['field_name'], 'Field_placement')
-        self.assertEqual(r.context['fields'][7]['field_property_uri'], "annal:field_placement")
-        self.assertEqual(r.context['fields'][7]['field_render_type'], "Placement")
-        self.assertEqual(r.context['fields'][7]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][7]['field_value_type'], "annal:Placement")
-        self.assertEqual(r.context['fields'][7]['field_value'], field_placement)
+        # 8th field - Field_property
+        self.assertEqual(r.context['fields'][7]['field_id'], 'Field_property')
+        self.assertEqual(r.context['fields'][7]['field_name'], 'Field_property')
+        self.assertEqual(r.context['fields'][7]['field_property_uri'], "annal:property_uri")
+        self.assertEqual(r.context['fields'][7]['field_render_type'], "Identifier")
+        self.assertEqual(r.context['fields'][7]['field_value_type'], "annal:Identifier")
+        self.assertEqual(r.context['fields'][7]['field_value'], field_property)
         self.assertEqual(r.context['fields'][7]['options'], self.no_options)
         # 9th field - default value
         self.assertEqual(r.context['fields'][8]['field_id'], 'Field_default')
         self.assertEqual(r.context['fields'][8]['field_name'], 'Field_default')
         self.assertEqual(r.context['fields'][8]['field_property_uri'], "annal:default_value")
         self.assertEqual(r.context['fields'][8]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][8]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][8]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][8]['field_value'], field_default)
         self.assertEqual(r.context['fields'][8]['options'], self.no_options)
@@ -314,7 +307,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][9]['field_name'], 'Field_entity_type')
         self.assertEqual(r.context['fields'][9]['field_property_uri'], "annal:field_entity_type")
         self.assertEqual(r.context['fields'][9]['field_render_type'], "Identifier")
-        self.assertEqual(r.context['fields'][9]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][9]['field_value_type'], "annal:Identifier")
         self.assertEqual(r.context['fields'][9]['field_value'], field_entity_type)
         self.assertEqual(r.context['fields'][9]['options'], self.no_options)
@@ -323,7 +315,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][10]['field_name'], 'Field_typeref')
         self.assertEqual(r.context['fields'][10]['field_property_uri'], "annal:options_typeref")
         self.assertEqual(r.context['fields'][10]['field_render_type'], "Enum_optional")
-        self.assertEqual(r.context['fields'][10]['field_placement'].field, "small-6 columns")
         self.assertEqual(r.context['fields'][10]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][10]['field_value'], field_typeref)
         self.assertEqual(r.context['fields'][10]['options'], [""]+get_site_types_sorted()+["testtype"])
@@ -332,7 +323,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][11]['field_name'], 'Field_restrict')
         self.assertEqual(r.context['fields'][11]['field_property_uri'], "annal:restrict_values")
         self.assertEqual(r.context['fields'][11]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][11]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][11]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][11]['field_value'], field_restrict)
         self.assertEqual(r.context['fields'][11]['options'], self.no_options)
@@ -341,7 +331,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][12]['field_name'], 'Field_groupref')
         self.assertEqual(r.context['fields'][12]['field_property_uri'], "annal:group_ref")
         self.assertEqual(r.context['fields'][12]['field_render_type'], "Enum_optional")
-        self.assertEqual(r.context['fields'][12]['field_placement'].field, "small-6 columns")
         self.assertEqual(r.context['fields'][12]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][12]['field_value'], field_viewref)
         self.assertEqual(r.context['fields'][12]['options'], [""] + self.group_options)
@@ -350,7 +339,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][13]['field_name'], 'Field_repeat_label_add')
         self.assertEqual(r.context['fields'][13]['field_property_uri'], "annal:repeat_label_add")
         self.assertEqual(r.context['fields'][13]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][13]['field_placement'].field, "small-6 columns")
         self.assertEqual(r.context['fields'][13]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][13]['field_value'], field_repeat_label_add)
         self.assertEqual(r.context['fields'][13]['options'], self.no_options)
@@ -359,7 +347,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][14]['field_name'], 'Field_repeat_label_delete')
         self.assertEqual(r.context['fields'][14]['field_property_uri'], "annal:repeat_label_delete")
         self.assertEqual(r.context['fields'][14]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][14]['field_placement'].field, "small-6 columns")
         self.assertEqual(r.context['fields'][14]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][14]['field_value'], field_repeat_label_delete)
         self.assertEqual(r.context['fields'][14]['options'], self.no_options)
@@ -395,7 +382,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow1col2 = """
-            <div class="small-12 medium-6 right columns">
+            <div class="small-12 medium-6 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
                         <p>Field value type</p>
@@ -480,20 +467,26 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow7 = """
-            <div class="small-12 columns">
+        # log.info("placement_option_value_dict %r"%(get_placement_option_value_dict(),))
+        formrow7 = ("""
+            <div class="small-12 medium-6 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
-                        <p>Size/position</p>
+                        <p>Position/size</p>
                     </div>
                     <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Field_placement"
-                               placeholder="(field display size and placement details)"
-                               value=""/>
+                    """+
+                    render_choice_options(
+                        "Field_placement", # "Position/size",
+                        [""] + get_placement_options(),
+                        "", 
+                        placeholder="(field position and size)", select_class="placement-text",
+                        value_dict=get_placement_option_value_dict())+
+                    """
                     </div>
                 </div>
             </div>
-            """%field_vals(width=12)
+            """)%field_vals(width=6)
         formrow8 = """
             <div class="small-12 columns">
                 <div class="row">
@@ -540,7 +533,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow11 = ("""
-            <div class="small-6 columns">
+            <div class="small-12 medium-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
                   <p>Field group</p>
@@ -768,7 +761,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_context = recordfield_entity_view_context_data(
             field_id="!badfield", orig_id="orig_field_id", action="new"
             )
-        # log.info(repr(r.context['fields'][0]))
+        # log.info(repr(r.context['fields'][3]))
         self.assertDictionaryMatch(r.context, expect_context)
         return
 

@@ -35,20 +35,23 @@ from django.test.client         import Client
 
 from bs4                        import BeautifulSoup
 
-from annalist.identifiers           import RDF, RDFS, ANNAL
-from annalist.models.site           import Site
-from annalist.models.collection     import Collection
-from annalist.models.recordtype     import RecordType
-from annalist.models.recordlist     import RecordList
-from annalist.models.recordview     import RecordView
-from annalist.models.recordgroup    import RecordGroup
-from annalist.models.recordfield    import RecordField
+from annalist.identifiers                   import RDF, RDFS, ANNAL
+from annalist.models.site                   import Site
+from annalist.models.collection             import Collection
+from annalist.models.recordtype             import RecordType
+from annalist.models.recordlist             import RecordList
+from annalist.models.recordview             import RecordView
+from annalist.models.recordgroup            import RecordGroup
+from annalist.models.recordfield            import RecordField
 
-from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import dict_to_str, init_annalist_test_site
-from AnnalistTestCase               import AnnalistTestCase
+from annalist.views.fields.render_placement import get_placement_options
 
-from entity_testutils import (
+from AnnalistTestCase           import AnnalistTestCase
+from tests                      import dict_to_str, init_annalist_test_site
+from tests                      import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from entity_testutils           import (
     site_view_url,
     collection_view_url,
     collection_edit_url,
@@ -57,7 +60,7 @@ from entity_testutils import (
     collection_entity_edit_url,
     create_user_permissions, create_test_user
     )
-from entity_testsitedata            import (
+from entity_testsitedata        import (
     get_site_types, get_site_types_sorted,
     get_site_lists, get_site_lists_sorted,
     get_site_list_types, get_site_list_types_sorted,
@@ -116,6 +119,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "Type_alias_group"
             , "View_field_group"
             ])
+        self.placements_expected = get_placement_options()
+
         # Login with admin permissions
         permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
         create_test_user(
@@ -167,6 +172,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     def check_select_field(self, s, name, options, selection):
         select_elem = s.find("select", attrs={"name": name})
         options_here = [o.string for o in select_elem.find_all("option")]
+        if options_here != options:
+            log.info("options_here: %r"%(options_here,))
+            log.info("options:      %r"%(options,))
         self.assertEqual(options_here, options)
         if selection is not None:
             self.assertEqual(
@@ -1039,7 +1047,12 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "Field_comment", "textarea", None)
         self.check_input_type_value(s, "Field_placeholder", "text", "")
         self.check_input_type_value(s, "Field_property", "text", "")
-        self.check_input_type_value(s, "Field_placement", "text", "")
+        # self.check_input_type_value(s, "Field_placement", "text", "")
+        self.check_select_field(
+            s, "Field_placement", 
+            ["(field position and size)"]+self.placements_expected, 
+            "(field position and size)"
+            )
         self.check_input_type_value(s, "Field_default", "text", None)
         self.check_input_type_value(s, "Field_entity_type", "text", "")
         self.check_input_type_value(s, "Field_restrict", "text", "")
@@ -1094,11 +1107,11 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             [ "Field_id"
             , "Field_type"
             , "Field_render"
+            , "Field_placement"
             , "Field_label"
             , "Field_comment"
             , "Field_placeholder"
             , "Field_property"
-            , "Field_placement"
             , "Field_default"
             , "Field_entity_type"
             , "Field_typeref"

@@ -81,7 +81,7 @@ testsrc_view_create_values = (
         , 'annal:field_placement':      "small:0,12;medium:0,6"
         }
       , { 'annal:field_id':             "testtgtref_field"
-        , 'annal:field_placement':      "small:0,12;medium:6,6right"
+        , 'annal:field_placement':      "small:0,12;medium:6,6"
         }
       , { 'annal:field_id':             "Entity_label"
         , 'annal:field_placement':      "small:0,12"

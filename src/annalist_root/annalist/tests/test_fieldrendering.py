@@ -33,6 +33,7 @@ from annalist.views.fields.render_text          import RenderText
 from annalist.views.fields.render_placement     import Placement, get_placement_classes
 from annalist.views.fields                      import render_tokenset
 from annalist.views.fields.render_tokenset      import RenderTokenSet
+from annalist.views.fields.render_placement     import get_field_placement_renderer
 from annalist.views.fields                      import render_repeatgroup
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
 from annalist.views.fields.render_fieldvalue    import RenderFieldValue, get_template
@@ -75,6 +76,20 @@ intvalue_context = Context(
       }
     })
 
+placement_context = Context(
+    { 'field':
+      { 'field_placement':        get_placement_classes("small:0,12")
+      , 'field_name':             "test_field"
+      , 'field_label':            "test label"
+      , 'field_placeholder':      "(test placeholder)"
+      , 'field_value':            "small:0,12;medium:4,4"
+      }
+    , 'repeat':
+      { 'repeat_prefix': "prefix_"
+      }
+    , 'repeat_prefix': "repeat_prefix_"
+    })
+
 #   -----------------------------------------------------------------------------
 #
 #   FieldDescription tests
@@ -106,7 +121,7 @@ class FieldDescriptionTest(AnnalistTestCase):
                     , "annal:field_placement":  "small:0,12;medium:0,6"
                     }
                   , { "annal:field_id":         "Entity_type"
-                    , "annal:field_placement":  "small:0,12;medium:6,6right"
+                    , "annal:field_placement":  "small:0,12;medium:6,6"
                     }
                   , { "annal:field_id":         "Entity_label"
                     , "annal:field_placement":  "small:0,12"
@@ -242,7 +257,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , '''<div class="row selectable">'''
             , '''<p>Field id</p>'''
             , '''<p>Property</p>'''
-            , '''<p>Size/position</p>'''
+            , '''<p>Position/size</p>'''
             # 1st field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="0" class="right" />'''
@@ -255,9 +270,9 @@ class FieldDescriptionTest(AnnalistTestCase):
             , '''<input type="text" size="64" name="View_fields__0__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value=""/>'''
-            , '''<input type="text" size="64" name="View_fields__0__Field_placement"'''+
-              ''' placeholder="(field display size and placement details)"'''+
-              ''' value="small:0,12;medium:0,6"/>'''
+            # , '''<input type="text" size="64" name="View_fields__0__Field_placement"'''+
+            #   ''' placeholder="(field display size and placement details)"'''+
+            #   ''' value="small:0,12;medium:0,6"/>'''
             # 2nd field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="1" class="right" />'''
@@ -270,10 +285,10 @@ class FieldDescriptionTest(AnnalistTestCase):
             , '''<input type="text" size="64" name="View_fields__1__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value=""/>'''
-            , '''<input type="text" size="64" name="View_fields__1__Field_placement"'''+
-              ''' placeholder="(field display size and placement details)"'''+
-              ''' value="small:0,12;medium:6,6right"/>'''
-             # 3rd field
+            # , '''<input type="text" size="64" name="View_fields__1__Field_placement"'''+
+            #   ''' placeholder="(field display size and placement details)"'''+
+            #   ''' value="small:0,12;medium:6,6"/>'''
+            # 3rd field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="2" class="right" />'''
             , '''<select name="View_fields__2__Field_id">'''+
@@ -285,9 +300,9 @@ class FieldDescriptionTest(AnnalistTestCase):
             , '''<input type="text" size="64" name="View_fields__2__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value="rdfs:label"/>'''
-            , '''<input type="text" size="64" name="View_fields__2__Field_placement"'''+
-              ''' placeholder="(field display size and placement details)"'''+
-              ''' value="small:0,12"/>'''
+            # , '''<input type="text" size="64" name="View_fields__2__Field_placement"'''+
+            #   ''' placeholder="(field display size and placement details)"'''+
+            #   ''' value="small:0,12"/>'''
             # 4th field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="3" class="right" />'''
@@ -300,9 +315,9 @@ class FieldDescriptionTest(AnnalistTestCase):
             , '''<input type="text" size="64" name="View_fields__3__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value="rdfs:comment"/>'''
-            , '''<input type="text" size="64" name="View_fields__3__Field_placement"'''+
-              ''' placeholder="(field display size and placement details)"'''+
-              ''' value="small:0,12"/>'''
+            # , '''<input type="text" size="64" name="View_fields__3__Field_placement"'''+
+            #   ''' placeholder="(field display size and placement details)"'''+
+            #   ''' value="small:0,12"/>'''
             # Buttons
             , '''<input type="submit" name="View_fields__remove" value="Remove selected field(s)" />'''
             , '''<input type="submit" name="View_fields__add" value="Add field" />'''
@@ -312,31 +327,33 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def _check_value_renderer_results(self,
-        fieldrender, expect_rendered_view="...", expect_rendered_edit="..."
+        fieldrender, context=None,
+        expect_rendered_view="...", 
+        expect_rendered_edit="..."
         ):
-        rendered_label      = fieldrender.label().render(intvalue_context)
+        rendered_label      = fieldrender.label().render(context)
         self.assertEqual(
             rendered_label, 
             '''<div class="view-label small-12 columns">  <p>test label</p></div>'''
             )
-        rendered_view       = fieldrender.view().render(intvalue_context)
+        rendered_view       = fieldrender.view().render(context)
         self.assertEqual(
             rendered_view, 
             '''<div class="small-12 columns">  %s</div>'''%expect_rendered_view
             )
-        rendered_edit       = fieldrender.edit().render(intvalue_context)
+        rendered_edit       = fieldrender.edit().render(context)
         self.assertEqual(
             rendered_edit, 
             '''<div class="small-12 columns">  %s</div>'''%expect_rendered_edit
             )
-        rendered_label_view = fieldrender.label_view().render(intvalue_context)
+        rendered_label_view = fieldrender.label_view().render(context)
         self.assertEqual(
             rendered_label_view, 
             '''<div class="view-label small-12 columns">  '''+
             '''<p>test label</p>'''+
             '''</div>'''
             )
-        rendered_label_edit = fieldrender.label_edit().render(intvalue_context)
+        rendered_label_edit = fieldrender.label_edit().render(context)
         self.assertEqual(
             rendered_label_edit, 
             '''<div class="small-12 columns">\n'''+
@@ -350,13 +367,13 @@ class FieldDescriptionTest(AnnalistTestCase):
             '''  </div>\n'''+
             '''</div>'''
             )
-        rendered_col_head   = fieldrender.col_head().render(intvalue_context)
+        rendered_col_head   = fieldrender.col_head().render(context)
         self.assertEqual(
             rendered_col_head, 
             '''<div class="view-label small-12 columns">  '''+
             '''<p>test label</p></div>'''
             )
-        rendered_col_view   = fieldrender.col_view().render(intvalue_context)
+        rendered_col_view   = fieldrender.col_view().render(context)
         self.assertEqual(
             rendered_col_view, 
             '''<div class="small-12 columns">\n'''+
@@ -372,7 +389,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             '''  </div>\n'''+
             '''</div>'''
             )
-        rendered_col_edit   = fieldrender.col_edit().render(intvalue_context)
+        rendered_col_edit   = fieldrender.col_edit().render(context)
         self.assertEqual(
             rendered_col_edit, 
             '''<div class="small-12 columns">\n'''+
@@ -389,7 +406,6 @@ class FieldDescriptionTest(AnnalistTestCase):
             '''</div>'''
             )
         return
-
 
     def test_RenderFieldValue_renderers(self):
 
@@ -416,6 +432,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             )
         self._check_value_renderer_results(
             fieldrender,
+            context=intvalue_context,
             expect_rendered_view="42",
             expect_rendered_edit=
                 '''<input type="text" size="64" name="prefix_test_field" '''+
@@ -438,6 +455,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             )
         self._check_value_renderer_results(
             fieldrender,
+            context=intvalue_context,
             expect_rendered_view=
                 '''<!-- field/annalist_view_text.html -->\n42''',
             expect_rendered_edit=
@@ -456,6 +474,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             )
         self._check_value_renderer_results(
             fieldrender,
+            context=intvalue_context,
             expect_rendered_view=
                 '''<!-- field/annalist_view_text.html -->\n42''',
             expect_rendered_edit=
@@ -464,6 +483,63 @@ class FieldDescriptionTest(AnnalistTestCase):
                 '''<input type="text" size="64" name="test_field" \n'''+
                 '''       placeholder="(test placeholder)"\n'''+
                 '''       value="42"/>'''
+            )
+        return
+
+
+    def test_RenderFieldPlacementValue(self):
+        self._check_value_renderer_results(
+            get_field_placement_renderer(),
+            context=placement_context,
+            expect_rendered_view=
+                '''<span class="placement-text">'''+
+                '''&blk14;&blk14;&blk14;&blk14;&block;&block;'''+
+                '''&block;&block;&blk14;&blk14;&blk14;&blk14;'''+
+                ''' (4/4)</span>''',
+            expect_rendered_edit=
+                '''<select class="placement-text" name="repeat_prefix_test_field">\n'''+
+                '''  <option value="">(test placeholder)</option>\n'''+
+                '''  <option value="small:0,12">'''+
+                    '''&block;&block;&block;&block;&block;&block;'''+
+                    '''&block;&block;&block;&block;&block;&block;'''+
+                    ''' (0/12)</option>\n'''+
+                '''  <option value="small:0,12;medium:0,6">'''+
+                    '''&block;&block;&block;&block;&block;&block;'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
+                    ''' (0/6)</option>\n'''+
+                '''  <option value="small:0,12;medium:6,6">'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
+                    '''&block;&block;&block;&block;&block;&block;'''+
+                    ''' (6/6)</option>\n'''+
+                '''  <option value="small:0,12;medium:0,4">'''+
+                    '''&block;&block;&block;&block;&blk14;&blk14;'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
+                    ''' (0/4)</option>\n'''+
+                '''  <option value="small:0,12;medium:4,4" selected="selected">'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&block;&block;'''+
+                    '''&block;&block;&blk14;&blk14;&blk14;&blk14;'''+
+                    ''' (4/4)</option>\n'''+
+                '''  <option value="small:0,12;medium:8,4">'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
+                    '''&blk14;&blk14;&block;&block;&block;&block;'''+
+                    ''' (8/4)</option>\n'''+
+                '''  <option value="small:0,12;medium:0,3">'''+
+                    '''&block;&block;&block;&blk14;&blk14;&blk14;'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
+                    ''' (0/3)</option>\n'''+
+                '''  <option value="small:0,12;medium:3,3">'''+
+                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
+                    ''' (3/3)</option>\n'''+
+                '''  <option value="small:0,12;medium:6,3">'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
+                    '''&block;&block;&block;&blk14;&blk14;&blk14;'''+
+                    ''' (6/3)</option>\n'''+
+                '''  <option value="small:0,12;medium:9,3">'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
+                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
+                    ''' (9/3)</option>\n'''+
+                '''</select>'''
             )
         return
 

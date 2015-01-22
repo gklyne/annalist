@@ -184,7 +184,7 @@ def recordfield_entity_view_context_data(
             , 'field_id':           'Field_type'
             , 'field_name':         'Field_type'
             , 'field_render_type':  'Identifier'
-            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6right')
+            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
             , 'field_value_type':   'annal:Identifier'
             , 'field_placeholder':  '(field value type)'
             , 'field_value':        'annal:Text'
@@ -198,6 +198,16 @@ def recordfield_entity_view_context_data(
             , 'field_value_type':   'annal:Slug'
             , 'field_placeholder':  '(field render type)'
             , 'field_value':        'Text'
+            , 'options':            []
+            }
+          , { 'field_label':        'Position/size'
+            , 'field_id':           'Field_placement'
+            , 'field_name':         'Field_placement'
+            , 'field_render_type':  'Placement'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
+            , 'field_value_type':   'annal:Placement'
+            , 'field_placeholder':  '(field position and size)'
+            , 'field_value':        ''
             , 'options':            []
             }
           , { 'field_label':        'Label'
@@ -240,23 +250,13 @@ def recordfield_entity_view_context_data(
             , 'field_value':        ''
             , 'options':            []
             }
-          , { 'field_label':        'Size/position'
-            , 'field_id':           'Field_placement'
-            , 'field_name':         'Field_placement'
-            , 'field_render_type':  'Placement'
-            , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value_type':   'annal:Placement'
-            , 'field_placeholder':  '(field display size and placement details)'
-            , 'field_value':        ''
-            , 'options':            []
-            }
           ]
         , 'continuation_url':   entitydata_list_type_url("testcoll", "_field")
         })
     if field_id:
         context_dict['fields'][0]['field_value'] = field_id
-        context_dict['fields'][3]['field_value'] = '%s testcoll/_field/%s'%(update,field_id)
-        context_dict['fields'][4]['field_value'] = '%s help for %s in collection testcoll'%(update,field_id)
+        context_dict['fields'][4]['field_value'] = '%s testcoll/_field/%s'%(update,field_id)
+        context_dict['fields'][5]['field_value'] = '%s help for %s in collection testcoll'%(update,field_id)
         context_dict['orig_id']     = field_id
     if orig_id:
         context_dict['orig_id']     = orig_id
