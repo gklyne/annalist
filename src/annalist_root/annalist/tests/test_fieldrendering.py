@@ -35,7 +35,7 @@ from annalist.views.fields                      import render_tokenset
 from annalist.views.fields.render_tokenset      import RenderTokenSet
 from annalist.views.fields                      import render_repeatgroup
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
-from annalist.views.fields.render_fieldvalue2   import RenderFieldValue2, get_template
+from annalist.views.fields.render_fieldvalue    import RenderFieldValue, get_template
 
 from tests                  import init_annalist_test_site
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -391,7 +391,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
 
-    def test_RenderFieldValue2_renderers(self):
+    def test_RenderFieldValue_renderers(self):
 
         class render_int_view(object):
             def render(self, context):
@@ -410,7 +410,7 @@ class FieldDescriptionTest(AnnalistTestCase):
                     , 'repeat_prefix':      context['repeat']['repeat_prefix']
                     })
 
-        fieldrender = RenderFieldValue2(
+        fieldrender = RenderFieldValue(
             view_renderer=render_int_view(), 
             edit_renderer=render_int_edit()
             )
@@ -423,7 +423,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             )
         return
 
-    def test_RenderFieldValue2_templates(self):
+    def test_RenderFieldValue_templates(self):
         view_template = get_template(
             "field/annalist_view_text.html",  
             "Can't load view template"
@@ -432,7 +432,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             "field/annalist_edit_text.html",
             "Can't load edit template"
             )
-        fieldrender = RenderFieldValue2(
+        fieldrender = RenderFieldValue(
             view_template=view_template, 
             edit_template=edit_template
             )
@@ -449,8 +449,8 @@ class FieldDescriptionTest(AnnalistTestCase):
             )
         return
 
-    def test_RenderFieldValue2_files(self):
-        fieldrender = RenderFieldValue2(
+    def test_RenderFieldValue_files(self):
+        fieldrender = RenderFieldValue(
             view_file="field/annalist_view_text.html", 
             edit_file="field/annalist_edit_text.html"
             )

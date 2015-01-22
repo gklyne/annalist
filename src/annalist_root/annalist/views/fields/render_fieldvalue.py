@@ -1,5 +1,5 @@
 """
-RenderFieldValue2 class for returning field renderers.  This class works for 
+RenderFieldValue class for returning field renderers.  This class works for 
 fields that can be rendered using supplied renderer objects (which may be 
 compiled templates).
 
@@ -82,7 +82,7 @@ col_label_wrapper_template = (
 #   Renderer factory class
 #   ------------------------------------------------------------
 
-class RenderFieldValue2(object):
+class RenderFieldValue(object):
     """
     Renderer constructor for an entity value field.
   
@@ -122,8 +122,8 @@ class RenderFieldValue2(object):
         edit_file       is the name of a template file that formats a field value
                         in an editable form control
         """
-        # log.info("RenderFieldValue2: viewrender %s, editrender %s"%(viewrender, edit_file))
-        super(RenderFieldValue2, self).__init__()
+        # log.info("RenderFieldValue: viewrender %s, editrender %s"%(viewrender, edit_file))
+        super(RenderFieldValue, self).__init__()
         # Save view renderer
         if view_renderer is not None:
             self._view_renderer  = view_renderer
@@ -132,7 +132,7 @@ class RenderFieldValue2(object):
         elif view_file is not None:
             self._view_renderer  = Template(get_template(view_file))
         else:
-            raise Annalist_Error("RenderFieldValue2: no view renderer or template provided")
+            raise Annalist_Error("RenderFieldValue: no view renderer or template provided")
         # Save edit renderer
         if edit_renderer is not None:
             self._edit_renderer  = edit_renderer
@@ -141,7 +141,7 @@ class RenderFieldValue2(object):
         elif edit_file is not None:
             self._edit_renderer  = Template(get_template(edit_file))
         else:
-            raise Annalist_Error("RenderFieldValue2: no view renderer or template provided")
+            raise Annalist_Error("RenderFieldValue: no view renderer or template provided")
         # Initialize various renderer caches
         self._render_view       = None
         self._render_edit       = None
@@ -157,13 +157,13 @@ class RenderFieldValue2(object):
   
     def __str__(self):
         return (
-            "RenderFieldValue2: view_renderer %s, edit_renderer %s"%
+            "RenderFieldValue: view_renderer %s, edit_renderer %s"%
             (self._view_renderer, self._edit_renderer)
             )
   
     def __repr__(self):
         return (
-            "RenderFieldValue2(view_renderer=%r, edit_renderer=%r)"%
+            "RenderFieldValue(view_renderer=%r, edit_renderer=%r)"%
             (self._view_renderer, self._edit_renderer)
             )
 
