@@ -16,7 +16,7 @@ from django.conf                    import settings
 
 from render_text                    import RenderText
 from render_tokenset                import RenderTokenSet
-from render_fieldvalue              import RenderFieldValue
+from render_fieldvalue2             import RenderFieldValue2
 from render_tokenset                import RenderTokenSet
 import render_tokenset
 from render_repeatgroup             import RenderRepeatGroup
@@ -70,8 +70,8 @@ def get_field_renderer(renderid):
              (renderid in _field_edit_files) ):
             viewfile = _field_view_files.get(renderid, None)
             editfile = _field_edit_files.get(renderid, None)
-            _field_renderers[renderid] = RenderFieldValue(
-                viewfile=viewfile, editfile=editfile
+            _field_renderers[renderid] = RenderFieldValue2(
+                view_file=viewfile, edit_file=editfile
                 )
     return _field_renderers.get(renderid, None)
 

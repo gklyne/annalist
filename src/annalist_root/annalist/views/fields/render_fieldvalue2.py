@@ -104,28 +104,47 @@ class RenderFieldValue2(object):
     (In the case of the `label` renderer, the field description is enough.)
     """
 
-    def __init__(self, viewrenderer=None, editrenderer=None):
+    def __init__(self, 
+        view_renderer=None, edit_renderer=None, 
+        view_template=None, edit_template=None,
+        view_file=None, edit_file=None
+        ):
         """
         Creates a renderer factory for a value field.
 
-        viewrenderer    is a render object that displays a field value,
-                        or a string containing a value display template file name
-        editrenderer    is a render object that displays a field value in a
-                        form control that allows the value to be edited,
-                        or a string containing a value editing template file name
+        view_renderer   is a render object that formats a field value
+        edit_renderer   is a render object that formats a field value in a
+                        form control that allows the value to be edited
+        view_template   is a template string that formats a field value
+        edit_template   is a template string that formats a field value in a
+                        form control that allows the value to be edited
+        view_file       is the name of a template file that formats a field value
+        edit_file       is the name of a template file that formats a field value
+                        in an editable form control
         """
-        # log.info("RenderFieldValue2: viewrender %s, editrender %s"%(viewrender, editfile))
+        # log.info("RenderFieldValue2: viewrender %s, editrender %s"%(viewrender, edit_file))
         super(RenderFieldValue2, self).__init__()
-        # Save value renderers
-        if isinstance(viewrenderer, (str, unicode)):
-            self._viewrenderer  = Template(viewrenderer)
+        # Save view renderer
+        if view_renderer is not None:
+            self._view_renderer  = view_renderer
+        elif view_template is not None:
+            self._view_renderer  = Template(view_template)
+        elif view_file is not None:
+            self._view_renderer  = Template(get_template(view_file))
         else:
-            self._viewrenderer  = viewrenderer
-        if isinstance(editrenderer, (str, unicode)):
-            self._editrenderer  = Template(editrenderer)
+            raise Annalist_Error("RenderFieldValue2: no view renderer or template provided")
+        # Save edit renderer
+        if edit_renderer is not None:
+            self._edit_renderer  = edit_renderer
+        elif edit_template is not None:
+            self._edit_renderer  = Template(edit_template)
+        elif edit_file is not None:
+            self._edit_renderer  = Template(get_template(edit_file))
         else:
-            self._editrenderer  = editrenderer
+            raise Annalist_Error("RenderFieldValue2: no view renderer or template provided")
         # Initialize various renderer caches
+        self._render_view       = None
+        self._render_edit       = None
         self._render_label_view = None
         self._render_label_edit = None
         self._render_col_head   = None
@@ -138,14 +157,14 @@ class RenderFieldValue2(object):
   
     def __str__(self):
         return (
-            "RenderFieldValue2: viewrenderer %s, editrenderer %s"%
-            (self._viewrenderer, self._editrenderer)
+            "RenderFieldValue2: view_renderer %s, edit_renderer %s"%
+            (self._view_renderer, self._edit_renderer)
             )
   
     def __repr__(self):
         return (
-            "RenderFieldValue2(viewrenderer=%r, editrenderer=%r)"%
-            (self._viewrenderer, self._editrenderer)
+            "RenderFieldValue2(view_renderer=%r, edit_renderer=%r)"%
+            (self._view_renderer, self._edit_renderer)
             )
 
     # Helpers
@@ -174,21 +193,29 @@ class RenderFieldValue2(object):
         """
         if not self._render_label_view:
             self._render_label_view = self._get_renderer(label_template, None)
-        log.info("self._render_label_view %r"%self._render_label_view)
+        # log.info("self._render_label_view %r"%self._render_label_view)
         return self._render_label_view
 
     def view(self):
         """
         Returns a renderer object to display just a non-editable field value.
         """
-        log.info("self._viewrenderer %r"%self._viewrenderer)
-        return self._viewrenderer
+        # log.info("self._view_renderer %r"%self._view_renderer)
+        if not self._render_view:
+            self._render_view = self._get_renderer(
+                value_wrapper_template, self._view_renderer
+                )
+        return self._render_view
 
     def edit(self):
         """
         Returns a renderer object to display just an editable field value.
         """
-        return self._editrenderer
+        if not self._render_edit:
+            self._render_edit = self._get_renderer(
+                value_wrapper_template, self._edit_renderer
+                )
+        return self._render_edit
 
     def label_view(self):
         """
@@ -196,7 +223,7 @@ class RenderFieldValue2(object):
         """
         if not self._render_label_view:
             self._render_label_view = self._get_renderer(
-                label_wrapper_template, self._viewrenderer
+                label_wrapper_template, self._view_renderer
                 )
         return self._render_label_view
 
@@ -206,7 +233,7 @@ class RenderFieldValue2(object):
         """
         if not self._render_label_edit:
             self._render_label_edit = self._get_renderer(
-                label_wrapper_template, self._editrenderer
+                label_wrapper_template, self._edit_renderer
                 )
         return self._render_label_edit
 
@@ -226,7 +253,7 @@ class RenderFieldValue2(object):
         """
         if not self._render_col_view:
             self._render_col_view = self._get_renderer(
-                col_label_wrapper_template, self._viewrenderer
+                col_label_wrapper_template, self._view_renderer
                 )
         return self._render_col_view
 
@@ -237,7 +264,7 @@ class RenderFieldValue2(object):
         """
         if not self._render_col_edit:
             self._render_col_edit = self._get_renderer(
-                col_label_wrapper_template, self._editrenderer
+                col_label_wrapper_template, self._edit_renderer
                 )
         return self._render_col_edit
 
@@ -245,11 +272,11 @@ class RenderFieldValue2(object):
 # Helper function for caller to get template content.
 # This uses the configured Django templatre loader.
 
-def get_template(templatefile, failmsg):
+def get_template(templatefile, failmsg="no template filename supplied"):
     """
     Retrieve template source from the supplied filename
     """
-    assert templatefile, "%s: no template filename"%failmsg
+    assert templatefile, "get_template: %s"%failmsg
     # Instantiate a template loader
     loader = Loader()
     # Source: actual source code read from template file

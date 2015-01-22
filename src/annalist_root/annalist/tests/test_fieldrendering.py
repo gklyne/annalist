@@ -311,10 +311,92 @@ class FieldDescriptionTest(AnnalistTestCase):
             self.assertIn(e, rendered_text)
         return
 
+    def _check_value_renderer_results(self,
+        fieldrender, expect_rendered_view="...", expect_rendered_edit="..."
+        ):
+        rendered_label      = fieldrender.label().render(intvalue_context)
+        self.assertEqual(
+            rendered_label, 
+            '''<div class="view-label small-12 columns">  <p>test label</p></div>'''
+            )
+        rendered_view       = fieldrender.view().render(intvalue_context)
+        self.assertEqual(
+            rendered_view, 
+            '''<div class="small-12 columns">  %s</div>'''%expect_rendered_view
+            )
+        rendered_edit       = fieldrender.edit().render(intvalue_context)
+        self.assertEqual(
+            rendered_edit, 
+            '''<div class="small-12 columns">  %s</div>'''%expect_rendered_edit
+            )
+        rendered_label_view = fieldrender.label_view().render(intvalue_context)
+        self.assertEqual(
+            rendered_label_view, 
+            '''<div class="view-label small-12 columns">  '''+
+            '''<p>test label</p>'''+
+            '''</div>'''
+            )
+        rendered_label_edit = fieldrender.label_edit().render(intvalue_context)
+        self.assertEqual(
+            rendered_label_edit, 
+            '''<div class="small-12 columns">\n'''+
+            '''  <div class="row">\n'''+
+            '''    <div class="view-label small-12 medium-2 columns">\n'''+
+            '''      <p>test label</p>\n'''+
+            '''    </div>\n'''+
+            '''    <div class="small-12 medium-10 columns">\n'''+
+            '''      %s\n'''%expect_rendered_edit+
+            '''    </div>\n'''+
+            '''  </div>\n'''+
+            '''</div>'''
+            )
+        rendered_col_head   = fieldrender.col_head().render(intvalue_context)
+        self.assertEqual(
+            rendered_col_head, 
+            '''<div class="view-label small-12 columns">  '''+
+            '''<p>test label</p></div>'''
+            )
+        rendered_col_view   = fieldrender.col_view().render(intvalue_context)
+        self.assertEqual(
+            rendered_col_view, 
+            '''<div class="small-12 columns">\n'''+
+            '''  <div class="row show-for-small-only">\n'''+
+            '''    <div class="view-label small-12 columns">\n'''+
+            '''      <p>test label</p>\n'''+
+            '''    </div>\n'''+
+            '''  </div>\n'''+
+            '''  <div class="row">\n'''+
+            '''    <div class="small-12 columns">\n'''+
+            '''      %s\n'''%expect_rendered_view+
+            '''    </div>\n'''+
+            '''  </div>\n'''+
+            '''</div>'''
+            )
+        rendered_col_edit   = fieldrender.col_edit().render(intvalue_context)
+        self.assertEqual(
+            rendered_col_edit, 
+            '''<div class="small-12 columns">\n'''+
+            '''  <div class="row show-for-small-only">\n'''+
+            '''    <div class="view-label small-12 columns">\n'''+
+            '''      <p>test label</p>\n'''+
+            '''    </div>\n'''+
+            '''  </div>\n'''+
+            '''  <div class="row">\n'''+
+            '''    <div class="small-12 columns">\n'''+
+            '''      %s\n'''%expect_rendered_edit+
+            '''    </div>\n'''+
+            '''  </div>\n'''+
+            '''</div>'''
+            )
+        return
+
+
     def test_RenderFieldValue2_renderers(self):
+
         class render_int_view(object):
             def render(self, context):
                 return str(context['field']['field_value'])
+
         class render_int_edit(object):
             def render(self, context):
                 return (
@@ -328,88 +410,20 @@ class FieldDescriptionTest(AnnalistTestCase):
                     , 'repeat_prefix':      context['repeat']['repeat_prefix']
                     })
 
-        fieldrender = RenderFieldValue2(render_int_view(), render_int_edit())
-        rendered_label      = fieldrender.label().render(intvalue_context)
-        self.assertEqual(
-            rendered_label, 
-            '''<div class="view-label small-12 columns">  <p>test label</p></div>'''
+        fieldrender = RenderFieldValue2(
+            view_renderer=render_int_view(), 
+            edit_renderer=render_int_edit()
             )
-        rendered_view       = fieldrender.view().render(intvalue_context)
-        self.assertEqual(
-            rendered_view, 
-            "42"
-            )
-        rendered_edit       = fieldrender.edit().render(intvalue_context)
-        self.assertEqual(
-            rendered_edit, 
-            '''<input type="text" size="64" name="prefix_test_field" '''+
-            '''placeholder="(test placeholder)" value="42"/>'''
-            )
-        rendered_label_view = fieldrender.label_view().render(intvalue_context)
-        self.assertEqual(
-            rendered_label_view, 
-            '''<div class="view-label small-12 columns">  '''+
-            '''<p>test label</p>'''+
-            '''</div>'''
-            )
-        rendered_label_edit = fieldrender.label_edit().render(intvalue_context)
-        self.assertEqual(
-            rendered_label_edit, 
-            '''<div class="small-12 columns">\n'''+
-            '''  <div class="row">\n'''+
-            '''    <div class="view-label small-12 medium-2 columns">\n'''+
-            '''      <p>test label</p>\n'''+
-            '''    </div>\n'''+
-            '''    <div class="small-12 medium-10 columns">\n'''+
-            '''      <input type="text" size="64" name="prefix_test_field" '''+
-                         '''placeholder="(test placeholder)" value="42"/>\n'''+
-            '''    </div>\n'''+
-            '''  </div>\n'''+
-            '''</div>'''
-            )
-        rendered_col_head   = fieldrender.col_head().render(intvalue_context)
-        self.assertEqual(
-            rendered_col_head, 
-            '''<div class="view-label small-12 columns">  '''+
-            '''<p>test label</p></div>'''
-            )
-        rendered_col_view   = fieldrender.col_view().render(intvalue_context)
-        self.assertEqual(
-            rendered_col_view, 
-            '''<div class="small-12 columns">\n'''+
-            '''  <div class="row show-for-small-only">\n'''+
-            '''    <div class="view-label small-12 columns">\n'''+
-            '''      <p>test label</p>\n'''+
-            '''    </div>\n'''+
-            '''  </div>\n'''+
-            '''  <div class="row">\n'''+
-            '''    <div class="small-12 columns">\n'''+
-            '''      42\n'''
-            '''    </div>\n'''+
-            '''  </div>\n'''+
-            '''</div>'''
-            )
-        rendered_col_edit   = fieldrender.col_edit().render(intvalue_context)
-        self.assertEqual(
-            rendered_col_edit, 
-            '''<div class="small-12 columns">\n'''+
-            '''  <div class="row show-for-small-only">\n'''+
-            '''    <div class="view-label small-12 columns">\n'''+
-            '''      <p>test label</p>\n'''+
-            '''    </div>\n'''+
-            '''  </div>\n'''+
-            '''  <div class="row">\n'''+
-            '''    <div class="small-12 columns">\n'''+
-            '''      <input type="text" size="64" name="prefix_test_field" '''+
-                         '''placeholder="(test placeholder)" value="42"/>\n'''+
-            '''    </div>\n'''+
-            '''  </div>\n'''+
-            '''</div>'''
+        self._check_value_renderer_results(
+            fieldrender,
+            expect_rendered_view="42",
+            expect_rendered_edit=
+                '''<input type="text" size="64" name="prefix_test_field" '''+
+                '''placeholder="(test placeholder)" value="42"/>'''           
             )
         return
 
     def test_RenderFieldValue2_templates(self):
-
         view_template = get_template(
             "field/annalist_view_text.html",  
             "Can't load view template"
@@ -418,85 +432,38 @@ class FieldDescriptionTest(AnnalistTestCase):
             "field/annalist_edit_text.html",
             "Can't load edit template"
             )
-        fieldrender = RenderFieldValue2(view_template, edit_template)
+        fieldrender = RenderFieldValue2(
+            view_template=view_template, 
+            edit_template=edit_template
+            )
+        self._check_value_renderer_results(
+            fieldrender,
+            expect_rendered_view=
+                '''<!-- field/annalist_view_text.html -->\n42''',
+            expect_rendered_edit=
+                '''<!-- field/annalist_edit_text.html -->\n'''+
+                '''<!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->\n'''+
+                '''<input type="text" size="64" name="test_field" \n'''+
+                '''       placeholder="(test placeholder)"\n'''+
+                '''       value="42"/>'''
+            )
+        return
 
-        rendered_label      = fieldrender.label().render(intvalue_context)
-        self.assertEqual(
-            rendered_label, 
-            '''<div class="view-label small-12 columns">  <p>test label</p></div>'''
+    def test_RenderFieldValue2_files(self):
+        fieldrender = RenderFieldValue2(
+            view_file="field/annalist_view_text.html", 
+            edit_file="field/annalist_edit_text.html"
             )
-        rendered_view       = fieldrender.view().render(intvalue_context)
-        self.assertEqual(
-            rendered_view, 
-            '''<!-- field/annalist_view_text.html -->\n42'''
-            )
-        rendered_edit       = fieldrender.edit().render(intvalue_context)
-        self.assertEqual(
-            rendered_edit,
-            '''<!-- field/annalist_edit_text.html -->\n'''+
-            '''<!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->\n'''+
-            '''<input type="text" size="64" name="test_field" \n'''+
-            '''       placeholder="(test placeholder)"\n'''+
-            '''       value="42"/>'''
-            )
-        rendered_label_view = fieldrender.label_view().render(intvalue_context)
-        self.assertEqual(
-            rendered_label_view, 
-            '''<div class="view-label small-12 columns">  '''+
-            '''<p>test label</p>'''+
-            '''</div>'''
-            )
-        rendered_label_edit = fieldrender.label_edit().render(intvalue_context)
-        self.assertEqual(
-            rendered_label_edit, 
-            '''<div class="small-12 columns">\n'''+
-            '''  <div class="row">\n'''+
-            '''    <div class="view-label small-12 medium-2 columns">\n'''+
-            '''      <p>test label</p>\n'''+
-            '''    </div>\n'''+
-            '''    <div class="small-12 medium-10 columns">\n'''+
-            '''      %s\n'''%rendered_edit+
-            '''    </div>\n'''+
-            '''  </div>\n'''+
-            '''</div>'''
-            )
-        rendered_col_head   = fieldrender.col_head().render(intvalue_context)
-        self.assertEqual(
-            rendered_col_head, 
-            '''<div class="view-label small-12 columns">  '''+
-            '''<p>test label</p></div>'''
-            )
-        rendered_col_view   = fieldrender.col_view().render(intvalue_context)
-        self.assertEqual(
-            rendered_col_view, 
-            '''<div class="small-12 columns">\n'''+
-            '''  <div class="row show-for-small-only">\n'''+
-            '''    <div class="view-label small-12 columns">\n'''+
-            '''      <p>test label</p>\n'''+
-            '''    </div>\n'''+
-            '''  </div>\n'''+
-            '''  <div class="row">\n'''+
-            '''    <div class="small-12 columns">\n'''+
-            '''      %s\n'''%rendered_view+
-            '''    </div>\n'''+
-            '''  </div>\n'''+
-            '''</div>'''
-            )
-        rendered_col_edit   = fieldrender.col_edit().render(intvalue_context)
-        self.assertEqual(
-            rendered_col_edit, 
-            '''<div class="small-12 columns">\n'''+
-            '''  <div class="row show-for-small-only">\n'''+
-            '''    <div class="view-label small-12 columns">\n'''+
-            '''      <p>test label</p>\n'''+
-            '''    </div>\n'''+
-            '''  </div>\n'''+
-            '''  <div class="row">\n'''+
-            '''    <div class="small-12 columns">\n'''+
-            '''      %s\n'''%rendered_edit+
-            '''    </div>\n'''+
-            '''  </div>\n'''+
-            '''</div>'''
+        self._check_value_renderer_results(
+            fieldrender,
+            expect_rendered_view=
+                '''<!-- field/annalist_view_text.html -->\n42''',
+            expect_rendered_edit=
+                '''<!-- field/annalist_edit_text.html -->\n'''+
+                '''<!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->\n'''+
+                '''<input type="text" size="64" name="test_field" \n'''+
+                '''       placeholder="(test placeholder)"\n'''+
+                '''       value="42"/>'''
             )
         return
 

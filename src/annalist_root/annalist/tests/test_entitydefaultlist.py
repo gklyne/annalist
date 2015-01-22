@@ -247,6 +247,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Collection testcoll</title>")
         self.assertContains(r, "<h3>List entities</h3>", html=True)
         cont = uri_params({"continuation_url": u})
+        # log.info(r.content)
         rowdata = """
             <div class="trow row select-row">
               <div class="small-1 columns">
@@ -264,7 +265,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
             </div>
             """%({'base': TestBasePath, 'cont': cont})
         self.assertContains(r, rowdata, html=True)
-        # log.info(r.content)
         # Test context
         # self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['title'],            "Collection testcoll")
