@@ -51,7 +51,7 @@ def am_createsite(annroot, userhome, options):
     if len(options.args) > 0:
         print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
-    status = am_errors.AM_SUCCESS
+    status       = am_errors.AM_SUCCESS
     emptysitedir = os.path.join(annroot, "sampledata/empty/annalist_site")
     with SuppressLogging(logging.INFO):
         sitesettings = importlib.import_module(settings.modulename)

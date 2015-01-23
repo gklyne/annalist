@@ -88,6 +88,7 @@ setup(
             , 'sampledata/init/annalist_site/c/*/d/*/*/*.jsonld'
             , 'sampledata/empty/annalist_site/README.md'
             , 'sampledata/empty/annalist_site/_annalist_site/*.jsonld'
+            , 'sampledata/empty/annalist_site/c/README.md'
             ]
         , 'annalist_root.annalist':
             [ 'templates/*.html'
