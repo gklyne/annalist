@@ -12,15 +12,20 @@ log = logging.getLogger(__name__)
 import re
 from collections    import OrderedDict, namedtuple
 
-from annalist.views.fields.render_fieldvalue    import RenderFieldValue
+from annalist.views.fields.render_fieldvalue    import (
+    RenderFieldValue,
+    get_context_value, get_context_repeat_value, get_context_field_value,
+    get_field_value
+    )
 
 #   ----------------------------------------------------------------------------
 #
-#   Field placement field renderer
+#   Field placement render support functions
 #
 #   ----------------------------------------------------------------------------
 
-# Enumerated placem,ent options.
+# Enumerated placement options.
+#
 # '.' and '#' here are placeholders for symbols that will be used to show
 # that a grid column is unoccupied or occupied respectively by the field.
 placement_occupancy = OrderedDict(
@@ -84,17 +89,11 @@ def placement_option(placement, placeholder, placement_selected="False"):
         (placement, selected, body_text)
         )
 
-def get_context_value(context, key, default):
-    if key in context:
-        return context[key]
-    return default
-
-def get_context_field_value(context, key, default):
-    field = get_context_value(context, 'field', {})
-    return get_context_value(field, key, default)
-
-def get_field_value(context, default):
-    return get_context_field_value(context, 'field_value', default)
+#   ----------------------------------------------------------------------------
+#
+#   Field placement field renderers
+#
+#   ----------------------------------------------------------------------------
 
 class placement_view_renderer(object):
 

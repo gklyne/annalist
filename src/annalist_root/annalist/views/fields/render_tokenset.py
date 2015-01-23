@@ -11,86 +11,81 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-from django.http        import HttpResponse
-from django.template    import Template, Context
-
-edit = ("""
-    <!-- views.fields.render_tokenset.edit -->
-    <div class="{{field.field_placement.field}}">
-      <div class="row">
-        <div class="view-label {{field.field_placement.label}}">
-          <p>{{field.field_label}}</p>
-        </div>
-        <div class="{{field.field_placement.value}}">
-          <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
-          <input type="text" size="64" name="{{repeat.repeat_prefix}}{{field.field_name}}" 
-               placeholder="{{field.field_placeholder}}"
-               value="{{field.field_value_encoded}}"/>
-        </div>
-      </div>
-    </div>
-    """)
-
-view = ("""
-    <!-- views.fields.render_tokenset.view -->
-    <div class="{{field.field_placement.field}}">
-        <div class="row">
-            <div class="view-label {{field.field_placement.label}}">
-                <p>{{field.field_label}}</p>
-            </div>
-            <div class="{{field.field_placement.value}}">
-                <p>{{field.field_value_encoded}}</p>
-            </div>
-        </div>
-    </div>
-    """)
-
-item = (
-    """<div class="view-label {{field.field_placement.field}}">"""+
-    """  {{ field.field_value_encoded|default:"&nbsp;" }}"""+
-    """</div>"""
+from annalist.views.fields.render_fieldvalue    import (
+    RenderFieldValue,
+    get_context_value, get_context_repeat_value, get_context_field_value,
+    get_field_value
     )
 
-class RenderTokenSet(object):
-  """
-  Render class for token list field
-  """
+from django.template    import Template, Context
 
-  def __init__(self, template=None):
-    # Later, may introduce a template_file= option to read from templates directory
-    """
-    Creates a renderer object for a string of space-separated values
-    """
-    super(RenderTokenSet, self).__init__()
-    assert template is not None, "RenderTokenSet template must be supplied (.edit, .view or .item)"
-    self._template = Template(template)
-    return
+#   ----------------------------------------------------------------------------
+#
+#   Token set render support functions
+#
+#   ----------------------------------------------------------------------------
 
-  def __str__(self):
-    return "RenderTokenSet" # %self.render(Context({}))
 
-  def render(self, context):
+class TokenSetValueMapper(object):
     """
-    Renders a token list field
+    Value mapper class for token list
     """
-    responsebody = self._template.render(context)
-    # log.info("RenderTokenSet.render: %s"%responsebody)
-    return responsebody
 
-  def encode(self, field_value):
-    """
-    Encodes a token list as a string of space-separated values
-    """
-    if isinstance(field_value, (list,tuple)):
-      return " ".join(field_value)
-    log.warning("encode tokenlist: supplied value is not a list or tuple")
-    return str(field_value)
+    @staticmethod
+    def encode(field_value):
+        """
+        Encodes a token list as a string of space-separated values
+        """
+        if isinstance(field_value, (list,tuple)):
+            return " ".join(field_value)
+        log.warning("TokenSetValueMapper.encode tokenset: supplied value is not a list or tuple")
+        return str(field_value)
 
-  def decode(self, field_value):
-    """
-    Decodes a string of space-separated tokens as a list of tokens
-    """
-    return field_value.split()
+    @staticmethod
+    def decode(field_value):
+        """
+        Decodes a string of space-separated tokens as a list of tokens
+        """
+        return field_value.split()
 
+#   ----------------------------------------------------------------------------
+#
+#   Token set field renderers
+#
+#   ----------------------------------------------------------------------------
+
+class tokenset_view_renderer(object):
+    def render(self, context):
+        """
+        Render token list for viewing.
+        """
+        tokenset = get_field_value(context, None)
+        return TokenSetValueMapper.encode(tokenset) if tokenset else "&nbsp;"
+
+class tokenset_edit_renderer(object):
+
+    def __init__(self):
+        self._template = Template(
+            '''<input type="text" size="64" name="{{repeat.repeat_prefix}}{{field.field_name}}" '''+
+                '''placeholder="{{field.field_placeholder}}" '''+
+                '''value="{{encoded_field_value}}"/>'''
+            )
+
+    def render(self, context):
+        """
+        Render token list for editing
+        """
+        tokenset = get_field_value(context, None)
+        with context.push(encoded_field_value=TokenSetValueMapper.encode(tokenset)):
+            return self._template.render(context)
+
+def get_field_tokenset_renderer():
+    """
+    Return field renderer object for token list values
+    """
+    return RenderFieldValue(
+        view_renderer=tokenset_view_renderer(), 
+        edit_renderer=tokenset_edit_renderer(),
+        )
 
 # End.

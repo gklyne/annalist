@@ -23,6 +23,8 @@ log = logging.getLogger(__name__)
 from django.http        import HttpResponse
 from django.template    import Template, Context
 
+import django
+django.setup()  # Needed for template loader
 from django.template.loaders.app_directories    import Loader
  
 #   ------------------------------------------------------------
@@ -284,6 +286,23 @@ def get_template(templatefile, failmsg="no template filename supplied"):
     source, file_path = loader.load_template_source(templatefile)
     return source
 
+# Helper functions for accessing values from context
+
+def get_context_value(context, key, default):
+    if key in context:
+        return context[key]
+    return default
+
+def get_context_repeat_value(context, key, default):
+    repeat = get_context_value(context, 'repeat', {})
+    return get_context_value(repeat, key, default)
+
+def get_context_field_value(context, key, default):
+    field = get_context_value(context, 'field', {})
+    return get_context_value(field, key, default)
+
+def get_field_value(context, default):
+    return get_context_field_value(context, 'field_value', default)
 
 # End.
 #........1.........2.........3.........4.........5.........6.........7.........8

@@ -60,7 +60,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [x] Where possible, replace direct access to field name and property URI to use new access methods.  (bound_field still uses direct indexing because test code uses faked FieldDescription structure.)
 - [x] RepeatGroup renderer - use placeholder beside label as way to explain content?
 - [x] Implement renderer for field placement field
-- [ ] Revise tokenset renderer to follow field placement pattern; get rid of encode/decode methods?
+- [x] Revise tokenset renderer to follow field placement pattern; get rid of encode/decode methods?
+- [ ] Rationalize storage of repeat_prefix in context: top level or under 'repeat'?
 - [ ] Review options for creating user accounts in development software version (currently have 'admin'/admin@localhost in sitedata as holding option).  Put something explicit in makedevelsite.sh? Document site 'admin' user and development setup?
 - [x] Remove `/annalist_root/sampledata/data/` from distribution kit data so that test suite can run in Docker container.  (Otherwise, can't rename old data directory due to "Invalid cross-device link" error)
 - [ ] `annalist-manager` help to provide list of permission tokens

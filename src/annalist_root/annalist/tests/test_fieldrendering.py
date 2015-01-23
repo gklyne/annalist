@@ -31,8 +31,8 @@ from annalist.views.fielddescription    import FieldDescription, field_descripti
 
 from annalist.views.fields.render_text          import RenderText
 from annalist.views.fields.render_placement     import Placement, get_placement_classes
-from annalist.views.fields                      import render_tokenset
-from annalist.views.fields.render_tokenset      import RenderTokenSet
+# from annalist.views.fields                      import render_tokenset
+from annalist.views.fields.render_tokenset      import get_field_tokenset_renderer, TokenSetValueMapper
 from annalist.views.fields.render_placement     import get_field_placement_renderer
 from annalist.views.fields                      import render_repeatgroup
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
@@ -52,24 +52,24 @@ from entity_testentitydata  import entity_url
 
 tokenset_context = Context(
     { 'field':
-      { 'field_placement':        get_placement_classes("small:0,12")
-      , 'field_name':             "test_field"
-      , 'field_label':            "test label"
-      , 'field_placeholder':      "(test placeholder)"
-      , 'field_value_encoded':    "aa bb cc"
+      { 'field_placement':      get_placement_classes("small:0,12")
+      , 'field_name':           "test_field"
+      , 'field_label':          "test label"
+      , 'field_placeholder':    "(test placeholder)"
+      , 'field_value':          ["aa", "bb", "cc"]
       }
     , 'repeat':
-      { 'repeat_prefix': "prefix_"
+      { 'repeat_prefix':        "prefix_"
       }
     })
 
 intvalue_context = Context(
     { 'field':
-      { 'field_placement':        get_placement_classes("small:0,12")
-      , 'field_name':             "test_field"
-      , 'field_label':            "test label"
-      , 'field_placeholder':      "(test placeholder)"
-      , 'field_value':            42
+      { 'field_placement':      get_placement_classes("small:0,12")
+      , 'field_name':           "test_field"
+      , 'field_label':          "test label"
+      , 'field_placeholder':    "(test placeholder)"
+      , 'field_value':          42
       }
     , 'repeat':
       { 'repeat_prefix': "prefix_"
@@ -78,11 +78,11 @@ intvalue_context = Context(
 
 placement_context = Context(
     { 'field':
-      { 'field_placement':        get_placement_classes("small:0,12")
-      , 'field_name':             "test_field"
-      , 'field_label':            "test label"
-      , 'field_placeholder':      "(test placeholder)"
-      , 'field_value':            "small:0,12;medium:4,4"
+      { 'field_placement':      get_placement_classes("small:0,12")
+      , 'field_name':           "test_field"
+      , 'field_label':          "test label"
+      , 'field_placeholder':    "(test placeholder)"
+      , 'field_value':          "small:0,12;medium:4,4"
       }
     , 'repeat':
       { 'repeat_prefix': "prefix_"
@@ -167,15 +167,15 @@ class FieldDescriptionTest(AnnalistTestCase):
 
     # Tests
 
-    def test_RenderTokenSetTest(self):
+    def test_TokenSetValueMapperTest(self):
         self.assertEqual(
-            RenderTokenSet.__name__, "RenderTokenSet", 
-            "Check RenderTokenSet class name"
+            TokenSetValueMapper.__name__, "TokenSetValueMapper", 
+            "Check TokenSetValueMapper class name"
             )
         return
 
-    def test_RenderTokenSetEncode(self):
-        fieldrender = RenderTokenSet(render_tokenset.edit)
+    def test_TokenSetValueMapperEncode(self):
+        fieldrender = TokenSetValueMapper()
         self.assertEqual(fieldrender.encode(["aa"]), "aa")
         self.assertEqual(fieldrender.encode(["aa", "bb", "cc" ]), "aa bb cc")
         # Rendering non-list generates warning
@@ -183,14 +183,14 @@ class FieldDescriptionTest(AnnalistTestCase):
             self.assertEqual(fieldrender.encode("aa"), "aa")
         return
 
-    def test_RenderTokenSetDecode(self):
-        fieldrender = RenderTokenSet(render_tokenset.edit)
+    def test_TokenSetValueMapperDecode(self):
+        fieldrender = TokenSetValueMapper()
         self.assertEqual(fieldrender.decode("aa"), ["aa"])
         self.assertEqual(fieldrender.decode("aa bb cc"), ["aa", "bb", "cc"])
         return
 
-    def test_RenderTokenSetEdit(self):
-        fieldrender = RenderTokenSet(render_tokenset.edit)
+    def test_TokenSetRender_Edit(self):
+        fieldrender   = get_field_tokenset_renderer().label_edit()
         rendered_text = fieldrender.render(tokenset_context)
         # replace runs of whitespace/newlines with single space:
         rendered_text = re.sub(r'\s+', " ", rendered_text)
@@ -206,8 +206,8 @@ class FieldDescriptionTest(AnnalistTestCase):
             self.assertIn(e, rendered_text)
         return
 
-    def test_RenderTokenSetView(self):
-        fieldrender = RenderTokenSet(render_tokenset.view)
+    def test_TokenSetRender_View(self):
+        fieldrender   = get_field_tokenset_renderer().label_view()
         rendered_text = fieldrender.render(tokenset_context)
         # replace runs of whitespace/newlines with single space:
         rendered_text = re.sub(r'\s+', " ", rendered_text)
@@ -215,20 +215,23 @@ class FieldDescriptionTest(AnnalistTestCase):
             [ '''<div class="small-12 columns">'''
             , '''<div class="row">'''
             , '''<div class="view-label small-12 medium-2 columns"> <p>test label</p> </div>'''
-            , '''<div class="small-12 medium-10 columns"> <p>aa bb cc</p> </div>'''
+            , '''<div class="small-12 medium-10 columns"> aa bb cc </div>'''
             ])
         for e in expect_elements:
             self.assertIn(e, rendered_text)
         return
 
-    def test_RenderTokenSetItem(self):
-        fieldrender = RenderTokenSet(render_tokenset.item)
+    def test_TokenSetRender_Item(self):
+        fieldrender   = get_field_tokenset_renderer().col_view()
         rendered_text = fieldrender.render(tokenset_context)
         # replace runs of whitespace/newlines with single space:
         rendered_text = re.sub(r'\s+', " ", rendered_text)
         expect_elements = (
             [ '''<div class="view-label small-12 columns">'''+
-              ''' aa bb cc'''+
+              ''' <p>test label</p> '''+
+              '''</div>'''
+            , '''<div class="small-12 columns">'''+
+              ''' aa bb cc '''+
               '''</div>'''
             ])
         for e in expect_elements:
@@ -270,9 +273,6 @@ class FieldDescriptionTest(AnnalistTestCase):
             , '''<input type="text" size="64" name="View_fields__0__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value=""/>'''
-            # , '''<input type="text" size="64" name="View_fields__0__Field_placement"'''+
-            #   ''' placeholder="(field display size and placement details)"'''+
-            #   ''' value="small:0,12;medium:0,6"/>'''
             # 2nd field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="1" class="right" />'''
@@ -285,9 +285,6 @@ class FieldDescriptionTest(AnnalistTestCase):
             , '''<input type="text" size="64" name="View_fields__1__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value=""/>'''
-            # , '''<input type="text" size="64" name="View_fields__1__Field_placement"'''+
-            #   ''' placeholder="(field display size and placement details)"'''+
-            #   ''' value="small:0,12;medium:6,6"/>'''
             # 3rd field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="2" class="right" />'''
@@ -300,9 +297,6 @@ class FieldDescriptionTest(AnnalistTestCase):
             , '''<input type="text" size="64" name="View_fields__2__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value="rdfs:label"/>'''
-            # , '''<input type="text" size="64" name="View_fields__2__Field_placement"'''+
-            #   ''' placeholder="(field display size and placement details)"'''+
-            #   ''' value="small:0,12"/>'''
             # 4th field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="3" class="right" />'''
@@ -315,9 +309,6 @@ class FieldDescriptionTest(AnnalistTestCase):
             , '''<input type="text" size="64" name="View_fields__3__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value="rdfs:comment"/>'''
-            # , '''<input type="text" size="64" name="View_fields__3__Field_placement"'''+
-            #   ''' placeholder="(field display size and placement details)"'''+
-            #   ''' value="small:0,12"/>'''
             # Buttons
             , '''<input type="submit" name="View_fields__remove" value="Remove selected field(s)" />'''
             , '''<input type="submit" name="View_fields__add" value="Add field" />'''
@@ -546,8 +537,8 @@ class FieldDescriptionTest(AnnalistTestCase):
 # End.
 
 if __name__ == "__main__":
-    import django
-    django.setup()  # Needed for template loader
+    # import django
+    # django.setup()  # Needed for template loader
     # Runtests in this module
     # runner = unittest.TextTestRunner(verbosity=2)
     # tests = unittest.TestSuite()

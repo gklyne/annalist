@@ -133,18 +133,20 @@ class bound_field(object):
             return self.entity_type_link+self.get_continuation_param()
         elif name == "field_value":
             field_val = None
-            if self._key == ANNAL.CURIE.type:
-                # @@TODO: remove annal:Type hack when proper selection from enumerated 
-                #         entities has been implemented.
-                #
-                # The handling of annal:Type is something of a hack to return the internal
-                # type-id for an entity rather than its type URI/CURIE, which is used in 
-                # turn by the form renderer to determine the type_id selection on the 
-                # rendered form.  This hack may be rendered unnecessary when the 
-                # entity reference selection is properly generalized.
-                #
-                field_val = self.entity_type_id
-            elif self._key in self._entityvals:
+            #@@
+            # if self._key == ANNAL.CURIE.type:
+            #     # @@TODO: remove annal:Type hack when proper selection from enumerated 
+            #     #         entities has been implemented.
+            #     #
+            #     # The handling of annal:Type is something of a hack to return the internal
+            #     # type-id for an entity rather than its type URI/CURIE, which is used in 
+            #     # turn by the form renderer to determine the type_id selection on the 
+            #     # rendered form.  This hack may be rendered unnecessary when the 
+            #     # entity reference selection is properly generalized.
+            #     #
+            #     field_val = self.entity_type_id
+            #@@
+            if self._key in self._entityvals:
                 field_val = self._entityvals[self._key]
             elif self._extras and self._key in self._extras:
                 field_val = self._extras[self._key]
@@ -155,13 +157,15 @@ class bound_field(object):
                 if field_val is None:
                     field_val = ""
             return field_val
-        elif name == "field_value_encoded":
-            # Used to present non-text value as text for display
-            try:
-                return self._field_description['field_value_mapper'].encode(self.field_value)
-            except Exception as e:
-                log.warning("Get 'field_value_encoded' failed: %r: value: %s"%(e, self.field_value))
-            return self.field_value
+        #@@
+        # elif name == "field_value_encoded":
+        #     # Used to present non-text value as text for display
+        #     try:
+        #         return self._field_description['field_value_mapper'].encode(self.field_value)
+        #     except Exception as e:
+        #         log.warning("Get 'field_value_encoded' failed: %r: value: %s"%(e, self.field_value))
+        #     return self.field_value
+        #@@
         elif name == "field_value_link":
             # Used to get link corresponding to a value, if such exists
             return self.get_field_link()
@@ -256,7 +260,8 @@ class bound_field(object):
             "<li>key: %s</li>"%(self._key,)+
             "<li>val: %s</li>"%(self.field_value,)+
             "<li>field_description: %r</li>"%(self._field_description,)+
-            "</ul>")
+            "</ul>"
+            )
 
 def get_entity_values(displayinfo, entity, entity_id=None):
     """

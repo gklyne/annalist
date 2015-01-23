@@ -15,11 +15,9 @@ from collections                    import OrderedDict, namedtuple
 from django.conf                    import settings
 
 from render_text                    import RenderText
-from render_tokenset                import RenderTokenSet
 from render_fieldvalue              import RenderFieldValue
 from render_placement               import get_field_placement_renderer
-from render_tokenset                import RenderTokenSet
-import render_tokenset
+from render_tokenset                import get_field_tokenset_renderer, TokenSetValueMapper
 from render_repeatgroup             import RenderRepeatGroup
 import render_repeatgroup
 
@@ -29,7 +27,6 @@ _field_view_files = (
     { "Text":           "field/annalist_view_text.html"
     , "Textarea":       "field/annalist_view_textarea.html"
     , "Slug":           "field/annalist_view_slug.html"
-    # , "Placement":      "field/annalist_view_text.html"
     , "EntityId":       "field/annalist_view_entityid.html"
     , "EntityTypeId":   "field/annalist_view_select.html"
     , "Identifier":     "field/annalist_view_identifier.html"
@@ -48,7 +45,6 @@ _field_edit_files = (
     { "Text":           "field/annalist_edit_text.html"
     , "Textarea":       "field/annalist_edit_textarea.html"
     , "Slug":           "field/annalist_edit_slug.html"
-    # , "Placement":      "field/annalist_edit_text.html"
     , "EntityId":       "field/annalist_edit_entityid.html"
     , "EntityTypeId":   "field/annalist_edit_select.html"
     , "Identifier":     "field/annalist_edit_identifier.html"
@@ -63,8 +59,14 @@ _field_edit_files = (
     , "List_sel":       "field/annalist_edit_choice.html"
     })
 
+_field_get_renderer_functions = (
+    { "Placement":      get_field_placement_renderer
+    , "TokenSet":       get_field_tokenset_renderer
+    })
+
 def get_field_renderer(renderid):
     if renderid not in _field_renderers:
+        # Create and cache renderer
         if ( (renderid in _field_view_files) or
              (renderid in _field_edit_files) ):
             viewfile = _field_view_files.get(renderid, None)
@@ -72,6 +74,8 @@ def get_field_renderer(renderid):
             _field_renderers[renderid] = RenderFieldValue(
                 view_file=viewfile, edit_file=editfile
                 )
+        elif renderid in _field_get_renderer_functions:
+            _field_renderers[renderid] = _field_get_renderer_functions[renderid]()
     return _field_renderers.get(renderid, None)
 
 def get_edit_renderer(renderid):
@@ -87,16 +91,8 @@ def get_edit_renderer(renderid):
         a context. This allows you to reference a compiled Template in your context.
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
-    if renderid == "TokenSet":
-        # return "field/annalist_edit_tokenlist.html"
-        return RenderTokenSet(render_tokenset.edit)
-    if renderid == "Placement":
-        return get_field_placement_renderer().label_edit()
     if renderid == "RepeatGroup":
         return RenderRepeatGroup(render_repeatgroup.edit_group)
-    # @@TODO: not currently used
-    # if renderid == "RepeatListRow":
-    #     return RenderRepeatGroup(render_repeatgroup.edit_listrow)
     if renderid == "RepeatGroupRow":
         return RenderRepeatGroup(render_repeatgroup.edit_grouprow)
     renderer = get_field_renderer(renderid)
@@ -121,19 +117,13 @@ def get_view_renderer(renderid):
         a context. This allows you to reference a compiled Template in your context.
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
-    if renderid == "TokenSet":
-        # return "field/annalist_view_tokenlist.html"
-        return RenderTokenSet(render_tokenset.view)
     if renderid == "RepeatGroup":
         return RenderRepeatGroup(render_repeatgroup.view_group)
     if renderid == "RepeatListRow":
         return RenderRepeatGroup(render_repeatgroup.view_listrow)
     if renderid == "RepeatGroupRow":
         return RenderRepeatGroup(render_repeatgroup.view_grouprow)
-    if renderid == "Placement":
-        renderer = get_field_placement_renderer()
-    else:
-        renderer = get_field_renderer(renderid)
+    renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.label_view()
     # Default to simple text for unknown renderer type
@@ -146,10 +136,7 @@ def get_colhead_renderer(renderid):
     Returns a field list heading renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    if renderid == "Placement":
-        renderer = get_field_placement_renderer()
-    else:
-        renderer = get_field_renderer(renderid)
+    renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.col_head()
     log.debug("get_colhead_renderer: %s not found"%renderid)
@@ -160,14 +147,7 @@ def get_coledit_renderer(renderid):
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    if renderid == "TokenSet":
-        return RenderTokenSet(render_tokenset.item)
-    # if renderid == "RepeatGroup":
-    #     return RenderRepeatGroup(render_repeatgroup.view_row)
-    if renderid == "Placement":
-        renderer = get_field_placement_renderer()
-    else:
-        renderer = get_field_renderer(renderid)
+    renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.col_edit()
     log.debug("get_coledit_renderer: %s not found"%renderid)
@@ -178,14 +158,7 @@ def get_colview_renderer(renderid):
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    if renderid == "TokenSet":
-        return RenderTokenSet(render_tokenset.item)
-    # if renderid == "RepeatGroup":
-    #     return RenderRepeatGroup(render_repeatgroup.view_row)
-    if renderid == "Placement":
-        renderer = get_field_placement_renderer()
-    else:
-        renderer = get_field_renderer(renderid)
+    renderer = get_field_renderer(renderid)
     if renderer:
         return renderer.view()
     log.debug("get_colview_renderer: %s not found"%renderid)
@@ -199,7 +172,7 @@ def get_value_mapper(renderid):
     The default 'RenderText' object returned contains identity mappings.
     """
     if renderid == "TokenSet":
-        return RenderTokenSet("no template")
+        return TokenSetValueMapper()
     else:
         return RenderText()
 

@@ -33,12 +33,13 @@ from annalist.models.collection             import Collection
 from annalist.models.annalistuser           import AnnalistUser
 
 from annalist.views.annalistuserdelete      import AnnalistUserDeleteConfirmedView
-from annalist.views.fields.render_tokenset  import RenderTokenSet
-from annalist.views.fields                  import render_tokenset
+from annalist.views.fields.render_tokenset  import get_field_tokenset_renderer
 
-from tests                                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                                  import init_annalist_test_site
 from AnnalistTestCase                       import AnnalistTestCase
+from tests                                  import init_annalist_test_site
+from tests                                  import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
 from entity_testutils                       import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
@@ -235,18 +236,17 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             , 'field_placeholder':  "(user permissions)"
             , 'field_name':         "User_permissions"
             , 'field_value':        ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
-            , 'field_value_encoded': "VIEW CREATE UPDATE DELETE CONFIG ADMIN"
             })
         context  = Context({'field': field})
-        rendered = RenderTokenSet(render_tokenset.edit).render(context)
+        rendered = get_field_tokenset_renderer().label_edit().render(context)
         self.assertIn('''<div class="small-12 columns">''',                             rendered)
         self.assertIn('''<div class="row">''',                                          rendered)
         self.assertIn('''<div class="view-label small-12 medium-2 columns">''',         rendered)
         self.assertIn('''<p>Permissions</p>''',                                         rendered)
         self.assertIn('''<div class="small-12 medium-10 columns">''',                   rendered)
         self.assertIn('''<input type="text" size="64" name="User_permissions" ''',      rendered)
-        self.assertIn('''       placeholder="(user permissions)"''',                    rendered)
-        self.assertIn('''       value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>''',    rendered)
+        self.assertIn(       '''placeholder="(user permissions)"''',                    rendered)
+        self.assertIn(       '''value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>''',    rendered)
         return
 
     def test_included_tokenlist_rendering(self):
@@ -261,11 +261,10 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             , 'field_placeholder':      "(user permissions)"
             , 'field_name':             "User_permissions"
             , 'field_value':            ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
-            , 'field_value_encoded':    "VIEW CREATE UPDATE DELETE CONFIG ADMIN"
-            , 'field_render_object':    RenderTokenSet(render_tokenset.edit)
+            , 'field_render_object':    get_field_tokenset_renderer().label_edit()
             })
         template = Template("{% include field.field_render_object %}")
-        context  = Context({ 'render_object': RenderTokenSet(render_tokenset.edit), 'field': field})
+        context  = Context({ 'render_object': get_field_tokenset_renderer().label_edit(), 'field': field})
         rendered = template.render(context)
         self.assertIn('''<div class="small-12 columns">''',                             rendered)
         self.assertIn('''<div class="row">''',                                          rendered)
@@ -273,8 +272,8 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertIn('''<p>Permissions</p>''',                                         rendered)
         self.assertIn('''<div class="small-12 medium-10 columns">''',                   rendered)
         self.assertIn('''<input type="text" size="64" name="User_permissions" ''',      rendered)
-        self.assertIn('''       placeholder="(user permissions)"''',                    rendered)
-        self.assertIn('''       value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>''',    rendered)
+        self.assertIn(       '''placeholder="(user permissions)"''',                    rendered)
+        self.assertIn(       '''value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>''',    rendered)
         return
 
     def test_get_new_user_form_rendering(self):
