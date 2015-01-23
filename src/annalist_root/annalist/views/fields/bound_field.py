@@ -133,19 +133,6 @@ class bound_field(object):
             return self.entity_type_link+self.get_continuation_param()
         elif name == "field_value":
             field_val = None
-            #@@
-            # if self._key == ANNAL.CURIE.type:
-            #     # @@TODO: remove annal:Type hack when proper selection from enumerated 
-            #     #         entities has been implemented.
-            #     #
-            #     # The handling of annal:Type is something of a hack to return the internal
-            #     # type-id for an entity rather than its type URI/CURIE, which is used in 
-            #     # turn by the form renderer to determine the type_id selection on the 
-            #     # rendered form.  This hack may be rendered unnecessary when the 
-            #     # entity reference selection is properly generalized.
-            #     #
-            #     field_val = self.entity_type_id
-            #@@
             if self._key in self._entityvals:
                 field_val = self._entityvals[self._key]
             elif self._extras and self._key in self._extras:
@@ -157,15 +144,6 @@ class bound_field(object):
                 if field_val is None:
                     field_val = ""
             return field_val
-        #@@
-        # elif name == "field_value_encoded":
-        #     # Used to present non-text value as text for display
-        #     try:
-        #         return self._field_description['field_value_mapper'].encode(self.field_value)
-        #     except Exception as e:
-        #         log.warning("Get 'field_value_encoded' failed: %r: value: %s"%(e, self.field_value))
-        #     return self.field_value
-        #@@
         elif name == "field_value_link":
             # Used to get link corresponding to a value, if such exists
             return self.get_field_link()
@@ -177,12 +155,6 @@ class bound_field(object):
             return self._field_description
         elif name == "options":
             return self.get_field_options()
-        #@@
-        # elif name == "field_name":
-        #     return self._field_description.get_field_name()
-        # elif name == "field_property_uri":
-        #     return self._field_description.get_field_property_uri()
-        #@@
         else:
             # log.info("bound_field[%s] -> %r"%(name, self._field_description[name]))
             return self._field_description[name]
