@@ -65,7 +65,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Review options for creating user accounts in development software version (currently have 'admin'/'mailto:admin@localhost' in sitedata as holding option).  Put something explicit in makedevelsite.sh?  Document site 'admin' user and development setup?
     - For now, sticking with admin user entry in initial site data.  Updated install document.
 - [x] Remove `/annalist_root/sampledata/data/` from distribution kit data so that test suite can run in Docker container.  (Otherwise, can't rename old data directory due to "Invalid cross-device link" error)
-- [ ] `annalist-manager` help to provide list of permission tokens
+- [x] `annalist-manager` help to provide list of permission tokens
 - [ ] `annalist-manager` createsitedata should also create collections directory
 - [ ] `annalist-manager` option to write version string to stdout
 - [ ] Installation instructions need to be clear (and tested) about ordering of create, initialize, defaultadmin

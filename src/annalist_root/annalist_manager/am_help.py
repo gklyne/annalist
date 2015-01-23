@@ -38,7 +38,7 @@ command_summary_help = ("\n"+
 
 config_options_help = (
     "Annalist can be run in a number of configurations, notably\n"+
-    " 'development', 'personal' and 'shared'.\n"+
+    "'development', 'personal' and 'shared'.\n"+
     "\n"+
     "A configuration can be selected by using one of the following options:\n"+
     "--devel    selects the 'development' configuration, which stores all site data\n"+
@@ -63,7 +63,18 @@ permissions_help = (
     "or may be empty.  If multiple permissions are specified, some form of command-line\n"+
     "quoting should be used so they are presented as a single argument (e.g. enclose\n"+
     "the list of keywords in double quoted).\n"+
-    "If not specified on the command line, the user will be prompted for default permissions\n"+
+    "If not specified on the command line, the user will be prompted for default permissions.\n"+
+    "\n"+
+    "Initially defined permissions are:\n"+
+    "CREATE_COLLECTION   site-level permission required to create new collection (or ADMIN).\n"+
+    "DELETE_COLLECTION   site-level permission required to delete a collection (or ADMIN).\n"+
+    "VIEW                permission to view or list data in a collection\n"+
+    "CREATE              permission to create new data in a collection\n"+
+    "UPDATE              permission to update existing data in a collection\n"+
+    "DELETE              permission to delete data from a collection\n"+
+    "CONFIG              permission to add or modify configuration data for a collection\n"+
+    "                    (i.e. types, views, lists, fields, and field groups)\n"+
+    "ADMIN               permission to add or modify user permissions\n"+
     "")
 
 def am_help(options, progname):

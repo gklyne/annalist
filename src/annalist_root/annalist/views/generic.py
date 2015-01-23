@@ -306,8 +306,6 @@ class AnnalistGenericView(ContentNegotiationView):
                     e.g. "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", ...
         collection  is the collection to which the requested action is directed,
                     or None if the test is against site-level permissions.
-
-        For now, require authentication for anything other than VIEW scope.
         """
         user_id, user_uri = self.get_user_identity()
         coll_id = collection.get_id() if collection else "(site)"
