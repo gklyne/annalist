@@ -1,11 +1,32 @@
 # Installing and setting up Annalist
 
-
 ## Prerequisites
 
 * A Unix-like operating system: Annalist has been tested with MacOS 10.9 and Linux 14.04.  Other versions should be usable.  (The software can be run on Windows, but the procedure to get it running is somewhat more complicated, and is not yet fully tested or documented.)
 * Python 2.7 (see [Python beginners guide / download](https://wiki.python.org/moin/BeginnersGuide/Download)).
 * virtualenv (includes setuptools and pip; see [virtualenv introduction](http://virtualenv.readthedocs.org/en/latest/virtualenv.html)).
+
+
+## Running as a Docker container
+
+@@TODO: supply details and test; e.g.
+
+    docker run --name=annalist-site -d annalist-site
+    docker run -it -p 8000:8000 --rm --volumes-from=annalist_site annalist
+
+Then, in the presented shell environment:
+
+    # FIRST TIME:
+    annalist-manager createsitedata
+    # OR (to keep previous annalist collection data):
+    annalist-manager updatesitedata
+    annalist-manager initialize
+    annalist-manager runserver
+
+@@TODO: add description to run Annalist server headless (no shell), and test; e.g.
+
+    docker run -it -p 8000:8000 --rm --volumes-from=annalist_site annalist \
+        annalist-manager runserver
 
 
 ## Upgrading an existing installation
@@ -125,20 +146,17 @@ Annalist has been implemented to use federated authentication based on Open ID C
 
 Annalist currently supports two user authentication mechanisms: OpenID Connect using Google+, and local user login credentials.  (Other OpenID Connect providers may also work, but have not been tested.)
 
-
 #### OpenID Connect using Google+
 
 Annalist OpenID Connect authentication has been tested with Google+ identity service.  Instructions for configuring a new installation to work with Google+ are in [Configuring Annalist to use OpenID Connect](openid-connect-setup.md).
 
 The configuration details for using an OpenID Connect provider are stored in a private area, away from the Annalist source files and site data, since they contain private keying data.  A subdirectory `providers` of the Annalist configuration directory contains a description file for weach supported OpenID Connect provider.  New providers may be supported by adding descrtiption files to this directory.  The provider description for Google may be a useful example for creating descriptions for other providers.  (But be aware that different providers will have different registration procedures, and may require subtlely different forms of configuration information.)
 
-
 #### Local user database
 
 Annalist can also allow users to log in using locally stored credentials, which may be useful for quick evaluation deployments but is not the recommended mechanism for normal operational use.
 
 When installing Annalist, an administration account may be created using the `annalist-manager` tool.  When logged in to Annalist using this account, the **Admin** link in the footer of most Annalist pages will allow new user accounts to be created via the Django admin interface.  More documentation about using this admin intrefcae is in the [The Django Admin Site](http://www.djangobook.com/en/2.0/chapter06.html), which isChapter 6 of [The Django Book](http://www.djangobook.com/en/2.0/index.html).
-
 
 ### Initial site setup
 
@@ -150,19 +168,30 @@ NOTE: using the development configuration, data files are stored within the soft
 
         source annenv/bin/activate
 
-2.  Initialize user management database
-
-        annalist-manager initialize --development
-
-3.  Initialize sitedata (don't do this if updating annalist software to use existing site data)
+2.  Initialize sitedata:
 
         annalist-manager createsitedata --development
+
+     (Don't do this if updating annalist software to use existing site data: use `annalist-manager updatesitedata` instead)
+
+3.  Initialize user management database
+
+        annalist-manager initialize --development
 
 4.  Create admin user
 
         annalist-manager createadminuser --development
 
     Respond to the prompts with a username, email address and password.  The username may be up to 30 characters, and may consist of letters, digits and underscores.
+
+    Alternatively, to create a default admin user with name `admin` and email address `admin@localhost`, use this command:
+
+        annalist-manager createadminuser --development
+
+    As before, enter and re-enter a password when prompted.
+
+    NOTE: the initial Annalist site data contains details of the default `admin` user to facilitate development testing, but still requires the Django user to be created for this account to
+
 
 5.  Start the Annalist server
 
