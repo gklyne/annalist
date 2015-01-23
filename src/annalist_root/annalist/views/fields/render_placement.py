@@ -14,8 +14,7 @@ from collections    import OrderedDict, namedtuple
 
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_context_value, get_context_repeat_value, get_context_field_value,
-    get_field_value
+    get_context_value, get_context_field_value, get_field_value
     )
 
 #   ----------------------------------------------------------------------------

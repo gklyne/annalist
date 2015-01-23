@@ -42,7 +42,7 @@ class RenderText(object):
                         <p>{{field.field_label}}</p>
                     </div>
                     <div class="{{field.field_placement.value}}">
-                        <input type="text" size="64" name="{{repeat.repeat_prefix}}{{field.field_name}}" 
+                        <input type="text" size="64" name="{{repeat_prefix}}{{field.field_name}}" 
                                placeholder="{{field.field_placeholder}}"
                                value="{{field.field_value}}"/>
                     </div>

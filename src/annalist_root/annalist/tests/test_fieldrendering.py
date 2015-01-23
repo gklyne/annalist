@@ -31,7 +31,6 @@ from annalist.views.fielddescription    import FieldDescription, field_descripti
 
 from annalist.views.fields.render_text          import RenderText
 from annalist.views.fields.render_placement     import Placement, get_placement_classes
-# from annalist.views.fields                      import render_tokenset
 from annalist.views.fields.render_tokenset      import get_field_tokenset_renderer, TokenSetValueMapper
 from annalist.views.fields.render_placement     import get_field_placement_renderer
 from annalist.views.fields                      import render_repeatgroup
@@ -58,9 +57,10 @@ tokenset_context = Context(
       , 'field_placeholder':    "(test placeholder)"
       , 'field_value':          ["aa", "bb", "cc"]
       }
-    , 'repeat':
-      { 'repeat_prefix':        "prefix_"
-      }
+    # , 'repeat':
+    #   { 'repeat_prefix':        "prefix_"
+    #   }
+    , 'repeat_prefix':        "tokprefix_"
     })
 
 intvalue_context = Context(
@@ -71,9 +71,10 @@ intvalue_context = Context(
       , 'field_placeholder':    "(test placeholder)"
       , 'field_value':          42
       }
-    , 'repeat':
-      { 'repeat_prefix': "prefix_"
-      }
+    # , 'repeat':
+    #   { 'repeat_prefix': "prefix_"
+    #   }
+    , 'repeat_prefix':        "intprefix_"
     })
 
 placement_context = Context(
@@ -84,9 +85,9 @@ placement_context = Context(
       , 'field_placeholder':    "(test placeholder)"
       , 'field_value':          "small:0,12;medium:4,4"
       }
-    , 'repeat':
-      { 'repeat_prefix': "prefix_"
-      }
+    # , 'repeat':
+    #   { 'repeat_prefix': "prefix_"
+    #   }
     , 'repeat_prefix': "repeat_prefix_"
     })
 
@@ -199,7 +200,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , '''<div class="row">'''
             , '''<div class="view-label small-12 medium-2 columns"> <p>test label</p> </div>'''
             , '''<div class="small-12 medium-10 columns">'''
-            , '''<input type="text" size="64" name="prefix_test_field" '''+
+            , '''<input type="text" size="64" name="tokprefix_test_field" '''+
               '''placeholder="(test placeholder)" value="aa bb cc"/>'''
             ])
         for e in expect_elements:
@@ -414,7 +415,7 @@ class FieldDescriptionTest(AnnalistTestCase):
                     { 'field_value':        context['field']['field_value']
                     , 'field_name':         context['field']['field_name']
                     , 'field_placeholder':  context['field']['field_placeholder']
-                    , 'repeat_prefix':      context['repeat']['repeat_prefix']
+                    , 'repeat_prefix':      context['repeat_prefix']
                     })
 
         fieldrender = RenderFieldValue(
@@ -426,7 +427,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             context=intvalue_context,
             expect_rendered_view="42",
             expect_rendered_edit=
-                '''<input type="text" size="64" name="prefix_test_field" '''+
+                '''<input type="text" size="64" name="intprefix_test_field" '''+
                 '''placeholder="(test placeholder)" value="42"/>'''           
             )
         return
@@ -452,7 +453,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             expect_rendered_edit=
                 '''<!-- field/annalist_edit_text.html -->\n'''+
                 '''<!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->\n'''+
-                '''<input type="text" size="64" name="test_field" \n'''+
+                '''<input type="text" size="64" name="intprefix_test_field" \n'''+
                 '''       placeholder="(test placeholder)"\n'''+
                 '''       value="42"/>'''
             )
@@ -471,12 +472,11 @@ class FieldDescriptionTest(AnnalistTestCase):
             expect_rendered_edit=
                 '''<!-- field/annalist_edit_text.html -->\n'''+
                 '''<!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->\n'''+
-                '''<input type="text" size="64" name="test_field" \n'''+
+                '''<input type="text" size="64" name="intprefix_test_field" \n'''+
                 '''       placeholder="(test placeholder)"\n'''+
                 '''       value="42"/>'''
             )
         return
-
 
     def test_RenderFieldPlacementValue(self):
         self._check_value_renderer_results(

@@ -13,8 +13,7 @@ log = logging.getLogger(__name__)
 
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_context_value, get_context_repeat_value, get_context_field_value,
-    get_field_value
+    get_context_value, get_context_field_value, get_field_value
     )
 
 from django.template    import Template, Context
@@ -66,7 +65,7 @@ class tokenset_edit_renderer(object):
 
     def __init__(self):
         self._template = Template(
-            '''<input type="text" size="64" name="{{repeat.repeat_prefix}}{{field.field_name}}" '''+
+            '''<input type="text" size="64" name="{{repeat_prefix}}{{field.field_name}}" '''+
                 '''placeholder="{{field.field_placeholder}}" '''+
                 '''value="{{encoded_field_value}}"/>'''
             )

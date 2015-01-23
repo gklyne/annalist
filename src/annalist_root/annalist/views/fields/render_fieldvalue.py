@@ -293,9 +293,9 @@ def get_context_value(context, key, default):
         return context[key]
     return default
 
-def get_context_repeat_value(context, key, default):
-    repeat = get_context_value(context, 'repeat', {})
-    return get_context_value(repeat, key, default)
+# def get_context_repeat_value(context, key, default):
+#     repeat = get_context_value(context, 'repeat', {})
+#     return get_context_value(repeat, key, default)
 
 def get_context_field_value(context, key, default):
     field = get_context_value(context, 'field', {})
