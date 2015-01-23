@@ -33,7 +33,9 @@ command_summary_help = ("\n"+
     "  %(prog)s createsitedata [ CONFIG ]\n"+
     "  %(prog)s updatesitedata [ CONFIG ]\n"+
     "  %(prog)s runserver [ CONFIG ]\n"+
+    "  %(prog)s sitedirectory [ CONFIG ]\n"+
     "  %(prog)s serverlog [ CONFIG ]\n"+
+    "  %(prog)s version\n"+
     "")
 
 config_options_help = (
@@ -241,16 +243,23 @@ def am_help(options, progname):
             config_options_help+
             "\n"+
             "")
-    elif options.args[0].startswith("serv"):
+    elif options.args[0].startswith("site"):
         help_text = ("\n"+
-            "  %(prog)s serverlog [ CONFIG ]\n"+
+            "  %(prog)s sitedirectory [ CONFIG ]\n"+
             "\n"+
-            "Sends the name of Annalist server log to standard output.\n"+
+            "Sends the name of Annalist site directory to standard output.\n"+
             "\n"+
-            "This is a convenience function to locate the server log file, which\n"+
+            "This is a convenience function to locate the site data directory, which\n"+
             "may be buried deep in the Python virtual environment files.\n"+
             "\n"+
             config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("ver"):
+        help_text = ("\n"+
+            "  %(prog)s version\n"+
+            "\n"+
+            "Sends the Annalist software version string to standard output.\n"+
             "\n"+
             "")
     else:

@@ -17,6 +17,7 @@ import django
 import sys
 import logging
 from annalist import __version__
+from annalist import layout
 
 DJANGO_ROOT     = os.path.dirname(os.path.realpath(django.__file__))
 SETTINGS_DIR    = os.path.dirname(os.path.realpath(__file__))

@@ -10,6 +10,7 @@ ANNALIST_VERSION_MSG = "Annalist version %s (shared service configuration)"%(ANN
 
 SETTINGS_MODULE = __name__
 BASE_DATA_DIR   = "/var"
+BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, layout.SITE_DIR)
 CONFIG_BASE     = "/etc/annalist/"
 
 # SECURITY WARNING: don't run with debug turned on in production!

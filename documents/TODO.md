@@ -68,7 +68,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] `annalist-manager` help to provide list of permission tokens
 - [x] `annalist-manager` createsitedata should also create collections directory
     - @@TODO: test in new install
-- [ ] `annalist-manager` option to write version string to stdout
+- [x] `annalist-manager` option to write version string to stdout
 - [ ] Installation instructions need to be clear (and tested) about ordering of create, initialize, defaultadmin
 
 (sub-release?)

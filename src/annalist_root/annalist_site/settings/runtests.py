@@ -98,6 +98,7 @@ ROOT_URLCONF        = 'annalist_site.runtests_urls'
 
 SETTINGS_MODULE     = __name__
 BASE_DATA_DIR       = SITE_SRC_ROOT+"/sampledata/data"
+BASE_SITE_DIR       = os.path.join(BASE_DATA_DIR, layout.SITE_DIR)
 CONFIG_BASE         = os.path.join(os.path.expanduser("~"), ".annalist/")
 
 log.info(ANNALIST_VERSION_MSG)
