@@ -168,10 +168,22 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             self.assertEqual(input_elem.string, input_text)
         return
 
+    # Convert selected Unicode characters to HTMLentity form (undoing changes wrought by BeautifulSoup)
+    @staticmethod
+    def html_encode(s):
+        # See: http://stackoverflow.com/a/1919221/324122
+        entity_map = (
+            { '\u2588': "&block;"
+            , '\u2591': "&blk14;"
+            })
+        for u, e in entity_map.iteritems():
+            s = s.replace(u, e)
+        return s
+
     # Test named input is <select> with specified options and selected value
     def check_select_field(self, s, name, options, selection):
-        select_elem = s.find("select", attrs={"name": name})
-        options_here = [o.string for o in select_elem.find_all("option")]
+        select_elem  = s.find("select", attrs={"name": name})
+        options_here = [self.html_encode(o.string) for o in select_elem.find_all("option")]
         if options_here != options:
             log.info("options_here: %r"%(options_here,))
             log.info("options:      %r"%(options,))
