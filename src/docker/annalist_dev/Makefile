@@ -10,7 +10,7 @@ base-shell:
 	docker run --rm -it $(BASE) bash
 
 shell: build
-	docker run --rm -it $(IMAGE) bash
+	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) bash
 
 clean:
 	$(RM) .build
@@ -25,7 +25,7 @@ build: .build
 
 run: build
 	# docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) $(IMAGE)
-	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE)
+	docker run -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) annalist-manager runserver
 
 # site-data:
 # 	docker run --name=$(IMAGE) -d $(IMAGE)
