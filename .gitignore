@@ -38,7 +38,8 @@ catalog-v001.xml
 .hgignore
 
 # ------------------------
-# Others from guthub, etc.
+# Others from guthub, make, etc.
+.build
 
 # Compiled source
 *.com

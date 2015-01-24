@@ -7,7 +7,7 @@
 
 FROM ubuntu
 
-VOLUME /annalist
+VOLUME /annalist_site
 
 CMD ["true"]
 

@@ -21,8 +21,8 @@ RUN cd /github/annalist/src && \
     python setup.py build && \
     python setup.py install
 
-VOLUME /annalist
-ENV HOME /annalist
+VOLUME /annalist_site
+ENV HOME /annalist_site
 
 # ADD entrypoint.sh /entrypoint.sh
 

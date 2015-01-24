@@ -1,5 +1,6 @@
 BASE=ubuntu
 IMAGE=annalist_site
+DATA_CONTAINER=annalist_site
 # RELEASE=$(shell cat VERSION)
 # RELEASE_PREFIX=
 HOSTPORT=8000
@@ -23,7 +24,7 @@ build: .build
 	touch .build
 
 site-data:
-	docker run --name=$(IMAGE) -d $(IMAGE)
+	docker run --name=$(DATA_CONTAINER) -d $(IMAGE)
 
 # run: build
 # 	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) $(IMAGE)
