@@ -16,17 +16,26 @@
 
 Then, in the presented shell environment:
 
-    # FIRST TIME:
+First time (to create new Annalist site data and database):
+
     annalist-manager createsitedata
-    # OR (to keep previous annalist collection data):
-    annalist-manager updatesitedata
     annalist-manager initialize
+
+or (to keep previous annalist collection data):
+
+    annalist-manager updatesitedata
+
+then:
+
     annalist-manager runserver
 
 @@TODO: add description to run Annalist server headless (no shell), and test; e.g.
 
     docker run -it -p 8000:8000 --rm --volumes-from=annalist_site annalist \
         annalist-manager runserver
+
+NOTE: for configurations which store the database file in the site data area (including the default personal configuration used here), `annalist-manager createsitedata` must be run before `annalist-manager initialize`, as it requires absence of any previous site data or database files.
+When updating an Annalist site, it should not be necessary to run `annalist-manager initialize`.
 
 
 ## Upgrading an existing installation
@@ -35,7 +44,7 @@ Stop any existing annalist server.  Look for background processes running `annal
 
 The installation instructions below can then be used to update an Annalist software installation, except that step 2 may be skipped if re-using an existing virtual environment.
 
-The annalist user database will need to be initialized or migrated:
+The annalist user database may need to be initialized or migrated:
 
     annalist-manager initialize [ CONFIG ]
 

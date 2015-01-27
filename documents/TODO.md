@@ -69,6 +69,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] `annalist-manager` createsitedata should also create collections directory
     - @@TODO: test in new install
 - [x] `annalist-manager` option to write version string to stdout
+- [ ] docker installation files and scripts, and docker container available from dockerhub
 - [ ] Installation instructions need to be clear (and tested) about ordering of create, initialize, defaultadmin
 
 (sub-release?)

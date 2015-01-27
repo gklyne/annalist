@@ -16,7 +16,7 @@ RUN mkdir /github && \
     git clone https://github.com/gklyne/annalist.git
 
 RUN cd /github/annalist/src && \
-    git checkout master && \
+    git checkout develop && \
     python setup.py clean --all && \
     python setup.py build && \
     python setup.py install
@@ -29,6 +29,7 @@ ENV HOME /annalist
 EXPOSE 8000
 
 # CMD /entrypoint.sh
+
 
 ################################################################################
 
@@ -48,4 +49,7 @@ EXPOSE 8000
 # fi
 
 # annalist-manager runserver
+
+
+
 

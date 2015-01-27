@@ -34,8 +34,6 @@
 - [ ] Update front page link at annalist.net
 - [ ] Commit changes
 - [ ] Upload to PyPI (see below)
-- [ ] Create Docker image, test
-- [ ] Push docker image to DockerHub
 - [ ] Merge final updates to master
 - [ ] Test again on master branch
 - [ ] Tag release on master branch
@@ -44,6 +42,8 @@
     - `git push --tags`
 - [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Commit and push changes
+- [ ] Create Docker image, test (see below)
+- [ ] Push docker image to DockerHub (see below)
 - [ ] Post announcement to Google Group, Twitter and elsewhere
 
 ## Build kit and PyPI upload
@@ -63,3 +63,10 @@ Upload to PyPI:
 
     python setup.py sdist upload
 
+
+## Create docker images
+
+The following sequence must be run on any system with docker installed.  It assumes that the relevant version of Annalist has been installed and tested on the local system.
+
+    cd ${ANNALIST}/src/docker/annalist-site
+    docker

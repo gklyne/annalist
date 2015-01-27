@@ -1,6 +1,6 @@
 BASE=ubuntu
-IMAGE=annalist_site
-# RELEASE=$(shell cat VERSION)
+IMAGE=annalist
+RELEASE=$(annalist-manager version)
 # RELEASE_PREFIX=
 HOSTPORT=8000
 GUESTPORT=8000
@@ -19,14 +19,14 @@ all: build
 build: .build
 
 .build: Dockerfile
-	docker build --rm=true -t $(IMAGE) .
+	docker build --rm=true -t $(IMAGE):$(RELEASE) .
 	touch .build
 
-site-data:
-	docker run --name=$(IMAGE) -d $(IMAGE)
+run: build
+	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) $(IMAGE)
 
-# run: build
-# 	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) $(IMAGE)
+# site-data:
+# 	docker run --name=$(IMAGE) -d $(IMAGE)
 
 # release: releases/$(RELEASE_PREFIX)$(IMAGE)-$(RELEASE).tar.gz
 
@@ -36,7 +36,6 @@ site-data:
 # 	docker tag $(IMAGE) $(RELEASE_PREFIX)$(IMAGE):$(RELEASE)
 # 	docker save $(RELEASE_PREFIX)$(IMAGE):$(RELEASE) > releases/$(RELEASE_PREFIX)$(IMAGE)-$(RELEASE).tar.gz
 
-.PHONY: clean release shell run start-db devserver base-shell build
-
 # Declare non-file targets
-.PHONY: base-shell shell all clean build site-data
+.PHONY: base-shell shell all clean build run 
+
