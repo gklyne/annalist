@@ -20,8 +20,11 @@ all: build
 build: .build
 
 .build: Dockerfile
-	docker build --rm=true -t $(IMAGE):$(RELEASE) .
+	docker build --rm=false -t $(IMAGE):$(RELEASE) .
 	touch .build
+
+shell: build
+	docker run --rm -it $(IMAGE):$(RELEASE) bash
 
 run: build
 	# docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) $(IMAGE)

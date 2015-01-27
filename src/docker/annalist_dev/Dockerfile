@@ -7,10 +7,6 @@ RUN apt-get update -y  && \
     apt-get install -y python python-pip python-virtualenv && \
     apt-get install -y git
 
-# RUN pip install annalist
-
-# WORKDIR /annalist
-
 RUN mkdir /github && \
     cd /github && \
     git clone https://github.com/gklyne/annalist.git
@@ -24,12 +20,13 @@ RUN cd /github/annalist/src && \
 VOLUME /annalist_site
 ENV HOME /annalist_site
 
-# ADD entrypoint.sh /entrypoint.sh
-
 EXPOSE 8000
 
-# CMD /entrypoint.sh
+CMD annalist-manager runserver
 
+# ADD entrypoint.sh /entrypoint.sh
+
+# CMD /entrypoint.sh
 
 ################################################################################
 
