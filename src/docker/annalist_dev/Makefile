@@ -24,7 +24,6 @@ build: .build
 	touch .build
 
 run: build
-	# docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) $(IMAGE)
 	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE)
 
 # site-data:

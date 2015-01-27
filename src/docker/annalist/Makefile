@@ -1,6 +1,7 @@
 BASE=ubuntu
 IMAGE=annalist
-RELEASE=$(annalist-manager version)
+DATA_CONTAINER=annalist_site
+RELEASE=$(shell annalist-manager version)
 # RELEASE_PREFIX=
 HOSTPORT=8000
 GUESTPORT=8000
@@ -23,7 +24,7 @@ build: .build
 	touch .build
 
 run: build
-	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) $(IMAGE)
+	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE)
 
 # site-data:
 # 	docker run --name=$(IMAGE) -d $(IMAGE)

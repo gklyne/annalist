@@ -65,8 +65,8 @@ def parseCommandArgs(argv):
                         action='store',
                         dest="configuration", metavar="CONFIG",
                         default="personal",
-                        #choices=['personal', 'shared', 'devel'],
-                        help="Select site configuration by name (e.g. personal, shared, devel.")
+                        #choices=['personal', 'shared', 'devel', 'runtests'],
+                        help="Select site configuration by name (e.g. personal, shared, devel, runtests.")
     parser.add_argument("-p", "--personal",
                         action='store_true',
                         dest="config_p", # metavar="PERSONAL",
