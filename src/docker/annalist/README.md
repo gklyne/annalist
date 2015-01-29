@@ -4,6 +4,8 @@ This directory contains files to build a docker image running the released versi
 
 # Build instructions
 
+NOTE: the commands below should be run with an installed copy of the annalist version to be containerized.  (The makefile uses `annlist-manager version` to retieve the current software version tag.)
+
 @@TODO: check this
 
 The line:
