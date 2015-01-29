@@ -28,8 +28,11 @@ run: build
 	docker run -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) annalist-manager runserver
 
 push: build
-	docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):$(RELEASE)
-	docker push gklyne/$(IMAGE):$(RELEASE)
+	# docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):$(RELEASE)
+	# docker push gklyne/$(IMAGE):$(RELEASE)
+
+	docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):latest
+	docker push gklyne/$(IMAGE)
 
 # site-data:
 # 	docker run --name=$(IMAGE) -d $(IMAGE)

@@ -7,15 +7,19 @@ RUN apt-get update -y  && \
     apt-get install -y python python-pip python-virtualenv && \
     apt-get install -y git
 
+RUN pip install django==1.7 wsgiref==0.1.2 oauth2client==1.2 httplib2==0.9
+
 RUN mkdir /github && \
     cd /github && \
     git clone https://github.com/gklyne/annalist.git
 
 RUN cd /github/annalist/src && \
     git checkout develop && \
+    git pull
     python setup.py clean --all && \
     python setup.py build && \
-    python setup.py install
+    python setup.py install \
+    # 20150129 (see https://github.com/docker/docker/issues/1326#issuecomment-52304721)
 
 VOLUME /annalist_site
 ENV HOME /annalist_site

@@ -15,7 +15,7 @@ shell: build
 clean:
 	$(RM) .build
 
-all: build
+all: clean build
 
 build: .build
 
@@ -24,20 +24,15 @@ build: .build
 	touch .build
 
 site-data:
-	docker run --name=$(DATA_CONTAINER) -d $(IMAGE)
+	docker run --name=$(DATA_CONTAINER) --detach=true $(IMAGE)
 
-# run: build
-# 	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) $(IMAGE)
+push: build
+	# docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):$(RELEASE)
+	# docker push gklyne/$(IMAGE):$(RELEASE)
 
-# release: releases/$(RELEASE_PREFIX)$(IMAGE)-$(RELEASE).tar.gz
-
-# releases/$(RELEASE_PREFIX)$(IMAGE)-$(RELEASE).tar.gz: build VERSION
-# 	echo "Releasing " $(RELEASE)
-# 	git tag release/$(RELEASE)
-# 	docker tag $(IMAGE) $(RELEASE_PREFIX)$(IMAGE):$(RELEASE)
-# 	docker save $(RELEASE_PREFIX)$(IMAGE):$(RELEASE) > releases/$(RELEASE_PREFIX)$(IMAGE)-$(RELEASE).tar.gz
-
-.PHONY: clean release shell run start-db devserver base-shell build
+	docker tag $(IMAGE) gklyne/$(IMAGE)
+	docker push gklyne/$(IMAGE)
 
 # Declare non-file targets
 .PHONY: base-shell shell all clean build site-data
+
