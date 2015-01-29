@@ -173,8 +173,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     def html_encode(s):
         # See: http://stackoverflow.com/a/1919221/324122
         entity_map = (
-            { '\u2588': "&block;"
-            , '\u2591': "&blk14;"
+            { u'\u2588': u"&block;"
+            , u'\u2591': u"&blk14;"
             })
         for u, e in entity_map.iteritems():
             s = s.replace(u, e)

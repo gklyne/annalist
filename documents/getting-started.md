@@ -13,8 +13,10 @@ A number of demonstration screencast videos, and accompanying scripts, can be fo
 
 @@TODO -- test and flesh out.  Roughly:
 
-    docker run --name=annalist-site -d annalist-site
-    docker run -it -p 8000:8000 --rm --volumes-from=annalist_site annalist bash
+    docker run --name=annalist_site --detach gklyne/annalist_site
+    docker run --interactive --tty --rm \
+        --publish=8000:8000 --volumes-from=annalist_site \
+        gklyne/annalist_dev bash
 
 Then, in the presented shell environment:
 
