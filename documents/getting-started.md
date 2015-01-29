@@ -3,6 +3,29 @@
 A number of demonstration screencast videos, and accompanying scripts, can be found by browsing to the [demonstration/evaluation scripts](./demo-script.md) page.
 
 
+# Quick deployment using Docker
+
+## Prerequisites
+
+* A Linux operating system with [Docker](https://www.docker.com) installed.
+
+## Installation
+
+@@TODO -- test and flesh out.  Roughly:
+
+    docker run --name=annalist-site -d annalist-site
+    docker run -it -p 8000:8000 --rm --volumes-from=annalist_site annalist bash
+
+Then, in the presented shell environment:
+
+    annalist-manager createsitedata
+    annalist-manager initialize
+    annalist-manager defaultadminuser  # Enter password when prompted
+    annalist-manager runserver
+
+Control-C shuts down the server, then `exit` or Control-D to shut down the Docker container.
+
+
 # Install and initialize software
 
 See [Installing and setting up Annalist](installing-annalist.md) for details.  What follows is just a very brief summary.
@@ -28,11 +51,11 @@ In a working directory, and with Internet connection:
 The following commands create an initialize an annalist site in the invoking user's home directory; i.e. `~/annalist_site`.  See [Installing and setting up Annalist](installing-annalist.md) for other options.
 
     annalist-manager runtests
-    annalist-manager initialize
     annalist-manager createsitedata
-    annalist-manager createadminuser
+    annalist-manager initialize
+    annalist-manager defaultadminuser
 
-Enter a username, email address and password for the admin user as prompted.
+Enter and re-enter a password for the admin user when prompted.
 
 ## Start the server
 

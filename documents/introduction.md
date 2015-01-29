@@ -81,7 +81,7 @@ Annalist is also a tool that can be used to organize and collate various kinds o
 
 # Design principles
 
-@@TODO: flech outn with more design/architecture information
+@@TODO: flesh out with more design/architecture information
 
 flat file storage
 
@@ -122,4 +122,6 @@ With the exception of Callimachus, which scored about 60-80%, none of these scor
 A tool that I use for a lot of rough data recording is SimpleNote (and Notational Velocity).  This is a pure text tool that addresses many of the desiderata targetted by Annalist, but deals with simpl,e raw text files rather than data.  It would, in theory, be possible to encode the data as test in such a system, but I don't think that would be a truly viable option for any serous data.
 
 Related to some aspects of Annalist's design is the work on [linked data fragments](http://linkeddatafragments.org) by Ruben Verborgh _et al_ at iMinds, University of Ghent.  Annalist's use of flat files for storing small frames of data has similarities with some of these ideas.  One way in which Annalist differs from the Linked Data Fragments work is that the fragments are used as the native form of stored data, and amalgamation into larger datasets only comes later, if at all.  Also, it is not a goal of Annalist to support high performance querying over large datasets.  It is conceivable that Annalist data records would play well with the developing Linked Data Fragments infrastructure.
+
+A development not in the original survey is DBWiki, whose goals appear to be much closer to those of Annalist.  See [Using Links to prototype a Database Wiki](http://www.cs.cornell.edu/conferences/dbpl2011/papers/dbpl11-cheney.pdf) for more details.
 

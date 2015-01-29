@@ -10,5 +10,4 @@ Local user accounts (e.g. created by an admin user using the 'admin' link on the
 
 Being logged in does not necessarily mean you hgave permissions to acess Annalist data;  it simply means that Annalist has an indicator of who you are.
 
-(@@NOTE: Currently, the authorization system is not fully implememted, and all authenticated users have full access to the Annalist data, but that will change before the first non-prototype software release.  See [Annalist issue 11](https://github.com/gklyne/annalist/issues/11))
-
+Initial administrator access and permissions can be established using the `annalst-manager` utility.

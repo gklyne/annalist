@@ -9,6 +9,8 @@
 
 ## Running as a Docker container
 
+Prerequisite for this option:  a Linux operating system with [Docker](https://www.docker.com) installed.
+
 @@TODO: supply details and test; e.g.
 
     docker run --name=annalist-site -d annalist-site
@@ -29,7 +31,7 @@ then:
 
     annalist-manager runserver
 
-@@TODO: add description to run Annalist server headless (no shell), and test; e.g.
+@@TODO: add and test description to run Annalist server headless (no shell), e.g.
 
     docker run -it -p 8000:8000 --rm --volumes-from=annalist_site annalist \
         annalist-manager runserver
@@ -149,7 +151,7 @@ Annalist deploymemnt details are controlled by files in the `src/annalist_rot/an
 
 **Shared**: Annalist site data is kept in directory `/var/annalist_site`, and configuration files are in subdirectory `/etc/annalist`.  Such an installation will typically require root privileges on the host computer system to complete.
 
-### Analist authentication options
+### Annalist authentication options
 
 Annalist has been implemented to use federated authentication based on Open ID Connect (http://openid.net/connect/) rather than local user credential management.  Using third party authentication services should facilitate integration with single-sign-on (SSO) services, and avoids the security risks assciated with local password storage.  Unfortunately, installing and configuring a system to use an OpenID Connect authentication service does take some addtional effort to register the installed application with the authentication service.
 
@@ -169,7 +171,7 @@ When installing Annalist, an administration account may be created using the `an
 
 ### Initial site setup
 
-These instructions use the example of a development configuration (`devel`) and a local user database: these options are not suitable for a full deployment, but are probably the least intrusive to use for early evaluation purposes.
+These instructions use the example of a development configuration (`devel`) and a local user database: these options are not suitable for a full deployment, but are probably the least intrusive to use for early evaluation purposes.  Alternatively, for a quickstart, use the Docker container described above.
 
 NOTE: using the development configuration, data files are stored within the software source code tree, and will be removed when the software is updated.  Use `--personal` instead of `--development` in the sequence below if you want to preserve any data files you create.
 
@@ -256,4 +258,11 @@ Click on the link in the Id column to view the new collection:
 
 From this screen, you can start to add data to this collection.  For more information, see [Using Annalist](using-annalist.md)
 
+
+# `annalist-manager` command reference
+
+@@TODO.  Use `annalist-manager help` for a command summary.
+
+NOTE: for configurations which store the database file in the site data area (including the default personal configuration), `annalist-manager createsitedata` must be run before `annalist-manager initialize`, as it requires absence of any previous site data or database files.
+When updating an existing Annalist site, it should not be necessary to run `annalist-manager initialize`.
 
