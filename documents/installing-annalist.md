@@ -11,12 +11,21 @@
 
 Prerequisite for this option:  a Linux operating system with [Docker](https://www.docker.com) installed.
 
-@@TODO: supply details and test; e.g.
+@@TODO: update the following to refer to released versions of Annalist.
 
-    docker run --name=annalist-site -d annalist-site
-    docker run -it -p 8000:8000 --rm --volumes-from=annalist_site annalist
+If Annalist docker containers have been used previously on the host system, the following commamnds ensure you have the latest images:
 
-Then, in the presented shell environment:
+    docker pull gklyne/annalist_site
+    docker pull gklyne/annalist_dev
+
+Then
+
+    docker run --name=annalist_site --detach gklyne/annalist_site
+    docker run --interactive --tty --rm \
+        --publish=8000:8000 --volumes-from=annalist_site \
+        gklyne/annalist_dev bash
+
+The remaining commands are executed in the shell environment presented by the final `docker run` command above.
 
 First time (to create new Annalist site data and database):
 
@@ -27,17 +36,28 @@ or (to keep previous annalist collection data):
 
     annalist-manager updatesitedata
 
-then:
+NOTE: for configurations which store the database file in the site data area (including the default personal configuration used here), `annalist-manager createsitedata` must be run before `annalist-manager initialize`, as it requires absence of any previous site data or database files.
+When updating an Annalist site, it should not be necessary to run `annalist-manager initialize`.
+
+Then, to start the Annalist web server:
 
     annalist-manager runserver
 
+At this point, a browser can be directed to port 8000 (e.g. http://localhost:8000) of the Docker container host to interact with the Annlist system and data.
+
+Existing Analist collection data can be loaded into a new installation, before strarting the server.  For example, an experimental Digital Music Object, which demonstrates several features of Annalist, can be loaded thus:
+
+    cd /annalist_site/annalist_site/c/
+    git clone https://github.com/gklyne/DMO_Experiment.git
+
+
 @@TODO: add and test description to run Annalist server headless (no shell), e.g.
 
-    docker run -it -p 8000:8000 --rm --volumes-from=annalist_site annalist \
+    docker run --interactive --tty --rm \
+        --publish=8000:8000 --volumes-from=annalist_site \
+        gklyne/annalist_dev \
         annalist-manager runserver
 
-NOTE: for configurations which store the database file in the site data area (including the default personal configuration used here), `annalist-manager createsitedata` must be run before `annalist-manager initialize`, as it requires absence of any previous site data or database files.
-When updating an Annalist site, it should not be necessary to run `annalist-manager initialize`.
 
 
 ## Upgrading an existing installation

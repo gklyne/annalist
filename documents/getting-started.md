@@ -11,7 +11,14 @@ A number of demonstration screencast videos, and accompanying scripts, can be fo
 
 ## Installation
 
-@@TODO -- test and flesh out.  Roughly:
+To install and run Annalist (@@dev version) in a docker container, use the following commands.
+
+If Annalist docker containers have been used previously on the host system, the following commamnds ensure you have the latest images:
+
+    docker pull gklyne/annalist_site
+    docker pull gklyne/annalist_dev
+
+Then
 
     docker run --name=annalist_site --detach gklyne/annalist_site
     docker run --interactive --tty --rm \
