@@ -1,5 +1,6 @@
+
 BASE=ubuntu
-IMAGE=annalist_dev
+IMAGE=annalist
 DATA_CONTAINER=annalist_site
 RELEASE=$(shell annalist-manager version)
 # RELEASE_PREFIX=
@@ -30,21 +31,9 @@ run: build
 push: build
 	# docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):$(RELEASE)
 	# docker push gklyne/$(IMAGE):$(RELEASE)
-
 	docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):latest
 	docker push gklyne/$(IMAGE)
 
-# site-data:
-# 	docker run --name=$(IMAGE) -d $(IMAGE)
-
-# release: releases/$(RELEASE_PREFIX)$(IMAGE)-$(RELEASE).tar.gz
-
-# releases/$(RELEASE_PREFIX)$(IMAGE)-$(RELEASE).tar.gz: build VERSION
-# 	echo "Releasing " $(RELEASE)
-# 	git tag release/$(RELEASE)
-# 	docker tag $(IMAGE) $(RELEASE_PREFIX)$(IMAGE):$(RELEASE)
-# 	docker save $(RELEASE_PREFIX)$(IMAGE):$(RELEASE) > releases/$(RELEASE_PREFIX)$(IMAGE)-$(RELEASE).tar.gz
-
 # Declare non-file targets
-.PHONY: base-shell shell all clean build run 
+.PHONY: base-shell shell all clean build run push 
 

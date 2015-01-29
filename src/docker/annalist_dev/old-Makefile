@@ -1,5 +1,5 @@
 BASE=ubuntu
-IMAGE=annalist_dev
+IMAGE=annalist
 DATA_CONTAINER=annalist_site
 RELEASE=$(shell annalist-manager version)
 # RELEASE_PREFIX=
@@ -9,30 +9,22 @@ GUESTPORT=8000
 base-shell:
 	docker run --rm -it $(BASE) bash
 
+shell: build
+	docker run --rm -it $(IMAGE) bash
+
 clean:
 	$(RM) .build
 
-all: clean build
+all: build
 
 build: .build
 
 .build: Dockerfile
-	docker build --rm=false -t $(IMAGE):$(RELEASE) .
+	docker build --rm=true -t $(IMAGE):$(RELEASE) .
 	touch .build
 
-shell: build
-	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) bash
-
 run: build
-	# docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) $(IMAGE)
-	docker run -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) annalist-manager runserver
-
-push: build
-	# docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):$(RELEASE)
-	# docker push gklyne/$(IMAGE):$(RELEASE)
-
-	docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):latest
-	docker push gklyne/$(IMAGE)
+	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE)
 
 # site-data:
 # 	docker run --name=$(IMAGE) -d $(IMAGE)

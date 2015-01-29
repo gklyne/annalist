@@ -34,5 +34,5 @@ push: build
 	docker push gklyne/$(IMAGE)
 
 # Declare non-file targets
-.PHONY: base-shell shell all clean build site-data
+.PHONY: base-shell shell all clean build site-data push
 
