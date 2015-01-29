@@ -9,13 +9,10 @@ GUESTPORT=8000
 base-shell:
 	docker run --rm -it $(BASE) bash
 
-shell: build
-	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) bash
-
 clean:
 	$(RM) .build
 
-all: build
+all: clean build
 
 build: .build
 
@@ -24,11 +21,15 @@ build: .build
 	touch .build
 
 shell: build
-	docker run --rm -it $(IMAGE):$(RELEASE) bash
+	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) bash
 
 run: build
 	# docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) $(IMAGE)
 	docker run -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) annalist-manager runserver
+
+push: build
+	docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):$(RELEASE)
+	docker push gklyne/$(IMAGE):$(RELEASE)
 
 # site-data:
 # 	docker run --name=$(IMAGE) -d $(IMAGE)

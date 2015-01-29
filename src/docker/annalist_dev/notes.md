@@ -1,3 +1,13 @@
-Remove old ":dangling" docker images
+Remove old "dangling" docker images:
 
-    docker rmi $(sudo docker images -f "dangling=true" -q)
+    docker rmi $(docker images -f "dangling=true" -q)
+
+Remove all containers:
+
+   docker rm `docker ps -aq`
+
+Remove all images:
+
+    docker rmi `docker images -aq`
+
+
