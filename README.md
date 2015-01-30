@@ -3,7 +3,7 @@ annalist
 
 A free-form web data notebook - "Data management for little guys"
 
-_Current status (2014-09-16):  first public prototype, released for evaluation and feedback._ 
+_Current status (2015-01-30):  public prototype, released for evaluation and feedback._ 
 
 For information about the current release, please refer to the [V0.1 release notes](documents/release-notes/release-v0.1.md)
 

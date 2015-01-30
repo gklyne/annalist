@@ -1,6 +1,7 @@
 # Development roadmap
 
-Current status: V0.1.8; updates from V0.1.6 include data view/edit form generator improvements to support repeating fields, and several smaller bug fixes and display improvements.  V0.1.8a bug fix for [Issue #39](https://github.com/gklyne/annalist/issues/39).
+Current status: V0.1.10; updates from V0.1.8 include usability and presentation improvements, bug fixes and availability as a Docker container.
+
 
 # V1.0 release
 

@@ -51,6 +51,3 @@ CMD annalist-manager runserver
 
 # annalist-manager runserver
 
-
-
-
