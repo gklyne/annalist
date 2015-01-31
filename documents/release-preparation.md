@@ -18,7 +18,7 @@
 - [-] Demo screencast update
 - [x] Add TODO list to release notes, and reset
 - [x] Bump version to even value and update history
-- [ ] Update version number in scripts, documents, etc.
+- [x] Update version number in scripts, documents, etc.
     - [x] TODO
     - [x] Release notes
     - [x] documents/installing-annalist.md
@@ -33,8 +33,15 @@
 - [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
 - [x] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
-- [ ] Commit changes
-- [ ] Upload to PyPI (see below)
+- [x] Update demo installation on annalist.net; test
+    - `killall python`
+    - `pip uninstall annalist`
+    - `pip install /var/www/software/Annalist-0.1.10.tar.gz --upgrade`
+    - `annalist-manager runtests`
+    - `. update-run-annalist.sh`
+    - `cat annalist.out`
+- [x] Commit changes
+- [x] Upload to PyPI (see below)
 - [ ] Merge final updates to master
 - [ ] Test again on master branch
 - [ ] Tag release on master branch
