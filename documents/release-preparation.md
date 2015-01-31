@@ -42,13 +42,13 @@
     - `cat annalist.out`
 - [x] Commit changes
 - [x] Upload to PyPI (see below)
-- [ ] Merge final updates to master
-- [ ] Test again on master branch
-- [ ] Tag release on master branch
+- [x] Merge final updates to master
+- [x] Test again on master branch
+- [x] Tag release on master branch
     - `git tag -a release-x.y.z`
-- [ ] Push master branch, and tags
+- [x] Push master branch, and tags
     - `git push --tags`
-- [ ] On develop branch, bump version number again (back to odd value)
+- [x] On develop branch, bump version number again (back to odd value)
 - [ ] Commit and push changes
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)

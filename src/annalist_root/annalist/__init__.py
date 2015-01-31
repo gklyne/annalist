@@ -79,6 +79,8 @@ default_app_config = 'annalist.apps.AnnalistConfig'
                                 # Document default admin user permissions created with new site
                                 # annalist-manager enhancements; permissions help, new subcommands
                                 # Added build scripts for Docker containers
-__version__        = "0.1.10"   # Bump version number for release
+#__version__        = "0.1.10"  # Bump version number for release
+__version__        = "0.1.11"  # Bump version number (odd = unstable)
+
 
 # End.
