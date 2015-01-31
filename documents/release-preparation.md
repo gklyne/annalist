@@ -2,46 +2,46 @@
 
 ## Summary of release tasks
 
-- [x] Feature freeze
-- [x] Delete contents of build directory (ensure any old files are removed)
-- [x] Clean old .pyc files - `clean.sh`
-- [x] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
-- [x] Local install
-- [x] Run test suite
-- [x] Update site data in local 'personal' installation
+- [ ] Feature freeze
+- [ ] Delete contents of build directory (ensure any old files are removed)
+- [ ] Clean old .pyc files - `clean.sh`
+- [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
+- [ ] Local install
+- [ ] Run test suite
+- [ ] Update site data in local 'personal' installation
     - `annalist-manager initialize`
     - `annalist-manager updatesitedata`
-- [x] Test 'personal' deployment in actual use
+- [ ] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
-- [>] Demo deployment; test
-- [>] Documentation updates
-- [-] Demo screencast update
-- [x] Add TODO list to release notes, and reset
-- [x] Bump version to even value and update history
-- [x] Update version number in scripts, documents, etc.
-    - [x] TODO
-    - [x] Release notes
-    - [x] documents/installing-annalist.md
-    - [x] documents/release-notes/announce_0.1.*.md
-    - [x] documents/roadmap.md
-    - [x] documents/pages/index.html
-    - [x] src/annalist_root/annalist/__init__.py
-    - [x] src/newkit_to_annalist_net.sh
-    - [x] src/newkit_to_conina_ubuntu.sh
-    - [x] Docker build scripts?
-- [x] Create new local installation and test again
-- [x] Create and post updated kit download and web pages to annalist.net
+- [ ] Demo deployment; test
+- [ ] Documentation updates
+- [ ] Demo screencast update
+- [ ] Add TODO list to release notes, and reset
+- [ ] Bump version to even value and update history
+- [ ] Update version number in scripts, documents, etc.
+    - [ ] TODO
+    - [ ] Release notes
+    - [ ] documents/installing-annalist.md
+    - [ ] documents/release-notes/announce_0.1.*.md
+    - [ ] documents/roadmap.md
+    - [ ] documents/pages/index.html
+    - [ ] src/annalist_root/annalist/__init__.py
+    - [ ] src/newkit_to_annalist_net.sh
+    - [ ] src/newkit_to_conina_ubuntu.sh
+    - [ ] Docker build scripts?
+- [ ] Create new local installation and test again
+- [ ] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [x] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
-- [x] Update demo installation on annalist.net; test
+- [ ] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
+- [ ] Update demo installation on annalist.net; test
     - `killall python`
     - `pip uninstall annalist`
     - `pip install /var/www/software/Annalist-0.1.10.tar.gz --upgrade`
     - `annalist-manager runtests`
     - `. update-run-annalist.sh`
     - `cat annalist.out`
-- [x] Commit changes
-- [x] Upload to PyPI (see below)
+- [ ] Commit changes
+- [ ] Upload to PyPI (see below)
 - [ ] Merge final updates to master
 - [ ] Test again on master branch
 - [ ] Tag release on master branch
