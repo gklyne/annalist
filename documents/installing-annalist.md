@@ -11,28 +11,30 @@
 
 Prerequisite for this option:  a Linux operating system with [Docker](https://www.docker.com) installed.
 
-@@TODO: update the following to refer to released versions of Annalist.
-
 If Annalist docker containers have been used previously on the host system, the following commamnds ensure you have the latest images:
 
     docker pull gklyne/annalist_site
-    docker pull gklyne/annalist_dev
+    docker pull gklyne/annalist
 
 Then
 
     docker run --name=annalist_site --detach gklyne/annalist_site
     docker run --interactive --tty --rm \
         --publish=8000:8000 --volumes-from=annalist_site \
-        gklyne/annalist_dev bash
+        gklyne/annalist bash
 
 The remaining commands are executed in the shell environment presented by the final `docker run` command above.
 
-First time (to create new Annalist site data and database):
+    annalist-manager version
+
+Check the version displayed: I've found docker sometimes caches older versions and fails up update to the latest available.  If necessary, use `docker rmi gklyne/annalist` to remove old images from the local cache.  If all is well, continue as follows:
+
+If this is the first time annalist has been run on this system, create a new Annalist site data and database:
 
     annalist-manager createsitedata
     annalist-manager initialize
 
-or (to keep previous annalist collection data):
+or, to keep previous annalist collection data:
 
     annalist-manager updatesitedata
 
@@ -50,13 +52,26 @@ Existing Analist collection data can be loaded into a new installation, before s
     cd /annalist_site/annalist_site/c/
     git clone https://github.com/gklyne/DMO_Experiment.git
 
+To run Annalist server as a headless container headless (no shell):
 
-@@TODO: add and test description to run Annalist server headless (no shell), e.g.
+    docker run --detach \
+        --publish=8000:8000 --volumes-from=annalist_site \
+        gklyne/annalist \
+        annalist-manager runserver
+
+(Currently, doing this means there is no way to access the server logs - this will be addressed in a future release)
+
+@@TODO: figure out changes to the annalist configuratyion so, e.g. logs can be viewed using:
 
     docker run --interactive --tty --rm \
-        --publish=8000:8000 --volumes-from=annalist_site \
-        gklyne/annalist_dev \
-        annalist-manager runserver
+        --volumes-from=annalist_site \
+        gklyne/annalist bash
+
+then
+
+    less $(annalist-manager serverlog)
+
+(These changes will need the log file location to be on the annalist site volume)
 
 
 

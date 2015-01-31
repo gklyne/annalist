@@ -11,21 +11,25 @@ A number of demonstration screencast videos, and accompanying scripts, can be fo
 
 ## Installation
 
-To install and run Annalist (@@dev version) in a docker container, use the following commands.
+To install and run Annalist in a docker container, use the following commands.
 
 If Annalist docker containers have been used previously on the host system, the following commamnds ensure you have the latest images:
 
     docker pull gklyne/annalist_site
-    docker pull gklyne/annalist_dev
+    docker pull gklyne/annalist
 
 Then
 
     docker run --name=annalist_site --detach gklyne/annalist_site
     docker run --interactive --tty --rm \
         --publish=8000:8000 --volumes-from=annalist_site \
-        gklyne/annalist_dev bash
+        gklyne/annalist bash
 
 Then, in the presented shell environment:
+
+    annalist-manager version
+
+Check the version displayed: I've found docker sometimes caches older versions and fails up update to the latest available.  If necessary, use `docker rmi gklyne/annalist` to remove old images from the local cache.  If all is well, continue as follows:
 
     annalist-manager createsitedata
     annalist-manager initialize

@@ -4,7 +4,7 @@ I've just released an update (0.1.10) to the public prototype of Annalist.
 
 The main new features are usability enhancements, particularly in the possible workflows for creating linked records; support for property aliasing; simplified interface for viewing entity lists; and some presentation improvements.
 
-This release is additionally available as a Docker comntainer from DockerHub (see quick staret and installation instructions.)
+This release is additionally available as a Docker container from DockerHub (see quick start and installation instructions).  This is the first release to be available as a Docker container, and I'd be interested to learn of any problems (please send comments to this annalist-discuss group, or as a [GitHub issue](https://github.com/gklyne/annalist/issues).
 
 Summary of improvements and bug-fixes:
 
@@ -28,13 +28,13 @@ I've just released Annalist 0.1.10.
 
 The main new features are usability enhancements, particularly in the possible workflows for creating linked records; support for property aliasing; simplified interface for viewing entity lists; and some presentation improvements.
 
-This release is additionally available as a Docker comntainer from DockerHub (see quick staret and installation instructions.)
+This release is additionally available as a Docker container from DockerHub (see quick start and installation instructions.)
 
 The full announcement is at:
-...
+...https://groups.google.com/d/msg/annalist-discuss/SJBtcVzO1_I/ju_Z1GTX8j4J
 
 Release notes (see "history" section for details) at:
-...
+...https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md
 
 Annalist project on Github:
 https://github.com/gklyne/annalist
