@@ -49,9 +49,9 @@
 - [x] Push master branch, and tags
     - `git push --tags`
 - [x] On develop branch, bump version number again (back to odd value)
-- [ ] Commit and push changes
-- [ ] Create Docker image, test (see below)
-- [ ] Push docker image to DockerHub (see below)
+- [x] Commit and push changes
+- [x] Create Docker image, test (see below)
+- [x] Push docker image to DockerHub (see below)
 - [ ] Post announcement to Google Group, Twitter and elsewhere
 
 ## Build kit and PyPI upload
@@ -76,5 +76,21 @@ Upload to PyPI:
 
 The following sequence must be run on any system with docker installed.  It assumes that the relevant version of Annalist has been installed and tested on the local system.
 
+Use a well-connected Linux system for the following steps.
+
+    cd ${ANNALIST}/src
+    git checkout master
+    git pull
+    python setup.py clean --all
+    python setup.py build
+    python setup.py install
+    annalist-manager version  # Check display
+
     cd ${ANNALIST}/src/docker/annalist-site
-    docker
+    make all
+    make push
+
+    cd ${ANNALIST}/src/docker/annalist
+    make all
+    make push
+
