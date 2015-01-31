@@ -98,7 +98,7 @@ class FieldValueMap(object):
         """
         # log.info("Form->entity: prefix %s, fieldname %s"%(prefix, self.i))
         v = formvals.get(prefix+self.i, None)
-        if v:
+        if v is not None:
             return {self.e: v}
         return None
 
