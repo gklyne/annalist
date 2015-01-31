@@ -1,5 +1,5 @@
 BASE=ubuntu
-IMAGE=annalist_dev
+IMAGE=annalist
 DATA_CONTAINER=annalist_site
 RELEASE=$(shell annalist-manager version)
 # RELEASE_PREFIX=
