@@ -25,7 +25,8 @@ DATABASES = {
     }
 }
 
-LOGGING_FILE = SITE_SRC_ROOT+'/annalist.log'
+# LOGGING_FILE = SITE_SRC_ROOT+'/annalist.log'
+LOGGING_FILE = BASE_SITE_DIR+'/annalist.log'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
