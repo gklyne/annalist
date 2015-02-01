@@ -59,9 +59,7 @@ To run Annalist server as a headless container headless (no shell):
         gklyne/annalist \
         annalist-manager runserver
 
-(Currently, doing this means there is no way to access the server logs - this will be addressed in a future release)
-
-@@TODO: figure out changes to the annalist configuratyion so, e.g. logs can be viewed using:
+From version 0.1.11 onwards, the server logs are located on the annalist_site data volume, and may be viewed by running a second Docker container, thus:
 
     docker run --interactive --tty --rm \
         --volumes-from=annalist_site \
@@ -70,9 +68,6 @@ To run Annalist server as a headless container headless (no shell):
 then
 
     less $(annalist-manager serverlog)
-
-(These changes will need the log file location to be on the annalist site volume)
-
 
 
 ## Upgrading an existing installation

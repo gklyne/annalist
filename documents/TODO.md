@@ -13,8 +13,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 # Version 0.1.11, towards 0.1.12
 
 - [x] Minor bug: in DMO_experiment, add new performer field, click "+" to define new performer, on return to previous page new field is not there.  Suspect it is because all fields are blank when "+" is clicked, so new field not saved.  Modified `views.form_utils.fieldvaluemap` to treat only `None` as non-existend field value.
-- [ ] Configuration change so that shell session in new Docker container can see server logs.  Save logs in root of annalist_site data.  
-    - @@ changed - needs testing in Docker
+- [x] Configuration change so that shell session in new Docker container can see server logs.  Save logs in root of annalist_site data.  
 - [ ] New render types: Markdown, Boolean (checkbox), Link (hyperlink)
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)

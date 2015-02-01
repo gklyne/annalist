@@ -24,9 +24,12 @@ build: .build
 shell: build
 	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) bash
 
+inspect: build
+	docker run --rm -it --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) bash
+
 run: build
 	# docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) $(IMAGE)
-	docker run -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) annalist-manager runserver
+	docker run --rm -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) annalist-manager runserver
 
 push: build
 	# docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):$(RELEASE)
@@ -35,5 +38,5 @@ push: build
 	docker push gklyne/$(IMAGE)
 
 # Declare non-file targets
-.PHONY: base-shell shell all clean build run push 
+.PHONY: base-shell all clean build shell inspect run push 
 
