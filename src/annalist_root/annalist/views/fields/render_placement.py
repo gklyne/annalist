@@ -38,6 +38,9 @@ placement_occupancy = OrderedDict(
     , ("small:0,12;medium:3,3", "...###...... (3/3)")
     , ("small:0,12;medium:6,3", "......###... (6/3)")
     , ("small:0,12;medium:9,3", ".........### (9/3)")
+    , ("small:0,12;medium:6,6right", "......###### (6/6R)")
+    , ("small:0,12;medium:8,4right", "........#### (8/4R)")
+    , ("small:0,12;medium:9,3right", ".........### (9/3R)")
     ])
 
 def option_symbol(occupied):

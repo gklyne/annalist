@@ -6,37 +6,55 @@
 
 {% block content %}
 
-    <!--
-    <div class="row">
-        <div class="large-12 columns">
-            <h3>'{{type_id}}' data in collection '{{coll_id}}'</h3>
-        </div>
-    </div>
-    -->
+<div class="row">
+  <div class="large-12 columns">
+    <form method="POST" action="">
+      {% csrf_token %}
+      <!-- Hidden button is default when ENTER key is pressed -->
+      <!-- see http://stackoverflow.com/questions/1963245/    -->
+      <input type="submit" name="close" value="Close" style="display:none;" />
 
-    <div class="row">
-        <div class="large-12 columns">
-            <form method="POST" action="">
-                {% csrf_token %}
-                <div class="row">
-                    {% for field in fields %}
-                    {% include field.field_render_view %}
-                    {% endfor %}
-                </div>
-                <div class="row">
-                    <div class="small-2 columns">
-                    </div>
-                    <div class="small-12 medium-10 columns">
-                        <input type="submit" name="close"            value="Close" />
-                        <input type="submit" name="copy"             value="Copy" />
-                        <input type="submit" name="edit"             value="Edit" />
-                        <input type="hidden" name="continuation_url" value="{{continuation_url}}"/>
-                        <input type="hidden" name="orig_id"          value="{{orig_id}}"/>
-                        <input type="hidden" name="action"           value="{{action}}"/>
-                    </div>
-                </div>
-            </form>
+      <div class="row">
+        {% for field in fields %}
+        <!-- {{field.field_name}}: {{field.field_render_view}} -->
+        {% include field.field_render_view %}
+        {% endfor %}
+      </div>
+
+      <div class="row">
+        <div class="medium-2 columns show-for-medium-up">
+          <div class="row">
+            <div class="small-12 columns">
+              &nbsp;
+            </div>
+          </div>
         </div>
-    </div>
+        <div class="small-12 medium-10 columns">
+          <div class="row">
+            <div class="form-buttons small-12 columns">
+              <input type="submit" name="close"            value="Close" />
+              <input type="submit" name="copy"             value="Copy" />
+              <input type="submit" name="edit"             value="Edit" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="row">
+        {% with field=view_choices %}
+        {% include field.field_render_edit %}
+        {% endwith %} 
+      </div>
+
+      <input type="hidden" name="orig_id"          value="{{orig_id}}" />
+      <input type="hidden" name="orig_type"        value="{{orig_type}}" />
+      <input type="hidden" name="action"           value="{{action}}" />
+      <input type="hidden" name="view_id"          value="{{view_id}}" />
+      <input type="hidden" name="continuation_url" value="{{continuation_url}}" />
+    </form>
+  </div>
+</div>
 
 {% endblock %}

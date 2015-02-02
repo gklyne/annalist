@@ -73,6 +73,7 @@ class DisplayInfo(object):
     def __init__(self, view, action):
         self.view           = view
         self.action         = action
+        # Default no permissions:
         self.authorizations = dict([(k, False) for k in authorization_map])
         self.reqhost        = None
         self.site           = None
@@ -353,13 +354,13 @@ class DisplayInfo(object):
                 log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
         return view_id
 
-    def get_edit_continuation_url(self, entity_type, entity_id):
+    def get_save_continuation_url(self, entity_type, entity_id, action):
         """
         Gets a URI that is based on that used to invoke the current view,
         but with a different action and specified entity_type/entity_id
 
         This is used to continue editing a new or copied entity after that 
-        entity has been saved.
+        entity has been saved, or viewing an entity following an edit.
         """
         return self.view.view_uri(
                 "AnnalistEntityEditView", 
@@ -367,7 +368,7 @@ class DisplayInfo(object):
                 view_id=self.view_id,
                 type_id=entity_type,
                 entity_id=entity_id,
-                action="edit"
+                action=action
                 )
 
     def context_data(self):

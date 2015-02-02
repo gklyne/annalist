@@ -20,9 +20,10 @@ body
 }
 
 body > div 
+body > div.row
 {
-    padding-left:   0.9375rem;
-    padding-right:  0.9375rem;    
+    padding-left:   0.75rem;
+    padding-right:  0.75rem;    
 }
 
 .top 
@@ -47,21 +48,39 @@ div.row .row {
 }
 */
 
+div.row
+{   /* Outermost column padding */
+    margin: 0 0rem;
+    padding: 0 0.75rem;
+}
+
 div.row .columns ,
 div.row .column 
 {   /* Outermost column padding */
+    margin: 0 0rem;
     padding: 0 0.75rem;
 }
 
 div.row .columns .row
 {   /* Remove outermost column padding for row within column */
-    padding: 0 -0.75rem;
+    margin: 0 -0.75rem;
+    padding: 0 0rem;
 }
 
-div.row .columns .row .columns
+/* NOTE: using padding to create space, but n egative margins to reclaim */
+
+form div.row .column  .row .column  ,
+form div.row .columns .row .columns ,
+form div.row .column  .row .column  .row .column ,
+form div.row .columns .row .columns .row .columns
 {   /* padding left and right around inner columns */
-    margin: 0 0;
     padding: 0 0.5rem;  /* was 0.75 */
+}
+
+form div.row .column  .row .column  .row ,
+form div.row .columns .row .columns .row
+{
+    margin: 0 -0.5rem;
 }
 
 /*  ------------------------------------------------------------------------- 
@@ -97,20 +116,31 @@ div.row div.columns p.caption
 div.row div.column  p.group-label , 
 div.row div.columns p.group-label
 {
-    margin-top:  0.25rem;
-    height: auto;
-    font-size: small;
+    margin-top:  0rem;
+    margin-bottom:  0rem;
+    padding-top: 0.25rem;
+    /* height: auto; */
+    font-size: 0.75rem;
     color: #666666;
 }
 
 div.row div.column  p.group-placeholder , 
 div.row div.columns p.group-placeholder
 {
-    margin-top:  0.25rem;
+    margin-top:  0rem;
+    margin-bottom:  0rem;
     height: auto;
-    font-size: small;
+    font-size: 0.875rem;
     font-style: italic;
     color: #989898;
+}
+
+div.row div.column.col-head  p ,
+div.row div.columns.col-head p ,
+div.row div.column.col-head ,
+div.row div.columns.col-head
+{
+    background-color: #f0f0f8;
 }
 
 div.row div.column.view-label  p,
@@ -118,9 +148,32 @@ div.row div.columns.view-label p,
 div.row div.column.view-label,
 div.row div.columns.view-label
 {
-    margin-top:  0.25rem;
-    font-size: small;
+    margin-top:  0rem;
+    margin-bottom:  0rem;
+    padding-top: 0.25rem;
+    font-size: 0.75rem;
     color: #666666;
+    /* vertical-align: middle; */
+}
+
+div.row div.column.view-value  p,
+div.row div.columns.view-value p,
+div.row div.column.view-value,
+div.row div.columns.view-value
+{
+    margin-top:  0rem;
+    margin-bottom:  0rem;
+    padding-top: 0rem;
+    padding-bottom: 0.125rem;
+    font-size: 0.875rem;
+    color: #444444;
+    /* vertical-align: middle; */
+}
+
+div.row div.column  div.row div.column.form-buttons ,
+div.row div.columns div.row div.columns.form-buttons
+{
+    margin-top:  0.75rem;   
 }
 
 div.help > h1 {
@@ -194,23 +247,28 @@ div.columns form , div.columns form {
 
 div.columns > input , 
 div.columns > textarea , 
-div.columns > select
+div.columns > select ,
+div.columns > p > input , 
+div.columns > p > textarea , 
+div.columns > p > select
 {
-    margin: 0.25rem 0 ;
-    padding: 0.25rem 0 ;
-    height: auto;
+    margin-top: 0.4rem;
+    margin-bottom: 0rem;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    height: 1.5rem;
     /* border: 0; - causes buttons to display differently - WTF? */
 }
 
 div.columns input[type="checkbox"]
 {
-    margin-top: 0rem ;
+    margin-top: 0rem ;   /* Move checkbox down in row */
     /* vertical-align: middle;  -- tried this, doesn't work across 'div's */
 }
 
 div.columns.checkbox-in-edit-padding input[type="checkbox"]
 {   /* Hack to get checkboxes to align sensibly in row of field group */
-    margin-top: 0.75rem ;
+    margin-top: 0.4rem ;
 }
 
 /*
@@ -291,17 +349,6 @@ div.row.table div.trow div.columns
 
 /* Buttons, and special styling for enum_new button */
 
-div.row .columns .row div.less_new_button
-{
-    /* width: calc(100%-8em); */
-}
-
-div.row .columns .row div.new_button
-{
-    padding-left: 0;
-    /* width: 6em; */
-}
-
 div.row div.new_button button
 {   /* Override Foundation styling */
     display: inline-block;
@@ -314,13 +361,14 @@ div.row div.new_button button
     color: #000000;
     cursor: default;
     font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-    font-size: 1rem;
+    font-size: 0.875rem;
     font-weight: normal;
     line-height: normal;
     text-decoration: none;
     text-align: center;
-    margin-top: 0.375rem;
+    margin-top: 0.5rem;
     margin-bottom: 0;
+    margin-right: 0.75rem;
     padding-top: 0px;
     padding-bottom: 0;
     padding-right: 0.25rem;

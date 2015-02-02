@@ -297,7 +297,9 @@ def entitydata_form_data(
         entity_id=None, orig_id=None, 
         type_id="testtype", orig_type=None,
         coll_id="testcoll", 
-        action=None, cancel=None, update="Entity"):
+        action=None, cancel=None, close=None, edit=None, copy=None, 
+        update="Entity"
+        ):
     form_data_dict = (
         { 'Entity_label':       '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Entity_comment':     '%s description ... (%s/%s)'%(update, coll_id, type_id)
@@ -319,6 +321,12 @@ def entitydata_form_data(
         form_data_dict['action']            = action
     if cancel:
         form_data_dict['cancel']            = "Cancel"
+    elif close:
+        form_data_dict['close']             = "Close"
+    elif edit:
+        form_data_dict['edit']              = "Edit"
+    elif copy:
+        form_data_dict['copy']              = "Copy"
     else:
         form_data_dict['save']              = 'Save'
     return form_data_dict
@@ -426,7 +434,7 @@ def entitydata_default_view_form_data(
         coll_id="testcoll", 
         type_id="testtype", orig_type=None,
         entity_id=None, orig_id=None, 
-        action=None, cancel=None, update="Entity",
+        action=None, cancel=None, close=None, edit=None, copy=None, update="Entity",
         add_view_field=None, use_view=None, 
         new_view=None, new_field=None, new_type=None, new_enum=None):
     # log.info("entitydata_default_view_form_data: entity_id %s"%(entity_id))
@@ -451,6 +459,12 @@ def entitydata_default_view_form_data(
         form_data_dict['action']          = action
     if cancel:
         form_data_dict['cancel']          = "Cancel"
+    elif close:
+        form_data_dict['close']           = "Close"
+    elif edit:
+        form_data_dict['edit']            = "Edit"
+    elif copy:
+        form_data_dict['copy']            = "Copy"
     elif add_view_field:
         form_data_dict['add_view_field']  = add_view_field
     elif use_view:

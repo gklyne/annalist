@@ -14,7 +14,14 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 - [x] Minor bug: in DMO_experiment, add new performer field, click "+" to define new performer, on return to previous page new field is not there.  Suspect it is because all fields are blank when "+" is clicked, so new field not saved.  Modified `views.form_utils.fieldvaluemap` to treat only `None` as non-existend field value.
 - [x] Configuration change so that shell session in new Docker container can see server logs.  Save logs in root of annalist_site data.  
-- [ ] New render types: Markdown, Boolean (checkbox), Link (hyperlink)
+- [ ] Non-editing entity view: [#3](https://github.com/gklyne/annalist/issues/3)
+    - [>] Create new test suite for non-editing view (add copy options)
+    - [>] Update authorization tests (add copy options)
+    - [x] Create new template
+    - [x] Add new response dispatch options to entityedit
+    - [x] Update application urls
+    - [ ] Check/update view-field renderers
+- [ ] New render types: Markdown, Boolean (checkbox), Link (hyperlink) [#2](https://github.com/gklyne/annalist/issues/2)
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [ ] Blob and file upload support: images, spreadsheets, ...
@@ -29,13 +36,13 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Use site/collection data to populate help panes on displays; use Markdown.
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Login: support continuation URI
-- [ ] Provide content for the links in the page footer
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 
 (feature freeze for V0.9alpha?)
 
+- [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
@@ -53,12 +60,6 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] annalist-manager createsitedata [ CONFIG ]
     - [ ] annalist-manager updatesitedata [ CONFIG ]
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
-- [ ] review use of template files vs. use of inline template text in class
-    - [x] Need to support edit/view/item/head (NOT: probably via class inheritance structure)
-    - [x] Inline template text should be more efficient as it avoids repeated reading of template files
-    - [x] Inline template text keeps value mapping logic with template logic
-    - [ ] Inline templates may be harder to style effectively; maybe read HTML from file on first use?
-    - [ ] Re-work field rendering to be based on common base of `RenderFieldValue2`
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Eliminate type-specific render types
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
@@ -67,7 +68,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 Usability notes:
 
-- [ ] Need easier way to make new entries for fields that are referenced from a record; e.g. a `New value` button as part of an enum field.
+- [x] Need easier way to make new entries for fields that are referenced from a record; e.g. a `New value` button as part of an enum field.
+- [ ] Clearer linkage between related records - hyperlinks on non-editing views
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
     - [ ] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
         - test by creating contacts/supplies listy for CruisingLog
@@ -96,15 +98,9 @@ Notes for Future TODOs:
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
 - [ ] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
-- [ ] Review site/collection data organization
-    - [ ] Generalize collection/site hierarchy to use a "search path" of imported collections.  See also next item.
-    - [ ] Enumerated values are hard-wired into models.entitytypeinfo - move them to regular type/data files in site data?  Hmmm... currently, it seems all _annalist_site values need to be hard-wired in entitytypeinfo; maybe look to use collection "search path" logic instead (see above).
-    - [ ] Think about implementing site data as a distinguished collection, thereby exploiting the access control framework for site metadata updates.
-    - [ ] _annalist_core for software-defined values, and _annalist_site for local overrides?
-    - [ ] Refer collection management permissions (create/update/etc) to _annalist_site collection - this will make it easier to define top-level permnissions through Annalist itself, rather than relying on annalist-manager.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
 - [ ] Rationalize common fields to reduce duplication?
-- [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s). 
+- [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?
 - [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions
 - [ ] Make default values smarter; e.g. field renderer logic to scan collection data for candidates?
 - [ ] Allow type definition to include template for new id, e.g. based on current date
@@ -119,7 +115,7 @@ Notes for Future TODOs:
 - [ ] Introduce markdown rendering type
 - [ ] Use markdown directly for help text
 - [x] Consider associating property URI with view rather than/as well as field, so fields can be re-used
-- [ ] Option to auto-generate unique property URI for field in view, maybe using field definition as base
+- [x] Option to auto-generate unique property URI for field in view, maybe using field definition as base
 - [ ] Think about fields that return subgraph
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.

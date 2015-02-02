@@ -151,11 +151,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.client.logout()
         u = entity_url("testcoll", "testtype", "entity1")
         r = self.client.get(u)
-        # @@TODO: currently defaults to 'edit' action; later may be 'view'
-        self.assertEqual(r.status_code,   401)
-        self.assertEqual(r.reason_phrase, "Unauthorized")
-        # self.assertEqual(r.status_code,   200)
-        # self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
         return
 
     def test_post_default_form_use_view_no_login(self):

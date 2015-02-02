@@ -41,8 +41,8 @@ label_template = (
     )
 
 value_wrapper_template = (
-    """<div class="{{field.field_placement.field}}">"""+
-    """  {% include value_renderer %}"""+
+    """<div class="view-value {{field.field_placement.field}}">"""+
+    """  <p>{% include value_renderer %}</p>"""+
     """</div>"""
     )
 
@@ -52,15 +52,15 @@ label_wrapper_template = (
     """    <div class="view-label {{field.field_placement.label}}">\n"""+
     """      <p>{{field.field_label}}</p>\n"""+
     """    </div>\n"""+
-    """    <div class="{{field.field_placement.value}}">\n"""+
-    """      {% include value_renderer %}\n"""+
+    """    <div class="view-value {{field.field_placement.value}}">\n"""+
+    """      <p>{% include value_renderer %}</p>\n"""+
     """    </div>\n"""+
     """  </div>\n"""+
     """</div>"""
     )
 
-col_label_template = (
-    """<div class="view-label {{field.field_placement.field}}">"""+
+col_head_template = (
+    """<div class="view-label col-head {{field.field_placement.field}}">"""+
     """  <p>{{field.field_label}}</p>"""+
     """</div>"""
     )
@@ -73,10 +73,16 @@ col_label_wrapper_template = (
     """    </div>\n"""+
     """  </div>\n"""+
     """  <div class="row">\n"""+
-    """    <div class="small-12 columns">\n"""+
-    """      {% include value_renderer %}\n"""+
+    """    <div class="view-value small-12 columns">\n"""+
+    """      <p>{% include value_renderer %}</p>\n"""+
     """    </div>\n"""+
     """  </div>\n"""+
+    """</div>"""
+    )
+
+col_value_wrapper_template = (
+    """<div class="view-value {{field.field_placement.field}}">"""+
+    """  <p>{% include value_renderer %}</p>"""+
     """</div>"""
     )
 
@@ -245,7 +251,7 @@ class RenderFieldValue(object):
         a field label used as a column header on larger media.
         """
         if not self._render_col_head:
-            self._render_col_head = Template(col_label_template)
+            self._render_col_head = Template(col_head_template)
         return self._render_col_head
 
     def col_view(self):

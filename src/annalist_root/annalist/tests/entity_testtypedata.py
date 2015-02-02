@@ -240,7 +240,9 @@ def recordtype_entity_view_context_data(
 def recordtype_entity_view_form_data(
         coll_id="testcoll", 
         type_id=None, orig_id=None, 
-        action=None, cancel=None, update="RecordType"):
+        action=None, cancel=None, close=None, edit=None, copy=None, 
+        update="RecordType"
+        ):
     form_data_dict = (
         { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
@@ -263,6 +265,12 @@ def recordtype_entity_view_form_data(
         form_data_dict['action']        = action
     if cancel:
         form_data_dict['cancel']        = "Cancel"
+    elif close:
+        form_data_dict['close']         = "Close"
+    elif edit:
+        form_data_dict['edit']          = "Edit"
+    elif copy:
+        form_data_dict['copy']          = "Copy"
     else:
         form_data_dict['save']          = 'Save'
     return form_data_dict

@@ -229,6 +229,50 @@ class AuthorizationTest(AnnalistTestCase):
         r = self.client.get(u)
         return r
 
+    def view_user_get(self):
+        # requires ADMIN
+        e = self.create_user("view_user")
+        u = entitydata_edit_url(action="view", 
+            coll_id="testcoll", type_id="_user", entity_id="view_user", 
+            view_id="Default_view"
+            )
+        r = self.client.get(u)
+        return r
+
+    def view_user_edit(self):
+        # requires ADMIN
+        e = self.create_user("view_user")
+        u = entitydata_edit_url(action="view", 
+            coll_id="testcoll", type_id="_user", entity_id="view_user", 
+            view_id="Default_view"
+            )
+        f = annalistuser_view_form_data(action="view",
+            coll_id="testcoll", user_id="view_user",
+            user_name="View User",
+            user_uri="mailto:view_user@%s"%(TestHost), 
+            user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"],
+            edit="edit"
+            )
+        r = self.client.post(u, f)
+        return r
+
+    def view_user_copy(self):
+        # requires ADMIN
+        e = self.create_user("view_user")
+        u = entitydata_edit_url(action="view", 
+            coll_id="testcoll", type_id="_user", entity_id="view_user", 
+            view_id="Default_view"
+            )
+        f = annalistuser_view_form_data(action="view",
+            coll_id="testcoll", user_id="view_user",
+            user_name="View User",
+            user_uri="mailto:view_user@%s"%(TestHost), 
+            user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"],
+            copy="copy"
+            )
+        r = self.client.post(u, f)
+        return r
+
     def new_user(self):
         # requires ADMIN
         u = entitydata_edit_url(action="new", 
@@ -313,6 +357,44 @@ class AuthorizationTest(AnnalistTestCase):
         r = self.client.get(u)
         return r
 
+    def view_type_get(self):
+        # requires VIEW
+        e = self.create_type("view_type")
+        u = entitydata_edit_url(action="view", 
+            coll_id="testcoll", type_id="_type", entity_id="view_type", 
+            view_id="Default_view"
+            )
+        r = self.client.get(u)
+        return r
+
+    def view_type_edit(self):
+        # requires CONFIG
+        e = self.create_type("view_type")
+        u = entitydata_edit_url(action="view", 
+            coll_id="testcoll", type_id="_type", entity_id="view_type", 
+            view_id="Default_view"
+            )
+        f = recordtype_entity_view_form_data(action="view",
+            coll_id="testcoll", type_id="_type", orig_id="view_type",
+            edit="edit"
+            )
+        r = self.client.post(u, f)
+        return r
+
+    def view_type_copy(self):
+        # requires CONFIG
+        e = self.create_type("view_type")
+        u = entitydata_edit_url(action="view", 
+            coll_id="testcoll", type_id="_type", entity_id="view_type", 
+            view_id="Default_view"
+            )
+        f = recordtype_entity_view_form_data(action="view",
+            coll_id="testcoll", type_id="_type", orig_id="view_type",
+            copy="copy"
+            )
+        r = self.client.post(u, f)
+        return r
+
     def new_type(self):
         # requires CONFIG
         u = entitydata_edit_url(action="new", 
@@ -320,9 +402,9 @@ class AuthorizationTest(AnnalistTestCase):
             view_id="Default_view"
             )
         f = recordtype_entity_view_form_data(action="new",
-                coll_id="testcoll", 
-                type_id="new_type", orig_id="orig_type"
-                )
+            coll_id="testcoll", 
+            type_id="new_type", orig_id="orig_type"
+            )
         r = self.client.post(u, f)
         return r
 
@@ -334,9 +416,9 @@ class AuthorizationTest(AnnalistTestCase):
             view_id="Default_view"
             )
         f = recordtype_entity_view_form_data(action="copy",
-                coll_id="testcoll", 
-                type_id="copy_type_new", orig_id="copy_type"
-                )
+            coll_id="testcoll", 
+            type_id="copy_type_new", orig_id="copy_type"
+            )
         r = self.client.post(u, f)
         return r
 
@@ -348,9 +430,9 @@ class AuthorizationTest(AnnalistTestCase):
             view_id="Default_view"
             )
         f = recordtype_entity_view_form_data(action="edit",
-                coll_id="testcoll", 
-                type_id="edit_type"
-                )
+            coll_id="testcoll", 
+            type_id="edit_type"
+            )
         r = self.client.post(u, f)
         return r
 
@@ -383,28 +465,68 @@ class AuthorizationTest(AnnalistTestCase):
         typedata = RecordTypeData.create(self.testcoll, "Default_type", {})
         assert typedata is not None
         e = EntityData.create(typedata, entity_id, 
-                entitydata_create_values(entity_id, coll_id="testcoll", type_id="Default_type")
-                )
+            entitydata_create_values(entity_id, coll_id="testcoll", type_id="Default_type")
+            )
         return e
 
     def list_data(self):
         # requires VIEW
         u = entitydata_list_type_url(
-                coll_id="testcoll", type_id="Default_type", 
-                list_id="Default_list"
-                )
+            coll_id="testcoll", type_id="Default_type", 
+            list_id="Default_list"
+            )
         r = self.client.get(u)
+        return r
+
+    def view_data_get(self):
+        # requires VIEW
+        e = self.create_data("view_data")
+        u = entitydata_edit_url(action="view", 
+            coll_id="testcoll", type_id="Default_type", entity_id="view_data", 
+            view_id="Default_view"
+            )
+        r = self.client.get(u)
+        return r
+
+    def view_data_edit(self):
+        # requires UPDATE
+        e = self.create_data("view_data")
+        u = entitydata_edit_url(action="view", 
+            coll_id="testcoll", type_id="Default_type", entity_id="view_data", 
+            view_id="Default_view"
+            )
+        f = entitydata_form_data(action="edit",
+            coll_id="testcoll", type_id="Default_data", 
+            entity_id="view_data", orig_id="view_data",
+            edit="edit"
+            )
+        r = self.client.post(u, f)
+        return r
+
+    def view_data_copy(self):
+        # requires CREATE
+        e = self.create_data("view_data")
+        u = entitydata_edit_url(action="view", 
+            coll_id="testcoll", type_id="Default_type", entity_id="view_data", 
+            view_id="Default_view"
+            )
+        f = entitydata_form_data(action="copy",
+            coll_id="testcoll", type_id="Default_data", 
+            entity_id="copy_view_data", orig_id="view_data",
+            copy="copy"
+            )
+        r = self.client.post(u, f)
         return r
 
     def new_data(self):
         # requires CREATE
         u = entitydata_edit_url(action="new", 
-                coll_id="testcoll", type_id="Default_type",
-                view_id="Default_view"
-                )
+            coll_id="testcoll", type_id="Default_type",
+            view_id="Default_view"
+            )
         f = entitydata_form_data(action="new",
-                coll_id="testcoll", type_id="Default_type", entity_id="new_entity"
-                )
+            coll_id="testcoll", type_id="Default_type", entity_id="new_entity"
+            )
         r = self.client.post(u, f)
         return r
 
@@ -412,13 +534,13 @@ class AuthorizationTest(AnnalistTestCase):
         # requires CREATE
         e = self.create_data("copy_entity")
         u = entitydata_edit_url(action="copy", 
-                coll_id="testcoll", type_id="Default_type", entity_id="copy_entity", 
-                view_id="Default_view"
-                )
+            coll_id="testcoll", type_id="Default_type", entity_id="copy_entity", 
+            view_id="Default_view"
+            )
         f = entitydata_form_data(action="copy",
-                coll_id="testcoll", type_id="Default_type", 
-                entity_id="copy_entity_new", orig_id="copy_entity"
-                )
+            coll_id="testcoll", type_id="Default_type", 
+            entity_id="copy_entity_new", orig_id="copy_entity"
+            )
         r = self.client.post(u, f)
         # log.info("r %s"%r)
         return r
@@ -427,12 +549,12 @@ class AuthorizationTest(AnnalistTestCase):
         # requires UPDATE
         e = self.create_data("edit_entity")
         u = entitydata_edit_url(action="edit", 
-                coll_id="testcoll", type_id="Default_type", entity_id="edit_entity", 
-                view_id="Default_view"
-                )
+            coll_id="testcoll", type_id="Default_type", entity_id="edit_entity", 
+            view_id="Default_view"
+            )
         f = entitydata_form_data(action="edit",
-                coll_id="testcoll", type_id="Default_type", entity_id="edit_entity"
-                )
+            coll_id="testcoll", type_id="Default_type", entity_id="edit_entity"
+            )
         r = self.client.post(u, f)
         # log.info("r %s"%r)
         return r
@@ -441,9 +563,9 @@ class AuthorizationTest(AnnalistTestCase):
         # requires DELETE
         e = self.create_data("delete_entity")
         u = entitydata_list_type_url(
-                coll_id="testcoll", type_id="Default_type", 
-                list_id="Default_list"
-                )
+            coll_id="testcoll", type_id="Default_type", 
+            list_id="Default_list"
+            )
         f = entitydata_delete_form_data(entity_id="delete_entity")
         # log.info("u %s"%u)
         # log.info("f %r"%f)
@@ -475,6 +597,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.remove_collection().status_code,      403)
         #
         self.assertEqual(self.list_users().status_code,             200)
+        self.assertEqual(self.view_user_get().status_code,          200)
+        self.assertEqual(self.view_user_edit().status_code,         302)
+        self.assertEqual(self.view_user_copy().status_code,         302)
         self.assertEqual(self.new_user().status_code,               302)
         self.assertEqual(self.copy_user().status_code,              302)
         self.assertEqual(self.edit_user().status_code,              302)
@@ -482,6 +607,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_user_confirmed().status_code,  302)
         #
         self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         302)
+        self.assertEqual(self.view_type_copy().status_code,         302)
         self.assertEqual(self.new_type().status_code,               302)
         self.assertEqual(self.copy_type().status_code,              302)
         self.assertEqual(self.edit_type().status_code,              302)
@@ -489,6 +617,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  302)
         #
         self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         302)
+        self.assertEqual(self.view_data_copy().status_code,         302)
         self.assertEqual(self.new_data().status_code,               302)
         self.assertEqual(self.copy_data().status_code,              302)
         self.assertEqual(self.edit_data().status_code,              302)
@@ -504,6 +635,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.remove_collection().status_code,      403)
         #
         self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.view_user_get().status_code,          403)
+        self.assertEqual(self.view_user_edit().status_code,         403)
+        self.assertEqual(self.view_user_copy().status_code,         403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
         self.assertEqual(self.edit_user().status_code,              403)
@@ -511,6 +645,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_user_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         302)
+        self.assertEqual(self.view_type_copy().status_code,         302)
         self.assertEqual(self.new_type().status_code,               302)
         self.assertEqual(self.copy_type().status_code,              302)
         self.assertEqual(self.edit_type().status_code,              302)
@@ -518,6 +655,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  302)
         #
         self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         302)
+        self.assertEqual(self.view_data_copy().status_code,         302)
         self.assertEqual(self.new_data().status_code,               302)
         self.assertEqual(self.copy_data().status_code,              302)
         self.assertEqual(self.edit_data().status_code,              302)
@@ -533,6 +673,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.remove_collection().status_code,      403)
         #
         self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.view_user_get().status_code,          403)
+        self.assertEqual(self.view_user_edit().status_code,         403)
+        self.assertEqual(self.view_user_copy().status_code,         403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
         self.assertEqual(self.edit_user().status_code,              403)
@@ -540,6 +683,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_user_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         403)
+        self.assertEqual(self.view_type_copy().status_code,         403)
         self.assertEqual(self.new_type().status_code,               403)
         self.assertEqual(self.copy_type().status_code,              403)
         self.assertEqual(self.edit_type().status_code,              403)
@@ -547,6 +693,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         302)
+        self.assertEqual(self.view_data_copy().status_code,         302)
         self.assertEqual(self.new_data().status_code,               302)
         self.assertEqual(self.copy_data().status_code,              302)
         self.assertEqual(self.edit_data().status_code,              302)
@@ -562,6 +711,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.remove_collection().status_code,      403)
         #
         self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.view_user_get().status_code,          403)
+        self.assertEqual(self.view_user_edit().status_code,         403)
+        self.assertEqual(self.view_user_copy().status_code,         403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
         self.assertEqual(self.edit_user().status_code,              403)
@@ -569,6 +721,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_user_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         403)
+        self.assertEqual(self.view_type_copy().status_code,         403)
         self.assertEqual(self.new_type().status_code,               403)
         self.assertEqual(self.copy_type().status_code,              403)
         self.assertEqual(self.edit_type().status_code,              403)
@@ -576,6 +731,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         302)
+        self.assertEqual(self.view_data_copy().status_code,         403)
         self.assertEqual(self.new_data().status_code,               403)
         self.assertEqual(self.copy_data().status_code,              403)
         self.assertEqual(self.edit_data().status_code,              302)
@@ -591,6 +749,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.remove_collection().status_code,      403)
         #
         self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.view_user_get().status_code,          403)
+        self.assertEqual(self.view_user_edit().status_code,         403)
+        self.assertEqual(self.view_user_copy().status_code,         403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
         self.assertEqual(self.edit_user().status_code,              403)
@@ -598,6 +759,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_user_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         403)
+        self.assertEqual(self.view_type_copy().status_code,         403)
         self.assertEqual(self.new_type().status_code,               403)
         self.assertEqual(self.copy_type().status_code,              403)
         self.assertEqual(self.edit_type().status_code,              403)
@@ -605,6 +769,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         302)
+        self.assertEqual(self.view_data_copy().status_code,         403)
         self.assertEqual(self.new_data().status_code,               403)
         self.assertEqual(self.copy_data().status_code,              403)
         self.assertEqual(self.edit_data().status_code,              302)
@@ -620,6 +787,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.remove_collection().status_code,      403)
         #
         self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.view_user_get().status_code,          403)
+        self.assertEqual(self.view_user_edit().status_code,         403)
+        self.assertEqual(self.view_user_copy().status_code,         403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
         self.assertEqual(self.edit_user().status_code,              403)
@@ -627,6 +797,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_user_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         403)
+        self.assertEqual(self.view_type_copy().status_code,         403)
         self.assertEqual(self.new_type().status_code,               403)
         self.assertEqual(self.copy_type().status_code,              403)
         self.assertEqual(self.edit_type().status_code,              403)
@@ -634,6 +807,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         403)
+        self.assertEqual(self.view_data_copy().status_code,         403)
         self.assertEqual(self.new_data().status_code,               403)
         self.assertEqual(self.copy_data().status_code,              403)
         self.assertEqual(self.edit_data().status_code,              403)
@@ -649,6 +825,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.remove_collection().status_code,      403)
         #
         self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.view_user_get().status_code,          403)
+        self.assertEqual(self.view_user_edit().status_code,         403)
+        self.assertEqual(self.view_user_copy().status_code,         403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
         self.assertEqual(self.edit_user().status_code,              403)
@@ -656,6 +835,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_user_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         403)
+        self.assertEqual(self.view_type_copy().status_code,         403)
         self.assertEqual(self.new_type().status_code,               403)
         self.assertEqual(self.copy_type().status_code,              403)
         self.assertEqual(self.edit_type().status_code,              403)
@@ -663,6 +845,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         403)
+        self.assertEqual(self.view_data_copy().status_code,         403)
         self.assertEqual(self.new_data().status_code,               403)
         self.assertEqual(self.copy_data().status_code,              403)
         self.assertEqual(self.edit_data().status_code,              403)
@@ -677,6 +862,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.remove_collection().status_code,      401)
         #
         self.assertEqual(self.list_users().status_code,             401)
+        self.assertEqual(self.view_user_get().status_code,          401)
+        self.assertEqual(self.view_user_edit().status_code,         401)
+        self.assertEqual(self.view_user_copy().status_code,         401)
         self.assertEqual(self.new_user().status_code,               401)
         self.assertEqual(self.copy_user().status_code,              401)
         self.assertEqual(self.edit_user().status_code,              401)
@@ -684,6 +872,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_user_confirmed().status_code,  401)
         #
         self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         401)
+        self.assertEqual(self.view_type_copy().status_code,         401)
         self.assertEqual(self.new_type().status_code,               401)
         self.assertEqual(self.copy_type().status_code,              401)
         self.assertEqual(self.edit_type().status_code,              401)
@@ -691,6 +882,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  401)
         #
         self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         401)
+        self.assertEqual(self.view_data_copy().status_code,         401)
         self.assertEqual(self.new_data().status_code,               401)
         self.assertEqual(self.copy_data().status_code,              401)
         self.assertEqual(self.edit_data().status_code,              401)
@@ -707,6 +901,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.remove_collection().status_code,      200)
         #
         self.assertEqual(self.list_users().status_code,             200)
+        self.assertEqual(self.view_user_get().status_code,          200)
+        self.assertEqual(self.view_user_edit().status_code,         302)
+        self.assertEqual(self.view_user_copy().status_code,         302)
         self.assertEqual(self.new_user().status_code,               302)
         self.assertEqual(self.copy_user().status_code,              302)
         self.assertEqual(self.edit_user().status_code,              302)
@@ -714,6 +911,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_user_confirmed().status_code,  302)
         #
         self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         302)
+        self.assertEqual(self.view_type_copy().status_code,         302)
         self.assertEqual(self.new_type().status_code,               302)
         self.assertEqual(self.copy_type().status_code,              302)
         self.assertEqual(self.edit_type().status_code,              302)
@@ -721,6 +921,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  302)
         #
         self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         302)
+        self.assertEqual(self.view_data_copy().status_code,         302)
         self.assertEqual(self.new_data().status_code,               302)
         self.assertEqual(self.copy_data().status_code,              302)
         self.assertEqual(self.edit_data().status_code,              302)
@@ -735,6 +938,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.remove_collection().status_code,      403)
         #
         self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.view_user_get().status_code,          403)
+        self.assertEqual(self.view_user_edit().status_code,         403)
+        self.assertEqual(self.view_user_copy().status_code,         403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
         self.assertEqual(self.edit_user().status_code,              403)
@@ -742,6 +948,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_user_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         403)
+        self.assertEqual(self.view_type_copy().status_code,         403)
         self.assertEqual(self.new_type().status_code,               403)
         self.assertEqual(self.copy_type().status_code,              403)
         self.assertEqual(self.edit_type().status_code,              403)
@@ -749,6 +958,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         403)
+        self.assertEqual(self.view_data_copy().status_code,         403)
         self.assertEqual(self.new_data().status_code,               403)
         self.assertEqual(self.copy_data().status_code,              403)
         self.assertEqual(self.edit_data().status_code,              403)
@@ -763,6 +975,8 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.remove_collection().status_code,      200)
         #
         self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.view_user_get().status_code,          403)
+        self.assertEqual(self.view_user_edit().status_code,         403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
         self.assertEqual(self.edit_user().status_code,              403)
@@ -770,6 +984,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_user_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         403)
+        self.assertEqual(self.view_type_copy().status_code,         403)
         self.assertEqual(self.new_type().status_code,               403)
         self.assertEqual(self.copy_type().status_code,              403)
         self.assertEqual(self.edit_type().status_code,              403)
@@ -777,6 +994,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         403)
+        self.assertEqual(self.view_data_copy().status_code,         403)
         self.assertEqual(self.new_data().status_code,               403)
         self.assertEqual(self.copy_data().status_code,              403)
         self.assertEqual(self.edit_data().status_code,              403)
@@ -791,6 +1011,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.remove_collection().status_code,      403)
         #
         self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.view_user_get().status_code,          403)
+        self.assertEqual(self.view_user_edit().status_code,         403)
+        self.assertEqual(self.view_user_copy().status_code,         403)
         self.assertEqual(self.new_user().status_code,               403)
         self.assertEqual(self.copy_user().status_code,              403)
         self.assertEqual(self.edit_user().status_code,              403)
@@ -798,6 +1021,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_user_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         403)
+        self.assertEqual(self.view_type_copy().status_code,         403)
         self.assertEqual(self.new_type().status_code,               403)
         self.assertEqual(self.copy_type().status_code,              403)
         self.assertEqual(self.edit_type().status_code,              403)
@@ -805,6 +1031,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_type_confirmed().status_code,  403)
         #
         self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         403)
+        self.assertEqual(self.view_data_copy().status_code,         403)
         self.assertEqual(self.new_data().status_code,               403)
         self.assertEqual(self.copy_data().status_code,              403)
         self.assertEqual(self.edit_data().status_code,              403)

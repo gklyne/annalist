@@ -178,6 +178,8 @@ edit_listrow = (
 view_grouprow = (
     { 'head':
         """
+        <!-- Force to new row -->
+        <div class="small-12 columns">
         <!-- views.fields.render_repeatgroup.view_grouprow -->
         <div class="row">
           <div class="small-12 medium-2 columns">
@@ -185,10 +187,7 @@ view_grouprow = (
           </div>
           <div class="small-12 medium-10 columns hide-for-small-only">
             <div class="row">
-              <div class="small-1 columns">
-                <th>&nbsp;</th>
-              </div>
-              <div class="small-11 columns">
+              <div class="small-12 columns">
                 <div class="row">
                   {% for f in field.group_field_descs %}
                   {% include f.field_render_colhead with field=f %}
@@ -207,12 +206,7 @@ view_grouprow = (
           </div>
           <div class="small-12 medium-10 columns">
             <div class="row select-row">
-              <div class="small-1 columns">
-                <input type="checkbox" class="select-box right"
-                       name="{{field.group_id}}__select_fields"
-                       value="{{repeat_index}}" />
-              </div>
-              <div class="small-11 columns">
+              <div class="small-12 columns">
                 <div class="row">
                   {% for f in repeat_bound_fields %}
                   {% include f.field_render_colview with field=f %}
@@ -223,11 +217,17 @@ view_grouprow = (
           </div>
         </div>
         """
+    , 'tail':
+        """
+        </div>
+        """
     })
 
 edit_grouprow = (
     { 'head':
         """
+        <!-- Force to new row -->
+        <div class="small-12 columns"><div class="row"> 
         <!-- views.fields.render_repeatgroup.edit_grouprow -->
         <div class="small-12 columns">
           <div class="row">
@@ -292,6 +292,10 @@ edit_grouprow = (
             </div>
           </div>
         </div>"""
+    , 'tail':
+        """
+        </div></div>
+        """
     })
 
 class RenderRepeatGroup(object):
