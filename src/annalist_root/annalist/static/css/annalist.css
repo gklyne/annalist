@@ -74,7 +74,8 @@ form div.row .columns .row .columns ,
 form div.row .column  .row .column  .row .column ,
 form div.row .columns .row .columns .row .columns
 {   /* padding left and right around inner columns */
-    padding: 0 0.5rem;  /* was 0.75 */
+    padding-left: 0.5rem;  /* was 0.75 */
+    padding-right: 0.5rem;  /* was 0.75 */
 }
 
 form div.row .column  .row .column  .row ,
@@ -161,38 +162,62 @@ div.columns form , div.columns form
     margin-bottom: 0;
 }
 
-div.row div.column  p.group-label , 
-div.row div.columns p.group-label
+div.row div.column.group-label , 
+div.row div.columns.group-label
 {
-    margin-top:  0rem;
+    margin-top:     0.4rem;
     margin-bottom:  0rem;
-    padding-top: 0.25rem;
+    padding-top:    0.15rem;
     /* height: auto; */
     font-size: 0.75rem;
     color: #666666;
 }
 
-div.row div.column  p.group-placeholder , 
-div.row div.columns p.group-placeholder
+div.row div.column.group-placeholder , 
+div.row div.columns.group-placeholder
 {
-    margin-top:  0rem;
+    margin-top:     0.4rem;
     margin-bottom:  0rem;
+    padding-top:    0.25rem;
+    padding-bottom: 0rem;
     height: auto;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-style: italic;
-    color: #989898;
+    /* color: #989898; */
+    color: #666666;
 }
 
-div.row div.column.col-head ,
-div.row div.columns.col-head
+div.row div.column.col-head.view-label ,
+div.row div.columns.col-head.view-label
 {
+    padding-top: 0.25rem;
+    padding-bottom: 0rem;
     background-color: #f0f0f8;
+    height: 1.2rem;
+}
+
+div.group-row.even div.small-10.columns, 
+div.group-row:nth-of-type(even) div.small-10.columns
+{   /* Background shading for even rows in list; first row is zeroth? */
+    background-color: white;
+}
+
+div.group-row.odd div.small-10.columns, 
+div.group-row:nth-of-type(odd) div.small-10.columns
+{   /* Background shading for odd rows in list */
+    background-color: #F0F0F8;
+}
+
+div.row div.columns div.row div.columns.group-buttons ,
+div.row div.column  div.row div.column.group-buttons
+{
+    margin-top: 0.25rem;
 }
 
 div.row div.column.view-label,
 div.row div.columns.view-label
 {
-    margin-top:   0.5rem;
+    margin-top:   0.4rem;
     margin-bottom:  0rem;
     padding-top: 0rem;
     font-size: 0.75rem;

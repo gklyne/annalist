@@ -21,8 +21,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Add new response dispatch options to entityedit
     - [x] Update application urls
     - [x] Check/update view-field renderers
+    - [x] Get rid of <p> elements in repeat group listings; update CSS as needed
 - [ ] New render types: Markdown, Boolean (checkbox), Link (hyperlink) [#2](https://github.com/gklyne/annalist/issues/2)
-- [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [ ] Blob and file upload support: images, spreadsheets, ...
     - [ ] Field type to link to uploaded file
@@ -97,6 +97,7 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
 - [ ] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
 - [ ] Rationalize common fields to reduce duplication?

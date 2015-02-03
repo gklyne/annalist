@@ -257,7 +257,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         # replace runs of whitespace/newlines with single space:
         rendered_text = re.sub(r'\s+', " ", rendered_text)
         expect_elements = (
-            [ '''<div class="small-2 columns"> <p class="group-label">Fields</p> </div>'''
+            [ '''<div class="group-label small-2 columns"> Fields </div>'''
             , '''<div class="row selectable">'''
             , '''<div class="view-label small-12 medium-4 columns"> Field id </div>'''
             , '''<div class="view-label small-12 medium-4 columns"> Property </div>'''

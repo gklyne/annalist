@@ -18,44 +18,50 @@ from django.template    import Template, Context
 
 from annalist.views.fields.bound_field  import bound_field
 
-view_group = (      # @@TODO rationalize (see other; not currently used)
+view_group = (
     { 'head':
         """
-        @@TODO: FIXME render_repeatgroup.view_group.head@@
         <!-- views.fields.render_repeatgroup.view_group -->
         <div class="small-12 columns">
-          <p class="group-label">{{field.field_label}}</p>
+          <div class="row">
+            <div class="group-label small-2 columns">
+              {{field.field_label}}
+            </div>
+            <div class="group-placeholder small-10 columns">
+              {{field.field_placeholder}}
+            </div>
+          </div>
         </div>"""
     , 'body':
         """
-        @@TODO: FIXME render_repeatgroup.view_group.body@@
-        <div class="small-12 columns">
-          <div class="row selectable">
-            <div class="small-12 columns">
+        <div class="group-row small-12 columns">
+          <div class="row">
+            <div class="small-2 columns">
+              &nbsp;
+            </div>
+            <div class="small-10 columns">
               {% for f in repeat_bound_fields %}
-              {% include f.field_render_view with field=f %}
+                <div class="row">
+                  {% include f.field_render_view with field=f %}
+                </div>
               {% endfor %}
             </div>
           </div>
         </div>"""
-    # , 'tail':
-    #     """
-    #     @@TODO: FIXME render_repeatgroup.view_group.tail@@
-    #     """
     })
 
 edit_group = (
     { 'head':
         """<!-- views.fields.render_repeatgroup.edit_group -->
-        <div class="small-2 columns">
-          <p class="group-label">{{field.field_label}}</p>
+        <div class="group-label small-2 columns">
+          {{field.field_label}}
         </div>
-        <div class="small-10 columns">
-          <p class="group-placeholder">{{field.field_placeholder}}</p>
+        <div class="group-placeholder small-10 columns">
+          {{field.field_placeholder}}
         </div>"""
     , 'body':
         """
-        <div class="small-12 columns">
+        <div class="group-row small-12 columns">
           <div class="row selectable">
             <div class="small-2 columns checkbox-in-edit-padding">
               {% if auth_config %}
@@ -65,7 +71,9 @@ edit_group = (
             </div>
             <div class="small-10 columns">
               {% for f in repeat_bound_fields %}
-              {% include f.field_render_edit with field=f %}
+                <div class="row">
+                  {% include f.field_render_edit with field=f %}
+                </div>
               {% endfor %}
             </div>
           </div>
@@ -87,111 +95,23 @@ edit_group = (
         </div> """
     })
 
-view_listrow = (
-    { 'head':
-        """
-        <!-- views.fields.render_repeatgroup.view_listrow -->
-        <div class="thead row">
-          <div class="small-1 columns">
-            <th>&nbsp;</th>
-          </div>
-          <div class="small-11 columns">
-            <div class="row">
-              {% for f in field.group_field_descs %}
-              {% include f.field_render_colhead with field=f %}
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-        """
-    , 'body':
-        """
-        <div class="trow row select-row">
-          <div class="small-1 columns">
-            <input type="checkbox" class="select-box right" name="entity_select" 
-                   value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
-          </div>
-          <div class="small-11 columns">
-            <div class="row">
-              {% for f in repeat_bound_fields %}
-              {% include f.field_render_colview with field=f %}
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-        """
-    })
-
-edit_listrow = (
-    { 'head':
-        """
-        <!-- views.fields.render_repeatgroup.edit_listrow -->
-        <div class="thead row">
-          <div class="small-12 columns">
-            <div class="row">
-              <div class="small-12 columns">
-                <p class="group-label">{{field.field_label}}</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="small-1 columns">
-                <th>&nbsp;</th>
-              </div>
-              <div class="small-11 columns">
-                <div class="row">
-                  {% for f in field.group_field_descs %}
-                  {% include f.field_render_colhead with field=f %}
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        """
-    , 'body':
-        """
-        <div class="trow row select-row">
-          <div class="small-1 columns checkbox-in-edit-padding">
-            <input type="checkbox" class="select-box right" name="entity_select" 
-                   value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
-          </div>
-          <div class="small-11 columns">
-            <div class="row">
-              {% for f in repeat_bound_fields %}
-              {% include f.field_render_coledit with field=f %}
-              {% endfor %}
-            </div>
-          </div>
-        </div>"""
-    , 'tail':
-        """
-        <div class="row">
-          <div class="small-12 columns">
-            <input type="submit" name="{{field.group_id}}__remove" 
-                   value="{{field.group_delete_label}}" />
-            <input type="submit" name="{{field.group_id}}__add"    
-                   value="{{field.group_add_label}}" />
-          </div>
-        </div>"""
-    })
-
 view_grouprow = (
     { 'head':
         """
-        <!-- Force to new row -->
-        <div class="small-12 columns">
         <!-- views.fields.render_repeatgroup.view_grouprow -->
-        <div class="row">
-          <div class="small-12 medium-2 columns">
-            <p class="group-label">{{field.field_label}}</p>
-          </div>
-          <div class="small-12 medium-10 columns hide-for-small-only">
-            <div class="row">
-              <div class="small-12 columns">
-                <div class="row">
-                  {% for f in field.group_field_descs %}
-                  {% include f.field_render_colhead with field=f %}
-                  {% endfor %}
+        <div class="small-12 columns">
+          <div class="row">
+            <div class="group-label small-12 medium-2 columns">
+              {{field.field_label}}
+            </div>
+            <div class="small-12 medium-10 columns hide-for-small-only">
+              <div class="row">
+                <div class="small-12 columns">
+                  <div class="row">
+                    {% for f in field.group_field_descs %}
+                    {% include f.field_render_colhead with field=f %}
+                    {% endfor %}
+                  </div>
                 </div>
               </div>
             </div>
@@ -200,27 +120,28 @@ view_grouprow = (
         """
     , 'body':
         """
-        <div class="row">
-          <div class="small-12 medium-2 columns">
-            &nbsp;
-          </div>
-          <div class="small-12 medium-10 columns">
-            <div class="row select-row">
-              <div class="small-12 columns">
-                <div class="row">
-                  {% for f in repeat_bound_fields %}
-                  {% include f.field_render_colview with field=f %}
-                  {% endfor %}
+        <div class="small-12 columns">
+          <div class="row">
+            <div class="small-12 medium-2 columns">
+              &nbsp;
+            </div>
+            <div class="small-12 medium-10 columns">
+              <div class="row select-row">
+                <div class="small-12 columns">
+                  <div class="row">
+                    {% for f in repeat_bound_fields %}
+                    {% include f.field_render_colview with field=f %}
+                    {% endfor %}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
         """
-    , 'tail':
-        """
-        </div>
-        """
+    # , 'tail':
+    #     """
+    #     """
     })
 
 edit_grouprow = (
@@ -231,8 +152,8 @@ edit_grouprow = (
         <!-- views.fields.render_repeatgroup.edit_grouprow -->
         <div class="small-12 columns">
           <div class="row">
-            <div class="small-12 medium-2 columns">
-              <p class="group-label">{{field.field_label}}</p>
+            <div class="group-label small-12 medium-2 columns">
+              {{field.field_label}}
             </div>
             <div class="small-12 medium-10 columns hide-for-small-only">
               <div class="row">
@@ -284,19 +205,112 @@ edit_grouprow = (
             <div class="small-12 medium-2 columns">
               &nbsp;
             </div>
-            <div class="small-12 medium-10 columns">
-              <input type="submit" name="{{field.group_id}}__remove" 
-                     value="{{field.group_delete_label}}" />
-              <input type="submit" name="{{field.group_id}}__add"    
-                     value="{{field.group_add_label}}" />
+            <div class="group-buttons small-12 medium-10 columns">
+              <div class="row">
+                <div class="small-1 columns">
+                  &nbsp;
+                </div>
+                <div class="small-11 columns">
+                  <input type="submit" name="{{field.group_id}}__remove" 
+                         value="{{field.group_delete_label}}" />
+                  <input type="submit" name="{{field.group_id}}__add"    
+                         value="{{field.group_add_label}}" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>"""
+    })
+
+# Used for rendering lists of entities via the EntityList view class
+view_listrow = (
+    { 'head':
+        """
+        <!-- views.fields.render_repeatgroup.view_listrow -->
+        <div class="thead row">
+          <div class="small-1 columns">
+            <th>&nbsp;</th>
+          </div>
+          <div class="small-11 columns">
+            <div class="row">
+              {% for f in field.group_field_descs %}
+              {% include f.field_render_colhead with field=f %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        """
+    , 'body':
+        """
+        <div class="trow row select-row">
+          <div class="small-1 columns">
+            <input type="checkbox" class="select-box right" name="entity_select" 
+                   value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
+          </div>
+          <div class="small-11 columns">
+            <div class="row">
+              {% for f in repeat_bound_fields %}
+              {% include f.field_render_colview with field=f %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        """
+    })
+
+edit_listrow_unused = (
+    { 'head':
+        """
+        <!-- views.fields.render_repeatgroup.edit_listrow -->
+        <div class="thead row">
+          <div class="small-12 columns">
+            <div class="row">
+              <div class="group-label small-12 columns">
+                {{field.field_label}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-1 columns">
+                <th>&nbsp;</th>
+              </div>
+              <div class="small-11 columns">
+                <div class="row">
+                  {% for f in field.group_field_descs %}
+                  {% include f.field_render_colhead with field=f %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        """
+    , 'body':
+        """
+        <div class="trow row select-row">
+          <div class="small-1 columns checkbox-in-edit-padding">
+            <input type="checkbox" class="select-box right" name="entity_select" 
+                   value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
+          </div>
+          <div class="small-11 columns">
+            <div class="row">
+              {% for f in repeat_bound_fields %}
+              {% include f.field_render_coledit with field=f %}
+              {% endfor %}
             </div>
           </div>
         </div>"""
     , 'tail':
         """
-        </div></div>
-        """
+        <div class="row">
+          <div class="small-12 columns">
+            <input type="submit" name="{{field.group_id}}__remove" 
+                   value="{{field.group_delete_label}}" />
+            <input type="submit" name="{{field.group_id}}__add"    
+                   value="{{field.group_add_label}}" />
+          </div>
+        </div>"""
     })
+
 
 class RenderRepeatGroup(object):
   """
