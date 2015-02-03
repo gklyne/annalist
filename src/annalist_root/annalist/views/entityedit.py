@@ -468,7 +468,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 # entity_id, entity_type_id, 
                 orig_entity_id, orig_entity_type_id, # orig_entity,
                 viewinfo, context_extra_values, messages,
-                view_edit_uri_base, self.uri_action,
+                view_edit_uri_base, edit_action,
                 {}, continuation_url
                 )
 

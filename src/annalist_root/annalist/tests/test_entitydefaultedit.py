@@ -142,9 +142,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               <div class="small-12 medium-6 columns">
                 <div class="row">
                   <div class="%(label_classes)s">
-                    <p>
                       Id
-                    </p>
                   </div>
                   <div class="%(input_classes)s">
                     <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
@@ -159,9 +157,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               <div class="small-12 medium-6 columns">
                 <div class="row">
                   <div class="%(label_classes)s">
-                    <p>
                       Type
-                    </p>
                   </div>
                   <div class="%(input_classes)s">
                   """+
@@ -179,9 +175,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               <div class="small-12 columns">
                 <div class="row">
                   <div class="%(label_classes)s">
-                    <p>
                       Label
-                    </p>
                   </div>
                   <div class="%(input_classes)s">
                     <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
@@ -197,9 +191,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               <div class="small-12 columns">
                 <div class="row">
                   <div class="%(label_classes)s">
-                    <p>
                       Comment
-                    </p>
                   </div>
                   <div class="%(input_classes)s">
                     <textarea cols="64" rows="6" name="Entity_comment" 

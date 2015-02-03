@@ -154,11 +154,15 @@ class EntityGenericListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row">
-                    <div class="small-3 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></div>
-                    <div class="small-2 columns"><a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">testtype</a></div>
-                    <div class="small-7 columns">
+                  <div class="view-value small-3 columns">
+                    <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
+                  </div>
+                  <div class="view-value small-2 columns">
+                    <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">testtype</a>
+                  </div>
+                  <div class="view-value small-7 columns">
                     Entity testcoll/testtype/entity1
-                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -320,9 +324,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row">
-                    <div class="small-3 columns"><a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a></div>
-                    <div class="small-3 columns">annal:Text</div>
-                    <div class="small-6 columns">Address</div>
+                  <div class="view-value small-3 columns">
+                    <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
+                  </div>
+                  <div class="view-value small-3 columns">annal:Text</div>
+                  <div class="view-value small-6 columns">Address</div>
                 </div>
               </div>
             </div>
@@ -432,9 +438,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row">
-                    <div class="small-3 columns"><a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a></div>
-                    <div class="small-3 columns">annal:Text</div>
-                    <div class="small-6 columns">Address</div>
+                  <div class="view-value small-3 columns">
+                    <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
+                  </div>
+                  <div class="view-value small-3 columns">annal:Text</div>
+                  <div class="view-value small-6 columns">Address</div>
                 </div>
               </div>
             </div>
@@ -471,9 +479,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row">
-                    <div class="small-3 columns"><a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a></div>
-                    <div class="small-3 columns">annal:Text</div>
-                    <div class="small-6 columns">Address</div>
+                  <div class="view-value small-3 columns">
+                    <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
+                  </div>
+                  <div class="view-value small-3 columns">annal:Text</div>
+                  <div class="view-value small-6 columns">Address</div>
                 </div>
               </div>
             </div>

@@ -198,8 +198,8 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_elements = (
             [ '''<div class="small-12 columns">'''
             , '''<div class="row">'''
-            , '''<div class="view-label small-12 medium-2 columns"> <p>test label</p> </div>'''
-            , '''<div class="small-12 medium-10 columns">'''
+            , '''<div class="view-label small-12 medium-2 columns"> test label </div>'''
+            , '''<div class="view-value small-12 medium-10 columns">'''
             , '''<input type="text" size="64" name="tokprefix_test_field" '''+
               '''placeholder="(test placeholder)" value="aa bb cc"/>'''
             ])
@@ -215,8 +215,8 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_elements = (
             [ '''<div class="small-12 columns">'''
             , '''<div class="row">'''
-            , '''<div class="view-label small-12 medium-2 columns"> <p>test label</p> </div>'''
-            , '''<div class="small-12 medium-10 columns"> aa bb cc </div>'''
+            , '''<div class="view-label small-12 medium-2 columns"> test label </div>'''
+            , '''<div class="view-value small-12 medium-10 columns"> aa bb cc </div>'''
             ])
         for e in expect_elements:
             self.assertIn(e, rendered_text)
@@ -229,9 +229,9 @@ class FieldDescriptionTest(AnnalistTestCase):
         rendered_text = re.sub(r'\s+', " ", rendered_text)
         expect_elements = (
             [ '''<div class="view-label small-12 columns">'''+
-              ''' <p>test label</p> '''+
+              ''' test label '''+
               '''</div>'''
-            , '''<div class="small-12 columns">'''+
+            , '''<div class="view-value small-12 columns">'''+
               ''' aa bb cc '''+
               '''</div>'''
             ])
@@ -259,9 +259,9 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_elements = (
             [ '''<div class="small-2 columns"> <p class="group-label">Fields</p> </div>'''
             , '''<div class="row selectable">'''
-            , '''<p>Field id</p>'''
-            , '''<p>Property</p>'''
-            , '''<p>Position/size</p>'''
+            , '''<div class="view-label small-12 medium-4 columns"> Field id </div>'''
+            , '''<div class="view-label small-12 medium-4 columns"> Property </div>'''
+            , '''<div class="view-label small-12 medium-4 columns"> Position/size </div>'''
             # 1st field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="0" class="right" />'''
@@ -326,23 +326,23 @@ class FieldDescriptionTest(AnnalistTestCase):
         rendered_label      = fieldrender.label().render(context)
         self.assertEqual(
             rendered_label, 
-            '''<div class="view-label small-12 columns">  <p>test label</p></div>'''
+            '''<div class="view-label small-12 columns">  test label</div>'''
             )
         rendered_view       = fieldrender.view().render(context)
         self.assertEqual(
             rendered_view, 
-            '''<div class="small-12 columns">  %s</div>'''%expect_rendered_view
+            '''<div class="view-value small-12 columns">  %s</div>'''%expect_rendered_view
             )
         rendered_edit       = fieldrender.edit().render(context)
         self.assertEqual(
             rendered_edit, 
-            '''<div class="small-12 columns">  %s</div>'''%expect_rendered_edit
+            '''<div class="view-value small-12 columns">  %s</div>'''%expect_rendered_edit
             )
         rendered_label_view = fieldrender.label_view().render(context)
         self.assertEqual(
             rendered_label_view, 
             '''<div class="view-label small-12 columns">  '''+
-            '''<p>test label</p>'''+
+            '''test label'''+
             '''</div>'''
             )
         rendered_label_edit = fieldrender.label_edit().render(context)
@@ -351,9 +351,9 @@ class FieldDescriptionTest(AnnalistTestCase):
             '''<div class="small-12 columns">\n'''+
             '''  <div class="row">\n'''+
             '''    <div class="view-label small-12 medium-2 columns">\n'''+
-            '''      <p>test label</p>\n'''+
+            '''      test label\n'''+
             '''    </div>\n'''+
-            '''    <div class="small-12 medium-10 columns">\n'''+
+            '''    <div class="view-value small-12 medium-10 columns">\n'''+
             '''      %s\n'''%expect_rendered_edit+
             '''    </div>\n'''+
             '''  </div>\n'''+
@@ -362,8 +362,8 @@ class FieldDescriptionTest(AnnalistTestCase):
         rendered_col_head   = fieldrender.col_head().render(context)
         self.assertEqual(
             rendered_col_head, 
-            '''<div class="view-label small-12 columns">  '''+
-            '''<p>test label</p></div>'''
+            '''<div class="view-label col-head small-12 columns">  '''+
+            '''test label</div>'''
             )
         rendered_col_view   = fieldrender.col_view().render(context)
         self.assertEqual(
@@ -371,11 +371,11 @@ class FieldDescriptionTest(AnnalistTestCase):
             '''<div class="small-12 columns">\n'''+
             '''  <div class="row show-for-small-only">\n'''+
             '''    <div class="view-label small-12 columns">\n'''+
-            '''      <p>test label</p>\n'''+
+            '''      test label\n'''+
             '''    </div>\n'''+
             '''  </div>\n'''+
             '''  <div class="row">\n'''+
-            '''    <div class="small-12 columns">\n'''+
+            '''    <div class="view-value small-12 columns">\n'''+
             '''      %s\n'''%expect_rendered_view+
             '''    </div>\n'''+
             '''  </div>\n'''+
@@ -387,11 +387,11 @@ class FieldDescriptionTest(AnnalistTestCase):
             '''<div class="small-12 columns">\n'''+
             '''  <div class="row show-for-small-only">\n'''+
             '''    <div class="view-label small-12 columns">\n'''+
-            '''      <p>test label</p>\n'''+
+            '''      test label\n'''+
             '''    </div>\n'''+
             '''  </div>\n'''+
             '''  <div class="row">\n'''+
-            '''    <div class="small-12 columns">\n'''+
+            '''    <div class="view-value small-12 columns">\n'''+
             '''      %s\n'''%expect_rendered_edit+
             '''    </div>\n'''+
             '''  </div>\n'''+
@@ -530,6 +530,19 @@ class FieldDescriptionTest(AnnalistTestCase):
                     '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
                     '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
                     ''' (9/3)</option>\n'''+
+                # Extras for old placement strings
+                '''  <option value="small:0,12;medium:6,6right">'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
+                    '''&block;&block;&block;&block;&block;&block;'''+
+                    ''' (6/6R)</option>\n'''+
+                '''  <option value="small:0,12;medium:8,4right">'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
+                    '''&blk14;&blk14;&block;&block;&block;&block;'''+
+                    ''' (8/4R)</option>\n'''+
+                '''  <option value="small:0,12;medium:9,3right">'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
+                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
+                    ''' (9/3R)</option>\n'''+
                 '''</select>'''
             )
         return

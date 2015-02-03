@@ -177,97 +177,130 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Collection testcoll</title>")
-        field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="testtype", entity_id="00000001",
+            entity_url = (
+                "/testsite/c/testcoll/d/testtype/entity1/" +
+                "?continuation_url=%s"%u +
+                "%3Fcontinuation_url=/xyzzy/"
+                ),
+            default_view_url = (
+                "/testsite/c/testcoll/d/_view/Default_view/" +
+                "?continuation_url=%s"%u +
+                "%3Fcontinuation_url=/xyzzy/"
+                ),
+            default_list_url = (
+                "/testsite/c/testcoll/d/_list/Default_list/" +
+                "?continuation_url=%s"%u +
+                "%3Fcontinuation_url=/xyzzy/"
+                )
+            )
         formrow1 = """
             <div class="small-12 medium-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
-                  <p>Id</p>
+                  Id
                 </div>
                 <div class="%(input_classes)s">
-                    <input type="text" size="64" name="entity_id" 
-                           placeholder="(type id)" value="00000001"/>
+                  <a href="%(entity_url)s">entity1</a>
                 </div>
               </div>
             </div>
             """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Label</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Type_label"
-                        placeholder="(label)"  
-                        value="%(default_label_esc)s"/>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Label
                 </div>
+                <div class="%(input_classes)s">
+                  Entity testcoll/testtype/entity1
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Comment</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <textarea cols="64" rows="6" name="Type_comment" 
-                                  class="small-rows-4 medium-rows-8"
-                                  placeholder="(type description)">
-                            %(default_comment_esc)s
-                        </textarea>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Comment
                 </div>
+                <div class="%(input_classes)s">
+                  Entity coll testcoll, type testtype, entity entity1
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>URI</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Type_uri"
-                               placeholder="(URI)"  
-                               value=""/>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  URI
                 </div>
+                <div class="%(input_classes)s">
+                  &nbsp;
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow5 = """
+            <div class="small-12 medium-6 columns">
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Default view
+                </div>
+                <div class="%(input_classes)s">
+                  <a href="%(default_view_url)s">Default_view</a>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        formrow6 = """
+            <div class="small-12 medium-6 columns">
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Default list
+                </div>
+                <div class="%(input_classes)s">
+                  <a href="%(default_list_url)s">Default_list</a>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        formrow7 = """
             <div class="row">
                 <div class="%(space_classes)s">
-                    <div class="row">
-                        <div class="small-12 columns">
-                          &nbsp;
-                        </div>
+                  <div class="row">
+                    <div class="small-12 columns">
+                      &nbsp;
                     </div>
+                  </div>
                 </div>
                 <div class="%(button_wide_classes)s">
-                    <div class="row">
-                        <div class="%(button_left_classes)s">
-                            <input type="submit" name="save"          value="Save" />
-                            <input type="submit" name="cancel"        value="Cancel" />
-                        </div>
+                  <div class="row">
+                    <div class="%(button_left_classes)s">
+                      <input type="submit" name="close" value="Close" />
+                      <input type="submit" name="copy"  value="Copy" />
+                      <input type="submit" name="edit"  value="Edit" />
                     </div>
+                  </div>
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow6 = ("""
+        formrow8 = ("""
             <div class="row">
               <div class="%(label_classes)s">
-                <p>Choose view</p>
+                Choose view
               </div>
               <div class="%(input_classes)s">
                 <div class="row">
                   <div class="small-9 columns">
-                    """+
-                      render_choice_options(
-                        "view_choice",
-                        sorted(get_site_views()),
-                        "Type_view")+
-                    """
+                  """+
+                    render_choice_options(
+                      "view_choice",
+                      sorted(get_site_views()),
+                      "Type_view")+
+                  """
                   </div>
                   <div class="small-3 columns">
                     <input type="submit" name="use_view"      value="Show view" />
@@ -276,7 +309,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow7 = """
+        formrow9 = """
             <div class="%(button_right_classes)s">
               <div class="row">
                 <div class="small-12 columns">
@@ -295,8 +328,10 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertContains(r, formrow4, html=True)
         self.assertContains(r, formrow5, html=True)
         self.assertContains(r, formrow6, html=True)
+        self.assertContains(r, formrow7, html=True)
+        self.assertContains(r, formrow8, html=True)
         # New buttons hidden (for now)
-        # self.assertContains(r, formrow7, html=True)
+        # self.assertContains(r, formrow9, html=True)
         return
 
     def test_get_view(self):
@@ -365,7 +400,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_name'], 'Type_view')
         self.assertEqual(r.context['fields'][4]['field_label'], 'Default view')
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:type_view")
-        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:View")
         self.assertEqual(r.context['fields'][4]['field_value'], "Default_view")
         self.assertEqual(r.context['fields'][4]['options'], self.view_options)
@@ -374,7 +409,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_name'], 'Type_list')
         self.assertEqual(r.context['fields'][5]['field_label'], 'Default list')
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_list")
-        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:List")
         self.assertEqual(r.context['fields'][5]['field_value'], "Default_list")
         self.assertEqual(r.context['fields'][5]['options'], self.list_options)

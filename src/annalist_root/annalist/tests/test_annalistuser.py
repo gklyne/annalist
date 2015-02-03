@@ -8,6 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import unittest
+import re
 
 import logging
 log = logging.getLogger(__name__)
@@ -239,10 +240,13 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             })
         context  = Context({'field': field})
         rendered = get_field_tokenset_renderer().label_edit().render(context)
+        rendered = re.sub(r'\s+', " ", rendered)
         self.assertIn('''<div class="small-12 columns">''',                             rendered)
         self.assertIn('''<div class="row">''',                                          rendered)
-        self.assertIn('''<div class="view-label small-12 medium-2 columns">''',         rendered)
-        self.assertIn('''<p>Permissions</p>''',                                         rendered)
+        self.assertIn(
+            '''<div class="view-label small-12 medium-2 columns"> Permissions </div>''',
+            rendered
+            )
         self.assertIn('''<div class="view-value small-12 medium-10 columns">''',        rendered)
         self.assertIn('''<input type="text" size="64" name="User_permissions" ''',      rendered)
         self.assertIn(       '''placeholder="(user permissions)"''',                    rendered)
@@ -266,10 +270,13 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         template = Template("{% include field.field_render_object %}")
         context  = Context({ 'render_object': get_field_tokenset_renderer().label_edit(), 'field': field})
         rendered = template.render(context)
+        rendered = re.sub(r'\s+', " ", rendered)
         self.assertIn('''<div class="small-12 columns">''',                             rendered)
         self.assertIn('''<div class="row">''',                                          rendered)
-        self.assertIn('''<div class="view-label small-12 medium-2 columns">''',         rendered)
-        self.assertIn('''<p>Permissions</p>''',                                         rendered)
+        self.assertIn(
+            '''<div class="view-label small-12 medium-2 columns"> Permissions </div>''',
+            rendered
+            )
         self.assertIn('''<div class="view-value small-12 medium-10 columns">''',        rendered)
         self.assertIn('''<input type="text" size="64" name="User_permissions" ''',      rendered)
         self.assertIn(       '''placeholder="(user permissions)"''',                    rendered)
@@ -288,13 +295,12 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
-                        <p>User Id</p>
+                        User Id
                     </div>
                     <div class="%(input_classes)s">
-                        <p><input type="text" size="64" name="entity_id" 
+                        <input type="text" size="64" name="entity_id" 
                                    placeholder="(user id)" 
                                    value="00000001" />
-                        </p>
                     </div>
                 </div>
             </div>
@@ -303,13 +309,12 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             <div class="small-12 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
-                        <p>User name</p>
+                        User name
                     </div>
                     <div class="%(input_classes)s">
-                        <p><input type="text" size="64" name="User_name" 
+                        <input type="text" size="64" name="User_name" 
                                placeholder="(user name)"
                                value="" />
-                        </p>
                     </div>
                 </div>
             </div>
@@ -318,14 +323,14 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             <div class="small-12 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
-                        <p>Description</p>
+                        Description
                     </div>
                     <div class="%(input_classes)s">
-                        <p><textarea cols="64" rows="6" name="User_description" 
+                        <textarea cols="64" rows="6" name="User_description" 
                                   class="small-rows-4 medium-rows-8"
                                   placeholder="(user description)"
                                   >
-                        </textarea></p>
+                        </textarea>
                     </div>
                 </div>
             </div>
@@ -334,13 +339,12 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             <div class="small-12 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
-                        <p>URI</p>
+                        URI
                     </div>
                     <div class="%(input_classes)s">
-                        <p><input type="text" size="64" name="User_uri" 
+                        <input type="text" size="64" name="User_uri" 
                                placeholder="(User URI - e.g. mailto:local-name@example.com)"
                                value=""/>
-                        </p>
                     </div>
                 </div>
             </div>
@@ -349,13 +353,12 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             <div class="small-12 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
-                        <p>Permissions</p>
+                        Permissions
                     </div>
                     <div class="%(input_classes)s">
-                        <p><input type="text" size="64" name="User_permissions" 
+                        <input type="text" size="64" name="User_permissions" 
                                placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
                                value=""/>
-                        </p>
                     </div>
                 </div>
             </div>
@@ -399,13 +402,12 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             <div class="small-12 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
-                        <p>Permissions</p>
+                        Permissions
                     </div>
                     <div class="%(input_classes)s">
-                        <p><input type="text" size="64" name="User_permissions" 
+                        <input type="text" size="64" name="User_permissions" 
                                placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
                                value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>
-                        </p>
                     </div>
                 </div>
             </div>
@@ -430,13 +432,12 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             <div class="small-12 columns">
                 <div class="row">
                     <div class="%(label_classes)s">
-                        <p>Permissions</p>
+                        Permissions
                     </div>
                     <div class="%(input_classes)s">
-                        <p><input type="text" size="64" name="User_permissions" 
+                        <input type="text" size="64" name="User_permissions" 
                                placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
                                value="VIEW CREATE UPDATE DELETE"/>
-                        </p>
                     </div>
                 </div>
             </div>

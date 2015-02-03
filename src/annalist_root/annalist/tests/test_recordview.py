@@ -446,75 +446,75 @@ class RecordViewEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="_view", entity_id="00000001")
         formrow1 = """
             <div class="small-12 medium-6 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Id</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="entity_id" 
-                        placeholder="(view id)" value="%(entity_id)s"/>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Id
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="entity_id" 
+                         placeholder="(view id)" value="%(entity_id)s"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Label</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="View_label"
-                               placeholder="(view label)" 
-                               value="%(default_label_esc)s"/>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Label
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="View_label"
+                         placeholder="(view label)" 
+                         value="%(default_label_esc)s"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Help</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <textarea cols="64" rows="6" name="View_comment" 
-                                  class="small-rows-4 medium-rows-8"
-                                  placeholder="(description of record view)">
-                            %(default_comment_esc)s
-                        </textarea>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Help
                 </div>
+                <div class="%(input_classes)s">
+                  <textarea cols="64" rows="6" name="View_comment" 
+                            class="small-rows-4 medium-rows-8"
+                            placeholder="(description of record view)">
+                      %(default_comment_esc)s
+                  </textarea>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 medium-6 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Add field?</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="View_add_field" 
-                        placeholder="(yes or no)" value="yes"/>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Add field?
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="View_add_field" 
+                         placeholder="(yes or no)" value="yes"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=6)
         formrow5 = ("""
             <div class="small-12 medium-4 columns">
               <div class="row show-for-small-only">
                 <div class="view-label small-12 columns">
-                  <p>Field id</p>
+                  Field id
                 </div>
               </div>
               <div class="row">
-                <div class="small-12 columns">
-                  """+
-                    render_select_options(
-                      "View_fields__0__Field_id", "Field id",
-                      get_site_default_entity_fields_sorted(),
-                      "Entity_id")+
-                  """
+                <div class="view-value small-12 columns">
+                """+
+                  render_select_options(
+                    "View_fields__0__Field_id", "Field id",
+                    get_site_default_entity_fields_sorted(),
+                    "Entity_id")+
+                """
                 </div>
               </div>
             </div>
@@ -547,69 +547,69 @@ class RecordViewEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="_view", entity_id="BibEntry_view")
         formrow1 = """
             <div class="small-12 medium-6 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Id</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="entity_id" 
-                        placeholder="(view id)" value="%(entity_id)s"/>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Id
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="entity_id" 
+                         placeholder="(view id)" value="%(entity_id)s"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Label</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="View_label"
-                               placeholder="(view label)" 
-                               value="Bibliographic metadata"/>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Label
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="View_label"
+                         placeholder="(view label)" 
+                         value="Bibliographic metadata"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Help</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <textarea cols="64" rows="6" name="View_comment" 
-                                  class="small-rows-4 medium-rows-8"
-                                  placeholder="(description of record view)">
-                            Bibliography entries each contain some subset of standard data entries.
-                        </textarea>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Help
                 </div>
+                <div class="%(input_classes)s">
+                  <textarea cols="64" rows="6" name="View_comment" 
+                            class="small-rows-4 medium-rows-8"
+                            placeholder="(description of record view)">
+                      Bibliography entries each contain some subset of standard data entries.
+                  </textarea>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 medium-6 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Add field?</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="View_add_field" 
-                        placeholder="(yes or no)" value="yes"/>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Add field?
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="View_add_field" 
+                         placeholder="(yes or no)" value="yes"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=6)
         formrow5 = ("""
             <div class="small-12 medium-4 columns">
               <div class="row show-for-small-only">
                 <div class="view-label small-12 columns">
-                  <p>Field id</p>
+                  Field id
                 </div>
               </div>
               <div class="row">
-                <div class="small-12 columns">
+                <div class="view-value small-12 columns">
                   """+
                     render_select_options(
                       "View_fields__0__Field_id", "Field id",

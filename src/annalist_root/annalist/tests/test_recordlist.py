@@ -309,7 +309,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
-                  <p>Id</p>
+                  Id
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="entity_id" 
@@ -323,7 +323,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
-                  <p>List display type</p>
+                  List display type
                 </div>
                 <div class="%(input_classes)s">
                 """+
@@ -340,7 +340,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             <div class="small-12 columns">
               <div class="row">
                 <div class="%(label_classes)s">
-                  <p>Label</p>
+                  Label
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="List_label" 
@@ -354,7 +354,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             <div class="small-12 columns">
               <div class="row">
                 <div class="%(label_classes)s">
-                  <p>Help</p>
+                  Help
                 </div>
                 <div class="%(input_classes)s">
                   <textarea cols="64" rows="6" name="List_comment" 
@@ -370,7 +370,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             <div class="small-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
-                  <p>Record type</p>
+                  Record type
                 </div>
                 <div class="%(input_classes)s">
                 """+
@@ -387,7 +387,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             <div class="small-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
-                  <p>View</p>
+                  View
                 </div>
                 <div class="%(input_classes)s">
                 """+
@@ -411,7 +411,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             <div class="small-12 columns">
               <div class="row">
                 <div class="%(label_classes)s">
-                  <p>Selector</p>
+                  Selector
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="List_entity_selector" 

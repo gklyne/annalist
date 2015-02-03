@@ -202,7 +202,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns">
               <div class="row">
                 <div class="%(label_classes)s">
-                  <p>Id</p>
+                  Id
                 </div>
                 <div class="%(input_classes)s">
                     <input type="text" size="64" name="entity_id" 
@@ -213,71 +213,71 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Label</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Type_label"
-                        placeholder="(label)"  
-                        value="%(default_label_esc)s"/>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Label
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Type_label"
+                  placeholder="(label)"  
+                  value="%(default_label_esc)s"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Comment</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <textarea cols="64" rows="6" name="Type_comment" 
-                                  class="small-rows-4 medium-rows-8"
-                                  placeholder="(type description)">
-                            %(default_comment_esc)s
-                        </textarea>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  Comment
                 </div>
+                <div class="%(input_classes)s">
+                  <textarea cols="64" rows="6" name="Type_comment" 
+                            class="small-rows-4 medium-rows-8"
+                            placeholder="(type description)">
+                      %(default_comment_esc)s
+                  </textarea>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>URI</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Type_uri"
-                               placeholder="(URI)"  
-                               value=""/>
-                    </div>
+              <div class="row">
+                <div class="%(label_classes)s">
+                  URI
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Type_uri"
+                         placeholder="(URI)"  
+                         value=""/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow5 = """
             <div class="row">
-                <div class="%(space_classes)s">
-                    <div class="row">
-                        <div class="small-12 columns">
-                          &nbsp;
-                        </div>
-                    </div>
+              <div class="%(space_classes)s">
+                <div class="row">
+                  <div class="small-12 columns">
+                    &nbsp;
+                  </div>
                 </div>
-                <div class="%(button_wide_classes)s">
-                    <div class="row">
-                        <div class="%(button_left_classes)s">
-                            <input type="submit" name="save"          value="Save" />
-                            <input type="submit" name="cancel"        value="Cancel" />
-                        </div>
-                    </div>
+              </div>
+              <div class="%(button_wide_classes)s">
+                <div class="row">
+                  <div class="%(button_left_classes)s">
+                    <input type="submit" name="save"          value="Save" />
+                    <input type="submit" name="cancel"        value="Cancel" />
+                  </div>
                 </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow6 = ("""
             <div class="row">
               <div class="%(label_classes)s">
-                <p>Choose view</p>
+                Choose view
               </div>
               <div class="%(input_classes)s">
                 <div class="row">
@@ -403,7 +403,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_help'], view_id_help)
         self.assertEqual(r.context['fields'][4]['field_placeholder'], "(view id)")
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:type_view")
-        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:View")
         self.assertEqual(r.context['fields'][4]['field_value'], "Default_view")
         self.assertEqual(r.context['fields'][4]['options'], self.view_options)
@@ -417,7 +417,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_help'], list_id_help)
         self.assertEqual(r.context['fields'][5]['field_placeholder'], "(list id)")
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_list")
-        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:List")
         self.assertEqual(r.context['fields'][5]['field_value'], "Default_list")
         self.assertEqual(r.context['fields'][5]['options'], self.list_options)
@@ -506,7 +506,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_name'], 'Type_view')
         self.assertEqual(r.context['fields'][4]['field_label'], 'Default view')
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:type_view")
-        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:View")
         self.assertEqual(r.context['fields'][4]['field_value'], "Default_view")
         self.assertEqual(r.context['fields'][4]['options'], self.view_options)
@@ -515,7 +515,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_name'], 'Type_list')
         self.assertEqual(r.context['fields'][5]['field_label'], 'Default list')
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_list")
-        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:List")
         self.assertEqual(r.context['fields'][5]['field_value'], "Default_list")
         self.assertEqual(r.context['fields'][5]['options'], self.list_options)
