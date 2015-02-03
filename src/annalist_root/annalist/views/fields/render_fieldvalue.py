@@ -36,13 +36,13 @@ from django.template.loaders.app_directories    import Loader
 
 label_template = (
     """<div class="view-label {{field.field_placement.field}}">"""+
-    """  <p>{{field.field_label|default:"&nbsp;"}}</p>"""+
+    """  {{field.field_label|default:"&nbsp;"}}"""+
     """</div>"""
     )
 
 value_wrapper_template = (
     """<div class="view-value {{field.field_placement.field}}">"""+
-    """  <p>{% include value_renderer %}</p>"""+
+    """  {% include value_renderer %}"""+
     """</div>"""
     )
 
@@ -50,10 +50,10 @@ label_wrapper_template = (
     """<div class="{{field.field_placement.field}}">\n"""+
     """  <div class="row">\n"""+
     """    <div class="view-label {{field.field_placement.label}}">\n"""+
-    """      <p>{{field.field_label}}</p>\n"""+
+    """      {{field.field_label}}\n"""+
     """    </div>\n"""+
     """    <div class="view-value {{field.field_placement.value}}">\n"""+
-    """      <p>{% include value_renderer %}</p>\n"""+
+    """      {% include value_renderer %}\n"""+
     """    </div>\n"""+
     """  </div>\n"""+
     """</div>"""
@@ -61,7 +61,7 @@ label_wrapper_template = (
 
 col_head_template = (
     """<div class="view-label col-head {{field.field_placement.field}}">"""+
-    """  <p>{{field.field_label}}</p>"""+
+    """  {{field.field_label}}"""+
     """</div>"""
     )
 
@@ -69,12 +69,12 @@ col_label_wrapper_template = (
     """<div class="{{field.field_placement.field}}">\n"""+
     """  <div class="row show-for-small-only">\n"""+
     """    <div class="view-label small-12 columns">\n"""+
-    """      <p>{{field.field_label}}</p>\n"""+
+    """      {{field.field_label}}\n"""+
     """    </div>\n"""+
     """  </div>\n"""+
     """  <div class="row">\n"""+
     """    <div class="view-value small-12 columns">\n"""+
-    """      <p>{% include value_renderer %}</p>\n"""+
+    """      {% include value_renderer %}\n"""+
     """    </div>\n"""+
     """  </div>\n"""+
     """</div>"""
@@ -82,7 +82,7 @@ col_label_wrapper_template = (
 
 col_value_wrapper_template = (
     """<div class="view-value {{field.field_placement.field}}">"""+
-    """  <p>{% include value_renderer %}</p>"""+
+    """  {% include value_renderer %}"""+
     """</div>"""
     )
 

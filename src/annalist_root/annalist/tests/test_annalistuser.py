@@ -243,7 +243,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertIn('''<div class="row">''',                                          rendered)
         self.assertIn('''<div class="view-label small-12 medium-2 columns">''',         rendered)
         self.assertIn('''<p>Permissions</p>''',                                         rendered)
-        self.assertIn('''<div class="small-12 medium-10 columns">''',                   rendered)
+        self.assertIn('''<div class="view-value small-12 medium-10 columns">''',        rendered)
         self.assertIn('''<input type="text" size="64" name="User_permissions" ''',      rendered)
         self.assertIn(       '''placeholder="(user permissions)"''',                    rendered)
         self.assertIn(       '''value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>''',    rendered)
@@ -270,7 +270,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertIn('''<div class="row">''',                                          rendered)
         self.assertIn('''<div class="view-label small-12 medium-2 columns">''',         rendered)
         self.assertIn('''<p>Permissions</p>''',                                         rendered)
-        self.assertIn('''<div class="small-12 medium-10 columns">''',                   rendered)
+        self.assertIn('''<div class="view-value small-12 medium-10 columns">''',        rendered)
         self.assertIn('''<input type="text" size="64" name="User_permissions" ''',      rendered)
         self.assertIn(       '''placeholder="(user permissions)"''',                    rendered)
         self.assertIn(       '''value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>''',    rendered)
@@ -291,9 +291,10 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                         <p>User Id</p>
                     </div>
                     <div class="%(input_classes)s">
-                        <input type="text" size="64" name="entity_id" 
-                               placeholder="(user id)" 
-                               value="00000001" />
+                        <p><input type="text" size="64" name="entity_id" 
+                                   placeholder="(user id)" 
+                                   value="00000001" />
+                        </p>
                     </div>
                 </div>
             </div>
@@ -305,9 +306,10 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                         <p>User name</p>
                     </div>
                     <div class="%(input_classes)s">
-                        <input type="text" size="64" name="User_name" 
+                        <p><input type="text" size="64" name="User_name" 
                                placeholder="(user name)"
                                value="" />
+                        </p>
                     </div>
                 </div>
             </div>
@@ -319,11 +321,11 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                         <p>Description</p>
                     </div>
                     <div class="%(input_classes)s">
-                        <textarea cols="64" rows="6" name="User_description" 
+                        <p><textarea cols="64" rows="6" name="User_description" 
                                   class="small-rows-4 medium-rows-8"
                                   placeholder="(user description)"
                                   >
-                        </textarea>
+                        </textarea></p>
                     </div>
                 </div>
             </div>
@@ -335,9 +337,10 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                         <p>URI</p>
                     </div>
                     <div class="%(input_classes)s">
-                        <input type="text" size="64" name="User_uri" 
+                        <p><input type="text" size="64" name="User_uri" 
                                placeholder="(User URI - e.g. mailto:local-name@example.com)"
                                value=""/>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -349,9 +352,10 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                         <p>Permissions</p>
                     </div>
                     <div class="%(input_classes)s">
-                        <input type="text" size="64" name="User_permissions" 
+                        <p><input type="text" size="64" name="User_permissions" 
                                placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
                                value=""/>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -398,9 +402,10 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                         <p>Permissions</p>
                     </div>
                     <div class="%(input_classes)s">
-                        <input type="text" size="64" name="User_permissions" 
+                        <p><input type="text" size="64" name="User_permissions" 
                                placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
                                value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -428,9 +433,10 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                         <p>Permissions</p>
                     </div>
                     <div class="%(input_classes)s">
-                        <input type="text" size="64" name="User_permissions" 
+                        <p><input type="text" size="64" name="User_permissions" 
                                placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
                                value="VIEW CREATE UPDATE DELETE"/>
+                        </p>
                     </div>
                 </div>
             </div>
