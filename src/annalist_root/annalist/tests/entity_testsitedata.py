@@ -305,6 +305,7 @@ def get_site_bibentry_fields():
 
 site_field_types = (
     [ "_initial_values"
+    , "CheckBox"
     , "EntityId"
     , "EntityTypeId"
     , "Enum"
@@ -319,6 +320,7 @@ site_field_types = (
     , "Slug"
     , "Text"
     , "Textarea"
+    , "TokenSet"
     , "Type"
     , "View"
     ])

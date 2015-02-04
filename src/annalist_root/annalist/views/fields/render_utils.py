@@ -18,6 +18,8 @@ from render_text                    import RenderText
 from render_fieldvalue              import RenderFieldValue
 from render_placement               import get_field_placement_renderer
 from render_tokenset                import get_field_tokenset_renderer, TokenSetValueMapper
+from render_bool_checkbox           import get_bool_checkbox_renderer, BoolCheckboxValueMapper
+
 from render_repeatgroup             import RenderRepeatGroup
 import render_repeatgroup
 
@@ -62,6 +64,12 @@ _field_edit_files = (
 _field_get_renderer_functions = (
     { "Placement":      get_field_placement_renderer
     , "TokenSet":       get_field_tokenset_renderer
+    , "CheckBox":       get_bool_checkbox_renderer
+    })
+
+_field_value_mappers = (
+    { "TokenSet":       TokenSetValueMapper
+    , "CheckBox":       BoolCheckboxValueMapper
     })
 
 def get_field_renderer(renderid):
@@ -166,15 +174,15 @@ def get_colview_renderer(renderid):
 
 def get_value_mapper(renderid):
     """
-    Returns a value mapper class (with encode and decode methods) which is used to map
-    values between entity fields and textual form fields.
+    Returns a value mapper class instance (with encode and decode methods) which 
+    is used to map values between entity fields and textual form fields.
 
     The default 'RenderText' object returned contains identity mappings.
     """
-    if renderid == "TokenSet":
-        return TokenSetValueMapper()
-    else:
-        return RenderText()
+    mapper_class = RenderText
+    if renderid in _field_value_mappers:
+        mapper_class = _field_value_mappers[renderid]
+    return mapper_class()
 
 if __name__ == "__main__":
     import doctest

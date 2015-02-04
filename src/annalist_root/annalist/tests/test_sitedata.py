@@ -88,38 +88,10 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.types_expected = get_site_types_sorted() + ["type1", "type2"]
         self.lists_expected = get_site_lists_sorted() + ['list1', 'list2']
         self.views_expected = get_site_views_sorted() + ["view1", "view2"]
-        self.list_types_expected = ["Grid", "List"]
-        self.render_types_expected = (
-            [ "EntityId"
-            , "EntityTypeId"
-            , "Enum"
-            , "Enum_choice"
-            , "Enum_optional"
-            , "Field"
-            , "Identifier"
-            , "List"
-            , "Placement"
-            , "RepeatGroup"
-            , "RepeatGroupRow"
-            , "Slug"
-            , "Text"
-            , "Textarea"
-            , "Type"
-            , "View"
-            ])
-        self.grouprefs_expected = (
-            [ "Bib_book_group"
-            , "Bib_identifier_group"
-            , "Bib_journal_group"
-            , "Bib_license_group"
-            , "Bib_person_group"
-            , "Bib_publication_group"
-            , "Group_field_group"
-            , "List_field_group"
-            , "Type_alias_group"
-            , "View_field_group"
-            ])
-        self.placements_expected = get_placement_options()
+        self.list_types_expected   = ["Grid", "List"]
+        self.render_types_expected = get_site_field_types_sorted()
+        self.grouprefs_expected    = get_site_field_groups_sorted()
+        self.placements_expected   = get_placement_options()
 
         # Login with admin permissions
         permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
