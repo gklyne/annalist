@@ -57,9 +57,9 @@ class BooleanCheckboxRenderingTest(FieldRendererTestSupport):
             render_edit = (
                 '''<input type="checkbox" '''+
                        '''name="repeat_prefix_test_field" '''+
-                       ('''value="%s"%s>'''%(valtext,checked)) +
-                  '''test label'''+
-                '''</input>'''
+                       ('''value="%s"%s'''%(valtext,checked)) +
+                       ''' />'''+
+                  ''' test label'''
                 )
             return {'view': render_view, 'edit': render_edit}
 
@@ -85,14 +85,17 @@ class BooleanCheckboxRenderingTest(FieldRendererTestSupport):
         return
 
     def test_DecodeBoolCheckboxValue(self):
+        # Any text other than None or empty string indicates the box is checked, returns True
         test_decode_values = (
-            { None:     False
-            , "No":     False
-            , "Yes":    True
-            , "False":  False
-            , "True":   True
-            , "false":  False
-            , "true":   True
+            { None:         False
+            , "":           False
+            , "checked":    True
+            , "No":         True
+            , "Yes":        True
+            , "False":      True
+            , "True":       True
+            , "false":      True
+            , "true":       True
             })
         for valtext, expect_valdata in test_decode_values.items():
             valdata = BoolCheckboxValueMapper.decode(valtext)

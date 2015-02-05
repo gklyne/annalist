@@ -709,7 +709,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "View_label", "text", None)
         self.check_input_type_value(s, "View_comment", "textarea", None)
         self.check_input_type_value(s, "View_target_type", "text", None)
-        self.check_input_type_value(s, "View_add_field", "text", None)
+        self.check_input_type_value(s, "View_add_field", "checkbox", "Yes")
         self.check_select_field(s, "view_choice", self.views_expected, "View_view")
         return
 

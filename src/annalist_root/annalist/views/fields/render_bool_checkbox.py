@@ -51,7 +51,8 @@ class BoolCheckboxValueMapper(object):
         Decodes a checkbox value attribute string as a Boolean value
         """
         # print "field_value "+repr(field_value)
-        return BoolCheckboxValueMapper.encode(field_value).lower() in ["yes", "true"]
+        # BoolCheckboxValueMapper.encode(field_value).lower() in ["yes", "true"]
+        return (field_value is not None) and (field_value != "")
 
 #   ----------------------------------------------------------------------------
 #
@@ -71,9 +72,8 @@ class bool_checkbox_edit_renderer(object):
         self._template = Template(
             '''<input type="checkbox" '''+
                    '''name="{{repeat_prefix}}{{field.field_name}}" '''+
-                   '''value="{{encoded_field_value}}"{{checked|safe}}>'''+
-              '''{{field.field_label}}'''+
-            '''</input>'''
+                   '''value="{{encoded_field_value}}"{{checked|safe}} />'''+
+              ''' {{field.field_label}}'''
             )
         return
     def render(self, context):
@@ -83,6 +83,7 @@ class bool_checkbox_edit_renderer(object):
         val     = get_field_value(context, None)
         boolval = BoolCheckboxValueMapper.decode(val)
         textval = BoolCheckboxValueMapper.encode(val)
+        boolval = textval.lower() in ["yes", "true"]
         checked = ''' checked="checked"''' if boolval else ''''''
         with context.push(encoded_field_value=textval, checked=checked):
             result = self._template.render(context)

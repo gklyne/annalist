@@ -151,7 +151,7 @@ class GenericEntityEditView(AnnalistGenericView):
             "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
-        log.debug("  form data %r"%(request.POST))
+        log.info("  form data %r"%(request.POST))
         self.get_view_template(action, type_id, entity_id)
         action_uri = action
         action     = request.POST.get('action', action)
