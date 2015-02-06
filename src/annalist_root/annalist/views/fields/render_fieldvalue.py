@@ -36,7 +36,7 @@ from django.template.loaders.app_directories    import Loader
 
 label_template = (
     """<div class="view-label {{field.field_placement.field}}">"""+
-    """  {{field.field_label|default:"&nbsp;"}}"""+
+    """  <span>{{field.field_label|default:"&nbsp;"}}</span>"""+
     """</div>"""
     )
 
@@ -48,9 +48,9 @@ value_wrapper_template = (
 
 label_wrapper_template = (
     """<div class="{{field.field_placement.field}}">\n"""+
-    """  <div class="row">\n"""+
+    """  <div class="row view-value-row">\n"""+
     """    <div class="view-label {{field.field_placement.label}}">\n"""+
-    """      {{field.field_label}}\n"""+
+    """      <span>{{field.field_label}}</span>\n"""+
     """    </div>\n"""+
     """    <div class="view-value {{field.field_placement.value}}">\n"""+
     """      {% include value_renderer %}\n"""+
@@ -61,7 +61,7 @@ label_wrapper_template = (
 
 col_head_template = (
     """<div class="view-label col-head {{field.field_placement.field}}">"""+
-    """  {{field.field_label}}"""+
+    """  <span>{{field.field_label}}</span>"""+
     """</div>"""
     )
 
@@ -69,10 +69,10 @@ col_label_wrapper_template = (
     """<div class="{{field.field_placement.field}}">\n"""+
     """  <div class="row show-for-small-only">\n"""+
     """    <div class="view-label small-12 columns">\n"""+
-    """      {{field.field_label}}\n"""+
+    """      <span>{{field.field_label}}</span>\n"""+
     """    </div>\n"""+
     """  </div>\n"""+
-    """  <div class="row">\n"""+
+    """  <div class="row view-value-col">\n"""+
     """    <div class="view-value small-12 columns">\n"""+
     """      {% include value_renderer %}\n"""+
     """    </div>\n"""+
@@ -129,25 +129,28 @@ class RenderFieldValue(object):
         view_file       is the name of a template file that formats a field value
         edit_file       is the name of a template file that formats a field value
                         in an editable form control
+
+
+        Methods provided return composed renderers for a varietom of contexts.
         """
         # log.info("RenderFieldValue: viewrender %s, editrender %s"%(viewrender, edit_file))
         super(RenderFieldValue, self).__init__()
         # Save view renderer
         if view_renderer is not None:
-            self._view_renderer  = view_renderer
+            self._view_renderer = view_renderer
         elif view_template is not None:
-            self._view_renderer  = Template(view_template)
+            self._view_renderer = Template(view_template)
         elif view_file is not None:
-            self._view_renderer  = Template(get_template(view_file))
+            self._view_renderer = Template(get_template(view_file))
         else:
             raise Annalist_Error("RenderFieldValue: no view renderer or template provided")
         # Save edit renderer
         if edit_renderer is not None:
-            self._edit_renderer  = edit_renderer
+            self._edit_renderer = edit_renderer
         elif edit_template is not None:
-            self._edit_renderer  = Template(edit_template)
+            self._edit_renderer = Template(edit_template)
         elif edit_file is not None:
-            self._edit_renderer  = Template(get_template(edit_file))
+            self._edit_renderer = Template(get_template(edit_file))
         else:
             raise Annalist_Error("RenderFieldValue: no view renderer or template provided")
         # Initialize various renderer caches

@@ -21,6 +21,7 @@
   "rdfs:comment": "RecordView help for view1 in collection coll3",
   "annal:add_field": true,
   "annal:type_id": "_view",
+  "annal:record_type": "annal:Test_default",
   "annal:url": "/testsite/c/coll3/d/_view/view1/",
   "annal:id": "view1",
   "@id": "./",

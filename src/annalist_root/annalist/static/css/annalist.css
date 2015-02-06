@@ -63,7 +63,8 @@ div.row .column
 
 div.row .columns .row
 {   /* Remove outermost column padding for row within column */
-    margin: 0 -0.75rem;
+    margin-left:  -0.75rem;
+    margin-right: -0.75rem;
     padding: 0 0rem;
 }
 
@@ -81,7 +82,8 @@ form div.row .columns .row .columns .row .columns
 form div.row .column  .row .column  .row ,
 form div.row .columns .row .columns .row
 {
-    margin: 0 -0.5rem;
+    margin-left:  -0.5rem;
+    margin-right: -0.5rem;
 }
 
 /*  ------------------------------------------------------------------------- 
@@ -110,13 +112,15 @@ div.row.headings
     font-weight: bold;
 }
 
+/*
 div.column  > p , 
 div.columns > p 
 {
     margin: 0.25rem 0 0 0;
-    /*padding: 0.25rem 0;*/
+    padding: 0.25rem 0;
     height: auto;
 }
+*/
 
 div.row div.column  p.caption , 
 div.row div.columns p.caption
@@ -165,9 +169,9 @@ div.columns form , div.columns form
 div.row div.column.group-label , 
 div.row div.columns.group-label
 {
-    margin-top:     0.4rem;
+    margin-top:     0rem;
     margin-bottom:  0rem;
-    padding-top:    0.15rem;
+    padding-top:    0.25rem;
     /* height: auto; */
     font-size: 0.75rem;
     color: #666666;
@@ -176,9 +180,9 @@ div.row div.columns.group-label
 div.row div.column.group-placeholder , 
 div.row div.columns.group-placeholder
 {
-    margin-top:     0.4rem;
+    margin-top:     0rem;
     margin-bottom:  0rem;
-    padding-top:    0.25rem;
+    padding-top:    0.4rem;
     padding-bottom: 0rem;
     height: auto;
     font-size: 0.75rem;
@@ -190,10 +194,10 @@ div.row div.columns.group-placeholder
 div.row div.column.col-head.view-label ,
 div.row div.columns.col-head.view-label
 {
-    padding-top: 0.25rem;
+    padding-top: 0.4rem;
     padding-bottom: 0rem;
     background-color: #f0f0f8;
-    height: 1.2rem;
+    height: 1.4rem;
 }
 
 div.group-row.even div.small-10.columns, 
@@ -214,8 +218,55 @@ div.row div.column  div.row div.column.group-buttons
     margin-top: 0.25rem;
 }
 
+div.row div.columns div.row.view-value-row
+{
+    margin-top:     0.25rem;
+    margin-bottom:  0rem;
+}
+
 div.row div.column.view-label,
 div.row div.columns.view-label
+{
+    margin-top:     0rem;
+    margin-bottom:  0rem;
+    padding-top:    0.25rem;
+    padding-bottom: 0.1rem;
+    font-size: 0.75rem;
+    color: #666666;
+    height: 1rem;
+}
+
+div.row div.column.view-value,
+div.row div.columns.view-value
+{
+    margin-top:  0rem;
+    margin-bottom:  0rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    font-size: 0.875rem;
+    color: #444444;
+    /* vertical-align: middle; */
+}
+
+/* Vertiucal spacing for rows in a grouprow */
+div.row.edit-grouprow
+{
+    margin-top:    0.2rem;
+    margin-bottom: 0.2rem;
+}
+
+
+/* Nested value in group */
+div.row.edit-grouprow div.columns div.row.view-value-col div.columns.view-value ,
+div.row.edit-grouprow div.column  div.row.view-value-col div.column.view-value
+{
+    padding-top:    0rem;
+    padding-bottom: 0rem;
+}
+
+/*
+div.row div.column.edit-label,
+div.row div.columns.edit-label
 {
     margin-top:   0.4rem;
     margin-bottom:  0rem;
@@ -225,8 +276,8 @@ div.row div.columns.view-label
     height: 1rem;
 }
 
-div.row div.column.view-value,
-div.row div.columns.view-value
+div.row div.column.edit-value,
+div.row div.columns.edit-value
 {
     margin-top:  0.4rem;
     margin-bottom:  0rem;
@@ -234,32 +285,70 @@ div.row div.columns.view-value
     padding-bottom: 0.125rem;
     font-size: 0.875rem;
     color: #444444;
-    /* vertical-align: middle; */
 }
+*/
 
 /* Input field formatting */
 
-div.columns > input , 
-div.columns > textarea , 
-div.columns > select
+div.columns.view-value
 {
-    margin-top: 0rem;
-    margin-bottom: 0rem;
-    padding-top: 0rem;
+    font-size: 0.875rem;
+    height:    auto;
+}
+
+div.columns.view-value > input[type="input"] , 
+div.columns.view-value > input[type="textarea"] , 
+div.columns.view-value > input[type="text"] , 
+div.columns.view-value > textarea , 
+div.columns.view-value > select ,
+div.columns.view-value > div.row > div.columns > select
+{
+    margin-top:     0rem;
+    margin-bottom:  0rem;
+    padding-top:    0rem;
     padding-bottom: 0rem;
-    height: 1.4rem;
+    height:         1.4rem;
     /* border: 0; - causes buttons to display differently - WTF? */
+}
+
+div.columns.view-value > input[type="checkbox"]
+{
+    margin-top:    0.2rem ;
+    margin-bottom: 0.2rem;
+    height:        1rem;
+}
+
+div.columns.view-value > span
+{
+    margin-top:     0rem;
+    margin-bottom:  0rem;
+    padding-top:    0rem;
+    padding-bottom: 0rem;
+    font-size: 0.875rem;
+}
+
+div.columns.view-value > span.value-placeholder
+{
+    margin-top:     0rem;
+    margin-bottom:  0rem;
+    padding-top:    0rem;
+    padding-bottom: 0rem;
+    font-size: 0.75rem;
+    font-style: italic;
+    color: #666666;
+    height: 1.4rem;
+}
+
+div.columns.checkbox-in-edit-padding > input[type="checkbox"] ,
+{   /* Hack to get checkboxes to align sensibly in row of field group */
+    margin-top: 0.25rem ;
+    margin-bottom: 0rem;
 }
 
 div.columns input[type="checkbox"]
 {
-    margin-top: 0rem ;   /* Move checkbox down in row */
-    /* vertical-align: middle;  -- tried this, doesn't work across 'div's */
-}
-
-div.columns.checkbox-in-edit-padding input[type="checkbox"]
-{   /* Hack to get checkboxes to align sensibly in row of field group */
-    margin-top: 0.4rem ;
+    margin-top:    0.25rem ;  /* Override values from foundation.css */
+    margin-bottom: 0rem ;
 }
 
 div.columns > input[type=submit] {
@@ -301,7 +390,7 @@ option.placement-text
 
 /* Buttons, and special styling for enum_new button */
 
-div.row div.new_button button
+div.row div.new-button button
 {   /* Override Foundation styling */
     display: inline-block;
     position: relative;
@@ -371,25 +460,26 @@ div.row.table div.row.tfoot .columns .row .columns.view-label
     color: #222222;  /* 222222 */
 }
 
-div.row.table div.trow
+div.row.tbody
 {   /* Row spacing for entries in list */
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
+    height: auto;
 } 
 
-div.row.table div.trow.even , 
-div.row.table div.trow:nth-of-type(even)
+div.row.table div.tbody.even , 
+div.row.table div.tbody:nth-of-type(even)
 {   /* Background shading for even rows in list; first row is zeroth? */
     background: white;
 }
 
-div.row.table div.trow.odd , 
-div.row.table div.trow:nth-of-type(odd)
+div.row.table div.tbody.odd , 
+div.row.table div.tbody:nth-of-type(odd)
 {   /* Background shading for odd rows in list */
     background: #F8F8F8;
 }
 
-div.row.table div.trow div.columns
+div.row.table div.tbody div.columns
 {   /* Text size and styling for row content */
     font-size: 0.875rem;
 } 

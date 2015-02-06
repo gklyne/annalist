@@ -41,7 +41,7 @@ view_group = (
             </div>
             <div class="small-10 columns">
               {% for f in repeat_bound_fields %}
-                <div class="row">
+                <div class="view-group row">
                   {% include f.field_render_view with field=f %}
                 </div>
               {% endfor %}
@@ -71,7 +71,7 @@ edit_group = (
             </div>
             <div class="small-10 columns">
               {% for f in repeat_bound_fields %}
-                <div class="row">
+                <div class="edit-group row">
                   {% include f.field_render_edit with field=f %}
                 </div>
               {% endfor %}
@@ -107,7 +107,7 @@ view_grouprow = (
             <div class="small-12 medium-10 columns hide-for-small-only">
               <div class="row">
                 <div class="small-12 columns">
-                  <div class="row">
+                  <div class="view-grouprow col-head row">
                     {% for f in field.group_field_descs %}
                     {% include f.field_render_colhead with field=f %}
                     {% endfor %}
@@ -128,7 +128,7 @@ view_grouprow = (
             <div class="small-12 medium-10 columns">
               <div class="row select-row">
                 <div class="small-12 columns">
-                  <div class="row">
+                  <div class="view-grouprow row">
                     {% for f in repeat_bound_fields %}
                     {% include f.field_render_colview with field=f %}
                     {% endfor %}
@@ -161,7 +161,7 @@ edit_grouprow = (
                   <th>&nbsp;</th>
                 </div>
                 <div class="small-11 columns">
-                  <div class="row">
+                  <div class="edit-grouprow col-head row">
                     {% for f in field.group_field_descs %}
                     {% include f.field_render_colhead with field=f %}
                     {% endfor %}
@@ -180,14 +180,14 @@ edit_grouprow = (
               &nbsp;
             </div>
             <div class="small-12 medium-10 columns">
-              <div class="trow row select-row">
+              <div class="tbody row select-row">
                 <div class="small-1 columns checkbox-in-edit-padding">
                   <input type="checkbox" class="select-box right"
                          name="{{field.group_id}}__select_fields"
                          value="{{repeat_index}}" />
                 </div>
                 <div class="small-11 columns">
-                  <div class="row">
+                  <div class="edit-grouprow row">
                     {% for f in repeat_bound_fields %}
                     {% include f.field_render_coledit with field=f %}
                     {% endfor %}
@@ -232,7 +232,7 @@ view_listrow = (
             <th>&nbsp;</th>
           </div>
           <div class="small-11 columns">
-            <div class="row">
+            <div class="view-listrow col-head row">
               {% for f in field.group_field_descs %}
               {% include f.field_render_colhead with field=f %}
               {% endfor %}
@@ -242,13 +242,13 @@ view_listrow = (
         """
     , 'body':
         """
-        <div class="trow row select-row">
+        <div class="tbody row select-row">
           <div class="small-1 columns">
             <input type="checkbox" class="select-box right" name="entity_select" 
                    value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
           </div>
           <div class="small-11 columns">
-            <div class="row">
+            <div class="view-listrow row">
               {% for f in repeat_bound_fields %}
               {% include f.field_render_colview with field=f %}
               {% endfor %}
@@ -274,7 +274,7 @@ edit_listrow_unused = (
                 <th>&nbsp;</th>
               </div>
               <div class="small-11 columns">
-                <div class="row">
+                <div class="edit-listrow col-head row">
                   {% for f in field.group_field_descs %}
                   {% include f.field_render_colhead with field=f %}
                   {% endfor %}
@@ -286,13 +286,13 @@ edit_listrow_unused = (
         """
     , 'body':
         """
-        <div class="trow row select-row">
+        <div class="tbody row select-row">
           <div class="small-1 columns checkbox-in-edit-padding">
             <input type="checkbox" class="select-box right" name="entity_select" 
                    value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
           </div>
           <div class="small-11 columns">
-            <div class="row">
+            <div class="edit-listbody row">
               {% for f in repeat_bound_fields %}
               {% include f.field_render_coledit with field=f %}
               {% endfor %}

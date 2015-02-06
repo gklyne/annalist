@@ -22,12 +22,13 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Update application urls
     - [x] Check/update view-field renderers
     - [x] Get rid of <p> elements in repeat group listings; update CSS as needed
-- [x] New render type: Boolean (checkbox) [#2](https://github.com/gklyne/annalist/issues/2)
+- [ ] New render type: Boolean (checkbox) [#2](https://github.com/gklyne/annalist/issues/2)
     - [x] Boolean/checkbox test cases
     - [x] Boolean/checkbox renderer; allow for migrating old representations
     - [x] Add renderer to render_utils tables
     - [x] Add render type name to enumerated value; update tests
     - [x] Update site data (view?) to use new renderer
+    - [ ] Check web page(s) (again) and tweak CSS definitions as needed
 - [ ] Document process for creating and integrating a new renderer
 - [ ] New render type: Link (hyperlink) [#2](https://github.com/gklyne/annalist/issues/2)
     - following same outline steps as checkbox
@@ -38,6 +39,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] etc.
 - [ ] New render type: Markdown, [#2](https://github.com/gklyne/annalist/issues/2)
     - following same outline steps as checkbox
+    - cf. http://pythonhosted.org//Markdown/reference.html
     - [ ] Markdown test cases
     - [ ] Markdown renderer (think about data migration in design)
     - [ ] Update site data to use new renderer

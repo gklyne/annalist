@@ -65,7 +65,8 @@ class bool_checkbox_view_renderer(object):
         """
         Render token list for viewing.
         """
-        return BoolCheckboxValueMapper.encode(get_field_value(context, None))
+        textval = BoolCheckboxValueMapper.encode(get_field_value(context, None))
+        return "<span>%s</span>"%textval
 
 class bool_checkbox_edit_renderer(object):
     def __init__(self):
@@ -73,7 +74,7 @@ class bool_checkbox_edit_renderer(object):
             '''<input type="checkbox" '''+
                    '''name="{{repeat_prefix}}{{field.field_name}}" '''+
                    '''value="{{encoded_field_value}}"{{checked|safe}} />'''+
-              ''' {{field.field_label}}'''
+              ''' <span class="value-placeholder">{{field.field_placeholder}}</span>'''
             )
         return
     def render(self, context):

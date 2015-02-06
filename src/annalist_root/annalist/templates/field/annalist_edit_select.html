@@ -1,6 +1,6 @@
 <!-- field/annalist_edit_select.html -->
 <div class="row">
-  <div class="small-10 columns less_new_button">
+  <div class="small-10 columns view-value less-new-button">
     <select name="{{repeat_prefix}}{{field.field_name}}">
       {% for v in field.options %}
         {% if v == field.field_value %}
@@ -19,7 +19,7 @@
       {% endfor %}
     </select>
   </div>
-  <div class="small-2 columns new_button left small-text-right">
+  <div class="small-2 columns view-value new-button left small-text-right">
     <button type="submit" 
             name="{{repeat_prefix}}{{field.field_name}}__new" 
             value="New"
