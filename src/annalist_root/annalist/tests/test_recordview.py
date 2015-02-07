@@ -72,9 +72,6 @@ from entity_testsitedata                import (
 #   -----------------------------------------------------------------------------
 
 class RecordViewTest(AnnalistTestCase):
-    """
-    Tests for RecordView object interface
-    """
 
     def setUp(self):
         init_annalist_test_site()

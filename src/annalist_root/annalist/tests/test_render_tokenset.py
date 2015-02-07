@@ -24,16 +24,7 @@ from annalist.views.fields.render_tokenset  import get_field_tokenset_renderer, 
 
 from field_rendering_support                import FieldRendererTestSupport
 
-#   -----------------------------------------------------------------------------
-#
-#   Token set rendering tests
-#
-#   -----------------------------------------------------------------------------
-
 class TokenSetRenderingTest(FieldRendererTestSupport):
-    """
-    Tests for Site object interface
-    """
 
     def setUp(self):
         # init_annalist_test_site()

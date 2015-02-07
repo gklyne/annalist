@@ -26,16 +26,7 @@ from annalist.views.fields.render_bool_checkbox import (
 
 from annalist.tests.field_rendering_support     import FieldRendererTestSupport
 
-#   -----------------------------------------------------------------------------
-#
-#   Boolean checkbox rendering tests
-#
-#   -----------------------------------------------------------------------------
-
 class BooleanCheckboxRenderingTest(FieldRendererTestSupport):
-    """
-    Tests for Site object interface
-    """
 
     def setUp(self):
         return

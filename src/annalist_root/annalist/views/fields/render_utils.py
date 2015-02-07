@@ -23,7 +23,7 @@ from render_bool_checkbox           import get_bool_checkbox_renderer, BoolCheck
 from render_repeatgroup             import RenderRepeatGroup
 import render_repeatgroup
 
-_field_renderers = {}
+_field_renderers = {}   # renderer cache
 
 _field_view_files = (
     { "Text":           "field/annalist_view_text.html"

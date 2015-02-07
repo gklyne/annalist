@@ -19,16 +19,7 @@ from annalist.views.fields.render_placement     import get_field_placement_rende
 
 from annalist.tests.field_rendering_support     import FieldRendererTestSupport
 
-#   -----------------------------------------------------------------------------
-#
-#   Field placement value rendering tests
-#
-#   -----------------------------------------------------------------------------
-
 class FieldPlacementRenderingTest(FieldRendererTestSupport):
-    """
-    Tests for Site object interface
-    """
 
     def setUp(self):
         self.placement_context = self._make_test_context("small:0,12;medium:4,4")
