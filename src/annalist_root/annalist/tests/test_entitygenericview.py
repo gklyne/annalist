@@ -197,9 +197,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             )
         formrow1 = """
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Id
+                  <span>Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <a href="%(entity_url)s">entity1</a>
@@ -209,45 +209,45 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Label
+                  <span>Label</span>
                 </div>
                 <div class="%(input_classes)s">
-                  Entity testcoll/testtype/entity1
+                  <span>Entity testcoll/testtype/entity1</span>
                 </div>
               </div>
             </div>
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Comment
+                  <span>Comment</span>
                 </div>
                 <div class="%(input_classes)s">
-                  Entity coll testcoll, type testtype, entity entity1
+                  <span class="textarea">Entity coll testcoll, type testtype, entity entity1</span>
                 </div>
               </div>
             </div>
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  URI
+                  <span>URI</span>
                 </div>
                 <div class="%(input_classes)s">
-                  &nbsp;
+                  <span>&nbsp;</span>
                 </div>
               </div>
             </div>
             """%field_vals(width=12)
         formrow5 = """
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Default view
+                  <span>Default view</span>
                 </div>
                 <div class="%(input_classes)s">
                   <a href="%(default_view_url)s">Default_view</a>
@@ -257,9 +257,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow6 = """
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Default list
+                  <span>Default list</span>
                 </div>
                 <div class="%(input_classes)s">
                   <a href="%(default_list_url)s">Default_list</a>
@@ -288,9 +288,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow8 = ("""
-            <div class="row">
+            <div class="row view-value-row">
               <div class="%(label_classes)s">
-                Choose view
+                <span>Choose view</span>
               </div>
               <div class="%(input_classes)s">
                 <div class="row">

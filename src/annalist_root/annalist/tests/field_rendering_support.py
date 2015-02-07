@@ -8,6 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import sys
 import os
+import re
 import unittest
 
 import logging
@@ -54,35 +55,40 @@ class FieldRendererTestSupport(AnnalistTestCase):
         expect_rendered_view="...", 
         expect_rendered_edit="..."
         ):
-        rendered_label      = fieldrender.label().render(context)
+        rendered_label = fieldrender.label().render(context)
+        rendered_label = re.sub(r'<!--.*-->\n', "", rendered_label)
         self.assertEqual(
             rendered_label, 
-            '''<div class="view-label small-12 columns">  test label</div>'''
+            '''<div class="view-label small-12 columns">  <span>test label</span></div>'''
             )
-        rendered_view       = fieldrender.view().render(context)
+        rendered_view = fieldrender.view().render(context)
+        rendered_view = re.sub(r'<!--.*-->\n', "", rendered_view)
         self.assertEqual(
             rendered_view, 
             '''<div class="view-value small-12 columns">  %s</div>'''%expect_rendered_view
             )
-        rendered_edit       = fieldrender.edit().render(context)
+        rendered_edit = fieldrender.edit().render(context)
+        rendered_edit = re.sub(r'<!--.*-->\n', "", rendered_edit)
         self.assertEqual(
             rendered_edit, 
             '''<div class="view-value small-12 columns">  %s</div>'''%expect_rendered_edit
             )
         rendered_label_view = fieldrender.label_view().render(context)
+        rendered_label_view = re.sub(r'<!--.*-->\n', "", rendered_label_view)
         self.assertEqual(
             rendered_label_view, 
             '''<div class="view-label small-12 columns">  '''+
-            '''test label'''+
+            '''<span>test label</span>'''+
             '''</div>'''
             )
         rendered_label_edit = fieldrender.label_edit().render(context)
+        rendered_label_edit = re.sub(r'<!--.*-->\n', "", rendered_label_edit)
         self.assertEqual(
             rendered_label_edit, 
             '''<div class="small-12 columns">\n'''+
-            '''  <div class="row">\n'''+
+            '''  <div class="row view-value-row">\n'''+
             '''    <div class="view-label small-12 medium-2 columns">\n'''+
-            '''      test label\n'''+
+            '''      <span>test label</span>\n'''+
             '''    </div>\n'''+
             '''    <div class="view-value small-12 medium-10 columns">\n'''+
             '''      %s\n'''%expect_rendered_edit+
@@ -90,38 +96,42 @@ class FieldRendererTestSupport(AnnalistTestCase):
             '''  </div>\n'''+
             '''</div>'''
             )
-        rendered_col_head   = fieldrender.col_head().render(context)
+        rendered_col_head = fieldrender.col_head().render(context)
+        rendered_col_head = re.sub(r'<!--.*-->\n', "", rendered_col_head)
         self.assertEqual(
             rendered_col_head, 
             '''<div class="view-label col-head small-12 columns">  '''+
-            '''test label</div>'''
+              '''<span>test label</span>'''+
+            '''</div>'''
             )
-        rendered_col_view   = fieldrender.col_view().render(context)
+        rendered_col_view = fieldrender.col_view().render(context)
+        rendered_col_view = re.sub(r'<!--.*-->\n', "", rendered_col_view)
         self.assertEqual(
             rendered_col_view, 
             '''<div class="small-12 columns">\n'''+
             '''  <div class="row show-for-small-only">\n'''+
             '''    <div class="view-label small-12 columns">\n'''+
-            '''      test label\n'''+
+            '''      <span>test label</span>\n'''+
             '''    </div>\n'''+
             '''  </div>\n'''+
-            '''  <div class="row">\n'''+
+            '''  <div class="row view-value-col">\n'''+
             '''    <div class="view-value small-12 columns">\n'''+
             '''      %s\n'''%expect_rendered_view+
             '''    </div>\n'''+
             '''  </div>\n'''+
             '''</div>'''
             )
-        rendered_col_edit   = fieldrender.col_edit().render(context)
+        rendered_col_edit = fieldrender.col_edit().render(context)
+        rendered_col_edit = re.sub(r'<!--.*-->\n', "", rendered_col_edit)
         self.assertEqual(
             rendered_col_edit, 
             '''<div class="small-12 columns">\n'''+
             '''  <div class="row show-for-small-only">\n'''+
             '''    <div class="view-label small-12 columns">\n'''+
-            '''      test label\n'''+
+            '''      <span>test label</span>\n'''+
             '''    </div>\n'''+
             '''  </div>\n'''+
-            '''  <div class="row">\n'''+
+            '''  <div class="row view-value-col">\n'''+
             '''    <div class="view-value small-12 columns">\n'''+
             '''      %s\n'''%expect_rendered_edit+
             '''    </div>\n'''+
@@ -129,5 +139,6 @@ class FieldRendererTestSupport(AnnalistTestCase):
             '''</div>'''
             )
         return
+
 
 # End.

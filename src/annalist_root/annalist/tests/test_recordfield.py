@@ -370,9 +370,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="_field", entity_id="00000001")
         formrow1col1 = """
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Id
+                  <span>Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="entity_id" 
@@ -383,9 +383,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow1col2 = """
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Field value type
+                  <span>Field value type</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_type" 
@@ -397,9 +397,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow2 = ("""
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Field render type
+                  <span>Field render type</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
@@ -414,9 +414,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """)%field_vals(width=6)
         formrow3 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Label
+                  <span>Label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_label" 
@@ -428,9 +428,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                    Help
+                    <span>Help</span>
                 </div>
                 <div class="%(input_classes)s">
                   <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"
@@ -443,9 +443,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow5 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Placeholder
+                  <span>Placeholder</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_placeholder"
@@ -456,9 +456,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow6 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Property
+                  <span>Property</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_property" 
@@ -470,9 +470,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # log.info("placement_option_value_dict %r"%(get_placement_option_value_dict(),))
         formrow7 = ("""
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Position/size
+                  <span>Position/size</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
@@ -489,9 +489,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """)%field_vals(width=6)
         formrow8 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Default
+                  <span>Default</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_default" 
@@ -503,9 +503,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow9 = ("""
             <div class="small-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Enum type
+                  <span>Enum type</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
@@ -520,9 +520,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """)%field_vals(width=6)
         formrow10 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Enum restriction
+                  <span>Enum restriction</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_restrict" 
@@ -534,9 +534,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow11 = ("""
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Field group
+                  <span>Field group</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
@@ -552,9 +552,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """)%field_vals(width=6)
         formrow12col1 = """
             <div class="small-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Add fields label
+                  <span>Add fields label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_repeat_label_add"
@@ -566,9 +566,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow12col2 = """
             <div class="small-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Delete fields label
+                  <span>Delete fields label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_repeat_label_delete"

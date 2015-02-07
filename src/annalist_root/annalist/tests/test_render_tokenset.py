@@ -79,8 +79,8 @@ class TokenSetRenderingTest(FieldRendererTestSupport):
         rendered_text = re.sub(r'\s+', " ", rendered_text)
         expect_elements = (
             [ '''<div class="small-12 columns">'''
-            , '''<div class="row">'''
-            , '''<div class="view-label small-12 medium-2 columns"> test label </div>'''
+            , '''<div class="row view-value-row">'''
+            , '''<div class="view-label small-12 medium-2 columns"> <span>test label</span> </div>'''
             , '''<div class="view-value small-12 medium-10 columns">'''
             , '''<input type="text" size="64" name="tokprefix_test_field" '''+
               '''placeholder="(test placeholder)" value="aa bb cc"/>'''
@@ -96,8 +96,8 @@ class TokenSetRenderingTest(FieldRendererTestSupport):
         rendered_text = re.sub(r'\s+', " ", rendered_text)
         expect_elements = (
             [ '''<div class="small-12 columns">'''
-            , '''<div class="row">'''
-            , '''<div class="view-label small-12 medium-2 columns"> test label </div>'''
+            , '''<div class="row view-value-row">'''
+            , '''<div class="view-label small-12 medium-2 columns"> <span>test label</span> </div>'''
             , '''<div class="view-value small-12 medium-10 columns"> aa bb cc </div>'''
             ])
         for e in expect_elements:
@@ -111,7 +111,7 @@ class TokenSetRenderingTest(FieldRendererTestSupport):
         rendered_text = re.sub(r'\s+', " ", rendered_text)
         expect_elements = (
             [ '''<div class="view-label small-12 columns">'''+
-              ''' test label '''+
+              ''' <span>test label</span> '''+
               '''</div>'''
             , '''<div class="view-value small-12 columns">'''+
               ''' aa bb cc '''+

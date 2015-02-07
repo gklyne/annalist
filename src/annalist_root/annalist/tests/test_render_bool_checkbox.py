@@ -53,13 +53,13 @@ class BooleanCheckboxRenderingTest(FieldRendererTestSupport):
                 valtext = "Yes" if val else "No"
                 valbool = val
             checked     = ''' checked="checked"''' if valbool else ''''''
-            render_view = valtext
+            render_view = '''<span>%s</span>'''%valtext
             render_edit = (
                 '''<input type="checkbox" '''+
                        '''name="repeat_prefix_test_field" '''+
                        ('''value="%s"%s'''%(valtext,checked)) +
                        ''' />'''+
-                  ''' test label'''
+                  ''' <span class="value-placeholder">(test placeholder)</span>'''
                 )
             return {'view': render_view, 'edit': render_edit}
 

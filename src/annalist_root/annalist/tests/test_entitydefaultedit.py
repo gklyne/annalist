@@ -138,11 +138,10 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "Collection testcoll")
         field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         formrow1 = """
-              <!-- editable text field -->
               <div class="small-12 medium-6 columns">
-                <div class="row">
+                <div class="row view-value-row">
                   <div class="%(label_classes)s">
-                      Id
+                      <span>Id</span>
                   </div>
                   <div class="%(input_classes)s">
                     <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
@@ -153,11 +152,10 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               </div>
             """%field_vals(width=6)
         formrow2 = ("""
-              <!-- record type dropdown -->
               <div class="small-12 medium-6 columns">
-                <div class="row">
+                <div class="row view-value-row">
                   <div class="%(label_classes)s">
-                      Type
+                      <span>Type</span>
                   </div>
                   <div class="%(input_classes)s">
                   """+
@@ -173,12 +171,11 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         formrow3 = """
               <!-- editable text field -->
               <div class="small-12 columns">
-                <div class="row">
+                <div class="row view-value-row">
                   <div class="%(label_classes)s">
-                      Label
+                      <span>Label</span>
                   </div>
                   <div class="%(input_classes)s">
-                    <!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->
                     <input type="text" size="64" name="Entity_label" 
                            placeholder="(label)" 
                            value="%(default_label_esc)s">
@@ -187,11 +184,10 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               </div>
             """%field_vals(width=12)
         formrow4 = """
-              <!-- editable textarea field -->
               <div class="small-12 columns">
-                <div class="row">
+                <div class="row view-value-row">
                   <div class="%(label_classes)s">
-                      Comment
+                      <span>Comment</span>
                   </div>
                   <div class="%(input_classes)s">
                     <textarea cols="64" rows="6" name="Entity_comment" 

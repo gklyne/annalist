@@ -459,9 +459,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="_view", entity_id="00000001")
         formrow1 = """
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Id
+                  <span>Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="entity_id" 
@@ -472,9 +472,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Label
+                  <span>Label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="View_label"
@@ -486,9 +486,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Help
+                  <span>Help</span>
                 </div>
                 <div class="%(input_classes)s">
                   <textarea cols="64" rows="6" name="View_comment" 
@@ -502,13 +502,13 @@ class RecordViewEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Add field?
+                  <span>Add field?</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="checkbox" name="View_add_field" value="Yes" checked="checked" />
-                   Add field?
+                   <span class="value-placeholder">(allow add field while editing entity)</span>
                 </div>
               </div>
             </div>
@@ -517,10 +517,10 @@ class RecordViewEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-4 columns">
               <div class="row show-for-small-only">
                 <div class="view-label small-12 columns">
-                  Field id
+                  <span>Field id</span>
                 </div>
               </div>
-              <div class="row">
+              <div class="row view-value-col">
                 <div class="view-value small-12 columns">
                 """+
                   render_select_options(
@@ -560,9 +560,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="_view", entity_id="BibEntry_view")
         formrow1 = """
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Id
+                  <span>Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="entity_id" 
@@ -573,9 +573,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Label
+                  <span>Label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="View_label"
@@ -587,9 +587,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Help
+                  <span>Help</span>
                 </div>
                 <div class="%(input_classes)s">
                   <textarea cols="64" rows="6" name="View_comment" 
@@ -603,13 +603,13 @@ class RecordViewEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Add field?
+                  <span>Add field?</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="checkbox" name="View_add_field" value="Yes" checked="checked" />
-                   Add field?
+                   <span class="value-placeholder">(allow add field while editing entity)</span>
                 </div>
               </div>
             </div>
@@ -618,17 +618,17 @@ class RecordViewEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-4 columns">
               <div class="row show-for-small-only">
                 <div class="view-label small-12 columns">
-                  Field id
+                  <span>Field id</span>
                 </div>
               </div>
-              <div class="row">
+              <div class="row view-value-col">
                 <div class="view-value small-12 columns">
-                  """+
-                    render_select_options(
-                      "View_fields__0__Field_id", "Field id",
-                      get_site_bibentry_fields_sorted(),
-                      "Entity_id")+
-                  """
+                """+
+                  render_select_options(
+                    "View_fields__0__Field_id", "Field id",
+                    get_site_bibentry_fields_sorted(),
+                    "Entity_id")+
+                """
                 </div>
               </div>
             </div>

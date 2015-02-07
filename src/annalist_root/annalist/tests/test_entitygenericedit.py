@@ -200,9 +200,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         formrow1 = """
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Id
+                  <span>Id</span>
                 </div>
                 <div class="%(input_classes)s">
                     <input type="text" size="64" name="entity_id" 
@@ -213,9 +213,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Label
+                  <span>Label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Type_label"
@@ -227,9 +227,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  Comment
+                  <span>Comment</span>
                 </div>
                 <div class="%(input_classes)s">
                   <textarea cols="64" rows="6" name="Type_comment" 
@@ -243,9 +243,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  URI
+                  <span>URI</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Type_uri"
@@ -275,9 +275,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow6 = ("""
-            <div class="row">
+            <div class="row view-value-row">
               <div class="%(label_classes)s">
-                Choose view
+                <span>Choose view</span>
               </div>
               <div class="%(input_classes)s">
                 <div class="row">

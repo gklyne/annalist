@@ -137,9 +137,9 @@ class FieldRenderingTest(FieldRendererTestSupport):
         expect_elements = (
             [ '''<div class="group-label small-2 columns"> Fields </div>'''
             , '''<div class="row selectable">'''
-            , '''<div class="view-label small-12 medium-4 columns"> Field id </div>'''
-            , '''<div class="view-label small-12 medium-4 columns"> Property </div>'''
-            , '''<div class="view-label small-12 medium-4 columns"> Position/size </div>'''
+            , '''<div class="view-label small-12 medium-4 columns"> <span>Field id</span> </div>'''
+            , '''<div class="view-label small-12 medium-4 columns"> <span>Property</span> </div>'''
+            , '''<div class="view-label small-12 medium-4 columns"> <span>Position/size</span> </div>'''
             # 1st field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="0" class="right" />'''
@@ -247,10 +247,8 @@ class FieldRenderingTest(FieldRendererTestSupport):
             fieldrender,
             context=self.intvalue_context,
             expect_rendered_view=
-                '''<!-- field/annalist_view_text.html -->\n42''',
+                '''<span>42</span>''',
             expect_rendered_edit=
-                '''<!-- field/annalist_edit_text.html -->\n'''+
-                '''<!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->\n'''+
                 '''<input type="text" size="64" name="intprefix_test_field" \n'''+
                 '''       placeholder="(test placeholder)"\n'''+
                 '''       value="42"/>'''
@@ -267,15 +265,14 @@ class FieldRenderingTest(FieldRendererTestSupport):
             fieldrender,
             context=self.intvalue_context,
             expect_rendered_view=
-                '''<!-- field/annalist_view_text.html -->\n42''',
+                '''<span>42</span>''',
             expect_rendered_edit=
-                '''<!-- field/annalist_edit_text.html -->\n'''+
-                '''<!-- cf http://stackoverflow.com/questions/1480588/input-size-vs-width -->\n'''+
                 '''<input type="text" size="64" name="intprefix_test_field" \n'''+
                 '''       placeholder="(test placeholder)"\n'''+
                 '''       value="42"/>'''
             )
         return
+
 
 # End.
 

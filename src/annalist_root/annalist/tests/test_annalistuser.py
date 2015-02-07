@@ -242,9 +242,11 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         rendered = get_field_tokenset_renderer().label_edit().render(context)
         rendered = re.sub(r'\s+', " ", rendered)
         self.assertIn('''<div class="small-12 columns">''',                             rendered)
-        self.assertIn('''<div class="row">''',                                          rendered)
+        self.assertIn('''<div class="row view-value-row">''',                           rendered)
         self.assertIn(
-            '''<div class="view-label small-12 medium-2 columns"> Permissions </div>''',
+            '''<div class="view-label small-12 medium-2 columns"> '''+
+              '''<span>Permissions</span> '''+
+            '''</div>''',
             rendered
             )
         self.assertIn('''<div class="view-value small-12 medium-10 columns">''',        rendered)
@@ -272,9 +274,11 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         rendered = template.render(context)
         rendered = re.sub(r'\s+', " ", rendered)
         self.assertIn('''<div class="small-12 columns">''',                             rendered)
-        self.assertIn('''<div class="row">''',                                          rendered)
+        self.assertIn('''<div class="row view-value-row">''',                           rendered)
         self.assertIn(
-            '''<div class="view-label small-12 medium-2 columns"> Permissions </div>''',
+            '''<div class="view-label small-12 medium-2 columns"> '''+
+              '''<span>Permissions</span> '''+
+            '''</div>''',
             rendered
             )
         self.assertIn('''<div class="view-value small-12 medium-10 columns">''',        rendered)
@@ -293,9 +297,9 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="00000001")
         formrow1 = """
             <div class="small-12 medium-6 columns">
-                <div class="row">
+                <div class="row view-value-row">
                     <div class="%(label_classes)s">
-                        User Id
+                        <span>User Id</span>
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="entity_id" 
@@ -307,9 +311,9 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-                <div class="row">
+                <div class="row view-value-row">
                     <div class="%(label_classes)s">
-                        User name
+                        <span>User name</span>
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="User_name" 
@@ -321,9 +325,9 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-                <div class="row">
+                <div class="row view-value-row">
                     <div class="%(label_classes)s">
-                        Description
+                        <span>Description</span>
                     </div>
                     <div class="%(input_classes)s">
                         <textarea cols="64" rows="6" name="User_description" 
@@ -337,9 +341,9 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 columns">
-                <div class="row">
+                <div class="row view-value-row">
                     <div class="%(label_classes)s">
-                        URI
+                        <span>URI</span>
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="User_uri" 
@@ -351,9 +355,9 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow5 = """
             <div class="small-12 columns">
-                <div class="row">
+                <div class="row view-value-row">
                     <div class="%(label_classes)s">
-                        Permissions
+                        <span>Permissions</span>
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="User_permissions" 
@@ -400,9 +404,9 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="testuser")
         formrow5 = """
             <div class="small-12 columns">
-                <div class="row">
+                <div class="row view-value-row">
                     <div class="%(label_classes)s">
-                        Permissions
+                        <span>Permissions</span>
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="User_permissions" 
@@ -430,9 +434,9 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="baduserperms")
         formrow5 = """
             <div class="small-12 columns">
-                <div class="row">
+                <div class="row view-value-row">
                     <div class="%(label_classes)s">
-                        Permissions
+                        <span>Permissions</span>
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="User_permissions" 

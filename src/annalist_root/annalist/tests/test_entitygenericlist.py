@@ -147,13 +147,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
         rowdata = """
-            <div class="trow row select-row">
+            <div class="tbody row select-row">
               <div class="small-1 columns">
                 <input type="checkbox" class="select-box right" name="entity_select"
                        value="testtype/entity1" />
               </div>
               <div class="small-11 columns">
-                <div class="row">
+                <div class="row view-listrow">
                   <div class="view-value small-3 columns">
                     <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
                   </div>
@@ -161,7 +161,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">testtype</a>
                   </div>
                   <div class="view-value small-7 columns">
-                    Entity testcoll/testtype/entity1
+                    <span>Entity testcoll/testtype/entity1</span>
                   </div>
                 </div>
               </div>
@@ -317,18 +317,18 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata1 = """
-            <div class="trow row select-row">
+            <div class="tbody row select-row">
               <div class="small-1 columns">
                 <input type="checkbox" class="select-box right" name="entity_select"
                        value="_field/Bib_address" />
               </div>
               <div class="small-11 columns">
-                <div class="row">
+                <div class="row view-listrow">
                   <div class="view-value small-3 columns">
                     <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
                   </div>
-                  <div class="view-value small-3 columns">annal:Text</div>
-                  <div class="view-value small-6 columns">Address</div>
+                  <div class="view-value small-3 columns"><span>annal:Text</span></div>
+                  <div class="view-value small-6 columns"><span>Address</span></div>
                 </div>
               </div>
             </div>
@@ -431,18 +431,18 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata1 = """
-            <div class="trow row select-row">
+            <div class="tbody row select-row">
               <div class="small-1 columns">
                 <input type="checkbox" class="select-box right" name="entity_select"
                        value="_field/Bib_address" />
               </div>
               <div class="small-11 columns">
-                <div class="row">
+                <div class="row view-listrow">
                   <div class="view-value small-3 columns">
                     <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
                   </div>
-                  <div class="view-value small-3 columns">annal:Text</div>
-                  <div class="view-value small-6 columns">Address</div>
+                  <div class="view-value small-3 columns"><span>annal:Text</span></div>
+                  <div class="view-value small-6 columns"><span>Address</span></div>
                 </div>
               </div>
             </div>
@@ -472,18 +472,18 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         rowdata = """
-            <div class="trow row select-row">
+            <div class="tbody row select-row">
               <div class="small-1 columns">
                 <input type="checkbox" class="select-box right" name="entity_select"
                        value="_field/Bib_address" />
               </div>
               <div class="small-11 columns">
-                <div class="row">
+                <div class="row view-listrow">
                   <div class="view-value small-3 columns">
                     <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
                   </div>
-                  <div class="view-value small-3 columns">annal:Text</div>
-                  <div class="view-value small-6 columns">Address</div>
+                  <div class="view-value small-3 columns"><span>annal:Text</span></div>
+                  <div class="view-value small-6 columns"><span>Address</span></div>
                 </div>
               </div>
             </div>
