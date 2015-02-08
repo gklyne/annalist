@@ -32,25 +32,28 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Document process for creating and integrating a new renderer
 - [ ] New render type: Link (hyperlink) [#2](https://github.com/gklyne/annalist/issues/2)
     - following same outline steps as checkbox
-    - [ ] Link test cases
-    - [ ] Link renderer (think about data mifgration in design)
-        - Make provision for CURIE support too?
+    - [x] Link test cases
+    - [x] Link renderer (think about data migration in design)
+    - [x] Add renderer to render_utils tables
+    - [x] Add render type name to enumerated value; update tests (test_entitygenericlist:244, entity_testsitedata:306)
     - [ ] Update site data to use new renderer
     - [ ] etc.
-- [ ] New render type: Markdown, [#2](https://github.com/gklyne/annalist/issues/2)
-    - following same outline steps as checkbox
-    - cf. http://pythonhosted.org//Markdown/reference.html
-    - [ ] Markdown test cases
-    - [ ] Markdown renderer (think about data migration in design)
-    - [ ] Update site data to use new renderer
-    - [ ] etc.
-    - [ ] Update Annalist dependencies to include markdown package
-    - [ ] Update site data to use Markdown where appropriate 
 - [ ] New render type: image, [#2](https://github.com/gklyne/annalist/issues/2)
     - following same outline steps as checkbox
     - [ ] Image test cases
     - [ ] Image renderer
         - Make provision for CURIE support too?
+- [ ] New render type: Markdown, [#2](https://github.com/gklyne/annalist/issues/2)
+    - following same outline steps as checkbox
+    - cf. http://pythonhosted.org//Markdown/reference.html
+    - [ ] Markdown test cases
+    - [ ] Markdown renderer (think about data migration in design)
+    - [ ] Add renderer to render_utils tables
+    - [ ] Add render type name to enumerated value; update tests
+    - [ ] Update site data to use new renderer
+    - [ ] etc.
+    - [ ] Update Annalist dependencies to include markdown package
+    - [ ] Update site data to use Markdown where appropriate 
 
 (sub-release?)
 

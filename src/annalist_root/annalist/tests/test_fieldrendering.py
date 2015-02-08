@@ -251,7 +251,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
             expect_rendered_edit=
                 '''<input type="text" size="64" name="intprefix_test_field" \n'''+
                 '''       placeholder="(test placeholder)"\n'''+
-                '''       value="42"/>'''
+                '''       value="42" />'''
             )
         return
 
@@ -269,7 +269,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
             expect_rendered_edit=
                 '''<input type="text" size="64" name="intprefix_test_field" \n'''+
                 '''       placeholder="(test placeholder)"\n'''+
-                '''       value="42"/>'''
+                '''       value="42" />'''
             )
         return
 

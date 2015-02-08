@@ -63,12 +63,13 @@ class BoolCheckboxValueMapper(object):
 class bool_checkbox_view_renderer(object):
     def render(self, context):
         """
-        Render token list for viewing.
+        Render Boolean value for viewing.
         """
         textval = BoolCheckboxValueMapper.encode(get_field_value(context, None))
         return "<span>%s</span>"%textval
 
 class bool_checkbox_edit_renderer(object):
+
     def __init__(self):
         self._template = Template(
             '''<input type="checkbox" '''+
@@ -77,9 +78,10 @@ class bool_checkbox_edit_renderer(object):
               ''' <span class="value-placeholder">{{field.field_placeholder}}</span>'''
             )
         return
+
     def render(self, context):
         """
-        Render token list for editing
+        Render Boolean value for editing
         """
         val     = get_field_value(context, None)
         boolval = BoolCheckboxValueMapper.decode(val)
@@ -92,7 +94,7 @@ class bool_checkbox_edit_renderer(object):
 
 def get_bool_checkbox_renderer():
     """
-    Return field renderer object for token list values
+    Return field renderer object for Boolean as checkbox
     """
     return RenderFieldValue(
         view_renderer=bool_checkbox_view_renderer(), 

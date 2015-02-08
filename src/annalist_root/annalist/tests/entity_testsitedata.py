@@ -322,6 +322,7 @@ site_field_types = (
     , "Textarea"
     , "TokenSet"
     , "Type"
+    , "URILink"
     , "View"
     ])
 

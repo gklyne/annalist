@@ -10,17 +10,17 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
-from collections                    import OrderedDict, namedtuple
+from collections                import OrderedDict, namedtuple
 
-from django.conf                    import settings
+from django.conf                import settings
 
-from render_text                    import RenderText
-from render_fieldvalue              import RenderFieldValue
-from render_placement               import get_field_placement_renderer
-from render_tokenset                import get_field_tokenset_renderer, TokenSetValueMapper
-from render_bool_checkbox           import get_bool_checkbox_renderer, BoolCheckboxValueMapper
-
-from render_repeatgroup             import RenderRepeatGroup
+from render_text                import RenderText
+from render_fieldvalue          import RenderFieldValue
+from render_placement           import get_field_placement_renderer
+from render_tokenset            import get_field_tokenset_renderer, TokenSetValueMapper
+from render_bool_checkbox       import get_bool_checkbox_renderer, BoolCheckboxValueMapper
+from render_uri_link            import get_uri_link_renderer, URILinkValueMapper
+from render_repeatgroup         import RenderRepeatGroup
 import render_repeatgroup
 
 _field_renderers = {}   # renderer cache
@@ -65,11 +65,13 @@ _field_get_renderer_functions = (
     { "Placement":      get_field_placement_renderer
     , "TokenSet":       get_field_tokenset_renderer
     , "CheckBox":       get_bool_checkbox_renderer
+    , "URILink":        get_uri_link_renderer
     })
 
 _field_value_mappers = (
     { "TokenSet":       TokenSetValueMapper
     , "CheckBox":       BoolCheckboxValueMapper
+    , "URILink":        URILinkValueMapper
     })
 
 def get_field_renderer(renderid):
