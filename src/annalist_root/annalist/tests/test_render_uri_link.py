@@ -42,7 +42,7 @@ class TextLinkRenderingTest(FieldRendererTestSupport):
     def test_RenderTextLinkValue(self):
 
         def expect_render(linktext, labeltext):
-            render_view = '''<a href="%s">%s</a>'''%(linktext, labeltext)
+            render_view = '''<a href="%s" target="_blank">%s</a>'''%(linktext, labeltext)
             render_edit = (
                 '''<input type="text" size="64" name="repeat_prefix_test_field" '''+
                        '''placeholder="(test placeholder)" '''+

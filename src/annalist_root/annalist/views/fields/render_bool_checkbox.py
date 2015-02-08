@@ -36,7 +36,7 @@ class BoolCheckboxValueMapper(object):
         # print "data_value "+repr(data_value)
         if data_value is None:
             textval = "No"
-        elif isinstance(data_value, str):
+        elif isinstance(data_value, (str, unicode)):
             textval = data_value
         elif isinstance(data_value, bool):
             textval = "Yes" if data_value else "No"

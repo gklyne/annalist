@@ -54,6 +54,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] etc.
     - [ ] Update Annalist dependencies to include markdown package
     - [ ] Update site data to use Markdown where appropriate 
+- [ ] Fix styling (row spacing) for site front page - it looks a bit spaced-out following changes to view/list styling.  probably just needs appropriate new CSS classes to be included.
 
 (sub-release?)
 

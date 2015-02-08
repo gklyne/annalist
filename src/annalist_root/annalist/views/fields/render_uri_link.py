@@ -65,7 +65,7 @@ class uri_link_view_renderer(object):
             if linkval.startswith(p):
                 textval = linkval[len(p):]
                 break
-        return '''<a href="%s">%s</a>'''%(linkval, textval)
+        return '''<a href="%s" target="_blank">%s</a>'''%(linkval, textval)
 
 class uri_link_edit_renderer(object):
 

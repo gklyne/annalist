@@ -62,6 +62,8 @@ class BooleanCheckboxRenderingTest(FieldRendererTestSupport):
             , (self._make_test_context("True"),  expect_render("True"))
             , (self._make_test_context("Yes"),   expect_render("Yes"))
             , (self._make_test_context("No"),    expect_render("No"))
+            , (self._make_test_context(u"yes"),  expect_render("yes"))
+            , (self._make_test_context(u"no"),   expect_render("no"))
             ])
         renderer = get_bool_checkbox_renderer()
 
