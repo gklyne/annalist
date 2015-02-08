@@ -6,67 +6,117 @@
 
 {% block content %}
 
-    <div class="row">
-        <div class="large-12 columns">
-            <h3>Collections</h3>
-        </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <h3>Collections</h3>
     </div>
+  </div>
 
-    <div class="row">
-        <div class="large-12 columns">
-            <form method="POST" action="">
-                {% csrf_token %}
+  <div class="row">
+    <div class="large-12 columns">
+      <form method="POST" action="">
+        <div class="table row">
+          <div class="small-12 columns">
+          {% csrf_token %}
 
-                <div class="row headings">
-                    <div class="small-3 columns">
-                        <p>Id</p>
-                    </div>
-                    <div class="small-7 columns">
-                        <p>Label</p>
-                    </div>
-                    <div class="small-2 columns">
-                    </div>
+            <div class="thead row">
+              <div class="small-12 columns">
+                <div class="view-listrow col-head row">
+                  <div class="small-1 columns">
+                    <span>&nbsp;</span>
+                  </div>
+                  <div class="view-label col-head small-4 columns">
+                    <span>Id</span>
+                  </div>
+                  <div class="view-label col-head small-7 columns">
+                    <span>Label</span>
+                  </div>
                 </div>
+              </div>
+            </div>
 
-                {% for c, v in collections.items %}
-                <div class="row">
-                    <div class="small-3 columns">
-                        <p><a href="{{v.url}}">{{c}}</a></p>
-                    </div>
-                    <div class="small-7 columns">
-                        <p>{{v.title}}</p>
-                    </div>
-                    <div class="small-2 columns">
-                        {% if auth_delete_coll %}
-                        <p><input type="checkbox" name="select" value="{{c}}" class="right" /></p>
-                        {% endif %}
-                    </div>
+            {% for c, v in collections.items %}
+            <div class="tbody row">
+              <div class="small-12 columns">
+                <div class="view-listrow row">
+                  <div class="small-1 columns">
+                    {% if auth_delete_coll %}
+                    <input type="checkbox" name="select" value="{{c}}" class="right" />
+                    {% else %}
+                    <span>&nbsp;</span>
+                    {% endif %}
+                  </div>
+                  <div class="view-value small-4 columns">
+                    <a href="{{v.url}}">{{c}}</a>
+                  </div>
+                  <div class="view-value small-7 columns">
+                    <span>{{v.title}}</span>
+                  </div>
                 </div>
-                {% endfor %}
+              </div>
+            </div>
+            {% endfor %}
 
-                {% if auth_delete_coll %}
-                <div class="row">
-                    <div class="small-3 columns right">
-                        <input type="submit" value="Remove selected" name="remove" class="right" />
-                    </div>
+            {% if auth_delete_coll %}
+            <div class="row">
+              <div class="small-1 columns">
+                <span>&nbsp;</span>
+              </div>
+              <div class="small-11 columns">
+                <input type="submit" value="Remove selected" name="remove" />
+              </div>
+            </div>
+            <!-- original:
+            <div class="row">
+              <div class="small-3 columns right">
+                <input type="submit" value="Remove selected" name="remove" class="right" />
+              </div>
+            </div>
+            -->
+            {% endif %}
+
+            {% if auth_create_coll %}
+            <div class="row">
+              <div class="small-12 columns">
+                <div class="view-listrow row">
+                  <div class="small-1 columns">
+                    <span>&nbsp;</span>
+                  </div>
+                  <div class="view-value small-4 columns">
+                    <input type="text" size="32" name="new_id" value=""/>
+                  </div>
+                  <div class="view-value small-7 columns">
+                    <input type="text" size="64" name="new_label" value=""/>
+                  </div>
                 </div>
-                {% endif %}
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-1 columns">
+                <span>&nbsp;</span>
+              </div>
+              <div class="view-value small-11 columns">
+                <input type="submit" value="New" name="new" />
+              </div>
+            </div>
+            <!-- original:
+            <div class="row">
+              <div class="small-3 columns">
+                <input type="text" size="32" name="new_id" value=""/>
+              </div>
+              <div class="small-7 columns">
+                <input type="text" size="64" name="new_label" value=""/>
+              </div>
+              <div class="small-2 columns">
+                <input type="submit" value="New" name="new" class="right" />
+              </div>
+            </div>
+            -->
+            {% endif %}
 
-                {% if auth_create_coll %}
-                <div class="row">
-                    <div class="small-3 columns">
-                        <input type="text" size="32" name="new_id" value=""/>
-                    </div>
-                    <div class="small-7 columns">
-                        <input type="text" size="64" name="new_label" value=""/>
-                    </div>
-                    <div class="small-2 columns">
-                        <input type="submit" value="New" name="new" class="right" />
-                    </div>
-                </div>
-                {% endif %}
-
-            </form>
+          </div>
         </div>
+      </form>
     </div>
+  </div>
 {% endblock %}

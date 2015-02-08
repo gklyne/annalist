@@ -30,14 +30,14 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Update site data (view?) to use new renderer
     - [x] Check web page(s) (again) and tweak CSS definitions as needed
 - [x] Document process for creating and integrating a new renderer
-- [ ] New render type: Link (hyperlink) [#2](https://github.com/gklyne/annalist/issues/2)
+- [x] New render type: Link (hyperlink) [#2](https://github.com/gklyne/annalist/issues/2)
     - following same outline steps as checkbox
     - [x] Link test cases
     - [x] Link renderer (think about data migration in design)
     - [x] Add renderer to render_utils tables
     - [x] Add render type name to enumerated value; update tests (test_entitygenericlist:244, entity_testsitedata:306)
-    - [ ] Update site data to use new renderer
-    - [ ] etc.
+    - [x] Update site data to use new renderer
+    - [x] etc.
 - [ ] New render type: image, [#2](https://github.com/gklyne/annalist/issues/2)
     - following same outline steps as checkbox
     - [ ] Image test cases
@@ -54,7 +54,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] etc.
     - [ ] Update Annalist dependencies to include markdown package
     - [ ] Update site data to use Markdown where appropriate 
-- [ ] Fix styling (row spacing) for site front page - it looks a bit spaced-out following changes to view/list styling.  probably just needs appropriate new CSS classes to be included.
+- [x] Fix styling (row spacing) for site front page - it looks a bit spaced-out following changes to view/list styling.  probably just needs appropriate new CSS classes to be included.
 
 (sub-release?)
 

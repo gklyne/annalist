@@ -356,6 +356,12 @@ div.columns > input[type=submit] {
     padding-right: 1rem;
 }
 
+div.columns > select[size]
+{
+    height: auto;
+}
+
+
 /*
 div.columns > input[type=text] , 
 div.columns > textarea , 
