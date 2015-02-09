@@ -199,8 +199,12 @@ class FieldDescription(object):
     def group_view_fields(self):
         """
         If the field itself contains or uses a group of fields, returns a
-        RecoirdGroupvalue or dictionary describiung the fields field.
+        RecordGroupValue or dictionary describing the fields.
         """
+        group_view = self._field_desc['group_view']
+        if group_view is None:
+            log.error("Field %(field_id)s is missing `group_view` value"%(self._field_desc))
+            return []
         return self._field_desc['group_view'][ANNAL.CURIE.group_fields]
 
     def group_field_descs(self):

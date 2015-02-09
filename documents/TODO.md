@@ -44,6 +44,14 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Add render type name to enumerated value; update tests (test_entitygenericlist:244, entity_testsitedata:306)
     - [x] Update site data to use new renderer
     - [x] etc.
+- [ ] Extend CruisingLog example data with image galleries for place and daily log entries
+    - [ ] Generate thumbnails that link to larger images
+    - [x] Create new field group "AnnotatedPicture" with textarea and image fields
+    - [x] Create Annotation (Textarea) and Picture (UriImage) fields for above
+    - [ ] Create RepeatGroupRow field AnnotatedPictures
+    - [ ] Add RepeatGroupRow field to Place view with field group AnnotatedPicture
+    - [ ] Add RepeatGroupRow field to Place view with field group AnnotatedPicture
+    - [ ] Test
 - [ ] New render type: Markdown, [#2](https://github.com/gklyne/annalist/issues/2)
     - following same outline steps as checkbox
     - cf. http://pythonhosted.org//Markdown/reference.html
@@ -57,6 +65,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Update site data to use Markdown where appropriate 
 - [x] Fix styling (row spacing) for site front page - it looks a bit spaced-out following changes to view/list styling.  probably just needs appropriate new CSS classes to be included.
 - [ ] Beside the "Add field" button, include "Edit view" button on entity editing page
+- [x] BUG: RepeatGroupRow field without Group Ref specified gives 500 error when view is displayed
+- [ ] BUG: no substotute if add/remove labels not supplied
+- [ ] Field placement lacks 0/9, 3/9, 0/8, 4/8, 3/6 options
 
 (sub-release?)
 
