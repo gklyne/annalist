@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
+, "annal:id":           "URIImage"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "annal:field_render_type/URIImage"
+, "rdfs:comment":       "String URI image reference rendered as an image"
+, "annal:uri":          "annal:field_render_type/URIImage"
+}

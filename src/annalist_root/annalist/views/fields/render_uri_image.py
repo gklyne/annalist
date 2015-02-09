@@ -1,5 +1,5 @@
 """
-Renderer and value mapper for URI value displayed as a link.
+Renderer and value mapper for URI value displayed as an image.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -18,12 +18,12 @@ from django.template    import Template, Context
 
 #   ----------------------------------------------------------------------------
 #
-#   Link URI value mapping
+#   Image URI value mapping
 #
 #   ----------------------------------------------------------------------------
 
 
-class URILinkValueMapper(object):
+class URIImageValueMapper(object):
     """
     Value mapper class for token list
     """
@@ -31,43 +31,33 @@ class URILinkValueMapper(object):
     @staticmethod
     def encode(data_value):
         """
-        Encodes link value as string
+        Encodes image reference as a string
         """
         return data_value or ""
 
     @staticmethod
     def decode(field_value):
         """
-        Decodes a text value as a link.
+        Decodes a URI value as an image reference.
         """
         return field_value or ""
 
 #   ----------------------------------------------------------------------------
 #
-#   Link URI field renderers
+#   Image URI field renderers
 #
 #   ----------------------------------------------------------------------------
 
-class uri_link_view_renderer(object):
+class uri_image_view_renderer(object):
 
     def render(self, context):
         """
-        Render link for viewing.
+        Render URI in view as referenced image.
         """
-        linkval = URILinkValueMapper.encode(get_field_value(context, ""))
-        common_prefixes = (
-            [ "http://", "https://"
-            , "file:///", "file://localhost/", "file://"
-            , "mailto:"]
-            )
-        textval = linkval
-        for p in common_prefixes:
-            if linkval.startswith(p):
-                textval = linkval[len(p):]
-                break
-        return '''<a href="%s" target="_blank">%s</a>'''%(linkval, textval)
+        linkval = URIImageValueMapper.encode(get_field_value(context, ""))
+        return '''<img src="%s" alt="%s" />'''%(linkval, linkval)
 
-class uri_link_edit_renderer(object):
+class uri_image_edit_renderer(object):
 
     def __init__(self):
         self._template = Template(
@@ -79,17 +69,17 @@ class uri_link_edit_renderer(object):
 
     def render(self, context):
         """
-        Render link for editing
+        Render image URI for editing
         """
         return self._template.render(context)
 
-def get_uri_link_renderer():
+def get_uri_image_renderer():
     """
     Return field renderer object for token list values
     """
     return RenderFieldValue(
-        view_renderer=uri_link_view_renderer(), 
-        edit_renderer=uri_link_edit_renderer(),
+        view_renderer=uri_image_view_renderer(), 
+        edit_renderer=uri_image_edit_renderer(),
         )
 
 # End.

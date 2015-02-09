@@ -20,6 +20,7 @@ from render_placement           import get_field_placement_renderer
 from render_tokenset            import get_field_tokenset_renderer, TokenSetValueMapper
 from render_bool_checkbox       import get_bool_checkbox_renderer, BoolCheckboxValueMapper
 from render_uri_link            import get_uri_link_renderer, URILinkValueMapper
+from render_uri_image           import get_uri_image_renderer, URIImageValueMapper
 from render_repeatgroup         import RenderRepeatGroup
 import render_repeatgroup
 
@@ -66,12 +67,14 @@ _field_get_renderer_functions = (
     , "TokenSet":       get_field_tokenset_renderer
     , "CheckBox":       get_bool_checkbox_renderer
     , "URILink":        get_uri_link_renderer
+    , "URIImage":       get_uri_image_renderer
     })
 
 _field_value_mappers = (
     { "TokenSet":       TokenSetValueMapper
     , "CheckBox":       BoolCheckboxValueMapper
     , "URILink":        URILinkValueMapper
+    , "URIImage":       URIImageValueMapper
     })
 
 def get_field_renderer(renderid):
