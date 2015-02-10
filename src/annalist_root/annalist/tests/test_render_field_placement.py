@@ -44,10 +44,30 @@ class FieldPlacementRenderingTest(FieldRendererTestSupport):
                     '''&block;&block;&block;&block;&block;&block;'''+
                     '''&block;&block;&block;&block;&block;&block;'''+
                     ''' (0/12)</option>\n'''+
+                '''  <option value="small:0,12;medium:0,9">'''+
+                    '''&block;&block;&block;&block;&block;&block;'''+
+                    '''&block;&block;&block;&blk14;&blk14;&blk14;'''+
+                    ''' (0/9)</option>\n'''+
+                '''  <option value="small:0,12;medium:3,9">'''+
+                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
+                    '''&block;&block;&block;&block;&block;&block;'''+
+                    ''' (3/9)</option>\n'''+
+                '''  <option value="small:0,12;medium:0,8">'''+
+                    '''&block;&block;&block;&block;&block;&block;'''+
+                    '''&block;&block;&blk14;&blk14;&blk14;&blk14;'''+
+                    ''' (0/8)</option>\n'''+
+                '''  <option value="small:0,12;medium:4,8">'''+
+                    '''&blk14;&blk14;&blk14;&blk14;&block;&block;'''+
+                    '''&block;&block;&block;&block;&block;&block;'''+
+                    ''' (4/8)</option>\n'''+
                 '''  <option value="small:0,12;medium:0,6">'''+
                     '''&block;&block;&block;&block;&block;&block;'''+
                     '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
                     ''' (0/6)</option>\n'''+
+                '''  <option value="small:0,12;medium:3,6">'''+
+                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
+                    '''&block;&block;&block;&blk14;&blk14;&blk14;'''+
+                    ''' (3/6)</option>\n'''+
                 '''  <option value="small:0,12;medium:6,6">'''+
                     '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
                     '''&block;&block;&block;&block;&block;&block;'''+

@@ -40,7 +40,11 @@ class UriImageRenderingTest(FieldRendererTestSupport):
     def test_RenderUriImageValue(self):
 
         def expect_render(linktext, alttext):
-            render_view = '''<img src="%s" alt="%s" />'''%(linktext, alttext)
+            render_view = (
+                '''<a href="%s" target="_blank">'''%(linktext)+
+                  '''<img src="%s" alt="Image at %s" />'''%(linktext, alttext)+
+                '''</a>'''
+                )
             render_edit = (
                 '''<input type="text" size="64" name="repeat_prefix_test_field" '''+
                        '''placeholder="(test placeholder)" '''+

@@ -44,14 +44,14 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Add render type name to enumerated value; update tests (test_entitygenericlist:244, entity_testsitedata:306)
     - [x] Update site data to use new renderer
     - [x] etc.
-- [ ] Extend CruisingLog example data with image galleries for place and daily log entries
-    - [ ] Generate thumbnails that link to larger images
+- [x] Extend CruisingLog example data with image galleries for place and daily log entries
+    - [x] Generate thumbnails that link to larger images
     - [x] Create new field group "AnnotatedPicture" with textarea and image fields
     - [x] Create Annotation (Textarea) and Picture (UriImage) fields for above
-    - [ ] Create RepeatGroupRow field AnnotatedPictures
-    - [ ] Add RepeatGroupRow field to Place view with field group AnnotatedPicture
-    - [ ] Add RepeatGroupRow field to Place view with field group AnnotatedPicture
-    - [ ] Test
+    - [x] Create RepeatGroupRow field AnnotatedPictures
+    - [x] Add RepeatGroupRow field to Place view with field group AnnotatedPicture
+    - [x] Add RepeatGroupRow field to Place view with field group AnnotatedPicture
+    - [x] Test
 - [ ] New render type: Markdown, [#2](https://github.com/gklyne/annalist/issues/2)
     - following same outline steps as checkbox
     - cf. http://pythonhosted.org//Markdown/reference.html
@@ -68,7 +68,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Consider removing the "add field" button (and corresponding field in View_view)?
 - [x] BUG: RepeatGroupRow field without Group Ref specified gives 500 error when view is displayed
 - [ ] BUG: no substitute if add/remove labels not supplied
-- [ ] Field placement lacks 0/9, 3/9, 0/8, 4/8, 3/6 options
+- [x] Field placement lacks 0/9, 3/9, 0/8, 4/8, 3/6 options
+- [x] Provide image click-through to larger version.
 
 (sub-release?)
 
@@ -146,6 +147,8 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Create image-viewing page to avoid download options, and link to that. (cf. UriImage renderer)
+- [ ] Vary layout for editing and viewing?  Sounds hard.
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
 - [ ] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)

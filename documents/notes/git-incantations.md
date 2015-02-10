@@ -110,3 +110,11 @@ See: http://stackoverflow.com/questions/927358/undo-last-git-commit):
     git stash
     git checkout -b <branch>
     git stash pop
+
+
+## Others
+
+List all commits on branch b1 that are not also on branch b2:
+
+    git log b1 ^b2 --no-merges
+

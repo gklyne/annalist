@@ -55,7 +55,10 @@ class uri_image_view_renderer(object):
         Render URI in view as referenced image.
         """
         linkval = URIImageValueMapper.encode(get_field_value(context, ""))
-        return '''<img src="%s" alt="%s" />'''%(linkval, linkval)
+        return (
+            '''<a href="%s" target="_blank">'''+
+            '''<img src="%s" alt="Image at %s" />'''+
+            '''</a>''')%(linkval, linkval, linkval)
 
 class uri_image_edit_renderer(object):
 
