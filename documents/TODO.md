@@ -38,7 +38,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Update site data to use new renderer
     - [x] etc.
 - [x] New render type: image, [#2](https://github.com/gklyne/annalist/issues/2)
-    - [ ] Image test cases
+    - [x] Image test cases
     - [x] Image renderer
     - [x] Add renderer to render_utils tables
     - [x] Add render type name to enumerated value; update tests (test_entitygenericlist:244, entity_testsitedata:306)
@@ -64,7 +64,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Update Annalist dependencies to include markdown package
     - [ ] Update site data to use Markdown where appropriate 
 - [x] Fix styling (row spacing) for site front page - it looks a bit spaced-out following changes to view/list styling.  probably just needs appropriate new CSS classes to be included.
-- [ ] Beside the "Add field" button, include "Edit view" button on entity editing page
+- [ ] Beside the "Add field" button, include "Edit view" button on entity editing page.
+    - [ ] Consider removing the "add field" button (and corresponding field in View_view)?
 - [x] BUG: RepeatGroupRow field without Group Ref specified gives 500 error when view is displayed
 - [ ] BUG: no substitute if add/remove labels not supplied
 - [ ] Field placement lacks 0/9, 3/9, 0/8, 4/8, 3/6 options

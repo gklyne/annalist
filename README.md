@@ -11,7 +11,9 @@ For information about the current release, please refer to the [V0.1 release not
 Quick-start
 -----------
 
-See [Getting started with Annalist](documents/getting-started.md)
+See [Getting started with Annalist](documents/getting-started.md).
+
+There's also an [on-line demonstration server](http://demo.annalist.net/annalist/site/) - log in with a Gogle account to try creating or modifying data.
 
 
 Installation
