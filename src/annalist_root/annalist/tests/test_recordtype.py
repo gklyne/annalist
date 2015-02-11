@@ -383,30 +383,41 @@ class RecordTypeEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow5 = ("""
-            <div class="row">
-              <div class="%(space_classes)s">
-                <div class="row">
-                  <div class="small-12 columns">
-                    &nbsp;
-                  </div>
-                </div>
-              </div>
-              <div class="%(button_wide_classes)s">
-                <div class="row">
-                  <div class="%(button_left_classes)s">
-                      <input type="submit" name="save"          value="Save" />
-                      <input type="submit" name="cancel"        value="Cancel" />
-                  </div>
+        formrow5a = """
+            <div class="%(space_classes)s">
+              <div class="row">
+                <div class="small-12 columns">
+                  &nbsp;
                 </div>
               </div>
             </div>
-            """)%field_vals(width=12)
+            """%field_vals(width=2)
+        formrow5b = """
+            <div class="%(button_wide_classes)s">
+              <div class="row">
+                <div class="%(button_left_classes)s">
+                  <input type="submit" name="save"      value="Save" />
+                  <input type="submit" name="cancel"    value="Cancel" />
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        formrow5c = """
+            <div class="%(button_wide_classes)s">
+              <div class="row">
+                <div class="%(button_right_classes)s">
+                  <input type="submit" name="edit_view" value="Edit view" />
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=4)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)
         self.assertContains(r, formrow4, html=True)
-        self.assertContains(r, formrow5, html=True)
+        self.assertContains(r, formrow5a, html=True)
+        self.assertContains(r, formrow5b, html=True)
+        self.assertContains(r, formrow5c, html=True)
         return
 
     def test_get_new(self):

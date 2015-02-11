@@ -64,7 +64,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Update Annalist dependencies to include markdown package
     - [ ] Update site data to use Markdown where appropriate 
 - [x] Fix styling (row spacing) for site front page - it looks a bit spaced-out following changes to view/list styling.  probably just needs appropriate new CSS classes to be included.
-- [ ] Beside the "Add field" button, include "Edit view" button on entity editing page.
+- [x] Beside the "Add field" button, include "Edit view" button on entity editing page.
 - [ ] Consider removing the "Add field" button (and corresponding field in View_view)?
 - [x] BUG: RepeatGroupRow field without Group Ref specified gives 500 error when view is displayed
 - [x] BUG: no substitute if add/remove labels not supplied

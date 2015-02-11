@@ -367,32 +367,43 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow6 = ("""
-            <div class="row">
-                <div class="%(space_classes)s">
-                    <div class="row">
-                        <div class="small-12 columns">
-                          &nbsp;
-                        </div>
-                    </div>
+        formrow6a = """
+            <div class="%(space_classes)s">
+              <div class="row">
+                <div class="small-12 columns">
+                  &nbsp;
                 </div>
-                <div class="%(button_wide_classes)s">
-                    <div class="row">
-                        <div class="%(button_left_classes)s">
-                            <input type="submit" name="save"          value="Save" />
-                            <input type="submit" name="cancel"        value="Cancel" />
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
-            """)%field_vals(width=12)
+            """%field_vals(width=2)
+        formrow6b = """
+            <div class="%(button_wide_classes)s">
+              <div class="row">
+                <div class="%(button_left_classes)s">
+                  <input type="submit" name="save"      value="Save" />
+                  <input type="submit" name="cancel"    value="Cancel" />
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        formrow6c = """
+            <div class="%(button_wide_classes)s">
+              <div class="row">
+                <div class="%(button_right_classes)s">
+                  <input type="submit" name="edit_view" value="Edit view" />
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=4)
         # log.info(r.content)
-        self.assertContains(r, formrow1, html=True)
-        self.assertContains(r, formrow2, html=True)
-        self.assertContains(r, formrow3, html=True)
-        self.assertContains(r, formrow4, html=True)
-        self.assertContains(r, formrow5, html=True)
-        self.assertContains(r, formrow6, html=True)
+        self.assertContains(r, formrow1,  html=True)
+        self.assertContains(r, formrow2,  html=True)
+        self.assertContains(r, formrow3,  html=True)
+        self.assertContains(r, formrow4,  html=True)
+        self.assertContains(r, formrow5,  html=True)
+        self.assertContains(r, formrow6a, html=True)
+        self.assertContains(r, formrow6b, html=True)
+        self.assertContains(r, formrow6c, html=True)
         return
 
     def test_user_permissions_form_rendering(self):

@@ -553,7 +553,7 @@ def entitydata_recordtype_view_form_data(
         type_id="testtype", orig_type=None, type_uri=None,
         entity_id=None, orig_id=None, 
         action=None, cancel=None, update="Entity",
-        add_view_field=None):
+        add_view_field=None, edit_view=None):
     # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (
         { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
@@ -564,28 +564,30 @@ def entitydata_recordtype_view_form_data(
     if entity_id and type_id:
         type_url = entity_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
         type_url = type_url.replace("___", entity_id)  # Preserve bad type in form data
-        form_data_dict['entity_id']     = entity_id
-        form_data_dict['Type_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
-        form_data_dict['Type_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
-        form_data_dict['Type_uri']      = "" # type_url
-        form_data_dict['orig_id']       = entity_id
+        form_data_dict['entity_id']       = entity_id
+        form_data_dict['Type_label']      = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
+        form_data_dict['Type_comment']    = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
+        form_data_dict['Type_uri']        = "" # type_url
+        form_data_dict['orig_id']         = entity_id
     if type_id:
-        form_data_dict['entity_type']   = type_id
-        form_data_dict['orig_type']     = type_id
+        form_data_dict['entity_type']     = type_id
+        form_data_dict['orig_type']       = type_id
     if type_uri:
-        form_data_dict['Type_uri']      = type_uri        
+        form_data_dict['Type_uri']        = type_uri        
     if orig_id:
-        form_data_dict['orig_id']       = orig_id
+        form_data_dict['orig_id']         = orig_id
     if orig_type:
-        form_data_dict['orig_type']     = orig_type
+        form_data_dict['orig_type']       = orig_type
     if action:
-        form_data_dict['action']        = action
+        form_data_dict['action']          = action
     if cancel:
-        form_data_dict['cancel']        = "Cancel"
+        form_data_dict['cancel']          = "Cancel"
     elif add_view_field:
-        form_data_dict['add_view_field'] = add_view_field
+        form_data_dict['add_view_field']  = add_view_field
+    elif edit_view:
+        form_data_dict['edit_view']       = edit_view
     else:
-        form_data_dict['save']          = 'Save'
+        form_data_dict['save']            = 'Save'
     return form_data_dict
 
 #   -----------------------------------------------------------------------------
@@ -695,14 +697,19 @@ def error_label(coll_id=None, type_id=None, entity_id=None):
 #   -----------------------------------------------------------------------------
 
 def layout_classes(width=12):
-    if width == 4:
+    if width == 2:
+        class_dict = (
+            { 'space_classes':          "medium-2 columns show-for-medium-up"
+            })
+    elif width == 4:
         class_dict = (
             { 'label_classes':          "view-label small-12 medium-6 columns"
             , 'input_classes':          "view-value small-12 medium-6 columns"
             , 'col_head_classes':       "view-label col-head small-4 columns"
             , 'col_item_classes':       "view-value col-???? small-4 columns"
-            # , 'button_left_classes':    "form-buttons small-12 medium-6  columns"
-            # , 'button_right_classes':   "form-buttons small-12 medium-6 columns medium-text-right"
+            , 'button_wide_classes':    "small-4 columns"
+            , 'button_left_classes':    "form-buttons small-12 columns"
+            , 'button_right_classes':   "form-buttons small-12 columns text-right"
             })
     elif width == 6:
         class_dict = (
@@ -710,8 +717,13 @@ def layout_classes(width=12):
             , 'input_classes':          "view-value small-12 medium-8 columns"
             , 'col_head_classes':       "view-label col-head small-6 columns"
             , 'col_item_classes':       "view-value col-???? small-6 columns"
-            , 'button_left_classes':    "form-buttons small-12 medium-6 columns"
-            , 'button_right_classes':   "form-buttons small-12 medium-6 columns medium-text-right"
+            , 'button_wide_classes':    "small-6 columns"
+            , 'button_left_classes':    "form-buttons small-12 columns"
+            , 'button_right_classes':   "form-buttons small-12 columns text-right"
+            })
+    elif width == 10:
+        class_dict = (
+            { 'button_wide_classes':    "small-10 columns"
             })
     elif width == 12:
         class_dict = (
@@ -724,8 +736,8 @@ def layout_classes(width=12):
             , 'col_head_classes':       "view-label col-head small-12 columns"
             , 'col_item_classes':       "view-value col-???? small-12 columns"
             , 'space_classes':          "medium-2 columns show-for-medium-up"
-            , 'button_half_classes':    "form-buttons small-12 medium-5 columns"
             , 'button_wide_classes':    "small-12 medium-10 columns"
+            , 'button_half_classes':    "form-buttons small-12 medium-5 columns"
             , 'button_left_classes':    "form-buttons small-12 columns"
             , 'button_right_classes':   "form-buttons small-12 columns text-right"
             })

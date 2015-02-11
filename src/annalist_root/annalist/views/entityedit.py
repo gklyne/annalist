@@ -530,7 +530,7 @@ class GenericEntityEditView(AnnalistGenericView):
 
         # Add field from entity view (as opposed to view description view)
         # See below call of 'find_add_field' for adding field in view description
-        if 'add_view_field' in form_data:
+        if ('add_view_field' in form_data) or ('edit_view' in form_data) :
             view_edit_uri_base = self.view_uri("AnnalistEntityEditView",
                 coll_id=viewinfo.coll_id,
                 view_id="View_view",
@@ -538,13 +538,16 @@ class GenericEntityEditView(AnnalistGenericView):
                 entity_id=viewinfo.view_id,
                 action=self.uri_action
                 )
+            add_field_param = (
+                {"add_field": "View_fields"} if ('add_view_field' in form_data) else {}
+                )
             return self.save_invoke_edit_entity(
                 entityvaluemap, form_data,
                 entity_id, entity_type_id, 
                 orig_entity_id, orig_entity_type_id, # orig_entity,
                 viewinfo, context_extra_values, messages,
                 view_edit_uri_base, "config",
-                {"add_field": "View_fields"}, continuation_url
+                add_field_param, continuation_url
                 )
 
         # Add new instance of repeating field, and redisplay
