@@ -699,6 +699,8 @@ def layout_classes(width=12):
         class_dict = (
             { 'label_classes':          "view-label small-12 medium-6 columns"
             , 'input_classes':          "view-value small-12 medium-6 columns"
+            , 'col_head_classes':       "view-label col-head small-4 columns"
+            , 'col_item_classes':       "view-value col-???? small-4 columns"
             # , 'button_left_classes':    "form-buttons small-12 medium-6  columns"
             # , 'button_right_classes':   "form-buttons small-12 medium-6 columns medium-text-right"
             })
@@ -706,13 +708,21 @@ def layout_classes(width=12):
         class_dict = (
             { 'label_classes':          "view-label small-12 medium-4 columns"
             , 'input_classes':          "view-value small-12 medium-8 columns"
+            , 'col_head_classes':       "view-label col-head small-6 columns"
+            , 'col_item_classes':       "view-value col-???? small-6 columns"
             , 'button_left_classes':    "form-buttons small-12 medium-6 columns"
             , 'button_right_classes':   "form-buttons small-12 medium-6 columns medium-text-right"
             })
     elif width == 12:
         class_dict = (
-            { 'label_classes':          "view-label small-12 medium-2 columns"
+            { 'group_label_classes':    "group-label small-12 medium-2 columns"
+            , 'group_space_classes':    "small-12 medium-2 columns hide-for-small-only"
+            , 'group_row_head_classes': "small-12 medium-10 columns hide-for-small-only"
+            , 'group_row_body_classes': "small-12 medium-10 columns"
+            , 'label_classes':          "view-label small-12 medium-2 columns"
             , 'input_classes':          "view-value small-12 medium-10 columns"
+            , 'col_head_classes':       "view-label col-head small-12 columns"
+            , 'col_item_classes':       "view-value col-???? small-12 columns"
             , 'space_classes':          "medium-2 columns show-for-medium-up"
             , 'button_half_classes':    "form-buttons small-12 medium-5 columns"
             , 'button_wide_classes':    "small-12 medium-10 columns"

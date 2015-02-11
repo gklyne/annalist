@@ -129,6 +129,8 @@ class FieldDescription(object):
             group_label = (field_label or 
                 group_view.get(RDFS.CURIE.label, self._field_desc['field_group_ref'])
                 )
+            add_label    = recordfield.get(ANNAL.CURIE.repeat_label_add, None) or "Add "+field_id
+            remove_label = recordfield.get(ANNAL.CURIE.repeat_label_delete, None) or "Remove "+field_id
             group_field_descs = []
             for subfield in group_view[ANNAL.CURIE.group_fields]:
                 f = field_description_from_view_field(collection, subfield, view_context)
@@ -136,8 +138,8 @@ class FieldDescription(object):
             self._field_desc.update(
                 { 'group_id':           field_id
                 , 'group_label':        group_label
-                , 'group_add_label':    recordfield.get(ANNAL.CURIE.repeat_label_add, "Add "+group_label)
-                , 'group_delete_label': recordfield.get(ANNAL.CURIE.repeat_label_delete, "Remove "+group_label)
+                , 'group_add_label':    add_label
+                , 'group_delete_label': remove_label
                 , 'group_view':         group_view
                 , 'group_field_descs':  group_field_descs
                 })

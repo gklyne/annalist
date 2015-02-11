@@ -1,5 +1,5 @@
 """
-Entity editing tests for enumerated value fields
+Entity editing tests for duplicated fields
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -61,7 +61,7 @@ from entity_testentitydata          import (
 
 #   -----------------------------------------------------------------------------
 #
-#   Entity edit enumerated value field tests
+#   Entity edit duplicated field tests
 #
 #   -----------------------------------------------------------------------------
 
