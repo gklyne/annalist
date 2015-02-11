@@ -37,6 +37,7 @@
             </div>
           </div>
         </div>
+        {% comment "Add field button suppressed for now" %}
         {% if auth_config and edit_add_field and edit_add_field != "no" %}
         <div class="small-5 columns">
           <div class="row">
@@ -55,6 +56,7 @@
           </div>
         </div>
         {% else %}
+        {% endcomment %}
         <div class="small-6 columns">
           <div class="row">
             <div class="form-buttons small-12 columns">
@@ -70,7 +72,9 @@
             </div>
           </div>
         </div>
+        {% comment "Add field button suppressed for now" %}
         {% endif %}
+        {% endcomment %}
       </div>
 
       <hr />

@@ -66,10 +66,13 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Fix styling (row spacing) for site front page - it looks a bit spaced-out following changes to view/list styling.  probably just needs appropriate new CSS classes to be included.
 - [x] Beside the "Add field" button, include "Edit view" button on entity editing page.
 - [ ] Consider removing the "Add field" button (and corresponding field in View_view)?
+    - Have removed "Add field" button in template
+    - But: to remove add field in view, or use it to enable Edit view button?
 - [x] BUG: RepeatGroupRow field without Group Ref specified gives 500 error when view is displayed
 - [x] BUG: no substitute if add/remove labels not supplied
 - [x] Field placement lacks 0/9, 3/9, 0/8, 4/8, 3/6 options
 - [x] Provide image click-through to larger version.
+- [ ] View display: suppress headings for empty repeatgrouprow value
 
 (sub-release?)
 
