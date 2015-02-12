@@ -320,6 +320,7 @@ site_field_types = (
     , "Field"
     , "Identifier"
     , "List"
+    , "Markdown"
     , "Placement"
     , "RepeatGroup"
     , "RepeatGroupRow"

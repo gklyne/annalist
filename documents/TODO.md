@@ -52,17 +52,24 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Add RepeatGroupRow field to Place view with field group AnnotatedPicture
     - [x] Add RepeatGroupRow field to Place view with field group AnnotatedPicture
     - [x] Test
-- [ ] New render type: Markdown, [#2](https://github.com/gklyne/annalist/issues/2)
+- [x] New render type: Markdown, [#2](https://github.com/gklyne/annalist/issues/2)
     - following same outline steps as checkbox
     - cf. http://pythonhosted.org//Markdown/reference.html
-    - [ ] Markdown test cases
-    - [ ] Markdown renderer (think about data migration in design)
-    - [ ] Add renderer to render_utils tables
-    - [ ] Add render type name to enumerated value; update tests
-    - [ ] Update site data to use new renderer
-    - [ ] etc.
-    - [ ] Update Annalist dependencies to include markdown package
-    - [ ] Update site data to use Markdown where appropriate 
+    - [x] Markdown test cases
+    - [x] Markdown renderer
+    - [x] Add renderer to render_utils tables
+    - [x] Add render type name to enumerated value; update tests (test_entitygenericlist:244, entity_testsitedata:306)
+    - [x] Run tests
+    - [x] Update test data to use new renderer
+    - [x] Fix up CSS for Markdown formatting; e.g.
+        - div.columns.view-value > span.markdown p
+        - div.columns.view-value > span.markdown li
+        - div.columns.view-value > span.markdown h1
+        - div.columns.view-value > span.markdown h2
+        - div.columns.view-value > span.markdown h3
+        - div.columns.view-value > span.markdown h4
+    - [x] Update Annalist dependencies to include markdown package
+    - [x] Update site data to use Markdown where appropriate 
 - [x] Fix styling (row spacing) for site front page - it looks a bit spaced-out following changes to view/list styling.  probably just needs appropriate new CSS classes to be included.
 - [x] Beside the "Add field" button, include "Edit view" button on entity editing page.
 - [x] BUG: RepeatGroupRow field without Group Ref specified gives 500 error when view is displayed

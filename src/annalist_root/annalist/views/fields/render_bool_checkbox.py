@@ -25,7 +25,9 @@ from django.template    import Template, Context
 
 class BoolCheckboxValueMapper(object):
     """
-    Value mapper class for token list
+    Value mapper class for Boolean value presented as checkbox.
+
+    Also interprets text values 'True', 'False','Yes', 'No', etc.
     """
 
     @staticmethod

@@ -339,7 +339,7 @@ div.columns.view-value > span.value-placeholder
     height: 1.4rem;
 }
 
-div.columns.checkbox-in-edit-padding > input[type="checkbox"] ,
+div.columns.checkbox-in-edit-padding > input[type="checkbox"]
 {   /* Hack to get checkboxes to align sensibly in row of field group */
     margin-top: 0.25rem ;
     margin-bottom: 0rem;
@@ -351,7 +351,8 @@ div.columns input[type="checkbox"]
     margin-bottom: 0rem ;
 }
 
-div.columns > input[type=submit] {
+div.columns > input[type=submit] 
+{
     padding-left: 1rem;
     padding-right: 1rem;
 }
@@ -362,6 +363,89 @@ div.columns > textarea[rows]
     height: auto;
 }
 
+/* Markdown field text styling */
+
+div.columns.view-value > span.markdown h1 ,
+div.columns.view-value > span.markdown h2 ,
+div.columns.view-value > span.markdown h3 ,
+div.columns.view-value > span.markdown h4 ,
+div.columns.view-value > span.markdown li ,
+div.columns.view-value > span.markdown p
+{
+    margin-bottom:  0rem;
+    padding-top:    0rem;
+    padding-bottom: 0rem;
+    line-height:    1rem;
+}
+
+div.columns.view-value > span.markdown ul ,
+div.columns.view-value > span.markdown ol
+{
+    margin-top:     0rem;
+    margin-bottom:  0.4rem;
+}
+
+div.columns.view-value > span.markdown > p:first-child ,
+div.columns.view-value > span.markdown > h1:first-child ,
+div.columns.view-value > span.markdown > h2:first-child ,
+div.columns.view-value > span.markdown > h3:first-child ,
+div.columns.view-value > span.markdown > h4:first-child
+{
+    margin-top:     0rem;
+}
+
+div.columns.view-value > span.markdown h1
+{
+    margin-top:     0.6rem;
+}
+
+div.columns.view-value > span.markdown h2
+{
+    margin-top:     0.5rem;
+}
+
+div.columns.view-value > span.markdown p ,
+div.columns.view-value > span.markdown li ,
+div.columns.view-value > span.markdown h3 ,
+div.columns.view-value > span.markdown h4
+{
+    margin-top:     0.35rem;
+}
+
+div.columns.view-value > span.markdown p ,
+div.columns.view-value > span.markdown li
+{
+    font-size: 0.875rem;
+    font-weight: normal;
+}
+
+div.columns.view-value > span.markdown h1
+{
+    font-size:   1rem;
+    font-weight: bold;
+    line-height: 1.2rem;
+}
+
+div.columns.view-value > span.markdown h2
+{
+    font-size:   1rem;
+    font-weight: normal;
+    font-style:  italic;
+    line-height: 1.2rem;
+}
+
+div.columns.view-value > span.markdown h3
+{
+    font-size:   0.875rem;
+    font-weight: bold;
+}
+
+div.columns.view-value > span.markdown h4
+{
+    font-size:   0.875rem;
+    font-weight: normal;
+    font-style:  italic;
+}
 
 /*
 div.columns > input[type=text] , 

@@ -141,6 +141,7 @@ setup(
         , 'oauth2client==1.2'
           , 'httplib2==0.9'
         , 'pyparsing==2.0.2'    # Does RDFlib need 1.5.7?
+        , 'Markdown==2.5.2'
         # For testing:
         , 'beautifulsoup4'
         # For development - used by miscutils/MockHttpResources:

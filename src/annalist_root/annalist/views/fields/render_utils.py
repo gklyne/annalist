@@ -21,6 +21,7 @@ from render_tokenset            import get_field_tokenset_renderer, TokenSetValu
 from render_bool_checkbox       import get_bool_checkbox_renderer, BoolCheckboxValueMapper
 from render_uri_link            import get_uri_link_renderer, URILinkValueMapper
 from render_uri_image           import get_uri_image_renderer, URIImageValueMapper
+from render_text_markdown       import get_text_markdown_renderer, TextMarkdownValueMapper
 from render_repeatgroup         import RenderRepeatGroup
 import render_repeatgroup
 
@@ -68,6 +69,7 @@ _field_get_renderer_functions = (
     , "CheckBox":       get_bool_checkbox_renderer
     , "URILink":        get_uri_link_renderer
     , "URIImage":       get_uri_image_renderer
+    , "Markdown":       get_text_markdown_renderer
     })
 
 _field_value_mappers = (
@@ -75,6 +77,7 @@ _field_value_mappers = (
     , "CheckBox":       BoolCheckboxValueMapper
     , "URILink":        URILinkValueMapper
     , "URIImage":       URIImageValueMapper
+    , "Markdown":       TextMarkdownValueMapper
     })
 
 def get_field_renderer(renderid):
