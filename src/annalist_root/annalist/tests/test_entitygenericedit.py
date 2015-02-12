@@ -274,15 +274,15 @@ class GenericEntityEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow5c = """
-            <div class="%(button_wide_classes)s">
-              <div class="row">
-                <div class="%(button_right_classes)s">
-                  <input type="submit" name="edit_view" value="Edit view" />
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=4)
+        # formrow5c = """
+        #     <div class="%(button_wide_classes)s">
+        #       <div class="row">
+        #         <div class="%(button_right_classes)s">
+        #           <input type="submit" name="edit_view" value="Edit view" />
+        #         </div>
+        #       </div>
+        #     </div>
+        #     """%field_vals(width=4)
         formrow6 = ("""
             <div class="row view-value-row">
               <div class="%(label_classes)s">
@@ -324,7 +324,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow4,  html=True)
         self.assertContains(r, formrow5a, html=True)
         self.assertContains(r, formrow5b, html=True)
-        self.assertContains(r, formrow5c, html=True)
+        # self.assertContains(r, formrow5c, html=True)
         self.assertContains(r, formrow6,  html=True)
         # New buttons hidden (for now)
         # self.assertContains(r, formrow7, html=True)

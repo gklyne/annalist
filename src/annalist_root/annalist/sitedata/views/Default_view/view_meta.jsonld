@@ -5,7 +5,7 @@
 , "annal:uri":          "annal:display/Default_view"
 , "rdfs:label":         "Default record view"
 , "rdfs:comment":       "Default record view, applied when no view is specified when creating a record."
-, "annal:add_field":    true
+, "annal:edit_view":    true
 , "annal:view_fields":
   [ { "annal:field_id":         "Entity_id"
     , "annal:field_placement":  "small:0,12;medium:0,6"

@@ -262,9 +262,9 @@ site_user_fields = (
 
 site_view_fields = (
     [ "_initial_values"
-    , "View_add_field"
-    , "View_choice"
+    # , "View_choice"
     , "View_comment"
+    , "View_edit_view"
     , "View_fields"
     , "View_id"
     , "View_label"
@@ -295,11 +295,17 @@ def get_site_default_entity_fields_sorted():
 def get_site_default_entity_fields():
     return set(site_default_entity_fields[1:])
 
+def get_site_view_fields_sorted():
+    return site_default_entity_fields[1:] + site_view_fields[1:]
+
+def get_site_view_fields():
+    return set(get_site_view_fields_sorted())
+
 def get_site_bibentry_fields_sorted():
     return site_bibentry_fields[1:] + site_default_entity_fields[1:]
 
 def get_site_bibentry_fields():
-    return set(site_bibentry_fields[1:] + site_default_entity_fields[1:])
+    return set(get_site_bibentry_fields_sorted())
 
 #   ----- Field render types -----
 

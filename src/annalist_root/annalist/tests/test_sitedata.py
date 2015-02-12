@@ -67,6 +67,7 @@ from entity_testsitedata        import (
     get_site_views, get_site_views_sorted,
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
+    get_site_view_fields, get_site_view_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
 
@@ -167,21 +168,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 )
         return
 
-    # row_data:
-    #
-    # <div class="trow row select-row">
-    #   <div class="small-1 columns">
-    #     <input class="select-box right" name="entity_select" type="checkbox" value="type2/entity3"/>
-    #   </div>
-    #   <div class="small-11 columns">
-    #     <div class="row">
-    #       <div class="small-3 columns"><!-- ... --><a href="...">entity3</a></div>
-    #       <div class="small-2 columns"><!-- ... --><a href="...">type2</a></div>
-    #       <div class="small-7 columns"><!-- ... -->Entity coll1/type2/entity3</div>
-    #       </div>
-    #   </div>
-    # </div>
-    #
     def check_row_column(self, row_data, colnum, row_expected):
         if row_expected[colnum] is not None:
             e = row_expected[colnum]
@@ -245,7 +231,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_view[ANNAL.CURIE.id],             view_id)
         self.assertEqual(type_view[ANNAL.CURIE.type_id],        "_view")
         self.assertEqual(type_view[ANNAL.CURIE.record_type],    type_uri)
-        self.assertIn(ANNAL.CURIE.add_field,                    type_view)
+        self.assertIn(ANNAL.CURIE.edit_view,                    type_view)
         # Read and check fields used in list and view displays
         self.check_type_fields(type_id, type_uri, type_list[ANNAL.CURIE.list_fields])
         self.check_type_fields(type_id, type_uri, type_view[ANNAL.CURIE.view_fields])
@@ -708,7 +694,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "View_label", "text", None)
         self.check_input_type_value(s, "View_comment", "textarea", None)
         self.check_input_type_value(s, "View_target_type", "text", None)
-        self.check_input_type_value(s, "View_add_field", "checkbox", "Yes")
+        self.check_input_type_value(s, "View_edit_view", "checkbox", "Yes")
         self.check_select_field(s, "view_choice", self.views_expected, "View_view")
         return
 
@@ -719,24 +705,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = (
-            [ "Entity_comment"
-            , "Entity_id"
-            , "Entity_label"
-            , "Entity_type"
-            , "View_add_field"
-            , "View_comment"
-            , "View_fields"
-            , "View_id"
-            , "View_label"
-            , "View_target_type"
-            ])
-        expect_fields = (
+        expect_field_choices = get_site_view_fields_sorted()
+        expect_fields        = (
             [ "View_id"
             , "View_label"
             , "View_comment"
             , "View_target_type"
-            , "View_add_field"
+            , "View_edit_view"
             , "View_fields"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)
@@ -1007,9 +982,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/User_name",                 ["User_name"                          ] ]
             , [ "_field/User_permissions",          ["User_permissions"                   ] ]
             , [ "_field/User_uri",                  ["User_uri"                           ] ]
-            , [ "_field/View_add_field",            ["View_add_field"                     ] ]
             , [ "_field/View_choice",               ["View_choice"                        ] ]
             , [ "_field/View_comment",              ["View_comment"                       ] ]
+            , [ "_field/View_edit_view",            ["View_edit_view"                     ] ]
             , [ "_field/View_fields",               ["View_fields"                        ] ]
             , [ "_field/View_id",                   ["View_id"                            ] ]
             , [ "_field/View_label",                ["View_label"                         ] ]

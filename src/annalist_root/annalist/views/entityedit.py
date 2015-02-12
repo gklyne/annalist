@@ -50,7 +50,7 @@ baseentityvaluemap  = (
         [ SimpleValueMap(c='coll_id',          e=None,                    f=None               )
         , SimpleValueMap(c='type_id',          e=None,                    f=None               )
         , SimpleValueMap(c='view_choices',     e=None,                    f=None               )
-        , SimpleValueMap(c='edit_add_field',   e=None,                    f=None               )
+        , SimpleValueMap(c='edit_view_button', e=None,                    f=None               )
         , StableValueMap(c='entity_id',        e=ANNAL.CURIE.id,          f='entity_id'        )
         , SimpleValueMap(c='entity_url',       e=ANNAL.CURIE.url,         f='entity_url'       )
         , SimpleValueMap(c='entity_uri',       e=ANNAL.CURIE.uri,         f='entity_uri'       )
@@ -178,7 +178,7 @@ class GenericEntityEditView(AnnalistGenericView):
             { 'site_title':       viewinfo.sitedata["title"]
             , 'title':            viewinfo.collection[RDFS.CURIE.label]
             , 'action':           action
-            , 'edit_add_field':   viewinfo.recordview.get(ANNAL.CURIE.add_field, "yes")
+            , 'edit_view_button': viewinfo.recordview.get(ANNAL.CURIE.edit_view, "yes")
             , 'continuation_url': continuation_url
             , 'request_url':      self.get_request_path()
             , 'coll_id':          coll_id
@@ -334,7 +334,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if viewinfo.action == "copy":
             entityvals.pop(ANNAL.CURIE.uri, None)
         context_extra_values = (
-            { 'edit_add_field':     viewinfo.recordview.get(ANNAL.CURIE.add_field, "yes")
+            { 'edit_view_button':   viewinfo.recordview.get(ANNAL.CURIE.edit_view, "yes")
             , 'continuation_url':   continuation_url
             , 'request_url':        self.get_request_path()
             , 'coll_id':            coll_id
@@ -530,6 +530,8 @@ class GenericEntityEditView(AnnalistGenericView):
 
         # Add field from entity view (as opposed to view description view)
         # See below call of 'find_add_field' for adding field in view description
+        # @@TODO: remove references to add_view_field option; 
+        #         lose parameter to save_invoke_edit_entity (?)
         if ('add_view_field' in form_data) or ('edit_view' in form_data) :
             view_edit_uri_base = self.view_uri("AnnalistEntityEditView",
                 coll_id=viewinfo.coll_id,

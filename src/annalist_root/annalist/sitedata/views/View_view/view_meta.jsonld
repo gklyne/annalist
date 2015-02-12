@@ -6,7 +6,7 @@
 , "annal:record_type":  "annal:View"
 , "rdfs:label":         "View description for record view description"
 , "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record view description"
-, "annal:add_field":    false
+, "annal:edit_view":    false
 , "annal:view_fields":
   [ { "annal:field_id":               "View_id"
     , "annal:field_placement":        "small:0,12;medium:0,6"
@@ -20,7 +20,7 @@
   , { "annal:field_id":               "View_target_type"
     , "annal:field_placement":        "small:0,12"
     }
-  , { "annal:field_id":               "View_add_field"
+  , { "annal:field_id":               "View_edit_view"
     , "annal:field_placement":        "small:0,12;medium:0,6"
     }
   , { "annal:field_id":               "View_fields"

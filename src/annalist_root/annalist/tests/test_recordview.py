@@ -330,10 +330,10 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['options'],                 self.no_options)
         # 5th field - add field
         # log.info("******\n"+repr(r.context['fields'][4]))
-        self.assertEqual(r.context['fields'][4]['field_id'], 'View_add_field')
-        self.assertEqual(r.context['fields'][4]['field_name'], 'View_add_field')
-        self.assertEqual(r.context['fields'][4]['field_label'], 'Add field?')
-        self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:add_field")
+        self.assertEqual(r.context['fields'][4]['field_id'], 'View_edit_view')
+        self.assertEqual(r.context['fields'][4]['field_name'], 'View_edit_view')
+        self.assertEqual(r.context['fields'][4]['field_label'], 'Editable view?')
+        self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:edit_view")
         self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:Boolean")
         self.assertEqual(r.context['fields'][4]['field_value'], True)
@@ -400,9 +400,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_label'], 'Record type')
         # 5th field - add field
         # log.info("******\n"+repr(r.context['fields'][3]))
-        self.assertEqual(r.context['fields'][4]['field_id'], 'View_add_field')
-        self.assertEqual(r.context['fields'][4]['field_name'], 'View_add_field')
-        self.assertEqual(r.context['fields'][4]['field_label'], 'Add field?')
+        self.assertEqual(r.context['fields'][4]['field_id'], 'View_edit_view')
+        self.assertEqual(r.context['fields'][4]['field_name'], 'View_edit_view')
+        self.assertEqual(r.context['fields'][4]['field_label'], 'Editable view?')
         # 6th field - field list
         expect_field_data = (
             [
@@ -419,7 +419,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
               , 'annal:field_id':        'View_target_type'
               }
             , { 'annal:field_placement': 'small:0,12;medium:0,6'
-              , 'annal:field_id':        'View_add_field'
+              , 'annal:field_id':        'View_edit_view'
               }
             , { 'annal:field_placement': 'small:0,12'
               , 'annal:field_id':        'View_fields'
@@ -501,11 +501,11 @@ class RecordViewEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Add field?</span>
+                  <span>Editable view?</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <input type="checkbox" name="View_add_field" value="Yes" checked="checked" />
-                   <span class="value-placeholder">(allow add field while editing entity)</span>
+                  <input type="checkbox" name="View_edit_view" value="Yes" checked="checked" />
+                   <span class="value-placeholder">(edit view from edit entity form)</span>
                 </div>
               </div>
             </div>
@@ -602,11 +602,11 @@ class RecordViewEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Add field?</span>
+                  <span>Editable view?</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <input type="checkbox" name="View_add_field" value="Yes" checked="checked" />
-                   <span class="value-placeholder">(allow add field while editing entity)</span>
+                  <input type="checkbox" name="View_edit_view" value="Yes" checked="checked" />
+                   <span class="value-placeholder">(edit view from edit entity form)</span>
                 </div>
               </div>
             </div>
@@ -660,7 +660,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
-        self.assertEqual(r.context['edit_add_field'],   False)
+        self.assertEqual(r.context['edit_view_button'],   False)
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields initially created
         self._check_default_entity_context_fields(r, 
@@ -689,7 +689,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
-        self.assertEqual(r.context['edit_add_field'],   False)
+        self.assertEqual(r.context['edit_view_button'],   False)
         self.assertEqual(r.context['continuation_url'], "")
         # Fields
         self._check_default_entity_context_fields(r, 
@@ -722,7 +722,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        view_url = collection_entity_view_url(coll_id="testcoll", type_id="_view", entity_id="Default_view")
+        view_url = collection_entity_view_url(
+            coll_id="testcoll", type_id="_view", entity_id="Default_view"
+            )
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "Default_view")
@@ -730,7 +732,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['entity_uri'],       "annal:display/Default_view")
         self.assertEqual(r.context['action'],           "edit")
-        self.assertEqual(r.context['edit_add_field'],   False)
+        self.assertEqual(r.context['edit_view_button'],   False)
         self.assertEqual(r.context['continuation_url'], "")
         # Fields
         self._check_default_entity_context_fields(r, 
@@ -767,7 +769,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        view_url = collection_entity_view_url(coll_id="testcoll", type_id="_view", entity_id="View_view")
+        view_url = collection_entity_view_url(
+            coll_id="testcoll", type_id="_view", entity_id="View_view"
+            )
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "View_view")
@@ -790,7 +794,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        view_url = collection_entity_view_url(coll_id="testcoll", type_id="_view", entity_id="View_view")
+        view_url = collection_entity_view_url(
+            coll_id="testcoll", type_id="_view", entity_id="View_view"
+            )
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_view")
         self.assertEqual(r.context['entity_id'],        "View_view")
@@ -821,7 +827,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "edit")
-        self.assertEqual(r.context['edit_add_field'],   False)
+        self.assertEqual(r.context['edit_view_button'],   False)
         self.assertEqual(r.context['continuation_url'], "")
         # Skip checking fields 0-4 - that's already been covered
         # log.info("*** fields[5]['options']:     "+repr(r.context['fields'][5]['options']))
