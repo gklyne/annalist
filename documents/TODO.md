@@ -72,7 +72,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Replace the "Add field" button with an "Edit view" button
     - [x] Also change "Add field?" option in view form to "Editable view?"
     - [x] Update field names and tests
-- [ ] View display: suppress headings for empty repeatgrouprow value
+- [x] View display: suppress headings for empty repeatgrouprow value
 
 (sub-release?)
 

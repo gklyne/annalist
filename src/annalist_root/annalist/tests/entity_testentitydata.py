@@ -731,6 +731,7 @@ def layout_classes(width=12):
             , 'group_space_classes':    "small-12 medium-2 columns hide-for-small-only"
             , 'group_row_head_classes': "small-12 medium-10 columns hide-for-small-only"
             , 'group_row_body_classes': "small-12 medium-10 columns"
+            , 'group_buttons_classes':  "group-buttons small-12 medium-10 columns"
             , 'label_classes':          "view-label small-12 medium-2 columns"
             , 'input_classes':          "view-value small-12 medium-10 columns"
             , 'col_head_classes':       "view-label col-head small-12 columns"

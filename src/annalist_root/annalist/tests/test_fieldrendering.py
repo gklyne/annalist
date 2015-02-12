@@ -135,7 +135,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
         # replace runs of whitespace/newlines with single space:
         rendered_text = re.sub(r'\s+', " ", rendered_text)
         expect_elements = (
-            [ '''<div class="group-label small-2 columns"> Fields </div>'''
+            [ '''<div class="group-label small-2 columns"> <span>Fields</span> </div>'''
             , '''<div class="row selectable">'''
             , '''<div class="view-label small-12 medium-4 columns"> <span>Field id</span> </div>'''
             , '''<div class="view-label small-12 medium-4 columns"> <span>Property</span> </div>'''

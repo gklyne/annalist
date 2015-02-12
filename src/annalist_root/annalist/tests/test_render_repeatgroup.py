@@ -38,6 +38,7 @@ from entity_testtypedata            import (
     )
 from entity_testentitydata          import (
     entity_url, entitydata_edit_url, 
+    default_fields
     )
 
 class RepeatGroupRenderingTest(AnnalistTestCase):
@@ -113,6 +114,14 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertTrue(testrepeatgroup is not None)
         return testrepeatgroup
 
+    def _create_testentity(self):
+        testentity = EntityData.create(self.testdata, "testentity",
+            { "annal:type":         "test:testtype"
+            , "test:repeat_fields": []
+            })
+        self.assertTrue(testentity is not None)
+        return testentity
+
     # Tests
 
     def test_RenderRepeatGroup(self):
@@ -139,7 +148,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
         self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
         self.assertEqual(r.context['fields'][0]['field_value'], "00000001")
-        # 1st field - repeat group
+        # 2nd field - repeat group
         self.assertEqual(r.context['fields'][1]['field_id'],           "testrepeatfield")
         self.assertEqual(r.context['fields'][1]['field_name'],         "testrepeatfield")
         self.assertEqual(r.context['fields'][1]['field_label'],        "Test repeat field label")
@@ -151,6 +160,60 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['group_delete_label'], "Remove group")
         self.assertEqual(len(r.context['fields'][1]['field_value']), 0)
         self.assertEqual(r.context['fields'][1]['field_value'], "") #@@ Really?
+        # Test rendered result
+        field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
+        formrow1 = """
+            <div class="small-12 medium-6 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Id</span>
+                </div>
+                <div class="%(input_classes)s">
+                    <input type="text" size="64" name="entity_id" 
+                           placeholder="(entity id)" value="00000001"/>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        formrow2a = """
+            <div class="%(group_label_classes)s">
+              <span>Test repeat field label</span>
+            </div>
+            """%field_vals(width=12)
+        formrow2b = """
+            <div class="%(group_row_head_classes)s">
+              <div class="row">
+                <div class="small-1 columns">
+                  &nbsp;
+                </div>
+                <div class="small-11 columns">
+                  <div class="edit-grouprow col-head row">
+                    <div class="%(col_head_classes)s">
+                      <span>Comment</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow2c = """
+            <div class="%(group_buttons_classes)s">
+              <div class="row">
+                <div class="small-1 columns">
+                  &nbsp;
+                </div>
+                <div class="small-11 columns">
+                  <input type="submit" name="testrepeatfield__remove" value="Remove group" />
+                  <input type="submit" name="testrepeatfield__add"    value="Add group" />
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        # log.info(r.content)
+        self.assertContains(r, formrow1,  html=True)
+        self.assertContains(r, formrow2a, html=True)
+        self.assertContains(r, formrow2b, html=True)
+        self.assertContains(r, formrow2c, html=True)
         return
 
     def test_RenderRepeatGroup_no_labels(self):
@@ -177,7 +240,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
         self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
         self.assertEqual(r.context['fields'][0]['field_value'], "00000001")
-        # 1st field - repeat group
+        # 2nd field - repeat group
         self.assertEqual(r.context['fields'][1]['field_id'],           "testrepeatfield")
         self.assertEqual(r.context['fields'][1]['field_name'],         "testrepeatfield")
         self.assertEqual(r.context['fields'][1]['field_label'],        "Test repeat field label")
@@ -189,6 +252,55 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['group_delete_label'], "Remove testrepeatfield")
         self.assertEqual(len(r.context['fields'][1]['field_value']), 0)
         self.assertEqual(r.context['fields'][1]['field_value'], "") #@@ Really?
+        return
+
+    def test_RenderRepeatGroup_view_no_values(self):
+        # Create view with repeat-field and repeat-group
+        testview        = self._create_testview()
+        testrepeatfield = self._create_testrepeatfield(
+            label_add="Add group",
+            label_delete="Remove group")
+        testrepeatgroup = self._create_testrepeatgroup()
+        testentity      = self._create_testentity()
+        # Render view
+        u = entitydata_edit_url(
+            "view", "testcoll", "testtype", entity_id="testentity", view_id="testview"
+            )
+        v = entity_url("testcoll", "testtype", entity_id="testentity")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "<title>Collection testcoll</title>")
+        # Test rendered result
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="testtype", entity_id="00000001",
+            view_url=v, cont_url=u 
+            )
+        formrow1 = """
+            <div class="small-12 medium-6 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Id</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <a href="%(view_url)s?continuation_url=%(cont_url)s">testentity</a>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        formrow2 = """
+            <div class="row">
+              <div class="%(group_label_classes)s">
+                <span>Test repeat field label</span>
+              </div>
+              <div class="group-placeholder %(group_row_body_classes)s">
+                <span>(None)</span>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        # log.info(r.content)
+        self.assertContains(r, formrow1,  html=True)
+        self.assertContains(r, formrow2, html=True)
         return
 
 # End.
