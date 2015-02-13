@@ -267,26 +267,35 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow7 = """
-            <div class="row">
-                <div class="%(space_classes)s">
-                  <div class="row">
-                    <div class="small-12 columns">
-                      &nbsp;
-                    </div>
-                  </div>
+        formrow7a = """
+            <div class="%(space_classes)s">
+              <div class="row">
+                <div class="small-12 columns">
+                  &nbsp;
                 </div>
-                <div class="%(button_wide_classes)s">
-                  <div class="row">
-                    <div class="%(button_left_classes)s">
-                      <input type="submit" name="close" value="Close" />
-                      <input type="submit" name="copy"  value="Copy" />
-                      <input type="submit" name="edit"  value="Edit" />
-                    </div>
-                  </div>
-                </div>
+              </div>
             </div>
-            """%field_vals(width=12)
+            """%field_vals(width=2)
+        formrow7b = """
+            <div class="%(button_wide_classes)s">
+              <div class="row">
+                <div class="%(button_left_classes)s">
+                  <input type="submit" name="close" value="Close" />
+                  <input type="submit" name="copy"  value="Copy" />
+                  <input type="submit" name="edit"  value="Edit" />
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        formrow7c = """
+            <div class="%(button_wide_classes)s">
+              <div class="row">
+                <div class="%(button_right_classes)s">
+                  <input type="submit" name="open_view"     value="View description" />
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=4)
         formrow8 = ("""
             <div class="row view-value-row">
               <div class="%(label_classes)s">
@@ -328,7 +337,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertContains(r, formrow4,  html=True)
         self.assertContains(r, formrow5,  html=True)
         self.assertContains(r, formrow6,  html=True)
-        self.assertContains(r, formrow7,  html=True)
+        self.assertContains(r, formrow7a, html=True)
+        self.assertContains(r, formrow7b, html=True)
+        # self.assertContains(r, formrow7c, html=True)
         self.assertContains(r, formrow8,  html=True)
         # New buttons hidden (for now)
         # self.assertContains(r, formrow9, html=True)

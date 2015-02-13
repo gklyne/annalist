@@ -278,7 +278,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         #     <div class="%(button_wide_classes)s">
         #       <div class="row">
         #         <div class="%(button_right_classes)s">
-        #           <input type="submit" name="edit_view" value="Edit view" />
+        #           <input type="submit" name="open_view" value="Edit view" />
         #         </div>
         #       </div>
         #     </div>
@@ -764,7 +764,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
         f = entitydata_recordtype_view_form_data(
                 entity_id="entityeditview", action="new",
-                edit_view="Edit view"
+                open_view="Edit view"
                 )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -784,7 +784,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.client.logout()
         f = entitydata_recordtype_view_form_data(
                 entity_id="entityeditview", action="new",
-                edit_view="Edit view"
+                open_view="Edit view"
                 )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
         r = self.client.post(u, f)
@@ -1017,7 +1017,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("entyity1")
         f = entitydata_recordtype_view_form_data(
             entity_id="entityeditview", action="copy", update="Updated entity", 
-            edit_view="Edit view"
+            open_view="Edit view"
             )
         u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1", view_id="Type_view")
         r = self.client.post(u, f)
@@ -1040,7 +1040,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.client.logout()
         f = entitydata_recordtype_view_form_data(
             entity_id="entityeditview", action="copy", update="Updated entity", 
-            edit_view="Edit view"
+            open_view="Edit view"
             )
         u = entitydata_edit_url(
             "copy", "testcoll", "testtype", entity_id="entity1", view_id="Type_view"
@@ -1382,7 +1382,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         e1 = self._check_entity_data_values("entityeditview")
         f  = entitydata_recordtype_view_form_data(
                 entity_id="entityeditview", action="edit", update="Updated entity", 
-                edit_view="Edit view"
+                open_view="Edit view"
                 )
         u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditview", view_id="Type_view")
         r  = self.client.post(u, f)
@@ -1400,7 +1400,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.client.logout()
         f = entitydata_recordtype_view_form_data(
                 entity_id="entityeditview", action="edit", update="Updated entity", 
-                edit_view="Edit view"
+                open_view="Edit view"
                 )
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditview", view_id="Type_view")
         r = self.client.post(u, f)

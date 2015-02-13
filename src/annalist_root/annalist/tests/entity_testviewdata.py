@@ -100,7 +100,7 @@ def recordview_value_keys(view_uri=False, target_record_type=True):
         [ 'annal:id', 'annal:type_id'
         , 'annal:type', 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
-        , 'annal:edit_view'
+        , 'annal:open_view'
         , 'annal:view_fields'
         ])
     if view_uri:
@@ -129,7 +129,7 @@ def recordview_create_values(
         , 'rdfs:label':         "%s %s/%s"%(update, coll_id, view_id)
         , 'rdfs:comment':       "%s help for %s in collection %s"%(update, view_id, coll_id)
         , 'annal:record_type':  target_record_type
-        , 'annal:edit_view':    True
+        , 'annal:open_view':    True
         , 'annal:view_fields':
           [ { 'annal:field_id':         "Entity_id"
             , 'annal:field_placement':  "small:0,12;medium:0,6"

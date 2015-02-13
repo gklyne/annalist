@@ -231,7 +231,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_view[ANNAL.CURIE.id],             view_id)
         self.assertEqual(type_view[ANNAL.CURIE.type_id],        "_view")
         self.assertEqual(type_view[ANNAL.CURIE.record_type],    type_uri)
-        self.assertIn(ANNAL.CURIE.edit_view,                    type_view)
+        self.assertIn(ANNAL.CURIE.open_view,                    type_view)
         # Read and check fields used in list and view displays
         self.check_type_fields(type_id, type_uri, type_list[ANNAL.CURIE.list_fields])
         self.check_type_fields(type_id, type_uri, type_view[ANNAL.CURIE.view_fields])

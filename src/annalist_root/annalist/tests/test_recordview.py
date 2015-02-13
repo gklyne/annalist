@@ -333,7 +333,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_id'], 'View_edit_view')
         self.assertEqual(r.context['fields'][4]['field_name'], 'View_edit_view')
         self.assertEqual(r.context['fields'][4]['field_label'], 'Editable view?')
-        self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:edit_view")
+        self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:open_view")
         self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:Boolean")
         self.assertEqual(r.context['fields'][4]['field_value'], True)

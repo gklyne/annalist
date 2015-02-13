@@ -5,7 +5,7 @@
 , "annal:record_type":  "bib:BibEntry"
 , "rdfs:label":         "Bibliographic metadata"
 , "rdfs:comment":       "Bibliography entries each contain some subset of standard data entries."
-, "annal:edit_view":    true
+, "annal:open_view":    true
 , "annal:view_fields":
   [ { "annal:field_id":         "Entity_id"
     , "annal:field_placement":  "small:0,12;medium:0,6"

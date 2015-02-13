@@ -178,7 +178,7 @@ class GenericEntityEditView(AnnalistGenericView):
             { 'site_title':       viewinfo.sitedata["title"]
             , 'title':            viewinfo.collection[RDFS.CURIE.label]
             , 'action':           action
-            , 'edit_view_button': viewinfo.recordview.get(ANNAL.CURIE.edit_view, "yes")
+            , 'edit_view_button': viewinfo.recordview.get(ANNAL.CURIE.open_view, "yes")
             , 'continuation_url': continuation_url
             , 'request_url':      self.get_request_path()
             , 'coll_id':          coll_id
@@ -334,7 +334,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if viewinfo.action == "copy":
             entityvals.pop(ANNAL.CURIE.uri, None)
         context_extra_values = (
-            { 'edit_view_button':   viewinfo.recordview.get(ANNAL.CURIE.edit_view, "yes")
+            { 'edit_view_button':   viewinfo.recordview.get(ANNAL.CURIE.open_view, "yes")
             , 'continuation_url':   continuation_url
             , 'request_url':        self.get_request_path()
             , 'coll_id':            coll_id
@@ -532,7 +532,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # See below call of 'find_add_field' for adding field in view description
         # @@TODO: remove references to add_view_field option; 
         #         lose parameter to save_invoke_edit_entity (?)
-        if ('add_view_field' in form_data) or ('edit_view' in form_data) :
+        if ('add_view_field' in form_data) or ('open_view' in form_data) :
             view_edit_uri_base = self.view_uri("AnnalistEntityEditView",
                 coll_id=viewinfo.coll_id,
                 view_id="View_view",
@@ -543,6 +543,8 @@ class GenericEntityEditView(AnnalistGenericView):
             add_field_param = (
                 {"add_field": "View_fields"} if ('add_view_field' in form_data) else {}
                 )
+            log.info("Open view: continuation_url: %s"%continuation_url)
+            log.info("Open view: entity_id: %s"%entity_id)
             return self.save_invoke_edit_entity(
                 entityvaluemap, form_data,
                 entity_id, entity_type_id, 
@@ -885,7 +887,7 @@ class GenericEntityEditView(AnnalistGenericView):
             self.invoke_edit_entity(
                 viewinfo, config_edit_perm,
                 config_edit_url, url_params, 
-                entity_id, entity_type_id, 
+                entity_id or orig_entity_id, entity_type_id, 
                 form_data, continuation_url
                 )
             )
@@ -935,6 +937,7 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         if viewinfo.check_authorization(edit_perm):
             return viewinfo.http_response
+        log.info("invoke_edit_entity: entity_id %s"%entity_id)
         (continuation_next, continuation_here) = self.continuation_urls(
             request_dict=param_data,
             default_cont=continuation_url, 
