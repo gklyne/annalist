@@ -83,7 +83,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Entity drop-down selectors: add current value to list if not already present
     - (avoids hiding information if type URI changed and field type is no longer offered)
 - [x] Add "Edit view" option to view as well as edit form
-    - View description doesn't carry the entity Id to the contrinuation URI (None instead)
+    - View description doesn't carry the entity Id to the continuation URI (None instead)
 
 (sub-release?)
 

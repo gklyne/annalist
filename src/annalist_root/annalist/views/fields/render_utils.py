@@ -22,6 +22,7 @@ from render_bool_checkbox       import get_bool_checkbox_renderer, BoolCheckboxV
 from render_uri_link            import get_uri_link_renderer, URILinkValueMapper
 from render_uri_image           import get_uri_image_renderer, URIImageValueMapper
 from render_text_markdown       import get_text_markdown_renderer, TextMarkdownValueMapper
+from render_select              import get_select_renderer, get_choice_renderer, SelectValueMapper
 from render_repeatgroup         import RenderRepeatGroup
 import render_repeatgroup
 
@@ -32,17 +33,17 @@ _field_view_files = (
     , "Textarea":       "field/annalist_view_textarea.html"
     , "Slug":           "field/annalist_view_slug.html"
     , "EntityId":       "field/annalist_view_entityid.html"
-    , "EntityTypeId":   "field/annalist_view_select.html"
     , "Identifier":     "field/annalist_view_identifier.html"
-    , "Type":           "field/annalist_view_select.html"
-    , "View":           "field/annalist_view_select.html"
-    , "List":           "field/annalist_view_select.html"
-    , "Field":          "field/annalist_view_select.html"
-    , "Enum":           "field/annalist_view_select.html"
-    , "Enum_choice":    "field/annalist_view_choice.html"
-    , "Enum_optional":  "field/annalist_view_select.html"
     , "View_choice":    "field/annalist_view_view_choice.html"
-    , "List_sel":       "field/annalist_view_choice.html"
+    # , "EntityTypeId":   "field/annalist_view_select.html"
+    # , "Type":           "field/annalist_view_select.html"
+    # , "View":           "field/annalist_view_select.html"
+    # , "List":           "field/annalist_view_select.html"
+    # , "Field":          "field/annalist_view_select.html"
+    # , "Enum":           "field/annalist_view_select.html"
+    # , "Enum_optional":  "field/annalist_view_select.html"
+    # , "Enum_choice":    "field/annalist_view_choice.html"
+    # , "List_sel":       "field/annalist_view_choice.html"
     })
 
 _field_edit_files = (
@@ -50,17 +51,17 @@ _field_edit_files = (
     , "Textarea":       "field/annalist_edit_textarea.html"
     , "Slug":           "field/annalist_edit_slug.html"
     , "EntityId":       "field/annalist_edit_entityid.html"
-    , "EntityTypeId":   "field/annalist_edit_select.html"
     , "Identifier":     "field/annalist_edit_identifier.html"
-    , "Type":           "field/annalist_edit_select.html"
-    , "View":           "field/annalist_edit_select.html"
-    , "List":           "field/annalist_edit_select.html"
-    , "Field":          "field/annalist_edit_select.html"
-    , "Enum":           "field/annalist_edit_select.html"
-    , "Enum_choice":    "field/annalist_edit_choice.html"
-    , "Enum_optional":  "field/annalist_edit_select.html"
     , "View_choice":    "field/annalist_edit_view_choice.html"
-    , "List_sel":       "field/annalist_edit_choice.html"
+    # , "EntityTypeId":   "field/annalist_edit_select.html"
+    # , "Type":           "field/annalist_edit_select.html"
+    # , "View":           "field/annalist_edit_select.html"
+    # , "List":           "field/annalist_edit_select.html"
+    # , "Field":          "field/annalist_edit_select.html"
+    # , "Enum":           "field/annalist_edit_select.html"
+    # , "Enum_optional":  "field/annalist_edit_select.html"
+    # , "Enum_choice":    "field/annalist_edit_choice.html"
+    # , "List_sel":       "field/annalist_edit_choice.html"
     })
 
 _field_get_renderer_functions = (
@@ -70,6 +71,16 @@ _field_get_renderer_functions = (
     , "URILink":        get_uri_link_renderer
     , "URIImage":       get_uri_image_renderer
     , "Markdown":       get_text_markdown_renderer
+
+    , "EntityTypeId":   get_select_renderer
+    , "Type":           get_select_renderer
+    , "View":           get_select_renderer
+    , "List":           get_select_renderer
+    , "Field":          get_select_renderer
+    , "Enum":           get_select_renderer
+    , "Enum_optional":  get_select_renderer
+    , "Enum_choice":    get_choice_renderer
+    , "List_sel":       get_choice_renderer
     })
 
 _field_value_mappers = (
@@ -78,6 +89,16 @@ _field_value_mappers = (
     , "URILink":        URILinkValueMapper
     , "URIImage":       URIImageValueMapper
     , "Markdown":       TextMarkdownValueMapper
+
+    , "EntityTypeId":   SelectValueMapper
+    , "Type":           SelectValueMapper
+    , "View":           SelectValueMapper
+    , "List":           SelectValueMapper
+    , "Field":          SelectValueMapper
+    , "Enum":           SelectValueMapper
+    , "Enum_optional":  SelectValueMapper
+    , "Enum_choice":    SelectValueMapper
+    , "List_sel":       SelectValueMapper
     })
 
 def get_field_renderer(renderid):
