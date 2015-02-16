@@ -25,8 +25,12 @@ from django.template    import Template, Context
 #   ----------------------------------------------------------------------------
 
 view_select = (
-    """<!-- field/annalist_view_select.html -->
-    <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
+    """<!-- fields.render_select.py -->
+    {% if field.field_value_link_continuation %}
+      <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
+    {% else %}
+      <span>{{field.field_value}}</span>
+    {% endif %}
     """)
 
 edit_select = (
@@ -34,18 +38,18 @@ edit_select = (
     <div class="row">
       <div class="small-10 columns view-value less-new-button">
         <select name="{{repeat_prefix}}{{field.field_name}}">
-          {% for v in field.options %}
+          {% for v in field_options %}
             {% if v == field.field_value %}
               {% if v == "" %}
-              <option value="" selected="selected">{{field.field_placeholder}}</option>
+                <option value="" selected="selected">{{field.field_placeholder}}</option>
               {% else %}
-              <option selected="selected">{{v}}</option>
+                <option selected="selected">{{v}}</option>
               {% endif %}
             {% else %}
               {% if v == "" %}
-              <option value="">{{field.field_placeholder}}</option>
+                <option value="">{{field.field_placeholder}}</option>
               {% else %}
-              <option>{{v}}</option>
+                <option>{{v}}</option>
               {% endif %}
             {% endif %}
           {% endfor %}
@@ -64,25 +68,29 @@ edit_select = (
     """)
 
 view_choice = (
-    """<!-- field/annalist_view_choice.html -->
-    <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
+    """<!-- fields.render_choice.py -->
+    {% if field.field_value_link_continuation %}
+      <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
+    {% else %}
+      <span>{{field.field_value}}</span>
+    {% endif %}
     """)
 
 edit_choice = (
-    """<!-- field/annalist_edit_choice.html -->
+    """<!-- fields.render_choice.py -->
     <select name="{{repeat_prefix}}{{field.field_name}}">
-      {% for v in field.options %}
+      {% for v in field_options %}
         {% if v == field.field_value %}
           {% if v == "" %}
-          <option value="" selected="selected">{{field.field_placeholder}}</option>
+            <option value="" selected="selected">{{field.field_placeholder}}</option>
           {% else %}
-          <option selected="selected">{{v}}</option>
+            <option selected="selected">{{v}}</option>
           {% endif %}
         {% else %}
           {% if v == "" %}
-          <option value="">{{field.field_placeholder}}</option>
+            <option value="">{{field.field_placeholder}}</option>
           {% else %}
-          <option>{{v}}</option>
+            <option>{{v}}</option>
           {% endif %}
         {% endif %}
       {% endfor %}
@@ -147,11 +155,18 @@ class select_edit_renderer(object):
         return
 
     def render(self, context):
-        val     = get_field_value(context, None)
-        textval = SelectValueMapper.encode(val)
-        # Add current value in selection
-        with context.push(encoded_field_value=textval):
-            result = self._template.render(context)
+        try:
+            val     = get_field_value(context, None)
+            textval = SelectValueMapper.encode(val)
+            options = context['field']['options']
+            if textval not in options:
+                options = list(options)      # clone
+                options.insert(0, textval)   # Add missing current value to options
+            with context.push(encoded_field_value=textval, field_options=options):
+                result = self._template.render(context)
+        except Exception as e:
+            log.error(e)
+            result = str(e)
         return result
 
 #   ----------------------------------------------------------------------------
@@ -162,7 +177,7 @@ class select_edit_renderer(object):
 
 def get_select_renderer():
     """
-    Return field renderer object for Markdoiwn text
+    Return field renderer object for value selector (with '+' button)
     """
     return RenderFieldValue(
         view_renderer=select_view_renderer(view_select),
@@ -171,7 +186,7 @@ def get_select_renderer():
 
 def get_choice_renderer():
     """
-    Return field renderer object for Markdoiwn text
+    Return field renderer object for value selector (without '+' button)
     """
     return RenderFieldValue(
         view_renderer=select_view_renderer(view_choice),

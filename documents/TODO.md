@@ -80,8 +80,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Also change "Add field?" option in view form to "Editable view?"
     - [x] Update field names and tests
 - [x] View display: suppress headings for empty repeatgrouprow value
-- [ ] Entity drop-down selectors: add current value to list if not already present
+- [x] Entity drop-down selectors: add current value to list if not already present
     - (avoids hiding information if type URI changed and field type is no longer offered)
+    - Done, but when a field is not available for a view, there is no link provided to edit it.
 - [x] Add "Edit view" option to view as well as edit form
     - View description doesn't carry the entity Id to the continuation URI (None instead)
 
@@ -155,6 +156,7 @@ Usability notes:
 - [ ] When creating type, default URI to be based on id entered
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] List display paging
+- [ ] When generating a view of an enumerated value, push logic for finding link into the renderer, so that availability of field link does not depend on whether field is available for the selected view.  (Try changing entity type of fielod to random value - can no longer browse to field description from view/group description)
 
 
 Notes for Future TODOs:

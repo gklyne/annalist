@@ -65,16 +65,17 @@ class TextMarkdownRenderingTest(FieldRendererTestSupport):
 
         for render_context, expect_render in test_value_context_renders:
             # print repr(render_context['field']['field_value'])
+            # print expect_render['edit']
             self._check_value_renderer_results(
                 renderer,
                 context=render_context,
                 expect_rendered_view=expect_render['view'],
-                expect_rendered_edit=expect_render['edit']
+                expect_rendered_edit=expect_render['edit'],
+                collapse_whitespace=False
                 )
         return
 
     def test_DecodeTextMarkdownValue(self):
-        # Any text other than None or empty string indicates the box is checked, returns True
         test_decode_values = (
             { None:         None
             , "":           ""

@@ -149,7 +149,10 @@ class bound_field(object):
             return self.get_field_link()
         elif name == "field_value_link_continuation":
             # Used to get link corresponding to a value, if such exists
-            return self.get_field_link()+self.get_continuation_param()
+            link = self.get_field_link()
+            if link:
+                link += self.get_continuation_param()
+            return link
         elif name == "field_description":
             # Used to get link corresponding to a value, if such exists
             return self._field_description

@@ -38,8 +38,19 @@ class FieldRendererTestSupport(AnnalistTestCase):
     def tearDown(self):
         return
 
-    def _make_test_context(self, val, repeat_prefix="repeat_prefix_"):
-        return Context(
+    def assertRenderMatch(self, rendered, expected, collapse_whitespace=False):
+        rendered = re.sub(r'<!--.*-->\n', "", rendered)
+        if collapse_whitespace:
+            rendered = re.sub(r'\s+', " ", rendered)
+            expected = re.sub(r'\s+', " ", expected)
+        if rendered != expected:
+            print "rendered "+rendered
+            print "expected "+expected
+        self.assertEqual(rendered, expected)
+        return
+
+    def _make_test_context(self, val, repeat_prefix="repeat_prefix_", link=None, options=None):
+        cd = (
             { 'field':
               { 'field_placement':      get_placement_classes("small:0,12")
               , 'field_name':           "test_field"
@@ -49,41 +60,47 @@ class FieldRendererTestSupport(AnnalistTestCase):
               }
             , 'repeat_prefix':        repeat_prefix
             })
+        if link is not None:
+            cd['field']['field_value_link']              = link
+            cd['field']['field_value_link_continuation'] = link+"?continuation_url=test_cont"
+        if options is not None:
+            cd['field']['options'] = options
+        return Context(cd)
 
     def _check_value_renderer_results(self,
         fieldrender, context=None,
         expect_rendered_view="...", 
-        expect_rendered_edit="..."
+        expect_rendered_edit="...",
+        collapse_whitespace=False
         ):
         rendered_label = fieldrender.label().render(context)
-        rendered_label = re.sub(r'<!--.*-->\n', "", rendered_label)
-        self.assertEqual(
+        self.assertRenderMatch(
             rendered_label, 
-            '''<div class="view-label small-12 columns">  <span>test label</span></div>'''
+            '''<div class="view-label small-12 columns">  <span>test label</span></div>''',
+            collapse_whitespace
             )
         rendered_view = fieldrender.view().render(context)
-        rendered_view = re.sub(r'<!--.*-->\n', "", rendered_view)
-        self.assertEqual(
+        self.assertRenderMatch(
             rendered_view, 
-            '''<div class="view-value small-12 columns">  %s</div>'''%expect_rendered_view
+            '''<div class="view-value small-12 columns">  %s</div>'''%expect_rendered_view,
+            collapse_whitespace
             )
         rendered_edit = fieldrender.edit().render(context)
-        rendered_edit = re.sub(r'<!--.*-->\n', "", rendered_edit)
-        self.assertEqual(
+        self.assertRenderMatch(
             rendered_edit, 
-            '''<div class="view-value small-12 columns">  %s</div>'''%expect_rendered_edit
+            '''<div class="view-value small-12 columns">  %s</div>'''%expect_rendered_edit,
+            collapse_whitespace
             )
         rendered_label_view = fieldrender.label_view().render(context)
-        rendered_label_view = re.sub(r'<!--.*-->\n', "", rendered_label_view)
-        self.assertEqual(
+        self.assertRenderMatch(
             rendered_label_view, 
-            '''<div class="view-label small-12 columns">  '''+
-            '''<span>test label</span>'''+
-            '''</div>'''
+            '''<div class="view-label small-12 columns">'''+
+            '''  <span>test label</span>'''+
+            '''</div>''',
+            collapse_whitespace
             )
         rendered_label_edit = fieldrender.label_edit().render(context)
-        rendered_label_edit = re.sub(r'<!--.*-->\n', "", rendered_label_edit)
-        self.assertEqual(
+        self.assertRenderMatch(
             rendered_label_edit, 
             '''<div class="small-12 columns">\n'''+
             '''  <div class="row view-value-row">\n'''+
@@ -94,19 +111,19 @@ class FieldRendererTestSupport(AnnalistTestCase):
             '''      %s\n'''%expect_rendered_edit+
             '''    </div>\n'''+
             '''  </div>\n'''+
-            '''</div>'''
+            '''</div>''',
+            collapse_whitespace
             )
         rendered_col_head = fieldrender.col_head().render(context)
-        rendered_col_head = re.sub(r'<!--.*-->\n', "", rendered_col_head)
-        self.assertEqual(
+        self.assertRenderMatch(
             rendered_col_head, 
-            '''<div class="view-label col-head small-12 columns">  '''+
-              '''<span>test label</span>'''+
-            '''</div>'''
+            '''<div class="view-label col-head small-12 columns">'''+
+            '''  <span>test label</span>'''+
+            '''</div>''',
+            collapse_whitespace
             )
         rendered_col_view = fieldrender.col_view().render(context)
-        rendered_col_view = re.sub(r'<!--.*-->\n', "", rendered_col_view)
-        self.assertEqual(
+        self.assertRenderMatch(
             rendered_col_view, 
             '''<div class="small-12 columns">\n'''+
             '''  <div class="row show-for-small-only">\n'''+
@@ -119,11 +136,11 @@ class FieldRendererTestSupport(AnnalistTestCase):
             '''      %s\n'''%expect_rendered_view+
             '''    </div>\n'''+
             '''  </div>\n'''+
-            '''</div>'''
+            '''</div>''',
+            collapse_whitespace
             )
         rendered_col_edit = fieldrender.col_edit().render(context)
-        rendered_col_edit = re.sub(r'<!--.*-->\n', "", rendered_col_edit)
-        self.assertEqual(
+        self.assertRenderMatch(
             rendered_col_edit, 
             '''<div class="small-12 columns">\n'''+
             '''  <div class="row show-for-small-only">\n'''+
@@ -136,7 +153,8 @@ class FieldRendererTestSupport(AnnalistTestCase):
             '''      %s\n'''%expect_rendered_edit+
             '''    </div>\n'''+
             '''  </div>\n'''+
-            '''</div>'''
+            '''</div>''',
+            collapse_whitespace
             )
         return
 
