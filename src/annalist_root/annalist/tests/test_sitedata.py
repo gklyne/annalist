@@ -67,6 +67,7 @@ from entity_testsitedata        import (
     get_site_views, get_site_views_sorted,
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
+    get_site_view_fields, get_site_view_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
 
@@ -88,38 +89,10 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.types_expected = get_site_types_sorted() + ["type1", "type2"]
         self.lists_expected = get_site_lists_sorted() + ['list1', 'list2']
         self.views_expected = get_site_views_sorted() + ["view1", "view2"]
-        self.list_types_expected = ["Grid", "List"]
-        self.render_types_expected = (
-            [ "EntityId"
-            , "EntityTypeId"
-            , "Enum"
-            , "Enum_choice"
-            , "Enum_optional"
-            , "Field"
-            , "Identifier"
-            , "List"
-            , "Placement"
-            , "RepeatGroup"
-            , "RepeatGroupRow"
-            , "Slug"
-            , "Text"
-            , "Textarea"
-            , "Type"
-            , "View"
-            ])
-        self.grouprefs_expected = (
-            [ "Bib_book_group"
-            , "Bib_identifier_group"
-            , "Bib_journal_group"
-            , "Bib_license_group"
-            , "Bib_person_group"
-            , "Bib_publication_group"
-            , "Group_field_group"
-            , "List_field_group"
-            , "Type_alias_group"
-            , "View_field_group"
-            ])
-        self.placements_expected = get_placement_options()
+        self.list_types_expected   = ["Grid", "List"]
+        self.render_types_expected = get_site_field_types_sorted()
+        self.grouprefs_expected    = get_site_field_groups_sorted()
+        self.placements_expected   = get_placement_options()
 
         # Login with admin permissions
         permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
@@ -195,21 +168,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 )
         return
 
-    # row_data:
-    #
-    # <div class="trow row select-row">
-    #   <div class="small-1 columns">
-    #     <input class="select-box right" name="entity_select" type="checkbox" value="type2/entity3"/>
-    #   </div>
-    #   <div class="small-11 columns">
-    #     <div class="row">
-    #       <div class="small-3 columns"><!-- ... --><a href="...">entity3</a></div>
-    #       <div class="small-2 columns"><!-- ... --><a href="...">type2</a></div>
-    #       <div class="small-7 columns"><!-- ... -->Entity coll1/type2/entity3</div>
-    #       </div>
-    #   </div>
-    # </div>
-    #
     def check_row_column(self, row_data, colnum, row_expected):
         if row_expected[colnum] is not None:
             e = row_expected[colnum]
@@ -222,7 +180,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         return
 
     def check_list_row_data(self, s, trows_expected):
-        trows = s.form.find_all("div", class_="trow")
+        trows = s.form.find_all("div", class_="tbody")
         self.assertEqual(len(trows), len(trows_expected))
         for i in range(len(trows_expected)):
             e = trows_expected[i]   # expected
@@ -273,7 +231,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_view[ANNAL.CURIE.id],             view_id)
         self.assertEqual(type_view[ANNAL.CURIE.type_id],        "_view")
         self.assertEqual(type_view[ANNAL.CURIE.record_type],    type_uri)
-        self.assertIn(ANNAL.CURIE.add_field,                    type_view)
+        self.assertIn(ANNAL.CURIE.open_view,                    type_view)
         # Read and check fields used in list and view displays
         self.check_type_fields(type_id, type_uri, type_list[ANNAL.CURIE.list_fields])
         self.check_type_fields(type_id, type_uri, type_view[ANNAL.CURIE.view_fields])
@@ -336,14 +294,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         s = self.get_page(u)
         # Check displayed collections (check site setup)
         self.assertEqual(s.title.string, "Annalist data notebook test site")
-        trows = s.form.find_all("div", class_="row")
+        trows = s.select("form > div > div > div")
         self.assertEqual(len(trows), 5)
-        self.assertEqual(trows[1].div.p.a.string,  "coll1")
-        self.assertEqual(trows[1].div.p.a['href'], collection_view_url("coll1"))
-        self.assertEqual(trows[2].div.p.a.string,  "coll2")
-        self.assertEqual(trows[2].div.p.a['href'], collection_view_url("coll2"))
-        self.assertEqual(trows[3].div.p.a.string,  "coll3")
-        self.assertEqual(trows[3].div.p.a['href'], collection_view_url("coll3"))
+        for i in (1,2,3):
+            tcols = trows[i].find_all("div", class_="view-value")
+            colln = "coll%d"%i
+            self.assertEqual(tcols[0].a.string,  colln)
+            self.assertEqual(tcols[0].a['href'], collection_view_url(colln))
         return
  
     # Test collection view
@@ -357,9 +314,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "list_choice", self.lists_expected, "Default_list_all")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
-        self.assertEqual(thead[0].p.string, "Id")
-        self.assertEqual(thead[1].p.string, "Type")
-        self.assertEqual(thead[2].p.string, "Label")
+        self.assertEqual(thead[0].span.string, "Id")
+        self.assertEqual(thead[1].span.string, "Type")
+        self.assertEqual(thead[2].span.string, "Label")
         # test_default_list_all performs other relevant tests
         return
 
@@ -389,9 +346,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "list_choice", self.lists_expected, "Default_list_all")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
-        self.assertEqual(thead[0].p.string, "Id")
-        self.assertEqual(thead[1].p.string, "Type")
-        self.assertEqual(thead[2].p.string, "Label")
+        self.assertEqual(thead[0].span.string, "Id")
+        self.assertEqual(thead[1].span.string, "Type")
+        self.assertEqual(thead[2].span.string, "Label")
 
         trows_expected = (
             [ [ "_list/list1",    ["list1", "_list", "RecordList coll1/list1"] ]
@@ -425,8 +382,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "list_choice", self.lists_expected, "Default_list")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
-        self.assertEqual(thead[0].p.string, "Id")
-        self.assertEqual(thead[1].p.string, "Label")
+        self.assertEqual(thead[0].span.string, "Id")
+        self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
             [ [ "_list/list1",    ["list1", "RecordList coll1/list1"] ]
@@ -472,8 +429,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                   .find("div", class_="row")
                   .find_all("div", class_="columns")
             )
-        self.assertEqual(thead[0].p.string, "Id")
-        self.assertEqual(thead[1].p.string, "Label")
+        self.assertEqual(thead[0].span.string, "Id")
+        self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
             [ [ "_type/_field",           ["_field",           "Field description type"] ]
@@ -588,8 +545,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "list_choice", self.lists_expected, "List_list")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
-        self.assertEqual(thead[0].p.string, "Id")
-        self.assertEqual(thead[1].p.string, "Label")
+        self.assertEqual(thead[0].span.string, "Id")
+        self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
             [ [ "_list/_initial_values",    ["_initial_values",     None] ]
@@ -707,8 +664,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "list_choice", self.lists_expected, "View_list")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
-        self.assertEqual(thead[0].p.string, "Id")
-        self.assertEqual(thead[1].p.string, "Label")
+        self.assertEqual(thead[0].span.string, "Id")
+        self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
             [ [ "_view/_initial_values",    ["_initial_values",     None] ]
@@ -737,7 +694,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "View_label", "text", None)
         self.check_input_type_value(s, "View_comment", "textarea", None)
         self.check_input_type_value(s, "View_target_type", "text", None)
-        self.check_input_type_value(s, "View_add_field", "text", None)
+        self.check_input_type_value(s, "View_edit_view", "checkbox", "Yes")
         self.check_select_field(s, "view_choice", self.views_expected, "View_view")
         return
 
@@ -748,24 +705,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = (
-            [ "Entity_comment"
-            , "Entity_id"
-            , "Entity_label"
-            , "Entity_type"
-            , "View_add_field"
-            , "View_comment"
-            , "View_fields"
-            , "View_id"
-            , "View_label"
-            , "View_target_type"
-            ])
-        expect_fields = (
+        expect_field_choices = get_site_view_fields_sorted()
+        expect_fields        = (
             [ "View_id"
             , "View_label"
             , "View_comment"
             , "View_target_type"
-            , "View_add_field"
+            , "View_edit_view"
             , "View_fields"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)
@@ -821,8 +767,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "list_choice", self.lists_expected, "Field_group_list")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
-        self.assertEqual(thead[0].p.string, "Id")
-        self.assertEqual(thead[1].p.string, "Label")
+        self.assertEqual(thead[0].span.string, "Id")
+        self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
             [ [ "_group/Bib_book_group",        ["Bib_book_group",        "BibEntry book fields"] ]
@@ -942,9 +888,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             .find("div", class_="row")
             .find_all("div", class_="columns")
             )
-        self.assertEqual(thead[0].p.string, "Id")
-        self.assertEqual(thead[1].p.string, "Field value type")
-        self.assertEqual(thead[2].p.string, "Label")
+        self.assertEqual(thead[0].span.string, "Id")
+        self.assertEqual(thead[1].span.string, "Field value type")
+        self.assertEqual(thead[2].span.string, "Label")
 
         trows_expected = (
             [ [ "_field/_initial_values",           ["_initial_values",   "annal:Text", None     ] ]
@@ -1036,9 +982,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/User_name",                 ["User_name"                          ] ]
             , [ "_field/User_permissions",          ["User_permissions"                   ] ]
             , [ "_field/User_uri",                  ["User_uri"                           ] ]
-            , [ "_field/View_add_field",            ["View_add_field"                     ] ]
             , [ "_field/View_choice",               ["View_choice"                        ] ]
             , [ "_field/View_comment",              ["View_comment"                       ] ]
+            , [ "_field/View_edit_view",            ["View_edit_view"                     ] ]
             , [ "_field/View_fields",               ["View_fields"                        ] ]
             , [ "_field/View_id",                   ["View_id"                            ] ]
             , [ "_field/View_label",                ["View_label"                         ] ]
@@ -1180,9 +1126,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "list_choice", self.lists_expected, "User_list")
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
-        self.assertEqual(thead[0].p.string, "User Id")
-        self.assertEqual(thead[1].p.string, "URI")
-        self.assertEqual(thead[2].p.string, "Permissions")
+        self.assertEqual(thead[0].span.string, "User Id")
+        self.assertEqual(thead[1].span.string, "URI")
+        self.assertEqual(thead[2].span.string, "Permissions")
 
         trows_expected = (
             [ [ "_user/_default_user_perms",  

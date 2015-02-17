@@ -151,11 +151,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.client.logout()
         u = entity_url("testcoll", "testtype", "entity1")
         r = self.client.get(u)
-        # @@TODO: currently defaults to 'edit' action; later may be 'view'
-        self.assertEqual(r.status_code,   401)
-        self.assertEqual(r.reason_phrase, "Unauthorized")
-        # self.assertEqual(r.status_code,   200)
-        # self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
         return
 
     def test_post_default_form_use_view_no_login(self):
@@ -203,9 +200,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
         formrow1 = """
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <p>Id</p>
+                  <span>Id</span>
                 </div>
                 <div class="%(input_classes)s">
                     <input type="text" size="64" name="entity_id" 
@@ -216,71 +213,80 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Label</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Type_label"
-                        placeholder="(label)"  
-                        value="%(default_label_esc)s"/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Label</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Type_label"
+                  placeholder="(label)"  
+                  value="%(default_label_esc)s"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Comment</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <textarea cols="64" rows="6" name="Type_comment" 
-                                  class="small-rows-4 medium-rows-8"
-                                  placeholder="(type description)">
-                            %(default_comment_esc)s
-                        </textarea>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Comment</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <textarea cols="64" rows="6" name="Type_comment" 
+                            class="small-rows-4 medium-rows-8"
+                            placeholder="(type description)">
+                      %(default_comment_esc)s
+                  </textarea>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>URI</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Type_uri"
-                               placeholder="(URI)"  
-                               value=""/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>URI</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Type_uri"
+                         placeholder="(URI)"  
+                         value=""/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
-        formrow5 = """
-            <div class="row">
-                <div class="%(space_classes)s">
-                    <div class="row">
-                        <div class="small-12 columns">
-                          &nbsp;
-                        </div>
-                    </div>
+        formrow5a = """
+            <div class="%(space_classes)s">
+              <div class="row">
+                <div class="small-12 columns">
+                  &nbsp;
                 </div>
-                <div class="%(button_wide_classes)s">
-                    <div class="row">
-                        <div class="%(button_left_classes)s">
-                            <input type="submit" name="save"          value="Save" />
-                            <input type="submit" name="cancel"        value="Cancel" />
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
-            """%field_vals(width=12)
+            """%field_vals(width=2)
+        formrow5b = """
+            <div class="%(button_wide_classes)s">
+              <div class="row">
+                <div class="%(button_left_classes)s">
+                  <input type="submit" name="save"      value="Save" />
+                  <input type="submit" name="cancel"    value="Cancel" />
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        # formrow5c = """
+        #     <div class="%(button_wide_classes)s">
+        #       <div class="row">
+        #         <div class="%(button_right_classes)s">
+        #           <input type="submit" name="open_view" value="Edit view" />
+        #         </div>
+        #       </div>
+        #     </div>
+        #     """%field_vals(width=4)
         formrow6 = ("""
-            <div class="row">
+            <div class="row view-value-row">
               <div class="%(label_classes)s">
-                <p>Choose view</p>
+                <span>Choose view</span>
               </div>
               <div class="%(input_classes)s">
                 <div class="row">
@@ -312,12 +318,14 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         # log.info(r.content)
-        self.assertContains(r, formrow1, html=True)
-        self.assertContains(r, formrow2, html=True)
-        self.assertContains(r, formrow3, html=True)
-        self.assertContains(r, formrow4, html=True)
-        self.assertContains(r, formrow5, html=True)
-        self.assertContains(r, formrow6, html=True)
+        self.assertContains(r, formrow1,  html=True)
+        self.assertContains(r, formrow2,  html=True)
+        self.assertContains(r, formrow3,  html=True)
+        self.assertContains(r, formrow4,  html=True)
+        self.assertContains(r, formrow5a, html=True)
+        self.assertContains(r, formrow5b, html=True)
+        # self.assertContains(r, formrow5c, html=True)
+        self.assertContains(r, formrow6,  html=True)
         # New buttons hidden (for now)
         # self.assertContains(r, formrow7, html=True)
         return
@@ -406,7 +414,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_help'], view_id_help)
         self.assertEqual(r.context['fields'][4]['field_placeholder'], "(view id)")
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:type_view")
-        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:View")
         self.assertEqual(r.context['fields'][4]['field_value'], "Default_view")
         self.assertEqual(r.context['fields'][4]['options'], self.view_options)
@@ -420,7 +428,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_help'], list_id_help)
         self.assertEqual(r.context['fields'][5]['field_placeholder'], "(list id)")
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_list")
-        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:List")
         self.assertEqual(r.context['fields'][5]['field_value'], "Default_list")
         self.assertEqual(r.context['fields'][5]['options'], self.list_options)
@@ -509,7 +517,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_name'], 'Type_view')
         self.assertEqual(r.context['fields'][4]['field_label'], 'Default view')
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:type_view")
-        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:View")
         self.assertEqual(r.context['fields'][4]['field_value'], "Default_view")
         self.assertEqual(r.context['fields'][4]['options'], self.view_options)
@@ -518,7 +526,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_name'], 'Type_list')
         self.assertEqual(r.context['fields'][5]['field_label'], 'Default list')
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_list")
-        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:List")
         self.assertEqual(r.context['fields'][5]['field_value'], "Default_list")
         self.assertEqual(r.context['fields'][5]['options'], self.list_options)
@@ -751,6 +759,39 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
+    def test_post_new_entity_edit_view(self):
+        self.assertFalse(EntityData.exists(self.testdata, "entityeditview"))
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
+        f = entitydata_recordtype_view_form_data(
+                entity_id="entityeditview", action="new",
+                open_view="Edit view"
+                )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_edit_url("edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view")
+        w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditview", view_id="Type_view")
+        c = continuation_url_param(w)
+        a = "add_field="
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self.assertNotIn(a, r['location'])
+        self._check_entity_data_values("entityeditview")
+        return
+
+    def test_post_new_entity_edit_view_no_login(self):
+        self.client.logout()
+        f = entitydata_recordtype_view_form_data(
+                entity_id="entityeditview", action="new",
+                open_view="Edit view"
+                )
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
     def test_post_new_entity_use_view(self):
         self.assertFalse(EntityData.exists(self.testdata, "entityuseview"))
         f = entitydata_default_view_form_data(
@@ -966,6 +1007,44 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                 add_view_field="View_fields"
                 )
         u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1", view_id="Type_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
+    def test_post_copy_entity_edit_view(self):
+        self._create_entity_data("entyity1")
+        self._check_entity_data_values("entyity1")
+        f = entitydata_recordtype_view_form_data(
+            entity_id="entityeditview", action="copy", update="Updated entity", 
+            open_view="Edit view"
+            )
+        u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1", view_id="Type_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_edit_url(
+            "edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view"
+            )
+        w = entitydata_edit_url(
+            "edit", "testcoll", "testtype", entity_id="entityeditview", view_id="Type_view"
+            )
+        c = continuation_url_param(w)
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self._check_entity_data_values("entityeditview", update="Updated entity")
+        return
+
+    def test_post_copy_entity_edit_view_no_login(self):
+        self.client.logout()
+        f = entitydata_recordtype_view_form_data(
+            entity_id="entityeditview", action="copy", update="Updated entity", 
+            open_view="Edit view"
+            )
+        u = entitydata_edit_url(
+            "copy", "testcoll", "testtype", entity_id="entity1", view_id="Type_view"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   401)
         self.assertEqual(r.reason_phrase, "Unauthorized")
@@ -1293,6 +1372,37 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                 add_view_field="View_fields"
                 )
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityaddfield", view_id="Type_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   401)
+        self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
+    def test_post_edit_entity_edit_view(self):
+        self._create_entity_data("entityeditview")
+        e1 = self._check_entity_data_values("entityeditview")
+        f  = entitydata_recordtype_view_form_data(
+                entity_id="entityeditview", action="edit", update="Updated entity", 
+                open_view="Edit view"
+                )
+        u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditview", view_id="Type_view")
+        r  = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_edit_url("edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view")
+        c = continuation_url_param(u)
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self._check_entity_data_values("entityeditview", update="Updated entity")
+        return
+
+    def test_post_edit_entity_edit_view_no_login(self):
+        self.client.logout()
+        f = entitydata_recordtype_view_form_data(
+                entity_id="entityeditview", action="edit", update="Updated entity", 
+                open_view="Edit view"
+                )
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditview", view_id="Type_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   401)
         self.assertEqual(r.reason_phrase, "Unauthorized")

@@ -289,7 +289,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_help'], type_view_id_help)
         self.assertEqual(r.context['fields'][4]['field_placeholder'], type_view_id_placeholder)
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:type_view")
-        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:View")
         self.assertEqual(r.context['fields'][4]['field_value'], type_view)
         self.assertEqual(r.context['fields'][4]['options'], self.view_options)
@@ -306,7 +306,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_help'], type_list_id_help)
         self.assertEqual(r.context['fields'][5]['field_placeholder'], type_list_id_placeholder)
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_list")
-        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-6 columns")
+        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:List")
         self.assertEqual(r.context['fields'][5]['field_value'], type_list)
         self.assertEqual(r.context['fields'][5]['options'], self.list_options)
@@ -327,86 +327,87 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="_type", entity_id="00000001")
         formrow1 = """
             <div class="small-12 medium-6 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Id</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="entity_id" 
-                               placeholder="(type id)" value="00000001"/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Id</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="entity_id" 
+                         placeholder="(type id)" value="00000001"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Label</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Type_label" 
-                               placeholder="(label)" 
-                               value="%(default_label_esc)s" />
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Label</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Type_label" 
+                         placeholder="(label)" 
+                         value="%(default_label_esc)s" />
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Comment</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <textarea cols="64" rows="6" name="Type_comment" 
-                                  class="small-rows-4 medium-rows-8"
-                                  placeholder="(type description)"
-                                  >
-                            %(default_comment_esc)s
-                        </textarea>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Comment</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <textarea cols="64" rows="6" name="Type_comment" 
+                            class="small-rows-4 medium-rows-8"
+                            placeholder="(type description)"
+                            >
+                      %(default_comment_esc)s
+                  </textarea>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>URI</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Type_uri" 
-                               placeholder="(URI)"
-                               value=""/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>URI</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Type_uri" 
+                         placeholder="(URI)"
+                         value=""/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
-        formrow5 = ("""
-            <div class="row">
-                <div class="%(space_classes)s">
-                    <div class="row">
-                        <div class="small-12 columns">
-                          &nbsp;
-                        </div>
-                    </div>
+        formrow5a = """
+            <div class="%(space_classes)s">
+              <div class="row">
+                <div class="small-12 columns">
+                  &nbsp;
                 </div>
-                <div class="%(button_wide_classes)s">
-                    <div class="row">
-                        <div class="%(button_left_classes)s">
-                            <input type="submit" name="save"          value="Save" />
-                            <input type="submit" name="cancel"        value="Cancel" />
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
-            """)%field_vals(width=12)
+            """%field_vals(width=2)
+        formrow5b = """
+            <div class="%(button_wide_classes)s">
+              <div class="row">
+                <div class="%(button_left_classes)s">
+                  <input type="submit" name="save"      value="Save" />
+                  <input type="submit" name="cancel"    value="Cancel" />
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)
         self.assertContains(r, formrow4, html=True)
-        self.assertContains(r, formrow5, html=True)
+        self.assertContains(r, formrow5a, html=True)
+        self.assertContains(r, formrow5b, html=True)
         return
 
     def test_get_new(self):

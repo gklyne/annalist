@@ -79,6 +79,21 @@ default_app_config = 'annalist.apps.AnnalistConfig'
                                 # Document default admin user permissions created with new site
                                 # annalist-manager enhancements; permissions help, new subcommands
                                 # Added build scripts for Docker containers
-__version__        = "0.1.10"   # Bump version number for release
+#__version__        = "0.1.10"  # Bump version number for release
+#__version__        = "0.1.11"  # Bump version number (odd = unstable)
+                                # Save logs in root of annalist_site data, for Docker visibility
+                                # Introduce non-edit view of entities, with navigation links
+                                # New render type: Boolean as checkbox
+                                # New render type: URI as Hyperlink
+                                # New render type: URI as embedded image
+                                # New render type: long text with Markdown formatting; and new CSS
+                                # Page layout/styling changes; rationalize some CSS usage
+                                # Change 'Add field' button to 'Edit view'
+                                # Add 'View description' button on non-editing entity views
+                                # View display: suppress headings for empty repeatgrouprow value
+                                # Preserve current value in form if not present in drop-down options
+                                # Various bug fixes (see release notes)
+__version__        = "0.1.12"  # Bump version number for release
+
 
 # End.

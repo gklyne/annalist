@@ -307,9 +307,9 @@ class RecordListEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="_list", entity_id="00000001")
         formrow1a = """
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <p>Id</p>
+                  <span>Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="entity_id" 
@@ -321,9 +321,9 @@ class RecordListEditViewTest(AnnalistTestCase):
             """%field_vals(width=6)
         formrow1b = ("""
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <p>List display type</p>
+                  <span>List display type</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
@@ -338,9 +338,9 @@ class RecordListEditViewTest(AnnalistTestCase):
             """)%field_vals(width=6)
         formrow2 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <p>Label</p>
+                  <span>Label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="List_label" 
@@ -352,9 +352,9 @@ class RecordListEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow3 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <p>Help</p>
+                  <span>Help</span>
                 </div>
                 <div class="%(input_classes)s">
                   <textarea cols="64" rows="6" name="List_comment" 
@@ -368,9 +368,9 @@ class RecordListEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow4 = ("""
             <div class="small-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <p>Record type</p>
+                  <span>Record type</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
@@ -385,9 +385,9 @@ class RecordListEditViewTest(AnnalistTestCase):
             """)%field_vals(width=6)
         formrow5 = ("""
             <div class="small-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <p>View</p>
+                  <span>View</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
@@ -409,9 +409,9 @@ class RecordListEditViewTest(AnnalistTestCase):
             )
         formrow6 = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <p>Selector</p>
+                  <span>Selector</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="List_entity_selector" 

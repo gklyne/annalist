@@ -5,6 +5,7 @@ wsgiref==0.1.2
 oauth2client==1.2
 httplib2==0.9
 pyparsing==2.0.2
+Markdown==2.5.2
 # RDF stuff:
 # SPARQLWrapper==1.5.2
 # pyparsing==1.5.7    # Does RDFlib need this?

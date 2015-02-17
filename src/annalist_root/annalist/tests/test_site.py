@@ -264,14 +264,14 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(menuitems[0].a.string,  "Login")
         self.assertEqual(menuitems[0].a['href'], self.profileuri)
         # Check displayed collections
-        trows = s.form.find_all("div", class_="row")
-        self.assertEqual(len(trows), 5)
-        self.assertEqual(trows[1].div.p.a.string,  "coll1")
-        self.assertEqual(trows[1].div.p.a['href'], collection_view_url("coll1"))
-        self.assertEqual(trows[2].div.p.a.string,  "coll2")
-        self.assertEqual(trows[2].div.p.a['href'], collection_view_url("coll2"))
-        self.assertEqual(trows[3].div.p.a.string,  "coll3")
-        self.assertEqual(trows[3].div.p.a['href'], collection_view_url("coll3"))
+        trows = s.form.find_all("div", class_="tbody")
+        self.assertEqual(len(trows), 4)
+        self.assertEqual(trows[0].div.div('div')[1].a.string,  "coll1")
+        self.assertEqual(trows[0].div.div('div')[1].a['href'], collection_view_url("coll1"))
+        self.assertEqual(trows[1].div.div('div')[1].a.string,  "coll2")
+        self.assertEqual(trows[1].div.div('div')[1].a['href'], collection_view_url("coll2"))
+        self.assertEqual(trows[2].div.div('div')[1].a.string,  "coll3")
+        self.assertEqual(trows[2].div.div('div')[1].a['href'], collection_view_url("coll3"))
         return
 
     def test_get_with_login(self):
@@ -306,46 +306,40 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(menuitems[1].a.string,     "Logout")
         self.assertEqual(menuitems[1].a['href'],    TestBasePath+"/logout/")
         # Displayed colllections and check-buttons
-        trows = s.form.find_all("div", class_="row")
-        self.assertEqual(len(trows), 7)
-        tcols1 = trows[1].find_all("div")
-        self.assertEqual(tcols1[0].a.string,        "coll1")
-        self.assertEqual(tcols1[0].a['href'],       collection_view_url("coll1"))
-        self.assertEqual(tcols1[2].input['type'],   "checkbox")
-        self.assertEqual(tcols1[2].input['name'],   "select")
-        self.assertEqual(tcols1[2].input['value'],  "coll1")
-        tcols2 = trows[2].find_all("div")
-        self.assertEqual(tcols2[0].a.string,        "coll2")
-        self.assertEqual(tcols2[0].a['href'],       collection_view_url("coll2"))
-        self.assertEqual(tcols2[2].input['type'],   "checkbox")
-        self.assertEqual(tcols2[2].input['name'],   "select")
-        self.assertEqual(tcols2[2].input['value'],  "coll2")
-        tcols3 = trows[3].find_all("div")
-        self.assertEqual(tcols3[0].a.string,        "coll3")
-        self.assertEqual(tcols3[0].a['href'],       collection_view_url("coll3"))
-        self.assertEqual(tcols3[2].input['type'],   "checkbox")
-        self.assertEqual(tcols3[2].input['name'],   "select")
-        self.assertEqual(tcols3[2].input['value'],  "coll3")
-        tcols4 = trows[4].find_all("div")
-        self.assertEqual(tcols4[0].a.string,        "testcoll")
-        self.assertEqual(tcols4[0].a['href'],       collection_view_url("testcoll"))
-        self.assertEqual(tcols4[2].input['type'],   "checkbox")
-        self.assertEqual(tcols4[2].input['name'],   "select")
-        self.assertEqual(tcols4[2].input['value'],  "testcoll")
-        # Remove/new collection buttons
-        btn_remove = trows[5].find("div", class_="right")
-        self.assertEqual(btn_remove.input["type"],  "submit")
-        self.assertEqual(btn_remove.input["name"],  "remove")
-        # Input fields and button for new collection
-        field_id = trows[6].find_all("div")[0]
-        self.assertEqual(field_id.input["type"],  "text")
-        self.assertEqual(field_id.input["name"],  "new_id")
-        field_id = trows[6].find_all("div")[1]
-        self.assertEqual(field_id.input["type"],  "text")
-        self.assertEqual(field_id.input["name"],  "new_label")
-        btn_new = trows[6].find_all("div")[2]
-        self.assertEqual(btn_new.input["type"],  "submit")
-        self.assertEqual(btn_new.input["name"],  "new")
+        # trows = s.form.find_all("div", class_="tbody")
+        trows = s.select("form > div > div > div")
+        self.assertEqual(len(trows), 8)
+        site_data = (
+            [ (1, "checkbox", "select", "coll1")
+            , (2, "checkbox", "select", "coll2")
+            , (3, "checkbox", "select", "coll3")
+            , (4, "checkbox", "select", "testcoll")
+            ])
+        for i, itype, iname, ivalue in site_data:
+            # tcols = trows[i].find_all("div", class_="view-value")
+            tcols = trows[i].select("div > div > div")
+            self.assertEqual(tcols[0].input['type'],   itype)
+            self.assertEqual(tcols[0].input['name'],   iname)
+            self.assertEqual(tcols[0].input['value'],  ivalue)
+            self.assertEqual(tcols[1].a.string,        ivalue)
+            self.assertEqual(tcols[1].a['href'],       collection_view_url(ivalue))
+        # button to remove selected
+        btn_remove = trows[5].select("div > input")[0]
+        self.assertEqual(btn_remove["type"],  "submit")
+        self.assertEqual(btn_remove["name"],  "remove")
+        # Input fields for new collection
+        add_fields = trows[6].select("div > div > div")
+        field_id    = add_fields[1].input
+        field_label = add_fields[2].input
+        self.assertEqual(field_id["type"],    "text")
+        self.assertEqual(field_id["name"],    "new_id")
+        self.assertEqual(field_label["type"], "text")
+        self.assertEqual(field_label["name"], "new_label")
+        # Button for new collection
+        btn_new = trows[7].select("div > input")[0]
+        self.assertEqual(btn_new["type"],     "submit")
+        self.assertEqual(btn_new["name"],     "new")
+
         return
 
     def test_post_add(self):

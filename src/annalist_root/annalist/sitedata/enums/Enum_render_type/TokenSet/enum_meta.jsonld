@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
+, "annal:id":           "TokenSet"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "annal:field_render_type/TokenSet"
+, "rdfs:comment":       "List of options presented as a string containing space-separated tokens"
+, "annal:uri":          "annal:field_render_type/TokenSet"
+}

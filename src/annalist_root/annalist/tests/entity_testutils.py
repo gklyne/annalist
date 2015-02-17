@@ -224,14 +224,14 @@ def render_select_options(name, label, opts, sel, placeholder=None):
 
     >>> print render_select_options("foo", "foo_label", ["aa", "bb", "cc"], "bb")
     <div class="row">
-      <div class="small-10 columns less_new_button">
+      <div class="small-10 columns view-value less-new-button">
         <select name="foo">
           <option>aa</option>
           <option selected="selected">bb</option>
           <option>cc</option>
         </select>
       </div>
-      <div class="small-2 columns new_button left small-text-right">
+      <div class="small-2 columns view-value new-button left small-text-right">
         <button type="submit" 
                 name="foo__new" 
                 value="New"
@@ -242,7 +242,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
     </div>
     >>> print render_select_options("foo", "foo_label", ["", aa", "bb", "cc"], "", placeholder=("select)")
     <div class="row">
-      <div class="small-10 columns less_new_button">
+      <div class="small-10 columns view-value less-new-button">
           <select name="foo">
             <option value="" selected="selected">(select)</option>
             <option>aa</option>
@@ -250,7 +250,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
             <option>cc</option>
           </select>
       </div>
-      <div class="small-2 columns new_button left small-text-right">
+      <div class="small-2 columns view-value new-button left small-text-right">
         <button type="submit" 
                 name="foo__new" 
                 value="New"
@@ -268,12 +268,12 @@ def render_select_options(name, label, opts, sel, placeholder=None):
     #
     select_template = (
         """<div class="row">\n"""+
-        """  <div class="small-10 columns less_new_button">\n"""+
+        """  <div class="small-10 columns view-value less-new-button">\n"""+
         """    <select name="%(name)s">\n"""+
         """      %(options)s\n"""+
         """    </select>"""+
         """  </div>\n"""+
-        """  <div class="small-2 columns new_button left small-text-right">\n"""+
+        """  <div class="small-2 columns view-value new-button left small-text-right">\n"""+
         """    <button type="submit" \n"""+
         """            name="%(name)s__new" \n"""+
         """            value="New"\n"""+

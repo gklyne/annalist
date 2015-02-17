@@ -37,30 +37,25 @@
             </div>
           </div>
         </div>
-        {% if auth_config and edit_add_field and edit_add_field != "no" %}
-        <div class="small-12 medium-5 columns">
+        <div class="small-6 columns">
           <div class="row">
-            <div class="small-12 columns">
+            <div class="form-buttons small-12 columns">
               <input type="submit" name="save"          value="Save" />
               <input type="submit" name="cancel"        value="Cancel" />
             </div>
           </div>
         </div>
-        <div class="small-12 medium-5 columns">
+        {% if auth_config and edit_view_button and edit_view_button != "no" %}
+        <div class="small-4 columns">
           <div class="row">
-            <div class="small-12 columns text-right">
-              <input type="submit" name="add_view_field" value="Add field" />
+            <div class="form-buttons small-12 columns text-right">
+              <input type="submit" name="open_view"     value="Edit view" />
             </div>
           </div>
         </div>
         {% else %}
-        <div class="small-12 medium-10 columns">
-          <div class="row">
-            <div class="small-12 columns">
-              <input type="submit" name="save"          value="Save" />
-              <input type="submit" name="cancel"        value="Cancel" />
-            </div>
-          </div>
+        <div class="small-4 columns">
+          &nbsp;
         </div>
         {% endif %}
       </div>

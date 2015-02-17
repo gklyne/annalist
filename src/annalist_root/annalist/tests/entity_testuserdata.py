@@ -168,7 +168,9 @@ def annalistuser_view_form_data(
         user_name="Test User",
         user_uri="mailto:testuser@example.org", 
         user_permissions="VIEW CREATE UPDATE DELETE CONFIG ADMIN",
-        action=None, cancel=None, orig_id=None):
+        action=None, cancel=None, close=None, edit=None, copy=None, 
+        orig_id=None
+        ):
     form_data_dict = (
         { 'entity_id':          user_id
         , 'orig_id':            user_id
@@ -185,6 +187,12 @@ def annalistuser_view_form_data(
         form_data_dict['action']        = action
     if cancel:
         form_data_dict['cancel']        = "Cancel"
+    elif close:
+        form_data_dict['close']         = "Close"
+    elif edit:
+        form_data_dict['edit']          = "Edit"
+    elif copy:
+        form_data_dict['copy']          = "Copy"
     else:
         form_data_dict['save']          = 'Save'
     return form_data_dict

@@ -370,142 +370,142 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         field_vals = default_fields(coll_id="testcoll", type_id="_field", entity_id="00000001")
         formrow1col1 = """
             <div class="small-12 medium-6 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Id</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="entity_id" 
-                               placeholder="(field id)" value="00000001"/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Id</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="entity_id" 
+                         placeholder="(field id)" value="00000001"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=6)
         formrow1col2 = """
             <div class="small-12 medium-6 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Field value type</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Field_type" 
-                               placeholder="(field value type)" 
-                               value="annal:Text"/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Field value type</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_type" 
+                         placeholder="(field value type)" 
+                         value="annal:Text"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=6)
         formrow2 = ("""
             <div class="small-12 medium-6 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Field render type</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                    """+
-                      render_choice_options(
-                        "Field_render",
-                        get_site_field_types_sorted(),
-                        "Text")+
-                    """
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Field render type</span>
                 </div>
+                <div class="%(input_classes)s">
+                """+
+                  render_choice_options(
+                    "Field_render",
+                    get_site_field_types_sorted(),
+                    "Text")+
+                """
+                </div>
+              </div>
             </div>
             """)%field_vals(width=6)
         formrow3 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Label</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Field_label" 
-                        placeholder="(field label)"
-                        value="%(default_label_esc)s"/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Label</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_label" 
+                  placeholder="(field label)"
+                  value="%(default_label_esc)s"/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow4 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Help</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"
-                                  placeholder="(field usage commentary or help text)">
-                            %(default_comment_esc)s
-                        </textarea>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                    <span>Help</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"
+                            placeholder="(field usage commentary or help text)">
+                      %(default_comment_esc)s
+                  </textarea>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow5 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Placeholder</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Field_placeholder"
-                               placeholder="(placeholder text)" value=""/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Placeholder</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_placeholder"
+                         placeholder="(placeholder text)" value=""/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow6 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Property</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Field_property" 
-                        placeholder="(field URI or CURIE)" value=""/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Property</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_property" 
+                  placeholder="(field URI or CURIE)" value=""/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         # log.info("placement_option_value_dict %r"%(get_placement_option_value_dict(),))
         formrow7 = ("""
             <div class="small-12 medium-6 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Position/size</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                    """+
-                    render_choice_options(
-                        "Field_placement", # "Position/size",
-                        [""] + get_placement_options(),
-                        "", 
-                        placeholder="(field position and size)", select_class="placement-text",
-                        value_dict=get_placement_option_value_dict())+
-                    """
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Position/size</span>
                 </div>
+                <div class="%(input_classes)s">
+                """+
+                render_choice_options(
+                  "Field_placement", # "Position/size",
+                  [""] + get_placement_options(),
+                  "", 
+                  placeholder="(field position and size)", select_class="placement-text",
+                  value_dict=get_placement_option_value_dict())+
+                """
+                </div>
+              </div>
             </div>
             """)%field_vals(width=6)
         formrow8 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Default</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Field_default" 
-                               placeholder="(field default value)"
-                               value=""/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Default</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_default" 
+                         placeholder="(field default value)"
+                         value=""/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow9 = ("""
             <div class="small-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <p>Enum type</p>
+                  <span>Enum type</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
@@ -520,62 +520,62 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """)%field_vals(width=6)
         formrow10 = """
             <div class="small-12 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Enum restriction</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Field_restrict" 
-                               placeholder="(enumeration value restriction; e.g. &#39;[annal:field_entity_type] in entity[annal:record_type]&#39;)"
-                               value=""/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Enum restriction</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_restrict" 
+                         placeholder="(enumeration value restriction; e.g. &#39;[annal:field_entity_type] in entity[annal:record_type]&#39;)"
+                         value=""/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=12)
         formrow11 = ("""
             <div class="small-12 medium-6 columns">
-              <div class="row">
+              <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <p>Field group</p>
+                  <span>Field group</span>
                 </div>
                 <div class="%(input_classes)s">
-                    """+
-                      render_select_options(
-                        "Field_groupref", "Field group",
-                        [""] + get_site_field_groups_sorted(),
-                        "",
-                        placeholder="(no field group selected)")+
-                    """
+                """+
+                  render_select_options(
+                    "Field_groupref", "Field group",
+                    [""] + get_site_field_groups_sorted(),
+                    "",
+                    placeholder="(no field group selected)")+
+                """
                 </div>
               </div>
             </div>
             """)%field_vals(width=6)
         formrow12col1 = """
             <div class="small-6 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Add fields label</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Field_repeat_label_add"
-                               placeholder="(add repeat field(s) button label)"
-                               value=""/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Add fields label</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_repeat_label_add"
+                         placeholder="(add repeat field(s) button label)"
+                         value=""/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=6)
         formrow12col2 = """
             <div class="small-6 columns">
-                <div class="row">
-                    <div class="%(label_classes)s">
-                        <p>Delete fields label</p>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Field_repeat_label_delete"
-                               placeholder="(delete field(s) button label)"
-                               value=""/>
-                    </div>
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Delete fields label</span>
                 </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_repeat_label_delete"
+                         placeholder="(delete field(s) button label)"
+                         value=""/>
+                </div>
+              </div>
             </div>
             """%field_vals(width=6)
         # log.info(r.content)   #@@

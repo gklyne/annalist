@@ -145,18 +145,22 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         #     </tr>
         #     """%({'base': TestBasePath, 'cont': cont})
         rowdata = """
-            <div class="trow row select-row">
+            <div class="tbody row select-row">
               <div class="small-1 columns">
                 <input type="checkbox" class="select-box right" name="entity_select"
                        value="testtype/entity1" />
               </div>
               <div class="small-11 columns">
-                <div class="row">
-                    <div class="small-3 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></div>
-                    <div class="small-2 columns"><a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">testtype</a></div>
-                    <div class="small-7 columns">
-                    Entity testcoll/testtype/entity1
-                    </div>
+                <div class="row view-listrow">
+                  <div class="view-value small-3 columns">
+                    <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
+                  </div>
+                  <div class="view-value small-2 columns">
+                    <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">testtype</a>
+                  </div>
+                  <div class="view-value small-7 columns">
+                    <span>Entity testcoll/testtype/entity1</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -249,17 +253,19 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         cont = uri_params({"continuation_url": u})
         # log.info(r.content)
         rowdata = """
-            <div class="trow row select-row">
+            <div class="tbody row select-row">
               <div class="small-1 columns">
                 <input type="checkbox" class="select-box right" name="entity_select"
                        value="testtype/entity1" />
               </div>
               <div class="small-11 columns">
-                <div class="row">
-                    <div class="small-3 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></div>
-                    <div class="small-9 columns">
-                    Entity testcoll/testtype/entity1
-                    </div>
+                <div class="row view-listrow">
+                  <div class="view-value small-3 columns">
+                    <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
+                  </div>
+                  <div class="view-value small-9 columns">
+                    <span>Entity testcoll/testtype/entity1</span>
+                  </div>
                 </div>
               </div>
             </div>

@@ -79,6 +79,63 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 # History
 
+
+## Version 0.1.12
+
+The substantial change in this release is the introduction of non-editing entity views, with rendering of links to other referenced entities.  This makes it very much easier to navigate the network of entities that make up a collection.  A number of new render types have been introduced, many to support more useful data display in the non-editing view (links, Maerkdown formatting, etc - more details below.).  This non-editing view is now the default display for all entities.
+
+This release also contains a number of usability enhancements and bug fixes, including:
+
+* Save logs in root of annalist_site data, for Docker visibility.  When Annalist is running in a Docker conainer, another container can attach to the same data data volume in order to view the server logs (see the [installation instructions](https://github.com/gklyne/annalist/blob/master/documents/installing-annalist.md) for more information about how to do this).
+* New render type: Boolean as checkbox
+* New render type: URI as Hyperlink
+* New render type: URI as embedded image
+* New render type: long text with Markdown formatting; and new CSS to style Markdown-formatted text.
+* Page layout/styling changes; rationalize some CSS usage to achieve greater consistency between the editing, non-edit and list views.
+* Change 'Add field' button to 'Edit view' - this switches to the view editing page where field definitions can be changed, added or removed.
+* Add 'View description' button on non-editing entity views - this switches to a display of the view description.  Subject to permissions, an 'Edit' button allows the view definition to be edited.
+* View display: suppress headings for empty repeatgrouprow value.
+* Preserve current value in form if not present in drop-down options.  This change ws introduced mainly to prevent some surprising effects when editing field descriptions; the change is partially effective, but there remain some link navigation issues when a field value of not one of those available in a drop-down selector.
+* Various bug fixes (see release notes)
+
+
+# Version 0.1.11, towards 0.1.12
+
+- [x] Minor bug: in DMO_experiment, add new performer field, click "+" to define new performer, on return to previous page new field is not there.  Suspect it is because all fields are blank when "+" is clicked, so new field not saved.  Modified `views.form_utils.fieldvaluemap` to treat only `None` as non-existent field value.
+- [x] Configuration change so that shell session in new Docker container can see server logs.  Save logs in root of annalist_site data.  
+- [x] Non-editing entity view: [#3](https://github.com/gklyne/annalist/issues/3)
+- [x] New render type: Boolean (checkbox) [#2](https://github.com/gklyne/annalist/issues/2)
+- [x] Document process for creating and integrating a new renderer
+- [x] New render type: Link (hyperlink) [#2](https://github.com/gklyne/annalist/issues/2)
+- [x] New render type: Image, [#2](https://github.com/gklyne/annalist/issues/2)
+- [x] Extend CruisingLog example data with image galleries for place and daily log entries
+- [x] New render type: Markdown, [#2](https://github.com/gklyne/annalist/issues/2)
+    - [x] Markdown test cases
+    - [x] Markdown renderer
+    - [x] Fix up CSS for Markdown formatting; e.g.
+        - div.columns.view-value > span.markdown p
+        - div.columns.view-value > span.markdown li
+        - div.columns.view-value > span.markdown h1
+        - div.columns.view-value > span.markdown h2
+        - div.columns.view-value > span.markdown h3
+        - div.columns.view-value > span.markdown h4
+    - [x] Update Annalist dependencies to include markdown package
+    - [x] Update site data to use Markdown where appropriate 
+- [x] Fix styling (row spacing) for site front page - it looks a bit spaced-out following changes to view/list styling.  probably just needs appropriate new CSS classes to be included.
+- [x] Beside the "Add field" button, include "Edit view" button on entity editing page.
+- [x] BUG: RepeatGroupRow field without Group Ref specified gives 500 error when view is displayed
+- [x] BUG: no substitute if add/remove labels not supplied
+- [x] Field placement lacks 0/9, 3/9, 0/8, 4/8, 3/6 options
+- [x] Provide image click-through to larger version.
+- [x] Replace the "Add field" button with an "Edit view" button
+- [x] Add "Edit view" option to view as well as edit form
+    - View description doesn't carry the entity Id to the continuation URI (None instead)
+- [x] View display: suppress headings for empty repeatgrouprow value
+- [x] Entity drop-down selectors: add current value to list if not already present
+    - (avoids hiding information if type URI changed and field type is no longer offered)
+    - Done, but when a field is not available for a view, there is no link provided to edit it.
+
+
 ## Version 0.1.10
 
 This release contains a number of usability enhancements and bug fixes, including:

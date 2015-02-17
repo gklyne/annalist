@@ -102,7 +102,7 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return reverse(viewname, kwargs=kwargs)
 
-    def continuation_urls(self, request_dict, default_cont, base_here=None):
+    def continuation_urls(self, request_dict={}, default_cont="", base_here=None):
         """
         Returns a tuple of two continuation URI dictionary values:
 
@@ -142,9 +142,6 @@ class AnnalistGenericView(ContentNegotiationView):
         continuation_here = uri_with_params(base_here, 
             continuation_params(continuation_next, request_dict.dict())
             )
-        # continuation_here   = uri_with_continuation_params(
-        #     base_here, continuation_next, request_dict.dict()
-        #     )
         return (continuation_next, {"continuation_url": continuation_here})
 
     def info_params(self, info_message, info_head=message.ACTION_COMPLETED):

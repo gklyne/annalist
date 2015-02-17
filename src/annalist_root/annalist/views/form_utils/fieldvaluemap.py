@@ -84,8 +84,9 @@ class FieldValueMap(object):
         if self.e:
             log.debug("FieldValueMap.map_form_to_entity %s, %r"%(self.e, formvals))
             v = formvals.get(self.i, None)
-            if v is not None:
-                entityvals[self.e] = self.f['field_value_mapper'].decode(v)
+            # if v is not None:
+            #     entityvals[self.e] = self.f['field_value_mapper'].decode(v)
+            entityvals[self.e] = self.f['field_value_mapper'].decode(v)
         return entityvals
 
     def map_form_to_entity_repeated_item(self, formvals, prefix):
@@ -98,7 +99,7 @@ class FieldValueMap(object):
         """
         # log.info("Form->entity: prefix %s, fieldname %s"%(prefix, self.i))
         v = formvals.get(prefix+self.i, None)
-        if v:
+        if v is not None:
             return {self.e: v}
         return None
 

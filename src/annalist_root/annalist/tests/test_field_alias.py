@@ -198,7 +198,10 @@ class FieldAliasTest(AnnalistTestCase):
             , 'entity_type':        "BibEntry_type"
             , 'orig_id':            "bibentity1"
             , 'orig_type':          "BibEntry_type"
+            , 'Bib_type':           "article"
             , 'Bib_title':          "Updated "+self.bibentity1_data['bib:title']
+            , 'Bib_year':           "2014"
+            , 'Bib_month':          "09"
             , 'Bib_note':           "Updated "+self.bibentity1_data['bib:note']
             , 'action':             "edit"
             , 'save':               "Save"

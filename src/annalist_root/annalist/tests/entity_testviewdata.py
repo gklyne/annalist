@@ -95,23 +95,29 @@ def recordview_edit_url(action=None, coll_id=None, view_id=None):
 #
 #   -----------------------------------------------------------------------------
 
-def recordview_value_keys(view_uri=False):
+def recordview_value_keys(view_uri=False, target_record_type=True):
     keys = set(
         [ 'annal:id', 'annal:type_id'
         , 'annal:type', 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
-        , 'annal:add_field'
+        , 'annal:open_view'
         , 'annal:view_fields'
         ])
     if view_uri:
         keys.add('annal:uri')
+    if target_record_type:
+        keys.add('annal:record_type')
     return keys
 
-def recordview_load_keys(view_uri=False):
-    return recordview_value_keys(view_uri=view_uri) | {"@id", '@type'}
+def recordview_load_keys(view_uri=False, target_record_type=True):
+    return (
+        recordview_value_keys(view_uri=view_uri, target_record_type=target_record_type) | 
+        {"@id", '@type'}
+        )
 
 def recordview_create_values(
         coll_id="testcoll", view_id="testview", update="RecordView", view_uri=None, 
+        target_record_type="annal:Test_default",
         num_fields=4, field3_placement="small:0,12",
         extra_field=None, extra_field_uri=None
         ):
@@ -122,7 +128,8 @@ def recordview_create_values(
         { 'annal:type':         "annal:View"
         , 'rdfs:label':         "%s %s/%s"%(update, coll_id, view_id)
         , 'rdfs:comment':       "%s help for %s in collection %s"%(update, view_id, coll_id)
-        , 'annal:add_field':    "yes"
+        , 'annal:record_type':  target_record_type
+        , 'annal:open_view':    True
         , 'annal:view_fields':
           [ { 'annal:field_id':         "Entity_id"
             , 'annal:field_placement':  "small:0,12;medium:0,6"
@@ -157,10 +164,12 @@ def recordview_create_values(
 def recordview_values(
         coll_id="testcoll", view_id="testtype", view_uri=None, 
         update="RecordView", hosturi=TestHostUri, 
+        target_record_type="annal:Test_default",
         num_fields=4, field3_placement="small:0,12",
         extra_field=None, extra_field_uri=None):
     d = recordview_create_values(
         coll_id, view_id, update=update, view_uri=view_uri,
+        target_record_type=target_record_type,
         num_fields=num_fields, field3_placement=field3_placement,
         extra_field=extra_field, extra_field_uri=extra_field_uri
         ).copy()
@@ -174,8 +183,13 @@ def recordview_values(
 
 def recordview_read_values(
         coll_id="testcoll", view_id="testview", view_uri=None, 
+        target_record_type="annal:Test_default",
         update="RecordView", hosturi=TestHostUri):
-    d = recordview_values(coll_id, view_id, view_uri=view_uri, update=update, hosturi=hosturi).copy()
+    d = recordview_values(
+        coll_id, view_id, view_uri=view_uri, 
+        target_record_type=target_record_type,
+        update=update, hosturi=hosturi
+        ).copy()
     d.update(
         { '@id':            "./"
         , '@type':          ["annal:View"]
@@ -202,7 +216,9 @@ def recordview_values_add_field(view_data,
 
 def recordview_entity_view_context_data(
         coll_id="testcoll", view_id=None, orig_id=None, view_ids=[],
-        action=None, add_field=None, remove_field=None, 
+        action=None, 
+        target_record_type="annal:View",
+        add_field=None, remove_field=None, 
         update="RecordView"
     ):
     # Target record fields listed in the view description
@@ -258,15 +274,15 @@ def recordview_entity_view_context_data(
             , 'field_name':         'View_target_type'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_type':   'annal:Identifier'
-            , 'field_value':        'annal:View'
+            , 'field_value':        target_record_type
             , 'options':            []
             }
-          , { 'field_id':           'View_add_field'    # fields[4]
-            , 'field_label':        'Add field?'
-            , 'field_name':         'View_add_field'
+          , { 'field_id':           'View_edit_view'    # fields[4]
+            , 'field_label':        'Editable view?'
+            , 'field_name':         'View_edit_view'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_value_type':   'annal:Text'
-            , 'field_value':        'yes'
+            , 'field_value_type':   'annal:Boolean'
+            , 'field_value':        True
             , 'options':            []
             }
           , { "field_id":           "View_fields"   # fields[5]
@@ -304,6 +320,7 @@ def recordview_entity_view_form_data(
         coll_id="testcoll", 
         view_id=None, orig_id=None, 
         action=None, cancel=None, 
+        target_record_type="annal:View",
         field3_placement="small:0,12",
         extra_field=None,       # Extra field id for some tests (e.g. dup property uri)
         extra_field_uri=None,   # Extra field property URI to add in
@@ -315,7 +332,8 @@ def recordview_entity_view_form_data(
     form_data_dict = (
         { 'View_label':         '%s data ... (%s/%s)'%(update, coll_id, view_id)
         , 'View_comment':       '%s description ... (%s/%s)'%(update, coll_id, view_id)
-        , 'View_add_field':     'yes'
+        , 'View_target_type':   target_record_type
+        , 'View_edit_view':     "Yes"
         , 'orig_id':            'orig_view_id'
         , 'record_type':        'annal:View'
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")

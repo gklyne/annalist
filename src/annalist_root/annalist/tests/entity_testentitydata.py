@@ -297,7 +297,9 @@ def entitydata_form_data(
         entity_id=None, orig_id=None, 
         type_id="testtype", orig_type=None,
         coll_id="testcoll", 
-        action=None, cancel=None, update="Entity"):
+        action=None, cancel=None, close=None, edit=None, copy=None, 
+        update="Entity"
+        ):
     form_data_dict = (
         { 'Entity_label':       '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Entity_comment':     '%s description ... (%s/%s)'%(update, coll_id, type_id)
@@ -319,6 +321,12 @@ def entitydata_form_data(
         form_data_dict['action']            = action
     if cancel:
         form_data_dict['cancel']            = "Cancel"
+    elif close:
+        form_data_dict['close']             = "Close"
+    elif edit:
+        form_data_dict['edit']              = "Edit"
+    elif copy:
+        form_data_dict['copy']              = "Copy"
     else:
         form_data_dict['save']              = 'Save'
     return form_data_dict
@@ -426,7 +434,7 @@ def entitydata_default_view_form_data(
         coll_id="testcoll", 
         type_id="testtype", orig_type=None,
         entity_id=None, orig_id=None, 
-        action=None, cancel=None, update="Entity",
+        action=None, cancel=None, close=None, edit=None, copy=None, update="Entity",
         add_view_field=None, use_view=None, 
         new_view=None, new_field=None, new_type=None, new_enum=None):
     # log.info("entitydata_default_view_form_data: entity_id %s"%(entity_id))
@@ -451,6 +459,12 @@ def entitydata_default_view_form_data(
         form_data_dict['action']          = action
     if cancel:
         form_data_dict['cancel']          = "Cancel"
+    elif close:
+        form_data_dict['close']           = "Close"
+    elif edit:
+        form_data_dict['edit']            = "Edit"
+    elif copy:
+        form_data_dict['copy']            = "Copy"
     elif add_view_field:
         form_data_dict['add_view_field']  = add_view_field
     elif use_view:
@@ -539,7 +553,7 @@ def entitydata_recordtype_view_form_data(
         type_id="testtype", orig_type=None, type_uri=None,
         entity_id=None, orig_id=None, 
         action=None, cancel=None, update="Entity",
-        add_view_field=None):
+        add_view_field=None, open_view=None):
     # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (
         { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
@@ -550,28 +564,30 @@ def entitydata_recordtype_view_form_data(
     if entity_id and type_id:
         type_url = entity_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
         type_url = type_url.replace("___", entity_id)  # Preserve bad type in form data
-        form_data_dict['entity_id']     = entity_id
-        form_data_dict['Type_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
-        form_data_dict['Type_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
-        form_data_dict['Type_uri']      = "" # type_url
-        form_data_dict['orig_id']       = entity_id
+        form_data_dict['entity_id']       = entity_id
+        form_data_dict['Type_label']      = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
+        form_data_dict['Type_comment']    = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
+        form_data_dict['Type_uri']        = "" # type_url
+        form_data_dict['orig_id']         = entity_id
     if type_id:
-        form_data_dict['entity_type']   = type_id
-        form_data_dict['orig_type']     = type_id
+        form_data_dict['entity_type']     = type_id
+        form_data_dict['orig_type']       = type_id
     if type_uri:
-        form_data_dict['Type_uri']      = type_uri        
+        form_data_dict['Type_uri']        = type_uri        
     if orig_id:
-        form_data_dict['orig_id']       = orig_id
+        form_data_dict['orig_id']         = orig_id
     if orig_type:
-        form_data_dict['orig_type']     = orig_type
+        form_data_dict['orig_type']       = orig_type
     if action:
-        form_data_dict['action']        = action
+        form_data_dict['action']          = action
     if cancel:
-        form_data_dict['cancel']        = "Cancel"
+        form_data_dict['cancel']          = "Cancel"
     elif add_view_field:
-        form_data_dict['add_view_field'] = add_view_field
+        form_data_dict['add_view_field']  = add_view_field
+    elif open_view:
+        form_data_dict['open_view']       = open_view
     else:
-        form_data_dict['save']          = 'Save'
+        form_data_dict['save']            = 'Save'
     return form_data_dict
 
 #   -----------------------------------------------------------------------------
@@ -631,7 +647,7 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
 #
 #   -----------------------------------------------------------------------------
 
-def default_fields(coll_id=None, type_id=None, entity_id=None, width=12):
+def default_fields(coll_id=None, type_id=None, entity_id=None, width=12, **kwargs):
     """
     Returns a function that accepts a field width and returns a dictionary of entity values
     for testing.  The goal is to isolate default entity value settings from the test cases.
@@ -653,6 +669,8 @@ def default_fields(coll_id=None, type_id=None, entity_id=None, width=12):
             , 'default_comment_esc': def_comment_esc
             , 'default_entity_url':  def_entity_url
             })
+        if kwargs:
+            fields.update(kwargs)
         return fields
     return def_fields
 
@@ -679,29 +697,50 @@ def error_label(coll_id=None, type_id=None, entity_id=None):
 #   -----------------------------------------------------------------------------
 
 def layout_classes(width=12):
-    if width == 4:
+    if width == 2:
+        class_dict = (
+            { 'space_classes':          "medium-2 columns show-for-medium-up"
+            })
+    elif width == 4:
         class_dict = (
             { 'label_classes':          "view-label small-12 medium-6 columns"
-            , 'input_classes':          "small-12 medium-6 columns"
-            # , 'button_left_classes':    "small-12 medium-6  columns"
-            # , 'button_right_classes':   "small-12 medium-6 columns medium-text-right"
+            , 'input_classes':          "view-value small-12 medium-6 columns"
+            , 'col_head_classes':       "view-label col-head small-4 columns"
+            , 'col_item_classes':       "view-value col-???? small-4 columns"
+            , 'button_wide_classes':    "small-4 columns"
+            , 'button_left_classes':    "form-buttons small-12 columns"
+            , 'button_right_classes':   "form-buttons small-12 columns text-right"
             })
     elif width == 6:
         class_dict = (
             { 'label_classes':          "view-label small-12 medium-4 columns"
-            , 'input_classes':          "small-12 medium-8 columns"
-            , 'button_left_classes':    "small-12 medium-6 columns"
-            , 'button_right_classes':   "small-12 medium-6 columns medium-text-right"
+            , 'input_classes':          "view-value small-12 medium-8 columns"
+            , 'col_head_classes':       "view-label col-head small-6 columns"
+            , 'col_item_classes':       "view-value col-???? small-6 columns"
+            , 'button_wide_classes':    "small-6 columns"
+            , 'button_left_classes':    "form-buttons small-12 columns"
+            , 'button_right_classes':   "form-buttons small-12 columns text-right"
+            })
+    elif width == 10:
+        class_dict = (
+            { 'button_wide_classes':    "small-10 columns"
             })
     elif width == 12:
         class_dict = (
-            { 'label_classes':          "view-label small-12 medium-2 columns"
-            , 'input_classes':          "small-12 medium-10 columns"
+            { 'group_label_classes':    "group-label small-12 medium-2 columns"
+            , 'group_space_classes':    "small-12 medium-2 columns hide-for-small-only"
+            , 'group_row_head_classes': "small-12 medium-10 columns hide-for-small-only"
+            , 'group_row_body_classes': "small-12 medium-10 columns"
+            , 'group_buttons_classes':  "group-buttons small-12 medium-10 columns"
+            , 'label_classes':          "view-label small-12 medium-2 columns"
+            , 'input_classes':          "view-value small-12 medium-10 columns"
+            , 'col_head_classes':       "view-label col-head small-12 columns"
+            , 'col_item_classes':       "view-value col-???? small-12 columns"
             , 'space_classes':          "medium-2 columns show-for-medium-up"
-            , 'button_half_classes':    "small-12 medium-5 columns"
             , 'button_wide_classes':    "small-12 medium-10 columns"
-            , 'button_left_classes':    "small-12 columns"
-            , 'button_right_classes':   "small-12 columns text-right"
+            , 'button_half_classes':    "form-buttons small-12 medium-5 columns"
+            , 'button_left_classes':    "form-buttons small-12 columns"
+            , 'button_right_classes':   "form-buttons small-12 columns text-right"
             })
     else:
         assert False, "Unexpected width %r"%width

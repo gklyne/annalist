@@ -6,7 +6,7 @@
 , "annal:record_type":  "annal:Field_group"
 , "rdfs:label":         "View field description"
 , "rdfs:comment":       "This resource describes a sub-view single field description used when displaying and/or editing a record view description"
-, "annal:add_field":    "no"
+, "annal:add_field":    false
 , "annal:group_fields":
   [ { "annal:field_id":         "Group_field_sel"
     , "annal:property_uri":     "annal:field_id"

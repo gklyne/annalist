@@ -12,10 +12,83 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 # Version 0.1.11, towards 0.1.12
 
-- [ ] Minor bug: in DMO_experiment, add new performer field, click "+" to define new performer, on return to previous page new field is not there.  Suspect it is because all fields are blank when "+" is clicked, so new field not saved.
-- [ ] Configuration change so that shell session in new Docker container can see server logs.  Save logs in root of annalist_site data.
-- [ ] New render types: Markdown, Boolean (checkbox), Link (hyperlink)
-- [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
+- [x] Minor bug: in DMO_experiment, add new performer field, click "+" to define new performer, on return to previous page new field is not there.  Suspect it is because all fields are blank when "+" is clicked, so new field not saved.  Modified `views.form_utils.fieldvaluemap` to treat only `None` as non-existend field value.
+- [x] Configuration change so that shell session in new Docker container can see server logs.  Save logs in root of annalist_site data.  
+- [x] Non-editing entity view: [#3](https://github.com/gklyne/annalist/issues/3)
+    - [x] Create new test suite for non-editing view (add copy options)
+    - [x] Update authorization tests (add copy options)
+    - [x] Create new template
+    - [x] Add new response dispatch options to entityedit
+    - [x] Update application urls
+    - [x] Check/update view-field renderers
+    - [x] Get rid of <p> elements in repeat group listings; update CSS as needed
+- [x] New render type: Boolean (checkbox) [#2](https://github.com/gklyne/annalist/issues/2)
+    - [x] Boolean/checkbox test cases
+    - [x] Boolean/checkbox renderer; allow for migrating old representations
+    - [x] Add renderer to render_utils tables
+    - [x] Add render type name to enumerated value; update tests
+    - [x] Update site data (view?) to use new renderer
+    - [x] Check web page(s) (again) and tweak CSS definitions as needed
+- [x] Document process for creating and integrating a new renderer
+- [x] New render type: Link (hyperlink) [#2](https://github.com/gklyne/annalist/issues/2)
+    - [x] Link test cases
+    - [x] Link renderer (think about data migration in design)
+    - [x] Add renderer to render_utils tables
+    - [x] Add render type name to enumerated value; update tests (test_entitygenericlist:244, entity_testsitedata:306)
+    - [x] Update site data to use new renderer
+    - [x] etc.
+- [x] New render type: image, [#2](https://github.com/gklyne/annalist/issues/2)
+    - [x] Image test cases
+    - [x] Image renderer
+    - [x] Add renderer to render_utils tables
+    - [x] Add render type name to enumerated value; update tests (test_entitygenericlist:244, entity_testsitedata:306)
+    - [x] Update site data to use new renderer
+    - [x] etc.
+- [x] Extend CruisingLog example data with image galleries for place and daily log entries
+    - [x] Generate thumbnails that link to larger images
+    - [x] Create new field group "AnnotatedPicture" with textarea and image fields
+    - [x] Create Annotation (Textarea) and Picture (UriImage) fields for above
+    - [x] Create RepeatGroupRow field AnnotatedPictures
+    - [x] Add RepeatGroupRow field to Place view with field group AnnotatedPicture
+    - [x] Add RepeatGroupRow field to Place view with field group AnnotatedPicture
+    - [x] Test
+- [x] New render type: Markdown, [#2](https://github.com/gklyne/annalist/issues/2)
+    - following same outline steps as checkbox
+    - cf. http://pythonhosted.org//Markdown/reference.html
+    - [x] Markdown test cases
+    - [x] Markdown renderer
+    - [x] Add renderer to render_utils tables
+    - [x] Add render type name to enumerated value; update tests (test_entitygenericlist:244, entity_testsitedata:306)
+    - [x] Run tests
+    - [x] Update test data to use new renderer
+    - [x] Fix up CSS for Markdown formatting; e.g.
+        - div.columns.view-value > span.markdown p
+        - div.columns.view-value > span.markdown li
+        - div.columns.view-value > span.markdown h1
+        - div.columns.view-value > span.markdown h2
+        - div.columns.view-value > span.markdown h3
+        - div.columns.view-value > span.markdown h4
+    - [x] Update Annalist dependencies to include markdown package
+    - [x] Update site data to use Markdown where appropriate 
+- [x] Fix styling (row spacing) for site front page - it looks a bit spaced-out following changes to view/list styling.  probably just needs appropriate new CSS classes to be included.
+- [x] Beside the "Add field" button, include "Edit view" button on entity editing page.
+- [x] BUG: RepeatGroupRow field without Group Ref specified gives 500 error when view is displayed
+- [x] BUG: no substitute if add/remove labels not supplied
+- [x] Field placement lacks 0/9, 3/9, 0/8, 4/8, 3/6 options
+- [x] Provide image click-through to larger version.
+- [x] Replace the "Add field" button with an "Edit view" button
+    - [x] Also change "Add field?" option in view form to "Editable view?"
+    - [x] Update field names and tests
+- [x] View display: suppress headings for empty repeatgrouprow value
+- [x] Entity drop-down selectors: add current value to list if not already present
+    - (avoids hiding information if type URI changed and field type is no longer offered)
+    - Done, but when a field is not available for a view, there is no link provided to edit it.
+- [x] Add "Edit view" option to view as well as edit form
+    - View description doesn't carry the entity Id to the continuation URI (None instead)
+
+(sub-release?)
+
+- [ ] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [ ] Blob and file upload support: images, spreadsheets, ...
     - [ ] Field type to link to uploaded file
@@ -29,13 +102,13 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Use site/collection data to populate help panes on displays; use Markdown.
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Login: support continuation URI
-- [ ] Provide content for the links in the page footer
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 
 (feature freeze for V0.9alpha?)
 
+- [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
@@ -53,12 +126,6 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] annalist-manager createsitedata [ CONFIG ]
     - [ ] annalist-manager updatesitedata [ CONFIG ]
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
-- [ ] review use of template files vs. use of inline template text in class
-    - [x] Need to support edit/view/item/head (NOT: probably via class inheritance structure)
-    - [x] Inline template text should be more efficient as it avoids repeated reading of template files
-    - [x] Inline template text keeps value mapping logic with template logic
-    - [ ] Inline templates may be harder to style effectively; maybe read HTML from file on first use?
-    - [ ] Re-work field rendering to be based on common base of `RenderFieldValue2`
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Eliminate type-specific render types
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
@@ -67,7 +134,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 Usability notes:
 
-- [ ] Need easier way to make new entries for fields that are referenced from a record; e.g. a `New value` button as part of an enum field.
+- [x] Need easier way to make new entries for fields that are referenced from a record; e.g. a `New value` button as part of an enum field.
+- [x] Clearer linkage between related records - hyperlinks on non-editing views
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
     - [ ] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
         - test by creating contacts/supplies listy for CruisingLog
@@ -89,22 +157,20 @@ Usability notes:
 - [ ] When creating type, default URI to be based on id entered
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] List display paging
+- [ ] When generating a view of an enumerated value, push logic for finding link into the renderer, so that availability of field link does not depend on whether field is available for the selected view.  (Try changing entity type of fielod to random value - can no longer browse to field description from view/group description)
 
 
 Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Create image-viewing page to avoid download options, and link to that. (cf. UriImage renderer)
+- [ ] Vary layout for editing and viewing?  Sounds hard.
+- [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
 - [ ] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
-- [ ] Review site/collection data organization
-    - [ ] Generalize collection/site hierarchy to use a "search path" of imported collections.  See also next item.
-    - [ ] Enumerated values are hard-wired into models.entitytypeinfo - move them to regular type/data files in site data?  Hmmm... currently, it seems all _annalist_site values need to be hard-wired in entitytypeinfo; maybe look to use collection "search path" logic instead (see above).
-    - [ ] Think about implementing site data as a distinguished collection, thereby exploiting the access control framework for site metadata updates.
-    - [ ] _annalist_core for software-defined values, and _annalist_site for local overrides?
-    - [ ] Refer collection management permissions (create/update/etc) to _annalist_site collection - this will make it easier to define top-level permnissions through Annalist itself, rather than relying on annalist-manager.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
 - [ ] Rationalize common fields to reduce duplication?
-- [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s). 
+- [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?
 - [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions
 - [ ] Make default values smarter; e.g. field renderer logic to scan collection data for candidates?
 - [ ] Allow type definition to include template for new id, e.g. based on current date
@@ -119,7 +185,7 @@ Notes for Future TODOs:
 - [ ] Introduce markdown rendering type
 - [ ] Use markdown directly for help text
 - [x] Consider associating property URI with view rather than/as well as field, so fields can be re-used
-- [ ] Option to auto-generate unique property URI for field in view, maybe using field definition as base
+- [x] Option to auto-generate unique property URI for field in view, maybe using field definition as base
 - [ ] Think about fields that return subgraph
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.

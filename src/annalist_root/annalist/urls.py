@@ -138,6 +138,9 @@ urlpatterns = patterns('',
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>edit)$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityEditView'),
+    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>view)$',
+                            GenericEntityEditView.as_view(),
+                            name='AnnalistEntityEditView'),
     )
 
 urlpatterns += patterns('',
