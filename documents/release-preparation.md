@@ -17,42 +17,45 @@
 - [x] Documentation updates
 - [x] Demo screencast update
 - [x] Add TODO list to release notes
-- [ ] Create release preparation branch
+- [x] Create release preparation branch
     - `git checkout -b release-x.y.z develop`
-- [ ] Bump version to even value and update history
+- [x] Bump version to even value and update history
 - [ ] Update version number in scripts, documents, etc.
-    - [ ] TODO
-    - [ ] Release notes
-    - [ ] documents/installing-annalist.md
-    - [ ] documents/release-notes/announce_0.1.*.md
-    - [ ] documents/roadmap.md
-    - [ ] documents/pages/index.html
-    - [ ] src/annalist_root/annalist/__init__.py
-    - [ ] src/newkit_to_annalist_net.sh
-    - [ ] src/newkit_to_conina_ubuntu.sh
-    - [ ] Docker build scripts?
-- [ ] Create new local installation and test again
-- [ ] Create and post updated kit download and web pages to annalist.net
+    - [x] Release notes
+    - [x] documents/installing-annalist.md
+    - [x] documents/release-notes/announce_0.1.*.md
+    - [x] documents/roadmap.md
+    - [x] documents/pages/index.html
+    - [x] src/annalist_root/annalist/__init__.py
+    - [x] src/newkit_to_annalist_net.sh
+    - [x] src/newkit_to_conina_ubuntu.sh
+    - [x] Docker build scripts
+- [x] Create new local installation and test again
+- [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
-- [ ] Update demo installation on annalist.net; test
+- [x] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
+- [x] Update demo installation on annalist.net; test
     - `killall python`
+    - `. anenv/bin/activate`
     - `pip uninstall annalist`
-    - `pip install /var/www/software/Annalist-0.1.10.tar.gz --upgrade`
+    - `pip install /var/www/software/Annalist-0.1.12.tar.gz --upgrade`
     - `annalist-manager runtests`
     - `. update-run-annalist.sh`
     - `cat annalist.out`
 - [ ] Commit changes
 - [ ] Upload to PyPI (see below)
-- [ ] Merge final updates to master
-- [ ] Test again on master branch
-- [ ] Tag release on master branch
+- [ ] Tag release on release branch
     - `git tag -a release-x.y.z`
+- [ ] Merge release branch to master
+- [ ] Test again on master branch
 - [ ] Push master branch, and tags
     - `git push --tags`
+- [ ] Merge release branch to develop
 - [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Reset TODO list (remove entries moved to release notes, update version)
 - [ ] Commit and push changes
+- [ ] Delete release branch
+    - `git branch -d release-x.y.z`
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)
 - [ ] Post announcement to Google Group, Twitter and elsewhere
