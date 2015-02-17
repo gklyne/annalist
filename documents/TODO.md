@@ -88,6 +88,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 (sub-release?)
 
+- [ ] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [ ] Blob and file upload support: images, spreadsheets, ...
     - [ ] Field type to link to uploaded file
@@ -134,7 +135,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 Usability notes:
 
 - [x] Need easier way to make new entries for fields that are referenced from a record; e.g. a `New value` button as part of an enum field.
-- [ ] Clearer linkage between related records - hyperlinks on non-editing views
+- [x] Clearer linkage between related records - hyperlinks on non-editing views
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
     - [ ] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
         - test by creating contacts/supplies listy for CruisingLog

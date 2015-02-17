@@ -2,21 +2,23 @@
 
 ## Summary of release tasks
 
-- [ ] Feature freeze
-- [ ] Delete contents of build directory (ensure any old files are removed)
-- [ ] Clean old .pyc files - `clean.sh`
-- [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
-- [ ] Local install
-- [ ] Run test suite
-- [ ] Update site data in local 'personal' installation
+- [x] Feature freeze
+- [x] Delete contents of build directory (ensure any old files are removed)
+- [x] Clean old .pyc files - `clean.sh`
+- [x] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
+- [x] Local install
+- [x] Run test suite
+- [x] Update site data in local 'personal' installation
     - `annalist-manager initialize`
     - `annalist-manager updatesitedata`
-- [ ] Test 'personal' deployment in actual use
+- [x] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
-- [ ] Demo deployment; test
-- [ ] Documentation updates
-- [ ] Demo screencast update
-- [ ] Add TODO list to release notes, and reset
+- [x] Demo deployment; test
+- [x] Documentation updates
+- [x] Demo screencast update
+- [x] Add TODO list to release notes
+- [ ] Create release preparation branch
+    - `git checkout -b release-x.y.z develop`
 - [ ] Bump version to even value and update history
 - [ ] Update version number in scripts, documents, etc.
     - [ ] TODO
@@ -49,6 +51,7 @@
 - [ ] Push master branch, and tags
     - `git push --tags`
 - [ ] On develop branch, bump version number again (back to odd value)
+- [ ] Reset TODO list (remove entries moved to release notes, update version)
 - [ ] Commit and push changes
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)
