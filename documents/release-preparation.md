@@ -42,13 +42,13 @@
     - `annalist-manager runtests`
     - `. update-run-annalist.sh`
     - `cat annalist.out`
-- [ ] Commit changes
-- [ ] Upload to PyPI (see below)
-- [ ] Tag release on release branch
+- [x] Commit changes
+- [x] Upload to PyPI (see below)
+- [x] Tag release on release branch
     - `git tag -a release-x.y.z`
-- [ ] Merge release branch to master
-- [ ] Test again on master branch
-- [ ] Push master branch, and tags
+- [x] Merge release branch to master
+- [x] Test again on master branch
+- [x] Push master branch, and tags
     - `git push --tags`
 - [ ] Merge release branch to develop
 - [ ] On develop branch, bump version number again (back to odd value)
