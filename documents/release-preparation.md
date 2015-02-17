@@ -18,7 +18,8 @@
 - [x] Demo screencast update
 - [x] Add TODO list to release notes
 - [x] Create release preparation branch
-    - `git checkout -b release-x.y.z develop`
+    - `git checkout -b relprep-x.y.z develop`
+    - *NOTE* use a different name to that which will be used to tag the release
 - [x] Bump version to even value and update history
 - [ ] Update version number in scripts, documents, etc.
     - [x] Release notes
@@ -50,9 +51,10 @@
 - [x] Test again on master branch
 - [x] Push master branch, and tags
     - `git push --tags`
-- [ ] Merge release branch to develop
-- [ ] On develop branch, bump version number again (back to odd value)
-- [ ] Reset TODO list (remove entries moved to release notes, update version)
+- [x] Merge release branch to develop
+    - take care to ensure the branch is merged, not the tagged release
+- [x] On develop branch, bump version number again (back to odd value)
+- [x] Reset TODO list (remove entries moved to release notes, update version)
 - [ ] Commit and push changes
 - [ ] Delete release branch
     - `git branch -d release-x.y.z`

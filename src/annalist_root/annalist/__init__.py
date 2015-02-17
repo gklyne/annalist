@@ -93,7 +93,8 @@ default_app_config = 'annalist.apps.AnnalistConfig'
                                 # View display: suppress headings for empty repeatgrouprow value
                                 # Preserve current value in form if not present in drop-down options
                                 # Various bug fixes (see release notes)
-__version__        = "0.1.12"  # Bump version number for release
+# __version__        = "0.1.12" # Bump version number for release
+__version__        = "0.1.13"  # Bump version number (odd = unstable)
 
 
 # End.
