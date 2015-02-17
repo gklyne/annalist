@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: V0.1.10; updates from V0.1.8 include usability and presentation improvements, bug fixes and availability as a Docker container.
+Current status: public prototype release 0.1.12; updates from release 0.1.10 include non-editing view, navigation and presentation improvements, and bug fixes.
 
 
 # V1.0 release
@@ -11,6 +11,7 @@ More generally, features planned for future releases are recorded in the [issues
 
 
 # Desired features, not yet scheduled
+
 
 ## Web backend storage
 
@@ -39,11 +40,6 @@ There are also some issues around entity renaming and link preservation to be co
   - JSON-LD
   - uri-list
 - but serve native format directly.
-
-
-## External references and local blob storage
-
-For example, to crerate galleries of annotated images.  Want easy capability to upload data and use the resulting URI as a link.
 
 
 ## Extended data types and presentation options
@@ -136,19 +132,16 @@ Implement ResourceSync protocol for sharing and propagation of Annalist data set
 ## Deployment options
 
 1. Debian package
-
-2. Docker
-
-3. look into using Vagrant and/or Puppet/Chef/...
-
+2. Docker / DockerHub (done, but could be improved)
+3. Look into using Vagrant and/or Puppet/Chef/...
 4. Cloud appliance, etc.
 
 
 ## Sample applications
 
 * Cruising log
+* Digital Music Object experiments
 * Image database (bioimage revisited)
-
 
 
 # Other possibilities (not yet on roadmap)

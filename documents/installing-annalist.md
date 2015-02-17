@@ -140,9 +140,9 @@ The following assumes that software is installed under a directory called $WORKS
 
         pip install annalist
 
-4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.10.tar.gz).  Then install it thus:
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.12.tar.gz).  Then install it thus:
 
-        pip install $WORKSPACE/Annalist-0.1.10.tar.gz
+        pip install $WORKSPACE/Annalist-0.1.12.tar.gz
 
 5.  Finally, test the installed software:
 
@@ -150,22 +150,21 @@ The following assumes that software is installed under a directory called $WORKS
 
     The output from this command should look something like this:
 
-        INFO:annalist_site.settings.runtests:Annalist version 0.1.10 (test configuration)
+        INFO:annalist_site.settings.runtests:Annalist version 0.1.12 (test configuration)
         INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
-        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /usr/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data
-        INFO:annalist_site.settings.runtests:CONFIG_BASE:     /Users/graham/.annalist/
-        INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/django
-        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /usr/workspace/github/gklyne/annalist/src/annalist_root/annalist_site
-        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /usr/workspace/github/gklyne/annalist/src/annalist_root
-        INFO:annalist_site.settings.runtests:DB PATH:         /usr/workspace/github/gklyne/annalist/src/annalist_root/db.sqlite3
+        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /home/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.11-py2.7.egg/annalist_root/sampledata/data
+        INFO:annalist_site.settings.runtests:CONFIG_BASE:     /home/annalist/.annalist/
+        INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /home/annalist/anenv/lib/python2.7/site-packages/Django-1.7-py2.7.egg/django
+        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /home/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.11-py2.7.egg/annalist_root/annalist_site
+        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /home/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.11-py2.7.egg/annalist_root
+        INFO:annalist_site.settings.runtests:DB PATH:         /home/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.11-py2.7.egg/annalist_root/db.sqlite3
         Creating test database for alias 'default'...
-        ...................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+        ...................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
         ----------------------------------------------------------------------
-        Ran 483 tests in 206.929s
+        Ran 515 tests in 160.570s
 
         OK
         Destroying test database for alias 'default'...
-
 
 ## Setting up an Annalist site
 
