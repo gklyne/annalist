@@ -29,7 +29,7 @@ if sys.version_info[:2] != (2,7):
 dir_here = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(dir_here, "annalist_root"))
 
-# Helper to load README.md, etc.
+# Helper to load README.rst, etc.
 def read(fname):
     return codecs.open(os.path.join(dir_here, fname)).read()
 

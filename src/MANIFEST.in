@@ -1,4 +1,4 @@
-include README.md
+include README.rst
 include LICENCE.txt
 include annalist_root/requirements/*.txt
 include annalist_root/*.py
