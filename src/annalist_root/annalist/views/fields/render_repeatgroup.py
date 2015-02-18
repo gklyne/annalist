@@ -370,7 +370,7 @@ class RenderRepeatGroup(object):
     being rendered, or sub-element containing a list of repeated values that 
     are each formatted using the supplied body template.
     """
-    log.info("RenderRepeatGroup.render")
+    # log.info("RenderRepeatGroup.render")
     try:
         # log.info("RenderRepeatGroup.render field: %r"%(context['field'],))
         # log.info("RenderRepeatGroup.render descs: %r"%(context['field']['group_field_descs'],))

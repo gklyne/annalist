@@ -52,7 +52,7 @@ Existing Analist collection data can be loaded into a new installation, before s
     cd /annalist_site/annalist_site/c/
     git clone https://github.com/gklyne/DMO_Experiment.git
 
-To run Annalist server as a headless container headless (no shell):
+To run Annalist server as a headless container (no shell):
 
     docker run --detach \
         --publish=8000:8000 --volumes-from=annalist_site \

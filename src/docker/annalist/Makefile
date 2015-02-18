@@ -2,6 +2,7 @@ BASE=ubuntu
 IMAGE=annalist
 DATA_CONTAINER=annalist_site
 RELEASE=$(shell annalist-manager version)
+DATE=$(shell date)
 # RELEASE_PREFIX=
 HOSTPORT=8000
 GUESTPORT=8000
