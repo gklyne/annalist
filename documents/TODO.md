@@ -54,7 +54,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Eliminate type-specific render types
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value
-- [ ] Improve formatting of README sent to PyPI - use RST file?
+- [x] Improve formatting of README sent to PyPI
+    - renamed src/RAEDME.md to README.rst
 
 
 Usability notes:
