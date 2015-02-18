@@ -19,7 +19,7 @@ RUN cd /github/annalist/src && \
     python setup.py clean --all && \
     python setup.py build && \
     python setup.py install && \
-    echo "2015-12-29T15:30" # (see https://github.com/docker/docker/issues/1326#issuecomment-52304721)
+    echo "2015-02-17T12:55" # (see https://github.com/docker/docker/issues/1326#issuecomment-52304721)
 
 VOLUME /annalist_site
 ENV HOME /annalist_site
