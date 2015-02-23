@@ -1,6 +1,6 @@
 # !/usr/bin/env python
 #
-# am.py - command line tool to perform Annalist installation management
+# am_main.py - command line tool to perform Annalist installation management
 #
 
 from __future__ import print_function

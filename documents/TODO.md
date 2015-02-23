@@ -13,6 +13,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 # Version 0.1.13, towards 0.1.14
 
 - [ ] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.
+- [ ] Is it really appropriate to save the annal:url value in a stored entity?
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [ ] Blob and file upload support: images, spreadsheets, ...
     - [ ] Field type to link to uploaded file
