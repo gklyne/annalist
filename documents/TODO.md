@@ -125,5 +125,21 @@ Notes for Future TODOs:
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
     - [ ] internal options to save history in per-collection git repo
 
+# Feedback to be sorted
+
+## Backend storage options
+
+From Kingsley Idehen: [https://lists.w3.org/Archives/Public/public-lod/2015Feb/0116.html]()
+
+He requests at least one of:
+
+1. LDP
+2. WebDAV
+3. SPARQL Graph Protocol
+4. SPARQL 1.1 Insert, Update, Delete.
+
+My comment:  WebDAV(ish) was on the original roadmap - see https://github.com/gklyne/annalist/issues/32.  The intent hs been to use vanilla HTTP as far as possible (GET, PUT, POST, etc.) and then use WebDAV PROPFIND(?) to enumerate directory contents.  The more complex stuff isn't needed.
+
+Kingsley also mentions not to worry about access control, but leave that to the backend.  But it woud be the Annalist server, not the browser, that acesses the backend data so there would need to be some way to convey whatever authentication/authosization tokens are needed.  My rough plan was to use an OAUTH2/OIDC enabled backend that should be a small extension from the current OIDC authentication logic already used by Annalist, but the details still need to be worked out.
 
 ----
