@@ -138,8 +138,8 @@ class EntityRoot(object):
         self._values[ANNAL.CURIE.id]        = self._values.get(ANNAL.CURIE.id,      self._entityid)
         self._values[ANNAL.CURIE.type_id]   = self._values.get(ANNAL.CURIE.type_id, self._entitytypeid)
         self._values[ANNAL.CURIE.type]      = self._values.get(ANNAL.CURIE.type,    self._entitytype)
-        urlref = self.get_view_url_path()
-        self._values[ANNAL.CURIE.url]       = urlref
+        if ANNAL.CURIE.url not in self._values:
+            self._values[ANNAL.CURIE.url] = self.get_view_url_path()
         # log.info("set_values %r"%(self._values,))
         return self._values
 
@@ -245,6 +245,7 @@ class EntityRoot(object):
         # @TODO: is this next needed?  Put logic in set_values?
         if self._entityid:
             values[ANNAL.CURIE.id] = self._entityid
+        values.pop('annal:url', None)
         with open(fullpath, "wt") as entity_io:
             json.dump(values, entity_io, indent=2, separators=(',', ': '))
         self._entityuseurl  = self._entityurl
@@ -252,13 +253,17 @@ class EntityRoot(object):
 
     def _load_values(self):
         """
-        Read current entity from Annalist storage, and return entity body
+        Read current entity from Annalist storage, and return entity body.
+
+        Adds value for 'annal:url' to the entity data returned.
         """
         body_file = self._exists_path()
         if body_file:
             try:
                 with open(body_file, "r") as f:
-                    return json.load(util.strip_comments(f))
+                    entitydata = json.load(util.strip_comments(f))
+                    entitydata[ANNAL.CURIE.url] = self.get_view_url_path()
+                    return entitydata
             except IOError, e:
                 if e.errno != errno.ENOENT:
                     raise

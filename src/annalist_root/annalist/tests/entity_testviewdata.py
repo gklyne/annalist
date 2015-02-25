@@ -98,7 +98,8 @@ def recordview_edit_url(action=None, coll_id=None, view_id=None):
 def recordview_value_keys(view_uri=False, target_record_type=True):
     keys = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url'
+        , 'annal:type'
+        , 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:open_view'
         , 'annal:view_fields'

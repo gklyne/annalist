@@ -139,7 +139,8 @@ def entitydata_value_keys(entity_uri=False):
     keys = (
         [ '@type'
         , 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url'
+        , 'annal:type'
+        , 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         ])
     if entity_uri:

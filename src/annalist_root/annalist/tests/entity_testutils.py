@@ -172,9 +172,12 @@ def collection_value_keys():
     """
     return (
         [ '@type'
-        , 'annal:id' # , 'annal:type_id'
-        , 'annal:url', 'annal:uri'
-        , 'rdfs:label', 'rdfs:comment'
+        , 'annal:id' 
+        # , 'annal:type_id'
+        , 'annal:url'
+        , 'annal:uri'
+        , 'rdfs:label'
+        , 'rdfs:comment'
         ])
 
 def collection_create_values(coll_id="testcoll", update="Collection"):

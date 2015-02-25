@@ -100,7 +100,8 @@ def recordfield_edit_url(action=None, coll_id=None, field_id=None):
 def recordfield_init_keys(field_uri=False):
     keys = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url'
+        , 'annal:type'
+        , 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         ])
     if field_uri:

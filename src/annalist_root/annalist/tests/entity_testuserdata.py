@@ -93,14 +93,15 @@ def annalistuser_edit_url(action=None, coll_id=None, user_id=None):
 #   -----------------------------------------------------------------------------
 
 def annalistuser_value_keys():
-    ks = set(
+    keys = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url'
+        , 'annal:type'
+        , 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:user_uri'
         , 'annal:user_permissions'
         ])
-    return ks
+    return keys
 
 def annalistuser_load_keys():
     return annalistuser_value_keys() | {'@id', '@type'}

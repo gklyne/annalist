@@ -23,11 +23,11 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
     - (d) treat id/type change as special case and update all matching URIs in the continuation chain.  This would require dismantling and reassembling the continuation URI, but could be the complete solution
 - [ ] Is it really appropriate to save the annal:url value in a stored entity?
-    - in sitedata/users/admin/user_meta.jsonld, not a usable locator
-    - models/entitytypeinfo.py uses value if annal:uri is not present; URL could be provided when entity is loaded (entityroot._load_values() ?)
-    - models/entitytypeinfo.py: URI not saved if same as URL
-    - models/site.py site_data uses value.  Could be supplied via Collection.load(), which eventually calls entityroot._load_values()
-    - views/entityedit.py makes referebnce in 'baseentityvaluemap'.  Mapping table entry appears to be unused (try removing and running test suite).
+    - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator
+    - [x] entityroot._load_values() supply value for URL
+    - [x] entityroot.set_values only supplies value of not already present
+    - [x] entityroot.save() discards value before saving
+    - [x] views/entityedit.py makes referebnce in 'baseentityvaluemap'.  Removed; tests updated.
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [ ] Blob and file upload support: images, spreadsheets, ...
     - [ ] Field type to link to uploaded file

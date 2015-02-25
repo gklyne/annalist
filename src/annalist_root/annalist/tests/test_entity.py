@@ -355,7 +355,9 @@ class EntityTest(AnnalistTestCase):
         self.assertEqual(e.get("foo",  "bar"),    "bar")
         self.assertEqual(e.get("type", "notype"), "annal:EntityRoot")
         expect_keys = set(
-            ['annal:id', 'annal:type_id', 'annal:type', 'annal:url'
+            ['annal:id', 'annal:type_id'
+            , 'annal:type'
+            , 'annal:url'
             , 'type'
             ])
         self.assertEqual(set(e.keys()), expect_keys)
