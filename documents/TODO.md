@@ -12,8 +12,22 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 # Version 0.1.13, towards 0.1.14
 
-- [ ] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.
+- [ ] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.  This occurs because the continuation URI is changed when the id is changed. Options:
+    - (a) do nothing (messy, but not fatal)
+    - (b) treat id/type change in edit as special case and up-date immediate continuation URI;  this would catch the immediate and most surprising(?) occurrence, but might result in later 404 errors.
+    - (c) add 404 handling logic to generate message and return to next continuation up the chain.  This would propbably not be a bad thing in any case (current 404 handling is a bit primitive).
+        - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.
+        - [ ] update entityedit c.line_116 to use new displayinfo function.  This will mean that all 404 response logic is concentrated in the displayinfo module. (Apart from statichack.)
+        - [ ] update displayinfo so that it receives a copy of the continuation data when initialized.
+        - [ ] pass continuation data into view_setup, list_setup, collection_view_setup for ^^.  For site, just use default/empty continuation.
+        - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
+    - (d) treat id/type change as special case and update all matching URIs in the continuation chain.  This would require dismantling and reassembling the continuation URI, but could be the complete solution
 - [ ] Is it really appropriate to save the annal:url value in a stored entity?
+    - in sitedata/users/admin/user_meta.jsonld, not a usable locator
+    - models/entitytypeinfo.py uses value if annal:uri is not present; URL could be provided when entity is loaded (entityroot._load_values() ?)
+    - models/entitytypeinfo.py: URI not saved if same as URL
+    - models/site.py site_data uses value.  Could be supplied via Collection.load(), which eventually calls entityroot._load_values()
+    - views/entityedit.py makes referebnce in 'baseentityvaluemap'.  Mapping table entry appears to be unused (try removing and running test suite).
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [ ] Blob and file upload support: images, spreadsheets, ...
     - [ ] Field type to link to uploaded file
@@ -130,15 +144,16 @@ Notes for Future TODOs:
 ## Backend storage options
 
 From Kingsley Idehen: [https://lists.w3.org/Archives/Public/public-lod/2015Feb/0116.html]()
+kidehen@openlinksw.com
 
-He requests at least one of:
+Kingsley requests at least one of:
 
 1. LDP
 2. WebDAV
 3. SPARQL Graph Protocol
 4. SPARQL 1.1 Insert, Update, Delete.
 
-My comment:  WebDAV(ish) was on the original roadmap - see https://github.com/gklyne/annalist/issues/32.  The intent hs been to use vanilla HTTP as far as possible (GET, PUT, POST, etc.) and then use WebDAV PROPFIND(?) to enumerate directory contents.  The more complex stuff isn't needed.
+My comment:  WebDAV(ish) was on the original roadmap - see https://github.com/gklyne/annalist/issues/32 The intent has been to use vanilla HTTP as far as possible (GET, PUT, POST, etc.) and then use WebDAV PROPFIND(?) to enumerate directory contents.  The more complex stuff isn't needed.
 
 Kingsley also mentions not to worry about access control, but leave that to the backend.  But it woud be the Annalist server, not the browser, that acesses the backend data so there would need to be some way to convey whatever authentication/authosization tokens are needed.  My rough plan was to use an OAUTH2/OIDC enabled backend that should be a small extension from the current OIDC authentication logic already used by Annalist, but the details still need to be worked out.
 
