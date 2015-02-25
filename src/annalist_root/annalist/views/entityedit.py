@@ -52,7 +52,6 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='view_choices',     e=None,                    f=None               )
         , SimpleValueMap(c='edit_view_button', e=None,                    f=None               )
         , StableValueMap(c='entity_id',        e=ANNAL.CURIE.id,          f='entity_id'        )
-        , SimpleValueMap(c='entity_url',       e=ANNAL.CURIE.url,         f='entity_url'       )
         , SimpleValueMap(c='entity_uri',       e=ANNAL.CURIE.uri,         f='entity_uri'       )
         , SimpleValueMap(c='record_type',      e=ANNAL.CURIE.record_type, f='record_type'      )
         , SimpleValueMap(c='view_id',          e=None,                    f='view_id'          )

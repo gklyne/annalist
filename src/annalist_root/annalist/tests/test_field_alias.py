@@ -141,7 +141,6 @@ class FieldAliasTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "BibEntry_type")
         self.assertEqual(r.context['entity_id'],        "bibentity1")
         self.assertEqual(r.context['orig_id'],          "bibentity1")
-        self.assertEqual(r.context['entity_url'],       url)
         self.assertEqual(r.context['action'],           "edit")
         # Fields
         self.assertEqual(len(r.context['fields']), 4)        

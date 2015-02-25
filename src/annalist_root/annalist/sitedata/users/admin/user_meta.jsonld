@@ -4,7 +4,6 @@
   "annal:user_uri": "mailto:admin@localhost",
   "annal:type_id": "_user",
   "annal:uri": "annalist_site:/d/_user/admin/",
-  "annal:url": "annalist_site:/d/_user/admin/",
   "annal:user_permissions": [
     "VIEW",
     "CREATE",
