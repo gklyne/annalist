@@ -22,7 +22,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [ ] pass continuation data into view_setup, list_setup, collection_view_setup for ^^.  For site, just use default/empty continuation.
         - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
     - (d) treat id/type change as special case and update all matching URIs in the continuation chain.  This would require dismantling and reassembling the continuation URI, but could be the complete solution
-- [ ] Is it really appropriate to save the annal:url value in a stored entity?
+- [x] Is it really appropriate to save the annal:url value in a stored entity?
     - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator
     - [x] entityroot._load_values() supply value for URL
     - [x] entityroot.set_values only supplies value of not already present
@@ -33,7 +33,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Field type to link to uploaded file
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
-    - [ ] site link to view log
+    - [ ] site link to download current log file, if holding site admin permissions
+    - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
 - [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
     - [ ] JSON-LD @contexts support
