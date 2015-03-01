@@ -254,4 +254,7 @@ class ContentNegotiationView(generic.View):
             "Resource %(request_uri)s: Unavailable for legal reasons"
             )
 
+    def error500values(self, message="Server error from request to %(request_uri)s"):
+        return self.errorvalues(500, "Server error", message)
+
 # End.

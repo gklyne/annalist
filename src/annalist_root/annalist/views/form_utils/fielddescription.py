@@ -12,7 +12,7 @@ import logging
 log = logging.getLogger(__name__)
 
 from annalist.identifiers               import RDFS, ANNAL
-from annalist.exceptions                import EntityNotFound_Error
+from annalist.exceptions                import Annalist_Error, EntityNotFound_Error
 
 from annalist.models.recordgroup        import RecordGroup
 from annalist.models.recordfield        import RecordField
@@ -39,7 +39,7 @@ class FieldDescription(object):
     def __init__(self, 
             collection, recordfield, view_context=None, 
             field_property=None, field_placement=None, 
-            group_view=None
+            group_view=None, group_ids_seen=[]
             ):
         """
         Creates a field description value to use in a context value when
@@ -61,6 +61,7 @@ class FieldDescription(object):
         group_view      if the field itself references a list of fields, this is a
                         RecordGroup value or dictionary containing the referenced list 
                         of fields.
+        group_ids_seen  group ids expanded so far, to check for recursive reference.
         """
         # log.debug("FieldDescription recordfield: %r"%(recordfield,))
         field_id            = recordfield.get(ANNAL.CURIE.id,         "_missing_id_")
@@ -126,6 +127,9 @@ class FieldDescription(object):
             #     )
         # If field references group, pull in field details
         if group_view:
+            if field_id in group_ids_seen:
+                raise Annalist_Error(field_id, "Recursive field reference in field group")
+            group_ids_seen = group_ids_seen + [field_id]
             group_label = (field_label or 
                 group_view.get(RDFS.CURIE.label, self._field_desc['field_group_ref'])
                 )
@@ -133,7 +137,7 @@ class FieldDescription(object):
             remove_label = recordfield.get(ANNAL.CURIE.repeat_label_delete, None) or "Remove "+field_id
             group_field_descs = []
             for subfield in group_view[ANNAL.CURIE.group_fields]:
-                f = field_description_from_view_field(collection, subfield, view_context)
+                f = field_description_from_view_field(collection, subfield, view_context, group_ids_seen)
                 group_field_descs.append(f)
             self._field_desc.update(
                 { 'group_id':           field_id
@@ -314,7 +318,7 @@ class FieldDescription(object):
             yield k
         return
 
-def field_description_from_view_field(collection, field, view_context=None):
+def field_description_from_view_field(collection, field, view_context=None, group_ids_seen=[]):
     """
     Returns a field description value created using information from
     a field reference in a view description record (i.e. a dictionary
@@ -329,6 +333,7 @@ def field_description_from_view_field(collection, field, view_context=None):
                     values to be used when rendering the field.  In particular, a copy 
                     of the view description record provides context for some enumeration 
                     type selections.
+    group_ids_seen  group ids expanded so far, to check for recursive reference.
     """
     #@@TODO: for resilience, revert this when all tests pass?
     # field_id    = field.get(ANNAL.CURIE.field_id, "Field_id_missing")  # Field ID slug in URI
@@ -358,7 +363,8 @@ def field_description_from_view_field(collection, field, view_context=None):
         collection, recordfield, view_context=view_context, 
         field_property=field.get(ANNAL.CURIE.property_uri, None),
         field_placement=field.get(ANNAL.CURIE.field_placement, None), 
-        group_view=group_view
+        group_view=group_view,
+        group_ids_seen=group_ids_seen
         )
 
 # End.

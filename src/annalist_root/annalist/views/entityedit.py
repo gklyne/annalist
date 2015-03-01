@@ -18,6 +18,7 @@ from django.http                        import HttpResponseRedirect
 from django.core.urlresolvers           import resolve, reverse
 
 from annalist.identifiers               import RDFS, ANNAL
+from annalist.exceptions                import Annalist_Error
 from annalist                           import message
 from annalist                           import util
 
@@ -129,7 +130,16 @@ class GenericEntityEditView(AnnalistGenericView):
         #         handlers that respond with a rendered form.
         add_field        = request.GET.get('add_field', None)
         continuation_url = request.GET.get('continuation_url', "")
-        return self.form_render(viewinfo, entity, add_field, continuation_url)
+        try:
+            response = self.form_render(viewinfo, entity, add_field, continuation_url)
+        except Exception as e:
+            log.exception(str(e))
+            response = self.error(
+                dict(self.error500values(),
+                    message=str(e)+" - see server log for details"
+                    )
+                )
+        return response
 
     # POST
 
@@ -208,12 +218,30 @@ class GenericEntityEditView(AnnalistGenericView):
             # Create RecordTypeData when not already exists
             RecordTypeData.create(viewinfo.collection, typeinfo.entityparent.get_id(), {})
         #@@
-        return self.form_response(
-            viewinfo,
-            entity_id, orig_entity_id, 
-            entity_type_id, orig_entity_type_id,
-            messages, context_extra_values
-            )
+        #@@
+        # return self.form_response(
+        #     viewinfo,
+        #     entity_id, orig_entity_id, 
+        #     entity_type_id, orig_entity_type_id,
+        #     messages, context_extra_values
+        #     )
+        #@@
+        try:
+            response = self.form_response(
+                viewinfo,
+                entity_id, orig_entity_id, 
+                entity_type_id, orig_entity_type_id,
+                messages, context_extra_values
+                )
+        except Exception as e:
+            log.exception(str(e))
+            response = self.error(
+                dict(self.error500values(),
+                    message=str(e)+" - see server log for details"
+                    )
+                )
+        return response
+
 
     # Helper functions
 
@@ -323,7 +351,10 @@ class GenericEntityEditView(AnnalistGenericView):
         coll      = viewinfo.collection
         # Set up initial view context
         # @@TODO: entity needed here?
-        entityvaluemap = self.get_view_entityvaluemap(viewinfo, entity)
+        try:
+            entityvaluemap = self.get_view_entityvaluemap(viewinfo, entity)
+        except Annalist_Error as e:
+            return viewinfo.report_error(str(e))
         if add_field:
             add_field_desc = self.find_repeat_id(entityvaluemap, add_field)
             if add_field_desc:
@@ -394,7 +425,10 @@ class GenericEntityEditView(AnnalistGenericView):
         typeinfo       = viewinfo.entitytypeinfo
         orig_entity    = self.get_entity(orig_entity_id, typeinfo, viewinfo.action)
         # log.info("orig_entity %r"%(orig_entity.get_values(),))
-        entityvaluemap = self.get_view_entityvaluemap(viewinfo, orig_entity)
+        try:
+            entityvaluemap = self.get_view_entityvaluemap(viewinfo, orig_entity)
+        except Annalist_Error as e:
+            return viewinfo.report_error(str(e))
 
         # # Check response has valid id and type
         # if not util.valid_id(entity_id):

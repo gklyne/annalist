@@ -12,6 +12,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 # Version 0.1.13, towards 0.1.14
 
+- [x] BUG: invalid entity id in field data causes 500 ServerError
+- [x] BUG: If field group refers back to orinal field, python blows its stack, reports 500 ServerError
+- [x] Improve reporting of 500 serverError
 - [ ] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.  This occurs because the continuation URI is changed when the id is changed. Options:
     - (a) do nothing (messy, but not fatal)
     - (b) treat id/type change in edit as special case and up-date immediate continuation URI;  this would catch the immediate and most surprising(?) occurrence, but might result in later 404 errors.
@@ -22,6 +25,11 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [ ] pass continuation data into view_setup, list_setup, collection_view_setup for ^^.  For site, just use default/empty continuation.
         - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
     - (d) treat id/type change as special case and update all matching URIs in the continuation chain.  This would require dismantling and reassembling the continuation URI, but could be the complete solution
+- [ ] Add 'view' button to edit form
+- [ ] Create facility to built repeat field and group structure for existing simple field
+    - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
+    - See also discussion below of introducing "tasks" - this would be an early candidate for that.
+    - Need to think how the interface would work.  Option to add "task" button to any form?
 - [x] Is it really appropriate to save the annal:url value in a stored entity?
     - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator
     - [x] entityroot._load_values() supply value for URL
@@ -33,7 +41,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Field type to link to uploaded file
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
-    - [ ] site link to download current log file, if holding site admin permissions
+    - [ ] site link to download log, if admin permissions
     - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
 - [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
@@ -106,6 +114,8 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Improve reporting of errors due to invalid view/field definitions, etc.
+- [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop)
 - [ ] Create image-viewing page to avoid download options, and link to that. (cf. UriImage renderer)
 - [ ] Vary layout for editing and viewing?  Sounds hard.
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris

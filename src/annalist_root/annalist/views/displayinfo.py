@@ -226,6 +226,16 @@ class DisplayInfo(object):
                     )
         return self.http_response
 
+    def report_error(self, message):
+        log.error(message)
+        if not self.http_response:
+            self.http_response = self.view.error(
+                dict(self.view.error400values(),
+                    message=message
+                    )
+                )
+        return self.http_response
+
     # Additonal support functions for list views
 
     def get_type_list_id(self, type_id):

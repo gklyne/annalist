@@ -241,14 +241,15 @@ class Entity(EntityRoot):
             (cls._entitytype, parent._entitydir, entityid,
                 altparent._entitydir if altparent else "(no alt)")
             )
-        e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
-        v = e._load_values()
-        # log.info("entity.load %r"%(v,))
-        if v:
-            e.set_values(v)
-        else:
-            e = None
-        return e
+        entity = None
+        if util.valid_id(entityid):
+            e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
+            v = e._load_values()
+            # log.info("entity.load %r"%(v,))
+            if v:
+                e.set_values(v)
+                entity = e
+        return entity
 
     @classmethod
     def exists(cls, parent, entityid, altparent=None, use_altpath=False):
