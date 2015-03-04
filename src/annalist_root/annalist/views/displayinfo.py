@@ -29,7 +29,11 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
 
-from annalist.views.uri_builder     import uri_with_params
+from annalist.views.uri_builder     import (
+    uri_with_params, 
+    continuation_url_chain, continuation_chain_url,
+    url_update_type_entity_id
+    )
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -86,6 +90,7 @@ class DisplayInfo(object):
         self.view               = view
         self.action             = action
         self.request_dict       = request_dict
+        self.continuation_url   = request_dict.get('continuation_url', None)
         self.default_continue   = default_continue
         # Default no permissions:
         self.authorizations     = dict([(k, False) for k in authorization_map])
@@ -286,7 +291,7 @@ class DisplayInfo(object):
     def get_list_type_id(self):
         return self.recordlist.get(ANNAL.CURIE.default_type, None) or "Default_type"
 
-    def check_collection_entity(self, entity_id, entity_type, msg, continuation_url={}):
+    def check_collection_entity(self, entity_id, entity_type, msg):
         """
         Test a supplied entity_id is defined in the current collection,
         returning a URI to display a supplied error message if the test fails.
@@ -297,7 +302,6 @@ class DisplayInfo(object):
         entity_id           entity id that is required to be defined in the current collection.
         entity_type         specified type for entity to delete.
         msg                 message to display if the test fails.
-        continuation_url    URI of page to display when the redisplayed form is closed.
 
         returns a URI string for use with HttpResponseRedirect to redisplay the 
         current page with the supplied message, or None if entity id is OK.
@@ -355,43 +359,22 @@ class DisplayInfo(object):
             view_id = (
                 view_id or 
                 self.entitytypeinfo.get_default_view_id()
-                # self.get_type_view_id(type_id) or
-                # self.collection.get_default_view() or
-                # "Default_view"
                 )
             if not view_id:
                 log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
         return view_id
 
-    def get_save_continuation_url(self, entity_type, entity_id, action):
-        """
-        Gets a URI that is based on that used to invoke the current view,
-        but with a different action and specified entity_type/entity_id
-
-        This is used to continue editing a new or copied entity after that 
-        entity has been saved, or viewing an entity following an edit.
-        """
-        return self.view.view_uri(
-                "AnnalistEntityEditView", 
-                coll_id=self.coll_id,
-                view_id=self.view_id,
-                type_id=entity_type,
-                entity_id=entity_id,
-                action=action
-                )
-
     def get_continuation_url(self):
         """
         Return continuation URL specified for the current request, or None.
         """
-        return self.request_dict.get('continuation_url', None)
+        return self.continuation_url
 
     def get_continuation_url_dict(self):
         """
         Return dictionary with continuation URL specified for the current request.
         """
-        cont   = self.request_dict.get('continuation_url', None)
-        return {'continuation_url': cont} if cont else {}
+        return {'continuation_url': self.continuation_url} if self.continuation_url else {}
 
     def get_continuation_next(self):
         """
@@ -401,9 +384,9 @@ class DisplayInfo(object):
         """
         log.debug(
             "get_continuation_next '%s', default '%s'"%
-              (self.request_dict.get('continuation_url', None), self.default_continue)
+              (self.continuation_url, self.default_continue)
             )
-        return self.request_dict.get('continuation_url', None) or self.default_continue
+        return self.continuation_url or self.default_continue
 
     def get_continuation_here(self):
         """
@@ -415,6 +398,32 @@ class DisplayInfo(object):
         """
         # @@TODO: consider merging logic from generic.py, and eliminating method there
         return self.view.continuation_here(self.request_dict, None)
+
+    def update_continuation_url(self, 
+        old_type_id=None, new_type_id=None, 
+        old_entity_id=None, new_entity_id=None
+        ):
+        """
+        Update continuation URI to reflect renamed type or entity.
+        """
+        # def update_hop(chop):
+        #     return url_update_type_entity_id(chop, 
+        #         old_type_id=old_type_id, new_type_id=new_type_id, 
+        #         old_entity_id=old_entity_id, new_entity_id=new_entity_id
+        #         )
+        curi = self.continuation_url
+        if curi:
+            hops = continuation_url_chain(curi)
+            for i in range(len(hops)):
+                uribase, params = hops[i]
+                uribase = url_update_type_entity_id(uribase, 
+                    old_type_id=old_type_id, new_type_id=new_type_id, 
+                    old_entity_id=old_entity_id, new_entity_id=new_entity_id
+                    )
+                hops[i] = (uribase, params)
+            curi = continuation_chain_url(hops)
+            self.continuation_url = curi
+        return curi
 
     def context_data(self):
         """

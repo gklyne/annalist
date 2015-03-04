@@ -264,7 +264,8 @@ class GenericEntityEditView(AnnalistGenericView):
         consistently based on the URI used, and not subject to any vagaries of submitted
         form data.
         """
-        # @@TODO: clean up this code to use template URI values saved in viewinfo rather than `self`
+        # @@TODO: clean up this code to save and use values in viewinfo rather than `self`
+        #         i.e. 'formtemplate' and 'uri_action'; rename for greater clarity?
         if action in ["new", "copy", "edit"]:
             self.formtemplate = self._entityedittemplate
             self.uri_action  = "edit"
@@ -739,17 +740,24 @@ class GenericEntityEditView(AnnalistGenericView):
         if not entity_renamed:
             # Normal (non-type) entity create or update, no renaming
             err_vals = self.create_update_entity(new_typeinfo, entity_id, entity_values)
-        elif "_type" not in [entity_type_id, orig_entity_type_id]:
-            # Non-type record rename
-            err_vals = self.rename_entity(
-                typeinfo, orig_entity_id, new_typeinfo, entity_id, entity_values
-                )
         else:
-            err_vals = self.rename_entity_type(
-                viewinfo, 
-                typeinfo, orig_entity_id, 
-                new_typeinfo, entity_id, entity_values
-                )
+            if "_type" not in [entity_type_id, orig_entity_type_id]:
+                # Non-type record rename
+                err_vals = self.rename_entity(
+                    typeinfo, orig_entity_id, new_typeinfo, entity_id, entity_values
+                    )
+            else:
+                # Type renamed
+                err_vals = self.rename_entity_type(
+                    viewinfo, 
+                    typeinfo, orig_entity_id, 
+                    new_typeinfo, entity_id, entity_values
+                    )
+            if not err_vals:
+                viewinfo.update_continuation_url(
+                    old_type_id=orig_entity_type_id, old_entity_id=orig_entity_id,
+                    new_type_id=entity_type_id,      new_entity_id=entity_id
+                    )
         if err_vals:
             log.warning("err_vals %r"%(err_vals,))
             return self.form_re_render(
@@ -950,13 +958,19 @@ class GenericEntityEditView(AnnalistGenericView):
         if viewinfo.check_authorization(edit_perm):
             return viewinfo.http_response
         log.info("invoke_edit_entity: entity_id %s"%entity_id)
-        # @@TODO: clean up this logic: use viewinfo methods instead, remove logic from generic.py?
-        cont_next = self.continuation_next(param_data)
+        # @@TODO: clean up this logic: 
+        #         use viewinfo method instead of self.continuation_here, 
+        #         remove logic from generic.py?
         cont_here = self.continuation_here(
             request_dict=param_data.dict(),
-            default_cont=viewinfo.get_continuation_next(), 
-            base_here=viewinfo.get_save_continuation_url(
-                entity_type_id, entity_id, self.uri_action
+            default_cont=viewinfo.get_continuation_url(), 
+            base_here=self.view_uri(
+                "AnnalistEntityEditView", 
+                coll_id=viewinfo.coll_id,
+                view_id=viewinfo.view_id,
+                type_id=entity_type_id,
+                entity_id=entity_id,
+                action=self.uri_action
                 )
             )
         return HttpResponseRedirect(

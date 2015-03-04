@@ -1219,18 +1219,23 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         return
 
     def test_post_edit_entity_new_id(self):
+        # Also tests continuation URL update whejn entity Id is changed
         self._create_entity_data("entityeditid1")
         e1 = self._check_entity_data_values("entityeditid1")
+        c1 = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityeditid1", view_id="Type_view")
         # Now post edit form submission with different values and new id
         f  = entitydata_recordtype_view_form_data(
             entity_id="entityeditid2", orig_id="entityeditid1", action="edit"
             )
+        f['continuation_url'] = c1
         u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditid1", view_id="Type_view")
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        c2 = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityeditid2", view_id="Type_view")
+        self.assertEqual(r['location'], TestHostUri + c2)
+        # self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
         # Check that new record type exists and old does not
         self.assertFalse(EntityData.exists(self.testdata, "entityeditid1"))
         self._check_entity_data_values("entityeditid2")

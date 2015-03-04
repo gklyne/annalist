@@ -15,16 +15,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: invalid entity id in field data causes 500 ServerError
 - [x] BUG: If field group refers back to orinal field, python blows its stack, reports 500 ServerError
 - [x] Improve reporting of 500 serverError
-- [ ] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.  This occurs because the continuation URI is changed when the id is changed. Options:
-    - (a) do nothing (messy, but not fatal)
-    - (b) treat id/type change in edit as special case and up-date immediate continuation URI;  this would catch the immediate and most surprising(?) occurrence, but might result in later 404 errors.
-    - (c) add 404 handling logic to generate message and return to next continuation up the chain.  This would propbably not be a bad thing in any case (current 404 handling is a bit primitive).
-        - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.
-        - [ ] update entityedit c.line_116 to use new displayinfo function.  This will mean that all 404 response logic is concentrated in the displayinfo module. (Apart from statichack.)
-        - [ ] update displayinfo so that it receives a copy of the continuation data when initialized.
-        - [ ] pass continuation data into view_setup, list_setup, collection_view_setup for ^^.  For site, just use default/empty continuation.
-        - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
-    - (d) treat id/type change as special case and update all matching URIs in the continuation chain.  This would require dismantling and reassembling the continuation URI, but could be the more complete solution
+- [x] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.  This occurs because the continuation URI is changed when the id is changed.
+    - treat id/type change as special case and update all matching URIs in the continuation chain.  This involves dismantling and reassembling the continuation URI, and the continuation URL handling logic has been refactored to facilitate this.
 - [ ] Add 'view' button to edit form
 - [ ] Create facility to built repeat field and group structure for existing simple field
     - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
@@ -115,6 +107,12 @@ Notes for Future TODOs:
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
+- [ ] add 404 handling logic to generate message and return to next continuation up the chain.
+    - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.
+    - [ ] update entityedit c.line_116 to use new displayinfo function.  This will mean that all 404 response logic is concentrated in the displayinfo module. (Apart from statichack.)
+    - [ ] update displayinfo so that it receives a copy of the continuation data when initialized.
+    - [ ] pass continuation data into view_setup, list_setup, collection_view_setup for ^^.  For site, just use default/empty continuation.
+    - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
 - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop)
 - [ ] Create image-viewing page to avoid download options, and link to that. (cf. UriImage renderer)
 - [ ] Vary layout for editing and viewing?  Sounds hard.

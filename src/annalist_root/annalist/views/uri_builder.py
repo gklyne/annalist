@@ -69,7 +69,7 @@ def uri_params(*param_dicts, **param_dict):
     next_sep      = "?"        
     for pnam in uri_param_dict:
         pval = uri_param_dict[pnam]
-        if pval is not None:
+        if pval:
             # log.info("pnam %s, pval %s, uri_param_dict %r"%(pnam, pval, uri_param_dict))
             uri_param_str += next_sep + pnam + "=" + urllib.quote(pval, query_safe)
             next_sep = "&"
@@ -182,8 +182,10 @@ def url_update_type_entity_id(url_base,
     old_entity_id=None, new_entity_id=None
     ):
     """
-    Isolates type and entity identifiers in the supplied base URL, and replaces 
+    Isolates type and entity identifiers in the supplied URL, and replaces 
     them with values supplied.
+
+    Entity ids are updated only if the type id is also supplied and matches.
 
     URL path forms recognized (see also urls.py):
         .../c/<coll-id>/d/<type-id>/
@@ -246,25 +248,30 @@ def url_update_type_entity_id(url_base,
         , re.compile(r"(^.*/v/\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/(!.*)?$")
         ])
     us, ua, up, uq, uf = urlparse.urlsplit(url_base)
-    for rexp in rewrite_type_id_patterns:
-        match = rexp.match(up)
-        if match:
-            prefix, type_id, suffix = match.group(1, 2, 3)
-            if new_type_id and (type_id == old_type_id):
-                up = "%s/%s/%s"%(prefix, new_type_id, suffix or "")
-                break
-    for rexp in rewrite_entity_id_patterns:
-        match = rexp.match(up)
-        if match:
-            prefix, type_id, entity_id, suffix = match.group(1, 2, 3, 4)
-            if ( ( new_type_id   and (type_id == old_type_id)     ) or 
-                 ( new_entity_id and (entity_id == old_entity_id) ) ):
-                if type_id == old_type_id:
-                    type_id = new_type_id
-                if entity_id == old_entity_id:
-                    entity_id = new_entity_id
-                up = "%s/%s/%s/%s"%(prefix, type_id, entity_id, suffix or "")
-                break
+    if new_type_id:
+        for rexp in rewrite_type_id_patterns:
+            match = rexp.match(up)
+            if match:
+                prefix, type_id, suffix = match.group(1, 2, 3)
+                if not new_entity_id:
+                    # Rename all instances of type
+                    if type_id == old_type_id:
+                        up = "%s/%s/%s"%(prefix, new_type_id, suffix or "")
+                        break
+        for rexp in rewrite_entity_id_patterns:
+            match = rexp.match(up)
+            if match:
+                prefix, type_id, entity_id, suffix = match.group(1, 2, 3, 4)
+                if new_entity_id:
+                    # Rename matching type+entities only
+                    if ( (type_id == old_type_id) and (entity_id == old_entity_id) ):
+                        up = "%s/%s/%s/%s"%(prefix, new_type_id, new_entity_id, suffix or "")
+                        break
+                else:
+                    # Rename all instances of type
+                    if type_id == old_type_id:
+                        up = "%s/%s/%s/%s"%(prefix, new_type_id, entity_id, suffix or "")
+                        break
     return urlparse.urlunsplit((us, ua, up, uq, uf))
 
 if __name__ == "__main__":
