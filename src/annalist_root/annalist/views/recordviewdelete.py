@@ -34,17 +34,6 @@ class RecordViewDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         """
         log.debug("RecordViewDeleteConfirmedView.post: %r"%(request.POST))
         if "view_delete" in request.POST:
-            # @@
-            # entity_id = request.POST['viewlist']
-            # continuation_url = (
-            #     request.POST.get('continuation_url', None) or
-            #     self.view_uri("AnnalistCollectionEditView", coll_id=coll_id)
-            #     )
-            # continuation_url_params = continuation_params(request.POST.dict())
-            # return self.complete_remove_entity(
-            #     coll_id, "_view", entity_id, continuation_url, continuation_url_params
-            #     )
-            # @@
             return self.complete_remove_entity(
                 coll_id, "_view", request.POST['viewlist'], 
                 self.view_uri("AnnalistCollectionEditView", coll_id=coll_id),

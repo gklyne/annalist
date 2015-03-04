@@ -102,27 +102,23 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return reverse(viewname, kwargs=kwargs)
 
-    def continuation_urls(self, request_dict={}, default_cont="", base_here=None):
+    def continuation_next(self, request_dict={}, default_cont=None):
         """
-        Returns a tuple of two continuation URI dictionary values:
+        Returns a continuation URL to be used when returning from the current view,
+        or the supplied default if no continuation is specified for the current view.
+        """
+        return request_dict.get("continuation_url") or default_cont or None
 
-        [0] { 'continuation_url': continuation_next }
-        [1] { 'continuation_url': continuation_here }
-
-        where:
-
-        `continuation_next` is the URI to use after the current page has completed
-        processing, which is either supplied as a parameter to the current page or 
-        set to an indicated default.
-
-        `continuation_here` is a URI that returns control to the current page, to be passed
-        as a contionuation_uri parameter to any subsidiary pages invoked.  Such continuation 
-        URIs are cascaded, so that the return URI includes a the `continuation_url` for the 
-        current page.
+    def continuation_here(self, request_dict={}, default_cont="", base_here=None):
+        """
+        Returns a URL that returns control to the current page, to be passed as a
+        contionuation_uri parameter to any subsidiary pages invoked.  Such continuation 
+        URIs are cascaded, so that the return URI includes a the `continuation_url` 
+        for the current page.
 
         request_dict    is a request dictionary that is expected to contain a 
-                        to continuation_url value to use, other parameters to be 
-                        included an any continuation back to the current page.
+                        to continuation_url value to use, and other parameters to 
+                        be included an any continuation back to the current page.
         default_cont    is a default continuation URI to be used for returning from 
                         the current page if the current POST request does not specify
                         a continuation_url query parameter.
@@ -132,17 +128,12 @@ class AnnalistGenericView(ContentNegotiationView):
                         entity).
         """
         # Note: use default if request/form parameter is present but blank:
-        continuation_url    = request_dict.get("continuation_url") or default_cont or None
         if not base_here:
             base_here = self.get_request_path()
-        if continuation_url:
-            continuation_next = { "continuation_url": continuation_url }
-        else:
-            continuation_next = {}
-        continuation_here = uri_with_params(base_here, 
-            continuation_params(continuation_next, request_dict.dict())
+        continuation_next = self.continuation_next(request_dict, default_cont)
+        return uri_with_params(base_here, 
+            continuation_params({"continuation_url": continuation_next}, request_dict)
             )
-        return (continuation_next, {"continuation_url": continuation_here})
 
     def info_params(self, info_message, info_head=message.ACTION_COMPLETED):
         """
@@ -190,29 +181,33 @@ class AnnalistGenericView(ContentNegotiationView):
                 )
         return None
 
-    def check_value_supplied(self, val, msg, continuation_url={}, testfn=(lambda v: v)):
+    def check_value_supplied(self, val, msg, continuation_url=None, testfn=(lambda v: v)):
         """
-        Test a supplied value is specified (not None) and passes a supplied test,
+        Test if a supplied value is specified (not None) and passes a supplied test,
         returning a URI to display a supplied error message if the test fails.
 
         NOTE: this function works with the generic base template base_generic.html, which
         is assumed to provide an underlay for the currently viewed page.
 
-        val         value that is required to be not None and not empty or False
-        msg         message to display if the value evaluated to False
-        testfn      is a function to test the value (if not None).  If not specified, 
-                    the default test checks that the value does not evaluate as false
-                    (e.g. is a non-empty string, list or collection).
+        val                 value that is required to be not None and not empty or False
+        msg                 message to display if the value evaluated to False
+        continuation_url    a continuation URL for the resdiplayed page.
+        testfn              is a function to test the value (if not None).  If not specified, 
+                            the default test checks that the value does not evaluate as false
+                            (e.g. is a non-empty string, list or collection).
 
         returns a URI string for use with HttpResponseRedirect to redisplay the 
         current page with the supplied message, or None if the value passes the test.
         """
         redirect_uri = None
+        continuation_url_dict = {}
+        if continuation_url:
+            continuation_url_dict = {'continuation_url': continuation_url}
         if (val is None) or not testfn(val):
             redirect_uri = uri_with_params(
                 self.get_request_path(), 
                 self.error_params(msg),
-                continuation_url
+                continuation_url_dict
                 )
         return redirect_uri
 

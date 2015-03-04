@@ -145,7 +145,6 @@ def confirm_delete_params(
     params = (
         """{"%(button_id)s": ["Delete"],"""+
         """ "entity_id": ["%(entity_id)s"],"""+
-        """ "continuation_url": [null],"""+
         """ "completion_url": ["/testsite/c/%(coll_id)s%(list_id_)s%(type_id_)s"],"""+
         """ "search_for": ["%(search_for)s"]}"""
         )%vals

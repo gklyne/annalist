@@ -21,8 +21,6 @@ class AnnalistUserDeleteConfirmedView(EntityDeleteConfirmedBaseView):
     """
     View class to perform completion of confirmed record type deletion, requested
     from collection edit view.
-
-    @@TODO: Is this redundant (if users are managed as entities)?
     """
     def __init__(self):
         super(AnnalistUserDeleteConfirmedView, self).__init__()

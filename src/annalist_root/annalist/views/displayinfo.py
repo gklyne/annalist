@@ -68,27 +68,41 @@ class DisplayInfo(object):
 
     The information gathering methods do have some dependencies and must be
     invoked in a sequence that ensures the dependencies are satisfied.
+
+    view                is the view object that is being rendered.  This is an instance
+                        of a class derived from `AnnalistGenericView`, which in turn is 
+                        derived from `django.views.generic.View`.
+    action              is the user action for which the form has ben invoked
+                        (e.g. "new", "copy", "edit", etc.)
+    request_dict        is a dictionary of request parameters
+                        For GET requests, this derives from the URI query parameters; 
+                        for POST requests it is derived from the submitted form data.
+    default_continue    is a default continuation URI to be used when returning from the 
+                        current view without an explciitly specified continuation in
+                        the request.
     """
 
-    def __init__(self, view, action):
-        self.view           = view
-        self.action         = action
+    def __init__(self, view, action, request_dict, default_continue):
+        self.view               = view
+        self.action             = action
+        self.request_dict       = request_dict
+        self.default_continue   = default_continue
         # Default no permissions:
-        self.authorizations = dict([(k, False) for k in authorization_map])
-        self.reqhost        = None
-        self.site           = None
-        self.sitedata       = None
-        self.coll_id        = None
-        self.collection     = None
-        self.type_id        = None
-        self.entitytypeinfo = None
-        self.list_id        = None
-        self.recordlist     = None
-        self.view_id        = None
-        self.recordview     = None
-        self.entity_id      = None
-        # self.entitydata     = None
-        self.http_response  = None
+        self.authorizations     = dict([(k, False) for k in authorization_map])
+        self.reqhost            = None
+        self.site               = None
+        self.sitedata           = None
+        self.coll_id            = None
+        self.collection         = None
+        self.type_id            = None
+        self.entitytypeinfo     = None
+        self.list_id            = None
+        self.recordlist         = None
+        self.view_id            = None
+        self.recordview         = None
+        self.entity_id          = None
+        # self.entitydata       = None
+        self.http_response      = None
         return
 
     def get_site_info(self, reqhost):
@@ -301,7 +315,7 @@ class DisplayInfo(object):
                 uri_with_params(
                     self.view.get_request_path(),
                     self.view.error_params(msg),
-                    continuation_url
+                    self.get_continuation_url_dict()
                     )
                 )
         return redirect_uri
@@ -332,21 +346,6 @@ class DisplayInfo(object):
                 )
 
     # Additonal support functions
-
-    #@@
-    # def get_type_view_id(self, type_id):
-    #     """
-    #     Get default view id for given type
-    #     """
-    #     # @@TODO: remove this
-    #     view_id = None
-    #     if self.type_id:
-    #         if self.entitytypeinfo.recordtype:
-    #             view_id  = self.entitytypeinfo.recordtype.get(ANNAL.CURIE.type_view, None)
-    #         else:
-    #             log.warning("DisplayInfo.get_type_view_id: no type data for %s"%(self.type_id))
-    #     return view_id
-    #@@
 
     def get_view_id(self, type_id, view_id):
         """
@@ -380,6 +379,42 @@ class DisplayInfo(object):
                 entity_id=entity_id,
                 action=action
                 )
+
+    def get_continuation_url(self):
+        """
+        Return continuation URL specified for the current request, or None.
+        """
+        return self.request_dict.get('continuation_url', None)
+
+    def get_continuation_url_dict(self):
+        """
+        Return dictionary with continuation URL specified for the current request.
+        """
+        cont   = self.request_dict.get('continuation_url', None)
+        return {'continuation_url': cont} if cont else {}
+
+    def get_continuation_next(self):
+        """
+        Return continuation URL to be used when returning from the current view.
+
+        Uses the default continuation if no value supplied in request dictionary.
+        """
+        log.debug(
+            "get_continuation_next '%s', default '%s'"%
+              (self.request_dict.get('continuation_url', None), self.default_continue)
+            )
+        return self.request_dict.get('continuation_url', None) or self.default_continue
+
+    def get_continuation_here(self):
+        """
+        Return continuation URL back to the current view.
+
+        Any explicit contontinuation is included as a parameter, but the default
+        continuation is not (on the assumption that the current view will apply
+        this in the absence of an explicit value.)
+        """
+        # @@TODO: consider merging logic from generic.py, and eliminating method there
+        return self.view.continuation_here(self.request_dict, None)
 
     def context_data(self):
         """

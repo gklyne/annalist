@@ -24,7 +24,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [ ] update displayinfo so that it receives a copy of the continuation data when initialized.
         - [ ] pass continuation data into view_setup, list_setup, collection_view_setup for ^^.  For site, just use default/empty continuation.
         - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
-    - (d) treat id/type change as special case and update all matching URIs in the continuation chain.  This would require dismantling and reassembling the continuation URI, but could be the complete solution
+    - (d) treat id/type change as special case and update all matching URIs in the continuation chain.  This would require dismantling and reassembling the continuation URI, but could be the more complete solution
 - [ ] Add 'view' button to edit form
 - [ ] Create facility to built repeat field and group structure for existing simple field
     - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
