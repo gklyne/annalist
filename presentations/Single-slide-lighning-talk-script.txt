@@ -1,0 +1,63 @@
+# Annalist Lightning talk script
+
+Revised: 2015-03-05
+
+(2 mins allowed)
+
+## A gap in the landscape
+
+I believe there is a gap in the landscape of tool 
+provision for data sharing, particularly by 
+individuals and small workgroups.
+
+This gap lies somewhere between users' personal 
+desktops and the various data publication platforms
+
+What I think is missing is a tool that can be used out-of-the-box for gathering and managing data, and that also supports:
+
+* evolution
+  by allowing structure to be developed 
+  as data is gathered
+
+* collaboration
+  through controlled sharing with colleagues, and
+
+* reuse and remixing
+  by creating data that can be recombined with 
+  external sources
+
+
+
+
+
+## Annalist
+
+The Annalist linked data notebook attempts to fill 
+this gap, allowing simple data to be gathered and 
+viewed without any prior configuration 
+(e.g. something like a deck of index cards), 
+but also allowing structure to be added as needed.
+  
+It also allows one to start with a defined "core" 
+structure and add additional details as needs emerge.
+
+
+## Status
+
+The current status is that Annalist is a work in 
+progress, what I call a "public prototype".  
+There is substantial completed functionality, but I
+feel it is not yet a minimum viable product.
+
+There is a live demonstration running at annalist.net, which I encourage you to visit.
+
+Annalist development has been open from the outset, 
+with source, documentation, and more hosted on Github.
+
+In the future, I am interested in collaborations 
+to work on applications of Annalist, 
+to guide and support its further development,
+with a view to it eventually becoming 
+a self-sustaining community project.
+
+For more information, please grab hold of me, and/or visit annalist.net.
