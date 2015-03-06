@@ -600,6 +600,12 @@ class GenericEntityEditView(AnnalistGenericView):
             entityvals = entityvaluemap.map_form_data_to_values(form_data)
             return self.update_view_fields(viewinfo, remove_field, entityvals, entityvaluemap, **context_extra_values)
 
+        # Import data described by a field with an activated "Import" button
+        import_field = self.find_import(entityvaluemap, form_data)
+        if import_field:
+            entityvals = entityvaluemap.map_form_data_to_values(form_data)
+            return self.import_field(viewinfo, import_field, entityvals, entityvaluemap, **context_extra_values)
+
         # Report unexpected form data
         # This shouldn't happen, but just in case...
         # Redirect to continuation with error
@@ -1058,7 +1064,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     is a dictionary of default and additional values not provided by the
                     entity itself, that may be needed to render the updated form. 
 
-        returns an HttpResponse object to rendering the updated entity editing form,
+        returns an HttpResponse object to render the updated entity editing form,
         or to indicate an reason for failure.
         """
         # log.info("field_desc: %r: %r"%(field_desc,))
@@ -1066,6 +1072,46 @@ class GenericEntityEditView(AnnalistGenericView):
             self.remove_entity_field(field_desc, entityvals)
         else:
             self.add_entity_field(field_desc, entityvals)
+        # log.info("entityvals: %r"%(entityvals,))
+        form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
+        form_context.update(viewinfo.context_data())
+        return (
+            self.render_html(form_context, self.formtemplate) or 
+            self.error(self.error406values())
+            )
+
+    def import_field(self, 
+        viewinfo, field_desc, entityvals, entityvaluemap, **context_extra_values
+        ):
+        """
+        Imports a resource described by a supplied field descritpion, and redisplays the
+        current form.
+
+        The current form is saved to permanent storage.
+
+        viewinfo    DisplayInfo object describing the current view.
+        field_desc  is a field description for a field or field imported.
+        entityvals  is a dictionary of entity values to which the field is added.
+        entityvaluemap
+                    an EntityValueMap object for the entity being presented.
+        context_extra_values
+                    is a dictionary of default and additional values not provided by 
+                    the entity itself, that may be needed to render the updated form. 
+
+        returns an HttpResponse object to render the updated entity editing form,
+        or to indicate an reason for failure.
+        """
+        http_response = self.save_entity(entityvaluemap, form_data,
+            entity_id, entity_type_id, 
+            orig_entity_id, orig_entity_type_id,
+            viewinfo, context_extra_values, messages)
+        if http_response:
+            return http_response
+        # Import
+        # @@....
+        raise "Import not implemented"
+        # Redisplay
+        # @@TODO: factor out logic in common with `update_view_fields`
         # log.info("entityvals: %r"%(entityvals,))
         form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
         form_context.update(viewinfo.context_data())
@@ -1109,6 +1155,27 @@ class GenericEntityEditView(AnnalistGenericView):
                 new_repeatvals.append(old_repeatvals[i])
         entity[repeatvals_key] = new_repeatvals
         return
+
+    def find_import(self, entityvaluemap, form_data):
+        """
+        Locate any import option in form data and, if present, return a 
+        description of the field describing the value to be imported.
+        """
+        def is_import_f(fd):
+            return fd.has_import_button()
+        for enum_desc in self.find_fields(entityvaluemap, is_import_f):
+            enum_import = self.form_data_contains(form_data, enum_desc, "import")
+            if enum_import:
+                return enum_desc
+        return None
+
+    # The next two methods are used to locate form fields, which may be in repeat
+    # groups, that contain asctivated additional controls (buttons).
+    #
+    # `find_fields` is a generator that locates candidate fiels that *might* have 
+    # a designated control, and
+    # `form_data_contains` tests a field returned by `find_fields` to see if a 
+    # designated control (identified by a name suffix) has been activated.
 
     def find_fields(self, entityvaluemap, filter_f):
         """

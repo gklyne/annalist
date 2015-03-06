@@ -244,7 +244,7 @@ class FieldDescription(object):
 
     def has_new_button(self):
         """
-        Returns true if this field has a control (a 'new' or +' button)')
+        Returns true if this field has a control (a 'new' or '+' button)
         that invokes a new form to create a new entity.
         """
         new_render_types = (
@@ -253,6 +253,17 @@ class FieldDescription(object):
             , "Enum", "Enum_optional"
             ])
         return self._field_desc['field_render_type'] in new_render_types
+
+    def has_import_button(self):
+        """
+        Returns true if this field has a control (an 'import' or 'upload'
+        button) that is used to request additional nexternal data is added 
+        to an entity
+        """
+        import_render_types = (
+            [ "URIImport"
+            ])
+        return self._field_desc['field_render_type'] in import_render_types
 
     def has_field_group_ref(self):
         """
