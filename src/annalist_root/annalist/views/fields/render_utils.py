@@ -71,6 +71,7 @@ _field_get_renderer_functions = (
     , "URILink":        get_uri_link_renderer
     , "URIImage":       get_uri_image_renderer
     , "Markdown":       get_text_markdown_renderer
+    # , "URIImport":      get_uri_import_renderer
 
     , "EntityTypeId":   get_select_renderer
     , "Type":           get_select_renderer
@@ -89,6 +90,7 @@ _field_value_mappers = (
     , "URILink":        URILinkValueMapper
     , "URIImage":       URIImageValueMapper
     , "Markdown":       TextMarkdownValueMapper
+    # , "URIImport":      URIImportValuueMapper
 
     , "EntityTypeId":   SelectValueMapper
     , "Type":           SelectValueMapper

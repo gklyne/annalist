@@ -15,8 +15,34 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: invalid entity id in field data causes 500 ServerError
 - [x] BUG: If field group refers back to orinal field, python blows its stack, reports 500 ServerError
 - [x] Improve reporting of 500 serverError
-- [x] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.  This occurs because the continuation URI is changed when the id is changed.
+- [x] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.  This occurs because the continuation URI is refers to the old entity when the id is changed.
     - treat id/type change as special case and update all matching URIs in the continuation chain.  This involves dismantling and reassembling the continuation URI, and the continuation URL handling logic has been refactored to facilitate this.
+- [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
+    - [ ] Blob and file upload support: images, spreadsheets, ...
+        - [x] Choose render type name: URIImport
+        - [x] Define renderer test cases as a new module in `annalist/tests/`, e.g.:
+            - [x] Copy `test_render_bool_checkbox.py` to new module name
+            - [x] Update descriptive comment at top of module
+            - [x] Update `import` statement to refer to new module to be defined
+            - [x] Update class name
+            - [x] Rename and update the test case method for value rendering: this should cover value view and edit cases as appropriate.
+            - [x] Rename and update the test case method for decoding input values suitable for storage in a JSON structure.
+        - [x] Define a new renderer module in `annalist/views/fields/`; e.g.:
+            - [x] Copy `render_bool_checkbox.py` to new module name
+            - [x] Update descrptive comment at top of module
+            - [x] Update class name for value mapper
+            - [x] Implement value mapping as required.  If the values do not require mapping between the JSON object and form data, the class `render_text.RenderText`, which contains identity mapping functions, can be used instead.  If the renderer updates the JSON representation of existing data, consider handling legacy representations in the `encode` method to facilitate data migration.
+            - [x] Rename and update the view renderer and edit renderer functions to generate appropriate HTML.
+            - [x] Rename and update the get renderer function.  Note that this function must returned a `RenderFieldValue` object, as this provides the interfaces required by the rest of Annalist to render values in different contexts.
+        - [ ] Update entityedit.py to recognize new action to import resource
+        - [ ] Add tests for file import (needs to be a "full stack" test - see `test_field_alias` or `test_linked_records` for simple form of structure to follow)
+        - [ ] Edit module `annalist/views/fields/render_utils.py` to import the get renderer function, and add it to the dictionary `_field_get_renderer_functions`.
+        - [ ] Add the renderer type name to the enumeration defined in `annalist/sitedata/enums/Enum_render_type`
+        - [ ] Update the test modules to accommodate the new render type, and retest:
+            - [ ] `annalist/tests/test_entitygenericlist.py` about line 244 (bump counter)
+            - [ ] `annalist/tests/entity_testsitedata.py`, about line 306 (add new render type name in sorted list)
+        - [ ] Check the affected web views and augment the site CSS file (`annalist/static/css/annalist.css`)
+    - [ ] Field type to link to uploaded file
 - [ ] Add 'view' button to edit form
 - [ ] Create facility to built repeat field and group structure for existing simple field
     - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
@@ -28,9 +54,6 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] entityroot.set_values only supplies value of not already present
     - [x] entityroot.save() discards value before saving
     - [x] views/entityedit.py makes referebnce in 'baseentityvaluemap'.  Removed; tests updated.
-- [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
-    - [ ] Blob and file upload support: images, spreadsheets, ...
-    - [ ] Field type to link to uploaded file
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
     - [ ] site link to download log, if admin permissions
@@ -65,9 +88,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] annalist-manager deleteuser [ username ] [ CONFIG ]
     - [ ] annalist-manager createsitedata [ CONFIG ]
     - [ ] annalist-manager updatesitedata [ CONFIG ]
+- [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
-- [ ] Eliminate type-specific render types
+- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.)
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value
 - [x] Improve formatting of README sent to PyPI
@@ -99,7 +123,7 @@ Usability notes:
 - [ ] When creating type, default URI to be based on id entered
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] List display paging
-- [ ] When generating a view of an enumerated value, push logic for finding link into the renderer, so that availability of field link does not depend on whether field is available for the selected view.  (Try changing entity type of fielod to random value - can no longer browse to field description from view/group description)
+- [ ] When generating a view of an enumerated value, push logic for finding link into the renderer, so that availability of field link does not depend on whether field is available for the selected view.  (Try changing entity type of field to random value - can no longer browse to field description from view/group description)
 
 
 Notes for Future TODOs:
@@ -120,7 +144,7 @@ Notes for Future TODOs:
 - [ ] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
 - [ ] Rationalize common fields to reduce duplication?
-- [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?
+- [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?  But note that general philosophy is to avoid unnecessary validity checksn that m,ight impede data entry.
 - [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions
 - [ ] Make default values smarter; e.g. field renderer logic to scan collection data for candidates?
 - [ ] Allow type definition to include template for new id, e.g. based on current date
@@ -132,38 +156,25 @@ Notes for Future TODOs:
 - [ ] Provide a way to view/edit site type/view/list/etc descriptions (e.g. via link from site front page)
 - [ ] Undefined list error display, or any error - include link to collection in top bar
 - [ ] Help display for view: use commentary text from view descrtiption; thus can tailor help for each view.
-- [ ] Introduce markdown rendering type
+- [x] Introduce markdown rendering type
 - [ ] Use markdown directly for help text
 - [x] Consider associating property URI with view rather than/as well as field, so fields can be re-used
 - [x] Option to auto-generate unique property URI for field in view, maybe using field definition as base
 - [ ] Think about fields that return subgraph
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.
-- [ ] For rendering of additional info, think about template-based URIs filled in from other data.  (e.g. URI to pull an mage from CLAROS, or Google graph API like)
+- [ ] For rendering of additional info, think about template-based URIs filled in from other data.  (e.g. URI to pull an image from CLAROS, or Google graph API like)
 - [ ] Generate form-level DIFF displays from git JSON diffs
-- [ ] 3D rendering - checkmout JSMOL - http://wiki.jmol.org/index.php/JSmol
+- [ ] 3D rendering - check out JSMOL - http://wiki.jmol.org/index.php/JSmol
 - [ ] Visualize data structures from view definitions; generate OWL descriptions; etc.
 - [ ] Remixing spreadsheets: spreadsheet generation from queries as well as ingesting through data bridges.
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
     - [ ] internal options to save history in per-collection git repo
 
-# Feedback to be sorted
+# Feedback
 
-## Backend storage options
+* https://github.com/gklyne/annalist/issues/40
 
-From Kingsley Idehen: [https://lists.w3.org/Archives/Public/public-lod/2015Feb/0116.html]()
-kidehen@openlinksw.com
-
-Kingsley requests at least one of:
-
-1. LDP
-2. WebDAV
-3. SPARQL Graph Protocol
-4. SPARQL 1.1 Insert, Update, Delete.
-
-My comment:  WebDAV(ish) was on the original roadmap - see https://github.com/gklyne/annalist/issues/32 The intent has been to use vanilla HTTP as far as possible (GET, PUT, POST, etc.) and then use WebDAV PROPFIND(?) to enumerate directory contents.  The more complex stuff isn't needed.
-
-Kingsley also mentions not to worry about access control, but leave that to the backend.  But it woud be the Annalist server, not the browser, that acesses the backend data so there would need to be some way to convey whatever authentication/authosization tokens are needed.  My rough plan was to use an OAUTH2/OIDC enabled backend that should be a small extension from the current OIDC authentication logic already used by Annalist, but the details still need to be worked out.
 
 ----
