@@ -14,6 +14,11 @@ ACTION_COMPLETED            = "Action completed"
 NO_ACTION_PERFORMED         = "No action performed"
 INPUT_ERROR                 = "Problem with input"
 SYSTEM_ERROR                = "System error"
+IMPORT_ERROR                = "Resource import error"
+IMPORT_ERROR_REASON         = ("Failed to import resource %(import_url)s as %(import_name)s"+
+                               " for %(type_id)s/%(id)s: %(import_exc)s")
+IMPORT_DONE                 = "Resource imported"
+IMPORT_DONE_DETAIL          = "Resource %(import_url)s imported as %(import_name)s for entity %(type_id)s/%(id)s"
 UNEXPECTED_FORM_DATA        = "Unexpected form data: %r"
 MISSING_COLLECTION_ID       = "Missing identifier for new collection"
 INVALID_COLLECTION_ID       = "Invalid identifier for new collection: '%(coll_id)s'"

@@ -330,6 +330,7 @@ site_field_types = (
     , "TokenSet"
     , "Type"
     , "URIImage"
+    , "URIImport"
     , "URILink"
     , "View"
     ])

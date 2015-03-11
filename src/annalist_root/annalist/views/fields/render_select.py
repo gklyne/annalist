@@ -25,7 +25,7 @@ from django.template    import Template, Context
 #   ----------------------------------------------------------------------------
 
 view_select = (
-    """<!-- fields.render_select.py -->
+    """<!-- fields.select_view_renderer(view_select) -->
     {% if field.field_value_link_continuation %}
       <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
     {% else %}
@@ -34,7 +34,7 @@ view_select = (
     """)
 
 edit_select = (
-    """<!-- field/annalist_edit_select.html -->
+    """<!-- fields.select_view_renderer(edit_select) -->
     <div class="row">
       <div class="small-10 columns view-value less-new-button">
         <select name="{{repeat_prefix}}{{field.field_name}}">
@@ -68,7 +68,7 @@ edit_select = (
     """)
 
 view_choice = (
-    """<!-- fields.render_choice.py -->
+    """<!-- fields.choice_view_renderer(view_choice) -->
     {% if field.field_value_link_continuation %}
       <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
     {% else %}
@@ -77,7 +77,7 @@ view_choice = (
     """)
 
 edit_choice = (
-    """<!-- fields.render_choice.py -->
+    """<!-- fields.choice_view_renderer(edit_choice) -->
     <select name="{{repeat_prefix}}{{field.field_name}}">
       {% for v in field_options %}
         {% if v == field.field_value %}

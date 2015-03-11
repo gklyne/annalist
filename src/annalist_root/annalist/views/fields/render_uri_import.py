@@ -48,6 +48,30 @@ class URIImportValueMapper(object):
 
 #   ----------------------------------------------------------------------------
 #
+#   Import value templates
+#
+#   ----------------------------------------------------------------------------
+
+view_import = (
+    """<a href="%s" target="_blank">%s</a>""")
+
+edit_import = (
+    """<!-- fields.uri_import_edit_renderer -->
+    <div class="row">
+      <div class="small-10 columns view-value less-import-button">
+        <input type="text" size="64" name="{{repeat_prefix}}{{field.field_name}}"
+               placeholder="{{field.field_placeholder}}"
+               value="{{field.field_value}}" />
+      </div>
+      <div class="small-2 columns view-value import-button left small-text-right">
+        <input type="submit" name="{{repeat_prefix}}{{field.field_name}}__import" value="Import" />
+      </div>
+    </div>
+    """)
+
+
+#   ----------------------------------------------------------------------------
+#
 #   Link URI field renderers
 #
 #   ----------------------------------------------------------------------------
@@ -69,18 +93,12 @@ class uri_import_view_renderer(object):
             if linkval.startswith(p):
                 textval = linkval[len(p):]
                 break
-        return '''<a href="%s" target="_blank">%s</a>'''%(linkval, textval)
+        return view_import%(linkval, textval)
 
 class uri_import_edit_renderer(object):
 
     def __init__(self):
-        self._template = Template(
-            '''<input type="text" size="64" name="{{repeat_prefix}}{{field.field_name}}" '''+
-                   '''placeholder="{{field.field_placeholder}}" '''+
-                   '''value="{{field.field_value}}" />'''+
-            '''&nbsp;'''+
-            '''<input type="submit" name="{{repeat_prefix}}{{field.field_name}}__import" value="Import" />'''
-        )
+        self._template = Template(edit_import)
         return
 
     def render(self, context):

@@ -7,6 +7,7 @@ __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import sys
+import os
 import logging
 log = logging.getLogger(__name__)
 
@@ -1048,9 +1049,10 @@ class GenericEntityEditView(AnnalistGenericView):
         Renders a new form from supplied entity instance data with a repeated field or 
         field group added or removed.
 
-        The change is not saved to permanent storage, and is used to render a form display.
-        The new field is saved by invoking 'save' from the displayed form (i.e. a corresponding 
-        HTTP POST).
+        The changes made to date are not saved to permanent storage, but are used to 
+        render an updated form display with an additional field instance.  The updates
+        and any new field value are saved by invoking 'save' from the displayed form 
+        (i.e. a subsequent HTTP POST).
 
         viewinfo    DisplayInfo object describing the current view.
         field_desc  is a field description for a field or field group to be added
@@ -1087,7 +1089,10 @@ class GenericEntityEditView(AnnalistGenericView):
         Imports a resource described by a supplied field descritpion, and redisplays the
         current form.
 
-        The current form is saved to permanent storage.
+        The changes made to date are not saved to permanent storage, but are used to 
+        rerender the form display when the requested resource has been imported.  The 
+        updates are saved by invoking 'save' from the redisplayed form 
+        (i.e. a subsequent HTTP POST).
 
         viewinfo    DisplayInfo object describing the current view.
         field_desc  is a field description for a field or field imported.
@@ -1101,20 +1106,51 @@ class GenericEntityEditView(AnnalistGenericView):
         returns an HttpResponse object to render the updated entity editing form,
         or to indicate an reason for failure.
         """
-        http_response = self.save_entity(entityvaluemap, form_data,
-            entity_id, entity_type_id, 
-            orig_entity_id, orig_entity_type_id,
-            viewinfo, context_extra_values, messages)
-        if http_response:
-            return http_response
         # Import
-        # @@....
-        raise "Import not implemented"
+        import_url     = entityvals[field_desc['field_property_uri']]
+        import_name    = field_desc.get_field_instance_name()
+        try:
+            resource_fileobj, resource_url, resource_type = util.open_url(import_url)
+            try:
+                local_fileobj = viewinfo.entitytypeinfo.get_fileobj(
+                    viewinfo.entity_id, import_name, field_desc['field_value_type'], resource_type, "wb"
+                    )
+                try:
+                    import_err     = None
+                    import_done    = None
+                    import_vals    = (
+                        { 'id':             viewinfo.entity_id
+                        , 'type_id':        viewinfo.type_id
+                        , 'import_name':    os.path.basename(local_fileobj.name)
+                        , 'import_url':     import_url
+                        , 'resource_url':   resource_url
+                        , 'resource_type':  resource_type
+                        })
+                    util.copy_resource_to_fileobj(resource_fileobj, local_fileobj)
+                    import_done = message.IMPORT_DONE
+                    import_msg  = message.IMPORT_DONE_DETAIL%import_vals
+                finally:
+                    local_fileobj.close()
+            finally:
+                resource_fileobj.close()
+        except Exception as e:
+            # import_vals['import_exc'] = str(e)
+            import_err = message.IMPORT_ERROR
+            import_msg = message.IMPORT_ERROR_REASON%dict(import_vals, import_exc=str(e))
+            log.info("%s: %s"%(import_err, import_msg))
+            log.debug(str(e), exc_info=True)
         # Redisplay
         # @@TODO: factor out logic in common with `update_view_fields`
         # log.info("entityvals: %r"%(entityvals,))
         form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
         form_context.update(viewinfo.context_data())
+        if import_err:
+            form_context['error_head']    = import_err
+            form_context['error_message'] = import_msg
+        else:
+            form_context['done_head']     = import_done
+            form_context['done_message']  = import_msg
+
         return (
             self.render_html(form_context, self.formtemplate) or 
             self.error(self.error406values())
@@ -1166,6 +1202,7 @@ class GenericEntityEditView(AnnalistGenericView):
         for enum_desc in self.find_fields(entityvaluemap, is_import_f):
             enum_import = self.form_data_contains(form_data, enum_desc, "import")
             if enum_import:
+                enum_desc.set_field_instance_name(enum_import)
                 return enum_desc
         return None
 
@@ -1231,17 +1268,17 @@ class GenericEntityEditView(AnnalistGenericView):
                 return _find_fields(itemdesc['field_list'], [])
         return
 
-    def form_data_contains(self, form_data, field_desc, postfix):
+    def form_data_contains(self, form_data, field_desc, field_name_postfix):
         """
         Tests to see if the form data contains a result field corresponding to 
         the supplied field descriptor (as returned by 'find_fields') with a 
         postfix value as supplied.
 
-        Returns the full name of the field found, or None.
+        Returns the full name of the field found (without the trailing suffix), or None.
         """
         log.info("form_data_contains: field_desc %r"%field_desc)
+        log.info("form_data_contains: form_data %r"%form_data)
         field_name         = field_desc.get_field_name()
-        field_name_postfix = "new"
         def _scan_groups(prefix, group_list):
             """
             return (stop, result)
@@ -1252,10 +1289,10 @@ class GenericEntityEditView(AnnalistGenericView):
             stop_all   = True
             if group_list == []:
                 try_field = prefix + field_name
-                log.info("form_data_contains: try_field %s"%try_field)
+                log.info("form_data_contains: try_field %s__%s"%(try_field, field_name_postfix))
                 if try_field in form_data:
                     try_postfix = try_field + "__" + field_name_postfix
-                    return (try_postfix in form_data, try_postfix)
+                    return (try_postfix in form_data, try_field)
             else:
                 group_head = group_list[0]
                 group_tail = group_list[1:]

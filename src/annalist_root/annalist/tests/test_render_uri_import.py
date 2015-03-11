@@ -44,11 +44,21 @@ class UriImportRenderingTest(FieldRendererTestSupport):
         def expect_render(linktext, labeltext):
             render_view = '''<a href="%s" target="_blank">%s</a>'''%(linktext, labeltext)
             render_edit = (
-                '''<input type="text" size="64" name="repeat_prefix_test_field" '''+
-                       '''placeholder="(test placeholder)" '''+
-                       '''value="%s" />'''+
-                '''&nbsp;'''+
-                '''<input type="submit" name="repeat_prefix_test_field__import" value="Import" />'''
+                '''<div class="row"> '''+
+                  '''<div class="small-10 columns view-value less-import-button"> '''+
+                    '''<input type="text" size="64" name="repeat_prefix_test_field" '''+
+                           '''placeholder="(test placeholder)" '''+
+                           '''value="%s" /> '''+
+                  '''</div> '''+
+                  '''<div class="small-2 columns view-value import-button left small-text-right"> '''+
+                    '''<input type="submit" name="repeat_prefix_test_field__import" value="Import" /> '''+
+                  '''</div> '''+
+                '''</div> '''
+                # '''<input type="text" size="64" name="repeat_prefix_test_field" '''+
+                #        '''placeholder="(test placeholder)" '''+
+                #        '''value="%s" />'''+
+                # '''&nbsp;'''+
+                # '''<input type="submit" name="repeat_prefix_test_field__import" value="Import" />'''
                 )%linktext
             return {'view': render_view, 'edit': render_edit}
 
@@ -72,7 +82,8 @@ class UriImportRenderingTest(FieldRendererTestSupport):
                 renderer,
                 context=render_context,
                 expect_rendered_view=expect_render['view'],
-                expect_rendered_edit=expect_render['edit']
+                expect_rendered_edit=expect_render['edit'],
+                collapse_whitespace=True
                 )
         return
 

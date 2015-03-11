@@ -425,4 +425,20 @@ class EntityTypeInfo(object):
             log.warning("EntityTypeInfo.get_default_view_id: no type data for %s"%(self.type_id))
         return view_id or "Default_view"
 
+    def get_fileobj(self, entity_id, name, typeuri, mimetype, mode):
+        """
+        Returns a file object to access a file stored with the named entity 
+        with the designated type URI (typically obtained from a field description).  
+        The `mode` string value is interpreted like the `mode` parameter to the 
+        Python `open` function, to the extent applicable.
+        """
+        fileobj = None
+        if self.entityparent:
+            fileobj = self.entityclass.fileobj(
+                self.entityparent, entity_id, name, typeuri, mimetype, mode
+                )
+        else:
+            log.warning("EntityTypeInfo.get_fileobj: missing entityparent; type_id %s"%(self.type_id))
+        return fileobj
+
 # End.

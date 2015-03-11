@@ -28,6 +28,7 @@ from django.conf import settings
 from annalist               import util
 from annalist.exceptions    import Annalist_Error
 from annalist.identifiers   import ANNAL, RDF
+from annalist.resourcetypes import file_extension, file_extension_for_content_type
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -318,6 +319,30 @@ class EntityRoot(object):
                 yield fil
         return
 
+    def _fileobj(self, localname, filetypeuri, mimetype, mode):
+        """
+        Returns a file object for accessing a blob associated with the current entity.
+
+        localname   is the local name used to identify the file/resource among all those
+                    associated with the ciurrent entity.
+        filetypeuri is a URI/CURIE that identifies the type of data stored in the blob.
+        mimetype    is a MIME content-type string for the resource representation used,
+                    used in selecting the file extension to be used, or None in which case 
+                    a default file extension for the type is used.
+        mode        is a string defining how the resource is opened (using the same values
+                    as the built-in `open` function).
+        """
+        (body_dir, body_file) = self._dir_path()  # Same as `_save`
+        file_ext  = (
+            file_extension_for_content_type(filetypeuri, mimetype) or 
+            file_extension(filetypeuri)
+            )
+        file_name = os.path.join(body_dir, localname+"."+file_ext)
+        return open(file_name, mode)
+
+    # Special methods to facilitate access to entity values by dictionary operations
+    # on the Entity object
+
     def __iter__(self):
         """
         Return entity value keys
@@ -326,9 +351,6 @@ class EntityRoot(object):
             for k in self._values:
                 yield k
         return
-
-    # Special methods to facilitate access to entity values by dictionary operations
-    # on the Entity object
 
     def keys(self):
         """

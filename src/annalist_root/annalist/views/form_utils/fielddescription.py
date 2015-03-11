@@ -73,6 +73,7 @@ class FieldDescription(object):
         self._field_desc    = (
             { 'field_id':                   field_id
             , 'field_name':                 field_name
+            , 'field_instance_name':        field_name
             , 'field_label':                field_label
             , 'field_help':                 recordfield.get(RDFS.CURIE.comment, "")
             , 'field_property_uri':         field_property
@@ -98,8 +99,8 @@ class FieldDescription(object):
             , 'group_view':                 None
             , 'group_field_descs':          None
             })
-        self._field_suffix_index = 0    # No dup
-        self._field_suffix       = ""
+        self._field_suffix_index  = 0    # No dup
+        self._field_suffix        = ""
         # If field references type, pull in copy of type id and link values
         type_ref = self._field_desc['field_options_typeref']
         if type_ref:
@@ -188,6 +189,22 @@ class FieldDescription(object):
         Returns form field name to be used for the described field
         """
         return self._field_desc['field_name']
+
+    def set_field_instance_name(self, instance_name):
+        """
+        Set instance name for field (used when scanning field groups)
+
+        This is the full field instance name including group ids and 
+        indexes.
+        """
+        self._field_desc['field_instance_name'] = instance_name
+        return
+
+    def get_field_instance_name(self):
+        """
+        Get instance name for field (used when scanning field groups)
+        """
+        return self._field_desc['field_instance_name']
 
     def get_field_property_uri(self):
         """
