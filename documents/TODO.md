@@ -17,6 +17,12 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Improve reporting of 500 serverError
 - [x] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.  This occurs because the continuation URI is refers to the old entity when the id is changed.
     - treat id/type change as special case and update all matching URIs in the continuation chain.  This involves dismantling and reassembling the continuation URI, and the continuation URL handling logic has been refactored to facilitate this.
+- [ ] Support for complex entity field values (e.g. supporting details for resource imports)
+    - [x] Refactor entityedit Save_Entity handling
+    - [x] Refactor entityedit to carry more context in viewinfo (simplify function calls)
+    - [ ] Refactor value decoding so it can access other form fields (to build complex values)?  (see next)
+    - [ ] Drop attempts to merge import details with form data?
+        - attempting to merge form data with existing entity values (other than at the top level) creates potential problems for maintaining alignmnent when repeat fields are added or removed.  The alternative is to save entity values in hidden form fields, and use them when reconstructing the entity values from the form.  Need to check the form response logic here - maybe handle the merge at the point that form data is mapped back (and before processing any actions), in which case it's less of an issue?  This would suggest a revision to the entityvaluemap logic to update a supplied original entity value rather than create a new one, and merge later when saving it.
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [ ] Blob and file upload support: images, spreadsheets, ...
         - [x] Choose render type name: URIImport
@@ -34,26 +40,29 @@ NOTE: this document is used for short-term working notes; longer-term planning i
             - [x] Implement value mapping as required.  If the values do not require mapping between the JSON object and form data, the class `render_text.RenderText`, which contains identity mapping functions, can be used instead.  If the renderer updates the JSON representation of existing data, consider handling legacy representations in the `encode` method to facilitate data migration.
             - [x] Rename and update the view renderer and edit renderer functions to generate appropriate HTML.
             - [x] Rename and update the get renderer function.  Note that this function must returned a `RenderFieldValue` object, as this provides the interfaces required by the rest of Annalist to render values in different contexts.
-        - [ ] Update entityedit.py to recognize new action to import resource
+        - [x] Update entityedit.py to recognize new action to import resource
         - [ ] Add tests for file import (needs to be a "full stack" test - see `test_field_alias` or `test_linked_records` for simple form of structure to follow)
-        - [ ] Edit module `annalist/views/fields/render_utils.py` to import the get renderer function, and add it to the dictionary `_field_get_renderer_functions`.
-        - [ ] Add the renderer type name to the enumeration defined in `annalist/sitedata/enums/Enum_render_type`
-        - [ ] Update the test modules to accommodate the new render type, and retest:
-            - [ ] `annalist/tests/test_entitygenericlist.py` about line 244 (bump counter)
-            - [ ] `annalist/tests/entity_testsitedata.py`, about line 306 (add new render type name in sorted list)
+        - [x] Edit module `annalist/views/fields/render_utils.py` to import the get renderer function, and add it to the dictionary `_field_get_renderer_functions`.
+        - [x] Add the renderer type name to the enumeration defined in `annalist/sitedata/enums/Enum_render_type`
+        - [x] Update the test modules to accommodate the new render type, and retest:
+            - [x] `annalist/tests/test_entitygenericlist.py` about line 244 (bump counter)
+            - [x] `annalist/tests/entity_testsitedata.py`, about line 306 (add new render type name in sorted list)
         - [ ] Check the affected web views and augment the site CSS file (`annalist/static/css/annalist.css`)
     - [ ] Field type to link to uploaded file
 - [ ] Add 'view' button to edit form
-- [ ] Create facility to built repeat field and group structure for existing simple field
-    - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
-    - See also discussion below of introducing "tasks" - this would be an early candidate for that.
-    - Need to think how the interface would work.  Option to add "task" button to any form?
 - [x] Is it really appropriate to save the annal:url value in a stored entity?
     - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator
     - [x] entityroot._load_values() supply value for URL
     - [x] entityroot.set_values only supplies value of not already present
     - [x] entityroot.save() discards value before saving
     - [x] views/entityedit.py makes referebnce in 'baseentityvaluemap'.  Removed; tests updated.
+
+(new release?)
+
+- [ ] Create facility to built repeat field and group structure for existing simple field
+    - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
+    - See also discussion below of introducing "tasks" - this would be an early candidate for that.
+    - Need to think how the interface would work.  Option to add "task" button to any form?
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
     - [ ] site link to download log, if admin permissions

@@ -92,6 +92,13 @@ class DisplayInfo(object):
         self.request_dict       = request_dict
         self.continuation_url   = request_dict.get('continuation_url', None)
         self.default_continue   = default_continue
+        # Type/Entity ids from form
+        self.orig_type_id       = None
+        self.orig_entity_id     = None
+        self.curr_type_id       = None
+        self.curr_entity_id     = None
+        # Type-specific messages
+        self.type_messages      = None
         # Default no permissions:
         self.authorizations     = dict([(k, False) for k in authorization_map])
         self.reqhost            = None
@@ -109,6 +116,26 @@ class DisplayInfo(object):
         # self.entitydata       = None
         self.http_response      = None
         return
+
+    def set_type_entity_id(self,
+        orig_type_id=None, orig_entity_id=None,
+        curr_type_id=None, curr_entity_id=None
+        ):
+        """
+        Save type and entity ids from form
+        """
+        self.orig_type_id       = orig_type_id
+        self.orig_entity_id     = orig_entity_id
+        self.curr_type_id       = curr_type_id
+        self.curr_entity_id     = curr_entity_id
+        return self.http_response
+
+    def set_messages(self, messages):
+        """
+        Save type-specifric messages for later reporting
+        """
+        self.type_messages      = messages
+        return self.http_response
 
     def get_site_info(self, reqhost):
         if not self.http_response:
