@@ -21,7 +21,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-import json
+# import json
 
 from annalist.identifiers               import RDFS, ANNAL
 

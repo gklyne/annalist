@@ -104,33 +104,19 @@ class bound_field(object):
 
     def __getattr__(self, name):
         """
-        Get a bound field description attribute.  If the attribute name is "field_value"
-        then the value corresponding to the field description is retrieved from the entity,
-        otherwise the named attribute is retrieved from thge field description.
+        Get a bound field description attribute.  Broadly, if the attribute name is 
+        "field_value" then the value corresponding to the field description is 
+        retrieved from the entity, otherwise the named attribute is retrieved from 
+        the field description.
+
+        There are also a number of other special cases handled here as needed to 
+        support internally-generated hyperlinks and internal system logic.
         """
         # log.info("self._key %s, __getattr__ %s"%(self._key, name))
         # log.info("self._key %s"%self._key)
         # log.info("self._entity %r"%self._entity)
         if name in ["entity_id", "entity_link", "entity_type_id", "entity_type_link"]:
             return self._entityvals.get(name, "")
-        elif name == "field_value_key":
-            return self._key
-        elif name == "context_extra_values":
-            return self._extras
-        elif name == "field_placeholder":
-            return self._field_description.get('field_placeholder', "@@bound_field.field_placeholder@@")
-        elif name == "continuation_url":
-            if self._extras is None:
-                log.warning("bound_field.continuation_url - no extra context provided")
-                return ""
-            cont = self._extras.get("request_url", "")
-            if cont:
-                cont = uri_with_params(cont, continuation_params(self._extras))
-            return cont
-        elif name == "entity_link_continuation":
-            return self.entity_link+self.get_continuation_param()
-        elif name == "entity_type_link_continuation":
-            return self.entity_type_link+self.get_continuation_param()
         elif name == "field_value":
             field_val = None
             if self._key in self._entityvals:
@@ -144,20 +130,36 @@ class bound_field(object):
                 if field_val is None:
                     field_val = ""
             return field_val
+        elif name == "entity_link_continuation":
+            return self.entity_link+self.get_continuation_param()
+        elif name == "entity_type_link_continuation":
+            return self.entity_type_link+self.get_continuation_param()
         elif name == "field_value_link":
             # Used to get link corresponding to a value, if such exists
             return self.get_field_link()
         elif name == "field_value_link_continuation":
-            # Used to get link corresponding to a value, if such exists
             link = self.get_field_link()
             if link:
                 link += self.get_continuation_param()
             return link
+        elif name == "context_extra_values":
+            return self._extras
+        elif name == "continuation_url":
+            if self._extras is None:
+                log.warning("bound_field.continuation_url - no extra context provided")
+                return ""
+            cont = self._extras.get("request_url", "")
+            if cont:
+                cont = uri_with_params(cont, continuation_params(self._extras))
+            return cont
         elif name == "field_description":
-            # Used to get link corresponding to a value, if such exists
             return self._field_description
+        elif name == "field_value_key":
+            return self._key
         elif name == "options":
             return self.get_field_options()
+        elif name == "field_placeholder":
+            return self._field_description.get('field_placeholder', "@@bound_field.field_placeholder@@")
         else:
             # log.info("bound_field[%s] -> %r"%(name, self._field_description[name]))
             return self._field_description[name]
@@ -170,17 +172,17 @@ class bound_field(object):
             return links[v]
         return None
 
-    def get_field_options(self):
-        options = self._field_description['field_choice_labels']
-        options = options.values() if options is not None else ["(no options)"]
-        return options
-
     def get_continuation_param(self):
         cparam = self.continuation_url
         if cparam:
             cparam = uri_params({'continuation_url': cparam})
         log.debug('bound_field.get_continuation_param %s'%(cparam,))  #@@
         return cparam
+
+    def get_field_options(self):
+        options = self._field_description['field_choice_labels']
+        options = options.values() if options is not None else ["(no options)"]
+        return options
 
     def __getitem__(self, name):
         return self.__getattr__(name)

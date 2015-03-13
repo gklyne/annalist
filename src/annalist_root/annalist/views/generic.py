@@ -8,12 +8,11 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import os.path
-import json
-import random
-import uuid
-import copy
-
-import httplib2
+# import json
+# import random
+# import uuid
+# import copy
+# import httplib2
 
 import logging
 log = logging.getLogger(__name__)

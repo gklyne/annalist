@@ -6,12 +6,12 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os.path
-import json
-import random
+# import os.path
+# import json
+# import random
 import logging
-import uuid
-import copy
+# import uuid
+# import copy
 
 import logging
 log = logging.getLogger(__name__)

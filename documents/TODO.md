@@ -171,6 +171,12 @@ Notes for Future TODOs:
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
     - [ ] internal options to save history in per-collection git repo
+- [ ] Think aboutr selective updates to complex field values (e.g. import_field logic).
+    - Currently, the save_entity logic in `views.entityedit` assumes that fields are completely replaced at the top-level of keys in `entityvals`.  There is no support for partial replacement of a field from a form input: either the entire field is replaced or the original field value is kept in its entirety.  The import_field logic generates additional values when the `Import` button is activated, but not when the URL field is updates. Possible approaches:
+        - re-work the whole entity form data mapping logic so that fields can be partially updated.  This will involve accessing the original entity data before `save_entity` is called, and arranging that original field values are available while form data valuesare being mapped.  This is a fairly comploex re-work is desired.
+        - separate complex field values into separate fields that can be updated all-or-nothing
+        - save original field data in a hidden form field (similar to `views.confirm`)
+
 
 # Feedback
 

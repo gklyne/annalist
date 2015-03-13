@@ -449,7 +449,8 @@ class GenericEntityEditView(AnnalistGenericView):
             #     "save: entity_id %s, orig_entity_id %s, type_id %s, orig_type_id %s"%
             #     (entity_id, orig_entity_id, entity_type_id, orig_entity_type_id)
             #     )
-            http_response = self.save_entity(entityvaluemap, entityvals,
+            http_response = self.save_entity(
+                entityvaluemap, entityvals,
                 entity_id, entity_type_id,
                 orig_entity_id, orig_entity_type_id,
                 viewinfo, context_extra_values, messages)
@@ -461,7 +462,8 @@ class GenericEntityEditView(AnnalistGenericView):
         # current page as continuation.
         if 'use_view' in form_data:
             # Save entity, then redirect to selected view
-            http_response = self.save_entity(entityvaluemap, entityvals,
+            http_response = self.save_entity(
+                entityvaluemap, entityvals,
                 entity_id, entity_type_id, 
                 orig_entity_id, orig_entity_type_id,
                 viewinfo, context_extra_values, messages)
@@ -605,7 +607,12 @@ class GenericEntityEditView(AnnalistGenericView):
         # Import data described by a field with an activated "Import" button
         import_field = self.find_import(entityvaluemap, form_data)
         if import_field:
-            return self.import_field(viewinfo, import_field, entityvals, entityvaluemap, **context_extra_values)
+            return self.import_field(
+                viewinfo, import_field, entityvaluemap, entityvals, 
+                entity_id, entity_type_id, 
+                orig_entity_id, orig_entity_type_id,
+                messages,
+                **context_extra_values)
 
         # Report unexpected form data
         # This shouldn't happen, but just in case...
@@ -620,6 +627,7 @@ class GenericEntityEditView(AnnalistGenericView):
             log.info("  form[%s] = %r"%(k,v))
         redirect_uri = uri_with_params(viewinfo.get_continuation_next(), err_values)
         return HttpResponseRedirect(redirect_uri)
+
 
     def save_entity(self,
             entityvaluemap, entityvals,
@@ -671,7 +679,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 error_message=messages['entity_type_invalid']
                 )
 
-        # Check for valid entity nid and type id
+        # Check for valid entity id and type id
         # @@TODO: factor out repeated re-rendering logic
         if not util.valid_id(entity_id):
             log.warning("save_entity: invalid entity_id (%s)"%(entity_id))
@@ -925,7 +933,8 @@ class GenericEntityEditView(AnnalistGenericView):
         If there is a problem with any of these steps, an error response is 
         returned and displayed in the current view.
         """
-        http_response = self.save_entity(entityvaluemap, entityvals,
+        http_response = self.save_entity(
+            entityvaluemap, entityvals,
             entity_id, entity_type_id, 
             orig_entity_id, orig_entity_type_id,
             viewinfo, context_extra_values, messages)
@@ -978,23 +987,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 action=self.uri_action
                 )
             )
-
-        # @@TODO: clean up this logic: 
-        #         use viewinfo method instead of self.continuation_here, 
-        #         remove logic from generic.py?
-        # cont_here = self.continuation_here(
-        #     request_dict=param_data.dict(),
-        #     default_cont=viewinfo.get_continuation_url(), 
-        #     base_here=self.view_uri(
-        #         "AnnalistEntityEditView", 
-        #         coll_id=viewinfo.coll_id,
-        #         view_id=viewinfo.view_id,
-        #         type_id=entity_type_id,
-        #         entity_id=entity_id,
-        #         action=self.uri_action
-        #         )
-        #     )
-        #@@
         return HttpResponseRedirect(
             uri_with_params(edit_url, url_params, {'continuation_url': cont_here})
             )
@@ -1098,22 +1090,34 @@ class GenericEntityEditView(AnnalistGenericView):
             )
 
     def import_field(self, 
-        viewinfo, field_desc, entityvals, entityvaluemap, **context_extra_values
+        viewinfo, field_desc, entityvaluemap, entityvals, 
+        entity_id, entity_type_id, 
+        orig_entity_id, orig_entity_type_id,
+        messages,
+        **context_extra_values
         ):
         """
         Imports a resource described by a supplied field descritpion, and redisplays the
         current form.
 
-        The changes made to date are not saved to permanent storage, but are used to 
-        rerender the form display when the requested resource has been imported.  The 
-        updates are saved by invoking 'save' from the redisplayed form 
-        (i.e. a subsequent HTTP POST).
+        # The changes made to date are not saved to permanent storage, but are used to 
+        # rerender the form display when the requested resource has been imported.  The 
+        # updates are saved by invoking 'save' from the redisplayed form 
+        # (i.e. a subsequent HTTP POST).
 
         viewinfo    DisplayInfo object describing the current view.
         field_desc  is a field description for a field or field imported.
-        entityvals  is a dictionary of entity values to which the field is added.
         entityvaluemap
                     an EntityValueMap object for the entity being presented.
+        form_data   is the dictionary of values returned from the input form by a 
+                    form-submission POST operation.
+        @@TODO: fold these parameters into viewinfo
+        entity_id
+        entity_type_id
+        orig_entity_id
+        orig_entity_type_id
+        messages
+        @@
         context_extra_values
                     is a dictionary of default and additional values not provided by 
                     the entity itself, that may be needed to render the updated form. 
@@ -1122,26 +1126,40 @@ class GenericEntityEditView(AnnalistGenericView):
         or to indicate an reason for failure.
         """
         # Import
-        import_url     = entityvals[field_desc['field_property_uri']]
-        import_name    = field_desc.get_field_instance_name()
+        import_name  = field_desc.get_field_instance_name()
+        property_uri = field_desc['field_property_uri']
+        import_url   = entityvals[property_uri] or ""
         try:
             resource_fileobj, resource_url, resource_type = util.open_url(import_url)
             try:
                 local_fileobj = viewinfo.entitytypeinfo.get_fileobj(
                     viewinfo.entity_id, import_name, field_desc['field_value_type'], resource_type, "wb"
                     )
+                resource_name = os.path.basename(local_fileobj.name)
+                field_vals = (
+                    { 'import_url':     import_url
+                    , 'import_name':    import_name
+                    , 'resource_url' :  resource_url
+                    , 'resource_name':  resource_name
+                    , 'resource_type':  resource_type
+                    })
                 try:
-                    import_err     = None
-                    import_done    = None
-                    import_vals    = (
-                        { 'id':             viewinfo.entity_id
-                        , 'type_id':        viewinfo.type_id
-                        , 'import_name':    os.path.basename(local_fileobj.name)
-                        , 'import_url':     import_url
-                        , 'resource_url':   resource_url
-                        , 'resource_type':  resource_type
+                    import_err   = None
+                    import_done  = None
+                    import_vals  = field_vals.copy()
+                    import_vals.update(
+                        { 'id':         viewinfo.entity_id
+                        , 'type_id':    viewinfo.type_id
                         })
+                    #@@TODO: timeout / size limit?  (Potential DoS?)
                     util.copy_resource_to_fileobj(resource_fileobj, local_fileobj)
+                    entityvals[property_uri+"__import"] = field_vals
+                    http_response = self.save_entity(
+                        entityvaluemap, entityvals,
+                        entity_id, entity_type_id,
+                        orig_entity_id, orig_entity_type_id, 
+                        viewinfo, context_extra_values, messages
+                        )
                     import_done = message.IMPORT_DONE
                     import_msg  = message.IMPORT_DONE_DETAIL%import_vals
                 finally:
@@ -1165,7 +1183,6 @@ class GenericEntityEditView(AnnalistGenericView):
         else:
             form_context['done_head']     = import_done
             form_context['done_message']  = import_msg
-
         return (
             self.render_html(form_context, self.formtemplate) or 
             self.error(self.error406values())

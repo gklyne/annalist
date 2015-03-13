@@ -410,6 +410,7 @@ def copy_resource_to_fileobj(srcobj, dstobj):
 
     Specifically, this is used when downloading a web resource to a local stored entity.
     """
+    #@@TODO: timeout / size limit?  (Potential DoS?)
     shutil.copyfileobj(srcobj, dstobj)
     return
 
