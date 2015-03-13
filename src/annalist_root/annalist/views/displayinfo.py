@@ -388,16 +388,16 @@ class DisplayInfo(object):
             )
         return self.continuation_url or self.default_continue
 
-    def get_continuation_here(self):
+    def get_continuation_here(self, base_here=None):
         """
         Return continuation URL back to the current view.
-
-        Any explicit contontinuation is included as a parameter, but the default
-        continuation is not (on the assumption that the current view will apply
-        this in the absence of an explicit value.)
         """
         # @@TODO: consider merging logic from generic.py, and eliminating method there
-        return self.view.continuation_here(self.request_dict, None)
+        return self.view.continuation_here(
+            request_dict=self.request_dict,
+            default_cont=self.get_continuation_url(),
+            base_here=base_here
+            )
 
     def update_continuation_url(self, 
         old_type_id=None, new_type_id=None, 

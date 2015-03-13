@@ -87,7 +87,7 @@ class EntityValueMap(object):
             values.update(kmap.map_form_to_entity(form_data))
         return values
 
-    def map_form_data_to_context(self, form_data, **kwargs):
+    def REMOVE_ME_map_form_data_to_context(self, form_data, **kwargs):
         """
         Map values from form data to view context for form re-rendering.
 

@@ -1230,6 +1230,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             action="edit",
             remove_field=False
             )
+        # log.info("r.context: %r"%(r.context))
         # log.info("expect_context: %r"%(expect_context))
         self.assertDictionaryMatch(r.context, expect_context)
         return
