@@ -153,7 +153,7 @@ Notes for Future TODOs:
 - [ ] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
 - [ ] Rationalize common fields to reduce duplication?
-- [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?  But note that general philosophy is to avoid unnecessary validity checksn that m,ight impede data entry.
+- [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?  But note that general philosophy is to avoid unnecessary validity checks that might impede data entry.
 - [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions
 - [ ] Make default values smarter; e.g. field renderer logic to scan collection data for candidates?
 - [ ] Allow type definition to include template for new id, e.g. based on current date
@@ -185,6 +185,10 @@ Notes for Future TODOs:
         - re-work the whole entity form data mapping logic so that fields can be partially updated.  This will involve accessing the original entity data before `save_entity` is called, and arranging that original field values are available while form data valuesare being mapped.  This is a fairly comploex re-work is desired.
         - separate complex field values into separate fields that can be updated all-or-nothing
         - save original field data in a hidden form field (similar to `views.confirm`)
+- [ ] Consider refactoring form generator around Idiom/Formlet work; cf.
+    - http://groups.inf.ed.ac.uk/links/papers/formlets-essence.pdf
+    - http://homepages.inf.ed.ac.uk/wadler/papers/formlets/formlets.pdf
+    - http://homepages.inf.ed.ac.uk/slindley/papers/dbwiki-sigmod2011.pdf
 
 
 # Feedback
