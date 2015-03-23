@@ -47,14 +47,12 @@ class SimpleValueMap(_SimpleValueMap_tuple):
             #     )
         return subcontext
 
-    def map_form_to_entity(self, formvals):
-        entityvals = {}
+    def map_form_to_entity(self, formvals, entityvals):
         if self.e and self.f:
-            log.debug("SimpleValueMap.map_form_to_entity %s, %s, %r"%(self.e, self.f, formvals))
+            # log.debug("SimpleValueMap.map_form_to_entity %s, %s, %r"%(self.e, self.f, formvals))
             v = formvals.get(self.f, None)
             if v:
                 entityvals[self.e] = v
-            # entityvals[self.e] = formvals.get(self.f, None)
         return entityvals
 
     def get_structure_description(self):
@@ -74,8 +72,8 @@ class StableValueMap(SimpleValueMap):
     form to the entity.  (Some fields are handled specially.)
     """
 
-    def map_form_to_entity(self, formvals):
-        return {}
+    def map_form_to_entity(self, formvals, entityvals):
+        return entityvals
 
     def get_structure_description(self):
         d = super(StableValueMap, self).get_structure_description()

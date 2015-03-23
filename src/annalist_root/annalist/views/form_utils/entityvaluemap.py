@@ -80,30 +80,17 @@ class EntityValueMap(object):
             context.update(kval)
         return context
 
-    def map_form_data_to_values(self, form_data, **kwargs):
-        log.debug("map_form_data_to_values: form_data %r"%(form_data))
-        values = {}
+    def map_form_data_to_values(self, form_data, entityvals, **kwargs):
+        """
+        Map data from form response to entity data.  
+
+        Returns a deep copy of the supplied `entityvals` updated with values from
+        then form.  Values not mentioned in the form data are not updated.
+        """
+        log.debug("map_form_data_to_values: form_data %r, entityvals %r"%(form_data, entityvals))
+        values = copy.deepcopy(entityvals) or {}
         for kmap in self._map:
-            values.update(kmap.map_form_to_entity(form_data))
+            kmap.map_form_to_entity(form_data, values)
         return values
-
-    def REMOVE_ME_map_form_data_to_context(self, form_data, **kwargs):
-        """
-        Map values from form data to view context for form re-rendering.
-
-        Values defined in the supplied form data take priority, and the 
-        keyword arguments provide values where the form data does not.
-        """
-        # log.info("\n*********\nmap_form_data_to_context: form_data: %r"%form_data)
-        entityvals = self.map_form_data_to_values(form_data)
-        entityvals['entity_id']        = form_data.get('entity_id', "")
-        entityvals['entity_type_id']   = form_data.get('entity_type', "")
-        entityvals['entity_link']      = "" # form_data['entity_link']
-        entityvals['entity_type_link'] = ""
-        # log.info("\n*********\nmap_form_data_to_context: entityvals: %r"%entityvals)
-        context = self.map_value_to_context(entityvals, **kwargs)
-        # log.info("\n*********\nmap_form_data_to_context: context: %r"%context)
-        # log.info("\n*********")
-        return context
 
 # End.

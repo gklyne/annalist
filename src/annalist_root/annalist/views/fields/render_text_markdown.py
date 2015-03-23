@@ -11,6 +11,7 @@ log = logging.getLogger(__name__)
 
 import markdown
 
+from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
     get_field_value
@@ -25,24 +26,17 @@ from django.template    import Template, Context
 #   ----------------------------------------------------------------------------
 
 
-class TextMarkdownValueMapper(object):
+class TextMarkdownValueMapper(RenderBase):
     """
     Value mapper class for Markdown text
     """
 
-    @staticmethod
-    def encode(data_value):
+    @classmethod
+    def encode(cls, data_value):
         """
         Encodes supplied data value as string to appear in <textarea> form input.
         """
         return data_value or ""
-
-    @staticmethod
-    def decode(field_value):
-        """
-        Decodes a field value string as value to be stored in an entity field.
-        """
-        return field_value
 
 #   ----------------------------------------------------------------------------
 #

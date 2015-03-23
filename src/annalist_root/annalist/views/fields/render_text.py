@@ -12,7 +12,9 @@ log = logging.getLogger(__name__)
 from django.http        import HttpResponse
 from django.template    import Template
 
-class RenderText(object):
+from annalist.views.fields.render_base  import RenderBase
+
+class RenderText(RenderBase):
     """
     Render class for simple text entry field.
 
@@ -51,17 +53,5 @@ class RenderText(object):
             """)
         responsebody = responsetemplate.render(context)
         return responsebody
-
-    def encode(self, field_value):
-        """
-        returns a simple text string as itself, for use as a form value
-        """
-        return field_value
-
-    def decode(self, field_value):
-        """
-        returns a simple text string as itself, for use as an entity value
-        """
-        return field_value
 
 # End.

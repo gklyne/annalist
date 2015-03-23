@@ -50,21 +50,22 @@ class RepeatValuesMap(FieldValueMap):
             "RepeatValuesMap.fieldlist: %r\n"%(self.fieldlist)
             )
 
-    def map_form_to_entity(self, formvals):
+    def map_form_to_entity(self, formvals, entityvals):
         # log.info(repr(formvals))
         # @@TODO: use field_name (self.i) for prefix?
         prefix_template = self.f['group_id']+"__%d__"
         prefix_n        = 0
         repeatvals      = []
-        while True:
-            prefix = prefix_template%prefix_n
-            rvals = self.fieldlist.map_form_to_entity_repeated_items(formvals, prefix)
-            if rvals:
-                repeatvals.append(rvals)
-            else:
-                break
+        prefix_found    = True
+        while prefix_found:
+            vals          = {}
+            prefix        = prefix_template%prefix_n
+            prefix_found  = self.fieldlist.map_form_to_entity_repeated_items(formvals, vals, prefix)
+            if prefix_found:
+                repeatvals.append(vals)
             prefix_n += 1
-        return {self.e: repeatvals}
+        entityvals[self.e] = repeatvals
+        return entityvals
 
     def get_structure_description(self):
         """

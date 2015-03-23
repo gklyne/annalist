@@ -78,7 +78,9 @@ class EntityFinder(object):
         """
         entitytypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
         include_sitedata = (scope == "all")
-        for e in entitytypeinfo.enum_entities(user_permissions, usealtparent=include_sitedata):
+        for e in entitytypeinfo.enum_entities_with_inferred_values(
+            user_permissions, usealtparent=include_sitedata
+            ):
             yield e
         return
 

@@ -327,7 +327,7 @@ class GenericEntityEditView(AnnalistGenericView):
         #     "get_entity id %s, parent %s, action %s, altparent %s"%
         #     (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
         #     )
-        entity = typeinfo.get_entity_with_aliases(entity_id, action)
+        entity = typeinfo.get_entity(entity_id, action)
         if entity is None:
             parent_id    = typeinfo.entityparent.get_id()
             altparent_id = typeinfo.entityaltparent.get_id() if typeinfo.entityaltparent else "(none)"
@@ -336,6 +336,17 @@ class GenericEntityEditView(AnnalistGenericView):
                 (parent_id, altparent_id, entity_id)
                 )
         return entity
+
+    def get_form_display_context(self, viewinfo, entityvaluemap, entityvals, **context_extra_values):
+        """
+        Return a form display context with data from the supplied entity values, 
+        augmented with inferred values and other context data.
+        """
+        # log.info("get_form_display_context, entityvals: %r"%(entityvals,))
+        entityvals   = viewinfo.entitytypeinfo.get_entity_inferred_values(entityvals)
+        form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
+        form_context.update(viewinfo.context_data())
+        return form_context
 
     def form_render(self, viewinfo, entity, add_field):
         """
@@ -372,11 +383,16 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'orig_type':          type_id
             , 'view_id':            viewinfo.view_id
             })
-        viewcontext = entityvaluemap.map_value_to_context(entityvals, 
-            **context_extra_values
+        viewcontext = self.get_form_display_context(
+            viewinfo, entityvaluemap, entityvals, **context_extra_values
             )
+        #@@
+        # viewcontext = entityvaluemap.map_value_to_context(entityvals, 
+        #     **context_extra_values
+        #     )
         # log.info("form_render: viewcontext %r"%(viewcontext,)) #@@
-        viewcontext.update(viewinfo.context_data())
+        # viewcontext.update(viewinfo.context_data())
+        #@@
         # Generate and return form data
         return (
             self.render_html(viewcontext, self.formtemplate) or 
@@ -389,12 +405,16 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Returns re-rendering of form with current values and error message displayed.
         """
-        # log.info("********\nentityvals %r"%entityvals)
-        form_context = entityvaluemap.map_value_to_context(
-            entityvals,
-            **context_extra_values
+        form_context = self.get_form_display_context(
+            viewinfo, entityvaluemap, entityvals, **context_extra_values
             )
-        form_context.update(viewinfo.context_data())
+        #@@
+        # form_context = entityvaluemap.map_value_to_context(
+        #     entityvals,
+        #     **context_extra_values
+        #     )
+        # form_context.update(viewinfo.context_data())
+        #@@
         # log.info("********\nform_context %r"%form_context)
         form_context['error_head']    = error_head
         form_context['error_message'] = error_message
@@ -422,7 +442,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # log.info("orig_entity %r"%(orig_entity.get_values(),))
         try:
             entityvaluemap = self.get_view_entityvaluemap(viewinfo, orig_entity)
-            entityvals     = entityvaluemap.map_form_data_to_values(form_data)
+            entityformvals = entityvaluemap.map_form_data_to_values(form_data, orig_entity)
         except Annalist_Error as e:
             return viewinfo.report_error(str(e))
 
@@ -442,7 +462,9 @@ class GenericEntityEditView(AnnalistGenericView):
 
         # Save updated details
         if 'save' in form_data:
-            http_response = self.save_entity(viewinfo, entityvaluemap, entityvals, context_extra_values)
+            http_response = self.save_entity(
+                viewinfo, entityvaluemap, entityformvals, context_extra_values
+                )
             log.debug("continuation_url '%s'"%(viewinfo.get_continuation_next()))
             return http_response or HttpResponseRedirect(viewinfo.get_continuation_next())
 
@@ -451,7 +473,9 @@ class GenericEntityEditView(AnnalistGenericView):
         # current page as continuation.
         if 'use_view' in form_data:
             # Save entity, then redirect to selected view
-            http_response = self.save_entity(viewinfo, entityvaluemap, entityvals, context_extra_values)
+            http_response = self.save_entity(
+                viewinfo, entityvaluemap, entityformvals, context_extra_values
+                )
             if http_response:
                 return http_response
             view_uri_params = (
@@ -483,7 +507,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 action=edit_action
                 )
             return self.save_invoke_edit_entity(
-                viewinfo, entityvaluemap, entityvals, context_extra_values,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 view_edit_uri_base, edit_action,
                 {}
                 )
@@ -536,7 +560,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 action="new"
                 )
             return self.save_invoke_edit_entity(
-                viewinfo, entityvaluemap, entityvals, context_extra_values,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 new_edit_uri_base, "new",
                 {}
                 )
@@ -557,7 +581,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             log.info("Open view: entity_id: %s"%viewinfo.curr_entity_id)
             return self.save_invoke_edit_entity(
-                viewinfo, entityvaluemap, entityvals, context_extra_values,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 view_edit_uri_base, "config",
                 add_field_param
                 )
@@ -567,7 +591,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # log.info("*** Add field: "+repr(add_field))
         if add_field:
             return self.update_repeat_field_group(
-                viewinfo, add_field, entityvaluemap, entityvals, **context_extra_values
+                viewinfo, add_field, entityvaluemap, entityformvals, **context_extra_values
                 )
 
         # Remove Field(s), and redisplay
@@ -576,19 +600,19 @@ class GenericEntityEditView(AnnalistGenericView):
             if not remove_field['remove_fields']:
                 log.debug("form_response: No field(s) selected for remove_field")
                 return self.form_re_render(
-                    viewinfo, entityvaluemap, entityvals, context_extra_values,
+                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
                     error_head=messages['remove_field_error'],
                     error_message=messages['no_field_selected']
                     )
             return self.update_repeat_field_group(
-                viewinfo, remove_field, entityvaluemap, entityvals, **context_extra_values
+                viewinfo, remove_field, entityvaluemap, entityformvals, **context_extra_values
                 )
 
         # Import data described by a field with an activated "Import" button
         import_field = self.find_import(entityvaluemap, form_data)
         if import_field:
             return self.import_field(
-                viewinfo, import_field, entityvaluemap, entityvals, **context_extra_values
+                viewinfo, import_field, entityvaluemap, entityformvals, **context_extra_values
                 )
 
         # Report unexpected form data
@@ -1055,8 +1079,13 @@ class GenericEntityEditView(AnnalistGenericView):
         else:
             self.add_entity_field(field_desc, entityvals)
         # log.info("entityvals: %r"%(entityvals,))
-        form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
-        form_context.update(viewinfo.context_data())
+        form_context = self.get_form_display_context(
+            viewinfo, entityvaluemap, entityvals, **context_extra_values
+            )
+        #@@
+        # form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
+        # form_context.update(viewinfo.context_data())
+        #@@
         return (
             self.render_html(form_context, self.formtemplate) or 
             self.error(self.error406values())
@@ -1128,10 +1157,9 @@ class GenericEntityEditView(AnnalistGenericView):
             log.info("%s: %s"%(import_err, import_msg))
             log.debug(str(e), exc_info=True)
         # Redisplay
-        # @@TODO: factor out logic in common with `update_repeat_field_group`
-        # log.info("entityvals: %r"%(entityvals,))
-        form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
-        form_context.update(viewinfo.context_data())
+        form_context = self.get_form_display_context(
+            viewinfo, entityvaluemap, entityvals, **context_extra_values
+            )
         if import_err:
             form_context['error_head']    = import_err
             form_context['error_message'] = import_msg

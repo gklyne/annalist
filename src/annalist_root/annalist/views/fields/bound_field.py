@@ -256,7 +256,6 @@ def get_entity_values(displayinfo, entity, entity_id=None):
     typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
     if typeinfo.recordtype:
         entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
-        # @@other type-related info; e.g., aliases - populate 
     return entityvals
 
 if __name__ == "__main__":

@@ -90,13 +90,15 @@ class FieldListValueMap(object):
             listcontext.append(fv['_fieldlistvaluemap_'])
         return { self.c: listcontext }
 
-    def map_form_to_entity(self, formvals):
-        vals = {}
+    def map_form_to_entity(self, formvals, entityvals):
+        """
+        Use form data to update supplied entity values
+        """
         for f in self.fm:
-            vals.update(f.map_form_to_entity(formvals))
-        return vals
+            f.map_form_to_entity(formvals, entityvals)
+        return entityvals
 
-    def map_form_to_entity_repeated_items(self, formvals, prefix):
+    def map_form_to_entity_repeated_items(self, formvals, entityvals, prefix):
         """
         Extra helper method used when mapping a repeated list of fields items to 
         repeated entity values.  Returns values corresponding to a single repeated 
@@ -104,18 +106,10 @@ class FieldListValueMap(object):
         prefix string.
 
         Returns a dictionary of repeated field values found using the supplied prefix.
-
-        Returns None if no prefixed field value exists, which may be used as a loop
-        termination condition.
         """
-        vals = {}
-        prefix_seen = False
         for f in self.fm:
-            v = f.map_form_to_entity_repeated_item(formvals, prefix)
-            if v is not None:
-                vals.update(v)
-                prefix_seen = True
-        return vals
+            f.map_form_to_entity_repeated_item(formvals, entityvals, prefix)
+        return entityvals
 
     def get_structure_description(self):
         """

@@ -11,6 +11,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
     get_field_value
@@ -105,26 +106,18 @@ edit_choice = (
 #   ----------------------------------------------------------------------------
 
 
-class SelectValueMapper(object):
+class SelectValueMapper(RenderBase):
     """
     Value mapper class for text selected from a list of choices.
     """
 
-    @staticmethod
-    def encode(data_value):
+    @classmethod
+    def encode(cls, data_value):
         """
         Encodes supplied data value as an option value to be selected in a 
         <select> form inbput.
         """
         return data_value or ""
-
-    @staticmethod
-    def decode(field_value):
-        """
-        Decodes a selected option value as a value to be stored in an 
-        entity field.
-        """
-        return field_value
 
 #   ----------------------------------------------------------------------------
 #

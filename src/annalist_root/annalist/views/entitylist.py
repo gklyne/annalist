@@ -399,9 +399,9 @@ class EntityGenericListView(AnnalistGenericView):
             typeinfo = EntityTypeInfo(
                 listinfo.site, listinfo.collection, entity_id
                 )
-            if next(typeinfo.enum_entities(), None) is not None:
+            if next(typeinfo.enum_entity_ids(), None) is not None:
                 return (
-                    # Type has valu7es: redisplay form with error message
+                    # Type has values: redisplay form with error message
                     uri_with_params(
                         listinfo.view.get_request_path(),
                         listinfo.view.error_params(msg),
