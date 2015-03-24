@@ -393,6 +393,12 @@ def download_url_to_fileobj(url, fileobj=None):
         r.close()
     return (resource_url, resource_type)
 
+# Update MIME typesreturned by open_url when opening a file
+# @@TODO: unify logic with resourcetypes module, and do all MIME type wrangling there
+import mimetypes
+mimetypes.init()
+mimetypes.add_type("text/markdown", ".md")
+
 def open_url(url):
     """
     Opens a file-like object to access resource contents at a URL, and

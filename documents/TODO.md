@@ -21,10 +21,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Refactor entityedit Save_Entity handling
     - [x] Refactor entityedit to carry more context in viewinfo (simplify function calls)
     - [ ] Refactor value decoding so it can access other form fields (to build complex values)?  (see next)
-    - [ ] Drop attempts to merge import details with form data?
-        - attempting to merge form data with existing entity values (other than at the top level) creates potential problems for maintaining alignmnent when repeat fields are added or removed.  The alternative is to save entity values in hidden form fields, and use them when reconstructing the entity values from the form.  Need to check the form response logic here - maybe handle the merge at the point that form data is mapped back (and before processing any actions), in which case it's less of an issue?  This would suggest a revision to the entityvaluemap logic to update a supplied original entity value rather than create a new one, and merge later when saving it.
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
-    - [ ] Blob and file upload support: images, spreadsheets, ...
+    - [x] Blob and file upload support: images, spreadsheets, ...
         - [x] Choose render type name: URIImport
         - [x] Define renderer test cases as a new module in `annalist/tests/`, e.g.:
             - [x] Copy `test_render_bool_checkbox.py` to new module name
@@ -41,13 +39,13 @@ NOTE: this document is used for short-term working notes; longer-term planning i
             - [x] Rename and update the view renderer and edit renderer functions to generate appropriate HTML.
             - [x] Rename and update the get renderer function.  Note that this function must returned a `RenderFieldValue` object, as this provides the interfaces required by the rest of Annalist to render values in different contexts.
         - [x] Update entityedit.py to recognize new action to import resource
-        - [ ] Add tests for file import (needs to be a "full stack" test - see `test_field_alias` or `test_linked_records` for simple form of structure to follow)
+        - [x] Add tests for file import (needs to be a "full stack" test - see `test_field_alias` or `test_linked_records` for simple form of structure to follow)
         - [x] Edit module `annalist/views/fields/render_utils.py` to import the get renderer function, and add it to the dictionary `_field_get_renderer_functions`.
         - [x] Add the renderer type name to the enumeration defined in `annalist/sitedata/enums/Enum_render_type`
         - [x] Update the test modules to accommodate the new render type, and retest:
             - [x] `annalist/tests/test_entitygenericlist.py` about line 244 (bump counter)
             - [x] `annalist/tests/entity_testsitedata.py`, about line 306 (add new render type name in sorted list)
-        - [ ] Check the affected web views and augment the site CSS file (`annalist/static/css/annalist.css`)
+        - [x] Check the affected web views and augment the site CSS file (`annalist/static/css/annalist.css`)
     - [ ] Field type to link to uploaded file
 - [ ] Add 'view' button to edit form
 - [x] Is it really appropriate to save the annal:url value in a stored entity?

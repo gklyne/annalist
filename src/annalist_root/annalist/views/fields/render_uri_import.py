@@ -36,16 +36,27 @@ class URIImportValueMapper(RenderBase):
     @classmethod
     def encode(cls, data_value):
         """
-        Encodes link value as string
+        Extracts import URL from value structure, for field display.
         """
-        return data_value or ""
+        return (data_value or {}).get('import_url', "")
 
     @classmethod
     def decode(cls, field_value):
         """
-        Decodes a text value as a link.
+        Returns textual link value from import URL field value
         """
         return field_value or ""
+
+    def decode_store(self, field_value, entityvals, property_uri):
+        """
+        Decodes a supplied value and uses it to update the 'import_url'
+        field of an URI import field.  
+        """
+        u = self.decode(field_value)
+        v = entityvals.get(property_uri, {})
+        v['import_url'] = u
+        entityvals[property_uri] = v
+        return v
 
 #   ----------------------------------------------------------------------------
 #
@@ -59,12 +70,12 @@ view_import = (
 edit_import = (
     """<!-- fields.uri_import_edit_renderer -->
     <div class="row">
-      <div class="small-10 columns view-value less-import-button">
+      <div class="small-10 columns view-value view-subfield less-import-button">
         <input type="text" size="64" name="{{repeat_prefix}}{{field.field_name}}"
                placeholder="{{field.field_placeholder}}"
-               value="{{field.field_value}}" />
+               value="{{encoded_field_value}}" />
       </div>
-      <div class="small-2 columns view-value import-button left small-text-right">
+      <div class="small-2 columns view-value view-subfield import-button left small-text-right">
         <input type="submit" name="{{repeat_prefix}}{{field.field_name}}__import" value="Import" />
       </div>
     </div>
@@ -106,7 +117,11 @@ class uri_import_edit_renderer(object):
         """
         Render import link for editing
         """
-        return self._template.render(context)
+        val = URIImportValueMapper.encode(get_field_value(context, None))
+        with context.push(encoded_field_value=val):
+            result = self._template.render(context)
+        return result
+        #@@ return self._template.render(context)
 
 def get_uri_import_renderer():
     """

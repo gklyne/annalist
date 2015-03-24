@@ -20,16 +20,14 @@ from collections import OrderedDict
 import logging
 log = logging.getLogger(__name__)
 
-# from django.conf                                import settings
-# from django.test                                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
-# from django.template                            import Context, Template, loader
+from annalist.resourcetypes                 import file_extension, file_extension_for_content_type
 
 from annalist.views.fields.render_uri_import import (
     get_uri_import_renderer, 
     URIImportValueMapper
     )
 
-from annalist.tests.field_rendering_support     import FieldRendererTestSupport
+from annalist.tests.field_rendering_support import FieldRendererTestSupport
 
 class UriImportRenderingTest(FieldRendererTestSupport):
 
@@ -39,18 +37,35 @@ class UriImportRenderingTest(FieldRendererTestSupport):
     def tearDown(self):
         return
 
+    # Supporting tests
+
+    def test_resourcetypes(self):
+        self.assertEqual(file_extension("annal:Text"),     "txt")
+        self.assertEqual(file_extension("annal:Markdown"), "md")
+        self.assertEqual(file_extension("annal:Image"),    "png")
+        self.assertEqual(file_extension("ex:foo"),         "dat")
+        self.assertEqual(file_extension_for_content_type("annal:Text",     "text/plain"),       "txt")
+        self.assertEqual(file_extension_for_content_type("annal:Markdown", "text/markdown"),    "md")
+        self.assertEqual(file_extension_for_content_type("annal:Markdown", "text/plain"),       "txt")
+        self.assertEqual(file_extension_for_content_type("annal:Image",    "image/jpeg"),       "jpeg")
+        self.assertEqual(file_extension_for_content_type("ex:foo", "application/octet-stream"), "dat")
+        self.assertEqual(file_extension_for_content_type("ex:foo", "image/jpeg"),               None)
+        return
+
+    # Rendering test
+
     def test_RenderUriImportValue(self):
 
         def expect_render(linktext, labeltext):
             render_view = '''<a href="%s" target="_blank">%s</a>'''%(linktext, labeltext)
             render_edit = (
                 '''<div class="row"> '''+
-                  '''<div class="small-10 columns view-value less-import-button"> '''+
+                  '''<div class="small-10 columns view-value view-subfield less-import-button"> '''+
                     '''<input type="text" size="64" name="repeat_prefix_test_field" '''+
                            '''placeholder="(test placeholder)" '''+
                            '''value="%s" /> '''+
                   '''</div> '''+
-                  '''<div class="small-2 columns view-value import-button left small-text-right"> '''+
+                  '''<div class="small-2 columns view-value view-subfield import-button left small-text-right"> '''+
                     '''<input type="submit" name="repeat_prefix_test_field__import" value="Import" /> '''+
                   '''</div> '''+
                 '''</div> '''
@@ -62,16 +77,19 @@ class UriImportRenderingTest(FieldRendererTestSupport):
                 )%linktext
             return {'view': render_view, 'edit': render_edit}
 
+        def import_uri_value(uri):
+            return {'import_url': uri}
+
         test_values = (
-            [ ("http://example.com/path",         "example.com/path")
-            , ("https://example.com/path",        "example.com/path")
-            , ("file:///example/path",            "example/path")
-            , ("file://example.com/path",         "example.com/path")
-            , ("mailto:user@example.com",         "user@example.com")
-            , ("foo://example.com/more",          "foo://example.com/more")
+            [ (import_uri_value("http://example.com/path"),   "example.com/path")
+            , (import_uri_value("https://example.com/path"),  "example.com/path")
+            , (import_uri_value("file:///example/path"),      "example/path")
+            , (import_uri_value("file://example.com/path"),   "example.com/path")
+            , (import_uri_value("mailto:user@example.com"),   "user@example.com")
+            , (import_uri_value("foo://example.com/more"),    "foo://example.com/more")
             ])
         test_value_context_renders = (
-            [ (self._make_test_context(linktext),  expect_render(linktext, labeltext))
+            [ (self._make_test_context(linktext),  expect_render(linktext['import_url'], labeltext))
                 for linktext, labeltext in test_values
             ])
         renderer = get_uri_import_renderer()

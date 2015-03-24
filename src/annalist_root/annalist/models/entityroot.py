@@ -272,7 +272,10 @@ class EntityRoot(object):
             except ValueError, e:
                 log.error("EntityRoot._load_values: error loading %s"%(body_file))
                 log.error(e)
-                return { "@error": body_file }
+                return (
+                    { "@error": body_file 
+                    , "@message": "Error loading entity values %r"%(e,)
+                    })
         return None
 
     def _child_dirs(self, cls, altparent):

@@ -174,8 +174,8 @@ def testsrc_entity_create_values(entity_id, tgtref_id):
 
 def testtgt_entity_create_values(entity_id):
     return (
-        { 'rdfs:label':                 "testsrc_entity %s label"%entity_id
-        , 'rdfs:comment':               "testsrc_entity %s comment"%entity_id
+        { 'rdfs:label':                 "testtgt_entity %s label"%entity_id
+        , 'rdfs:comment':               "testtgt_entity %s comment"%entity_id
         })
 
 #   -----------------------------------------------------------------------------
@@ -223,7 +223,6 @@ class LinkedRecordTest(AnnalistTestCase):
     # Tests
 
     def test_view_entity_references(self):
-        # List linked records - check values in listing
         u = entity_url(coll_id="testcoll", type_id="testsrc_type", entity_id="testsrc1")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)

@@ -39,7 +39,7 @@ resource_types = (
       ]
     })
 
-default_types = [("dat", "applicatiopn/octet-stream")]
+default_types = [("dat", "application/octet-stream")]
 
 def file_extension(typeuri):
     """

@@ -339,6 +339,7 @@ class EntityTypeInfo(object):
                 entity = self.entityclass.load(self.entityparent, entity_id, altparent=self.entityaltparent)
         return entity
 
+    # @@TODO: rename inferred -> implied
     def get_entity_inferred_values(self, entity):
         """
         Adds inferrable values to the supplied entity value (e.g. aliases),
@@ -361,27 +362,6 @@ class EntityTypeInfo(object):
                 if inferred_entity.get(tgt, None) in [None, ""]:
                     inferred_entity[tgt] = inferred_entity.get(src, "")
         return inferred_entity
-
-    def REMOVE_get_entity_with_aliases(self, entity_id, action="view"):
-        """
-        Loads and returns an entity for the current type, or 
-        returns None if the entity does not exist.
-
-        If `action` is "new" then a new entity is initialized (but not saved).
-
-        Field aliases defined in the associated record type are populated
-        in the value returned.
-        """
-        # @@TODO: remove this method
-        entity = self.get_entity(entity_id, action=action)
-        # Fill in field aliases
-        if entity and ANNAL.CURIE.field_aliases in self.recordtype:
-            for alias in self.recordtype[ANNAL.CURIE.field_aliases]:
-                tgt = alias[ANNAL.CURIE.alias_target]
-                src = alias[ANNAL.CURIE.alias_source]
-                if entity.get(tgt, None) in [None, ""]:
-                    entity[tgt] = entity.get(src, "")
-        return entity
 
     def enum_entity_ids(self, usealtparent=False):
         """
