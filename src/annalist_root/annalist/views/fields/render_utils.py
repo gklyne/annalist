@@ -2,6 +2,8 @@
 This module contains utilities for use in conjunction with field renderers.
 """
 
+#@@TODO: rename module something like `find_renderer` or `renderer_discovery`
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -69,9 +71,9 @@ _field_get_renderer_functions = (
     { "Placement":      get_field_placement_renderer
     , "TokenSet":       get_field_tokenset_renderer
     , "CheckBox":       get_bool_checkbox_renderer
+    , "Markdown":       get_text_markdown_renderer
     , "URILink":        get_uri_link_renderer
     , "URIImage":       get_uri_image_renderer
-    , "Markdown":       get_text_markdown_renderer
     , "URIImport":      get_uri_import_renderer
 
     , "EntityTypeId":   get_select_renderer
@@ -104,21 +106,37 @@ _field_value_mappers = (
     , "List_sel":       SelectValueMapper
     })
 
-def get_field_renderer(renderid):
-    if renderid not in _field_renderers:
+def get_field_renderer(field_render_type):
+    if field_render_type not in _field_renderers:
         # Create and cache renderer
-        if ( (renderid in _field_view_files) or
-             (renderid in _field_edit_files) ):
-            viewfile = _field_view_files.get(renderid, None)
-            editfile = _field_edit_files.get(renderid, None)
-            _field_renderers[renderid] = RenderFieldValue(
+        if ( (field_render_type in _field_view_files) or
+             (field_render_type in _field_edit_files) ):
+            viewfile = _field_view_files.get(field_render_type, None)
+            editfile = _field_edit_files.get(field_render_type, None)
+            _field_renderers[field_render_type] = RenderFieldValue(
                 view_file=viewfile, edit_file=editfile
                 )
-        elif renderid in _field_get_renderer_functions:
-            _field_renderers[renderid] = _field_get_renderer_functions[renderid]()
-    return _field_renderers.get(renderid, None)
+        elif field_render_type in _field_get_renderer_functions:
+            _field_renderers[field_render_type] = _field_get_renderer_functions[field_render_type]()
+    return _field_renderers.get(field_render_type, None)
 
-def get_edit_renderer(renderid):
+def get_entityref_edit_renderer(renderer, field_render_type):
+    """
+    Returns an updated edit renderer for fields with an entity type reference
+    """
+    if field_render_type not in ["Enum", "Enum_choice", "Enum_optional", "View_choice", "List_sel"]:
+        renderer = get_field_renderer("Enum")
+    return renderer
+
+def get_uriimport_edit_renderer(renderer, field_render_type):
+    """
+    Returns an updated edit renderer for fields with a URI import value type
+    """
+    if field_render_type not in ["URIImport"]:
+        renderer = get_field_renderer("URIImport")
+    return renderer
+
+def get_edit_renderer(field_render_type, field_ref_type, field_val_type):
     """
     Returns an field edit renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
@@ -131,20 +149,26 @@ def get_edit_renderer(renderid):
         a context. This allows you to reference a compiled Template in your context.
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
-    if renderid == "RepeatGroup":
+    # Repeat group renderers
+    if field_render_type == "RepeatGroup":
         return RenderRepeatGroup(render_repeatgroup.edit_group)
-    if renderid == "RepeatGroupRow":
+    if field_render_type == "RepeatGroupRow":
         return RenderRepeatGroup(render_repeatgroup.edit_grouprow)
-    renderer = get_field_renderer(renderid)
+    # Entity reference and import edit renderers
+    renderer = get_field_renderer(field_render_type)
+    if field_ref_type:
+        renderer = get_entityref_edit_renderer(renderer, field_render_type)
+    elif field_val_type == "annal:Import":
+        renderer = get_uriimport_edit_renderer(renderer, field_render_type)
     if renderer:
         return renderer.label_edit()
-    log.debug("get_edit_renderer: %s not found"%renderid)
-    # raise ValueError("get_edit_renderer: %s not found"%renderid)
+    log.debug("get_edit_renderer: %s not found"%field_render_type)
+    # raise ValueError("get_edit_renderer: %s not found"%field_render_type)
     # Default to simple text for unknown renderer type
     renderer = get_field_renderer("Text")
     return renderer.label_edit()
 
-def get_view_renderer(renderid):
+def get_view_renderer(field_render_type, field_ref_type, field_val_type):
     """
     Returns a field view renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
@@ -157,54 +181,54 @@ def get_view_renderer(renderid):
         a context. This allows you to reference a compiled Template in your context.
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
-    if renderid == "RepeatGroup":
+    if field_render_type == "RepeatGroup":
         return RenderRepeatGroup(render_repeatgroup.view_group)
-    if renderid == "RepeatListRow":
+    if field_render_type == "RepeatListRow":
         return RenderRepeatGroup(render_repeatgroup.view_listrow)
-    if renderid == "RepeatGroupRow":
+    if field_render_type == "RepeatGroupRow":
         return RenderRepeatGroup(render_repeatgroup.view_grouprow)
-    renderer = get_field_renderer(renderid)
+    renderer = get_field_renderer(field_render_type)
     if renderer:
         return renderer.label_view()
     # Default to simple text for unknown renderer type
-    log.warning("get_view_renderer: %s not found"%renderid)
+    log.warning("get_view_renderer: %s not found"%field_render_type)
     renderer = get_field_renderer("Text")
     return renderer.label_view()
 
-def get_colhead_renderer(renderid):
+def get_colhead_renderer(field_render_type, field_ref_type, field_val_type):
     """
     Returns a field list heading renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    renderer = get_field_renderer(renderid)
+    renderer = get_field_renderer(field_render_type)
     if renderer:
         return renderer.col_head()
-    log.debug("get_colhead_renderer: %s not found"%renderid)
+    log.debug("get_colhead_renderer: %s not found"%field_render_type)
     return "field/annalist_head_any.html"
 
-def get_coledit_renderer(renderid):
+def get_coledit_renderer(field_render_type, field_ref_type, field_val_type):
     """
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    renderer = get_field_renderer(renderid)
+    renderer = get_field_renderer(field_render_type)
     if renderer:
         return renderer.col_edit()
-    log.debug("get_coledit_renderer: %s not found"%renderid)
+    log.debug("get_coledit_renderer: %s not found"%field_render_type)
     return "field/annalist_item_none.html"
 
-def get_colview_renderer(renderid):
+def get_colview_renderer(field_render_type, field_ref_type, field_val_type):
     """
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    renderer = get_field_renderer(renderid)
+    renderer = get_field_renderer(field_render_type)
     if renderer:
         return renderer.view()
-    log.debug("get_colview_renderer: %s not found"%renderid)
+    log.debug("get_colview_renderer: %s not found"%field_render_type)
     return "field/annalist_item_none.html"
 
-def get_value_mapper(renderid):
+def get_value_mapper(field_render_type):
     """
     Returns a value mapper class instance (with encode and decode methods) which 
     is used to map values between entity fields and textual form fields.
@@ -212,8 +236,8 @@ def get_value_mapper(renderid):
     The default 'RenderText' object returned contains identity mappings.
     """
     mapper_class = RenderText
-    if renderid in _field_value_mappers:
-        mapper_class = _field_value_mappers[renderid]
+    if field_render_type in _field_value_mappers:
+        mapper_class = _field_value_mappers[field_render_type]
     return mapper_class()
 
 if __name__ == "__main__":
