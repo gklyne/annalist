@@ -17,10 +17,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Improve reporting of 500 serverError
 - [x] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.  This occurs because the continuation URI is refers to the old entity when the id is changed.
     - treat id/type change as special case and update all matching URIs in the continuation chain.  This involves dismantling and reassembling the continuation URI, and the continuation URL handling logic has been refactored to facilitate this.
-- [ ] Support for complex entity field values (e.g. supporting details for resource imports)
+- [x] Support for complex entity field values (e.g. supporting details for resource imports)
     - [x] Refactor entityedit Save_Entity handling
     - [x] Refactor entityedit to carry more context in viewinfo (simplify function calls)
-    - [ ] Refactor value decoding so it can access other form fields (to build complex values)?  (see next)
+    - [x] Refactor value decoding so it can access other form fields (to build complex values)?  (see next)
 - [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [x] Blob and file upload support: images, spreadsheets, ...
         - [x] Choose render type name: URIImport
@@ -46,7 +46,21 @@ NOTE: this document is used for short-term working notes; longer-term planning i
             - [x] `annalist/tests/test_entitygenericlist.py` about line 244 (bump counter)
             - [x] `annalist/tests/entity_testsitedata.py`, about line 306 (add new render type name in sorted list)
         - [x] Check the affected web views and augment the site CSS file (`annalist/static/css/annalist.css`)
-    - [ ] Field type to link to uploaded file
+    - [ ] Field definition enhancements to link to uploaded file
+        - [x] Design revised field definition structure to separate rendering from value reference
+            - [x] Value reference direct
+            - [x] Value reference as upload to current entity
+            - [x] Value reference as URI
+            - [x] Value reference as field of another Annalist entity
+        - [x] Review existing render type definitions in light of new design
+        - [x] Work out migration strategy for collections to use new field structure
+        - [x] Revise field render selection logic to allow separate edit renderer selection from view renderer selection
+            - Updated logic in maily in render_utils, but some interfaces are revised affecting fielddescription, etc.
+        - [ ] Revise field value handling to take account of multiple sources
+        - [ ] Figure out how to resolve relative references: based on entity URL?
+        - [ ] Apply updates to site data as needed
+        - [ ] Add logic to migrate collection data
+        - [ ] @@Later? Eliminate redundant render types
 - [ ] Add 'view' button to edit form
 - [x] Is it really appropriate to save the annal:url value in a stored entity?
     - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator
@@ -57,7 +71,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 (new release?)
 
-- [ ] Create facility to built repeat field and group structure for existing simple field
+- [ ] Usability: 3 key tasks need to be easier (at the level of a single form fill-out):
+    - [ ] Create a new type+view+list, suitably interconnected
+    - [ ] Define a new field type and add to a view
+    - [ ] Create repeating fields in a view.  (a) Define a repeating field type and add to view, or (b) define a repeating group containing an existing field type, and add to a view. (a) could a checkbox choice on the previous task.  See also: [#41](https://github.com/gklyne/annalist/issues/41)
     - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
     - See also discussion below of introducing "tasks" - this would be an early candidate for that.
     - Need to think how the interface would work.  Option to add "task" button to any form?
