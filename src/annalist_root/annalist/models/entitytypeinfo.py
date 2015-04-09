@@ -236,6 +236,7 @@ class EntityTypeInfo(object):
 
         and other values as initialized here.
         """
+        #@@TODO: remove site param and access through coll
         self.entitysite      = site
         self.entitycoll      = coll
         self.recordtype      = None

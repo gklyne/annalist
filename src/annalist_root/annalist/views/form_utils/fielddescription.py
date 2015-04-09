@@ -63,6 +63,7 @@ class FieldDescription(object):
                         of fields.
         group_ids_seen  group ids expanded so far, to check for recursive reference.
         """
+        self._collection = collection
         # log.debug("FieldDescription recordfield: %r"%(recordfield,))
         field_id            = recordfield.get(ANNAL.CURIE.id,         "_missing_id_")
         field_name          = recordfield.get(ANNAL.CURIE.field_name, field_id)  # Field name in form

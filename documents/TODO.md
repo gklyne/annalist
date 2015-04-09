@@ -56,8 +56,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [x] Work out migration strategy for collections to use new field structure
         - [x] Revise field render selection logic to allow separate edit renderer selection from view renderer selection
             - Updated logic in maily in render_utils, but some interfaces are revised affecting fielddescription, etc.
-        - [ ] Revise field value handling to take account of multiple sources
-        - [ ] Figure out how to resolve relative references: based on entity URL?
+        - [x] Revise field value handling to take account of multiple sources @@import structure...
+        - [x] Figure out how to resolve relative references: based on entity URL?
+        - [ ] Test, test cases
         - [ ] Apply updates to site data as needed
         - [ ] Add logic to migrate collection data
         - [ ] @@Later? Eliminate redundant render types
