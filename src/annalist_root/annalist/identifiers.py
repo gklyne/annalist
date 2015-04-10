@@ -100,13 +100,15 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
     , "view_fields"
     , "list_entity_selector", "open_view"
     , "list_entities", "list_fields"
-    , "placeholder", "default_value", "property_uri", "options_valkey", "options_typeref"
-    , "restrict_values"
+    , "placeholder", "default_value", "property_uri", "options_valkey"
+    #@@TODO: rename to target_typeref, target_restriction, target_field ..
+    , "options_typeref", "restrict_values", "target_field"
     , "repeat", "repeat_id", "repeat_label", "repeat_label_add", "repeat_label_delete"
     # , "repeat_entity_values", "repeat_context_values"
     , "default_type", "default_view" , "default_list"
     , "field_id", "field_name", "field_placement"
-    , "field_value_type", "field_render_type", "field_entity_type"
+    , "field_render_type", "field_entity_type"
+    , "field_value_type", "field_target_type"
     , "group_ref", "repeat_label_add", "repeat_label_delete"
     ])
 

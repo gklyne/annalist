@@ -1115,9 +1115,10 @@ class GenericEntityEditView(AnnalistGenericView):
             #     (import_url, resource_url, resource_type)
             #     )
             try:
+                value_type    = field_desc.get('field_target_type', "annal:unknown_type")
                 local_fileobj = viewinfo.entitytypeinfo.get_fileobj(
                     viewinfo.entity_id, import_name, 
-                    field_desc['field_value_type'], resource_type, "wb"
+                    value_type, resource_type, "wb"
                     )
                 resource_name = os.path.basename(local_fileobj.name)
                 field_vals.update(

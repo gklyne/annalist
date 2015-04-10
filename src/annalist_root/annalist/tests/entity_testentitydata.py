@@ -442,8 +442,8 @@ def entitydata_default_view_form_data(
         ):
     # log.info("entitydata_default_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (
-        { 'Entity_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
-        , 'Entity_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
+        { 'Entity_label':       '%s data ... (%s/%s)'%(update, coll_id, type_id)
+        , 'Entity_comment':     '%s description ... (%s/%s)'%(update, coll_id, type_id)
         , 'orig_id':            'orig_entity_id'
         , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
         })
@@ -482,7 +482,7 @@ def entitydata_default_view_form_data(
     elif new_enum:
         form_data_dict[new_enum]          = new_enum
     elif do_import:
-        form_data_dict[do_import]          = do_import
+        form_data_dict[do_import]         = do_import
     else:
         form_data_dict['save']            = 'Save'
     return form_data_dict

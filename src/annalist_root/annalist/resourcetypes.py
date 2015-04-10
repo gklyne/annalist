@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 
 """
-Each resource type URI or CURIE is associated with a lusr of one or more file 
+Each resource type URI or CURIE is associated with a list of one or more file 
 extensions and MIME content-types.
 
 The first of each list indicates the value used when creating or serving a 

@@ -187,8 +187,8 @@ class bound_field(object):
         This may be different from field_value if it references another entity field
         """
         targetvals   = self.get_targetvals()
-        if targetvals != None:
-            target_key   = self._field_description[ANNAL.CURIE.target_field]
+        if targetvals is not None:
+            target_key   = self._field_description['field_target_key']
             target_value = targetvals.get(target_key, None)
         else:
             target_value = self.field_value
@@ -226,14 +226,18 @@ class bound_field(object):
         If field description is a reference to a target type entity or field, 
         return a copy of the referenced target entity, otherwise None.
         """
-        target_type = self._field_description.get(ANNAL.CURIE.options_typeref, None)
-        target_key  = self._field_description.get(ANNAL.CURIE.target_field, None)
+        log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
+        # target_type = self._field_description.get(ANNAL.CURIE.options_typeref, None)
+        # target_key  = self._field_description.get(ANNAL.CURIE.target_field, None)
+        target_type = self._field_description['field_options_typeref']
+        target_key  = self._field_description['field_target_key']
+        log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
         if target_type and target_key:
             if self._targetvals is None:
                 # Get entity type info
                 #@@TODO: eliminate site param...
                 coll           = self._field_description._collection
-                targettypeinfo = EntityTypeInfo(coll.get_site(), coll, type_id)
+                targettypeinfo = EntityTypeInfo(coll.get_site(), coll, target_type)
                 # Check access permission, assuming user has "VIEW" permission in current collection
                 # This is primarily to prevent a loophole for accessing user account details
                 #@@TODO: pass actual user permissions in to bound_field or field description or extra params
@@ -242,6 +246,7 @@ class bound_field(object):
                 if all([ p in user_permissions for p in req_permissions]):
                     target_id        = self.get_field_value()
                     self._targetvals = targettypeinfo.get_entity(target_id)
+                    log.debug("bound_field.get_targetvals: %r"%(self._targetvals.get_values(),))
                 else:
                     log.warning("bound_field.get_targetvals: target value type %s requires %r permissions"%(target_type, req_permissions))
         return self._targetvals
@@ -297,9 +302,13 @@ class bound_field(object):
         yield "entity_link_continuation"
         yield "entity_type_link"
         yield "entity_type_link_continuation"
-        yield "continuation_url"
         yield "field_value"
         yield "field_value_link"
+        yield "field_value_link_continuation"
+        yield "target_value"
+        yield "target_value_link"
+        yield "target_value_link_continuation"
+        yield "continuation_url"
         yield "options"
         for k in self._field_description:
             yield k

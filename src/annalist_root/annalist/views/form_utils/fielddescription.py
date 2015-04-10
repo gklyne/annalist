@@ -82,10 +82,12 @@ class FieldDescription(object):
             , 'field_property_uri':         field_property
             , 'field_placement':            get_placement_classes(field_placement)
             , 'field_value_type':           field_val_type
+            , 'field_target_type':          recordfield.get(ANNAL.CURIE.field_target_type, field_val_type)
             , 'field_placeholder':          recordfield.get(ANNAL.CURIE.placeholder, "")
             , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
             , 'field_options_typeref':      field_ref_type
             , 'field_restrict_values':      recordfield.get(ANNAL.CURIE.restrict_values, "ALL")
+            , 'field_target_key':           recordfield.get(ANNAL.CURIE.target_field, "ALL")
             , 'field_choice_labels':        None
             , 'field_choice_links':         None
             , 'field_group_ref':            recordfield.get(ANNAL.CURIE.group_ref, None)
