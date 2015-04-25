@@ -278,6 +278,25 @@ class EntityRoot(object):
                     })
         return None
 
+    def _migrate_values(self, entitydata):
+        """
+        Default method for entity format migration hook.
+
+        The specification for this method is that it returns an entitydata value
+        which is a copy of the supplied entitydata with format migrations applied.
+
+        This default implementation applies no migrations, and simply returns the 
+        supplied value.  The method may be overridden for entity types and instances
+        for which migrations are to be applied.
+
+        NOTE:  implementations are free to apply migrations in-place.  The resulting 
+        entitydata should be exctly as the supplied data *should* appear in storage
+        to conform to the current format of the data.  The migration function should 
+        be idempotent; i.e.
+            x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
+        """
+        return entitydata
+
     def _child_dirs(self, cls, altparent):
         """
         Returns a pair of directories that may contain child entities.

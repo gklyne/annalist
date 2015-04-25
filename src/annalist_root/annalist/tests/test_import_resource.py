@@ -129,41 +129,41 @@ test_reference_view_create_values = (
     })
 
 test_import_field_create_values = (
-    { 'annal:type':                 "annal:Field"
-    , 'annal:field_name':           "imp_field"
-    , 'rdfs:label':                 "test_import_field label"
-    , 'rdfs:comment':               "test_import_field comment"
-    , 'annal:property_uri':         "test:import"
-    , 'annal:field_render_type':    "URIImport"
-    , 'annal:field_value_type':     "annal:Import"
-    , 'annal:field_target_type':    "annal:Markdown"
-    , 'annal:placeholder':          "(URI to import)"
-    , 'annal:default_value':        ""
+    { 'annal:type':                     "annal:Field"
+    , 'annal:field_name':               "imp_field"
+    , 'rdfs:label':                     "test_import_field label"
+    , 'rdfs:comment':                   "test_import_field comment"
+    , 'annal:property_uri':             "test:import"
+    , 'annal:field_render_type':        "URIImport"
+    , 'annal:field_value_type':         "annal:Import"
+    , 'annal:field_target_type':        "annal:Markdown"
+    , 'annal:placeholder':              "(URI to import)"
+    , 'annal:default_value':            ""
     })
 
 test_reference_field_create_values = (
-    { 'annal:type':                 "annal:Field"
-    , 'annal:field_name':           "ref_field"
-    , 'rdfs:label':                 "test_reference_field label"
-    , 'rdfs:comment':               "test_reference_field comment"
-    , 'annal:property_uri':         "test:reference"
-    , 'annal:field_render_type':    "URILink"
-    , 'annal:field_value_type':     "annal:Slug"
-    , 'annal:field_target_type':    "annal:Identifier"
-    , 'annal:options_typeref':      "testimptype"
-    , 'annal:restrict_values':      "ALL"
-    , 'annal:target_field':         "test:import"
-    , 'annal:placeholder':          "(URI to import)"
-    , 'annal:default_value':        ""
+    { 'annal:type':                     "annal:Field"
+    , 'annal:field_name':               "ref_field"
+    , 'rdfs:label':                     "test_reference_field label"
+    , 'rdfs:comment':                   "test_reference_field comment"
+    , 'annal:property_uri':             "test:reference"
+    , 'annal:field_render_type':        "URILink"
+    , 'annal:field_value_type':         "annal:Slug"
+    , 'annal:field_target_type':        "annal:Identifier"
+    , 'annal:field_ref_type':           "testimptype"
+    , 'annal:field_ref_restriction':    "ALL"
+    , 'annal:field_ref_field':          "test:import"
+    , 'annal:placeholder':              "(URI to import)"
+    , 'annal:default_value':            ""
     })
 
 def test_import_field_value():
     return (
-        { "resource_name":            "imp_field.md"
-        , "import_url":               "file://%s/README.md"%TestBaseDir
-        , "resource_url":             "file://%s/README.md"%TestBaseDir
-        , "import_name":              "imp_field"
-        , "resource_type":            "text/markdown"
+        { "resource_name":              "imp_field.md"
+        , "import_url":                 "file://%s/README.md"%TestBaseDir
+        , "resource_url":               "file://%s/README.md"%TestBaseDir
+        , "import_name":                "imp_field"
+        , "resource_type":              "text/markdown"
         })
 
 def test_imp_entity_create_values(entity_id):

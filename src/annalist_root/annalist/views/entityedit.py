@@ -539,7 +539,7 @@ class GenericEntityEditView(AnnalistGenericView):
 
         new_enum = self.find_new_enum(entityvaluemap, form_data)
         if new_enum:
-            new_type_id  = new_enum['field_options_typeref']
+            new_type_id  = new_enum['field_ref_type']
             new_typeinfo = EntityTypeInfo(
                 viewinfo.site, viewinfo.collection, new_type_id
                 )
@@ -1010,7 +1010,7 @@ class GenericEntityEditView(AnnalistGenericView):
         Locate add enumerated value option in form data and, if present, return a 
         description of the enumerated field for which a new value is to be created.
 
-        Field 'field_options_typeref' of the returned value is the type_id of the 
+        Field 'field_ref_type' of the returned value is the type_id of the 
         enumerated value type.
         """
         def is_new_f(fd):

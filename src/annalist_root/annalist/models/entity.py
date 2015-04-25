@@ -247,6 +247,7 @@ class Entity(EntityRoot):
             v = e._load_values()
             # log.info("entity.load %r"%(v,))
             if v:
+                v = e._migrate_values(v)
                 e.set_values(v)
                 entity = e
         return entity

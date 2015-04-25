@@ -21,7 +21,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Refactor entityedit Save_Entity handling
     - [x] Refactor entityedit to carry more context in viewinfo (simplify function calls)
     - [x] Refactor value decoding so it can access other form fields (to build complex values)?  (see next)
-- [ ] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
+- [x] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
     - [x] Blob and file upload support: images, spreadsheets, ...
         - [x] Choose render type name: URIImport
         - [x] Define renderer test cases as a new module in `annalist/tests/`, e.g.:
@@ -46,7 +46,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
             - [x] `annalist/tests/test_entitygenericlist.py` about line 244 (bump counter)
             - [x] `annalist/tests/entity_testsitedata.py`, about line 306 (add new render type name in sorted list)
         - [x] Check the affected web views and augment the site CSS file (`annalist/static/css/annalist.css`)
-    - [ ] Field definition enhancements to link to uploaded file
+    - [x] Field definition enhancements to link to uploaded file
         - [x] Design revised field definition structure to separate rendering from value reference
             - [x] Value reference direct
             - [x] Value reference as upload to current entity
@@ -59,10 +59,22 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [x] Revise field value handling to take account of multiple sources
         - [x] Figure out how to resolve relative references: based on entity URL?
         - [x] Test, test cases
-        - [ ] Refactor: change field names in field description
-        - [ ] Apply updates to site data as needed
-        - [ ] Add logic to migrate collection data
-        - [ ] @@Later? Eliminate redundant render types
+        - [x] Refactor: change field names in field description. 
+            - [x] s/field_options_typeref/field_ref_type/
+            - [x] s/field_restrict_values/field_ref_restriction/
+            - [x] s/field_target_key/field_ref_field/
+            - [x] s/annal:options_typeref/annal:field_ref_type/
+            - [x] s/annal:restrict_values/annal:field_ref_restriction/
+            - [x] s/annal:target_field/annal:field_ref_field/
+        - [x] Apply updates to site data as needed
+        - [x] Add logic to migrate collection data
+            - [x] Add migration hook to Entity.load() method - call self._migrate_values()
+            - [x] Default _migrate_values method in EntityRoot just returns with no change
+            - [x] Attach migration data/method to EntityData subclasses as required.  May include common logic in EntityData method.
+            - [x] s/annal:options_typeref/annal:field_ref_type/
+            - [x] s/annal:restrict_values/annal:field_ref_restriction/
+            - [x] s/annal:target_field/annal:field_ref_field/
+- [ ] @@Later? Eliminate redundant render types
 - [ ] Add 'view' button to edit form
 - [x] Is it really appropriate to save the annal:url value in a stored entity?
     - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator

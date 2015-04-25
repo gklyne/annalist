@@ -9,6 +9,6 @@
 , "annal:field_value_type":     "annal:Slug"
 , "annal:placeholder":          "(field id)"
 , "annal:property_uri":         "annal:field"
-, "annal:options_typeref":      "_field"
+, "annal:field_ref_type":       "_field"
 , "annal:field_placement":      "small:0,6"
 }

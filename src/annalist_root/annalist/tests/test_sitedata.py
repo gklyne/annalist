@@ -278,7 +278,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                     , "Enum", "Enum_optional"
                     ])
                 if field_type in enum_types:
-                    self.assertIn(ANNAL.CURIE.options_typeref, view_field)
+                    self.assertIn(ANNAL.CURIE.field_ref_type, view_field)
             except Exception as e:
                 log.warning("check_type_fields error %s, field_id %s, render_type %s"%(e, field_id, field_type))
                 raise

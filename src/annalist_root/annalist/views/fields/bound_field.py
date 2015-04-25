@@ -188,7 +188,7 @@ class bound_field(object):
         """
         targetvals   = self.get_targetvals()
         if targetvals is not None:
-            target_key   = self._field_description['field_target_key']
+            target_key   = self._field_description['field_ref_field']
             target_value = targetvals.get(target_key, None)
         else:
             target_value = self.field_value
@@ -227,10 +227,8 @@ class bound_field(object):
         return a copy of the referenced target entity, otherwise None.
         """
         log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
-        # target_type = self._field_description.get(ANNAL.CURIE.options_typeref, None)
-        # target_key  = self._field_description.get(ANNAL.CURIE.target_field, None)
-        target_type = self._field_description['field_options_typeref']
-        target_key  = self._field_description['field_target_key']
+        target_type = self._field_description['field_ref_type']
+        target_key  = self._field_description['field_ref_field']
         log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
         if target_type and target_key:
             if self._targetvals is None:

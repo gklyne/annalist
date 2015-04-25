@@ -71,7 +71,7 @@ class FieldDescription(object):
         field_property      = field_property or recordfield.get(ANNAL.CURIE.property_uri, "")
         field_placement     = field_placement or recordfield.get(ANNAL.CURIE.field_placement, "")
         field_render_type   = recordfield.get(ANNAL.CURIE.field_render_type, "")
-        field_ref_type      = recordfield.get(ANNAL.CURIE.options_typeref, None)
+        field_ref_type      = recordfield.get(ANNAL.CURIE.field_ref_type, None)
         field_val_type      = recordfield.get(ANNAL.CURIE.field_value_type, "")
         self._field_desc    = (
             { 'field_id':                   field_id
@@ -85,9 +85,9 @@ class FieldDescription(object):
             , 'field_target_type':          recordfield.get(ANNAL.CURIE.field_target_type, field_val_type)
             , 'field_placeholder':          recordfield.get(ANNAL.CURIE.placeholder, "")
             , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
-            , 'field_options_typeref':      field_ref_type
-            , 'field_restrict_values':      recordfield.get(ANNAL.CURIE.restrict_values, "ALL")
-            , 'field_target_key':           recordfield.get(ANNAL.CURIE.target_field, "ALL")
+            , 'field_ref_type':             field_ref_type
+            , 'field_ref_restriction':      recordfield.get(ANNAL.CURIE.field_ref_restriction, "ALL")
+            , 'field_ref_field':            recordfield.get(ANNAL.CURIE.field_ref_field, None)
             , 'field_choice_labels':        None
             , 'field_choice_links':         None
             , 'field_group_ref':            recordfield.get(ANNAL.CURIE.group_ref, None)
@@ -107,9 +107,9 @@ class FieldDescription(object):
         self._field_suffix_index  = 0    # No dup
         self._field_suffix        = ""
         # If field references type, pull in copy of type id and link values
-        type_ref = self._field_desc['field_options_typeref']
+        type_ref = self._field_desc['field_ref_type']
         if type_ref:
-            restrict_values = self._field_desc['field_restrict_values']
+            restrict_values = self._field_desc['field_ref_restriction']
             entity_finder   = EntityFinder(collection, selector=restrict_values)
             entities        = entity_finder.get_entities_sorted(
                 type_id=type_ref, context=view_context, scope="all"
@@ -129,7 +129,7 @@ class FieldDescription(object):
                     self._field_desc['field_choice_labels'][eid] = eid   # @@TODO: be smarter about label?
                     self._field_desc['field_choice_links'][eid]  = e.get_view_url_path()
             # log.info("typeref %s: %r"%
-            #     (self._field_desc['field_options_typeref'], list(self._field_desc['field_choices']))
+            #     (self._field_desc['field_ref_type'], list(self._field_desc['field_choices']))
             #     )
         # If field references group, pull in field details
         if group_view:
@@ -254,7 +254,7 @@ class FieldDescription(object):
     def is_enum_field(self):
         """
         Returns true if this is an enumerated-value field, in which case the
-        'field_options_typeref' field is assumed to the type_id of the value 
+        'field_ref_type' field is assumed to the type_id of the value 
         type to be enumerated.
         """
         enum_render_types = (
@@ -304,7 +304,7 @@ class FieldDescription(object):
             "  , 'field_name': %r\n"%(self.get_field_name())+
             "  , 'field_render_type': %r\n"%(self._field_desc["field_render_type"])+
             "  , 'field_property_uri': %r\n"%(self.get_field_property_uri())+
-            "  , 'type_ref': %r"%(self._field_desc["field_options_typeref"])+
+            "  , 'type_ref': %r"%(self._field_desc["field_ref_type"])+
             "  , 'group_ref': %r"%(self._field_desc["field_group_ref"])+
             "  })"
             )

@@ -79,9 +79,9 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_placeholder':          ''
             , 'field_default_value':        None
             , 'field_placement':            expect_placement
-            , 'field_options_typeref':      None
+            , 'field_ref_type':             None
             , 'field_choice_links':         None
-            , 'field_restrict_values':      'ALL'
+            , 'field_ref_restriction':      'ALL'
             , 'field_group_ref':            None
             , 'field_render_type':          'Text'
             })
@@ -109,9 +109,9 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_placeholder':          '(field id)'
             , 'field_default_value':        None
             , 'field_placement':            expect_placement
-            , 'field_options_typeref':      None
+            , 'field_ref_type':             None
             , 'field_choice_links':         None
-            , 'field_restrict_values':      'ALL'
+            , 'field_ref_restriction':      'ALL'
             , 'field_group_ref':            None
             , 'field_render_type':          'EntityId'
             })
@@ -152,10 +152,10 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_placeholder':          '(field sel)'
             , 'field_default_value':        ''
             , 'field_placement':            expect_placement
-            , 'field_options_typeref':      '_field'
+            , 'field_ref_type':             '_field'
             , 'field_choice_labels':        expect_choice_labels
             , 'field_choice_links':         expect_choice_links
-            , 'field_restrict_values':      '[annal:field_entity_type] in entity[annal:record_type]'
+            , 'field_ref_restriction':      '[annal:field_entity_type] in entity[annal:record_type]'
             , 'field_group_ref':            None
             , 'field_render_type':          'Field'
             })
@@ -183,10 +183,10 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_placeholder':          '(repeat field description)'
             , 'field_default_value':        None
             , 'field_placement':            expect_placement
-            , 'field_options_typeref':      None
+            , 'field_ref_type':             None
             , 'field_choice_labels':        None
             , 'field_choice_links':         None
-            , 'field_restrict_values':      'ALL'
+            , 'field_ref_restriction':      'ALL'
             , 'field_group_ref':            'View_field_group'
             })
         self.assertDictionaryMatch(fd, expect_field_desc)

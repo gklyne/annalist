@@ -158,6 +158,26 @@ class RecordFieldTest(AnnalistTestCase):
         self.assertDictionaryMatch(td, v)
         return
 
+    def test_recordfield_create_migrate(self):
+        # Test field migration for RecordField values
+        vc = recordfield_create_values(field_id="field1")
+        vc.update(
+            { 'annal:options_typeref':  "test_target_type"
+            , 'annal:restrict_values':  "ALL"
+            , 'annal:target_field':     "annal:test_target_field"
+            })
+        t  = RecordField.create(self.testcoll, "field1", vc)
+        td = RecordField.load(self.testcoll, "field1").get_values()
+        vr  = recordfield_read_values(field_id="field1")
+        vr.update(
+            { 'annal:field_ref_type':           "test_target_type"
+            , 'annal:field_ref_restriction':    "ALL"
+            , 'annal:field_ref_field':          "annal:test_target_field"
+            })
+        self.assertKeysMatch(td, vr)
+        self.assertDictionaryMatch(td, vr)
+        return
+
 #   -----------------------------------------------------------------------------
 #
 #   RecordField edit view tests
@@ -313,7 +333,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # 10th field - enumeration type (for select rendering)
         self.assertEqual(r.context['fields'][10]['field_id'], 'Field_typeref')
         self.assertEqual(r.context['fields'][10]['field_name'], 'Field_typeref')
-        self.assertEqual(r.context['fields'][10]['field_property_uri'], "annal:options_typeref")
+        self.assertEqual(r.context['fields'][10]['field_property_uri'], "annal:field_ref_type")
         self.assertEqual(r.context['fields'][10]['field_render_type'], "Enum_optional")
         self.assertEqual(r.context['fields'][10]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][10]['field_value'], field_typeref)
@@ -321,7 +341,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # 11th field - enumeration restriction (for select rendering)
         self.assertEqual(r.context['fields'][11]['field_id'], 'Field_restrict')
         self.assertEqual(r.context['fields'][11]['field_name'], 'Field_restrict')
-        self.assertEqual(r.context['fields'][11]['field_property_uri'], "annal:restrict_values")
+        self.assertEqual(r.context['fields'][11]['field_property_uri'], "annal:field_ref_restriction")
         self.assertEqual(r.context['fields'][11]['field_render_type'], "Text")
         self.assertEqual(r.context['fields'][11]['field_value_type'], "annal:Text")
         self.assertEqual(r.context['fields'][11]['field_value'], field_restrict)
@@ -646,7 +666,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         # Test context
-        field_url = collection_entity_view_url(coll_id="testcoll", type_id="_field", entity_id="Type_label")
+        #@@ field_url = collection_entity_view_url(coll_id="testcoll", type_id="_field", entity_id="Type_label")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['entity_id'],        "Type_label")

@@ -160,7 +160,7 @@ testtgtref_field_create_values = (
     , 'annal:field_entity_type':    "test:type/testsrc_type"    # Field-ref domain type
     , 'annal:field_value_type':     "test:type/testtgt_type"    # Field-ref range type
     , 'annal:field_render_type':    "Enum"
-    , 'annal:options_typeref':      "testtgt_type"
+    , 'annal:field_ref_type':       "testtgt_type"
     , 'annal:placeholder':          "(reference to testtgt_type entity)"
     , 'annal:default_value':        ""
     })
