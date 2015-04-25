@@ -474,7 +474,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 { 'coll_id':    viewinfo.coll_id
                 , 'type_id':    viewinfo.curr_type_id
                 , 'view_id':    form_data['view_choice']
-                , 'entity_id':  viewinfo.curr_entity_id
+                , 'entity_id':  viewinfo.curr_entity_id or viewinfo.entity_id
                 , 'action':     self.uri_action
                 })
             redirect_uri = (

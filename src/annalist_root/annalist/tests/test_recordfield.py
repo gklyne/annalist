@@ -242,13 +242,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_default="",
             field_entity_type="",
             field_typeref="",
+            field_fieldref="",
             field_restrict="",
             field_viewref="",
             field_repeat_label_add="",
             field_repeat_label_delete=""
             ):
         r = response
-        self.assertEqual(len(r.context['fields']), 15)
+        self.assertEqual(len(r.context['fields']), 16)
         # 1st field - Id
         self.assertEqual(r.context['fields'][0]['field_id'], 'Field_id')
         self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
@@ -330,7 +331,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][9]['field_value_type'], "annal:Identifier")
         self.assertEqual(r.context['fields'][9]['field_value'], field_entity_type)
         self.assertEqual(r.context['fields'][9]['options'], self.no_options)
-        # 10th field - enumeration type (for select rendering)
+        # 10th field - type of referenced entity
         self.assertEqual(r.context['fields'][10]['field_id'], 'Field_typeref')
         self.assertEqual(r.context['fields'][10]['field_name'], 'Field_typeref')
         self.assertEqual(r.context['fields'][10]['field_property_uri'], "annal:field_ref_type")
@@ -338,38 +339,46 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][10]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][10]['field_value'], field_typeref)
         self.assertEqual(r.context['fields'][10]['options'], [""]+get_site_types_sorted()+["testtype"])
-        # 11th field - enumeration restriction (for select rendering)
-        self.assertEqual(r.context['fields'][11]['field_id'], 'Field_restrict')
-        self.assertEqual(r.context['fields'][11]['field_name'], 'Field_restrict')
-        self.assertEqual(r.context['fields'][11]['field_property_uri'], "annal:field_ref_restriction")
-        self.assertEqual(r.context['fields'][11]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][11]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][11]['field_value'], field_restrict)
+        # 11th field - field of referenced entity
+        self.assertEqual(r.context['fields'][11]['field_id'], 'Field_fieldref')
+        self.assertEqual(r.context['fields'][11]['field_name'], 'Field_fieldref')
+        self.assertEqual(r.context['fields'][11]['field_property_uri'], "annal:field_ref_field")
+        self.assertEqual(r.context['fields'][11]['field_render_type'], "Identifier")
+        self.assertEqual(r.context['fields'][11]['field_value_type'], "annal:Identifier")
+        self.assertEqual(r.context['fields'][11]['field_value'], field_fieldref)
         self.assertEqual(r.context['fields'][11]['options'], self.no_options)
+        # 11th field - enumeration restriction (for select rendering)
+        self.assertEqual(r.context['fields'][12]['field_id'], 'Field_restrict')
+        self.assertEqual(r.context['fields'][12]['field_name'], 'Field_restrict')
+        self.assertEqual(r.context['fields'][12]['field_property_uri'], "annal:field_ref_restriction")
+        self.assertEqual(r.context['fields'][12]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][12]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][12]['field_value'], field_restrict)
+        self.assertEqual(r.context['fields'][12]['options'], self.no_options)
         # 12th field - enumeration restriction (for select rendering)
-        self.assertEqual(r.context['fields'][12]['field_id'], 'Field_groupref')
-        self.assertEqual(r.context['fields'][12]['field_name'], 'Field_groupref')
-        self.assertEqual(r.context['fields'][12]['field_property_uri'], "annal:group_ref")
-        self.assertEqual(r.context['fields'][12]['field_render_type'], "Enum_optional")
-        self.assertEqual(r.context['fields'][12]['field_value_type'], "annal:Slug")
-        self.assertEqual(r.context['fields'][12]['field_value'], field_viewref)
-        self.assertEqual(r.context['fields'][12]['options'], [""] + self.group_options)
+        self.assertEqual(r.context['fields'][13]['field_id'], 'Field_groupref')
+        self.assertEqual(r.context['fields'][13]['field_name'], 'Field_groupref')
+        self.assertEqual(r.context['fields'][13]['field_property_uri'], "annal:group_ref")
+        self.assertEqual(r.context['fields'][13]['field_render_type'], "Enum_optional")
+        self.assertEqual(r.context['fields'][13]['field_value_type'], "annal:Slug")
+        self.assertEqual(r.context['fields'][13]['field_value'], field_viewref)
+        self.assertEqual(r.context['fields'][13]['options'], [""] + self.group_options)
         # 13th field - enumeration restriction (for select rendering)
-        self.assertEqual(r.context['fields'][13]['field_id'], 'Field_repeat_label_add')
-        self.assertEqual(r.context['fields'][13]['field_name'], 'Field_repeat_label_add')
-        self.assertEqual(r.context['fields'][13]['field_property_uri'], "annal:repeat_label_add")
-        self.assertEqual(r.context['fields'][13]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][13]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][13]['field_value'], field_repeat_label_add)
-        self.assertEqual(r.context['fields'][13]['options'], self.no_options)
-        # 14th field - enumeration restriction (for select rendering)
-        self.assertEqual(r.context['fields'][14]['field_id'], 'Field_repeat_label_delete')
-        self.assertEqual(r.context['fields'][14]['field_name'], 'Field_repeat_label_delete')
-        self.assertEqual(r.context['fields'][14]['field_property_uri'], "annal:repeat_label_delete")
+        self.assertEqual(r.context['fields'][14]['field_id'], 'Field_repeat_label_add')
+        self.assertEqual(r.context['fields'][14]['field_name'], 'Field_repeat_label_add')
+        self.assertEqual(r.context['fields'][14]['field_property_uri'], "annal:repeat_label_add")
         self.assertEqual(r.context['fields'][14]['field_render_type'], "Text")
         self.assertEqual(r.context['fields'][14]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][14]['field_value'], field_repeat_label_delete)
+        self.assertEqual(r.context['fields'][14]['field_value'], field_repeat_label_add)
         self.assertEqual(r.context['fields'][14]['options'], self.no_options)
+        # 14th field - enumeration restriction (for select rendering)
+        self.assertEqual(r.context['fields'][15]['field_id'], 'Field_repeat_label_delete')
+        self.assertEqual(r.context['fields'][15]['field_name'], 'Field_repeat_label_delete')
+        self.assertEqual(r.context['fields'][15]['field_property_uri'], "annal:repeat_label_delete")
+        self.assertEqual(r.context['fields'][15]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][15]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][15]['field_value'], field_repeat_label_delete)
+        self.assertEqual(r.context['fields'][15]['options'], self.no_options)
         return
 
     #   -----------------------------------------------------------------------------

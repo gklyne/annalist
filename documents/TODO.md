@@ -74,7 +74,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
             - [x] s/annal:options_typeref/annal:field_ref_type/
             - [x] s/annal:restrict_values/annal:field_ref_restriction/
             - [x] s/annal:target_field/annal:field_ref_field/
-- [ ] @@Later? Eliminate redundant render types
+        - [x] Add field ref to field view form
 - [ ] Add 'view' button to edit form
 - [x] Is it really appropriate to save the annal:url value in a stored entity?
     - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator
@@ -109,6 +109,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 (feature freeze for V0.9alpha?)
 
+- [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Loom into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
+- [ ] Eliminate redundant render types
 - [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared deployment should generate a new secret key in settings

@@ -201,6 +201,7 @@ site_field_fields = (
     , "Field_comment"
     , "Field_default"
     , "Field_entity_type"
+    , "Field_fieldref"
     , "Field_groupref"
     , "Field_id"
     , "Field_label"

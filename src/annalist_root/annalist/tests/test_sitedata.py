@@ -937,6 +937,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_comment",             ["Field_comment"                      ] ]
             , [ "_field/Field_default",             ["Field_default"                      ] ]
             , [ "_field/Field_entity_type",         ["Field_entity_type"                  ] ]
+            , [ "_field/Field_fieldref",            ["Field_fieldref"                     ] ]
             , [ "_field/Field_groupref",            ["Field_groupref"                     ] ]
             , [ "_field/Field_id",                  ["Field_id"                           ] ]
             , [ "_field/Field_label",               ["Field_label"                        ] ]
@@ -1047,6 +1048,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "Field_comment"
             , "Field_default"
             , "Field_entity_type"
+            , "Field_fieldref"
             , "Field_groupref"
             , "Field_id"
             , "Field_label"
@@ -1073,6 +1075,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "Field_default"
             , "Field_entity_type"
             , "Field_typeref"
+            , "Field_fieldref"
             , "Field_restrict"
             , "Field_groupref"
             , "Field_repeat_label_add"

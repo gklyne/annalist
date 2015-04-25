@@ -1534,4 +1534,26 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "Unauthorized")
         return
 
+    #   -------- view type --------
+
+    def test_post_view_entity_use_view(self):
+        self._create_entity_data("entityuseview")
+        e1 = self._check_entity_data_values("entityuseview")
+        # View doesn't return form entry field values...
+        f  = entitydata_default_view_form_data(
+                action="view",
+                use_view="Type_view", 
+                )
+        u  = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityuseview", view_id="Default_view")
+        r  = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityuseview", view_id="Type_view")
+        c = continuation_url_param("/testsite/c/testcoll/d/testtype/")
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self._check_entity_data_values("entityuseview")
+        return
+
 # End.
