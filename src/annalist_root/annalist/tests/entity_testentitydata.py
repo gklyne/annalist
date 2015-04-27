@@ -435,7 +435,8 @@ def entitydata_default_view_form_data(
         coll_id="testcoll", 
         type_id="testtype", orig_type=None,
         entity_id=None, orig_id=None, 
-        action=None, cancel=None, close=None, edit=None, copy=None, update="Entity",
+        action=None, cancel=None, close=None, view=None, edit=None, copy=None, 
+        update="Entity",
         add_view_field=None, use_view=None,
         new_view=None, new_field=None, new_type=None, 
         new_enum=None, do_import=None
@@ -464,6 +465,8 @@ def entitydata_default_view_form_data(
         form_data_dict['cancel']          = "Cancel"
     elif close:
         form_data_dict['close']           = "Close"
+    elif view:
+        form_data_dict['view']            = "View"
     elif edit:
         form_data_dict['edit']            = "Edit"
     elif copy:

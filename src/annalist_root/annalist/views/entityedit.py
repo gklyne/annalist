@@ -488,7 +488,8 @@ class GenericEntityEditView(AnnalistGenericView):
         # If "Edit" or "Copy" button invoked, initiate new view of current entity
         edit_action = (
             "edit" if 'edit' in form_data else
-            "copy" if 'copy' in form_data else None
+            "copy" if 'copy' in form_data else
+            "view" if 'view' in form_data else None
             )
         if edit_action is not None:
             view_edit_uri_base = self.view_uri("AnnalistEntityEditView",

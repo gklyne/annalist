@@ -269,6 +269,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
               <div class="row">
                 <div class="%(button_left_classes)s">
                   <input type="submit" name="save"      value="Save" />
+                  <input type="submit" name="view"      value="View" />
                   <input type="submit" name="cancel"    value="Cancel" />
                 </div>
               </div>
@@ -1532,6 +1533,28 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   401)
         self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
+    #   -------- view current entity --------
+
+    def test_post_edit_entity_view(self):
+        self._create_entity_data("entityeditview")
+        f = entitydata_default_view_form_data(entity_id="entityeditview", action="edit", view="View")
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditview", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        e = TestHostUri + entitydata_edit_url(
+            "view", "testcoll", "testtype", entity_id="entityeditview", view_id="Default_view"
+            )
+        l = continuation_url_param(entitydata_list_type_url("testcoll", "testtype"))
+        c = continuation_url_param(u, prev_cont=l)
+        self.assertIn(e, r['location'])
+        self.assertIn(c, r['location'])
+        # 'http://test.example.com/testsite/c/testcoll/v/Default_view/testtype/entityview/!edit
+        #   ?continuation_url=/testsite/c/testcoll/v/Default_view/testtype/entityview/!view
+        #   %3Fcontinuation_url=/testsite/c/testcoll/d/testtype/'
         return
 
     #   -------- view type --------

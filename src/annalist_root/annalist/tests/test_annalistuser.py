@@ -381,6 +381,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
               <div class="row">
                 <div class="%(button_left_classes)s">
                   <input type="submit" name="save"      value="Save" />
+                  <input type="submit" name="view"      value="View" />
                   <input type="submit" name="cancel"    value="Cancel" />
                 </div>
               </div>

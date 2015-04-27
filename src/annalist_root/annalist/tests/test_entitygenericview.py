@@ -280,9 +280,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_left_classes)s">
-                  <input type="submit" name="close" value="Close" />
-                  <input type="submit" name="copy"  value="Copy" />
                   <input type="submit" name="edit"  value="Edit" />
+                  <input type="submit" name="copy"  value="Copy" />
+                  <input type="submit" name="close" value="Close" />
                 </div>
               </div>
             </div>
