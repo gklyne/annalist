@@ -287,6 +287,15 @@ class FieldDescription(object):
             ])
         return self._field_desc['field_render_type'] in import_render_types
 
+    def is_upload_field(self):
+        """
+        Returns true if this field is a file-upload field
+        """
+        import_render_types = (
+            [ "FileUpload"
+            ])
+        return self._field_desc['field_render_type'] in import_render_types
+
     def has_field_group_ref(self):
         """
         Returns true if this field contains a reference to a field group,

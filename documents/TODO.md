@@ -75,14 +75,24 @@ NOTE: this document is used for short-term working notes; longer-term planning i
             - [x] s/annal:restrict_values/annal:field_ref_restriction/
             - [x] s/annal:target_field/annal:field_ref_field/
         - [x] Add field ref to field view form
-- [ ] Add 'view' button to edit form
+- [x] Add 'view' button to edit form
 - [ ] Add file-upload option (with resulting value like URI-import)
+    - Cf. https://docs.djangoproject.com/en/1.7/topics/http/file-uploads/
 - [ ] Add software version to coll_meta.
     - [ ] Check this when accessing collection.
     - [ ] Update when updating collection
     - cf. http://stackoverflow.com/questions/11887762/how-to-compare-version-style-strings
         from distutils.version import LooseVersion, StrictVersion
         LooseVersion("2.3.1") < LooseVersion("10.1.2")
+    - class UploadedFile
+        - .read
+        - .multiple_chunks -> bool
+        - .chunks -> generator of chunk data
+        - .name
+        - .size
+        - .content_type
+        - .charset
+        - .content_type_extra
 - [x] Is it really appropriate to save the annal:url value in a stored entity?
     - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator
     - [x] entityroot._load_values() supply value for URL

@@ -3,7 +3,6 @@
   "rdfs:comment": "RecordType help for type1 in collection coll1",
   "annal:type_id": "_type",
   "annal:type_view": "Default_view",
-  "annal:url": "/testsite/c/coll1/d/_type/type1/",
   "annal:type_list": "Default_list",
   "annal:id": "type1",
   "@id": "./",

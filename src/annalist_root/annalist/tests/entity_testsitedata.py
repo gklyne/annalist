@@ -319,6 +319,7 @@ site_field_types = (
     , "Enum_choice"
     , "Enum_optional"
     , "Field"
+    , "FileUpload"
     , "Identifier"
     , "List"
     , "Markdown"

@@ -24,6 +24,7 @@ from render_bool_checkbox       import get_bool_checkbox_renderer, BoolCheckboxV
 from render_uri_link            import get_uri_link_renderer, URILinkValueMapper
 from render_uri_image           import get_uri_image_renderer, URIImageValueMapper
 from render_uri_import          import get_uri_import_renderer, URIImportValueMapper
+from render_file_upload         import get_file_upload_renderer, FileUploadValueMapper
 from render_text_markdown       import get_text_markdown_renderer, TextMarkdownValueMapper
 from render_select              import get_select_renderer, get_choice_renderer, SelectValueMapper
 from render_repeatgroup         import RenderRepeatGroup
@@ -75,6 +76,7 @@ _field_get_renderer_functions = (
     , "URILink":        get_uri_link_renderer
     , "URIImage":       get_uri_image_renderer
     , "URIImport":      get_uri_import_renderer
+    , "FileUpload":     get_file_upload_renderer
 
     , "EntityTypeId":   get_select_renderer
     , "Type":           get_select_renderer
@@ -94,6 +96,7 @@ _field_value_mappers = (
     , "URIImage":       URIImageValueMapper
     , "Markdown":       TextMarkdownValueMapper
     , "URIImport":      URIImportValueMapper
+    , "FileUpload":     FileUploadValueMapper
 
     , "EntityTypeId":   SelectValueMapper
     , "Type":           SelectValueMapper

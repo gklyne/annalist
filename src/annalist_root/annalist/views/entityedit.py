@@ -163,6 +163,14 @@ class GenericEntityEditView(AnnalistGenericView):
               (coll_id, type_id, entity_id, view_id, action)
             )
         log.info("  form data %r"%(request.POST))
+        if request.FILES:
+            for f in request.FILES:
+                log.info(
+                    "  file upload %s: %s(%d bytes) %s"%
+                    (f, request.FILES[f].name, request.FILES[f].size, 
+                        request.FILES[f].content_type
+                        )
+                    )
         self.get_view_template(action, type_id, entity_id)
         action_uri  = action
         action      = request.POST.get('action', action)
@@ -451,6 +459,13 @@ class GenericEntityEditView(AnnalistGenericView):
         #         error_head=messages['entity_type_heading'],
         #         error_message=messages['entity_type_invalid']
         #         )
+
+        # Scan for uploaded files
+        # (actions that ignore uploads must be processed before this)
+        uploaded_files = self.request.FILES
+        self.import_uploaded_files(
+            entityvaluemap, uploaded_files, entityformvals, context_extra_values
+            )
 
         # Save updated details
         if 'save' in form_data:
@@ -1164,6 +1179,23 @@ class GenericEntityEditView(AnnalistGenericView):
             self.render_html(form_context, self.formtemplate) or 
             self.error(self.error406values())
             )
+
+    def import_uploaded_files(self,
+        entityvaluemap, uploaded_files, entityformvals, context_extra_values
+        ):
+        """
+        Process uploaded files.
+
+        This functon operates by scanning through fields that may generate a file
+        upload and looking for a corresponding uploaded files.  Uploaded files not
+        corresponding to view fields are ignored.
+        """
+        def is_upload_f(fd):
+            return fd.is_upload_field()
+        for fd in self.find_fields(entityvaluemap, is_upload_f):
+            # process fd; copy logic from import (@@TODO: refactor)
+            pass
+        return
 
     def find_repeat_fields(self, entityvaluemap):
         """

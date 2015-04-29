@@ -22,7 +22,6 @@
   "annal:open_view": true,
   "annal:type_id": "_view",
   "annal:record_type": "annal:Test_default",
-  "annal:url": "/testsite/c/coll1/d/_view/view2/",
   "annal:id": "view2",
   "@id": "./",
   "@type": [
