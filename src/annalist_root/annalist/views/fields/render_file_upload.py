@@ -35,7 +35,7 @@ class FileUploadValueMapper(RenderBase):
         """
         Extracts import URL from value structure, for field display.
         """
-        return (data_value or {}).get('upload_file', "")
+        return (data_value or {}).get('resource_name', "")
 
     @classmethod
     def decode(cls, field_value):
@@ -51,7 +51,7 @@ class FileUploadValueMapper(RenderBase):
         """
         u = self.decode(field_value)
         v = entityvals.get(property_uri, {})
-        v['upload_file'] = u
+        v['resource_name'] = u
         entityvals[property_uri] = v
         return v
 

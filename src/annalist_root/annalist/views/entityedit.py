@@ -460,12 +460,18 @@ class GenericEntityEditView(AnnalistGenericView):
         #         error_message=messages['entity_type_invalid']
         #         )
 
+        # @@TODO: move actions that don't save entity to here
+
         # Scan for uploaded files
         # (actions that ignore uploads must be processed before this)
         uploaded_files = self.request.FILES
         self.import_uploaded_files(
-            entityvaluemap, uploaded_files, entityformvals, context_extra_values
+            viewinfo, entityvaluemap, 
+            uploaded_files, entityformvals, 
+            context_extra_values
             )
+
+        # @@TODO: save entity here, remove from ensuing logic
 
         # Save updated details
         if 'save' in form_data:
@@ -918,6 +924,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
         return None
 
+    # @@TODO: eliminate this method
     def save_invoke_edit_entity(self, 
             viewinfo, entityvaluemap, entityvals, context_extra_values,
             config_edit_url, config_edit_perm,
@@ -958,8 +965,7 @@ class GenericEntityEditView(AnnalistGenericView):
         Common logic for invoking a resource edit while editing
         or viewing some other resource:
           - authorization to perform the requested edit is checked
-          - a continuaton URL is calculated which is the URL for the current view,
-            except that the continuation action is always "edit"
+          - a continuaton URL is calculated which is the URL for the current view
           - a URL for the config edit view is assembled from the supplied base URL
             and parameters, and the calculated continuaton URL
           - an HTTP redirect response to the config edit view is returned.
@@ -1181,7 +1187,9 @@ class GenericEntityEditView(AnnalistGenericView):
             )
 
     def import_uploaded_files(self,
-        entityvaluemap, uploaded_files, entityformvals, context_extra_values
+        viewinfo, entityvaluemap, 
+        uploaded_files, entityformvals, 
+        context_extra_values
         ):
         """
         Process uploaded files.
@@ -1193,8 +1201,55 @@ class GenericEntityEditView(AnnalistGenericView):
         def is_upload_f(fd):
             return fd.is_upload_field()
         for fd in self.find_fields(entityvaluemap, is_upload_f):
-            # process fd; copy logic from import (@@TODO: refactor)
-            pass
+            # process fd; copy logic from import (@@TODO: refactor?)
+            upload_name  = fd.get_field_instance_name()
+            if upload_name in uploaded_files:
+                log.info("importing file for %s"%upload_name)
+                property_uri = fd['field_property_uri']
+                field_vals   = entityformvals[property_uri].copy() or {}
+                field_vals['upload_name']   = upload_name
+                field_vals['uploaded_file'] = field_vals.get('uploaded_file', None)
+                upload_vals  = field_vals.copy()    # Used for reporting..
+                upload_vals.update(
+                    { 'id':         viewinfo.entity_id
+                    , 'type_id':    viewinfo.type_id
+                    })
+                try:
+                    value_type    = fd.get('field_target_type', "annal:unknown_type")
+                    resource_type = uploaded_files[upload_name].content_type
+                    local_fileobj = viewinfo.entitytypeinfo.get_fileobj(
+                        viewinfo.entity_id, upload_name, 
+                        value_type, resource_type, "wb"
+                        )
+                    resource_name = os.path.basename(local_fileobj.name)
+                    field_vals.update(
+                        { 'resource_name':  resource_name
+                        , 'resource_type':  resource_type
+                        , 'uploaded_file':  uploaded_files[upload_name].name
+                        , 'uploaded_size':  uploaded_files[upload_name].size
+                        })
+                    log.info("field_vals %r"%(field_vals,))
+                    try:
+                        upload_err   = None
+                        upload_done  = None
+                        upload_vals.update(field_vals)
+                        for chunk in uploaded_files[upload_name].chunks():
+                            local_fileobj.write(chunk)
+                        # Import completed: set up response
+                        entityformvals[property_uri] = field_vals
+                        upload_done = message.UPLOAD_DONE
+                        upload_msg  = message.UPLOAD_DONE_DETAIL%upload_vals
+                    finally:
+                        local_fileobj.close()
+                except Exception as e:
+                    # upload_vals['import_exc'] = str(e)
+                    upload_err = message.UPLOAD_ERROR
+                    upload_msg = message.UPLOAD_ERROR_REASON%dict(upload_vals, upload_exc=str(e))
+                    log.info("%s: %s"%(upload_err, upload_msg))
+                    log.debug(str(e), exc_info=True)
+                # end if
+            # end for
+        #@@TODO: think about how to handle errors from upload
         return
 
     def find_repeat_fields(self, entityvaluemap):

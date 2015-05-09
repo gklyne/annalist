@@ -31,8 +31,8 @@ resource_types = (
       ]
     , "annal:Image":
       [ ("png",    "image/png")
-      , ("jpeg",   "image/jpeg")
       , ("jpg",    "image/jpeg")
+      , ("jpeg",   "image/jpeg")
       , ("gif",    "image/gif")
       , ("tiff",   "image/tiff")
       , ("svg",    "image/svg")

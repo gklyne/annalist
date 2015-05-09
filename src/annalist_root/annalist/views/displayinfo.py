@@ -250,11 +250,18 @@ class DisplayInfo(object):
 
     def check_authorization(self, action):
         """
-        If no error so far, check authorization.  Return None if all is OK,
-        or HttpResonse object.
+        Check authorization.  Return None if all is OK, or HttpResonse object.
 
         Also, save copy of key authorizations for later rendering.
         """
+        # Save key authorizations for later rendering
+        for k in authorization_map:
+            for p in authorization_map[k]:
+                self.authorizations[k] = (
+                    self.authorizations[k] or 
+                    self.view.authorize(p, self.collection) is None
+                    )
+        # Check requested action
         action = action or "view"
         if self.entitytypeinfo:
             permissions_map = self.entitytypeinfo.permissions_map
@@ -264,12 +271,6 @@ class DisplayInfo(object):
             self.http_response or 
             self.view.form_action_auth(action, self.collection, permissions_map)
             )
-        for k in authorization_map:
-            for p in authorization_map[k]:
-                self.authorizations[k] = (
-                    self.authorizations[k] or 
-                    self.view.authorize(p, self.collection) is None
-                    )
         return self.http_response
 
     def report_error(self, message):

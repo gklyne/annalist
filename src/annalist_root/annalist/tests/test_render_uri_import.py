@@ -47,7 +47,7 @@ class UriImportRenderingTest(FieldRendererTestSupport):
         self.assertEqual(file_extension_for_content_type("annal:Text",     "text/plain"),       "txt")
         self.assertEqual(file_extension_for_content_type("annal:Markdown", "text/markdown"),    "md")
         self.assertEqual(file_extension_for_content_type("annal:Markdown", "text/plain"),       "txt")
-        self.assertEqual(file_extension_for_content_type("annal:Image",    "image/jpeg"),       "jpeg")
+        self.assertEqual(file_extension_for_content_type("annal:Image",    "image/jpeg"),       "jpg")
         self.assertEqual(file_extension_for_content_type("ex:foo", "application/octet-stream"), "dat")
         self.assertEqual(file_extension_for_content_type("ex:foo", "image/jpeg"),               None)
         return

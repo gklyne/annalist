@@ -21,6 +21,13 @@ IMPORT_DONE                 = "Resource imported"
 IMPORT_DONE_DETAIL          = ("Imported <%(resource_url)s>"+
                                " as %(import_name)s"+
                                " for entity %(type_id)s/%(id)s")
+UPLOAD_ERROR                = "File upload error"
+UPLOAD_ERROR_REASON         = ("Failed to upload file %(uploaded_file)s as %(upload_name)s"+
+                               " for %(type_id)s/%(id)s: %(upload_exc)s")
+UPLOAD_DONE                 = "File uploaded"
+UPLOAD_DONE_DETAIL          = ("Uploaded <%(uploaded_file)s>"+
+                               " as %(upload_name)s"+
+                               " for entity %(type_id)s/%(id)s")
 # IMPORT_DONE_DETAIL          = ("Imported <%(import_url)s> from <%(resource_url)s>"+
 #                                " as %(import_name)s"+
 #                                " for entity %(type_id)s/%(id)s")
