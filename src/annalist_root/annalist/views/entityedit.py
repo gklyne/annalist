@@ -11,7 +11,7 @@ import os
 import logging
 log = logging.getLogger(__name__)
 
-from itertools import izip_longest
+#@@ from itertools import izip_longest
 
 from django.conf                        import settings
 from django.http                        import HttpResponse
@@ -125,7 +125,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 })
             return self.error(
                 dict(self.error404values(),
-                    message=message.DOES_NOT_EXIST%{'id': entity_label}
+                    message=message.ENTITY_DOES_NOT_EXIST%{'id': entity_label}
                     )
                 )
         # @@TODO: build context_extra_values here and pass into form_render.
@@ -318,13 +318,14 @@ class GenericEntityEditView(AnnalistGenericView):
         entityvals = { field_description.get_field_property_uri(): viewinfo.view_id }
         return bound_field(field_description, entityvals)
 
-    def get_entity(self, entity_id, typeinfo, action):
+    # @@TODO: delete this when tests pass
+    def get_entity_moved_to_generic(self, entity_id, typeinfo, action):
         """
         Create local entity object or load values from existing.
 
         entity_id       entity id to create or load
         typeinfo        EntityTypeInfo object for the entity
-        action          is the requested action: new, edit, copy
+        action          is the requested action: new, edit, copy, view
 
         returns an object of the appropriate type.
 

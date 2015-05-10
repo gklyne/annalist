@@ -168,7 +168,7 @@ class AnnalistGenericView(ContentNegotiationView):
 
     def check_site_data(self):
         """
-        Check thaty site data is present and accessible.  If not, return an HTTP error
+        Check that site data is present and accessible.  If not, return an HTTP error
         response, otherwise None.
         """
         site_data = self.site_data()
@@ -356,6 +356,40 @@ class AnnalistGenericView(ContentNegotiationView):
             auth_scope = "UNKNOWN"
         # return self.authorize(auth_scope, auth_resource)
         return self.authorize(auth_scope, auth_collection)
+
+    # Entity access
+
+    def get_entity(self, entity_id, typeinfo, action):
+        """
+        Create local entity object or load values from existing.
+
+        entity_id       entity id to create or load
+        typeinfo        EntityTypeInfo object for the entity
+        action          is the requested action: new, edit, copy, view
+
+        returns an object of the appropriate type.
+
+        If an existing entity is accessed, values are read from storage, 
+        otherwise a new entity object is created but not yet saved.
+        """
+        # log.info(
+        #     "get_entity id %s, parent %s, action %s, altparent %s"%
+        #     (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
+        #     )
+        entity = typeinfo.get_entity(entity_id, action)
+        if entity is None:
+            parent_id    = typeinfo.entityparent.get_id()
+            altparent_id = (
+                typeinfo.entityaltparent.get_id() if typeinfo.entityaltparent 
+                else "(none)"
+                )
+            log.debug(
+                "Entity not found: parent %s, altparent %s, entity_id %s"%
+                (parent_id, altparent_id, entity_id)
+                )
+        return entity
+
+    # HTML rendering
 
     @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
     def render_html(self, resultdata, template_name):

@@ -466,7 +466,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", "_type", "notype")
-        self.assertContains(r, "<p>%s does not exist</p>"%(err_label), status_code=404)
+        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
         return
 
     def test_get_edit(self):
@@ -501,7 +501,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", "_type", "notype")
-        self.assertContains(r, "<p>%s does not exist</p>"%(err_label), status_code=404)
+        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
         return
 
     #   -----------------------------------------------------------------------------

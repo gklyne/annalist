@@ -706,7 +706,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # log.info(r.content)
         err_label = error_label("testcoll", "_field", "fieldnone")
         self.assertContains(r, 
-            "<p>%s does not exist</p>"%(err_label), 
+            "<p>Entity %s does not exist</p>"%(err_label), 
             status_code=404
             )
         return

@@ -25,6 +25,7 @@ from annalist.views.defaultedit         import EntityDefaultEditView
 from annalist.views.entityedit          import GenericEntityEditView
 from annalist.views.entitylist          import EntityGenericListView
 from annalist.views.entitydelete        import EntityDataDeleteConfirmedView
+from annalist.views.entityresource      import EntityResourceAccess
 
 # c - collections
 # v - view
@@ -141,7 +142,15 @@ urlpatterns = patterns('',
     url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>view)$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityEditView'),
-    )
+
+    # Specified entityresource access
+    url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/(?P<resource_ref>[\w.]{0,40})/$',
+                            EntityResourceAccess.as_view(),
+                            name='AnnalistEntityResourceAccess'),
+
+    ) # End of urlpatterns
+
+
 
 urlpatterns += patterns('',
     url(r'^login/$',      LoginUserView.as_view(),      name='LoginUserView'),

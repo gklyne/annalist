@@ -495,7 +495,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", "_list", "nolist")
-        self.assertContains(r, "<p>%s does not exist</p>"%(err_label), status_code=404)
+        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
         return
 
     def test_get_edit(self):
@@ -539,7 +539,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", "_list", "nolist")
-        self.assertContains(r, "<p>%s does not exist</p>"%(err_label), status_code=404)
+        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
         return
 
     # Test rendering of view with repeated field structure - in this case, List_view
