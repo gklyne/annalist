@@ -144,9 +144,12 @@ urlpatterns = patterns('',
                             name='AnnalistEntityEditView'),
 
     # Specified entityresource access
-    url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/(?P<resource_ref>[\w.]{0,40})/$',
+    url(r'^c/(?P<coll_id>\w{0,32})/d/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/(?P<resource_ref>[\w.]{0,250})$',
                             EntityResourceAccess.as_view(),
                             name='AnnalistEntityResourceAccess'),
+    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/(?P<resource_ref>[\w.]{0,250})$',
+                            EntityResourceAccess.as_view(),
+                            name='AnnalistEntityEditView'),
 
     ) # End of urlpatterns
 

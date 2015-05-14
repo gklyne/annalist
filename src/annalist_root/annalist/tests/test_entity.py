@@ -203,21 +203,55 @@ class EntityRootTest(TestCase):
             , 'title':  'Name collection coll1'
             # , 'uri':    '/annalist/coll1'
             })
-        test_values_returned = (
-            { '@id': '../'
-            , 'annal:id': 'testId'
-            , 'annal:type': 'test:EntityRootType'
-            , 'id': 'testId'
-            , 'title': 'Name collection coll1'
-            , 'type': 'annal:EntityRoot'
-            # , 'uri': '/annalist/coll1'
-            })
         e = TestEntityRootType(TestBaseUri, TestBaseDir)
         e.set_id("testId")
         e.set_values(test_values)
         self.assertFalse(e._exists())
         e._save()
         self.assertTrue(e._exists())
+        return
+
+    def test_entityroot_enum_fields(self):
+        test_values = (
+            { "@type": ['test:EntityRootType']
+            , "a": "a"
+            , "b": "b"
+            , "c": 2
+            , "d":
+              [ { "d1a": "d1a"
+                , "d1b": "d1b"
+                }
+              , { "d2a": "d2a"
+                , "d2b": "d2b"
+                }
+              ]
+            , "e": { "ex": "ex", "ey": "ey"}
+            })
+        e = TestEntityRootType(TestBaseUri, TestBaseDir)
+        e.set_id("testId")
+        e.set_values(test_values)
+        test_fields_returned = (
+            [ (['@type'],           ['test:EntityRootType'])
+            , (['annal:id'],        'testId')
+            , (['annal:url'],       TestBasePath+'/')
+            , (['annal:type_id'],   None)
+            , (['annal:type'],      'test:EntityRootType')
+            , (["a"],               "a")
+            , (["b"],               "b")
+            , (["c"],               2)
+            , (["d",0,"d1a"],       "d1a")
+            , (["d",0,"d1b"],       "d1b")
+            , (["d",1,"d2a"],       "d2a")
+            , (["d",1,"d2b"],       "d2b")
+            , (["e"],               { "ex": "ex", "ey": "ey" })
+            ])
+        actual_fields_returned = list(e.enum_fields())
+        for f in test_fields_returned:
+            self.assertIn(f, actual_fields_returned)
+        self.assertEqual(len(actual_fields_returned), len(test_fields_returned))
+        # Also get get_field...
+        for p, v in test_fields_returned:
+            self.assertEqual(e.get_field(p), v)
         return
 
 

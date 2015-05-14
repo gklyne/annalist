@@ -16,7 +16,12 @@ import os
 import logging
 log = logging.getLogger(__name__)
 
+from django.http                        import HttpResponse
+
+from annalist                           import message
+
 from annalist.models.entitytypeinfo     import EntityTypeInfo, get_built_in_type_ids
+
 from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.generic             import AnnalistGenericView
 
@@ -34,17 +39,16 @@ class EntityResourceAccess(AnnalistGenericView):
     # GET
 
     def get(self, request, 
-            coll_id=None, type_id=None, entity_id=None, resource_ref=None):
+            coll_id=None, type_id=None, entity_id=None, resource_ref=None, view_id=None):
         """
         Access specified entity resource
         """
         log.info(
-            "views.entityedit.get:  coll_id %s, type_id %s, entity_id %s, resource_ref %s"%
+            "get: coll_id %s, type_id %s, entity_id %s, resource_ref %s"%
             (coll_id, type_id, entity_id, resource_ref)
             )
-
-        viewinfo         = self.view_setup(
-            action, coll_id, type_id, view_id, entity_id, request.GET.dict()
+        viewinfo = self.view_setup(
+            coll_id, type_id, entity_id, request.GET.dict()
             )
         if viewinfo.http_response:
             return viewinfo.http_response
@@ -74,19 +78,10 @@ class EntityResourceAccess(AnnalistGenericView):
                         }
                     )
                 )
-        resource_file = self.access_resource(viewinfo, resource_info)
-        if resource_file is None:
-            return self.error(
-                dict(self.error404values(),
-                    message=message.RESOURCE_DOES_NOT_EXIST%
-                        { 'id':  entity_label
-                        , 'ref': resource_ref
-                        }
-                    )
-                )
+        resource_file = entity.field_resource_file(resource_ref)
         # Return resource
         try:
-            response = self.resource_response(resource_info, resource_file)
+            response = self.resource_response(resource_file, resource_info["resource_type"])
         except Exception as e:
             log.exception(str(e))
             response = self.error(
@@ -112,5 +107,24 @@ class EntityResourceAccess(AnnalistGenericView):
         # viewinfo.get_entity_data()
         viewinfo.check_authorization(action)
         return viewinfo
+
+    def find_resource(self, viewinfo, entity, resource_ref):
+        for t, f in entity.enum_fields():
+            log.info("find_resource: t %s, f %r"%(t,f))
+            if isinstance(f, dict):
+                if f.get("resource_name", None) == resource_ref:
+                    return f
+        return None
+
+    def resource_response(self, resource_file, resource_type):
+        """
+        Construct response containing body of referenced resource,
+        with supplied resoure_type as its content_type
+        """
+        # @@TODO: assumes response can reasonably be held in memory;
+        #         consider 'StreamingHttpResponse'?
+        response = HttpResponse(content_type=resource_type)
+        response.write(resource_file.read())
+        return response
 
 # End.

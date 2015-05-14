@@ -150,6 +150,54 @@ class EntityRoot(object):
         """
         return self._values
 
+    def enum_fields(self):
+        """
+        Enumerate fields in entity.
+
+        Recurses into fields that are lists or sequences of dictionaries,
+        this being the structure used for repeated field groups.
+
+        Yields `(path, value)` pairs, where `path` is a list of index values applied
+        successively to access the corresponding value.
+        """
+        def is_dict(e):
+            return isinstance(e,dict)
+        def enum_f(p, d):
+            for k in d:
+                if isinstance(d[k], (list, tuple)) and all([is_dict(e) for e in d[k]]):
+                    for i in range(len(d[k])):
+                        for f in enum_f(p+[k,i], d[k][i]):
+                            yield f
+                else:
+                    yield (p+[k], d[k])
+            return
+        if self._values:
+            for f in enum_f([], self._values):
+                yield f
+        return
+
+    def field_resource_file(self, resource_ref):
+        """
+        Returns a file object value for a resource associated with an entity,
+        or None if the resouce is not present.
+        """
+        (body_dir, _) = self._dir_path()
+        file_name = os.path.join(body_dir, resource_ref)
+        if os.path.isfile(file_name):
+            return open(file_name, "rb")
+        return None
+
+    def get_field(self, path):
+        """
+        Returns a field value corresponding to a path returned by enum_fields.
+        """
+        def get_f(p, v):
+            if p == []:
+                return v
+            else:
+                return get_f(p[1:], v[p[0]])
+        return get_f(path, self._values)
+
     # I/O helper functions
 
     def _dir_path(self):
