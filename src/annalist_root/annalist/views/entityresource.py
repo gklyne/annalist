@@ -110,7 +110,7 @@ class EntityResourceAccess(AnnalistGenericView):
 
     def find_resource(self, viewinfo, entity, resource_ref):
         for t, f in entity.enum_fields():
-            log.info("find_resource: t %s, f %r"%(t,f))
+            # log.debug("find_resource: t %s, f %r"%(t,f))
             if isinstance(f, dict):
                 if f.get("resource_name", None) == resource_ref:
                     return f

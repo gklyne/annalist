@@ -61,6 +61,11 @@ class FileUploadValueMapper(RenderBase):
 #
 #   ----------------------------------------------------------------------------
 
+# NOTE: this is a minimal rendering.  Enhancements might include additional information 
+#       from the entity field, especially for the view (e.g. content-type, etc.)
+# NOTE: The <a> element supports a `type` attribute 
+#       (cf. https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a)
+
 view_upload = (
     """<a href="%s" target="_blank">%s</a>""")
 
@@ -83,17 +88,9 @@ class File_upload_view_renderer(object):
         """
         Render import link for viewing.
         """
-        linkval = FileUploadValueMapper.encode(get_field_value(context, ""))
-        common_prefixes = (
-            [ "http://", "https://"
-            , "file:///", "file://localhost/", "file://"
-            , "mailto:"]
-            )
-        textval = linkval
-        for p in common_prefixes:
-            if linkval.startswith(p):
-                textval = linkval[len(p):]
-                break
+        filename = FileUploadValueMapper.encode(get_field_value(context, ""))
+        linkval  = filename
+        textval  = filename
         return view_upload%(linkval, textval)
 
 class File_upload_edit_renderer(object):
@@ -110,7 +107,6 @@ class File_upload_edit_renderer(object):
         with context.push(encoded_field_value=val):
             result = self._template.render(context)
         return result
-        #@@ return self._template.render(context)
 
 def get_file_upload_renderer():
     """

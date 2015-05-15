@@ -76,22 +76,20 @@ NOTE: this document is used for short-term working notes; longer-term planning i
             - [x] s/annal:target_field/annal:field_ref_field/
         - [x] Add field ref to field view form
 - [x] Add 'view' button to edit form
-- [ ] Add file-upload option (with resulting value like URI-import)
+- [x] Add file-upload option (with resulting value like URI-import)
     - Cf. https://docs.djangoproject.com/en/1.7/topics/http/file-uploads/
-        - class UploadedFile
-            - .read
-            - .multiple_chunks -> bool
-            - .chunks -> generator of chunk data
-            - .name
-            - .size
-            - .content_type
-            - .charset
-            - .content_type_extra
-- [ ] Serve reference to uploaded or imported resource
-    - [ ] How to determine content-type? Save parallel metadata, read entity, use extension?
+- [x] Serve reference to uploaded or imported resource
+    - [x] How to determine content-type? Save parallel metadata, read entity, use extension?
         - read entity is probably the right way, then locate field from resource name.  
         - 404 if not found there, or resource does not exist
         - initially, for GET only
+- [x] Test cases for file upload
+    - [x] test_render_file_upload (adapt from test_render_uri_import)
+    - [x] test_upload_file (adapt from test_import_resource)
+- [x] Create field definition for referencing uploaded image file - use URIlink render type
+- [x] Test case for referencing uploaded file
+    - [x] Similar to Import test
+    - [ ] View rendering test with reference to uploaded file (Use URIImage for manual test, then create test case)
 - [ ] Add software version to coll_meta.
     - [ ] Check this when accessing collection.
     - [ ] Update when updating collection
