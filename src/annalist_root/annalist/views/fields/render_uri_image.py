@@ -12,7 +12,8 @@ log = logging.getLogger(__name__)
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_field_value
+    get_field_value,
+    get_context_field_value
     )
 
 from django.template    import Template, Context
@@ -55,7 +56,8 @@ class uri_image_view_renderer(object):
         """
         Render URI in view as referenced image.
         """
-        linkval = URIImageValueMapper.encode(get_field_value(context, ""))
+        # linkval = URIImageValueMapper.encode(get_field_value(context, ""))
+        linkval = URIImageValueMapper.encode(get_context_field_value(context, "target_value_link", ""))
         return (
             '''<a href="%s" target="_blank">'''+
             '''<img src="%s" alt="Image at %s" />'''+

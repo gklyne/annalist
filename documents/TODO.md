@@ -89,7 +89,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Create field definition for referencing uploaded image file - use URIlink render type
 - [x] Test case for referencing uploaded file
     - [x] Similar to Import test
-    - [ ] View rendering test with reference to uploaded file (Use URIImage for manual test, then create test case)
+    - [ ] View rendering test with reference to uploaded file 
+        - (Use URIImage for manual test, then create test case)
+        - need to extract resource_name from target field value for link...
+- [ ] Sort out file upload view rendering
 - [ ] Add software version to coll_meta.
     - [ ] Check this when accessing collection.
     - [ ] Update when updating collection

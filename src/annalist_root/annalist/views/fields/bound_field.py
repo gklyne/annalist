@@ -189,7 +189,8 @@ class bound_field(object):
         targetvals   = self.get_targetvals()
         if targetvals is not None:
             target_key   = self._field_description['field_ref_field']
-            target_value = targetvals.get(target_key, None)
+            log.info("get_target_value: target_key %s"%(target_key,))
+            target_value = targetvals.get(target_key, "(@%s)"%(target_key))
         else:
             target_value = self.field_value
         return target_value
@@ -201,11 +202,12 @@ class bound_field(object):
         The target value is treated as a relative reference relative to the field_link value.
         If the target value is itself an absolute URI, it will be used as-is.
 
-        If the target value is a dictionary structure created by a URIImpoirt field, the 
+        If the target value is a dictionary structure created by a URIImport field, the 
         resulting value links to the imported data object.
         """
         target_base  = self.get_field_link()
         target_value = self.get_target_value()
+        log.info("get_target_link: base %s, value %s"%(target_base, target_value))
         if target_base and target_value:
             if isinstance(target_value, dict) and 'resource_name' in target_value:
                 target_ref = target_value['resource_name']
