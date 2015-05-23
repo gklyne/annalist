@@ -92,7 +92,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] View rendering test with reference to uploaded file 
         - (Use URIImage for manual test, then create test case)
         - need to extract resource_name from target field value for link...
-- [ ] Sort out file upload view rendering
+- [x] Sort out file upload view rendering
 - [ ] Add software version to coll_meta.
     - [ ] Check this when accessing collection.
     - [ ] Update when updating collection
@@ -123,6 +123,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
     - [ ] JSON-LD @contexts support
     - [ ] Alternative RDF formats support (e.g. content negotiation)
+- [ ] Add field padding so that display position is as expected (if possible)
 - [ ] Use site/collection data to populate help panes on displays; use Markdown.
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Login: support continuation URI

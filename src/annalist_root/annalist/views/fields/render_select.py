@@ -136,7 +136,12 @@ class select_view_renderer(object):
     def render(self, context):
         textval = SelectValueMapper.encode(get_field_value(context, None))
         with context.push(encoded_field_value=textval):
-            result = self._template.render(context)
+            try:
+                result = self._template.render(context)
+            except Exception as e:
+                log.error(repr(e))
+                log.error(repr(context))
+                result = repr(e)
         return result
 
 class select_edit_renderer(object):

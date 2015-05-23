@@ -189,7 +189,7 @@ class bound_field(object):
         targetvals   = self.get_targetvals()
         if targetvals is not None:
             target_key   = self._field_description['field_ref_field']
-            log.info("get_target_value: target_key %s"%(target_key,))
+            log.debug("get_target_value: target_key %s"%(target_key,))
             target_value = targetvals.get(target_key, "(@%s)"%(target_key))
         else:
             target_value = self.field_value
@@ -207,7 +207,7 @@ class bound_field(object):
         """
         target_base  = self.get_field_link()
         target_value = self.get_target_value()
-        log.info("get_target_link: base %s, value %s"%(target_base, target_value))
+        log.debug("get_target_link: base %s, value %s"%(target_base, target_value))
         if target_base and target_value:
             if isinstance(target_value, dict) and 'resource_name' in target_value:
                 target_ref = target_value['resource_name']

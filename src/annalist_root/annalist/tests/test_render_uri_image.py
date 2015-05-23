@@ -59,7 +59,7 @@ class UriImageRenderingTest(FieldRendererTestSupport):
             , ("file://example.com/path",         "file://example.com/path")
             ])
         test_value_context_renders = (
-            [ (self._make_test_context(linktext),  expect_render(linktext, alttext))
+            [ (self._make_test_context(linktext, target_link=linktext),  expect_render(linktext, alttext))
                 for linktext, alttext in test_values
             ])
         renderer = get_uri_image_renderer()
