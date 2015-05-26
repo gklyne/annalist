@@ -65,6 +65,7 @@ class FieldListValueMap(object):
             field_desc = field_description_from_view_field(coll, f, view_context)
             properties = field_desc.resolve_duplicates(properties)
             self.fd.append(field_desc)
+            # @@TODO: generate padding if needed
             if field_desc.is_repeat_group():
                 repeatfieldsmap = FieldListValueMap('_unused_fieldlistvaluemap_', 
                     coll, field_desc.group_view_fields(), view_context
@@ -74,7 +75,6 @@ class FieldListValueMap(object):
                     )
                 self.fm.append(repeatvaluesmap)
             else:
-                self.fd.append(field_desc)
                 self.fm.append(FieldValueMap(c='_fieldlistvaluemap_', f=field_desc))
         return
 

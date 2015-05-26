@@ -289,9 +289,6 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for an indicated view.
-
-        The 3rd parameter to `FieldListValueMap` is used for EntityFinder
-        invocations used to populate enumerated field options.
         """
         # Locate and read view description
         entitymap = EntityValueMap(baseentityvaluemap)

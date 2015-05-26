@@ -93,6 +93,12 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - (Use URIImage for manual test, then create test case)
         - need to extract resource_name from target field value for link...
 - [x] Sort out file upload view rendering
+- [ ] Padding to take account of field position
+    - RenderFieldValue.label_view and .label_edit seem to be the key functions.
+    - How to carry context forward?
+    - Possibly precompute padding?
+        - This would require logic in fieldlistvaluemap, fielddescription and render_placement
+        - plus new logic to render the padding elements
 - [ ] Add software version to coll_meta.
     - [ ] Check this when accessing collection.
     - [ ] Update when updating collection

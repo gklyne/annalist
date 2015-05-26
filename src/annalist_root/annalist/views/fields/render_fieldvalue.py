@@ -95,7 +95,7 @@ class RenderFieldValue(object):
     Renderer constructor for an entity value field.
   
     Given simple rendering templates for a display and editing an entity value
-    fields, this class will construct new rendferers for usingthose values in
+    fields, this class will construct new rendferers for using those values in
     different contexts:
   
       * label_view: labeled value display, not editable
@@ -281,7 +281,7 @@ class RenderFieldValue(object):
 
 
 # Helper function for caller to get template content.
-# This uses the configured Django templatre loader.
+# This uses the configured Django template loader.
 
 def get_template(templatefile, failmsg="no template filename supplied"):
     """
