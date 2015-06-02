@@ -1,6 +1,7 @@
 {
   "rdfs:label": "Collection coll2",
   "rdfs:comment": "Description of Collection coll2",
+  "annal:software_version": "0.1.13",
   "annal:type_id": "_collection",
   "annal:id": "coll2",
   "@id": "../",

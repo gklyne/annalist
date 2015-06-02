@@ -18,6 +18,7 @@ from django.utils.http              import urlquote, urlunquote
 from django.core.urlresolvers       import resolve, reverse
 from django.contrib.auth.models     import User
 
+import annalist
 from annalist.util                  import valid_id
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
@@ -184,8 +185,9 @@ def collection_create_values(coll_id="testcoll", update="Collection"):
     Entity values used when creating a collection entity
     """
     return (
-        { 'rdfs:label':     "%s %s"%(update, coll_id)
-        , 'rdfs:comment':   'Description of %s %s'%(update, coll_id)
+        { 'rdfs:label':             "%s %s"%(update, coll_id)
+        , 'rdfs:comment':           "Description of %s %s"%(update, coll_id)
+        , 'annal:software_version': annalist.__version__
         })
 
 def collection_values(coll_id, update="Collection", hosturi=TestHostUri):

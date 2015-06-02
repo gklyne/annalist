@@ -21,6 +21,7 @@ from django.http                    import HttpResponseRedirect
 from django.conf                    import settings
 from django.core.urlresolvers       import resolve, reverse
 
+import annalist
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
 from annalist                       import layout
@@ -135,7 +136,9 @@ class Site(EntityRoot):
 
         returns a Collection object for the newly created collection.
         """
-        c = Collection.create(self, coll_id, coll_meta)
+        d = dict(coll_meta)
+        d[ANNAL.CURIE.software_version] = annalist.__version__
+        c = Collection.create(self, coll_id, d)
         return c
 
     def remove_collection(self, coll_id):

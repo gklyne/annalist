@@ -93,18 +93,20 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - (Use URIImage for manual test, then create test case)
         - need to extract resource_name from target field value for link...
 - [x] Sort out file upload view rendering
-- [ ] Padding to take account of field position
-    - RenderFieldValue.label_view and .label_edit seem to be the key functions.
-    - How to carry context forward?
-    - Possibly precompute padding?
-        - This would require logic in fieldlistvaluemap, fielddescription and render_placement
-        - plus new logic to render the padding elements
 - [ ] Add software version to coll_meta.
+    - [x] Add when creating collection
     - [ ] Check this when accessing collection.
+        - cf. http://stackoverflow.com/questions/11887762/how-to-compare-version-style-strings
+            from distutils.version import LooseVersion, StrictVersion
+            LooseVersion("2.3.1") < LooseVersion("10.1.2")
     - [ ] Update when updating collection
-    - cf. http://stackoverflow.com/questions/11887762/how-to-compare-version-style-strings
-        from distutils.version import LooseVersion, StrictVersion
-        LooseVersion("2.3.1") < LooseVersion("10.1.2")
+- [ ] Add software version to site_meta.
+    - [ ] Add when creating site
+    - [ ] Check this when accessing site.
+        - cf. http://stackoverflow.com/questions/11887762/how-to-compare-version-style-strings
+            from distutils.version import LooseVersion, StrictVersion
+            LooseVersion("2.3.1") < LooseVersion("10.1.2")
+    - [ ] Update when updating site
 - [x] Is it really appropriate to save the annal:url value in a stored entity?
     - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator
     - [x] entityroot._load_values() supply value for URL
@@ -114,6 +116,14 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 (new release?)
 
+- [ ] Padding to take account of field position
+    - RenderFieldValue.label_view and .label_edit seem to be the key functions.
+    - How to carry context forward?
+    - Possibly precompute padding?
+        - This would require logic in fieldlistvaluemap, fielddescription and render_placement
+        - plus new logic to render the padding elements
+    - Another option: take field-loop out of template and run it as a `render_all_fields` method
+        - still needs placement parser to return position+width information
 - [ ] Usability: 3 key tasks need to be easier (at the level of a single form fill-out):
     - [ ] Create a new type+view+list, suitably interconnected
     - [ ] Define a new field type and add to a view
