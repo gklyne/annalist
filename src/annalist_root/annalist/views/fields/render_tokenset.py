@@ -46,8 +46,10 @@ class TokenSetValueMapper(RenderBase):
         """
         Decodes a string of space-separated tokens as a list of tokens
         """
-        return field_value.split()
-
+        if isinstance(field_value,(str,unicode)):
+            return field_value.split()
+        log.warning("decode: %r"%(field_value,))
+        return [field_value]
 
 #   ----------------------------------------------------------------------------
 #

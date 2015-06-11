@@ -26,5 +26,5 @@ include annalist_root/oauth2/templates/*.html
 include annalist_root/utils/*.py
 include annalist_root/requirements/*.txt
 include annalist_root/sampledata/*.md
-recursive-include annalist_root/sampledata/init *.jsonld *.md
+recursive-include annalist_root/sampledata/init *.jsonld *.md *.jpg
 recursive-include annalist_root/sampledata/empty *.jsonld *.md

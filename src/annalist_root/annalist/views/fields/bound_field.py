@@ -202,12 +202,12 @@ class bound_field(object):
         The target value is treated as a relative reference relative to the field_link value.
         If the target value is itself an absolute URI, it will be used as-is.
 
-        If the target value is a dictionary structure created by a URIImport field, the 
-        resulting value links to the imported data object.
+        If the target value is a dictionary structure created by a URIImport or FileUpload field, 
+        the resulting value links to the imported data object.
         """
         target_base  = self.get_field_link()
         target_value = self.get_target_value()
-        log.debug("get_target_link: base %s, value %s"%(target_base, target_value))
+        log.info("get_target_link: base %s, value %s"%(target_base, target_value))
         if target_base and target_value:
             if isinstance(target_value, dict) and 'resource_name' in target_value:
                 target_ref = target_value['resource_name']
@@ -221,7 +221,7 @@ class bound_field(object):
                     )
                 target_ref = None
             return urljoin(target_base, target_ref)
-        return target_base
+        return target_value
 
     def get_targetvals(self):
         """

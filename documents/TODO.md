@@ -93,6 +93,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - (Use URIImage for manual test, then create test case)
         - need to extract resource_name from target field value for link...
 - [x] Sort out file upload view rendering
+- [x] Add test case for simple image URL reference rendering (no target link)
 - [ ] Add software version to coll_meta.
     - [x] Add when creating collection
     - [ ] Check this when accessing collection.
@@ -107,6 +108,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
             from distutils.version import LooseVersion, StrictVersion
             LooseVersion("2.3.1") < LooseVersion("10.1.2")
     - [ ] Update when updating site
+- [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
 - [x] Is it really appropriate to save the annal:url value in a stored entity?
     - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator
     - [x] entityroot._load_values() supply value for URL

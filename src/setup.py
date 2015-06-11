@@ -80,6 +80,7 @@ setup(
             [ '*.sh', '*.txt'
             , 'sampledata/README.md'
             , 'sampledata/init/annalist_site/README.md'
+            , 'sampledata/init/annalist_site/test-image.jpg'
             , 'sampledata/init/annalist_site/_annalist_site/*.jsonld'
             , 'sampledata/init/annalist_site/c/*/_annalist_collection/*.jsonld'
             , 'sampledata/init/annalist_site/c/*/_annalist_collection/lists/*/*.jsonld'
