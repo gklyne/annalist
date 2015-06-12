@@ -44,11 +44,7 @@ from entity_testutils               import (
     create_test_user
     )
 from entity_testuserdata            import (
-    # annalistuser_dir,
-    # annalistuser_site_url, annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
-    # annalistuser_value_keys, annalistuser_load_keys,
     annalistuser_create_values, annalistuser_values, annalistuser_read_values
-    # annalistuser_delete_confirm_form_data
     )
 from entity_testtypedata            import (
     recordtype_edit_url,
@@ -350,6 +346,21 @@ class CollectionEditViewTest(AnnalistTestCase):
         r1 = self.client.get(u1)
         self.assertEqual(r1.status_code,   404)
         self.assertEqual(r1.reason_phrase, "Not found")
+        return
+
+    def test_get_view_newer_version(self):
+        collmeta = collection_create_values(coll_id="newer_version")
+        self.testsite.add_collection("newer_version", collmeta, annal_ver="99.99.99")
+        u = collection_view_url(coll_id="newer_version")
+        r = self.client.get(u)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        u1 = TestHostUri + entitydata_list_all_url(coll_id="newer_version")
+        self.assertEqual(r['location'], u1)
+        r1 = self.client.get(u1)
+        self.assertEqual(r1.status_code,   500)
+        self.assertEqual(r1.reason_phrase, "Server error")
+        self.assertContains(r1, "created by software version 99.99.99", status_code=500)
         return
 
     def test_get_edit(self):

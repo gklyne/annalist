@@ -14,13 +14,16 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from distutils.version              import LooseVersion
+
 from django.conf                    import settings
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.core.urlresolvers       import resolve, reverse
 
-from annalist.identifiers           import RDF, RDFS, ANNAL
+import annalist
 from annalist                       import message
+from annalist.identifiers           import RDF, RDFS, ANNAL
 
 from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.collection     import Collection
@@ -159,6 +162,13 @@ class DisplayInfo(object):
             else:
                 self.coll_id    = coll_id
                 self.collection = Collection.load(self.site, coll_id)
+                ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")
+                if LooseVersion(ver) > LooseVersion(annalist.__version__):
+                    self.http_response = self.view.error(
+                        dict(self.view.error500values(),
+                            message=message.COLLECTION_NEWER_VERSION%{'id': coll_id, 'ver': ver}
+                            )
+                        )
         return self.http_response
 
     def get_type_info(self, type_id):

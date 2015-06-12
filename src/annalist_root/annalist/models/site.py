@@ -125,7 +125,7 @@ class Site(EntityRoot):
         site_data["collections"] = colls
         return site_data
 
-    def add_collection(self, coll_id, coll_meta):
+    def add_collection(self, coll_id, coll_meta, annal_ver=annalist.__version__):
         """
         Add a new collection to the current site
 
@@ -133,11 +133,13 @@ class Site(EntityRoot):
                     with a form that is valid as URI path segment.
         coll_meta   a dictionary providing additional information about
                     the collection to be created.
+        annal_ver   Override annalist version stored in collection metadata
+                    (parameter provided for testing)
 
         returns a Collection object for the newly created collection.
         """
         d = dict(coll_meta)
-        d[ANNAL.CURIE.software_version] = annalist.__version__
+        d[ANNAL.CURIE.software_version] = annal_ver
         c = Collection.create(self, coll_id, d)
         return c
 

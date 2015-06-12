@@ -96,28 +96,25 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Add test case for simple image URL reference rendering (no target link)
 - [ ] Add software version to coll_meta.
     - [x] Add when creating collection
-    - [ ] Check this when accessing collection.
+    - [x] Check this when accessing collection.
         - cf. http://stackoverflow.com/questions/11887762/how-to-compare-version-style-strings
             from distutils.version import LooseVersion, StrictVersion
             LooseVersion("2.3.1") < LooseVersion("10.1.2")
+        - accessing collection:
+            - Check version in DisplayInfo.get_coll_info()
     - [ ] Update when updating collection
-- [ ] Add software version to site_meta.
-    - [ ] Add when creating site
-    - [ ] Check this when accessing site.
-        - cf. http://stackoverflow.com/questions/11887762/how-to-compare-version-style-strings
-            from distutils.version import LooseVersion, StrictVersion
-            LooseVersion("2.3.1") < LooseVersion("10.1.2")
-    - [ ] Update when updating site
-- [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
+            - tie in to entity save logic.
 - [x] Is it really appropriate to save the annal:url value in a stored entity?
     - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator
     - [x] entityroot._load_values() supply value for URL
     - [x] entityroot.set_values only supplies value of not already present
     - [x] entityroot.save() discards value before saving
     - [x] views/entityedit.py makes referebnce in 'baseentityvaluemap'.  Removed; tests updated.
+- [ ] Update documentation to cover import/upload and references.
 
 (new release?)
 
+- [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
 - [ ] Padding to take account of field position
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?
@@ -148,6 +145,13 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
+- [ ] Add software version to site_meta.
+    - [ ] Add when creating site
+        - as part of installation
+    - [ ] Update when updating site
+        - as part of installation
+    - [ ] Check this when accessing site.
+        - at server startup.
 
 (feature freeze for V0.9alpha?)
 
@@ -253,9 +257,9 @@ Notes for Future TODOs:
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
     - [ ] internal options to save history in per-collection git repo
-- [ ] Think aboutr selective updates to complex field values (e.g. import_field logic).
+- [x] Think about selective updates to complex field values (e.g. import_field logic).
     - Currently, the save_entity logic in `views.entityedit` assumes that fields are completely replaced at the top-level of keys in `entityvals`.  There is no support for partial replacement of a field from a form input: either the entire field is replaced or the original field value is kept in its entirety.  The import_field logic generates additional values when the `Import` button is activated, but not when the URL field is updates. Possible approaches:
-        - re-work the whole entity form data mapping logic so that fields can be partially updated.  This will involve accessing the original entity data before `save_entity` is called, and arranging that original field values are available while form data valuesare being mapped.  This is a fairly comploex re-work is desired.
+        - re-work the whole entity form data mapping logic so that fields can be partially updated.  This will involve accessing the original entity data before `save_entity` is called, and arranging that original field values are available while form data valuesare being mapped.  This is a fairly comploex re-work is desired.  This is the approach adopted.
         - separate complex field values into separate fields that can be updated all-or-nothing
         - save original field data in a hidden form field (similar to `views.confirm`)
 - [ ] Consider refactoring form generator around Idiom/Formlet work; cf.

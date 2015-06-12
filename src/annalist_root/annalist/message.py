@@ -61,6 +61,9 @@ COLLECTION_ID_INVALID       = "The collection identifier is missing or not a val
 COLLECTION_LABEL            = "Collection %(id)s"
 COLLECTION_EXISTS           = "Collection %(id)s already exists"
 COLLECTION_NOT_EXISTS       = "Collection %(id)s does not exist"
+COLLECTION_NEWER_VERSION    = ("Cannot access collection %(id)s, "+
+                               "which was created by software version %(ver)s. "+
+                               "(Update Annalist server software to use this collection)")
 ANNALIST_USER_ID            = "Problem with user identifier"
 ANNALIST_USER_ID_INVALID    = "The user identifier is missing or not a valid identifier"
 ANNALIST_USER_LABEL         = "User %(id)s in collection %(coll_id)s"
