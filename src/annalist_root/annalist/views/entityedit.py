@@ -444,20 +444,6 @@ class GenericEntityEditView(AnnalistGenericView):
         except Annalist_Error as e:
             return viewinfo.report_error(str(e))
 
-        # # Check response has valid id and type
-        # if not util.valid_id(entity_id):
-        #     log.debug("form_response: entity_id not util.valid_id('%s')"%entity_id)
-        #     return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
-        #         error_head=messages['entity_heading'],
-        #         error_message=messages['entity_invalid_id']
-        #         )
-        # if not util.valid_id(entity_type_id):
-        #     log.debug("form_response: entity_type_id not util.valid_id('%s')"%entity_type_id)
-        #     return self.form_re_render(viewinfo, entityvaluemap, form_data, context_extra_values,
-        #         error_head=messages['entity_type_heading'],
-        #         error_message=messages['entity_type_invalid']
-        #         )
-
         # @@TODO: move actions that don't save entity to here
 
         # Scan for uploaded files
@@ -656,9 +642,9 @@ class GenericEntityEditView(AnnalistGenericView):
         entity_type_id = viewinfo.curr_type_id
         orig_entity_id = viewinfo.orig_entity_id
         orig_type_id   = viewinfo.orig_type_id
-        action   = viewinfo.action
-        typeinfo = viewinfo.entitytypeinfo
-        messages = viewinfo.type_messages
+        action         = viewinfo.action
+        typeinfo       = viewinfo.entitytypeinfo
+        messages       = viewinfo.type_messages
         if self.uri_action == "view":
             # This is view operation: nothing to save
             return None
@@ -796,6 +782,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 error_message=err_vals[1]
                 )
         log.info("Saved %s/%s"%(entity_type_id, entity_id))
+        viewinfo.update_coll_version()
         return None
 
     def rename_entity_type(self,

@@ -171,6 +171,15 @@ class DisplayInfo(object):
                         )
         return self.http_response
 
+    def update_coll_version(self):
+        assert (self.collection is not None)
+        if not self.http_response:
+            ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")
+            if LooseVersion(ver) < LooseVersion(annalist.__version__):
+                self.collection[ANNAL.CURIE.software_version] = annalist.__version__
+                self.collection._save()
+        return
+
     def get_type_info(self, type_id):
         """
         Check type identifier, and get reference to type information object.

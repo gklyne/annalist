@@ -102,7 +102,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
             LooseVersion("2.3.1") < LooseVersion("10.1.2")
         - accessing collection:
             - Check version in DisplayInfo.get_coll_info()
-    - [ ] Update when updating collection
+    - [x] Update when updating collection
             - tie in to entity save logic.
 - [x] Is it really appropriate to save the annal:url value in a stored entity?
     - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator
