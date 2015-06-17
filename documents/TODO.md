@@ -110,10 +110,16 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] entityroot.set_values only supplies value of not already present
     - [x] entityroot.save() discards value before saving
     - [x] views/entityedit.py makes referebnce in 'baseentityvaluemap'.  Removed; tests updated.
-- [ ] Update documentation to cover import/upload and references.
+- [x] Update documentation to cover import/upload and references.
 
-(new release?)
+(new release)
 
+- [ ] rename render type URIImage as RefImage; update documentation
+- [ ] add render type RefAudio (use embedded HTML player); update documentation
+    - see tests conducted using CALMA data
+- [ ] profile_uri now not included in Google JSON file of client secrets
+    - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
+    - cf. oauth2/views.py:364
 - [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
 - [ ] Padding to take account of field position
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
@@ -188,6 +194,8 @@ Usability notes:
 
 - [x] Need easier way to make new entries for fields that are referenced from a record; e.g. a `New value` button as part of an enum field.
 - [x] Clearer linkage between related records - hyperlinks on non-editing views
+- [ ] List dropdown: normally show only those lists defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
+- [ ] View forms need title (indicating type of thing viewed)?  Or let user define label for Id field?
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
     - [ ] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
         - test by creating contacts/supplies listy for CruisingLog

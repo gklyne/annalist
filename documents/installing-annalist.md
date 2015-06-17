@@ -1,5 +1,18 @@
 # Installing and setting up Annalist
 
+## Contents
+
+1. Prerequisites
+2. Running as a Docker container
+3. Upgrading an existing installation
+4. New software installation
+5. Setting up an Annalist site
+6. Run annalist as a background process
+7. Accessing Annalist
+8. Create a collection
+9. `annalist-manager` command reference
+
+
 ## Prerequisites
 
 * A Unix-like operating system: Annalist has been tested with MacOS 10.9 and Linux 14.04.  Other versions should be usable.  (The software can be run on Windows, but the procedure to get it running is somewhat more complicated, and is not yet fully tested or documented.)
@@ -196,7 +209,7 @@ The configuration details for using an OpenID Connect provider are stored in a p
 
 Annalist can also allow users to log in using locally stored credentials, which may be useful for quick evaluation deployments but is not the recommended mechanism for normal operational use.
 
-When installing Annalist, an administration account may be created using the `annalist-manager` tool.  When logged in to Annalist using this account, the **Admin** link in the footer of most Annalist pages will allow new user accounts to be created via the Django admin interface.  More documentation about using this admin intrefcae is in the [The Django Admin Site](http://www.djangobook.com/en/2.0/chapter06.html), which isChapter 6 of [The Django Book](http://www.djangobook.com/en/2.0/index.html).
+When installing Annalist, an administration account may be created using the `annalist-manager` tool.  When logged in to Annalist using this account, the **Admin** link in the footer of most Annalist pages will allow new user accounts to be created via the Django admin interface.  More documentation about using this admin interface is in the [The Django Admin Site](http://www.djangobook.com/en/2.0/chapter06.html), which is Chapter 6 of [The Django Book](http://www.djangobook.com/en/2.0/index.html).
 
 ### Initial site setup
 
@@ -210,23 +223,23 @@ NOTE: using the development configuration, data files are stored within the soft
 
 2.  Initialize sitedata:
 
-        annalist-manager createsitedata --development
+        annalist-manager createsitedata
 
      (Don't do this if updating annalist software to use existing site data: use `annalist-manager updatesitedata` instead)
 
 3.  Initialize user management database
 
-        annalist-manager initialize --development
+        annalist-manager initialize
 
 4.  Create admin user
 
-        annalist-manager createadminuser --development
+        annalist-manager createadminuser
 
     Respond to the prompts with a username, email address and password.  The username may be up to 30 characters, and may consist of letters, digits and underscores.
 
     Alternatively, to create a default admin user with name `admin` and email address `admin@localhost`, use this command:
 
-        annalist-manager createadminuser --development
+        annalist-manager defaultadminuser
 
     As before, enter and re-enter a password when prompted.
 
@@ -235,9 +248,29 @@ NOTE: using the development configuration, data files are stored within the soft
 
 5.  Start the Annalist server
 
-        annalist-manager runserver --development
+        annalist-manager runserver
 
 You should now be able to use a browser to view the Annalist server, e.g. at http://localhost:8000.
+
+NOTE: for configurations which store the database file in the site data area (including the default personal configuration), `annalist-manager createsitedata` must be run before `annalist-manager initialize`, as it requires absence of any previous site data or database files.  When updating an existing Annalist site, it should not be necessary to run `annalist-manager initialize`.
+
+
+## Run annalist as a background process
+
+To run annalist as a long-runnin g background process, use the following command:
+
+    nohup annalist-manager runserver &
+
+(with `annalist-manager` configuration options if required.)
+
+To view the server log of a running Annalist instance:
+
+    less $(annalist-manager serverlog)
+
+To check for Annalist background processes, and to terminate an Annalist server running as a background process (run from the same user account that started annalist):
+
+    ps x
+    killall python
 
 
 ## Accessing Annalist
@@ -288,10 +321,7 @@ Click on the link in the Id column to view the new collection:
 From this screen, you can start to add data to this collection.  For more information, see [Using Annalist](using-annalist.md)
 
 
-# `annalist-manager` command reference
+## `annalist-manager` command reference
 
 @@TODO.  Use `annalist-manager help` for a command summary.
-
-NOTE: for configurations which store the database file in the site data area (including the default personal configuration), `annalist-manager createsitedata` must be run before `annalist-manager initialize`, as it requires absence of any previous site data or database files.
-When updating an existing Annalist site, it should not be necessary to run `annalist-manager initialize`.
 

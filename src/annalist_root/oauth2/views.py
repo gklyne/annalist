@@ -364,6 +364,7 @@ class LoginDoneView(generic.View):
                 profile_uri=CLIENT_SECRETS[flow.params['provider']]['profile_uri']
                 )
         except FlowExchangeError, e:
+            log.error("CLIENT_SECRETS %r"%(CLIENT_SECRETS[flow.params['provider']],))
             return HttpResponseRedirectLoginWithMessage(request, str(e))
         # Check authenticated details for user id match any previous values.
         #
