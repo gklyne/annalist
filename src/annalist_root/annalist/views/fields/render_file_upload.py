@@ -51,6 +51,8 @@ class FileUploadValueMapper(RenderBase):
         """
         u = self.decode(field_value)
         v = entityvals.get(property_uri, {})
+        if isinstance(v,(str, unicode)):
+            v = {}      # Ignore non-dictionary value
         v['resource_name'] = u
         entityvals[property_uri] = v
         return v
