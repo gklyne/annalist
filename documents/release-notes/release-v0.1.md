@@ -25,21 +25,21 @@ Key features implemented:
 * Ability to create new entity record types, views and listing formats on-the-fly as data is being prepared
 * Authentication with 3rd party IDP authentication (current implementation uses OAuth2/OpenID Connect, tested with Google, but should be usable with other OpenID Connect identity providers).  (Note access control is separate - see "Authorization" below.)
 * Authorization framework for access control, applied mainly per-collection but with site-wide defaults.
+* Support for linking to and annotating binary objects such as images.
+* Image rendering
 
 Intended core features not yet fully implemented but which are intended for the first full release:
 
 * Support for a range of field and data types to work with commonly used data: numbers, dates, etc.
 * Support for JSON-LD contexts.
 * Full linked data support, recognizing a range of linked data formats and facilitating the creation of links in and out.  (Links can be created, but it's currently a mostly manual process.)
-* Support for linking to and annotating binary objects such as images.
 * Serve and access data through a standard HTTP server (current implementation uses direct file access).
-* Image rendering and other media.
+* Rendering media other than images.
 * Grid view (e.g. for photo+metadata galleries).
 
 An intended core feature that will probably not make the first release is data bridges to other data sources, in particular to allow Annalist to work with existing spreadhseet data.
 
 There are also a number of rough edges to rounded off.  Through use of the software with real data, a number of areas have been identified where usability could be significantly improved.
-
 
 See the [list of outstanding issues for initial release](https://github.com/gklyne/annalist/issues?q=is%3Aopen+is%3Aissue+milestone%3A%22V0.x+alpha%22) for more details on planned features still to be implemented.
 
@@ -77,12 +77,131 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 * [Developer information](../developer-info.md)
 * [Development roadmap](../roadmap.md)
 
+
 # History
+
+## Version 0.1.14
+
+The big change in this release is inital support for imported web resources and uploaded files within an Annalist collection.  These are captured as "attachments" to an entity via field render types `URIImport` or `FileUpload`.  The attachments can then be referenced via the entity to which they are attached, also specifiying the field property URI: see `documents/view-field-types.md` for more details.
+
+The new facilities for presenting uploaded and imported files still need some work, and some code refactoring will be needed to make handling of such references more consistent.
+
+A number of bugs have been fixed, and other features added or improved:
+
+* Add logic to serve content of entity attachment in orginally submitted form.
+* Add "View" button to entity edit form.  This makes it possible to show hyperlinks that can be used to access referenced entities.
+* Fix some situations causing "500 Server error" messages.
+* Update continuation URI if necessary when an entity is renamed.
+* Added software version to collection, and refuse access if collection version is higher than current software version.
+* Don't save `annal:url` value in stored entities; rather depend on its value being determined when an entity is accessed.  This potentially improves portability of data collections.
+* Add documentation of view field descriptions, particularly to cover fields that are used to create entity attachments.
+* Added internal support for complex field values that can be partially updated (used to support attachment metadata).
+* Quite extensive code refactoring to support attachments.
+* Added hooks for file format migration.
+
+
+# Version 0.1.13, towards 0.1.14
+
+- [x] BUG: invalid entity id in field data causes 500 ServerError
+- [x] BUG: if field group refers back to orinal field, python blows its stack, reports 500 ServerError
+- [x] Improve reporting of 500 serverError
+- [x] BUG: edit from view, change id, results in NOT FOUND error displayed when returning to previous view.  This occurs because the continuation URI is refers to the old entity when the id is changed.
+    - treat id/type change as special case and update all matching URIs in the continuation chain.  This involves dismantling and reassembling the continuation URI, and the continuation URL handling logic has been refactored to facilitate this.
+- [x] Support for complex entity field values (e.g. supporting details for resource imports)
+    - [x] Refactor entityedit Save_Entity handling
+    - [x] Refactor entityedit to carry more context in viewinfo (simplify function calls)
+    - [x] Refactor value decoding so it can access other form fields (to build complex values)?  (see next)
+- [x] Blob upload and linking support [#31](https://github.com/gklyne/annalist/issues/31)
+    - [x] Blob and file upload support: images, spreadsheets, ...
+        - [x] Choose render type name: URIImport
+        - [x] Define renderer test cases as a new module in `annalist/tests/`, e.g.:
+            - [x] Copy `test_render_bool_checkbox.py` to new module name
+            - [x] Update descriptive comment at top of module
+            - [x] Update `import` statement to refer to new module to be defined
+            - [x] Update class name
+            - [x] Rename and update the test case method for value rendering: this should cover value view and edit cases as appropriate.
+            - [x] Rename and update the test case method for decoding input values suitable for storage in a JSON structure.
+        - [x] Define a new renderer module in `annalist/views/fields/`; e.g.:
+            - [x] Copy `render_bool_checkbox.py` to new module name
+            - [x] Update descrptive comment at top of module
+            - [x] Update class name for value mapper
+            - [x] Implement value mapping as required.  If the values do not require mapping between the JSON object and form data, the class `render_text.RenderText`, which contains identity mapping functions, can be used instead.  If the renderer updates the JSON representation of existing data, consider handling legacy representations in the `encode` method to facilitate data migration.
+            - [x] Rename and update the view renderer and edit renderer functions to generate appropriate HTML.
+            - [x] Rename and update the get renderer function.  Note that this function must returned a `RenderFieldValue` object, as this provides the interfaces required by the rest of Annalist to render values in different contexts.
+        - [x] Update entityedit.py to recognize new action to import resource
+        - [x] Add tests for file import (needs to be a "full stack" test - see `test_field_alias` or `test_linked_records` for simple form of structure to follow)
+        - [x] Edit module `annalist/views/fields/render_utils.py` to import the get renderer function, and add it to the dictionary `_field_get_renderer_functions`.
+        - [x] Add the renderer type name to the enumeration defined in `annalist/sitedata/enums/Enum_render_type`
+        - [x] Update the test modules to accommodate the new render type, and retest:
+            - [x] `annalist/tests/test_entitygenericlist.py` about line 244 (bump counter)
+            - [x] `annalist/tests/entity_testsitedata.py`, about line 306 (add new render type name in sorted list)
+        - [x] Check the affected web views and augment the site CSS file (`annalist/static/css/annalist.css`)
+    - [x] Field definition enhancements to link to uploaded file
+        - [x] Design revised field definition structure to separate rendering from value reference
+            - [x] Value reference direct
+            - [x] Value reference as upload to current entity
+            - [x] Value reference as URI
+            - [x] Value reference as field of another Annalist entity
+        - [x] Review existing render type definitions in light of new design
+        - [x] Work out migration strategy for collections to use new field structure
+        - [x] Revise field render selection logic to allow separate edit renderer selection from view renderer selection
+            - Updated logic in maily in render_utils, but some interfaces are revised affecting fielddescription, etc.
+        - [x] Revise field value handling to take account of multiple sources
+        - [x] Figure out how to resolve relative references: based on entity URL?
+        - [x] Test, test cases
+        - [x] Refactor: change field names in field description. 
+            - [x] s/field_options_typeref/field_ref_type/
+            - [x] s/field_restrict_values/field_ref_restriction/
+            - [x] s/field_target_key/field_ref_field/
+            - [x] s/annal:options_typeref/annal:field_ref_type/
+            - [x] s/annal:restrict_values/annal:field_ref_restriction/
+            - [x] s/annal:target_field/annal:field_ref_field/
+        - [x] Apply updates to site data as needed
+        - [x] Add logic to migrate collection data
+            - [x] Add migration hook to Entity.load() method - call self._migrate_values()
+            - [x] Default _migrate_values method in EntityRoot just returns with no change
+            - [x] Attach migration data/method to EntityData subclasses as required.  May include common logic in EntityData method.
+            - [x] s/annal:options_typeref/annal:field_ref_type/
+            - [x] s/annal:restrict_values/annal:field_ref_restriction/
+            - [x] s/annal:target_field/annal:field_ref_field/
+        - [x] Add field ref to field view form
+- [x] Add 'view' button to edit form
+- [x] Add file-upload option (with resulting value like URI-import)
+    - Cf. https://docs.djangoproject.com/en/1.7/topics/http/file-uploads/
+- [x] Serve reference to uploaded or imported resource.  Content-type and other infiormation is saved in a URIImport or FileUpload field value that is a dictionary.
+- [x] Test cases for file upload
+    - [x] test_render_file_upload (adapt from test_render_uri_import)
+    - [x] test_upload_file (adapt from test_import_resource)
+- [x] Create field definition for referencing uploaded image file - use URIlink render type
+- [x] Test case for referencing uploaded file
+    - [x] Similar to Import test
+    - [x] View rendering test with reference to uploaded file 
+        - (Use URIImage for manual test, then create test case)
+        - need to extract resource_name from target field value for link...
+- [x] Sort out file upload view rendering
+- [x] Add test case for simple image URL reference rendering (no target link)
+- [x] Add software version to coll_meta.
+    - [x] Add when creating collection
+    - [x] Check this when accessing collection.
+        - cf. http://stackoverflow.com/questions/11887762/how-to-compare-version-style-strings
+            from distutils.version import LooseVersion, StrictVersion
+            LooseVersion("2.3.1") < LooseVersion("10.1.2")
+        - accessing collection:
+            - Check version in DisplayInfo.get_coll_info()
+    - [x] Update when updating collection
+            - tie in to entity save logic.
+- [x] Is it really appropriate to save the annal:url value in a stored entity?
+    - [x] in sitedata/users/admin/user_meta.jsonld, not a usable locator
+    - [x] entityroot._load_values() supply value for URL
+    - [x] entityroot.set_values only supplies value of not already present
+    - [x] entityroot.save() discards value before saving
+    - [x] views/entityedit.py makes reference in 'baseentityvaluemap'.  Removed; tests updated.
+- [x] Update documentation to cover import/upload and references.
 
 
 ## Version 0.1.12
 
-The substantial change in this release is the introduction of non-editing entity views, with rendering of links to other referenced entities.  This makes it very much easier to navigate the network of entities that make up a collection.  A number of new render types have been introduced, many to support more useful data display in the non-editing view (links, Maerkdown formatting, etc - more details below.).  This non-editing view is now the default display for all entities.
+The substantial change in this release is the introduction of non-editing entity views, with rendering of links to other referenced entities.  This makes it very much easier to navigate the network of entities that make up a collection.  A number of new render types have been introduced, many to support more useful data display in the non-editing view (links, Markdown formatting, etc - more details below.).  This non-editing view is now the default display for all entities.
 
 This release also contains a number of usability enhancements and bug fixes, including:
 
@@ -96,7 +215,7 @@ This release also contains a number of usability enhancements and bug fixes, inc
 * Add 'View description' button on non-editing entity views - this switches to a display of the view description.  Subject to permissions, an 'Edit' button allows the view definition to be edited.
 * View display: suppress headings for empty repeatgrouprow value.
 * Preserve current value in form if not present in drop-down options.  This change ws introduced mainly to prevent some surprising effects when editing field descriptions; the change is partially effective, but there remain some link navigation issues when a field value of not one of those available in a drop-down selector.
-* Various bug fixes (see release notes)
+* Various bug fixes (see below)
 
 
 # Version 0.1.11, towards 0.1.12
