@@ -156,7 +156,6 @@ class bound_field(object):
         else:
             # log.info("bound_field[%s] -> %r"%(name, self._field_description[name]))
             return self._field_description.get(name, "@@bound_field.%s@@"%(name))
-            #@@ return self._field_description[name]
 
     def get_field_value(self):
         field_val = None
@@ -188,7 +187,7 @@ class bound_field(object):
         """
         targetvals   = self.get_targetvals()
         if targetvals is not None:
-            target_key   = self._field_description['field_ref_field']
+            target_key   = self._field_description['field_ref_field'].strip()
             log.debug("get_target_value: target_key %s"%(target_key,))
             target_value = targetvals.get(target_key, "(@%s)"%(target_key))
         else:
@@ -207,7 +206,7 @@ class bound_field(object):
         """
         target_base  = self.get_field_link()
         target_value = self.get_target_value()
-        log.info("get_target_link: base %s, value %s"%(target_base, target_value))
+        log.debug("get_target_link: base %s, value %r"%(target_base, target_value))
         if target_base and target_value:
             if isinstance(target_value, dict) and 'resource_name' in target_value:
                 target_ref = target_value['resource_name']
@@ -281,7 +280,7 @@ class bound_field(object):
             requrl = self._extras.get("request_url", "")
             if requrl:
                 chere  = uri_with_params(requrl, continuation_params(self._extras))
-        log.debug('bound_field.get_continuation_url %s'%(chere,))  #@@
+        log.debug('bound_field.get_continuation_url %s'%(chere,))
         return chere
 
     def get_field_options(self):

@@ -313,5 +313,8 @@ def get_context_field_value(context, key, default):
 def get_field_value(context, default):
     return get_context_field_value(context, 'field_value', default)
 
+def get_target_value(context, default):
+    return get_context_field_value(context, 'target_value', default)
+
 # End.
 #........1.........2.........3.........4.........5.........6.........7.........8

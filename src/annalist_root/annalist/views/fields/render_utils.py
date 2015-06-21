@@ -109,7 +109,10 @@ _field_value_mappers = (
     , "List_sel":       SelectValueMapper
     })
 
-def get_field_renderer(field_render_type):
+def get_field_base_renderer(field_render_type):
+    """
+    Lookup and return base renderer for given field type.
+    """
     if field_render_type not in _field_renderers:
         # Create and cache renderer
         if ( (field_render_type in _field_view_files) or
@@ -128,7 +131,7 @@ def get_entityref_edit_renderer(renderer, field_render_type):
     Returns an updated edit renderer for fields with an entity type reference
     """
     if field_render_type not in ["Enum", "Enum_choice", "Enum_optional", "View_choice", "List_sel"]:
-        renderer = get_field_renderer("Enum")
+        renderer = get_field_base_renderer("Enum")
     return renderer
 
 def get_uriimport_edit_renderer(renderer, field_render_type):
@@ -136,7 +139,20 @@ def get_uriimport_edit_renderer(renderer, field_render_type):
     Returns an updated edit renderer for fields with a URI import value type
     """
     if field_render_type not in ["URIImport"]:
-        renderer = get_field_renderer("URIImport")
+        renderer = get_field_base_renderer("URIImport")
+    return renderer
+
+def get_field_edit_renderer(field_render_type, field_ref_type, field_val_type):
+    """
+    Get edit renderer for supplied field details, taking account of variations on the 
+    base renderer due to field reference and field value type.
+    """
+    renderer = get_field_base_renderer(field_render_type)
+    if field_ref_type:
+        log.debug("Render field_render_type %s, field_ref_type %s"%(field_render_type, field_ref_type))
+        renderer = get_entityref_edit_renderer(renderer, field_render_type)
+    elif field_val_type == "annal:Import":
+        renderer = get_uriimport_edit_renderer(renderer, field_render_type)
     return renderer
 
 def get_edit_renderer(field_render_type, field_ref_type, field_val_type):
@@ -158,17 +174,13 @@ def get_edit_renderer(field_render_type, field_ref_type, field_val_type):
     if field_render_type == "RepeatGroupRow":
         return RenderRepeatGroup(render_repeatgroup.edit_grouprow)
     # Entity reference and import edit renderers
-    renderer = get_field_renderer(field_render_type)
-    if field_ref_type:
-        renderer = get_entityref_edit_renderer(renderer, field_render_type)
-    elif field_val_type == "annal:Import":
-        renderer = get_uriimport_edit_renderer(renderer, field_render_type)
+    renderer = get_field_edit_renderer(field_render_type, field_ref_type, field_val_type)
     if renderer:
         return renderer.label_edit()
     log.debug("get_edit_renderer: %s not found"%field_render_type)
     # raise ValueError("get_edit_renderer: %s not found"%field_render_type)
     # Default to simple text for unknown renderer type
-    renderer = get_field_renderer("Text")
+    renderer = get_field_base_renderer("Text")
     return renderer.label_edit()
 
 def get_view_renderer(field_render_type, field_ref_type, field_val_type):
@@ -190,12 +202,12 @@ def get_view_renderer(field_render_type, field_ref_type, field_val_type):
         return RenderRepeatGroup(render_repeatgroup.view_listrow)
     if field_render_type == "RepeatGroupRow":
         return RenderRepeatGroup(render_repeatgroup.view_grouprow)
-    renderer = get_field_renderer(field_render_type)
+    renderer = get_field_base_renderer(field_render_type)
     if renderer:
         return renderer.label_view()
     # Default to simple text for unknown renderer type
     log.warning("get_view_renderer: %s not found"%field_render_type)
-    renderer = get_field_renderer("Text")
+    renderer = get_field_base_renderer("Text")
     return renderer.label_view()
 
 def get_colhead_renderer(field_render_type, field_ref_type, field_val_type):
@@ -203,7 +215,7 @@ def get_colhead_renderer(field_render_type, field_ref_type, field_val_type):
     Returns a field list heading renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    renderer = get_field_renderer(field_render_type)
+    renderer = get_field_base_renderer(field_render_type)
     if renderer:
         return renderer.col_head()
     log.debug("get_colhead_renderer: %s not found"%field_render_type)
@@ -214,7 +226,7 @@ def get_coledit_renderer(field_render_type, field_ref_type, field_val_type):
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    renderer = get_field_renderer(field_render_type)
+    renderer = get_field_edit_renderer(field_render_type, field_ref_type, field_val_type)
     if renderer:
         return renderer.col_edit()
     log.debug("get_coledit_renderer: %s not found"%field_render_type)
@@ -225,7 +237,7 @@ def get_colview_renderer(field_render_type, field_ref_type, field_val_type):
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    renderer = get_field_renderer(field_render_type)
+    renderer = get_field_base_renderer(field_render_type)
     if renderer:
         return renderer.view()
     log.debug("get_colview_renderer: %s not found"%field_render_type)

@@ -94,7 +94,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - need to extract resource_name from target field value for link...
 - [x] Sort out file upload view rendering
 - [x] Add test case for simple image URL reference rendering (no target link)
-- [ ] Add software version to coll_meta.
+- [x] Add software version to coll_meta.
     - [x] Add when creating collection
     - [x] Check this when accessing collection.
         - cf. http://stackoverflow.com/questions/11887762/how-to-compare-version-style-strings
@@ -111,9 +111,15 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] entityroot.save() discards value before saving
     - [x] views/entityedit.py makes referebnce in 'baseentityvaluemap'.  Removed; tests updated.
 - [x] Update documentation to cover import/upload and references.
+- [x] Reference to field data (comment) returns id
 
 (new release)
 
+- [ ] rationalize field rendering so that it consistently uses target_value for viewing ("field_view_value"?), so that referenced-field values can work as expected for all render types (techdebt; currently fixed ad hoc for markdown rendering) 
+- [ ] file upload when creating entity appears to not work; need to create foirst then upload.  Is this because the directory does not exist yet?
+- [ ] file upload view/edit: display upladed filename as well as link (use for link text?)
+- [ ] provide unified import/upload field type to attachment can be either
+- [ ] Means to provide alternative display of field of same entity (e.g. image for file upload).  Also to display multiple fields from referenced entity.
 - [ ] rename render type URIImage as RefImage; update documentation
 - [ ] add render type RefAudio (use embedded HTML player); update documentation
     - see tests conducted using CALMA data

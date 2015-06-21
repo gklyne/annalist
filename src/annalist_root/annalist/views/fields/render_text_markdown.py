@@ -14,7 +14,8 @@ import markdown
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_field_value
+    get_field_value,
+    get_target_value,
     )
 
 from django.template    import Template, Context
@@ -49,9 +50,9 @@ class text_markdown_view_renderer(object):
         """
         Render Markdown text for viewing.
         """
-        textval = TextMarkdownValueMapper.encode(get_field_value(context, None))
-        textval = markdown.markdown(textval)
-        return """<span class="markdown">%s</span>"""%textval
+        textval = TextMarkdownValueMapper.encode(get_target_value(context, None))
+        htmlval = markdown.markdown(textval)
+        return """<span class="markdown">%s</span>"""%htmlval
 
 class text_markdown_edit_renderer(object):
 
@@ -66,9 +67,9 @@ class text_markdown_edit_renderer(object):
 
     def render(self, context):
         """
-        Render Markdoiwn text for editing
+        Render Markdown text for editing
         """
-        val     = get_field_value(context, None)
+        val     = get_target_value(context, None)
         textval = TextMarkdownValueMapper.encode(val)
         with context.push(encoded_field_value=textval):
             result = self._template.render(context)

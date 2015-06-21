@@ -269,12 +269,9 @@ class FieldDescription(object):
         Returns true if this field has a control (a 'new' or '+' button)
         that invokes a new form to create a new entity.
         """
-        new_render_types = (
-            [ "EntityTypeId"
-            , "Type", "View", "List", "Field"
-            , "Enum", "Enum_optional"
-            ])
-        return self._field_desc['field_render_type'] in new_render_types
+        # Strictly, this test includes 'Enum_choice' which does not have a '+' button,
+        # but since the absent button cannot be clicked, the infidelity here is benign
+        return self._field_desc['field_ref_type'] is not None
 
     def has_import_button(self):
         """

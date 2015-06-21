@@ -49,7 +49,13 @@ class FieldRendererTestSupport(AnnalistTestCase):
         self.assertEqual(rendered, expected)
         return
 
-    def _make_test_context(self, val, repeat_prefix="repeat_prefix_", field_link=None, target_link=None, options=None):
+    def _make_test_context(self, val, 
+            repeat_prefix="repeat_prefix_", 
+            target_value= None, 
+            field_link=None, 
+            target_link=None, 
+            options=None
+        ):
         cd = (
             { 'field':
               { 'field_placement':      get_placement_classes("small:0,12")
@@ -57,9 +63,12 @@ class FieldRendererTestSupport(AnnalistTestCase):
               , 'field_label':          "test label"
               , 'field_placeholder':    "(test placeholder)"
               , 'field_value':          val
+              , 'target_value':         val     # Mimics bound_field default behaviour
               }
             , 'repeat_prefix':        repeat_prefix
             })
+        if target_value is not None:
+            cd['field']['target_value'] = target_value
         if field_link is not None:
             cd['field']['field_value_link']              = field_link
             cd['field']['field_value_link_continuation'] = field_link+"?continuation_url=test_cont"

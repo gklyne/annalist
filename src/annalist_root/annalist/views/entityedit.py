@@ -162,7 +162,9 @@ class GenericEntityEditView(AnnalistGenericView):
             "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
-        log.info("  form data %r"%(request.POST))
+        log.log(settings.TRACE_FIELD_VALUE,
+            "  form data %r"%(request.POST)
+            )
         if request.FILES:
             for f in request.FILES:
                 log.info(
@@ -315,34 +317,6 @@ class GenericEntityEditView(AnnalistGenericView):
         entityvals = { field_description.get_field_property_uri(): viewinfo.view_id }
         return bound_field(field_description, entityvals)
 
-    # @@TODO: delete this when tests pass
-    def get_entity_moved_to_generic(self, entity_id, typeinfo, action):
-        """
-        Create local entity object or load values from existing.
-
-        entity_id       entity id to create or load
-        typeinfo        EntityTypeInfo object for the entity
-        action          is the requested action: new, edit, copy, view
-
-        returns an object of the appropriate type.
-
-        If an existing entity is accessed, values are read from storage, 
-        otherwise a new entity object is created but not yet saved.
-        """
-        # log.info(
-        #     "get_entity id %s, parent %s, action %s, altparent %s"%
-        #     (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
-        #     )
-        entity = typeinfo.get_entity(entity_id, action)
-        if entity is None:
-            parent_id    = typeinfo.entityparent.get_id()
-            altparent_id = typeinfo.entityaltparent.get_id() if typeinfo.entityaltparent else "(none)"
-            log.debug(
-                "Entity not found: parent %s, altparent %s, entity_id %s"%
-                (parent_id, altparent_id, entity_id)
-                )
-        return entity
-
     def get_form_display_context(self, viewinfo, entityvaluemap, entityvals, **context_extra_values):
         """
         Return a form display context with data from the supplied entity values, 
@@ -427,7 +401,8 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Handle POST response from entity edit form.
         """
-        log.info("form_response entity_id %s, orig_entity_id %s, type_id %s, orig_type_id %s"%
+        log.log(settings.TRACE_FIELD_VALUE,
+            "form_response entity_id %s, orig_entity_id %s, type_id %s, orig_type_id %s"%
             (viewinfo.curr_entity_id, viewinfo.orig_entity_id, viewinfo.curr_type_id, viewinfo.orig_type_id)
             )
         form_data = self.request.POST
@@ -1022,8 +997,10 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         def is_new_f(fd):
             # Using FieldDescription method directly doesn't work
+            # log.info("find_new_enum is_new_f fd %r"%(fd,))  #@@
             return fd.has_new_button()
         for enum_desc in self.find_fields(entityvaluemap, is_new_f):
+            # log.info("find_new_enum enum_desc %r"%(enum_desc,))  #@@
             enum_new = self.form_data_contains(form_data, enum_desc, "new")
             if enum_new:
                 return enum_desc
@@ -1303,7 +1280,7 @@ class GenericEntityEditView(AnnalistGenericView):
         filter_f        is a predicate that is applied to field description values, 
                         and returns True for those that are to be returned.
 
-        returns a generator of FieldDescription values from the supplied entity 
+        Returns a generator of FieldDescription values from the supplied entity 
         value map that satisfy the supplied predicate.
         """
         # Recursive helper function walks through list of field descriptions, 
@@ -1317,7 +1294,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 log.debug("find_fields: field_desc %r"%(field_desc))
                 if filter_f(field_desc):
                     field_desc['group_list'] = group_list
-                    log.info(
+                    log.debug(
                         "entityedit.find_fields: field name %s, prefixes %r"%
                         (field_desc.get_field_name(), group_list)
                         )
@@ -1331,7 +1308,7 @@ class GenericEntityEditView(AnnalistGenericView):
                             (groupref, field_desc['field_id'])
                             )
                     else:
-                        log.info(
+                        log.debug(
                             "entityedit.find_fields: Group field desc %s: %s"%
                             (groupref, field_desc['field_id'])
                             )
@@ -1358,6 +1335,7 @@ class GenericEntityEditView(AnnalistGenericView):
         Returns the full name of the field found (without the trailing suffix), or None.
         """
         log.info("form_data_contains: field_desc %r"%field_desc)
+        log.info("form_data_contains: group_list %r"%field_desc['group_list'])
         log.info("form_data_contains: form_data %r"%form_data)
         field_name         = field_desc.get_field_name()
         def _scan_groups(prefix, group_list):

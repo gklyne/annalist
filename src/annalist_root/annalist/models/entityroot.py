@@ -438,6 +438,7 @@ class EntityRoot(object):
         """
         Equivalent to dict.get() function
         """
+        # log.info("entityroot.get key %r, self._values %r"%(key, self._values))
         return self[key] if self._values and key in self._values else default
 
     def __getitem__(self, k):
