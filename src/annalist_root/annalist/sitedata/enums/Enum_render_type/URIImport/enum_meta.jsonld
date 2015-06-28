@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
+, "annal:id":           "URIImport"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "annal:field_render_type/URIImport"
+, "rdfs:comment":       "Import data at specified URI"
+, "annal:uri":          "annal:field_render_type/URIImport"
+}

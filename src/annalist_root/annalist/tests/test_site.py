@@ -48,7 +48,7 @@ from entity_testtypedata            import (
     )
 
 # Keys in side metadata entity
-site_data_keys = {'@id', 'rdfs:label', 'rdfs:comment', 'collections', 'title'}
+site_data_keys = {'@id', 'annal:url', 'rdfs:label', 'rdfs:comment', 'collections', 'title'}
 
 # Initial collection data used for form display
 init_collections = (

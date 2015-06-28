@@ -40,15 +40,10 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         """
         log.debug("EntityDataDeleteConfirmedView.post: %r"%(request.POST))
         if "entity_delete" in request.POST:
-            entity_id = request.POST['entity_id']
-            continuation_url = (
-                request.POST.get('completion_url', None) or
-                self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id)
-                )
-            continuation_url_params = continuation_params(request.POST.dict())
-            # log.info("continuation_params %r"%(continuation_params,))
             return self.complete_remove_entity(
-                coll_id, type_id, entity_id, continuation_url, continuation_url_params
+                coll_id, type_id, request.POST['entity_id'], 
+                self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id), 
+                request.POST.dict()
                 )
         return self.error(self.error400values())
 

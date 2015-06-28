@@ -229,7 +229,6 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          '_list')
         self.assertEqual(r.context['orig_type'],        '_list')
         self.assertEqual(r.context['coll_id'],          'testcoll')
-        self.assertEqual(r.context['entity_url'],       list_url)
         self.assertEqual(r.context['entity_uri'],       list_uri)
         self.assertEqual(r.context['action'],           action)
         self.assertEqual(r.context['view_id'],          'List_view')
@@ -442,7 +441,6 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_list")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       list_url)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
@@ -473,7 +471,6 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_list")
         self.assertEqual(r.context['entity_id'],        "Default_list")
         self.assertEqual(r.context['orig_id'],          "Default_list")
-        self.assertEqual(r.context['entity_url'],       list_url)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
@@ -498,7 +495,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", "_list", "nolist")
-        self.assertContains(r, "<p>%s does not exist</p>"%(err_label), status_code=404)
+        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
         return
 
     def test_get_edit(self):
@@ -515,7 +512,6 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_list")
         self.assertEqual(r.context['entity_id'],        "Default_list")
         self.assertEqual(r.context['orig_id'],          "Default_list")
-        self.assertEqual(r.context['entity_url'],       list_url)
         self.assertEqual(r.context['entity_uri'],       "annal:display/Default_list")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "")
@@ -543,7 +539,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", "_list", "nolist")
-        self.assertContains(r, "<p>%s does not exist</p>"%(err_label), status_code=404)
+        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
         return
 
     # Test rendering of view with repeated field structure - in this case, List_view
@@ -562,7 +558,6 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_list")
         self.assertEqual(r.context['entity_id'],        "Default_list")
         self.assertEqual(r.context['orig_id'],          "Default_list")
-        self.assertEqual(r.context['entity_url'],       list_url)
         self.assertEqual(r.context['entity_uri'],       "annal:display/Default_list")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "")

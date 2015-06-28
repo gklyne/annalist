@@ -98,7 +98,8 @@ def recordlist_edit_url(action=None, coll_id=None, list_id=None):
 def recordlist_value_keys(list_uri=False):
     keys = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url'
+        , 'annal:type'
+        , 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:display_type'
         , 'annal:list_entity_selector'

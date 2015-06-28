@@ -45,4 +45,27 @@ class RecordField(EntityData):
         super(RecordField, self).__init__(parent, field_id, altparent=altparent)
         return
 
+    def _migrate_values(self, entitydata):
+        """
+        Entity format migration method.
+
+        The specification for this method is that it returns an entitydata value
+        which is a copy of the supplied entitydata with format migrations applied.
+
+        NOTE:  implementations are free to apply migrations in-place.  The resulting 
+        entitydata should be exctly as the supplied data *should* appear in storage
+        to conform to the current format of the data.  The migration function should 
+        be idempotent; i.e.
+            x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
+        """
+        migration_map = (
+            [ ("annal:options_typeref",  "annal:field_ref_type"       )
+            , ("annal:restrict_values",  "annal:field_ref_restriction")
+            , ("annal:target_field",     "annal:field_ref_field"      )
+            ])
+        for old_key, new_key in migration_map:
+            if old_key in entitydata:
+                entitydata[new_key] = entitydata.pop(old_key)
+        return entitydata
+
 # End.

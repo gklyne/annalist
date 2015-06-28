@@ -29,7 +29,7 @@ if sys.version_info[:2] != (2,7):
 dir_here = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(dir_here, "annalist_root"))
 
-# Helper to load README.md, etc.
+# Helper to load README.rst, etc.
 def read(fname):
     return codecs.open(os.path.join(dir_here, fname)).read()
 
@@ -46,7 +46,7 @@ setup(
     name = NAME,
     version = VERSION,
     description = DESCRIPTION,
-    long_description = read("README.md"),
+    long_description = read("README.rst"),
     author = AUTHOR,
     author_email = AUTHOR_EMAIL,
     license = "MIT",
@@ -80,6 +80,7 @@ setup(
             [ '*.sh', '*.txt'
             , 'sampledata/README.md'
             , 'sampledata/init/annalist_site/README.md'
+            , 'sampledata/init/annalist_site/test-image.jpg'
             , 'sampledata/init/annalist_site/_annalist_site/*.jsonld'
             , 'sampledata/init/annalist_site/c/*/_annalist_collection/*.jsonld'
             , 'sampledata/init/annalist_site/c/*/_annalist_collection/lists/*/*.jsonld'

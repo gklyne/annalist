@@ -9,6 +9,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+import copy
+
 from annalist                       import message
 from annalist                       import util
 
@@ -234,6 +236,7 @@ class EntityTypeInfo(object):
 
         and other values as initialized here.
         """
+        #@@TODO: remove site param and access through coll
         self.entitysite      = site
         self.entitycoll      = coll
         self.recordtype      = None
@@ -337,25 +340,29 @@ class EntityTypeInfo(object):
                 entity = self.entityclass.load(self.entityparent, entity_id, altparent=self.entityaltparent)
         return entity
 
-    def get_entity_with_aliases(self, entity_id, action="view"):
+    # @@TODO: rename inferred -> implied
+    def get_entity_inferred_values(self, entity):
         """
-        Loads and returns an entity for the current type, or 
-        returns None if the entity does not exist.
+        Adds inferrable values to the supplied entity value (e.g. aliases),
+        and returns a new value with the additional values
 
-        If `action` is "new" then a new entity is initialized (but not saved).
-
-        Field aliases defined in the associated record type are populated
-        in the value returned.
+        Inferred values are determined by the type of the entity, and if type
+        information is not present this fundtion generates a failure.
         """
-        entity = self.get_entity(entity_id, action=action)
-        # Fill in field aliases
-        if entity and ANNAL.CURIE.field_aliases in self.recordtype:
+        if not self.recordtype: 
+            raise AssertionError(
+                "add_inferred_values_to_entity called with no type information available.  "+
+                "entity_id %s/%s, type_id %s"%(entity.get_type_id(), entity.get_id(), self.type_id)
+                )
+        inferred_entity = entity
+        if inferred_entity and ANNAL.CURIE.field_aliases in self.recordtype:
+            inferred_entity = copy.deepcopy(entity)
             for alias in self.recordtype[ANNAL.CURIE.field_aliases]:
                 tgt = alias[ANNAL.CURIE.alias_target]
                 src = alias[ANNAL.CURIE.alias_source]
-                if entity.get(tgt, None) in [None, ""]:
-                    entity[tgt] = entity.get(src, "")
-        return entity
+                if inferred_entity.get(tgt, None) in [None, ""]:
+                    inferred_entity[tgt] = inferred_entity.get(src, "")
+        return inferred_entity
 
     def enum_entity_ids(self, usealtparent=False):
         """
@@ -376,7 +383,6 @@ class EntityTypeInfo(object):
     def enum_entities(self, user_perms=None, usealtparent=False):
         """
         Iterate over entities in collection with current type.
-        Returns entities with alias fields instantiated.
 
         usealtparent    is True if site-wide entities are to be included.
         """
@@ -387,7 +393,26 @@ class EntityTypeInfo(object):
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
                         altparent=altparent):
-                    yield self.get_entity_with_aliases(eid)
+                    yield self.get_entity(eid)
+            else:
+                log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
+        return
+
+    def enum_entities_with_inferred_values(self, user_perms=None, usealtparent=False):
+        """
+        Iterate over entities in collection with current type.
+        Returns entities with alias and inferred fields instantiated.
+
+        usealtparent    is True if site-wide entities are to be included.
+        """
+        if (not user_perms or 
+            self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
+            altparent = self.entityaltparent if usealtparent else None
+            if self.entityparent:
+                for eid in self.entityparent.child_entity_ids(
+                        self.entityclass, 
+                        altparent=altparent):
+                    yield self.get_entity_inferred_values(self.get_entity(eid))
             else:
                 log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
         return
@@ -424,5 +449,21 @@ class EntityTypeInfo(object):
         else:
             log.warning("EntityTypeInfo.get_default_view_id: no type data for %s"%(self.type_id))
         return view_id or "Default_view"
+
+    def get_fileobj(self, entity_id, name, typeuri, mimetype, mode):
+        """
+        Returns a file object to access a file stored with the named entity 
+        with the designated type URI (typically obtained from a field description).  
+        The `mode` string value is interpreted like the `mode` parameter to the 
+        Python `open` function, to the extent applicable.
+        """
+        fileobj = None
+        if self.entityparent:
+            fileobj = self.entityclass.fileobj(
+                self.entityparent, entity_id, name, typeuri, mimetype, mode
+                )
+        else:
+            log.warning("EntityTypeInfo.get_fileobj: missing entityparent; type_id %s"%(self.type_id))
+        return fileobj
 
 # End.

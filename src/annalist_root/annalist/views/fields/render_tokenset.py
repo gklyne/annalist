@@ -11,6 +11,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
     get_context_value, get_context_field_value, get_field_value
@@ -25,13 +26,13 @@ from django.template    import Template, Context
 #   ----------------------------------------------------------------------------
 
 
-class TokenSetValueMapper(object):
+class TokenSetValueMapper(RenderBase):
     """
     Value mapper class for token list
     """
 
-    @staticmethod
-    def encode(field_value):
+    @classmethod
+    def encode(cls, field_value):
         """
         Encodes a token list as a string of space-separated values
         """
@@ -40,12 +41,15 @@ class TokenSetValueMapper(object):
         log.warning("TokenSetValueMapper.encode tokenset: supplied value is not a list or tuple")
         return str(field_value)
 
-    @staticmethod
-    def decode(field_value):
+    @classmethod
+    def decode(cls, field_value):
         """
         Decodes a string of space-separated tokens as a list of tokens
         """
-        return field_value.split()
+        if isinstance(field_value,(str,unicode)):
+            return field_value.split()
+        log.warning("decode: %r"%(field_value,))
+        return [field_value]
 
 #   ----------------------------------------------------------------------------
 #

@@ -61,7 +61,7 @@ class SelectRenderingTest(FieldRendererTestSupport):
         if valtext not in valchoices:
             vallink = None
         # print "_make_select_test_context: valtext %r, valchoices %r, vallink %s"%(valtext, valchoices, vallink)
-        return self._make_test_context(valtext, options=valchoices, link=vallink)
+        return self._make_test_context(valtext, options=valchoices, field_link=vallink)
 
     def test_RenderChoiceValue(self):
         def expect_render(valtext, vallink, valchoices):
@@ -77,10 +77,10 @@ class SelectRenderingTest(FieldRendererTestSupport):
                 )
             return {'view': render_view, 'edit': render_edit}
         test_values = (
-            [ ( u"aa", "http://example.org/aa", ["aa", "bb", "cc"])
-            , ( u"",   None,                    ["", "aa", "bb", "cc"])
-            , ( u"dd", "http://example.org/dd", ["aa", "bb", "cc"])
-            , ( u"",   None,                    ["aa", "bb", "cc"])
+            [ ( "aa", "http://example.org/aa", ["aa", "bb", "cc"])
+            , ( "",   None,                    ["", "aa", "bb", "cc"])
+            , ( "dd", "http://example.org/dd", ["aa", "bb", "cc"])
+            , ( "",   None,                    ["aa", "bb", "cc"])
             ])
         test_value_context_renders = (
             [ ( self._make_select_test_context(valtext, vallink, valchoices), 
@@ -89,7 +89,8 @@ class SelectRenderingTest(FieldRendererTestSupport):
             ])
         renderer = get_choice_renderer()
         for render_context, expect_render in test_value_context_renders:
-            # print repr(render_context['field']['field_value'])
+            # log.info("test_RenderChoiceValue: value  %(field_value)r"%render_context['field'])
+            # log.info("test_RenderChoiceValue: expect %s"%(expect_render,))
             self._check_value_renderer_results(
                 renderer,
                 context=render_context,

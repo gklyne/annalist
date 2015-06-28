@@ -12,7 +12,7 @@ import logging
 log = logging.getLogger(__name__)
 
 from annalist.identifiers               import RDFS, ANNAL
-from annalist.exceptions                import EntityNotFound_Error
+from annalist.exceptions                import Annalist_Error, EntityNotFound_Error
 
 from annalist.models.recordgroup        import RecordGroup
 from annalist.models.recordfield        import RecordField
@@ -39,7 +39,7 @@ class FieldDescription(object):
     def __init__(self, 
             collection, recordfield, view_context=None, 
             field_property=None, field_placement=None, 
-            group_view=None
+            group_view=None, group_ids_seen=[]
             ):
         """
         Creates a field description value to use in a context value when
@@ -61,7 +61,9 @@ class FieldDescription(object):
         group_view      if the field itself references a list of fields, this is a
                         RecordGroup value or dictionary containing the referenced list 
                         of fields.
+        group_ids_seen  group ids expanded so far, to check for recursive reference.
         """
+        self._collection = collection
         # log.debug("FieldDescription recordfield: %r"%(recordfield,))
         field_id            = recordfield.get(ANNAL.CURIE.id,         "_missing_id_")
         field_name          = recordfield.get(ANNAL.CURIE.field_name, field_id)  # Field name in form
@@ -69,25 +71,23 @@ class FieldDescription(object):
         field_property      = field_property or recordfield.get(ANNAL.CURIE.property_uri, "")
         field_placement     = field_placement or recordfield.get(ANNAL.CURIE.field_placement, "")
         field_render_type   = recordfield.get(ANNAL.CURIE.field_render_type, "")
+        field_ref_type      = recordfield.get(ANNAL.CURIE.field_ref_type, None)
+        field_val_type      = recordfield.get(ANNAL.CURIE.field_value_type, "")
         self._field_desc    = (
             { 'field_id':                   field_id
             , 'field_name':                 field_name
+            , 'field_instance_name':        field_name
             , 'field_label':                field_label
             , 'field_help':                 recordfield.get(RDFS.CURIE.comment, "")
             , 'field_property_uri':         field_property
             , 'field_placement':            get_placement_classes(field_placement)
-            , 'field_render_type':          field_render_type
-            , 'field_render_view':          get_view_renderer(field_render_type)
-            , 'field_render_edit':          get_edit_renderer(field_render_type)
-            , 'field_render_colhead':       get_colhead_renderer(field_render_type)
-            , 'field_render_colview':       get_colview_renderer(field_render_type)
-            , 'field_render_coledit':       get_coledit_renderer(field_render_type)
-            , 'field_value_mapper':         get_value_mapper(field_render_type)
-            , 'field_value_type':           recordfield.get(ANNAL.CURIE.field_value_type, "")
+            , 'field_value_type':           field_val_type
+            , 'field_target_type':          recordfield.get(ANNAL.CURIE.field_target_type, field_val_type)
             , 'field_placeholder':          recordfield.get(ANNAL.CURIE.placeholder, "")
             , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
-            , 'field_options_typeref':      recordfield.get(ANNAL.CURIE.options_typeref, None)
-            , 'field_restrict_values':      recordfield.get(ANNAL.CURIE.restrict_values, "ALL")
+            , 'field_ref_type':             field_ref_type
+            , 'field_ref_restriction':      recordfield.get(ANNAL.CURIE.field_ref_restriction, "ALL")
+            , 'field_ref_field':            recordfield.get(ANNAL.CURIE.field_ref_field, None)
             , 'field_choice_labels':        None
             , 'field_choice_links':         None
             , 'field_group_ref':            recordfield.get(ANNAL.CURIE.group_ref, None)
@@ -96,13 +96,20 @@ class FieldDescription(object):
             , 'group_delete_label':         None
             , 'group_view':                 None
             , 'group_field_descs':          None
+            , 'field_render_type':          field_render_type
+            , 'field_render_view':          get_view_renderer(field_render_type,    field_ref_type, field_val_type)
+            , 'field_render_edit':          get_edit_renderer(field_render_type,    field_ref_type, field_val_type)
+            , 'field_render_colhead':       get_colhead_renderer(field_render_type, field_ref_type, field_val_type)
+            , 'field_render_colview':       get_colview_renderer(field_render_type, field_ref_type, field_val_type)
+            , 'field_render_coledit':       get_coledit_renderer(field_render_type, field_ref_type, field_val_type)
+            , 'field_value_mapper':         get_value_mapper(field_render_type)
             })
-        self._field_suffix_index = 0    # No dup
-        self._field_suffix       = ""
+        self._field_suffix_index  = 0    # No dup
+        self._field_suffix        = ""
         # If field references type, pull in copy of type id and link values
-        type_ref = self._field_desc['field_options_typeref']
+        type_ref = self._field_desc['field_ref_type']
         if type_ref:
-            restrict_values = self._field_desc['field_restrict_values']
+            restrict_values = self._field_desc['field_ref_restriction']
             entity_finder   = EntityFinder(collection, selector=restrict_values)
             entities        = entity_finder.get_entities_sorted(
                 type_id=type_ref, context=view_context, scope="all"
@@ -122,10 +129,13 @@ class FieldDescription(object):
                     self._field_desc['field_choice_labels'][eid] = eid   # @@TODO: be smarter about label?
                     self._field_desc['field_choice_links'][eid]  = e.get_view_url_path()
             # log.info("typeref %s: %r"%
-            #     (self._field_desc['field_options_typeref'], list(self._field_desc['field_choices']))
+            #     (self._field_desc['field_ref_type'], list(self._field_desc['field_choices']))
             #     )
         # If field references group, pull in field details
         if group_view:
+            if field_id in group_ids_seen:
+                raise Annalist_Error(field_id, "Recursive field reference in field group")
+            group_ids_seen = group_ids_seen + [field_id]
             group_label = (field_label or 
                 group_view.get(RDFS.CURIE.label, self._field_desc['field_group_ref'])
                 )
@@ -133,7 +143,7 @@ class FieldDescription(object):
             remove_label = recordfield.get(ANNAL.CURIE.repeat_label_delete, None) or "Remove "+field_id
             group_field_descs = []
             for subfield in group_view[ANNAL.CURIE.group_fields]:
-                f = field_description_from_view_field(collection, subfield, view_context)
+                f = field_description_from_view_field(collection, subfield, view_context, group_ids_seen)
                 group_field_descs.append(f)
             self._field_desc.update(
                 { 'group_id':           field_id
@@ -185,6 +195,22 @@ class FieldDescription(object):
         """
         return self._field_desc['field_name']
 
+    def set_field_instance_name(self, instance_name):
+        """
+        Set instance name for field (used when scanning field groups)
+
+        This is the full field instance name including group ids and 
+        indexes.
+        """
+        self._field_desc['field_instance_name'] = instance_name
+        return
+
+    def get_field_instance_name(self):
+        """
+        Get instance name for field (used when scanning field groups)
+        """
+        return self._field_desc['field_instance_name']
+
     def get_field_property_uri(self):
         """
         Returns form field property URI to be used for the described field
@@ -228,7 +254,7 @@ class FieldDescription(object):
     def is_enum_field(self):
         """
         Returns true if this is an enumerated-value field, in which case the
-        'field_options_typeref' field is assumed to the type_id of the value 
+        'field_ref_type' field is assumed to the type_id of the value 
         type to be enumerated.
         """
         enum_render_types = (
@@ -240,15 +266,32 @@ class FieldDescription(object):
 
     def has_new_button(self):
         """
-        Returns true if this field has a control (a 'new' or +' button)')
+        Returns true if this field has a control (a 'new' or '+' button)
         that invokes a new form to create a new entity.
         """
-        new_render_types = (
-            [ "EntityTypeId"
-            , "Type", "View", "List", "Field"
-            , "Enum", "Enum_optional"
+        # Strictly, this test includes 'Enum_choice' which does not have a '+' button,
+        # but since the absent button cannot be clicked, the infidelity here is benign
+        return self._field_desc['field_ref_type'] is not None
+
+    def has_import_button(self):
+        """
+        Returns true if this field has a control (an 'import' or 'upload'
+        button) that is used to request additional external data is added 
+        to an entity
+        """
+        import_render_types = (
+            [ "URIImport"
             ])
-        return self._field_desc['field_render_type'] in new_render_types
+        return self._field_desc['field_render_type'] in import_render_types
+
+    def is_upload_field(self):
+        """
+        Returns true if this field is a file-upload field
+        """
+        import_render_types = (
+            [ "FileUpload"
+            ])
+        return self._field_desc['field_render_type'] in import_render_types
 
     def has_field_group_ref(self):
         """
@@ -267,7 +310,7 @@ class FieldDescription(object):
             "  , 'field_name': %r\n"%(self.get_field_name())+
             "  , 'field_render_type': %r\n"%(self._field_desc["field_render_type"])+
             "  , 'field_property_uri': %r\n"%(self.get_field_property_uri())+
-            "  , 'type_ref': %r"%(self._field_desc["field_options_typeref"])+
+            "  , 'type_ref': %r"%(self._field_desc["field_ref_type"])+
             "  , 'group_ref': %r"%(self._field_desc["field_group_ref"])+
             "  })"
             )
@@ -314,7 +357,7 @@ class FieldDescription(object):
             yield k
         return
 
-def field_description_from_view_field(collection, field, view_context=None):
+def field_description_from_view_field(collection, field, view_context=None, group_ids_seen=[]):
     """
     Returns a field description value created using information from
     a field reference in a view description record (i.e. a dictionary
@@ -329,6 +372,7 @@ def field_description_from_view_field(collection, field, view_context=None):
                     values to be used when rendering the field.  In particular, a copy 
                     of the view description record provides context for some enumeration 
                     type selections.
+    group_ids_seen  group ids expanded so far, to check for recursive reference.
     """
     #@@TODO: for resilience, revert this when all tests pass?
     # field_id    = field.get(ANNAL.CURIE.field_id, "Field_id_missing")  # Field ID slug in URI
@@ -358,7 +402,8 @@ def field_description_from_view_field(collection, field, view_context=None):
         collection, recordfield, view_context=view_context, 
         field_property=field.get(ANNAL.CURIE.property_uri, None),
         field_placement=field.get(ANNAL.CURIE.field_placement, None), 
-        group_view=group_view
+        group_view=group_view,
+        group_ids_seen=group_ids_seen
         )
 
 # End.

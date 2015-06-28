@@ -14,13 +14,16 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from distutils.version              import LooseVersion
+
 from django.conf                    import settings
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.core.urlresolvers       import resolve, reverse
 
-from annalist.identifiers           import RDF, RDFS, ANNAL
+import annalist
 from annalist                       import message
+from annalist.identifiers           import RDF, RDFS, ANNAL
 
 from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.collection     import Collection
@@ -29,7 +32,11 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
 
-from annalist.views.uri_builder     import uri_with_params
+from annalist.views.uri_builder     import (
+    uri_with_params, 
+    continuation_url_chain, continuation_chain_url,
+    url_update_type_entity_id
+    )
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -68,28 +75,70 @@ class DisplayInfo(object):
 
     The information gathering methods do have some dependencies and must be
     invoked in a sequence that ensures the dependencies are satisfied.
+
+    view                is the view object that is being rendered.  This is an instance
+                        of a class derived from `AnnalistGenericView`, which in turn is 
+                        derived from `django.views.generic.View`.
+    action              is the user action for which the form has ben invoked
+                        (e.g. "new", "copy", "edit", etc.)
+    request_dict        is a dictionary of request parameters
+                        For GET requests, this derives from the URI query parameters; 
+                        for POST requests it is derived from the submitted form data.
+    default_continue    is a default continuation URI to be used when returning from the 
+                        current view without an explciitly specified continuation in
+                        the request.
     """
 
-    def __init__(self, view, action):
-        self.view           = view
-        self.action         = action
+    def __init__(self, view, action, request_dict, default_continue):
+        self.view               = view
+        self.action             = action
+        self.request_dict       = request_dict
+        self.continuation_url   = request_dict.get('continuation_url', None)
+        self.default_continue   = default_continue
+        # Type/Entity ids from form
+        self.orig_type_id       = None
+        self.orig_entity_id     = None
+        self.curr_type_id       = None
+        self.curr_entity_id     = None
+        # Type-specific messages
+        self.type_messages      = None
         # Default no permissions:
-        self.authorizations = dict([(k, False) for k in authorization_map])
-        self.reqhost        = None
-        self.site           = None
-        self.sitedata       = None
-        self.coll_id        = None
-        self.collection     = None
-        self.type_id        = None
-        self.entitytypeinfo = None
-        self.list_id        = None
-        self.recordlist     = None
-        self.view_id        = None
-        self.recordview     = None
-        self.entity_id      = None
-        # self.entitydata     = None
-        self.http_response  = None
+        self.authorizations     = dict([(k, False) for k in authorization_map])
+        self.reqhost            = None
+        self.site               = None
+        self.sitedata           = None
+        self.coll_id            = None
+        self.collection         = None
+        self.type_id            = None
+        self.entitytypeinfo     = None
+        self.list_id            = None
+        self.recordlist         = None
+        self.view_id            = None
+        self.recordview         = None
+        self.entity_id          = None
+        # self.entitydata       = None
+        self.http_response      = None
         return
+
+    def set_type_entity_id(self,
+        orig_type_id=None, orig_entity_id=None,
+        curr_type_id=None, curr_entity_id=None
+        ):
+        """
+        Save type and entity ids from form
+        """
+        self.orig_type_id       = orig_type_id
+        self.orig_entity_id     = orig_entity_id
+        self.curr_type_id       = curr_type_id
+        self.curr_entity_id     = curr_entity_id
+        return self.http_response
+
+    def set_messages(self, messages):
+        """
+        Save type-specifric messages for later reporting
+        """
+        self.type_messages      = messages
+        return self.http_response
 
     def get_site_info(self, reqhost):
         if not self.http_response:
@@ -113,7 +162,23 @@ class DisplayInfo(object):
             else:
                 self.coll_id    = coll_id
                 self.collection = Collection.load(self.site, coll_id)
+                ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")
+                if LooseVersion(ver) > LooseVersion(annalist.__version__):
+                    self.http_response = self.view.error(
+                        dict(self.view.error500values(),
+                            message=message.COLLECTION_NEWER_VERSION%{'id': coll_id, 'ver': ver}
+                            )
+                        )
         return self.http_response
+
+    def update_coll_version(self):
+        assert (self.collection is not None)
+        if not self.http_response:
+            ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")
+            if LooseVersion(ver) < LooseVersion(annalist.__version__):
+                self.collection[ANNAL.CURIE.software_version] = annalist.__version__
+                self.collection._save()
+        return
 
     def get_type_info(self, type_id):
         """
@@ -204,11 +269,18 @@ class DisplayInfo(object):
 
     def check_authorization(self, action):
         """
-        If no error so far, check authorization.  Return None if all is OK,
-        or HttpResonse object.
+        Check authorization.  Return None if all is OK, or HttpResonse object.
 
         Also, save copy of key authorizations for later rendering.
         """
+        # Save key authorizations for later rendering
+        for k in authorization_map:
+            for p in authorization_map[k]:
+                self.authorizations[k] = (
+                    self.authorizations[k] or 
+                    self.view.authorize(p, self.collection) is None
+                    )
+        # Check requested action
         action = action or "view"
         if self.entitytypeinfo:
             permissions_map = self.entitytypeinfo.permissions_map
@@ -218,12 +290,16 @@ class DisplayInfo(object):
             self.http_response or 
             self.view.form_action_auth(action, self.collection, permissions_map)
             )
-        for k in authorization_map:
-            for p in authorization_map[k]:
-                self.authorizations[k] = (
-                    self.authorizations[k] or 
-                    self.view.authorize(p, self.collection) is None
+        return self.http_response
+
+    def report_error(self, message):
+        log.error(message)
+        if not self.http_response:
+            self.http_response = self.view.error(
+                dict(self.view.error400values(),
+                    message=message
                     )
+                )
         return self.http_response
 
     # Additonal support functions for list views
@@ -262,7 +338,7 @@ class DisplayInfo(object):
     def get_list_type_id(self):
         return self.recordlist.get(ANNAL.CURIE.default_type, None) or "Default_type"
 
-    def check_collection_entity(self, entity_id, entity_type, msg, continuation_url={}):
+    def check_collection_entity(self, entity_id, entity_type, msg):
         """
         Test a supplied entity_id is defined in the current collection,
         returning a URI to display a supplied error message if the test fails.
@@ -273,7 +349,6 @@ class DisplayInfo(object):
         entity_id           entity id that is required to be defined in the current collection.
         entity_type         specified type for entity to delete.
         msg                 message to display if the test fails.
-        continuation_url    URI of page to display when the redisplayed form is closed.
 
         returns a URI string for use with HttpResponseRedirect to redisplay the 
         current page with the supplied message, or None if entity id is OK.
@@ -291,7 +366,7 @@ class DisplayInfo(object):
                 uri_with_params(
                     self.view.get_request_path(),
                     self.view.error_params(msg),
-                    continuation_url
+                    self.get_continuation_url_dict()
                     )
                 )
         return redirect_uri
@@ -323,21 +398,6 @@ class DisplayInfo(object):
 
     # Additonal support functions
 
-    #@@
-    # def get_type_view_id(self, type_id):
-    #     """
-    #     Get default view id for given type
-    #     """
-    #     # @@TODO: remove this
-    #     view_id = None
-    #     if self.type_id:
-    #         if self.entitytypeinfo.recordtype:
-    #             view_id  = self.entitytypeinfo.recordtype.get(ANNAL.CURIE.type_view, None)
-    #         else:
-    #             log.warning("DisplayInfo.get_type_view_id: no type data for %s"%(self.type_id))
-    #     return view_id
-    #@@
-
     def get_view_id(self, type_id, view_id):
         """
         Get view id or suitable default using type if defined.
@@ -346,30 +406,71 @@ class DisplayInfo(object):
             view_id = (
                 view_id or 
                 self.entitytypeinfo.get_default_view_id()
-                # self.get_type_view_id(type_id) or
-                # self.collection.get_default_view() or
-                # "Default_view"
                 )
             if not view_id:
                 log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
         return view_id
 
-    def get_save_continuation_url(self, entity_type, entity_id, action):
+    def get_continuation_url(self):
         """
-        Gets a URI that is based on that used to invoke the current view,
-        but with a different action and specified entity_type/entity_id
+        Return continuation URL specified for the current request, or None.
+        """
+        return self.continuation_url
 
-        This is used to continue editing a new or copied entity after that 
-        entity has been saved, or viewing an entity following an edit.
+    def get_continuation_url_dict(self):
         """
-        return self.view.view_uri(
-                "AnnalistEntityEditView", 
-                coll_id=self.coll_id,
-                view_id=self.view_id,
-                type_id=entity_type,
-                entity_id=entity_id,
-                action=action
-                )
+        Return dictionary with continuation URL specified for the current request.
+        """
+        return {'continuation_url': self.continuation_url} if self.continuation_url else {}
+
+    def get_continuation_next(self):
+        """
+        Return continuation URL to be used when returning from the current view.
+
+        Uses the default continuation if no value supplied in request dictionary.
+        """
+        log.debug(
+            "get_continuation_next '%s', default '%s'"%
+              (self.continuation_url, self.default_continue)
+            )
+        return self.continuation_url or self.default_continue
+
+    def get_continuation_here(self, base_here=None):
+        """
+        Return continuation URL back to the current view.
+        """
+        # @@TODO: consider merging logic from generic.py, and eliminating method there
+        return self.view.continuation_here(
+            request_dict=self.request_dict,
+            default_cont=self.get_continuation_url(),
+            base_here=base_here
+            )
+
+    def update_continuation_url(self, 
+        old_type_id=None, new_type_id=None, 
+        old_entity_id=None, new_entity_id=None
+        ):
+        """
+        Update continuation URI to reflect renamed type or entity.
+        """
+        # def update_hop(chop):
+        #     return url_update_type_entity_id(chop, 
+        #         old_type_id=old_type_id, new_type_id=new_type_id, 
+        #         old_entity_id=old_entity_id, new_entity_id=new_entity_id
+        #         )
+        curi = self.continuation_url
+        if curi:
+            hops = continuation_url_chain(curi)
+            for i in range(len(hops)):
+                uribase, params = hops[i]
+                uribase = url_update_type_entity_id(uribase, 
+                    old_type_id=old_type_id, new_type_id=new_type_id, 
+                    old_entity_id=old_entity_id, new_entity_id=new_entity_id
+                    )
+                hops[i] = (uribase, params)
+            curi = continuation_chain_url(hops)
+            self.continuation_url = curi
+        return curi
 
     def context_data(self):
         """

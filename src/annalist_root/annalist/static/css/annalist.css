@@ -248,6 +248,14 @@ div.row div.columns.view-value
     /* vertical-align: middle; */
 }
 
+/* No additional padding for subfields in value */
+div.row div.column.view-value.view-subfield,
+div.row div.columns.view-value.view-subfield
+{
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+}
+
 /* Vertiucal spacing for rows in a grouprow */
 div.row.edit-grouprow
 {

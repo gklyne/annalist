@@ -30,7 +30,7 @@ In keeping with the idea that properties can be added to any data record at any 
 
 ## Record views
 
-A **record view** describes a selection and organization of properties to be used when displaying a single data record.  As such, a view establishes a presentation of a particular kind of structure on the data.  Different views may present different structures over the same underlying data.  A view is defined with a number of fields (see below).
+A **record view** describes a selection and organization of properties to be used when displaying a single data record.  As such, a view establishes a presentation of a particular kind of structure on the data.  Different views may present different structures over the same underlying data.  A view is defined with a number of fields (see below, and also [View fields in Annalist](view-field-types.md)).
 
 
 ## List views
@@ -45,6 +45,8 @@ Associated with each collection is a default list view, which is displayed when 
 Record and list views are build up using **fields**, which associate a data record property URI with a field renderer and a stored data value type.  A field render formats data for presentation (essentially as a fragment of HTML), and interprets user input as a storable data value.
 
 The available field renderers are defined by Annalist, and the range of rendering options is expected to increase as the software is developed.  Currently, there are three main types of renderer:  single-line text (Text), multiline text (TextArea) and enumeration, pwhich presents a selection of identifiers of some other defined type.
+
+For more information, see [View fields in Annalist](view-field-types.md).
 
 
 ## Field groups

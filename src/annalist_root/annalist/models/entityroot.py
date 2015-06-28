@@ -28,6 +28,7 @@ from django.conf import settings
 from annalist               import util
 from annalist.exceptions    import Annalist_Error
 from annalist.identifiers   import ANNAL, RDF
+from annalist.resourcetypes import file_extension, file_extension_for_content_type
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -138,8 +139,8 @@ class EntityRoot(object):
         self._values[ANNAL.CURIE.id]        = self._values.get(ANNAL.CURIE.id,      self._entityid)
         self._values[ANNAL.CURIE.type_id]   = self._values.get(ANNAL.CURIE.type_id, self._entitytypeid)
         self._values[ANNAL.CURIE.type]      = self._values.get(ANNAL.CURIE.type,    self._entitytype)
-        urlref = self.get_view_url_path()
-        self._values[ANNAL.CURIE.url]       = urlref
+        if ANNAL.CURIE.url not in self._values:
+            self._values[ANNAL.CURIE.url] = self.get_view_url_path()
         # log.info("set_values %r"%(self._values,))
         return self._values
 
@@ -148,6 +149,54 @@ class EntityRoot(object):
         Return collection metadata values
         """
         return self._values
+
+    def enum_fields(self):
+        """
+        Enumerate fields in entity.
+
+        Recurses into fields that are lists or sequences of dictionaries,
+        this being the structure used for repeated field groups.
+
+        Yields `(path, value)` pairs, where `path` is a list of index values applied
+        successively to access the corresponding value.
+        """
+        def is_dict(e):
+            return isinstance(e,dict)
+        def enum_f(p, d):
+            for k in d:
+                if isinstance(d[k], (list, tuple)) and all([is_dict(e) for e in d[k]]):
+                    for i in range(len(d[k])):
+                        for f in enum_f(p+[k,i], d[k][i]):
+                            yield f
+                else:
+                    yield (p+[k], d[k])
+            return
+        if self._values:
+            for f in enum_f([], self._values):
+                yield f
+        return
+
+    def field_resource_file(self, resource_ref):
+        """
+        Returns a file object value for a resource associated with an entity,
+        or None if the resouce is not present.
+        """
+        (body_dir, _) = self._dir_path()
+        file_name = os.path.join(body_dir, resource_ref)
+        if os.path.isfile(file_name):
+            return open(file_name, "rb")
+        return None
+
+    def get_field(self, path):
+        """
+        Returns a field value corresponding to a path returned by enum_fields.
+        """
+        def get_f(p, v):
+            if p == []:
+                return v
+            else:
+                return get_f(p[1:], v[p[0]])
+        return get_f(path, self._values)
 
     # I/O helper functions
 
@@ -245,6 +294,7 @@ class EntityRoot(object):
         # @TODO: is this next needed?  Put logic in set_values?
         if self._entityid:
             values[ANNAL.CURIE.id] = self._entityid
+        values.pop('annal:url', None)
         with open(fullpath, "wt") as entity_io:
             json.dump(values, entity_io, indent=2, separators=(',', ': '))
         self._entityuseurl  = self._entityurl
@@ -252,13 +302,17 @@ class EntityRoot(object):
 
     def _load_values(self):
         """
-        Read current entity from Annalist storage, and return entity body
+        Read current entity from Annalist storage, and return entity body.
+
+        Adds value for 'annal:url' to the entity data returned.
         """
         body_file = self._exists_path()
         if body_file:
             try:
                 with open(body_file, "r") as f:
-                    return json.load(util.strip_comments(f))
+                    entitydata = json.load(util.strip_comments(f))
+                    entitydata[ANNAL.CURIE.url] = self.get_view_url_path()
+                    return entitydata
             except IOError, e:
                 if e.errno != errno.ENOENT:
                     raise
@@ -266,8 +320,30 @@ class EntityRoot(object):
             except ValueError, e:
                 log.error("EntityRoot._load_values: error loading %s"%(body_file))
                 log.error(e)
-                return { "@error": body_file }
+                return (
+                    { "@error": body_file 
+                    , "@message": "Error loading entity values %r"%(e,)
+                    })
         return None
+
+    def _migrate_values(self, entitydata):
+        """
+        Default method for entity format migration hook.
+
+        The specification for this method is that it returns an entitydata value
+        which is a copy of the supplied entitydata with format migrations applied.
+
+        This default implementation applies no migrations, and simply returns the 
+        supplied value.  The method may be overridden for entity types and instances
+        for which migrations are to be applied.
+
+        NOTE:  implementations are free to apply migrations in-place.  The resulting 
+        entitydata should be exctly as the supplied data *should* appear in storage
+        to conform to the current format of the data.  The migration function should 
+        be idempotent; i.e.
+            x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
+        """
+        return entitydata
 
     def _child_dirs(self, cls, altparent):
         """
@@ -313,6 +389,30 @@ class EntityRoot(object):
                 yield fil
         return
 
+    def _fileobj(self, localname, filetypeuri, mimetype, mode):
+        """
+        Returns a file object for accessing a blob associated with the current entity.
+
+        localname   is the local name used to identify the file/resource among all those
+                    associated with the ciurrent entity.
+        filetypeuri is a URI/CURIE that identifies the type of data stored in the blob.
+        mimetype    is a MIME content-type string for the resource representation used,
+                    used in selecting the file extension to be used, or None in which case 
+                    a default file extension for the type is used.
+        mode        is a string defining how the resource is opened (using the same values
+                    as the built-in `open` function).
+        """
+        (body_dir, body_file) = self._dir_path()  # Same as `_save`
+        file_ext  = (
+            file_extension_for_content_type(filetypeuri, mimetype) or 
+            file_extension(filetypeuri)
+            )
+        file_name = os.path.join(body_dir, localname+"."+file_ext)
+        return open(file_name, mode)
+
+    # Special methods to facilitate access to entity values by dictionary operations
+    # on the Entity object
+
     def __iter__(self):
         """
         Return entity value keys
@@ -321,9 +421,6 @@ class EntityRoot(object):
             for k in self._values:
                 yield k
         return
-
-    # Special methods to facilitate access to entity values by dictionary operations
-    # on the Entity object
 
     def keys(self):
         """
@@ -341,6 +438,7 @@ class EntityRoot(object):
         """
         Equivalent to dict.get() function
         """
+        # log.info("entityroot.get key %r, self._values %r"%(key, self._values))
         return self[key] if self._values and key in self._values else default
 
     def __getitem__(self, k):

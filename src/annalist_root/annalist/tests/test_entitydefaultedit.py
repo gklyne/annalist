@@ -217,7 +217,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -301,7 +300,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "entity1")
         self.assertEqual(r.context['orig_id'],          "entity1")
-        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -380,7 +378,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.debug(r.content)
         def_label = error_label("testcoll", "testtype", "entitynone")
-        self.assertContains(r, "<p>%s does not exist</p>"%(def_label), status_code=404)
+        self.assertContains(r, "<p>Entity %s does not exist</p>"%(def_label), status_code=404)
         return
 
     #   -----------------------------------------------------------------------------

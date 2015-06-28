@@ -9,7 +9,7 @@
 , "annal:placeholder":          "(view id)"
 , "annal:property_uri":         "annal:type_view"
 , "annal:field_entity_type":    "annal:Type"
-, "annal:options_typeref":      "_view"
+, "annal:field_ref_type":       "_view"
 , "annal:field_placement":      "small:0,12;medium:0,6"
 , "annal:default_value":        "Default_view"
 }

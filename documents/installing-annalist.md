@@ -1,5 +1,18 @@
 # Installing and setting up Annalist
 
+## Contents
+
+1. Prerequisites
+2. Running as a Docker container
+3. Upgrading an existing installation
+4. New software installation
+5. Setting up an Annalist site
+6. Run annalist as a background process
+7. Accessing Annalist
+8. Create a collection
+9. `annalist-manager` command reference
+
+
 ## Prerequisites
 
 * A Unix-like operating system: Annalist has been tested with MacOS 10.9 and Linux 14.04.  Other versions should be usable.  (The software can be run on Windows, but the procedure to get it running is somewhat more complicated, and is not yet fully tested or documented.)
@@ -52,7 +65,7 @@ Existing Analist collection data can be loaded into a new installation, before s
     cd /annalist_site/annalist_site/c/
     git clone https://github.com/gklyne/DMO_Experiment.git
 
-To run Annalist server as a headless container headless (no shell):
+To run Annalist server as a headless container (no shell):
 
     docker run --detach \
         --publish=8000:8000 --volumes-from=annalist_site \
@@ -140,9 +153,9 @@ The following assumes that software is installed under a directory called $WORKS
 
         pip install annalist
 
-4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.12.tar.gz).  Then install it thus:
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.14.tar.gz).  Then install it thus:
 
-        pip install $WORKSPACE/Annalist-0.1.12.tar.gz
+        pip install $WORKSPACE/Annalist-0.1.14.tar.gz
 
 5.  Finally, test the installed software:
 
@@ -150,21 +163,22 @@ The following assumes that software is installed under a directory called $WORKS
 
     The output from this command should look something like this:
 
-        INFO:annalist_site.settings.runtests:Annalist version 0.1.12 (test configuration)
+        INFO:annalist_site.settings.runtests:Annalist version 0.1.14 (test configuration)
         INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
-        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /home/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.11-py2.7.egg/annalist_root/sampledata/data
-        INFO:annalist_site.settings.runtests:CONFIG_BASE:     /home/annalist/.annalist/
-        INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /home/annalist/anenv/lib/python2.7/site-packages/Django-1.7-py2.7.egg/django
-        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /home/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.11-py2.7.egg/annalist_root/annalist_site
-        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /home/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.11-py2.7.egg/annalist_root
-        INFO:annalist_site.settings.runtests:DB PATH:         /home/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.11-py2.7.egg/annalist_root/db.sqlite3
+        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.14-py2.7.egg/annalist_root/sampledata/data
+        INFO:annalist_site.settings.runtests:CONFIG_BASE:     /Users/graham/.annalist/
+        INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/django
+        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.14-py2.7.egg/annalist_root/annalist_site
+        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.14-py2.7.egg/annalist_root
+        INFO:annalist_site.settings.runtests:DB PATH:         /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.14-py2.7.egg/annalist_root/db.sqlite3
         Creating test database for alias 'default'...
-        ...................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+        ............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
         ----------------------------------------------------------------------
-        Ran 515 tests in 160.570s
+        Ran 540 tests in 234.506s
 
         OK
         Destroying test database for alias 'default'...
+
 
 ## Setting up an Annalist site
 
@@ -196,7 +210,7 @@ The configuration details for using an OpenID Connect provider are stored in a p
 
 Annalist can also allow users to log in using locally stored credentials, which may be useful for quick evaluation deployments but is not the recommended mechanism for normal operational use.
 
-When installing Annalist, an administration account may be created using the `annalist-manager` tool.  When logged in to Annalist using this account, the **Admin** link in the footer of most Annalist pages will allow new user accounts to be created via the Django admin interface.  More documentation about using this admin intrefcae is in the [The Django Admin Site](http://www.djangobook.com/en/2.0/chapter06.html), which isChapter 6 of [The Django Book](http://www.djangobook.com/en/2.0/index.html).
+When installing Annalist, an administration account may be created using the `annalist-manager` tool.  When logged in to Annalist using this account, the **Admin** link in the footer of most Annalist pages will allow new user accounts to be created via the Django admin interface.  More documentation about using this admin interface is in the [The Django Admin Site](http://www.djangobook.com/en/2.0/chapter06.html), which is Chapter 6 of [The Django Book](http://www.djangobook.com/en/2.0/index.html).
 
 ### Initial site setup
 
@@ -210,23 +224,23 @@ NOTE: using the development configuration, data files are stored within the soft
 
 2.  Initialize sitedata:
 
-        annalist-manager createsitedata --development
+        annalist-manager createsitedata
 
      (Don't do this if updating annalist software to use existing site data: use `annalist-manager updatesitedata` instead)
 
 3.  Initialize user management database
 
-        annalist-manager initialize --development
+        annalist-manager initialize
 
 4.  Create admin user
 
-        annalist-manager createadminuser --development
+        annalist-manager createadminuser
 
     Respond to the prompts with a username, email address and password.  The username may be up to 30 characters, and may consist of letters, digits and underscores.
 
     Alternatively, to create a default admin user with name `admin` and email address `admin@localhost`, use this command:
 
-        annalist-manager createadminuser --development
+        annalist-manager defaultadminuser
 
     As before, enter and re-enter a password when prompted.
 
@@ -235,9 +249,29 @@ NOTE: using the development configuration, data files are stored within the soft
 
 5.  Start the Annalist server
 
-        annalist-manager runserver --development
+        annalist-manager runserver
 
 You should now be able to use a browser to view the Annalist server, e.g. at http://localhost:8000.
+
+NOTE: for configurations which store the database file in the site data area (including the default personal configuration), `annalist-manager createsitedata` must be run before `annalist-manager initialize`, as it requires absence of any previous site data or database files.  When updating an existing Annalist site, it should not be necessary to run `annalist-manager initialize`.
+
+
+## Run annalist as a background process
+
+To run annalist as a long-runnin g background process, use the following command:
+
+    nohup annalist-manager runserver &
+
+(with `annalist-manager` configuration options if required.)
+
+To view the server log of a running Annalist instance:
+
+    less $(annalist-manager serverlog)
+
+To check for Annalist background processes, and to terminate an Annalist server running as a background process (run from the same user account that started annalist):
+
+    ps x
+    killall python
 
 
 ## Accessing Annalist
@@ -288,10 +322,7 @@ Click on the link in the Id column to view the new collection:
 From this screen, you can start to add data to this collection.  For more information, see [Using Annalist](using-annalist.md)
 
 
-# `annalist-manager` command reference
+## `annalist-manager` command reference
 
 @@TODO.  Use `annalist-manager help` for a command summary.
-
-NOTE: for configurations which store the database file in the site data area (including the default personal configuration), `annalist-manager createsitedata` must be run before `annalist-manager initialize`, as it requires absence of any previous site data or database files.
-When updating an existing Annalist site, it should not be necessary to run `annalist-manager initialize`.
 

@@ -2,7 +2,9 @@ To Google group:
 
 I've just released an update (0.1.12) to the public prototype of Annalist.
 
-New in this release are non-editing entity views, with links to referenced entities.  This facilitates navigation of the network of entities that make up a collection.  A number of new render types have been introduced, many to support more useful data display in the non-editing view (links, Maerkdown formatting, etc - more details below.).  This non-editing view is now the default used when viewing an entity (e.g. when following a link from a list view).
+New in this release are non-editing entity views, with links to referenced entities.  This facilitates navigation of the network of entities that make up a collection.  A number of new render types have been introduced, many to support more useful data display in the non-editing view (links, Markdown formatting, etc - more details below.).  This non-editing view is now the default used when viewing an entity (e.g. when following a link from a list view).
+
+The changes can be seen by browsing to http://demo.annalist.net/annalist/c/DMO_Experiment/d/, and clicking around from there.
 
 This release also contains a number of usability enhancements and bug fixes, including:
 
@@ -26,10 +28,12 @@ To research-object:
 
 I've just released Annalist 0.1.12.
 
-New in this release are non-editing entity views, with links to referenced entities.  This facilitates navigation of the network of entities that make up a collection.  A number of new render types have been introduced, many to support more useful data display in the non-editing view (links, Maerkdown formatting, etc - more details below.).  This non-editing view is now the default used when viewing an entity (e.g. when following a link from a list view).
+New in this release are non-editing entity views, with links to referenced entities.  This facilitates navigation of the network of entities that make up a collection.  A number of new render types have been introduced, many to support more useful data display in the non-editing view (links, Markdown formatting, etc - more details below.).  This non-editing view is now the default used when viewing an entity (e.g. when following a link from a list view).
+
+The changes can be seen by browsing to http://demo.annalist.net/annalist/c/DMO_Experiment/d/, and clicking around from there.
 
 The full announcement is at:
-...https://groups.google.com/d/msg/annalist-discuss/SJBtcVzO1_I/ju_Z1GTX8j4J
+...https://groups.google.com/d/msg/annalist-discuss/lR4ADtfi10E/W75DnHLh9-sJ
 
 Release notes (see "history" section for details) at:
 https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md

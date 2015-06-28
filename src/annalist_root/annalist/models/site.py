@@ -21,6 +21,7 @@ from django.http                    import HttpResponseRedirect
 from django.conf                    import settings
 from django.core.urlresolvers       import resolve, reverse
 
+import annalist
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
 from annalist                       import layout
@@ -124,7 +125,7 @@ class Site(EntityRoot):
         site_data["collections"] = colls
         return site_data
 
-    def add_collection(self, coll_id, coll_meta):
+    def add_collection(self, coll_id, coll_meta, annal_ver=annalist.__version__):
         """
         Add a new collection to the current site
 
@@ -132,10 +133,14 @@ class Site(EntityRoot):
                     with a form that is valid as URI path segment.
         coll_meta   a dictionary providing additional information about
                     the collection to be created.
+        annal_ver   Override annalist version stored in collection metadata
+                    (parameter provided for testing)
 
         returns a Collection object for the newly created collection.
         """
-        c = Collection.create(self, coll_id, coll_meta)
+        d = dict(coll_meta)
+        d[ANNAL.CURIE.software_version] = annal_ver
+        c = Collection.create(self, coll_id, d)
         return c
 
     def remove_collection(self, coll_id):

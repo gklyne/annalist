@@ -10,7 +10,7 @@ HTML for view fields is generated through the following steps:
 
 2. When generating HTML for a view, the field render type is translated by module `annalist/views/fields/render_utils.py` into a Django renderer object suitable for the context in which the field appears (view. edit, list, etc.).  This renderer object can be referenced by a Django template `%include` template tag (cf. [Django "include" documentation](https://docs.djangoproject.com/en/1.7/ref/templates/builtins/#include) - the capability to include an object with a render method was introduced in Django 1.7).
 
-3. The master template (`annalist/templates/annalist_entity_list.html`, `annalist/templates/annalist_entity_view.html` or `annalist/templates/annalist_entity_edit.html`), or the `RepeatGroup` renderer (`annalist/views/fields/render_repeatgroup.py` invoke the field renderer at the apropriate point on the page).
+3. The master template (`annalist/templates/annalist_entity_list.html`, `annalist/templates/annalist_entity_view.html` or `annalist/templates/annalist_entity_edit.html`), or the `RepeatGroup` renderer (`annalist/views/fields/render_repeatgroup.py` invokes the field renderer at the apropriate point on the page).
 
 New field types can be defined in one of the following ways:
 
@@ -52,15 +52,15 @@ NOTE: future developments may implement a separate directory for installation- o
 
 ## Defining a class-based render type
 
-For rendering fields that cannot be handled by Django templates, new rendering code can be added to Annalist.  Two new modukles should be created:  a module containing the renderer itself, and a test suite to confirm intended behaviour.
+For rendering fields that cannot be handled by Django templates, new rendering code can be added to Annalist.  Two new modules should be created:  a module containing the renderer itself, and a test suite to confirm intended behaviour.
 
 1.  Choose a short name string for the render type that does not clash with any values already defined in `annalist/views/fields/render_utils`.  Most of the defined render types appear in the tables at the start of the module (`_field_view_files`, `_field_edit_files` and `_field_get_renderer_functions`), but others may be mentioned directly in the functions that follow (e.g. `RepeatGroup`, `RepeatGroupRow` and `RepeatListRow` are mapped directly in function `get_view_renderer`)
 
 
 2.  Define test cases as a new module in `annalist/tests/`.  The existing test module `test_render_bool_checkbox.py` can be used as a starting point for defining a new module.  This module uses another module, `field_rendering_support.py`, to handle common aspects of renderer testing.  I suggest giving the new module a name that starts with `test_render_`.  Steps to consider when creating this module:
 
-    * [ ] Copy `test_render_bool_checkbox.py` to new module name
-    * [ ] Update descrptive comment at top of module
+    * [ ] Copy `test_render_bool_checkbox.py` (or similar) to new module name
+    * [ ] Update descriptive comment at top of module
     * [ ] Update `import` statement to refer to new module to be defined
     * [ ] Update class name
     * [ ] Rename and update the test case method for value rendering: this should cover value view and edit cases as appropriate.
@@ -70,10 +70,10 @@ For rendering fields that cannot be handled by Django templates, new rendering c
 
 3. Define a new renderer module in `annalist/views/fields/`.  The existing module `render_bool_checkbox.py` can be used as a starting point for this.  I suggest giving the new module a name that starts with `render_`.  Steps to consider when creating this module:
 
-    * [ ] Copy `render_bool_checkbox.py` to new module name
+    * [ ] Copy `render_bool_checkbox.py` (or similar) to new module name
     * [ ] Update descrptive comment at top of module
     * [ ] Update class name for value mapper
-    * [ ] Implement value mapping as required.  If the values do not require mapping between the JSON object and form data, the class `render_text.RenderText`, which contains identity mapping functions, can be used instead.  If the renderer is updates the JSON representation of existing data, consider handling legacy representations in the `encode` method to facilitate data migration.
+    * [ ] Implement value mapping as required.  If the values do not require mapping between the JSON object and form data, the class `render_text.RenderText`, which contains identity mapping functions, can be used instead.  If the renderer updates the JSON representation of existing data, consider handling legacy representations in the `encode` method to facilitate data migration.
     * [ ] Rename and update the view renderer and edit renderer functions to generate appropriate HTML.
     * [ ] Rename and update the get renderer function.  Note that this function must returned a `RenderFieldValue` object, as this provides the interfaces required by the rest of Annalist to render values in different contexts.
 

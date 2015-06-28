@@ -44,7 +44,7 @@ class EntityDeleteConfirmedBaseView(AnnalistGenericView):
             default_continuation_url
             )
         continuation_url_params = continuation_params(request_params)
-        viewinfo = DisplayInfo(self, "delete")
+        viewinfo = DisplayInfo(self, "delete", request_params, continuation_url)
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
         viewinfo.get_type_info(type_id)

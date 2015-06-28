@@ -72,6 +72,7 @@ def load_tests(loader, tests, ignore):
         # The doctest stuff doesn't seem to work on Windows
         # (These add a total of 12 tests to the overall test)
         tests.addTests(doctest.DocTestSuite(annalist.util))
+        tests.addTests(doctest.DocTestSuite(annalist.views.uri_builder))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_utils))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_placement))

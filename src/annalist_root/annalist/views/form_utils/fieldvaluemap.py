@@ -71,7 +71,7 @@ class FieldValueMap(object):
             )
         return { self.c: boundfield }
 
-    def map_form_to_entity(self, formvals):
+    def map_form_to_entity(self, formvals, entityvals):
         """
         Returns singleton or empty dictionary to be included in the resulting entity.
 
@@ -80,16 +80,13 @@ class FieldValueMap(object):
         self.e is the entity property URI that receives the field value, or None if no 
         value is saved for this field.
         """
-        entityvals = {}
         if self.e:
             log.debug("FieldValueMap.map_form_to_entity %s, %r"%(self.e, formvals))
             v = formvals.get(self.i, None)
-            # if v is not None:
-            #     entityvals[self.e] = self.f['field_value_mapper'].decode(v)
-            entityvals[self.e] = self.f['field_value_mapper'].decode(v)
+            self.f['field_value_mapper'].decode_store(v, entityvals, self.e)
         return entityvals
 
-    def map_form_to_entity_repeated_item(self, formvals, prefix):
+    def map_form_to_entity_repeated_item(self, formvals, entityvals, prefix):
         """
         Extra helper method used when mapping repeated field items to repeated entity values.
         The field name extracted is constructed using the supplied prefix string.
@@ -97,10 +94,12 @@ class FieldValueMap(object):
         Returns None if the prefixed value does not exist, which may be used as a loop
         termination condition.
         """
-        # log.info("Form->entity: prefix %s, fieldname %s"%(prefix, self.i))
-        v = formvals.get(prefix+self.i, None)
-        if v is not None:
-            return {self.e: v}
+        if self.e:
+            log.debug("FieldValueMap.map_form_to_entity_repeated_item %s, %r"%(self.e, formvals))
+            v = formvals.get(prefix+self.i, None)
+            if v is not None:
+                self.f['field_value_mapper'].decode_store(v, entityvals, self.e)
+                return v
         return None
 
     def get_structure_description(self):

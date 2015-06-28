@@ -11,6 +11,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
     get_field_value
@@ -25,7 +26,7 @@ from django.template    import Template, Context
 #   ----------------------------------------------------------------------------
 
 view_select = (
-    """<!-- fields.render_select.py -->
+    """<!-- fields.select_view_renderer(view_select) -->
     {% if field.field_value_link_continuation %}
       <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
     {% else %}
@@ -34,7 +35,7 @@ view_select = (
     """)
 
 edit_select = (
-    """<!-- field/annalist_edit_select.html -->
+    """<!-- fields.select_view_renderer(edit_select) -->
     <div class="row">
       <div class="small-10 columns view-value less-new-button">
         <select name="{{repeat_prefix}}{{field.field_name}}">
@@ -68,7 +69,7 @@ edit_select = (
     """)
 
 view_choice = (
-    """<!-- fields.render_choice.py -->
+    """<!-- fields.choice_view_renderer(view_choice) -->
     {% if field.field_value_link_continuation %}
       <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
     {% else %}
@@ -77,7 +78,7 @@ view_choice = (
     """)
 
 edit_choice = (
-    """<!-- fields.render_choice.py -->
+    """<!-- fields.choice_view_renderer(edit_choice) -->
     <select name="{{repeat_prefix}}{{field.field_name}}">
       {% for v in field_options %}
         {% if v == field.field_value %}
@@ -105,26 +106,18 @@ edit_choice = (
 #   ----------------------------------------------------------------------------
 
 
-class SelectValueMapper(object):
+class SelectValueMapper(RenderBase):
     """
     Value mapper class for text selected from a list of choices.
     """
 
-    @staticmethod
-    def encode(data_value):
+    @classmethod
+    def encode(cls, data_value):
         """
         Encodes supplied data value as an option value to be selected in a 
         <select> form inbput.
         """
         return data_value or ""
-
-    @staticmethod
-    def decode(field_value):
-        """
-        Decodes a selected option value as a value to be stored in an 
-        entity field.
-        """
-        return field_value
 
 #   ----------------------------------------------------------------------------
 #
@@ -143,7 +136,12 @@ class select_view_renderer(object):
     def render(self, context):
         textval = SelectValueMapper.encode(get_field_value(context, None))
         with context.push(encoded_field_value=textval):
-            result = self._template.render(context)
+            try:
+                result = self._template.render(context)
+            except Exception as e:
+                log.error(repr(e))
+                log.error(repr(context))
+                result = repr(e)
         return result
 
 class select_edit_renderer(object):

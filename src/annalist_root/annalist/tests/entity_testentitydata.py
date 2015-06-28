@@ -139,7 +139,8 @@ def entitydata_value_keys(entity_uri=False):
     keys = (
         [ '@type'
         , 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url'
+        , 'annal:type'
+        , 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         ])
     if entity_uri:
@@ -434,13 +435,16 @@ def entitydata_default_view_form_data(
         coll_id="testcoll", 
         type_id="testtype", orig_type=None,
         entity_id=None, orig_id=None, 
-        action=None, cancel=None, close=None, edit=None, copy=None, update="Entity",
-        add_view_field=None, use_view=None, 
-        new_view=None, new_field=None, new_type=None, new_enum=None):
+        action=None, cancel=None, close=None, view=None, edit=None, copy=None, 
+        update="Entity",
+        add_view_field=None, use_view=None,
+        new_view=None, new_field=None, new_type=None, 
+        new_enum=None, do_import=None
+        ):
     # log.info("entitydata_default_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (
-        { 'Entity_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
-        , 'Entity_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
+        { 'Entity_label':       '%s data ... (%s/%s)'%(update, coll_id, type_id)
+        , 'Entity_comment':     '%s description ... (%s/%s)'%(update, coll_id, type_id)
         , 'orig_id':            'orig_entity_id'
         , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
         })
@@ -461,6 +465,8 @@ def entitydata_default_view_form_data(
         form_data_dict['cancel']          = "Cancel"
     elif close:
         form_data_dict['close']           = "Close"
+    elif view:
+        form_data_dict['view']            = "View"
     elif edit:
         form_data_dict['edit']            = "Edit"
     elif copy:
@@ -478,6 +484,8 @@ def entitydata_default_view_form_data(
         form_data_dict['new_type']        = new_type
     elif new_enum:
         form_data_dict[new_enum]          = new_enum
+    elif do_import:
+        form_data_dict[do_import]         = do_import
     else:
         form_data_dict['save']            = 'Save'
     return form_data_dict

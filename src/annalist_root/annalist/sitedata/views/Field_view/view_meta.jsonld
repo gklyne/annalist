@@ -40,6 +40,9 @@
   , { "annal:field_id":         "Field_typeref"
     , "annal:field_placement":  "small:0,6"
     }
+  , { "annal:field_id":         "Field_fieldref"
+    , "annal:field_placement":  "small:6,6"
+    }
   , { "annal:field_id":         "Field_restrict"
     , "annal:field_placement":  "small:0,12"
     }

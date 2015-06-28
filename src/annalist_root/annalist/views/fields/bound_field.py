@@ -10,6 +10,8 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
+
+from urlparse       import urljoin  # py3: from urllib.parse ...
 from collections    import OrderedDict, namedtuple
 
 from django.conf                    import settings
@@ -76,7 +78,7 @@ class bound_field(object):
     "<ul><li>key: def</li><li>val: default</li><li>field_description: {'field_property_uri': 'def', 'field_id': 'def_id', 'field_type': 'def_type'}</li></ul>"
     """
 
-    __slots__ = ("_field_description", "_entityvals", "_key", "_extras")
+    __slots__ = ("_field_description", "_entityvals", "_targetvals", "_key", "_extras")
 
     def __init__(self, field_description, entityvals, context_extra_values=None):
         """
@@ -93,6 +95,7 @@ class bound_field(object):
         """
         self._field_description = field_description
         self._entityvals        = entityvals
+        self._targetvals        = None
         self._key               = self._field_description['field_property_uri']
         self._extras            = context_extra_values
         eid = entityvals.get('entity_id', "@@@render_utils.__init__@@@")
@@ -104,63 +107,69 @@ class bound_field(object):
 
     def __getattr__(self, name):
         """
-        Get a bound field description attribute.  If the attribute name is "field_value"
-        then the value corresponding to the field description is retrieved from the entity,
-        otherwise the named attribute is retrieved from thge field description.
+        Get a bound field description attribute.  Broadly, if the attribute name is 
+        "field_value" then the value corresponding to the field description is 
+        retrieved from the entity, otherwise the named attribute is retrieved from 
+        the field description.
+
+        There are also a number of other special cases handled here as needed to 
+        support internally-generated hyperlinks and internal system logic.
         """
         # log.info("self._key %s, __getattr__ %s"%(self._key, name))
         # log.info("self._key %s"%self._key)
         # log.info("self._entity %r"%self._entity)
         if name in ["entity_id", "entity_link", "entity_type_id", "entity_type_link"]:
             return self._entityvals.get(name, "")
-        elif name == "field_value_key":
-            return self._key
-        elif name == "context_extra_values":
-            return self._extras
-        elif name == "field_placeholder":
-            return self._field_description.get('field_placeholder', "@@bound_field.field_placeholder@@")
-        elif name == "continuation_url":
-            if self._extras is None:
-                log.warning("bound_field.continuation_url - no extra context provided")
-                return ""
-            cont = self._extras.get("request_url", "")
-            if cont:
-                cont = uri_with_params(cont, continuation_params(self._extras))
-            return cont
+
+        elif name == "field_value":
+            return self.get_field_value()
+        elif name == "field_value_link":
+            return self.get_field_link()
+        elif name == "field_value_link_continuation":
+            return self.get_link_continuation(self.get_field_link())
+
+        elif name == "target_value":
+            return self.get_target_value()
+        elif name == "target_value_link":
+            return self.get_target_link()
+        elif name == "target_value_link_continuation":
+            return self.get_link_continuation(self.get_target_link())
+
         elif name == "entity_link_continuation":
             return self.entity_link+self.get_continuation_param()
         elif name == "entity_type_link_continuation":
             return self.entity_type_link+self.get_continuation_param()
-        elif name == "field_value":
-            field_val = None
-            if self._key in self._entityvals:
-                field_val = self._entityvals[self._key]
-            elif self._extras and self._key in self._extras:
-                field_val = self._extras[self._key]
-            if field_val is None:
-                # Return default value, or empty string.
-                # Used to populate form field value when no value supplied, or provide per-field default
-                field_val = self._field_description.get('field_default_value', None)
-                if field_val is None:
-                    field_val = ""
-            return field_val
-        elif name == "field_value_link":
-            # Used to get link corresponding to a value, if such exists
-            return self.get_field_link()
-        elif name == "field_value_link_continuation":
-            # Used to get link corresponding to a value, if such exists
-            link = self.get_field_link()
-            if link:
-                link += self.get_continuation_param()
-            return link
+        elif name == "continuation_url":
+            return self.get_continuation_url()
         elif name == "field_description":
-            # Used to get link corresponding to a value, if such exists
             return self._field_description
+        elif name == "field_value_key":
+            return self._key
+        elif name == "context_extra_values":
+            return self._extras
         elif name == "options":
             return self.get_field_options()
+        #@@
+        # elif name == "field_placeholder":
+        #     return self._field_description.get('field_placeholder', "@@bound_field.field_placeholder@@")
+        #@@
         else:
             # log.info("bound_field[%s] -> %r"%(name, self._field_description[name]))
-            return self._field_description[name]
+            return self._field_description.get(name, "@@bound_field.%s@@"%(name))
+
+    def get_field_value(self):
+        field_val = None
+        if self._key in self._entityvals:
+            field_val = self._entityvals[self._key]
+        elif self._extras and self._key in self._extras:
+            field_val = self._extras[self._key]
+        if field_val is None:
+            # Return default value, or empty string.
+            # Used to populate form field value when no value supplied, or provide per-field default
+            field_val = self._field_description.get('field_default_value', None)
+            if field_val is None:
+                field_val = ""
+        return field_val
 
     def get_field_link(self):
         # Return link corresponding to field value, or None
@@ -170,17 +179,114 @@ class bound_field(object):
             return links[v]
         return None
 
+    def get_target_value(self):
+        """
+        Get target value of field for view display.
+
+        This may be different from field_value if it references another entity field
+        """
+        targetvals   = self.get_targetvals()
+        if targetvals is not None:
+            target_key   = self._field_description['field_ref_field'].strip()
+            log.debug("get_target_value: target_key %s"%(target_key,))
+            target_value = targetvals.get(target_key, "(@%s)"%(target_key))
+        else:
+            target_value = self.field_value
+        return target_value
+
+    def get_target_link(self):
+        """
+        Return link corresponding to target value, or None.
+
+        The target value is treated as a relative reference relative to the field_link value.
+        If the target value is itself an absolute URI, it will be used as-is.
+
+        If the target value is a dictionary structure created by a URIImport or FileUpload field, 
+        the resulting value links to the imported data object.
+        """
+        target_base  = self.get_field_link()
+        target_value = self.get_target_value()
+        log.debug("get_target_link: base %s, value %r"%(target_base, target_value))
+        if target_base and target_value:
+            if isinstance(target_value, dict) and 'resource_name' in target_value:
+                target_ref = target_value['resource_name']
+            elif isinstance(target_value, (str, unicode)):
+                target_ref = target_value
+            else:
+                log.warning(
+                    "bound_field.get_target_link: "+
+                    "target_value must be URI string or URIImport structure; got %r"%
+                      (target_value,)
+                    )
+                target_ref = None
+            return urljoin(target_base, target_ref)
+        return target_value
+
+    def get_targetvals(self):
+        """
+        If field description is a reference to a target type entity or field, 
+        return a copy of the referenced target entity, otherwise None.
+        """
+        log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
+        target_type = self._field_description['field_ref_type']
+        target_key  = self._field_description['field_ref_field']
+        log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
+        if target_type and target_key:
+            if self._targetvals is None:
+                # Get entity type info
+                #@@TODO: eliminate site param...
+                coll           = self._field_description._collection
+                targettypeinfo = EntityTypeInfo(coll.get_site(), coll, target_type)
+                # Check access permission, assuming user has "VIEW" permission in current collection
+                # This is primarily to prevent a loophole for accessing user account details
+                #@@TODO: pass actual user permissions in to bound_field or field description or extra params
+                user_permissions = ["VIEW"]
+                req_permissions  = list(set( targettypeinfo.permissions_map[a] for a in ["view", "list"] ))
+                if all([ p in user_permissions for p in req_permissions]):
+                    target_id        = self.get_field_value()
+                    self._targetvals = targettypeinfo.get_entity(target_id)
+                    log.debug("bound_field.get_targetvals: %r"%(self._targetvals.get_values(),))
+                else:
+                    log.warning("bound_field.get_targetvals: target value type %s requires %r permissions"%(target_type, req_permissions))
+        return self._targetvals
+
+    def get_link_continuation(self, link):
+        """
+        Return supplied base link with continuation parameter appended
+        (if the link value is defined - i.e. not None or empty).
+        """
+        if link:
+            link += self.get_continuation_param()
+        return link
+
+    def get_continuation_param(self):
+        """
+        Generate continuation parameter string for return back to the current request page
+        """
+        cparam = ""
+        chere  = self.get_continuation_url()
+        if chere:
+            cparam = uri_params({'continuation_url': chere})
+        return cparam
+
+    def get_continuation_url(self):
+        """
+        Generate continuation URL for return back to the current request page
+        """
+        chere = ""
+        if self._extras is None:
+            log.warning("bound_field.get_continuation_url() - no extra context provided")
+        else:
+            requrl = self._extras.get("request_url", "")
+            if requrl:
+                chere  = uri_with_params(requrl, continuation_params(self._extras))
+        log.debug('bound_field.get_continuation_url %s'%(chere,))
+        return chere
+
     def get_field_options(self):
         options = self._field_description['field_choice_labels']
         options = options.values() if options is not None else ["(no options)"]
         return options
-
-    def get_continuation_param(self):
-        cparam = self.continuation_url
-        if cparam:
-            cparam = uri_params({'continuation_url': cparam})
-        log.debug('bound_field.get_continuation_param %s'%(cparam,))  #@@
-        return cparam
 
     def __getitem__(self, name):
         return self.__getattr__(name)
@@ -195,9 +301,13 @@ class bound_field(object):
         yield "entity_link_continuation"
         yield "entity_type_link"
         yield "entity_type_link_continuation"
-        yield "continuation_url"
         yield "field_value"
         yield "field_value_link"
+        yield "field_value_link_continuation"
+        yield "target_value"
+        yield "target_value_link"
+        yield "target_value_link_continuation"
+        yield "continuation_url"
         yield "options"
         for k in self._field_description:
             yield k
@@ -254,7 +364,6 @@ def get_entity_values(displayinfo, entity, entity_id=None):
     typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
     if typeinfo.recordtype:
         entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
-        # @@other type-related info; e.g., aliases - populate 
     return entityvals
 
 if __name__ == "__main__":

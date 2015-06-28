@@ -99,7 +99,8 @@ def recordtype_edit_url(action=None, coll_id=None, type_id=None):
 def recordtype_value_keys(type_uri=False):
     ks = set(
         [ 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url'
+        , 'annal:type'
+        , 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:type_view', 'annal:type_list'
         ])

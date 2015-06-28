@@ -397,6 +397,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
               <div class="row">
                 <div class="%(button_left_classes)s">
                   <input type="submit" name="save"      value="Save" />
+                  <input type="submit" name="view"      value="View" />
                   <input type="submit" name="cancel"    value="Cancel" />
                 </div>
               </div>
@@ -421,7 +422,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_type")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       type_url)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
@@ -445,7 +445,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_type")
         self.assertEqual(r.context['entity_id'],        "Default_type")
         self.assertEqual(r.context['orig_id'],          "Default_type")
-        self.assertEqual(r.context['entity_url'],       type_url)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
@@ -467,7 +466,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", "_type", "notype")
-        self.assertContains(r, "<p>%s does not exist</p>"%(err_label), status_code=404)
+        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
         return
 
     def test_get_edit(self):
@@ -481,7 +480,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_type")
         self.assertEqual(r.context['entity_id'],        "Default_type")
         self.assertEqual(r.context['orig_id'],          "Default_type")
-        self.assertEqual(r.context['entity_url'],       type_url)
         self.assertEqual(r.context['entity_uri'],       "annal:Default_type")
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "")
@@ -503,7 +501,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", "_type", "notype")
-        self.assertContains(r, "<p>%s does not exist</p>"%(err_label), status_code=404)
+        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
         return
 
     #   -----------------------------------------------------------------------------

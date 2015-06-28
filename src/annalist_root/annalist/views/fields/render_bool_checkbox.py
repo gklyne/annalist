@@ -9,6 +9,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
     get_field_value
@@ -23,15 +24,15 @@ from django.template    import Template, Context
 #   ----------------------------------------------------------------------------
 
 
-class BoolCheckboxValueMapper(object):
+class BoolCheckboxValueMapper(RenderBase):
     """
     Value mapper class for Boolean value presented as checkbox.
 
     Also interprets text values 'True', 'False','Yes', 'No', etc.
     """
 
-    @staticmethod
-    def encode(data_value):
+    @classmethod
+    def encode(cls, data_value):
         """
         Encodes supplied data value as string
         """
@@ -47,8 +48,8 @@ class BoolCheckboxValueMapper(object):
         # print "text_value "+repr(textval)
         return textval
 
-    @staticmethod
-    def decode(field_value):
+    @classmethod
+    def decode(cls, field_value):
         """
         Decodes a checkbox value attribute string as a Boolean value
         """

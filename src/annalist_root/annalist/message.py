@@ -14,6 +14,23 @@ ACTION_COMPLETED            = "Action completed"
 NO_ACTION_PERFORMED         = "No action performed"
 INPUT_ERROR                 = "Problem with input"
 SYSTEM_ERROR                = "System error"
+IMPORT_ERROR                = "Resource import error"
+IMPORT_ERROR_REASON         = ("Failed to import resource %(import_url)s as %(import_name)s"+
+                               " for %(type_id)s/%(id)s: %(import_exc)s")
+IMPORT_DONE                 = "Resource imported"
+IMPORT_DONE_DETAIL          = ("Imported <%(resource_url)s>"+
+                               " as %(import_name)s"+
+                               " for entity %(type_id)s/%(id)s")
+UPLOAD_ERROR                = "File upload error"
+UPLOAD_ERROR_REASON         = ("Failed to upload file %(uploaded_file)s as %(upload_name)s"+
+                               " for %(type_id)s/%(id)s: %(upload_exc)s")
+UPLOAD_DONE                 = "File uploaded"
+UPLOAD_DONE_DETAIL          = ("Uploaded <%(uploaded_file)s>"+
+                               " as %(upload_name)s"+
+                               " for entity %(type_id)s/%(id)s")
+# IMPORT_DONE_DETAIL          = ("Imported <%(import_url)s> from <%(resource_url)s>"+
+#                                " as %(import_name)s"+
+#                                " for entity %(type_id)s/%(id)s")
 UNEXPECTED_FORM_DATA        = "Unexpected form data: %r"
 MISSING_COLLECTION_ID       = "Missing identifier for new collection"
 INVALID_COLLECTION_ID       = "Invalid identifier for new collection: '%(coll_id)s'"
@@ -30,7 +47,12 @@ NO_VIEW_FOR_DELETE          = "No record view selected to delete"
 NO_LIST_FOR_COPY            = "No list view selected to copy"
 NO_LIST_FOR_EDIT            = "No list view selected to edit"
 NO_LIST_FOR_DELETE          = "No list view selected to delete"
-DOES_NOT_EXIST              = "%(id)s does not exist"
+ENTITY_MESSAGE_LABEL        = "%(type_id)s/%(entity_id)s in collection %(coll_id)s"
+ENTITY_DEFAULT_LABEL        = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
+ENTITY_DEFAULT_COMMENT      = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
+ENTITY_DOES_NOT_EXIST       = "Entity %(id)s does not exist"
+RESOURCE_DOES_NOT_EXIST     = "Resource %(ref)s for entity %(id)s does not exist"
+RESOURCE_NOT_DEFINED        = "Resource %(ref)s is not present for entity %(id)s"
 REMOVE_RECORD_TYPE          = "Remove record type %(id)s in collection %(coll_id)s"
 REMOVE_RECORD_LIST          = "Remove record list %(id)s in collection %(coll_id)s"
 REMOVE_RECORD_VIEW          = "Remove record view %(id)s in collection %(coll_id)s"
@@ -39,6 +61,9 @@ COLLECTION_ID_INVALID       = "The collection identifier is missing or not a val
 COLLECTION_LABEL            = "Collection %(id)s"
 COLLECTION_EXISTS           = "Collection %(id)s already exists"
 COLLECTION_NOT_EXISTS       = "Collection %(id)s does not exist"
+COLLECTION_NEWER_VERSION    = ("Cannot access collection %(id)s, "+
+                               "which was created by software version %(ver)s. "+
+                               "(Update Annalist server software to use this collection)")
 ANNALIST_USER_ID            = "Problem with user identifier"
 ANNALIST_USER_ID_INVALID    = "The user identifier is missing or not a valid identifier"
 ANNALIST_USER_LABEL         = "User %(id)s in collection %(coll_id)s"
@@ -99,9 +124,6 @@ ENTITY_TYPE_ID_INVALID      = "The entity type identifier is missing, too long, 
 DEFAULT_VIEW_UPDATED        = "Default list view for collection %(coll_id)s changed to %(list_id)s"
 REMOVE_FIELD_ERROR          = "Problem with remove field(s) request"
 NO_FIELD_SELECTED           = "No field(s) selected"
-ENTITY_MESSAGE_LABEL        = "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
-ENTITY_DEFAULT_LABEL        = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
-ENTITY_DEFAULT_COMMENT      = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
 VIEW_DESCRIPTION_HEADING    = "Problem with view description"
 VIEW_PROPERTY_DUPLICATE     = "Field %(field_id)s repeats use of property %(property_uri)s in view"
 INVALID_OPERATION_ATTEMPTED = "Attempt to peform invalid operation"

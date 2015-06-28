@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: public prototype release 0.1.12; updates from release 0.1.10 include non-editing view, navigation and presentation improvements, and bug fixes.
+Current status: public prototype release 0.1.14; the main update from release 0.1.12 is support for arbitrary attachments to entities, via URI import or file upload.
 
 
 # V1.0 release
@@ -70,19 +70,6 @@ Facilitate the creation of a new collection using the structures (data types, vi
 - Authentication mechanisms
   - Consider using OAuth2-Shibboleth bridge for uni deployment (have link somewhere in notes)
 - OAuth2 dynamic registration - note ongoing work in IETF (https://datatracker.ietf.org/doc/draft-ietf-oauth-dyn-reg/)
-
-
-## Authorization and access control ramework
-
-Curently authenticated users have full access.  Need to add a permission layer.
-
-Notes:
-
-- Assume use of Annalist form data under control of suitable authority
-- Focus on form of authorization data
-- Back-fit to form interface for creation of data; figure what seeding is needed
-- Review proposed access control model
-    - re-examine elements from UMA, see what can be used/is useful.
 
 
 ## Support multiple entity providers

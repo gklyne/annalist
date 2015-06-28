@@ -16,6 +16,7 @@ import errno
 import stat
 import time
 import urlparse
+import urllib2
 import json
 import shutil
 import StringIO
@@ -350,6 +351,73 @@ def updatetree(src, tgt):
                 updatetree(sf, tf)                          # Recursive dir copy
             else:
                 shutil.copy2(sf, tgt)                       # Copy single file, may overwrite
+    return
+
+def download_url_to_file(url, fileName=None):
+    """
+    Download resource at given URL to a specified file, or to a a filename 
+    based on any Content-disposition header present, or on the URL itself.
+
+    This code lifted from a contribution by [Michael Waterfall](http://michael.typify.io/) 
+    at [http://stackoverflow.com/questions/862173/]().  (Thanks!)
+    """
+    def getFileName(url, openUrl):
+        if 'Content-Disposition' in openUrl.info():
+            # If the response has Content-Disposition, try to get filename from it
+            cd = dict(map(
+                lambda x: x.strip().split('=') if '=' in x else (x.strip(),''),
+                openUrl.info()['Content-Disposition'].split(';')))
+            if 'filename' in cd:
+                filename = cd['filename'].strip("\"'")
+                if filename: return filename
+        # if no filename was found above, parse it out of the final URL.
+        return os.path.basename(urlparse.urlsplit(openUrl.url)[2])
+    r = urllib2.urlopen(urllib2.Request(url))
+    try:
+        fileName = fileName or getFileName(url,r)
+        with open(fileName, 'wb') as f:
+            shutil.copyfileobj(r, f)
+    finally:
+        r.close()
+    return
+
+def download_url_to_fileobj(url, fileobj=None):
+    """
+    Download resource at given URL and write the data to to a supplied
+    file stream object.
+    """
+    r = urllib2.urlopen(urllib2.Request(url))
+    try:
+        shutil.copyfileobj(r, fileobj)
+    finally:
+        r.close()
+    return (resource_url, resource_type)
+
+# Update MIME typesreturned by open_url when opening a file
+# @@TODO: unify logic with resourcetypes module, and do all MIME type wrangling there
+import mimetypes
+mimetypes.init()
+mimetypes.add_type("text/markdown", ".md")
+
+def open_url(url):
+    """
+    Opens a file-like object to access resource contents at a URL, and
+    returns the access object, actual URL (following any redirect), and 
+    resource type (MIME content-type string)
+    """
+    r = urllib2.urlopen(urllib2.Request(url))
+    u = r.geturl()
+    t = r.info().gettype()
+    return (r, u, t)
+
+def copy_resource_to_fileobj(srcobj, dstobj):
+    """
+    Copies data from a supplied souyrce file object to a supplied destination object.
+
+    Specifically, this is used when downloading a web resource to a local stored entity.
+    """
+    #@@TODO: timeout / size limit?  (Potential DoS?)
+    shutil.copyfileobj(srcobj, dstobj)
     return
 
 if __name__ == "__main__":

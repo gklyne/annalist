@@ -280,9 +280,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_left_classes)s">
-                  <input type="submit" name="close" value="Close" />
-                  <input type="submit" name="copy"  value="Copy" />
                   <input type="submit" name="edit"  value="Edit" />
+                  <input type="submit" name="copy"  value="Copy" />
+                  <input type="submit" name="close" value="Close" />
                 </div>
               </div>
             </div>
@@ -358,7 +358,6 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "entity1")
         self.assertEqual(r.context['orig_id'],          "entity1")
-        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "edit")
         # Fields
         self.assertEqual(len(r.context['fields']), 7)
@@ -461,7 +460,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.debug(r.content)
         err_label = error_label("testcoll", "testtype", "entitynone")
-        self.assertContains(r, "<p>%s does not exist</p>"%err_label, status_code=404)
+        self.assertContains(r, "<p>Entity %s does not exist</p>"%err_label, status_code=404)
         return
 
     #   -----------------------------------------------------------------------------

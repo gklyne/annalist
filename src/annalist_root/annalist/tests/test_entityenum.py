@@ -57,7 +57,9 @@ def recordenum_value_keys():
     return (
         [ '@type'
         , 'annal:id', 'annal:type_id'
-        , 'annal:type', 'annal:url', 'annal:uri'
+        , 'annal:type'
+        , 'annal:url'
+        , 'annal:uri'
         , 'rdfs:label', 'rdfs:comment'
         ])
 

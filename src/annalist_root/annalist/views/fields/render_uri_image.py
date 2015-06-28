@@ -9,9 +9,11 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_field_value
+    get_field_value,
+    get_context_field_value
     )
 
 from django.template    import Template, Context
@@ -23,20 +25,20 @@ from django.template    import Template, Context
 #   ----------------------------------------------------------------------------
 
 
-class URIImageValueMapper(object):
+class URIImageValueMapper(RenderBase):
     """
     Value mapper class for token list
     """
 
-    @staticmethod
-    def encode(data_value):
+    @classmethod
+    def encode(cls, data_value):
         """
         Encodes image reference as a string
         """
         return data_value or ""
 
-    @staticmethod
-    def decode(field_value):
+    @classmethod
+    def decode(cls, field_value):
         """
         Decodes a URI value as an image reference.
         """
@@ -54,7 +56,8 @@ class uri_image_view_renderer(object):
         """
         Render URI in view as referenced image.
         """
-        linkval = URIImageValueMapper.encode(get_field_value(context, ""))
+        # linkval = URIImageValueMapper.encode(get_field_value(context, ""))
+        linkval = URIImageValueMapper.encode(get_context_field_value(context, "target_value_link", ""))
         return (
             '''<a href="%s" target="_blank">'''+
             '''<img src="%s" alt="Image at %s" />'''+

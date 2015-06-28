@@ -269,6 +269,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
               <div class="row">
                 <div class="%(button_left_classes)s">
                   <input type="submit" name="save"      value="Save" />
+                  <input type="submit" name="view"      value="View" />
                   <input type="submit" name="cancel"    value="Cancel" />
                 </div>
               </div>
@@ -341,7 +342,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -445,7 +445,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "")
         return
@@ -463,7 +462,6 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "entity1")
         self.assertEqual(r.context['orig_id'],          "entity1")
-        self.assertEqual(r.context['entity_url'],       view_url)
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
@@ -567,7 +565,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.debug(r.content)
         err_label = error_label("testcoll", "testtype", "entitynone")
-        self.assertContains(r, "<p>%s does not exist</p>"%err_label, status_code=404)
+        self.assertContains(r, "<p>Entity %s does not exist</p>"%err_label, status_code=404)
         return
 
     #   -----------------------------------------------------------------------------
@@ -1222,18 +1220,23 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         return
 
     def test_post_edit_entity_new_id(self):
+        # Also tests continuation URL update whejn entity Id is changed
         self._create_entity_data("entityeditid1")
         e1 = self._check_entity_data_values("entityeditid1")
+        c1 = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityeditid1", view_id="Type_view")
         # Now post edit form submission with different values and new id
         f  = entitydata_recordtype_view_form_data(
             entity_id="entityeditid2", orig_id="entityeditid1", action="edit"
             )
+        f['continuation_url'] = c1
         u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditid1", view_id="Type_view")
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        c2 = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityeditid2", view_id="Type_view")
+        self.assertEqual(r['location'], TestHostUri + c2)
+        # self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
         # Check that new record type exists and old does not
         self.assertFalse(EntityData.exists(self.testdata, "entityeditid1"))
         self._check_entity_data_values("entityeditid2")
@@ -1530,6 +1533,50 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   401)
         self.assertEqual(r.reason_phrase, "Unauthorized")
+        return
+
+    #   -------- view current entity --------
+
+    def test_post_edit_entity_view(self):
+        self._create_entity_data("entityeditview")
+        f = entitydata_default_view_form_data(entity_id="entityeditview", action="edit", view="View")
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditview", view_id="Default_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        e = TestHostUri + entitydata_edit_url(
+            "view", "testcoll", "testtype", entity_id="entityeditview", view_id="Default_view"
+            )
+        l = continuation_url_param(entitydata_list_type_url("testcoll", "testtype"))
+        c = continuation_url_param(u, prev_cont=l)
+        self.assertIn(e, r['location'])
+        self.assertIn(c, r['location'])
+        # 'http://test.example.com/testsite/c/testcoll/v/Default_view/testtype/entityview/!edit
+        #   ?continuation_url=/testsite/c/testcoll/v/Default_view/testtype/entityview/!view
+        #   %3Fcontinuation_url=/testsite/c/testcoll/d/testtype/'
+        return
+
+    #   -------- view type --------
+
+    def test_post_view_entity_use_view(self):
+        self._create_entity_data("entityuseview")
+        e1 = self._check_entity_data_values("entityuseview")
+        # View doesn't return form entry field values...
+        f  = entitydata_default_view_form_data(
+                action="view",
+                use_view="Type_view", 
+                )
+        u  = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityuseview", view_id="Default_view")
+        r  = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityuseview", view_id="Type_view")
+        c = continuation_url_param("/testsite/c/testcoll/d/testtype/")
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self._check_entity_data_values("entityuseview")
         return
 
 # End.

@@ -18,6 +18,7 @@ from django.utils.http              import urlquote, urlunquote
 from django.core.urlresolvers       import resolve, reverse
 from django.contrib.auth.models     import User
 
+import annalist
 from annalist.util                  import valid_id
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
@@ -145,7 +146,6 @@ def confirm_delete_params(
     params = (
         """{"%(button_id)s": ["Delete"],"""+
         """ "entity_id": ["%(entity_id)s"],"""+
-        """ "continuation_url": [null],"""+
         """ "completion_url": ["/testsite/c/%(coll_id)s%(list_id_)s%(type_id_)s"],"""+
         """ "search_for": ["%(search_for)s"]}"""
         )%vals
@@ -172,9 +172,12 @@ def collection_value_keys():
     """
     return (
         [ '@type'
-        , 'annal:id' # , 'annal:type_id'
-        , 'annal:url', 'annal:uri'
-        , 'rdfs:label', 'rdfs:comment'
+        , 'annal:id' 
+        # , 'annal:type_id'
+        , 'annal:url'
+        , 'annal:uri'
+        , 'rdfs:label'
+        , 'rdfs:comment'
         ])
 
 def collection_create_values(coll_id="testcoll", update="Collection"):
@@ -182,8 +185,9 @@ def collection_create_values(coll_id="testcoll", update="Collection"):
     Entity values used when creating a collection entity
     """
     return (
-        { 'rdfs:label':     "%s %s"%(update, coll_id)
-        , 'rdfs:comment':   'Description of %s %s'%(update, coll_id)
+        { 'rdfs:label':             "%s %s"%(update, coll_id)
+        , 'rdfs:comment':           "Description of %s %s"%(update, coll_id)
+        , 'annal:software_version': annalist.__version__
         })
 
 def collection_values(coll_id, update="Collection", hosturi=TestHostUri):

@@ -241,14 +241,16 @@ class Entity(EntityRoot):
             (cls._entitytype, parent._entitydir, entityid,
                 altparent._entitydir if altparent else "(no alt)")
             )
-        e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
-        v = e._load_values()
-        # log.info("entity.load %r"%(v,))
-        if v:
-            e.set_values(v)
-        else:
-            e = None
-        return e
+        entity = None
+        if util.valid_id(entityid):
+            e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
+            v = e._load_values()
+            # log.info("entity.load %r"%(v,))
+            if v:
+                v = e._migrate_values(v)
+                e.set_values(v)
+                entity = e
+        return entity
 
     @classmethod
     def exists(cls, parent, entityid, altparent=None, use_altpath=False):
@@ -299,5 +301,37 @@ class Entity(EntityRoot):
         else:
             return Annalist_Error("Entity %s not found"%(entityid))
         return None
+
+    @classmethod
+    def fileobj(cls, parent, entityid, filename, filetypeuri, mimetype, mode, altparent=None, use_altpath=False):
+        """
+        Method returns a file object value (like `open`) for accessing an imported
+        resource associated with an entity (e.g. image, binary blob, etc.)
+
+        cls         is the class of the entity to be tested
+        parent      is the parent from which the entity is descended.
+        entityid    is the local identifier (slug) for the entity.
+        filename    is the local name for the file object to ne created or accessed.
+        filetypeuri is a URI or CURIE indicating the type of resource for which a file
+                    object is created.  This is used to determine details such as file 
+                    extension used when creating a new file.
+        mimetype    is a MIME content-type string for the resource representation used.
+        mode        indicates how the resource is to be opened, with the same options
+                    that are used with the standard `open` method (as far as they are 
+                    applicable).  E.g. "wb" to create a new resource, and "r" to read 
+                    an existing one.
+        altparent   is an alternative parent entity to search for the tested entity, 
+                    using the alternative path for the entity type.
+        use_altpath is set True if this entity is situated at the alternative
+                    path relative to its parent.
+
+        Returns True if the entity exists, as determined by existence of the 
+        entity description metadata file.
+        """
+        log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%
+            (cls._entitytype, parent._entitydir, entityid)
+            )
+        e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
+        return e._fileobj(filename, filetypeuri, mimetype, mode)
 
 # End.

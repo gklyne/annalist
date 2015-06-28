@@ -9,6 +9,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
     get_field_value
@@ -23,24 +24,25 @@ from django.template    import Template, Context
 #   ----------------------------------------------------------------------------
 
 
-class URILinkValueMapper(object):
+class URILinkValueMapper(RenderBase):
     """
     Value mapper class for token list
     """
 
-    @staticmethod
-    def encode(data_value):
+    @classmethod
+    def encode(cls, data_value):
         """
         Encodes link value as string
         """
         return data_value or ""
 
-    @staticmethod
-    def decode(field_value):
+    @classmethod
+    def decode(cls, field_value):
         """
-        Decodes a text value as a link.
+        Decodes a URI string value as a link
         """
         return field_value or ""
+
 
 #   ----------------------------------------------------------------------------
 #
