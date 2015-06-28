@@ -33,37 +33,39 @@
     - [x] src/newkit_to_conina_ubuntu.sh
     - [x] Docker build scripts
 - [x] Create announcement text in `documents/release-notes/announce_0.1.*.md`
-- [ ] Demo deployment; test
+- [x] Demo deployment; test
     - cf. `src/newkit_to_annalist_net.sh`
-- [ ] Create and post updated kit download and web pages to annalist.net
+- [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
-- [ ] Update demo installation on annalist.net; test
+- [x] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
+- [x] Update demo installation on annalist.net; test
+    - ssh to annalist@annalist.net
     - `killall python`
     - `. anenv/bin/activate`
     - `pip uninstall annalist`
-    - `pip install /var/www/software/Annalist-0.1.12.tar.gz --upgrade`
+    - `pip install /var/www/software/Annalist-0.1.xx.tar.gz --upgrade`
     - `annalist-manager runtests`
     - `. update-run-annalist.sh`
     - `cat annalist.out`
-- [ ] Commit changes
-- [ ] Upload to PyPI (see below)
-- [ ] Tag release on release branch
+- [x] Commit changes
+- [x] Upload to PyPI (see below)
+- [x] Tag release on release branch
     - `git tag -a release-x.y.z`
-- [ ] Merge release branch to master
+- [x] Merge release branch to master
     - e.g.
         - `git checkout master`
         - `git merge release-prep-x.y.z`
-- [ ] Test again on master branch
-- [ ] Push master branch, and tags
+- [x] Test again on master branch
+- [x] Push master branch, and tags
+    - `git push`
     - `git push --tags`
-- [ ] Merge release branch to develop
+- [x] Merge release branch to develop
     - take care to ensure the branch is merged, not the tagged release
     - e.g.
         - `git checkout develop`
         - `git merge release-prep-x.y.z`
-- [ ] On develop branch, bump version number again (back to odd value)
-- [ ] Reset TODO list (remove entries moved to release notes, update version)
+- [x] On develop branch, bump version number again (back to odd value)
+- [x] Reset TODO list (remove entries moved to release notes, update version)
 - [ ] Commit and push changes
 - [ ] Delete release branch
     - `git branch -d release-prep-x.y.z`

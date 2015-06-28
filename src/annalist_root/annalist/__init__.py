@@ -10,6 +10,6 @@ __license__       = "MIT (http://opensource.org/licenses/MIT)"
 # https://docs.djangoproject.com/en/dev/ref/applications/
 default_app_config = 'annalist.apps.AnnalistConfig'
 
-__version__        = "0.1.14"  # Bump version number (odd = unstable)
+__version__        = "0.1.15"  # Software version number (odd = unstable)
 
 # End.
