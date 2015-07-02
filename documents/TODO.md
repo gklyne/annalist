@@ -8,6 +8,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] HOWTOs for common tasks; task-oriented documentation
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
+- [ ] New demo screencasts
 
 
 # Version 0.1.15, towards 0.1.16

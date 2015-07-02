@@ -29,8 +29,7 @@ I've just released Annalist 0.1.14.
 
 The major new feature in this release is support for arbitrary binary attachments to Annalist entities, initially usable for including image files in collections (previously, they must be published separately on the Web and referenced).
 
-The full announcement is at:
-...https://groups.google.com/d/msg/annalist-discuss/lR4ADtfi10E/W75DnHLh9-sJ
+The full announcement is at: https://groups.google.com/d/topic/annalist-discuss/qjvC0nxn5v4/discussion
 
 Release notes (see "history" section for details) at:
 https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md

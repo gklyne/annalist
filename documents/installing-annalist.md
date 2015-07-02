@@ -24,25 +24,28 @@
 
 Prerequisite for this option:  a Linux operating system with [Docker](https://www.docker.com) installed.
 
-If Annalist docker containers have been used previously on the host system, the following commamnds ensure you have the latest images:
+If Annalist Docker containers have been used previously on the host system, the following commamnds ensure you have the latest images:
 
     docker pull gklyne/annalist_site
     docker pull gklyne/annalist
 
-Then
+If this is the first time Annalist has been run on this system, create a new Annalist site data container:
 
     docker run --name=annalist_site --detach gklyne/annalist_site
+
+Then
+
     docker run --interactive --tty --rm \
         --publish=8000:8000 --volumes-from=annalist_site \
         gklyne/annalist bash
 
-The remaining commands are executed in the shell environment presented by the final `docker run` command above.
+The remaining commands are executed in the shell environment presented by the `docker run` command above.
 
     annalist-manager version
 
-Check the version displayed: I've found docker sometimes caches older versions and fails up update to the latest available.  If necessary, use `docker rmi gklyne/annalist` to remove old images from the local cache.  If all is well, continue as follows:
+Check the version displayed: I've found Docker sometimes caches older versions and fails up update to the latest available.  If necessary, use `docker rmi gklyne/annalist` to remove old images from the local cache.  If all is well, continue as follows:
 
-If this is the first time annalist has been run on this system, create a new Annalist site data and database:
+If this is the first time Annalist has been run on this system, create a new Annalist site data and database:
 
     annalist-manager createsitedata
     annalist-manager initialize
