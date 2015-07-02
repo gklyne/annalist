@@ -14,6 +14,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 # Version 0.1.15, towards 0.1.16
 
 - [ ] rationalize field rendering so that it consistently uses target_value for viewing ("field_view_value"?), so that referenced-field values can work as expected for all render types (techdebt; currently fixed ad hoc for markdown rendering) 
+- [ ] Create picture gallery demonstration collection to test file uploads
 - [ ] BUG: file upload when creating entity appears to not work; need to create first then upload.  Is this because the entity directory does not exist yet?
 - [ ] file upload view/edit: display upladed filename as well as link (use for link text?)
 - [ ] provide unified import/upload field type to attachment can be either

@@ -72,6 +72,7 @@
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)
 - [ ] Post announcement to Google Group, Twitter and elsewhere
+- [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`), retest
 
 ## Build kit and PyPI upload
 
