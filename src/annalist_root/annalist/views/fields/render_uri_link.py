@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_field_value
+    get_field_edit_value, get_field_view_value
     )
 
 from django.template    import Template, Context
@@ -56,7 +56,7 @@ class uri_link_view_renderer(object):
         """
         Render link for viewing.
         """
-        linkval = URILinkValueMapper.encode(get_field_value(context, ""))
+        linkval = URILinkValueMapper.encode(get_field_view_value(context, ""))
         common_prefixes = (
             [ "http://", "https://"
             , "file:///", "file://localhost/", "file://"
@@ -75,7 +75,7 @@ class uri_link_edit_renderer(object):
         self._template = Template(
             '''<input type="text" size="64" name="{{repeat_prefix}}{{field.field_name}}" '''+
                    '''placeholder="{{field.field_placeholder}}" '''+
-                   '''value="{{field.field_value}}" />'''
+                   '''value="{{field.field_edit_value}}" />'''
         )
         return
 

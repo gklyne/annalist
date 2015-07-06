@@ -13,20 +13,19 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 # Version 0.1.15, towards 0.1.16
 
-- [ ] rationalize field rendering so that it consistently uses target_value for viewing ("field_view_value"?), so that referenced-field values can work as expected for all render types (techdebt; currently fixed ad hoc for markdown rendering) 
+- [x] rationalize field rendering so that it consistently uses target_value for viewing ("field_view_value"?), so that referenced-field values can work as expected for all render types (techdebt; currently fixed ad hoc for markdown rendering) 
 - [ ] Create picture gallery demonstration collection to test file uploads
 - [ ] BUG: file upload when creating entity appears to not work; need to create first then upload.  Is this because the entity directory does not exist yet?
-- [ ] file upload view/edit: display upladed filename as well as link (use for link text?)
+- [ ] file upload view/edit: display uploaded filename as well as link (use for link text?)
 - [ ] provide unified import/upload field type to attachment can be either
 - [ ] means to provide alternative display of field of same entity (e.g. image for file upload).  Also to display multiple fields from referenced entity.
+
 - [ ] rename render type URIImage as RefImage; update documentation
 - [ ] add render type RefAudio (use embedded HTML player); update documentation
     - see tests conducted using CALMA data
-- [ ] profile_uri now not included in Google JSON file of client secrets
-    - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
-    - cf. oauth2/views.py:364
+
 - [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
-- [ ] Padding to take account of field position
+- [ ] Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?
     - Possibly precompute padding?
@@ -41,18 +40,24 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
     - See also discussion below of introducing "tasks" - this would be an early candidate for that.
     - Need to think how the interface would work.  Option to add "task" button to any form?
-- [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
-    - [x] annalist-manager serverlog command returns log file name
-    - [ ] site link to download log, if admin permissions
-    - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
+
 - [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
     - [ ] JSON-LD @contexts support
     - [ ] Alternative RDF formats support (e.g. content negotiation)
-- [ ] Add field padding so that display position is as expected (if possible)
+
 - [ ] Use site/collection data to populate help panes on displays; use Markdown.
+
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Login: support continuation URI
+
+- [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
+    - [x] annalist-manager serverlog command returns log file name
+    - [ ] site link to download log, if admin permissions
+    - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
+- [ ] profile_uri now not included in Google JSON file of client secrets
+    - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
+    - cf. oauth2/views.py:364
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]

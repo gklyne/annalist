@@ -15,7 +15,9 @@ from collections    import OrderedDict, namedtuple
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_context_value, get_context_field_value, get_field_value
+    get_context_value, get_context_field_value, 
+    get_field_edit_value,
+    get_field_view_value    
     )
 
 #   ----------------------------------------------------------------------------
@@ -110,7 +112,7 @@ class placement_view_renderer(object):
         """
         Render field placement for viewing.
         """
-        placement = get_field_value(context, "&nbsp;")
+        placement = get_field_view_value(context, "&nbsp;")
         if placement in placement_occupancy:
             return placement_display_span(placement)
         # Not predefined value - return string
@@ -123,7 +125,7 @@ class placement_edit_renderer(object):
         Render field placement for editing
         """
         repeat_prefix     = get_context_value(context, 'repeat_prefix', "")
-        placement         = get_field_value(context, "")
+        placement         = get_field_edit_value(context, "")
         field_name        = get_context_field_value(
             context, 'field_name', "_unknown_"
             )

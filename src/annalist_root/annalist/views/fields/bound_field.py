@@ -121,14 +121,14 @@ class bound_field(object):
         if name in ["entity_id", "entity_link", "entity_type_id", "entity_type_link"]:
             return self._entityvals.get(name, "")
 
-        elif name == "field_value":
+        elif name in ["field_value", "field_edit_value"]:
             return self.get_field_value()
         elif name == "field_value_link":
             return self.get_field_link()
         elif name == "field_value_link_continuation":
             return self.get_link_continuation(self.get_field_link())
 
-        elif name == "target_value":
+        elif name in ["target_value", "field_view_value"]:
             return self.get_target_value()
         elif name == "target_value_link":
             return self.get_target_link()
@@ -172,7 +172,8 @@ class bound_field(object):
         return field_val
 
     def get_field_link(self):
-        # Return link corresponding to field value, or None
+        # Return link corresponding to field value that is a selection from an enumeration of entities
+        # (or some other value with an associated link), or None
         links = self._field_description['field_choice_links']
         v     = self.field_value
         if links and v in links:
@@ -186,12 +187,14 @@ class bound_field(object):
         This may be different from field_value if it references another entity field
         """
         targetvals   = self.get_targetvals()
+        log.debug("bound_field.get_target_value: targetvals %r"%(targetvals,))
         if targetvals is not None:
             target_key   = self._field_description['field_ref_field'].strip()
-            log.debug("get_target_value: target_key %s"%(target_key,))
+            log.debug("bound_field.get_target_value: target_key %s"%(target_key,))
             target_value = targetvals.get(target_key, "(@%s)"%(target_key))
         else:
             target_value = self.field_value
+        log.debug("bound_field.get_target_value: %r"%(target_value,))
         return target_value
 
     def get_target_link(self):
@@ -228,8 +231,8 @@ class bound_field(object):
         return a copy of the referenced target entity, otherwise None.
         """
         log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
-        target_type = self._field_description['field_ref_type']
-        target_key  = self._field_description['field_ref_field']
+        target_type = self._field_description.get('field_ref_type',  None)
+        target_key  = self._field_description.get('field_ref_field', None)
         log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
         if target_type and target_key:
             if self._targetvals is None:
@@ -248,6 +251,7 @@ class bound_field(object):
                     log.debug("bound_field.get_targetvals: %r"%(self._targetvals.get_values(),))
                 else:
                     log.warning("bound_field.get_targetvals: target value type %s requires %r permissions"%(target_type, req_permissions))
+        log.debug("bound_field.get_targetvals: targetvals %r"%(self._targetvals,))
         return self._targetvals
 
     def get_link_continuation(self, link):
@@ -301,6 +305,8 @@ class bound_field(object):
         yield "entity_link_continuation"
         yield "entity_type_link"
         yield "entity_type_link_continuation"
+        yield "field_edit_value"
+        yield "field_view_value"
         yield "field_value"
         yield "field_value_link"
         yield "field_value_link_continuation"
@@ -334,9 +340,19 @@ class bound_field(object):
 
     def fullrepr(self):
         return (
-            "bound_field({'field':%r, 'vals':%r, 'field_value':%r, 'extras':%r})"%
-            (self._field_description, dict(self._entityvals.items()), 
-                self.field_value, self._extras) 
+            ( "bound_field(\n"+
+              "  { 'key': %r\n"+
+              "  , 'field_edit_value': %r\n"+
+              "  , 'field_view_value': %r\n"+
+              "  , 'field_descr': %r\n"+
+              "  , 'entity_vals': %r\n"+
+              "  })\n"
+            )%( self._key
+              , self.field_edit_value
+              , self.field_view_value 
+              , self._field_description
+              , dict(self._entityvals.items())
+              )
             )
 
     def htmlrepr(self):

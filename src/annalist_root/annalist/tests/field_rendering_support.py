@@ -63,7 +63,9 @@ class FieldRendererTestSupport(AnnalistTestCase):
               , 'field_label':          "test label"
               , 'field_placeholder':    "(test placeholder)"
               , 'field_value':          val
+              , 'field_edit_value':     val
               , 'target_value':         val     # Mimics bound_field default behaviour
+              , 'field_view_value':     val
               }
             , 'repeat_prefix':        repeat_prefix
             })

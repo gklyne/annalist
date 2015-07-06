@@ -14,7 +14,8 @@ log = logging.getLogger(__name__)
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_field_value
+    get_field_edit_value,
+    get_field_view_value
     )
 
 from django.template    import Template, Context
@@ -134,7 +135,7 @@ class select_view_renderer(object):
         return
 
     def render(self, context):
-        textval = SelectValueMapper.encode(get_field_value(context, None))
+        textval = SelectValueMapper.encode(get_field_view_value(context, None))
         with context.push(encoded_field_value=textval):
             try:
                 result = self._template.render(context)
@@ -154,7 +155,7 @@ class select_edit_renderer(object):
 
     def render(self, context):
         try:
-            val     = get_field_value(context, None)
+            val     = get_field_edit_value(context, None)
             textval = SelectValueMapper.encode(val)
             options = context['field']['options']
             if textval not in options:

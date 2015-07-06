@@ -14,7 +14,9 @@ log = logging.getLogger(__name__)
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_context_value, get_context_field_value, get_field_value
+    get_context_value, get_context_field_value, 
+    get_field_edit_value,
+    get_field_view_value
     )
 
 from django.template    import Template, Context
@@ -39,6 +41,7 @@ class TokenSetValueMapper(RenderBase):
         if isinstance(field_value, (list,tuple)):
             return " ".join(field_value)
         log.warning("TokenSetValueMapper.encode tokenset: supplied value is not a list or tuple")
+        log.warning("TokenSetValueMapper.encode value: %r"%(field_value,))
         return str(field_value)
 
     @classmethod
@@ -62,7 +65,7 @@ class tokenset_view_renderer(object):
         """
         Render token list for viewing.
         """
-        tokenset = get_field_value(context, None)
+        tokenset = get_field_view_value(context, None)
         return TokenSetValueMapper.encode(tokenset) if tokenset else "&nbsp;"
 
 class tokenset_edit_renderer(object):
@@ -78,7 +81,7 @@ class tokenset_edit_renderer(object):
         """
         Render token list for editing
         """
-        tokenset = get_field_value(context, None)
+        tokenset = get_field_edit_value(context, None)
         with context.push(encoded_field_value=TokenSetValueMapper.encode(tokenset)):
             return self._template.render(context)
 

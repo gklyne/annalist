@@ -310,11 +310,11 @@ def get_context_field_value(context, key, default):
     field = get_context_value(context, 'field', {})
     return get_context_value(field, key, default)
 
-def get_field_value(context, default):
-    return get_context_field_value(context, 'field_value', default)
+def get_field_edit_value(context, default):
+    return get_context_field_value(context, 'field_edit_value', default)
 
-def get_target_value(context, default):
-    return get_context_field_value(context, 'target_value', default)
+def get_field_view_value(context, default):
+    return get_context_field_value(context, 'field_view_value', default)
 
 # End.
 #........1.........2.........3.........4.........5.........6.........7.........8

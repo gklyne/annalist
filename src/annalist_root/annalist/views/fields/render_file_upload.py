@@ -13,7 +13,8 @@ log = logging.getLogger(__name__)
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_field_value
+    get_field_edit_value,
+    get_field_view_value
     )
 
 from django.template    import Template, Context
@@ -91,7 +92,7 @@ class File_upload_view_renderer(object):
         """
         Render import link for viewing.
         """
-        filename = FileUploadValueMapper.encode(get_field_value(context, ""))
+        filename = FileUploadValueMapper.encode(get_field_view_value(context, ""))
         linkval  = filename
         textval  = filename
         return view_upload%(linkval, textval)
@@ -106,7 +107,7 @@ class File_upload_edit_renderer(object):
         """
         Render import link for editing
         """
-        val = FileUploadValueMapper.encode(get_field_value(context, None))
+        val = FileUploadValueMapper.encode(get_field_edit_value(context, None))
         with context.push(encoded_field_value=val):
             result = self._template.render(context)
         return result
