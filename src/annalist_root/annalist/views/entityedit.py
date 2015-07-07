@@ -328,6 +328,30 @@ class GenericEntityEditView(AnnalistGenericView):
         form_context.update(viewinfo.context_data())
         return form_context
 
+    def merge_entity_form_values(self, orig_entityvals, entityformvals):
+        """
+        Logic that merges updated values from a form response into a set of 
+        stored entity values.
+
+        Values that correspond to an uploaded or imported file are not updated.
+
+        (This is a bit ad hoc, needed to overcome the fact that previously uploaded 
+        file information is not part of the form data being merged.)
+        """
+        # @@TODO: consider more positive method for detecting previous upload; e.g. @type value
+        def is_previous_upload(ov, k):
+            return (
+                (k in ov) and
+                isinstance(ov[k], dict) and
+                ("resource_name" in ov[k])
+                )
+        upd_entityvals = orig_entityvals.copy()
+        for k in entityformvals:
+            if not is_previous_upload(orig_entityvals, k):
+                upd_entityvals[k] = entityformvals[k]
+        # log.info("orig entity_values %r"%(entity_values,))
+        return upd_entityvals
+
     def form_render(self, viewinfo, entity, add_field):
         """
         Returns an HTTP response that renders a view of an entity, 
@@ -427,12 +451,12 @@ class GenericEntityEditView(AnnalistGenericView):
         # @@TODO: make upload files part of save entity logic
         # @@TODO: ensure attachments are moved when entity is renamed.
 
-        uploaded_files = self.request.FILES
-        self.import_uploaded_files(
-            viewinfo, entityvaluemap, 
-            uploaded_files, entityformvals, 
-            context_extra_values
-            )
+        # uploaded_files = self.request.FILES
+        # self.import_uploaded_files(
+        #     viewinfo, entityvaluemap, 
+        #     uploaded_files, entityformvals, 
+        #     context_extra_values
+        #     )
 
         # @@TODO: save entity here, remove from ensuing logic
 
@@ -606,7 +630,7 @@ class GenericEntityEditView(AnnalistGenericView):
         redirect_uri = uri_with_params(viewinfo.get_continuation_next(), err_values)
         return HttpResponseRedirect(redirect_uri)
 
-    def save_entity(self, viewinfo, entityvaluemap, entityvals, context_extra_values):
+    def save_entity(self, viewinfo, entityvaluemap, entityformvals, context_extra_values):
         """
         This method contains logic to save entity data modified through a form
         interface.  If an entity is being edited (as opposed to created or copied)
@@ -642,14 +666,14 @@ class GenericEntityEditView(AnnalistGenericView):
         if not util.valid_id(entity_id):
             log.debug("form_response: entity_id not util.valid_id('%s')"%entity_id)
             return self.form_re_render(
-                viewinfo, entityvaluemap, entityvals, context_extra_values,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 error_head=messages['entity_heading'],
                 error_message=messages['entity_invalid_id']
                 )
         if not util.valid_id(entity_type_id):
             log.debug("form_response: entity_type_id not util.valid_id('%s')"%entity_type_id)
             return self.form_re_render(
-                viewinfo, entityvaluemap, entityvals, context_extra_values,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 error_head=messages['entity_type_heading'],
                 error_message=messages['entity_type_invalid']
                 )
@@ -659,14 +683,14 @@ class GenericEntityEditView(AnnalistGenericView):
         if not util.valid_id(entity_id):
             log.warning("save_entity: invalid entity_id (%s)"%(entity_id))
             return self.form_re_render(
-                viewinfo, entityvaluemap, entityvals, context_extra_values,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 error_head=message.ENTITY_DATA_ID,
                 error_message=message.ENTITY_DATA_ID_INVALID
                 )
         if not util.valid_id(entity_type_id):
             log.warning("save_entity: invalid entity_type_id (%s)"%(entity_type_id))
             return self.form_re_render(
-                viewinfo, entityvaluemap, entityvals, context_extra_values,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 error_head=message.ENTITY_TYPE_ID,
                 error_message=message.ENTITY_TYPE_ID_INVALID
                 )
@@ -676,7 +700,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if not typeinfo.parent_exists():
             log.warning("save_entity: original entity parent does not exist")
             return self.form_re_render(
-                viewinfo, entityvaluemap, entityvals, context_extra_values,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 error_head=messages['parent_heading'],
                 error_message=messages['parent_missing']
                 )
@@ -699,7 +723,7 @@ class GenericEntityEditView(AnnalistGenericView):
                         (action, entity_type_id, entity_id, orig_type_id, orig_entity_id)
                     )
                 return self.form_re_render(
-                    viewinfo, entityvaluemap, entityvals, context_extra_values,
+                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
                     error_head=messages['entity_heading'],
                     error_message=messages['entity_exists']
                     )
@@ -710,7 +734,7 @@ class GenericEntityEditView(AnnalistGenericView):
                       (entity_type_id, entity_id, action, entity_renamed)
                     )
                 return self.form_re_render(
-                    viewinfo, entityvaluemap, entityvals, context_extra_values,
+                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
                     error_head=messages['entity_heading'],
                     error_message=messages['entity_not_exists']
                     )
@@ -722,11 +746,9 @@ class GenericEntityEditView(AnnalistGenericView):
         # field aliases as basis for new value.
         orig_entity   = typeinfo.get_entity(entity_id, action)
         orig_values   = orig_entity.get_values() if orig_entity else {}
-        entity_values = orig_values.copy()
-        # log.info("orig entity_values %r"%(entity_values,))
+        entity_values = self.merge_entity_form_values(orig_values, entityformvals)
         if action == "copy":
             entity_values.pop(ANNAL.CURIE.uri, None)      # Force new URI on copy
-        entity_values.update(entityvals)
         entity_values[ANNAL.CURIE.type_id] = entity_type_id
         entity_values[ANNAL.CURIE.type]    = new_typeinfo.entityclass._entitytype
         # log.info("save entity_values%r"%(entity_values))
@@ -753,15 +775,123 @@ class GenericEntityEditView(AnnalistGenericView):
                     old_type_id=orig_type_id,   old_entity_id=orig_entity_id,
                     new_type_id=entity_type_id, new_entity_id=entity_id
                     )
+
+        # Save any uploaded files
+        if not err_vals:
+            uploaded_files = self.request.FILES
+            updated = self.import_uploaded_files(
+                entity_id, new_typeinfo,
+                entityvaluemap, entity_values,
+                uploaded_files
+                )
+            if updated:
+                err_vals = self.create_update_entity(new_typeinfo, entity_id, entity_values)
+
+        # Finish up
         if err_vals:
             log.warning("err_vals %r"%(err_vals,))
             return self.form_re_render(
-                viewinfo, entityvaluemap, entityvals, context_extra_values,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 error_head=err_vals[0],
                 error_message=err_vals[1]
                 )
         log.info("Saved %s/%s"%(entity_type_id, entity_id))
         viewinfo.update_coll_version()
+        return None
+
+    def import_uploaded_files(self,
+        entity_id, typeinfo,
+        entityvaluemap, entityvals,
+        uploaded_files
+        ):
+        """
+        Process uploaded files: files are saved to the entity directory, and 
+        the supplied entity values are updated accordingly
+
+        This functon operates by scanning through fields that may generate a file
+        upload and looking for a corresponding uploaded files.  Uploaded files not
+        corresponding to view fields are ignored.
+
+        Returns 'true' if any files are uploaded and the supplied entityvals 
+        are accordingly updated and need to be re-saved.
+        """
+        def is_upload_f(fd):
+            return fd.is_upload_field()
+        updated = False
+        for fd in self.find_fields(entityvaluemap, is_upload_f):
+            # process fd; copy logic from import (@@TODO: refactor?)
+            upload_name  = fd.get_field_instance_name()
+            if upload_name in uploaded_files:
+                log.info("importing file for %s"%upload_name)
+                property_uri = fd['field_property_uri']
+                fv           = entityvals[property_uri]
+                field_vals   = fv.copy() if isinstance(fv, dict) else {}
+                field_vals['upload_name']   = upload_name
+                field_vals['uploaded_file'] = field_vals.get('uploaded_file', None)
+                upload_vals  = field_vals.copy()    # Used for reporting..
+                upload_vals.update(
+                    { 'id':         entity_id
+                    , 'type_id':    typeinfo.type_id
+                    })
+                log.debug("upload_vals: %r"%(upload_vals,))
+                try:
+                    value_type    = fd.get('field_target_type', "annal:unknown_type")
+                    resource_type = uploaded_files[upload_name].content_type
+                    local_fileobj = typeinfo.get_fileobj(
+                        entity_id, upload_name, 
+                        value_type, resource_type, "wb"
+                        )
+                    resource_name = os.path.basename(local_fileobj.name)
+                    field_vals.update(
+                        { 'resource_name':  resource_name
+                        , 'resource_type':  resource_type
+                        , 'uploaded_file':  uploaded_files[upload_name].name
+                        , 'uploaded_size':  uploaded_files[upload_name].size
+                        })
+                    log.info("field_vals %r"%(field_vals,))
+                    try:
+                        upload_err   = None
+                        upload_done  = None
+                        upload_vals.update(field_vals)
+                        for chunk in uploaded_files[upload_name].chunks():
+                            local_fileobj.write(chunk)
+                        # Import completed: set up response
+                        entityvals[property_uri] = field_vals
+                        upload_done = message.UPLOAD_DONE
+                        upload_msg  = message.UPLOAD_DONE_DETAIL%upload_vals
+                        updated     = True
+                    finally:
+                        local_fileobj.close()
+                except Exception as e:
+                    # upload_vals['import_exc'] = str(e)
+                    upload_err = message.UPLOAD_ERROR
+                    upload_msg = message.UPLOAD_ERROR_REASON%dict(upload_vals, upload_exc=str(e))
+                    log.info("%s: %s"%(upload_err, upload_msg))
+                    log.debug(str(e), exc_info=True)
+                # end if
+            # end for
+        #@@TODO: think about how to handle errors from upload
+        return updated
+
+    def create_update_entity(self, typeinfo, entity_id, entity_values):
+        """
+        Create or update an entity.
+
+        Returns None if the operation succeeds, or error message
+        details to be displayed as a pair of values for the message 
+        heading and the message body.
+        """
+        typeinfo.create_entity(entity_id, entity_values)
+        if not typeinfo.entity_exists(entity_id):
+            log.warning(
+                "EntityEdit.create_update_entity: Failed to create/update entity %s/%s"%
+                    (typeinfo.type_id, entity_id)
+                )
+            return (
+                message.SYSTEM_ERROR, 
+                message.CREATE_ENTITY_FAILED%
+                    (typeinfo.type_id, entity_id)
+                )
         return None
 
     def rename_entity_type(self,
@@ -864,27 +994,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 message.RENAME_ENTITY_FAILED%
                     (old_typeinfo.type_id, old_entity_id, 
                      new_typeinfo.type_id, new_entity_id)
-                )
-        return None
-
-    def create_update_entity(self, typeinfo, entity_id, entity_values):
-        """
-        Create or update an entity.
-
-        Returns None if the operation succeeds, or error message
-        details to be displayed as a pair of values for the message 
-        heading and the message body.
-        """
-        typeinfo.create_entity(entity_id, entity_values)
-        if not typeinfo.entity_exists(entity_id):
-            log.warning(
-                "EntityEdit.create_update_entity: Failed to create/update entity %s/%s"%
-                    (typeinfo.type_id, entity_id)
-                )
-            return (
-                message.SYSTEM_ERROR, 
-                message.CREATE_ENTITY_FAILED%
-                    (typeinfo.type_id, entity_id)
                 )
         return None
 
@@ -1151,73 +1260,6 @@ class GenericEntityEditView(AnnalistGenericView):
             self.render_html(form_context, self.formtemplate) or 
             self.error(self.error406values())
             )
-
-    def import_uploaded_files(self,
-        viewinfo, entityvaluemap, 
-        uploaded_files, entityformvals, 
-        context_extra_values
-        ):
-        """
-        Process uploaded files.
-
-        This functon operates by scanning through fields that may generate a file
-        upload and looking for a corresponding uploaded files.  Uploaded files not
-        corresponding to view fields are ignored.
-        """
-        def is_upload_f(fd):
-            return fd.is_upload_field()
-        for fd in self.find_fields(entityvaluemap, is_upload_f):
-            # process fd; copy logic from import (@@TODO: refactor?)
-            upload_name  = fd.get_field_instance_name()
-            if upload_name in uploaded_files:
-                log.info("importing file for %s"%upload_name)
-                property_uri = fd['field_property_uri']
-                fv           = entityformvals[property_uri]
-                field_vals   = fv.copy() if isinstance(fv, dict) else {}
-                field_vals['upload_name']   = upload_name
-                field_vals['uploaded_file'] = field_vals.get('uploaded_file', None)
-                upload_vals  = field_vals.copy()    # Used for reporting..
-                upload_vals.update(
-                    { 'id':         viewinfo.entity_id
-                    , 'type_id':    viewinfo.type_id
-                    })
-                try:
-                    value_type    = fd.get('field_target_type', "annal:unknown_type")
-                    resource_type = uploaded_files[upload_name].content_type
-                    local_fileobj = viewinfo.entitytypeinfo.get_fileobj(
-                        viewinfo.entity_id, upload_name, 
-                        value_type, resource_type, "wb"
-                        )
-                    resource_name = os.path.basename(local_fileobj.name)
-                    field_vals.update(
-                        { 'resource_name':  resource_name
-                        , 'resource_type':  resource_type
-                        , 'uploaded_file':  uploaded_files[upload_name].name
-                        , 'uploaded_size':  uploaded_files[upload_name].size
-                        })
-                    log.info("field_vals %r"%(field_vals,))
-                    try:
-                        upload_err   = None
-                        upload_done  = None
-                        upload_vals.update(field_vals)
-                        for chunk in uploaded_files[upload_name].chunks():
-                            local_fileobj.write(chunk)
-                        # Import completed: set up response
-                        entityformvals[property_uri] = field_vals
-                        upload_done = message.UPLOAD_DONE
-                        upload_msg  = message.UPLOAD_DONE_DETAIL%upload_vals
-                    finally:
-                        local_fileobj.close()
-                except Exception as e:
-                    # upload_vals['import_exc'] = str(e)
-                    upload_err = message.UPLOAD_ERROR
-                    upload_msg = message.UPLOAD_ERROR_REASON%dict(upload_vals, upload_exc=str(e))
-                    log.info("%s: %s"%(upload_err, upload_msg))
-                    log.debug(str(e), exc_info=True)
-                # end if
-            # end for
-        #@@TODO: think about how to handle errors from upload
-        return
 
     def find_repeat_fields(self, entityvaluemap):
         """

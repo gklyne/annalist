@@ -14,15 +14,18 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 # Version 0.1.15, towards 0.1.16
 
 - [x] rationalize field rendering so that it consistently uses target_value for viewing ("field_view_value"?), so that referenced-field values can work as expected for all render types (techdebt; currently fixed ad hoc for markdown rendering) 
-- [ ] Create picture gallery demonstration collection to test file uploads
-- [ ] BUG: file upload when creating entity appears to not work; need to create first then upload.  Is this because the entity directory does not exist yet?
+- [x] create picture gallery demonstration collection to test file uploads
+- [x] BUG: file upload when creating entity appears to not work; need to create first then upload.
+- [ ] ensure attachments are moved when entity is renamed.
 - [ ] file upload view/edit: display uploaded filename as well as link (use for link text?)
 - [ ] provide unified import/upload field type to attachment can be either
 - [ ] means to provide alternative display of field of same entity (e.g. image for file upload).  Also to display multiple fields from referenced entity.
-
+- [ ] rationalize field description form to makle handling of upload/import more obvious
 - [ ] rename render type URIImage as RefImage; update documentation
 - [ ] add render type RefAudio (use embedded HTML player); update documentation
     - see tests conducted using CALMA data
+
+(release?)
 
 - [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
 - [ ] Add field padding so that display position is as expected (if possible)
