@@ -142,6 +142,14 @@ def get_uriimport_edit_renderer(renderer, field_render_type):
         renderer = get_field_base_renderer("URIImport")
     return renderer
 
+def get_fileupload_edit_renderer(renderer, field_render_type):
+    """
+    Returns an updated edit renderer for fields with a file upload value type
+    """
+    if field_render_type not in ["FileUpload"]:
+        renderer = get_field_base_renderer("FileUpload")
+    return renderer
+
 def get_field_edit_renderer(field_render_type, field_ref_type, field_val_type):
     """
     Get edit renderer for supplied field details, taking account of variations on the 
@@ -153,6 +161,8 @@ def get_field_edit_renderer(field_render_type, field_ref_type, field_val_type):
         renderer = get_entityref_edit_renderer(renderer, field_render_type)
     elif field_val_type == "annal:Import":
         renderer = get_uriimport_edit_renderer(renderer, field_render_type)
+    elif field_val_type == "annal:Upload":
+        renderer = get_fileupload_edit_renderer(renderer, field_render_type)
     return renderer
 
 def get_edit_renderer(field_render_type, field_ref_type, field_val_type):

@@ -207,7 +207,7 @@ class bound_field(object):
         If the target value is a dictionary structure created by a URIImport or FileUpload field, 
         the resulting value links to the imported data object.
         """
-        target_base  = self.get_field_link()
+        target_base  = self.get_field_link() or self.entity_link
         target_value = self.get_target_value()
         log.debug("get_target_link: base %s, value %r"%(target_base, target_value))
         if target_base and target_value:

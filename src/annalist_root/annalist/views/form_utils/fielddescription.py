@@ -275,23 +275,41 @@ class FieldDescription(object):
 
     def has_import_button(self):
         """
-        Returns true if this field has a control (an 'import' or 'upload'
-        button) that is used to request additional external data is added 
-        to an entity
+        Returns 'true' if this field has a control (an 'import' button) that is used 
+        to request additional external data is added to an entity
         """
         import_render_types = (
             [ "URIImport"
             ])
-        return self._field_desc['field_render_type'] in import_render_types
+        import_value_types = (
+            [ "annal:Import"
+            ])
+        is_import = (
+            (self._field_desc['field_render_type'] in import_render_types) or
+            (self._field_desc['field_value_type']  in import_value_types )
+            )
+        return is_import
 
     def is_upload_field(self):
         """
-        Returns true if this field is a file-upload field
+        Returns 'true' if this field is a file-upload field (selected file contents are 
+        returned with the form response.)
         """
-        import_render_types = (
+        upload_render_types = (
             [ "FileUpload"
             ])
-        return self._field_desc['field_render_type'] in import_render_types
+        upload_value_types = (
+            [ "annal:Upload"
+            ])
+        is_upload = (
+            (self._field_desc['field_render_type'] in upload_render_types) or
+            (self._field_desc['field_value_type']  in upload_value_types )
+            )
+        return is_upload
+        # upload_render_types = (
+        #     [ "FileUpload"
+        #     ])
+        # return self._field_desc['field_render_type'] in upload_render_types
 
     def has_field_group_ref(self):
         """

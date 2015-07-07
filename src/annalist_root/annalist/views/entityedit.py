@@ -423,6 +423,10 @@ class GenericEntityEditView(AnnalistGenericView):
 
         # Scan for uploaded files
         # (actions that ignore uploads must be processed before this)
+
+        # @@TODO: make upload files part of save entity logic
+        # @@TODO: ensure attachments are moved when entity is renamed.
+
         uploaded_files = self.request.FILES
         self.import_uploaded_files(
             viewinfo, entityvaluemap, 
@@ -1168,7 +1172,8 @@ class GenericEntityEditView(AnnalistGenericView):
             if upload_name in uploaded_files:
                 log.info("importing file for %s"%upload_name)
                 property_uri = fd['field_property_uri']
-                field_vals   = entityformvals[property_uri].copy() or {}
+                fv           = entityformvals[property_uri]
+                field_vals   = fv.copy() if isinstance(fv, dict) else {}
                 field_vals['upload_name']   = upload_name
                 field_vals['uploaded_file'] = field_vals.get('uploaded_file', None)
                 upload_vals  = field_vals.copy()    # Used for reporting..
