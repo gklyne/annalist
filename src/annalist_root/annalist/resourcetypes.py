@@ -37,6 +37,16 @@ resource_types = (
       , ("tiff",   "image/tiff")
       , ("svg",    "image/svg")
       ]
+    , "annal:Upload":
+      [ ("md",     "text/markdown")
+      , ("txt",    "text/plain")
+      , ("png",    "image/png")
+      , ("jpg",    "image/jpeg")
+      , ("jpeg",   "image/jpeg")
+      , ("gif",    "image/gif")
+      , ("tiff",   "image/tiff")
+      , ("svg",    "image/svg")
+      ]
     })
 
 default_types = [("dat", "application/octet-stream")]

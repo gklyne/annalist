@@ -16,7 +16,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] rationalize field rendering so that it consistently uses target_value for viewing ("field_view_value"?), so that referenced-field values can work as expected for all render types (techdebt; currently fixed ad hoc for markdown rendering) 
 - [x] create picture gallery demonstration collection to test file uploads
 - [x] BUG: file upload when creating entity appears to not work; need to create first then upload.
-- [ ] ensure attachments are moved when entity is renamed.
+- [x] ensure attachments are moved when entity is renamed.
+- [ ] test case for rename with attachments
+- [ ] test case for upload image displayed in same entity
+- [ ] test case for edit entity with attachment
 - [ ] file upload view/edit: display uploaded filename as well as link (use for link text?)
 - [ ] provide unified import/upload field type to attachment can be either
 - [ ] means to provide alternative display of field of same entity (e.g. image for file upload).  Also to display multiple fields from referenced entity.

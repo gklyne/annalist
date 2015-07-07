@@ -279,10 +279,10 @@ class GenericEntityEditView(AnnalistGenericView):
         #         i.e. 'formtemplate' and 'uri_action'; rename for greater clarity?
         if action in ["new", "copy", "edit"]:
             self.formtemplate = self._entityedittemplate
-            self.uri_action  = "edit"
+            self.uri_action   = "edit"
         else:
             self.formtemplate = self._entityviewtemplate
-            self.uri_action  = "view"
+            self.uri_action   = "view"
         self.uri_type_id   = type_id
         self.uri_entity_id = entity_id
         return self.formtemplate
@@ -345,6 +345,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 isinstance(ov[k], dict) and
                 ("resource_name" in ov[k])
                 )
+        # log.info("merge_entity_form_values orig_entityvals: %r"%(orig_entityvals,))
+        # log.info("merge_entity_form_values entityformvals:  %r"%(entityformvals,))
         upd_entityvals = orig_entityvals.copy()
         for k in entityformvals:
             if not is_previous_upload(orig_entityvals, k):
@@ -442,23 +444,6 @@ class GenericEntityEditView(AnnalistGenericView):
             entityformvals = entityvaluemap.map_form_data_to_values(form_data, orig_entity)
         except Annalist_Error as e:
             return viewinfo.report_error(str(e))
-
-        # @@TODO: move actions that don't save entity to here
-
-        # Scan for uploaded files
-        # (actions that ignore uploads must be processed before this)
-
-        # @@TODO: make upload files part of save entity logic
-        # @@TODO: ensure attachments are moved when entity is renamed.
-
-        # uploaded_files = self.request.FILES
-        # self.import_uploaded_files(
-        #     viewinfo, entityvaluemap, 
-        #     uploaded_files, entityformvals, 
-        #     context_extra_values
-        #     )
-
-        # @@TODO: save entity here, remove from ensuing logic
 
         # Save updated details
         if 'save' in form_data:
@@ -662,6 +647,8 @@ class GenericEntityEditView(AnnalistGenericView):
               (entity_type_id != orig_type_id  ) )
             )
 
+        # @@TODO: factor out repeated re-rendering logic
+
         # Check for valid id and type to be saved
         if not util.valid_id(entity_id):
             log.debug("form_response: entity_id not util.valid_id('%s')"%entity_id)
@@ -679,7 +666,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
 
         # Check for valid entity id and type id
-        # @@TODO: factor out repeated re-rendering logic
         if not util.valid_id(entity_id):
             log.warning("save_entity: invalid entity_id (%s)"%(entity_id))
             return self.form_re_render(
@@ -744,7 +730,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # Note: form data is applied as update to original entity data so that
         # values not in view are preserved.  Use original entity values without 
         # field aliases as basis for new value.
-        orig_entity   = typeinfo.get_entity(entity_id, action)
+        orig_entity   = typeinfo.get_entity(orig_entity_id, action)
         orig_values   = orig_entity.get_values() if orig_entity else {}
         entity_values = self.merge_entity_form_values(orig_values, entityformvals)
         if action == "copy":
@@ -980,7 +966,9 @@ class GenericEntityEditView(AnnalistGenericView):
         details to be displayed as a pair of values for the message 
         heading and the message body.
         """
+        log.info("rename_entity old: %s, new: %s, vals: %r"%(old_entity_id, new_entity_id, entity_values))
         new_typeinfo.create_entity(new_entity_id, entity_values)
+        new_typeinfo.copy_data_files(new_entity_id, old_typeinfo, old_entity_id)
         if new_typeinfo.entity_exists(new_entity_id):    # Precautionary
             old_typeinfo.remove_entity(old_entity_id)
         else:
@@ -997,24 +985,18 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
         return None
 
-    # @@TODO: eliminate this method
     def save_invoke_edit_entity(self, 
             viewinfo, entityvaluemap, entityvals, context_extra_values,
-            config_edit_url, config_edit_perm,
+            config_edit_url, edit_perm,
             url_params):
         """
         Common logic for invoking a resource edit while editing
         some other resource:
           - the entity currently being edited is saved
-          - authorization to perform the requested edit is checked
-          - a continuaton URL is calculated which is the URL for the current 
-            view, except that the continuation action is always "edit"
-          - a URL for the config edit view is assembled from the supplied base URL
-            and parameters, and the calculated continuaton URL
-          - an HTTP redirect response to the config edit view is returned.
+          - the invoke_edit_entity method (below) is called
 
-        If there is a problem with any of these steps, an error response is 
-        returned and displayed in the current view.
+        If there is a problem, an error response is returned for display 
+        in the current view.
         """
         http_response = self.save_entity(
             viewinfo, entityvaluemap, entityvals, context_extra_values
@@ -1022,7 +1004,7 @@ class GenericEntityEditView(AnnalistGenericView):
         return (
             http_response or
             self.invoke_edit_entity(
-                viewinfo, config_edit_perm,
+                viewinfo, edit_perm,
                 config_edit_url, url_params, 
                 viewinfo.curr_type_id,
                 viewinfo.curr_entity_id or viewinfo.orig_entity_id
@@ -1132,8 +1114,8 @@ class GenericEntityEditView(AnnalistGenericView):
         return None
 
     def update_repeat_field_group(self, 
-        viewinfo, field_desc, entityvaluemap, entityvals, **context_extra_values
-        ):
+            viewinfo, field_desc, entityvaluemap, entityvals, **context_extra_values
+            ):
         """
         Renders a new form from supplied entity instance data with a repeated field or 
         field group added or removed.

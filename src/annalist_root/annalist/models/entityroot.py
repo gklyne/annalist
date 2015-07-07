@@ -389,6 +389,40 @@ class EntityRoot(object):
                 yield fil
         return
 
+    def _entity_files(self):
+        """
+        Iterates over files/resources (not subdirectories) that are part of the current entity.
+
+        Returns pairs (p,f), where 'p' is a full path name, and 'f' is a filename within the 
+        current entity directory. 
+        """
+        for f in os.listdir(self._entitydir):
+            p = os.path.join(self._entitydir, f)
+            if os.path.isfile(p):
+                yield (p, f)
+        return
+
+    def _exists_file(self, f):
+        """
+        Test if a file named 'f' exists inthe current entity directory
+        """
+        return os.path.isfile(os.path.join(self._entitydir, f))
+
+    def _copy_file(self, p, f):
+        """
+        Copy file with path 'p' to a new file 'f' in the current entity directory
+        """
+        new_p = os.path.join(self._entitydir, f)
+        try:
+            shutil.copy(p, new_p)
+        except shutil.Error as e:
+            log.error('shutil.copy error: %s' % e)
+            return None
+        except IOError as e:
+            log.error('shutil.copy IOError: %s' % e.strerror)
+            return None
+        return new_p
+
     def _fileobj(self, localname, filetypeuri, mimetype, mode):
         """
         Returns a file object for accessing a blob associated with the current entity.
