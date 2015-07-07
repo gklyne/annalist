@@ -70,6 +70,15 @@ test_reference_type_create_values = (
     , 'annal:type_list':            "test_reference_list"
     })
 
+test_image_type_create_values = (
+    { 'annal:type':                 "annal:Type"
+    , 'rdfs:label':                 "test_image_type label"
+    , 'rdfs:comment':               "test_image_type comment"
+    , 'annal:uri':                  "test:type/test_image_type"
+    , 'annal:type_view':            "test_image_view"
+    , 'annal:type_list':            "test_image_list"
+    })
+
 test_upload_file_view_create_values = (
     { 'annal:type':                 "annal:View"
     , 'rdfs:label':                 "test_upload_view label"
@@ -158,6 +167,28 @@ test_image_ref_view_create_values = (
       ]
     })
 
+test_image_view_create_values = (
+    { 'annal:type':                 "annal:View"
+    , 'rdfs:label':                 "test_image_view label"
+    , 'rdfs:comment':               "test_image_view comment"
+    , 'annal:record_type':          ""
+    , 'annal:add_field':            "yes"
+    , 'annal:view_fields':
+      [ { 'annal:field_id':             "Entity_id"
+        , 'annal:field_placement':      "small:0,12;medium:0,6"
+        }
+      , { 'annal:field_id':             "Entity_label"
+        , 'annal:field_placement':      "small:0,12"
+        }
+      , { 'annal:field_id':             "Entity_comment"
+        , 'annal:field_placement':      "small:0,12"
+        }
+      , { 'annal:field_id':             "Test_image"
+        , 'annal:field_placement':      "small:0,12"
+        }
+      ]
+    })
+
 test_upload_file_field_create_values = (
     { 'annal:type':                     "annal:Field"
     , 'annal:field_name':               "upl_field"
@@ -216,6 +247,19 @@ test_image_ref_field_create_values = (
     , 'annal:default_value':            ""
     })
 
+test_image_field_create_values = (
+    { 'annal:type':                     "annal:Field"
+    , 'annal:field_name':               "img_field"
+    , 'rdfs:label':                     "test_image_field label"
+    , 'rdfs:comment':                   "test_image_field comment"
+    , 'annal:property_uri':             "test:image"
+    , 'annal:field_render_type':        "URIImage"
+    , 'annal:field_value_type':         "annal:Upload"
+    , 'annal:field_target_type':        "annal:Image"
+    , 'annal:placeholder':              "(Image to upload)"
+    , 'annal:default_value':            ""
+    })
+
 def test_upload_file_field_value():
     return (
         { "resource_name":              "upl_field.md"
@@ -234,6 +278,15 @@ def test_upload_image_field_value():
         , "uploaded_file":              "test-image.jpg"
         })
 
+def test_image_field_value():
+    return (
+        { "resource_name":              "img_field.jpg"
+        , "resource_type":              "image/jpeg"
+        , "upload_name":                "img_field"
+        , "uploaded_size":              1547926
+        , "uploaded_file":              "test-image.jpg"
+        })
+
 def test_imp_entity_create_values(entity_id):
     return (
         { 'rdfs:label':                 "test_imp_entity %s label"%entity_id
@@ -246,6 +299,13 @@ def test_ref_entity_create_values(entity_id):
         { 'rdfs:label':                 "test_ref_entity %s label"%entity_id
         , 'rdfs:comment':               "test_ref_entity %s comment"%entity_id
         , 'test:reference':             entity_id
+        })
+
+def test_img_entity_create_values(entity_id):
+    return (
+        { 'rdfs:label':                 "test_img_entity %s label"%entity_id
+        , 'rdfs:comment':               "test_img_entity %s comment"%entity_id
+        , 'test:image':                 test_image_field_value()
         })
 
 #   -----------------------------------------------------------------------------
@@ -268,36 +328,52 @@ class ImportResourceTest(AnnalistTestCase):
         self.testsite    = Site(TestBaseUri, TestBaseDir)
         self.testcoll    = Collection(self.testsite, "testcoll")
         # Populate collection with linked record types, views and lists
-        self.test_imp_type = RecordType.create(
+
+        # Types
+        self.test_upl_type = RecordType.create(
             self.testcoll, "testupltype", test_upload_type_create_values
             )
-        self.test_imp_view = RecordView.create(
+        self.test_ref_type = RecordType.create(
+            self.testcoll, "testreftype", test_reference_type_create_values
+            )
+        self.test_image_type = RecordType.create(
+            self.testcoll, "testimgtype", test_image_type_create_values
+            )
+
+        # Views
+        self.test_upl_file_view = RecordView.create(
             self.testcoll, "testuplfileview", test_upload_file_view_create_values
             )
-        self.test_imp_view = RecordView.create(
+        self.test_upl_image_view = RecordView.create(
             self.testcoll, "testuplimageview", test_upload_image_view_create_values
             )
+        self.test_ref_file_view = RecordView.create(
+            self.testcoll, "testrefview", test_reference_view_create_values
+            )
+        self.test_ref_image_view = RecordView.create(
+            self.testcoll, "testimgrefview", test_image_ref_view_create_values
+            )
+        self.test_image_view = RecordView.create(
+            self.testcoll, "testimgview", test_image_view_create_values
+            )
+
+        # Fields
         self.test_upl_file_field = RecordField.create(
             self.testcoll, "Test_upload_file", test_upload_file_field_create_values
             )
         self.test_upl_image_field = RecordField.create(
             self.testcoll, "Test_upload_image", test_upload_image_field_create_values
             )
-        self.test_ref_type = RecordType.create(
-            self.testcoll, "testreftype", test_reference_type_create_values
-            )
-        self.test_ref_view = RecordView.create(
-            self.testcoll, "testrefview", test_reference_view_create_values
-            )
-        self.test_ref_view = RecordView.create(
-            self.testcoll, "testimgview", test_image_ref_view_create_values
-            )
-        self.test_ref_field = RecordField.create(
+        self.test_ref_file_field = RecordField.create(
             self.testcoll, "Test_reference", test_reference_field_create_values
             )
-        self.test_ref_field = RecordField.create(
+        self.test_ref_image_field = RecordField.create(
             self.testcoll, "Test_image_ref", test_image_ref_field_create_values
             )
+        self.test_image_field = RecordField.create(
+            self.testcoll, "Test_image", test_image_field_create_values
+            )
+
         # Create data records for testing import and references:
         test_entity_ids = ("test1", "test2")
         test_entity_ids = ("test1",)
@@ -307,6 +383,9 @@ class ImportResourceTest(AnnalistTestCase):
         self.test_ref_type_info = EntityTypeInfo(self.testsite, self.testcoll, "testreftype", create_typedata=True)
         for entity_id in test_entity_ids:
             self.test_ref_type_info.create_entity(entity_id, test_ref_entity_create_values(entity_id))
+        self.test_img_type_info = EntityTypeInfo(self.testsite, self.testcoll, "testimgtype", create_typedata=True)
+        for entity_id in test_entity_ids:
+            self.test_img_type_info.create_entity(entity_id, test_img_entity_create_values(entity_id))
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -458,41 +537,10 @@ class ImportResourceTest(AnnalistTestCase):
         return
 
     def test_reference_uploaded_image(self):
-
-        # # Upload image
-        # with open(self.imagepath) as fp:
-        #     f = entitydata_default_view_form_data(entity_id="test1", action="edit")
-        #     f['upl_field'] = fp     # Upload file with submission
-        #     u = entitydata_edit_url("edit", "testcoll", "testupltype", entity_id="test1", view_id="testuplimageview")
-        #     r = self.client.post(u, f)
-        # self.assertEqual(r.status_code,   302)
-        # self.assertEqual(r.reason_phrase, "FOUND")
-        # # Read back and compare entity resource just created
-        # siteobj = open(self.imagepath, "rb")
-        # testobj = self.test_upl_type_info.get_fileobj(
-        #     "test1", "upl_field", "annal:Image", "image/jpeg", "rb"
-        #     )
-        # self.assertTrue(siteobj.read() == testobj.read(), "Referenced image != original")
-
-        # # Retrieve updated form
-        # r = self.client.get(u)
-        # # Test context
-        # self.assertEqual(len(r.context['fields']), 4)
-        # i = 0
-        # self.assertEqual(r.context['fields'][i].field_id,     "Entity_id")
-        # self.assertEqual(r.context['fields'][i].field_value,  "test1")
-        # i = 1
-        # self.assertEqual(r.context['fields'][i].field_id,     "Entity_label")
-        # i = 2
-        # self.assertEqual(r.context['fields'][i].field_id,     "Entity_comment")
-        # i = 3
-        # self.assertEqual(r.context['fields'][i].field_id,     "Test_upload_image")
-        # self.assertDictionaryMatch(r.context['fields'][i].field_value, test_upload_image_field_value())
-
         self.test_upload_image_resource()
 
         # Display resource with image reference
-        u = entitydata_edit_url("view", "testcoll", "testreftype", entity_id="test1", view_id="testimgview")
+        u = entitydata_edit_url("view", "testcoll", "testreftype", entity_id="test1", view_id="testimgrefview")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -533,6 +581,91 @@ class ImportResourceTest(AnnalistTestCase):
               """<div class="row view-value-row"> """+
                 """<div class="view-label small-12 medium-2 columns"> """+
                   """<span>test_image_ref_field label</span> """+
+                """</div> """+
+                """<div class="view-value small-12 medium-10 columns"> """+
+                  """<a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" target="_blank"> """+
+                    """<img src="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" """+
+                    """     alt="Image at %(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" /> """+
+                  """</a> """+
+                """</div> """+
+              """</div> """+
+            """</div> """
+            )%field_details
+        self.assertContains(r, img_element, html=True)
+        return
+
+    def test_image_edit_field(self):
+        # Upload to an image view field
+        with open(self.imagepath) as fp:
+            f = entitydata_default_view_form_data(entity_id="test1", action="edit")
+            f['img_field'] = fp     # Upload file with submission
+            u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
+            r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        # Read back and compare entity resource just created
+        siteobj = open(self.imagepath, "rb")
+        testobj = self.test_img_type_info.get_fileobj(
+            "test1", "img_field", "annal:Image", "image/jpeg", "rb"
+            )
+        self.assertTrue(siteobj.read() == testobj.read(), "Referenced image != original")
+
+        # Retrieve updated form
+        r = self.client.get(u)
+        # Test context
+        self.assertEqual(len(r.context['fields']), 4)
+        i = 0
+        self.assertEqual(r.context['fields'][i].field_id,     "Entity_id")
+        self.assertEqual(r.context['fields'][i].field_value,  "test1")
+        i = 1
+        self.assertEqual(r.context['fields'][i].field_id,     "Entity_label")
+        i = 2
+        self.assertEqual(r.context['fields'][i].field_id,     "Entity_comment")
+        i = 3
+        self.assertEqual(r.context['fields'][i].field_id,     "Test_image")
+        self.assertDictionaryMatch(r.context['fields'][i].field_value, test_image_field_value())
+        return
+
+    def test_image_view_field(self):
+        # This test is for an image field that supports file upload in the same entity
+
+        # Upload image
+        self.test_image_edit_field()
+
+        # Display resource in view mode
+        u = entitydata_edit_url("view", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Check display context
+        self.assertEqual(len(r.context['fields']), 4)
+        i = 0
+        self.assertEqual(r.context['fields'][i].field_id,     "Entity_id")
+        self.assertEqual(r.context['fields'][i].field_value,  "test1")
+        i = 1
+        self.assertEqual(r.context['fields'][i].field_id,     "Entity_label")
+        i = 2
+        self.assertEqual(r.context['fields'][i].field_id,     "Entity_comment")
+        i = 3
+        basepath = TestBasePath + "/c/testcoll/d/testimgtype/"
+        # print "\n*****\n"+repr(r.context['fields'][i].target_value)+"\n*****\n"
+        self.assertEqual(r.context['fields'][i].field_id,           "Test_image")
+        self.assertEqual(r.context['fields'][i].field_value,        test_image_field_value())
+        self.assertEqual(r.context['fields'][i].target_value_link,  basepath+"test1/img_field.jpg")
+        # Check for rendered image link
+        # log.info(r.content)
+        field_details = (
+            { "basepath":   TestBasePath
+            , "coll_id":    "testcoll"
+            , "type_id":    "testimgtype"
+            , "entity_id":  "test1"
+            , "field_id":   "img_field"
+            })
+        img_element = (
+            """<div class="small-12 columns"> """+
+              """<div class="row view-value-row"> """+
+                """<div class="view-label small-12 medium-2 columns"> """+
+                  """<span>test_image_field label</span> """+
                 """</div> """+
                 """<div class="view-value small-12 medium-10 columns"> """+
                   """<a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" target="_blank"> """+
