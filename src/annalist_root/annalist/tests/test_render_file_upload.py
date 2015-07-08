@@ -35,19 +35,28 @@ class FileUploadRenderingTest(FieldRendererTestSupport):
     def test_RenderFileUploadValue(self):
 
         def expect_render(filename, labeltext):
-            render_view = '''<a href="%s" target="_blank">%s</a>'''%(filename, labeltext)
+            # render_view = '''<a href="%s" target="_blank">%s</a>'''%(filename, labeltext)
+            # render_edit = (
+            #     '''<input type="file" name="repeat_prefix_test_field" '''+
+            #            '''placeholder="(test placeholder)" '''+
+            #            '''value="%s" /> '''
+            #     )%filename
+            render_view = (
+                '''Uploaded file <a href="%s" target="_blank">%s</a>'''
+                )%(filename, labeltext)
             render_edit = (
                 '''<input type="file" name="repeat_prefix_test_field" '''+
                        '''placeholder="(test placeholder)" '''+
-                       '''value="%s" /> '''
-                )%filename
+                       '''value="%s" /> '''+
+                '''Previously uploaded: %s '''
+                )%(filename, labeltext)
             return {'view': render_view, 'edit': render_edit}
 
         def upload_file_value(file):
-            return {'resource_name': file}
+            return {'resource_name': file, 'uploaded_file': "uploaded.ext"}
 
         test_values = (
-            [ (upload_file_value("testfile.ext"),   "testfile.ext")
+            [ (upload_file_value("testfile.ext"),   "uploaded.ext")
             ])
         test_value_context_renders = (
             [ (self._make_test_context(filename),  expect_render(filename['resource_name'], labeltext))

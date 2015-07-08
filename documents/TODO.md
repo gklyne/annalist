@@ -20,13 +20,14 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] test case for upload image displayed in same entity
 - [x] test case for rename with attachments
 - [x] test case for edit entity with attachment
-- [ ] file upload view/edit: display uploaded filename as well as link (use for link text?)
-- [ ] provide unified import/upload field type to attachment can be either
+- [x] file upload view/edit: display uploaded filename as well as link (use for link text?)
+- [ ] rename render type URIImage as RefImage; update documentation
 - [ ] means to provide alternative display of field of same entity (e.g. image for file upload).  Also to display multiple fields from referenced entity.
+    - test on CruisingLog place description
+- [ ] provide unified import/upload field type to attachment can be either
 - [ ] rationalize field description form to makle handling of upload/import more obvious
     - Note that 'field_value_type' is overloaded as it is used to trigger upload renderers *and* to guide Mime type selection.
     - Use 'field_target_type' - need to expose in form?
-- [ ] rename render type URIImage as RefImage; update documentation
 - [ ] add render type RefAudio (use embedded HTML player); update documentation
     - see tests conducted using CALMA data
 
