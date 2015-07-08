@@ -151,13 +151,13 @@ Thus, to create a repeated field in a view, the following steps must be performe
 
 Annalist primarily deals with collections of data that are stored as JSON (or JSON-LD) text files, which can in turn reference other resources, including imges and other non-textual media, that are accessible on the Web.  But sometimes it is useful to import such resources so that they become part of a published Annalist collection, and to reference such resources.
 
-Annalist deals with such circumstances by allowing arbitrary files and resources to be "attached" to an Annalist entity, via file upload and web resource import fields. These attachments are described and referenced within the JSON part of an entity, and stored alongside the JSON as files of the appropriate type.  This approach allows Annalist to preserve information about the attachments such as the content type and provenance information.  Further, Annalist fields in one entity can reference fields in another entity, and for fields using resource renderers such as `URIImage`, a reference to such a field is treated as a reference to the attached resource.
+Annalist deals with such circumstances by allowing arbitrary files and resources to be "attached" to an Annalist entity, via file upload and web resource import fields. These attachments are described and referenced within the JSON part of an entity, and stored alongside the JSON as files of the appropriate type.  This approach allows Annalist to preserve information about the attachments such as the content type and provenance information.  Further, Annalist fields in one entity can reference fields in another entity, and for fields using resource renderers such as `RefImage`, a reference to such a field is treated as a reference to the attached resource.
 
 Web resources can be imported as attachements to an entity by creating a field with render type `URIImport`.  This is rendered for editing as a text input field for the resource URI with an "Import" button alongside, and for viewing as a hyperlink that links to the imported resource attached to the entity.
 
 Files can be uploaded as attachements to an entity by creating a field with render type `FileUpload`.  This is rendered for editing as an HTML file browser input, and for viewing as a hyperlink that links to the imported file attached to the entity.
 
-For referencing resources, there are several options, provided through renderers like `URILink` and `URIImage`:
+For referencing resources, there are several options, provided through renderers like `URILink` and `RefImage`:
 
 1. Direct reference to a resource (usually an external resource)
 2. Reference to an imported or uploaded attachment in a designated entity
@@ -220,6 +220,7 @@ The definitive list of render types is in `annalist/sitedata/enums/Enum_render_t
 * `List` - identifies a list description; subsumed by `Enum_choice`.
 * `Markdown` - multiline rich text.  Stored and presented for editing as Markdown text, and for viewing as  text formatted according to Markdown conventions.
 * `Placement` - a special-case field renderer used for presenting placement of a field on a form.
+* `RefImage` - A reference to an image value, presented for viewing as the referenced image.  See also section "Resource references, imports and file uploads".
 * `RepeatGroup` - special case renderers used for describing repeated fields in a view description.  The stored value is a list of JSON objects, each of which is rendered using the field group reference from the field description (see section "Repeated field groups" and field `Field_groupref`).  Fields within each group are flowed vertically down the view with labels to the left.
 * `RepeatGroupRow` - same as `RepeatGroup`, except that field groups are rendered in tabular form with field labels for column headers, with each repeated group as a row of the table.
 * `Slug` - simple text value used as an internal local identifier, or Slug, presented in the same was as the 'Text' renderer.  The text value is expected to consist of up to 32 letters, digits and/or underscore characters, (but this is not currently enforced @@).
@@ -227,7 +228,6 @@ The definitive list of render types is in `annalist/sitedata/enums/Enum_render_t
 * `Textarea` - a multi-line text value, presented for editing as an HTML "textarea" field, and for viewing as a simple flowed text element.
 * `TokenSet` - a list of simple text values, presented for editing as an HTML input field, and for viewing as a simple text element.  Presented values are space-separated.  Currently there is no mechanism to escape spaces within individual text values (@@).
 * `Type` - identifies an entity type description; subsumed by `Enum_choice`.
-* `URIImage` - A reference to an image value, presented for viewing as the referenced image.  See also section "Resource references, imports and file uploads".
 * `URIImport` - Import a web resource as an attachment to an entity.  Stored as a complex structure with resource URI, local resource reference, content type, etc.;  presented for editing as a text input field and an "Import" button, and for viewing as a hyperlink.  See section "Resource references, imports and file uploads"
 * `URILink` - A URI presented for viewing as a Hyperlink, used to create fields that reference externally stored resources.  See also section "Resource references, imports and file uploads".
 * `View` - identifies a view description; subsumed by `Enum_choice`.

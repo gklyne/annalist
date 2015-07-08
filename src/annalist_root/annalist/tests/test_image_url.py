@@ -1,7 +1,7 @@
 """
 Tests image URL display field.
 
-(Unlike test_render_uri_image, this tests rendering from saved data)
+(Unlike test_render_ref_image, this tests rendering from saved data)
 
 (Unlike test_upload_file, this tests rendering of a field with a direct URI value, 
 not a reference to an upload/import field in some other entity)
@@ -94,7 +94,7 @@ test_image_ref_field_create_values = (
     , 'rdfs:label':                     "test_image_ref_field label"
     , 'rdfs:comment':                   "test_image_ref_field comment"
     , 'annal:property_uri':             "test:reference"
-    , 'annal:field_render_type':        "URIImage"
+    , 'annal:field_render_type':        "RefImage"
     , 'annal:field_value_type':         "annal:Identifier"
     # , 'annal:field_target_type':        "annal:Identifier"
     # , 'annal:field_ref_type':           "testupltype"

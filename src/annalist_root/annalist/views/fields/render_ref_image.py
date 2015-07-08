@@ -26,7 +26,7 @@ from django.template    import Template, Context
 #   ----------------------------------------------------------------------------
 
 
-class URIImageValueMapper(RenderBase):
+class RefImageValueMapper(RenderBase):
     """
     Value mapper class for token list
     """
@@ -51,20 +51,20 @@ class URIImageValueMapper(RenderBase):
 #
 #   ----------------------------------------------------------------------------
 
-class uri_image_view_renderer(object):
+class ref_image_view_renderer(object):
 
     def render(self, context):
         """
         Render URI in view as referenced image.
         """
-        # linkval = URIImageValueMapper.encode(get_field_value(context, ""))
-        linkval = URIImageValueMapper.encode(get_context_field_value(context, "target_value_link", ""))
+        # linkval = RefImageValueMapper.encode(get_field_value(context, ""))
+        linkval = RefImageValueMapper.encode(get_context_field_value(context, "target_value_link", ""))
         return (
             '''<a href="%s" target="_blank">'''+
             '''<img src="%s" alt="Image at %s" />'''+
             '''</a>''')%(linkval, linkval, linkval)
 
-class uri_image_edit_renderer(object):
+class ref_image_edit_renderer(object):
 
     def __init__(self):
         self._template = Template(
@@ -80,13 +80,13 @@ class uri_image_edit_renderer(object):
         """
         return self._template.render(context)
 
-def get_uri_image_renderer():
+def get_ref_image_renderer():
     """
     Return field renderer object for token list values
     """
     return RenderFieldValue(
-        view_renderer=uri_image_view_renderer(), 
-        edit_renderer=uri_image_edit_renderer(),
+        view_renderer=ref_image_view_renderer(), 
+        edit_renderer=ref_image_edit_renderer(),
         )
 
 # End.
