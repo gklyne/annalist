@@ -26,6 +26,24 @@ from django.template    import Template, Context
 #
 #   ----------------------------------------------------------------------------
 
+edit_options = (
+    '''{% for v in field_options %} '''+
+      '''{% if v == field.field_value %} '''+
+        '''{% if v == "" %} '''+
+          '''<option value="" selected="selected">{{field.field_placeholder}}</option> '''+
+        '''{% else %} '''+
+          '''<option selected="selected">{{v}}</option> '''+
+        '''{% endif %} '''+
+      '''{% else %} '''+
+        '''{% if v == "" %} '''+
+          '''<option value="">{{field.field_placeholder}}</option> '''+
+        '''{% else %} '''+
+          '''<option>{{v}}</option> '''+
+        '''{% endif %} '''+
+      '''{% endif %} '''+
+    '''{% endfor %} '''
+    )
+
 view_select = (
     """<!-- fields.select_view_renderer(view_select) -->
     {% if field.field_value_link_continuation %}
@@ -40,21 +58,24 @@ edit_select = (
     <div class="row">
       <div class="small-10 columns view-value less-new-button">
         <select name="{{repeat_prefix}}{{field.field_name}}">
-          {% for v in field_options %}
-            {% if v == field.field_value %}
-              {% if v == "" %}
-                <option value="" selected="selected">{{field.field_placeholder}}</option>
-              {% else %}
-                <option selected="selected">{{v}}</option>
-              {% endif %}
-            {% else %}
-              {% if v == "" %}
-                <option value="">{{field.field_placeholder}}</option>
-              {% else %}
-                <option>{{v}}</option>
-              {% endif %}
-            {% endif %}
-          {% endfor %}
+    """+
+    edit_options+
+          # {% for v in field_options %}
+          #   {% if v == field.field_value %}
+          #     {% if v == "" %}
+          #       <option value="" selected="selected">{{field.field_placeholder}}</option>
+          #     {% else %}
+          #       <option selected="selected">{{v}}</option>
+          #     {% endif %}
+          #   {% else %}
+          #     {% if v == "" %}
+          #       <option value="">{{field.field_placeholder}}</option>
+          #     {% else %}
+          #       <option>{{v}}</option>
+          #     {% endif %}
+          #   {% endif %}
+          # {% endfor %}
+    """
         </select>
       </div>
       <div class="small-2 columns view-value new-button left small-text-right">
@@ -81,24 +102,26 @@ view_choice = (
 edit_choice = (
     """<!-- fields.choice_view_renderer(edit_choice) -->
     <select name="{{repeat_prefix}}{{field.field_name}}">
-      {% for v in field_options %}
-        {% if v == field.field_value %}
-          {% if v == "" %}
-            <option value="" selected="selected">{{field.field_placeholder}}</option>
-          {% else %}
-            <option selected="selected">{{v}}</option>
-          {% endif %}
-        {% else %}
-          {% if v == "" %}
-            <option value="">{{field.field_placeholder}}</option>
-          {% else %}
-            <option>{{v}}</option>
-          {% endif %}
-        {% endif %}
-      {% endfor %}
+    """+
+    edit_options+
+      # {% for v in field_options %}
+      #   {% if v == field.field_value %}
+      #     {% if v == "" %}
+      #       <option value="" selected="selected">{{field.field_placeholder}}</option>
+      #     {% else %}
+      #       <option selected="selected">{{v}}</option>
+      #     {% endif %}
+      #   {% else %}
+      #     {% if v == "" %}
+      #       <option value="">{{field.field_placeholder}}</option>
+      #     {% else %}
+      #       <option>{{v}}</option>
+      #     {% endif %}
+      #   {% endif %}
+      # {% endfor %}
+    """
     </select>
     """)
-
 
 #   ----------------------------------------------------------------------------
 #

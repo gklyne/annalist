@@ -316,7 +316,9 @@ class FieldDescription(object):
         Returns true if this field contains a reference to a field group,
         which in turn references further field descriptions.
 
-        (Currently, this function duplicates `is_repeat_group`.)
+        @@@ (Currently, this function duplicates `is_repeat_group`.)
+
+        @@@ tesat for:  group_ref, group_field_descs, and group_id
         """
         field_group_types = ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"]
         return self._field_desc['field_render_type'] in field_group_types

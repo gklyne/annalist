@@ -22,14 +22,15 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] test case for edit entity with attachment
 - [x] file upload view/edit: display uploaded filename as well as link (use for link text?)
 - [x] rename render type URIImage as RefImage; update documentation
-- [ ] means to provide alternative display of field of same entity (e.g. image for file upload).  Also to display multiple fields from referenced entity.
+- [ ] means to provide multiple alternative display of field of same or referenced entity (e.g. image for file upload).
     - test on CruisingLog place description
-- [ ] provide unified import/upload field type so attachment can be either
-- [ ] rationalize field description form to makle handling of upload/import more obvious
+- [ ] rationalize field description form to make handling of upload/import more obvious
     - Note that 'field_value_type' is overloaded as it is used to trigger upload renderers *and* to guide Mime type selection.
     - Use 'field_target_type' - need to expose in form?
 - [ ] add render type RefAudio (use embedded HTML player); update documentation
+    - update resourcetypes.py with supported audio types
     - see tests conducted using CALMA data
+- [ ] field renderer for unified import or upload resource?
 
 (release?)
 
