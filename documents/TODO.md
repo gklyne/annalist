@@ -18,7 +18,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: file upload when creating entity appears to not work; need to create first then upload.
 - [x] ensure attachments are moved when entity is renamed.
 - [x] test case for upload image displayed in same entity
-- [ ] test case for rename with attachments
+- [x] test case for rename with attachments
 - [ ] test case for edit entity with attachment
 - [ ] file upload view/edit: display uploaded filename as well as link (use for link text?)
 - [ ] provide unified import/upload field type to attachment can be either

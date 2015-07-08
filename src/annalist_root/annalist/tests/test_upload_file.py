@@ -314,7 +314,7 @@ def test_img_entity_create_values(entity_id):
 #
 #   -----------------------------------------------------------------------------
 
-class ImportResourceTest(AnnalistTestCase):
+class UploadResourceTest(AnnalistTestCase):
     """
     Tests for resource import
     """
@@ -603,6 +603,7 @@ class ImportResourceTest(AnnalistTestCase):
             r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
+
         # Read back and compare entity resource just created
         siteobj = open(self.imagepath, "rb")
         testobj = self.test_img_type_info.get_fileobj(
@@ -677,6 +678,27 @@ class ImportResourceTest(AnnalistTestCase):
             """</div> """
             )%field_details
         self.assertContains(r, img_element, html=True)
+        return
+
+    def test_image_rename(self):
+        # This test that entity renaming also copies over an attachment
+
+        # Upload image
+        self.test_image_edit_field()
+
+        # Rename entity
+        f = entitydata_default_view_form_data(orig_id="test1", entity_id="test_new", action="edit")
+        u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+
+        # Read back and compare renamed entity resource
+        siteobj = open(self.imagepath, "rb")
+        testobj = self.test_img_type_info.get_fileobj(
+            "test_new", "img_field", "annal:Image", "image/jpeg", "rb"
+            )
+        self.assertTrue(siteobj.read() == testobj.read(), "Renamed entity image != original")
         return
 
 # End.
