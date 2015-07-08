@@ -19,7 +19,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] ensure attachments are moved when entity is renamed.
 - [x] test case for upload image displayed in same entity
 - [x] test case for rename with attachments
-- [ ] test case for edit entity with attachment
+- [x] test case for edit entity with attachment
 - [ ] file upload view/edit: display uploaded filename as well as link (use for link text?)
 - [ ] provide unified import/upload field type to attachment can be either
 - [ ] means to provide alternative display of field of same entity (e.g. image for file upload).  Also to display multiple fields from referenced entity.

@@ -680,6 +680,43 @@ class UploadResourceTest(AnnalistTestCase):
         self.assertContains(r, img_element, html=True)
         return
 
+    def test_image_edit(self):
+        # This test that entity editing leaves attachment intact
+
+        # Upload image
+        self.test_image_edit_field()
+
+        # Edit entity
+        f = entitydata_default_view_form_data(entity_id="test1", action="edit", update="Updated")
+        u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+
+        # Retrieve updated form
+        r = self.client.get(u)
+        # Test context
+        self.assertEqual(len(r.context['fields']), 4)
+        i = 0
+        self.assertEqual(r.context['fields'][i].field_id,     "Entity_id")
+        self.assertEqual(r.context['fields'][i].field_value,  "test1")
+        i = 1
+        self.assertEqual(r.context['fields'][i].field_id,     "Entity_label")
+        self.assertEqual(r.context['fields'][i].field_value,  "Updated testcoll/testtype/test1")
+        i = 2
+        self.assertEqual(r.context['fields'][i].field_id,     "Entity_comment")
+        i = 3
+        self.assertEqual(r.context['fields'][i].field_id,     "Test_image")
+        self.assertDictionaryMatch(r.context['fields'][i].field_value, test_image_field_value())
+
+        # Read back and compare entity resource
+        siteobj = open(self.imagepath, "rb")
+        testobj = self.test_img_type_info.get_fileobj(
+            "test1", "img_field", "annal:Image", "image/jpeg", "rb"
+            )
+        self.assertTrue(siteobj.read() == testobj.read(), "Edited entity image != original")
+        return
+
     def test_image_rename(self):
         # This test that entity renaming also copies over an attachment
 
