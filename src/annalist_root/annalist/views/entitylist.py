@@ -169,7 +169,8 @@ class EntityGenericListView(AnnalistGenericView):
                     context=listinfo.recordlist, search=search_for
                     )
             )
-        entityvallist = { '_list_entities_': [ get_entity_values(listinfo, e) for e in entity_list ] }
+        typeinfo      = listinfo.entitytypeinfo
+        entityvallist = { '_list_entities_': [ get_entity_values(typeinfo, e) for e in entity_list ] }
         # Set up initial view context
         context_extra_values = (
             { 'continuation_url':       listinfo.get_continuation_url() or ""

@@ -1,7 +1,5 @@
 """
-Renderer and value mapper for field consisting of a list of simple token values.
-
-Simple tokens may not contain whitespace.
+Renderer and value mapper for a group of fields repeated over a list of values.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"

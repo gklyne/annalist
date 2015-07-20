@@ -375,7 +375,7 @@ class GenericEntityEditView(AnnalistGenericView):
             if add_field_desc:
                 # Add empty fields per named repeat group
                 self.add_entity_field(add_field_desc, entity)
-        entityvals  = get_entity_values(viewinfo, entity, entity_id)
+        entityvals  = get_entity_values(viewinfo.entitytypeinfo, entity, entity_id)
         if viewinfo.action == "copy":
             entityvals.pop(ANNAL.CURIE.uri, None)
         context_extra_values = (

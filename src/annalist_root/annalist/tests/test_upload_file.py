@@ -323,10 +323,10 @@ class UploadResourceTest(AnnalistTestCase):
         self.filepath  = "%s/README.md"%TestBaseDir
         self.fileuri   = "file://"+self.filepath
         self.imagepath = "%s/test-image.jpg"%TestBaseDir
-        self.imageuri  = "file://"+self.filepath
+        self.imageuri  = "file://"+self.imagepath
         init_annalist_test_site()
-        self.testsite    = Site(TestBaseUri, TestBaseDir)
-        self.testcoll    = Collection(self.testsite, "testcoll")
+        self.testsite  = Site(TestBaseUri, TestBaseDir)
+        self.testcoll  = Collection(self.testsite, "testcoll")
         # Populate collection with linked record types, views and lists
 
         # Types

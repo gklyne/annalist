@@ -29,6 +29,8 @@ from render_uri_import          import get_uri_import_renderer, URIImportValueMa
 from render_file_upload         import get_file_upload_renderer, FileUploadValueMapper
 from render_repeatgroup         import RenderRepeatGroup
 import render_repeatgroup
+from render_ref_multifields     import RenderMultiFields
+import render_ref_multifields
 
 _field_renderers = {}   # renderer cache
 
@@ -185,6 +187,9 @@ def get_edit_renderer(field_render_type, field_ref_type, field_val_type):
         return RenderRepeatGroup(render_repeatgroup.edit_group)
     if field_render_type == "RepeatGroupRow":
         return RenderRepeatGroup(render_repeatgroup.edit_grouprow)
+    if field_render_type == "RefMultifield":
+        #@@ select renderer?
+        return RenderMultiFields(render_ref_multifields.edit_multifield)
     # Entity reference and import edit renderers
     renderer = get_field_edit_renderer(field_render_type, field_ref_type, field_val_type)
     if renderer:
@@ -214,6 +219,8 @@ def get_view_renderer(field_render_type, field_ref_type, field_val_type):
         return RenderRepeatGroup(render_repeatgroup.view_listrow)
     if field_render_type == "RepeatGroupRow":
         return RenderRepeatGroup(render_repeatgroup.view_grouprow)
+    if field_render_type == "RefMultifield":
+        return RenderMultiFields(render_ref_multifields.view_multifield)
     renderer = get_field_base_renderer(field_render_type)
     if renderer:
         return renderer.label_view()
