@@ -22,20 +22,23 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] test case for edit entity with attachment
 - [x] file upload view/edit: display uploaded filename as well as link (use for link text?)
 - [x] rename render type URIImage as RefImage; update documentation
-- [ ] means to provide multiple alternative display of field of same or referenced entity (e.g. image for file upload).
-    - test on CruisingLog place description
+- [ ] allow multiple fields displayed from referenced entity (e.g. image for file upload).
+    - [x] initial implementation
+    - [x] edit test case
+    - [ ] test on CruisingLog place description
+    - [ ] test suite for renderer alone
 - [ ] rationalize field description form to make handling of upload/import more obvious
     - Note that 'field_value_type' is overloaded as it is used to trigger upload renderers *and* to guide Mime type selection.
     - Use 'field_target_type' - need to expose in form?
 - [ ] add render type RefAudio (use embedded HTML player); update documentation
     - update resourcetypes.py with supported audio types
     - see tests conducted using CALMA data
-- [ ] field renderer for unified import or upload resource?
 
 (release?)
 
 - [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
-- [ ] Add field padding so that display position is as expected (if possible)
+- [ ] field renderer for unified import or upload resource?
+- [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?
     - Possibly precompute padding?
@@ -81,8 +84,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 (feature freeze for V0.9alpha?)
 
-- [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Loom into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
-- [ ] Eliminate redundant render types
+- [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
+- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types
 - [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared deployment should generate a new secret key in settings
@@ -103,11 +106,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
-- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.)
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
-- [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value
 - [x] Improve formatting of README sent to PyPI
-    - renamed src/RAEDME.md to README.rst
+    - renamed src/README.md to README.rst
 
 
 Usability notes:

@@ -113,7 +113,7 @@ class RefMultifieldTest(AnnalistTestCase):
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
                 }
               , { 'annal:field_id':         "refimg_field"
-                , 'annal:field_placement':  "small:0,12"
+                , 'annal:field_placement':  "small:0,12;medium:0,6"
                 }
               ]
             })
@@ -123,14 +123,14 @@ class RefMultifieldTest(AnnalistTestCase):
     def _create_refimg_field(self, label_add=None, label_delete=None):
         refimg_field = RecordField.create(self.testcoll, "refimg_field",
             { "annal:type":                 "annal:Field"
-            , "rdfs:label":                 "Image reference field label"
+            , "rdfs:label":                 "Image reference"
             , "rdfs:comment":               "Image reference field comment"
             , "annal:field_render_type":    "RefMultifield"
             , "annal:field_value_type":     "annal:Field_group"
             , "annal:field_entity_type":    "test:img_type"
             , "annal:placeholder":          "(ref image field)"
             , "annal:property_uri":         "test:ref_image"
-            , "annal:field_placement":      "small:0,6"
+            , "annal:field_placement":      "small:0,12;medium:0,6"
             , "annal:group_ref":            "test_refimg_group"
             , "annal:field_ref_type":       "img_type"
             })
@@ -222,11 +222,11 @@ class RefMultifieldTest(AnnalistTestCase):
         # 2nd field - multifield group
         self.assertEqual(r.context['fields'][1]['field_id'],            "refimg_field")
         self.assertEqual(r.context['fields'][1]['field_name'],          "refimg_field")
-        self.assertEqual(r.context['fields'][1]['field_label'],         "Image reference field label")
+        self.assertEqual(r.context['fields'][1]['field_label'],         "Image reference")
         self.assertEqual(r.context['fields'][1]['field_property_uri'],  "test:ref_image")
         self.assertEqual(r.context['fields'][1]['field_value_type'],    "annal:Field_group")
         self.assertEqual(r.context['fields'][1]['field_group_ref'],     "test_refimg_group")
-        self.assertEqual(r.context['fields'][1]['group_label'],         "Image reference field label")
+        self.assertEqual(r.context['fields'][1]['group_label'],         "Image reference")
         self.assertEqual(r.context['fields'][1]['field_value'],         "img_entity")
 
         # Test rendered result
@@ -285,6 +285,97 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertContains(r, formrow1,  html=True)
         self.assertContains(r, formrow2a, html=True)
         self.assertContains(r, formrow2b, html=True)
+        return
+
+    def test_Ref_Multifield_edit(self):
+        self._create_image_multifield_ref_and_view()
+
+        # Render view of multifield reference
+        u = entitydata_edit_url("edit", "testcoll", "ref_type", "ref_entity", view_id="refimg_view")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+
+        # Check render context
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "ref_type")
+        self.assertEqual(r.context['entity_id'],        "ref_entity")
+        self.assertEqual(r.context['action'],           "edit")
+        # Fields
+        self.assertEqual(len(r.context['fields']), 2)
+        # 1st field - Id
+        self.assertEqual(r.context['fields'][0]['field_id'],            "Entity_id")
+        self.assertEqual(r.context['fields'][0]['field_name'],          "entity_id")
+        self.assertEqual(r.context['fields'][0]['field_label'],         "Id")
+        self.assertEqual(r.context['fields'][0]['field_value'],         "ref_entity")
+        # 2nd field - multifield group
+        self.assertEqual(r.context['fields'][1]['field_id'],            "refimg_field")
+        self.assertEqual(r.context['fields'][1]['field_name'],          "refimg_field")
+        self.assertEqual(r.context['fields'][1]['field_label'],         "Image reference")
+        self.assertEqual(r.context['fields'][1]['field_property_uri'],  "test:ref_image")
+        self.assertEqual(r.context['fields'][1]['field_value_type'],    "annal:Field_group")
+        self.assertEqual(r.context['fields'][1]['field_group_ref'],     "test_refimg_group")
+        self.assertEqual(r.context['fields'][1]['group_label'],         "Image reference")
+        self.assertEqual(r.context['fields'][1]['field_value'],         "img_entity")
+
+        # Test rendered result
+        field_vals    = default_fields(
+            coll_id="testcoll", type_id="ref_type", entity_id="ref_entity", 
+            view_id="refimg_view",
+            basepath=TestBasePath
+            )
+        formrow1 = """
+            <div class="small-12 medium-6 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Id</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="entity_id"
+                         placeholder="(entity id)"
+                         value="%(entity_id)s"/>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+
+        tgt_field_vals = default_fields(
+            coll_id="testcoll", type_id="img_type", entity_id="img_entity", 
+            view_id="refimg_view",
+            field_id="refimg_field",
+            basepath=TestBasePath
+            )
+        formrow2 = """
+            <div class="small-12 medium-6 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Image reference</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <div class="row">
+                    <div class="small-10 columns view-value less-new-button">
+                      <select name="%(field_id)s">
+                       <option selected="selected">%(entity_id)s</option>
+                      </select>
+                    </div>
+                    <div class="small-2 columns view-value new-button left small-text-right">
+                      <button type="submit"
+                              name="%(field_id)s__new"
+                              value="New"
+                              title="Define new Image reference"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%tgt_field_vals(width=6)
+
+        # log.info(r.content)
+        self.assertContains(r, formrow1,  html=True)
+        self.assertContains(r, formrow2,  html=True)
         return
 
 # End.

@@ -80,7 +80,6 @@ _field_get_renderer_functions = (
     , "URILink":        get_uri_link_renderer
     , "URIImport":      get_uri_import_renderer
     , "FileUpload":     get_file_upload_renderer
-
     , "EntityTypeId":   get_select_renderer
     , "Type":           get_select_renderer
     , "View":           get_select_renderer
@@ -188,8 +187,7 @@ def get_edit_renderer(field_render_type, field_ref_type, field_val_type):
     if field_render_type == "RepeatGroupRow":
         return RenderRepeatGroup(render_repeatgroup.edit_grouprow)
     if field_render_type == "RefMultifield":
-        #@@ select renderer?
-        return RenderMultiFields(render_ref_multifields.edit_multifield)
+        return get_select_renderer().label_edit()
     # Entity reference and import edit renderers
     renderer = get_field_edit_renderer(field_render_type, field_ref_type, field_val_type)
     if renderer:

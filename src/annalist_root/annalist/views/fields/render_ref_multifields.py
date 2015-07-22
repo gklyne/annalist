@@ -39,43 +39,6 @@ view_multifield = (
         """
     })
 
-edit_multifield = (
-    { 'head':
-        """
-        <!-- edit_multifield head -->
-        """
-    , 'body':
-        """
-        <div class="small-12 columns">
-          <div class="row">
-            <div class="small-12 medium-2 columns hide-for-small-only">
-              &nbsp;
-            </div>
-            <div class="small-12 medium-10 columns">
-              <div class="tbody row select-row">
-                <div class="small-1 columns checkbox-in-edit-padding">
-                  <input type="checkbox" class="select-box right"
-                         name="{{field.group_id}}__select_fields"
-                         value="{{repeat_index}}" />
-                </div>
-                <div class="small-11 columns">
-                  <div class="edit-grouprow row">
-                    {% for f in repeat_bound_fields %}
-                    {% include f.field_render_coledit with field=f %}
-                    {% endfor %}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        """
-    , 'tail':
-        """
-        <!-- edit_multifield tail -->
-        """
-    })
-
 class RenderMultiFields(object):
   """
   Render class for a field group in a referenced entity.
