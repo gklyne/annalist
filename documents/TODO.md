@@ -25,7 +25,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] allow multiple fields displayed from referenced entity (e.g. image for file upload).
     - [x] initial implementation
     - [x] edit test case
-    - [ ] test on CruisingLog place description
+    - [x] test on CruisingLog place description
+    - [ ] test case for ref_multifield in repeat field
     - [ ] test suite for renderer alone
 - [ ] rationalize field description form to make handling of upload/import more obvious
     - Note that 'field_value_type' is overloaded as it is used to trigger upload renderers *and* to guide Mime type selection.
@@ -109,6 +110,11 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
 - [x] Improve formatting of README sent to PyPI
     - renamed src/README.md to README.rst
+
+
+Technical debt:
+
+- [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" andf "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (If is field description values that are referenced from templates.)
 
 
 Usability notes:
