@@ -6,7 +6,7 @@ and generates context values to drive rendering of that field in a form.
 The template used is expected to iterate over the fields and render each one, e.g.:
 
     {% for field in fields %}
-    {% include field.field_render_edit %}
+    {% include field.field_render_label_edit %}
     {% endfor %}
 
 The iterated values of `field` provide additional values for the field rendering template,

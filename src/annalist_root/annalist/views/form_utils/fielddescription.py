@@ -22,9 +22,14 @@ from annalist.models.entityfinder       import EntityFinder
 from annalist.views.fields.render_utils import (
     get_view_renderer,
     get_edit_renderer, 
-    get_colhead_renderer, 
-    get_colview_renderer,
-    get_coledit_renderer,
+    get_label_view_renderer,
+    get_label_edit_renderer, 
+    get_col_head_renderer, 
+    get_col_head_view_renderer, 
+    get_col_head_edit_renderer, 
+    get_col_view_renderer,
+    get_col_edit_renderer,
+    get_mode_renderer,
     get_value_mapper
     )
 from annalist.views.fields.render_placement import (
@@ -97,11 +102,16 @@ class FieldDescription(object):
             , 'group_view':                 None
             , 'group_field_descs':          None
             , 'field_render_type':          field_render_type
-            , 'field_render_view':          get_view_renderer(field_render_type,    field_ref_type, field_val_type)
-            , 'field_render_edit':          get_edit_renderer(field_render_type,    field_ref_type, field_val_type)
-            , 'field_render_colhead':       get_colhead_renderer(field_render_type, field_ref_type, field_val_type)
-            , 'field_render_colview':       get_colview_renderer(field_render_type, field_ref_type, field_val_type)
-            , 'field_render_coledit':       get_coledit_renderer(field_render_type, field_ref_type, field_val_type)
+            , 'field_render_view':          get_view_renderer(field_render_type,          field_ref_type, field_val_type)
+            , 'field_render_edit':          get_edit_renderer(field_render_type,          field_ref_type, field_val_type)
+            , 'field_render_label_view':    get_label_view_renderer(field_render_type,    field_ref_type, field_val_type)
+            , 'field_render_label_edit':    get_label_edit_renderer(field_render_type,    field_ref_type, field_val_type)
+            , 'field_render_colhead':       get_col_head_renderer(field_render_type,      field_ref_type, field_val_type)
+            , 'field_render_colhead_view':  get_col_head_view_renderer(field_render_type, field_ref_type, field_val_type)
+            , 'field_render_colhead_edit':  get_col_head_edit_renderer(field_render_type, field_ref_type, field_val_type)
+            , 'field_render_colview':       get_col_view_renderer(field_render_type,      field_ref_type, field_val_type)
+            , 'field_render_coledit':       get_col_edit_renderer(field_render_type,      field_ref_type, field_val_type)
+            , 'field_render_mode':          get_mode_renderer(field_render_type,          field_ref_type, field_val_type)
             , 'field_value_mapper':         get_value_mapper(field_render_type)
             })
         self._field_suffix_index  = 0    # No dup

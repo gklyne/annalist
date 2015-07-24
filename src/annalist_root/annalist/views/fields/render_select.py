@@ -149,7 +149,7 @@ class SelectValueMapper(RenderBase):
 #
 #   ----------------------------------------------------------------------------
 
-class select_view_renderer(object):
+class Select_view_renderer(object):
     """
     Render select value for viewing using supplied template
     """
@@ -168,7 +168,7 @@ class select_view_renderer(object):
                 result = repr(e)
         return result
 
-class select_edit_renderer(object):
+class Select_edit_renderer(object):
     """
     Render select value for editing using supplied template
     """
@@ -202,8 +202,8 @@ def get_select_renderer():
     Return field renderer object for value selector (with '+' button)
     """
     return RenderFieldValue(
-        view_renderer=select_view_renderer(view_select),
-        edit_renderer=select_edit_renderer(edit_select),
+        view_renderer=Select_view_renderer(view_select),
+        edit_renderer=Select_edit_renderer(edit_select),
         )
 
 def get_choice_renderer():
@@ -211,8 +211,8 @@ def get_choice_renderer():
     Return field renderer object for value selector (without '+' button)
     """
     return RenderFieldValue(
-        view_renderer=select_view_renderer(view_choice),
-        edit_renderer=select_edit_renderer(edit_choice),
+        view_renderer=Select_view_renderer(view_choice),
+        edit_renderer=Select_edit_renderer(edit_choice),
         )
 
 # End.

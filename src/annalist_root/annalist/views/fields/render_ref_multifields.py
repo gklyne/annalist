@@ -20,22 +20,37 @@ log = logging.getLogger(__name__)
 from django.http        import HttpResponse
 from django.template    import Template, Context
 
-from annalist.views.fields.bound_field  import bound_field
+from annalist.views.fields.render_select    import edit_select, Select_edit_renderer, SelectValueMapper
+from annalist.views.fields.bound_field      import bound_field
+from annalist.views.fields.render_fieldvalue    import (
+    RenderFieldValue,
+    get_field_edit_value,
+    get_field_view_value
+    )
+
+col_head_view_template = (
+        """<!-- views.fields.render_ref_mnultifield.col_head_view_template  (mode:{{render_mode}}) -->\n"""+
+        """{% for f in group_bound_fields %}"""+
+        """  <!-- field {{f}} -->"""+ #@@
+        """  {% include f.field_render_mode with field=f %}"""+
+        """{% endfor %}"""
+        )
 
 view_multifield = (
     { 'head':
         """
-        <!-- view_multifield head -->
+        <!-- view_multifield head (mode:{{render_mode}}) -->
         """
     , 'body':
         """
+        <!-- view_multifield body (mode:{{render_mode}}) -->
         {% for f in group_bound_fields %}
-          {% include f.field_render_view with field=f %}\
+          {% include f.field_render_mode with field=f %}\
         {% endfor %}
         """
     , 'tail':
         """
-        <!-- view_multifield tail -->
+        <!-- view_multifield tail (mode:{{render_mode}})-->
         """
     })
 
@@ -61,6 +76,12 @@ class RenderMultiFields(object):
     return "RenderMultiFields %r"%(self._template_head)
     # return "RenderMultiFields %r, %s"%(self._template_head,self.render(context))
 
+#   ----------------------------------------------------------------------------
+#
+#   Multi-field reference field renderer for viewing
+#
+#   ----------------------------------------------------------------------------
+
   def render(self, context):
     """
     Renders a repeating field group.
@@ -77,7 +98,7 @@ class RenderMultiFields(object):
     being rendered, or sub-element containing a list of repeated values that 
     are each formatted using the supplied body template.
     """
-    # log.info("RenderMultiFields.render")
+    log.info("RenderMultiFields.render (mode: %s)"%context['render_mode'])
     try:
         # log.info("RenderMultiFields.render field: %r"%(context['field'],))
         # log.info("RenderMultiFields.render descs: %r"%(context['field']['group_field_descs'],))
@@ -109,5 +130,36 @@ class RenderMultiFields(object):
             )
         del tb
     return "".join(response_parts)
+
+#   ----------------------------------------------------------------------------
+#
+#   Multi-field reference value mapping
+#
+#   ----------------------------------------------------------------------------
+
+class RefMultifieldValueMapper(SelectValueMapper):
+    """
+    Value mapper class for multifield reference
+
+    Inherits all logic from SelectvalueMapper.
+    """
+    pass
+
+#   ----------------------------------------------------------------------------
+#
+#   Return render objects for multiple field reference fields
+#
+#   ----------------------------------------------------------------------------
+
+def get_ref_multifield_renderer():
+    """
+    Return field renderer object for value selector (with '+' button)
+    """
+    r = RenderFieldValue(
+        col_head_view_template=col_head_view_template,
+        view_renderer=RenderMultiFields(view_multifield),
+        edit_renderer=Select_edit_renderer(edit_select)
+        )
+    return r
 
 # End.

@@ -325,6 +325,7 @@ site_field_types = (
     , "Markdown"
     , "Placement"
     , "RefImage"
+    , "RefMultifield"
     , "RepeatGroup"
     , "RepeatGroupRow"
     , "Slug"

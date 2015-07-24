@@ -132,7 +132,7 @@ Usability notes:
         - [ ] initial value/identifier templates (e.g. create ID from current date)
             - NOTE: default and initial values behave differently
         - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
-- [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?
+- [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?  In particular, getting the entity type for a field is tricky.
 - [ ] Use pop-up text based on field comment to tell user how a field value is used
 - [ ] Option to re-order fields on view form
 - [ ] When creating type, default URI to be based on id entered

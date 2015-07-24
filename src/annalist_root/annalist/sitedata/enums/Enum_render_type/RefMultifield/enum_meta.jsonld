@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
+, "annal:id":           "RefMultifield"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "Multiple fields of referenced entity"
+, "rdfs:comment":       "Field description consists of a group of sub-fields and an entity type reference.  In edit mode, an entity is selected from a dropdown list.  In view mode, the indicated fields are displayed from the referenced entity.  E.g. used for displaying annotated images."
+, "annal:uri":          "annal:field_render_type/RefMultifield"
+}

@@ -40,7 +40,7 @@ view_group = (
             <div class="small-10 columns">
               {% for f in repeat_bound_fields %}
                 <div class="view-group row">
-                  {% include f.field_render_view with field=f %}
+                  {% include f.field_render_label_view with field=f %}
                 </div>
               {% endfor %}
             </div>
@@ -73,7 +73,7 @@ edit_group = (
             <div class="small-10 columns">
               {% for f in repeat_bound_fields %}
                 <div class="edit-group row">
-                  {% include f.field_render_edit with field=f %}
+                  {% include f.field_render_label_edit with field=f %}
                 </div>
               {% endfor %}
             </div>
@@ -265,7 +265,7 @@ view_listrow = (
           <div class="small-11 columns">
             <div class="view-listrow row">
               {% for f in repeat_bound_fields %}
-              {% include f.field_render_colview with field=f %}
+              {% include f.field_render_view with field=f %}
               {% endfor %}
             </div>
           </div>
