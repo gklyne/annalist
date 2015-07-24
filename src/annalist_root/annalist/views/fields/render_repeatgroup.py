@@ -110,7 +110,7 @@ view_grouprow = (
                 <div class="small-12 columns">
                   <div class="view-grouprow col-head row">
                     {% for f in field.group_field_descs %}
-                    {% include f.field_render_colhead with field=f %}
+                    {% include f.field_render_colhead_view with field=f %}
                     {% endfor %}
                   </div>
                 </div>
@@ -178,7 +178,7 @@ edit_grouprow = (
                 <div class="small-11 columns">
                   <div class="edit-grouprow col-head row">
                     {% for f in field.group_field_descs %}
-                    {% include f.field_render_colhead with field=f %}
+                    {% include f.field_render_colhead_edit with field=f %}
                     {% endfor %}
                   </div>
                 </div>

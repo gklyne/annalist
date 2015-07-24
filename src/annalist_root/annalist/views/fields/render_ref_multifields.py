@@ -28,33 +28,107 @@ from annalist.views.fields.render_fieldvalue    import (
     get_field_view_value
     )
 
-col_head_view_template = (
-        """<!-- views.fields.render_ref_mnultifield.col_head_view_template  (mode:{{render_mode}}) -->\n"""+
+col_head_view = (
+    { 'head':
+        """<!-- views.fields.render_ref_multifield.col_head_view head (mode:{{render_mode}}) -->
+        """
+    , 'body':
+        """<!-- views.fields.render_ref_multifield.col_head_view body (mode:{{render_mode}}) -->\n"""+
         """{% for f in group_bound_fields %}"""+
         """  <!-- field {{f}} -->"""+ #@@
         """  {% include f.field_render_mode with field=f %}"""+
         """{% endfor %}"""
-        )
+    , 'tail':
+        """<!-- views.fields.render_ref_multifield.col_head_view tail (mode:{{render_mode}}) -->
+        """
+    })
 
 view_multifield = (
     { 'head':
-        """
-        <!-- view_multifield head (mode:{{render_mode}}) -->
+        """<!-- views.fields.render_ref_multifield.view_multifield head (mode:{{render_mode}}) -->
         """
     , 'body':
-        """
-        <!-- view_multifield body (mode:{{render_mode}}) -->
+        """<!-- views.fields.render_ref_multifield.view_multifield body (mode:{{render_mode}}) -->
         {% for f in group_bound_fields %}
           {% include f.field_render_mode with field=f %}\
         {% endfor %}
         """
     , 'tail':
-        """
-        <!-- view_multifield tail (mode:{{render_mode}})-->
+        """<!-- views.fields.render_ref_multifield.view_multifield tail (mode:{{render_mode}})-->
         """
     })
 
-class RenderMultiFields(object):
+#   ----------------------------------------------------------------------------
+#
+#   Multi-field reference field label renderer for viewing
+#
+#   ----------------------------------------------------------------------------
+
+class RenderMultiFields_label(object):
+  """
+  Render class for a field group labels in a referenced entity.
+  """
+
+  def __init__(self, templates=None):
+    # Later, may introduce a template_file= option to read from templates directory
+    """
+    Creates a renderer object
+    """
+    # log.info("RenderMultiFields_label: __init__ %r"%(templates))
+    super(RenderMultiFields_label, self).__init__()
+    assert templates is not None, "RenderMultiFields_label template must be supplied"
+    self._template_head  = Template(templates.get('head', ""))
+    self._template_body  = Template(templates.get('body', "@@missing body@@"))
+    self._template_tail  = Template(templates.get('tail', ""))
+    return
+
+  def __str__(self):
+    return "RenderMultiFields_label %r"%(self._template_head)
+    # return "RenderMultiFields_label %r, %s"%(self._template_head,self.render(context))
+
+  def render(self, context):
+    """
+    Renders column labels for multiple fields in a group
+
+    `context`   is a dictionary-like object that provides information for the
+                rendering operation.  `context['field']` contains the group 
+                field descriptions.
+
+    returns a string that is incorporated into the resulting web page.
+    """
+    log.info("RenderMultiFields_label.render (mode: %s)"%context['render_mode'])
+    try:
+        # log.info("RenderMultiFields_label.render field: %r"%(context['field'],))
+        # log.info("RenderMultiFields_label.render descs: %r"%(context['field']['group_field_descs'],))
+        group_fields = [ f for f in context['field']['group_field_descs'] ]
+        group_dict = (
+            { 'group_bound_fields':  group_fields
+            })
+        log.info("RenderMultiFields_label.render group_dict: %r"%(group_dict))
+        response_parts = [self._template_head.render(context)]
+        with context.push(group_dict):
+            response_parts.append(self._template_body.render(context))
+        response_parts.append(self._template_tail.render(context))
+    except Exception as e:
+        log.exception("Exception in RenderMultiFields_label.render")
+        ex_type, ex, tb = sys.exc_info()
+        traceback.print_tb(tb)
+        response_parts = (
+            ["Exception in RenderMultiFields_label.render"]+
+            [repr(e)]+
+            traceback.format_exception(ex_type, ex, tb)+
+            ["***RenderMultiFields_label.render***"]
+            )
+        del tb
+    return "".join(response_parts)
+
+#   ----------------------------------------------------------------------------
+#
+#   Multi-field reference field value renderer for viewing
+#
+#   ----------------------------------------------------------------------------
+
+class RenderMultiFields_value(object):
   """
   Render class for a field group in a referenced entity.
   """
@@ -64,23 +138,17 @@ class RenderMultiFields(object):
     """
     Creates a renderer object
     """
-    # log.info("RenderMultiFields: __init__ %r"%(templates))
-    super(RenderMultiFields, self).__init__()
-    assert templates is not None, "RenderMultiFields template must be supplied (.edit or .view)"
+    # log.info("RenderMultiFields_value: __init__ %r"%(templates))
+    super(RenderMultiFields_value, self).__init__()
+    assert templates is not None, "RenderMultiFields_value template must be supplied (.edit or .view)"
     self._template_head  = Template(templates.get('head', ""))
     self._template_body  = Template(templates.get('body', "@@missing body@@"))
     self._template_tail  = Template(templates.get('tail', ""))
     return
 
   def __str__(self):
-    return "RenderMultiFields %r"%(self._template_head)
-    # return "RenderMultiFields %r, %s"%(self._template_head,self.render(context))
-
-#   ----------------------------------------------------------------------------
-#
-#   Multi-field reference field renderer for viewing
-#
-#   ----------------------------------------------------------------------------
+    return "RenderMultiFields_value %r"%(self._template_head)
+    # return "RenderMultiFields_value %r, %s"%(self._template_head,self.render(context))
 
   def render(self, context):
     """
@@ -98,13 +166,13 @@ class RenderMultiFields(object):
     being rendered, or sub-element containing a list of repeated values that 
     are each formatted using the supplied body template.
     """
-    log.info("RenderMultiFields.render (mode: %s)"%context['render_mode'])
+    log.info("RenderMultiFields_value.render (mode: %s)"%context['render_mode'])
     try:
-        # log.info("RenderMultiFields.render field: %r"%(context['field'],))
-        # log.info("RenderMultiFields.render descs: %r"%(context['field']['group_field_descs'],))
+        # log.info("RenderMultiFields_value.render field: %r"%(context['field'],))
+        # log.info("RenderMultiFields_value.render descs: %r"%(context['field']['group_field_descs'],))
         target_vals = context['field']['target_value']
         extras      = context['field']['context_extra_values']
-        log.debug("RenderMultiFields.render target_vals: %r"%(target_vals))
+        log.debug("RenderMultiFields_value.render target_vals: %r"%(target_vals))
         group_fields = [ 
             bound_field(f, target_vals, context_extra_values=extras) 
             for f in context['field']['group_field_descs'] 
@@ -113,20 +181,20 @@ class RenderMultiFields(object):
             { 'group_bound_fields':  group_fields
             , 'group_entity':        target_vals
             })
-        log.info("RenderMultiFields.render group_dict: %r"%(group_dict))
+        log.info("RenderMultiFields_value.render group_dict: %r"%(group_dict))
         response_parts = [self._template_head.render(context)]
         with context.push(group_dict):
             response_parts.append(self._template_body.render(context))
         response_parts.append(self._template_tail.render(context))
     except Exception as e:
-        log.exception("Exception in RenderMultiFields.render")
+        log.exception("Exception in RenderMultiFields_value.render")
         ex_type, ex, tb = sys.exc_info()
         traceback.print_tb(tb)
         response_parts = (
-            ["Exception in RenderMultiFields.render"]+
+            ["Exception in RenderMultiFields_value.render"]+
             [repr(e)]+
             traceback.format_exception(ex_type, ex, tb)+
-            ["***RenderMultiFields.render***"]
+            ["***RenderMultiFields_value.render***"]
             )
         del tb
     return "".join(response_parts)
@@ -156,8 +224,8 @@ def get_ref_multifield_renderer():
     Return field renderer object for value selector (with '+' button)
     """
     r = RenderFieldValue(
-        col_head_view_template=col_head_view_template,
-        view_renderer=RenderMultiFields(view_multifield),
+        col_head_view_renderer=RenderMultiFields_label(col_head_view),
+        view_renderer=RenderMultiFields_value(view_multifield),
         edit_renderer=Select_edit_renderer(edit_select)
         )
     return r

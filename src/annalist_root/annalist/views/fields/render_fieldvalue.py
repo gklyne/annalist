@@ -108,8 +108,8 @@ class RenderFieldValue(object):
 
     def __init__(self, 
         view_renderer=None, edit_renderer=None, 
+        col_head_view_renderer=None, col_head_edit_renderer=None, 
         view_template=None, edit_template=None,
-        col_head_view_template=None, col_head_edit_template=None, 
         view_file=None, edit_file=None
         ):
         """
@@ -118,15 +118,15 @@ class RenderFieldValue(object):
         view_renderer   is a render object that formats a field value
         edit_renderer   is a render object that formats a field value in a
                         form control that allows the value to be edited
+        col_head_view_renderer
+                        if supplied, overrides the renderer normally used for 
+                        displaying column headings when viewing an entity.
+        col_head_edit_renderer
+                        if supplied, overrides the renderer normally used for 
+                        displaying column headings when viewing an entity.
         view_template   is a template string that formats a field value
         edit_template   is a template string that formats a field value in a
                         form control that allows the value to be edited
-        col_head_view_template
-                        if supplied, overrides the template normally used for 
-                        displaying column headings when viewing an entity.
-        col_head_edit_template
-                        if supplied, overrides the template normally used for 
-                        displaying column headings when viewing an entity.
         view_file       is the name of a template file that formats a field value
         edit_file       is the name of a template file that formats a field value
                         in an editable form control
@@ -155,8 +155,8 @@ class RenderFieldValue(object):
         else:
             raise Annalist_Error("RenderFieldValue: no view renderer or template provided")
         # Initialize various renderer caches
-        self._col_head_view_template = col_head_view_template
-        self._col_head_edit_template = col_head_edit_template
+        self._col_head_view_renderer = col_head_view_renderer
+        self._col_head_edit_renderer = col_head_edit_renderer
         self._render_view            = None
         self._render_edit            = None
         self._render_label_view      = None
@@ -333,9 +333,9 @@ class RenderFieldValue(object):
         a field label used as a column header on larger media when
         viewing an entity.
         """
-        if not self._render_col_head_view and self._col_head_view_template:
+        if not self._render_col_head_view and self._col_head_view_renderer:
             self._render_col_head_view = self._set_render_mode(
-                Template(self._col_head_view_template),
+                self._col_head_view_renderer,
                 "col_head_view"
                 )
         return self._render_col_head_view or self.col_head()
@@ -346,9 +346,9 @@ class RenderFieldValue(object):
         a field label used as a column header on larger media when
         editing an entity.
         """
-        if not self._render_col_head_edit and self._col_head_edit_template:
+        if not self._render_col_head_edit and self._col_head_edit_renderer:
             self._render_col_head_edit = self._set_render_mode(
-                Template(self._col_head_edit_template),
+                self._col_head_edit_renderer,
                 "col_head_edit"
                 )
         return self._render_col_head_edit or self.col_head()
