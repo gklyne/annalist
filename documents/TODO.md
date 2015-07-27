@@ -26,7 +26,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] initial implementation
     - [x] edit test case
     - [x] test on CruisingLog place description
-    - [ ] test case for ref_multifield in repeat field
+    - [x] test case for ref_multifield in repeat field (add to test_ref_multifields.py)
     - [ ] test suite for renderer alone
 - [ ] rationalize field description form to make handling of upload/import more obvious
     - Note that 'field_value_type' is overloaded as it is used to trigger upload renderers *and* to guide Mime type selection.

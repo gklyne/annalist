@@ -35,7 +35,7 @@ col_head_view = (
     , 'body':
         """<!-- views.fields.render_ref_multifield.col_head_view body (mode:{{render_mode}}) -->\n"""+
         """{% for f in group_bound_fields %}"""+
-        """  <!-- field {{f}} -->"""+ #@@
+        #@@ """  <!-- field {{f}} -->"""+ #@@
         """  {% include f.field_render_mode with field=f %}"""+
         """{% endfor %}"""
     , 'tail':
@@ -96,7 +96,7 @@ class RenderMultiFields_label(object):
 
     returns a string that is incorporated into the resulting web page.
     """
-    log.info("RenderMultiFields_label.render (mode: %s)"%context['render_mode'])
+    # log.info("RenderMultiFields_label.render (mode: %s)"%context['render_mode'])
     try:
         # log.info("RenderMultiFields_label.render field: %r"%(context['field'],))
         # log.info("RenderMultiFields_label.render descs: %r"%(context['field']['group_field_descs'],))
@@ -104,7 +104,7 @@ class RenderMultiFields_label(object):
         group_dict = (
             { 'group_bound_fields':  group_fields
             })
-        log.info("RenderMultiFields_label.render group_dict: %r"%(group_dict))
+        # log.info("RenderMultiFields_label.render group_dict: %r"%(group_dict))
         response_parts = [self._template_head.render(context)]
         with context.push(group_dict):
             response_parts.append(self._template_body.render(context))
@@ -166,7 +166,7 @@ class RenderMultiFields_value(object):
     being rendered, or sub-element containing a list of repeated values that 
     are each formatted using the supplied body template.
     """
-    log.info("RenderMultiFields_value.render (mode: %s)"%context['render_mode'])
+    # log.info("RenderMultiFields_value.render (mode: %s)"%context['render_mode'])
     try:
         # log.info("RenderMultiFields_value.render field: %r"%(context['field'],))
         # log.info("RenderMultiFields_value.render descs: %r"%(context['field']['group_field_descs'],))
@@ -181,7 +181,7 @@ class RenderMultiFields_value(object):
             { 'group_bound_fields':  group_fields
             , 'group_entity':        target_vals
             })
-        log.info("RenderMultiFields_value.render group_dict: %r"%(group_dict))
+        # log.info("RenderMultiFields_value.render group_dict: %r"%(group_dict))
         response_parts = [self._template_head.render(context)]
         with context.push(group_dict):
             response_parts.append(self._template_body.render(context))

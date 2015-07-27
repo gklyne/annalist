@@ -713,8 +713,8 @@ def layout_classes(width=12):
         class_dict = (
             { 'label_classes':          "view-label small-12 medium-6 columns"
             , 'input_classes':          "view-value small-12 medium-6 columns"
-            , 'col_head_classes':       "view-label col-head small-4 columns"
-            , 'col_item_classes':       "view-value col-???? small-4 columns"
+            , 'col_head_classes':       "view-label col-head small-12 medium-4 columns"
+            , 'col_item_classes':       "view-value col-???? small-12 medium-4 columns"
             , 'button_wide_classes':    "small-4 columns"
             , 'button_left_classes':    "form-buttons small-12 columns"
             , 'button_right_classes':   "form-buttons small-12 columns text-right"
@@ -723,8 +723,8 @@ def layout_classes(width=12):
         class_dict = (
             { 'label_classes':          "view-label small-12 medium-4 columns"
             , 'input_classes':          "view-value small-12 medium-8 columns"
-            , 'col_head_classes':       "view-label col-head small-6 columns"
-            , 'col_item_classes':       "view-value col-???? small-6 columns"
+            , 'col_head_classes':       "view-label col-head small-12 medium-6 columns"
+            , 'col_item_classes':       "small-12 medium-6 columns"
             , 'button_wide_classes':    "small-6 columns"
             , 'button_left_classes':    "form-buttons small-12 columns"
             , 'button_right_classes':   "form-buttons small-12 columns text-right"
