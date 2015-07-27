@@ -37,6 +37,13 @@ resource_types = (
       , ("tiff",   "image/tiff")
       , ("svg",    "image/svg")
       ]
+    , "annal:Audio":
+      [ ("mp3",    "audio/mpeg")
+      , ("mp4",    "audio/mp4")
+      , ("wav",    "audio/wav")
+      , ("ogg",    "audio/ogg")
+      #@@ needs fleshing out?
+      ]
     , "annal:Upload":
       [ ("md",     "text/markdown")
       , ("txt",    "text/plain")

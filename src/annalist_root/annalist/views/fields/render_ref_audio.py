@@ -1,9 +1,9 @@
 """
-Renderer and value mapper for URI value displayed as an image.
+Renderer and value mapper for URI value displayed as an audio player widget.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
-__copyright__   = "Copyright 2014, G. Klyne"
+__copyright__   = "Copyright 2015, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import logging
@@ -21,49 +21,49 @@ from django.template    import Template, Context
 
 #   ----------------------------------------------------------------------------
 #
-#   Image reference value mapping
+#   Audio resource reference value mapping
 #
 #   ----------------------------------------------------------------------------
 
 
-class RefImageValueMapper(RenderBase):
+class RefAudioValueMapper(RenderBase):
     """
-    Value mapper class for image resource reference
+    Value mapper class for audio resource reference
     """
 
     @classmethod
     def encode(cls, data_value):
         """
-        Encodes image reference as a string
+        Encodes audio reference as a string
         """
         return data_value or ""
 
     @classmethod
     def decode(cls, field_value):
         """
-        Decodes a URI value as an image reference.
+        Decodes a URI value as an audio reference.
         """
         return field_value or ""
 
 #   ----------------------------------------------------------------------------
 #
-#   Image reference field renderers
+#   Audio resource reference field renderers
 #
 #   ----------------------------------------------------------------------------
 
-class ref_image_view_renderer(object):
+class ref_audio_view_renderer(object):
 
     def render(self, context):
         """
-        Render reference in entity view as referenced image.
+        Render audio reference in entity view as player widget for referenced resource.
         """
-        linkval = RefImageValueMapper.encode(get_context_field_value(context, "target_value_link", ""))
+        linkval = RefAudioValueMapper.encode(get_context_field_value(context, "target_value_link", ""))
         return (
-            '''<a href="%s" target="_blank">'''+
-            '''<img src="%s" alt="Image at '%s'" />'''+
-            '''</a>''')%(linkval, linkval, linkval)
+            """<div>Audio at '<a href="%s" target="_blank">%s</a>'</div>"""+
+            """<audio controls="controls" src="%s" ></audio>"""+
+            "")%(linkval, linkval, linkval)
 
-class ref_image_edit_renderer(object):
+class ref_audio_edit_renderer(object):
 
     def __init__(self):
         self._template = Template(
@@ -75,17 +75,17 @@ class ref_image_edit_renderer(object):
 
     def render(self, context):
         """
-        Render image URI for editing
+        Render audio URI for editing
         """
         return self._template.render(context)
 
-def get_ref_image_renderer():
+def get_ref_audio_renderer():
     """
     Return field renderer object for token list values
     """
     return RenderFieldValue(
-        view_renderer=ref_image_view_renderer(), 
-        edit_renderer=ref_image_edit_renderer(),
+        view_renderer=ref_audio_view_renderer(), 
+        edit_renderer=ref_audio_edit_renderer(),
         )
 
 # End.

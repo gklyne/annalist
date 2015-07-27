@@ -204,7 +204,7 @@ class ImageReferenceTest(AnnalistTestCase):
                 """<div class="view-value small-12 medium-10 columns"> """+
                   """<a href="%(image_uri)s" target="_blank"> """+
                     """<img src="%(image_uri)s" """+
-                    """     alt="Image at %(image_uri)s" /> """+
+                    """     alt="Image at '%(image_uri)s'" /> """+
                   """</a> """+
                 """</div> """+
               """</div> """+

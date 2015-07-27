@@ -333,7 +333,8 @@ class RefMultifieldTest(AnnalistTestCase):
             coll_id="testcoll", type_id="img_type", entity_id="Test_img_entity", 
             view_id="Test_refimg_view",
             field_id="image_field",
-            basepath=TestBasePath
+            basepath=TestBasePath,
+            ref_image="%s/c/testcoll/d/img_type/Test_img_entity/image_field.jpeg"%(TestBasePath,)
             )
         formrow2a = """
             <div class="small-12 medium-6 columns">
@@ -354,9 +355,9 @@ class RefMultifieldTest(AnnalistTestCase):
                   """<span>View image field</span> """+
                 """</div> """+
                 """<div class="%(input_classes)s"> """+
-                  """<a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpeg" target="_blank"> """+
-                    """<img src="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpeg" """+
-                    """     alt="Image at %(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpeg" /> """+
+                  """<a href="%(ref_image)s" target="_blank"> """+
+                    """<img src="%(ref_image)s" """+
+                    """     alt="Image at '%(ref_image)s'" /> """+
                   """</a> """+
                 """</div> """+
               """</div> """+
@@ -577,7 +578,7 @@ class RefMultifieldTest(AnnalistTestCase):
                             <div class="row view-value-col">
                               <div class="view-value small-12 columns">
                                 <a href="%(ref_image)s" target="_blank">
-                                  <img src="%(ref_image)s" alt="Image at %(ref_image)s" />
+                                  <img src="%(ref_image)s" alt="Image at '%(ref_image)s'" />
                                 </a>
                               </div>
                             </div>

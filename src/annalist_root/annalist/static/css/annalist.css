@@ -319,6 +319,7 @@ div.columns.view-value > div.row > div.columns > select
     /* border: 0; - causes buttons to display differently - WTF? */
 }
 
+div.columns.view-value > audio ,
 div.columns.view-value > input[type="checkbox"]
 {
     margin-top:    0.2rem ;

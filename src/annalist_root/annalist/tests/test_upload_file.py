@@ -585,7 +585,7 @@ class UploadResourceTest(AnnalistTestCase):
                 """<div class="view-value small-12 medium-10 columns"> """+
                   """<a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" target="_blank"> """+
                     """<img src="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" """+
-                    """     alt="Image at %(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" /> """+
+                    """     alt="Image at '%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg'" /> """+
                   """</a> """+
                 """</div> """+
               """</div> """+
@@ -671,7 +671,7 @@ class UploadResourceTest(AnnalistTestCase):
                 """<div class="view-value small-12 medium-10 columns"> """+
                   """<a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" target="_blank"> """+
                     """<img src="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" """+
-                    """     alt="Image at %(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" /> """+
+                    """     alt="Image at '%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg'" /> """+
                   """</a> """+
                 """</div> """+
               """</div> """+

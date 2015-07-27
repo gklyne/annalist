@@ -324,6 +324,7 @@ site_field_types = (
     , "List"
     , "Markdown"
     , "Placement"
+    , "RefAudio"
     , "RefImage"
     , "RefMultifield"
     , "RepeatGroup"

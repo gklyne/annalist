@@ -28,11 +28,21 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] test on CruisingLog place description
     - [x] test case for ref_multifield in repeat field (add to test_ref_multifields.py)
 - [ ] add render type RefAudio (use embedded HTML player); update documentation
-    - update resourcetypes.py with supported audio types
-    - see tests conducted using CALMA data
-- [ ] rationalize field description form to make handling of upload/import more obvious
-    - Note that 'field_value_type' is overloaded as it is used to trigger upload renderers *and* to guide Mime type selection.
-    - Use 'field_target_type' - need to expose in form?
+    - [x] implement new renderer
+    - [x] create test case for new renderer
+    - [x] update resourcetypes.py with supported audio types
+- [ ] rationalize field description form to make handling of upload/import and references to fields in other entities more obvious
+    - Note that `field_value_type` is overloaded as it is used to trigger upload renderers *and* (indirectly as default for `field_target_type`) to guide Mime type selection.
+    - [ ] Add `field_value_mode` to field description, with values `value_direct` (default), `value_entity`, `value_field`, `value_import` and `value_upload`.
+        - [ ] define new enumeration type `Value_mode`
+        - [ ] define new field type `Field_value_mode` (`annal:value_mode`)
+        - [ ] update view definitions to use new field type
+    - [ ] Use `field_value_mode` to determine `has_import_button` and `is_upload_field`.  
+        - [ ] Rename `has_import_button` to `is_import_field`.
+        - This removes the overloading on `field_value_type`.
+    - [ ] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type`
+    - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
+    - [ ] Update all references in code to 'annal:...' value types to use ANNAL.CURIE.... values instead.
 
 (release?)
 
