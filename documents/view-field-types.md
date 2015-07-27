@@ -221,6 +221,7 @@ The definitive list of render types is in `annalist/sitedata/enums/Enum_render_t
 * `Markdown` - multiline rich text.  Stored and presented for editing as Markdown text, and for viewing as  text formatted according to Markdown conventions.
 * `Placement` - a special-case field renderer used for presenting placement of a field on a form.
 * `RefImage` - A reference to an image value, presented for viewing as the referenced image.  See also section "Resource references, imports and file uploads".
+* `RefAudio` - A reference to an audio resourcxe, presented for viewing as a media player widget.  See also section "Resource references, imports and file uploads".
 * `RepeatGroup` - special case renderers used for describing repeated fields in a view description.  The stored value is a list of JSON objects, each of which is rendered using the field group reference from the field description (see section "Repeated field groups" and field `Field_groupref`).  Fields within each group are flowed vertically down the view with labels to the left.
 * `RepeatGroupRow` - same as `RepeatGroup`, except that field groups are rendered in tabular form with field labels for column headers, with each repeated group as a row of the table.
 * `Slug` - simple text value used as an internal local identifier, or Slug, presented in the same was as the 'Text' renderer.  The text value is expected to consist of up to 32 letters, digits and/or underscore characters, (but this is not currently enforced @@).

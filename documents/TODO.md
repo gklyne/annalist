@@ -27,10 +27,11 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] edit test case
     - [x] test on CruisingLog place description
     - [x] test case for ref_multifield in repeat field (add to test_ref_multifields.py)
-- [ ] add render type RefAudio (use embedded HTML player); update documentation
+- [x] add render type RefAudio (use embedded HTML player); update documentation
     - [x] implement new renderer
     - [x] create test case for new renderer
     - [x] update resourcetypes.py with supported audio types
+    - [x] update documentation
 - [ ] rationalize field description form to make handling of upload/import and references to fields in other entities more obvious
     - Note that `field_value_type` is overloaded as it is used to trigger upload renderers *and* (indirectly as default for `field_target_type`) to guide Mime type selection.
     - [ ] Add `field_value_mode` to field description, with values `value_direct` (default), `value_entity`, `value_field`, `value_import` and `value_upload`.
@@ -43,6 +44,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type`
     - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
     - [ ] Update all references in code to 'annal:...' value types to use ANNAL.CURIE.... values instead.
+    - [ ] Update documentation
 
 (release?)
 
