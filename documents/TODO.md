@@ -22,18 +22,17 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] test case for edit entity with attachment
 - [x] file upload view/edit: display uploaded filename as well as link (use for link text?)
 - [x] rename render type URIImage as RefImage; update documentation
-- [ ] allow multiple fields displayed from referenced entity (e.g. image for file upload).
+- [x] allow multiple fields displayed from referenced entity (e.g. image for file upload).
     - [x] initial implementation
     - [x] edit test case
     - [x] test on CruisingLog place description
     - [x] test case for ref_multifield in repeat field (add to test_ref_multifields.py)
-    - [ ] test suite for renderer alone
-- [ ] rationalize field description form to make handling of upload/import more obvious
-    - Note that 'field_value_type' is overloaded as it is used to trigger upload renderers *and* to guide Mime type selection.
-    - Use 'field_target_type' - need to expose in form?
 - [ ] add render type RefAudio (use embedded HTML player); update documentation
     - update resourcetypes.py with supported audio types
     - see tests conducted using CALMA data
+- [ ] rationalize field description form to make handling of upload/import more obvious
+    - Note that 'field_value_type' is overloaded as it is used to trigger upload renderers *and* to guide Mime type selection.
+    - Use 'field_target_type' - need to expose in form?
 
 (release?)
 
