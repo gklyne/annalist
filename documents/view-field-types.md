@@ -166,8 +166,6 @@ For referencing resources, there are several options, provided through renderers
 
 These different cases are invoked as follows.
 
-(@@TEST: do repeated import fields work OK?)
-
 ### Direct reference to a resource (usually an external resource)
 
 Field "Field value type" (`Field_type`) describes the target value (e.g. `annal:Identifier` or `annal:Image`), and field "Enum type" (`Field_typeref`) is unspecified or blank.

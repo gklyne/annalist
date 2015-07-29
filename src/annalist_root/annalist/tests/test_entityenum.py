@@ -109,9 +109,6 @@ def recordenum_read_values(
 #   -----------------------------------------------------------------------------
 
 class RecordEnumTest(AnnalistTestCase):
-    """
-    Tests for Site object interface
-    """
 
     def setUp(self):
         init_annalist_test_site()

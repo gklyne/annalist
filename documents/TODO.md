@@ -35,7 +35,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] rationalize field description form to make handling of upload/import and references to fields in other entities more obvious
     - Note that `field_value_type` is overloaded as it is used to trigger upload renderers *and* (indirectly as default for `field_target_type`) to guide Mime type selection.
     - [ ] Add `field_value_mode` to field description, with values `value_direct` (default), `value_entity`, `value_field`, `value_import` and `value_upload`.
-        - [ ] define new enumeration type `Value_mode`
+        - [x] define new enumeration type `Value_mode`
         - [ ] define new field type `Field_value_mode` (`annal:value_mode`)
         - [ ] update view definitions to use new field type
     - [ ] Use `field_value_mode` to determine `has_import_button` and `is_upload_field`.  

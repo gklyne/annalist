@@ -1,0 +1,8 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_value_mode", "annal:Enum", "annal:Type"]
+, "annal:id":           "Value_direct"
+, "annal:type_id":      "Enum_value_mode"
+, "annal:uri":          "annal:value_mode/Value_direct"
+, "rdfs:label":         "Direct value"
+, "rdfs:comment":       "Field value is actual value to be displayed."
+}

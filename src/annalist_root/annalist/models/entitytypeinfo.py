@@ -165,9 +165,10 @@ TYPE_CLASS_MAP = (
     , '_view':              RecordView
     , '_group':             RecordGroup
     , '_field':             RecordField
-    , 'Enum_list_type':     RecordEnumFactory('Enum_list_type',  'Enum_list_type')
+    , 'Enum_list_type':     RecordEnumFactory('Enum_list_type',   'Enum_list_type')
     , 'Enum_render_type':   RecordEnumFactory('Enum_render_type', 'Enum_render_type')
-    , 'Enum_bib_type':      RecordEnumFactory('Enum_bib_type',   'Enum_bib_type')
+    , 'Enum_value_mode':    RecordEnumFactory('Enum_value_mode',    'Enum_value_mode')
+    , 'Enum_bib_type':      RecordEnumFactory('Enum_bib_type',    'Enum_bib_type')
     })
 
 TYPE_MESSAGE_MAP = (
@@ -179,6 +180,7 @@ TYPE_MESSAGE_MAP = (
     , '_field':             FIELD_MESSAGES
     , 'Enum_list_type':     ENUM_MESSAGES
     , 'Enum_render_type':   ENUM_MESSAGES
+    , 'Enum_value_mode':    ENUM_MESSAGES
     , 'Enum_bib_type':      ENUM_MESSAGES
     })
 
@@ -191,6 +193,7 @@ TYPE_PERMISSIONS_MAP = (
     , '_field':             CONFIG_PERMISSIONS
     , 'Enum_list_type':     CONFIG_PERMISSIONS
     , 'Enum_render_type':   CONFIG_PERMISSIONS
+    , 'Enum_value_mode':    CONFIG_PERMISSIONS
     , 'Enum_bib_type':      CONFIG_PERMISSIONS
     })
 

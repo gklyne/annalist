@@ -62,6 +62,7 @@ site_types = (
     , "Enum_bib_type"
     , "Enum_list_type"
     , "Enum_render_type"
+    , "Enum_value_mode"
     ])
 
 def get_site_types_sorted():

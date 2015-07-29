@@ -445,6 +445,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_type/Enum_bib_type",    ["Enum_bib_type",    "Bibliographic entry type"] ]
             , [ "_type/Enum_list_type",   ["Enum_list_type",   "List display type"] ]
             , [ "_type/Enum_render_type", ["Enum_render_type", "Field render type"] ]
+            , [ "_type/Enum_value_mode",  ["Enum_value_mode",  "Field value mode"] ]
             , [ "_type/type1",            ["type1",            "RecordType coll1/type1"] ]
             , [ "_type/type2",            ["type2",            "RecordType coll1/type2"] ]
             ])
