@@ -227,7 +227,7 @@ def recordlist_view_context_data(
             , 'field_label':        'Record type'
             , 'field_render_type':  'Type'
             , 'field_name':         'List_default_type'
-            , 'field_placement':    get_placement_classes('small:0,6')
+            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_type':   'annal:Type'
             , 'field_value':        'Default_type'
             , 'options':            []
@@ -236,7 +236,7 @@ def recordlist_view_context_data(
             , 'field_label':        'View'
             , 'field_render_type':  'View'
             , 'field_name':         'List_default_view'
-            , 'field_placement':    get_placement_classes('small:6,6')
+            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
             , 'field_value_type':   'annal:View'
             , 'field_value':        'Default_view'
             , 'options':            []

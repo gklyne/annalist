@@ -216,6 +216,7 @@ site_field_fields = (
     , "Field_restrict"
     , "Field_type"
     , "Field_typeref"
+    , "Field_value_mode"
     ])
 
 site_group_fields = (
@@ -344,6 +345,23 @@ def get_site_field_types_sorted():
     return site_field_types[1:]
 
 def get_site_field_types():
+    return set(site_field_types[1:])
+
+#   ----- Field value mode types -----
+
+site_value_modes = (
+    [ "_initial_values"
+    , "Value_direct"
+    , "Value_entity"
+    , "Value_field"
+    , "Value_import"
+    , "Value_upload"
+    ])
+
+def get_site_value_modes_sorted():
+    return site_value_modes[1:]
+
+def get_site_value_modes():
     return set(site_field_types[1:])
 
 # End.

@@ -9,5 +9,5 @@
 , "annal:field_value_type":     "annal:Text"
 , "annal:field_entity_type":    "annal:User"
 , "annal:property_uri":         "rdfs:label"
-, "annal:field_placement":      "small:0,6"
+, "annal:field_placement":      "small:0,12;medium:0,6"
 }

@@ -952,6 +952,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_restrict",            ["Field_restrict"                     ] ]
             , [ "_field/Field_type",                ["Field_type"                         ] ]
             , [ "_field/Field_typeref",             ["Field_typeref"                      ] ]
+            , [ "_field/Field_value_mode",          ["Field_value_mode"                   ] ]
             , [ "_field/Group_comment",             ["Group_comment"                      ] ]
             , [ "_field/Group_field_placement",     ["Group_field_placement"              ] ]
             , [ "_field/Group_field_property",      ["Group_field_property"               ] ]
@@ -1063,24 +1064,26 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "Field_restrict"
             , "Field_type"
             , "Field_typeref"
+            , "Field_value_mode"
             ])
         expect_fields = (
             [ "Field_id"
             , "Field_type"
             , "Field_render"
+            , "Field_value_mode"
+            , "Field_property"
             , "Field_placement"
+            , "Field_typeref"
+            , "Field_fieldref"
             , "Field_label"
             , "Field_comment"
             , "Field_placeholder"
-            , "Field_property"
             , "Field_default"
-            , "Field_entity_type"
-            , "Field_typeref"
-            , "Field_fieldref"
-            , "Field_restrict"
             , "Field_groupref"
             , "Field_repeat_label_add"
             , "Field_repeat_label_delete"
+            , "Field_entity_type"
+            , "Field_restrict"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)
         self.check_select_field(s, "view_choice", self.views_expected, "View_view")

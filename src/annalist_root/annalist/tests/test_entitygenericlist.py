@@ -241,7 +241,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 195)    # Will change with site data
+        self.assertEqual(len(entities), 196)    # Will change with site data
         return
 
     def test_get_types_list(self):

@@ -36,8 +36,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - Note that `field_value_type` is overloaded as it is used to trigger upload renderers *and* (indirectly as default for `field_target_type`) to guide Mime type selection.
     - [ ] Add `field_value_mode` to field description, with values `value_direct` (default), `value_entity`, `value_field`, `value_import` and `value_upload`.
         - [x] define new enumeration type `Value_mode`
-        - [ ] define new field type `Field_value_mode` (`annal:value_mode`)
-        - [ ] update view definitions to use new field type
+        - [x] define new field type `Field_value_mode` (`annal:value_mode`)
+        - [x] update view definitions to use new field type
+        - [x] update field view test case(s)
+    - [ ] Add migration logic to set view mode appropriately in field definitions
     - [ ] Use `field_value_mode` to determine `has_import_button` and `is_upload_field`.  
         - [ ] Rename `has_import_button` to `is_import_field`.
         - This removes the overloading on `field_value_type`.
@@ -125,7 +127,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 Technical debt:
 
-- [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" andf "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (If is field description values that are referenced from templates.)
+- [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
 
 
 Usability notes:
@@ -134,6 +136,7 @@ Usability notes:
 - [x] Clearer linkage between related records - hyperlinks on non-editing views
 - [ ] List dropdown: normally show only those lists defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
 - [ ] View forms need title (indicating type of thing viewed)?  Or let user define label for Id field?
+- [ ] Provide field type that can be used to place fixed annotations/instructions in a form
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
     - [ ] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
         - test by creating contacts/supplies listy for CruisingLog

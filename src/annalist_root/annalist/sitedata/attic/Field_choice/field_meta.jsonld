@@ -10,5 +10,5 @@
 , "annal:placeholder":          "(field id)"
 , "annal:property_uri":         "annal:field"
 , "annal:field_ref_type":       "_field"
-, "annal:field_placement":      "small:0,6"
+, "annal:field_placement":      "small:0,12;medium:0,6"
 }

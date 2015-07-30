@@ -96,7 +96,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             {}
             )
         expect_placement = Placement(
-            field = 'small-6 columns', 
+            field = 'small-12 medium-6 columns', 
             label = 'small-12 medium-4 columns', 
             value = 'small-12 medium-8 columns'
             )
@@ -114,6 +114,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_ref_restriction':      'ALL'
             , 'field_group_ref':            None
             , 'field_render_type':          'EntityId'
+            , 'field_value_mode':           'Value_direct'
             })
         # print repr(fd)
         self.assertDictionaryMatch(fd, expect_field_desc)
@@ -126,7 +127,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             {}
             )
         expect_placement = Placement(
-            field='small-6 columns', 
+            field='small-12 medium-6 columns', 
             label='small-12 medium-4 columns', 
             value='small-12 medium-8 columns'
             )
@@ -158,6 +159,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_ref_restriction':      '[annal:field_entity_type] in entity[annal:record_type]'
             , 'field_group_ref':            None
             , 'field_render_type':          'Field'
+            , 'field_value_mode':           'Value_direct'
             })
         # print repr(fd)
         self.assertDictionaryMatch(fd, expect_field_desc)

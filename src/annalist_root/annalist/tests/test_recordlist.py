@@ -366,7 +366,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow4 = ("""
-            <div class="small-6 columns">
+            <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Record type</span>
@@ -383,7 +383,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """)%field_vals(width=6)
         formrow5 = ("""
-            <div class="small-6 columns">
+            <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>View</span>

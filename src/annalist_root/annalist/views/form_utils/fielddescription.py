@@ -76,6 +76,7 @@ class FieldDescription(object):
         field_property      = field_property or recordfield.get(ANNAL.CURIE.property_uri, "")
         field_placement     = field_placement or recordfield.get(ANNAL.CURIE.field_placement, "")
         field_render_type   = recordfield.get(ANNAL.CURIE.field_render_type, "")
+        field_value_mode    = recordfield.get(ANNAL.CURIE.field_value_mode, "@@FieldDescription:value_mode@@")
         field_ref_type      = recordfield.get(ANNAL.CURIE.field_ref_type, None)
         field_val_type      = recordfield.get(ANNAL.CURIE.field_value_type, "")
         self._field_desc    = (
@@ -102,6 +103,7 @@ class FieldDescription(object):
             , 'group_view':                 None
             , 'group_field_descs':          None
             , 'field_render_type':          field_render_type
+            , 'field_value_mode':           field_value_mode
             , 'field_render_view':          get_view_renderer(field_render_type,          field_ref_type, field_val_type)
             , 'field_render_edit':          get_edit_renderer(field_render_type,          field_ref_type, field_val_type)
             , 'field_render_label_view':    get_label_view_renderer(field_render_type,    field_ref_type, field_val_type)

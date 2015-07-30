@@ -63,6 +63,7 @@ from entity_testsitedata            import (
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
+    get_site_value_modes, get_site_value_modes_sorted,
     )
 
 #   -----------------------------------------------------------------------------
@@ -193,10 +194,11 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.no_options     = ['(no options)']
-        self.view_options   = get_site_views_sorted()
-        self.group_options  = get_site_field_groups_sorted()
-        self.render_options = get_site_field_types_sorted()
+        self.no_options         = ['(no options)']
+        self.view_options       = get_site_views_sorted()
+        self.group_options      = get_site_field_groups_sorted()
+        self.render_options     = get_site_field_types_sorted()
+        self.value_mode_options = get_site_value_modes_sorted()
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -234,6 +236,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_id="(?field_id)", 
             field_type="(?field_type)",
             field_render="(?field_type)",
+            field_value_mode="Value_direct",
             field_label="(?field_label)",
             field_comment="(?field_comment)",
             field_placeholder="(?field_placeholder)",
@@ -249,136 +252,161 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_repeat_label_delete=""
             ):
         r = response
-        self.assertEqual(len(r.context['fields']), 16)
-        # 1st field - Id
-        self.assertEqual(r.context['fields'][0]['field_id'], 'Field_id')
-        self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
-        self.assertEqual(r.context['fields'][0]['field_render_type'], "EntityId")
-        self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][0]['field_value_type'], "annal:Slug")
-        self.assertEqual(r.context['fields'][0]['field_value'], field_id)
-        self.assertEqual(r.context['fields'][0]['options'], self.no_options)
-        # 2nd field - Value type
-        self.assertEqual(r.context['fields'][1]['field_id'], 'Field_type')
-        self.assertEqual(r.context['fields'][1]['field_name'], 'Field_type')
-        self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:field_value_type")
-        self.assertEqual(r.context['fields'][1]['field_render_type'], "Identifier")
-        self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Identifier")
-        self.assertEqual(r.context['fields'][1]['field_value'], field_type)
-        self.assertEqual(r.context['fields'][1]['options'], self.no_options)
-        # 3rd field - Render type
-        self.assertEqual(r.context['fields'][2]['field_id'], 'Field_render')
-        self.assertEqual(r.context['fields'][2]['field_name'], 'Field_render')
-        self.assertEqual(r.context['fields'][2]['field_property_uri'], "annal:field_render_type")
-        self.assertEqual(r.context['fields'][2]['field_render_type'], "Enum_choice")
-        self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Slug")
-        self.assertEqual(r.context['fields'][2]['field_value'], field_render)
+        self.assertEqual(len(r.context['fields']), 17)
+        # Field 0: Id
+        i = 0
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_id')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'entity_id')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:id")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "EntityId")
+        self.assertEqual(r.context['fields'][i]['field_placement'].field, "small-12 medium-6 columns")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Slug")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_id)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Field 1: Value type
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_type')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_type')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_value_type")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Identifier")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Identifier")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_type)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Foeld 2: Render type
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_render')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_render')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_render_type")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Enum_choice")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Slug")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_render)
         self.assertEqual(set(r.context['fields'][2]['options']), set(self.render_options))
-        # 4th field - placement (default)
-        self.assertEqual(r.context['fields'][3]['field_id'], 'Field_placement')
-        self.assertEqual(r.context['fields'][3]['field_name'], 'Field_placement')
-        self.assertEqual(r.context['fields'][3]['field_property_uri'], "annal:field_placement")
-        self.assertEqual(r.context['fields'][3]['field_render_type'], "Placement")
-        self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Placement")
-        self.assertEqual(r.context['fields'][3]['field_value'], field_placement)
-        self.assertEqual(r.context['fields'][3]['options'], self.no_options)
-        # 5th field - Label
-        self.assertEqual(r.context['fields'][4]['field_id'], 'Field_label')
-        self.assertEqual(r.context['fields'][4]['field_name'], 'Field_label')
-        self.assertEqual(r.context['fields'][4]['field_property_uri'], "rdfs:label")
-        self.assertEqual(r.context['fields'][4]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][4]['field_value'], field_label)
-        self.assertEqual(r.context['fields'][4]['options'], self.no_options)
-        # 6th field - comment
-        self.assertEqual(r.context['fields'][5]['field_id'], 'Field_comment')
-        self.assertEqual(r.context['fields'][5]['field_name'], 'Field_comment')
-        self.assertEqual(r.context['fields'][5]['field_property_uri'], "rdfs:comment")
-        self.assertEqual(r.context['fields'][5]['field_render_type'], "Textarea")
-        self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:Longtext")
-        self.assertEqual(r.context['fields'][5]['field_value'], field_comment)
-        self.assertEqual(r.context['fields'][5]['options'], self.no_options)
-        # 7th field - URI
-        self.assertEqual(r.context['fields'][6]['field_id'], 'Field_placeholder')
-        self.assertEqual(r.context['fields'][6]['field_name'], 'Field_placeholder')
-        self.assertEqual(r.context['fields'][6]['field_property_uri'], "annal:placeholder")
-        self.assertEqual(r.context['fields'][6]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][6]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][6]['field_value'], field_placeholder)
-        self.assertEqual(r.context['fields'][6]['options'], self.no_options)
-        # 8th field - Field_property
-        self.assertEqual(r.context['fields'][7]['field_id'], 'Field_property')
-        self.assertEqual(r.context['fields'][7]['field_name'], 'Field_property')
-        self.assertEqual(r.context['fields'][7]['field_property_uri'], "annal:property_uri")
-        self.assertEqual(r.context['fields'][7]['field_render_type'], "Identifier")
-        self.assertEqual(r.context['fields'][7]['field_value_type'], "annal:Identifier")
-        self.assertEqual(r.context['fields'][7]['field_value'], field_property)
-        self.assertEqual(r.context['fields'][7]['options'], self.no_options)
-        # 9th field - default value
-        self.assertEqual(r.context['fields'][8]['field_id'], 'Field_default')
-        self.assertEqual(r.context['fields'][8]['field_name'], 'Field_default')
-        self.assertEqual(r.context['fields'][8]['field_property_uri'], "annal:default_value")
-        self.assertEqual(r.context['fields'][8]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][8]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][8]['field_value'], field_default)
-        self.assertEqual(r.context['fields'][8]['options'], self.no_options)
-        # 10th field - enumeration type (for select rendering)
-        self.assertEqual(r.context['fields'][9]['field_id'], 'Field_entity_type')
-        self.assertEqual(r.context['fields'][9]['field_name'], 'Field_entity_type')
-        self.assertEqual(r.context['fields'][9]['field_property_uri'], "annal:field_entity_type")
-        self.assertEqual(r.context['fields'][9]['field_render_type'], "Identifier")
-        self.assertEqual(r.context['fields'][9]['field_value_type'], "annal:Identifier")
-        self.assertEqual(r.context['fields'][9]['field_value'], field_entity_type)
-        self.assertEqual(r.context['fields'][9]['options'], self.no_options)
-        # 10th field - type of referenced entity
-        self.assertEqual(r.context['fields'][10]['field_id'], 'Field_typeref')
-        self.assertEqual(r.context['fields'][10]['field_name'], 'Field_typeref')
-        self.assertEqual(r.context['fields'][10]['field_property_uri'], "annal:field_ref_type")
-        self.assertEqual(r.context['fields'][10]['field_render_type'], "Enum_optional")
-        self.assertEqual(r.context['fields'][10]['field_value_type'], "annal:Slug")
-        self.assertEqual(r.context['fields'][10]['field_value'], field_typeref)
-        self.assertEqual(r.context['fields'][10]['options'], [""]+get_site_types_sorted()+["testtype"])
-        # 11th field - field of referenced entity
-        self.assertEqual(r.context['fields'][11]['field_id'], 'Field_fieldref')
-        self.assertEqual(r.context['fields'][11]['field_name'], 'Field_fieldref')
-        self.assertEqual(r.context['fields'][11]['field_property_uri'], "annal:field_ref_field")
-        self.assertEqual(r.context['fields'][11]['field_render_type'], "Identifier")
-        self.assertEqual(r.context['fields'][11]['field_value_type'], "annal:Identifier")
-        self.assertEqual(r.context['fields'][11]['field_value'], field_fieldref)
-        self.assertEqual(r.context['fields'][11]['options'], self.no_options)
-        # 11th field - enumeration restriction (for select rendering)
-        self.assertEqual(r.context['fields'][12]['field_id'], 'Field_restrict')
-        self.assertEqual(r.context['fields'][12]['field_name'], 'Field_restrict')
-        self.assertEqual(r.context['fields'][12]['field_property_uri'], "annal:field_ref_restriction")
-        self.assertEqual(r.context['fields'][12]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][12]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][12]['field_value'], field_restrict)
-        self.assertEqual(r.context['fields'][12]['options'], self.no_options)
-        # 12th field - enumeration restriction (for select rendering)
-        self.assertEqual(r.context['fields'][13]['field_id'], 'Field_groupref')
-        self.assertEqual(r.context['fields'][13]['field_name'], 'Field_groupref')
-        self.assertEqual(r.context['fields'][13]['field_property_uri'], "annal:group_ref")
-        self.assertEqual(r.context['fields'][13]['field_render_type'], "Enum_optional")
-        self.assertEqual(r.context['fields'][13]['field_value_type'], "annal:Slug")
-        self.assertEqual(r.context['fields'][13]['field_value'], field_viewref)
-        self.assertEqual(r.context['fields'][13]['options'], [""] + self.group_options)
-        # 13th field - enumeration restriction (for select rendering)
-        self.assertEqual(r.context['fields'][14]['field_id'], 'Field_repeat_label_add')
-        self.assertEqual(r.context['fields'][14]['field_name'], 'Field_repeat_label_add')
-        self.assertEqual(r.context['fields'][14]['field_property_uri'], "annal:repeat_label_add")
-        self.assertEqual(r.context['fields'][14]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][14]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][14]['field_value'], field_repeat_label_add)
-        self.assertEqual(r.context['fields'][14]['options'], self.no_options)
-        # 14th field - enumeration restriction (for select rendering)
-        self.assertEqual(r.context['fields'][15]['field_id'], 'Field_repeat_label_delete')
-        self.assertEqual(r.context['fields'][15]['field_name'], 'Field_repeat_label_delete')
-        self.assertEqual(r.context['fields'][15]['field_property_uri'], "annal:repeat_label_delete")
-        self.assertEqual(r.context['fields'][15]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][15]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][15]['field_value'], field_repeat_label_delete)
-        self.assertEqual(r.context['fields'][15]['options'], self.no_options)
+        # Field 3: Value mode
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_value_mode')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_value_mode')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_value_mode")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Enum_choice")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Slug")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_value_mode)
+        self.assertEqual(set(r.context['fields'][i]['options']), set(self.value_mode_options))
+        # Field 4: Field_property URI
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_property')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_property')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:property_uri")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Identifier")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Identifier")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_property)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Field 5: placement
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_placement')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_placement')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_placement")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Placement")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Placement")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_placement)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Field 6: type of referenced entity
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_typeref')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_typeref')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_ref_type")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Enum_optional")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Slug")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_typeref)
+        self.assertEqual(r.context['fields'][i]['options'], [""]+get_site_types_sorted()+["testtype"])
+        # Field 7: field of referenced entity
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_fieldref')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_fieldref')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_ref_field")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Identifier")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Identifier")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_fieldref)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Field 8: Label
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_label')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_label')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "rdfs:label")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_label)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Field 9: comment
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_comment')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_comment')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "rdfs:comment")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Textarea")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Longtext")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_comment)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Field 10: Placeholder
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_placeholder')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_placeholder')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:placeholder")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_placeholder)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Field 11: default value
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_default')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_default')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:default_value")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_default)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Field 12: enumeration restriction (for select rendering)
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_groupref')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_groupref')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:group_ref")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Enum_optional")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Slug")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_viewref)
+        self.assertEqual(r.context['fields'][i]['options'], [""] + self.group_options)
+        # Field 13: enumeration restriction (for select rendering)
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_repeat_label_add')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_repeat_label_add')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:repeat_label_add")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_repeat_label_add)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Field 14: enumeration restriction (for select rendering)
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_repeat_label_delete')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_repeat_label_delete')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:repeat_label_delete")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_repeat_label_delete)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Field 15: enumeration type (for select rendering)
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_entity_type')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_entity_type')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_entity_type")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Identifier")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Identifier")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_entity_type)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Field 16: enumeration restriction (for select rendering)
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_restrict')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_restrict')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_ref_restriction")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_restrict)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
         return
 
     #   -----------------------------------------------------------------------------
@@ -424,7 +452,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow2 = ("""
+        formrow2col1 = ("""
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
@@ -441,63 +469,38 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow3 = """
-            <div class="small-12 columns">
+        formrow2col2 = ("""
+            <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Label</span>
+                  <span>Value mode</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <input type="text" size="64" name="Field_label" 
-                  placeholder="(field label)"
-                  value="%(default_label_esc)s"/>
+                """+
+                  render_choice_options(
+                    "Field_value_mode",
+                    get_site_value_modes_sorted(),
+                    "Value_direct")+
+                """
                 </div>
               </div>
             </div>
-            """%field_vals(width=12)
-        formrow4 = """
-            <div class="small-12 columns">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                    <span>Help</span>
-                </div>
-                <div class="%(input_classes)s">
-                  <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"
-                            placeholder="(field usage commentary or help text)">
-                      %(default_comment_esc)s
-                  </textarea>
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=12)
-        formrow5 = """
-            <div class="small-12 columns">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Placeholder</span>
-                </div>
-                <div class="%(input_classes)s">
-                  <input type="text" size="64" name="Field_placeholder"
-                         placeholder="(placeholder text)" value=""/>
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=12)
-        formrow6 = """
-            <div class="small-12 columns">
+            """)%field_vals(width=6)
+        formrow3col1 = """
+            <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Property</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_property" 
-                  placeholder="(field URI or CURIE)" value=""/>
+                         placeholder="(field URI or CURIE)" value=""/>
                 </div>
               </div>
             </div>
-            """%field_vals(width=12)
+            """%field_vals(width=6)
         # log.info("placement_option_value_dict %r"%(get_placement_option_value_dict(),))
-        formrow7 = ("""
+        formrow3col2 = ("""
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
@@ -516,22 +519,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow8 = """
-            <div class="small-12 columns">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Default</span>
-                </div>
-                <div class="%(input_classes)s">
-                  <input type="text" size="64" name="Field_default" 
-                         placeholder="(field default value)"
-                         value=""/>
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=12)
-        formrow9 = ("""
-            <div class="small-6 columns">
+        formrow4col1 = ("""
+            <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Enum type</span>
@@ -547,21 +536,76 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow10 = """
+        formrow4col2 = ("""
+            <div class="small-12 medium-6 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Referenced field</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_fieldref" 
+                         placeholder="(field URI or CURIE)" value="">
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow5 = """
             <div class="small-12 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Enum restriction</span>
+                  <span>Label</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <input type="text" size="64" name="Field_restrict" 
-                         placeholder="(enumeration value restriction; e.g. &#39;[annal:field_entity_type] in entity[annal:record_type]&#39;)"
+                  <input type="text" size="64" name="Field_label" 
+                  placeholder="(field label)"
+                  value="%(default_label_esc)s"/>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow6 = """
+            <div class="small-12 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                    <span>Help</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"
+                            placeholder="(field usage commentary or help text)">
+                      %(default_comment_esc)s
+                  </textarea>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow7 = """
+            <div class="small-12 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Placeholder</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_placeholder"
+                         placeholder="(placeholder text)" value=""/>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow8 = """
+            <div class="small-12 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Default</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_default" 
+                         placeholder="(field default value)"
                          value=""/>
                 </div>
               </div>
             </div>
             """%field_vals(width=12)
-        formrow11 = ("""
+        formrow9col1 = ("""
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
@@ -579,8 +623,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow12col1 = """
-            <div class="small-6 columns">
+        formrow10col1 = """
+            <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Add fields label</span>
@@ -593,8 +637,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow12col2 = """
-            <div class="small-6 columns">
+        formrow10col2 = """
+            <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Delete fields label</span>
@@ -607,21 +651,53 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
+        formrow11 = """
+            <div class="small-12 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Entity type</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_entity_type" 
+                         placeholder="(type URI/CURIE of entity to which field applies)" 
+                         value="" />
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow12 = """
+            <div class="small-12 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Enum restriction</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_restrict" 
+                         placeholder="(enumeration value restriction; e.g. &#39;[annal:field_entity_type] in entity[annal:record_type]&#39;)"
+                         value=""/>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+
         # log.info(r.content)   #@@
-        self.assertContains(r, formrow1col1, html=True)
-        self.assertContains(r, formrow1col2, html=True)
-        self.assertContains(r, formrow2, html=True)
-        self.assertContains(r, formrow3, html=True)
-        self.assertContains(r, formrow4, html=True)
-        self.assertContains(r, formrow5, html=True)
-        self.assertContains(r, formrow6, html=True)
-        self.assertContains(r, formrow7, html=True)
-        self.assertContains(r, formrow8, html=True)
-        self.assertContains(r, formrow9, html=True)
-        self.assertContains(r, formrow10, html=True)
-        self.assertContains(r, formrow11, html=True)
-        self.assertContains(r, formrow12col1, html=True)
-        self.assertContains(r, formrow12col2, html=True)
+        self.assertContains(r, formrow1col1, html=True)     # Id
+        self.assertContains(r, formrow1col2, html=True)     # Value type
+        self.assertContains(r, formrow2col1, html=True)     # Render type
+        self.assertContains(r, formrow2col2, html=True)     # Value mode
+        self.assertContains(r, formrow3col1, html=True)     # Property URI
+        self.assertContains(r, formrow3col2, html=True)     # Placement
+        self.assertContains(r, formrow4col1, html=True)     # Ref type (enum)
+        self.assertContains(r, formrow4col2, html=True)     # Ref field
+        self.assertContains(r, formrow5, html=True)         # Label
+        self.assertContains(r, formrow6, html=True)         # Comment/help
+        self.assertContains(r, formrow7, html=True)         # Placeholder
+        self.assertContains(r, formrow8, html=True)         # Default
+        self.assertContains(r, formrow9col1, html=True)     # Field group
+        self.assertContains(r, formrow10col1, html=True)    # Add field label
+        self.assertContains(r, formrow10col2, html=True)    # Delete field label
+        self.assertContains(r, formrow11, html=True)        # Entity type
+        self.assertContains(r, formrow12, html=True)        # Restriction
         return
 
     def test_get_new(self):

@@ -66,6 +66,9 @@ class RecordField(EntityData):
         for old_key, new_key in migration_map:
             if old_key in entitydata:
                 entitydata[new_key] = entitydata.pop(old_key)
+        if 'annal:field_value_mode' not in entitydata:
+            # @@TODO: make this smarter
+            entitydata['annal:field_value_mode'] = "Value_direct"
         return entitydata
 
 # End.
