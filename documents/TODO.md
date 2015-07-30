@@ -34,20 +34,20 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] update documentation
 - [ ] rationalize field description form to make handling of upload/import and references to fields in other entities more obvious
     - Note that `field_value_type` is overloaded as it is used to trigger upload renderers *and* (indirectly as default for `field_target_type`) to guide Mime type selection.
-    - [ ] Add `field_value_mode` to field description, with values `value_direct` (default), `value_entity`, `value_field`, `value_import` and `value_upload`.
+    - [?] Add `field_value_mode` to field description, with values `value_direct` (default), `value_entity`, `value_field`, `value_import` and `value_upload`.
         - [x] define new enumeration type `Value_mode`
         - [x] define new field type `Field_value_mode` (`annal:value_mode`)
         - [x] update view definitions to use new field type
         - [x] update field view test case(s)
     - [x] Relabel "Enum type" -> "Referenced entity type"
-    - [ ] Add migration logic to set view mode appropriately in field definitions
-    - [ ] Use `field_value_mode` to determine `has_import_button` and `is_upload_field`.  
-        - [ ] Rename `has_import_button` to `is_import_field`.
+    - [x] Add migration logic to set view mode appropriately in field definitions
+    - [x] Rename FieldDescription method `has_import_button` to `is_import_field`.
+    - [ ] Use `field_value_mode` to determine `is_import_field` and `is_upload_field`.  
     - [ ] Find all references to `field_value_type` and change logic to use `field_value_mode`
         - [ ] render_utils.get_field_edit_renderer
-        - [ ] modify all get_xxx_renderer funcxtions to accept just `field_render_type` and `field_value_mode` parameters.
+        - [ ] modify all get_xxx_renderer functions to accept just `field_render_type` and `field_value_mode` parameters.
         - This removes the overloading on `field_value_type`.
-    - [ ] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type`
+    - [ ] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type` in site data
     - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
     - [ ] Update all references in code to 'annal:...' value types to use ANNAL.CURIE.... values instead.
     - [ ] Update documentation

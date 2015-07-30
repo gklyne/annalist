@@ -1285,7 +1285,7 @@ class GenericEntityEditView(AnnalistGenericView):
         description of the field describing the value to be imported.
         """
         def is_import_f(fd):
-            return fd.has_import_button()
+            return fd.is_import_field()
         for enum_desc in self.find_fields(entityvaluemap, is_import_f):
             enum_import = self.form_data_contains(form_data, enum_desc, "import")
             if enum_import:

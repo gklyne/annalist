@@ -115,8 +115,9 @@ class placement_view_renderer(object):
         placement = get_field_view_value(context, "&nbsp;")
         if placement in placement_occupancy:
             return placement_display_span(placement)
-        # Not predefined value - return string
-        return placement        
+        # Not predefined value - return string in unadorned span.
+        # (Without a <span ... /> with some content, the grid layout gets messed up.
+        return '''<span>%s</span>'''%(placement or "(not specified)")
 
 class placement_edit_renderer(object):
 

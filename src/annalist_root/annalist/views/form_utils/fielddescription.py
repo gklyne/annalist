@@ -83,6 +83,8 @@ class FieldDescription(object):
             { 'field_id':                   field_id
             , 'field_name':                 field_name
             , 'field_instance_name':        field_name
+            , 'field_render_type':          field_render_type
+            , 'field_value_mode':           field_value_mode
             , 'field_label':                field_label
             , 'field_help':                 recordfield.get(RDFS.CURIE.comment, "")
             , 'field_property_uri':         field_property
@@ -102,8 +104,6 @@ class FieldDescription(object):
             , 'group_delete_label':         None
             , 'group_view':                 None
             , 'group_field_descs':          None
-            , 'field_render_type':          field_render_type
-            , 'field_value_mode':           field_value_mode
             , 'field_render_view':          get_view_renderer(field_render_type,          field_ref_type, field_val_type)
             , 'field_render_edit':          get_edit_renderer(field_render_type,          field_ref_type, field_val_type)
             , 'field_render_label_view':    get_label_view_renderer(field_render_type,    field_ref_type, field_val_type)
@@ -285,7 +285,7 @@ class FieldDescription(object):
         # but since the absent button cannot be clicked, the infidelity here is benign
         return self._field_desc['field_ref_type'] is not None
 
-    def has_import_button(self):
+    def is_import_field(self):
         """
         Returns 'true' if this field has a control (an 'import' button) that is used 
         to request additional external data is added to an entity

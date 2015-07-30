@@ -272,24 +272,24 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Identifier")
         self.assertEqual(r.context['fields'][i]['field_value'], field_type)
         self.assertEqual(r.context['fields'][i]['options'], self.no_options)
-        # Foeld 2: Render type
+        # Field 2: Label
         i += 1
-        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_render')
-        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_render')
-        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_render_type")
-        self.assertEqual(r.context['fields'][i]['field_render_type'], "Enum_choice")
-        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Slug")
-        self.assertEqual(r.context['fields'][i]['field_value'], field_render)
-        self.assertEqual(set(r.context['fields'][2]['options']), set(self.render_options))
-        # Field 3: Value mode
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_label')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_label')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "rdfs:label")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Text")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Text")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_label)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
+        # Field 3: comment
         i += 1
-        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_value_mode')
-        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_value_mode')
-        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_value_mode")
-        self.assertEqual(r.context['fields'][i]['field_render_type'], "Enum_choice")
-        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Slug")
-        self.assertEqual(r.context['fields'][i]['field_value'], field_value_mode)
-        self.assertEqual(set(r.context['fields'][i]['options']), set(self.value_mode_options))
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_comment')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_comment')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "rdfs:comment")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Textarea")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Longtext")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_comment)
+        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
         # Field 4: Field_property URI
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'], 'Field_property')
@@ -308,7 +308,25 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Placement")
         self.assertEqual(r.context['fields'][i]['field_value'], field_placement)
         self.assertEqual(r.context['fields'][i]['options'], self.no_options)
-        # Field 6: type of referenced entity
+        # Field 6: Render type
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_render')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_render')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_render_type")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Enum_choice")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Slug")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_render)
+        self.assertEqual(set(r.context['fields'][i]['options']), set(self.render_options))
+        # Field 7: Value mode
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_value_mode')
+        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_value_mode')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_value_mode")
+        self.assertEqual(r.context['fields'][i]['field_render_type'], "Enum_choice")
+        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Slug")
+        self.assertEqual(r.context['fields'][i]['field_value'], field_value_mode)
+        self.assertEqual(set(r.context['fields'][i]['options']), set(self.value_mode_options))
+        # Field 8: type of referenced entity
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'], 'Field_typeref')
         self.assertEqual(r.context['fields'][i]['field_name'], 'Field_typeref')
@@ -317,7 +335,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Slug")
         self.assertEqual(r.context['fields'][i]['field_value'], field_typeref)
         self.assertEqual(r.context['fields'][i]['options'], [""]+get_site_types_sorted()+["testtype"])
-        # Field 7: field of referenced entity
+        # Field 9: field of referenced entity
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'], 'Field_fieldref')
         self.assertEqual(r.context['fields'][i]['field_name'], 'Field_fieldref')
@@ -325,24 +343,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_render_type'], "Identifier")
         self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Identifier")
         self.assertEqual(r.context['fields'][i]['field_value'], field_fieldref)
-        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
-        # Field 8: Label
-        i += 1
-        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_label')
-        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_label')
-        self.assertEqual(r.context['fields'][i]['field_property_uri'], "rdfs:label")
-        self.assertEqual(r.context['fields'][i]['field_render_type'], "Text")
-        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][i]['field_value'], field_label)
-        self.assertEqual(r.context['fields'][i]['options'], self.no_options)
-        # Field 9: comment
-        i += 1
-        self.assertEqual(r.context['fields'][i]['field_id'], 'Field_comment')
-        self.assertEqual(r.context['fields'][i]['field_name'], 'Field_comment')
-        self.assertEqual(r.context['fields'][i]['field_property_uri'], "rdfs:comment")
-        self.assertEqual(r.context['fields'][i]['field_render_type'], "Textarea")
-        self.assertEqual(r.context['fields'][i]['field_value_type'], "annal:Longtext")
-        self.assertEqual(r.context['fields'][i]['field_value'], field_comment)
         self.assertEqual(r.context['fields'][i]['options'], self.no_options)
         # Field 10: Placeholder
         i += 1
@@ -452,41 +452,36 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow2col1 = ("""
-            <div class="small-12 medium-6 columns">
+        formrow2 = """
+            <div class="small-12 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Field render type</span>
+                  <span>Label</span>
                 </div>
                 <div class="%(input_classes)s">
-                """+
-                  render_choice_options(
-                    "Field_render",
-                    get_site_field_types_sorted(),
-                    "Text")+
-                """
+                  <input type="text" size="64" name="Field_label" 
+                  placeholder="(field label)"
+                  value="%(default_label_esc)s"/>
                 </div>
               </div>
             </div>
-            """)%field_vals(width=6)
-        formrow2col2 = ("""
-            <div class="small-12 medium-6 columns">
+            """%field_vals(width=12)
+        formrow3 = """
+            <div class="small-12 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Value mode</span>
+                    <span>Help</span>
                 </div>
                 <div class="%(input_classes)s">
-                """+
-                  render_choice_options(
-                    "Field_value_mode",
-                    get_site_value_modes_sorted(),
-                    "Value_direct")+
-                """
+                  <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"
+                            placeholder="(field usage commentary or help text)">
+                      %(default_comment_esc)s
+                  </textarea>
                 </div>
               </div>
             </div>
-            """)%field_vals(width=6)
-        formrow3col1 = """
+            """%field_vals(width=12)
+        formrow4col1 = """
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
@@ -500,7 +495,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         # log.info("placement_option_value_dict %r"%(get_placement_option_value_dict(),))
-        formrow3col2 = ("""
+        formrow4col2 = ("""
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
@@ -519,7 +514,41 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow4col1 = ("""
+        formrow5col1 = ("""
+            <div class="small-12 medium-6 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Field render type</span>
+                </div>
+                <div class="%(input_classes)s">
+                """+
+                  render_choice_options(
+                    "Field_render",
+                    get_site_field_types_sorted(),
+                    "Text")+
+                """
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow5col2 = ("""
+            <div class="small-12 medium-6 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Value mode</span>
+                </div>
+                <div class="%(input_classes)s">
+                """+
+                  render_choice_options(
+                    "Field_value_mode",
+                    get_site_value_modes_sorted(),
+                    "Value_direct")+
+                """
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow6col1 = ("""
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
@@ -536,7 +565,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow4col2 = ("""
+        formrow6col2 = ("""
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
@@ -549,35 +578,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow5 = """
-            <div class="small-12 columns">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Label</span>
-                </div>
-                <div class="%(input_classes)s">
-                  <input type="text" size="64" name="Field_label" 
-                  placeholder="(field label)"
-                  value="%(default_label_esc)s"/>
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=12)
-        formrow6 = """
-            <div class="small-12 columns">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                    <span>Help</span>
-                </div>
-                <div class="%(input_classes)s">
-                  <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"
-                            placeholder="(field usage commentary or help text)">
-                      %(default_comment_esc)s
-                  </textarea>
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=12)
         formrow7 = """
             <div class="small-12 columns">
               <div class="row view-value-row">
@@ -683,14 +683,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # log.info(r.content)   #@@
         self.assertContains(r, formrow1col1, html=True)     # Id
         self.assertContains(r, formrow1col2, html=True)     # Value type
-        self.assertContains(r, formrow2col1, html=True)     # Render type
-        self.assertContains(r, formrow2col2, html=True)     # Value mode
-        self.assertContains(r, formrow3col1, html=True)     # Property URI
-        self.assertContains(r, formrow3col2, html=True)     # Placement
-        self.assertContains(r, formrow4col1, html=True)     # Ref type (enum)
-        self.assertContains(r, formrow4col2, html=True)     # Ref field
-        self.assertContains(r, formrow5, html=True)         # Label
-        self.assertContains(r, formrow6, html=True)         # Comment/help
+        self.assertContains(r, formrow2, html=True)         # Label
+        self.assertContains(r, formrow3, html=True)         # Comment/help
+        self.assertContains(r, formrow4col1, html=True)     # Property URI
+        self.assertContains(r, formrow4col2, html=True)     # Placement
+        self.assertContains(r, formrow5col1, html=True)     # Render type
+        self.assertContains(r, formrow5col2, html=True)     # Value mode
+        self.assertContains(r, formrow6col1, html=True)     # Ref type (enum)
+        self.assertContains(r, formrow6col2, html=True)     # Ref field
         self.assertContains(r, formrow7, html=True)         # Placeholder
         self.assertContains(r, formrow8, html=True)         # Default
         self.assertContains(r, formrow9col1, html=True)     # Field group

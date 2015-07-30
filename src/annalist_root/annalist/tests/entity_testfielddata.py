@@ -214,34 +214,34 @@ def recordfield_entity_view_context_data(
             , 'field_value':            "annal:Text"
             , 'options':                []
             }
-          , { 'field_id':               "Field_render"              # 2
-            , 'field_name':             "Field_render"
-            , 'field_label':            "Field render type"
-            , 'field_value_type':       "annal:Slug"
-            , 'field_render_type':      "Enum_choice"
+          , { 'field_id':               "Field_label"               # 2
+            , 'field_name':             "Field_label"
+            , 'field_label':            "Label"
+            , 'field_value_type':       "annal:Text"
+            , 'field_render_type':      "Text"
             , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:field_render_type"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
-            , 'field_ref_type':         "Enum_render_type"
+            , 'field_property_uri':     "rdfs:label"
+            , 'field_placement':        get_placement_classes('small:0,12')
+            , 'field_ref_type':         None
             , 'field_ref_field':        None
-            , 'field_placeholder':      "(field render type)"
-            , 'field_default_value':    "Text"
-            , 'field_value':            "Text"
+            , 'field_placeholder':      "(field label)"
+            , 'field_default_value':    ""
+            , 'field_value':            "%s data ... (testcoll/_field)"%(update)
             , 'options':                []
             }
-          , { 'field_id':               "Field_value_mode"          # 3
-            , 'field_name':             "Field_value_mode"
-            , 'field_label':            "Value mode"
-            , 'field_value_type':       "annal:Slug"
-            , 'field_render_type':      "Enum_choice"
+          , { 'field_id':               "Field_comment"             # 3
+            , 'field_name':             "Field_comment"
+            , 'field_label':            "Help"
+            , 'field_value_type':       "annal:Longtext"
+            , 'field_render_type':      "Textarea"
             , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:field_value_mode"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
-            , 'field_ref_type':         "Enum_value_mode"
+            , 'field_property_uri':     "rdfs:comment"
+            , 'field_placement':        get_placement_classes('small:0,12')
+            , 'field_ref_type':         None
             , 'field_ref_field':        None
-            , 'field_placeholder':      "(field value mode)"
-            , 'field_default_value':    "Value_direct"
-            , 'field_value':            "Value_direct"
+            , 'field_placeholder':      "(field usage commentary or help text)"
+            , 'field_default_value':    ""
+            , 'field_value':            '%s description ... (testcoll/_field)'%(update)
             , 'options':                []
             }
           , { 'field_id':               "Field_property"            # 4
@@ -274,7 +274,37 @@ def recordfield_entity_view_context_data(
             , 'field_value':            ""
             , 'options':                []
             }
-          , { 'field_id':               "Field_typeref"             # 6
+          , { 'field_id':               "Field_render"              # 6
+            , 'field_name':             "Field_render"
+            , 'field_label':            "Field render type"
+            , 'field_value_type':       "annal:Slug"
+            , 'field_render_type':      "Enum_choice"
+            , 'field_value_mode':       "Value_direct"
+            , 'field_property_uri':     "annal:field_render_type"
+            , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
+            , 'field_ref_type':         "Enum_render_type"
+            , 'field_ref_field':        None
+            , 'field_placeholder':      "(field render type)"
+            , 'field_default_value':    "Text"
+            , 'field_value':            "Text"
+            , 'options':                []
+            }
+          , { 'field_id':               "Field_value_mode"          # 7
+            , 'field_name':             "Field_value_mode"
+            , 'field_label':            "Value mode"
+            , 'field_value_type':       "annal:Slug"
+            , 'field_render_type':      "Enum_choice"
+            , 'field_value_mode':       "Value_direct"
+            , 'field_property_uri':     "annal:field_value_mode"
+            , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
+            , 'field_ref_type':         "Enum_value_mode"
+            , 'field_ref_field':        None
+            , 'field_placeholder':      "(field value mode)"
+            , 'field_default_value':    "Value_direct"
+            , 'field_value':            "Value_direct"
+            , 'options':                []
+            }
+          , { 'field_id':               "Field_typeref"             # 8
             , 'field_name':             "Field_typeref"
             , 'field_label':            "Refer to type"
             , 'field_value_type':       "annal:Slug"
@@ -289,7 +319,7 @@ def recordfield_entity_view_context_data(
             , 'field_value':            ""
             , 'options':                []
             }
-          , { 'field_id':               "Field_fieldref"            # 7
+          , { 'field_id':               "Field_fieldref"            # 9
             , 'field_name':             "Field_fieldref"
             , 'field_label':            "Refer to field"
             , 'field_value_type':       "annal:Identifier"
@@ -302,36 +332,6 @@ def recordfield_entity_view_context_data(
             , 'field_placeholder':      "(field URI or CURIE)"
             , 'field_default_value':    ""
             , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_label"               # 8
-            , 'field_name':             "Field_label"
-            , 'field_label':            "Label"
-            , 'field_value_type':       "annal:Text"
-            , 'field_render_type':      "Text"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "rdfs:label"
-            , 'field_placement':        get_placement_classes('small:0,12')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field label)"
-            , 'field_default_value':    ""
-            , 'field_value':            "%s data ... (testcoll/_field)"%(update)
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_comment"             # 9
-            , 'field_name':             "Field_comment"
-            , 'field_label':            "Help"
-            , 'field_value_type':       "annal:Longtext"
-            , 'field_render_type':      "Textarea"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "rdfs:comment"
-            , 'field_placement':        get_placement_classes('small:0,12')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field usage commentary or help text)"
-            , 'field_default_value':    ""
-            , 'field_value':            '%s description ... (testcoll/_field)'%(update)
             , 'options':                []
             }
           , { 'field_id':               "Field_placeholder"         # 10
@@ -444,8 +444,8 @@ def recordfield_entity_view_context_data(
         })
     if field_id:
         context_dict['fields'][0]['field_value'] = field_id
-        context_dict['fields'][8]['field_value'] = '%s testcoll/_field/%s'%(update,field_id)
-        context_dict['fields'][9]['field_value'] = '%s help for %s in collection testcoll'%(update,field_id)
+        context_dict['fields'][2]['field_value'] = '%s testcoll/_field/%s'%(update,field_id)
+        context_dict['fields'][3]['field_value'] = '%s help for %s in collection testcoll'%(update,field_id)
         context_dict['orig_id']     = field_id
     if orig_id:
         context_dict['orig_id']     = orig_id
