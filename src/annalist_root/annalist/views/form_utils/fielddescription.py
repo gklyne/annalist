@@ -290,38 +290,40 @@ class FieldDescription(object):
         Returns 'true' if this field has a control (an 'import' button) that is used 
         to request additional external data is added to an entity
         """
-        import_render_types = (
-            [ "URIImport"
-            ])
-        import_value_types = (
-            [ "annal:Import"
-            ])
-        is_import = (
-            (self._field_desc['field_render_type'] in import_render_types) or
-            (self._field_desc['field_value_type']  in import_value_types )
-            )
-        return is_import
+        return self._field_desc['field_value_mode'] == "Value_import"
+        #@@
+        # import_render_types = (
+        #     [ "URIImport"
+        #     ])
+        # import_value_types = (
+        #     [ "annal:Import"
+        #     ])
+        # is_import = (
+        #     (self._field_desc['field_render_type'] in import_render_types) or
+        #     (self._field_desc['field_value_type']  in import_value_types )
+        #     )
+        # return is_import
+        #@@
 
     def is_upload_field(self):
         """
         Returns 'true' if this field is a file-upload field (selected file contents are 
         returned with the form response.)
         """
-        upload_render_types = (
-            [ "FileUpload"
-            ])
-        upload_value_types = (
-            [ "annal:Upload"
-            ])
-        is_upload = (
-            (self._field_desc['field_render_type'] in upload_render_types) or
-            (self._field_desc['field_value_type']  in upload_value_types )
-            )
-        return is_upload
+        return self._field_desc['field_value_mode'] == "Value_upload"
+        #@@
         # upload_render_types = (
         #     [ "FileUpload"
         #     ])
-        # return self._field_desc['field_render_type'] in upload_render_types
+        # upload_value_types = (
+        #     [ "annal:Upload"
+        #     ])
+        # is_upload = (
+        #     (self._field_desc['field_render_type'] in upload_render_types) or
+        #     (self._field_desc['field_value_type']  in upload_value_types )
+        #     )
+        # return is_upload
+        #@@
 
     def has_field_group_ref(self):
         """
