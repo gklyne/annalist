@@ -2,7 +2,7 @@
 , "@type":                      ["annal:Field"]
 , "annal:id":                   "Field_typeref"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Enum type"
+, "rdfs:label":                 "Refer to type"
 , "rdfs:comment":               "Type whose id values are candidates for a field value."
 , "annal:field_name":           "Field_typeref"
 , "annal:field_render_type":    "Enum_optional"

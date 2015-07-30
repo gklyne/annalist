@@ -390,7 +390,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Field_type',        "annal:Identifier",    "Field value type")
             , ('Field_render',      "annal:Slug",          "Field render type")
             , ('Field_default',     "annal:Text",          "Default")
-            , ('Field_typeref',     "annal:Slug",          "Enum type")
+            , ('Field_typeref',     "annal:Slug",          "Refer to type")
             , ('Field_restrict',    "annal:Text",          "Enum restriction")
             , ('List_comment',      "annal:Longtext",      "Help")
             , ('List_default_type', "annal:Type",          "Record type")

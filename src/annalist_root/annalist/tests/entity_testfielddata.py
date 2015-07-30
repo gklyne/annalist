@@ -276,7 +276,7 @@ def recordfield_entity_view_context_data(
             }
           , { 'field_id':               "Field_typeref"             # 6
             , 'field_name':             "Field_typeref"
-            , 'field_label':            "Enum type"
+            , 'field_label':            "Refer to type"
             , 'field_value_type':       "annal:Slug"
             , 'field_render_type':      "Enum_optional"
             , 'field_value_mode':       "Value_direct"
@@ -291,7 +291,7 @@ def recordfield_entity_view_context_data(
             }
           , { 'field_id':               "Field_fieldref"            # 7
             , 'field_name':             "Field_fieldref"
-            , 'field_label':            "Referenced field"
+            , 'field_label':            "Refer to field"
             , 'field_value_type':       "annal:Identifier"
             , 'field_render_type':      "Identifier"
             , 'field_value_mode':       "Value_direct"

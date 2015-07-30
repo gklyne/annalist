@@ -39,9 +39,13 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [x] define new field type `Field_value_mode` (`annal:value_mode`)
         - [x] update view definitions to use new field type
         - [x] update field view test case(s)
+    - [x] Relabel "Enum type" -> "Referenced entity type"
     - [ ] Add migration logic to set view mode appropriately in field definitions
     - [ ] Use `field_value_mode` to determine `has_import_button` and `is_upload_field`.  
         - [ ] Rename `has_import_button` to `is_import_field`.
+    - [ ] Find all references to `field_value_type` and change logic to use `field_value_mode`
+        - [ ] render_utils.get_field_edit_renderer
+        - [ ] modify all get_xxx_renderer funcxtions to accept just `field_render_type` and `field_value_mode` parameters.
         - This removes the overloading on `field_value_type`.
     - [ ] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type`
     - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
@@ -137,6 +141,8 @@ Usability notes:
 - [ ] List dropdown: normally show only those lists defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
 - [ ] View forms need title (indicating type of thing viewed)?  Or let user define label for Id field?
 - [ ] Provide field type that can be used to place fixed annotations/instructions in a form
+- [ ] Add title attributes to all buttons - used as tooltip
+- [ ] Add title to field controls based on field help, to use as tooltip.
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
     - [ ] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
         - test by creating contacts/supplies listy for CruisingLog

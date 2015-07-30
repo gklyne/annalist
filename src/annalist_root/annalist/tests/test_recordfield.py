@@ -523,12 +523,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Enum type</span>
+                  <span>Refer to type</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
                   render_select_options(
-                    "Field_typeref", "Enum type",
+                    "Field_typeref", "Refer to type",
                     [""]+get_site_types_sorted()+["testtype"],
                     "", placeholder="(no type selected)")+
                 """
@@ -540,7 +540,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Referenced field</span>
+                  <span>Refer to field</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_fieldref" 
