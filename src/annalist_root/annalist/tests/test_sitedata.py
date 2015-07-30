@@ -249,6 +249,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 self.assertEqual(view_field[ANNAL.CURIE.type_id], "_field")
                 self.assertIn(ANNAL.CURIE.property_uri,           view_field)
                 self.assertIn(ANNAL.CURIE.field_render_type,      view_field)
+                self.assertIn(ANNAL.CURIE.field_value_mode,       view_field)
                 self.assertIn(ANNAL.CURIE.field_value_type,       view_field)
                 self.assertIn(ANNAL.CURIE.field_placement,        view_field)
                 self.assertIn(ANNAL.CURIE.placeholder,            view_field)

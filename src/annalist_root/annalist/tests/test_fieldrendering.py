@@ -85,14 +85,15 @@ class FieldRenderingTest(FieldRendererTestSupport):
                 # ----- Field description -----
                 , 'field_id':                   'View_fields'
                 , 'field_name':                 'View_fields'
+                , 'field_target_type':          'annal:Field_group'
                 , 'field_label':                'Fields'
                 , 'field_help':                 'This resource descibes the repeated field description used when displaying and/or editing a record view description'
-                , 'field_placeholder':          '(repeat field description)'
-                , 'field_placement':            get_placement_classes("small:0,12")
-                , 'field_property_uri':         'annal:view_fields'
-                , 'field_value_type':           'annal:Field_group'
-                , 'field_group_ref':            'View_field_view'
                 , 'field_render_type':          'RepeatGroup'
+                , 'field_value_mode':           'Value_direct'
+                , 'field_property_uri':         'annal:view_fields'
+                , 'field_placement':            get_placement_classes("small:0,12")
+                , 'field_placeholder':          '(repeat field description)'
+                , 'field_group_ref':            'View_field_view'
                 , 'group_id':                   'View_fields'
                 , 'group_label':                'Fields'
                 , 'group_add_label':            'Add field'

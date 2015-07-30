@@ -43,10 +43,13 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Add migration logic to set view mode appropriately in field definitions
     - [x] Rename FieldDescription method `has_import_button` to `is_import_field`.
     - [x] Use `field_value_mode` to determine `is_import_field` and `is_upload_field`.  
-    - [ ] Find all references to `field_value_type` and change logic to use `field_value_mode`
-        - [ ] render_utils.get_field_edit_renderer
-        - [ ] modify all get_xxx_renderer functions to accept just `field_render_type` and `field_value_mode` parameters.
-        - This removes the overloading on `field_value_type`.
+    - [x] Find all references to `field_value_type` and change logic to use `field_value_mode`
+        - [x] render_utils.get_field_edit_renderer
+        - [x] modify all get_xxx_renderer functions to accept just `field_render_type` and `field_value_mode` parameters.
+            - This removes the overloading on `field_value_type`.
+        - [x] Remove references to `field_ref_type` when selecting renderer (`get_edit_type`, others?)
+    - [x] Remove 'field_value_type' from FieldDescrioption.  Update all tests to use 'field_target_type'
+    - [ ] Add appropriate 'field_value_mode' to all field descriptions in site data
     - [ ] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type` in site data
     - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
     - [ ] Update all references in code to 'annal:...' value types to use ANNAL.CURIE.... values instead.

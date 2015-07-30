@@ -283,14 +283,15 @@ class RecordListEditViewTest(AnnalistTestCase):
               , 'annal:field_placement':      "small:3,9"
               }
             ])
-        self.assertEqual(r.context['fields'][8]['field_id'], 'List_repeat_fields')
-        self.assertEqual(r.context['fields'][8]['field_name'], 'List_repeat_fields')
-        self.assertEqual(r.context['fields'][8]['field_label'], 'Fields')
+        self.assertEqual(r.context['fields'][8]['field_id'],           'List_repeat_fields')
+        self.assertEqual(r.context['fields'][8]['field_name'],         'List_repeat_fields')
+        self.assertEqual(r.context['fields'][8]['field_label'],        'Fields')
         self.assertEqual(r.context['fields'][8]['field_property_uri'], "annal:list_fields")
-        self.assertEqual(r.context['fields'][8]['field_value_type'], "annal:Field_group")
-        self.assertEqual(len(r.context['fields'][8]['field_value']), 2)
-        self.assertEqual(r.context['fields'][8]['field_value'], expect_field_data)
-        self.assertEqual(r.context['fields'][8]['options'], self.no_options)
+        self.assertEqual(r.context['fields'][8]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][8]['field_target_type'],  "annal:Field_group")
+        self.assertEqual(len(r.context['fields'][8]['field_value']),   2)
+        self.assertEqual(r.context['fields'][8]['field_value'],        expect_field_data)
+        self.assertEqual(r.context['fields'][8]['options'],            self.no_options)
         return
 
     #   -----------------------------------------------------------------------------

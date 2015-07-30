@@ -158,7 +158,8 @@ class RefMultifieldTest(AnnalistTestCase):
             , "rdfs:label":                 "Image reference"
             , "rdfs:comment":               "Image reference field comment"
             , "annal:field_render_type":    "RefMultifield"
-            , "annal:field_value_type":     "annal:Field_group"
+            #@@ , "annal:field_value_mode":     "Value_entity"    #@@TODO: Use migration logic for now; later, make explicit
+            , "annal:field_target_type":    "annal:Field_group"
             , "annal:field_entity_type":    "test:img_type"
             , "annal:placeholder":          "(ref image field)"
             , "annal:property_uri":         "test:ref_image"
@@ -190,7 +191,8 @@ class RefMultifieldTest(AnnalistTestCase):
             , "rdfs:label":                 "Repeat image reference"
             , "rdfs:comment":               "Repeat image reference field comment"
             , "annal:field_render_type":    "RepeatGroupRow"
-            , "annal:field_value_type":     "annal:Field_group"
+            #@@ , "annal:field_value_mode":     "Value_direct"      #@@TODO: Use migration logic for now; later, make explicit
+            , "annal:field_target_type":    "annal:Field_group"
             , "annal:placeholder":          "(repeat image field)"
             , "annal:property_uri":         "test:rpt_image"
             , "annal:field_placement":      "small:0,12"
@@ -215,29 +217,31 @@ class RefMultifieldTest(AnnalistTestCase):
 
     def _create_refimg_image_field(self):
         refimg_image_field = RecordField.create(self.testcoll, "Test_image",
-            {  "annal:type":                 "annal:Field"
-            ,  "rdfs:label":                 "View image field"
-            ,  "rdfs:comment":               "In view mode, displays an image."
-            ,  "annal:field_render_type":    "RefImage"
-            ,  "annal:field_value_type":     "annal:Image"
-            ,  "annal:field_entity_type":    "test:img_type"
-            ,  "annal:placeholder":          "(view image field)"
-            ,  "annal:property_uri":         "test:image"
-            ,  "annal:field_placement":      "small:0,12;medium:0,6"
+            { "annal:type":                 "annal:Field"
+            , "rdfs:label":                 "View image field"
+            , "rdfs:comment":               "In view mode, displays an image."
+            , "annal:field_render_type":    "RefImage"
+            , "annal:field_value_mode":     "Value_direct"
+            , "annal:field_target_type":    "annal:Image"
+            , "annal:field_entity_type":    "test:img_type"
+            , "annal:placeholder":          "(view image field)"
+            , "annal:property_uri":         "test:image"
+            , "annal:field_placement":      "small:0,12;medium:0,6"
             })
         return refimg_image_field
 
     def _create_refimg_comment_field(self):
         refimg_comment_field = RecordField.create(self.testcoll, "Test_comment",
-            {  "annal:type":                 "annal:Field"
-            ,  "rdfs:label":                 "View comment field"
-            ,  "rdfs:comment":               "In view mode, displays a comment."
-            ,  "annal:field_render_type":    "Markdown"
-            ,  "annal:field_value_type":     "annal:Markdown"
-            ,  "annal:field_entity_type":    "test:img_type"
-            ,  "annal:placeholder":          "(view comment field)"
-            ,  "annal:field_placement":      "small:0,12;medium:0,6"
-            ,  "annal:property_uri":         "rdfs:comment"
+            { "annal:type":                 "annal:Field"
+            , "rdfs:label":                 "View comment field"
+            , "rdfs:comment":               "In view mode, displays a comment."
+            , "annal:field_render_type":    "Markdown"
+            , "annal:field_value_mode":     "Value_direct"
+            , "annal:field_target_type":    "annal:Markdown"
+            , "annal:field_entity_type":    "test:img_type"
+            , "annal:placeholder":          "(view comment field)"
+            , "annal:field_placement":      "small:0,12;medium:0,6"
+            , "annal:property_uri":         "rdfs:comment"
             })
         return refimg_comment_field
 
@@ -304,10 +308,12 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_id'],            "Test_refimg_field")
         self.assertEqual(r.context['fields'][1]['field_name'],          "Test_refimg_field")
         self.assertEqual(r.context['fields'][1]['field_label'],         "Image reference")
-        self.assertEqual(r.context['fields'][1]['field_property_uri'],  "test:ref_image")
-        self.assertEqual(r.context['fields'][1]['field_value_type'],    "annal:Field_group")
+        self.assertEqual(r.context['fields'][1]['field_render_type'],   "RefMultifield")
+        self.assertEqual(r.context['fields'][1]['field_value_mode'],    "Value_entity")
+        self.assertEqual(r.context['fields'][1]['field_target_type'],   "annal:Field_group")
         self.assertEqual(r.context['fields'][1]['field_group_ref'],     "Test_refimg_group")
         self.assertEqual(r.context['fields'][1]['group_label'],         "Image reference")
+        self.assertEqual(r.context['fields'][1]['field_property_uri'],  "test:ref_image")
         self.assertEqual(r.context['fields'][1]['field_value'],         "Test_img_entity")
 
         # Test rendered result
@@ -394,10 +400,12 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_id'],            "Test_refimg_field")
         self.assertEqual(r.context['fields'][1]['field_name'],          "Test_refimg_field")
         self.assertEqual(r.context['fields'][1]['field_label'],         "Image reference")
-        self.assertEqual(r.context['fields'][1]['field_property_uri'],  "test:ref_image")
-        self.assertEqual(r.context['fields'][1]['field_value_type'],    "annal:Field_group")
+        self.assertEqual(r.context['fields'][1]['field_render_type'],   "RefMultifield")
+        self.assertEqual(r.context['fields'][1]['field_value_mode'],    "Value_entity")
+        self.assertEqual(r.context['fields'][1]['field_target_type'],   "annal:Field_group")
         self.assertEqual(r.context['fields'][1]['field_group_ref'],     "Test_refimg_group")
         self.assertEqual(r.context['fields'][1]['group_label'],         "Image reference")
+        self.assertEqual(r.context['fields'][1]['field_property_uri'],  "test:ref_image")
         self.assertEqual(r.context['fields'][1]['field_value'],         "Test_img_entity")
 
         # Test rendered result
@@ -485,10 +493,12 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_id'],            "Test_rptref_field")
         self.assertEqual(r.context['fields'][1]['field_name'],          "Test_rptref_field")
         self.assertEqual(r.context['fields'][1]['field_label'],         "Repeat image reference")
-        self.assertEqual(r.context['fields'][1]['field_property_uri'],  "test:rpt_image")
-        self.assertEqual(r.context['fields'][1]['field_value_type'],    "annal:Field_group")
+        self.assertEqual(r.context['fields'][1]['field_render_type'],   "RepeatGroupRow")
+        self.assertEqual(r.context['fields'][1]['field_value_mode'],    "Value_direct")
+        self.assertEqual(r.context['fields'][1]['field_target_type'],   "annal:Field_group")
         self.assertEqual(r.context['fields'][1]['field_group_ref'],     "Test_rptref_group")
         self.assertEqual(r.context['fields'][1]['group_label'],         "Repeat image reference")
+        self.assertEqual(r.context['fields'][1]['field_property_uri'],  "test:rpt_image")
         self.assertEqual(r.context['fields'][1]['field_value'][0],      {'test:ref_image': 'Test_img_entity'})
 
         # Test rendered result
@@ -624,10 +634,12 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_id'],            "Test_rptref_field")
         self.assertEqual(r.context['fields'][1]['field_name'],          "Test_rptref_field")
         self.assertEqual(r.context['fields'][1]['field_label'],         "Repeat image reference")
-        self.assertEqual(r.context['fields'][1]['field_property_uri'],  "test:rpt_image")
-        self.assertEqual(r.context['fields'][1]['field_value_type'],    "annal:Field_group")
+        self.assertEqual(r.context['fields'][1]['field_render_type'],   "RepeatGroupRow")
+        self.assertEqual(r.context['fields'][1]['field_value_mode'],    "Value_direct")
+        self.assertEqual(r.context['fields'][1]['field_target_type'],   "annal:Field_group")
         self.assertEqual(r.context['fields'][1]['field_group_ref'],     "Test_rptref_group")
         self.assertEqual(r.context['fields'][1]['group_label'],         "Repeat image reference")
+        self.assertEqual(r.context['fields'][1]['field_property_uri'],  "test:rpt_image")
         self.assertEqual(r.context['fields'][1]['field_value'][0],      {'test:ref_image': 'Test_img_entity'})
 
         # Test rendered result

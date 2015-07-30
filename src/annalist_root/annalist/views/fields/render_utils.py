@@ -159,22 +159,22 @@ def get_fileupload_edit_renderer(renderer, field_render_type):
         renderer = get_field_base_renderer("FileUpload")
     return renderer
 
-def get_field_edit_renderer(field_render_type, field_ref_type, field_val_type):
+def get_field_edit_renderer(field_render_type, field_value_mode):
     """
     Get edit renderer for supplied field details, taking account of variations on the 
     base renderer due to field reference and field value type.
     """
+    log.debug("Render field_render_type %s, field_value_mode %s"%(field_render_type, field_value_mode))
     renderer = get_field_base_renderer(field_render_type)
-    if field_ref_type:
-        log.debug("Render field_render_type %s, field_ref_type %s"%(field_render_type, field_ref_type))
+    if field_value_mode in ["Value_entity", "Value_field"]:
         renderer = get_entityref_edit_renderer(renderer, field_render_type)
-    elif field_val_type == "annal:Import":
+    elif field_value_mode == "Value_import":
         renderer = get_uriimport_edit_renderer(renderer, field_render_type)
-    elif field_val_type == "annal:Upload":
+    elif field_value_mode == "Value_upload":
         renderer = get_fileupload_edit_renderer(renderer, field_render_type)
     return renderer
 
-def get_edit_renderer(field_render_type, field_ref_type, field_val_type):
+def get_edit_renderer(field_render_type, field_value_mode):
     """
     Returns an field edit renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
@@ -194,7 +194,7 @@ def get_edit_renderer(field_render_type, field_ref_type, field_val_type):
     if field_render_type == "RefMultifield":
         renderer = get_select_renderer()
     else:
-        renderer = get_field_edit_renderer(field_render_type, field_ref_type, field_val_type)
+        renderer = get_field_edit_renderer(field_render_type, field_value_mode)
     if renderer:
         return renderer.edit()
     log.debug("get_edit_renderer: %s not found"%field_render_type)
@@ -203,7 +203,7 @@ def get_edit_renderer(field_render_type, field_ref_type, field_val_type):
     renderer = get_field_base_renderer("Text")
     return renderer.edit()
 
-def get_view_renderer(field_render_type, field_ref_type, field_val_type):
+def get_view_renderer(field_render_type, field_value_mode):
     """
     Returns a field view renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
@@ -230,7 +230,7 @@ def get_view_renderer(field_render_type, field_ref_type, field_val_type):
     renderer = get_field_base_renderer("Text")
     return renderer.view()
 
-def get_label_edit_renderer(field_render_type, field_ref_type, field_val_type):
+def get_label_edit_renderer(field_render_type, field_value_mode):
     """
     Returns an field edit renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
@@ -242,7 +242,7 @@ def get_label_edit_renderer(field_render_type, field_ref_type, field_val_type):
     if field_render_type == "RefMultifield":
         renderer = get_select_renderer()
     else:
-        renderer = get_field_edit_renderer(field_render_type, field_ref_type, field_val_type)
+        renderer = get_field_edit_renderer(field_render_type, field_value_mode)
     if renderer:
         return renderer.label_edit()
     log.debug("get_label_edit_renderer: %s not found"%field_render_type)
@@ -251,7 +251,7 @@ def get_label_edit_renderer(field_render_type, field_ref_type, field_val_type):
     renderer = get_field_base_renderer("Text")
     return renderer.label_edit()
 
-def get_label_view_renderer(field_render_type, field_ref_type, field_val_type):
+def get_label_view_renderer(field_render_type, field_value_mode):
     """
     Returns a field view renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
@@ -270,7 +270,7 @@ def get_label_view_renderer(field_render_type, field_ref_type, field_val_type):
     renderer = get_field_base_renderer("Text")
     return renderer.label_view()
 
-def get_col_head_renderer(field_render_type, field_ref_type, field_val_type):
+def get_col_head_renderer(field_render_type, field_value_mode):
     """
     Returns a field list heading renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
@@ -281,7 +281,7 @@ def get_col_head_renderer(field_render_type, field_ref_type, field_val_type):
     log.debug("get_col_head_renderer: %s not found"%field_render_type)
     return "field/annalist_head_any.html"
 
-def get_col_head_view_renderer(field_render_type, field_ref_type, field_val_type):
+def get_col_head_view_renderer(field_render_type, field_value_mode):
     """
     Returns a field list heading renderer object that can be referenced in a 
     Django template "{% include ... %}" element when viewing an entity.
@@ -292,7 +292,7 @@ def get_col_head_view_renderer(field_render_type, field_ref_type, field_val_type
     log.debug("get_col_head_view_renderer: %s not found"%field_render_type)
     return "field/annalist_head_any.html"
 
-def get_col_head_edit_renderer(field_render_type, field_ref_type, field_val_type):
+def get_col_head_edit_renderer(field_render_type, field_value_mode):
     """
     Returns a field list heading renderer object that can be referenced in a 
     Django template "{% include ... %}" element when editing an entity.
@@ -303,18 +303,18 @@ def get_col_head_edit_renderer(field_render_type, field_ref_type, field_val_type
     log.debug("get_col_head_edit_renderer: %s not found"%field_render_type)
     return "field/annalist_head_any.html"
 
-def get_col_edit_renderer(field_render_type, field_ref_type, field_val_type):
+def get_col_edit_renderer(field_render_type, field_value_mode):
     """
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    renderer = get_field_edit_renderer(field_render_type, field_ref_type, field_val_type)
+    renderer = get_field_edit_renderer(field_render_type, field_value_mode)
     if renderer:
         return renderer.col_edit()
     log.debug("get_col_edit_renderer: %s not found"%field_render_type)
     return "field/annalist_item_none.html"
 
-def get_col_view_renderer(field_render_type, field_ref_type, field_val_type):
+def get_col_view_renderer(field_render_type, field_value_mode):
     """
     Returns a field list row-item renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
@@ -325,7 +325,7 @@ def get_col_view_renderer(field_render_type, field_ref_type, field_val_type):
     log.debug("get_col_view_renderer: %s not found"%field_render_type)
     return "field/annalist_item_none.html"
 
-def get_mode_renderer(field_render_type, field_ref_type, field_val_type):
+def get_mode_renderer(field_render_type, field_value_mode):
     """
     Returns a renderer for the indicated render type that renders a field using the
     current render_mode (used for nested renderers which can be invoked in different 
