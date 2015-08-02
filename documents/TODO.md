@@ -48,8 +48,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [x] modify all get_xxx_renderer functions to accept just `field_render_type` and `field_value_mode` parameters.
             - This removes the overloading on `field_value_type`.
         - [x] Remove references to `field_ref_type` when selecting renderer (`get_edit_type`, others?)
-    - [x] Remove 'field_value_type' from FieldDescrioption.  Update all tests to use 'field_target_type'
-    - [ ] Add appropriate 'field_value_mode' to all field descriptions in site data
+    - [x] Remove 'field_value_type' from `FieldDescription`.  Update all tests to use 'field_target_type'
+    - [x] Add 'field_value_mode' to all field descriptions in site data
+    - [ ] Add 'field_value_mode' value to field descriptions in example data (cruising log)
     - [ ] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type` in site data
     - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
     - [ ] Update all references in code to 'annal:...' value types to use ANNAL.CURIE.... values instead.

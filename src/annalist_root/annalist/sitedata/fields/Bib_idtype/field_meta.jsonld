@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Identifier type"
 , "rdfs:comment":               "BibJSON(ish) identifier type"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(identifier type; e.g. 'DOI', 'URL', etc.)"
 , "annal:property_uri":         "bib:type"

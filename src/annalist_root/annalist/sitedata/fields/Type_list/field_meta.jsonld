@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Default list"
 , "rdfs:comment":               "Default list id for this type"
 , "annal:field_render_type":    "List"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:List"
 , "annal:placeholder":          "(list id)"
 , "annal:default_value":        "Default_list"

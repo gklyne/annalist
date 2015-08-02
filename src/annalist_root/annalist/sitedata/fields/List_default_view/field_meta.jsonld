@@ -5,6 +5,7 @@
 , "rdfs:label":                 "View"
 , "rdfs:comment":               "The identifier of a record view that is used when viewing, editing or creating records from this list view.  (Note that record views are not tied to a specific record type:  see also the List_record_type field.)"
 , "annal:field_render_type":    "View"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:View"
 , "annal:placeholder":          "(view id)"
 , "annal:property_uri":         "annal:default_view"

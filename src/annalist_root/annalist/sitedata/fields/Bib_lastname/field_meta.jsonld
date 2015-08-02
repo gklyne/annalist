@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Last name"
 , "rdfs:comment":               "BibJSON(ish) person last name"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(last name)"
 , "annal:property_uri":         "bib:lastname"

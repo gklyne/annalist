@@ -7,6 +7,7 @@
 , "annal:placeholder":              "(field sel)"
 , "annal:field_name":               "Field_id"
 , "annal:field_render_type":        "Field"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_ref_type":           "_field"
 , "annal:field_ref_restriction":    "[annal:field_entity_type] in entity[annal:record_type]"
 , "annal:field_value_type":         "annal:Slug"

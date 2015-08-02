@@ -6,6 +6,7 @@
 , "rdfs:comment":               "User name consisting of first_name and last_name"
 , "annal:placeholder":          "(user name)"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:field_entity_type":    "annal:User"
 , "annal:property_uri":         "rdfs:label"

@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Help"
 , "rdfs:comment":               "Descriptive text about the record view.  This may be used as help or tooltip text in appropriate contexts."
 , "annal:field_render_type":    "Textarea"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Longtext"
 , "annal:field_entity_type":    "annal:View"
 , "annal:placeholder":          "(description of record view)"

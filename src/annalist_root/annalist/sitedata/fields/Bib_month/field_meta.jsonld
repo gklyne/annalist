@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Month"
 , "rdfs:comment":               "The month of publication (or, if unpublished, the month of creation)"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(month)"
 , "annal:property_uri":         "bib:month"

@@ -6,6 +6,7 @@
 , "rdfs:comment":               "Optional string describing user/permissions record"
 , "annal:placeholder":          "(user description)"
 , "annal:field_render_type":    "Textarea"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Longtext"
 , "annal:field_entity_type":    "annal:User"
 , "annal:property_uri":         "rdfs:comment"

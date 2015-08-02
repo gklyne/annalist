@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Publication details"
 , "rdfs:comment":               "BibJSON(ish) field for publisher details"
 , "annal:field_render_type":    "RepeatGroup"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "bib:Licenses"
 , "annal:placeholder":          "Information about publisher or other organization who published the article"
 , "annal:property_uri":         "bib:publication_details"

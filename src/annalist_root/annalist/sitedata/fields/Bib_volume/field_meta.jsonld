@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Volume"
 , "rdfs:comment":               "BibJSON(ish) name or number of volume of book or journal"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(volume name or number)"
 , "annal:property_uri":         "bib:volume"
