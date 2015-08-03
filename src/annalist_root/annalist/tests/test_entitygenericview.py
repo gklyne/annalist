@@ -226,7 +226,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
                   <span>Comment</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <span class="textarea">Entity coll testcoll, type testtype, entity entity1</span>
+                  <span class="markdown">
+                    <p>Entity coll testcoll, type testtype, entity entity1</p>
+                  </span>
                 </div>
               </div>
             </div>
@@ -394,7 +396,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_label'],        'Comment')
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:comment")
         self.assertEqual(r.context['fields'][2]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][2]['field_target_type'],  "annal:Longtext")
+        self.assertEqual(r.context['fields'][2]['field_target_type'],  "annal:Richtext")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][2]['field_value'],        type_comment_value)
         self.assertEqual(r.context['fields'][2]['options'],            self.no_options)

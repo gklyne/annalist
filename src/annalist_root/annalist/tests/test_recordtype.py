@@ -258,7 +258,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_placeholder'], type_comment_placeholder)
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:comment")
         self.assertEqual(r.context['fields'][2]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][2]['field_target_type'],  "annal:Longtext")
+        self.assertEqual(r.context['fields'][2]['field_target_type'],  "annal:Richtext")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][2]['field_value'],        type_help)
         self.assertEqual(r.context['fields'][2]['options'],            self.no_options)

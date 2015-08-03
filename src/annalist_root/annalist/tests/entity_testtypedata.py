@@ -190,9 +190,9 @@ def recordtype_entity_view_context_data(
             }
           , { 'field_id':           'Type_comment'
             , 'field_name':         'Type_comment'
-            , 'field_target_type':  'annal:Longtext'
             , 'field_label':        'Comment'
-            , 'field_render_type':  'Textarea'
+            , 'field_target_type':  'annal:Richtext'
+            , 'field_render_type':  'Markdown'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value':        '%s description ... (%s/%s)'%(update, coll_id, type_id)

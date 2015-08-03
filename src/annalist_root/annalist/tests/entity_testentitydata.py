@@ -243,10 +243,10 @@ def entitydata_context_data(
           , { 'field_label':        'Comment'
             , 'field_id':           'Entity_comment'
             , 'field_name':         'Entity_comment'
-            , 'field_render_type':  'Textarea'
+            , 'field_render_type':  'Markdown'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  "annal:Longtext"
+            , 'field_target_type':  "annal:Richtext"
             , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
             , 'options':            []
             }
@@ -269,9 +269,9 @@ def entitydata_context_add_field(
     context_dict, field_id, dup_index, field_value,
         field_name='Entity_comment',
         field_label='Comment',
-        field_render_type='Textarea',
+        field_render_type='Markdown',
         field_value_mode='Value_direct',
-        field_value_type='annal:Longtext',
+        field_value_type='annal:Richtext',
         field_placement='small:0,12',
         field_options=[]
         ):
@@ -421,7 +421,7 @@ def entitydata_default_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Entity_comment'
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  'annal:Longtext'
+            , 'field_target_type':  'annal:Richtext'
             , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
             , 'options':            []
             }
@@ -541,7 +541,7 @@ def entitydata_recordtype_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_comment'
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  'annal:Longtext'
+            , 'field_target_type':  'annal:Richtext'
             , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
             , 'options':            []
             }

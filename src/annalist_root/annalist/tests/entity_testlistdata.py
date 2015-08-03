@@ -219,9 +219,9 @@ def recordlist_view_context_data(
             }
           , { 'field_id':           'List_comment'              # fields[3]
             , 'field_name':         'List_comment'
-            , 'field_target_type':  'annal:Longtext'
             , 'field_label':        'Help'
-            , 'field_render_type':  'Textarea'
+            , 'field_target_type':  'annal:Richtext'
+            , 'field_render_type':  'Markdown'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
             # , 'field_value':      (Supplied separately, below)

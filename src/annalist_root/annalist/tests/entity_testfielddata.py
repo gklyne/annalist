@@ -232,8 +232,8 @@ def recordfield_entity_view_context_data(
           , { 'field_id':               "Field_comment"             # 3
             , 'field_name':             "Field_comment"
             , 'field_label':            "Help"
-            , 'field_target_type':      "annal:Longtext"
-            , 'field_render_type':      "Textarea"
+            , 'field_target_type':      "annal:Richtext"
+            , 'field_render_type':      "Markdown"
             , 'field_value_mode':       "Value_direct"
             , 'field_property_uri':     "rdfs:comment"
             , 'field_placement':        get_placement_classes('small:0,12')

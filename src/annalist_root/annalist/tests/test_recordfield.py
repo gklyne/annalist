@@ -289,9 +289,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_comment')
         self.assertEqual(r.context['fields'][i]['field_name'],         'Field_comment')
         self.assertEqual(r.context['fields'][i]['field_property_uri'], "rdfs:comment")
-        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Textarea")
+        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Markdown")
         self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Longtext")
+        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Richtext")
         self.assertEqual(r.context['fields'][i]['field_value'],        field_comment)
         self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
         # Field 4: Field_property URI

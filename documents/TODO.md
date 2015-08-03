@@ -50,11 +50,14 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [x] Remove references to `field_ref_type` when selecting renderer (`get_edit_type`, others?)
     - [x] Remove 'field_value_type' from `FieldDescription`.  Update all tests to use 'field_target_type'
     - [x] Add 'field_value_mode' to all field descriptions in site data
-    - [ ] Add 'field_value_mode' value to field descriptions in example data (cruising log)
-    - [ ] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type` in site data
-    - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
+    - [x] Add 'field_value_mode' value to field descriptions in example data (cruising log)
+    - [x] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type` in site and demo data
+        - [x] Collection: Picture_gallery (`annal:Upload`)
     - [ ] Update all references in code to 'annal:...' value types to use ANNAL.CURIE.... values instead.
+        - [ ] fielddescription.py
     - [ ] Update documentation
+    - [ ] LATER: Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
+- [ ] Audio widget not responsive over entire height; box sizing messed up?
 
 (release?)
 
