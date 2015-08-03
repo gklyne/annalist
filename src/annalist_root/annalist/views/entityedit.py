@@ -821,7 +821,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     })
                 log.debug("upload_vals: %r"%(upload_vals,))
                 try:
-                    value_type    = fd.get('field_target_type', "annal:unknown_type")
+                    value_type    = fd.get('field_target_type', ANNAL.CURIE.unknown_type)
                     resource_type = uploaded_files[upload_name].content_type
                     local_fileobj = typeinfo.get_fileobj(
                         entity_id, upload_name, 
@@ -1194,7 +1194,7 @@ class GenericEntityEditView(AnnalistGenericView):
             #     (import_url, resource_url, resource_type)
             #     )
             try:
-                value_type    = field_desc.get('field_target_type', "annal:unknown_type")
+                value_type    = field_desc.get('field_target_type', ANNAL.CURIE.unknown_type)
                 local_fileobj = viewinfo.entitytypeinfo.get_fileobj(
                     viewinfo.entity_id, import_name, 
                     value_type, resource_type, "wb"

@@ -294,7 +294,7 @@ class EntityRoot(object):
         # @TODO: is this next needed?  Put logic in set_values?
         if self._entityid:
             values[ANNAL.CURIE.id] = self._entityid
-        values.pop('annal:url', None)
+        values.pop(ANNAL.CURIE.url, None)
         with open(fullpath, "wt") as entity_io:
             json.dump(values, entity_io, indent=2, separators=(',', ': '))
         self._entityuseurl  = self._entityurl

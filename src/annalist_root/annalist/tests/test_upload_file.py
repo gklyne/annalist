@@ -197,7 +197,7 @@ test_upload_file_field_create_values = (
     , 'annal:property_uri':             "test:upload"
     , 'annal:field_render_type':        "FileUpload"
     , 'annal:field_value_mode':         "Value_upload"
-    , 'annal:field_target_type':        "annal:Markdown"
+    , 'annal:field_target_type':        "annal:Richtext"
     , 'annal:placeholder':              "(File to upload)"
     , 'annal:default_value':            ""
     })
@@ -421,7 +421,7 @@ class UploadResourceTest(AnnalistTestCase):
         self.assertEqual(resource_url,  self.fileuri)
         self.assertEqual(resource_type, "text/markdown")
         testobj1 = self.test_upl_type_info.get_fileobj(
-            "test1", "test1res", "annal:Markdown", resource_type, "wb"
+            "test1", "test1res", "annal:Richtext", resource_type, "wb"
             )
         util.copy_resource_to_fileobj(resource_fileobj, testobj1)
         resource_fileobj.close()
@@ -429,7 +429,7 @@ class UploadResourceTest(AnnalistTestCase):
         # Read back both and compare
         siteobj = open(TestBaseDir+"/README.md", "rb")
         testobj = self.test_upl_type_info.get_fileobj(
-            "test1", "test1res", "annal:Markdown", resource_type, "rb"
+            "test1", "test1res", "annal:Richtext", resource_type, "rb"
             )
         self.assertEqual(siteobj.read(), testobj.read())
         return
@@ -460,7 +460,7 @@ class UploadResourceTest(AnnalistTestCase):
         # Read back and compare entity resource just created
         siteobj = open(self.filepath, "rb")
         testobj = self.test_upl_type_info.get_fileobj(
-            "test1", "upl_field", "annal:Markdown", "text/markdown", "rb"
+            "test1", "upl_field", "annal:Richtext", "text/markdown", "rb"
             )
         self.assertEqual(siteobj.read(), testobj.read())
         return

@@ -53,8 +53,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Add 'field_value_mode' value to field descriptions in example data (cruising log)
     - [x] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type` in site and demo data
         - [x] Collection: Picture_gallery (`annal:Upload`)
-    - [ ] Update all references in code to 'annal:...' value types to use ANNAL.CURIE.... values instead.
-        - [ ] fielddescription.py
+    - [x] Update all references in code to 'annal:...' value types to use ANNAL.CURIE.... values instead.
     - [ ] Update documentation
     - [ ] LATER: Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 - [ ] Audio widget not responsive over entire height; box sizing messed up?

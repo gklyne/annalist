@@ -122,18 +122,18 @@ class EntityGenericListView(AnnalistGenericView):
         entitymap.add_map_entry(fieldlistmap)  # For access to field headings
 
         repeatrows_field_descr = (
-            { "annal:id":                   "List_rows"
-            , "rdfs:label":                 "Fields"
-            , "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a record view description"
-            , "annal:field_name":           "List_rows"
-            , "annal:field_render_type":    "RepeatListRow"
-            , "annal:property_uri":         "_list_entities_"
-            , "annal:group_ref":            "List_fields"
+            { ANNAL.CURIE.id:                   "List_rows"
+            , RDFS.CURIE.label:                 "Fields"
+            , RDFS.CURIE.comment:               "This resource describes the repeated field description used when displaying and/or editing a record view description"
+            , ANNAL.CURIE.field_name:           "List_rows"
+            , ANNAL.CURIE.field_render_type:    "RepeatListRow"
+            , ANNAL.CURIE.property_uri:         "_list_entities_"
+            , ANNAL.CURIE.group_ref:            "List_fields"
             })
         repeatrows_group_descr = (
-            { "annal:id":           "List_fields"
-            , "rdfs:label":         "List fields description"
-            , "annal:group_fields": listinfo.recordlist[ANNAL.CURIE.list_fields]
+            { ANNAL.CURIE.id:           "List_fields"
+            , RDFS.CURIE.label:         "List fields description"
+            , ANNAL.CURIE.group_fields: listinfo.recordlist[ANNAL.CURIE.list_fields]
             })
         repeatrows_descr = FieldDescription(
             listinfo.collection, 

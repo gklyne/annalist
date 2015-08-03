@@ -59,9 +59,9 @@ class RecordField(EntityData):
             x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
         """
         migration_map = (
-            [ ("annal:options_typeref",  "annal:field_ref_type"       )
-            , ("annal:restrict_values",  "annal:field_ref_restriction")
-            , ("annal:target_field",     "annal:field_ref_field"      )
+            [ (ANNAL.CURIE.options_typeref,  ANNAL.CURIE.field_ref_type       )
+            , (ANNAL.CURIE.restrict_values,  ANNAL.CURIE.field_ref_restriction)
+            , (ANNAL.CURIE.target_field,     ANNAL.CURIE.field_ref_field      )
             ])
         for old_key, new_key in migration_map:
             if old_key in entitydata:

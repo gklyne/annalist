@@ -91,6 +91,7 @@ class FieldDescription(object):
             , 'field_placement':            get_placement_classes(field_placement)
             #@@ , 'field_value_type':           field_val_type
             #@@TODO: LATER: rename 'field_target_type' to 'field_value_type' when old references are flushed out
+            #@@      See also references to 'field_target_type' in entityedit.py
             , 'field_target_type':          recordfield.get(ANNAL.CURIE.field_target_type, field_val_type)
             , 'field_placeholder':          recordfield.get(ANNAL.CURIE.placeholder, "")
             , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
@@ -292,19 +293,6 @@ class FieldDescription(object):
         to request additional external data is added to an entity
         """
         return self._field_desc['field_value_mode'] == "Value_import"
-        #@@
-        # import_render_types = (
-        #     [ "URIImport"
-        #     ])
-        # import_value_types = (
-        #     [ "annal:Import"
-        #     ])
-        # is_import = (
-        #     (self._field_desc['field_render_type'] in import_render_types) or
-        #     (self._field_desc['field_value_type']  in import_value_types )
-        #     )
-        # return is_import
-        #@@
 
     def is_upload_field(self):
         """
@@ -312,19 +300,6 @@ class FieldDescription(object):
         returned with the form response.)
         """
         return self._field_desc['field_value_mode'] == "Value_upload"
-        #@@
-        # upload_render_types = (
-        #     [ "FileUpload"
-        #     ])
-        # upload_value_types = (
-        #     [ "annal:Upload"
-        #     ])
-        # is_upload = (
-        #     (self._field_desc['field_render_type'] in upload_render_types) or
-        #     (self._field_desc['field_value_type']  in upload_value_types )
-        #     )
-        # return is_upload
-        #@@
 
     def has_field_group_ref(self):
         """

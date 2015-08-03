@@ -237,7 +237,7 @@ class RefMultifieldTest(AnnalistTestCase):
             , "rdfs:comment":               "In view mode, displays a comment."
             , "annal:field_render_type":    "Markdown"
             , "annal:field_value_mode":     "Value_direct"
-            , "annal:field_target_type":    "annal:Markdown"
+            , "annal:field_target_type":    "annal:Richtext"
             , "annal:field_entity_type":    "test:img_type"
             , "annal:placeholder":          "(view comment field)"
             , "annal:field_placement":      "small:0,12;medium:0,6"
