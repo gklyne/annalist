@@ -32,7 +32,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] create test case for new renderer
     - [x] update resourcetypes.py with supported audio types
     - [x] update documentation
-- [ ] rationalize field description form to make handling of upload/import and references to fields in other entities more obvious
+- [x] rationalize field description form to make handling of upload/import and references to fields in other entities more obvious
     - Note that `field_value_type` is overloaded as it is used to trigger upload renderers *and* (indirectly as default for `field_target_type`) to guide Mime type selection.
     - [x] Add `field_value_mode` to field description, with values `value_direct` (default), `value_entity`, `value_field`, `value_import` and `value_upload`.
         - [x] define new enumeration type `Value_mode`
@@ -54,9 +54,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type` in site and demo data
         - [x] Collection: Picture_gallery (`annal:Upload`)
     - [x] Update all references in code to 'annal:...' value types to use ANNAL.CURIE.... values instead.
-    - [ ] Update documentation
-    - [ ] LATER: Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
-- [ ] Audio widget not responsive over entire height; box sizing messed up?
+- [x] Audio widget not responsive over entire height; box sizing messed up?
+- [ ] Update documentation (including README.md status summary)
 
 (release?)
 
@@ -105,6 +104,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - as part of installation
     - [ ] Check this when accessing site.
         - at server startup.
+- [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 
 (feature freeze for V0.9alpha?)
 
