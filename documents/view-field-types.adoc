@@ -13,23 +13,23 @@ This page describes the field definition parameters and in particular introduces
 Note: much of field description processing is handled by modules `annalist.views.form_utils.fielddescription` and `annalist.views.fields.bound_field`, coordinated by `annalist.views.entityedit` and `annalist.views.entitylist`.
 
 
-## Field description values
+== Field description values
 
 A field description is entered through a form with the following fields.
 
 (Parenthesized values are field identifiers)
 
-### Id (`Field_id`)
+=== Id (`Field_id`)
 
 This is a name that is used to distinguish the fields from all available fields.  Consists of up to 32 letters, digits and/or underscore characters.  Case sensistive, but on some systems it is not possible to have different fields whose identifiers differ in upper- and lower-case letters.
 
-### Name (`Field_name`)
+=== Name (`Field_name`)
 
 Used internally to generate the name of a field in an HTML form view.  Defaults to the value of `Field_id`.
 
 (Currently not supported in field editing view, but can be set in stored field description records. @@)
 
-### Field value type (`Field_type`)
+=== Field value type (`Field_type`)
 
 Type (as a URI or CURIE) of underlying data that is stored in a field.  
 
@@ -37,11 +37,11 @@ This field is provided as an additional information and as a hint to the field r
 
 See also the section "Field value types" below.
 
-### Label (`Field_label`)
+=== Label (`Field_label`)
 
 A short textual label for the field.  The label is displayed as part of the form in which the field appears.
 
-### Help (`Field_comment`)
+=== Help (`Field_comment`)
 
 A longer textual description of the field.
 
@@ -49,13 +49,13 @@ Use Markdown for formatting the field description when editing.
 
 (@@TODO: use the description for pop-up help text in the form.)
 
-### Field renderer type (`Field_render`)
+=== Field renderer type (`Field_render`)
 
 Identifier that indicates how the field value is rendered, indicating one of a number of available built-in field renderers.  The stored value is the identrifier string (slug).  It is presented for editing as a drop-down list of available values and for viewing as a hyperlink to the term description.
 
 See also the section "Field render types" below.
 
-### Field value mode (`Field_value_mode`)
+=== Field value mode (`Field_value_mode`)
 
 Mode of access to displayed field data; one of: `Value_direct`, `Value_import`, `Value_upload`, `Value_entity` or `Value_field`.  If in doubt, use `Value_direct`.
 
@@ -69,7 +69,7 @@ Mode of access to displayed field data; one of: `Value_direct`, `Value_import`, 
 
 * Reference to linked entity (`Value_entity`), used with `RefMultifield` render type: the displayed value is one or more fields selected from a linked entity (e.g., a reference to an entity record containing an image and description can be displayed as image and descripotion fields from that record.)  When editing, a selection is made from a dropdown list of available entities.
 
-### Position/size (`Field_placement`)
+=== Position/size (`Field_placement`)
 
 Used to specifying the position of of a field in a form display, specified in terms of width and horizontal placement on a responsive display grid <sup>1,2</sup>.
 
@@ -77,35 +77,35 @@ Internally, the placement is stored as a specially formatted string.  It is pres
 
 Default placement can be specified as part of the field description, and overridden when the field is included in a particular view.
 
-### Placeholder (`Field_placeholder`)
+=== Placeholder (`Field_placeholder`)
 
 A string that is presented to describe the expected field content when the field content is empty
 
-### Property (`Field_property`)
+=== Property (`Field_property`)
 
-A [CURIE](http://www.w3.org/TR/curie/) or [URI](https://tools.ietf.org/html/rfc3986) that is used to relate the field value to the containing entity.  The supplied string is used as a key value in the stored JSON.  The use of CURIE or URI formats for this key allows Annalist data to be interpreted as JSON-LD, hence as [linked data](http://linkeddata.org).
+A http://www.w3.org/TR/curie/[CURIE] or https://tools.ietf.org/html/rfc3986[URI] that is used to relate the field value to the containing entity.  The supplied string is used as a key value in the stored JSON.  The use of CURIE or URI formats for this key allows Annalist data to be interpreted as JSON-LD, hence as http://linkeddata.org[linked data].
 
 A default property CURIE or URI can be specified as part of the field description, and overridden when the field is included in a particular view.
 
 (@@TODO: not yet implemented is management of prefix URIs and JSON-LD contexts required to fully support use as linked data)
 
-### Default (`Field_default`)
+=== Default (`Field_default`)
 
 A default value for the field if none is specified.
 
-### Enum type (`Field_typeref`)
+=== Enum type (`Field_typeref`)
 
 Used with render types `Enum`, `Enum_optional` and `Enum_choice` (and also `Type`, `List`, `View`, `Field` which are sumsumed by the `Enum*` render types).
 
 When specified, this field value is an internal type identifier.  The field is taken to be a reference to an entity of the given type, and presented for editing as a drop-down list of available values.  For viewing, the field is presented as a hyperlink to a description of the corresponding type.
 
-### Referenced field (`Field_fieldref`)
+=== Referenced field (`Field_fieldref`)
 
 When a field refers to some target entity, this may indicate a property CURIE or URI for a field of that entity that is used for view rendering.
 
 See section "Resource references, imports and file uploads" for more details.
 
-### Field group (`Field_groupref`)
+=== Field group (`Field_groupref`)
 
 Field group reference used by `RepeatGroup`, `RepeatGroupRow` and `RefMultifield` renderers.  Otherwise, it is ignored.
 
@@ -115,19 +115,19 @@ The field value is presented for editing as a drop-down list, and for viewing as
 
 See also the section "Repeated field groups"
 
-### Add fields label (`Field_repeat_label_add`)
+=== Add fields label (`Field_repeat_label_add`)
 
 Button label used by `RepeatGroup` and `RepeatGroupRow` renderers.  Otherwise, it is ignored.
 
 See also the section "Repeated field groups"
 
-### Delete fields label (`Field_repeat_label_delete`)
+=== Delete fields label (`Field_repeat_label_delete`)
 
 Button label used by `RepeatGroup` and `RepeatGroupRow` renderers.  Otherwise, it is ignored.
 
 See also the section "Repeated field groups"
 
-### Entity type (`Field_entity_type`)
+=== Entity type (`Field_entity_type`)
 
 Type (URI or CURIE) of entity to which field applies.
 
@@ -135,7 +135,7 @@ This is used to restrict the fields that are offered when editing a view or list
 
 Many, or even most, field descriptions are specific to a particular entity type, but some are generic.  If this value is not specified, the corresponding field is offered as an option for any entity type, but if given then it is offered only when editing a view or list for the specified type.
 
-### Enum restriction (`Field_restrict`)
+=== Enum restriction (`Field_restrict`)
 
 Selection filter to restrict enumerated values that are candidate field values.
 
@@ -143,7 +143,7 @@ This is provided mainly for internal use to implement the `Field_entity_type` fe
 
 The field value is a string expression that is used to filter candidates that are presented as members of an enumerated value.  The selection filter syntax is defined by module `annalist.models.entityfimnder`, and is used for enumerated value fields and also for generating entity list displays (cf. `List_entity_selector` field used in `List_view`).
 
-## Repeated field groups
+== Repeated field groups
 
 Some entities contain fields or groups of fields that may be repeated an arbitrary number of times.  This repetition is described within a view description as a single field that consists of a list of values rendered using a `RepeatGroup` and `RepeatGroupRow` renderer.
 
@@ -168,7 +168,7 @@ Thus, to create a repeated field in a view, the following steps must be performe
 
 (@@TODO: reordering of fields within a group)
 
-## Resource references, imports and file uploads
+== Resource references, imports and file uploads
 
 Annalist primarily deals with collections of data that are stored as JSON (or JSON-LD) text files, which can in turn reference other resources, including images and other non-textual media, that are accessible on the Web.  But sometimes it is useful to import such resources so that they become part of a published Annalist collection, and to reference such resources.
 
@@ -187,25 +187,25 @@ For referencing resources, there are several options, provided through renderers
 
 These different cases are invoked as follows.
 
-### Direct reference to a resource (usually an external resource)
+=== Direct reference to a resource (usually an external resource)
 
 Field "Field value type" (`Field_type`) describes the target value (e.g. `annal:Identifier` or `annal:Image`), and field "Enum type" (`Field_typeref`) is unspecified or blank.
 
 In this case the field value is used directly as the resource URI, and for editing is presented as a text input box for the URI.
 
-### Reference to an imported or uploaded attachment in a designated entity
+=== Reference to an imported or uploaded attachment in a designated entity
 
 The value of field "Enum type" (`Field_typeref`) is the target entity type, and field "Referenced field" (`Field_fieldref`) is target field property CURIE or URI for the attachment; this is the same as the "Property" (`Field_property`) value in the target field description.
 
 The stored field value is an identifier for a selected target record, and is presented for editing as a drop-down list of entity identifiers.
 
-### Reference to an imported attachment in the current entity
+=== Reference to an imported attachment in the current entity
 
 Field "Field value type" (`Field_type`) is `annal:Import`, and field "Enum type" (`Field_typeref`) is unspecified or blank.
 
 In this case the field value describes an attachment to the current entity, and for editing is presented as render type `annal:URIImport`.
 
-### Reference to an uploaded attachment in the current entity
+=== Reference to an uploaded attachment in the current entity
 
 (@@TODO: not yet implemented)
 
@@ -213,12 +213,12 @@ Field "Field value type" (`Field_type`) is `annal:Upload`, and field "Enum type"
 
 In this case the field value describes an attachment to the current entity, and for editing is presented as render type `annal:FileUpload`.
 
-### Multi-field references
+=== Multi-field references
 
 @@TODO
 
 
-## Field render types
+== Field render types
 
 Annalist provides a number of built-in field rendering functions for dealing with different types and uses of field data.
 
@@ -239,7 +239,7 @@ Some of the values listed below were created to handle earlier stages of develop
 * `Enum_optional` - presents a value of a designated type (see field `Field_typeref`) as a dropdown list for edting, or as a hyperlink for viewing.  The value may be left unselected, in which case the stored value is blank.
 * `Field` - identifies a field description; subsumed by `Enum_choice`.
 * `FileUpload` - upload file as resource attached to entity.  Stored as a complex structure with filename, resource reference, content type, etc.;  presented for editing as an HTML file upload input element, and for viewing as a hyperlink.  See section "Resource references, imports and file uploads"
-* `Identifier` - a [CURIE](http://www.w3.org/TR/curie/) or [URI](https://tools.ietf.org/html/rfc3986).  Preesented for editing as a text box, and for viewing as a simple text element.
+* `Identifier` - a http://www.w3.org/TR/curie/[CURIE] or https://tools.ietf.org/html/rfc3986[URI].  Preesented for editing as a text box, and for viewing as a simple text element.
 * `List` - identifies a list description; subsumed by `Enum_choice`.
 * `Markdown` - multiline rich text.  Stored and presented for editing as Markdown text, and for viewing as  text formatted according to Markdown conventions.
 * `Placement` - a special-case field renderer used for presenting placement of a field on a form.
@@ -257,7 +257,7 @@ Some of the values listed below were created to handle earlier stages of develop
 * `View` - identifies a view description; subsumed by `Enum_choice`.
 
 
-## Field value types
+== Field value types
 
 Field value types are identified by URIs or CURIEs that are used to identify some value type.
 
@@ -267,8 +267,8 @@ Built-in values include:
 * `annal:LongText` - multi-line text
 * `annal:Slug` - short text sring used as an internal identifier (consists of up to 32 letters, digits and/or underscore characters)
 * `annal:Markdown` - multi-line rich text entered, edited and stoired using Markdown formatting conventions
-* `annal:Identifier` - text value containing a [CURIE](http://www.w3.org/TR/curie/) or [URI](https://tools.ietf.org/html/rfc3986)
-* `annal:URI` - text value containing a [URI](https://tools.ietf.org/html/rfc3986)
+* `annal:Identifier` - text value containing a http://www.w3.org/TR/curie/[CURIE] or https://tools.ietf.org/html/rfc3986[URI]
+* `annal:URI` - text value containing a https://tools.ietf.org/html/rfc3986[URI]
 * `annal:Placement` - text value indicating the placement of a field in a display, and presented as a rough visial indication of the field placement (see module `annalist.views.fields.render_placement`)
 * `annal:Field_group` - value of a field that is itself a reference to a field group (which is itself a list of fields); used for repeated-value fields.
 * `annal:Type` - mainly internal use for reference to an Annalist entity type; the stored value is an `annal:Slug` text value, presented as a drop-down list or a hyperlink
@@ -281,15 +281,15 @@ Built-in values include:
 
 
 
-## References
+== References
 
-1. [Foundation responsive web framwork](http://foundation.zurb.com)
+1. http://foundation.zurb.com[Foundation responsive web framwork]
 
-2. [Foundation grid](http://foundation.zurb.com/docs/components/grid.html)
+2. http://foundation.zurb.com/docs/components/grid.html[Foundation grid]
 
-3. [CURIE](http://www.w3.org/TR/curie/)
+3. http://www.w3.org/TR/curie/[CURIE]
 
-4. [URI](https://tools.ietf.org/html/rfc3986)
+4. https://tools.ietf.org/html/rfc3986[URI]
 
 
 
