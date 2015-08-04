@@ -109,7 +109,7 @@ Existing user permissions are carried over from the previous installation.
 
 # Accessing and using annalist
 
-See [Installing and setting up Annalist](installing-annalist.md) and [Guide to using Annalist](using-annalist.md) for details.  What follows is just a very brief summary to get started.
+See [Installing and setting up Annalist](installing-annalist.md) and [Guide to using Annalist](using-annalist.adoc) for details.  What follows is just a very brief summary to get started.
 
 ## Access annalist and create a collection
 
@@ -123,5 +123,5 @@ An Annalist _collection_ consists of entity _data records_, _types_, _lists_, _v
 
 See the [demonstration screecast](http://annalist.net/media/annalist-demo-music-instrument-catalogue.mp4) for an introduction to using Annalist.  The sequence of operations performed by demonstration is described in [documents/demo-script.md](demo-script.md).
 
-See the [Guide to using Annalist](using-annalist.md) for details.
+See the [Guide to using Annalist](using-annalist.adoc) for details.
 

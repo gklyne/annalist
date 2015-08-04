@@ -71,7 +71,7 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 * [Annalist overview](../introduction.md)
 * [Installing and setting up Annalist](../installing-annalist.md)
 * [Getting started with Annalist](../getting-started.md)
-* [Guide to using Annalist](../using-annalist.md)
+* [Guide to using Annalist](../using-annalist.adoc)
 * [Simple demonstration sequence](../demo-script.md)
 * [Frequently asked questions](../faq.md)
 * [Developer information](../developer-info.md)

@@ -47,7 +47,7 @@
     - `annalist-manager runtests`
     - `. update-run-annalist.sh`
     - `cat annalist.out`
-- [ ] Commit changes
+- [x] Commit changes
 - [ ] Upload to PyPI (see below)
 - [ ] Tag release on release branch
     - `git tag -a release-x.y.z`

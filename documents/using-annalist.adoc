@@ -41,7 +41,7 @@ In keeping with the idea that properties can be added to any data record at any 
 
 === Record views
 
-A *record view* describes a selection and organization of properties to be used when displaying a single data record.  As such, a view establishes a presentation of a particular kind of structure on the data.  Different views may present different structures over the same underlying data.  A view is defined with a number of fields (see below, and also [View fields in Annalist](view-field-types.md)).
+A *record view* describes a selection and organization of properties to be used when displaying a single data record.  As such, a view establishes a presentation of a particular kind of structure on the data.  Different views may present different structures over the same underlying data.  A view is defined with a number of fields (see below, and also [View fields in Annalist](view-field-types.adoc)).
 
 
 === List views

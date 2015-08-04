@@ -322,7 +322,7 @@ Click on the link in the Id column to view the new collection:
 
 ![Initial view of new collection](screenshots/Collection-initial-view.png)
 
-From this screen, you can start to add data to this collection.  For more information, see [Using Annalist](using-annalist.md)
+From this screen, you can start to add data to this collection.  For more information, see [Using Annalist](using-annalist.adoc)
 
 
 ## `annalist-manager` command reference
