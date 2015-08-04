@@ -2,6 +2,7 @@
 Graham Klyne
 v0.1.15, 2015-08-04
 :toc:
+:toc-placement: preambe
 
 Annalist uses _views_ to define user-definable presentation of data for display and editing.
 
@@ -11,7 +12,6 @@ This page describes the field definition parameters and in particular introduces
 
 Note: much of field description processing is handled by modules `annalist.views.form_utils.fielddescription` and `annalist.views.fields.bound_field`, coordinated by `annalist.views.entityedit` and `annalist.views.entitylist`.
 
-toc::[]
 
 ## Field description values
 
