@@ -1,0 +1,16 @@
+= Bare code crossref example
+Graham Klyne
+v0.1.15, 2015-08-04
+:toc: macro
+
+toc::[]
+
+== section `foo`
+
+Reference to <<`bar`>>
+
+== `bar`
+
+Reference to <<section `foo`>
+
+End.

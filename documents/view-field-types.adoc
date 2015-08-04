@@ -193,9 +193,13 @@ For referencing resources, there are several options, provided through renderers
 These different cases are invoked using different values of <<Field value mode (`Field_value_mode`)>> as follows.
 1
 
-=== Direct reference to a resource (usually an external resource)
+=== Direct reference to a resource
+
+This option is mainly used for referencing an external resource; e.g. an image stored on Flickr.
 
 The value of <<Field value mode (`Field_value_mode`)>> is specified as `Value_direct`, <<Field value type (`Field_type`)>> describes the target value (e.g. `annal:Identifier` or `annal:Image`), and fields <<Refer to type (`Field_typeref`)>> and <<Refer to field (`Field_fieldref`)>> are unspecified or blank.
+
+The value of <<Field renderer type (`Field_render`)>> is specified as appropriate to the resource referenced (e.g. <<Link to external resource (`URILink`),`URILink`>>, <<Reference to image resource (`RefImage`),`RefImage`>> or <<Reference to audio resource (`RefAudio`),`RefAudio`>>).
 
 In this case the field value is used directly as the resource URI, and for editing is presented as a text input box.
 
@@ -203,13 +207,13 @@ In this case the field value is used directly as the resource URI, and for editi
 
 The value of <<Field value mode (`Field_value_mode`)>> is specified as `Value_import`, <<Field value type (`Field_type`)>> describes the target value (e.g. `annal:Image` or `annal:Audio`), and fields <<Refer to type (`Field_typeref`)>> and <<Refer to field (`Field_fieldref`)>> are unspecified or blank.
 
-In this case the field value describes an attachment to the current entity, and for editing is presented as render type <<`annal:URIImport`>>.
+In this case the field value describes an attachment to the current entity, and for editing is presented as render type <<Web resource import (`URIImport`)>>.
 
 === Reference to an uploaded attachment in the current entity
 
 The value of <<Field value mode (`Field_value_mode`)>> is specified as `Value_upload`, <<Field value type (`Field_type`)>> describes the target value (e.g. `annal:Image` or `annal:Audio`), and and fields <<Refer to type (`Field_typeref`)>> and <<Refer to field (`Field_fieldref`)>> are unspecified or blank.
 
-In this case the field value describes an attachment to the current entity, and for editing is presented as render type <<`annal:FileUpload`>>.
+In this case the field value describes an attachment to the current entity, and for editing is presented as render type <<File upload (`FileUpload`)>>.
 
 === Reference to an imported or uploaded attachment in a designated entity
 
