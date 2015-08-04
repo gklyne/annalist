@@ -91,21 +91,21 @@ The following instructions assume Annalist service running on host `annalist.exa
 
 . Browse to annalist server at `http://annalist.example.org:8000`
 +
-  An empty list of collections should be displayed, along with some help text:
+An empty list of collections should be displayed, along with some help text:
 +
-  image::screenshots/Front-page-initial.png[alt="Initial front page"]
+image::screenshots/Front-page-initial.png[alt="Initial front page"]
 
 . Select the *Login* item from the top menu bar:
 +
-  image::screenshots/Login-initial.png[alt="Initial login page"]
+image::screenshots/Login-initial.png[alt="Initial login page"]
 
 . Log in to Annalist using one of the procedures described belo.]
 
 . After logged in, click the *Home* link on the to menu bar to return to the front page:
 +
-  image::screenshots/Front-page-admin.png[alt="Initial front page after login"]
+image::screenshots/Front-page-admin.png[alt="Initial front page after login"]
 +
-  Note that the front page now shows text entry boxes and a button for creating a new collection.
+Note that the front page now shows text entry boxes and a button for creating a new collection.
 
 
 === Log in with OpenID Connect credentials
@@ -127,7 +127,7 @@ The intended means of Annalist user authentication is via a third party identity
 
 . Select the "Local user credentials: *login*" link at the bottom of the page:
 +
-  image::screenshots/Login-django.png[alt="Django login page"]
+image::screenshots/Login-django.png[alt="Django login page"]
 
 . Enter a previously created username and password
 
@@ -179,11 +179,11 @@ As noted, permissions (currently) apply to the entire content of an annalist Col
 
 A logged in user with ADMIN permissions over a collection may create further collection-level user permissions from the "List users" view of a collection, which is accessed from the default collection view by selecting `User_list` from the `List view` dropdown, then clicking the `View` button:
 
-  image::screenshots/List-users-example.png[alt="List users view"]
+image::screenshots/List-users-example.png[alt="List users view"]
 
 A new user permission record can created from here by clicking the `New` button, which displays a form into which user details may be entered:
 
-  image::screenshots/Edit-user-example.png[alt="User permissions editing view"]
+image::screenshots/Edit-user-example.png[alt="User permissions editing view"]
 
 This form, works like most other Annalist data forms: enter details and click `Save` to create a new user permissions record.
 
