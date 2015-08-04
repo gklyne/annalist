@@ -1,4 +1,4 @@
-= Bare code crossref example
+= Bare <code> crossref example
 Graham Klyne
 v0.1.15, 2015-08-04
 :toc: macro
@@ -11,6 +11,6 @@ Reference to <<`bar`>>
 
 == `bar`
 
-Reference to <<section `foo`>
+Reference to <<section `foo`>>
 
 End.
