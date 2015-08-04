@@ -64,7 +64,7 @@
     - e.g.
         - `git checkout develop`
         - `git merge release-prep-x.y.z`
-- [ ] On develop branch, bump version number again (back to odd value)
+- [x] On develop branch, bump version number again (back to odd value)
 - [ ] Reset TODO list (remove entries moved to release notes, update version)
 - [ ] Commit and push changes
 - [ ] Delete release branch
