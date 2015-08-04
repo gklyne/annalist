@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Note"
 , "rdfs:comment":               "Miscellaneous extra information about the work"
 , "annal:field_render_type":    "Textarea"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Longtext"
 , "annal:placeholder":          "(note about the work)"
 , "annal:property_uri":         "bib:note"

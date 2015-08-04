@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Short code"
 , "rdfs:comment":               "BibJSON(ish) short code for journal"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(short code)"
 , "annal:property_uri":         "bib:shortcode"

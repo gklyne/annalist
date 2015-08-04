@@ -6,6 +6,7 @@
 , "rdfs:comment":               "Type (URI or CURIE) of record displayed using this view.  Used to determine field choices appropriate to this record view."
 , "annal:field_name":           "View_target_type"
 , "annal:field_render_type":    "Identifier"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Identifier"
 , "annal:field_entity_type":    "annal:View"
 , "annal:placeholder":          "(record type URI/CURIE displayed by view)"

@@ -1,7 +1,5 @@
 """
-Renderer and value mapper for field consisting of a list of simple token values.
-
-Simple tokens may not contain whitespace.
+Renderer and value mapper for a group of fields repeated over a list of values.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -42,7 +40,7 @@ view_group = (
             <div class="small-10 columns">
               {% for f in repeat_bound_fields %}
                 <div class="view-group row">
-                  {% include f.field_render_view with field=f %}
+                  {% include f.field_render_label_view with field=f %}
                 </div>
               {% endfor %}
             </div>
@@ -75,7 +73,7 @@ edit_group = (
             <div class="small-10 columns">
               {% for f in repeat_bound_fields %}
                 <div class="edit-group row">
-                  {% include f.field_render_edit with field=f %}
+                  {% include f.field_render_label_edit with field=f %}
                 </div>
               {% endfor %}
             </div>
@@ -112,7 +110,7 @@ view_grouprow = (
                 <div class="small-12 columns">
                   <div class="view-grouprow col-head row">
                     {% for f in field.group_field_descs %}
-                    {% include f.field_render_colhead with field=f %}
+                    {% include f.field_render_colhead_view with field=f %}
                     {% endfor %}
                   </div>
                 </div>
@@ -180,7 +178,7 @@ edit_grouprow = (
                 <div class="small-11 columns">
                   <div class="edit-grouprow col-head row">
                     {% for f in field.group_field_descs %}
-                    {% include f.field_render_colhead with field=f %}
+                    {% include f.field_render_colhead_edit with field=f %}
                     {% endfor %}
                   </div>
                 </div>
@@ -267,7 +265,7 @@ view_listrow = (
           <div class="small-11 columns">
             <div class="view-listrow row">
               {% for f in repeat_bound_fields %}
-              {% include f.field_render_colview with field=f %}
+              {% include f.field_render_view with field=f %}
               {% endfor %}
             </div>
           </div>

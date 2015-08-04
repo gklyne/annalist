@@ -89,8 +89,10 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
     , "Type_Data", "EntityData"
     # Entity types
     , "User", "Type", "List", "View", "Field_group", "Field", "Enum"
-    , "Text", "Longtext", "Slug", "Identifier", "Placement"
-    , "Default_type"
+    , "Text", "Longtext", "Richtext", "Slug", "Identifier"
+    , "Placement", "Image", "Audio", "User"
+    , "Import", "Upload"
+    , "Default_type", "unknown_type"
     # Properties
     , "software_version"
     , "id", "type_id", "type", "label", "help", "url", "uri", "record_type"
@@ -106,9 +108,11 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
     , "repeat", "repeat_id", "repeat_label", "repeat_label_add", "repeat_label_delete"
     , "default_type", "default_view" , "default_list"
     , "field_id", "field_name", "field_placement"
-    , "field_render_type", "field_entity_type"
+    , "field_render_type", "field_value_mode", "field_entity_type"
     , "field_value_type", "field_target_type"
     , "group_ref", "repeat_label_add", "repeat_label_delete"
+    # Deprecated properties - in migration tables
+    , "options_typeref", "restrict_values", "target_field"
     ])
 
 # End.

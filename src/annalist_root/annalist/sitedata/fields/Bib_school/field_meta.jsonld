@@ -5,6 +5,7 @@
 , "rdfs:label":                 "School"
 , "rdfs:comment":               "The school where the thesis was written"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(school where the thesis was written)"
 , "annal:property_uri":         "bib:school"

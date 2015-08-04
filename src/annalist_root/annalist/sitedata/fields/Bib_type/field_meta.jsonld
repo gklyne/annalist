@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Type"
 , "rdfs:comment":               "The type of publication."
 , "annal:field_render_type":    "Enum"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Slug"
 , "annal:placeholder":          "(type of publication)"
 , "annal:property_uri":         "bib:type"

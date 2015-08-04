@@ -9,6 +9,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from annalist.identifiers       import ANNAL
 
 """
 Each resource type URI or CURIE is associated with a list of one or more file 
@@ -22,15 +23,32 @@ File extensions and MIME types are presented as pairs so that an extension
 can be inferred when a MIME content-type is given, and vice versa.
 """
 resource_types = (
-    { "annal:Text":
+    { ANNAL.CURIE.Text:
       [ ("txt",    "text/plain") 
       ]
-    , "annal:Markdown":
+    , ANNAL.CURIE.Richtext:
       [ ("md",     "text/markdown")
       , ("txt",    "text/plain")
       ]
-    , "annal:Image":
+    , ANNAL.CURIE.Image:
       [ ("png",    "image/png")
+      , ("jpg",    "image/jpeg")
+      , ("jpeg",   "image/jpeg")
+      , ("gif",    "image/gif")
+      , ("tiff",   "image/tiff")
+      , ("svg",    "image/svg")
+      ]
+    , ANNAL.CURIE.Audio:
+      [ ("mp3",    "audio/mpeg")
+      , ("mp4",    "audio/mp4")
+      , ("wav",    "audio/wav")
+      , ("ogg",    "audio/ogg")
+      #@@ needs fleshing out?
+      ]
+    , ANNAL.CURIE.Upload:
+      [ ("md",     "text/markdown")
+      , ("txt",    "text/plain")
+      , ("png",    "image/png")
       , ("jpg",    "image/jpeg")
       , ("jpeg",   "image/jpeg")
       , ("gif",    "image/gif")

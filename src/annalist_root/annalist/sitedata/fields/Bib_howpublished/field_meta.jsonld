@@ -5,6 +5,7 @@
 , "rdfs:label":                 "How published"
 , "rdfs:comment":               "How it was published, if the publishing method is nonstandard"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(non-standard publication mechanism)"
 , "annal:property_uri":         "bib:howpublished"

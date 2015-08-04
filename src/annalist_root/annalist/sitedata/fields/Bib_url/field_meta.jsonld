@@ -5,6 +5,7 @@
 , "rdfs:label":                 "URL"
 , "rdfs:comment":               "URL"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(URL)"
 , "annal:property_uri":         "bib:url"

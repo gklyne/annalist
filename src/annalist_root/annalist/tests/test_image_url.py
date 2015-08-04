@@ -1,7 +1,7 @@
 """
 Tests image URL display field.
 
-(Unlike test_render_uri_image, this tests rendering from saved data)
+(Unlike test_render_ref_image, this tests rendering from saved data)
 
 (Unlike test_upload_file, this tests rendering of a field with a direct URI value, 
 not a reference to an upload/import field in some other entity)
@@ -94,12 +94,9 @@ test_image_ref_field_create_values = (
     , 'rdfs:label':                     "test_image_ref_field label"
     , 'rdfs:comment':                   "test_image_ref_field comment"
     , 'annal:property_uri':             "test:reference"
-    , 'annal:field_render_type':        "URIImage"
-    , 'annal:field_value_type':         "annal:Identifier"
-    # , 'annal:field_target_type':        "annal:Identifier"
-    # , 'annal:field_ref_type':           "testupltype"
-    # , 'annal:field_ref_restriction':    "ALL"
-    # , 'annal:field_ref_field':          "test:upload"
+    , 'annal:field_render_type':        "RefImage"
+    , 'annal:field_value_mode':         "Value_direct"
+    , 'annal:field_target_type':        "annal:Identifier"
     , 'annal:placeholder':              "(Image reference)"
     , 'annal:default_value':            ""
     })
@@ -178,7 +175,7 @@ class ImageReferenceTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i].field_id,     "Entity_comment")
         self.assertEqual(r.context['fields'][i].field_value,  "test_ref_image comment")
         i = 3
-        basepath = TestBasePath + "/c/testcoll/d/testupltype/"
+        basepath = TestBasePath + "/c/testcoll/d/testreftype/"
         # print "\n*****\n"+repr(r.context['fields'][i])+"\n*****\n"
         self.assertEqual(r.context['fields'][i].field_id,           "Test_image_ref")
         self.assertEqual(r.context['fields'][i].field_value,        self.imageuri)
@@ -204,7 +201,7 @@ class ImageReferenceTest(AnnalistTestCase):
                 """<div class="view-value small-12 medium-10 columns"> """+
                   """<a href="%(image_uri)s" target="_blank"> """+
                     """<img src="%(image_uri)s" """+
-                    """     alt="Image at %(image_uri)s" /> """+
+                    """     alt="Image at '%(image_uri)s'" /> """+
                   """</a> """+
                 """</div> """+
               """</div> """+

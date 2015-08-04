@@ -188,83 +188,92 @@ def recordlist_view_context_data(
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_list")
         , 'fields':
           [ { 'field_id':           'List_id'                   # fields[0]
+            , 'field_name':         'entity_id'
+            , 'field_target_type':  'annal:Slug'
             , 'field_label':        'Id'
             , 'field_render_type':  'Slug'
-            , 'field_name':         'entity_id'
+            , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_value_type':   'annal:Slug'
             # , 'field_value':      (Supplied separately, below)
             , 'options':            []
             }
           , { 'field_id':           'List_type'                 # fields[1]
+            , 'field_name':         'List_type'
+            , 'field_target_type':  'annal:List_type'
             , 'field_label':        'List display type'
             , 'field_render_type':  'Enum_choice'
-            , 'field_name':         'List_type'
+            , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_value_type':   'annal:List_type'
             , 'field_value':        'List'
             , 'options':            [] # ['list', 'grid']
             }
           , { 'field_id':           'List_label'                # fields[2]
+            , 'field_name':         'List_label'
+            , 'field_target_type':  'annal:Text'
             , 'field_label':        'Label'
             , 'field_render_type':  'Text'
-            , 'field_name':         'List_label'
+            , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value_type':   'annal:Text'
             # , 'field_value':      (Supplied separately, below)
             , 'options':            []
             }
           , { 'field_id':           'List_comment'              # fields[3]
-            , 'field_label':        'Help'
-            , 'field_render_type':  'Textarea'
             , 'field_name':         'List_comment'
+            , 'field_label':        'Help'
+            , 'field_target_type':  'annal:Richtext'
+            , 'field_render_type':  'Markdown'
+            , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value_type':   'annal:Longtext'
             # , 'field_value':      (Supplied separately, below)
             , 'options':            []
             }
           , { 'field_id':           'List_default_type'         # fields[4]
+            , 'field_name':         'List_default_type'
+            , 'field_target_type':  'annal:Type'
             , 'field_label':        'Record type'
             , 'field_render_type':  'Type'
-            , 'field_name':         'List_default_type'
-            , 'field_placement':    get_placement_classes('small:0,6')
-            , 'field_value_type':   'annal:Type'
+            , 'field_value_mode':   'Value_direct'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value':        'Default_type'
             , 'options':            []
             }
           , { 'field_id':           'List_default_view'         # fields[5]
+            , 'field_name':         'List_default_view'
+            , 'field_target_type':  'annal:View'
             , 'field_label':        'View'
             , 'field_render_type':  'View'
-            , 'field_name':         'List_default_view'
-            , 'field_placement':    get_placement_classes('small:6,6')
-            , 'field_value_type':   'annal:View'
+            , 'field_value_mode':   'Value_direct'
+            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
             , 'field_value':        'Default_view'
             , 'options':            []
             }
           , { 'field_id':           'List_entity_selector'      # fields[6]
+            , 'field_name':         'List_entity_selector'
+            , 'field_target_type':  'annal:Text'
             , 'field_label':        'Selector'
             , 'field_render_type':  'Text'
-            , 'field_name':         'List_entity_selector'
+            , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value_type':   'annal:Text'
             , 'field_value':        'ALL'
             , 'options':            []
             }
           , { 'field_id':           'List_target_type'          # fields[7]
+            , 'field_name':         'List_target_type'
+            , 'field_target_type':  'annal:Identifier'
             , 'field_label':        'Record type URI'
             , 'field_render_type':  'Identifier'
-            , 'field_name':         'List_target_type'
+            , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value_type':   'annal:Identifier'
             , 'field_value':        ''
             , 'options':            []
             }
           , { "field_id":           "List_repeat_fields"        # fields[8]
+            , 'field_name':         'List_repeat_fields'
+            , 'field_target_type':  'annal:Field_group'
             , 'field_label':        'Fields'
             , 'field_render_type':  'RepeatGroupRow'
-            , 'field_name':         'List_repeat_fields'
+            , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value_type':   'annal:Field_group'
             , 'field_value':        list_fields
             , 'options':            []
             }

@@ -24,8 +24,7 @@
 
       <div class="row">
         {% for field in fields %}
-        <!-- {{field.field_name}}: {{field.field_render_edit}} -->
-        {% include field.field_render_edit %}
+        {% include field.field_render_label_edit %}
         {% endfor %}
       </div>
 
@@ -65,7 +64,7 @@
       <div class="row">
  
         {% with field=view_choices %}
-        {% include field.field_render_edit %}
+        {% include field.field_render_label_edit %}
         {% endwith %}
 
         {% comment "New type/view/field/group buttons suppressed for now" %}

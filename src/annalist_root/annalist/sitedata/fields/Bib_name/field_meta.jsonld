@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Name"
 , "rdfs:comment":               "BibJSON(ish) name (for author, journal, etc.)"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(name - e.g. 'family, more')"
 , "annal:property_uri":         "bib:name"

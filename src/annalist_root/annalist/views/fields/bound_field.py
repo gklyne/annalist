@@ -121,14 +121,14 @@ class bound_field(object):
         if name in ["entity_id", "entity_link", "entity_type_id", "entity_type_link"]:
             return self._entityvals.get(name, "")
 
-        elif name == "field_value":
+        elif name in ["field_value", "field_edit_value"]:
             return self.get_field_value()
         elif name == "field_value_link":
             return self.get_field_link()
         elif name == "field_value_link_continuation":
             return self.get_link_continuation(self.get_field_link())
 
-        elif name == "target_value":
+        elif name in ["target_value", "field_view_value"]:
             return self.get_target_value()
         elif name == "target_value_link":
             return self.get_target_link()
@@ -172,7 +172,8 @@ class bound_field(object):
         return field_val
 
     def get_field_link(self):
-        # Return link corresponding to field value, or None
+        # Return link corresponding to field value that is a selection from an enumeration of entities
+        # (or some other value with an associated link), or None
         links = self._field_description['field_choice_links']
         v     = self.field_value
         if links and v in links:
@@ -185,13 +186,21 @@ class bound_field(object):
 
         This may be different from field_value if it references another entity field
         """
-        targetvals   = self.get_targetvals()
+        targetvals = self.get_targetvals()
+        log.debug("bound_field.get_target_value: targetvals %r"%(targetvals,))
+        target_key = self._field_description.get('field_ref_field', None)
+        target_key = target_key and target_key.strip()
         if targetvals is not None:
-            target_key   = self._field_description['field_ref_field'].strip()
-            log.debug("get_target_value: target_key %s"%(target_key,))
-            target_value = targetvals.get(target_key, "(@%s)"%(target_key))
+            if target_key:
+                log.debug("bound_field.get_target_value: target_key %s"%(target_key,))
+                target_value = targetvals.get(target_key, "(@%s)"%(target_key))
+            else:
+                target_value = targetvals
+        elif target_key:
+            target_value = self._entityvals.get(target_key, "(@%s)"%(target_key))
         else:
             target_value = self.field_value
+        log.debug("bound_field.get_target_value result: %r"%(target_value,))
         return target_value
 
     def get_target_link(self):
@@ -204,9 +213,9 @@ class bound_field(object):
         If the target value is a dictionary structure created by a URIImport or FileUpload field, 
         the resulting value links to the imported data object.
         """
-        target_base  = self.get_field_link()
+        target_base  = self.get_field_link() or self.entity_link
         target_value = self.get_target_value()
-        log.debug("get_target_link: base %s, value %r"%(target_base, target_value))
+        log.debug("get_target_link: base %r, value %r"%(target_base, target_value))
         if target_base and target_value:
             if isinstance(target_value, dict) and 'resource_name' in target_value:
                 target_ref = target_value['resource_name']
@@ -228,11 +237,11 @@ class bound_field(object):
         return a copy of the referenced target entity, otherwise None.
         """
         log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
-        target_type = self._field_description['field_ref_type']
-        target_key  = self._field_description['field_ref_field']
+        target_type = self._field_description.get('field_ref_type',  None)
+        target_key  = self._field_description.get('field_ref_field', None)
         log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
-        if target_type and target_key:
-            if self._targetvals is None:
+        if self._targetvals is None:
+            if target_type:
                 # Get entity type info
                 #@@TODO: eliminate site param...
                 coll           = self._field_description._collection
@@ -244,10 +253,14 @@ class bound_field(object):
                 req_permissions  = list(set( targettypeinfo.permissions_map[a] for a in ["view", "list"] ))
                 if all([ p in user_permissions for p in req_permissions]):
                     target_id        = self.get_field_value()
-                    self._targetvals = targettypeinfo.get_entity(target_id)
-                    log.debug("bound_field.get_targetvals: %r"%(self._targetvals.get_values(),))
+                    self._targetvals = get_entity_values(targettypeinfo, targettypeinfo.get_entity(target_id))
+                    log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
                 else:
-                    log.warning("bound_field.get_targetvals: target value type %s requires %r permissions"%(target_type, req_permissions))
+                    log.warning(
+                        "bound_field.get_targetvals: target value type %s requires %r permissions"%
+                        (target_type, req_permissions)
+                        )
+        log.debug("bound_field.get_targetvals: targetvals %r"%(self._targetvals,))
         return self._targetvals
 
     def get_link_continuation(self, link):
@@ -301,6 +314,8 @@ class bound_field(object):
         yield "entity_link_continuation"
         yield "entity_type_link"
         yield "entity_type_link_continuation"
+        yield "field_edit_value"
+        yield "field_view_value"
         yield "field_value"
         yield "field_value_link"
         yield "field_value_link_continuation"
@@ -334,9 +349,19 @@ class bound_field(object):
 
     def fullrepr(self):
         return (
-            "bound_field({'field':%r, 'vals':%r, 'field_value':%r, 'extras':%r})"%
-            (self._field_description, dict(self._entityvals.items()), 
-                self.field_value, self._extras) 
+            ( "bound_field(\n"+
+              "  { 'key': %r\n"+
+              "  , 'field_edit_value': %r\n"+
+              "  , 'field_view_value': %r\n"+
+              "  , 'field_descr': %r\n"+
+              "  , 'entity_vals': %r\n"+
+              "  })\n"
+            )%( self._key
+              , self.field_edit_value
+              , self.field_view_value 
+              , self._field_description
+              , dict(self._entityvals.items())
+              )
             )
 
     def htmlrepr(self):
@@ -348,7 +373,7 @@ class bound_field(object):
             "</ul>"
             )
 
-def get_entity_values(displayinfo, entity, entity_id=None):
+def get_entity_values(typeinfo=None, entity=None, entity_id=None):
     """
     Returns an entity values dictionary for a supplied entity, suitable for
     use with a bound_field object.
@@ -357,12 +382,12 @@ def get_entity_values(displayinfo, entity, entity_id=None):
         entity_id = entity.get_id()
     type_id    = entity.get_type_id()
     entityvals = entity.get_values().copy()
-    entityvals['entity_id']      = entity_id
-    entityvals['entity_link']    = entity.get_view_url_path()
+    entityvals['entity_id']        = entity_id
+    entityvals['entity_link']      = entity.get_view_url_path()
     # log.info("type_id %s"%(type_id))
-    entityvals['entity_type_id'] = type_id
-    typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
-    if typeinfo.recordtype:
+    entityvals['entity_type_id']   = type_id
+    #@@ typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
+    if typeinfo and typeinfo.recordtype:
         entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
     return entityvals
 

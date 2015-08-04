@@ -6,6 +6,7 @@
 , "rdfs:comment":               "Type (URI or CURIE) of entity to which field applies.  Used to determine entities for which the field type is offered as an option."
 , "annal:field_name":           "Field_entity_type"
 , "annal:field_render_type":    "Identifier"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Identifier"
 , "annal:placeholder":          "(type URI/CURIE of entity to which field applies)"
 , "annal:field_placement":      "small:0,12"

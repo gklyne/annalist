@@ -5,6 +5,7 @@
 , "rdfs:label":                 "License"
 , "rdfs:comment":               "BibJSON(ish) field for license"
 , "annal:field_render_type":    "RepeatGroup"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "bib:Licenses"
 , "annal:placeholder":          "Article licensing information"
 , "annal:property_uri":         "bib:license"

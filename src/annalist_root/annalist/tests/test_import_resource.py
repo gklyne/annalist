@@ -121,8 +121,8 @@ test_import_field_create_values = (
     , 'rdfs:comment':                   "test_import_field comment"
     , 'annal:property_uri':             "test:import"
     , 'annal:field_render_type':        "URIImport"
-    , 'annal:field_value_type':         "annal:Import"
-    , 'annal:field_target_type':        "annal:Markdown"
+    , 'annal:field_value_mode':         "Value_import"
+    , 'annal:field_value_type':         "annal:Richtext"
     , 'annal:placeholder':              "(URI to import)"
     , 'annal:default_value':            ""
     })
@@ -134,8 +134,8 @@ test_reference_field_create_values = (
     , 'rdfs:comment':                   "test_reference_field comment"
     , 'annal:property_uri':             "test:reference"
     , 'annal:field_render_type':        "URILink"
-    , 'annal:field_value_type':         "annal:Slug"
-    , 'annal:field_target_type':        "annal:Identifier"
+    , 'annal:field_value_mode':         "Value_field"
+    , 'annal:field_value_type':         "annal:Identifier"
     , 'annal:field_ref_type':           "testimptype"
     , 'annal:field_ref_restriction':    "ALL"
     , 'annal:field_ref_field':          "test:import"
@@ -243,7 +243,7 @@ class ImportResourceTest(AnnalistTestCase):
         self.assertEqual(resource_url,  self.fileuri)
         self.assertEqual(resource_type, "text/markdown")
         testobj1 = self.test_imp_type_info.get_fileobj(
-            "test1", "test1res", "annal:Markdown", resource_type, "wb"
+            "test1", "test1res", "annal:Richtext", resource_type, "wb"
             )
         util.copy_resource_to_fileobj(resource_fileobj, testobj1)
         resource_fileobj.close()
@@ -251,7 +251,7 @@ class ImportResourceTest(AnnalistTestCase):
         # Read back both and compare
         siteobj = open(TestBaseDir+"/README.md", "rb")
         testobj = self.test_imp_type_info.get_fileobj(
-            "test1", "test1res", "annal:Markdown", resource_type, "rb"
+            "test1", "test1res", "annal:Richtext", resource_type, "rb"
             )
         self.assertEqual(siteobj.read(), testobj.read())
         return
@@ -278,7 +278,7 @@ class ImportResourceTest(AnnalistTestCase):
         # Read back and compare entity resource just created
         siteobj = open(TestBaseDir+"/README.md", "rb")
         testobj = self.test_imp_type_info.get_fileobj(
-            "test1", "imp_field", "annal:Markdown", "text/markdown", "rb"
+            "test1", "imp_field", "annal:Richtext", "text/markdown", "rb"
             )
         self.assertEqual(siteobj.read(), testobj.read())
         return

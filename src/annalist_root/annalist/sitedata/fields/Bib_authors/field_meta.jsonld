@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Author(s)"
 , "rdfs:comment":               "BibJSON(ish) field for authors"
 , "annal:field_render_type":    "RepeatGroup"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "bib:Authors"
 , "annal:placeholder":          "Author(s) of article"
 , "annal:property_uri":         "bib:author"

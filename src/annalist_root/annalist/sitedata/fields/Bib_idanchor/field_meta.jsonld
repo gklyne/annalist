@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Anchor"
 , "rdfs:comment":               "BibJSON(ish) URL anchor"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(URL anchow value)"
 , "annal:property_uri":         "bib:anchor"

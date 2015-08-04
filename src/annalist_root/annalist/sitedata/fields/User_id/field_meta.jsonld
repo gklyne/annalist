@@ -7,9 +7,10 @@
 , "annal:field_name":           "entity_id"
 , "annal:placeholder":          "(user id)"
 , "annal:field_render_type":    "EntityId"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Slug"
 , "annal:field_entity_type":    "annal:User"
 , "annal:property_uri":         "annal:id"
-, "annal:field_placement":      "small:0,6"
+, "annal:field_placement":      "small:0,12;medium:0,6"
 , "annal:default_value":        ""
 }

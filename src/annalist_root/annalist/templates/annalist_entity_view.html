@@ -16,8 +16,7 @@
 
       <div class="row">
         {% for field in fields %}
-        <!-- {{field.field_name}}: {{field.field_render_view}} -->
-        {% include field.field_render_view %}
+        {% include field.field_render_label_view %}
         {% endfor %}
       </div>
 
@@ -57,7 +56,7 @@
 
       <div class="row">
         {% with field=view_choices %}
-        {% include field.field_render_edit %}
+        {% include field.field_render_label_edit %}
         {% endwith %} 
       </div>
 

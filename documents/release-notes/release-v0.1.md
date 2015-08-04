@@ -27,6 +27,7 @@ Key features implemented:
 * Authorization framework for access control, applied mainly per-collection but with site-wide defaults.
 * Support for linking to and annotating binary objects such as images.
 * Image rendering
+* Audio clip rendering (via HTML5 capabilities)
 
 Intended core features not yet fully implemented but which are intended for the first full release:
 
@@ -34,7 +35,6 @@ Intended core features not yet fully implemented but which are intended for the 
 * Support for JSON-LD contexts.
 * Full linked data support, recognizing a range of linked data formats and facilitating the creation of links in and out.  (Links can be created, but it's currently a mostly manual process.)
 * Serve and access data through a standard HTTP server (current implementation uses direct file access).
-* Rendering media other than images.
 * Grid view (e.g. for photo+metadata galleries).
 
 An intended core feature that will probably not make the first release is data bridges to other data sources, in particular to allow Annalist to work with existing spreadhseet data.
@@ -71,7 +71,7 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 * [Annalist overview](../introduction.md)
 * [Installing and setting up Annalist](../installing-annalist.md)
 * [Getting started with Annalist](../getting-started.md)
-* [Guide to using Annalist](../using-annalist.md)
+* [Guide to using Annalist](../using-annalist.adoc)
 * [Simple demonstration sequence](../demo-script.md)
 * [Frequently asked questions](../faq.md)
 * [Developer information](../developer-info.md)
@@ -79,6 +79,43 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 
 # History
+
+## Version 0.1.16
+
+The main advances in this release are improvement of the file upload and resource import logic, and improvements to the form rendering to make it easier to use media attachments.  One strategy adopted is to use an entity type as a "media library" to which resources can be attached, and to provide new field rendering options to reference the attached resources and associated metadata.  These new capabilities have been used to enhance the picture displays in the "CruisingLog" demo collection at http://demo.annalistr.net/ (see definitions for `DailyLog`, `Place` and `Picture`).
+
+Other changes include:
+
+* Support for audio clips
+* General rationalization of some aspects of the form rendering logic
+* More test cases
+* Documentation updates
+
+
+## Version 0.1.15, towards 0.1.16
+
+- [x] create picture gallery demonstration collection to test file uploads
+- [x] BUG: file upload when creating entity appears to not work; need to create first then upload.
+- [x] ensure attachments are moved when entity is renamed.
+- [x] test cases for upload image displayed in same entity, rename with attachments, edit entity with attachment
+- [x] file upload view/edit: display uploaded filename as well as link
+- [x] rename render type URIImage as RefImage; update documentation
+- [x] allow multiple fields displayed from referenced entity (e.g. image for file upload).
+- [x] add render type RefAudio (use embedded HTML player); update documentation
+- [x] rationalize field description form to make handling of upload/import and references to fields in other entities more obvious
+    - [x] Add `field_value_mode` to field description
+    - [x] Add migration logic to set `field_value_mode` appropriately in field definitions
+    - [x] Change some field labels
+    - [x] Rename FieldDescription method `has_import_button` to `is_import_field`
+    - [x] Use `field_value_mode` to determine `is_import_field` and `is_upload_field`
+    - [x] Find all references to `field_value_type` and change logic to use `field_value_mode`
+    - [x] Remove references to `field_ref_type` when selecting renderer (`get_edit_type`, others?)
+    - [x] Remove 'field_value_type' from `FieldDescription`.  Update all tests to use 'field_target_type'
+    - [x] Add 'field_value_mode' to all field descriptions in site data and some example data
+    - [x] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type` in site and demo data
+    - [x] Update all references in code to 'annal:...' value types to use ANNAL.CURIE.... values instead
+- [x] Update documentation (including README.md status summary)
+
 
 ## Version 0.1.14
 

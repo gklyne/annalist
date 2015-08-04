@@ -22,14 +22,14 @@ log = logging.getLogger(__name__)
 # from django.test                                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 # from django.template                            import Context, Template, loader
 
-from annalist.views.fields.render_uri_image import (
-    get_uri_image_renderer, 
-    URIImageValueMapper
+from annalist.views.fields.render_ref_image import (
+    get_ref_image_renderer, 
+    RefImageValueMapper
     )
 
 from annalist.tests.field_rendering_support     import FieldRendererTestSupport
 
-class UriImageRenderingTest(FieldRendererTestSupport):
+class RefImageRenderingTest(FieldRendererTestSupport):
 
     def setUp(self):
         return
@@ -37,12 +37,12 @@ class UriImageRenderingTest(FieldRendererTestSupport):
     def tearDown(self):
         return
 
-    def test_RenderUriImageValue(self):
+    def test_RenderRefImageValue(self):
 
         def expect_render(linktext, alttext):
             render_view = (
                 '''<a href="%s" target="_blank">'''%(linktext)+
-                  '''<img src="%s" alt="Image at %s" />'''%(linktext, alttext)+
+                  '''<img src="%s" alt="Image at '%s'" />'''%(linktext, alttext)+
                 '''</a>'''
                 )
             render_edit = (
@@ -62,7 +62,7 @@ class UriImageRenderingTest(FieldRendererTestSupport):
             [ (self._make_test_context(linktext, target_link=linktext),  expect_render(linktext, alttext))
                 for linktext, alttext in test_values
             ])
-        renderer = get_uri_image_renderer()
+        renderer = get_ref_image_renderer()
 
         for render_context, expect_render in test_value_context_renders:
             # print repr(render_context['field']['field_value'])
@@ -74,7 +74,7 @@ class UriImageRenderingTest(FieldRendererTestSupport):
                 )
         return
 
-    def test_DecodeUriImageValue(self):
+    def test_DecodeRefImageValue(self):
         test_decode_values = (
             { None:                         ""
             , "http://example.com/path":    "http://example.com/path"
@@ -83,7 +83,7 @@ class UriImageRenderingTest(FieldRendererTestSupport):
             , "file://example.com/path":    "file://example.com/path"
             })
         for valtext, expect_valdata in test_decode_values.items():
-            valdata = URIImageValueMapper.decode(valtext)
+            valdata = RefImageValueMapper.decode(valtext)
             self.assertEqual(
                 valdata, expect_valdata, 
                 "Value decode(%s) = %r, expect %r"%(valtext, valdata, expect_valdata)

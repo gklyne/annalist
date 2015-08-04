@@ -14,11 +14,11 @@
 - [x] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
 - [x] Documentation updates
-- [-] Demo screencast update
+- [x] Demo screencast update
 - [x] Create release preparation branch
     - `git checkout -b release-prep-x.y.z develop`
     - *NOTE* use a different name to that which will be used to tag the release
-- [x] Add TODO list to release notes
+- [x] Add TODO list to release notes (edit out working notes)
 - [x] Bump version to even value in `src/annalist_root/annalist/__init__.py`
 - [x] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`), reinstall and re-test
 - [x] Add release highlights description to release notes
@@ -33,20 +33,21 @@
     - [x] src/newkit_to_conina_ubuntu.sh
     - [x] Docker build scripts
 - [x] Create announcement text in `documents/release-notes/announce_0.1.*.md`
-- [ ] Demo deployment; test
-    - cf. `src/newkit_to_annalist_net.sh`
-- [ ] Create and post updated kit download and web pages to annalist.net
+- [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
-- [ ] Update demo installation on annalist.net; test
+- [x] Demo deployment; test
+- [x] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
+        cp ~annalist/uploads/pages/index.html /var/www
+- [x] Update demo installation on annalist.net; test
+    - ssh to annalist@annalist.net
     - `killall python`
     - `. anenv/bin/activate`
     - `pip uninstall annalist`
-    - `pip install /var/www/software/Annalist-0.1.12.tar.gz --upgrade`
+    - `pip install /var/www/software/Annalist-0.1.xx.tar.gz --upgrade`
     - `annalist-manager runtests`
     - `. update-run-annalist.sh`
     - `cat annalist.out`
-- [ ] Commit changes
+- [x] Commit changes
 - [ ] Upload to PyPI (see below)
 - [ ] Tag release on release branch
     - `git tag -a release-x.y.z`
@@ -56,6 +57,7 @@
         - `git merge release-prep-x.y.z`
 - [ ] Test again on master branch
 - [ ] Push master branch, and tags
+    - `git push`
     - `git push --tags`
 - [ ] Merge release branch to develop
     - take care to ensure the branch is merged, not the tagged release
@@ -70,6 +72,7 @@
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)
 - [ ] Post announcement to Google Group, Twitter and elsewhere
+- [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`), retest
 
 ## Build kit and PyPI upload
 
@@ -91,19 +94,20 @@ Upload to PyPI:
 
 ## Create docker images
 
-The following sequence must be run on any system with docker installed.  It assumes that the relevant version of Annalist has been installed and tested on the local system.
+The following sequence must be run on any system with docker installed (cf. ssh-dev-annalist.sh).  It assumes that the relevant version of Annalist has been installed and tested on the local system.
 
-Use a well-connected Linux system for the following steps.
+Use a well-connected Linux system for the following steps, and set the python virtual environment.
 
     cd ${ANNALIST}/src
     git checkout master
     git pull
+    pip uninstall annalist
     python setup.py clean --all
     python setup.py build
     python setup.py install
     annalist-manager version  # Check display
 
-    cd ${ANNALIST}/src/docker/annalist-site
+    cd ${ANNALIST}/src/docker/annalist_site
     make all
     make push
 

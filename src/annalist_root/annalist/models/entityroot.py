@@ -294,7 +294,7 @@ class EntityRoot(object):
         # @TODO: is this next needed?  Put logic in set_values?
         if self._entityid:
             values[ANNAL.CURIE.id] = self._entityid
-        values.pop('annal:url', None)
+        values.pop(ANNAL.CURIE.url, None)
         with open(fullpath, "wt") as entity_io:
             json.dump(values, entity_io, indent=2, separators=(',', ': '))
         self._entityuseurl  = self._entityurl
@@ -388,6 +388,40 @@ class EntityRoot(object):
             if util.valid_id(fil):
                 yield fil
         return
+
+    def _entity_files(self):
+        """
+        Iterates over files/resources (not subdirectories) that are part of the current entity.
+
+        Returns pairs (p,f), where 'p' is a full path name, and 'f' is a filename within the 
+        current entity directory. 
+        """
+        for f in os.listdir(self._entitydir):
+            p = os.path.join(self._entitydir, f)
+            if os.path.isfile(p):
+                yield (p, f)
+        return
+
+    def _exists_file(self, f):
+        """
+        Test if a file named 'f' exists inthe current entity directory
+        """
+        return os.path.isfile(os.path.join(self._entitydir, f))
+
+    def _copy_file(self, p, f):
+        """
+        Copy file with path 'p' to a new file 'f' in the current entity directory
+        """
+        new_p = os.path.join(self._entitydir, f)
+        try:
+            shutil.copy(p, new_p)
+        except shutil.Error as e:
+            log.error('shutil.copy error: %s' % e)
+            return None
+        except IOError as e:
+            log.error('shutil.copy IOError: %s' % e.strerror)
+            return None
+        return new_p
 
     def _fileobj(self, localname, filetypeuri, mimetype, mode):
         """

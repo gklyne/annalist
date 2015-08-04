@@ -24,25 +24,28 @@
 
 Prerequisite for this option:  a Linux operating system with [Docker](https://www.docker.com) installed.
 
-If Annalist docker containers have been used previously on the host system, the following commamnds ensure you have the latest images:
+If Annalist Docker containers have been used previously on the host system, the following commamnds ensure you have the latest images:
 
     docker pull gklyne/annalist_site
     docker pull gklyne/annalist
 
-Then
+If this is the first time Annalist has been run on this system, create a new Annalist site data container:
 
     docker run --name=annalist_site --detach gklyne/annalist_site
+
+Then
+
     docker run --interactive --tty --rm \
         --publish=8000:8000 --volumes-from=annalist_site \
         gklyne/annalist bash
 
-The remaining commands are executed in the shell environment presented by the final `docker run` command above.
+The remaining commands are executed in the shell environment presented by the `docker run` command above.
 
     annalist-manager version
 
-Check the version displayed: I've found docker sometimes caches older versions and fails up update to the latest available.  If necessary, use `docker rmi gklyne/annalist` to remove old images from the local cache.  If all is well, continue as follows:
+Check the version displayed: I've found Docker sometimes caches older versions and fails up update to the latest available.  If necessary, use `docker rmi gklyne/annalist` to remove old images from the local cache.  If all is well, continue as follows:
 
-If this is the first time annalist has been run on this system, create a new Annalist site data and database:
+If this is the first time Annalist has been run on this system, create a new Annalist site data and database:
 
     annalist-manager createsitedata
     annalist-manager initialize
@@ -153,9 +156,9 @@ The following assumes that software is installed under a directory called $WORKS
 
         pip install annalist
 
-4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.14.tar.gz).  Then install it thus:
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.16.tar.gz).  Then install it thus:
 
-        pip install $WORKSPACE/Annalist-0.1.14.tar.gz
+        pip install $WORKSPACE/Annalist-0.1.16.tar.gz
 
 5.  Finally, test the installed software:
 
@@ -163,22 +166,22 @@ The following assumes that software is installed under a directory called $WORKS
 
     The output from this command should look something like this:
 
-        INFO:annalist_site.settings.runtests:Annalist version 0.1.14 (test configuration)
+        anenv)conina:src graham$ annalist-manager runtests
+        INFO:annalist_site.settings.runtests:Annalist version 0.1.16 (test configuration)
         INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
-        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.14-py2.7.egg/annalist_root/sampledata/data
+        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.16-py2.7.egg/annalist_root/sampledata/data
         INFO:annalist_site.settings.runtests:CONFIG_BASE:     /Users/graham/.annalist/
         INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/django
-        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.14-py2.7.egg/annalist_root/annalist_site
-        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.14-py2.7.egg/annalist_root
-        INFO:annalist_site.settings.runtests:DB PATH:         /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.14-py2.7.egg/annalist_root/db.sqlite3
+        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.16-py2.7.egg/annalist_root/annalist_site
+        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.16-py2.7.egg/annalist_root
+        INFO:annalist_site.settings.runtests:DB PATH:         /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.16-py2.7.egg/annalist_root/db.sqlite3
         Creating test database for alias 'default'...
-        ............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+        ......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
         ----------------------------------------------------------------------
-        Ran 540 tests in 234.506s
+        Ran 550 tests in 242.974s
 
         OK
         Destroying test database for alias 'default'...
-
 
 ## Setting up an Annalist site
 
@@ -319,7 +322,7 @@ Click on the link in the Id column to view the new collection:
 
 ![Initial view of new collection](screenshots/Collection-initial-view.png)
 
-From this screen, you can start to add data to this collection.  For more information, see [Using Annalist](using-annalist.md)
+From this screen, you can start to add data to this collection.  For more information, see [Using Annalist](using-annalist.adoc)
 
 
 ## `annalist-manager` command reference

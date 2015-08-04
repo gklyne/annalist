@@ -82,11 +82,11 @@ For rendering fields that cannot be handled by Django templates, new rendering c
 
 ## Using a new renderer
 
-1.  Add the renderer type name to the enumeration defined in `annalist/sitedata/enums/Enum_render_type`; this allows the render type to appear on the field type drop-down that is presented when defining a new view or field group in Annalist.  This is easily achieved by duplicating one of the existing directories (e.g. `Text`) to use the new render type name (previously selected at step 1) and editing the file `enum_meta.jsonld` (fields `annal:id`, `rdfs:label`, `rdfs:comment` and `annal:uri`).  The new directory name created must match the dictionary key name used when uopdating `annalist/views/fields/render_utils.py`.
+1.  Add the renderer type name to the enumeration defined in `annalist/sitedata/enums/Enum_render_type`; this allows the render type to appear on the field type drop-down that is presented when defining a new view or field group in Annalist.  This is easily achieved by duplicating one of the existing directories (e.g. `Text`) to use the new render type name (previously selected at step 1) and editing the file `enum_meta.jsonld` (fields `annal:id`, `rdfs:label`, `rdfs:comment` and `annal:uri`).  The new directory name created must match the dictionary key name used when updating `annalist/views/fields/render_utils.py`.
 
 2.  Update the test modules to accommodate the new render type, and retest:
     * `annalist/tests/test_entitygenericlist.py` about line 244 (bump counter)
-    * `annalist/tests/entity_testsitedata.py`, about line 306 (add new render type name in sorted list)
+    * `annalist/tests/entity_testsitedata.py`, from about line 313 (add new render type name in sorted list)
 
 3. Update site or collection data field definitions to use the new renderer as appropiate.
 

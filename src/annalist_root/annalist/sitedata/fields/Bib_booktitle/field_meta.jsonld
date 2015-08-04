@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Book title"
 , "rdfs:comment":               "BibJSON(ish) field Bib_booktitle"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(book title)"
 , "annal:property_uri":         "bib:Bib_booktitle"

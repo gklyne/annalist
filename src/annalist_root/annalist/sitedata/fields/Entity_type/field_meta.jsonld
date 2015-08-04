@@ -6,6 +6,7 @@
 , "rdfs:comment":               "A short identifier that identifies the type of the corresponding entity."
 , "annal:field_name":           "entity_type"
 , "annal:field_render_type":    "EntityTypeId"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Slug"
 , "annal:placeholder":          "(type id)"
 , "annal:property_uri":         "annal:type_id"

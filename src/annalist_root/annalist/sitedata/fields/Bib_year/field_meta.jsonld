@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Year"
 , "rdfs:comment":               "The year of publication (or, if unpublished, the year of creation)"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(Bib_year)"
 , "annal:property_uri":         "bib:year"

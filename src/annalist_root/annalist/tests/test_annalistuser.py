@@ -236,7 +236,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             , 'field_label':        "Permissions"
             , 'field_placeholder':  "(user permissions)"
             , 'field_name':         "User_permissions"
-            , 'field_value':        ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+            , 'field_edit_value':   ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             })
         context  = Context({'field': field})
         rendered = get_field_tokenset_renderer().label_edit().render(context)
@@ -266,7 +266,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             , 'field_label':            "Permissions"
             , 'field_placeholder':      "(user permissions)"
             , 'field_name':             "User_permissions"
-            , 'field_value':            ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+            , 'field_edit_value':       ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             , 'field_render_object':    get_field_tokenset_renderer().label_edit()
             })
         template = Template("{% include field.field_render_object %}")

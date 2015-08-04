@@ -6,6 +6,7 @@
 , "rdfs:label":                 "Journal"
 , "rdfs:comment":               "BibJSON(ish) field for journal"
 , "annal:field_render_type":    "RepeatGroup"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "bib:Journal"
 , "annal:placeholder":          "Journal in which paper is published"
 , "annal:property_uri":         "bib:journal"

@@ -13,7 +13,8 @@ log = logging.getLogger(__name__)
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_field_value
+    get_field_edit_value,
+    get_field_view_value
     )
 
 from django.template    import Template, Context
@@ -31,11 +32,26 @@ class FileUploadValueMapper(RenderBase):
     """
 
     @classmethod
+    def resource_name(cls, data_value):
+        """
+        Extracts import URL ref from value structure, for field display.
+        """
+        return (data_value or {}).get('resource_name', "(@@resource_name not present)")
+
+    @classmethod
+    def uploaded_file(cls, data_value):
+        """
+        Extracts uploaded filename from value structure, for field display.
+        """
+        return (data_value or {}).get('uploaded_file', "")
+
+
+    @classmethod
     def encode(cls, data_value):
         """
-        Extracts import URL from value structure, for field display.
+        Extracts import URL ref from value structure, for field display.
         """
-        return (data_value or {}).get('resource_name', "")
+        return cls.resource_name(data_value)
 
     @classmethod
     def decode(cls, field_value):
@@ -70,13 +86,16 @@ class FileUploadValueMapper(RenderBase):
 #       (cf. https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a)
 
 view_upload = (
-    """<a href="%s" target="_blank">%s</a>""")
+    """Uploaded file <a href="%s" target="_blank">%s</a>""")
 
 edit_upload = (
     """<!-- fields.render_file_upload -->
     <input type="file" name="{{repeat_prefix}}{{field.field_name}}"
            placeholder="{{field.field_placeholder}}"
-           value="{{encoded_field_value}}" />
+           value="{{resource_name}}" />
+    {% if uploaded_file != "" %}
+    Previously uploaded: {{uploaded_file}}
+    {% endif %}
     """)
 
 #   ----------------------------------------------------------------------------
@@ -91,9 +110,9 @@ class File_upload_view_renderer(object):
         """
         Render import link for viewing.
         """
-        filename = FileUploadValueMapper.encode(get_field_value(context, ""))
-        linkval  = filename
-        textval  = filename
+        val      = get_field_view_value(context, None)
+        linkval  = FileUploadValueMapper.resource_name(val)
+        textval  = FileUploadValueMapper.uploaded_file(val)
         return view_upload%(linkval, textval)
 
 class File_upload_edit_renderer(object):
@@ -106,8 +125,10 @@ class File_upload_edit_renderer(object):
         """
         Render import link for editing
         """
-        val = FileUploadValueMapper.encode(get_field_value(context, None))
-        with context.push(encoded_field_value=val):
+        val = get_field_edit_value(context, None)
+        resource_name = FileUploadValueMapper.resource_name(val)
+        uploaded_file = FileUploadValueMapper.uploaded_file(val)
+        with context.push(resource_name=resource_name, uploaded_file=uploaded_file):
             result = self._template.render(context)
         return result
 

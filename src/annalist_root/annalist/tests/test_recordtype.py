@@ -218,30 +218,32 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         type_id_help = (
             "A short identifier that distinguishes this type from all other types in the same collection."
             )
-        self.assertEqual(r.context['fields'][0]['field_id'], 'Type_id')
-        self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
-        self.assertEqual(r.context['fields'][0]['field_help'], type_id_help)
-        self.assertEqual(r.context['fields'][0]['field_placeholder'], "(type id)")
+        self.assertEqual(r.context['fields'][0]['field_id'],           'Type_id')
+        self.assertEqual(r.context['fields'][0]['field_name'],         'entity_id')
+        self.assertEqual(r.context['fields'][0]['field_label'],        'Id')
+        self.assertEqual(r.context['fields'][0]['field_help'],         type_id_help)
+        self.assertEqual(r.context['fields'][0]['field_placeholder'],  "(type id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
+        self.assertEqual(r.context['fields'][0]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][0]['field_target_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][0]['field_value_type'], "annal:Slug")
-        self.assertEqual(r.context['fields'][0]['field_value'], type_id)
-        self.assertEqual(r.context['fields'][0]['options'], self.no_options)
+        self.assertEqual(r.context['fields'][0]['field_value'],        type_id)
+        self.assertEqual(r.context['fields'][0]['options'],            self.no_options)
         # 2nd field - Label
         type_label_help = (
             "Short string used to describe record type when displayed"
             )
-        self.assertEqual(r.context['fields'][1]['field_id'], 'Type_label')
-        self.assertEqual(r.context['fields'][1]['field_name'], 'Type_label')
-        self.assertEqual(r.context['fields'][1]['field_label'], 'Label')
-        self.assertEqual(r.context['fields'][1]['field_help'], type_label_help)
+        self.assertEqual(r.context['fields'][1]['field_id'],          'Type_label')
+        self.assertEqual(r.context['fields'][1]['field_name'],        'Type_label')
+        self.assertEqual(r.context['fields'][1]['field_label'],       'Label')
+        self.assertEqual(r.context['fields'][1]['field_help'],        type_label_help)
         self.assertEqual(r.context['fields'][1]['field_placeholder'], "(label)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "rdfs:label")
+        self.assertEqual(r.context['fields'][1]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][1]['field_target_type'],  "annal:Text")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][1]['field_value_type'], "annal:Text")
-        self.assertEqual(r.context['fields'][1]['field_value'], type_label)
-        self.assertEqual(r.context['fields'][1]['options'], self.no_options)
+        self.assertEqual(r.context['fields'][1]['field_value'],        type_label)
+        self.assertEqual(r.context['fields'][1]['options'],            self.no_options)
         # 3rd field - comment
         type_comment_help = (
             "Descriptive text about a record type"
@@ -249,16 +251,17 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         type_comment_placeholder = (
             "(type description)"
             )
-        self.assertEqual(r.context['fields'][2]['field_id'], 'Type_comment')
-        self.assertEqual(r.context['fields'][2]['field_name'], 'Type_comment')
-        self.assertEqual(r.context['fields'][2]['field_label'], 'Comment')
-        self.assertEqual(r.context['fields'][2]['field_help'], type_comment_help)
+        self.assertEqual(r.context['fields'][2]['field_id'],          'Type_comment')
+        self.assertEqual(r.context['fields'][2]['field_name'],        'Type_comment')
+        self.assertEqual(r.context['fields'][2]['field_label'],       'Comment')
+        self.assertEqual(r.context['fields'][2]['field_help'],        type_comment_help)
         self.assertEqual(r.context['fields'][2]['field_placeholder'], type_comment_placeholder)
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:comment")
+        self.assertEqual(r.context['fields'][2]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][2]['field_target_type'],  "annal:Richtext")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][2]['field_value_type'], "annal:Longtext")
-        self.assertEqual(r.context['fields'][2]['field_value'], type_help)
-        self.assertEqual(r.context['fields'][2]['options'], self.no_options)
+        self.assertEqual(r.context['fields'][2]['field_value'],        type_help)
+        self.assertEqual(r.context['fields'][2]['options'],            self.no_options)
         # 4th field - URI
         type_uri_help = (
             "Entity type URI"
@@ -266,16 +269,17 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         type_uri_placeholder = (
             "(URI)"
             )
-        self.assertEqual(r.context['fields'][3]['field_id'], 'Type_uri')
-        self.assertEqual(r.context['fields'][3]['field_name'], 'Type_uri')
-        self.assertEqual(r.context['fields'][3]['field_label'], 'URI')
-        self.assertEqual(r.context['fields'][3]['field_help'], type_uri_help)
+        self.assertEqual(r.context['fields'][3]['field_id'],          'Type_uri')
+        self.assertEqual(r.context['fields'][3]['field_name'],        'Type_uri')
+        self.assertEqual(r.context['fields'][3]['field_label'],       'URI')
+        self.assertEqual(r.context['fields'][3]['field_help'],        type_uri_help)
         self.assertEqual(r.context['fields'][3]['field_placeholder'], type_uri_placeholder)
         self.assertEqual(r.context['fields'][3]['field_property_uri'], "annal:uri")
+        self.assertEqual(r.context['fields'][3]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][3]['field_target_type'],  "annal:Identifier")
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][3]['field_value_type'], "annal:Identifier")
-        self.assertEqual(r.context['fields'][3]['field_value'], type_uri)
-        self.assertEqual(r.context['fields'][3]['options'], self.no_options)
+        self.assertEqual(r.context['fields'][3]['field_value'],        type_uri)
+        self.assertEqual(r.context['fields'][3]['options'],            self.no_options)
         # 5th field - view id
         type_view_id_help = (
             "Default view id for this type"
@@ -283,16 +287,17 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         type_view_id_placeholder = (
             "(view id)"
             )
-        self.assertEqual(r.context['fields'][4]['field_id'], 'Type_view')
-        self.assertEqual(r.context['fields'][4]['field_name'], 'Type_view')
-        self.assertEqual(r.context['fields'][4]['field_label'], 'Default view')
-        self.assertEqual(r.context['fields'][4]['field_help'], type_view_id_help)
+        self.assertEqual(r.context['fields'][4]['field_id'],          'Type_view')
+        self.assertEqual(r.context['fields'][4]['field_name'],        'Type_view')
+        self.assertEqual(r.context['fields'][4]['field_label'],       'Default view')
+        self.assertEqual(r.context['fields'][4]['field_help'],        type_view_id_help)
         self.assertEqual(r.context['fields'][4]['field_placeholder'], type_view_id_placeholder)
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:type_view")
+        self.assertEqual(r.context['fields'][4]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][4]['field_target_type'],  "annal:View")
         self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][4]['field_value_type'], "annal:View")
-        self.assertEqual(r.context['fields'][4]['field_value'], type_view)
-        self.assertEqual(r.context['fields'][4]['options'], self.view_options)
+        self.assertEqual(r.context['fields'][4]['field_value'],        type_view)
+        self.assertEqual(r.context['fields'][4]['options'],            self.view_options)
         # 6th field - list id
         type_list_id_help = (
             "Default list id for this type"
@@ -300,16 +305,17 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         type_list_id_placeholder = (
             "(list id)"
             )
-        self.assertEqual(r.context['fields'][5]['field_id'], 'Type_list')
-        self.assertEqual(r.context['fields'][5]['field_name'], 'Type_list')
-        self.assertEqual(r.context['fields'][5]['field_label'], 'Default list')
-        self.assertEqual(r.context['fields'][5]['field_help'], type_list_id_help)
+        self.assertEqual(r.context['fields'][5]['field_id'],          'Type_list')
+        self.assertEqual(r.context['fields'][5]['field_name'],        'Type_list')
+        self.assertEqual(r.context['fields'][5]['field_label'],       'Default list')
+        self.assertEqual(r.context['fields'][5]['field_help'],        type_list_id_help)
         self.assertEqual(r.context['fields'][5]['field_placeholder'], type_list_id_placeholder)
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_list")
+        self.assertEqual(r.context['fields'][5]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][5]['field_target_type'],  "annal:List")
         self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][5]['field_value_type'], "annal:List")
-        self.assertEqual(r.context['fields'][5]['field_value'], type_list)
-        self.assertEqual(r.context['fields'][5]['options'], self.list_options)
+        self.assertEqual(r.context['fields'][5]['field_value'],        type_list)
+        self.assertEqual(r.context['fields'][5]['options'],            self.list_options)
         return
 
     #   -----------------------------------------------------------------------------

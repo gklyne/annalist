@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Institution"
 , "rdfs:comment":               "The institution that was involved in the publishing, but not necessarily the publisher"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(institution involkved in publication)"
 , "annal:property_uri":         "bib:institution"

@@ -2,7 +2,7 @@ To Google group:
 
 I've just released an update (0.1.6) to the first public prototype of Annalist.
 
-The major visible change in this release is the implementation of an Authorization (access control) framework (separate from the authentication mechanisms).  Authorization is applied mainly at the level of an Annalist collection, with provision for site-wide defaults to be defined through the `annalist-manager` utility.  Separate permissions are used for accessing data, creating data, modifying data, changing collection structure and changing user permissions.  More details can be found in the [Guide to using Annalist](https://github.com/gklyne/annalist/blob/master/documents/using-annalist.md), in the section headed "Access control and user permissions".
+The major visible change in this release is the implementation of an Authorization (access control) framework (separate from the authentication mechanisms).  Authorization is applied mainly at the level of an Annalist collection, with provision for site-wide defaults to be defined through the `annalist-manager` utility.  Separate permissions are used for accessing data, creating data, modifying data, changing collection structure and changing user permissions.  More details can be found in the [Guide to using Annalist](https://github.com/gklyne/annalist/blob/master/documents/using-annalist.adoc), in the section headed "Access control and user permissions".
 
 There are many other small improvements in this release, including:
 - New field rendering types (token set and optional enumerated value)

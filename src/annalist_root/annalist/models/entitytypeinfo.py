@@ -165,9 +165,10 @@ TYPE_CLASS_MAP = (
     , '_view':              RecordView
     , '_group':             RecordGroup
     , '_field':             RecordField
-    , 'Enum_list_type':     RecordEnumFactory('Enum_list_type',  'Enum_list_type')
+    , 'Enum_list_type':     RecordEnumFactory('Enum_list_type',   'Enum_list_type')
     , 'Enum_render_type':   RecordEnumFactory('Enum_render_type', 'Enum_render_type')
-    , 'Enum_bib_type':      RecordEnumFactory('Enum_bib_type',   'Enum_bib_type')
+    , 'Enum_value_mode':    RecordEnumFactory('Enum_value_mode',    'Enum_value_mode')
+    , 'Enum_bib_type':      RecordEnumFactory('Enum_bib_type',    'Enum_bib_type')
     })
 
 TYPE_MESSAGE_MAP = (
@@ -179,6 +180,7 @@ TYPE_MESSAGE_MAP = (
     , '_field':             FIELD_MESSAGES
     , 'Enum_list_type':     ENUM_MESSAGES
     , 'Enum_render_type':   ENUM_MESSAGES
+    , 'Enum_value_mode':    ENUM_MESSAGES
     , 'Enum_bib_type':      ENUM_MESSAGES
     })
 
@@ -191,6 +193,7 @@ TYPE_PERMISSIONS_MAP = (
     , '_field':             CONFIG_PERMISSIONS
     , 'Enum_list_type':     CONFIG_PERMISSIONS
     , 'Enum_render_type':   CONFIG_PERMISSIONS
+    , 'Enum_value_mode':    CONFIG_PERMISSIONS
     , 'Enum_bib_type':      CONFIG_PERMISSIONS
     })
 
@@ -272,6 +275,12 @@ class EntityTypeInfo(object):
             log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
         return
 
+    def _new_entity(self, entity_id):
+        """
+        Returns a new, entity object of the current type with the given id
+        """
+        return self.entityclass(self.entityparent, entity_id)
+
     def parent_exists(self):
         """
         Test for existence of parent entity for the current type.
@@ -331,7 +340,7 @@ class EntityTypeInfo(object):
         entity = None
         if util.valid_id(entity_id):
             if action == "new":
-                entity = self.entityclass(self.entityparent, entity_id)
+                entity = self._new_entity(entity_id)
                 entity_initial_values = self.get_initial_entity_values(entity_id)
                 entity.set_values(entity_initial_values)
             elif self.entityclass.exists(
@@ -363,6 +372,34 @@ class EntityTypeInfo(object):
                 if inferred_entity.get(tgt, None) in [None, ""]:
                     inferred_entity[tgt] = inferred_entity.get(src, "")
         return inferred_entity
+
+    def copy_data_files(self, new_entity_id, old_typeinfo, old_entity_id):
+        """
+        Copy associated data files from specified entity to new.
+        """
+        if self.entity_exists(new_entity_id):
+            if old_typeinfo.entity_exists(old_entity_id):
+                new_entity = self._new_entity(new_entity_id)
+                old_entity = old_typeinfo._new_entity(old_entity_id)
+                for p, f in old_entity._entity_files():
+                    if not new_entity._exists_file(f):
+                        p_new = new_entity._copy_file(p, f)
+                        if not p_new:
+                            log.warning(
+                                "EntityTypeInfo.copy_data_files: error copying file %s from %s to %s"%
+                                (f, old_entity_id, new_entity_id)
+                                )
+            else:
+                log.warning(
+                    "EntityTypeInfo.copy_data_files: source entity not found %s/%s"%
+                    (old_typeinfo.type_id, old_entity_id)
+                    )
+        else:
+            log.warning(
+                "EntityTypeInfo.copy_data_files: target entity not found %s/%s"
+                %(self.type_id, entity_id)
+                )
+        return
 
     def enum_entity_ids(self, usealtparent=False):
         """

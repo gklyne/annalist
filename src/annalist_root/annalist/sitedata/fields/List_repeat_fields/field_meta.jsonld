@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Fields"
 , "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a record view description"
 , "annal:field_render_type":    "RepeatGroupRow"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Field_group"
 , "annal:field_entity_type":    "annal:List"
 , "annal:placeholder":          "(repeat field description)"

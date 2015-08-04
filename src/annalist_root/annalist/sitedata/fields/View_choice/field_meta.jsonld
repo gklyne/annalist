@@ -6,6 +6,7 @@
 , "rdfs:comment":                   "Choose view to display."
 , "annal:field_name":               "view_choice"
 , "annal:field_render_type":        "View_choice"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":         "annal:Slug"
 , "annal:placeholder":              "(view id)"
 , "annal:property_uri":             "annal:view"

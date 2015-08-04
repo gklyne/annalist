@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Pages"
 , "rdfs:comment":               "Page numbers, separated either by commas or double-hyphens."
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(page numbers: 'a,b' or 'from--to')"
 , "annal:property_uri":         "bib:pages"

@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Label"
 , "rdfs:comment":               "Short string used to describe view when displayed"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:field_entity_type":    "annal:View"
 , "annal:placeholder":          "(view label)"

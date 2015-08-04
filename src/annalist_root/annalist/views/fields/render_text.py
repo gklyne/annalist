@@ -17,9 +17,6 @@ from annalist.views.fields.render_base  import RenderBase
 class RenderText(RenderBase):
     """
     Render class for simple text entry field.
-
-    This class also includes .encode() and .decode() methods , which are used for
-    mapping values between entity values and editable form text.
     """
 
     def __init__(self):

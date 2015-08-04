@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Chapter"
 , "rdfs:comment":               "BibJSON(ish) name or number of book chapter"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(chapter name or number)"
 , "annal:property_uri":         "bib:chapter"

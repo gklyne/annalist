@@ -14,7 +14,8 @@ log = logging.getLogger(__name__)
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_field_value
+    get_field_edit_value,
+    get_field_view_value
     )
 
 from django.template    import Template, Context
@@ -24,6 +25,24 @@ from django.template    import Template, Context
 #   Select value templates
 #
 #   ----------------------------------------------------------------------------
+
+edit_options = (
+    '''{% for v in field_options %} '''+
+      '''{% if v == field.field_value %} '''+
+        '''{% if v == "" %} '''+
+          '''<option value="" selected="selected">{{field.field_placeholder}}</option> '''+
+        '''{% else %} '''+
+          '''<option selected="selected">{{v}}</option> '''+
+        '''{% endif %} '''+
+      '''{% else %} '''+
+        '''{% if v == "" %} '''+
+          '''<option value="">{{field.field_placeholder}}</option> '''+
+        '''{% else %} '''+
+          '''<option>{{v}}</option> '''+
+        '''{% endif %} '''+
+      '''{% endif %} '''+
+    '''{% endfor %} '''
+    )
 
 view_select = (
     """<!-- fields.select_view_renderer(view_select) -->
@@ -39,21 +58,24 @@ edit_select = (
     <div class="row">
       <div class="small-10 columns view-value less-new-button">
         <select name="{{repeat_prefix}}{{field.field_name}}">
-          {% for v in field_options %}
-            {% if v == field.field_value %}
-              {% if v == "" %}
-                <option value="" selected="selected">{{field.field_placeholder}}</option>
-              {% else %}
-                <option selected="selected">{{v}}</option>
-              {% endif %}
-            {% else %}
-              {% if v == "" %}
-                <option value="">{{field.field_placeholder}}</option>
-              {% else %}
-                <option>{{v}}</option>
-              {% endif %}
-            {% endif %}
-          {% endfor %}
+    """+
+    edit_options+
+          # {% for v in field_options %}
+          #   {% if v == field.field_value %}
+          #     {% if v == "" %}
+          #       <option value="" selected="selected">{{field.field_placeholder}}</option>
+          #     {% else %}
+          #       <option selected="selected">{{v}}</option>
+          #     {% endif %}
+          #   {% else %}
+          #     {% if v == "" %}
+          #       <option value="">{{field.field_placeholder}}</option>
+          #     {% else %}
+          #       <option>{{v}}</option>
+          #     {% endif %}
+          #   {% endif %}
+          # {% endfor %}
+    """
         </select>
       </div>
       <div class="small-2 columns view-value new-button left small-text-right">
@@ -80,24 +102,26 @@ view_choice = (
 edit_choice = (
     """<!-- fields.choice_view_renderer(edit_choice) -->
     <select name="{{repeat_prefix}}{{field.field_name}}">
-      {% for v in field_options %}
-        {% if v == field.field_value %}
-          {% if v == "" %}
-            <option value="" selected="selected">{{field.field_placeholder}}</option>
-          {% else %}
-            <option selected="selected">{{v}}</option>
-          {% endif %}
-        {% else %}
-          {% if v == "" %}
-            <option value="">{{field.field_placeholder}}</option>
-          {% else %}
-            <option>{{v}}</option>
-          {% endif %}
-        {% endif %}
-      {% endfor %}
+    """+
+    edit_options+
+      # {% for v in field_options %}
+      #   {% if v == field.field_value %}
+      #     {% if v == "" %}
+      #       <option value="" selected="selected">{{field.field_placeholder}}</option>
+      #     {% else %}
+      #       <option selected="selected">{{v}}</option>
+      #     {% endif %}
+      #   {% else %}
+      #     {% if v == "" %}
+      #       <option value="">{{field.field_placeholder}}</option>
+      #     {% else %}
+      #       <option>{{v}}</option>
+      #     {% endif %}
+      #   {% endif %}
+      # {% endfor %}
+    """
     </select>
     """)
-
 
 #   ----------------------------------------------------------------------------
 #
@@ -125,7 +149,7 @@ class SelectValueMapper(RenderBase):
 #
 #   ----------------------------------------------------------------------------
 
-class select_view_renderer(object):
+class Select_view_renderer(object):
     """
     Render select value for viewing using supplied template
     """
@@ -134,7 +158,7 @@ class select_view_renderer(object):
         return
 
     def render(self, context):
-        textval = SelectValueMapper.encode(get_field_value(context, None))
+        textval = SelectValueMapper.encode(get_field_view_value(context, None))
         with context.push(encoded_field_value=textval):
             try:
                 result = self._template.render(context)
@@ -144,7 +168,7 @@ class select_view_renderer(object):
                 result = repr(e)
         return result
 
-class select_edit_renderer(object):
+class Select_edit_renderer(object):
     """
     Render select value for editing using supplied template
     """
@@ -154,7 +178,7 @@ class select_edit_renderer(object):
 
     def render(self, context):
         try:
-            val     = get_field_value(context, None)
+            val     = get_field_edit_value(context, None)
             textval = SelectValueMapper.encode(val)
             options = context['field']['options']
             if textval not in options:
@@ -178,8 +202,8 @@ def get_select_renderer():
     Return field renderer object for value selector (with '+' button)
     """
     return RenderFieldValue(
-        view_renderer=select_view_renderer(view_select),
-        edit_renderer=select_edit_renderer(edit_select),
+        view_renderer=Select_view_renderer(view_select),
+        edit_renderer=Select_edit_renderer(edit_select),
         )
 
 def get_choice_renderer():
@@ -187,8 +211,8 @@ def get_choice_renderer():
     Return field renderer object for value selector (without '+' button)
     """
     return RenderFieldValue(
-        view_renderer=select_view_renderer(view_choice),
-        edit_renderer=select_edit_renderer(edit_choice),
+        view_renderer=Select_view_renderer(view_choice),
+        edit_renderer=Select_edit_renderer(edit_choice),
         )
 
 # End.

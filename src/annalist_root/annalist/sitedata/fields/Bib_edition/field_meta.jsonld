@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Edition"
 , "rdfs:comment":               "BibJSON(ish) The edition of a book"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(edition of book)"
 , "annal:property_uri":         "bib:edition"

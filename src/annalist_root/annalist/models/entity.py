@@ -325,8 +325,7 @@ class Entity(EntityRoot):
         use_altpath is set True if this entity is situated at the alternative
                     path relative to its parent.
 
-        Returns True if the entity exists, as determined by existence of the 
-        entity description metadata file.
+        Returns a file object value, or None.
         """
         log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%
             (cls._entitytype, parent._entitydir, entityid)

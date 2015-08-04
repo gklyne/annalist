@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Address"
 , "rdfs:comment":               "Publisher's address (usually just the city, but can be the full address for lesser-known publishers)"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(publisher city or address)"
 , "annal:property_uri":         "bib:address"

@@ -80,12 +80,6 @@ col_label_wrapper_template = (
     """</div>"""
     )
 
-col_value_wrapper_template = (
-    """<div class="view-value {{field.field_placement.field}}">"""+
-    """  {% include value_renderer %}"""+
-    """</div>"""
-    )
-
 #   ------------------------------------------------------------
 #   Renderer factory class
 #   ------------------------------------------------------------
@@ -114,6 +108,7 @@ class RenderFieldValue(object):
 
     def __init__(self, 
         view_renderer=None, edit_renderer=None, 
+        col_head_view_renderer=None, col_head_edit_renderer=None, 
         view_template=None, edit_template=None,
         view_file=None, edit_file=None
         ):
@@ -123,6 +118,12 @@ class RenderFieldValue(object):
         view_renderer   is a render object that formats a field value
         edit_renderer   is a render object that formats a field value in a
                         form control that allows the value to be edited
+        col_head_view_renderer
+                        if supplied, overrides the renderer normally used for 
+                        displaying column headings when viewing an entity.
+        col_head_edit_renderer
+                        if supplied, overrides the renderer normally used for 
+                        displaying column headings when viewing an entity.
         view_template   is a template string that formats a field value
         edit_template   is a template string that formats a field value in a
                         form control that allows the value to be edited
@@ -131,7 +132,7 @@ class RenderFieldValue(object):
                         in an editable form control
 
 
-        Methods provided return composed renderers for a varietom of contexts.
+        Methods provided return composed renderers for a variety of contexts.
         """
         # log.info("RenderFieldValue: viewrender %s, editrender %s"%(viewrender, edit_file))
         super(RenderFieldValue, self).__init__()
@@ -154,16 +155,21 @@ class RenderFieldValue(object):
         else:
             raise Annalist_Error("RenderFieldValue: no view renderer or template provided")
         # Initialize various renderer caches
-        self._render_view       = None
-        self._render_edit       = None
-        self._render_label_view = None
-        self._render_label_edit = None
-        self._render_col_head   = None
-        self._render_col_view   = None
-        self._render_col_edit   = None
-        self._render_label      = None
-        self._render_view       = None
-        self._render_edit       = None
+        self._col_head_view_renderer = col_head_view_renderer
+        self._col_head_edit_renderer = col_head_edit_renderer
+        self._render_view            = None
+        self._render_edit            = None
+        self._render_label_view      = None
+        self._render_label_edit      = None
+        self._render_col_head        = None
+        self._render_col_head_view   = None
+        self._render_col_head_edit   = None
+        self._render_col_view        = None
+        self._render_col_edit        = None
+        self._render_label           = None
+        self._render_view            = None
+        self._render_edit            = None
+        self._renderers              = None
         return
   
     def __str__(self):
@@ -186,13 +192,67 @@ class RenderFieldValue(object):
         supplied value renderer
         """
         class _renderer(object):
-            def __init__(self): # , wrapper, value_renderer):
+            def __init__(self):
                 pass
             def render(self, context):
                 with context.push(value_renderer=value_renderer):
                     return compiled_wrapper.render(context)
         # Compile wrapper template and return inner renderer class
         compiled_wrapper = Template(wrapper_template)
+        return _renderer()
+
+    def _set_render_mode(self, value_renderer, render_mode):
+        """
+        Returns a modified version of a renderer that invokes the supplied renderer
+        with the specified render_mode set in the view context.
+        """
+        class _renderer(object):
+            def __init__(self):
+                pass
+            def render(self, context):
+                with context.push(render_mode=render_mode):
+                    return value_renderer.render(context)
+        return _renderer()
+
+    def render_mode(self):
+        """
+        Returns a renderer object that renders whatever is required for the 
+        current value of "render_mode" in the view context.
+        """
+        if self._renderers is None:
+            # Create dictionary of renderers for render_mode
+            self._renderers = (
+                { "view":           self.view
+                , "edit":           self.edit
+                , "label_view":     self.label_view
+                , "label_edit":     self.label_edit
+                , "col_head":       self.col_head
+                , "col_head_view":  self.col_head_view
+                , "col_head_edit":  self.col_head_edit
+                , "col_view":       self.col_view
+                , "col_edit":       self.col_edit
+                })       
+        _renderers = self._renderers
+        class _renderer(object):
+            def __init__(self):
+                pass
+            def render(self, context):
+                try:
+                    m = context['render_mode']
+                    r = _renderers[m]()
+                    return r.render(context)
+                except Exception as e:
+                    log.exception("Exception in render_fieldvalue.render_mode.render")
+                    ex_type, ex, tb = sys.exc_info()
+                    traceback.print_tb(tb)
+                    response_parts = (
+                        ["Exception in render_fieldvalue.render_mode.render"]+
+                        [repr(e)]+
+                        traceback.format_exception(ex_type, ex, tb)+
+                        ["***render_fieldvalue.render_mode.render***"]
+                        )
+                    del tb
+                    return "".join(response_parts)
         return _renderer()
 
     # Template access functions
@@ -203,7 +263,10 @@ class RenderFieldValue(object):
         supplied `context['field']` value.
         """
         if not self._render_label_view:
-            self._render_label_view = self._get_renderer(label_template, None)
+            self._render_label_view = self._set_render_mode(
+                self._get_renderer(label_template, None),
+                "label"
+                )
         # log.info("self._render_label_view %r"%self._render_label_view)
         return self._render_label_view
 
@@ -213,8 +276,9 @@ class RenderFieldValue(object):
         """
         # log.info("self._view_renderer %r"%self._view_renderer)
         if not self._render_view:
-            self._render_view = self._get_renderer(
-                value_wrapper_template, self._view_renderer
+            self._render_view = self._set_render_mode(
+                self._get_renderer(value_wrapper_template, self._view_renderer),
+                "view"
                 )
         return self._render_view
 
@@ -223,8 +287,9 @@ class RenderFieldValue(object):
         Returns a renderer object to display just an editable field value.
         """
         if not self._render_edit:
-            self._render_edit = self._get_renderer(
-                value_wrapper_template, self._edit_renderer
+            self._render_edit = self._set_render_mode(
+                self._get_renderer(value_wrapper_template, self._edit_renderer),
+                "edit"
                 )
         return self._render_edit
 
@@ -233,8 +298,9 @@ class RenderFieldValue(object):
         Returns a renderer object to display a labeled non-editable field value.
         """
         if not self._render_label_view:
-            self._render_label_view = self._get_renderer(
-                label_wrapper_template, self._view_renderer
+            self._render_label_view = self._set_render_mode(
+                self._get_renderer(label_wrapper_template, self._view_renderer),
+                "label_view"
                 )
         return self._render_label_view
 
@@ -243,8 +309,9 @@ class RenderFieldValue(object):
         Returns a renderer object to display an editable field value.
         """
         if not self._render_label_edit:
-            self._render_label_edit = self._get_renderer(
-                label_wrapper_template, self._edit_renderer
+            self._render_label_edit = self._set_render_mode(
+                self._get_renderer(label_wrapper_template, self._edit_renderer),
+                "label_edit"
                 )
         return self._render_label_edit
 
@@ -254,8 +321,37 @@ class RenderFieldValue(object):
         a field label used as a column header on larger media.
         """
         if not self._render_col_head:
-            self._render_col_head = Template(col_head_template)
+            self._render_col_head = self._set_render_mode(
+                Template(col_head_template),
+                "col_head"
+                )
         return self._render_col_head
+
+    def col_head_view(self):
+        """
+        Returns a renderer object to display nothing on small media, or
+        a field label used as a column header on larger media when
+        viewing an entity.
+        """
+        if not self._render_col_head_view and self._col_head_view_renderer:
+            self._render_col_head_view = self._set_render_mode(
+                self._col_head_view_renderer,
+                "col_head_view"
+                )
+        return self._render_col_head_view or self.col_head()
+
+    def col_head_edit(self):
+        """
+        Returns a renderer object to display nothing on small media, or
+        a field label used as a column header on larger media when
+        editing an entity.
+        """
+        if not self._render_col_head_edit and self._col_head_edit_renderer:
+            self._render_col_head_edit = self._set_render_mode(
+                self._col_head_edit_renderer,
+                "col_head_edit"
+                )
+        return self._render_col_head_edit or self.col_head()
 
     def col_view(self):
         """
@@ -263,8 +359,9 @@ class RenderFieldValue(object):
         labeled on a small display, and unlabelled for a larger display
         """
         if not self._render_col_view:
-            self._render_col_view = self._get_renderer(
-                col_label_wrapper_template, self._view_renderer
+            self._render_col_view = self._set_render_mode(
+                self._get_renderer(col_label_wrapper_template, self._view_renderer),
+                "col_view"
                 )
         return self._render_col_view
 
@@ -274,11 +371,11 @@ class RenderFieldValue(object):
         labeled on a small display, and unlabelled for a larger display
         """
         if not self._render_col_edit:
-            self._render_col_edit = self._get_renderer(
-                col_label_wrapper_template, self._edit_renderer
+            self._render_col_edit = self._set_render_mode(
+                self._get_renderer(col_label_wrapper_template, self._edit_renderer),
+                "col_edit"
                 )
         return self._render_col_edit
-
 
 # Helper function for caller to get template content.
 # This uses the configured Django template loader.
@@ -310,11 +407,11 @@ def get_context_field_value(context, key, default):
     field = get_context_value(context, 'field', {})
     return get_context_value(field, key, default)
 
-def get_field_value(context, default):
-    return get_context_field_value(context, 'field_value', default)
+def get_field_edit_value(context, default):
+    return get_context_field_value(context, 'field_edit_value', default)
 
-def get_target_value(context, default):
-    return get_context_field_value(context, 'target_value', default)
+def get_field_view_value(context, default):
+    return get_context_field_value(context, 'field_view_value', default)
 
 # End.
 #........1.........2.........3.........4.........5.........6.........7.........8

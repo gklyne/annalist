@@ -5,6 +5,7 @@
 , "rdfs:label":                 "Alternate name"
 , "rdfs:comment":               "BibJSON(ish) alternate personal name"
 , "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
 , "annal:placeholder":          "(alternate name)"
 , "annal:property_uri":         "bib:alternate"

@@ -11,13 +11,16 @@
 , "annal:record_type":          "annal:Field"
 , "annal:list_fields":
   [ { "annal:field_id":             "Entity_id"
-    , "annal:field_placement":      "small:0,3"
+    , "annal:field_placement":      "small:0,4;medium:0,3"
+    }
+  , { "annal:field_id":             "Field_render"
+    , "annal:field_placement":      "small:4,4;medium:3,3"
     }
   , { "annal:field_id":             "Field_type"
-    , "annal:field_placement":      "small:3,3"
+    , "annal:field_placement":      "small:0,12,hide;medium:6,3"
     }
   , { "annal:field_id":             "Entity_label"
-    , "annal:field_placement":      "small:6,6"
+    , "annal:field_placement":      "small:8,4;medium:9,3"
     }
   ]
 }

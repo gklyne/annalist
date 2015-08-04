@@ -22,9 +22,14 @@ from annalist.models.entityfinder       import EntityFinder
 from annalist.views.fields.render_utils import (
     get_view_renderer,
     get_edit_renderer, 
-    get_colhead_renderer, 
-    get_colview_renderer,
-    get_coledit_renderer,
+    get_label_view_renderer,
+    get_label_edit_renderer, 
+    get_col_head_renderer, 
+    get_col_head_view_renderer, 
+    get_col_head_edit_renderer, 
+    get_col_view_renderer,
+    get_col_edit_renderer,
+    get_mode_renderer,
     get_value_mapper
     )
 from annalist.views.fields.render_placement import (
@@ -71,17 +76,22 @@ class FieldDescription(object):
         field_property      = field_property or recordfield.get(ANNAL.CURIE.property_uri, "")
         field_placement     = field_placement or recordfield.get(ANNAL.CURIE.field_placement, "")
         field_render_type   = recordfield.get(ANNAL.CURIE.field_render_type, "")
+        field_value_mode    = recordfield.get(ANNAL.CURIE.field_value_mode, "@@FieldDescription:value_mode@@")
         field_ref_type      = recordfield.get(ANNAL.CURIE.field_ref_type, None)
         field_val_type      = recordfield.get(ANNAL.CURIE.field_value_type, "")
         self._field_desc    = (
             { 'field_id':                   field_id
             , 'field_name':                 field_name
             , 'field_instance_name':        field_name
+            , 'field_render_type':          field_render_type
+            , 'field_value_mode':           field_value_mode
             , 'field_label':                field_label
             , 'field_help':                 recordfield.get(RDFS.CURIE.comment, "")
             , 'field_property_uri':         field_property
             , 'field_placement':            get_placement_classes(field_placement)
-            , 'field_value_type':           field_val_type
+            #@@ , 'field_value_type':           field_val_type
+            #@@TODO: LATER: rename 'field_target_type' to 'field_value_type' when old references are flushed out
+            #@@      See also references to 'field_target_type' in entityedit.py
             , 'field_target_type':          recordfield.get(ANNAL.CURIE.field_target_type, field_val_type)
             , 'field_placeholder':          recordfield.get(ANNAL.CURIE.placeholder, "")
             , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
@@ -96,12 +106,16 @@ class FieldDescription(object):
             , 'group_delete_label':         None
             , 'group_view':                 None
             , 'group_field_descs':          None
-            , 'field_render_type':          field_render_type
-            , 'field_render_view':          get_view_renderer(field_render_type,    field_ref_type, field_val_type)
-            , 'field_render_edit':          get_edit_renderer(field_render_type,    field_ref_type, field_val_type)
-            , 'field_render_colhead':       get_colhead_renderer(field_render_type, field_ref_type, field_val_type)
-            , 'field_render_colview':       get_colview_renderer(field_render_type, field_ref_type, field_val_type)
-            , 'field_render_coledit':       get_coledit_renderer(field_render_type, field_ref_type, field_val_type)
+            , 'field_render_view':          get_view_renderer(         field_render_type, field_value_mode)
+            , 'field_render_edit':          get_edit_renderer(         field_render_type, field_value_mode)
+            , 'field_render_label_view':    get_label_view_renderer(   field_render_type, field_value_mode)
+            , 'field_render_label_edit':    get_label_edit_renderer(   field_render_type, field_value_mode)
+            , 'field_render_colhead':       get_col_head_renderer(     field_render_type, field_value_mode)
+            , 'field_render_colhead_view':  get_col_head_view_renderer(field_render_type, field_value_mode)
+            , 'field_render_colhead_edit':  get_col_head_edit_renderer(field_render_type, field_value_mode)
+            , 'field_render_colview':       get_col_view_renderer(     field_render_type, field_value_mode)
+            , 'field_render_coledit':       get_col_edit_renderer(     field_render_type, field_value_mode)
+            , 'field_render_mode':          get_mode_renderer(         field_render_type, field_value_mode)
             , 'field_value_mapper':         get_value_mapper(field_render_type)
             })
         self._field_suffix_index  = 0    # No dup
@@ -273,32 +287,28 @@ class FieldDescription(object):
         # but since the absent button cannot be clicked, the infidelity here is benign
         return self._field_desc['field_ref_type'] is not None
 
-    def has_import_button(self):
+    def is_import_field(self):
         """
-        Returns true if this field has a control (an 'import' or 'upload'
-        button) that is used to request additional external data is added 
-        to an entity
+        Returns 'true' if this field has a control (an 'import' button) that is used 
+        to request additional external data is added to an entity
         """
-        import_render_types = (
-            [ "URIImport"
-            ])
-        return self._field_desc['field_render_type'] in import_render_types
+        return self._field_desc['field_value_mode'] == "Value_import"
 
     def is_upload_field(self):
         """
-        Returns true if this field is a file-upload field
+        Returns 'true' if this field is a file-upload field (selected file contents are 
+        returned with the form response.)
         """
-        import_render_types = (
-            [ "FileUpload"
-            ])
-        return self._field_desc['field_render_type'] in import_render_types
+        return self._field_desc['field_value_mode'] == "Value_upload"
 
     def has_field_group_ref(self):
         """
         Returns true if this field contains a reference to a field group,
         which in turn references further field descriptions.
 
-        (Currently, this function duplicates `is_repeat_group`.)
+        @@@ (Currently, this function duplicates `is_repeat_group`.)
+
+        @@@ tesat for:  group_ref, group_field_descs, and group_id
         """
         field_group_types = ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"]
         return self._field_desc['field_render_type'] in field_group_types

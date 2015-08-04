@@ -12,7 +12,8 @@ log = logging.getLogger(__name__)
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_field_value
+    get_field_edit_value,
+    get_field_view_value
     )
 
 from django.template    import Template, Context
@@ -68,7 +69,7 @@ class bool_checkbox_view_renderer(object):
         """
         Render Boolean value for viewing.
         """
-        textval = BoolCheckboxValueMapper.encode(get_field_value(context, None))
+        textval = BoolCheckboxValueMapper.encode(get_field_view_value(context, None))
         return "<span>%s</span>"%textval
 
 class bool_checkbox_edit_renderer(object):
@@ -86,7 +87,7 @@ class bool_checkbox_edit_renderer(object):
         """
         Render Boolean value for editing
         """
-        val     = get_field_value(context, None)
+        val     = get_field_edit_value(context, None)
         boolval = BoolCheckboxValueMapper.decode(val)
         textval = BoolCheckboxValueMapper.encode(val)
         boolval = textval.lower() in ["yes", "true"]

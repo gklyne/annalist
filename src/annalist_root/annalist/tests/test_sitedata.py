@@ -119,7 +119,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             r = self.client.get(r['location'])
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        s = BeautifulSoup(r.content)
+        s = BeautifulSoup(r.content, "html.parser")
         return s
 
     # Test named input has specified type and value
@@ -249,6 +249,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 self.assertEqual(view_field[ANNAL.CURIE.type_id], "_field")
                 self.assertIn(ANNAL.CURIE.property_uri,           view_field)
                 self.assertIn(ANNAL.CURIE.field_render_type,      view_field)
+                self.assertIn(ANNAL.CURIE.field_value_mode,       view_field)
                 self.assertIn(ANNAL.CURIE.field_value_type,       view_field)
                 self.assertIn(ANNAL.CURIE.field_placement,        view_field)
                 self.assertIn(ANNAL.CURIE.placeholder,            view_field)
@@ -445,6 +446,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_type/Enum_bib_type",    ["Enum_bib_type",    "Bibliographic entry type"] ]
             , [ "_type/Enum_list_type",   ["Enum_list_type",   "List display type"] ]
             , [ "_type/Enum_render_type", ["Enum_render_type", "Field render type"] ]
+            , [ "_type/Enum_value_mode",  ["Enum_value_mode",  "Field value mode"] ]
             , [ "_type/type1",            ["type1",            "RecordType coll1/type1"] ]
             , [ "_type/type2",            ["type2",            "RecordType coll1/type2"] ]
             ])
@@ -889,107 +891,109 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             .find_all("div", class_="columns")
             )
         self.assertEqual(thead[0].span.string, "Id")
-        self.assertEqual(thead[1].span.string, "Field value type")
-        self.assertEqual(thead[2].span.string, "Label")
+        self.assertEqual(thead[1].span.string, "Field render type")
+        self.assertEqual(thead[2].span.string, "Field value type")
+        self.assertEqual(thead[3].span.string, "Label")
 
         trows_expected = (
-            [ [ "_field/_initial_values",           ["_initial_values",   "annal:Text", None     ] ]
-            , [ "_field/Bib_address",               ["Bib_address",       "annal:Text", "Address"] ]
-            , [ "_field/Bib_alternate",             ["Bib_alternate",     "annal:Text"    ] ]
-            , [ "_field/Bib_authors",               ["Bib_authors",       "bib:Authors"   ] ]
-            , [ "_field/Bib_bookentry",             ["Bib_bookentry",     "bib:BookEntry" ] ]
-            , [ "_field/Bib_booktitle",             ["Bib_booktitle",     "annal:Text"    ] ]
-            , [ "_field/Bib_chapter",               ["Bib_chapter",       "annal:Text"    ] ]
-            , [ "_field/Bib_description",           ["Bib_description",   "annal:Text"    ] ]
-            , [ "_field/Bib_edition",               ["Bib_edition",       "annal:Text"    ] ]
-            , [ "_field/Bib_editors",               ["Bib_editors",       "bib:Editors"   ] ]
-            , [ "_field/Bib_eprint",                ["Bib_eprint",        "annal:Text"    ] ]
-            , [ "_field/Bib_firstname",             ["Bib_firstname",     "annal:Text"    ] ]
-            , [ "_field/Bib_howpublished",          ["Bib_howpublished",  "annal:Text"    ] ]
-            , [ "_field/Bib_id",                    ["Bib_id",            "annal:Text"    ] ]
-            , [ "_field/Bib_idanchor",              ["Bib_idanchor",      "annal:Text"    ] ]
-            , [ "_field/Bib_identifiers",           ["Bib_identifiers",   "bib:Identifiers" ] ]
-            , [ "_field/Bib_idtype",                ["Bib_idtype",        "annal:Text"    ] ]
-            , [ "_field/Bib_institution",           ["Bib_institution",   "annal:Text"    ] ]
-            , [ "_field/Bib_journal",               ["Bib_journal",       "bib:Journal"   ] ]
-            , [ "_field/Bib_jurisdiction",          ["Bib_jurisdiction",  "annal:Text"    ] ]
-            , [ "_field/Bib_lastname",              ["Bib_lastname",      "annal:Text"    ] ]
-            , [ "_field/Bib_license",               ["Bib_license",       "bib:Licenses"  ] ]
-            , [ "_field/Bib_month",                 ["Bib_month",         "annal:Text"    ] ]
-            , [ "_field/Bib_name",                  ["Bib_name",          "annal:Text"    ] ]
-            , [ "_field/Bib_note",                  ["Bib_note",          "annal:Longtext" ] ]
-            , [ "_field/Bib_number",                ["Bib_number",        "annal:Text"    ] ]
-            , [ "_field/Bib_organization",          ["Bib_organization",  "annal:Text"    ] ]
-            , [ "_field/Bib_pages",                 ["Bib_pages",         "annal:Text"    ] ]
-            , [ "_field/Bib_publication_details",   ["Bib_publication_details"            ] ]
-            , [ "_field/Bib_publisher",             ["Bib_publisher",     "annal:Text"    ] ]
-            , [ "_field/Bib_school",                ["Bib_school",        "annal:Text"    ] ]
-            , [ "_field/Bib_shortcode",             ["Bib_shortcode",     "annal:Text"    ] ]
-            , [ "_field/Bib_title",                 ["Bib_title",         "annal:Text"    ] ]
-            , [ "_field/Bib_type",                  ["Bib_type",          "annal:Slug"    ] ]
-            , [ "_field/Bib_url",                   ["Bib_url",           "annal:Text"    ] ]
-            , [ "_field/Bib_volume",                ["Bib_volume",        "annal:Text"    ] ]
-            , [ "_field/Bib_year",                  ["Bib_year",          "annal:Text"    ] ]
-            , [ "_field/Entity_comment",            ["Entity_comment"                     ] ]
-            , [ "_field/Entity_id",                 ["Entity_id"                          ] ]
-            , [ "_field/Entity_label",              ["Entity_label"                       ] ]
-            , [ "_field/Entity_type",               ["Entity_type"                        ] ]
-            , [ "_field/Field_comment",             ["Field_comment"                      ] ]
-            , [ "_field/Field_default",             ["Field_default"                      ] ]
-            , [ "_field/Field_entity_type",         ["Field_entity_type"                  ] ]
-            , [ "_field/Field_fieldref",            ["Field_fieldref"                     ] ]
-            , [ "_field/Field_groupref",            ["Field_groupref"                     ] ]
-            , [ "_field/Field_id",                  ["Field_id"                           ] ]
-            , [ "_field/Field_label",               ["Field_label"                        ] ]
-            , [ "_field/Field_missing",             ["Field_missing"                      ] ]
-            , [ "_field/Field_placeholder",         ["Field_placeholder"                  ] ]
-            , [ "_field/Field_placement",           ["Field_placement"                    ] ]
-            , [ "_field/Field_property",            ["Field_property"                     ] ]
-            , [ "_field/Field_render",              ["Field_render"                       ] ]
-            , [ "_field/Field_repeat_label_add",    ["Field_repeat_label_add"             ] ]
-            , [ "_field/Field_repeat_label_delete", ["Field_repeat_label_delete"          ] ]
-            , [ "_field/Field_restrict",            ["Field_restrict"                     ] ]
-            , [ "_field/Field_type",                ["Field_type"                         ] ]
-            , [ "_field/Field_typeref",             ["Field_typeref"                      ] ]
-            , [ "_field/Group_comment",             ["Group_comment"                      ] ]
-            , [ "_field/Group_field_placement",     ["Group_field_placement"              ] ]
-            , [ "_field/Group_field_property",      ["Group_field_property"               ] ]
-            , [ "_field/Group_field_sel",           ["Group_field_sel"                    ] ]
-            , [ "_field/Group_id",                  ["Group_id"                           ] ]
-            , [ "_field/Group_label",               ["Group_label"                        ] ]
-            , [ "_field/Group_repeat_fields",       ["Group_repeat_fields"                ] ]
-            , [ "_field/Group_target_type",         ["Group_target_type"                  ] ]
-            , [ "_field/List_choice",               ["List_choice"                        ] ]
-            , [ "_field/List_comment",              ["List_comment"                       ] ]
-            , [ "_field/List_default_type",         ["List_default_type"                  ] ]
-            , [ "_field/List_default_view",         ["List_default_view"                  ] ]
-            , [ "_field/List_entity_selector",      ["List_entity_selector"               ] ]
-            , [ "_field/List_id",                   ["List_id"                            ] ]
-            , [ "_field/List_label",                ["List_label"                         ] ]
-            , [ "_field/List_repeat_fields",        ["List_repeat_fields"                 ] ]
-            , [ "_field/List_target_type",          ["List_target_type"                   ] ]
-            , [ "_field/List_type",                 ["List_type"                          ] ]
-            , [ "_field/Type_alias_source",         ["Type_alias_source"                  ] ]
-            , [ "_field/Type_alias_target",         ["Type_alias_target"                  ] ]
-            , [ "_field/Type_aliases",              ["Type_aliases"                       ] ]
-            , [ "_field/Type_comment",              ["Type_comment"                       ] ]
-            , [ "_field/Type_id",                   ["Type_id"                            ] ]
-            , [ "_field/Type_label",                ["Type_label"                         ] ]
-            , [ "_field/Type_list",                 ["Type_list"                          ] ]
-            , [ "_field/Type_uri",                  ["Type_uri"                           ] ]
-            , [ "_field/Type_view",                 ["Type_view"                          ] ]
-            , [ "_field/User_description",          ["User_description"                   ] ]
-            , [ "_field/User_id",                   ["User_id"                            ] ]
-            , [ "_field/User_name",                 ["User_name"                          ] ]
-            , [ "_field/User_permissions",          ["User_permissions"                   ] ]
-            , [ "_field/User_uri",                  ["User_uri"                           ] ]
-            , [ "_field/View_choice",               ["View_choice"                        ] ]
-            , [ "_field/View_comment",              ["View_comment"                       ] ]
-            , [ "_field/View_edit_view",            ["View_edit_view"                     ] ]
-            , [ "_field/View_fields",               ["View_fields"                        ] ]
-            , [ "_field/View_id",                   ["View_id"                            ] ]
-            , [ "_field/View_label",                ["View_label"                         ] ]
-            , [ "_field/View_target_type",          ["View_target_type"                   ] ]
+            [ [ "_field/_initial_values",           ["_initial_values",   "Text", "annal:Text", None       ] ]
+            , [ "_field/Bib_address",               ["Bib_address",       "Text", "annal:Text", "Address"  ] ]
+            , [ "_field/Bib_alternate",             ["Bib_alternate",     "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_authors",               ["Bib_authors",       "RepeatGroup", "bib:Authors"     ] ]
+            , [ "_field/Bib_bookentry",             ["Bib_bookentry",     "RepeatGroup", "bib:BookEntry"   ] ]
+            , [ "_field/Bib_booktitle",             ["Bib_booktitle",     "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_chapter",               ["Bib_chapter",       "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_description",           ["Bib_description",   "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_edition",               ["Bib_edition",       "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_editors",               ["Bib_editors",       "RepeatGroup", "bib:Editors"     ] ]
+            , [ "_field/Bib_eprint",                ["Bib_eprint",        "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_firstname",             ["Bib_firstname",     "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_howpublished",          ["Bib_howpublished",  "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_id",                    ["Bib_id",            "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_idanchor",              ["Bib_idanchor",      "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_identifiers",           ["Bib_identifiers",   "RepeatGroup", "bib:Identifiers" ] ]
+            , [ "_field/Bib_idtype",                ["Bib_idtype",        "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_institution",           ["Bib_institution",   "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_journal",               ["Bib_journal",       "RepeatGroup", "bib:Journal"     ] ]
+            , [ "_field/Bib_jurisdiction",          ["Bib_jurisdiction",  "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_lastname",              ["Bib_lastname",      "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_license",               ["Bib_license",       "RepeatGroup", "bib:Licenses"    ] ]
+            , [ "_field/Bib_month",                 ["Bib_month",         "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_name",                  ["Bib_name",          "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_note",                  ["Bib_note",          "Textarea", "annal:Longtext"     ] ]
+            , [ "_field/Bib_number",                ["Bib_number",        "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_organization",          ["Bib_organization",  "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_pages",                 ["Bib_pages",         "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_publication_details",   ["Bib_publication_details"                             ] ]
+            , [ "_field/Bib_publisher",             ["Bib_publisher",     "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_school",                ["Bib_school",        "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_shortcode",             ["Bib_shortcode",     "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_title",                 ["Bib_title",         "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_type",                  ["Bib_type",          "Enum", "annal:Slug"             ] ]
+            , [ "_field/Bib_url",                   ["Bib_url",           "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_volume",                ["Bib_volume",        "Text", "annal:Text"             ] ]
+            , [ "_field/Bib_year",                  ["Bib_year",          "Text", "annal:Text"             ] ]
+            , [ "_field/Entity_comment",            ["Entity_comment",    "Markdown", "annal:Richtext"     ] ]
+            , [ "_field/Entity_id",                 ["Entity_id",         "EntityId", "annal:Slug"         ] ]
+            , [ "_field/Entity_label",              ["Entity_label",      "Text", "annal:Text"             ] ]
+            , [ "_field/Entity_type",               ["Entity_type",       "EntityTypeId", "annal:Slug"     ] ]
+            , [ "_field/Field_comment",             ["Field_comment",     "Markdown", "annal:Richtext"     ] ]
+            , [ "_field/Field_default",             ["Field_default",     "Text", "annal:Text"             ] ]
+            , [ "_field/Field_entity_type",         ["Field_entity_type", "Identifier", "annal:Identifier" ] ]
+            , [ "_field/Field_fieldref",            ["Field_fieldref",    "Identifier", "annal:Identifier" ] ]
+            , [ "_field/Field_groupref",            ["Field_groupref",    "Enum_optional", "annal:Slug"    ] ]
+            , [ "_field/Field_id",                  ["Field_id",          "EntityId", "annal:Slug"         ] ]
+            , [ "_field/Field_label",               ["Field_label",       "Text", "annal:Text"             ] ]
+            , [ "_field/Field_missing",             ["Field_missing",     "Text", "annal:Text"             ] ]
+            , [ "_field/Field_placeholder",         ["Field_placeholder", "Text", "annal:Text"             ] ]
+            , [ "_field/Field_placement",           ["Field_placement",   "Placement", "annal:Placement"   ] ]
+            , [ "_field/Field_property",            ["Field_property",    "Identifier", "annal:Identifier" ] ]
+            , [ "_field/Field_render",              ["Field_render",      "Enum_choice", "annal:Slug"      ] ]
+            , [ "_field/Field_repeat_label_add",    ["Field_repeat_label_add", "Text", "annal:Text"        ] ]
+            , [ "_field/Field_repeat_label_delete", ["Field_repeat_label_delete", "Text", "annal:Text"     ] ]
+            , [ "_field/Field_restrict",            ["Field_restrict",    "Text", "annal:Text"             ] ]
+            , [ "_field/Field_type",                ["Field_type",        "Identifier", "annal:Identifier" ] ]
+            , [ "_field/Field_typeref",             ["Field_typeref",     "Enum_optional", "annal:Slug"    ] ]
+            , [ "_field/Field_value_mode",          ["Field_value_mode",  "Enum_choice", "annal:Slug"      ] ]
+            , [ "_field/Group_comment",             ["Group_comment"             ] ]
+            , [ "_field/Group_field_placement",     ["Group_field_placement"     ] ]
+            , [ "_field/Group_field_property",      ["Group_field_property"      ] ]
+            , [ "_field/Group_field_sel",           ["Group_field_sel"           ] ]
+            , [ "_field/Group_id",                  ["Group_id"                  ] ]
+            , [ "_field/Group_label",               ["Group_label"               ] ]
+            , [ "_field/Group_repeat_fields",       ["Group_repeat_fields"       ] ]
+            , [ "_field/Group_target_type",         ["Group_target_type"         ] ]
+            , [ "_field/List_choice",               ["List_choice"               ] ]
+            , [ "_field/List_comment",              ["List_comment"              ] ]
+            , [ "_field/List_default_type",         ["List_default_type"         ] ]
+            , [ "_field/List_default_view",         ["List_default_view"         ] ]
+            , [ "_field/List_entity_selector",      ["List_entity_selector"      ] ]
+            , [ "_field/List_id",                   ["List_id"                   ] ]
+            , [ "_field/List_label",                ["List_label"                ] ]
+            , [ "_field/List_repeat_fields",        ["List_repeat_fields"        ] ]
+            , [ "_field/List_target_type",          ["List_target_type"          ] ]
+            , [ "_field/List_type",                 ["List_type"                 ] ]
+            , [ "_field/Type_alias_source",         ["Type_alias_source"         ] ]
+            , [ "_field/Type_alias_target",         ["Type_alias_target"         ] ]
+            , [ "_field/Type_aliases",              ["Type_aliases"              ] ]
+            , [ "_field/Type_comment",              ["Type_comment"              ] ]
+            , [ "_field/Type_id",                   ["Type_id"                   ] ]
+            , [ "_field/Type_label",                ["Type_label"                ] ]
+            , [ "_field/Type_list",                 ["Type_list"                 ] ]
+            , [ "_field/Type_uri",                  ["Type_uri"                  ] ]
+            , [ "_field/Type_view",                 ["Type_view"                 ] ]
+            , [ "_field/User_description",          ["User_description"          ] ]
+            , [ "_field/User_id",                   ["User_id"                   ] ]
+            , [ "_field/User_name",                 ["User_name"                 ] ]
+            , [ "_field/User_permissions",          ["User_permissions"          ] ]
+            , [ "_field/User_uri",                  ["User_uri"                  ] ]
+            , [ "_field/View_choice",               ["View_choice"               ] ]
+            , [ "_field/View_comment",              ["View_comment"              ] ]
+            , [ "_field/View_edit_view",            ["View_edit_view"            ] ]
+            , [ "_field/View_fields",               ["View_fields"               ] ]
+            , [ "_field/View_id",                   ["View_id"                   ] ]
+            , [ "_field/View_label",                ["View_label"                ] ]
+            , [ "_field/View_target_type",          ["View_target_type"          ] ]
             ])
         self.check_list_row_data(s, trows_expected)
 
@@ -1062,24 +1066,26 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "Field_restrict"
             , "Field_type"
             , "Field_typeref"
+            , "Field_value_mode"
             ])
         expect_fields = (
             [ "Field_id"
             , "Field_type"
-            , "Field_render"
-            , "Field_placement"
             , "Field_label"
             , "Field_comment"
-            , "Field_placeholder"
             , "Field_property"
-            , "Field_default"
-            , "Field_entity_type"
+            , "Field_placement"
+            , "Field_render"
+            , "Field_value_mode"
             , "Field_typeref"
             , "Field_fieldref"
-            , "Field_restrict"
+            , "Field_placeholder"
+            , "Field_default"
             , "Field_groupref"
             , "Field_repeat_label_add"
             , "Field_repeat_label_delete"
+            , "Field_entity_type"
+            , "Field_restrict"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)
         self.check_select_field(s, "view_choice", self.views_expected, "View_view")
