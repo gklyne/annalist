@@ -6,7 +6,7 @@ v0.1.15, 2015-08-04
 
 Annalist uses _views_ to define user-definable presentation of data for display and editing.
 
-These views essentially consist of a list of _fields_ to be displayted from the presented entity.  Each field is defined by a number of parameters (which are themselves managed using an Annalist view, viz. `Field_view`).
+These views essentially consist of a list of _fields_ to be displayed from the presented entity.  Each field is defined by a number of parameters (which are themselves managed using an Annalist view, viz. `Field_view`).
 
 This page describes the field definition parameters and in particular introduces the available field rendering types.  It also discusses additional considerations for repeated fields, and fields that reference uploaded files or imported web resources.
 
@@ -24,7 +24,7 @@ A field description is entered through a form that looks like this:
 [[Field_edit_form]]
 image::screenshots/Field_edit_form.png[alt="Field edit form"]
 
-The fields of this form are described in the following sections (Parenthesized values are field identifiers).
+The fields of this form are described in the following sections (parenthesized values are field identifiers).
 
 === Id (`Field_id`)
 
