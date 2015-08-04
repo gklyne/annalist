@@ -74,6 +74,7 @@
 - [ ] Post announcement to Google Group, Twitter and elsewhere
 - [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`), retest
 
+
 ## Build kit and PyPI upload
 
 Local:
