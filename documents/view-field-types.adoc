@@ -1,4 +1,7 @@
-# View fields in Annalist
+= View fields in Annalist
+Graham Klyne
+v0.1.15, 2015-08-04
+:toc:
 
 Annalist uses _views_ to define user-definable presentation of data for display and editing.
 
