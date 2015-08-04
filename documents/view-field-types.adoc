@@ -22,7 +22,7 @@ toc::[]
 A field description is entered through a form that looks like this:
 
 [[Field_edit_form]]
-image::screenshots/Field_edit_form.png[title="Field edit form", alt="Field edit form"]
+image::screenshots/Field_edit_form.png[alt="Field edit form"]
 
 The fields of this form are described in the following sections (Parenthesized values are field identifiers).
 
@@ -30,11 +30,13 @@ The fields of this form are described in the following sections (Parenthesized v
 
 This is a name that is used to distinguish a field definition from all available fields.  Consists of up to 32 letters, digits and/or underscore characters.  Case sensistive, but on some systems it is not possible to have different fields whose identifiers differ in just upper- and lower-case letters.
 
+////
 === Field input name (`Field_name`)
 
 Used internally to generate the name of a field in an HTML form view, which is used in turn to identify the corresponding value returned when the form is submitted.  Defaults to the value of `Field_id`.
 
 (Currently not supported in field editing view, but can be set in stored field description records. @@)
+////
 
 === Field value type (`Field_type`)
 
