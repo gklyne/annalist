@@ -2,6 +2,7 @@
 Graham Klyne
 v0.1.15, 2015-08-04
 :toc: macro
+:toc-title:
 
 Annalist uses _views_ to define user-definable presentation of data for display and editing.
 
@@ -18,9 +19,12 @@ toc::[]
 
 == Field description values
 
-A field description is entered through a form with the following fields.
+A field description is entered through a form that looks like this:
 
-(Parenthesized values are field identifiers)
+[[Field_edit_form]]
+image::screenshots/Field_edit_form.png[title="Field edit form", alt="Field edit form"]
+
+The fields of this form are described in the following sections (Parenthesized values are field identifiers).
 
 === Id (`Field_id`)
 
@@ -286,7 +290,7 @@ A special-case field renderer used for presenting placement of a field on a form
 
 === Reference to image resource (`RefImage`)
 
-A reference to an image value, presented for viewing as the referenced image.  See also section "Resource references, imports and file uploads".
+A reference to an image value, presented for viewing as the referenced image.  See also section <<Resource references, imports and file uploads>>.
 
 === Reference to audio resource (`RefAudio`)
 
