@@ -57,7 +57,7 @@ Record and list views are build up using *fields*, which associate a data record
 
 The available field renderers are defined by Annalist, and the range of rendering options is expected to increase as the software is developed.  Currently, there are three main types of renderer:  single-line text (Text), multiline text (TextArea) and enumeration, pwhich presents a selection of identifiers of some other defined type.
 
-For more information, see [View fields in Annalist](view-field-types.md).
+For more information, see link::view-field-types.md[View fields in Annalist].
 
 
 === Field groups
