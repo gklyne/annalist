@@ -80,14 +80,14 @@ Entities are stored as flat files in JSON (JSON-LD) format.
 
 A site has been described as consisting of a number of collections containing user-defined entities (data records, data types, views, lists, etc).
 
-There is also provision for site-wide entities, which is used mainly for the predefined Annalist special types (`_type`, '_view`, `_list`, etc., and also for some predefined instances of these), but which can be used for any data.  All site-wide values are available to all collections in a site.  If a collection creates a local entity that is also available as a site-wide entity, the local value takes precedence for that collection. 
+There is also provision for site-wide entities, which is used mainly for the predefined Annalist special types (`_type`, `_view`, `_list`, etc., and also for some predefined instances of these), but which can be used for any data.  All site-wide values are available to all collections in a site.  If a collection creates a local entity that is also available as a site-wide entity, the local value takes precedence for that collection. 
 
-Site-wide data is fixed for an installation:  it cannot be created or modified through the Annalist user interface.  Certain operations may appear to modify a site-wide value (e.g. editing a default record view): these cause the site-wide dscription to be copied into the collection and updated there.  Thus, the view `default_view`
+Site-wide data is fixed for an installation:  it cannot be created or modified through the Annalist user interface.  Certain operations may appear to modify a site-wide value (e.g. editing a default record view): these cause the site-wide dscription to be copied into the collection and updated there.  Thus, the view `default_view` can be modified for a single collection without affecting the site-wide definition applicable to other collections.
 
 
 == Accessing Annalist
 
-The following instructions assume Annalist service running on host `annalist.example.org`.  If a different host is used, replace `annalist.example.org` with the name or IP address of the host that is running the Annalist server.
+The following instructions assume an Annalist service running on host `annalist.example.org`.  If a different host is used, replace `annalist.example.org` with the name or IP address of the host that is running the Annalist server.
 
 . Browse to annalist server at `http://annalist.example.org:8000`
 +
@@ -149,9 +149,9 @@ Having logged in using the admin username and password, the *Admin* link in the 
 
 === Access control and user permissions
 
-Being logged in to Annalist does not, of itself, grant permission to access or modify any Annalist data - except in a very broad sense covered by `\_default_user_perms` (see below).  That is controlled separately by _user permission_ records, which may be created for any collection ovcerv which the user is granted access permissions.
+Being logged in to Annalist does not, of itself, grant permission to access or modify any Annalist data - except in a very broad sense covered by `_default_user_perms` (see below).  That is controlled separately by __user permission__ records, which may be created for any collection ovcerv which the user is granted access permissions.
 
-When a user is logged in to Annalist (using OpenID or local credentials), their session is associated with a user identifier (user_id) and an email address, as well as some descriptive information.  The user_id alone is not a secure basis for access control, as Annalist allows anyone to create a new user_id through the OpenID based login process.  Rather, it is assumed that the associated email address has been properly checked as associated with the logged-in user:  this verification is something that should be handled by any OpenID identity provider (such as Google) worthy of being used as such.  Annalist uses the combination of user_id and email address as a reliable authenticated identifier, with which access permissions are associated.  Different user_ids may bve associated with the same email address, possibly corresponding to different roles of the authenticated user;  each such combination is associated with its own set of permissions. (Technically, Annalist internally uses a mailto: URI as an authenticated user identifier, and uses different forms of URI for some special cases.)
+When a user is logged in to Annalist (using OpenID or local credentials), their session is associated with a user identifier (user_id) and an email address, as well as some descriptive information.  The user_id alone is not a secure basis for access control, as Annalist allows anyone to create a new user_id through the OpenID based login process.  Rather, it is assumed that the associated email address has been properly checked as associated with the logged-in user:  this verification is something that should be handled by any OpenID identity provider (such as Google) worthy of being used as such.  Annalist uses the combination of user_id and email address as a reliable authenticated identifier, with which access permissions are associated.  Different user_ids may bve associated with the same email address, possibly corresponding to different roles of the authenticated user;  each such combination is associated with its own set of permissions. (Technically, Annalist internally uses a `mailto:` URI as an authenticated user identifier, and uses different forms of URI for some special cases.)
 
 Permissions granted to a user consist of a list of tokens denoting different access rights; e.g. VIEW, CREATE, UPDATE, DELETE, etc.  Permissions are applied at the level of a collection;  a user may have different permissions in different collections.  The permisisons granted form part of the collection metadata, and as such are replicated if an entire collection is copied or moved to a different service.  It is also possible to associate permissions with an entire Annalist site, which means they are applied in any collection for which more specific permissions are not granted;  the user interface for creating site-wide permissions currently takes the form of a limited set of `annalist_manager` commands, and is intended to be used for setting up site-wide defaults and administrative access.
 
@@ -177,15 +177,15 @@ As noted, permissions (currently) apply to the entire content of an annalist Col
 
 ==== Creating user permissions in a collection
 
-A logged in user with ADMIN permissions over a collection may create further collection-level user permissions from the "List users" view of a collection, which is accessed from the default collection view by selecting `User_list` from the `List view` dropdown, then clicking the `View` button:
+A logged in user with ADMIN permissions over a collection may create further collection-level user permissions from the "List users" view of a collection, which is accessed from the default collection view by selecting `User_list` from the *List view* dropdown, then clicking the *View* button:
 
 image::screenshots/List-users-example.png[alt="List users view"]
 
-A new user permission record can created from here by clicking the `New` button, which displays a form into which user details may be entered:
+A new user permission record can created from here by clicking the *New* button, which displays a form into which user details may be entered:
 
 image::screenshots/Edit-user-example.png[alt="User permissions editing view"]
 
-This form, works like most other Annalist data forms: enter details and click `Save` to create a new user permissions record.
+This form, works like most other Annalist data forms: enter details and click *Save* to create a new user permissions record.
 
 A similar pattern applies for copying, editing or deleting existing user permissions.
 
@@ -263,17 +263,17 @@ From this screen, you can start to add data to this collection.
 
 === Create a data record
 
-Click the *New* button at the foot of any record list page.  A new form, is displayed for entering details of some new entity.  The initial type of new entity, and the data entry form displayed, are determined based on the list view used, but these can be overridden using thew `Type` and `Choose view` dropdowns.
+Click the *New* button at the foot of any record list page.  A new form, is displayed for entering details of some new entity.  The initial type of new entity, and the data entry form displayed, are determined based on the list view used, but these can be overridden using thew *Type* and *Choose view* dropdowns.
 
 Example list display:
 
 image::screenshots/List-musical-instruments.png[alt="List of musical instruments"]
 
-Based on the definition of this list, clicking on `New` briungs up a new form for entering details of a new instrument:
+Based on the definition of this list, clicking on *New* briungs up a new form for entering details of a new instrument:
 
 image::screenshots/Edit-musical-instrument.png[alt="Edit musical instrument details"]
 
-Enter details into the presented form, and click `Save` to create a new record with the details entered:
+Enter details into the presented form, and click *Save* to create a new record with the details entered:
 
 image::screenshots/List-musical-instruments-2.png[alt="Updated list of musical instruments"]
 
@@ -284,7 +284,7 @@ Select a record list display that includes the record to be copied.
 
 Select the checkbox beside the record to be copied.
 
-Click the *Copy* button at the foot of the record list page.  This brings up a view of the selected record which can be edited as required, and saved as a new record by clinking the `Save` button.  The new record must be given a unique identifier (`Id` field) before it can be saved.
+Click the *Copy* button at the foot of the record list page.  This brings up a view of the selected record which can be edited as required, and saved as a new record by clinking the *Save* button.  The new record must be given a unique identifier (`Id` field) before it can be saved.
 
 === Edit an existing data record
 
@@ -292,7 +292,7 @@ Select a record list display that includes the record to be edited.
 
 Select the checkbox beside the record to be edited.
 
-Click the *Edit* button at the foot of the record list page.  This brings up a view of the selected record which can be edited as required, and saved by clinking the `Save` button.
+Click the *Edit* button at the foot of the record list page.  This brings up a view of the selected record which can be edited as required, and saved by clinking the *Save* button.
 
 === Delete an existing data record
 
@@ -333,7 +333,7 @@ Finally, the *Customize* button displays a "Customize collection" page, which ha
 
 === Customize collection page
 
-The default display for a collection, and all the other list views, include a `Customize` button that provides access to a "Customize collection" page, which summarizes the record types, list views and record views defined for a collection, and provides affordances to create, edit or delete them:
+The default display for a collection, and all the other list views, include a *Customize* button that provides access to a "Customize collection" page, which summarizes the record types, list views and record views defined for a collection, and provides affordances to create, edit or delete them:
 
 image::screenshots/Customize-collection.png[alt="Customize collection view"]
 
