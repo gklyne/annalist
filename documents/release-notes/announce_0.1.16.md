@@ -2,7 +2,7 @@ To Google group:
 
 I've just released an update (0.1.16) to the public prototype of Annalist.
 
-The main advances in this update are improvements to file uploads and resource imports, and changes to form rendering to make it easier to use media attachments.  (One strategy available is to use an entity type as a "media library" to which resources can be attached, and to provide new field rendering options to reference the attached resources and associated metadata.)  These new capabilities have been used to enhance the picture displays in the "CruisingLog" demo collection at http://demo.annalistr.net/ (see definitions for `DailyLog`, `Place` and `Picture`).
+The main advances in this update are improvements to file uploads and resource imports, and changes to form rendering to make it easier to use media attachments.  (One strategy available is to use an entity type as a "media library" to which resources can be attached, and to provide new field rendering options to reference the attached resources and associated metadata.)  These new capabilities have been used to enhance the picture displays in the "CruisingLog" demo collection at http://demo.annalist.net/ (see definitions for `DailyLog`, `Place` and `Picture`).
 
 Other changes include:
 
@@ -21,9 +21,10 @@ To research-object:
 
 I've just released Annalist 0.1.16.
 
-The major new feature in this release are improvements to file uploads and resource imports, and changes to form rendering to make it easier to use media attachments.
+The major new features in this release are improvements to file uploads and resource imports, and changes to form rendering to make it easier to use media attachments.
 
-The full announcement is at: https://groups.google.com/d/topic/annalist-discuss/****/discussion
+The full announcement is at: 
+https://groups.google.com/forum/#!topic/annalist-discuss/RJA_g19rHUg
 
 Release notes (see "history" section for details) at:
 https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md
