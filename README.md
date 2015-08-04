@@ -3,7 +3,7 @@ annalist
 
 A free-form web data notebook - "Data management for little guys"
 
-_Current status (2015-01-30):  public prototype, released for evaluation and feedback._ 
+_Current status (2015-08-04):  public prototype, released for evaluation and feedback._ 
 
 For information about the current release, please refer to the [V0.1 release notes](documents/release-notes/release-v0.1.md)
 
@@ -42,7 +42,9 @@ A _Linked Data Notebook_, supporting collection, organization and sharing of str
 
 In Annalist, I hope to create a generic data notebook which can be used for diverse purposes, in which I have been motivated by the needs of small academic research groups, and my own past experiences running a small business.  I want to deliver a self-hostable, web-based tool that will, "out-of-box", allow collection of web accessible, linked data without prior design of its structure.  I aim to allow structure in data to be developed as needs arise.  Some of my ideas for this are drawn from pre-web PC tools (e.g. [WordPerfect Notebook](https://raw.github.com/gklyne/annalist/master/presentations/wpnotebook_screenshots.png) and [Blackwell Idealist](https://raw.github.com/gklyne/annalist/master/presentations/matrix.png)) which used simple text based file formats to drive flexible, small-scale databases.  I find these products occupied a sweet spot that hasn't since been matched by any web-based software of which I'm aware.
 
-The work on Annalist is in its early stages, but I'm committed to open development from the outset, so you can see all the technical work and notes to date [here](https://github.com/gklyne/annalist).   As of August 2014, the basic data entry, form generation and configuration logic is working and it is possible to create simple collections of data.  The biggest area of missing functionality is support for a range of different data types in a data record (e.g. numbers, dates, images, links to spreadsheet data), and proper support for linking in and out (though these are possible using URIs in simple text fields).  It should be possible for a technically competent person to install and run the software, and get an indication of the direction I'm going.
+Annalist is a work-in-progress, but I'm committed to open development throughout, so you can see all the technical work and notes to date [here](https://github.com/gklyne/annalist).  It should be possible for a technically competent person to install and run the software, and get an indication of the direction I'm going.  Annalist software is available as source code from github, a Python installation package from PyPI, and a Docker container.
+
+As of August 2015, the basic data entry, form generation and configuration logic is working and it is possible to create simple collections of data, supporting a limited range of data types including imported and linked images and audio files.  Missing core functionality intended for the initial release is generation of JSON-LD contexts for full linked data support.  Also intended for the initial release are usability improvements, notably in the area of simplifying the creation of some common data patterns (such as linked type, view and list definitions for new record types).
 
 Note that all the active development takes place on the ["develop" branch](https://github.com/gklyne/annalist/tree/develop).  Tested versions are periodically merged to the default-visible 'master' branch.  In due course, I plan to follow a ["gitflow"-inspired](http://nvie.com/posts/a-successful-git-branching-model/) working style that uses the "master" branch for released, tested software.
 
@@ -79,7 +81,5 @@ David Flanders, formerly of JISC and now at University of Melbourne, provided en
 More recently, work in the European [Wf4Ever project](http://www.wf4ever-project.org), which explored the use of Research Objects to capture details of scientific method along with experimental data, raised many questions about the nature of tools needed to support publication of reproducible and re-usable research data.  The numerous discussions and experiments have informed many of the design ideas and choices that have gone in to Annalist.
 
 ----
-
-@@TODO: see https://pypi.python.org/pypi/setuptools-markdown, or just use .rst extension (see https://github.com/xaralis/django-static-sitemaps for example)
 
 

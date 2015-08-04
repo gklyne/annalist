@@ -177,6 +177,7 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] PyPI description: see https://pypi.python.org/pypi/setuptools-markdown, or just use .rst extension (see https://github.com/xaralis/django-static-sitemaps for example)  (Also needed to fix link and highlighting syntax; ReST is pig-ugly IMO).  Let's see if it formats OK in 0.1.16 release.
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
     - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.
@@ -184,7 +185,7 @@ Notes for Future TODOs:
     - [ ] update displayinfo so that it receives a copy of the continuation data when initialized.
     - [ ] pass continuation data into view_setup, list_setup, collection_view_setup for ^^.  For site, just use default/empty continuation.
     - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
-- [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop)
+- [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
 - [ ] Create image-viewing page to avoid download options, and link to that. (cf. UriImage renderer)
 - [ ] Vary layout for editing and viewing?  Sounds hard.
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris

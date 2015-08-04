@@ -8,6 +8,40 @@ This page describes the field definition parameters and in particular introduces
 
 Note: much of field description processing is handled by modules `annalist.views.form_utils.fielddescription` and `annalist.views.fields.bound_field`, coordinated by `annalist.views.entityedit` and `annalist.views.entitylist`.
 
+
+**Table of Contents**
+
+<!-- Generated with http://doctoc.herokuapp.com -->
+
+- [Field description values](#)
+    - [Id (Field_id)](#)
+    - [Name (Field_name)](#)
+    - [Field value type (Field_type)](#)
+    - [Field renderer type (Field_render)](#)
+    - [Position/size (Field_placement)](#)
+    - [Label (Field_label)](#)
+    - [Help (Field_comment)](#)
+    - [Placeholder (Field_placeholder)](#)
+    - [Property (Field_property)](#)
+    - [Default (Field_default)](#)
+    - [Entity type (Field_entity_type)](#)
+    - [Enum type (Field_typeref)](#)
+    - [Referenced field (Field_fieldref)](#)
+    - [Enum restriction (Field_restrict)](#)
+    - [Field group (Field_groupref)](#)
+    - [Add fields label (Field_repeat_label_add)](#)
+    - [Delete fields label (Field_repeat_label_delete)](#)
+- [Repeated field groups](#)
+- [Resource references, imports and file uploads](#)
+    - [Direct reference to a resource (usually an external resource)](#)
+    - [Reference to an imported or uploaded attachment in a designated entity](#)
+    - [Reference to an imported attachment in the current entity](#)
+    - [Reference to an uploaded attachment in the current entity](#)
+- [Field render types](#)
+- [Field value types](#)
+- [References](#)
+
+
 ## Field description values
 
 A field description is entered through a form with the following fields.
@@ -32,20 +66,6 @@ This field is provided as an additional information and as a hint to the field r
 
 See also the section "Field value types" below.
 
-### Field renderer type (`Field_render`)
-
-Identifer that indicates how the field value is rendered, indicating one of a number of available built-in field renderers.  The stored value is an 'annal:Slug', and presented as a drop-down list based on the contents of descriptions in `annalist/sitedata/enums/Enum_render_type`.
-
-See also the section "Field render types" below.
-
-### Position/size (`Field_placement`)
-
-Used to specifying the position of of a field in a form display, specified in terms of width and horizontal placement on a responsive display grid <sup>1,2</sup>.
-
-Internally, the placement is stored as a specially formatted string.  It is presenrted for viewing as a rough visual indication of the filed placement, and for  editing as a dropdown list of options.
-
-Default placement can be specified as part of the field description, and overridden when the field is included in a particular view.
-
 ### Label (`Field_label`)
 
 A short textual label for the field.  The label is displayed as part of the form in which the field appears.
@@ -54,7 +74,37 @@ A short textual label for the field.  The label is displayed as part of the form
 
 A longer textual description of the field.
 
-(@@TODO: use Markdown for formatting the field description, and use the description for pop-up help text in the form)
+Use Markdown for formatting the field description when editing.
+
+(@@TODO: use the description for pop-up help text in the form.)
+
+### Field renderer type (`Field_render`)
+
+Identifier that indicates how the field value is rendered, indicating one of a number of available built-in field renderers.  The stored value is the identrifier string (slug).  It is presented for editing as a drop-down list of available values and for viewing as a hyperlink to the term description.
+
+See also the section "Field render types" below.
+
+### Field value mode (`Field_value_mode`)
+
+Mode of access to displayed field data; one of: `Value_direct`, `Value_import`, `Value_upload`, `Value_entity` or `Value_field`.  If in doubt, use `Value_direct`.
+
+* Direct display and editing (`Value_direct`): most display fields simply display a field value directly from the presented entity record, or allow that field value to be entered or edited directly.  But there are some situations which vary this behaviour:
+
+* Imported URI (`Value_import`): the displayed value is an imported resource (e.g. an image).  When editing, atext box is displayed into which a URI can be entered, and a button to trigger the resource import.  The resource is stored as an attachment to the entity, and a description is stored in the entity record.
+
+* Uploaded file: the displayed value is an uploaded file (e.g. an image).  When editing, a file briwser control is provided for the user to select a file to be uploaded.  The file is stored as an attachment to the entity, and a description is stored in the entity record.
+
+* Reference to linked entity field (`Value_field`): the displayed value is a single field from a linked entity.  When editing, a selection is made from a dropdown list of available entities.
+
+* Reference to linked entity (`Value_entity`), used with `RefMultifield` render type: the displayed value is one or more fields selected from a linked entity (e.g., a reference to an entity record containing an image and description can be displayed as image and descripotion fields from that record.)  When editing, a selection is made from a dropdown list of available entities.
+
+### Position/size (`Field_placement`)
+
+Used to specifying the position of of a field in a form display, specified in terms of width and horizontal placement on a responsive display grid <sup>1,2</sup>.
+
+Internally, the placement is stored as a specially formatted string.  It is presenrted for viewing as a rough visual indication of the filed placement, and for  editing as a dropdown list of options.
+
+Default placement can be specified as part of the field description, and overridden when the field is included in a particular view.
 
 ### Placeholder (`Field_placeholder`)
 
@@ -72,14 +122,6 @@ A default property CURIE or URI can be specified as part of the field descriptio
 
 A default value for the field if none is specified.
 
-### Entity type (`Field_entity_type`)
-
-Type (URI or CURIE) of entity to which field applies.
-
-This is used to restrict the fields that are offered when editing a view or list description (see also field `View_target_type` used in view descriptions).
-
-Many, or even most, field descriptions are specific to a particular entity type, but some are generic.  If this value is not specified, the corresponding field is offered as an option for any entity type, but if given then it is offered only when editing a view or list for the specified type.
-
 ### Enum type (`Field_typeref`)
 
 Used with render types `Enum`, `Enum_optional` and `Enum_choice` (and also `Type`, `List`, `View`, `Field` which are sumsumed by the `Enum*` render types).
@@ -92,19 +134,11 @@ When a field refers to some target entity, this may indicate a property CURIE or
 
 See section "Resource references, imports and file uploads" for more details.
 
-### Enum restriction (`Field_restrict`)
-
-Selection filter to restrict enumerated values that are candidate field values, used in conjunction with field `Field_fieldref`.
-
-This is provided mainly for internal use to implement the `Field_entity_type` feature.  If in doubt, leave this field blank.
-
-The field value is a string expression that is used to filter candidates that are presented as members of an enumerated value.  The selection filter syntax is defined by module `annalist.models.entityfimnder`, and is used for enumerated value fields and also for generating entity list displays (cf. `List_entity_selector` field used in `List_view`).
-
 ### Field group (`Field_groupref`)
 
-Field group reference used by `RepeatGroup` and `RepeatGroupRow` renderers.  Otherwise, it is ignored.
+Field group reference used by `RepeatGroup`, `RepeatGroupRow` and `RefMultifield` renderers.  Otherwise, it is ignored.
 
-The value is a reference to a separately defined field group, which itself contains a list of field description references.  The group itself defines a group of fields that are repeated within a view..
+The value is a reference to a separately defined field group, which itself contains a list of field description references.  The group itself defines a group of fields that are included in a view.
 
 The field value is presented for editing as a drop-down list, and for viewing as a hyperlink to the selected field group.
 
@@ -121,6 +155,22 @@ See also the section "Repeated field groups"
 Button label used by `RepeatGroup` and `RepeatGroupRow` renderers.  Otherwise, it is ignored.
 
 See also the section "Repeated field groups"
+
+### Entity type (`Field_entity_type`)
+
+Type (URI or CURIE) of entity to which field applies.
+
+This is used to restrict the fields that are offered when editing a view or list description (see also field `View_target_type` used in view descriptions).  If in doubt, leave this field blank.
+
+Many, or even most, field descriptions are specific to a particular entity type, but some are generic.  If this value is not specified, the corresponding field is offered as an option for any entity type, but if given then it is offered only when editing a view or list for the specified type.
+
+### Enum restriction (`Field_restrict`)
+
+Selection filter to restrict enumerated values that are candidate field values.
+
+This is provided mainly for internal use to implement the `Field_entity_type` feature.  If in doubt, leave this field blank.
+
+The field value is a string expression that is used to filter candidates that are presented as members of an enumerated value.  The selection filter syntax is defined by module `annalist.models.entityfimnder`, and is used for enumerated value fields and also for generating entity list displays (cf. `List_entity_selector` field used in `List_view`).
 
 ## Repeated field groups
 
@@ -149,7 +199,7 @@ Thus, to create a repeated field in a view, the following steps must be performe
 
 ## Resource references, imports and file uploads
 
-Annalist primarily deals with collections of data that are stored as JSON (or JSON-LD) text files, which can in turn reference other resources, including imges and other non-textual media, that are accessible on the Web.  But sometimes it is useful to import such resources so that they become part of a published Annalist collection, and to reference such resources.
+Annalist primarily deals with collections of data that are stored as JSON (or JSON-LD) text files, which can in turn reference other resources, including images and other non-textual media, that are accessible on the Web.  But sometimes it is useful to import such resources so that they become part of a published Annalist collection, and to reference such resources.
 
 Annalist deals with such circumstances by allowing arbitrary files and resources to be "attached" to an Annalist entity, via file upload and web resource import fields. These attachments are described and referenced within the JSON part of an entity, and stored alongside the JSON as files of the appropriate type.  This approach allows Annalist to preserve information about the attachments such as the content type and provenance information.  Further, Annalist fields in one entity can reference fields in another entity, and for fields using resource renderers such as `RefImage`, a reference to such a field is treated as a reference to the attached resource.
 
@@ -192,6 +242,10 @@ Field "Field value type" (`Field_type`) is `annal:Upload`, and field "Enum type"
 
 In this case the field value describes an attachment to the current entity, and for editing is presented as render type `annal:FileUpload`.
 
+### Multi-field references
+
+@@TODO
+
 
 ## Field render types
 
@@ -204,7 +258,7 @@ Each renderer deals with two main functions:
 
 Some of the values listed below were created to handle earlier stages of development, are now redundant, and in due course their use should be replaced by the more generic renderers indicated.
 
-The definitive list of render types is in `annalist/sitedata/enums/Enum_render_type`.  Renderer selection is handled through module `annalist.views.fields.rener_utils`.
+(The definitive list of render types is in `annalist/sitedata/enums/Enum_render_type`.  Renderer selection is handled through module `annalist.views.fields.rener_utils`.)
 
 * `CheckBox` - presents Boolean value as a checkbox.
 * `EntityId` - presents entity identitier as a simple input field for editing, or as a hyperlink for viewing.
@@ -253,12 +307,10 @@ Built-in values include:
 * `annal:List_type` - type of list display: "List" or "Grid"
 * `annal:TokenSet` - list of string token values (e.g. used for user permissions list); stored as a JSON list, presented as a space-separated list of tokens
 * `annal:Boolean` - stored as JSON `true` or `talse`, typically presented as a checkbox.
-* `annal:Import` - (see section "Resource references, imports and file uploads")
-* `annal:Upload` - (see section "Resource references, imports and file uploads")
 
 
 
-# References
+## References
 
 1. [Foundation responsive web framwork](http://foundation.zurb.com)
 
