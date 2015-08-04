@@ -2,7 +2,7 @@
 Graham Klyne
 v0.1.15, 2015-08-04
 :toc:
-:toc-placement: preambe
+:toc-placement: preamble
 
 Annalist uses _views_ to define user-definable presentation of data for display and editing.
 
