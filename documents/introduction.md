@@ -22,7 +22,7 @@ Currently, the tool of choice (or necessity) for many researchers is a spreadshe
 
 Many of the above problems may be faced in smaller ways by anyone who uses a computer to store data.
 
-Personal information, TODO lists, accounting records, object catalogues, and photo galleries are just a few examples of applications that combine structured annotations with other information.  Current tools (of which I am aware) that can be used for creatinmg these kinds of datasets (a) require some non-trivial level of technical expertise to use, (b) tend to require a data model to be defined in advance, when often one wants to allow details to be addedc into the structure as they are encountered, and (c) don't really lend themselves to collaborative work or sharing and cross-linking with public datasets.
+Personal information, TODO lists, accounting records, object catalogues, and photo galleries are just a few examples of applications that combine structured annotations with other information.  Current tools (of which I am aware) that can be used for creatinmg these kinds of datasets (a) require some non-trivial level of technical expertise to use, (b) tend to require a data model to be defined in advance, when often one wants to allow details to be added into the structure as they are encountered, and (c) don't really lend themselves to collaborative work or sharing and cross-linking with public datasets.
 
 ## Primary goals
 
@@ -50,8 +50,8 @@ There are also a number of secondary goals which have informed some of the desig
 - mobile-friendly
 - desktop or web hosting
 - usable with separately hosted data
-- support darta hosting for external applications (REST API)
-- "source as resource": darta is viewable by end user using just a text viewer
+- support data hosting for external applications (REST API)
+- "source as resource": data is viewable by end user using just a text viewer
 - incremental backup friendly
 - search across all or selected fields
 
@@ -71,7 +71,7 @@ Small research groups, or individuals building subsidiary datasets that may cont
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;David De Roure, University of Oxford. [_Executable Music Documents_](http://ora.ox.ac.uk/objects/uuid:3d03653b-7609-4d05-94a5-0aea4c0109f8).
 
-Reasearch Objects thus contain a diverse mixture of information bundled together as a logically singular entity.  In past work on Research Objects, a question that has often been asked by researchers, without an entirely satisfactory answer, is "how can I create an research object".  Annalist allows the diverse elements of a research object to be drawn together and exposed as a single bundle, which is straightforward to converted to one's favoured form of Research Object package for sharing and distribution.
+Reasearch Objects thus contain a diverse mixture of information bundled together as a logically singular entity.  In past work on Research Objects, a question that has often been asked by researchers, without an entirely satisfactory answer, is "how can I create an research object".  Annalist allows the diverse elements of a research object to be drawn together and exposed as a single bundle, which is straightforward to convert to one's favoured form of Research Object package for sharing and distribution.
 
 
 ## Personal data
@@ -119,7 +119,7 @@ The surveyed systems included:
 
 With the exception of Callimachus, which scored about 60-80%, none of these scored more than about 50% of availability of the features to be targetted by Annalist.  (This is not to critisize these systems, just observing that the requirements addressed don't entirely align with those for Annalist.)
 
-A tool that I use for a lot of rough data recording is SimpleNote (and Notational Velocity).  This is a pure text tool that addresses many of the desiderata targetted by Annalist, but deals with simpl,e raw text files rather than data.  It would, in theory, be possible to encode the data as test in such a system, but I don't think that would be a truly viable option for any serous data.
+A tool that I use for a lot of rough data recording is SimpleNote (and Notational Velocity).  This is a pure text tool that addresses many of the desiderata targetted by Annalist, but deals with simple raw text files rather than data.  It would, in theory, be possible to encode the data as test in such a system, but I don't think that would be a truly viable option for any serous data.
 
 Related to some aspects of Annalist's design is the work on [linked data fragments](http://linkeddatafragments.org) by Ruben Verborgh _et al_ at iMinds, University of Ghent.  Annalist's use of flat files for storing small frames of data has similarities with some of these ideas.  One way in which Annalist differs from the Linked Data Fragments work is that the fragments are used as the native form of stored data, and amalgamation into larger datasets only comes later, if at all.  Also, it is not a goal of Annalist to support high performance querying over large datasets.  It is conceivable that Annalist data records would play well with the developing Linked Data Fragments infrastructure.
 
