@@ -183,7 +183,7 @@ Web resources can be imported as attachements to an entity by creating a field w
 
 Files can be uploaded as attachements to an entity by creating a field with render type `FileUpload`.  This is rendered for editing as an HTML file browser input, and for viewing as a hyperlink that links to the imported file attached to the entity.
 
-For referencing resources, there are several options, provided through renderers like <<`URILink`>>, <<`RefImage`>> and <<`RefAudio`>>:
+For referencing resources, there are several options, provided through renderers like <<Link to external resource (`URILink`),`URILink`>>, <<Reference to image resource (`RefImage`),`RefImage`>> and <<Reference to audio resource (`RefAudio`),`RefAudio`>>:
 
 . Direct reference to a resource (usually an external resource)
 . Reference to an imported attachment in the current entity
@@ -242,59 +242,65 @@ Some of the values listed below were created to handle earlier stages of develop
 
 (The definitive list of render types is in `annalist/sitedata/enums/Enum_render_type`.  Renderer selection is handled through module `annalist.views.fields.rener_utils`.)
 
-=== `Text`
+=== Single line text (`Text`)
 
 A simple single-line text value, presented for editing as an HTML input field, and for viewing as a simple text element.
 
-=== `Textarea`
+=== Multiline text (`Textarea`)
 
 A multi-line text value, presented for editing as an HTML "textarea" field, and for viewing as a simple flowed text element.
 
-=== `Markdown`
+=== MArkdown rich text (`Markdown`)
 
 Multiline rich text.  Stored and presented for editing as plain text text, and for viewing as text formatted according to http://daringfireball.net/projects/markdown/[Markdown] conventions.
 
-=== `Enum`
+=== Select entity `Enum`
 
-Presents a value of a designated type (see field <<Refer to type (`Field_typeref`)>>) as a dropdown list for edting, or as a hyperlink for viewing.  Requires some existing value to be selected and picks an arbitrary value for a default.
+Presents a value of a designated type (see field <<Refer to type (`Field_typeref`)>>) as a dropdown list for edting, or as a hyperlink for viewing.
 
-=== `Enum_choice`
+Requires some existing value to be selected and picks an arbitrary value for a default.
 
-Presents a value of a designated type (see field <<Refer to type (`Field_typeref`)>>) as a dropdown list for edting, or as a hyperlink for viewing.  Also provides a "+" button which can be used to create a new value of the designated type. The value may be left unselected, in which case the stored value is blank.
+=== Select or create entity `Enum_choice`
 
-=== `Enum_optional`
+Presents a value of a designated type (see field <<Refer to type (`Field_typeref`)>>) as a dropdown list for edting, or as a hyperlink for viewing.  Also provides a "+" button which can be used to create a new value of the designated type.
 
-Presents a value of a designated type (see field <<Refer to type (`Field_typeref`)>>) as a dropdown list for edting, or as a hyperlink for viewing.  The value may be left unselected, in which case the stored value is blank.
+The value may be left unselected, in which case the stored value is blank.
 
-=== `Identifier`
+=== Optional entity selection `Enum_optional`
+
+Presents a value of a designated type (see field <<Refer to type (`Field_typeref`)>>) as a dropdown list for edting, or as a hyperlink for viewing.
+
+The value may be left unselected, in which case the stored value is blank.
+
+=== CURIE or URI (`Identifier`)
 
 A http://www.w3.org/TR/curie/[CURIE] or https://tools.ietf.org/html/rfc3986[URI].  Preesented for editing as a text box, and for viewing as a simple text element.
 
-=== `Placement`
+=== Field position and size (`Placement`)
 
 A special-case field renderer used for presenting placement of a field on a form.
 
-=== `RefImage`
+=== Reference to image resource (`RefImage`)
 
 A reference to an image value, presented for viewing as the referenced image.  See also section "Resource references, imports and file uploads".
 
-=== `RefAudio`
+=== Reference to audio resource (`RefAudio`)
 
 A reference to an audio resourcxe, presented for viewing as a media player widget.  See also section "Resource references, imports and file uploads".
 
-=== `CheckBox`
+=== Boolean as checkbox (`CheckBox`)
 
 Presents a Boolean value as a checkbox.
 
-=== `EntityId`
+=== Entity identifier (`EntityId`)
 
 Presents an entity identitier as a simple input field for editing, or as a hyperlink for viewing.
 
-=== `EntityTypeId`
+=== Entity type identifier (`EntityTypeId`)
 
 Presents the entity type identifier a simple input field for editing, or as a hyperlink for viewing.
 
-=== `RepeatGroup`
+=== Repeated field group (`RepeatGroup`)
 
 A special case renderer used for describing repeated fields in a view description.  The stored value is a list of JSON objects, each of which is rendered using the field group reference from the field description (see section "Repeated field groups" and field `Field_groupref`).  Fields within each group are flowed vertically down the view with labels to the left.
 
@@ -306,29 +312,29 @@ A repeat group can also be used for optional values in an entity record.
 
 (@@TODO: provide means to change ordering of values in repeat group)
 
-=== `RepeatGroupRow`
+=== Repeated field group as rows of table `RepeatGroupRow`
 
 Same as `RepeatGroup`, except that field groups are rendered in tabular form with field labels for column headers, and each repeated group as a row of the table.
 
-=== `Slug`
+=== Short identifier string (`Slug`)
 
 A simple text value used as an internal local identifier, or Slug, presented in the same way as the 'Text' renderer.  The text value is expected to consist of up to 32 letters, digits and/or underscore characters, (but this is not currently enforced @@TODO).
 
-=== `TokenSet`
+=== List of text tokens (`TokenSet`)
 
-a list of simple text values, presented for editing as an HTML input field, and for viewing as a simple text element.  Presented values are space-separated.  Currently there is no mechanism to escape spaces within individual text values (@@).
+a list of simple text values, presented for editing as an HTML input field, and for viewing as a simple text element.  Presented values are space-separated.  Currently there is no mechanism to escape spaces within individual text values (@@TODO).
 
-=== `URILink`
+=== Link to external resource (`URILink`)
 
 A URI presented for viewing as a Hyperlink, used to create fields that reference externally stored resources.  See also section "Resource references, imports and file uploads".
 
-=== `FileUpload`
+=== File upload (`FileUpload`)
 
 upload file as resource attached to entity.  Stored as a complex structure with filename, resource reference, content type, etc.;  presented for editing as an HTML file upload input element, and for viewing as a hyperlink.  See section "Resource references, imports and file uploads"
 
 Functionality superseded by value mode `Value_upload` used with render type `URILink` (@@CHECK)
 
-=== `URIImport`
+=== Web resource import (`URIImport`)
 
 Import a web resource as an attachment to an entity.  Stored as a complex structure with resource URI, local resource reference, content type, etc.;  presented for editing as a text input field and an "Import" button, and for viewing as a hyperlink.  See section "Resource references, imports and file uploads"
 
