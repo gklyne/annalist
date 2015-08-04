@@ -1,6 +1,6 @@
 = View fields in Annalist
 Graham Klyne
-v0.1.15, 2015-08-04
+v0.1.16, 2015-08-04
 :toc: macro
 :toc-title:
 

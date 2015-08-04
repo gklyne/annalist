@@ -119,7 +119,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             r = self.client.get(r['location'])
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        s = BeautifulSoup(r.content)
+        s = BeautifulSoup(r.content, "html.parser")
         return s
 
     # Test named input has specified type and value

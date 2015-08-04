@@ -255,7 +255,7 @@ class SiteViewTest(AnnalistTestCase):
         # Check returned HTML (checks template logic)
         # (Don't need to keep doing this as logic can be tested through context as above)
         # (See: http://stackoverflow.com/questions/2257958/)
-        s = BeautifulSoup(r.content)
+        s = BeautifulSoup(r.content, "html.parser")
         self.assertEqual(s.html.title.string, site_title())
         homelink = s.find(class_="title-area").find(class_="name").h1.a
         self.assertEqual(homelink.string,   "Home")
@@ -294,7 +294,7 @@ class SiteViewTest(AnnalistTestCase):
         # Check returned HTML (checks template logic)
         # (Don't need to keep doing this as logic can be tested through context as above)
         # (See: http://stackoverflow.com/questions/2257958/)
-        s = BeautifulSoup(r.content)
+        s = BeautifulSoup(r.content, "html.parser")
         # title and top menu
         self.assertEqual(s.html.title.string, site_title())
         homelink = s.find(class_="title-area").find(class_="name").h1.a

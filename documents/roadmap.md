@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: public prototype release 0.1.14; the main update from release 0.1.12 is support for arbitrary attachments to entities, via URI import or file upload.
+Current status: public prototype release 0.1.16; the main update from release 0.1.14 is improvements to handling media attachments.
 
 
 # V1.0 release
@@ -44,7 +44,7 @@ There are also some issues around entity renaming and link preservation to be co
 
 ## Extended data types and presentation options
 
-Numbers, Dates, Images, Georeferences, etc.
+Numbers, Dates, Georeferences, etc.
 
 I also want to look into using "live" links, e.g. to obtain georeference coordinates or environment sensor data for incl,usion into data records.
 
@@ -69,7 +69,7 @@ Facilitate the creation of a new collection using the structures (data types, vi
 - Alternative OIDC identity providers
 - Authentication mechanisms
   - Consider using OAuth2-Shibboleth bridge for uni deployment (have link somewhere in notes)
-- OAuth2 dynamic registration - note ongoing work in IETF (https://datatracker.ietf.org/doc/draft-ietf-oauth-dyn-reg/)
+- OAuth2 dynamic registration - https://tools.ietf.org/html/rfc7591 - if IDPs support it.
 
 
 ## Support multiple entity providers

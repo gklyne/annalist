@@ -1,7 +1,7 @@
 {
   "rdfs:label": "Collection testcoll",
   "rdfs:comment": "Description of Collection testcoll",
-  "annal:software_version": "0.1.15",
+  "annal:software_version": "0.1.16",
   "annal:type_id": "_collection",
   "annal:id": "testcoll",
   "@id": "../",

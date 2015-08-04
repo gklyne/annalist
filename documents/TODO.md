@@ -55,7 +55,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [x] Collection: Picture_gallery (`annal:Upload`)
     - [x] Update all references in code to 'annal:...' value types to use ANNAL.CURIE.... values instead.
 - [x] Audio widget not responsive over entire height; box sizing messed up?
-- [ ] Update documentation (including README.md status summary)
+- [x] Update documentation (including README.md status summary)
 
 (release?)
 
