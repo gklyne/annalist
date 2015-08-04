@@ -1,8 +1,7 @@
 = View fields in Annalist
 Graham Klyne
 v0.1.15, 2015-08-04
-:toc:
-:toc-placement: preamble
+:toc: macro
 
 Annalist uses _views_ to define user-definable presentation of data for display and editing.
 
@@ -11,6 +10,10 @@ These views essentially consist of a list of _fields_ to be displayted from the 
 This page describes the field definition parameters and in particular introduces the available field rendering types.  It also discusses additional considerations for repeated fields, and fields that reference uploaded files or imported web resources.
 
 Note: much of field description processing is handled by modules `annalist.views.form_utils.fielddescription` and `annalist.views.fields.bound_field`, coordinated by `annalist.views.entityedit` and `annalist.views.entitylist`.
+
+*Table of Contents*
+
+toc::[]
 
 
 == Field description values
@@ -283,13 +286,12 @@ Built-in values include:
 
 == References
 
-1. http://foundation.zurb.com[Foundation responsive web framwork]
+1. Foundation responsive web framwork. http://foundation.zurb.com
 
-2. http://foundation.zurb.com/docs/components/grid.html[Foundation grid]
+2. Foundation grid. http://foundation.zurb.com/docs/components/grid.html
 
-3. http://www.w3.org/TR/curie/[CURIE]
+3. CURIE (Compact URI). http://www.w3.org/TR/curie/
 
-4. https://tools.ietf.org/html/rfc3986[URI]
-
+4. URI. https://tools.ietf.org/html/rfc3986
 
 
