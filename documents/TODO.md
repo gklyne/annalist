@@ -13,8 +13,30 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 # Version 0.1.17, towards 0.1.18
 
+- [ ] BUG: if alternative field is defined for "Entity_id" (e.g. for different label), can't save entity.  Probably because of internal expected form field name not used?  When RenderType is "EntityId, force use of standard field name?  Similar for "EntityTypeId"?
+    - workaround for now: always use "Entity_id" for field id in view.
+- [ ] BUG: if Value_entity field does not include "refer to type" value, barfs with 500 error.  (Fixed but needs testing.)
+- [ ] BUG: Multifield ref inside a repeat field not occupying the entire width of the field generates messed up layout of labels vs content.  (Content is OK, labels not.  Maybe need an additional layer of row/cols for the headers in the multifield ref?)
+- [ ] BUG: import resource in new entity raises internal error (fixed but needs testing)
+- [ ] BUG: import image when changing record ID (of on new record?) gives error
+- [ ] QUESTION: why does _group have a record type field?  Is it needed?  If not, eliminate it.
+    - No significant references to ANNAL.CURIE.record_type noted in source code.
+- [ ] Built-in `Entity_id` and `Entity_label` fields have non-standard position/size values
+- [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
+- [ ] Missing enumerated value reference: provide better diagnostic
+- [ ] Enum selection - include labels in dropdown (then can use built-in IDs)
+- [ ] When using "+" to add an enum entry, also need quick route to edit entry?
+- [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
+
+- [ ] Usability: 3 key tasks need to be easier (at the level of a single form fill-out):
+    - [ ] Create a new type+view+list, suitably interconnected
+    - [x] Define a new field type and add to a view
+    - [ ] Create repeating fields in a view.  (a) Define a repeating field type and add to view, or (b) define a repeating group containing an existing field type, and add to a view. (a) could a checkbox choice on the previous task.  See also: [#41](https://github.com/gklyne/annalist/issues/41)
+    - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
+    - See also discussion below of introducing "tasks" - this would be an early candidate for that.
+    - Need to think how the interface would work.  Option to add "task" button to any form?
+
 - [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
-- [ ] field renderer for unified import or upload resource?
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?
@@ -23,13 +45,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - plus new logic to render the padding elements
     - Another option: take field-loop out of template and run it as a `render_all_fields` method
         - still needs placement parser to return position+width information
-- [ ] Usability: 3 key tasks need to be easier (at the level of a single form fill-out):
-    - [ ] Create a new type+view+list, suitably interconnected
-    - [ ] Define a new field type and add to a view
-    - [ ] Create repeating fields in a view.  (a) Define a repeating field type and add to view, or (b) define a repeating group containing an existing field type, and add to a view. (a) could a checkbox choice on the previous task.  See also: [#41](https://github.com/gklyne/annalist/issues/41)
-    - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
-    - See also discussion below of introducing "tasks" - this would be an early candidate for that.
-    - Need to think how the interface would work.  Option to add "task" button to any form?
+
+(release 0.1.18?)
+
 
 - [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
@@ -98,6 +116,8 @@ Usability notes:
 
 - [x] Need easier way to make new entries for fields that are referenced from a record; e.g. a `New value` button as part of an enum field.
 - [x] Clearer linkage between related records - hyperlinks on non-editing views
+- [ ] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
+- [ ] OR... allow an entity to specify its own default view?
 - [ ] List dropdown: normally show only those lists defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
 - [ ] View forms need title (indicating type of thing viewed)?  Or let user define label for Id field?
 - [ ] Provide field type that can be used to place fixed annotations/instructions in a form
@@ -131,7 +151,9 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
-- [ ] PyPI description: see https://pypi.python.org/pypi/setuptools-markdown, or just use .rst extension (see https://github.com/xaralis/django-static-sitemaps for example)  (Also needed to fix link and highlighting syntax; ReST is pig-ugly IMO).  Let's see if it formats OK in 0.1.16 release.
+- [ ] field renderer for unified import or upload resource?
+- [x] PyPI description: see https://pypi.python.org/pypi/setuptools-markdown, or just use .rst extension (see https://github.com/xaralis/django-static-sitemaps for example)  (Also needed to fix link and highlighting syntax; ReST is pig-ugly IMO).  Let's see if it formats OK in 0.1.16 release.
+- [ ] `annal:member` - used to "lift" repeated values to the property that references a repeat group?
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
     - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.
@@ -140,8 +162,8 @@ Notes for Future TODOs:
     - [ ] pass continuation data into view_setup, list_setup, collection_view_setup for ^^.  For site, just use default/empty continuation.
     - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
 - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
-- [ ] Create image-viewing page to avoid download options, and link to that. (cf. UriImage renderer)
-- [ ] Vary layout for editing and viewing?  Sounds hard.
+- [x] Create image-viewing page to avoid download options, and link to that. (cf. UriImage renderer)
+- [x] Vary layout for editing and viewing?  Sounds hard.
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
 - [ ] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
@@ -156,6 +178,7 @@ Notes for Future TODOs:
 - [ ] Provide a way to edit site metadata (e.g. via link from site front page)
 - [ ] Provide a way to view/edit site user permissions (e.g. via link from site front page)
 - [ ] Provide a way to view/edit site type/view/list/etc descriptions (e.g. via link from site front page)
+    - not edit: site data should be stable and controlled.  Consider collection structure inheritiance instead.
 - [ ] Undefined list error display, or any error - include link to collection in top bar
 - [ ] Help display for view: use commentary text from view descrtiption; thus can tailor help for each view.
 - [x] Introduce markdown rendering type

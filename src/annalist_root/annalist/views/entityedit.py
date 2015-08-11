@@ -1179,9 +1179,15 @@ class GenericEntityEditView(AnnalistGenericView):
         # Import
         import_name  = field_desc.get_field_instance_name()
         property_uri = field_desc['field_property_uri']
-        field_vals   = entityvals[property_uri].copy() or {}
+        #@@ field_vals   = entityvals[property_uri].copy() or {}
+        fv           = entityvals[property_uri]
+        field_vals   = fv.copy() if isinstance(fv, dict) else {}
+        if isinstance(fv, dict):
+            import_url = fv.get('import_url', "")
+        else:
+            import_url = fv
         field_vals['import_name'] = import_name
-        import_url   = field_vals['import_url'] or ""
+        field_vals['import_url']  = import_url
         import_vals  = field_vals.copy()
         import_vals.update(
             { 'id':         viewinfo.entity_id
