@@ -13,8 +13,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 # Version 0.1.17, towards 0.1.18
 
-- [ ] BUG: if alternative field is defined for "Entity_id" (e.g. for different label), can't save entity.  Probably because of internal expected form field name not used?  When RenderType is "EntityId, force use of standard field name?  Similar for "EntityTypeId"?
-    - workaround for now: always use "Entity_id" for field id in view.
+- [x] BUG: if alternative field is defined for "Entity_id" (e.g. for different label), can't save entity.  Probably because of internal expected form field name not used?  When RenderType is "EntityId, force use of standard field name?  Similar for "EntityTypeId"?
+    - workaround until fix: always use "Entity_id" for field id in view.
+    - fix applied: EntityId and EntityTypeId renderers used fixed field name
 - [ ] BUG: if Value_entity field does not include "refer to type" value, barfs with 500 error.  (Fixed but needs testing.)
 - [ ] BUG: Multifield ref inside a repeat field not occupying the entire width of the field generates messed up layout of labels vs content.  (Content is OK, labels not.  Maybe need an additional layer of row/cols for the headers in the multifield ref?)
 - [ ] BUG: import resource in new entity raises internal error (fixed but needs testing)
@@ -110,6 +111,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 Technical debt:
 
 - [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
+- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, dues somewhat to the early template-based logic for field rendering.  Withn the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special login in bound_field.
+- [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
+- [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
+- [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
 
 
 Usability notes:

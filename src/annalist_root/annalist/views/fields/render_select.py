@@ -45,7 +45,7 @@ edit_options = (
     )
 
 view_select = (
-    """<!-- fields.select_view_renderer(view_select) -->
+    """<!-- fields.render_select.view_select -->
     {% if field.field_value_link_continuation %}
       <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
     {% else %}
@@ -54,27 +54,12 @@ view_select = (
     """)
 
 edit_select = (
-    """<!-- fields.select_view_renderer(edit_select) -->
+    """<!-- fields.render_select.edit_select -->
     <div class="row">
       <div class="small-10 columns view-value less-new-button">
         <select name="{{repeat_prefix}}{{field.field_name}}">
     """+
     edit_options+
-          # {% for v in field_options %}
-          #   {% if v == field.field_value %}
-          #     {% if v == "" %}
-          #       <option value="" selected="selected">{{field.field_placeholder}}</option>
-          #     {% else %}
-          #       <option selected="selected">{{v}}</option>
-          #     {% endif %}
-          #   {% else %}
-          #     {% if v == "" %}
-          #       <option value="">{{field.field_placeholder}}</option>
-          #     {% else %}
-          #       <option>{{v}}</option>
-          #     {% endif %}
-          #   {% endif %}
-          # {% endfor %}
     """
         </select>
       </div>
@@ -91,7 +76,7 @@ edit_select = (
     """)
 
 view_choice = (
-    """<!-- fields.choice_view_renderer(view_choice) -->
+    """<!-- fields.render_select.view_choice -->
     {% if field.field_value_link_continuation %}
       <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
     {% else %}
@@ -100,25 +85,31 @@ view_choice = (
     """)
 
 edit_choice = (
-    """<!-- fields.choice_view_renderer(edit_choice) -->
+    """<!-- fields.render_select.edit_choice -->
     <select name="{{repeat_prefix}}{{field.field_name}}">
     """+
     edit_options+
-      # {% for v in field_options %}
-      #   {% if v == field.field_value %}
-      #     {% if v == "" %}
-      #       <option value="" selected="selected">{{field.field_placeholder}}</option>
-      #     {% else %}
-      #       <option selected="selected">{{v}}</option>
-      #     {% endif %}
-      #   {% else %}
-      #     {% if v == "" %}
-      #       <option value="">{{field.field_placeholder}}</option>
-      #     {% else %}
-      #       <option>{{v}}</option>
-      #     {% endif %}
-      #   {% endif %}
-      # {% endfor %}
+    """
+    </select>
+    """)
+
+# @@TODO: don't use "field_value" here and remove special case logic in bound_field?
+
+view_entitytype = (
+    """<!-- fields.render_select.view_entitytype -->
+    {% if field.field_value_link_continuation %}
+      <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
+    {% else %}
+      <span>{{field.field_value}}</span>
+    {% endif %}
+    """)
+
+edit_entitytype = (
+    # Note use of fixed field name
+    """<!-- fields.render_select.edit_entitytype -->
+    <select name="entity_type">
+    """+
+    edit_options+
     """
     </select>
     """)
@@ -213,6 +204,15 @@ def get_choice_renderer():
     return RenderFieldValue(
         view_renderer=Select_view_renderer(view_choice),
         edit_renderer=Select_edit_renderer(edit_choice),
+        )
+
+def get_entitytype_renderer():
+    """
+    Return field renderer object for entitytype
+    """
+    return RenderFieldValue(
+        view_renderer=Select_view_renderer(view_entitytype),
+        edit_renderer=Select_edit_renderer(edit_entitytype),
         )
 
 # End.
