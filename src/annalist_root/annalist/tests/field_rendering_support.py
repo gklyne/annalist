@@ -87,12 +87,14 @@ class FieldRendererTestSupport(AnnalistTestCase):
         expect_rendered_edit="...",
         collapse_whitespace=False
         ):
-        rendered_label = fieldrender.label().render(context)
-        self.assertRenderMatch(
-            rendered_label, 
-            '''<div class="view-label small-12 columns">  <span>test label</span></div>''',
-            collapse_whitespace
-            )
+        #@@
+        # rendered_label = fieldrender.label().render(context)
+        # self.assertRenderMatch(
+        #     rendered_label, 
+        #     '''<div class="view-label small-12 columns">  <span>test label</span></div>''',
+        #     collapse_whitespace
+        #     )
+        #@@
         rendered_view = fieldrender.view().render(context)
         self.assertRenderMatch(
             rendered_view, 
@@ -108,8 +110,18 @@ class FieldRendererTestSupport(AnnalistTestCase):
         rendered_label_view = fieldrender.label_view().render(context)
         self.assertRenderMatch(
             rendered_label_view, 
-            '''<div class="view-label small-12 columns">'''+
-            '''  <span>test label</span>'''+
+            # '''<div class="view-label small-12 columns">'''+
+            # '''  <span>test label</span>'''+
+            # '''</div>''',
+            '''<div class="small-12 columns">\n'''+
+            '''  <div class="row view-value-row">\n'''+
+            '''    <div class="view-label small-12 medium-2 columns">\n'''+
+            '''      <span>test label</span>\n'''+
+            '''    </div>\n'''+
+            '''    <div class="view-value small-12 medium-10 columns">\n'''+
+            '''      %s\n'''%expect_rendered_view+
+            '''    </div>\n'''+
+            '''  </div>\n'''+
             '''</div>''',
             collapse_whitespace
             )

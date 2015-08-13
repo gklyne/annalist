@@ -35,7 +35,6 @@ col_head_view = (
     , 'body':
         """<!-- views.fields.render_ref_multifield.col_head_view body (mode:{{render_mode}}) -->\n"""+
         """{% for f in group_bound_fields %}"""+
-        #@@ """  <!-- field {{f}} -->"""+ #@@
         """  {% include f.field_render_mode with field=f %}"""+
         """{% endfor %}"""
     , 'tail':
@@ -50,7 +49,7 @@ view_multifield = (
     , 'body':
         """<!-- views.fields.render_ref_multifield.view_multifield body (mode:{{render_mode}}) -->
         {% for f in group_bound_fields %}
-          {% include f.field_render_mode with field=f %}\
+          {% include f.field_render_mode with field=f %}
         {% endfor %}
         """
     , 'tail':
@@ -105,10 +104,10 @@ class RenderMultiFields_label(object):
             { 'group_bound_fields':  group_fields
             })
         # log.info("RenderMultiFields_label.render group_dict: %r"%(group_dict))
-        response_parts = [self._template_head.render(context)]
         with context.push(group_dict):
+            response_parts = [self._template_head.render(context)]
             response_parts.append(self._template_body.render(context))
-        response_parts.append(self._template_tail.render(context))
+            response_parts.append(self._template_tail.render(context))
     except Exception as e:
         log.exception("Exception in RenderMultiFields_label.render")
         ex_type, ex, tb = sys.exc_info()

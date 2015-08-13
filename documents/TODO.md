@@ -16,8 +16,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: if alternative field is defined for "Entity_id" (e.g. for different label), can't save entity.  Probably because of internal expected form field name not used?  When RenderType is "EntityId, force use of standard field name?  Similar for "EntityTypeId"?
     - workaround until fix: always use "Entity_id" for field id in view.
     - fix applied: EntityId and EntityTypeId renderers used fixed field name
-- [ ] BUG: if Value_entity field does not include "refer to type" value, barfs with 500 error.  (Fixed but needs testing.)
+- [x] BUG: if Value_entity field does not include "refer to type" value, barfs with 500 error.  (Fixed but needs testing.)
 - [ ] BUG: Multifield ref inside a repeat field not occupying the entire width of the field generates messed up layout of labels vs content.  (Content is OK, labels not.  Maybe need an additional layer of row/cols for the headers in the multifield ref?)
+    - in "render_vieldvalue", 'col_view' wraps the view renderer with, but 'col_head', 'col_head_view', etc. use the 'col_head' renderer without wrapping.
+    - in "render_fieldvalue", the wrapper templates all include field placement.  For "col_head", the field placement is provided by the renderer itself, which in most cases is also provided by "render_fieldvalue"
 - [ ] BUG: import resource in new entity raises internal error (fixed but needs testing)
 - [ ] BUG: import image when changing record ID (of on new record?) gives error
 - [ ] QUESTION: why does _group have a record type field?  Is it needed?  If not, eliminate it.

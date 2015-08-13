@@ -34,18 +34,30 @@ from django.template.loaders.app_directories    import Loader
 #   These templatres all expect the value renderer to be provided in the
 #   view context as `value_renderer`
 
+# Render-type-independent templates
+
 label_template = (
     """<div class="view-label {{field.field_placement.field}}">"""+
     """  <span>{{field.field_label|default:"&nbsp;"}}</span>"""+
     """</div>"""
     )
 
+col_head_template = (
+    """<div class="view-label col-head {{field.field_placement.field}}">"""+
+    """  <span>{{field.field_label}}</span>"""+
+    """</div>"""
+    )
+
+# Renderer wrapper templates
+
+# Wrap bare value (e.g. column value)
 value_wrapper_template = (
     """<div class="view-value {{field.field_placement.field}}">"""+
     """  {% include value_renderer %}"""+
     """</div>"""
     )
 
+# Wrap value and include label
 label_wrapper_template = (
     """<div class="{{field.field_placement.field}}">\n"""+
     """  <div class="row view-value-row">\n"""+
@@ -56,12 +68,6 @@ label_wrapper_template = (
     """      {% include value_renderer %}\n"""+
     """    </div>\n"""+
     """  </div>\n"""+
-    """</div>"""
-    )
-
-col_head_template = (
-    """<div class="view-label col-head {{field.field_placement.field}}">"""+
-    """  <span>{{field.field_label}}</span>"""+
     """</div>"""
     )
 
@@ -157,6 +163,7 @@ class RenderFieldValue(object):
         # Initialize various renderer caches
         self._col_head_view_renderer = col_head_view_renderer
         self._col_head_edit_renderer = col_head_edit_renderer
+        self._render_label           = None
         self._render_view            = None
         self._render_edit            = None
         self._render_label_view      = None
@@ -257,18 +264,19 @@ class RenderFieldValue(object):
 
     # Template access functions
 
-    def label(self):
+    #@@ Is this used - seems not???
+    def _unused_label(self):
         """
         Returns a renderer object to display a field label from the 
         supplied `context['field']` value.
         """
-        if not self._render_label_view:
-            self._render_label_view = self._set_render_mode(
+        if not self._render_label:
+            self._render_label = self._set_render_mode(
                 self._get_renderer(label_template, None),
                 "label"
                 )
-        # log.info("self._render_label_view %r"%self._render_label_view)
-        return self._render_label_view
+        # log.info("self._render_label %r"%self._render_label)
+        return self._render_label
 
     def view(self):
         """
