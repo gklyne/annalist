@@ -486,9 +486,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 import_field=import_field
                 )
             return http_response or HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
-            # return self.import_field(
-            #     viewinfo, import_field, entityvaluemap, entityformvals, **context_extra_values
-            #     )
 
         # Update or define new view or type (invoked from generic entity editing view)
         # Save current entity and redirect to view edit with new field added, and
@@ -988,101 +985,6 @@ class GenericEntityEditView(AnnalistGenericView):
             log.debug(str(e), exc_info=True)
             responseinfo.set_response_error(import_err, import_msg)
         return responseinfo
-
-    def import_field(self, 
-            viewinfo, field_desc, entityvaluemap, entityvals, **context_extra_values
-            ):
-        """
-        Imports a resource described by a supplied field descritpion, updates the 
-        saved entity with information about the imported resource, and redisplays 
-        the current form.
-
-        viewinfo    DisplayInfo object describing the current view.
-        field_desc  is a field description for a field or field imported.
-        entityvaluemap
-                    an EntityValueMap object for the entity being presented.
-        entityvals  is a dictionary of entity values which is updated with details
-                    of the imported resource.
-        context_extra_values
-                    is a dictionary of default and additional values not provided by 
-                    the entity itself, that may be needed to render the updated form. 
-
-        Returns an HttpResponse object to render the updated entity editing form,
-        or to indicate an reason for failure.
-        """
-        # log.info("import_field, entityvals: %r"%(entityvals,))  #@@
-        # Import
-        import_name  = field_desc.get_field_instance_name()
-        property_uri = field_desc['field_property_uri']
-        #@@ field_vals   = entityvals[property_uri].copy() or {}
-        fv           = entityvals[property_uri]
-        field_vals   = fv.copy() if isinstance(fv, dict) else {}
-        if isinstance(fv, dict):
-            import_url = fv.get('import_url', "")
-        else:
-            import_url = fv
-        field_vals['import_name'] = import_name
-        field_vals['import_url']  = import_url
-        import_vals  = field_vals.copy()
-        import_vals.update(
-            { 'id':         viewinfo.entity_id
-            , 'type_id':    viewinfo.type_id
-            })
-        try:
-            resource_fileobj, resource_url, resource_type = util.open_url(import_url)
-            # log.info(
-            #     "import_field: import_url %s, resource_url %s, resource_type %s"%
-            #     (import_url, resource_url, resource_type)
-            #     )
-            try:
-                value_type    = field_desc.get('field_target_type', ANNAL.CURIE.unknown_type)
-                local_fileobj = viewinfo.entitytypeinfo.get_fileobj(
-                    viewinfo.entity_id, import_name, 
-                    value_type, resource_type, "wb"
-                    )
-                resource_name = os.path.basename(local_fileobj.name)
-                field_vals.update(
-                    { 'resource_url' :  resource_url
-                    , 'resource_name':  resource_name
-                    , 'resource_type':  resource_type
-                    })
-                try:
-                    import_err   = None
-                    import_done  = None
-                    import_vals.update(field_vals)
-                    #@@TODO: timeout / size limit?  (Potential DoS?)
-                    util.copy_resource_to_fileobj(resource_fileobj, local_fileobj)
-                    # Import completed: update entity and set up response
-                    entityvals[property_uri] = field_vals
-                    http_response = self.save_entity(
-                        viewinfo, entityvaluemap, entityvals, context_extra_values
-                        )
-                    import_done = message.IMPORT_DONE
-                    import_msg  = message.IMPORT_DONE_DETAIL%import_vals
-                finally:
-                    local_fileobj.close()
-            finally:
-                resource_fileobj.close()
-        except Exception as e:
-            # import_vals['import_exc'] = str(e)
-            import_err = message.IMPORT_ERROR
-            import_msg = message.IMPORT_ERROR_REASON%dict(import_vals, import_exc=str(e))
-            log.info("%s: %s"%(import_err, import_msg))
-            log.debug(str(e), exc_info=True)
-        # Redisplay
-        form_context = self.get_form_display_context(
-            viewinfo, entityvaluemap, entityvals, **context_extra_values
-            )
-        if import_err:
-            form_context['error_head']    = import_err
-            form_context['error_message'] = import_msg
-        else:
-            form_context['done_head']     = import_done
-            form_context['done_message']  = import_msg
-        return (
-            self.render_html(form_context, self.formtemplate) or 
-            self.error(self.error406values())
-            )
 
     def create_update_entity(self, typeinfo, entity_id, entity_values):
         """
