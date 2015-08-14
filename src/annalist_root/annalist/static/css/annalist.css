@@ -200,6 +200,14 @@ div.row div.columns.col-head.view-label
     height: 1.4rem;
 }
 
+/* Suppress padding and reduce height for nested column headings */
+div.column.col-head.view-label  div.row div.column.col-head.view-label ,
+div.columns.col-head.view-label div.row div.columns.col-head.view-label
+{
+    padding-top: 0rem;
+    height: 1.0rem;
+}
+
 div.group-row.even div.small-10.columns, 
 div.group-row:nth-of-type(even) div.small-10.columns
 {   /* Background shading for even rows in list; first row is zeroth? */
@@ -239,14 +247,23 @@ div.row div.columns.view-label
 div.row div.column.view-value,
 div.row div.columns.view-value
 {
-    margin-top:  0rem;
+    margin-top:     0rem;
     margin-bottom:  0rem;
-    padding-top: 0.2rem;
+    padding-top:    0.2rem;
     padding-bottom: 0.2rem;
-    font-size: 0.875rem;
-    color: #444444;
+    font-size:      0.875rem;
+    color:          #444444;
     /* vertical-align: middle; */
 }
+
+/* Suppress padding for nested column values */
+div.column.view-value  div.row div.column.view-value,
+div.columns.view-value div.row div.columns.view-value
+{
+    padding-top:    0rem;
+    padding-bottom: 0rem;
+}
+
 
 /* No additional padding for subfields in value */
 div.row div.column.view-value.view-subfield,

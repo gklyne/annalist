@@ -41,8 +41,8 @@ class FieldRendererTestSupport(AnnalistTestCase):
     def assertRenderMatch(self, rendered, expected, collapse_whitespace=False):
         rendered = re.sub(r'<!--.*-->\n', "", rendered)
         if collapse_whitespace:
-            rendered = re.sub(r'\s+', " ", rendered)
-            expected = re.sub(r'\s+', " ", expected)
+            rendered = re.sub(r'\s+', " ", rendered).strip()
+            expected = re.sub(r'\s+', " ", expected).strip()
         if rendered != expected:
             print "rendered "+rendered
             print "expected "+expected
@@ -87,7 +87,7 @@ class FieldRendererTestSupport(AnnalistTestCase):
         expect_rendered_edit="...",
         collapse_whitespace=False
         ):
-        #@@
+        #@@ - method unused, deprecated.  When stabilized, remove this code.
         # rendered_label = fieldrender.label().render(context)
         # self.assertRenderMatch(
         #     rendered_label, 
@@ -98,21 +98,18 @@ class FieldRendererTestSupport(AnnalistTestCase):
         rendered_view = fieldrender.view().render(context)
         self.assertRenderMatch(
             rendered_view, 
-            '''<div class="view-value small-12 columns">  %s</div>'''%expect_rendered_view,
+            '''<div class="view-value small-12 columns">\n  %s\n</div>'''%expect_rendered_view,
             collapse_whitespace
             )
         rendered_edit = fieldrender.edit().render(context)
         self.assertRenderMatch(
             rendered_edit, 
-            '''<div class="view-value small-12 columns">  %s</div>'''%expect_rendered_edit,
+            '''<div class="view-value small-12 columns">\n  %s\n</div>'''%expect_rendered_edit,
             collapse_whitespace
             )
         rendered_label_view = fieldrender.label_view().render(context)
         self.assertRenderMatch(
             rendered_label_view, 
-            # '''<div class="view-label small-12 columns">'''+
-            # '''  <span>test label</span>'''+
-            # '''</div>''',
             '''<div class="small-12 columns">\n'''+
             '''  <div class="row view-value-row">\n'''+
             '''    <div class="view-label small-12 medium-2 columns">\n'''+
@@ -143,8 +140,8 @@ class FieldRendererTestSupport(AnnalistTestCase):
         rendered_col_head = fieldrender.col_head().render(context)
         self.assertRenderMatch(
             rendered_col_head, 
-            '''<div class="view-label col-head small-12 columns">'''+
-            '''  <span>test label</span>'''+
+            '''<div class="view-label col-head small-12 columns">\n'''+
+            '''  <span>test label</span>\n'''+
             '''</div>''',
             collapse_whitespace
             )

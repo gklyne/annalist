@@ -525,7 +525,7 @@ class RefMultifieldTest(AnnalistTestCase):
               <span>Repeat image reference</span>
             </div>
             """
-        formrow2b = """
+        formrow2b = """ # Old
             <div class="small-12 medium-10 columns hide-for-small-only">
               <div class="row">
                 <div class="small-12 columns">
@@ -535,6 +535,27 @@ class RefMultifieldTest(AnnalistTestCase):
                     </div>
                     <div class="%(col_head_classes)s">
                       <span>View image field</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        # Note two grou wrappers here: one for repeat and one for multifield ref...
+        formrow2b = """
+            <div class="small-12 medium-10 columns hide-for-small-only">
+              <div class="row">
+                <div class="small-12 columns">
+                  <div class="view-grouprow col-head row">
+                    <div class="view-label col-head small-12 medium-6 columns">
+                      <div class="view-grouprow col-head row">
+                        <div class="%(col_head_classes)s">
+                          <span>View comment field</span>
+                        </div>
+                        <div class="%(col_head_classes)s">
+                          <span>View image field</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

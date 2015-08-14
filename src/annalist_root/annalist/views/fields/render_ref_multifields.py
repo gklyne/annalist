@@ -30,16 +30,17 @@ from annalist.views.fields.render_fieldvalue    import (
 
 col_head_view = (
     { 'head':
-        """<!-- views.fields.render_ref_multifield.col_head_view head (mode:{{render_mode}}) -->
-        """
+        """\n"""+
+        """<!-- views.fields.render_ref_multifield.col_head_view head (mode:{{render_mode}}) -->\n"""
     , 'body':
         """<!-- views.fields.render_ref_multifield.col_head_view body (mode:{{render_mode}}) -->\n"""+
-        """{% for f in group_bound_fields %}"""+
-        """  {% include f.field_render_mode with field=f %}"""+
-        """{% endfor %}"""
+        """<div class="view-grouprow col-head row">\n"""+
+        """  {% for f in group_bound_fields %}"""+
+        """    {% include f.field_render_mode with field=f %}"""+
+        """  {% endfor %}"""+
+        """</div>\n"""
     , 'tail':
-        """<!-- views.fields.render_ref_multifield.col_head_view tail (mode:{{render_mode}}) -->
-        """
+        """<!-- views.fields.render_ref_multifield.col_head_view tail (mode:{{render_mode}}) -->\n"""
     })
 
 view_multifield = (
