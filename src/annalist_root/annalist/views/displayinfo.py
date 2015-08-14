@@ -135,7 +135,7 @@ class DisplayInfo(object):
 
     def set_messages(self, messages):
         """
-        Save type-specifric messages for later reporting
+        Save type-specific messages for later reporting
         """
         self.type_messages      = messages
         return self.http_response
@@ -253,7 +253,7 @@ class DisplayInfo(object):
             self.entity_id = entity_id
         return self.http_response
 
-    def get_entity_data_not_used(self):
+    def _unused_get_entity_data(self):
         """
         Retrieve entity data to use for display
         """

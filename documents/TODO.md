@@ -18,10 +18,12 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - fix applied: EntityId and EntityTypeId renderers used fixed field name
 - [x] BUG: if Value_entity field does not include "refer to type" value, barfs with 500 error.  (Fixed but needs testing.)
 - [x] BUG: Multifield ref inside a repeat field not occupying the entire width of the field generates messed up layout of labels vs content.  (Content is OK, labels not.  Maybe need an additional layer of row/cols for the headers in the multifield ref?)
-    - in "render_vieldvalue", 'col_view' wraps the view renderer with, but 'col_head', 'col_head_view', etc. use the 'col_head' renderer without wrapping.
-    - in "render_fieldvalue", the wrapper templates all include field placement.  For "col_head", the field placement is provided by the renderer itself, which in most cases is also provided by "render_fieldvalue"
-- [ ] BUG: import resource in new entity raises internal error (fixed but needs testing)
-- [ ] BUG: import image when changing record ID (of on new record?) gives error
+- [x] BUG: import resource in new entity raises internal error.
+- [ ] BUG: import image when changing record ID (or on new record?) gives error:
+        Failed to import resource file:///Users/graham/Pictures/PEBCAT.jpg as import_image for Default_type/00000001: [Errno 2] No such file or directory: u'/Users/graham/annalist_site/c/test/d/Default_type/00000001/import_image.jpg'
+- [ ] BUG: import image when changing record id causes error on save: 
+        Problem with entity identifier  
+        Entity test_3 of type Default_type in collection test already exists
 - [ ] QUESTION: why does _group have a record type field?  Is it needed?  If not, eliminate it.
     - No significant references to ANNAL.CURIE.record_type noted in source code.
 - [ ] Built-in `Entity_id` and `Entity_label` fields have non-standard position/size values

@@ -55,7 +55,10 @@ class URIImportValueMapper(RenderBase):
         """
         u = self.decode(field_value)
         v = entityvals.get(property_uri, {})
-        v['import_url'] = u
+        if isinstance(v, dict):
+            v['import_url'] = u
+        else:
+            v = {'import_url': u}
         entityvals[property_uri] = v
         return v
 

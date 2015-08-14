@@ -156,7 +156,7 @@ def test_imp_entity_create_values(entity_id):
     return (
         { 'rdfs:label':                 "test_imp_entity %s label"%entity_id
         , 'rdfs:comment':               "test_imp_entity %s comment"%entity_id
-        , 'test:import':                test_import_field_value()
+        , 'test:import':                "" # test_import_field_value()
         })
 
 def test_ref_entity_create_values(entity_id):
@@ -257,10 +257,20 @@ class ImportResourceTest(AnnalistTestCase):
         return
 
     def test_import_resource(self):
-        f = entitydata_default_view_form_data(entity_id="test1", action="edit", do_import="imp_field__import")
+        f = entitydata_default_view_form_data(
+            entity_id="test1", type_id="testimptype", action="edit", 
+            do_import="imp_field__import"
+            )
         f['imp_field'] = self.fileuri
-        u = entitydata_edit_url("view", "testcoll", "testimptype", entity_id="test1", view_id="testimpview")
+        u = entitydata_edit_url(
+            "edit", "testcoll", "testimptype", entity_id="test1", view_id="testimpview"
+            )
         r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertMatch(r['location'], TestHostUri+u)
+        # Read back form following redirect
+        r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
@@ -285,12 +295,15 @@ class ImportResourceTest(AnnalistTestCase):
 
     def test_reference_imported_resource(self):
         # Create imported resource (see previous test)
-        f = entitydata_default_view_form_data(entity_id="test1", action="edit", do_import="imp_field__import")
+        f = entitydata_default_view_form_data(
+            entity_id="test1", type_id="testimptype", action="edit", 
+            do_import="imp_field__import"
+            )
         f['imp_field'] = self.fileuri
-        u = entitydata_edit_url("view", "testcoll", "testimptype", entity_id="test1", view_id="testimpview")
+        u = entitydata_edit_url("edit", "testcoll", "testimptype", entity_id="test1", view_id="testimpview")
         r = self.client.post(u, f)
-        self.assertEqual(r.status_code,   200)
-        self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
         # Display resource with reference
         u = entitydata_edit_url("view", "testcoll", "testreftype", entity_id="test1", view_id="testrefview")
         r = self.client.get(u)
