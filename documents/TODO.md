@@ -19,20 +19,26 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: if Value_entity field does not include "refer to type" value, barfs with 500 error.  (Fixed but needs testing.)
 - [x] BUG: Multifield ref inside a repeat field not occupying the entire width of the field generates messed up layout of labels vs content.  (Content is OK, labels not.  Maybe need an additional layer of row/cols for the headers in the multifield ref?)
 - [x] BUG: import resource in new entity raises internal error.
-- [x] BUG: import image when changing record ID (or on new record?) gives error:
-        Failed to import resource file:///Users/graham/Pictures/PEBCAT.jpg as import_image for Default_type/00000001: [Errno 2] No such file or directory: u'/Users/graham/annalist_site/c/test/d/Default_type/00000001/import_image.jpg'
-- [x] BUG: import image when changing record id causes error on save: 
-        Problem with entity identifier  
-        Entity test_3 of type Default_type in collection test already exists
+- [x] BUG: import image when changing record ID (or on new record?) gives error.
+- [x] BUG: import image when changing record ID causes error on save:.
+- [x] Update file upload logic to use resposeinfo, following pattern of import.
+- [ ] Factor out common code between upload/import logic.
 - [ ] QUESTION: why does _group have a record type field?  Is it needed?  If not, eliminate it.
     - No significant references to ANNAL.CURIE.record_type noted in source code.
-- [ ] Built-in `Entity_id` and `Entity_label` fields have non-standard position/size values
-- [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
+- [x] Built-in `Entity_id` and `Entity_label` fields have non-standard position/size values
 - [ ] Missing enumerated value reference: provide better diagnostic
+- [ ] Revise add field buttons to use save+redirect rather than re-render
+- [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
 - [ ] Enum selection - include labels in dropdown (then can use built-in IDs)
 - [ ] When using "+" to add an enum entry, also need quick route to edit entry?
+- [ ] Update save_entity to return responseinfo
+- [ ] Refactor entity edit response handling
+- [ ] Use responseinfo values for status reporting to user
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 
+(release 0.1.18?)
+
+- [ ] Option to re-order fields on view form
 - [ ] Usability: 3 key tasks need to be easier (at the level of a single form fill-out):
     - [ ] Create a new type+view+list, suitably interconnected
     - [x] Define a new field type and add to a view
@@ -40,6 +46,21 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
     - See also discussion below of introducing "tasks" - this would be an early candidate for that.
     - Need to think how the interface would work.  Option to add "task" button to any form?
+
+(release?)
+
+- [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
+    - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
+    - [ ] JSON-LD @contexts support
+    - [ ] Alternative RDF formats support (e.g. content negotiation)
+
+(release?)
+
+- [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
+- [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
+- [ ] The bibiographic definitions currently part of site data should be mived to a "built-in" collection and inherited only when required.
+
+(release?)
 
 - [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
@@ -51,16 +72,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - Another option: take field-loop out of template and run it as a `render_all_fields` method
         - still needs placement parser to return position+width information
 
-(release 0.1.18?)
-
-
-- [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
-    - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
-    - [ ] JSON-LD @contexts support
-    - [ ] Alternative RDF formats support (e.g. content negotiation)
+(release?)
 
 - [ ] Use site/collection data to populate help panes on displays; use Markdown.
-
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Login: support continuation URI
 
@@ -147,7 +161,7 @@ Usability notes:
         - [ ] initial value/identifier templates (e.g. create ID from current date)
             - NOTE: default and initial values behave differently
         - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
-- [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?  In particular, getting the entity type for a field is tricky.
+- [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?  In particular, getting the entity type for a field is error-prone.
 - [ ] Use pop-up text based on field comment to tell user how a field value is used
 - [ ] Option to re-order fields on view form
 - [ ] When creating type, default URI to be based on id entered
@@ -174,7 +188,7 @@ Notes for Future TODOs:
 - [x] Create image-viewing page to avoid download options, and link to that. (cf. UriImage renderer)
 - [x] Vary layout for editing and viewing?  Sounds hard.
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
-- [ ] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
+- [x] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
 - [ ] Rationalize common fields to reduce duplication?
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?  But note that general philosophy is to avoid unnecessary validity checks that might impede data entry.

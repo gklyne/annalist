@@ -795,7 +795,13 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
 
         # Save any imported resource or uploaded files
-        updated = False
+        if not err_vals:
+            responseinfo = self.import_uploaded_files(
+                entity_id, new_typeinfo,
+                entityvaluemap, entity_values,
+                self.request.FILES,
+                responseinfo
+                )
         if not err_vals and import_field is not None:
             responseinfo = self.import_resource_field(
                 entity_id, new_typeinfo,
@@ -803,18 +809,9 @@ class GenericEntityEditView(AnnalistGenericView):
                 import_field,
                 responseinfo
                 )
-            updated = responseinfo.is_updated()
             # log.info("import_resource_field: responseinfo %r"%responseinfo)
             # log.info("import_resource_field: entity_values %r"%entity_values)
-        if not err_vals:
-            uploaded_files = self.request.FILES
-            if self.import_uploaded_files(
-                entity_id, new_typeinfo,
-                entityvaluemap, entity_values,
-                uploaded_files
-                ):
-                updated = True
-        if updated:
+        if responseinfo.is_updated():
             err_vals = self.create_update_entity(new_typeinfo, entity_id, entity_values)
 
         # Finish up
@@ -832,7 +829,8 @@ class GenericEntityEditView(AnnalistGenericView):
     def import_uploaded_files(self,
         entity_id, typeinfo,
         entityvaluemap, entityvals,
-        uploaded_files
+        uploaded_files,
+        responseinfo
         ):
         """
         Process uploaded files: files are saved to the entity directory, and 
@@ -842,12 +840,13 @@ class GenericEntityEditView(AnnalistGenericView):
         upload and looking for a corresponding uploaded files.  Uploaded files not
         corresponding to view fields are ignored.
 
-        Returns 'true' if any files are uploaded and the supplied entityvals 
-        are accordingly updated and need to be re-saved.
+        uploaded_files  is the Django uploaded files information from the request
+                        bveing processed.
+
+        Updates and returns the supplied responseinfo object.
         """
         def is_upload_f(fd):
             return fd.is_upload_field()
-        updated = False
         for fd in self.find_fields(entityvaluemap, is_upload_f):
             # process fd; copy logic from import (@@TODO: refactor?)
             upload_name  = fd.get_field_instance_name()
@@ -887,22 +886,23 @@ class GenericEntityEditView(AnnalistGenericView):
                             local_fileobj.write(chunk)
                         # Import completed: set up response
                         entityvals[property_uri] = field_vals
-                        upload_done = message.UPLOAD_DONE
-                        upload_msg  = message.UPLOAD_DONE_DETAIL%upload_vals
-                        updated     = True
+                        responseinfo.set_updated()
+                        responseinfo.set_response_confirmation(
+                            message.UPLOAD_DONE,
+                            message.UPLOAD_DONE_DETAIL%upload_vals
+                            )
                     finally:
                         local_fileobj.close()
                 except Exception as e:
                     # upload_vals['import_exc'] = str(e)
                     upload_err = message.UPLOAD_ERROR
                     upload_msg = message.UPLOAD_ERROR_REASON%dict(upload_vals, upload_exc=str(e))
-                    log.info("%s: %s"%(upload_err, upload_msg))
+                    log.warning("%s: %s"%(upload_err, upload_msg))
                     log.debug(str(e), exc_info=True)
+                    responseinfo.set_response_error(upload_err, upload_msg)
                 # end if
             # end for
-        #@@TODO: think about how to handle errors from upload
-        #        => use `responseinfo` (see 'import_resource_field' below)
-        return updated
+        return responseinfo
 
     def import_resource_field(self, 
             entity_id, typeinfo,
@@ -943,11 +943,12 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'type_id':    typeinfo.type_id
             })
         try:
+            log.info("import_resource_field: importing file for %s"%import_url)
             resource_fileobj, resource_url, resource_type = util.open_url(import_url)
-            # log.info(
-            #     "import_field: import_url %s, resource_url %s, resource_type %s"%
-            #     (import_url, resource_url, resource_type)
-            #     )
+            log.debug(
+                "import_field: import_url %s, resource_url %s, resource_type %s"%
+                (import_url, resource_url, resource_type)
+                )
             try:
                 value_type    = import_field.get('field_target_type', ANNAL.CURIE.unknown_type)
                 local_fileobj = typeinfo.get_fileobj(
