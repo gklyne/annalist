@@ -796,21 +796,21 @@ class GenericEntityEditView(AnnalistGenericView):
 
         # Save any imported resource or uploaded files
         if not err_vals:
-            responseinfo = self.import_uploaded_files(
+            responseinfo = self.save_uploaded_files(
                 entity_id, new_typeinfo,
                 entityvaluemap, entity_values,
                 self.request.FILES,
                 responseinfo
                 )
         if not err_vals and import_field is not None:
-            responseinfo = self.import_resource_field(
+            responseinfo = self.save_linked_resource(
                 entity_id, new_typeinfo,
                 entityvaluemap, entity_values,
                 import_field,
                 responseinfo
                 )
-            # log.info("import_resource_field: responseinfo %r"%responseinfo)
-            # log.info("import_resource_field: entity_values %r"%entity_values)
+            # log.info("save_linked_resource: responseinfo %r"%responseinfo)
+            # log.info("save_linked_resource: entity_values %r"%entity_values)
         if responseinfo.is_updated():
             err_vals = self.create_update_entity(new_typeinfo, entity_id, entity_values)
 
@@ -826,7 +826,71 @@ class GenericEntityEditView(AnnalistGenericView):
         viewinfo.update_coll_version()
         return None
 
-    def import_uploaded_files(self,
+    def import_resource(self,
+            field_desc, field_name,
+            type_id, entity_id, entityvals,
+            init_field_vals, read_resource,
+            responseinfo
+            ):
+        """
+        Common logic for saving uploaded files or linked resources.
+
+        field_desc      Field descriptor for import/upload field
+        field_name      is the name of the field instance for which a 
+                        resource is imported.
+        type_id         Id of type of entity to which uploaded resource is attached
+        entity_id       Id of entity
+        entityvals      Entity values dictionary
+        init_field_vals is a function that is called to set up a field values
+                        dictionary. Called as:
+                            init_field_vals(field_vals, field_name, field_string)
+        read_resource   opens and saves a resource.  Also updates the supplied 
+                        field_vals with details of the accessed resource.  Called as:
+                            read_resource(field_desc, field_name, field_vals)
+        responseinfo    receives information about any read_resource error.
+                        The structure is provided with message templates for reporting.
+
+        returns `import_vals`, which is a copy of the field values augmented with 
+        some additional information to assist diagnostic generation.
+        """
+        log.info("Importing resource for %s"%field_name)
+        property_uri = field_desc['field_property_uri']
+        fv           = entityvals[property_uri]
+        if isinstance(fv, dict):
+            field_vals   = fv.copy()
+            field_string = None
+        elif isinstance(fv, (str, unicode)):
+            field_vals   = {}
+            field_string = fv
+        else:
+            field_vals = {}
+        init_field_vals(field_vals, field_name, field_string)
+        import_vals  = field_vals.copy()    # Used for reporting..
+        import_vals.update(
+            { 'id':         entity_id
+            , 'type_id':    type_id
+            })
+        log.debug("import_vals: %r"%(import_vals))
+        try:
+            read_resource(field_desc, field_name, field_vals)
+            # Import completed: update field in entity value dictionary
+            entityvals[property_uri] = field_vals
+            import_vals.update(field_vals)
+            import_done = responseinfo.get_message('import_done')
+            import_msg  = responseinfo.get_formatted('import_done_info', import_vals)
+            responseinfo.set_updated()
+            responseinfo.set_response_confirmation(import_done, import_msg)
+        except Exception as e:
+            import_err = responseinfo.get_message('import_err')
+            import_msg = responseinfo.get_formatted(
+                'import_err_info', dict(import_vals, import_exc=str(e))
+                )
+            log.warning("%s: %s"%(import_err, import_msg))
+            log.debug(str(e), exc_info=True)
+            responseinfo.set_response_error(import_err, import_msg)
+        return import_vals
+
+    def save_uploaded_files(self,
         entity_id, typeinfo,
         entityvaluemap, entityvals,
         uploaded_files,
@@ -847,64 +911,51 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         def is_upload_f(fd):
             return fd.is_upload_field()
+        def init_field_vals(field_vals, field_name, field_string):
+            field_vals['upload_name']   = field_name
+            field_vals['uploaded_file'] = field_vals.get('uploaded_file', field_string)
+            return
+        def read_resource(field_desc, field_name, field_vals):
+            value_type    = field_desc.get('field_target_type', ANNAL.CURIE.unknown_type)
+            uploaded_file = uploaded_files[field_name]
+            resource_type = uploaded_file.content_type
+            with typeinfo.get_fileobj(
+                    entity_id, field_name, value_type, resource_type, "wb"
+                    ) as local_fileobj:
+                resource_name = os.path.basename(local_fileobj.name)
+                field_vals.update(
+                    { 'resource_name':  resource_name
+                    , 'resource_type':  resource_type
+                    , 'uploaded_file':  uploaded_file.name
+                    , 'uploaded_size':  uploaded_file.size
+                    })
+                for chunk in uploaded_files[upload_name].chunks():
+                    local_fileobj.write(chunk)
+            return
+
+        # log.info("save_uploaded_files, entityvals: %r"%(entityvals,))  #@@
+        if responseinfo.is_response_error():
+            return responseinfo     # Error already seen - return now
+        responseinfo.set_message_templates(
+            { 'import_err':         message.UPLOAD_ERROR
+            , 'import_err_info':    message.UPLOAD_ERROR_REASON
+            , 'import_done':        message.UPLOAD_DONE
+            , 'import_done_info':   message.UPLOAD_DONE_DETAIL
+            })
         for fd in self.find_fields(entityvaluemap, is_upload_f):
-            # process fd; copy logic from import (@@TODO: refactor?)
             upload_name  = fd.get_field_instance_name()
             if upload_name in uploaded_files:
-                log.info("importing file for %s"%upload_name)
-                property_uri = fd['field_property_uri']
-                fv           = entityvals[property_uri]
-                field_vals   = fv.copy() if isinstance(fv, dict) else {}
-                field_vals['upload_name']   = upload_name
-                field_vals['uploaded_file'] = field_vals.get('uploaded_file', None)
-                upload_vals  = field_vals.copy()    # Used for reporting..
-                upload_vals.update(
-                    { 'id':         entity_id
-                    , 'type_id':    typeinfo.type_id
-                    })
-                log.debug("upload_vals: %r"%(upload_vals,))
-                try:
-                    value_type    = fd.get('field_target_type', ANNAL.CURIE.unknown_type)
-                    resource_type = uploaded_files[upload_name].content_type
-                    local_fileobj = typeinfo.get_fileobj(
-                        entity_id, upload_name, 
-                        value_type, resource_type, "wb"
-                        )
-                    resource_name = os.path.basename(local_fileobj.name)
-                    field_vals.update(
-                        { 'resource_name':  resource_name
-                        , 'resource_type':  resource_type
-                        , 'uploaded_file':  uploaded_files[upload_name].name
-                        , 'uploaded_size':  uploaded_files[upload_name].size
-                        })
-                    log.info("field_vals %r"%(field_vals,))
-                    try:
-                        upload_err   = None
-                        upload_done  = None
-                        upload_vals.update(field_vals)
-                        for chunk in uploaded_files[upload_name].chunks():
-                            local_fileobj.write(chunk)
-                        # Import completed: set up response
-                        entityvals[property_uri] = field_vals
-                        responseinfo.set_updated()
-                        responseinfo.set_response_confirmation(
-                            message.UPLOAD_DONE,
-                            message.UPLOAD_DONE_DETAIL%upload_vals
-                            )
-                    finally:
-                        local_fileobj.close()
-                except Exception as e:
-                    # upload_vals['import_exc'] = str(e)
-                    upload_err = message.UPLOAD_ERROR
-                    upload_msg = message.UPLOAD_ERROR_REASON%dict(upload_vals, upload_exc=str(e))
-                    log.warning("%s: %s"%(upload_err, upload_msg))
-                    log.debug(str(e), exc_info=True)
-                    responseinfo.set_response_error(upload_err, upload_msg)
+                self.import_resource(
+                    fd, upload_name,
+                    typeinfo.type_id, entity_id, entityvals,
+                    init_field_vals, read_resource,
+                    responseinfo
+                    )
                 # end if
             # end for
         return responseinfo
 
-    def import_resource_field(self, 
+    def save_linked_resource(self, 
             entity_id, typeinfo,
             entityvaluemap, entityvals,
             import_field,
@@ -919,31 +970,12 @@ class GenericEntityEditView(AnnalistGenericView):
 
         Updates and returns the supplied responseinfo object.
         """
-
-        # @@TODO: factor out common logic with `import_uploaded_files`
-        #         (possibly down to different value fields and functions for util.open_url)
-
-        # log.info("import_resource_field, entityvals: %r"%(entityvals,))  #@@
-        if responseinfo.is_response_error():
-            return ResponseInfo     # Error already seen - return now
-        # Import
-        import_name  = import_field.get_field_instance_name()
-        property_uri = import_field['field_property_uri']
-        fv           = entityvals[property_uri]
-        field_vals   = fv.copy() if isinstance(fv, dict) else {}
-        if isinstance(fv, dict):
-            import_url = fv.get('import_url', "")
-        else:
-            import_url = fv
-        field_vals['import_name'] = import_name
-        field_vals['import_url']  = import_url
-        import_vals  = field_vals.copy()
-        import_vals.update(
-            { 'id':         entity_id
-            , 'type_id':    typeinfo.type_id
-            })
-        try:
-            log.info("import_resource_field: importing file for %s"%import_url)
+        def init_field_vals(field_vals, field_name, field_string):
+            field_vals['import_name'] = field_name
+            field_vals['import_url']  = field_vals.get('import_url', field_string)
+            return
+        def read_resource(field_desc, field_name, field_vals):
+            import_url = field_vals['import_url']
             resource_fileobj, resource_url, resource_type = util.open_url(import_url)
             log.debug(
                 "import_field: import_url %s, resource_url %s, resource_type %s"%
@@ -951,40 +983,37 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             try:
                 value_type    = import_field.get('field_target_type', ANNAL.CURIE.unknown_type)
-                local_fileobj = typeinfo.get_fileobj(
-                    entity_id, import_name, 
-                    value_type, resource_type, "wb"
-                    )
-                resource_name = os.path.basename(local_fileobj.name)
-                field_vals.update(
-                    { 'resource_url' :  resource_url
-                    , 'resource_name':  resource_name
-                    , 'resource_type':  resource_type
-                    })
-                try:
-                    import_err   = None
-                    import_done  = None
-                    import_vals.update(field_vals)
+                with typeinfo.get_fileobj(
+                        entity_id, field_name, value_type, resource_type, "wb"
+                        ) as local_fileobj:
+                    resource_name = os.path.basename(local_fileobj.name)
+                    field_vals.update(
+                        { 'resource_url' :  resource_url
+                        , 'resource_name':  resource_name
+                        , 'resource_type':  resource_type
+                        })
                     #@@TODO: timeout / size limit?  (Potential DoS?)
                     util.copy_resource_to_fileobj(resource_fileobj, local_fileobj)
-                    # Import completed: update entity and set up response
-                    entityvals[property_uri] = field_vals
-                    responseinfo.set_updated()
-                    responseinfo.set_response_confirmation(
-                        message.IMPORT_DONE,
-                        message.IMPORT_DONE_DETAIL%import_vals
-                        )
-                finally:
-                    local_fileobj.close()
             finally:
                 resource_fileobj.close()
-        except Exception as e:
-            # import_vals['import_exc'] = str(e)
-            import_err = message.IMPORT_ERROR
-            import_msg = message.IMPORT_ERROR_REASON%dict(import_vals, import_exc=str(e))
-            log.info("%s: %s"%(import_err, import_msg))
-            log.debug(str(e), exc_info=True)
-            responseinfo.set_response_error(import_err, import_msg)
+            return
+
+        # log.info("save_linked_resource, entityvals: %r"%(entityvals,))  #@@
+        if responseinfo.is_response_error():
+            return responseinfo     # Error already seen - return now
+        responseinfo.set_message_templates(
+            { 'import_err':         message.IMPORT_ERROR
+            , 'import_err_info':    message.IMPORT_ERROR_REASON
+            , 'import_done':        message.IMPORT_DONE
+            , 'import_done_info':   message.IMPORT_DONE_DETAIL
+            })
+        import_name = import_field.get_field_instance_name()
+        self.import_resource(
+            import_field, import_name,
+            typeinfo.type_id, entity_id, entityvals,
+            init_field_vals, read_resource,
+            responseinfo
+            )
         return responseinfo
 
     def create_update_entity(self, typeinfo, entity_id, entity_values):

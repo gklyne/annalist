@@ -22,7 +22,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: import image when changing record ID (or on new record?) gives error.
 - [x] BUG: import image when changing record ID causes error on save:.
 - [x] Update file upload logic to use resposeinfo, following pattern of import.
-- [ ] Factor out common code between upload/import logic.
+- [x] Factor out common code between upload/import logic.
 - [ ] QUESTION: why does _group have a record type field?  Is it needed?  If not, eliminate it.
     - No significant references to ANNAL.CURIE.record_type noted in source code.
 - [x] Built-in `Entity_id` and `Entity_label` fields have non-standard position/size values

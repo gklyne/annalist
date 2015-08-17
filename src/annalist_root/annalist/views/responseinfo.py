@@ -39,6 +39,7 @@ class ResponseInfo(object):
         self._response_conf = None      # Operation confirmation message
         self._response_err  = None      # Error message/glag (string)
         self._response_info = None      # String reporting details of confirmation or error
+        self._templates     = None      # Message templates dictionary
         self._updated       = False     # Set True if entity values need to be updated
         return
 
@@ -94,5 +95,24 @@ class ResponseInfo(object):
 
     def is_updated(self):
         return self._updated
+
+    def set_message_templates(self, templates):
+        if self._templates is None:
+            self._templates = templates
+        else:
+            self._templates.update(templates)
+        return self._templates
+
+    def get_message_templates():
+        return self._templates
+
+    def get_message(self, key):
+        return self._templates.get(key, "ResponseInfo.get_message: unknown key %r"%key)
+
+    def get_formatted(self, key, values):
+        t = self._templates.get(
+            key, "ResponseInfo.get_formatted: unknown key %r (values %%r)"%key
+            )
+        return t%values
 
 # End.
