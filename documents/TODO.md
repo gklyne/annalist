@@ -23,10 +23,12 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: import image when changing record ID causes error on save:.
 - [x] Update file upload logic to use resposeinfo, following pattern of import.
 - [x] Factor out common code between upload/import logic.
-- [ ] QUESTION: why does _group have a record type field?  Is it needed?  If not, eliminate it.
+- [x] QUESTION: why does _group have a record type field?  Is it needed?  If not, eliminate it.
     - No significant references to ANNAL.CURIE.record_type noted in source code.
+    - It is used to allow field options to be restricted for particular entity types, to avoid overlong lists of fields types to choose from when editing certing groups (or views or lists).
+    - No not remove.
 - [x] Built-in `Entity_id` and `Entity_label` fields have non-standard position/size values
-- [ ] Missing enumerated value reference: provide better diagnostic
+- [x] Missing enumerated value reference: provide better diagnostic
 - [ ] Revise add field buttons to use save+redirect rather than re-render
 - [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
 - [ ] Enum selection - include labels in dropdown (then can use built-in IDs)

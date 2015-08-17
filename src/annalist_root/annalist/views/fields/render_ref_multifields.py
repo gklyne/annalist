@@ -17,8 +17,10 @@ import traceback
 import logging
 log = logging.getLogger(__name__)
 
-from django.http        import HttpResponse
-from django.template    import Template, Context
+from django.http            import HttpResponse
+from django.template        import Template, Context
+
+from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
 
 from annalist.views.fields.render_select    import edit_select, Select_edit_renderer, SelectValueMapper
 from annalist.views.fields.bound_field      import bound_field
@@ -109,6 +111,10 @@ class RenderMultiFields_label(object):
             response_parts = [self._template_head.render(context)]
             response_parts.append(self._template_body.render(context))
             response_parts.append(self._template_tail.render(context))
+    except TargetIdNotFound_Error as e:
+        response_parts = [ str(e) ]
+    except TargetEntityNotFound_Error as e:        
+        response_parts = [ str(e) ]
     except Exception as e:
         log.exception("Exception in RenderMultiFields_label.render")
         ex_type, ex, tb = sys.exc_info()
@@ -186,6 +192,10 @@ class RenderMultiFields_value(object):
         with context.push(group_dict):
             response_parts.append(self._template_body.render(context))
         response_parts.append(self._template_tail.render(context))
+    except TargetIdNotFound_Error as e:
+        response_parts = [ str(e) ]
+    except TargetEntityNotFound_Error as e:        
+        response_parts = [ str(e) ]
     except Exception as e:
         log.exception("Exception in RenderMultiFields_value.render")
         ex_type, ex, tb = sys.exc_info()

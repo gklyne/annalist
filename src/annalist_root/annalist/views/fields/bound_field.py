@@ -14,9 +14,10 @@ import re
 from urlparse       import urljoin  # py3: from urllib.parse ...
 from collections    import OrderedDict, namedtuple
 
-from django.conf                    import settings
+from django.conf            import settings
 
-from annalist.identifiers           import RDFS, ANNAL
+from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
+from annalist.identifiers   import RDFS, ANNAL
 
 from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.entity         import EntityRoot
@@ -252,8 +253,13 @@ class bound_field(object):
                 user_permissions = ["VIEW"]
                 req_permissions  = list(set( targettypeinfo.permissions_map[a] for a in ["view", "list"] ))
                 if all([ p in user_permissions for p in req_permissions]):
-                    target_id        = self.get_field_value()
-                    self._targetvals = get_entity_values(targettypeinfo, targettypeinfo.get_entity(target_id))
+                    target_id    = self.get_field_value()
+                    if target_id is None or target_id == "":
+                        raise TargetIdNotFound_Error(value=(targettypeinfo.type_id,self._key))
+                    targetentity = targettypeinfo.get_entity(target_id)
+                    if targetentity is None:
+                        raise TargetEntityNotFound_Error(value=(targettypeinfo.type_id, target_id))
+                    self._targetvals = get_entity_values(targettypeinfo, targetentity)
                     log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
                 else:
                     log.warning(
