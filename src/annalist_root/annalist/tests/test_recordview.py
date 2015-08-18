@@ -196,8 +196,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
             ])
         # log.info(self.field_options_no_bibentry)
         # For checking Location: header values...
-        self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_view")
-        # Login and permissions
+        self.continuation_path = entitydata_list_type_url(coll_id="testcoll", type_id="_view")
+        self.continuation_url  = TestHostUri + self.continuation_path
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
@@ -1182,6 +1182,13 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="View_view"
             )
         r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + u + "?continuation_url=" + self.continuation_path
+        self.assertEqual(v, r['location'])
+        # Retrieve from redirect location, and test result
+        r = self.client.get(v)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         expect_context = recordview_entity_view_context_data(
@@ -1206,6 +1213,13 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="View_view"
             )
         r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + u + "?continuation_url=" + self.continuation_path
+        self.assertEqual(v, r['location'])
+        # Retrieve from redirect location, and test result
+        r = self.client.get(v)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         expect_context = recordview_entity_view_context_data(

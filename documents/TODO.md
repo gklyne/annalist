@@ -29,8 +29,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - No not remove.
 - [x] Built-in `Entity_id` and `Entity_label` fields have non-standard position/size values
 - [x] Missing enumerated value reference: provide better diagnostic
-- [ ] Revise add field buttons to use save+redirect rather than re-render
-- [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
+- [x] Revise add field buttons to use save+redirect rather than re-render
 - [ ] Enum selection - include labels in dropdown (then can use built-in IDs)
 - [ ] When using "+" to add an enum entry, also need quick route to edit entry?
 - [ ] Update save_entity to return responseinfo
@@ -124,8 +123,6 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
-- [x] Improve formatting of README sent to PyPI
-    - renamed src/README.md to README.rst
 
 
 Technical debt:
@@ -139,8 +136,6 @@ Technical debt:
 
 Usability notes:
 
-- [x] Need easier way to make new entries for fields that are referenced from a record; e.g. a `New value` button as part of an enum field.
-- [x] Clearer linkage between related records - hyperlinks on non-editing views
 - [ ] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
 - [ ] OR... allow an entity to specify its own default view?
 - [ ] List dropdown: normally show only those lists defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
@@ -176,8 +171,8 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
 - [ ] field renderer for unified import or upload resource?
-- [x] PyPI description: see https://pypi.python.org/pypi/setuptools-markdown, or just use .rst extension (see https://github.com/xaralis/django-static-sitemaps for example)  (Also needed to fix link and highlighting syntax; ReST is pig-ugly IMO).  Let's see if it formats OK in 0.1.16 release.
 - [ ] `annal:member` - used to "lift" repeated values to the property that references a repeat group?
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
@@ -187,10 +182,7 @@ Notes for Future TODOs:
     - [ ] pass continuation data into view_setup, list_setup, collection_view_setup for ^^.  For site, just use default/empty continuation.
     - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
 - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
-- [x] Create image-viewing page to avoid download options, and link to that. (cf. UriImage renderer)
-- [x] Vary layout for editing and viewing?  Sounds hard.
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
-- [x] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
 - [ ] Rationalize common fields to reduce duplication?
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?  But note that general philosophy is to avoid unnecessary validity checks that might impede data entry.
@@ -206,10 +198,7 @@ Notes for Future TODOs:
     - not edit: site data should be stable and controlled.  Consider collection structure inheritiance instead.
 - [ ] Undefined list error display, or any error - include link to collection in top bar
 - [ ] Help display for view: use commentary text from view descrtiption; thus can tailor help for each view.
-- [x] Introduce markdown rendering type
 - [ ] Use markdown directly for help text
-- [x] Consider associating property URI with view rather than/as well as field, so fields can be re-used
-- [x] Option to auto-generate unique property URI for field in view, maybe using field definition as base
 - [ ] Think about fields that return subgraph
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.
@@ -221,15 +210,6 @@ Notes for Future TODOs:
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
     - [ ] internal options to save history in per-collection git repo
-- [x] Think about selective updates to complex field values (e.g. import_field logic).
-    - Currently, the save_entity logic in `views.entityedit` assumes that fields are completely replaced at the top-level of keys in `entityvals`.  There is no support for partial replacement of a field from a form input: either the entire field is replaced or the original field value is kept in its entirety.  The import_field logic generates additional values when the `Import` button is activated, but not when the URL field is updates. Possible approaches:
-        - re-work the whole entity form data mapping logic so that fields can be partially updated.  This will involve accessing the original entity data before `save_entity` is called, and arranging that original field values are available while form data valuesare being mapped.  This is a fairly comploex re-work is desired.  This is the approach adopted.
-        - separate complex field values into separate fields that can be updated all-or-nothing
-        - save original field data in a hidden form field (similar to `views.confirm`)
-- [ ] Consider refactoring form generator around Idiom/Formlet work; cf.
-    - http://groups.inf.ed.ac.uk/links/papers/formlets-essence.pdf
-    - http://homepages.inf.ed.ac.uk/wadler/papers/formlets/formlets.pdf
-    - http://homepages.inf.ed.ac.uk/slindley/papers/dbwiki-sigmod2011.pdf
 
 
 # Feedback

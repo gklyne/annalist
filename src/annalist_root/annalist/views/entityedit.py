@@ -11,8 +11,6 @@ import os
 import logging
 log = logging.getLogger(__name__)
 
-#@@ from itertools import izip_longest
-
 from django.conf                        import settings
 from django.http                        import HttpResponse
 from django.http                        import HttpResponseRedirect
@@ -610,23 +608,26 @@ class GenericEntityEditView(AnnalistGenericView):
         add_field = self.find_add_field(entityvaluemap, form_data)
         # log.info("*** Add field: "+repr(add_field))
         if add_field:
-            return self.update_repeat_field_group(
+            http_response = self.update_repeat_field_group(
                 viewinfo, add_field, entityvaluemap, entityformvals, **context_extra_values
                 )
+            return http_response or HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
 
         # Remove Field(s), and redisplay
         remove_field = self.find_remove_field(entityvaluemap, form_data)
         if remove_field:
-            if not remove_field['remove_fields']:
+            if remove_field['remove_fields']:
+                http_response = self.update_repeat_field_group(
+                    viewinfo, remove_field, entityvaluemap, entityformvals, **context_extra_values
+                    )
+            else:
                 log.debug("form_response: No field(s) selected for remove_field")
-                return self.form_re_render(
+                http_response = self.form_re_render(
                     viewinfo, entityvaluemap, entityformvals, context_extra_values,
                     error_head=messages['remove_field_error'],
                     error_message=messages['no_field_selected']
                     )
-            return self.update_repeat_field_group(
-                viewinfo, remove_field, entityvaluemap, entityformvals, **context_extra_values
-                )
+            return http_response or HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
 
         # Report unexpected form data
         # This shouldn't happen, but just in case...
@@ -1271,16 +1272,11 @@ class GenericEntityEditView(AnnalistGenericView):
         return None
 
     def update_repeat_field_group(self, 
-            viewinfo, field_desc, entityvaluemap, entityvals, **context_extra_values
+            viewinfo, field_desc, entityvaluemap, entityformvals, **context_extra_values
             ):
         """
-        Renders a new form from supplied entity instance data with a repeated field or 
-        field group added or removed.
-
-        The changes made to date are not saved to permanent storage, but are used to 
-        render an updated form display with an additional field instance.  The updates
-        and any new field value are saved by invoking 'save' from the displayed form 
-        (i.e. a subsequent HTTP POST).
+        Saves an entity instance data with a repeated field or field group added or 
+        removed, then redisplays the current form.
 
         viewinfo    DisplayInfo object describing the current view.
         field_desc  is a field description for a field or field group to be added
@@ -1289,27 +1285,25 @@ class GenericEntityEditView(AnnalistGenericView):
                     values to be removed, otherwise a field is added.
         entityvaluemap
                     an EntityValueMap object for the entity being presented.
-        entityvals  is a dictionary of entity values to which the field is added.
+        entityformvals  
+                    is a dictionary of entity values to which the field is added.
         context_extra_values
                     is a dictionary of default and additional values not provided by the
                     entity itself, that may be needed to render the updated form. 
 
-        returns an HttpResponse object to render the updated entity editing form,
-        or to indicate an reason for failure.
+        returns None if the entity is updated and saved, or an HttpResponse object to 
+        display an error message.
         """
         # log.info("field_desc: %r: %r"%(field_desc,))
         if 'remove_fields' in field_desc:
-            self.remove_entity_field(field_desc, entityvals)
+            self.remove_entity_field(field_desc, entityformvals)
         else:
-            self.add_entity_field(field_desc, entityvals)
+            self.add_entity_field(field_desc, entityformvals)
         # log.info("entityvals: %r"%(entityvals,))
-        form_context = self.get_form_display_context(
-            viewinfo, entityvaluemap, entityvals, **context_extra_values
+        http_response = self.save_entity(
+            viewinfo, entityvaluemap, entityformvals, context_extra_values
             )
-        return (
-            self.render_html(form_context, self.formtemplate) or 
-            self.error(self.error406values())
-            )
+        return http_response
 
     def find_repeat_fields(self, entityvaluemap):
         """
