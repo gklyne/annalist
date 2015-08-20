@@ -65,7 +65,7 @@ def recordtype_url(coll_id="testcoll", type_id="testtype"):
     URL for record type description data; also view using default entity view
     """
     if not valid_id(type_id):
-        type_id = "___"
+        return None
     return collection_entity_view_url(coll_id=coll_id, type_id="_type", entity_id=type_id)
 
 def recordtype_edit_url(action=None, coll_id=None, type_id=None):
@@ -236,7 +236,7 @@ def recordtype_entity_view_context_data(
         context_dict['fields'][0]['field_value'] = type_id
         context_dict['fields'][1]['field_value'] = '%s %s/%s'%(update, coll_id, type_id)
         context_dict['fields'][2]['field_value'] = '%s help for %s in collection %s'%(update, type_id, coll_id)
-        context_dict['fields'][3]['field_value'] = type_url
+        context_dict['fields'][3]['field_value'] = type_url or ""
         context_dict['orig_id']     = type_id
     if orig_id:
         context_dict['orig_id']     = orig_id
@@ -262,7 +262,7 @@ def recordtype_entity_view_form_data(
         form_data_dict['orig_id']       = type_id
         form_data_dict['Type_label']    = '%s %s/%s'%(update, coll_id, type_id)
         form_data_dict['Type_comment']  = '%s help for %s in collection %s'%(update, type_id, coll_id)
-        form_data_dict['Type_uri']      = type_url
+        form_data_dict['Type_uri']      = type_url or ""
         form_data_dict['Type_view']     = "Default_view"
         form_data_dict['Type_list']     = "Default_list"
         form_data_dict['orig_type']     = "_type"

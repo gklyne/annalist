@@ -31,7 +31,10 @@ from annalist.models.collection             import Collection
 from annalist.models.recordfield            import RecordField
 
 from annalist.views.entityedit              import GenericEntityEditView
-from annalist.views.fields.render_placement import get_placement_options, get_placement_option_value_dict
+from annalist.views.form_utils.fieldchoice  import FieldChoice
+from annalist.views.fields.render_placement import (
+    get_placement_options, get_placement_option_value_dict
+    )
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
@@ -55,6 +58,10 @@ from entity_testentitydata          import (
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
+from entity_testtypedata                import recordtype_url
+from entity_testviewdata                import recordview_url
+from entity_testlistdata                import recordlist_url
+from entity_testgroupdata               import recordgroup_url
 from entity_testsitedata            import (
     get_site_types, get_site_types_sorted,
     get_site_lists, get_site_lists_sorted,
@@ -194,11 +201,32 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.no_options         = ['(no options)']
-        self.view_options       = get_site_views_sorted()
-        self.group_options      = get_site_field_groups_sorted()
-        self.render_options     = get_site_field_types_sorted()
-        self.value_mode_options = get_site_value_modes_sorted()
+        type_option_values       = [""] + get_site_types_sorted()+["testtype"]
+        view_option_values       = get_site_views_sorted()
+        group_option_values      = [""] + get_site_field_groups_sorted()
+        render_option_values     = get_site_field_types_sorted()
+        value_mode_option_values = get_site_value_modes_sorted()
+        self.no_options          = [ FieldChoice('', label="(no options)") ]
+        self.type_options = [
+            FieldChoice(v, link=recordtype_url("testcoll", v)) 
+            for v in type_option_values 
+            ]
+        self.view_options = [ 
+            FieldChoice(v, link=recordview_url("testcoll", v)) 
+            for v in view_option_values 
+            ]
+        self.group_options= [ 
+            FieldChoice(v, link=recordgroup_url("testcoll", v)) 
+            for v in group_option_values 
+            ]
+        self.render_options = [ 
+            FieldChoice(v, link=collection_entity_view_url("testcoll", "Enum_render_type", v)) 
+            for v in render_option_values 
+            ]
+        self.value_mode_options =[ 
+            FieldChoice(v, link=collection_entity_view_url("testcoll", "Enum_value_mode", v)) 
+            for v in value_mode_option_values 
+            ]
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -343,7 +371,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][i]['field_value'],        field_typeref)
-        self.assertEqual(r.context['fields'][i]['options'],            [""]+get_site_types_sorted()+["testtype"])
+        self.assertEqual(r.context['fields'][i]['options'],            self.type_options)
         # Field 9: field of referenced entity
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_fieldref')
@@ -383,7 +411,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][i]['field_value'],        field_viewref)
-        self.assertEqual(r.context['fields'][i]['options'],            [""] + self.group_options)
+        self.assertEqual(r.context['fields'][i]['options'],            self.group_options)
         # Field 13: enumeration restriction (for select rendering)
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_repeat_label_add')
@@ -575,7 +603,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "Field_typeref", "Refer to type",
-                    [""]+get_site_types_sorted()+["testtype"],
+                    [ v.value for v in self.type_options ],
                     "", placeholder="(no type selected)")+
                 """
                 </div>
@@ -696,7 +724,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-
         # log.info(r.content)   #@@
         self.assertContains(r, formrow1col1, html=True)     # Id
         self.assertContains(r, formrow1col2, html=True)     # Value type

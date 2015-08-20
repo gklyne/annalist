@@ -264,11 +264,10 @@ def render_select_options(name, label, opts, sel, placeholder=None):
       </div>
     </div>
     """
-    def select_option(o):
-        selected = ('' if o != sel else ' selected="selected"')
-        if (placeholder is not None) and (o == ""):
-            return '<option value=""%s>%s</option>'%(selected,placeholder)
-        return '<option%s>%s</option>'%(selected,o)
+    def select_option(opt):
+        selected = ('' if opt != sel else ' selected="selected"')
+        label    = (placeholder or "") if opt == "" else opt
+        return '<option value="%s"%s>%s</option>'%(opt, selected, label)
     #
     select_template = (
         """<div class="row">\n"""+
@@ -300,16 +299,16 @@ def render_choice_options(name, opts, sel, placeholder=None, select_class=None, 
 
     >>> print render_choice_options("foo", "foo_label", ["aa", "bb", "cc"], "bb")
     <select name="foo">
-      <option>aa</option>
-      <option selected="selected">bb</option>
-      <option>cc</option>
+      <option value="aa">aa</option>
+      <option value="bb" selected="selected">bb</option>
+      <option value="cc">cc</option>
     </select>
     >>> print render_choice_options("foo", "foo_label", ["", aa", "bb", "cc"], "", placeholder=("select)")
     <select name="foo">
       <option value="" selected="selected">(select)</option>
-      <option>aa</option>
-      <option>bb</option>
-      <option>cc</option>
+      <option value="aa">aa</option>
+      <option value="bb">bb</option>
+      <option value="cc">cc</option>
     </select>
     """
     def select_option(o):
@@ -317,7 +316,8 @@ def render_choice_options(name, opts, sel, placeholder=None, select_class=None, 
         if (placeholder is not None) and (o == ""):
             return '<option value=""%s>%s</option>'%(selected,placeholder)
         v = value_dict.get(o, None)
-        value = ('' if v is None else ' value="%s"'%v)
+        # value = ('' if v is None else ' value="%s"'%v)
+        value = ' value="%s"'%(v or o)
         return '<option%s%s>%s</option>'%(selected,value,o)
     #
     select_template = (

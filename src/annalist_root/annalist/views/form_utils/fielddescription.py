@@ -11,15 +11,15 @@ import collections
 import logging
 log = logging.getLogger(__name__)
 
-from annalist.identifiers               import RDFS, ANNAL
-from annalist.exceptions                import Annalist_Error, EntityNotFound_Error
+from annalist.identifiers   import RDFS, ANNAL
+from annalist.exceptions    import Annalist_Error, EntityNotFound_Error
 
-from annalist.models.recordgroup        import RecordGroup
-from annalist.models.recordfield        import RecordField
-from annalist.models.entitytypeinfo     import EntityTypeInfo
-from annalist.models.entityfinder       import EntityFinder
+from annalist.models.recordgroup            import RecordGroup
+from annalist.models.recordfield            import RecordField
+from annalist.models.entitytypeinfo         import EntityTypeInfo
+from annalist.models.entityfinder           import EntityFinder
 
-from annalist.views.fields.render_utils import (
+from annalist.views.fields.render_utils     import (
     get_view_renderer,
     get_edit_renderer, 
     get_label_view_renderer,
@@ -35,6 +35,7 @@ from annalist.views.fields.render_utils import (
 from annalist.views.fields.render_placement import (
     get_placement_classes
     )
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 class FieldDescription(object):
     """
@@ -98,8 +99,9 @@ class FieldDescription(object):
             , 'field_ref_type':             field_ref_type
             , 'field_ref_restriction':      recordfield.get(ANNAL.CURIE.field_ref_restriction, "ALL")
             , 'field_ref_field':            recordfield.get(ANNAL.CURIE.field_ref_field, None)
-            , 'field_choice_labels':        None
-            , 'field_choice_links':         None
+            , 'field_choices':              None
+            # , 'field_choice_labels':        None
+            # , 'field_choice_links':         None
             , 'field_group_ref':            recordfield.get(ANNAL.CURIE.group_ref, None)
             , 'group_label':                None
             , 'group_add_label':            None
@@ -132,16 +134,28 @@ class FieldDescription(object):
             # returned must be materialized as a list
             # Uses collections.OrderedfDict to preserve entity ordering
             # 'Enum_optional' adds a blank entry at the start of the list
-            self._field_desc['field_choice_labels'] = collections.OrderedDict()
-            self._field_desc['field_choice_links']  = collections.OrderedDict()
+            #@@
+            # self._field_desc['field_choice_values'] = collections.OrderedDict()
+            # self._field_desc['field_choice_labels'] = collections.OrderedDict()
+            # self._field_desc['field_choice_links']  = collections.OrderedDict()
+            #@@
+            self._field_desc['field_choices'] = collections.OrderedDict()
             if field_render_type == "Enum_optional":
-                self._field_desc['field_choice_labels'][''] = ""
-                self._field_desc['field_choice_links']['']  = None
+                #@@
+                # self._field_desc['field_choice_values'][''] = ""
+                # self._field_desc['field_choice_labels'][''] = ""
+                # self._field_desc['field_choice_links']['']  = None
+                #@@
+                self._field_desc['field_choices'][''] = FieldChoice('')
             for e in entities:
                 eid = e.get_id()
                 if eid != "_initial_values":
-                    self._field_desc['field_choice_labels'][eid] = eid   # @@TODO: be smarter about label?
-                    self._field_desc['field_choice_links'][eid]  = e.get_view_url_path()
+                    #@@
+                    # self._field_desc['field_choice_values'][eid] = eid
+                    # self._field_desc['field_choice_labels'][eid] = eid   # @@TODO: be smarter about label?
+                    # self._field_desc['field_choice_links'][eid]  = e.get_view_url_path()
+                    #@@
+                    self._field_desc['field_choices'][eid] = FieldChoice(eid, link=e.get_view_url_path())
             # log.info("typeref %s: %r"%
             #     (self._field_desc['field_ref_type'], list(self._field_desc['field_choices']))
             #     )
@@ -373,7 +387,7 @@ def field_description_from_view_field(collection, field, view_context=None, grou
     a field reference in a view description record (i.e. a dictionary
     containing a field id value and optional field property URI and
     placement values.  (The optional values, if not provided, are 
-    obtained from the referenced field descriptionb)
+    obtained from the referenced field description)
 
     collection      is a collection from which data is being rendered.
     field           is a dictionary with the field description from a view or list 

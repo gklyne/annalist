@@ -11,18 +11,22 @@ log = logging.getLogger(__name__)
 
 import re
 
-from urlparse       import urljoin  # py3: from urllib.parse ...
-from collections    import OrderedDict, namedtuple
+from urlparse               import urljoin  # py3: from urllib.parse ...
+from collections            import OrderedDict, namedtuple
 
 from django.conf            import settings
 
 from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
 from annalist.identifiers   import RDFS, ANNAL
 
-from annalist.models.entitytypeinfo import EntityTypeInfo
-from annalist.models.entity         import EntityRoot
+from annalist.models.entitytypeinfo         import EntityTypeInfo
+from annalist.models.entity                 import EntityRoot
 
-from annalist.views.uri_builder     import uri_params, uri_with_params, continuation_params
+from annalist.views.uri_builder             import (
+    uri_params, uri_with_params, continuation_params
+    )
+from annalist.views.form_utils.fieldchoice  import FieldChoice
+
 
 class bound_field(object):
     """
@@ -175,10 +179,16 @@ class bound_field(object):
     def get_field_link(self):
         # Return link corresponding to field value that is a selection from an enumeration of entities
         # (or some other value with an associated link), or None
-        links = self._field_description['field_choice_links']
-        v     = self.field_value
-        if links and v in links:
-            return links[v]
+        #@@
+        # links = self._field_description['field_choice_links']
+        # v     = self.field_value
+        # if links and v in links:
+        #     return links[v]
+        #@@
+        choices = self._field_description['field_choices']  # OrderedDict
+        v       = self.field_value
+        if choices and v in choices:
+            return choices[v].link
         return None
 
     def get_target_value(self):
@@ -303,8 +313,14 @@ class bound_field(object):
         return chere
 
     def get_field_options(self):
-        options = self._field_description['field_choice_labels']
-        options = options.values() if options is not None else ["(no options)"]
+        #@@
+        # options = self._field_description['field_choice_labels']  # OrderedDict
+        # options = options.values() if options is not None else ["(no options)"]
+        #@@
+        options = self._field_description['field_choices']      # OrderedDict
+        options = ( options.values() if options is not None else 
+                    [ FieldChoice('', label="(no options)") ]
+                  )
         return options
 
     def __getitem__(self, name):

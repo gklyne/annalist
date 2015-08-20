@@ -34,7 +34,8 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.entityedit      import GenericEntityEditView
+from annalist.views.entityedit              import GenericEntityEditView
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
@@ -75,6 +76,8 @@ from entity_testsitedata            import (
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
+from entity_testviewdata            import recordview_url
+from entity_testlistdata            import recordlist_url
 
 #   -----------------------------------------------------------------------------
 #
@@ -91,15 +94,23 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
         self.type_ids   = ['testtype', 'Default_type']
-        self.no_options = ['(no options)']
-        self.view_options    = sorted(
+        self.no_options = [ FieldChoice('', label="(no options)") ]
+        view_option_values = sorted(
             [ vid for vid in self.testcoll.child_entity_ids(RecordView, self.testsite) 
                   if vid != "_initial_values"
             ])
-        self.list_options    = sorted(
+        self.view_options = [ 
+            FieldChoice(v, link=recordview_url("testcoll", v)) 
+            for v in view_option_values 
+            ]
+        list_option_values = sorted(
             [ lid for lid in self.testcoll.child_entity_ids(RecordList, self.testsite) 
                   if lid != "_initial_values"
             ])
+        self.list_options = [ 
+            FieldChoice(v, link=recordlist_url("testcoll", v)) 
+            for v in list_option_values 
+            ]
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)

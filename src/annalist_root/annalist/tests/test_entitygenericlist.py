@@ -36,8 +36,9 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.uri_builder     import uri_params, uri_with_params
-from annalist.views.entitylist      import EntityGenericListView #, EntityDataDeleteConfirmedView
+from annalist.views.uri_builder             import uri_params, uri_with_params
+from annalist.views.entitylist              import EntityGenericListView
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
@@ -77,6 +78,7 @@ from entity_testsitedata            import (
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
+from entity_testlistdata            import recordlist_url
 
 #   -----------------------------------------------------------------------------
 #
@@ -110,7 +112,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         e4 = EntityData.create(self.testdata2, "entity4", 
             entitydata_create_values("entity4", type_id="testtype2")
             )
-        self.initial_list_ids = get_site_lists()
+        initial_list_ids_values = get_site_lists()
+        self.initial_list_ids = (
+            [ FieldChoice(v, link=recordlist_url("testcoll", v))
+              for v in initial_list_ids_values
+            ])
         return
 
     def tearDown(self):

@@ -17,6 +17,7 @@ from annalist.views.fields.render_fieldvalue    import (
     get_field_edit_value,
     get_field_view_value
     )
+from annalist.views.form_utils.fieldchoice      import FieldChoice
 
 from django.template    import Template, Context
 
@@ -27,18 +28,18 @@ from django.template    import Template, Context
 #   ----------------------------------------------------------------------------
 
 edit_options = (
-    '''{% for v in field_options %} '''+
-      '''{% if v == field.field_value %} '''+
-        '''{% if v == "" %} '''+
+    '''{% for opt in field_options %} '''+
+      '''{% if opt.value == field.field_value %} '''+
+        '''{% if opt.value == "" %} '''+
           '''<option value="" selected="selected">{{field.field_placeholder}}</option> '''+
         '''{% else %} '''+
-          '''<option selected="selected">{{v}}</option> '''+
+          '''<option value="{{opt.value}}" selected="selected">{{opt.label}}</option> '''+
         '''{% endif %} '''+
       '''{% else %} '''+
-        '''{% if v == "" %} '''+
+        '''{% if opt.value == "" %} '''+
           '''<option value="">{{field.field_placeholder}}</option> '''+
         '''{% else %} '''+
-          '''<option>{{v}}</option> '''+
+          '''<option value="{{opt.value}}">{{opt.label}}</option> '''+
         '''{% endif %} '''+
       '''{% endif %} '''+
     '''{% endfor %} '''
@@ -172,9 +173,11 @@ class Select_edit_renderer(object):
             val     = get_field_edit_value(context, None)
             textval = SelectValueMapper.encode(val)
             options = context['field']['options']
-            if textval not in options:
+            # options is list of FieldChoice values
+            # print repr(options)
+            if textval not in [ o.value for o in options ]:
                 options = list(options)      # clone
-                options.insert(0, textval)   # Add missing current value to options
+                options.insert(0, FieldChoice(textval))   # Add missing current value to options
             with context.push(encoded_field_value=textval, field_options=options):
                 result = self._template.render(context)
         except Exception as e:

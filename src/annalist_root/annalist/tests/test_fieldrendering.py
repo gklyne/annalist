@@ -145,10 +145,10 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="0" class="right" />'''
             , '''<select name="View_fields__0__Field_id">'''+
-              ''' <option>Entity_comment</option>'''+
-              ''' <option selected="selected">Entity_id</option>'''+
-              ''' <option>Entity_label</option>'''+
-              ''' <option>Entity_type</option>'''+
+              ''' <option value="Entity_comment">Entity_comment</option>'''+
+              ''' <option value="Entity_id" selected="selected">Entity_id</option>'''+
+              ''' <option value="Entity_label">Entity_label</option>'''+
+              ''' <option value="Entity_type">Entity_type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__0__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -157,10 +157,10 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="1" class="right" />'''
             , '''<select name="View_fields__1__Field_id">'''+
-              ''' <option>Entity_comment</option>'''+
-              ''' <option>Entity_id</option>'''+
-              ''' <option>Entity_label</option>'''+
-              ''' <option selected="selected">Entity_type</option>'''+
+              ''' <option value="Entity_comment">Entity_comment</option>'''+
+              ''' <option value="Entity_id">Entity_id</option>'''+
+              ''' <option value="Entity_label">Entity_label</option>'''+
+              ''' <option value="Entity_type" selected="selected">Entity_type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__1__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -169,10 +169,10 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="2" class="right" />'''
             , '''<select name="View_fields__2__Field_id">'''+
-              ''' <option>Entity_comment</option>'''+
-              ''' <option>Entity_id</option>'''+
-              ''' <option selected="selected">Entity_label</option>'''+
-              ''' <option>Entity_type</option>'''+
+              ''' <option value="Entity_comment">Entity_comment</option>'''+
+              ''' <option value="Entity_id">Entity_id</option>'''+
+              ''' <option value="Entity_label" selected="selected">Entity_label</option>'''+
+              ''' <option value="Entity_type">Entity_type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__2__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -181,10 +181,10 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="3" class="right" />'''
             , ''' <select name="View_fields__3__Field_id">'''+
-              ''' <option selected="selected">Entity_comment</option>'''+
-              ''' <option>Entity_id</option>'''+
-              ''' <option>Entity_label</option>'''+
-              ''' <option>Entity_type</option>'''+
+              ''' <option value="Entity_comment" selected="selected">Entity_comment</option>'''+
+              ''' <option value="Entity_id">Entity_id</option>'''+
+              ''' <option value="Entity_label">Entity_label</option>'''+
+              ''' <option value="Entity_type">Entity_type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__3__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+

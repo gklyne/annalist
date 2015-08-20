@@ -31,7 +31,8 @@ from annalist.models.sitedata           import SiteData
 from annalist.models.collection         import Collection
 from annalist.models.recordlist         import RecordList
 
-from annalist.views.recordlistdelete    import RecordListDeleteConfirmedView
+from annalist.views.recordlistdelete        import RecordListDeleteConfirmedView
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                              import init_annalist_test_site
@@ -170,9 +171,9 @@ class RecordListEditViewTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
-        self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.no_options = ['(no options)']
+        self.testsite   = Site(TestBaseUri, TestBaseDir)
+        self.testcoll   = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
+        self.no_options = [ FieldChoice('', label="(no options)") ]
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_list")
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")

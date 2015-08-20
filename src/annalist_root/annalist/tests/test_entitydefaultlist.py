@@ -27,8 +27,9 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.uri_builder     import uri_params, uri_with_params
-from annalist.views.defaultlist     import EntityDefaultListView
+from annalist.views.uri_builder             import uri_params, uri_with_params
+from annalist.views.defaultlist             import EntityDefaultListView
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
@@ -67,6 +68,7 @@ from entity_testsitedata            import (
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
+from entity_testlistdata            import recordlist_url
 
 
 #   -----------------------------------------------------------------------------
@@ -95,7 +97,11 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         e4 = EntityData.create(self.testdata2, "entity4", 
             entitydata_create_values("entity4", type_id="testtype2")
             )
-        self.initial_list_ids = get_site_lists()
+        initial_list_ids_values = get_site_lists()
+        self.initial_list_ids = (
+            [ FieldChoice(v, link=recordlist_url("testcoll", v))
+              for v in initial_list_ids_values
+            ])
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -134,16 +140,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>List entities with type information</h3>", html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         cont = uri_params({"continuation_url": u})
-        # rowdata = """
-        #     <tr class="select-row">
-        #         <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></td>
-        #         <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/_type/testtype/%(cont)s">testtype</a></td>
-        #         <td class="small-8 columns">Entity testcoll/testtype/entity1</td>
-        #         <td class="select-row">
-        #             <input type="checkbox" name="entity_select" value="testtype/entity1" />
-        #         </td>
-        #     </tr>
-        #     """%({'base': TestBasePath, 'cont': cont})
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">

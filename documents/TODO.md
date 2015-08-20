@@ -31,15 +31,16 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Missing enumerated value reference: provide better diagnostic
 - [x] Revise add field buttons to use save+redirect rather than re-render
 - [ ] Enum selection - include labels in dropdown (then can use built-in IDs)
-- [ ] When using "+" to add an enum entry, also need quick route to edit entry?
+    - need to figure out how to extract ID for storage when form is submitted.
 - [ ] Update save_entity to return responseinfo
 - [ ] Refactor entity edit response handling
+- [ ] Option to re-order fields on view form
 - [ ] Use responseinfo values for status reporting to user
+- [ ] When using "+" to add an enum entry, also need quick route to edit entry?
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 
 (release 0.1.18?)
 
-- [ ] Option to re-order fields on view form
 - [ ] Usability: 3 key tasks need to be easier (at the level of a single form fill-out):
     - [ ] Create a new type+view+list, suitably interconnected
     - [x] Define a new field type and add to a view

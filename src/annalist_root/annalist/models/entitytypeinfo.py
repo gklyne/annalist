@@ -167,7 +167,7 @@ TYPE_CLASS_MAP = (
     , '_field':             RecordField
     , 'Enum_list_type':     RecordEnumFactory('Enum_list_type',   'Enum_list_type')
     , 'Enum_render_type':   RecordEnumFactory('Enum_render_type', 'Enum_render_type')
-    , 'Enum_value_mode':    RecordEnumFactory('Enum_value_mode',    'Enum_value_mode')
+    , 'Enum_value_mode':    RecordEnumFactory('Enum_value_mode',  'Enum_value_mode')
     , 'Enum_bib_type':      RecordEnumFactory('Enum_bib_type',    'Enum_bib_type')
     })
 

@@ -15,14 +15,11 @@ from collections import OrderedDict
 import logging
 log = logging.getLogger(__name__)
 
-# from django.conf                                import settings
-# from django.test                                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
-# from django.template                            import Context, Template, loader
-
 from annalist.views.fields.render_select        import (
     get_select_renderer, get_choice_renderer, 
     SelectValueMapper
     )
+from annalist.views.form_utils.fieldchoice      import FieldChoice
 
 from annalist.tests.field_rendering_support     import FieldRendererTestSupport
 
@@ -35,7 +32,7 @@ def expect_render_option(choice_val, select_val, placeholder):
         value_text  = ''' value=""'''
     else:
         choice_text = choice_val
-        value_text  = ''''''
+        value_text  = ''' value="%s"'''%choice_val
     return '''<option%s%s>%s</option>'''%(value_text, selected, choice_text)
 
 def expect_render_select(select_name, choice_list, select_val, placeholder):
@@ -60,8 +57,19 @@ class SelectRenderingTest(FieldRendererTestSupport):
     def _make_select_test_context(self, valtext, vallink, valchoices):
         if valtext not in valchoices:
             vallink = None
-        # print "_make_select_test_context: valtext %r, valchoices %r, vallink %s"%(valtext, valchoices, vallink)
-        return self._make_test_context(valtext, options=valchoices, field_link=vallink)
+        # log.info(
+        #     "_make_select_test_context: valtext %r, valchoices %r, vallink %s"%
+        #     (valtext, valchoices, vallink)
+        #     )
+        valoptions = []
+        for v in valchoices:
+            l = vallink if v == valtext else "@@no_link@@"
+            valoptions.append(FieldChoice(v, link=l))
+        # log.info(
+        #     "_make_select_test_context: valoptions %r"%
+        #     (valoptions,)
+        #     )
+        return self._make_test_context(valtext, options=valoptions, field_link=vallink)
 
     def test_RenderChoiceValue(self):
         def expect_render(valtext, vallink, valchoices):
@@ -99,7 +107,6 @@ class SelectRenderingTest(FieldRendererTestSupport):
                 collapse_whitespace=True
                 )
         return
-
 
     def test_RenderSelectValue(self):
         def expect_render(valtext, vallink, valchoices):
@@ -143,7 +150,7 @@ class SelectRenderingTest(FieldRendererTestSupport):
             ])
         renderer = get_select_renderer()
         for render_context, expect_render in test_value_context_renders:
-            # print repr(render_context['field']['field_value'])
+            # log.info(repr(render_context['field']['field_value']))
             self._check_value_renderer_results(
                 renderer,
                 context=render_context,

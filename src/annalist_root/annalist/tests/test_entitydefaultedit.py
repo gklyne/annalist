@@ -27,7 +27,8 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.defaultedit     import EntityDefaultEditView
+from annalist.views.defaultedit             import EntityDefaultEditView
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
@@ -41,6 +42,7 @@ from entity_testutils               import (
     create_test_user
     )
 from entity_testtypedata            import (
+    recordtype_url,
     recordtype_edit_url,
     recordtype_create_values,
     )
@@ -81,8 +83,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
-        self.type_ids   = get_site_types_sorted() + ['testtype']
-        self.no_options = ['(no options)']
+        self.type_ids   = [ FieldChoice(t, link=recordtype_url(type_id=t)) 
+                            for t in (get_site_types_sorted() + ['testtype']) ]
+        self.no_options = [ FieldChoice('', label="(no options)") ]
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -159,12 +162,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   </div>
                   <div class="%(input_classes)s">
                   """+
-                    # def render_select_options(name, label, opts, sel, placeholder=None):
-                    # render_select_options(
-                    #   "entity_type", "Type",
-                    #   get_site_types_sorted()+["testtype"],
-                    #   "testtype")+
-                    # def render_choice_options(name, opts, sel, placeholder=None, select_class=None, value_dict={}):
                     render_choice_options(
                         "entity_type",
                         get_site_types_sorted()+["testtype"],

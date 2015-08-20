@@ -32,8 +32,9 @@ from annalist.models.collection         import Collection
 from annalist.models.recordview         import RecordView
 from annalist.models.recordfield        import RecordField
 
-from annalist.views.uri_builder         import uri_with_params
-from annalist.views.recordviewdelete    import RecordViewDeleteConfirmedView
+from annalist.views.uri_builder             import uri_with_params
+from annalist.views.recordviewdelete        import RecordViewDeleteConfirmedView
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                              import init_annalist_test_site
@@ -166,9 +167,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
-        self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.no_options       = ['(no options)']
+        self.testsite   = Site(TestBaseUri, TestBaseDir)
+        self.testcoll   = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
+        self.no_options = [ FieldChoice('', label="(no options)") ]
         def special_field(fid):
             return ( 
                 fid.startswith("Field_") or 

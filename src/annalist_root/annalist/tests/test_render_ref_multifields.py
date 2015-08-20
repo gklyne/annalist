@@ -31,6 +31,7 @@ from tests                              import init_annalist_test_site
 from annalist.tests.AnnalistTestCase    import AnnalistTestCase
 from entity_testutils               import (
     collection_create_values,
+    render_select_options, render_choice_options,
     create_test_user
     )
 from entity_testtypedata            import (
@@ -435,34 +436,25 @@ class RefMultifieldTest(AnnalistTestCase):
             field_id="Test_refimg_field",
             basepath=TestBasePath
             )
-        formrow2 = """
+        formrow2 = ("""
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Image reference</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <div class="row">
-                    <div class="small-10 columns view-value less-new-button">
-                      <select name="%(field_id)s">
-                       <option selected="selected">%(entity_id)s</option>
-                      </select>
-                    </div>
-                    <div class="small-2 columns view-value new-button left small-text-right">
-                      <button type="submit"
-                              name="%(field_id)s__new"
-                              value="New"
-                              title="Define new Image reference"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
+                """+
+                render_select_options(
+                    "%(field_id)s", 
+                    "Image reference",
+                    ["%(entity_id)s"],
+                    "%(entity_id)s"
+                    )+
+                """
                 </div>
               </div>
             </div>
-            """%tgt_field_vals(width=6)
-
+            """)%tgt_field_vals(width=6)
         # log.info(r.content)
         self.assertContains(r, formrow1,  html=True)
         self.assertContains(r, formrow2,  html=True)
@@ -734,22 +726,14 @@ class RefMultifieldTest(AnnalistTestCase):
                       </div>
                       <div class="row view-value-col">
                         <div class="view-value small-12 columns">
-                          <div class="row">
-                            <div class="small-10 columns view-value less-new-button">
-                              <select name="%(repeat_id)s__0__%(field_id)s">
-                                <option selected="selected">%(entity_id)s</option>
-                              </select>
-                            </div>
-                            <div class="small-2 columns view-value new-button left small-text-right">
-                              <button type="submit"
-                                      name="%(repeat_id)s__0__%(field_id)s__new"
-                                      value="New"
-                                      title="Define new Image reference"
-                              >
-                                +
-                              </button>
-                            </div>
-                          </div>
+                        """+
+                        render_select_options(
+                            "%(repeat_id)s__0__%(field_id)s", 
+                            "Image reference",
+                            ["%(entity_id)s"],
+                            "%(entity_id)s"
+                            )+
+                        """
                         </div>
                       </div>
                     </div>

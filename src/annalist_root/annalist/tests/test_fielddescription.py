@@ -24,6 +24,7 @@ from annalist.views.fielddescription    import FieldDescription, field_descripti
 
 from annalist.views.fields.render_placement     import Placement
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
+from annalist.views.form_utils.fieldchoice      import FieldChoice
 
 from tests                  import init_annalist_test_site
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -82,7 +83,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_default_value':        None
             , 'field_placement':            expect_placement
             , 'field_ref_type':             None
-            , 'field_choice_links':         None
+            , 'field_choices':              None
             , 'field_ref_restriction':      'ALL'
             , 'field_group_ref':            None
             })
@@ -113,7 +114,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_default_value':        None
             , 'field_placement':            expect_placement
             , 'field_ref_type':             None
-            , 'field_choice_links':         None
+            , 'field_choices':              None
             , 'field_ref_restriction':      'ALL'
             , 'field_group_ref':            None
             })
@@ -138,11 +139,8 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'Entity_label'
             , 'Entity_type'
             ])
-        expect_choice_labels = OrderedDict(
-            [ (id, id) for id in expect_choice_ids]
-            )
-        expect_choice_links = OrderedDict(
-            [ (id, entity_url("testcoll", "_field", id)) 
+        expect_choices = OrderedDict(
+            [ (id, FieldChoice(id, link=entity_url("testcoll", "_field", id)))
               for id in expect_choice_ids
             ])
         expect_field_desc = (
@@ -157,8 +155,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_default_value':        ''
             , 'field_placement':            expect_placement
             , 'field_ref_type':             '_field'
-            , 'field_choice_labels':        expect_choice_labels
-            , 'field_choice_links':         expect_choice_links
+            , 'field_choices':              expect_choices
             , 'field_ref_restriction':      '[annal:field_entity_type] in entity[annal:record_type]'
             , 'field_group_ref':            None
             })
@@ -189,8 +186,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_default_value':        None
             , 'field_placement':            expect_placement
             , 'field_ref_type':             None
-            , 'field_choice_labels':        None
-            , 'field_choice_links':         None
+            , 'field_choices':              None
             , 'field_ref_restriction':      'ALL'
             , 'field_group_ref':            'View_field_group'
             })

@@ -34,7 +34,8 @@ from annalist.models.recordtypedata     import RecordTypeData
 from annalist.models.recordview         import RecordView
 from annalist.models.recordlist         import RecordList
 
-from annalist.views.recordtypedelete    import RecordTypeDeleteConfirmedView
+from annalist.views.recordtypedelete        import RecordTypeDeleteConfirmedView
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                              import init_annalist_test_site
@@ -59,6 +60,8 @@ from entity_testentitydata              import (
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
+from entity_testviewdata                import recordview_url
+from entity_testlistdata                import recordlist_url
 
 #   -----------------------------------------------------------------------------
 #
@@ -160,17 +163,25 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
-        self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.no_options = ['(no options)']
-        self.view_options    = sorted(
+        self.testsite   = Site(TestBaseUri, TestBaseDir)
+        self.testcoll   = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
+        self.no_options = [ FieldChoice('', label="(no options)") ]
+        view_option_values = sorted(
             [ vid for vid in self.testcoll.child_entity_ids(RecordView, self.testsite) 
                   if vid != "_initial_values"
             ])
-        self.list_options    = sorted(
+        self.view_options = [ 
+            FieldChoice(v, link=recordview_url("testcoll", v)) 
+            for v in view_option_values 
+            ]
+        list_option_values = sorted(
             [ lid for lid in self.testcoll.child_entity_ids(RecordList, self.testsite) 
                   if lid != "_initial_values"
             ])
+        self.list_options = [ 
+            FieldChoice(v, link=recordlist_url("testcoll", v)) 
+            for v in list_option_values 
+            ]
         # For checking Location: header values...
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_type")
         # Login and permissions

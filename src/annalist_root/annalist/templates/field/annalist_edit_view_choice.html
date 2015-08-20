@@ -2,11 +2,11 @@
 <div class="row">
   <div class="small-9 columns">
     <select name="{{repeat_prefix}}{{field.field_name}}">
-      {% for v in field.options %}
-        {% if v == field.field_value %}
-        <option selected="selected">{{v}}</option>
+      {% for opt in field.options %}
+        {% if opt.value == field.field_value %}
+        <option value="{{opt.value}}" selected="selected">{{opt.label}}</option>
         {% else %}
-        <option>{{v}}</option>
+        <option value="{{opt.value}}">{{opt.label}}</option>
         {% endif %}
       {% endfor %}
     </select>

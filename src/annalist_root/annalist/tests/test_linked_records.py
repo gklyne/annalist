@@ -22,6 +22,7 @@ from django.core.urlresolvers       import resolve, reverse
 from django.test.client             import Client
 
 from annalist.identifiers           import ANNAL
+
 from annalist.models.entity         import EntityRoot, Entity
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
@@ -31,10 +32,14 @@ from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
+from annalist.views.form_utils.fieldchoice  import FieldChoice
+
+
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import init_annalist_test_site
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
+    collection_entity_view_url,
     create_test_user,
     create_user_permissions,
     context_list_entities,
@@ -201,6 +206,11 @@ class LinkedRecordTest(AnnalistTestCase):
         self.testsrc_list = RecordList.create(self.testcoll, "testsrc_list", testsrc_list_create_values)
         self.testtgt_list = RecordList.create(self.testcoll, "testtgt_list", testtgt_list_create_values)
         self.testtgtref_field = RecordField.create(self.testcoll, "testtgtref_field", testtgtref_field_create_values)
+        self.no_options   = [ FieldChoice('', label="(no options)") ]
+        self.tgt_options  = (
+            [ FieldChoice(v, link=collection_entity_view_url("testcoll", "testtgt_type", v))
+              for v in ["testtgt1", "testtgt2"]
+            ])
         # Create data records for testing:
         self.testtgt_type_info = EntityTypeInfo(self.testsite, self.testcoll, "testtgt_type", create_typedata=True)
         self.testsrc_type_info = EntityTypeInfo(self.testsite, self.testcoll, "testsrc_type", create_typedata=True)
@@ -233,22 +243,22 @@ class LinkedRecordTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i].field_id,         "Entity_id")
         self.assertEqual(r.context['fields'][i].field_value,      "testsrc1")
         self.assertEqual(r.context['fields'][i].field_value_link, None)
-        self.assertEqual(r.context['fields'][i].options,          ["(no options)"])
+        self.assertEqual(r.context['fields'][i].options,          self.no_options)
         i = 1
         self.assertEqual(r.context['fields'][i].field_id,         "testtgtref_field")
         self.assertEqual(r.context['fields'][i].field_value,      "testtgt1")
         self.assertEqual(r.context['fields'][i].field_value_link, "/testsite/c/testcoll/d/testtgt_type/testtgt1/")
-        self.assertEqual(r.context['fields'][i].options,          ["testtgt1", "testtgt2"])
+        self.assertEqual(r.context['fields'][i].options,          self.tgt_options)
         i = 2
         self.assertEqual(r.context['fields'][i].field_id,         "Entity_label")
         self.assertEqual(r.context['fields'][i].field_value,      "testsrc_entity testsrc1 label")
         self.assertEqual(r.context['fields'][i].field_value_link, None)
-        self.assertEqual(r.context['fields'][i].options,          ["(no options)"])
+        self.assertEqual(r.context['fields'][i].options,          self.no_options)
         i = 3
         self.assertEqual(r.context['fields'][i].field_id,         "Entity_comment")
         self.assertEqual(r.context['fields'][i].field_value,      "testsrc_entity testsrc1 comment")
         self.assertEqual(r.context['fields'][i].field_value_link, None)
-        self.assertEqual(r.context['fields'][i].options,          ["(no options)"])
+        self.assertEqual(r.context['fields'][i].options,          self.no_options)
         return
 
     def test_list_entity_references(self):
