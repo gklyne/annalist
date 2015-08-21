@@ -265,7 +265,7 @@ class bound_field(object):
                 if all([ p in user_permissions for p in req_permissions]):
                     target_id    = self.get_field_value()
                     if target_id is None or target_id == "":
-                        raise TargetIdNotFound_Error(value=(targettypeinfo.type_id,self._key))
+                        raise TargetIdNotFound_Error(value=(targettypeinfo.type_id, self.field_name))
                     targetentity = targettypeinfo.get_entity(target_id)
                     if targetentity is None:
                         raise TargetEntityNotFound_Error(value=(targettypeinfo.type_id, target_id))

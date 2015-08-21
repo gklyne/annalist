@@ -221,7 +221,20 @@ class RenderFieldValue(object):
                 pass
             def render(self, context):
                 with context.push(value_renderer=value_renderer):
-                    return compiled_wrapper.render(context)
+                    try:
+                        return compiled_wrapper.render(context)
+                    except Exception as e:
+                        log.exception("Exception in (_get_renderer) _renderer.render")
+                        ex_type, ex, tb = sys.exc_info()
+                        traceback.print_tb(tb)
+                        response_parts = (
+                            ["Exception in (_get_renderer) _renderer.render"]+
+                            [repr(e)]+
+                            traceback.format_exception(ex_type, ex, tb)+
+                            ["***(_get_renderer) _renderer.render***"]
+                            )
+                        del tb
+                        return "\n".join(response_parts)
         # Compile wrapper template and return inner renderer class
         compiled_wrapper = Template(wrapper_template)
         return _renderer()
@@ -277,7 +290,7 @@ class RenderFieldValue(object):
                         ["***render_fieldvalue.render_mode.render***"]
                         )
                     del tb
-                    return "".join(response_parts)
+                    return "\n".join(response_parts)
         return _renderer()
 
     # Template access functions

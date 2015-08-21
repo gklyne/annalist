@@ -29,11 +29,14 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - No not remove.
 - [x] Built-in `Entity_id` and `Entity_label` fields have non-standard position/size values
 - [x] Missing enumerated value reference: provide better diagnostic
+- [x] Missing enumerated value field: displays blank; should be diagnostic
 - [x] Revise add field buttons to use save+redirect rather than re-render
+- [ ] Introduce separate data-compatibility version (may lag current version)
 - [ ] Enum selection - include labels in dropdown (then can use built-in IDs)
     - need to figure out how to extract ID for storage when form is submitted.
 - [ ] Update save_entity to return responseinfo
 - [ ] Refactor entity edit response handling
+- [ ] Confirmation message when resource is imported/uploaded
 - [ ] Option to re-order fields on view form
 - [ ] Use responseinfo values for status reporting to user
 - [ ] When using "+" to add an enum entry, also need quick route to edit entry?
@@ -101,6 +104,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 (feature freeze for V0.9alpha?)
 
+- [ ] review renderers and revise to take all message strings from messages.py
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types
 - [ ] Provide content for the links in the page footer

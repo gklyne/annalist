@@ -47,14 +47,15 @@ col_head_view = (
 
 view_multifield = (
     { 'head':
-        """<!-- views.fields.render_ref_multifield.view_multifield head (mode:{{render_mode}}) -->
-        """
+        """\n"""+
+        """<!-- views.fields.render_ref_multifield.view_multifield head (mode:{{render_mode}}) -->\n"""
     , 'body':
-        """<!-- views.fields.render_ref_multifield.view_multifield body (mode:{{render_mode}}) -->
-        {% for f in group_bound_fields %}
-          {% include f.field_render_mode with field=f %}
-        {% endfor %}
-        """
+        """<!-- views.fields.render_ref_multifield.view_multifield body (mode:{{render_mode}}) -->\n"""+
+        """<div class="view-grouprow row">\n"""+
+        """  {% for f in group_bound_fields %}"""+
+        """    {% include f.field_render_mode with field=f %}"""+
+        """  {% endfor %}"""+
+        """</div>\n"""
     , 'tail':
         """<!-- views.fields.render_ref_multifield.view_multifield tail (mode:{{render_mode}})-->
         """

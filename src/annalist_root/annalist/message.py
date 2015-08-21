@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 SITE_NAME_DEFAULT           = "Annalist linked data notebook"
 ACTION_COMPLETED            = "Action completed"
 NO_ACTION_PERFORMED         = "No action performed"
+NO_SELECTION                = "(No '%(id)s' selected)"
 INPUT_ERROR                 = "Problem with input"
 SYSTEM_ERROR                = "System error"
 IMPORT_ERROR                = "Resource import error"

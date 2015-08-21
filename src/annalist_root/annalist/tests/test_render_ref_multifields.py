@@ -580,6 +580,7 @@ class RefMultifieldTest(AnnalistTestCase):
                       </div>
                       <div class="row view-value-col">
                         <div class="view-value small-12 columns">
+                          <div class="view-grouprow row">
                             <div class="%(col_item_classes)s">
                               <div class="row show-for-small-only">
                                 <div class="view-label small-12 columns">
@@ -592,17 +593,18 @@ class RefMultifieldTest(AnnalistTestCase):
                                 </div>
                               </div>
                             </div>
-                          <div class="%(col_item_classes)s">
-                            <div class="row show-for-small-only">
-                              <div class="view-label small-12 columns">
-                                <span>View image field</span>
+                            <div class="%(col_item_classes)s">
+                              <div class="row show-for-small-only">
+                                <div class="view-label small-12 columns">
+                                  <span>View image field</span>
+                                </div>
                               </div>
-                            </div>
-                            <div class="row view-value-col">
-                              <div class="view-value small-12 columns">
-                                <a href="%(ref_image)s" target="_blank">
-                                  <img src="%(ref_image)s" alt="Image at '%(ref_image)s'" />
-                                </a>
+                              <div class="row view-value-col">
+                                <div class="view-value small-12 columns">
+                                  <a href="%(ref_image)s" target="_blank">
+                                    <img src="%(ref_image)s" alt="Image at '%(ref_image)s'" />
+                                  </a>
+                                </div>
                               </div>
                             </div>
                           </div>

@@ -1425,9 +1425,9 @@ class GenericEntityEditView(AnnalistGenericView):
 
         Returns the full name of the field found (without the trailing suffix), or None.
         """
-        log.info("form_data_contains: field_desc %r"%field_desc)
-        log.info("form_data_contains: group_list %r"%field_desc['group_list'])
-        log.info("form_data_contains: form_data %r"%form_data)
+        log.debug("form_data_contains: field_desc %r"%field_desc)
+        log.debug("form_data_contains: group_list %r"%field_desc['group_list'])
+        log.debug("form_data_contains: form_data %r"%form_data)
         field_name         = field_desc.get_field_name()
         def _scan_groups(prefix, group_list):
             """
@@ -1439,7 +1439,7 @@ class GenericEntityEditView(AnnalistGenericView):
             stop_all   = True
             if group_list == []:
                 try_field = prefix + field_name
-                log.info("form_data_contains: try_field %s__%s"%(try_field, field_name_postfix))
+                log.debug("form_data_contains: try_field %s__%s"%(try_field, field_name_postfix))
                 if try_field in form_data:
                     try_postfix = try_field + "__" + field_name_postfix
                     return (try_postfix in form_data, try_field)

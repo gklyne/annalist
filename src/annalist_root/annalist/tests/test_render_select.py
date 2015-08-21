@@ -72,11 +72,13 @@ class SelectRenderingTest(FieldRendererTestSupport):
         return self._make_test_context(valtext, options=valoptions, field_link=vallink)
 
     def test_RenderChoiceValue(self):
-        def expect_render(valtext, vallink, valchoices):
+        def expect_render(valtext, vallabel, vallink, valchoices):
             if vallink and valtext in valchoices:
-                render_view = """<a href="%s">%s</a> """%(vallink+"?continuation_url=test_cont", valtext)
+                render_view = """<a href="%s">%s</a> """%(vallink+"?continuation_url=test_cont", vallabel)
+            elif valtext == "":
+                render_view = """<span class="value-missing">%s</span> """%(vallabel)
             else:
-                render_view = """<span>%s</span> """%(valtext)
+                render_view = """<span>%s</span> """%(vallabel)
             render_edit = expect_render_select(
                 "repeat_prefix_test_field",
                 valchoices, 
@@ -84,16 +86,17 @@ class SelectRenderingTest(FieldRendererTestSupport):
                 "(test placeholder)"
                 )
             return {'view': render_view, 'edit': render_edit}
+        noval = "(No 'test label' selected)"
         test_values = (
-            [ ( "aa", "http://example.org/aa", ["aa", "bb", "cc"])
-            , ( "",   None,                    ["", "aa", "bb", "cc"])
-            , ( "dd", "http://example.org/dd", ["aa", "bb", "cc"])
-            , ( "",   None,                    ["aa", "bb", "cc"])
+            [ ( "aa", "aa",  "http://example.org/aa", ["aa", "bb", "cc"])
+            , ( "",   noval, None,                    ["", "aa", "bb", "cc"])
+            , ( "dd", "dd",  "http://example.org/dd", ["aa", "bb", "cc"])
+            , ( "",   noval, None,                    ["aa", "bb", "cc"])
             ])
         test_value_context_renders = (
             [ ( self._make_select_test_context(valtext, vallink, valchoices), 
-                expect_render(valtext, vallink, valchoices)
-              ) for valtext, vallink, valchoices in test_values
+                expect_render(valtext, vallabel, vallink, valchoices)
+              ) for valtext, vallabel, vallink, valchoices in test_values
             ])
         renderer = get_choice_renderer()
         for render_context, expect_render in test_value_context_renders:
@@ -109,11 +112,16 @@ class SelectRenderingTest(FieldRendererTestSupport):
         return
 
     def test_RenderSelectValue(self):
-        def expect_render(valtext, vallink, valchoices):
+        def expect_render(valtext, vallabel, vallink, valchoices):
             if vallink and valtext in valchoices:
-                render_view = """<a href="%s">%s</a> """%(vallink+"?continuation_url=test_cont", valtext)
+                render_view = (
+                    """<a href="%s">%s</a> """%
+                    (vallink+"?continuation_url=test_cont", vallabel)
+                    )
+            elif valtext == "":
+                render_view = """<span class="value-missing">%s</span> """%(vallabel)
             else:
-                render_view = """<span>%s</span> """%(valtext)
+                render_view = """<span>%s</span> """%(vallabel)
             select = expect_render_select(
                 "repeat_prefix_test_field",
                 valchoices, 
@@ -137,16 +145,17 @@ class SelectRenderingTest(FieldRendererTestSupport):
                 '''</div>\n'''
                 )%(select, "repeat_prefix_test_field", "test label")
             return {'view': render_view, 'edit': render_edit}
+        noval = "(No 'test label' selected)"
         test_values = (
-            [ ( u"aa", "http://example.org/aa", ["aa", "bb", "cc"])
-            , ( u"",   "http://example.org/aa", ["", "aa", "bb", "cc"])
-            , ( u"dd", "http://example.org/aa", ["aa", "bb", "cc"])
-            , ( u"",   "http://example.org/aa", ["aa", "bb", "cc"])
+            [ ( u"aa", "aa",  "http://example.org/aa", ["aa", "bb", "cc"])
+            , ( u"",   noval, None,                    ["", "aa", "bb", "cc"])
+            , ( u"dd", "dd",  "http://example.org/dd", ["aa", "bb", "cc"])
+            , ( u"",   noval, None,                    ["aa", "bb", "cc"])
             ])
         test_value_context_renders = (
             [ ( self._make_select_test_context(valtext, vallink, valchoices), 
-                expect_render(valtext, vallink, valchoices)
-              ) for valtext, vallink, valchoices in test_values
+                expect_render(valtext, vallabel, vallink, valchoices)
+              ) for valtext, vallabel, vallink, valchoices in test_values
             ])
         renderer = get_select_renderer()
         for render_context, expect_render in test_value_context_renders:

@@ -8,8 +8,12 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import traceback
 import logging
 log = logging.getLogger(__name__)
+
+from annalist               import message
+from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
 
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
@@ -19,7 +23,7 @@ from annalist.views.fields.render_fieldvalue    import (
     )
 from annalist.views.form_utils.fieldchoice      import FieldChoice
 
-from django.template    import Template, Context
+from django.template        import Template, Context
 
 #   ----------------------------------------------------------------------------
 #
@@ -31,15 +35,15 @@ edit_options = (
     '''{% for opt in field_options %} '''+
       '''{% if opt.value == field.field_value %} '''+
         '''{% if opt.value == "" %} '''+
-          '''<option value="" selected="selected">{{field.field_placeholder}}</option> '''+
+          '''<option value="" selected="selected">{{field.field_placeholder}}</option>\n'''+
         '''{% else %} '''+
-          '''<option value="{{opt.value}}" selected="selected">{{opt.label}}</option> '''+
+          '''<option value="{{opt.value}}" selected="selected">{{opt.label}}</option>\n'''+
         '''{% endif %} '''+
       '''{% else %} '''+
         '''{% if opt.value == "" %} '''+
-          '''<option value="">{{field.field_placeholder}}</option> '''+
+          '''<option value="">{{field.field_placeholder}}</option>\n'''+
         '''{% else %} '''+
-          '''<option value="{{opt.value}}">{{opt.label}}</option> '''+
+          '''<option value="{{opt.value}}">{{opt.label}}</option>\n'''+
         '''{% endif %} '''+
       '''{% endif %} '''+
     '''{% endfor %} '''
@@ -49,8 +53,12 @@ view_select = (
     """<!-- fields.render_select.view_select -->
     {% if field.field_value_link_continuation %}
       <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
-    {% else %}
+    {% elif field.field_value and field.field_value != "" %}
       <span>{{field.field_value}}</span>
+    {% else %}
+    <span class="value-missing">"""+
+      message.NO_SELECTION%{'id': "{{field.field_label}}"}+
+    """</span>
     {% endif %}
     """)
 
@@ -80,8 +88,12 @@ view_choice = (
     """<!-- fields.render_select.view_choice -->
     {% if field.field_value_link_continuation %}
       <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
-    {% else %}
+    {% elif field.field_value and field.field_value != "" %}
       <span>{{field.field_value}}</span>
+    {% else %}
+    <span class="value-missing">"""+
+      message.NO_SELECTION%{'id': "{{field.field_label}}"}+
+    """</span>
     {% endif %}
     """)
 
@@ -100,8 +112,12 @@ view_entitytype = (
     """<!-- fields.render_select.view_entitytype -->
     {% if field.field_value_link_continuation %}
       <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
-    {% else %}
+    {% elif field.field_value and field.field_value != "" %}
       <span>{{field.field_value}}</span>
+    {% else %}
+    <span class="value-missing">"""+
+      message.NO_SELECTION%{'id': "{{field.field_label}}"}+
+    """</span>
     {% endif %}
     """)
 
@@ -150,14 +166,26 @@ class Select_view_renderer(object):
         return
 
     def render(self, context):
-        textval = SelectValueMapper.encode(get_field_view_value(context, None))
+        try:
+            val     = get_field_view_value(context, None)
+            textval = SelectValueMapper.encode(val)
+            log.debug("Select_view_renderer.render: textval %s"%textval)
+        except TargetIdNotFound_Error as e:
+            log.debug(repr(e))
+            textval = ""
+        except TargetEntityNotFound_Error as e:        
+            log.debug(repr(e))
+            textval = repr(e)
+        except Exception as e:
+            log.error(repr(e))
+            textval = repr(e)
         with context.push(encoded_field_value=textval):
             try:
                 result = self._template.render(context)
             except Exception as e:
                 log.error(repr(e))
-                log.error(repr(context))
                 result = repr(e)
+        log.debug("Select_view_renderer.render: result %r"%(result,))
         return result
 
 class Select_edit_renderer(object):
