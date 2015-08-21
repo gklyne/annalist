@@ -175,8 +175,8 @@ class DisplayInfo(object):
         assert (self.collection is not None)
         if not self.http_response:
             ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")
-            if LooseVersion(ver) < LooseVersion(annalist.__version__):
-                self.collection[ANNAL.CURIE.software_version] = annalist.__version__
+            if LooseVersion(ver) < LooseVersion(annalist.__version_data__):
+                self.collection[ANNAL.CURIE.software_version] = annalist.__version_data__
                 self.collection._save()
         return
 

@@ -187,7 +187,7 @@ def collection_create_values(coll_id="testcoll", update="Collection"):
     return (
         { 'rdfs:label':             "%s %s"%(update, coll_id)
         , 'rdfs:comment':           "Description of %s %s"%(update, coll_id)
-        , 'annal:software_version': annalist.__version__
+        , 'annal:software_version': annalist.__version_data__
         })
 
 def collection_values(coll_id, update="Collection", hosturi=TestHostUri):

@@ -31,9 +31,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Missing enumerated value reference: provide better diagnostic
 - [x] Missing enumerated value field: displays blank; should be diagnostic
 - [x] Revise add field buttons to use save+redirect rather than re-render
-- [ ] Introduce separate data-compatibility version (may lag current version)
+- [x] Introduce separate data-compatibility version (may lag current version)
 - [ ] Enum selection - include labels in dropdown (then can use built-in IDs)
-    - need to figure out how to extract ID for storage when form is submitted.
 - [ ] Update save_entity to return responseinfo
 - [ ] Refactor entity edit response handling
 - [ ] Confirmation message when resource is imported/uploaded
