@@ -134,28 +134,13 @@ class FieldDescription(object):
             # returned must be materialized as a list
             # Uses collections.OrderedfDict to preserve entity ordering
             # 'Enum_optional' adds a blank entry at the start of the list
-            #@@
-            # self._field_desc['field_choice_values'] = collections.OrderedDict()
-            # self._field_desc['field_choice_labels'] = collections.OrderedDict()
-            # self._field_desc['field_choice_links']  = collections.OrderedDict()
-            #@@
             self._field_desc['field_choices'] = collections.OrderedDict()
             if field_render_type == "Enum_optional":
-                #@@
-                # self._field_desc['field_choice_values'][''] = ""
-                # self._field_desc['field_choice_labels'][''] = ""
-                # self._field_desc['field_choice_links']['']  = None
-                #@@
                 self._field_desc['field_choices'][''] = FieldChoice('')
             for e in entities:
                 eid = e.get_id()
                 if eid != "_initial_values":
-                    #@@
-                    # self._field_desc['field_choice_values'][eid] = eid
-                    # self._field_desc['field_choice_labels'][eid] = eid   # @@TODO: be smarter about label?
-                    # self._field_desc['field_choice_links'][eid]  = e.get_view_url_path()
-                    #@@
-                    self._field_desc['field_choices'][eid] = FieldChoice(eid, link=e.get_view_url_path())
+                    self._field_desc['field_choices'][eid] = FieldChoice(eid, label=e.get_label(), link=e.get_view_url_path())
             # log.info("typeref %s: %r"%
             #     (self._field_desc['field_ref_type'], list(self._field_desc['field_choices']))
             #     )

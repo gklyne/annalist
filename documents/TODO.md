@@ -39,7 +39,6 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Option to re-order fields on view form
 - [ ] Use responseinfo values for status reporting to user
 - [ ] When using "+" to add an enum entry, also need quick route to edit entry?
-- [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 
 (release 0.1.18?)
 
@@ -123,10 +122,12 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] annalist-manager deleteuser [ username ] [ CONFIG ]
     - [ ] annalist-manager createsitedata [ CONFIG ]
     - [ ] annalist-manager updatesitedata [ CONFIG ]
+    - etc.
 - [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
+- [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 
 
 Technical debt:
@@ -142,7 +143,7 @@ Usability notes:
 
 - [ ] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
 - [ ] OR... allow an entity to specify its own default view?
-- [ ] List dropdown: normally show only those lists defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
+- [ ] Type/List/View dropdowns: normally show only those types/lists/views defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
 - [ ] View forms need title (indicating type of thing viewed)?  Or let user define label for Id field?
 - [ ] Provide field type that can be used to place fixed annotations/instructions in a form
 - [ ] Add title attributes to all buttons - used as tooltip

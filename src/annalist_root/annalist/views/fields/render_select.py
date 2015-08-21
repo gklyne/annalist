@@ -49,12 +49,27 @@ edit_options = (
     '''{% endfor %} '''
     )
 
+#@@ Original
 view_select = (
     """<!-- fields.render_select.view_select -->
     {% if field.field_value_link_continuation %}
       <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
     {% elif field.field_value and field.field_value != "" %}
       <span>{{field.field_value}}</span>
+    {% else %}
+    <span class="value-missing">"""+
+      message.NO_SELECTION%{'id': "{{field.field_label}}"}+
+    """</span>
+    {% endif %}
+    """)
+
+#@@ updated
+view_select = (
+    """<!-- fields.render_select.view_select -->
+    {% if field_linkval %}
+      <a href="{{field_linkval}}">{{field_labelval}}</a>
+    {% elif field_textval and field_textval != "" %}
+      <span>{{field_labelval}}</span>
     {% else %}
     <span class="value-missing">"""+
       message.NO_SELECTION%{'id': "{{field.field_label}}"}+
@@ -84,6 +99,7 @@ edit_select = (
     </div>
     """)
 
+#@@ Original
 view_choice = (
     """<!-- fields.render_select.view_choice -->
     {% if field.field_value_link_continuation %}
@@ -97,6 +113,21 @@ view_choice = (
     {% endif %}
     """)
 
+#@@ updated
+view_choice = (
+    """<!-- fields.render_select.view_choice -->
+    {% if field_linkval %}
+      <a href="{{field_linkval}}">{{field_labelval}}</a>
+    {% elif field_textval and field_textval != "" %}
+      <span>{{field_labelval}}</span>
+    {% else %}
+    <span class="value-missing">"""+
+      message.NO_SELECTION%{'id': "{{field.field_label}}"}+
+    """</span>
+    {% endif %}
+    """)
+
+
 edit_choice = (
     """<!-- fields.render_select.edit_choice -->
     <select name="{{repeat_prefix}}{{field.field_name}}">
@@ -108,12 +139,27 @@ edit_choice = (
 
 # @@TODO: don't use "field_value" here and remove special case logic in bound_field?
 
+#@@ Original
 view_entitytype = (
     """<!-- fields.render_select.view_entitytype -->
     {% if field.field_value_link_continuation %}
       <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
     {% elif field.field_value and field.field_value != "" %}
       <span>{{field.field_value}}</span>
+    {% else %}
+    <span class="value-missing">"""+
+      message.NO_SELECTION%{'id': "{{field.field_label}}"}+
+    """</span>
+    {% endif %}
+    """)
+
+#@@ updated
+view_entitytype = (
+    """<!-- fields.render_select.view_entitytype -->
+    {% if field_linkval %}
+      <a href="{{field_linkval}}">{{field_labelval}}</a>
+    {% elif field_textval and field_textval != "" %}
+      <span>{{field_labelval}}</span>
     {% else %}
     <span class="value-missing">"""+
       message.NO_SELECTION%{'id': "{{field.field_label}}"}+
@@ -167,9 +213,21 @@ class Select_view_renderer(object):
 
     def render(self, context):
         try:
-            val     = get_field_view_value(context, None)
-            textval = SelectValueMapper.encode(val)
-            log.debug("Select_view_renderer.render: textval %s"%textval)
+            # val      = get_field_view_value(context, None)
+            val      = get_field_edit_value(context, None)
+            textval  = SelectValueMapper.encode(val)
+            labelval = textval
+            linkval  = None
+            options  = context['field']['options']
+            for o in options:
+                if textval == o.value:
+                    labelval = o.label
+                    linkval  = o.link
+                    break
+            log.info(
+                "Select_view_renderer.render: textval %s, labelval %s, linkval %s"%
+                (textval, labelval, linkval)
+                )
         except TargetIdNotFound_Error as e:
             log.debug(repr(e))
             textval = ""
@@ -179,7 +237,7 @@ class Select_view_renderer(object):
         except Exception as e:
             log.error(repr(e))
             textval = repr(e)
-        with context.push(encoded_field_value=textval):
+        with context.push(field_textval=textval, field_labelval=labelval, field_linkval=linkval):
             try:
                 result = self._template.render(context)
             except Exception as e:

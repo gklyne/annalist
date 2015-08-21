@@ -425,9 +425,16 @@ div.columns.view-value > span.value-missing
     height:         1.4rem;
 }
 
+div.row div.column.checkbox-in-edit-padding ,
+div.row div.columns.checkbox-in-edit-padding
+{
+    padding-top:    0.25rem;
+    padding-bottom: 0rem;
+}
+
 div.columns.checkbox-in-edit-padding > input[type="checkbox"]
 {   /* Hack to get checkboxes to align sensibly in row of field group */
-    margin-top: 0.25rem ;
+    margin-top:    0.25rem ;
     margin-bottom: 0rem;
 }
 

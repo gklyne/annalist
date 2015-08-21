@@ -27,7 +27,7 @@ from django.conf import settings
 
 from annalist               import util
 from annalist.exceptions    import Annalist_Error
-from annalist.identifiers   import ANNAL, RDF
+from annalist.identifiers   import ANNAL, RDF, RDFS
 from annalist.resourcetypes import file_extension, file_extension_for_content_type
 
 #   -------------------------------------------------------------------------------------------
@@ -91,6 +91,12 @@ class EntityRoot(object):
 
     def get_type_id(self):
         return self._entitytypeid
+
+    def get_label(self):
+        """
+        Return label string for the current entity.
+        """
+        return self._values.get(RDFS.CURIE.label, self._entityid)
 
     def get_url(self, baseurl=""):
         """
