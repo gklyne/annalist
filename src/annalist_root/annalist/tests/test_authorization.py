@@ -1054,7 +1054,7 @@ class AuthorizationTest(AnnalistTestCase):
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 2)
         entity_fields = (
-            [ ('testtype',    '_type',    'RecordType testtype/testtype')
+            [ ('testtype',    '_type',    'RecordType testcoll/testtype')
             , ('entity1',     'testtype', 'Entity testcoll/testtype/entity1')
             ])
         for eid in range(2):

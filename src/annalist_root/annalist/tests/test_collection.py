@@ -384,9 +384,9 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertEquals(r.context['title'],   "Collection coll1")
         self.assertEquals(r.context['coll_id'], "coll1")
-        self.assertEquals(r.context['types'],   ["type1", "type2"])
-        self.assertEquals(r.context['lists'],   ["list1", "list2"])
-        self.assertEquals(r.context['views'],   ["view1", "view2"])
+        self.assertEquals([e.get_id() for e in r.context['types']],   ["type1", "type2"])
+        self.assertEquals([e.get_id() for e in r.context['lists']],   ["list1", "list2"])
+        self.assertEquals([e.get_id() for e in r.context['views']],   ["view1", "view2"])
         self.assertEquals(r.context['select_rows'], "6")
         return
 

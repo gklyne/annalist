@@ -76,6 +76,7 @@ class FieldDescription(object):
         field_label         = recordfield.get(RDFS.CURIE.label, "")
         field_property      = field_property or recordfield.get(ANNAL.CURIE.property_uri, "")
         field_placement     = field_placement or recordfield.get(ANNAL.CURIE.field_placement, "")
+        field_placeholder   = recordfield.get(ANNAL.CURIE.placeholder, "")
         field_render_type   = recordfield.get(ANNAL.CURIE.field_render_type, "")
         field_value_mode    = recordfield.get(ANNAL.CURIE.field_value_mode, "@@FieldDescription:value_mode@@")
         field_ref_type      = recordfield.get(ANNAL.CURIE.field_ref_type, None)
@@ -94,7 +95,7 @@ class FieldDescription(object):
             #@@TODO: LATER: rename 'field_target_type' to 'field_value_type' when old references are flushed out
             #@@      See also references to 'field_target_type' in entityedit.py
             , 'field_target_type':          recordfield.get(ANNAL.CURIE.field_target_type, field_val_type)
-            , 'field_placeholder':          recordfield.get(ANNAL.CURIE.placeholder, "")
+            , 'field_placeholder':          field_placeholder
             , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
             , 'field_ref_type':             field_ref_type
             , 'field_ref_restriction':      recordfield.get(ANNAL.CURIE.field_ref_restriction, "ALL")
@@ -136,7 +137,7 @@ class FieldDescription(object):
             # 'Enum_optional' adds a blank entry at the start of the list
             self._field_desc['field_choices'] = collections.OrderedDict()
             if field_render_type == "Enum_optional":
-                self._field_desc['field_choices'][''] = FieldChoice('')
+                self._field_desc['field_choices'][''] = FieldChoice('', label=field_placeholder)
             for e in entities:
                 eid = e.get_id()
                 if eid != "_initial_values":

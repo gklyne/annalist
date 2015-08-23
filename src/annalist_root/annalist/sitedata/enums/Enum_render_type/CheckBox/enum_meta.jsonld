@@ -2,7 +2,7 @@
 , "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
 , "annal:id":           "CheckBox"
 , "annal:type_id":      "Enum_render_type"
-, "rdfs:label":         "annal:field_render_type/CheckBox"
+, "rdfs:label":         "CheckBox"
 , "rdfs:comment":       "Boolean yes/no value rendered as checkbox"
 , "annal:uri":          "annal:field_render_type/CheckBox"
 }

@@ -427,7 +427,7 @@ def recordfield_entity_view_context_data(
             }
           , { 'field_id':               "Field_restrict"            # 16
             , 'field_name':             "Field_restrict"
-            , 'field_label':            "Enum restriction"
+            , 'field_label':            "Value restriction"
             , 'field_target_type':      "annal:Text"
             , 'field_render_type':      "Text"
             , 'field_value_mode':       "Value_direct"

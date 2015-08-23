@@ -16,30 +16,18 @@ import urlparse
 import logging
 log = logging.getLogger(__name__)
 
-# from django.conf                import settings
-# from django.http                import QueryDict
-# from django.utils.http          import urlquote, urlunquote
-# from django.core.urlresolvers   import resolve, reverse
-
 # from annalist.util              import valid_id
 # from annalist.identifiers       import RDF, RDFS, ANNAL
 # from annalist                   import layout
 # from annalist                   import message
 
+from annalist.views.form_utils.fieldchoice  import FieldChoice
+
 # from tests import (
 #     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 #     )
 
-# from entity_testsitedata            import (
-#     get_site_types, get_site_types_sorted,
-#     get_site_lists, get_site_lists_sorted,
-#     get_site_list_types, get_site_list_types_sorted,
-#     get_site_views, get_site_views_sorted,
-#     get_site_field_groups, get_site_field_groups_sorted, 
-#     get_site_fields, get_site_fields_sorted, 
-#     get_site_field_types, get_site_field_types_sorted, 
-#     )
-
+from entity_testentitydata      import entity_url
 
 #   -----------------------------------------------------------------------------
 #
@@ -50,232 +38,267 @@ log = logging.getLogger(__name__)
 #   ----- Types -----
 
 site_types = (
-    [ "_initial_values"
-    , "_field"
-    , "_group"
-    , "_list"
-    , "_type"
-    , "_user"
-    , "_view"
-    , "BibEntry_type"
-    , "Default_type"
-    , "Enum_bib_type"
-    , "Enum_list_type"
-    , "Enum_render_type"
-    , "Enum_value_mode"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("_field",                     label="View field"                  )
+    , FieldChoice("_group",                     label="Field group"                 )
+    , FieldChoice("_list",                      label="List"                        )
+    , FieldChoice("_type",                      label="Type"                        )
+    , FieldChoice("_user",                      label="User"                        )
+    , FieldChoice("_view",                      label="View"                        )
+    , FieldChoice("BibEntry_type",              label="Bibliographic record"        )
+    , FieldChoice("Default_type",               label="Default record"              )
+    , FieldChoice("Enum_bib_type",              label="Bibliographic entry type"    )
+    , FieldChoice("Enum_list_type",             label="List display type"           )
+    , FieldChoice("Enum_render_type",           label="Field render type"           )
+    , FieldChoice("Enum_value_mode",            label="Field value mode"            )
     ])
 
 def get_site_types_sorted():
     return site_types[1:]
 
+def get_site_types_linked(coll_id):
+    return (
+        [ fc.add_link(entity_url(coll_id, "_type", fc.id)) 
+          for fc in get_site_types_sorted() 
+        ])
+
 def get_site_types():
-    return set(site_types[1:])
+    return set( ( fc.id for fc in get_site_types_sorted() )  )
 
 #   ----- Lists -----
 
 site_lists = (
-    [ "_initial_values"
-    , "BibEntry_list"
-    , "Default_list"
-    , "Default_list_all"
-    , "Field_group_list"
-    , "Field_list"
-    , "List_list"
-    , "Type_list"
-    , "User_list"
-    , "View_list"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("BibEntry_list",              label="List bibliographic entries")
+    , FieldChoice("Default_list",               label="List entities")
+    , FieldChoice("Default_list_all",           label="List entities with type information")
+    , FieldChoice("Field_group_list",           label="List field groups")
+    , FieldChoice("Field_list",                 label="List fields")
+    , FieldChoice("List_list",                  label="List lists")
+    , FieldChoice("Type_list",                  label="List types")
+    , FieldChoice("User_list",                  label="List users")
+    , FieldChoice("View_list",                  label="List views")
     ])
 
 def get_site_lists_sorted():
     return site_lists[1:]
 
+def get_site_lists_linked(coll_id):
+    return (
+        [ fc.add_link(entity_url(coll_id, "_list", fc.id)) 
+          for fc in get_site_lists_sorted() 
+        ])
+
 def get_site_lists():
-    return set(site_lists[1:])
+    return set( ( fc.id for fc in get_site_lists_sorted() )  )
 
 #   ----- List types -----
 
 site_list_types = (
-    [ "Grid"
-    , "List"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("Grid",                       label="Grid display")
+    , FieldChoice("List",                       label="List display")
     ])
 
 def get_site_list_types_sorted():
-    return site_list_types
+    return site_list_types[1:]
 
 def get_site_list_types():
-    return set(site_list_types)
+    return set( ( fc.id for fc in get_site_list_types_sorted() )  )
 
 #   ----- Views -----
 
 site_views = (
-    [ "_initial_values"
-    , "BibEntry_view"
-    , "Default_view"
-    , "Field_group_view"
-    , "Field_view"
-    , "List_view"
-    , "Type_view"
-    , "User_view"
-    , "View_view"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("BibEntry_view",              label="Bibliographic metadata"  )
+    , FieldChoice("Default_view",               label="Default record view"     )
+    , FieldChoice("Field_group_view",           label="Field group view"        )
+    , FieldChoice("Field_view",                 label="Field description view"  )
+    , FieldChoice("List_view",                  label="List description view"   )
+    , FieldChoice("Type_view",                  label="Type description view"   )
+    , FieldChoice("User_view",                  label="User permissions view"   )
+    , FieldChoice("View_view",                  label="View description view"   )
     ])
 
 def get_site_views_sorted():
     return site_views[1:]
 
+def get_site_views_linked(coll_id):
+    return (
+        [ fc.add_link(entity_url(coll_id, "_view", fc.id)) 
+          for fc in get_site_views_sorted() 
+        ])
+
 def get_site_views():
-    return set(site_views[1:])
+    return set( ( fc.id for fc in get_site_views_sorted() )  )
 
 #   ----- Field groups -----
 
 site_field_groups = (
-    [ "_initial_values"
-    , "Bib_book_group"
-    , "Bib_identifier_group"
-    , "Bib_journal_group"
-    , "Bib_license_group"
-    , "Bib_person_group"
-    , "Bib_publication_group"
-    , "Group_field_group"
-    , "List_field_group"
-    , "Type_alias_group"
-    , "View_field_group"
-    ])
+    [ FieldChoice("_initial_values")
+    , FieldChoice("Bib_book_group",             label="BibEntry book fields"       )
+    , FieldChoice("Bib_identifier_group",       label="BibEntry identifier fields" )
+    , FieldChoice("Bib_journal_group",          label="BibEntry journal fields"    )
+    , FieldChoice("Bib_license_group",          label="BibEntry license fields"    )
+    , FieldChoice("Bib_person_group",           label="BibEntry person fields"     )
+    , FieldChoice("Bib_publication_group",      label="BibEntry publication fields")
+    , FieldChoice("Group_field_group",          label="Group field fields"         )
+    , FieldChoice("List_field_group",           label="List field fields"          )
+    , FieldChoice("Type_alias_group",           label="Field alias fields"         )
+    , FieldChoice("View_field_group",           label="View field fields"          )
+    ]) 
 
 def get_site_field_groups_sorted():
     return site_field_groups[1:]
 
+def get_site_field_groups_linked(coll_id):
+    return (
+        [ fc.add_link(entity_url(coll_id, "_group", fc.id)) 
+          for fc in get_site_field_groups_sorted()
+        ])
+
 def get_site_field_groups():
-    return set(site_field_groups[1:])
+    return set( ( fc.id for fc in get_site_field_groups_sorted() )  )
 
 #   ----- Fields -----
 
 site_default_entity_fields = (
-    [ "_initial_values"
-    , "Entity_comment"
-    , "Entity_id"
-    , "Entity_label"
-    , "Entity_type"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("Entity_comment",             label="Comment"          )
+    , FieldChoice("Entity_id",                  label="Id"               )
+    , FieldChoice("Entity_label",               label="Label"            )
+    , FieldChoice("Entity_type",                label="Type"             )
     ])
 
 site_bibentry_fields = (
-    [ "_initial_values"
-    , "Bib_address"
-    , "Bib_alternate"
-    , "Bib_authors"
-    , "Bib_bookentry"
-    , "Bib_booktitle"
-    , "Bib_chapter"
-    , "Bib_description"
-    , "Bib_edition"
-    , "Bib_editors"
-    , "Bib_eprint"
-    , "Bib_firstname"
-    , "Bib_howpublished"
-    , "Bib_id"
-    , "Bib_idanchor"
-    , "Bib_identifiers"
-    , "Bib_idtype"
-    , "Bib_institution"
-    , "Bib_journal"
-    , "Bib_jurisdiction"
-    , "Bib_lastname"
-    , "Bib_license"
-    , "Bib_month"
-    , "Bib_name"
-    , "Bib_note"
-    , "Bib_number"
-    , "Bib_organization"
-    , "Bib_pages"
-    , "Bib_publication_details"
-    , "Bib_publisher"
-    , "Bib_school"
-    , "Bib_shortcode"
-    , "Bib_title"
-    , "Bib_type"
-    , "Bib_url"
-    , "Bib_volume"
-    , "Bib_year"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("Bib_address",                label="Address"             )
+    , FieldChoice("Bib_alternate",              label="Alternate name"      )
+    , FieldChoice("Bib_authors",                label="Author(s)"           )
+    , FieldChoice("Bib_bookentry",              label="Book content"        )
+    , FieldChoice("Bib_booktitle",              label="Book title"          )
+    , FieldChoice("Bib_chapter",                label="Chapter"             )
+    , FieldChoice("Bib_description",            label="Description"         )
+    , FieldChoice("Bib_edition",                label="Edition"             )
+    , FieldChoice("Bib_editors",                label="Editor(s)"           )
+    , FieldChoice("Bib_eprint",                 label="ePrint"              )
+    , FieldChoice("Bib_firstname",              label="First name"          )
+    , FieldChoice("Bib_howpublished",           label="How published"       )
+    , FieldChoice("Bib_id",                     label="Id"                  )
+    , FieldChoice("Bib_idanchor",               label="Anchor"              )
+    , FieldChoice("Bib_identifiers",            label="Identifiers"         )
+    , FieldChoice("Bib_idtype",                 label="Identifier type"     )
+    , FieldChoice("Bib_institution",            label="Institution"         )
+    , FieldChoice("Bib_journal",                label="Journal"             )
+    , FieldChoice("Bib_jurisdiction",           label="Jurisdiction"        )
+    , FieldChoice("Bib_lastname",               label="Last name"           )
+    , FieldChoice("Bib_license",                label="License"             )
+    , FieldChoice("Bib_month",                  label="Month"               )
+    , FieldChoice("Bib_name",                   label="Name"                )
+    , FieldChoice("Bib_note",                   label="Note"                )
+    , FieldChoice("Bib_number",                 label="Issue number"        )
+    , FieldChoice("Bib_organization",           label="Organization"        )
+    , FieldChoice("Bib_pages",                  label="Pages"               )
+    , FieldChoice("Bib_publication_details",    label="Publication details" )
+    , FieldChoice("Bib_publisher",              label="Publisher"           )
+    , FieldChoice("Bib_school",                 label="School"              )
+    , FieldChoice("Bib_shortcode",              label="Short code"          )
+    , FieldChoice("Bib_title",                  label="Title"               )
+    , FieldChoice("Bib_type",                   label="Publication type"    )
+    , FieldChoice("Bib_url",                    label="URL"                 )
+    , FieldChoice("Bib_volume",                 label="Volume"              )
+    , FieldChoice("Bib_year",                   label="Year"                )
     ])
 
 site_field_fields = (
-    [ "_initial_values"
-    , "Field_comment"
-    , "Field_default"
-    , "Field_entity_type"
-    , "Field_fieldref"
-    , "Field_groupref"
-    , "Field_id"
-    , "Field_label"
-    , "Field_missing"
-    , "Field_placeholder"
-    , "Field_placement"
-    , "Field_property"
-    , "Field_render"
-    , "Field_repeat_label_add"
-    , "Field_repeat_label_delete"
-    , "Field_restrict"
-    , "Field_type"
-    , "Field_typeref"
-    , "Field_value_mode"
-    ])
+    [ FieldChoice("_initial_values")
+    , FieldChoice("Field_comment",              label="Help"                )
+    , FieldChoice("Field_default",              label="Default"             )
+    , FieldChoice("Field_entity_type",          label="Entity type"         )
+    , FieldChoice("Field_fieldref",             label="Refer to field"      )
+    , FieldChoice("Field_groupref",             label="Field group"         )
+    , FieldChoice("Field_id",                   label="Id"                  )
+    , FieldChoice("Field_label",                label="Label"               )
+    , FieldChoice("Field_missing",              label="Missing"             )
+    , FieldChoice("Field_placeholder",          label="Placeholder"         )
+    , FieldChoice("Field_placement",            label="Position/size"       )
+    , FieldChoice("Field_property",             label="Property"            )
+    , FieldChoice("Field_render",               label="Field render type"   )
+    , FieldChoice("Field_repeat_label_add",     label="Add fields label"    )
+    , FieldChoice("Field_repeat_label_delete",  label="Delete fields label" )
+    , FieldChoice("Field_restrict",             label="Value restriction"   )
+    , FieldChoice("Field_type",                 label="Field value type"    )
+    , FieldChoice("Field_typeref",              label="Refer to type"       )
+    , FieldChoice("Field_value_mode",           label="Value mode"          )
+    ])  
 
 site_group_fields = (
-    [ "_initial_values"
-    , "Group_comment"
-    , "Group_field_sel"
-    , "Group_field_placement"
-    , "Group_field_property"
-    , "Group_id"
-    , "Group_label"
-    , "Group_repeat_fields"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("Group_comment",              label="Help"                )
+    , FieldChoice("Group_field_placement",      label="Position/size"       )
+    , FieldChoice("Group_field_property",       label="Property"            )
+    , FieldChoice("Group_field_sel",            label="Field id"            )
+    , FieldChoice("Group_fields",               label="Fields"              )
+    , FieldChoice("Group_id",                   label="Id"                  )
+    , FieldChoice("Group_label",                label="Label"               )
+    , FieldChoice("Group_target_type",          label="Record type"         )
     ])
 
 site_list_fields = (
-    [ "_initial_values"
-    , "List_choice"
-    , "List_comment"
-    , "List_default_type"
-    , "List_default_view"
-    , "List_entity_selector"
-    , "List_id"
-    , "List_label"
-    , "List_repeat_fields"
-    , "List_target_type"
-    , "List_type"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("List_comment",               label="Help"                )
+    , FieldChoice("List_default_type",          label="Record type"         )
+    , FieldChoice("List_default_view",          label="View"                )   
+    , FieldChoice("List_entity_selector",       label="Selector"            )
+    , FieldChoice("List_field_placement",       label="Position/size"       )
+    , FieldChoice("List_field_property",        label="Property"            )
+    , FieldChoice("List_field_sel",             label="Field id"            )
+    , FieldChoice("List_fields",                label="Fields"              )
+    , FieldChoice("List_id",                    label="Id"                  )
+    , FieldChoice("List_label",                 label="Label"               )
+    , FieldChoice("List_target_type",           label="Record type URI"     )
+    , FieldChoice("List_type",                  label="List display type"   )
     ])
+    # , FieldChoice("List_choice",                label="List view"           )
 
 site_type_fields = (
-    [ "_initial_values"
-    , "Type_comment"
-    , "Type_id"
-    , "Type_label"
-    , "Type_list"
-    , "Type_uri"
-    , "Type_view"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("Type_alias_source",          label="Type alias source"   )
+    , FieldChoice("Type_alias_target",          label="Type alias target"   )
+    , FieldChoice("Type_aliases",               label="Field aliases"       )
+    , FieldChoice("Type_comment",               label="Comment"             )
+    , FieldChoice("Type_id",                    label="Id"                  )
+    , FieldChoice("Type_label",                 label="Label"               )
+    , FieldChoice("Type_list",                  label="Default list"        )
+    , FieldChoice("Type_uri",                   label="URI"                 )
+    , FieldChoice("Type_view",                  label="Default view"        )
     ])
 
 site_user_fields = (
-    [ "_initial_values"
-    , "User_description"
-    , "User_id"
-    , "User_name"
-    , "User_permissions"
-    , "User_uri"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("User_description",           label="Description"         )
+    , FieldChoice("User_id",                    label="User Id"             )
+    , FieldChoice("User_name",                  label="User name"           )
+    , FieldChoice("User_permissions",           label="Permissions"         )
+    , FieldChoice("User_uri",                   label="URI"                 )
     ])
 
 site_view_fields = (
-    [ "_initial_values"
-    # , "View_choice"
-    , "View_comment"
-    , "View_edit_view"
-    , "View_fields"
-    , "View_id"
-    , "View_label"
-    , "View_target_type"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("View_comment",               label="Help"                )
+    , FieldChoice("View_edit_view",             label="Editable view?"      )
+    , FieldChoice("View_field_placement",       label="Position/size"       )
+    , FieldChoice("View_field_property",        label="Property"            )
+    , FieldChoice("View_field_sel",             label="Field id"            )
+    , FieldChoice("View_fields",                label="Fields"              )
+    , FieldChoice("View_id",                    label="Id"                  )
+    , FieldChoice("View_label",                 label="Label"               )
+    , FieldChoice("View_target_type",           label="Record type"         )
     ])
+    # , FieldChoice("View_choice",          "Choose view")
 
 site_fields = (
-    [ "_initial_values" ] +
+    [ FieldChoice("_initial_values")] +
     site_bibentry_fields[1:] +
     site_default_entity_fields[1:] +
     site_field_fields[1:] +
@@ -290,78 +313,129 @@ def get_site_fields_sorted():
     return site_fields[1:]
 
 def get_site_fields():
-    return set(site_fields[1:])
+    return set( ( fc.id for fc in get_site_fields_sorted() )  )
 
 def get_site_default_entity_fields_sorted():
     return site_default_entity_fields[1:]
 
+def get_site_default_entity_fields_linked(coll_id):
+    return (
+        [ fc.add_link(entity_url(coll_id, "_field", fc.id)) 
+          for fc in get_site_default_entity_fields_sorted() 
+        ])
+
 def get_site_default_entity_fields():
-    return set(site_default_entity_fields[1:])
+    return set( ( fc.id for fc in get_site_default_entity_fields_sorted() )  )
+
+def get_site_default_entity_fields():
+    return set( ( fc.id for fc in  get_site_default_entity_fields_sorted() )  )
 
 def get_site_view_fields_sorted():
     return site_default_entity_fields[1:] + site_view_fields[1:]
 
 def get_site_view_fields():
-    return set(get_site_view_fields_sorted())
+    return set( ( fc.id for fc in get_site_view_fields_sorted() )  )
+
+def get_site_field_fields_sorted():
+    return site_default_entity_fields[1:] + site_field_fields[1:]
+
+def get_site_field_fields():
+    return set( ( fc.id for fc in get_site_field_fields_sorted() )  )
+
+def get_site_group_fields_sorted():
+    return site_default_entity_fields[1:] + site_group_fields[1:]
+
+def get_site_group_fields():
+    return set( ( fc.id for fc in get_site_group_fields_sorted() )  )
+
+def get_site_list_fields_sorted():
+    return site_default_entity_fields[1:] + site_list_fields[1:]
+
+def get_site_list_fields():
+    return set( ( fc.id for fc in get_site_list_fields_sorted() )  )
+
+def get_site_type_fields_sorted():
+    return site_default_entity_fields[1:] + site_type_fields[1:]
+
+def get_site_type_fields():
+    return set( ( fc.id for fc in get_site_type_fields_sorted() )  )
+
+def get_site_user_fields_sorted():
+    return site_default_entity_fields[1:] + site_user_fields[1:]
+
+def get_site_user_fields():
+    return set( ( fc.id for fc in get_site_user_fields_sorted() )  )
 
 def get_site_bibentry_fields_sorted():
     return site_bibentry_fields[1:] + site_default_entity_fields[1:]
 
 def get_site_bibentry_fields():
-    return set(get_site_bibentry_fields_sorted())
+    return set( ( fc.id for fc in get_site_bibentry_fields_sorted() )  )
 
 #   ----- Field render types -----
 
 site_field_types = (
-    [ "_initial_values"
-    , "CheckBox"
-    , "EntityId"
-    , "EntityTypeId"
-    , "Enum"
-    , "Enum_choice"
-    , "Enum_optional"
-    , "Field"
-    , "FileUpload"
-    , "Identifier"
-    , "List"
-    , "Markdown"
-    , "Placement"
-    , "RefAudio"
-    , "RefImage"
-    , "RefMultifield"
-    , "RepeatGroup"
-    , "RepeatGroupRow"
-    , "Slug"
-    , "Text"
-    , "Textarea"
-    , "TokenSet"
-    , "Type"
-    , "URIImport"
-    , "URILink"
-    , "View"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("CheckBox",                   label="CheckBox"                     )
+    , FieldChoice("EntityId",                   label="Entity Id"                    )
+    , FieldChoice("EntityTypeId",               label="Entity type Id"               )
+    , FieldChoice("Enum",                       label="Required entity ref"          )
+    , FieldChoice("Enum_choice",                label="Entity choice"                )
+    , FieldChoice("Enum_optional",              label="Optional entity ref"          )
+    , FieldChoice("Field",                      label="Field Id"             ) #@@deprecated
+    , FieldChoice("FileUpload",                 label="File upload"                  )
+    , FieldChoice("Identifier",                 label="Identifier"                   )
+    , FieldChoice("List",                       label="List Id"              ) #@@deprecated
+    , FieldChoice("Markdown",                   label="Markdown rich text"           )
+    , FieldChoice("Placement",                  label="Position/size"                )
+    , FieldChoice("RefAudio",                   label="Ref audio file"               )
+    , FieldChoice("RefImage",                   label="Ref image file"               )
+    , FieldChoice("RefMultifield",              label="Fields of referenced entity"  )
+    , FieldChoice("RepeatGroup",                label="Repeating field group"        )
+    , FieldChoice("RepeatGroupRow",             label="Repeating fields as row"      )
+    , FieldChoice("Slug",                       label="Short name"                   )
+    , FieldChoice("Text",                       label="Short text"                   )
+    , FieldChoice("Textarea",                   label="Multiline text"               )
+    , FieldChoice("TokenSet",                   label="Space-separated tokens"       )
+    , FieldChoice("Type",                       label="Type Id"              ) #@@deprecated
+    , FieldChoice("URIImport",                  label="Web import"                   )
+    , FieldChoice("URILink",                    label="Web link"                     )
+    , FieldChoice("View",                       label="View Id"              ) #@@deprecated
     ])
 
 def get_site_field_types_sorted():
     return site_field_types[1:]
 
+def get_site_field_types_linked(coll_id):
+    return (
+        [ fc.add_link(entity_url(coll_id, "Enum_render_type", fc.id)) 
+          for fc in get_site_field_types_sorted()
+        ])
+
 def get_site_field_types():
-    return set(site_field_types[1:])
+    return set( ( fc.id for fc in get_site_field_types_sorted() )  )
 
 #   ----- Field value mode types -----
 
 site_value_modes = (
-    [ "_initial_values"
-    , "Value_direct"
-    , "Value_entity"
-    , "Value_field"
-    , "Value_import"
-    , "Value_upload"
+    [ FieldChoice("_initial_values")
+    , FieldChoice("Value_direct",               label="Direct value"      )
+    , FieldChoice("Value_entity",               label="Entity reference"  )
+    , FieldChoice("Value_field",                label="Field reference"   )
+    , FieldChoice("Value_import",               label="Import from web"   )
+    , FieldChoice("Value_upload",               label="File upload"       )
     ])
 
 def get_site_value_modes_sorted():
     return site_value_modes[1:]
 
+def get_site_value_modes_linked(coll_id):
+    return (
+        [ fc.add_link(entity_url(coll_id, "Enum_value_mode", fc.id)) 
+          for fc in get_site_value_modes_sorted()
+        ])
+
 def get_site_value_modes():
-    return set(site_field_types[1:])
+    return set( ( fc.id for fc in get_site_value_modes_sorted() )  )
 
 # End.

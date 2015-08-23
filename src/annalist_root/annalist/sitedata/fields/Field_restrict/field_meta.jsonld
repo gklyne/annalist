@@ -2,7 +2,7 @@
 , "@type":                      ["annal:Field"]
 , "annal:id":                   "Field_restrict"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Enum restriction"
+, "rdfs:label":                 "Value restriction"
 , "rdfs:comment":               "Selection filter to restrict enumerated values (per 'annal:field_ref_type') that are candidate field values."
 , "annal:field_name":           "Field_restrict"
 , "annal:field_render_type":    "Text"

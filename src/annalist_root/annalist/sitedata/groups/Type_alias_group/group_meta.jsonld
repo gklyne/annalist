@@ -4,7 +4,7 @@
 , "annal:type":         "annal:Field_group"
 , "annal:id":           "Type_alias_group"
 , "annal:uri":          "annal:display/Type_alias_group"
-, "rdfs:label":         "Field alias"
+, "rdfs:label":         "Field alias fields"
 , "rdfs:comment":       "Fields describing a single field alias associated with a type."
 , "annal:record_type":  "annal:Type"
 , "annal:group_fields": 

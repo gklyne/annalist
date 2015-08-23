@@ -3,7 +3,8 @@
 , "annal:id":           "Group_field_group"
 , "annal:type_id":      "_group"
 , "annal:uri":          "annal:display/Group_field_group"
-, "rdfs:label":         "Group field description"
+, "annal:record_type":  "annal:Field_group"
+, "rdfs:label":         "Group field fields"
 , "rdfs:comment":       "This resource describes a group of fields used to define a display field when displaying and/or editing a field group description"
 , "annal:group_fields":
   [ { "annal:field_id":         "Group_field_sel"

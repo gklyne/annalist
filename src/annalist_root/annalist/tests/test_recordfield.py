@@ -63,14 +63,14 @@ from entity_testviewdata                import recordview_url
 from entity_testlistdata                import recordlist_url
 from entity_testgroupdata               import recordgroup_url
 from entity_testsitedata            import (
-    get_site_types, get_site_types_sorted,
-    get_site_lists, get_site_lists_sorted,
+    get_site_types, get_site_types_sorted, get_site_types_linked,
+    get_site_lists, get_site_lists_sorted, get_site_lists_linked,
+    get_site_views, get_site_views_sorted, get_site_views_linked,
+    get_site_field_groups, get_site_field_groups_sorted, get_site_field_groups_linked, 
+    get_site_field_types,  get_site_field_types_sorted,  get_site_field_types_linked ,
+    get_site_value_modes,  get_site_value_modes_sorted,  get_site_value_modes_linked,
     get_site_list_types, get_site_list_types_sorted,
-    get_site_views, get_site_views_sorted,
-    get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
-    get_site_field_types, get_site_field_types_sorted, 
-    get_site_value_modes, get_site_value_modes_sorted,
     )
 
 #   -----------------------------------------------------------------------------
@@ -201,32 +201,55 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        type_option_values       = [""] + get_site_types_sorted()+["testtype"]
-        view_option_values       = get_site_views_sorted()
-        group_option_values      = [""] + get_site_field_groups_sorted()
-        render_option_values     = get_site_field_types_sorted()
-        value_mode_option_values = get_site_value_modes_sorted()
-        self.no_options          = [ FieldChoice('', label="(no options)") ]
-        self.type_options = [
-            FieldChoice(v, link=recordtype_url("testcoll", v)) 
-            for v in type_option_values 
-            ]
-        self.view_options = [ 
-            FieldChoice(v, link=recordview_url("testcoll", v)) 
-            for v in view_option_values 
-            ]
-        self.group_options= [ 
-            FieldChoice(v, link=recordgroup_url("testcoll", v)) 
-            for v in group_option_values 
-            ]
-        self.render_options = [ 
-            FieldChoice(v, link=collection_entity_view_url("testcoll", "Enum_render_type", v)) 
-            for v in render_option_values 
-            ]
-        self.value_mode_options =[ 
-            FieldChoice(v, link=collection_entity_view_url("testcoll", "Enum_value_mode", v)) 
-            for v in value_mode_option_values 
-            ]
+        self.no_options         = [ FieldChoice('', label="(no options)") ]
+        self.type_options       = get_site_types_linked("testcoll")
+        self.ref_type_options   = (
+            [FieldChoice("", label="(no type selected)")] +
+            self.type_options +
+            [ FieldChoice("testtype", 
+                label="RecordType testcoll/testtype", 
+                link=entity_url("testcoll", "_type", "testtype")
+            )])
+        self.view_options       = get_site_views_linked("testcoll")
+        self.group_options      = (
+            [FieldChoice("", label="(no field group selected)")] +
+            get_site_field_groups_linked("testcoll")
+            )
+        self.render_options     = get_site_field_types_linked("testcoll")
+        self.value_mode_options = get_site_value_modes_linked("testcoll")
+        self.placement_options  = (
+            [FieldChoice("", label="(field position and size)")] + 
+            get_placement_options()
+            )
+        #@@
+        # type_option_values       = [""] + get_site_types_sorted()+["testtype"]
+        # view_option_values       = get_site_views_sorted()
+        # group_option_values      = [""] + get_site_field_groups_sorted()
+        # render_option_values     = get_site_field_types_sorted()
+        # value_mode_option_values = get_site_value_modes_sorted()
+        # self.no_options          = [ FieldChoice('', label="(no options)") ]
+        # self.type_options = [
+        #     FieldChoice(v, link=recordtype_url("testcoll", v)) 
+        #     for v in type_option_values 
+        #     ]
+        # self.view_options = [ 
+        #     FieldChoice(v, link=recordview_url("testcoll", v)) 
+        #     for v in view_option_values 
+        #     ]
+        # self.group_options= [ 
+        #     FieldChoice(v, link=recordgroup_url("testcoll", v)) 
+        #     for v in group_option_values 
+        #     ]
+        # self.render_options = [ 
+        #     FieldChoice(v, link=collection_entity_view_url("testcoll", "Enum_render_type", v)) 
+        #     for v in render_option_values 
+        #     ]
+        # self.value_mode_options =[ 
+        #     FieldChoice(v, link=collection_entity_view_url("testcoll", "Enum_value_mode", v)) 
+        #     for v in value_mode_option_values 
+        #     ]
+        #@@
+
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -371,7 +394,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][i]['field_value'],        field_typeref)
-        self.assertEqual(r.context['fields'][i]['options'],            self.type_options)
+        self.assertEqual(r.context['fields'][i]['options'],            self.ref_type_options)
         # Field 9: field of referenced entity
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_fieldref')
@@ -549,11 +572,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 <div class="%(input_classes)s">
                 """+
                 render_choice_options(
-                  "Field_placement", # "Position/size",
-                  [""] + get_placement_options(),
+                  "Field_placement",
+                  self.placement_options,
                   "", 
-                  placeholder="(field position and size)", select_class="placement-text",
-                  value_dict=get_placement_option_value_dict())+
+                  select_class="placement-text")+
                 """
                 </div>
               </div>
@@ -603,8 +625,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "Field_typeref", "Refer to type",
-                    [ v.value for v in self.type_options ],
-                    "", placeholder="(no type selected)")+
+                    self.ref_type_options,
+                    "")+
                 """
                 </div>
               </div>
@@ -714,7 +736,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Enum restriction</span>
+                  <span>Value restriction</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_restrict" 

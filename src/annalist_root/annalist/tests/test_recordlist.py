@@ -61,10 +61,10 @@ from entity_testentitydata              import (
     layout_classes
     )
 from entity_testsitedata            import (
-    get_site_types, get_site_types_sorted,
-    get_site_lists, get_site_lists_sorted,
+    get_site_types, get_site_types_sorted, get_site_types_linked,
+    get_site_lists, get_site_lists_sorted, get_site_lists_linked,
+    get_site_views, get_site_views_sorted, get_site_views_linked,
     get_site_list_types, get_site_list_types_sorted,
-    get_site_views, get_site_views_sorted,
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
@@ -173,8 +173,17 @@ class RecordListEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite   = Site(TestBaseUri, TestBaseDir)
         self.testcoll   = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.no_options = [ FieldChoice('', label="(no options)") ]
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_list")
+        self.no_options = [ FieldChoice('', label="(no options)") ]
+        self.type_options   = get_site_types_linked("testcoll")
+        self.type_options.append(
+            FieldChoice("testtype", 
+                label="RecordType testcoll/testtype", 
+                link=entity_url("testcoll", "_type", "testtype")
+            ))
+        self.view_options   = get_site_views_linked("testcoll")
+        self.list_options   = get_site_lists_linked("testcoll")
+        self.list_type_opts = get_site_list_types_sorted()
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -284,8 +293,8 @@ class RecordListEditViewTest(AnnalistTestCase):
               , 'annal:field_placement':      "small:3,9"
               }
             ])
-        self.assertEqual(r.context['fields'][8]['field_id'],           'List_repeat_fields')
-        self.assertEqual(r.context['fields'][8]['field_name'],         'List_repeat_fields')
+        self.assertEqual(r.context['fields'][8]['field_id'],           'List_fields')
+        self.assertEqual(r.context['fields'][8]['field_name'],         'List_fields')
         self.assertEqual(r.context['fields'][8]['field_label'],        'Fields')
         self.assertEqual(r.context['fields'][8]['field_property_uri'], "annal:list_fields")
         self.assertEqual(r.context['fields'][8]['field_value_mode'],   "Value_direct")
@@ -330,7 +339,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                 """+
                   render_choice_options(
                     "List_type",
-                    get_site_list_types_sorted(),
+                    self.list_type_opts,
                     "List")+
                 """
                 </div>
@@ -377,7 +386,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "List_default_type", "Record type",
-                    get_site_types_sorted()+["testtype"],
+                    self.type_options,
                     "Default_type")+
                 """
                 </div>
@@ -394,7 +403,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "List_default_view", "View",
-                    sorted(get_site_views()),
+                    self.view_options,
                     "Default_view")+
                 """
                 </div>

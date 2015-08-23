@@ -3,7 +3,7 @@
 , "annal:id":           "BibEntry_type"
 , "annal:type_id":      "_type"
 , "annal:uri":          "bib:BibEntry"
-, "rdfs:label":         "Bibliographic record type"
+, "rdfs:label":         "Bibliographic record"
 , "rdfs:comment":
     "Bibliographic record type, adopted as a use case for using Annalist to create BibJSON records."
 , "annal:type_view":    "BibEntry_view"

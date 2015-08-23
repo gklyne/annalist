@@ -62,6 +62,9 @@ class FieldChoice(_FieldChoice_tuple):
         result = super(FieldChoice, _cls).__new__(_cls, id, value, label, link)
         return result
 
+    def add_link(self, link=None):
+        return FieldChoice(self.id, self.value, self.label, link)
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

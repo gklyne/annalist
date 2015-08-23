@@ -15,29 +15,31 @@ from collections import OrderedDict
 import logging
 log = logging.getLogger(__name__)
 
-from django.test.client                 import Client
+from django.test.client                     import Client
 
-from annalist.models.site               import Site
-from annalist.models.collection         import Collection
-from annalist.models.recordtype         import RecordType
-from annalist.models.recordtypedata     import RecordTypeData
-from annalist.models.recordview         import RecordView
-from annalist.models.recordfield        import RecordField
-from annalist.models.recordgroup        import RecordGroup
-from annalist.models.entitydata         import EntityData
+from annalist.models.site                   import Site
+from annalist.models.collection             import Collection
+from annalist.models.recordtype             import RecordType
+from annalist.models.recordtypedata         import RecordTypeData
+from annalist.models.recordview             import RecordView
+from annalist.models.recordfield            import RecordField
+from annalist.models.recordgroup            import RecordGroup
+from annalist.models.entitydata             import EntityData
 
-from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                              import init_annalist_test_site
-from annalist.tests.AnnalistTestCase    import AnnalistTestCase
-from entity_testutils               import (
+from annalist.views.form_utils.fieldchoice  import FieldChoice
+
+from tests                                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from tests                                  import init_annalist_test_site
+from annalist.tests.AnnalistTestCase        import AnnalistTestCase
+from entity_testutils       import (
     collection_create_values,
     render_select_options, render_choice_options,
     create_test_user
     )
-from entity_testtypedata            import (
+from entity_testtypedata    import (
     recordtype_create_values, 
     )
-from entity_testentitydata          import (
+from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
     default_fields
     )
@@ -447,7 +449,7 @@ class RefMultifieldTest(AnnalistTestCase):
                 render_select_options(
                     "%(field_id)s", 
                     "Image reference",
-                    ["%(entity_id)s"],
+                    [FieldChoice("%(entity_id)s", label="Label %(entity_id)s")],
                     "%(entity_id)s"
                     )+
                 """
@@ -732,7 +734,7 @@ class RefMultifieldTest(AnnalistTestCase):
                         render_select_options(
                             "%(repeat_id)s__0__%(field_id)s", 
                             "Image reference",
-                            ["%(entity_id)s"],
+                            [FieldChoice("%(entity_id)s", label="Label %(entity_id)s")],
                             "%(entity_id)s"
                             )+
                         """

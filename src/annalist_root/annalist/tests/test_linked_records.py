@@ -208,7 +208,9 @@ class LinkedRecordTest(AnnalistTestCase):
         self.testtgtref_field = RecordField.create(self.testcoll, "testtgtref_field", testtgtref_field_create_values)
         self.no_options   = [ FieldChoice('', label="(no options)") ]
         self.tgt_options  = (
-            [ FieldChoice(v, link=collection_entity_view_url("testcoll", "testtgt_type", v))
+            [ FieldChoice(v, 
+                label="testtgt_entity %s label"%v,
+                link=entity_url("testcoll", "testtgt_type", v))
               for v in ["testtgt1", "testtgt2"]
             ])
         # Create data records for testing:

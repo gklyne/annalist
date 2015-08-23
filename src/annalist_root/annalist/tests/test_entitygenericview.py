@@ -68,10 +68,10 @@ from entity_testentitydata          import (
     layout_classes
     )
 from entity_testsitedata            import (
-    get_site_types, get_site_types_sorted,
-    get_site_lists, get_site_lists_sorted,
+    get_site_types, get_site_types_sorted, get_site_types_linked,
+    get_site_lists, get_site_lists_sorted, get_site_lists_linked,
+    get_site_views, get_site_views_sorted, get_site_views_linked,
     get_site_list_types, get_site_list_types_sorted,
-    get_site_views, get_site_views_sorted,
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
@@ -93,24 +93,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
-        self.type_ids   = ['testtype', 'Default_type']
         self.no_options = [ FieldChoice('', label="(no options)") ]
-        view_option_values = sorted(
-            [ vid for vid in self.testcoll.child_entity_ids(RecordView, self.testsite) 
-                  if vid != "_initial_values"
-            ])
-        self.view_options = [ 
-            FieldChoice(v, link=recordview_url("testcoll", v)) 
-            for v in view_option_values 
-            ]
-        list_option_values = sorted(
-            [ lid for lid in self.testcoll.child_entity_ids(RecordList, self.testsite) 
-                  if lid != "_initial_values"
-            ])
-        self.list_options = [ 
-            FieldChoice(v, link=recordlist_url("testcoll", v)) 
-            for v in list_option_values 
-            ]
+        self.list_options = get_site_lists_linked("testcoll")
+        self.view_options = get_site_views_linked("testcoll")
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -263,7 +248,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
                   <span>Default view</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <a href="%(default_view_url)s">Default_view</a>
+                  <a href="%(default_view_url)s">Default record view</a>
                 </div>
               </div>
             </div>
@@ -275,7 +260,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
                   <span>Default list</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <a href="%(default_list_url)s">Default_list</a>
+                  <a href="%(default_list_url)s">List entities</a>
                 </div>
               </div>
             </div>
@@ -320,7 +305,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
                   """+
                     render_choice_options(
                       "view_choice",
-                      sorted(get_site_views()),
+                      self.view_options,
                       "Type_view")+
                   """
                   </div>

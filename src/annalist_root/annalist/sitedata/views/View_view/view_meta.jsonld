@@ -4,7 +4,7 @@
 , "annal:type_id":      "_view"
 , "annal:uri":          "annal:display/View_view"
 , "annal:record_type":  "annal:View"
-, "rdfs:label":         "View description for record view description"
+, "rdfs:label":         "View description view"
 , "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record view description"
 , "annal:open_view":    false
 , "annal:view_fields":

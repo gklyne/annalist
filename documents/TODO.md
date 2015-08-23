@@ -32,7 +32,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Missing enumerated value field: displays blank; should be diagnostic
 - [x] Revise add field buttons to use save+redirect rather than re-render
 - [x] Introduce separate data-compatibility version (may lag current version)
-- [ ] Enum selection - include labels in dropdown (then can use built-in IDs)
+- [ ] Enum selection - include labels in dropdown (then can use built-in IDs more easily)
+- [ ] _group annal:record_type field - rather than relying on correct value supplied, allow propagation of value from containing view.  This will affect renderers/fields that contain group references.  Need to think about how code logic might work.
+    - No: on reflection, prefer to treat group record as subtype.  If current 3-way regime works, may want to consider introducing a new subtype for a field reference in a view. (annal:Include_field?  annal:View_field?)
 - [ ] Update save_entity to return responseinfo
 - [ ] Refactor entity edit response handling
 - [ ] Confirmation message when resource is imported/uploaded
@@ -132,6 +134,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 Technical debt:
 
+- [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
+    - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
+    - [ ]remove corresponding special case code in bound_field.
 - [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
 - [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, dues somewhat to the early template-based logic for field rendering.  Withn the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special login in bound_field.
 - [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.

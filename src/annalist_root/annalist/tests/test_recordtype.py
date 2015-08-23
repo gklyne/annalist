@@ -60,6 +60,15 @@ from entity_testentitydata              import (
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
+from entity_testsitedata            import (
+    get_site_types, get_site_types_sorted, get_site_types_linked,
+    get_site_lists, get_site_lists_sorted, get_site_lists_linked,
+    get_site_views, get_site_views_sorted, get_site_views_linked,
+    get_site_list_types, get_site_list_types_sorted,
+    get_site_field_groups, get_site_field_groups_sorted, 
+    get_site_fields, get_site_fields_sorted, 
+    get_site_field_types, get_site_field_types_sorted, 
+    )
 from entity_testviewdata                import recordview_url
 from entity_testlistdata                import recordlist_url
 
@@ -143,7 +152,7 @@ class RecordTypeTest(AnnalistTestCase):
         self.assertEqual(set(td.keys()), set(recordtype_load_keys(type_uri=True)))
         v = recordtype_read_values(type_id="Default_type")
         v.update(
-            { 'rdfs:label':     'Default record type'
+            { 'rdfs:label':     'Default record'
             , 'rdfs:comment':   'Default record type, applied when no type is specified when creating a record.'
             , 'annal:uri':      'annal:Default_type'
             })
@@ -166,22 +175,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.testsite   = Site(TestBaseUri, TestBaseDir)
         self.testcoll   = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.no_options = [ FieldChoice('', label="(no options)") ]
-        view_option_values = sorted(
-            [ vid for vid in self.testcoll.child_entity_ids(RecordView, self.testsite) 
-                  if vid != "_initial_values"
-            ])
-        self.view_options = [ 
-            FieldChoice(v, link=recordview_url("testcoll", v)) 
-            for v in view_option_values 
-            ]
-        list_option_values = sorted(
-            [ lid for lid in self.testcoll.child_entity_ids(RecordList, self.testsite) 
-                  if lid != "_initial_values"
-            ])
-        self.list_options = [ 
-            FieldChoice(v, link=recordlist_url("testcoll", v)) 
-            for v in list_option_values 
-            ]
+        self.view_options = get_site_views_linked("testcoll")
+        self.list_options = get_site_lists_linked("testcoll")
         # For checking Location: header values...
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_type")
         # Login and permissions
@@ -468,7 +463,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Fields
         self._check_context_fields(r, 
             type_id="Default_type",
-            type_label="Default record type",
+            type_label="Default record",
             type_help="Default record type, applied when no type is specified when creating a record.",
             type_uri=""
             )
@@ -503,7 +498,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Fields
         self._check_context_fields(r, 
             type_id="Default_type",
-            type_label="Default record type",
+            type_label="Default record",
             type_help="Default record type, applied when no type is specified when creating a record.",
             type_uri="annal:Default_type"
             )

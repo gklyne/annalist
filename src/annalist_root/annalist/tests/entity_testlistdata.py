@@ -267,8 +267,8 @@ def recordlist_view_context_data(
             , 'field_value':        ''
             , 'options':            []
             }
-          , { "field_id":           "List_repeat_fields"        # fields[8]
-            , 'field_name':         'List_repeat_fields'
+          , { "field_id":           "List_fields"           # fields[8]
+            , 'field_name':         'List_fields'
             , 'field_target_type':  'annal:Field_group'
             , 'field_label':        'Fields'
             , 'field_render_type':  'RepeatGroupRow'
@@ -304,10 +304,10 @@ def recordlist_view_form_data(
         , 'List_default_view':      'Default_view'
         , 'List_entity_selector':   'ALL'
         # List repeating fields
-        , 'List_repeat_fields__0__Field_id':           "Entity_id"
-        , 'List_repeat_fields__0__Field_placement':    "small:0,3"
-        , 'List_repeat_fields__1__Field_id':           "Entity_label"
-        , 'List_repeat_fields__1__Field_placement':    "small:3,9"
+        , 'List_fields__0__Field_id':           "Entity_id"
+        , 'List_fields__0__Field_placement':    "small:0,3"
+        , 'List_fields__1__Field_id':           "Entity_label"
+        , 'List_fields__1__Field_placement':    "small:3,9"
         # Hidden fields
         , 'action':                 '@@TBD@@'
         , 'view_id':                'List_view'

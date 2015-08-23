@@ -4,7 +4,7 @@
 , "annal:type_id":      "_group"
 , "annal:uri":          "annal:display/Bib_publication_group"
 , "annal:record_type":  "bib:BibEntry"
-, "rdfs:label":         "BibEntry publication detail fields"
+, "rdfs:label":         "BibEntry publication fields"
 , "rdfs:comment":       "Group of fields describing publication details in a BibEntry record"
 , "annal:group_fields":
   [ { "annal:field_id":         "Bib_publisher"

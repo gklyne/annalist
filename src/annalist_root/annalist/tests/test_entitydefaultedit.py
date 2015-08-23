@@ -57,7 +57,7 @@ from entity_testentitydata          import (
     layout_classes
     )
 from entity_testsitedata            import (
-    get_site_types, get_site_types_sorted,
+    get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted,
     get_site_list_types, get_site_list_types_sorted,
     get_site_views, get_site_views_sorted,
@@ -81,10 +81,13 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
+        self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testcoll", "testtype"))
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
-        self.type_ids   = [ FieldChoice(t, link=recordtype_url(type_id=t)) 
-                            for t in (get_site_types_sorted() + ['testtype']) ]
+        self.type_ids = get_site_types_linked("testcoll")
+        self.type_ids.append(FieldChoice("testtype", 
+                label="RecordType testcoll/testtype",
+                link=recordtype_url("testcoll", "testtype")
+            ))
         self.no_options = [ FieldChoice('', label="(no options)") ]
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
@@ -164,7 +167,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   """+
                     render_choice_options(
                         "entity_type",
-                        get_site_types_sorted()+["testtype"],
+                        self.type_ids,
                         "testtype")+
                   """
                   </div>

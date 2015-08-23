@@ -3,7 +3,7 @@
 , "annal:type_id":      "_view"
 , "annal:id":           "Type_view"
 , "annal:record_type":  "annal:Type"
-, "rdfs:label":         "View description for record type description"
+, "rdfs:label":         "Type description view"
 , "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record type description"
 , "annal:open_view":    false
 , "annal:view_fields":

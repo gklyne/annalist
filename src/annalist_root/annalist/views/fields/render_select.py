@@ -31,6 +31,11 @@ from django.template        import Template, Context
 #
 #   ----------------------------------------------------------------------------
 
+# @@TODO: remove references to field value and special case code in bound_field.
+#         the continuation URI will need to be provided separately in the context
+#         and mentioned separately in the templates
+
+
 edit_options = (
     '''{% for opt in field_options %} '''+
       '''{% if opt.value == field.field_value %} '''+
@@ -67,7 +72,7 @@ view_select = (
 view_select = (
     """<!-- fields.render_select.view_select -->
     {% if field_linkval %}
-      <a href="{{field_linkval}}">{{field_labelval}}</a>
+      <a href="{{field.field_value_link_continuation}}">{{field_labelval}}</a>
     {% elif field_textval and field_textval != "" %}
       <span>{{field_labelval}}</span>
     {% else %}
@@ -117,7 +122,7 @@ view_choice = (
 view_choice = (
     """<!-- fields.render_select.view_choice -->
     {% if field_linkval %}
-      <a href="{{field_linkval}}">{{field_labelval}}</a>
+      <a href="{{field.field_value_link_continuation}}">{{field_labelval}}</a>
     {% elif field_textval and field_textval != "" %}
       <span>{{field_labelval}}</span>
     {% else %}
@@ -137,8 +142,6 @@ edit_choice = (
     </select>
     """)
 
-# @@TODO: don't use "field_value" here and remove special case logic in bound_field?
-
 #@@ Original
 view_entitytype = (
     """<!-- fields.render_select.view_entitytype -->
@@ -157,7 +160,7 @@ view_entitytype = (
 view_entitytype = (
     """<!-- fields.render_select.view_entitytype -->
     {% if field_linkval %}
-      <a href="{{field_linkval}}">{{field_labelval}}</a>
+      <a href="{{field.field_value_link_continuation}}">{{field_labelval}}</a>
     {% elif field_textval and field_textval != "" %}
       <span>{{field_labelval}}</span>
     {% else %}
@@ -237,7 +240,10 @@ class Select_view_renderer(object):
         except Exception as e:
             log.error(repr(e))
             textval = repr(e)
-        with context.push(field_textval=textval, field_labelval=labelval, field_linkval=linkval):
+        with context.push(
+            field_textval=textval, 
+            field_labelval=labelval, 
+            field_linkval=linkval):
             try:
                 result = self._template.render(context)
             except Exception as e:
