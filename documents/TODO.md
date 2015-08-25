@@ -21,12 +21,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: import resource in new entity raises internal error.
 - [x] BUG: import image when changing record ID (or on new record?) gives error.
 - [x] BUG: import image when changing record ID causes error on save:.
-- [x] Update file upload logic to use resposeinfo, following pattern of import.
+- [x] Update file upload logic to use `responseinfo`, following pattern of import.
 - [x] Factor out common code between upload/import logic.
-- [x] QUESTION: why does _group have a record type field?  Is it needed?  If not, eliminate it.
-    - No significant references to ANNAL.CURIE.record_type noted in source code.
-    - It is used to allow field options to be restricted for particular entity types, to avoid overlong lists of fields types to choose from when editing certing groups (or views or lists).
-    - No not remove.
 - [x] Built-in `Entity_id` and `Entity_label` fields have non-standard position/size values
 - [x] Missing enumerated value reference: provide better diagnostic
 - [x] Missing enumerated value field: displays blank; should be diagnostic
@@ -34,11 +30,11 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Introduce separate data-compatibility version (may lag current version)
 - [x] Enum selection - include labels in dropdown (then can use built-in IDs more easily)
 - [x] _group annal:record_type fields updated to treat grouped field description data as subtype.
-- [ ] Update save_entity to return responseinfo
-- [ ] Refactor entity edit response handling
-- [ ] Confirmation message when resource is imported/uploaded
+- [x] Update save_entity to return responseinfo
+- [x] Confirmation message when resource is imported/uploaded
+- [x] Use responseinfo values for status reporting to user
+    - changes made for save and import.  Make others as the need arises.
 - [ ] Option to re-order fields on view form
-- [ ] Use responseinfo values for status reporting to user
 - [ ] When using "+" to add an enum entry, also need quick route to edit entry?
 
 (release 0.1.18?)
@@ -133,6 +129,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 Technical debt:
 
+- [ ] Refactor entity edit response handling
 - [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
     - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
     - [ ]remove corresponding special case code in bound_field.

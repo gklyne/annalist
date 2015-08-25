@@ -458,6 +458,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if ('cancel' in form_data) or ('close' in form_data):
             return HttpResponseRedirect(viewinfo.get_continuation_next())
 
+        responseinfo = ResponseInfo()
         typeinfo     = viewinfo.entitytypeinfo
         messages     = viewinfo.type_messages
         orig_entity  = self.get_entity(viewinfo.orig_entity_id, typeinfo, viewinfo.action)
@@ -470,45 +471,50 @@ class GenericEntityEditView(AnnalistGenericView):
 
         # Save updated details
         if 'save' in form_data:
-            http_response = self.save_entity(
-                viewinfo, entityvaluemap, entityformvals, context_extra_values
+            responseinfo = self.save_entity(
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                responseinfo=responseinfo
                 )
             log.debug("continuation_url '%s'"%(viewinfo.get_continuation_next()))
-            return http_response or HttpResponseRedirect(viewinfo.get_continuation_next())
+            return responseinfo.http_redirect(self, viewinfo.get_continuation_next())
 
         # Import data described by a field with an activated "Import" button
         import_field = self.find_import(entityvaluemap, form_data)
         if import_field:
-            http_response = self.save_entity(
+            responseinfo = self.save_entity(
                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                import_field=import_field
+                import_field=import_field,
+                responseinfo=responseinfo
                 )
-            return http_response or HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
+            return responseinfo.http_redirect(self, self.get_form_refresh_uri(viewinfo))
+            # responseinfo.set_http_response(HttpResponseRedirect(self.get_form_refresh_uri(viewinfo)))
+            # return responseinfo.get_http_response()
 
         # Update or define new view or type (invoked from generic entity editing view)
         # Save current entity and redirect to view edit with new field added, and
         # current page as continuation.
         if 'use_view' in form_data:
             # Save entity, then redirect to selected view
-            http_response = self.save_entity(
-                viewinfo, entityvaluemap, entityformvals, context_extra_values
+            responseinfo = self.save_entity(
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                responseinfo=responseinfo
                 )
-            if http_response:
-                return http_response
-            view_uri_params = (
-                { 'coll_id':    viewinfo.coll_id
-                , 'type_id':    viewinfo.curr_type_id
-                , 'view_id':    form_data['view_choice']
-                , 'entity_id':  viewinfo.curr_entity_id or viewinfo.entity_id
-                , 'action':     self.uri_action
-                })
-            redirect_uri = (
-                uri_with_params(
-                    self.view_uri("AnnalistEntityEditView", **view_uri_params),
-                    viewinfo.get_continuation_url_dict()
+            if not responseinfo.has_http_response():
+                view_uri_params = (
+                    { 'coll_id':    viewinfo.coll_id
+                    , 'type_id':    viewinfo.curr_type_id
+                    , 'view_id':    form_data['view_choice']
+                    , 'entity_id':  viewinfo.curr_entity_id or viewinfo.entity_id
+                    , 'action':     self.uri_action
+                    })
+                redirect_uri = (
+                    uri_with_params(
+                        self.view_uri("AnnalistEntityEditView", **view_uri_params),
+                        viewinfo.get_continuation_url_dict()
+                        )
                     )
-                )
-            return HttpResponseRedirect(redirect_uri)
+            responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+            return responseinfo.get_http_response()
 
         # If "Edit" or "Copy" button invoked, initiate new view of current entity
         edit_action = (
@@ -524,11 +530,13 @@ class GenericEntityEditView(AnnalistGenericView):
                 entity_id=self.uri_entity_id,   # entity_id,
                 action=edit_action
                 )
-            return self.save_invoke_edit_entity(
+            responseinfo = self.save_invoke_edit_entity(
                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 view_edit_uri_base, edit_action,
-                {}
+                {},
+                responseinfo=responseinfo
                 )
+            return responseinfo.get_http_response()
 
         # New entity buttons
         #
@@ -577,11 +585,13 @@ class GenericEntityEditView(AnnalistGenericView):
                 view_id=new_view_id, type_id=new_type_id, 
                 action="new"
                 )
-            return self.save_invoke_edit_entity(
+            responseinfo = self.save_invoke_edit_entity(
                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 new_edit_uri_base, "new",
-                {}
+                {},
+                responseinfo=responseinfo
                 )
+            return responseinfo.get_http_response()
 
         # Add field from entity view (as opposed to view description view)
         # See below call of 'find_add_field' for adding field in view description
@@ -598,11 +608,13 @@ class GenericEntityEditView(AnnalistGenericView):
                 {"add_field": "View_fields"} if ('add_view_field' in form_data) else {}
                 )
             log.info("Open view: entity_id: %s"%viewinfo.curr_entity_id)
-            return self.save_invoke_edit_entity(
+            responseinfo = self.save_invoke_edit_entity(
                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 view_edit_uri_base, "config",
-                add_field_param
+                add_field_param,
+                responseinfo=responseinfo
                 )
+            return responseinfo.get_http_response()
 
         # Add new instance of repeating field, and redisplay
         add_field = self.find_add_field(entityvaluemap, form_data)
@@ -627,7 +639,9 @@ class GenericEntityEditView(AnnalistGenericView):
                     error_head=messages['remove_field_error'],
                     error_message=messages['no_field_selected']
                     )
-            return http_response or HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
+            responseinfo.set_http_response(http_response)
+            responseinfo.set_http_response(HttpResponseRedirect(self.get_form_refresh_uri(viewinfo)))
+            return responseinfo.get_http_response()
 
         # Report unexpected form data
         # This shouldn't happen, but just in case...
@@ -641,11 +655,12 @@ class GenericEntityEditView(AnnalistGenericView):
         for k, v in form_data.items():
             log.info("  form[%s] = %r"%(k,v))
         redirect_uri = uri_with_params(viewinfo.get_continuation_next(), err_values)
-        return HttpResponseRedirect(redirect_uri)
+        responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+        return responseinfo.get_http_response()
 
     def save_entity(
             self, viewinfo, entityvaluemap, entityformvals, context_extra_values,
-            import_field=None
+            import_field=None, responseinfo=None
             ):
         """
         This method contains logic to save entity data modified through a form
@@ -654,9 +669,34 @@ class GenericEntityEditView(AnnalistGenericView):
         and the original entity data is removed.  If an entity was being viewed,
         no data is saved.
 
-        Returns None if the save completes successfully, otherwise an 
-        HTTP response object that reports the nature of the problem.
+        viewinfo        contains display context for the form which is being processed
+        entityvaluemap  a list of field descriptions that are used to map valuyes between
+                        the edited entyity and the form display, including references to
+                        field descriptions that control hopw values are rendered.  This
+                        is used to find form 
+        entityformvals  a dictionary of entity values extracted from the submitted form; 
+                        these are used either for redisplayiongthe form if there is an 
+                        error, or to update the saved entity data.
+        context_extra_values
+                        a dictionary of additional values that may be used if the
+                        form needs to be redisplayed.
+        import_field    if specified, is a field description for which a resource 
+                        import is requested.  cf. method `save_linked_resource`.
+        responseinfo    a `ResponseInfo` object that is used to collect diagnostic 
+                        information about form processing.  It may contain an HTTP 
+                        response object if the form or an error page needs to be 
+                        displayed, a flag indicating whether the entity data was
+                        updated, and any additional messages to be included with
+                        any other response.
+
+        Returns the supplied ResponseInfo object, with `None` for the HTTPResponse 
+        valuer of the save completes successfully, otherwise an HTTP response object 
+        that reports the nature of the problem.
         """
+        if responseinfo is None:
+            raise ValueError("entityedit.save_entity expects ResponseInfo object")
+        if responseinfo.has_http_response():
+            return responseinfo
         # log.info("save_entity: formvals: %r, import_field %r"%(entityformvals, import_field))
         entity_id      = viewinfo.curr_entity_id
         entity_type_id = viewinfo.curr_type_id
@@ -665,15 +705,14 @@ class GenericEntityEditView(AnnalistGenericView):
         action         = viewinfo.action
         typeinfo       = viewinfo.entitytypeinfo
         messages       = viewinfo.type_messages
-        responseinfo   = ResponseInfo()
         if self.uri_action == "view":
-            # This is view operation: nothing to save
-            return None
+            # This is a view operation: nothing to save
+            return responseinfo
         if not action in ["new", "copy", "edit"]:
             log.warning("'Save' operation for action '%s'"%(action))
             # Check "edit" authorization to continue
             if viewinfo.check_authorization("edit"):
-                return viewinfo.http_response
+                return responseinfo.set_http_response(viewinfo.http_response)
         entity_renamed = (
             ( action == "edit" ) and
             ( (entity_id      != orig_entity_id) or 
@@ -685,43 +724,33 @@ class GenericEntityEditView(AnnalistGenericView):
         # Check for valid id and type to be saved
         if not util.valid_id(entity_id):
             log.debug("form_response: entity_id not util.valid_id('%s')"%entity_id)
-            return self.form_re_render(
-                viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                error_head=messages['entity_heading'],
-                error_message=messages['entity_invalid_id']
+            return responseinfo.set_http_response(
+                self.form_re_render(
+                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                    error_head=messages['entity_heading'],
+                    error_message=messages['entity_invalid_id']
+                    )
                 )
         if not util.valid_id(entity_type_id):
             log.debug("form_response: entity_type_id not util.valid_id('%s')"%entity_type_id)
-            return self.form_re_render(
-                viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                error_head=messages['entity_type_heading'],
-                error_message=messages['entity_type_invalid']
-                )
-
-        # Check for valid entity id and type id
-        if not util.valid_id(entity_id):
-            log.warning("save_entity: invalid entity_id (%s)"%(entity_id))
-            return self.form_re_render(
-                viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                error_head=message.ENTITY_DATA_ID,
-                error_message=message.ENTITY_DATA_ID_INVALID
-                )
-        if not util.valid_id(entity_type_id):
-            log.warning("save_entity: invalid entity_type_id (%s)"%(entity_type_id))
-            return self.form_re_render(
-                viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                error_head=message.ENTITY_TYPE_ID,
-                error_message=message.ENTITY_TYPE_ID_INVALID
+            return responseinfo.set_http_response(
+                self.form_re_render(
+                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                    error_head=messages['entity_type_heading'],
+                    error_message=messages['entity_type_invalid']
+                    )
                 )
 
         # Check original parent exists (still)
         #@@ TODO: unless this is a "new" action?
         if not typeinfo.parent_exists():
             log.warning("save_entity: original entity parent does not exist")
-            return self.form_re_render(
-                viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                error_head=messages['parent_heading'],
-                error_message=messages['parent_missing']
+            return responseinfo.set_http_response(
+                self.form_re_render(
+                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                    error_head=messages['parent_heading'],
+                    error_message=messages['parent_missing']
+                    )
                 )
 
         # Determine type information for saved entity
@@ -741,10 +770,12 @@ class GenericEntityEditView(AnnalistGenericView):
                     "Entity exists: action %s %s/%s, orig %s/%s"%
                         (action, entity_type_id, entity_id, orig_type_id, orig_entity_id)
                     )
-                return self.form_re_render(
-                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                    error_head=messages['entity_heading'],
-                    error_message=messages['entity_exists']
+                return responseinfo.set_http_response(
+                    self.form_re_render(
+                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                        error_head=messages['entity_heading'],
+                        error_message=messages['entity_exists']
+                        )
                     )
         else:
             if not typeinfo.entity_exists(entity_id, use_altparent=True):
@@ -752,10 +783,12 @@ class GenericEntityEditView(AnnalistGenericView):
                 log.warning("Expected %s/%s not found; action %s, entity_renamed %r"%
                       (entity_type_id, entity_id, action, entity_renamed)
                     )
-                return self.form_re_render(
-                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                    error_head=messages['entity_heading'],
-                    error_message=messages['entity_not_exists']
+                return responseinfo.set_http_response(
+                    self.form_re_render(
+                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                        error_head=messages['entity_heading'],
+                        error_message=messages['entity_not_exists']
+                        )
                     )
 
         # Assemble updated values for storage
@@ -818,14 +851,16 @@ class GenericEntityEditView(AnnalistGenericView):
         # Finish up
         if err_vals:
             log.warning("err_vals %r"%(err_vals,))
-            return self.form_re_render(
-                viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                error_head=err_vals[0],
-                error_message=err_vals[1]
+            return responseinfo.set_http_response(
+                self.form_re_render(
+                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                    error_head=err_vals[0],
+                    error_message=err_vals[1]
+                    )
                 )
         log.info("Saved %s/%s"%(entity_type_id, entity_id))
         viewinfo.update_coll_version()
-        return None
+        return responseinfo
 
     def import_resource(self,
             field_desc, field_name,
@@ -1146,7 +1181,8 @@ class GenericEntityEditView(AnnalistGenericView):
     def save_invoke_edit_entity(self, 
             viewinfo, entityvaluemap, entityvals, context_extra_values,
             config_edit_url, edit_perm,
-            url_params):
+            url_params,
+            responseinfo=None):
         """
         Common logic for invoking a resource edit while editing
         some other resource:
@@ -1156,11 +1192,11 @@ class GenericEntityEditView(AnnalistGenericView):
         If there is a problem, an error response is returned for display 
         in the current view.
         """
-        http_response = self.save_entity(
-            viewinfo, entityvaluemap, entityvals, context_extra_values
+        responseinfo = self.save_entity(
+            viewinfo, entityvaluemap, entityvals, context_extra_values,
+            responseinfo=responseinfo
             )
-        return (
-            http_response or
+        responseinfo.set_http_response(
             self.invoke_edit_entity(
                 viewinfo, edit_perm,
                 config_edit_url, url_params, 
@@ -1168,6 +1204,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 viewinfo.curr_entity_id or viewinfo.orig_entity_id
                 )
             )
+        return responseinfo
 
     def invoke_edit_entity(self, 
             viewinfo, edit_perm,
@@ -1300,10 +1337,12 @@ class GenericEntityEditView(AnnalistGenericView):
         else:
             self.add_entity_field(field_desc, entityformvals)
         # log.info("entityvals: %r"%(entityvals,))
+        responseinfo = ResponseInfo()
         http_response = self.save_entity(
-            viewinfo, entityvaluemap, entityformvals, context_extra_values
+            viewinfo, entityvaluemap, entityformvals, context_extra_values,
+            responseinfo=responseinfo
             )
-        return http_response
+        return responseinfo.get_http_response()
 
     def find_repeat_fields(self, entityvaluemap):
         """

@@ -57,13 +57,16 @@ class ResponseInfo(object):
     def __repr__(self):
         return str(self)
 
-    def _unused_set_http_response(self, http_response):
+    def set_http_response(self, http_response):
         if self._http_response is None:
             self._http_response = http_response
-        return
+        return self     # Result can be 'responseinfo' return value
 
-    def _unused_get_http_response(self):
+    def get_http_response(self):
         return self._http_response
+
+    def has_http_response(self):
+        return self._http_response is not None
 
     def set_response_confirmation(self, response_conf, response_info):
         if not self.is_response_error():
@@ -76,6 +79,9 @@ class ResponseInfo(object):
             self._response_err  = response_err
             self._response_info = response_info
         return
+
+    def is_response_confirmation(self):
+        return self._response_conf is not None
 
     def is_response_error(self):
         return self._response_err is not None
@@ -114,5 +120,25 @@ class ResponseInfo(object):
             key, "ResponseInfo.get_formatted: unknown key %r (values %%r)"%key
             )
         return t%values
+
+    def http_redirect(self, base_view, next_uri):
+        """
+        Generate an HTTP redirect response that incorporates any confirmation messages
+        set up for the current responseinfo.  The responseinfo object is updated with
+        the generated response, which is also returned as the result of thismethod.
+        """
+        if self._http_response is None:
+            if self.is_response_error():
+                resp = base_view.redirect_error(next_uri, 
+                    error_head=self._response_err, 
+                    error_message=self._response_info
+                    )
+            else:
+                resp = base_view.redirect_info(next_uri, 
+                    info_head=self._response_conf, 
+                    info_message=self._response_info
+                    )
+            self.set_http_response(resp)
+        return self._http_response
 
 # End.
