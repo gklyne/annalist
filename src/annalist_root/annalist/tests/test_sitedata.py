@@ -311,13 +311,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                     self.assertEqual(field_group["@type"], [ANNAL.CURIE.Field_group])
                     self.assertEqual(field_group[ANNAL.CURIE.id],          group_id)
                     self.assertEqual(field_group[ANNAL.CURIE.type_id],     "_group")
-                    self.assertEqual(field_group[ANNAL.CURIE.record_type], type_uri)
-                    self.check_type_fields(
-                        "_group", type_uri, field_group[ANNAL.CURIE.group_fields]
+                    self.check_type_fields("_group", 
+                        field_group[ANNAL.CURIE.record_type], field_group[ANNAL.CURIE.group_fields]
                         )
-                    # self.check_type_fields(
-                    #     "_group", ANNAL.CURIE.Field_group, field_group[ANNAL.CURIE.group_fields]
-                    #     )
                     # field_name is present only if different from field_id
                     # self.assertIn(ANNAL.CURIE.field_name,  list_field)
                 enum_types = (

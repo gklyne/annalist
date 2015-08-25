@@ -235,13 +235,17 @@ site_field_fields = (
 site_group_fields = (
     [ FieldChoice("_initial_values")
     , FieldChoice("Group_comment",              label="Help"                )
-    , FieldChoice("Group_field_placement",      label="Position/size"       )
-    , FieldChoice("Group_field_property",       label="Property"            )
-    , FieldChoice("Group_field_sel",            label="Field id"            )
     , FieldChoice("Group_fields",               label="Fields"              )
     , FieldChoice("Group_id",                   label="Id"                  )
     , FieldChoice("Group_label",                label="Label"               )
     , FieldChoice("Group_target_type",          label="Record type"         )
+    ])
+
+site_group_field_group_fields = (
+    [ FieldChoice("_initial_values")
+    , FieldChoice("Group_field_placement",      label="Position/size"       )
+    , FieldChoice("Group_field_property",       label="Property"            )
+    , FieldChoice("Group_field_sel",            label="Field id"            )
     ])
 
 site_list_fields = (
@@ -250,9 +254,6 @@ site_list_fields = (
     , FieldChoice("List_default_type",          label="Record type"         )
     , FieldChoice("List_default_view",          label="View"                )   
     , FieldChoice("List_entity_selector",       label="Selector"            )
-    , FieldChoice("List_field_placement",       label="Position/size"       )
-    , FieldChoice("List_field_property",        label="Property"            )
-    , FieldChoice("List_field_sel",             label="Field id"            )
     , FieldChoice("List_fields",                label="Fields"              )
     , FieldChoice("List_id",                    label="Id"                  )
     , FieldChoice("List_label",                 label="Label"               )
@@ -260,6 +261,13 @@ site_list_fields = (
     , FieldChoice("List_type",                  label="List display type"   )
     ])
     # , FieldChoice("List_choice",                label="List view"           )
+
+site_list_field_group_fields = (
+    [ FieldChoice("_initial_values")
+    , FieldChoice("List_field_placement",       label="Position/size"       )
+    , FieldChoice("List_field_property",        label="Property"            )
+    , FieldChoice("List_field_sel",             label="Field id"            )
+    ])
 
 site_type_fields = (
     [ FieldChoice("_initial_values")
@@ -287,15 +295,19 @@ site_view_fields = (
     [ FieldChoice("_initial_values")
     , FieldChoice("View_comment",               label="Help"                )
     , FieldChoice("View_edit_view",             label="Editable view?"      )
-    , FieldChoice("View_field_placement",       label="Position/size"       )
-    , FieldChoice("View_field_property",        label="Property"            )
-    , FieldChoice("View_field_sel",             label="Field id"            )
     , FieldChoice("View_fields",                label="Fields"              )
     , FieldChoice("View_id",                    label="Id"                  )
     , FieldChoice("View_label",                 label="Label"               )
     , FieldChoice("View_target_type",           label="Record type"         )
     ])
     # , FieldChoice("View_choice",          "Choose view")
+
+site_view_field_group_fields = (
+    [ FieldChoice("_initial_values")
+    , FieldChoice("View_field_placement",       label="Position/size"       )
+    , FieldChoice("View_field_property",        label="Property"            )
+    , FieldChoice("View_field_sel",             label="Field id"            )
+    ])
 
 site_fields = (
     [ FieldChoice("_initial_values")] +

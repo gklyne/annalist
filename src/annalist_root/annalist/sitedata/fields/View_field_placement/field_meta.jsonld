@@ -9,7 +9,7 @@
 , "annal:field_render_type":    "Placement"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Placement"
-, "annal:field_entity_type":    "annal:View"
+, "annal:field_entity_type":    "annal:View_field"
 , "annal:property_uri":         "annal:field_placement"
 , "annal:field_placement":      "small:0,12;medium:0,6"
 , "annal:default_value":        ""

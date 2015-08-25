@@ -32,9 +32,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Missing enumerated value field: displays blank; should be diagnostic
 - [x] Revise add field buttons to use save+redirect rather than re-render
 - [x] Introduce separate data-compatibility version (may lag current version)
-- [ ] Enum selection - include labels in dropdown (then can use built-in IDs more easily)
-- [ ] _group annal:record_type field - rather than relying on correct value supplied, allow propagation of value from containing view.  This will affect renderers/fields that contain group references.  Need to think about how code logic might work.
-    - No: on reflection, prefer to treat group record as subtype.  If current 3-way regime works, may want to consider introducing a new subtype for a field reference in a view. (annal:Include_field?  annal:View_field?)
+- [x] Enum selection - include labels in dropdown (then can use built-in IDs more easily)
+- [x] _group annal:record_type fields updated to treat grouped field description data as subtype.
 - [ ] Update save_entity to return responseinfo
 - [ ] Refactor entity edit response handling
 - [ ] Confirmation message when resource is imported/uploaded
