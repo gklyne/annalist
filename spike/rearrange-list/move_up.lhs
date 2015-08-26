@@ -54,8 +54,11 @@ This case is covered by case 4, and repeated application of this deals with a
 leading sequence for which P is False,
 
 3. that requirement (c) is satisfied is confirmed by noting that in a list of 
-length 2 of more, the position of an element satisfying p is moved up by just 
-one place, and immediately becomes part of the result sequence.
+length 2 of more, the position of an element satisfying p following one that does 
+not is moved up by just one place, and immediately becomes part of the result 
+sequence.  Further, if the next element also satisfies p, it will be preceded on
+recursive evaluation of the updated tail of the list by an element that does 
+satisfy p.
 
 == Test cases
 
@@ -83,7 +86,7 @@ Strings in alist that begin with 'x' arer moved up thye list by one place.
 >                                  == ["x1","o2","x4","x5","o3","o6","x8","o7","o9"]
 >     ]
 
-To confirm the result, evaluate "all id true"
+To confirm the result, evaluate "all id mu_test"
 
 == Move down
 
