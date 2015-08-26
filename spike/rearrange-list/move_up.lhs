@@ -18,10 +18,12 @@ Implement a function move_up(L, P) that returns new list L1, such that:
 
 (a) the ordering of L[i] for P(L[i]) == True is preserved
 (b) the ordering of L[i] for P(L[i]) == False is preserved
-(c) for any L[i] such that P(L[i]) == True and which is preceded by some L[j] s.t. P(L[j]) == False then L1[i-1] = L[i]
-(d) for any L[i] that is not preceded by L[j] s.t. P(L[j]) == False then L1[i] = L[i]
+(c) for any L[i] such that P(L[i]) == True and which is preceded 
+    by some L[j] s.t. P(L[j]) == False then L1[i-1] = L[i]
+(d) for any L[i] that is not preceded by L[j] s.t. P(L[j]) == False 
+    then L1[i] = L[i]
 
-The idea is that all members of the list for which P evaluates True are mioved up the list by one slot, except where they occur at the start of the list.
+The idea is that all members of the list for which P evaluates True are moved up the list by one slot, except where they occur at the start of the list.
 
 == Algorithm
 
@@ -37,15 +39,26 @@ Thus, we have:
 >    | not (p v1) && not (p v2) 
 >               = v1:(move_up p (v2:vtail))
 
-Under induction (i.e. assuming move_up satifies all contditions for a list of length N, it also satisfies for a list of length N+1);  clearly, cases 1 and 2 satisfy the ordering constraints for lists of length 0 and 1:
+Under induction (i.e. assuming move_up satifies all contditions for a list of length N, 
+it also satisfies for a list of length N+1);  clearly, cases 1 and 2 satisfy the 
+ordering constraints for lists of length 0 and 1:
 
-1. order is preserved per (a), (b) in the first three cases. The 4th case changes the order of two elements which are not covered by either of the order-preserving requirements (a) or (b). 
+1. order is preserved per (a), (b) in the first three cases. The 4th case changes 
+the order of two elements which are not covered by either of the order-preserving
+requirements (a) or (b). 
 
-2. concerning requirement (d), any element not preceded by another which does not satisfy P must clearly be part of a list whose first element does not satisfy P.  This case is covered by case 4, and repeated application of this deals with a leading sequence for which P is False,
+2. concerning requirement (d), any element not preceded by another which does not 
+satisfy P must clearly be part of a list whose first element does not satisfy P.  
+This case is covered by case 4, and repeated application of this deals with a 
+leading sequence for which P is False,
 
-3. that requirement (c) is satisfied is confirmed by noting that in a list of length 2 of more, the position of an element satisfying p is moved up by just one place, and immediately becomes part of the result sequence.
+3. that requirement (c) is satisfied is confirmed by noting that in a list of 
+length 2 of more, the position of an element satisfying p is moved up by just 
+one place, and immediately becomes part of the result sequence.
 
 == Test cases
+
+Strings in alist that begin with 'x' arer moved up thye list by one place.
 
 > p (c:v) = c == 'x'
 
