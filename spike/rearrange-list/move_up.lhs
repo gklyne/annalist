@@ -23,7 +23,8 @@ Implement a function move_up(L, P) that returns new list L1, such that:
 (d) for any L[i] that is not preceded by L[j] s.t. P(L[j]) == False 
     then L1[i] = L[i]
 
-The idea is that all members of the list for which P evaluates True are moved up the list by one slot, except where they occur at the start of the list.
+The idea is that all members of the list for which P evaluates True are moved 
+up the list by one slot, except where they occur at the start of the list.
 
 == Algorithm
 
