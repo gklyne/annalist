@@ -20,7 +20,12 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: Multifield ref inside a repeat field not occupying the entire width of the field generates messed up layout of labels vs content.  (Content is OK, labels not.  Maybe need an additional layer of row/cols for the headers in the multifield ref?)
 - [x] BUG: import resource in new entity raises internal error.
 - [x] BUG: import image when changing record ID (or on new record?) gives error.
-- [x] BUG: import image when changing record ID causes error on save:.
+- [x] BUG: import image when changing record ID causes error on save
+- [x] BUG: if >1 repeated field group is selected for deletion, only the last is deleted
+- [ ] BUG: follow links to edit view, then close out, does not return to entity view.
+    - "View description" continuation is OK
+    - "View description" > "Edit" continuation is OK
+    - after "Move up", continuation is lost
 - [x] Update file upload logic to use `responseinfo`, following pattern of import.
 - [x] Factor out common code between upload/import logic.
 - [x] Built-in `Entity_id` and `Entity_label` fields have non-standard position/size values
@@ -34,8 +39,22 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Confirmation message when resource is imported/uploaded
 - [x] Use responseinfo values for status reporting to user
     - changes made for save and import.  Make others as the need arises.
-- [ ] Option to re-order fields on view form
+- [x] Option to re-order fields on view form
+    - [x] add move-up/move-down buttons
+    - [x] add handler logic to reorder list when move up/down clicked
+    - [x] test cases - top/middle/bottom, up/down
+- [ ] Multiple URIs for type, and instances of type - add "other types" fields,
+      and propagate these to the @types field of created instances.
 - [ ] When using "+" to add an enum entry, also need quick route to edit entry?
+    - existing tests generate __new button submission - cf. render_select.py
+    - logic in handler to invoke edit if value selected
+    - when rendering, use &#x270D; where value is selected
+    - default use &#x270D; rather than "+"
+    - add javascript to update rendering when value selected/deselected
+    - rename __new to __edit?
+    - when item is selected, change "+" to edit?  (Use &#x270D; - "writing hand" ?)
+    - how to select code based on current value?  
+        - Template logic?  Code generates context?  `bound_field` attribute?  javascript?
 
 (release 0.1.18?)
 
@@ -46,6 +65,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
     - See also discussion below of introducing "tasks" - this would be an early candidate for that.
     - Need to think how the interface would work.  Option to add "task" button to any form?
+- [ ] Simplified field-definition interface (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
 
 (release?)
 
@@ -142,6 +162,7 @@ Technical debt:
 
 Usability notes:
 
+- [ ] Persist item selection to refreshed display when move-up/movedown clicked?
 - [ ] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
 - [ ] OR... allow an entity to specify its own default view?
 - [ ] Type/List/View dropdowns: normally show only those types/lists/views defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
@@ -192,7 +213,7 @@ Notes for Future TODOs:
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
 - [ ] Rationalize common fields to reduce duplication?
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?  But note that general philosophy is to avoid unnecessary validity checks that might impede data entry.
-- [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions
+- [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions.
 - [ ] Make default values smarter; e.g. field renderer logic to scan collection data for candidates?
 - [ ] Allow type definition to include template for new id, e.g. based on current date
 - [ ] Use local prefix for type URI (when prefixes are handled properly); e.g. coll:Type/<id>
@@ -208,11 +229,14 @@ Notes for Future TODOs:
 - [ ] Think about fields that return subgraph
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.
+    - cf. [JSON-LD framing](http://json-ld.org/spec/latest/json-ld-framing/)
 - [ ] For rendering of additional info, think about template-based URIs filled in from other data.  (e.g. URI to pull an image from CLAROS, or Google graph API like)
 - [ ] Generate form-level DIFF displays from git JSON diffs
 - [ ] 3D rendering - check out JSMOL - http://wiki.jmol.org/index.php/JSmol
 - [ ] Visualize data structures from view definitions; generate OWL descriptions; etc.
 - [ ] Remixing spreadsheets: spreadsheet generation from queries as well as ingesting through data bridges.
+- [ ] SPARQL data bridge: use copmbination opf SPARQL CONSTRUCT query + JSON-LD frame?
+- [ ] View selection based on pattern match; e.g. JSON PATCH "Test" operation.
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
     - [ ] internal options to save history in per-collection git repo

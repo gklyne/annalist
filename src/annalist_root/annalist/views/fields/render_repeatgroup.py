@@ -87,13 +87,17 @@ edit_group = (
               &nbsp;
             </div>
             <div class="small-10 columns">
-              <input type="submit" name="{{field.group_id}}__remove" 
+              <input type="submit" name="{{field.group_id}}__remove"
                      value="{{field.group_delete_label}}" />
-              <input type="submit" name="{{field.group_id}}__add"    
+              <input type="submit" name="{{field.group_id}}__add"
                      value="{{field.group_add_label}}" />
+              <input type="submit" name="{{field.group_id}}__up"
+                     value="Move &#x2b06;" />
+              <input type="submit" name="{{field.group_id}}__down"
+                     value="Move &#x2b07;" />
             </div>
           </div>
-        </div> """
+        </div>"""
     })
 
 view_grouprow = (
@@ -230,6 +234,10 @@ edit_grouprow = (
                          value="{{field.group_delete_label}}" />
                   <input type="submit" name="{{field.group_id}}__add"    
                          value="{{field.group_add_label}}" />
+                  <input type="submit" name="{{field.group_id}}__up"
+                         value="Move &#x2b06;" />
+                  <input type="submit" name="{{field.group_id}}__down"
+                         value="Move &#x2b07;" />
                 </div>
               </div>
             </div>
@@ -322,6 +330,10 @@ edit_listrow_unused = (
                    value="{{field.group_delete_label}}" />
             <input type="submit" name="{{field.group_id}}__add"    
                    value="{{field.group_add_label}}" />
+            <input type="submit" name="{{field.group_id}}__up"
+                   value="Move up" />
+            <input type="submit" name="{{field.group_id}}__down"
+                   value="Move down" />
           </div>
         </div>"""
     })

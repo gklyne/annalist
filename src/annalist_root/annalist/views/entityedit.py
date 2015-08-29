@@ -221,6 +221,7 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'entity_type_heading':    typeinfo.entitymessages['entity_type_heading']%message_vals
             , 'entity_type_invalid':    typeinfo.entitymessages['entity_type_invalid']%message_vals
             , 'remove_field_error':     message.REMOVE_FIELD_ERROR
+            , 'move_field_error':       message.MOVE_FIELD_ERROR
             , 'no_field_selected':      message.NO_FIELD_SELECTED
             })
         viewinfo.set_messages(messages)
@@ -388,16 +389,19 @@ class GenericEntityEditView(AnnalistGenericView):
         entity_id = entity.get_id()
         coll      = viewinfo.collection
         # Set up initial view context
-        # @@TODO: entity needed here?
         try:
             entityvaluemap = self.get_view_entityvaluemap(viewinfo, entity)
         except Annalist_Error as e:
             return viewinfo.report_error(str(e))
+        #@@ TODO: remove this?
+        #   This logic is currently unused - it was provided for add field button 
+        #   on entity edit, now using view/edit view description buttons instead.
         if add_field:
             add_field_desc = self.find_repeat_id(entityvaluemap, add_field)
             if add_field_desc:
                 # Add empty fields per named repeat group
                 self.add_entity_field(add_field_desc, entity)
+        #@@
         entityvals  = get_entity_values(viewinfo.entitytypeinfo, entity, entity_id)
         if viewinfo.action == "copy":
             entityvals.pop(ANNAL.CURIE.uri, None)
@@ -620,27 +624,58 @@ class GenericEntityEditView(AnnalistGenericView):
         add_field = self.find_add_field(entityvaluemap, form_data)
         # log.info("*** Add field: "+repr(add_field))
         if add_field:
-            http_response = self.update_repeat_field_group(
-                viewinfo, add_field, entityvaluemap, entityformvals, **context_extra_values
+            responseinfo.set_http_response(
+                self.update_repeat_field_group(
+                    viewinfo, add_field, entityvaluemap, entityformvals, 
+                    **context_extra_values
+                    )
                 )
-            return http_response or HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
+            responseinfo.set_http_response(
+                HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
+                )
+            return responseinfo.get_http_response()
 
         # Remove Field(s), and redisplay
         remove_field = self.find_remove_field(entityvaluemap, form_data)
         if remove_field:
             if remove_field['remove_fields']:
                 http_response = self.update_repeat_field_group(
-                    viewinfo, remove_field, entityvaluemap, entityformvals, **context_extra_values
+                    viewinfo, remove_field, entityvaluemap, entityformvals, 
+                    **context_extra_values
                     )
             else:
                 log.debug("form_response: No field(s) selected for remove_field")
-                http_response = self.form_re_render(
-                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                    error_head=messages['remove_field_error'],
-                    error_message=messages['no_field_selected']
+                responseinfo.set_http_response(
+                    self.form_re_render(
+                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                        error_head=messages['remove_field_error'],
+                        error_message=messages['no_field_selected']
+                        )
                     )
-            responseinfo.set_http_response(http_response)
-            responseinfo.set_http_response(HttpResponseRedirect(self.get_form_refresh_uri(viewinfo)))
+            responseinfo.set_http_response(
+                HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
+                )
+            return responseinfo.get_http_response()
+
+        # Move field and redisplay
+        move_field = self.find_move_field(entityvaluemap, form_data)
+        if move_field:
+            if move_field['move_fields']:
+                http_response = self.update_repeat_field_group(
+                    viewinfo, move_field, entityvaluemap, entityformvals, **context_extra_values
+                    )
+            else:
+                log.debug("form_response: No field selected for move up/down")
+                responseinfo.set_http_response(
+                    self.form_re_render(
+                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                        error_head=messages['move_field_error'],
+                        error_message=messages['no_field_selected']
+                        )
+                    )
+            responseinfo.set_http_response(
+                HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
+                )
             return responseinfo.get_http_response()
 
         # Report unexpected form data
@@ -1271,9 +1306,32 @@ class GenericEntityEditView(AnnalistGenericView):
             if repeat_desc['group_id']+"__remove" in form_data:
                 remove_fields_key = repeat_desc['group_id']+"__select_fields"
                 if remove_fields_key in form_data:
-                    repeat_desc['remove_fields'] = form_data[remove_fields_key]
+                    repeat_desc['remove_fields'] = form_data.getlist(remove_fields_key)
                 else:
                     repeat_desc['remove_fields'] = []
+                return repeat_desc
+        return None
+
+    def find_move_field(self, entityvaluemap, form_data):
+        """
+        Locate move field option in form data and, if present, return a description 
+        of the field to be moved, with the member index to be moved added as  element 
+        'remove_fields', and the direction of movement as element 'move_direction'.
+        """
+        for repeat_desc in self.find_repeat_fields(entityvaluemap):
+            # log.info("find_remove_field: %r"%repeat_desc)
+            move_direction = None            
+            if repeat_desc['group_id']+"__up" in form_data:
+                move_direction = "up"
+            elif repeat_desc['group_id']+"__down" in form_data:
+                move_direction = "down"
+            if move_direction is not None:
+                repeat_desc['move_direction'] = move_direction
+                move_fields_key = repeat_desc['group_id']+"__select_fields"
+                if move_fields_key in form_data:
+                    repeat_desc['move_fields'] = form_data.getlist(move_fields_key)
+                else:
+                    repeat_desc['move_fields'] = []
                 return repeat_desc
         return None
 
@@ -1312,8 +1370,8 @@ class GenericEntityEditView(AnnalistGenericView):
             viewinfo, field_desc, entityvaluemap, entityformvals, **context_extra_values
             ):
         """
-        Saves an entity instance data with a repeated field or field group added or 
-        removed, then redisplays the current form.
+        Saves an entity instance data with a repeated field or field group added,
+        moved or removed, then redisplays the current form.
 
         viewinfo    DisplayInfo object describing the current view.
         field_desc  is a field description for a field or field group to be added
@@ -1334,6 +1392,8 @@ class GenericEntityEditView(AnnalistGenericView):
         # log.info("field_desc: %r: %r"%(field_desc,))
         if 'remove_fields' in field_desc:
             self.remove_entity_field(field_desc, entityformvals)
+        elif 'move_fields' in field_desc:
+            self.move_entity_field(field_desc, entityformvals)           
         else:
             self.add_entity_field(field_desc, entityformvals)
         # log.info("entityvals: %r"%(entityvals,))
@@ -1377,6 +1437,65 @@ class GenericEntityEditView(AnnalistGenericView):
         for i in range(len(old_repeatvals)):
             if str(i) not in remove_field_desc['remove_fields']:
                 new_repeatvals.append(old_repeatvals[i])
+        entity[repeatvals_key] = new_repeatvals
+        return
+
+    def move_entity_field(self, move_field_desc, entity):
+        def reverselist(l):
+            return list(reversed(l))
+        def move_up(vals):
+            """
+            Local function to move selected elements towards the head of a list.
+            Operates on a list of (valuye,flag) pairs
+            Based on spike/rearrange-list/move_up.lhs:
+
+            > move_up p []  = []
+            > move_up p [v] = [v]
+            > move_up p (v:vtail)
+            >    | p v      = v:(move_up p vtail)
+            > move_up p (v1:v2:vtail)
+            >    | not (p v1) && (p v2) 
+            >               = v2:(move_up p (v1:vtail))
+            >    | not (p v1) && not (p v2) 
+            >               = v1:(move_up p (v2:vtail))
+            """
+            if len(vals) <= 1:
+                return vals
+            v1 = vals[0]
+            v2 = vals[1]
+            if v1[1]:
+                return [v1] + move_up(vals[1:])
+            if v2[1]:
+                return [v2] + move_up([v1]+vals[2:])
+            else:
+                return [v1] + move_up([v2]+vals[2:])
+            raise RuntimeError("move_entity_field/move_up cases exhausted without match")
+        # Shuffle selected items up or down
+        repeatvals_key = move_field_desc['field_property_uri']
+        old_repeatvals = entity[repeatvals_key]
+        old_index_list = (
+            [ (i, str(i) in move_field_desc['move_fields']) 
+            for i in range(len(old_repeatvals))
+            ])
+        if move_field_desc['move_direction'] == 'up':
+            new_index_list = move_up(old_index_list)
+            log.info("***** Move up: %r"%(new_index_list,))
+        elif move_field_desc['move_direction'] == 'down':
+            new_index_list = reverselist(move_up(reverselist(old_index_list)))
+            log.info("***** Move down: %r"%(new_index_list,))
+        else:
+            raise RuntimeError("move_entity_field - 'move_direction' must be 'up' or 'down'")
+        new_repeatvals = (
+            [ old_repeatvals[new_index_list[i][0]]
+            for i in range(len(new_index_list))
+            ])        
+        # @@@@@@@@
+        # old_repeatvals = entity[repeatvals_key]
+        # new_repeatvals = []
+        # for i in range(len(old_repeatvals)):
+        #     if str(i) not in move_field_desc['move_fields']:
+        #         new_repeatvals.append(old_repeatvals[i])
+        # @@@@@@@@
         entity[repeatvals_key] = new_repeatvals
         return
 

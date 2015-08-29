@@ -207,6 +207,8 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
                 <div class="small-11 columns">
                   <input type="submit" name="testrepeatfield__remove" value="Remove group" />
                   <input type="submit" name="testrepeatfield__add"    value="Add group" />
+                  <input type="submit" name="testrepeatfield__up"     value="Move &#x2b06;" />
+                  <input type="submit" name="testrepeatfield__down"   value="Move &#x2b07;" />
                 </div>
               </div>
             </div>

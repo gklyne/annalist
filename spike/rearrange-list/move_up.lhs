@@ -62,7 +62,7 @@ satisfy p.
 
 == Test cases
 
-Strings in alist that begin with 'x' arer moved up thye list by one place.
+Strings in a list that begin with 'x' are moved up the list by one place.
 
 > p (c:v) = c == 'x'
 
@@ -94,7 +94,7 @@ To move the selected elements towards the tail, we use:
 
 > move_down p = reverse . (move_up p) . reverse
 
-Which satisfies the the following test cases:
+Which satisfies the following test cases:
 
 > md_test =
 >     [ move_down p []     == []

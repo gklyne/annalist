@@ -1258,6 +1258,71 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
+    def test_post_move_up_fields(self):
+        self._create_record_view("movefieldview")
+        self._check_recordview_values("movefieldview")
+        f = recordview_entity_view_form_data(
+            view_id="movefieldview", orig_id="movefieldview", 
+            action="edit",
+            target_record_type="annal:View",
+            move_up_fields=["2","3"]
+            )
+        u = entitydata_edit_url(
+            action="edit", coll_id="testcoll", type_id="_view", entity_id="movefieldview", 
+            view_id="View_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + u + "?continuation_url=" + self.continuation_path
+        self.assertEqual(v, r['location'])
+        # Retrieve from redirect location, and test result
+        r = self.client.get(v)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        expect_context = recordview_entity_view_context_data(
+            view_id="movefieldview", orig_id="movefieldview", 
+            action="edit",
+            target_record_type="annal:View",
+            move_up=[2,3]
+            )
+        self.assertDictionaryMatch(r.context, expect_context)
+        return
+
+    def test_post_move_down_fields(self):
+        self._create_record_view("movefieldview")
+        self._check_recordview_values("movefieldview")
+        f = recordview_entity_view_form_data(
+            view_id="movefieldview", orig_id="movefieldview", 
+            action="edit",
+            target_record_type="annal:View",
+            move_down_fields=["1"]
+            )
+        u = entitydata_edit_url(
+            action="edit", coll_id="testcoll", type_id="_view", entity_id="movefieldview", 
+            view_id="View_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + u + "?continuation_url=" + self.continuation_path
+        self.assertEqual(v, r['location'])
+        # Retrieve from redirect location, and test result
+        r = self.client.get(v)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        expect_context = recordview_entity_view_context_data(
+            view_id="movefieldview", orig_id="movefieldview", 
+            action="edit",
+            target_record_type="annal:View",
+            move_down=[1]
+            )
+        self.assertDictionaryMatch(r.context, expect_context)
+        return
+
+
 #   -----------------------------------------------------------------------------
 #
 #   ConfirmRecordViewDeleteTests tests for completion of record deletion

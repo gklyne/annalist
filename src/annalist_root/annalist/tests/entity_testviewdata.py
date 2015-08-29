@@ -219,7 +219,7 @@ def recordview_entity_view_context_data(
         coll_id="testcoll", view_id=None, orig_id=None, view_ids=[],
         action=None, 
         target_record_type="annal:View",
-        add_field=None, remove_field=None, 
+        add_field=None, remove_field=None, move_up=None, move_down=None,
         update="RecordView"
     ):
     # Target record fields listed in the view description
@@ -327,6 +327,14 @@ def recordview_entity_view_context_data(
             })
     if remove_field:
         context_dict['fields'][5]['field_value'][3:4] = []
+    if move_up:
+        assert move_up == [2,3]
+        fields = context_dict['fields'][5]['field_value']
+        context_dict['fields'][5]['field_value'] = [ fields[i]  for i in [0,2,3,1] ]
+    if move_down:
+        assert move_down == [1]
+        fields = context_dict['fields'][5]['field_value']
+        context_dict['fields'][5]['field_value'] = [ fields[i]  for i in [0,2,1,3] ]
     return context_dict
 
 def recordview_entity_view_form_data(
@@ -339,6 +347,8 @@ def recordview_entity_view_form_data(
         extra_field_uri=None,   # Extra field property URI to add in
         add_field=None,         # True for add field option
         remove_fields=None,     # List of field numbers to remove (as strings)
+        move_up_fields=None,    # List of field numbers to move up
+        move_down_fields=None,  # List of field numbers to move down
         new_enum=None,          # Id of new-value button enumerated value field
         update="RecordView"
         ):
@@ -387,6 +397,14 @@ def recordview_entity_view_form_data(
         form_data_dict['View_fields__remove'] = "Remove field"
         if remove_fields != "no-selection":
             form_data_dict['View_fields__select_fields'] = remove_fields
+    elif move_up_fields:
+        form_data_dict['View_fields__up'] = "Move up"
+        if move_up_fields != "no-selection":
+            form_data_dict['View_fields__select_fields'] = move_up_fields
+    elif move_down_fields:
+        form_data_dict['View_fields__down'] = "Move down"
+        if move_down_fields != "no-selection":
+            form_data_dict['View_fields__select_fields'] = move_down_fields
     elif new_enum:
         form_data_dict[new_enum]        = new_enum
     else:

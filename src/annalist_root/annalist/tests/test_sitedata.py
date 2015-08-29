@@ -1154,7 +1154,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
               ]
             , [ "_user/admin", 
                 [ "admin", "mailto:admin@localhost"
-                , "VIEW CREATE UPDATE DELETE CONFIG CREATE_COLL DELETE_COLL ADMIN"
+                , "VIEW CREATE UPDATE DELETE CONFIG CREATE_COLLECTION DELETE_COLLECTION ADMIN"
                 ]
               ]
             , [ "_user/testuser",
