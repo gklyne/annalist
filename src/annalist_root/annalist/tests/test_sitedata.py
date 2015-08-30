@@ -544,9 +544,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "Type_label"
             , "Type_comment"
             , "Type_uri"
+            , "Type_supertype_uris"
             , "Type_view"
             , "Type_list"
-            #@@ , "Type_supertype_uris"
             , "Type_aliases"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)

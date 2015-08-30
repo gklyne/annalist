@@ -50,7 +50,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
           - [x] Field: Type_supertype_uris
           - [x] Group: Type_supertype_uris
           - [x] Field: Type_supertype_uri
-          - [ ] Add field to type view
+          - [x] Add field to type view
+          - [x] Update sitedata consistency checks (treating groups as separate record type)
       - [x] entitytypeinfo.create_entity: return ['@type'] as list
       - [ ] entitytypeinfo.create_entity: copy types from record type description to ['@type']
           - this is the key function, used by create/save/rename entities

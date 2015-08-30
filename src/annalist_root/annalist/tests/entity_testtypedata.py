@@ -208,6 +208,16 @@ def recordtype_entity_view_context_data(
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
+          , { 'field_id':           'Type_supertype_uris'
+            , 'field_name':         'Type_supertype_uris'
+            , 'field_target_type':  'annal:Type_supertype_uri'
+            , 'field_label':        'Supertype URIs'
+            , 'field_render_type':  'RepeatGroupRow'
+            , 'field_value_mode':   'Value_direct'
+            , 'field_placement':    get_placement_classes('small:0,12')
+            # , 'field_value':      (Supplied separately)
+            , 'options':            []
+            }
           , { 'field_id':           'Type_view'
             , 'field_name':         'Type_view'
             , 'field_target_type':  'annal:View'
@@ -258,28 +268,29 @@ def recordtype_entity_view_form_data(
         })
     if type_id:
         type_url = recordtype_url(coll_id=coll_id, type_id=type_id)
-        form_data_dict['entity_id']     = type_id
-        form_data_dict['orig_id']       = type_id
-        form_data_dict['Type_label']    = '%s %s/%s'%(update, coll_id, type_id)
-        form_data_dict['Type_comment']  = '%s help for %s in collection %s'%(update, type_id, coll_id)
-        form_data_dict['Type_uri']      = type_url or ""
-        form_data_dict['Type_view']     = "Default_view"
-        form_data_dict['Type_list']     = "Default_list"
-        form_data_dict['orig_type']     = "_type"
+        form_data_dict['entity_id']           = type_id
+        form_data_dict['orig_id']             = type_id
+        form_data_dict['Type_label']          = '%s %s/%s'%(update, coll_id, type_id)
+        form_data_dict['Type_comment']        = '%s help for %s in collection %s'%(update, type_id, coll_id)
+        form_data_dict['Type_uri']            = type_url or ""
+        form_data_dict['Type_supertype_uris'] = []
+        form_data_dict['Type_view']           = "Default_view"
+        form_data_dict['Type_list']           = "Default_list"
+        form_data_dict['orig_type']           = "_type"
     if orig_id:
-        form_data_dict['orig_id']       = orig_id
+        form_data_dict['orig_id']   = orig_id
     if action:
-        form_data_dict['action']        = action
+        form_data_dict['action']    = action
     if cancel:
-        form_data_dict['cancel']        = "Cancel"
+        form_data_dict['cancel']    = "Cancel"
     elif close:
-        form_data_dict['close']         = "Close"
+        form_data_dict['close']     = "Close"
     elif edit:
-        form_data_dict['edit']          = "Edit"
+        form_data_dict['edit']      = "Edit"
     elif copy:
-        form_data_dict['copy']          = "Copy"
+        form_data_dict['copy']      = "Copy"
     else:
-        form_data_dict['save']          = 'Save'
+        form_data_dict['save']      = 'Save'
     return form_data_dict
 
 #   -----------------------------------------------------------------------------
