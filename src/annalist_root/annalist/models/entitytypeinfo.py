@@ -310,7 +310,7 @@ class EntityTypeInfo(object):
                 typeuri = self.recordtype[ANNAL.CURIE.uri]
             if not typeuri:
                 typeuri = self.recordtype[ANNAL.CURIE.url]
-        entity_values['@type'] = typeuri    # NOTE: previous type not carried forward
+        entity_values['@type'] = [typeuri]    # NOTE: previous types not carried forward
         # Don't save entity URI if same as URL
         if entity_values.get(ANNAL.CURIE.uri) == entity_values.get(ANNAL.CURIE.url):
             entity_values.pop(ANNAL.CURIE.uri, None)

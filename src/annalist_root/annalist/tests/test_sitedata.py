@@ -285,10 +285,12 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             # print "f: " + field_id
             view_field = RecordField.load(self.coll1, field_id, self.testsite)
             field_type = view_field[ANNAL.CURIE.field_render_type]
+            value_type = view_field[ANNAL.CURIE.field_value_type]
             try:
                 self.assertEqual(view_field["@type"], [ANNAL.CURIE.Field])
                 self.assertEqual(view_field[ANNAL.CURIE.id],      field_id)
                 self.assertEqual(view_field[ANNAL.CURIE.type_id], "_field")
+                #@@ self.assertEqual(value_type, type_id)
                 self.assertIn(ANNAL.CURIE.property_uri,           view_field)
                 self.assertIn(ANNAL.CURIE.field_render_type,      view_field)
                 self.assertIn(ANNAL.CURIE.field_value_mode,       view_field)
@@ -311,6 +313,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                     self.assertEqual(field_group["@type"], [ANNAL.CURIE.Field_group])
                     self.assertEqual(field_group[ANNAL.CURIE.id],          group_id)
                     self.assertEqual(field_group[ANNAL.CURIE.type_id],     "_group")
+                    #@@ self.assertEqual(field_group[ANNAL.CURIE.record_type], value_type)
                     self.check_type_fields("_group", 
                         field_group[ANNAL.CURIE.record_type], field_group[ANNAL.CURIE.group_fields]
                         )
@@ -543,6 +546,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "Type_uri"
             , "Type_view"
             , "Type_list"
+            #@@ , "Type_supertype_uris"
             , "Type_aliases"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)
@@ -808,16 +812,17 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_group/Bib_book_group",        ["Bib_book_group",        "BibEntry book fields"] ]
-            , [ "_group/Bib_identifier_group",  ["Bib_identifier_group",  "BibEntry identifier fields"] ]
-            , [ "_group/Bib_journal_group",     ["Bib_journal_group",     "BibEntry journal fields"] ]
-            , [ "_group/Bib_license_group",     ["Bib_license_group",     "BibEntry license fields"] ]
-            , [ "_group/Bib_person_group",      ["Bib_person_group",      "BibEntry person fields"] ]
-            , [ "_group/Bib_publication_group", ["Bib_publication_group", "BibEntry publication fields"] ]
-            , [ "_group/Group_field_group",     ["Group_field_group",     "Group field fields"] ]
-            , [ "_group/List_field_group",      ["List_field_group",      "List field fields"] ]
-            , [ "_group/Type_alias_group",      ["Type_alias_group",      "Field alias fields"] ]
-            , [ "_group/View_field_group",      ["View_field_group",      "View field fields"] ]
+            [ [ "_group/Bib_book_group",           ["Bib_book_group",           "BibEntry book fields"] ]
+            , [ "_group/Bib_identifier_group",     ["Bib_identifier_group",     "BibEntry identifier fields"] ]
+            , [ "_group/Bib_journal_group",        ["Bib_journal_group",        "BibEntry journal fields"] ]
+            , [ "_group/Bib_license_group",        ["Bib_license_group",        "BibEntry license fields"] ]
+            , [ "_group/Bib_person_group",         ["Bib_person_group",         "BibEntry person fields"] ]
+            , [ "_group/Bib_publication_group",    ["Bib_publication_group",    "BibEntry publication fields"] ]
+            , [ "_group/Group_field_group",        ["Group_field_group",        "Group field fields"] ]
+            , [ "_group/List_field_group",         ["List_field_group",         "List field fields"] ]
+            , [ "_group/Type_alias_group",         ["Type_alias_group",         "Field alias fields"] ]
+            , [ "_group/Type_supertype_uri_group", ["Type_supertype_uri_group", "Supertype URIs"] ]
+            , [ "_group/View_field_group",         ["View_field_group",         "View field fields"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return
@@ -1003,6 +1008,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Type_id",                   ["Type_id"                   ] ]
             , [ "_field/Type_label",                ["Type_label"                ] ]
             , [ "_field/Type_list",                 ["Type_list"                 ] ]
+            , [ "_field/Type_supertype_uri",        ["Type_supertype_uri"        ] ]
+            , [ "_field/Type_supertype_uris",       ["Type_supertype_uris"       ] ]
             , [ "_field/Type_uri",                  ["Type_uri"                  ] ]
             , [ "_field/Type_view",                 ["Type_view"                 ] ]
             , [ "_field/User_description",          ["User_description"          ] ]

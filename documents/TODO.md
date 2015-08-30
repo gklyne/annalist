@@ -43,8 +43,23 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] add move-up/move-down buttons
     - [x] add handler logic to reorder list when move up/down clicked
     - [x] test cases - top/middle/bottom, up/down
-- [ ] Multiple URIs for type, and instances of type - add "other types" fields,
-      and propagate these to the @types field of created instances.
+- [ ] Multiple URIs for type, and instances of type - add "supertypes" field
+      to type description, and propagate these to the @types field of created 
+      instances.
+      - [ ] Create new supertype URIs field in type descrioption
+          - [x] Field: Type_supertype_uris
+          - [x] Group: Type_supertype_uris
+          - [x] Field: Type_supertype_uri
+          - [ ] Add field to type view
+      - [x] entitytypeinfo.create_entity: return ['@type'] as list
+      - [ ] entitytypeinfo.create_entity: copy types from record type description to ['@type']
+          - this is the key function, used by create/save/rename entities
+      - [ ] test case: create type with supertype; create instance; check @type value of instance
+          - [ ] Update tests in rest_recordtype to include supertypes field:
+              - updating recordtype_create_values should be enough
+          - [ ] gneeric entity editing tests should do the rest 
+              - expect failures when new types are added to entities
+- [ ] When testing site data, check for entity type of repeated field match with value type of referencing field and group?
 - [ ] When using "+" to add an enum entry, also need quick route to edit entry?
     - existing tests generate __new button submission - cf. render_select.py
     - logic in handler to invoke edit if value selected
@@ -53,7 +68,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - add javascript to update rendering when value selected/deselected
     - rename __new to __edit?
     - when item is selected, change "+" to edit?  (Use &#x270D; - "writing hand" ?)
-    - how to select code based on current value?  
+    - how to select code based on current value?
         - Template logic?  Code generates context?  `bound_field` attribute?  javascript?
 
 (release 0.1.18?)

@@ -145,6 +145,7 @@ site_field_groups = (
     , FieldChoice("Group_field_group",          label="Group field fields"         )
     , FieldChoice("List_field_group",           label="List field fields"          )
     , FieldChoice("Type_alias_group",           label="Field alias fields"         )
+    , FieldChoice("Type_supertype_uri_group",   label="Supertype URIs"             )
     , FieldChoice("View_field_group",           label="View field fields"          )
     ]) 
 
@@ -271,15 +272,28 @@ site_list_field_group_fields = (
 
 site_type_fields = (
     [ FieldChoice("_initial_values")
-    , FieldChoice("Type_alias_source",          label="Type alias source"   )
-    , FieldChoice("Type_alias_target",          label="Type alias target"   )
+    # , FieldChoice("Type_alias_source",          label="Type alias source"   )
+    # , FieldChoice("Type_alias_target",          label="Type alias target"   )
     , FieldChoice("Type_aliases",               label="Field aliases"       )
     , FieldChoice("Type_comment",               label="Comment"             )
     , FieldChoice("Type_id",                    label="Id"                  )
     , FieldChoice("Type_label",                 label="Label"               )
     , FieldChoice("Type_list",                  label="Default list"        )
+    # , FieldChoice("Type_supertype_uri",         label="Supertype URI"       )
+    , FieldChoice("Type_supertype_uris",        label="Supertype URIs"      )
     , FieldChoice("Type_uri",                   label="URI"                 )
     , FieldChoice("Type_view",                  label="Default view"        )
+    ])
+
+site_type_supertype_uris_fields = (
+    [ FieldChoice("_initial_values")
+    , FieldChoice("Type_supertype_uri",         label="Supertype URI"       )
+    ])
+
+site_type_aliases_fields = (
+    [ FieldChoice("_initial_values")
+    , FieldChoice("Type_alias_source",          label="Type alias source"   )
+    , FieldChoice("Type_alias_target",          label="Type alias target"   )
     ])
 
 site_user_fields = (

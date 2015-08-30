@@ -51,7 +51,7 @@ class TokenSetValueMapper(RenderBase):
         """
         if isinstance(field_value,(str,unicode)):
             return field_value.split()
-        log.warning("decode: %r"%(field_value,))
+        log.warning("TokenSetValueMapper.decode: %r"%(field_value,))
         return [field_value]
 
 #   ----------------------------------------------------------------------------
