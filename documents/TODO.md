@@ -46,19 +46,21 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Multiple URIs for type, and instances of type - add "supertypes" field
       to type description, and propagate these to the @types field of created 
       instances.
-      - [ ] Create new supertype URIs field in type descrioption
+      - [x] Create new supertype URIs field in type description
           - [x] Field: Type_supertype_uris
           - [x] Group: Type_supertype_uris
           - [x] Field: Type_supertype_uri
           - [x] Add field to type view
           - [x] Update sitedata consistency checks (treating groups as separate record type)
+          - [x] Manually check entry of supertype URIs for Type
       - [x] entitytypeinfo.create_entity: return ['@type'] as list
-      - [ ] entitytypeinfo.create_entity: copy types from record type description to ['@type']
+      - [x] entitytypeinfo.create_entity: copy types from record type description to ['@type']
           - this is the key function, used by create/save/rename entities
+          - check manually that this allows listings of related types with different views
       - [ ] test case: create type with supertype; create instance; check @type value of instance
-          - [ ] Update tests in rest_recordtype to include supertypes field:
+          - [ ] Update tests in test_recordtype to include supertypes field:
               - updating recordtype_create_values should be enough
-          - [ ] gneeric entity editing tests should do the rest 
+          - [ ] generic entity editing tests should do the rest 
               - expect failures when new types are added to entities
 - [ ] When testing site data, check for entity type of repeated field match with value type of referencing field and group?
 - [ ] When using "+" to add an enum entry, also need quick route to edit entry?
@@ -136,6 +138,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 (feature freeze for V0.9alpha?)
 
 - [ ] review renderers and revise to take all message strings from messages.py
+- [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
+    - Should be easy to add.  Just need a name.
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types
 - [ ] Provide content for the links in the page footer

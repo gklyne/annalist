@@ -311,6 +311,13 @@ class EntityTypeInfo(object):
             if not typeuri:
                 typeuri = self.recordtype[ANNAL.CURIE.url]
         entity_values['@type'] = [typeuri]    # NOTE: previous types not carried forward
+        # Add supertype URIs to new entity record
+        supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uris, None)
+        if supertypes:
+            for tr in supertypes:
+                t = tr.get(ANNAL.CURIE.supertype_uri, None)
+                if t:
+                    entity_values['@type'].append(t)
         # Don't save entity URI if same as URL
         if entity_values.get(ANNAL.CURIE.uri) == entity_values.get(ANNAL.CURIE.url):
             entity_values.pop(ANNAL.CURIE.uri, None)
