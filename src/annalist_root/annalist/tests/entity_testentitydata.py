@@ -149,13 +149,14 @@ def entitydata_value_keys(entity_uri=False):
 
 def entitydata_create_values(
         entity_id, update="Entity", coll_id="testcoll", type_id="testtype", 
-        entity_uri=None, typeuri=None, hosturi=TestHostUri):
+        entity_uri=None, type_uri=None, hosturi=TestHostUri):
     """
     Data used when creating entity test data
     """
-    if typeuri is None:
-        typeuri = entity_url(coll_id, "_type", type_id)
-    types   = [entitydata_type(type_id), typeuri]
+    if type_uri is not None:
+        types = [entitydata_type(type_id), type_uri, type_uri+"/super1", type_uri+"/super2"]
+    else:
+        types = [entitydata_type(type_id), entity_url(coll_id, "_type", type_id)]
     # log.info('entitydata_create_values: types %r'%(types,)) 
     d = (
         { '@type':          types
@@ -184,12 +185,13 @@ def entitydata_values(
         entity_id, update="Entity", 
         coll_id="testcoll", type_id="testtype", 
         entity_uri=None,
-        typeuri=None, hosturi=TestHostUri):
-    typeuri = entity_url(coll_id, "_type", type_id)
+        type_uri=None, hosturi=TestHostUri
+        ):
+    # type_uri = entity_url(coll_id, "_type", type_id)
     dataurl = entity_url(coll_id, type_id, entity_id)
     d = entitydata_create_values(
         entity_id, update=update, coll_id=coll_id, type_id=type_id, 
-        entity_uri=entity_uri, typeuri=typeuri, hosturi=hosturi
+        entity_uri=entity_uri, type_uri=type_uri, hosturi=hosturi
         ).copy() #@@ copy needed here?
     d.update(
         { '@id':            './'
@@ -595,7 +597,7 @@ def entitydata_recordtype_view_form_data(
         form_data_dict['entity_type']     = type_id
         form_data_dict['orig_type']       = type_id
     if type_uri:
-        form_data_dict['Type_uri']        = type_uri        
+        form_data_dict['Type_uri']        = type_uri
     if orig_id:
         form_data_dict['orig_id']         = orig_id
     if orig_type:

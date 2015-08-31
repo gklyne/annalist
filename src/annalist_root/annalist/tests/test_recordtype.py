@@ -200,13 +200,22 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         e = EntityData.create(d, entity_id, {})
         return (t, d, e)
 
-    def _check_record_type_values(self, type_id, update="RecordType"):
+    def _check_record_type_values(self, type_id, 
+            update="RecordType", 
+            type_uri=None
+            ):
         "Helper function checks content of record type entry with supplied type_id"
         self.assertTrue(RecordType.exists(self.testcoll, type_id))
         t = RecordType.load(self.testcoll, type_id)
         self.assertEqual(t.get_id(), type_id)
         self.assertEqual(t.get_view_url(), TestHostUri + recordtype_url("testcoll", type_id))
-        v = recordtype_values(type_id=type_id, update=update)
+        v = recordtype_values(
+            type_id=type_id, 
+            update=update, 
+            type_uri=type_uri
+            )
+        # print "t: "+repr(t.get_values())
+        # print "v: "+repr(v)
         self.assertDictionaryMatch(t.get_values(), v)
         return t
 
@@ -215,7 +224,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_label="(?type_label)",
             type_help="(?type_help)",
             type_uri="(?type_uri)",
-            type_supertype_uris="", #@@
+            type_supertype_uris="",
             type_view="Default_view",
             type_list="Default_list"
             ):
@@ -461,7 +470,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="00000001",
             type_label=default_label("testcoll", "_type", "00000001"),
             type_help=default_comment("testcoll", "_type", "00000001"),
-            type_uri=""
+            type_uri="", type_supertype_uris=""
             )
         return
 
@@ -484,7 +493,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="Default_type",
             type_label="Default record",
             type_help="Default record type, applied when no type is specified when creating a record.",
-            type_uri=""
+            type_uri="", type_supertype_uris=""
             )
         return
 
@@ -519,7 +528,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="Default_type",
             type_label="Default record",
             type_help="Default record type, applied when no type is specified when creating a record.",
-            type_uri="annal:Default_type"
+            type_uri="annal:Default_type", type_supertype_uris=""
             )
         return
 
@@ -543,7 +552,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def test_post_new_type(self):
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
-        f = recordtype_entity_view_form_data(type_id="newtype", action="new", update="RecordType")
+        f = recordtype_entity_view_form_data(
+            type_id="newtype", action="new", update="RecordType",
+            type_uri="test:type"
+            )
         u = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
         r = self.client.post(u, f)
         # print r.content
@@ -552,7 +564,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record type exists
-        self._check_record_type_values("newtype", update="RecordType")
+        self._check_record_type_values("newtype", update="RecordType", type_uri="test:type")
         return
 
     def test_post_new_type_cancel(self):

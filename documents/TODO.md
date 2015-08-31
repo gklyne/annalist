@@ -43,7 +43,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] add move-up/move-down buttons
     - [x] add handler logic to reorder list when move up/down clicked
     - [x] test cases - top/middle/bottom, up/down
-- [ ] Multiple URIs for type, and instances of type - add "supertypes" field
+- [x] Multiple URIs for type, and instances of type - add "supertypes" field
       to type description, and propagate these to the @types field of created 
       instances.
       - [x] Create new supertype URIs field in type description
@@ -57,11 +57,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
       - [x] entitytypeinfo.create_entity: copy types from record type description to ['@type']
           - this is the key function, used by create/save/rename entities
           - check manually that this allows listings of related types with different views
-      - [ ] test case: create type with supertype; create instance; check @type value of instance
-          - [ ] Update tests in test_recordtype to include supertypes field:
-              - updating recordtype_create_values should be enough
-          - [ ] generic entity editing tests should do the rest 
-              - expect failures when new types are added to entities
+      - [x] test cases: create type with supertype; create instance; check @type value of instance
+          - [x] Update tests in test_recordtype to include supertypes.
+          - [x] Update tests in test_entitygenericedit to include supertypes.
 - [ ] When testing site data, check for entity type of repeated field match with value type of referencing field and group?
 - [ ] When using "+" to add an enum entry, also need quick route to edit entry?
     - existing tests generate __new button submission - cf. render_select.py
@@ -137,6 +135,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 (feature freeze for V0.9alpha?)
 
+- [ ] update Django version used to 1.8 (designated for long term support)
 - [ ] review renderers and revise to take all message strings from messages.py
 - [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
     - Should be easy to add.  Just need a name.
@@ -144,6 +143,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types
 - [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+    - [ ] Check out https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
     - [ ] Shared deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?

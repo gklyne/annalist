@@ -55,6 +55,7 @@ from entity_testtypedata            import (
     recordtype_dir, 
     recordtype_edit_url,
     recordtype_create_values, 
+    recordtype_entity_view_form_data,
     )
 from entity_testentitydata          import (
     recorddata_dir,  entitydata_dir,
@@ -91,7 +92,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
+        self.testtype = RecordType.create(self.testcoll, "testtype", 
+            recordtype_create_values("testtype", type_uri="test:testtype")
+            )
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
         self.no_options = [ FieldChoice('', label="(no options)") ]
         self.list_options = get_site_lists_linked("testcoll")
@@ -112,11 +115,16 @@ class GenericEntityEditViewTest(AnnalistTestCase):
     def _create_entity_data(self, entity_id, update="Entity"):
         "Helper function creates entity data with supplied entity_id"
         e = EntityData.create(self.testdata, entity_id, 
-            entitydata_create_values(entity_id, update=update)
+            entitydata_create_values(
+                entity_id, update=update, coll_id="testcoll", type_id="testtype",
+                type_uri="test:testtype"
+                )
             )
-        return e    
+        return e
 
-    def _check_entity_data_values(self, entity_id, type_id="testtype", update="Entity", update_dict=None):
+    def _check_entity_data_values(self, 
+            entity_id, type_id="testtype", update="Entity", update_dict=None
+            ):
         "Helper function checks content of form-updated record type entry with supplied entity_id"
         # log.info("_check_entity_data_values: type_id %s, entity_id %s"%(type_id, entity_id))
         typeinfo = EntityTypeInfo(self.testsite, self.testcoll, type_id)
@@ -124,7 +132,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         e = typeinfo.entityclass.load(typeinfo.entityparent, entity_id)
         self.assertEqual(e.get_id(), entity_id)
         self.assertEqual(e.get_view_url(""), TestHostUri + entity_url("testcoll", type_id, entity_id))
-        v = entitydata_values(entity_id, type_id=type_id, update=update)
+        v = entitydata_values(entity_id, type_id=type_id, update=update, type_uri="test:"+type_id)
         if update_dict:
             v.update(update_dict)
             for k in update_dict:
@@ -712,10 +720,14 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         return
 
     def create_new_type(self, coll_id, type_id):
-        self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
-        f = entitydata_recordtype_view_form_data(
-            coll_id=coll_id, type_id="_type", entity_id=type_id,
-            action="new"
+        self.assertFalse(RecordType.exists(self.testcoll, type_id))
+        # f = entitydata_recordtype_view_form_data(
+        #     coll_id=coll_id, type_id="_type", entity_id=type_id,
+        #     action="new"
+        #     )
+        f = recordtype_entity_view_form_data(
+            coll_id=coll_id, type_id=type_id, action="new", update="RecordType",
+            type_uri="test:"+type_id
             )
         u = entitydata_edit_url("new", coll_id, type_id="_type", view_id="Type_view")
         r = self.client.post(u, f)

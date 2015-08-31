@@ -96,7 +96,7 @@ def recordtype_edit_url(action=None, coll_id=None, type_id=None):
 #
 #   -----------------------------------------------------------------------------
 
-def recordtype_value_keys(type_uri=False):
+def recordtype_value_keys(type_uri=False, supertype_uris=False):
     ks = set(
         [ 'annal:id', 'annal:type_id'
         , 'annal:type'
@@ -106,12 +106,17 @@ def recordtype_value_keys(type_uri=False):
         ])
     if type_uri:
         ks.add('annal:uri')
+    if supertype_uris:
+        ks.add('annal:supertype_uris')
     return ks
 
-def recordtype_load_keys(type_uri=False):
-    return recordtype_value_keys(type_uri=type_uri) | {'@id', '@type'}
+def recordtype_load_keys(type_uri=False, supertype_uris=False):
+    return recordtype_value_keys(type_uri=type_uri, supertype_uris=supertype_uris) | {'@id', '@type'}
 
-def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="RecordType"):
+def recordtype_create_values(
+        coll_id="testcoll", type_id="testtype", update="RecordType",
+        type_uri=None
+        ):
     """
     Entity values used when creating a record type entity
     """
@@ -122,21 +127,26 @@ def recordtype_create_values(coll_id="testcoll", type_id="testtype", update="Rec
         , 'annal:type_view':    "Default_view"
         , 'annal:type_list':    "Default_list"
         })
+    if type_uri:
+        d['annal:uri'] = type_uri
+        d['annal:supertype_uris'] = (
+            [ { 'annal:supertype_uri': type_uri+"/super1" }
+            , { 'annal:supertype_uri': type_uri+"/super2" }
+            ])
     return d
 
 def recordtype_values(
         coll_id="testcoll", type_id="testtype", type_uri=None,
         update="RecordType", hosturi=TestHostUri):
     type_url = recordtype_url(coll_id=coll_id, type_id=type_id)
-    d = recordtype_create_values(coll_id, type_id, update=update).copy()
+    d = recordtype_create_values(
+        coll_id, type_id, update=update, type_uri=type_uri
+        ).copy()
     d.update(
         { 'annal:id':       type_id
         , 'annal:type_id':  "_type"
         , 'annal:url':      type_url
-        # , 'annal:uri':      type_uri    # @@TODO: isn't this part of create_values?
         })
-    if type_uri:
-        d['annal:uri'] = type_uri
     return d
 
 def recordtype_read_values(
@@ -160,7 +170,8 @@ def recordtype_read_values(
 
 def recordtype_entity_view_context_data(
         coll_id="testcoll", type_id=None, orig_id=None, type_ids=[],
-        action=None, update="RecordType"
+        action=None, update="RecordType",
+        type_uri=None, supertype_uris=None #@@ need to deal with these.
     ):
     context_dict = (
         { 'title':              "Collection %s"%(coll_id)
@@ -258,8 +269,14 @@ def recordtype_entity_view_form_data(
         coll_id="testcoll", 
         type_id=None, orig_id=None, 
         action=None, cancel=None, close=None, edit=None, copy=None, 
-        update="RecordType"
+        update="RecordType",
+        type_uri=None
         ):
+    """
+    Returns a request dictionary that can be used with the Django test client.
+    Per Django documentation, multiple values for a key are provided as a list.
+    See: https://docs.djangoproject.com/en/1.8/topics/testing/tools/#making-requests
+    """
     form_data_dict = (
         { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
@@ -267,13 +284,13 @@ def recordtype_entity_view_form_data(
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_type")
         })
     if type_id:
-        type_url = recordtype_url(coll_id=coll_id, type_id=type_id)
+        type_url  = recordtype_url(coll_id=coll_id, type_id=type_id)
+        type_help = '%s help for %s in collection %s'%(update, type_id, coll_id)
         form_data_dict['entity_id']           = type_id
         form_data_dict['orig_id']             = type_id
         form_data_dict['Type_label']          = '%s %s/%s'%(update, coll_id, type_id)
-        form_data_dict['Type_comment']        = '%s help for %s in collection %s'%(update, type_id, coll_id)
+        form_data_dict['Type_comment']        = type_help
         form_data_dict['Type_uri']            = type_url or ""
-        form_data_dict['Type_supertype_uris'] = []
         form_data_dict['Type_view']           = "Default_view"
         form_data_dict['Type_list']           = "Default_list"
         form_data_dict['orig_type']           = "_type"
@@ -290,7 +307,11 @@ def recordtype_entity_view_form_data(
     elif copy:
         form_data_dict['copy']      = "Copy"
     else:
-        form_data_dict['save']      = 'Save'
+        form_data_dict['save']      = "Save"
+    if type_uri:
+        form_data_dict['Type_uri']                                   = type_uri
+        form_data_dict['Type_supertype_uris__0__Type_supertype_uri'] = type_uri+"/super1"
+        form_data_dict['Type_supertype_uris__1__Type_supertype_uri'] = type_uri+"/super2"
     return form_data_dict
 
 #   -----------------------------------------------------------------------------
