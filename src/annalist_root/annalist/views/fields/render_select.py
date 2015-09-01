@@ -35,7 +35,6 @@ from django.template        import Template, Context
 #         the continuation URI will need to be provided separately in the context
 #         and mentioned separately in the templates
 
-
 edit_options = (
     '''{% for opt in field_options %} '''+
       '''{% if opt.value == field.field_value %} '''+
@@ -54,21 +53,6 @@ edit_options = (
     '''{% endfor %} '''
     )
 
-#@@ Original
-view_select = (
-    """<!-- fields.render_select.view_select -->
-    {% if field.field_value_link_continuation %}
-      <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
-    {% elif field.field_value and field.field_value != "" %}
-      <span>{{field.field_value}}</span>
-    {% else %}
-    <span class="value-missing">"""+
-      message.NO_SELECTION%{'id': "{{field.field_label}}"}+
-    """</span>
-    {% endif %}
-    """)
-
-#@@ updated
 view_select = (
     """<!-- fields.render_select.view_select -->
     {% if field_linkval %}
@@ -84,7 +68,7 @@ view_select = (
 
 edit_select = (
     """<!-- fields.render_select.edit_select -->
-    <div class="row">
+    <div class="row"> 
       <div class="small-10 columns view-value less-new-button">
         <select name="{{repeat_prefix}}{{field.field_name}}">
     """+
@@ -98,27 +82,12 @@ edit_select = (
                 value="New"
                 title="Define new {{field.field_label}}"
         >
-          +
+          <span class="select-edit-button-text">+&#x270D;</span>
         </button>
       </div>
     </div>
     """)
 
-#@@ Original
-view_choice = (
-    """<!-- fields.render_select.view_choice -->
-    {% if field.field_value_link_continuation %}
-      <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
-    {% elif field.field_value and field.field_value != "" %}
-      <span>{{field.field_value}}</span>
-    {% else %}
-    <span class="value-missing">"""+
-      message.NO_SELECTION%{'id': "{{field.field_label}}"}+
-    """</span>
-    {% endif %}
-    """)
-
-#@@ updated
 view_choice = (
     """<!-- fields.render_select.view_choice -->
     {% if field_linkval %}
@@ -142,21 +111,6 @@ edit_choice = (
     </select>
     """)
 
-#@@ Original
-view_entitytype = (
-    """<!-- fields.render_select.view_entitytype -->
-    {% if field.field_value_link_continuation %}
-      <a href="{{field.field_value_link_continuation}}">{{field.field_value}}</a>
-    {% elif field.field_value and field.field_value != "" %}
-      <span>{{field.field_value}}</span>
-    {% else %}
-    <span class="value-missing">"""+
-      message.NO_SELECTION%{'id': "{{field.field_label}}"}+
-    """</span>
-    {% endif %}
-    """)
-
-#@@ updated
 view_entitytype = (
     """<!-- fields.render_select.view_entitytype -->
     {% if field_linkval %}

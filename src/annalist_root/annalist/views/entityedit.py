@@ -584,14 +584,26 @@ class GenericEntityEditView(AnnalistGenericView):
             new_view_id  = new_typeinfo.get_default_view_id()
 
         if new_type_id is not None:
-            new_edit_uri_base = self.view_uri("AnnalistEntityNewView",
-                coll_id=viewinfo.coll_id, 
-                view_id=new_view_id, type_id=new_type_id, 
-                action="new"
-                )
+            edit_entity_id = new_enum and new_enum.get('enum_value', None)
+            edit_action    = "new"
+            edit_url_id    = "AnnalistEntityNewView"
+            if edit_entity_id:
+                edit_action = "edit"
+                new_edit_url_base = self.view_uri("AnnalistEntityEditView",
+                    coll_id=viewinfo.coll_id, 
+                    view_id=new_view_id, type_id=new_type_id, 
+                    entity_id=edit_entity_id,
+                    action=edit_action
+                    )
+            else:
+                new_edit_url_base = self.view_uri("AnnalistEntityNewView",
+                    coll_id=viewinfo.coll_id, 
+                    view_id=new_view_id, type_id=new_type_id, 
+                    action=edit_action
+                    )
             responseinfo = self.save_invoke_edit_entity(
                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                new_edit_uri_base, "new",
+                new_edit_url_base, edit_action,
                 {},
                 responseinfo=responseinfo
                 )
@@ -1351,6 +1363,7 @@ class GenericEntityEditView(AnnalistGenericView):
             # log.info("find_new_enum enum_desc %r"%(enum_desc,))  #@@
             enum_new = self.form_data_contains(form_data, enum_desc, "new")
             if enum_new:
+                enum_desc['enum_value'] = form_data[enum_new]
                 return enum_desc
         return None
 
@@ -1581,7 +1594,8 @@ class GenericEntityEditView(AnnalistGenericView):
         the supplied field descriptor (as returned by 'find_fields') with a 
         postfix value as supplied.
 
-        Returns the full name of the field found (without the trailing suffix), or None.
+        Returns the full name of the field found (without the trailing suffix), 
+        or None.
         """
         log.debug("form_data_contains: field_desc %r"%field_desc)
         log.debug("form_data_contains: group_list %r"%field_desc['group_list'])

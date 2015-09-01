@@ -94,8 +94,10 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
         self.no_options = [ FieldChoice('', label="(no options)") ]
-        self.list_options = get_site_lists_linked("testcoll")
+        self.no_view_id = [ FieldChoice('', label="(view id)") ]
+        self.no_list_id = [ FieldChoice('', label="(list id)") ]
         self.view_options = get_site_views_linked("testcoll")
+        self.list_options = get_site_lists_linked("testcoll")
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -431,7 +433,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_target_type'],  "annal:View")
         self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][5]['field_value'],        "Default_view")
-        self.assertEqual(r.context['fields'][5]['options'],            self.view_options)
+        self.assertEqual(r.context['fields'][5]['options'],            self.no_view_id + self.view_options)
         # 7th field - list id
         self.assertEqual(r.context['fields'][6]['field_id'],           'Type_list')
         self.assertEqual(r.context['fields'][6]['field_name'],         'Type_list')
@@ -441,7 +443,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][6]['field_target_type'],  "annal:List")
         self.assertEqual(r.context['fields'][6]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][6]['field_value'],        "Default_list")
-        self.assertEqual(r.context['fields'][6]['options'],            self.list_options)
+        self.assertEqual(r.context['fields'][6]['options'],            self.no_list_id + self.list_options)
         return
 
     def test_get_view_no_collection(self):

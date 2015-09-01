@@ -254,7 +254,8 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        # v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        v = entitydata_edit_url("edit", "testcoll", "_type", "testtype", view_id="Type_view")
         w = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entitynewtype", 
             view_id="Default_view"
@@ -405,7 +406,8 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        # v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        v = entitydata_edit_url("edit", "testcoll", "_type", "testtype", view_id="Type_view")
         w = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entitynewtype", 
             view_id="Default_view"
@@ -450,7 +452,8 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        v = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        # v = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        v = entitydata_edit_url("edit", "testcoll", "_field", "Entity_comment", view_id="Field_view")
         w = entitydata_edit_url(
             "edit", "testcoll", "_view", entity_id="editview", 
             view_id="View_view"

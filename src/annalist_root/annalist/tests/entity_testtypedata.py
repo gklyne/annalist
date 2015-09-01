@@ -233,7 +233,7 @@ def recordtype_entity_view_context_data(
             , 'field_name':         'Type_view'
             , 'field_target_type':  'annal:View'
             , 'field_label':        'Default view'
-            , 'field_render_type':  'View'
+            , 'field_render_type':  'Enum_optional'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             # , 'field_value':      (Supplied separately)
@@ -243,7 +243,7 @@ def recordtype_entity_view_context_data(
             , 'field_name':         'Type_list'
             , 'field_target_type':  'annal:List'
             , 'field_label':        'Default list'
-            , 'field_render_type':  'List'
+            , 'field_render_type':  'Enum_optional'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
             # , 'field_value':      (Supplied separately)

@@ -105,6 +105,12 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             [ ("view1", "RecordView coll1/view1")
             , ("view2", "RecordView coll1/view2")
             ])
+        self.no_list_selected = self.makeFieldChoice(
+            [ ("", "(list id)")
+            ])
+        self.no_view_selected = self.makeFieldChoice(
+            [ ("", "(view id)")
+            ])
         self.types_expected = get_site_types_sorted() + self.local_types
         self.lists_expected = get_site_lists_sorted() + self.local_lists
         self.views_expected = get_site_views_sorted() + self.local_views
@@ -526,8 +532,11 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "Type_label", "text", None)
         self.check_input_type_value(s, "Type_comment", "textarea", None)
         self.check_input_type_value(s, "Type_uri", "text", None)
-        self.check_select_field(s, "Type_view",   self.views_expected, "Default_view")
-        self.check_select_field(s, "Type_list",   self.lists_expected, "Default_list")
+        self.check_select_field(
+            s, "Type_view",   self.no_view_selected + self.views_expected, "Default_view"
+            )
+        self.check_select_field(
+            s, "Type_list",   self.no_list_selected + self.lists_expected, "Default_list")
         self.check_select_field(s, "view_choice", self.views_expected, "Type_view")
         return
 

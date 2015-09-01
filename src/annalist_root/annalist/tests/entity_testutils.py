@@ -241,7 +241,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
                 name="foo__new" 
                 value="New"
                 title="Define new foo_label">
-          +
+          <span class="select-edit-button-text">+&#x270D;</span>
         </button>
       </div>
     </div>
@@ -260,7 +260,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
                 name="foo__new" 
                 value="New"
                 title="Define new foo_label">
-          +
+          <span class="select-edit-button-text">+&#x270D;</span>
         </button>
       </div>
     </div>
@@ -286,7 +286,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
         """            name="%(name)s__new" \n"""+
         """            value="New"\n"""+
         """            title="Define new %(label)s">\n"""+
-        """      +\n"""+
+        """      <span class="select-edit-button-text">+&#x270D;</span>\n"""+
         """    </button>\n"""+
         """  </div>\n"""+
         """</div>\n"""+

@@ -175,8 +175,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.testsite   = Site(TestBaseUri, TestBaseDir)
         self.testcoll   = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.no_options = [ FieldChoice('', label="(no options)") ]
-        self.view_options = get_site_views_linked("testcoll")
-        self.list_options = get_site_lists_linked("testcoll")
+        self.no_view_id = [ FieldChoice('', label="(view id)") ]
+        self.no_list_id = [ FieldChoice('', label="(list id)") ]
+        self.view_options = self.no_view_id + get_site_views_linked("testcoll")
+        self.list_options = self.no_list_id + get_site_lists_linked("testcoll")
         # For checking Location: header values...
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_type")
         # Login and permissions

@@ -139,7 +139,7 @@ class SelectRenderingTest(FieldRendererTestSupport):
                 '''            value="New"\n'''+
                 '''            title="Define new %s"\n'''+
                 '''    >\n'''+
-                '''      +\n'''+
+                '''      <span class="select-edit-button-text">+&#x270D;</span>\n'''+
                 '''    </button>\n'''+
                 '''  </div>\n'''+
                 '''</div>\n'''

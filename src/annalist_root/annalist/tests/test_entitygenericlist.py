@@ -416,7 +416,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Type_label',        "Text",          "annal:Text",          "Label")
             , ('Type_comment',      "Markdown",      "annal:Richtext",      "Comment")
             , ('Type_uri',          "Identifier",    "annal:Identifier",    "URI")
-            , ('List_choice',       "List_sel",      "annal:Slug",          "List view")
+            , ('List_choice',       "Enum_choice",   "annal:Slug",          "List view")
             , ('View_choice',       "View_choice",   "annal:Slug",          "Choose view")
             , ('Group_field_sel',   "Field",         "annal:Slug",          "Field id")
             })

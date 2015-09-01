@@ -97,8 +97,10 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             )
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
         self.no_options = [ FieldChoice('', label="(no options)") ]
-        self.list_options = get_site_lists_linked("testcoll")
+        self.no_view_id = [ FieldChoice('', label="(view id)") ]
+        self.no_list_id = [ FieldChoice('', label="(list id)") ]
         self.view_options = get_site_views_linked("testcoll")
+        self.list_options = get_site_lists_linked("testcoll")
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
         loggedin = self.client.login(username="testuser", password="testpassword")
@@ -440,7 +442,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][5]['field_target_type'],  "annal:View")
         self.assertEqual(r.context['fields'][5]['field_value'], "Default_view")
-        self.assertEqual(r.context['fields'][5]['options'], self.view_options)
+        self.assertEqual(r.context['fields'][5]['options'], self.no_view_id + self.view_options)
         # 7th field - list id
         list_id_help = (
             "Default list id for this type"
@@ -455,7 +457,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][6]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][6]['field_target_type'],  "annal:List")
         self.assertEqual(r.context['fields'][6]['field_value'], "Default_list")
-        self.assertEqual(r.context['fields'][6]['options'], self.list_options)
+        self.assertEqual(r.context['fields'][6]['options'], self.no_list_id + self.list_options)
         return
 
     def test_get_new_no_continuation(self):
@@ -562,7 +564,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][5]['field_target_type'],  "annal:View")
         self.assertEqual(r.context['fields'][5]['field_value'],        "Default_view")
-        self.assertEqual(r.context['fields'][5]['options'],            self.view_options)
+        self.assertEqual(r.context['fields'][5]['options'],            self.no_view_id + self.view_options)
         # 7th field - list id
         self.assertEqual(r.context['fields'][6]['field_id'],           'Type_list')
         self.assertEqual(r.context['fields'][6]['field_name'],         'Type_list')
@@ -572,7 +574,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][6]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][6]['field_target_type'],  "annal:List")
         self.assertEqual(r.context['fields'][6]['field_value'],        "Default_list")
-        self.assertEqual(r.context['fields'][6]['options'],            self.list_options)
+        self.assertEqual(r.context['fields'][6]['options'],            self.no_list_id + self.list_options)
         return
 
     def test_get_view_no_collection(self):

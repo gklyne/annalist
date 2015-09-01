@@ -340,7 +340,7 @@ div.row.edit-grouprow
 
 /* Nested value in group */
 div.row.edit-grouprow div.columns div.row.view-value-col div.columns.view-value ,
-div.row.edit-grouprow div.column  div.row.view-value-col div.column.view-value  ,
+div.row.edit-grouprow div.column  div.row.view-value-col div.column.view-value
 {
     margin-top:     0rem;
     margin-bottom:  0rem;
@@ -610,6 +610,13 @@ div.row div.new-button button
     background: linear-gradient(to bottom,  #ffffff 0%,#c9c9c9 100%,#f9f9f9 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
 }
+
+div.row div.new-button button span.select-edit-button-text
+{
+    font-size: 160%;
+    line-height: 0.5;
+}
+
 
 /*  ------------------------------------------------------------------------- 
 

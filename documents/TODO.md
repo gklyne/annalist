@@ -60,17 +60,18 @@ NOTE: this document is used for short-term working notes; longer-term planning i
       - [x] test cases: create type with supertype; create instance; check @type value of instance
           - [x] Update tests in test_recordtype to include supertypes.
           - [x] Update tests in test_entitygenericedit to include supertypes.
-- [ ] When testing site data, check for entity type of repeated field match with value type of referencing field and group?
+- [x] When testing site data, check for entity type of repeated field match with value type of referencing field and group
 - [ ] When using "+" to add an enum entry, also need quick route to edit entry?
     - existing tests generate __new button submission - cf. render_select.py
-    - logic in handler to invoke edit if value selected
-    - when rendering, use &#x270D; where value is selected
-    - default use &#x270D; rather than "+"
-    - add javascript to update rendering when value selected/deselected
-    - rename __new to __edit?
-    - when item is selected, change "+" to edit?  (Use &#x270D; - "writing hand" ?)
-    - how to select code based on current value?
-        - Template logic?  Code generates context?  `bound_field` attribute?  javascript?
+    - [x] when item is selected, change "+" to edit?  (Use &#x270D; - "writing hand" ?)
+        - [x] when rendering, use &#x270D; when value is selected
+        - [x] update CSS to enlarge font on button while keeping overall size
+        - [x] use javascript to select icon when page is loaded
+        - [x] add javascript to update rendering when value selected/deselected
+    - [x] logic in handler to invoke edit if value selected
+    - [x] update test cases as needed
+    - [ ] rename __new to __new_edit?
+- [ ] remove rendundant field render types (Type, List, View, Field, etc.)
 
 (release 0.1.18?)
 
