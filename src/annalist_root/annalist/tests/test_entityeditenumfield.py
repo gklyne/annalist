@@ -247,7 +247,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.assertFalse(EntityData.exists(self.testdata, "entitynewtype"))
         f = entitydata_default_view_form_data(
                 entity_id="entitynewtype", action="new", update="Updated entity", 
-                new_enum="entity_type__new"
+                new_enum="entity_type__new_edit"
                 )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
@@ -270,7 +270,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.client.logout()
         f = entitydata_default_view_form_data(
                 entity_id="entitynewtype", action="new", update="Updated entity", 
-                new_enum="entity_type__new"
+                new_enum="entity_type__new_edit"
                 )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
@@ -396,7 +396,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         e1 = self._check_entity_data_values("entitynewtype")
         f  = entitydata_default_view_form_data(
                 entity_id="entitynewtype", action="edit", update="Updated entity", 
-                new_enum="entity_type__new"
+                new_enum="entity_type__new_edit"
                 )
         u  = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entitynewtype", 
@@ -422,7 +422,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.client.logout()
         f = entitydata_default_view_form_data(
                 entity_id="entitynewtype", action="edit", update="Updated entity", 
-                new_enum="entity_type__new"
+                new_enum="entity_type__new_edit"
                 )
         u  = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entitynewtype", 
@@ -441,7 +441,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         f = recordview_entity_view_form_data(
             view_id="editview", orig_id="editview", 
             action="edit", update="Updated RecordView",
-            new_enum="View_fields__3__Field_id__new"
+            new_enum="View_fields__3__Field_id__new_edit"
             )
         u = entitydata_edit_url(
             "edit", "testcoll", "_view", 

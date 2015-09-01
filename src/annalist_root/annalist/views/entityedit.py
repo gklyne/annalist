@@ -1361,9 +1361,9 @@ class GenericEntityEditView(AnnalistGenericView):
             return fd.has_new_button()
         for enum_desc in self.find_fields(entityvaluemap, is_new_f):
             # log.info("find_new_enum enum_desc %r"%(enum_desc,))  #@@
-            enum_new = self.form_data_contains(form_data, enum_desc, "new")
-            if enum_new:
-                enum_desc['enum_value'] = form_data[enum_new]
+            enum_new_edit = self.form_data_contains(form_data, enum_desc, "new_edit")
+            if enum_new_edit:
+                enum_desc['enum_value'] = form_data[enum_new_edit]
                 return enum_desc
         return None
 

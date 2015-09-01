@@ -135,7 +135,7 @@ class SelectRenderingTest(FieldRendererTestSupport):
                 '''  </div>\n'''+
                 '''  <div class="small-2 columns view-value new-button left small-text-right">\n'''+
                 '''    <button type="submit" \n'''+
-                '''            name="%s__new" \n'''+
+                '''            name="%s__new_edit" \n'''+
                 '''            value="New"\n'''+
                 '''            title="Define new %s"\n'''+
                 '''    >\n'''+

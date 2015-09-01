@@ -238,7 +238,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
       </div>
       <div class="small-2 columns view-value new-button left small-text-right">
         <button type="submit" 
-                name="foo__new" 
+                name="foo__new_edit" 
                 value="New"
                 title="Define new foo_label">
           <span class="select-edit-button-text">+&#x270D;</span>
@@ -257,7 +257,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
       </div>
       <div class="small-2 columns view-value new-button left small-text-right">
         <button type="submit" 
-                name="foo__new" 
+                name="foo__new_edit" 
                 value="New"
                 title="Define new foo_label">
           <span class="select-edit-button-text">+&#x270D;</span>
@@ -283,7 +283,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
         """  </div>\n"""+
         """  <div class="small-2 columns view-value new-button left small-text-right">\n"""+
         """    <button type="submit" \n"""+
-        """            name="%(name)s__new" \n"""+
+        """            name="%(name)s__new_edit" \n"""+
         """            value="New"\n"""+
         """            title="Define new %(label)s">\n"""+
         """      <span class="select-edit-button-text">+&#x270D;</span>\n"""+

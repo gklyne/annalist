@@ -61,7 +61,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
           - [x] Update tests in test_recordtype to include supertypes.
           - [x] Update tests in test_entitygenericedit to include supertypes.
 - [x] When testing site data, check for entity type of repeated field match with value type of referencing field and group
-- [ ] When using "+" to add an enum entry, also need quick route to edit entry?
+- [x] When using "+" to add an enum entry, also need quick route to edit entry?
     - existing tests generate __new button submission - cf. render_select.py
     - [x] when item is selected, change "+" to edit?  (Use &#x270D; - "writing hand" ?)
         - [x] when rendering, use &#x270D; when value is selected
@@ -70,7 +70,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [x] add javascript to update rendering when value selected/deselected
     - [x] logic in handler to invoke edit if value selected
     - [x] update test cases as needed
-    - [ ] rename __new to __new_edit?
+    - [x] rename __new to __new_edit?
 - [ ] remove rendundant field render types (Type, List, View, Field, etc.)
 
 (release 0.1.18?)

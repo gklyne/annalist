@@ -78,7 +78,7 @@ edit_select = (
       </div>
       <div class="small-2 columns view-value new-button left small-text-right">
         <button type="submit" 
-                name="{{repeat_prefix}}{{field.field_name}}__new" 
+                name="{{repeat_prefix}}{{field.field_name}}__new_edit" 
                 value="New"
                 title="Define new {{field.field_label}}"
         >
