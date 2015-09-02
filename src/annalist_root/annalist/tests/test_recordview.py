@@ -36,7 +36,9 @@ from annalist.views.uri_builder             import uri_with_params
 from annalist.views.recordviewdelete        import RecordViewDeleteConfirmedView
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from tests                              import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
 from tests                              import init_annalist_test_site
 from AnnalistTestCase                   import AnnalistTestCase
 from entity_testutils                   import (
@@ -62,6 +64,7 @@ from entity_testentitydata              import (
     layout_classes
     )
 from entity_testsitedata                import (
+    make_field_choices, no_selection,
     get_site_default_entity_fields_sorted,
     get_site_bibentry_fields_sorted
     ) 
@@ -528,7 +531,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "View_fields__0__Field_id", "Field id",
-                    get_site_default_entity_fields_sorted(),
+                    no_selection("(field sel)") + get_site_default_entity_fields_sorted(),
                     "Entity_id")+
                 """
                 </div>
@@ -629,7 +632,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "View_fields__0__Field_id", "Field id",
-                    get_site_bibentry_fields_sorted(),
+                    no_selection("(field sel)") + get_site_bibentry_fields_sorted(),
                     "Entity_id")+
                 """
                 </div>

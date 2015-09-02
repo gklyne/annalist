@@ -71,7 +71,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] logic in handler to invoke edit if value selected
     - [x] update test cases as needed
     - [x] rename __new to __new_edit?
-- [ ] remove rendundant field render types (Type, List, View, Field, etc.)
+- [x] remove rendundant field render types (Type, List, View, Field, etc.)
 
 (release 0.1.18?)
 

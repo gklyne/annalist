@@ -70,6 +70,7 @@ from entity_testentitydata          import (
     entitylist_form_data
     )
 from entity_testsitedata            import (
+    make_field_choices, no_selection,
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
     get_site_views, get_site_views_sorted, get_site_views_linked,
@@ -411,14 +412,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Field_typeref',     "Enum_optional", "annal:Slug",          "Refer to type")
             , ('Field_restrict',    "Text",          "annal:Text",          "Value restriction")
             , ('List_comment',      "Markdown",      "annal:Richtext",      "Help")
-            , ('List_default_type', "Type",          "annal:Type",          "Record type")
-            , ('List_default_view', "View",          "annal:View",          "View")
+            , ('List_default_type', "Enum_optional", "annal:Type",          "Record type")
+            , ('List_default_view', "Enum_optional", "annal:View",          "View")
             , ('Type_label',        "Text",          "annal:Text",          "Label")
             , ('Type_comment',      "Markdown",      "annal:Richtext",      "Comment")
             , ('Type_uri',          "Identifier",    "annal:Identifier",    "URI")
             , ('List_choice',       "Enum_choice",   "annal:Slug",          "List view")
             , ('View_choice',       "View_choice",   "annal:Slug",          "Choose view")
-            , ('Group_field_sel',   "Field",         "annal:Slug",          "Field id")
+            , ('Group_field_sel',   "Enum_optional", "annal:Slug",          "Field id")
             })
         for f in field_entities:
             for eid in range(len(entities)):

@@ -145,6 +145,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="0" class="right" />'''
             , '''<select name="View_fields__0__Field_id">'''+
+              ''' <option value="">(field sel)</option>'''+
               ''' <option value="Entity_comment">Comment</option>'''+
               ''' <option value="Entity_id" selected="selected">Id</option>'''+
               ''' <option value="Entity_label">Label</option>'''+
@@ -157,6 +158,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="1" class="right" />'''
             , '''<select name="View_fields__1__Field_id">'''+
+              ''' <option value="">(field sel)</option>'''+
               ''' <option value="Entity_comment">Comment</option>'''+
               ''' <option value="Entity_id">Id</option>'''+
               ''' <option value="Entity_label">Label</option>'''+
@@ -169,6 +171,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="2" class="right" />'''
             , '''<select name="View_fields__2__Field_id">'''+
+              ''' <option value="">(field sel)</option>'''+
               ''' <option value="Entity_comment">Comment</option>'''+
               ''' <option value="Entity_id">Id</option>'''+
               ''' <option value="Entity_label" selected="selected">Label</option>'''+
@@ -181,6 +184,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="3" class="right" />'''
             , ''' <select name="View_fields__3__Field_id">'''+
+              ''' <option value="">(field sel)</option>'''+
               ''' <option value="Entity_comment" selected="selected">Comment</option>'''+
               ''' <option value="Entity_id">Id</option>'''+
               ''' <option value="Entity_label">Label</option>'''+

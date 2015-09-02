@@ -4,7 +4,7 @@
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Record type"
 , "rdfs:comment":               "Default record type associated with this list.  This is used for constructing a default record selector (i.e. all records of specified type), and also when creating a new record from the list view."
-, "annal:field_render_type":    "Type"
+, "annal:field_render_type":    "Enum_optional"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Type"
 , "annal:placeholder":          "(default record type)"

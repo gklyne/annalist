@@ -68,14 +68,14 @@ _field_get_renderer_functions = (
     , "URIImport":      get_uri_import_renderer
     , "FileUpload":     get_file_upload_renderer
     , "EntityTypeId":   get_entitytype_renderer
-    , "Type":           get_select_renderer
-    , "View":           get_select_renderer
-    , "List":           get_select_renderer
-    , "Field":          get_select_renderer
+    # , "Type":           get_select_renderer
+    # , "View":           get_select_renderer
+    # , "List":           get_select_renderer
+    # , "Field":          get_select_renderer
     , "Enum":           get_select_renderer
     , "Enum_optional":  get_select_renderer
     , "Enum_choice":    get_choice_renderer
-    , "List_sel":       get_choice_renderer
+    # , "List_sel":       get_choice_renderer
     , "RefMultifield":  get_ref_multifield_renderer
     })
 
@@ -91,14 +91,14 @@ _field_value_mappers = (
     , "FileUpload":     FileUploadValueMapper
 
     , "EntityTypeId":   SelectValueMapper
-    , "Type":           SelectValueMapper
-    , "View":           SelectValueMapper
-    , "List":           SelectValueMapper
-    , "Field":          SelectValueMapper
+    # , "Type":           SelectValueMapper
+    # , "View":           SelectValueMapper
+    # , "List":           SelectValueMapper
+    # , "Field":          SelectValueMapper
     , "Enum":           SelectValueMapper
     , "Enum_optional":  SelectValueMapper
     , "Enum_choice":    SelectValueMapper
-    , "List_sel":       SelectValueMapper
+    # , "List_sel":       SelectValueMapper
 
     , "RefMultifield":  RefMultifieldValueMapper
     })

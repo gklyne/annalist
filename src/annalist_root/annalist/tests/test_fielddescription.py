@@ -33,6 +33,7 @@ from AnnalistTestCase       import AnnalistTestCase
 from entity_testentitydata  import entity_url
 
 from entity_testsitedata            import (
+    make_field_choices, no_selection,
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
     get_site_views, get_site_views_sorted, get_site_views_linked,
@@ -151,14 +152,16 @@ class FieldDescriptionTest(AnnalistTestCase):
         #     , ('Entity_type',     "Type"   )
         #     ])
         expect_choices = OrderedDict(
-            [ (fc.id, fc) for fc in get_site_default_entity_fields_linked("testcoll")
+            [ (fc.id, fc) 
+              for fc in no_selection("(field sel)") + 
+                        get_site_default_entity_fields_linked("testcoll") 
             ])
         expect_field_desc = (
             { 'field_id':                   'Group_field_sel'
             , 'field_name':                 'Field_id'
             , 'field_target_type':           ANNAL.CURIE.Slug
             , 'field_label':                'Field id'
-            , 'field_render_type':          'Field'
+            , 'field_render_type':          'Enum_optional'
             , 'field_value_mode':           'Value_direct'
             , 'field_property_uri':         ANNAL.CURIE.field_id
             , 'field_placeholder':          '(field sel)'
@@ -225,7 +228,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_name':                 'Field_id'
             , 'field_target_type':           ANNAL.CURIE.Slug
             , 'field_label':                'Field id'
-            , 'field_render_type':          'Field'
+            , 'field_render_type':          'Enum_optional'
             , 'field_value_mode':           'Value_direct'
             , 'field_property_uri':         ANNAL.CURIE.field_id
             , 'field_placement':            expect_field0_placement

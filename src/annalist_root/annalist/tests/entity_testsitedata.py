@@ -31,6 +31,19 @@ from entity_testentitydata      import entity_url
 
 #   -----------------------------------------------------------------------------
 #
+#   ----- Field choice generation support functions
+#
+#   -----------------------------------------------------------------------------
+
+# Convert list of ids and labvels into list of field choices
+def make_field_choices(options):
+    return [ FieldChoice(v, v, l) for v,l in options ]
+
+def no_selection(label):
+    return [ FieldChoice("", "", label) ]
+
+#   -----------------------------------------------------------------------------
+#
 #   ----- Site-wide entities defined
 #
 #   -----------------------------------------------------------------------------

@@ -62,6 +62,7 @@ from entity_testutils           import (
     create_user_permissions, create_test_user
     )
 from entity_testsitedata        import (
+    make_field_choices, no_selection,
     get_site_types,        get_site_types_sorted,
     get_site_lists,        get_site_lists_sorted,
     get_site_views,        get_site_views_sorted,
@@ -93,23 +94,17 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite  = Site(TestBaseUri, TestBaseDir)
         self.coll1     = Collection.load(self.testsite, "coll1")
-        self.local_types = self.makeFieldChoice(
+        self.local_types = make_field_choices(
             [ ("type1", "RecordType coll1/type1")
             , ("type2", "RecordType coll1/type2")
             ])
-        self.local_lists = self.makeFieldChoice(
+        self.local_lists = make_field_choices(
             [ ("list1", "RecordList coll1/list1")
             , ("list2", "RecordList coll1/list2")
             ])
-        self.local_views = self.makeFieldChoice(
+        self.local_views = make_field_choices(
             [ ("view1", "RecordView coll1/view1")
             , ("view2", "RecordView coll1/view2")
-            ])
-        self.no_list_selected = self.makeFieldChoice(
-            [ ("", "(list id)")
-            ])
-        self.no_view_selected = self.makeFieldChoice(
-            [ ("", "(view id)")
             ])
         self.types_expected = get_site_types_sorted() + self.local_types
         self.lists_expected = get_site_lists_sorted() + self.local_lists
@@ -136,10 +131,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     # --------------------------------------------------------------------------
     # Helper functions
     # --------------------------------------------------------------------------
-
-    # Convert list of ids into list of field choices
-    def makeFieldChoice(self, options):
-        return [ FieldChoice(v, v, l) for v,l in options ]
 
     # Dereference URI and return BeautifulSoup object for the returned HTML
     def get_page(self, uri):
@@ -378,7 +369,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         s = self.get_page(u)
         self.assertEqual(s.title.string, "Collection coll1")
         self.assertEqual(s.h3.string, "Customize collection coll1")
-        local_types_expected = self.makeFieldChoice(
+        local_types_expected = make_field_choices(
             [ ("type1", "RecordList coll1/type1")
             , ("type2", "RecordList coll1/type2")
             ])
@@ -533,10 +524,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "Type_comment", "textarea", None)
         self.check_input_type_value(s, "Type_uri", "text", None)
         self.check_select_field(
-            s, "Type_view",   self.no_view_selected + self.views_expected, "Default_view"
+            s, "Type_view",   
+            no_selection("(view id)") + self.views_expected, "Default_view"
             )
         self.check_select_field(
-            s, "Type_list",   self.no_list_selected + self.lists_expected, "Default_list")
+            s, "Type_list",
+            no_selection("(list id)") + self.lists_expected, "Default_list"
+            )
         self.check_select_field(s, "view_choice", self.views_expected, "Type_view")
         return
 
@@ -547,7 +541,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = get_site_type_fields_sorted()
+        expect_field_choices = no_selection("(field sel)") + get_site_type_fields_sorted()
         expect_fields = (
             [ "Type_id"
             , "Type_label"
@@ -578,10 +572,14 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             s, "List_type", self.list_types_expected, "List"
             )
         self.check_select_field(
-            s, "List_default_type", self.types_expected, "_type"
+            s, "List_default_type", 
+            no_selection("(default record type)") + self.types_expected, 
+            "_type"
             )
         self.check_select_field(
-            s, "List_default_view", self.views_expected, "Type_view"
+            s, "List_default_view", 
+            no_selection("(view id)") + self.views_expected, 
+            "Type_view"
             )
         return
 
@@ -637,8 +635,16 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "entity_id", "text", None)
         self.check_input_type_value(s, "List_label", "text", None)
         self.check_input_type_value(s, "List_comment", "textarea", None)
-        self.check_select_field(s, "List_default_type", self.types_expected, "Default_type")
-        self.check_select_field(s, "List_default_view", self.views_expected, "Default_view")
+        self.check_select_field(
+            s, "List_default_type", 
+            no_selection("(default record type)") + self.types_expected, 
+            "Default_type"
+            )
+        self.check_select_field(
+            s, "List_default_view", 
+            no_selection("(view id)") + self.views_expected, 
+            "Default_view"
+            )
         self.check_input_type_value(s, "List_entity_selector", "text", "ALL")
         self.check_input_type_value(s, "List_target_type", "text", "")
         self.check_select_field(s, "view_choice", self.views_expected, "List_view")
@@ -651,7 +657,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = get_site_list_fields_sorted()
+        expect_field_choices = no_selection("(field sel)") + get_site_list_fields_sorted()
         expect_fields = (
             [ "List_id"
             , "List_type"
@@ -679,14 +685,16 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "List_comment", "textarea", None)
         self.check_input_type_value(s, "List_entity_selector", "text", "'annal:List' in [@type]")
         self.check_input_type_value(s, "List_target_type", "text", "annal:List")
+        self.check_select_field(s, "List_type", self.list_types_expected, "List")
         self.check_select_field(
-            s, "List_type", self.list_types_expected, "List"
+            s, "List_default_type", 
+            no_selection("(default record type)") + self.types_expected, 
+            "_list"
             )
         self.check_select_field(
-            s, "List_default_type", self.types_expected, "_list"
-            )
-        self.check_select_field(
-            s, "List_default_view", self.views_expected, "List_view"
+            s, "List_default_view", 
+            no_selection("(view id)") + self.views_expected, 
+            "List_view"
             )
         return
 
@@ -753,7 +761,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = get_site_view_fields_sorted()
+        expect_field_choices = no_selection("(field sel)") + get_site_view_fields_sorted()
         expect_fields        = (
             [ "View_id"
             , "View_label"
@@ -776,14 +784,16 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "entity_id", "text", "View_list")
         self.check_input_type_value(s, "List_label", "text", None)
         self.check_input_type_value(s, "List_comment", "textarea", None)
+        self.check_select_field(s, "List_type", self.list_types_expected, "List")
         self.check_select_field(
-            s, "List_type", self.list_types_expected, "List"
+            s, "List_default_type", 
+            no_selection("(default record type)") + self.types_expected, 
+            "_view"
             )
         self.check_select_field(
-            s, "List_default_type", self.types_expected, "_view"
-            )
-        self.check_select_field(
-            s, "List_default_view", self.views_expected, "View_view"
+            s, "List_default_view", 
+            no_selection("(view id)") + self.views_expected, 
+            "View_view"
             )
         self.check_input_type_value(
             s, "List_entity_selector", "text", "'annal:View' in [@type]"
@@ -859,7 +869,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = get_site_group_fields_sorted()
+        expect_field_choices = no_selection("(field sel)") + get_site_group_fields_sorted()
         expect_fields = (
             [ "Group_id"
             , "Group_label"
@@ -884,17 +894,17 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(
             s, "List_entity_selector", "text", "'annal:Field_group' in [@type]"
             )
-        self.check_input_type_value(
-            s, "List_target_type", "text", "annal:Field_group"
+        self.check_input_type_value(s, "List_target_type", "text", "annal:Field_group")
+        self.check_select_field(s, "List_type", self.list_types_expected, "List")
+        self.check_select_field(
+            s, "List_default_type", 
+            no_selection("(default record type)") + self.types_expected, 
+            "_group"
             )
         self.check_select_field(
-            s, "List_type", self.list_types_expected, "List"
-            )
-        self.check_select_field(
-            s, "List_default_type", self.types_expected, "_group"
-            )
-        self.check_select_field(
-            s, "List_default_view", self.views_expected, "Field_group_view"
+            s, "List_default_view", 
+            no_selection("(view id)") + self.views_expected, 
+            "Field_group_view"
             )
         return
 
@@ -1086,7 +1096,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = get_site_field_fields_sorted()
+        expect_field_choices = no_selection("(field sel)") + get_site_field_fields_sorted()
         expect_fields = (
             [ "Field_id"
             , "Field_type"
@@ -1125,10 +1135,14 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             s, "List_entity_selector", "text", "'annal:Field' in [@type]"
             )
         self.check_select_field(
-            s, "List_default_type", self.types_expected, "_field"
+            s, "List_default_type", 
+            no_selection("(default record type)") + self.types_expected, 
+            "_field"
             )
         self.check_select_field(
-            s, "List_default_view", self.views_expected, "Field_view"
+            s, "List_default_view", 
+            no_selection("(view id)") + self.views_expected, 
+            "Field_view"
             )
         return
 
@@ -1203,7 +1217,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = get_site_user_fields_sorted()
+        expect_field_choices = no_selection("(field sel)") + get_site_user_fields_sorted()
         expect_fields = (
             [ "User_id"
             , "User_name"
@@ -1230,10 +1244,14 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             s, "List_entity_selector", "text", "'annal:User' in [@type]"
             )
         self.check_select_field(
-            s, "List_default_type", self.types_expected, "_user"
+            s, "List_default_type", 
+            no_selection("(default record type)") + self.types_expected, 
+            "_user"
             )
         self.check_select_field(
-            s, "List_default_view", self.views_expected, "User_view"
+            s, "List_default_view", 
+            no_selection("(view id)") + self.views_expected, 
+            "User_view"
             )
         return
 

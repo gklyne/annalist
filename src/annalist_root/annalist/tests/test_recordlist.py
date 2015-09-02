@@ -61,6 +61,7 @@ from entity_testentitydata              import (
     layout_classes
     )
 from entity_testsitedata            import (
+    make_field_choices, no_selection,
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
     get_site_views, get_site_views_sorted, get_site_views_linked,
@@ -386,7 +387,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "List_default_type", "Record type",
-                    self.type_options,
+                    no_selection("(default record type)") + self.type_options,
                     "Default_type")+
                 """
                 </div>
@@ -403,7 +404,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "List_default_view", "View",
-                    self.view_options,
+                    no_selection("(view id)") + self.view_options,
                     "Default_view")+
                 """
                 </div>
