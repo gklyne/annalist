@@ -63,20 +63,21 @@ _field_get_renderer_functions = (
     , "Markdown":       get_text_markdown_renderer
     , "RefAudio":       get_ref_audio_renderer
     , "RefImage":       get_ref_image_renderer
-    , "URIImage":       get_ref_image_renderer      # For backwards compatibility
     , "URILink":        get_uri_link_renderer
     , "URIImport":      get_uri_import_renderer
     , "FileUpload":     get_file_upload_renderer
     , "EntityTypeId":   get_entitytype_renderer
-    # , "Type":           get_select_renderer
-    # , "View":           get_select_renderer
-    # , "List":           get_select_renderer
-    # , "Field":          get_select_renderer
     , "Enum":           get_select_renderer
     , "Enum_optional":  get_select_renderer
     , "Enum_choice":    get_choice_renderer
-    # , "List_sel":       get_choice_renderer
     , "RefMultifield":  get_ref_multifield_renderer
+    # Render types recognized for backward compatibility
+    , "URIImage":       get_ref_image_renderer
+    , "Type":           get_select_renderer
+    , "View":           get_select_renderer
+    , "List":           get_select_renderer
+    , "Field":          get_select_renderer
+    , "List_sel":       get_choice_renderer
     })
 
 _field_value_mappers = (
@@ -85,22 +86,21 @@ _field_value_mappers = (
     , "Markdown":       TextMarkdownValueMapper
     , "RefAudio":       RefAudioValueMapper
     , "RefImage":       RefImageValueMapper
-    , "URIImage":       RefImageValueMapper         # For backwards compatibility
     , "URILink":        URILinkValueMapper
     , "URIImport":      URIImportValueMapper
     , "FileUpload":     FileUploadValueMapper
-
     , "EntityTypeId":   SelectValueMapper
-    # , "Type":           SelectValueMapper
-    # , "View":           SelectValueMapper
-    # , "List":           SelectValueMapper
-    # , "Field":          SelectValueMapper
     , "Enum":           SelectValueMapper
     , "Enum_optional":  SelectValueMapper
     , "Enum_choice":    SelectValueMapper
-    # , "List_sel":       SelectValueMapper
-
     , "RefMultifield":  RefMultifieldValueMapper
+    # Render types recognized for backward compatibility
+    , "URIImage":       RefImageValueMapper
+    , "Type":           SelectValueMapper
+    , "View":           SelectValueMapper
+    , "List":           SelectValueMapper
+    , "Field":          SelectValueMapper
+    , "List_sel":       SelectValueMapper
     })
 
 def get_field_base_renderer(field_render_type):

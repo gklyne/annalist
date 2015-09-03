@@ -49,6 +49,29 @@ def valid_id(id):
         return id not in reserved
     return False
 
+def split_type_entity_id(id, default_type_id=None):
+    """
+    Returns (type_id,entyity_id) pair for supplied string "type_id/entity_id".
+    If the supplied id may be a bare "entity_id" then the supplied default 
+    type_id is used.
+
+    >>> split_type_entity_id("type_id/entity_id")
+    ('type_id', 'entity_id')
+    >>> split_type_entity_id("t/e", "f")
+    ('t', 'e')
+    >>> split_type_entity_id("entity_id", "def_type_id")
+    ('def_type_id', 'entity_id')
+    >>> split_type_entity_id(None, "def_type_id")
+    ('def_type_id', None)
+    """
+    if id:
+        sub_ids = id.split("/")
+        if len(sub_ids) == 2:
+            return (sub_ids[0], sub_ids[1])
+        elif len(sub_ids) == 1:
+            return (default_type_id, sub_ids[0])
+    return (default_type_id, None)
+
 def slug_from_name(filename):
     """
     Extracts a slug (id) value from a filename

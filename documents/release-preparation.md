@@ -15,11 +15,13 @@
     - `annalist-manager runserver`
 - [ ] Documentation updates
 - [ ] Demo screencast update
+
 - [ ] Create release preparation branch
     - `git checkout -b release-prep-x.y.z develop`
     - *NOTE* use a different name to that which will be used to tag the release
 - [ ] Add TODO list to release notes (edit out working notes)
 - [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
+- [ ] Bump data compatibility version if new data is not compatible with older releases
 - [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`), reinstall and re-test
 - [ ] Add release highlights description to release notes
 - [ ] Review issues list in GitHub

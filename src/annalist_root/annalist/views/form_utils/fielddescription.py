@@ -140,8 +140,11 @@ class FieldDescription(object):
                 self._field_desc['field_choices'][''] = FieldChoice('', label=field_placeholder)
             for e in entities:
                 eid = e.get_id()
+                # val = e.get_type_entity_id()
                 if eid != "_initial_values":
-                    self._field_desc['field_choices'][eid] = FieldChoice(eid, label=e.get_label(), link=e.get_view_url_path())
+                    self._field_desc['field_choices'][eid] = FieldChoice(
+                        eid, label=e.get_label(), link=e.get_view_url_path()
+                        )
             # log.info("typeref %s: %r"%
             #     (self._field_desc['field_ref_type'], list(self._field_desc['field_choices']))
             #     )

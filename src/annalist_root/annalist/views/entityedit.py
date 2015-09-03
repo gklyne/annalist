@@ -291,7 +291,7 @@ class GenericEntityEditView(AnnalistGenericView):
         Return a URI to refresh the current form display, with options to override the
         view identifier and/or action to use.  The defaults justbrefresh the current
         display, except that a "new" action becomes "edit" on the assumption that
-        the new entity is saved before trhe refresh occurs.
+        the new entity is saved before the refresh occurs.
 
         If the entity has been renamed on the submitted form, this is taken into account
         when re-displaying.
@@ -479,7 +479,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 responseinfo=responseinfo
                 )
-            log.debug("continuation_url '%s'"%(viewinfo.get_continuation_next()))
+            log.info("save: continuation_url '%s'"%(viewinfo.get_continuation_next()))
             return responseinfo.http_redirect(self, viewinfo.get_continuation_next())
 
         # Import data described by a field with an activated "Import" button

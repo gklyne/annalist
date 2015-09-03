@@ -17,6 +17,7 @@ from django.core.urlresolvers           import resolve, reverse
 from annalist                           import message
 from annalist.exceptions                import Annalist_Error
 from annalist.identifiers               import RDFS, ANNAL
+from annalist.util                      import split_type_entity_id
 
 from annalist.models.collection         import Collection
 from annalist.models.recordtype         import RecordType
@@ -223,10 +224,10 @@ class EntityGenericListView(AnnalistGenericView):
                 continuation_url=listinfo.get_continuation_url()
                 )
         else:
-            (entity_type, entity_id) = (
-                entity_ids[0].split("/") if len(entity_ids) == 1 else (None, None)
-                )
-            entity_type = entity_type or type_id or listinfo.get_list_type_id()
+            entity_type = type_id or listinfo.get_list_type_id()
+            entity_id   = None
+            if len(entity_ids) == 1:
+                (entity_type, entity_id) = split_type_entity_id(entity_ids[0], entity_type)
             if "new" in request.POST:
                 action = "new"
                 redirect_uri = uri_with_params(

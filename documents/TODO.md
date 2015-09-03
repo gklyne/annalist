@@ -22,10 +22,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: import image when changing record ID (or on new record?) gives error.
 - [x] BUG: import image when changing record ID causes error on save
 - [x] BUG: if >1 repeated field group is selected for deletion, only the last is deleted
-- [ ] BUG: follow links to edit view, then close out, does not return to entity view.
-    - "View description" continuation is OK
-    - "View description" > "Edit" continuation is OK
-    - after "Move up", continuation is lost
+- [x] BUG: follow links to edit view, then save, does not return to entity view.
 - [x] Update file upload logic to use `responseinfo`, following pattern of import.
 - [x] Factor out common code between upload/import logic.
 - [x] Built-in `Entity_id` and `Entity_label` fields have non-standard position/size values
@@ -71,7 +68,11 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] logic in handler to invoke edit if value selected
     - [x] update test cases as needed
     - [x] rename __new to __new_edit?
-- [x] remove rendundant field render types (Type, List, View, Field, etc.)
+- [x] remove redundant field render types (Type, List, View, Field, etc.)
+    - Need to keep entries in render_utils for backwards compatibility
+- [ ] Apply subtype selection logic to dropdowns (as well as lists)
+    - select by type (as now)
+    - enumerate over all types with matchging type URI
 
 (release 0.1.18?)
 
@@ -138,6 +139,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 - [ ] update Django version used to 1.8 (designated for long term support)
 - [ ] review renderers and revise to take all message strings from messages.py
+- [ ] look into entity cacheing (esp. RecordType) for performance improvement
 - [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
     - Should be easy to add.  Just need a name.
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
@@ -171,6 +173,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 Technical debt:
 
 - [ ] Refactor entity edit response handling
+- [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
 - [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
     - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
     - [ ]remove corresponding special case code in bound_field.

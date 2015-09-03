@@ -219,10 +219,10 @@ class Select_edit_renderer(object):
             val     = get_field_edit_value(context, None)
             textval = SelectValueMapper.encode(val)
             options = context['field']['options']
-            # options is list of FieldChoice values
+            # options is a list of FieldChoice values
             # print repr(options)
             if textval not in [ o.value for o in options ]:
-                options = list(options)      # clone
+                options = list(options)                   # clone
                 options.insert(0, FieldChoice(textval))   # Add missing current value to options
             with context.push(encoded_field_value=textval, field_options=options):
                 result = self._template.render(context)

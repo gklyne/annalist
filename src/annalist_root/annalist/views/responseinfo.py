@@ -25,6 +25,8 @@ log = logging.getLogger(__name__)
 # from annalist                       import message
 # from annalist.identifiers           import RDF, RDFS, ANNAL
 
+from annalist.views.uri_builder     import uri_param_dict
+
 class ResponseInfo(object):
     """
     This class collects and organizes information generated while processing
@@ -127,14 +129,21 @@ class ResponseInfo(object):
         set up for the current responseinfo.  The responseinfo object is updated with
         the generated response, which is also returned as the result of thismethod.
         """
+        # NOTE: supplied URI is presumed to ioncl;ude continuation and other parameters.
+        # These need to be extracted and passed separately to the underlying
+        # `redirect_error` or `redirect_info` method so that they can be reassembled 
+        # along with the status messages.
+        param_dict = uri_param_dict(next_uri)
         if self._http_response is None:
             if self.is_response_error():
-                resp = base_view.redirect_error(next_uri, 
+                resp = base_view.redirect_error(next_uri,
+                    view_params=param_dict, 
                     error_head=self._response_err, 
                     error_message=self._response_info
                     )
             else:
                 resp = base_view.redirect_info(next_uri, 
+                    view_params=param_dict, 
                     info_head=self._response_conf, 
                     info_message=self._response_info
                     )

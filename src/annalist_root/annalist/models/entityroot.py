@@ -92,6 +92,12 @@ class EntityRoot(object):
     def get_type_id(self):
         return self._entitytypeid
 
+    def get_type_entity_id(self):
+        """
+        return Id that is unique within collection
+        """
+        return self._entitytypeid + "/" + self._entityid
+
     def get_label(self):
         """
         Return label string for the current entity.

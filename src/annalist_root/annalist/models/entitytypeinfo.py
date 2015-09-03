@@ -275,6 +275,39 @@ class EntityTypeInfo(object):
             log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
         return
 
+    def get_type_id(self):
+        """
+        Return id for current type
+        """
+        if self.recordtype:
+            return self.recordtype[ANNAL.CURIE.id]
+        return None
+
+    def get_type_uri(self):
+        """
+        Return identiftying URI for the current type
+        """
+        typeuri = None
+        if self.recordtype:
+            if ANNAL.CURIE.uri in self.recordtype:
+                typeuri = self.recordtype[ANNAL.CURIE.uri]
+            if not typeuri:
+                typeuri = self.recordtype[ANNAL.CURIE.url]
+        return typeuri
+
+    def get_all_type_uris(self):
+        """
+        Return list of all type URIs for this type
+        """
+        types = [self.get_type_uri()]
+        supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uris, None)
+        if supertypes:
+            for st in supertypes:
+                t = st.get(ANNAL.CURIE.supertype_uri, None)
+                if t:
+                    types.append(t)
+        return types
+
     def _new_entity(self, entity_id):
         """
         Returns a new, entity object of the current type with the given id
@@ -304,20 +337,17 @@ class EntityTypeInfo(object):
             )
         # Set type URI for entity; previous types are not carried forwards
         # If type does not define a URI, use type URL
-        typeuri = None
-        if self.recordtype:
-            if ANNAL.CURIE.uri in self.recordtype:
-                typeuri = self.recordtype[ANNAL.CURIE.uri]
-            if not typeuri:
-                typeuri = self.recordtype[ANNAL.CURIE.url]
-        entity_values['@type'] = [typeuri]    # NOTE: previous types not carried forward
-        # Add supertype URIs to new entity record
-        supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uris, None)
-        if supertypes:
-            for tr in supertypes:
-                t = tr.get(ANNAL.CURIE.supertype_uri, None)
-                if t:
-                    entity_values['@type'].append(t)
+        # typeuri = self.get_type_uri()
+        # assert typeuri is not None
+        # entity_values['@type'] = [typeuri]    # NOTE: previous types not carried forward
+        # # Add supertype URIs to new entity record
+        # supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uris, None)
+        # if supertypes:
+        #     for tr in supertypes:
+        #         t = tr.get(ANNAL.CURIE.supertype_uri, None)
+        #         if t:
+        #             entity_values['@type'].append(t)
+        entity_values['@type'] = self.get_all_type_uris() # NOTE: previous types not carried forward
         # Don't save entity URI if same as URL
         if entity_values.get(ANNAL.CURIE.uri) == entity_values.get(ANNAL.CURIE.url):
             entity_values.pop(ANNAL.CURIE.uri, None)

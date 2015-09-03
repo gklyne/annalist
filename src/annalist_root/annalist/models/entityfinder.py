@@ -54,6 +54,7 @@ class EntityFinder(object):
         self._coll     = coll
         self._site     = coll.get_site()
         self._selector = EntitySelector(selector)
+        self._subtypes = None
         return
 
     def get_collection_type_ids(self):
@@ -68,25 +69,65 @@ class EntityFinder(object):
             yield t
         return
 
+    def get_collection_subtypes(self, type_id):
+        """
+        Returns a iterator of `entitytypeinfo` objects for all subtypes
+        of the supplied type in the current collection, including the 
+        identified type itself.
+        """
+        supertypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
+        supertypeuri  = supertypeinfo.get_type_uri()
+        if supertypeuri is not None:
+            for tid in self.get_collection_type_ids():
+                tinfo = EntityTypeInfo(self._site, self._coll, tid)
+                if supertypeuri in tinfo.get_all_type_uris():
+                    # log.info(
+                    #     "supertype %s, yield %s: %s"%
+                    #     (supertypeuri, tinfo.get_type_id(), tinfo.get_type_uri())
+                    #     )
+                    yield tinfo
+        return 
+
     def get_type_entities(self, type_id, user_permissions, scope):
         """
         Iterate over entities from collection matching the supplied type.
 
-        'scope' is used to determine the extend of data top be included in the listing:
+        'scope' is used to determine the extent of data top be included in the listing:
         a value of 'all' means that site-wide entyioties are icnluded in the listing.
         Otherwise only collection entities are included.        
         """
         entitytypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
         include_sitedata = (scope == "all")
         for e in entitytypeinfo.enum_entities_with_inferred_values(
-            user_permissions, usealtparent=include_sitedata
-            ):
+                user_permissions, usealtparent=include_sitedata
+                ):
             yield e
+        return
+
+    def get_subtype_entities(self, type_id, user_permissions, scope):
+        """
+        Iterate over entities from collection that are of the indicated type
+        or any of its subtypes.
+
+        'scope' is used to determine the extent of data top be included in the listing:
+        a value of 'all' means that site-wide entyioties are icnluded in the listing.
+        Otherwise only collection entities are included.        
+        """
+        include_sitedata = (scope == "all")
+        for entitytypeinfo in self.get_collection_subtypes(type_id):
+            for e in entitytypeinfo.enum_entities_with_inferred_values(
+                    user_permissions, usealtparent=include_sitedata
+                    ):
+                # log.info(
+                #     "get_subtype_entities type_id %s, yield %s/%s"%
+                #     (type_id, e.get_type_id(), e.get_id())
+                #     )
+                yield e
         return
 
     def get_all_types_entities(self, types, user_permissions, scope):
         """
-        Iterate mover all entities of all types from a supplied type iterator
+        Iterate mover all entities of all type ids from a supplied type iterator
         """
         assert user_permissions is not None
         for t in types:
@@ -101,7 +142,8 @@ class EntityFinder(object):
         If a type_id is supplied, site data values are included.
         """
         if type_id:
-            return self.get_type_entities(type_id, user_permissions, scope)
+            return self.get_subtype_entities(type_id, user_permissions, scope)
+            # return self.get_type_entities(type_id, user_permissions, scope)
         else:
             return self.get_all_types_entities(
                 self.get_collection_type_ids(), user_permissions, scope
@@ -181,7 +223,7 @@ class EntitySelector(object):
     >>> c  = { 'view': { 'v:a': '1', 'v:b': ['2', '3'] } }
     >>> f1 = "'1' == [p:a]"
     >>> f2 = "[p:a]=='2'"
-    >>> f3 = ''
+    >>> f3 = ""
     >>> f4 = "'http://example.com/type' in [@type]"
     >>> f5 = "'foo:bar' in [@type]"
     >>> f6 = "'bar:foo' in [@type]"
