@@ -25,7 +25,7 @@ from render_ref_audio           import get_ref_audio_renderer, RefAudioValueMapp
 from render_ref_image           import get_ref_image_renderer, RefImageValueMapper
 from render_text_markdown       import get_text_markdown_renderer, TextMarkdownValueMapper
 from render_select              import (
-    get_select_renderer, get_choice_renderer, get_entitytype_renderer, 
+    get_select_renderer, get_choice_renderer, get_entitytype_renderer, get_view_choice_renderer,
     SelectValueMapper
     )
 from render_uri_link            import get_uri_link_renderer, URILinkValueMapper
@@ -44,7 +44,7 @@ _field_view_files = (
     , "Slug":           "field/annalist_view_slug.html"
     , "EntityId":       "field/annalist_view_entityid.html"
     , "Identifier":     "field/annalist_view_identifier.html"
-    , "View_choice":    "field/annalist_view_view_choice.html"
+    # , "View_choice":    "field/annalist_view_view_choice.html"
     })
 
 _field_edit_files = (
@@ -53,7 +53,7 @@ _field_edit_files = (
     , "Slug":           "field/annalist_edit_slug.html"
     , "EntityId":       "field/annalist_edit_entityid.html"
     , "Identifier":     "field/annalist_edit_identifier.html"
-    , "View_choice":    "field/annalist_edit_view_choice.html"
+    # , "View_choice":    "field/annalist_edit_view_choice.html"
     })
 
 _field_get_renderer_functions = (
@@ -70,6 +70,7 @@ _field_get_renderer_functions = (
     , "Enum":           get_select_renderer
     , "Enum_optional":  get_select_renderer
     , "Enum_choice":    get_choice_renderer
+    , "View_choice":    get_view_choice_renderer
     , "RefMultifield":  get_ref_multifield_renderer
     # Render types recognized for backward compatibility
     , "URIImage":       get_ref_image_renderer
@@ -93,6 +94,7 @@ _field_value_mappers = (
     , "Enum":           SelectValueMapper
     , "Enum_optional":  SelectValueMapper
     , "Enum_choice":    SelectValueMapper
+    , "View_choice":    SelectValueMapper
     , "RefMultifield":  RefMultifieldValueMapper
     # Render types recognized for backward compatibility
     , "URIImage":       RefImageValueMapper

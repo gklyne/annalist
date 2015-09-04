@@ -13,6 +13,7 @@ import re
 import os
 import os.path
 import errno
+import traceback
 import stat
 import time
 import urlparse
@@ -49,10 +50,10 @@ def valid_id(id):
         return id not in reserved
     return False
 
-def split_type_entity_id(id, default_type_id=None):
+def split_type_entity_id(eid, default_type_id=None):
     """
     Returns (type_id,entyity_id) pair for supplied string "type_id/entity_id".
-    If the supplied id may be a bare "entity_id" then the supplied default 
+    The supplied `eid` may be a bare "entity_id" then the supplied default 
     type_id is used.
 
     >>> split_type_entity_id("type_id/entity_id")
@@ -64,13 +65,34 @@ def split_type_entity_id(id, default_type_id=None):
     >>> split_type_entity_id(None, "def_type_id")
     ('def_type_id', None)
     """
-    if id:
-        sub_ids = id.split("/")
+    if eid is not None:
+        sub_ids = eid.split("/")
         if len(sub_ids) == 2:
             return (sub_ids[0], sub_ids[1])
         elif len(sub_ids) == 1:
             return (default_type_id, sub_ids[0])
     return (default_type_id, None)
+
+def fill_type_entity_id(eid, default_type_id=None):
+    """
+    Assemble a type+entity compisite identifier based on a supplied id string.
+    If the string does not alreadyt include a type_id value, thne supplied default
+    is used.
+    """
+    type_id, entity_id = split_type_entity_id(eid, default_type_id=default_type_id)
+    return make_type_entity_id(type_id, entity_id)
+
+def make_type_entity_id(type_id=None, entity_id=None):
+    """
+    Assemble a type_id and entity_id and return a composite identifier.
+
+    If the entity Id is blank, ignore the supplied type id
+    """
+    assert type_id is not None,   "make_type_entity_id: no type id (%s, %s)"%(type_id, entity_id)
+    assert entity_id is not None, "make_type_entity_id: no entity id (%s, %s)"%(type_id, entity_id)
+    if entity_id != "":
+        return type_id + "/" + entity_id
+    return ""
 
 def slug_from_name(filename):
     """

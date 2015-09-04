@@ -84,7 +84,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testcoll", "testtype"))
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
         self.type_ids = get_site_types_linked("testcoll")
-        self.type_ids.append(FieldChoice("testtype", 
+        self.type_ids.append(FieldChoice("_type/testtype", 
                 label="RecordType testcoll/testtype",
                 link=recordtype_url("testcoll", "testtype")
             ))
@@ -168,7 +168,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                     render_choice_options(
                         "entity_type",
                         self.type_ids,
-                        "testtype")+
+                        "_type/testtype")+
                   """
                   </div>
                 </div>

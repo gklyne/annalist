@@ -54,6 +54,7 @@ class FieldRendererTestSupport(AnnalistTestCase):
             target_value= None, 
             field_link=None, 
             target_link=None, 
+            field_ref_type=None,
             options=None
         ):
         cd = (
@@ -66,6 +67,7 @@ class FieldRendererTestSupport(AnnalistTestCase):
               , 'field_edit_value':     val
               , 'target_value':         val     # Mimics bound_field default behaviour
               , 'field_view_value':     val
+              , 'continuation_param':   "?continuation_url=test_cont"
               }
             , 'repeat_prefix':        repeat_prefix
             })
@@ -77,6 +79,8 @@ class FieldRendererTestSupport(AnnalistTestCase):
         if target_link is not None:
             cd['field']['target_value_link']              = target_link
             cd['field']['target_value_link_continuation'] = target_link+"?continuation_url=test_cont"
+        if field_ref_type is not None:
+            cd['field']['field_ref_type'] = field_ref_type
         if options is not None:
             cd['field']['options'] = options
         return Context(cd)

@@ -146,10 +146,10 @@ class FieldRenderingTest(FieldRendererTestSupport):
               ''' value="0" class="right" />'''
             , '''<select name="View_fields__0__Field_id">'''+
               ''' <option value="">(field sel)</option>'''+
-              ''' <option value="Entity_comment">Comment</option>'''+
-              ''' <option value="Entity_id" selected="selected">Id</option>'''+
-              ''' <option value="Entity_label">Label</option>'''+
-              ''' <option value="Entity_type">Type</option>'''+
+              ''' <option value="_field/Entity_comment">Comment</option>'''+
+              ''' <option value="_field/Entity_id" selected="selected">Id</option>'''+
+              ''' <option value="_field/Entity_label">Label</option>'''+
+              ''' <option value="_field/Entity_type">Type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__0__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -159,10 +159,10 @@ class FieldRenderingTest(FieldRendererTestSupport):
               ''' value="1" class="right" />'''
             , '''<select name="View_fields__1__Field_id">'''+
               ''' <option value="">(field sel)</option>'''+
-              ''' <option value="Entity_comment">Comment</option>'''+
-              ''' <option value="Entity_id">Id</option>'''+
-              ''' <option value="Entity_label">Label</option>'''+
-              ''' <option value="Entity_type" selected="selected">Type</option>'''+
+              ''' <option value="_field/Entity_comment">Comment</option>'''+
+              ''' <option value="_field/Entity_id">Id</option>'''+
+              ''' <option value="_field/Entity_label">Label</option>'''+
+              ''' <option value="_field/Entity_type" selected="selected">Type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__1__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -172,10 +172,10 @@ class FieldRenderingTest(FieldRendererTestSupport):
               ''' value="2" class="right" />'''
             , '''<select name="View_fields__2__Field_id">'''+
               ''' <option value="">(field sel)</option>'''+
-              ''' <option value="Entity_comment">Comment</option>'''+
-              ''' <option value="Entity_id">Id</option>'''+
-              ''' <option value="Entity_label" selected="selected">Label</option>'''+
-              ''' <option value="Entity_type">Type</option>'''+
+              ''' <option value="_field/Entity_comment">Comment</option>'''+
+              ''' <option value="_field/Entity_id">Id</option>'''+
+              ''' <option value="_field/Entity_label" selected="selected">Label</option>'''+
+              ''' <option value="_field/Entity_type">Type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__2__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -185,10 +185,10 @@ class FieldRenderingTest(FieldRendererTestSupport):
               ''' value="3" class="right" />'''
             , ''' <select name="View_fields__3__Field_id">'''+
               ''' <option value="">(field sel)</option>'''+
-              ''' <option value="Entity_comment" selected="selected">Comment</option>'''+
-              ''' <option value="Entity_id">Id</option>'''+
-              ''' <option value="Entity_label">Label</option>'''+
-              ''' <option value="Entity_type">Type</option>'''+
+              ''' <option value="_field/Entity_comment" selected="selected">Comment</option>'''+
+              ''' <option value="_field/Entity_id">Id</option>'''+
+              ''' <option value="_field/Entity_label">Label</option>'''+
+              ''' <option value="_field/Entity_type">Type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__3__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+

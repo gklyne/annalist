@@ -57,8 +57,8 @@ test_import_type_create_values = (
     , 'rdfs:label':                 "test_import_type label"
     , 'rdfs:comment':               "test_import_type comment"
     , 'annal:uri':                  "test:type/test_import_type"
-    , 'annal:type_view':            "test_import_view"
-    , 'annal:type_list':            "test_import_list"
+    , 'annal:type_view':            "_view/test_import_view"
+    , 'annal:type_list':            "_list/test_import_list"
     })
 
 test_reference_type_create_values = (
@@ -66,8 +66,8 @@ test_reference_type_create_values = (
     , 'rdfs:label':                 "test_reference_type label"
     , 'rdfs:comment':               "test_reference_type comment"
     , 'annal:uri':                  "test:type/test_reference_type"
-    , 'annal:type_view':            "test_reference_view"
-    , 'annal:type_list':            "test_reference_list"
+    , 'annal:type_view':            "_view/test_reference_view"
+    , 'annal:type_list':            "_list/test_reference_list"
     })
 
 test_import_view_create_values = (
@@ -163,7 +163,7 @@ def test_ref_entity_create_values(entity_id):
     return (
         { 'rdfs:label':                 "test_ref_entity %s label"%entity_id
         , 'rdfs:comment':               "test_ref_entity %s comment"%entity_id
-        , 'test:reference':             entity_id
+        , 'test:reference':             "testimptype/"+entity_id
         })
 
 #   -----------------------------------------------------------------------------
@@ -202,12 +202,20 @@ class ImportResourceTest(AnnalistTestCase):
             self.testcoll, "Test_reference", test_reference_field_create_values
             )
         # Create data records for testing import and references:
-        self.test_imp_type_info = EntityTypeInfo(self.testsite, self.testcoll, "testimptype", create_typedata=True)
+        self.test_imp_type_info = EntityTypeInfo(
+            self.testsite, self.testcoll, "testimptype", create_typedata=True
+            )
         for entity_id in ("test1", "test2"):
-            self.test_imp_type_info.create_entity(entity_id, test_imp_entity_create_values(entity_id))
-        self.test_ref_type_info = EntityTypeInfo(self.testsite, self.testcoll, "testreftype", create_typedata=True)
+            self.test_imp_type_info.create_entity(
+                entity_id, test_imp_entity_create_values(entity_id)
+                )
+        self.test_ref_type_info = EntityTypeInfo(
+            self.testsite, self.testcoll, "testreftype", create_typedata=True
+            )
         for entity_id in ("test1", "test2"):
-            self.test_ref_type_info.create_entity(entity_id, test_ref_entity_create_values(entity_id))
+            self.test_ref_type_info.create_entity(
+                entity_id, test_ref_entity_create_values(entity_id)
+                )
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -300,12 +308,16 @@ class ImportResourceTest(AnnalistTestCase):
             do_import="imp_field__import"
             )
         f['imp_field'] = self.fileuri
-        u = entitydata_edit_url("edit", "testcoll", "testimptype", entity_id="test1", view_id="testimpview")
+        u = entitydata_edit_url(
+            "edit", "testcoll", "testimptype", entity_id="test1", view_id="testimpview"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         # Display resource with reference
-        u = entitydata_edit_url("view", "testcoll", "testreftype", entity_id="test1", view_id="testrefview")
+        u = entitydata_edit_url(
+            "view", "testcoll", "testreftype", entity_id="test1", view_id="testrefview"
+            )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -322,8 +334,8 @@ class ImportResourceTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i].field_value,  "test_ref_entity test1 comment")
         i = 3
         basepath = TestBasePath + "/c/testcoll/d/testimptype/"
-        self.assertEqual(r.context['fields'][i].field_id,     "Test_reference")
-        self.assertEqual(r.context['fields'][i].field_value,        "test1")
+        self.assertEqual(r.context['fields'][i].field_id,           "Test_reference")
+        self.assertEqual(r.context['fields'][i].field_value,        "testimptype/test1")
         self.assertEqual(r.context['fields'][i].field_value_link,   basepath+"test1/")
         # {u'resource_url': u'file:///usr/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/README.md'
         # , u'resource_name': u'imp_field.md'

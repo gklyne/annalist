@@ -9,6 +9,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+import traceback
 import re
 
 from urlparse               import urljoin  # py3: from urllib.parse ...
@@ -147,6 +148,8 @@ class bound_field(object):
             return self.entity_type_link+self.get_continuation_param()
         elif name == "continuation_url":
             return self.get_continuation_url()
+        elif name == "continuation_param":
+            return self.get_continuation_param()
         elif name == "field_description":
             return self._field_description
         elif name == "field_value_key":
@@ -370,6 +373,7 @@ class bound_field(object):
         yield "target_value_link"
         yield "target_value_link_continuation"
         yield "continuation_url"
+        yield "continuation_param"
         yield "options"
         for k in self._field_description:
             yield k
@@ -436,6 +440,12 @@ def get_entity_values(typeinfo=None, entity=None, entity_id=None):
     #@@ typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
     if typeinfo and typeinfo.recordtype:
         entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
+    # This is red herring:  working version also has this
+    # else:
+    #     log.error("get_entity_values: No recordtype: typeinfo %r"%(typeinfo,))
+    #     log.error("get_entity_values: No recordtype: entity id %s/%s"%(type_id,entity_id))
+    #     log.error("get_entity_values: No recordtype: entity %r"%(entity,))
+    #     traceback.print_stack()
     return entityvals
 
 if __name__ == "__main__":

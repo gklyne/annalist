@@ -322,7 +322,7 @@ def recordtype_entity_view_form_data(
 
 def recordtype_delete_form_data(type_id=None, list_id="Default_list"):
     return (
-        { 'list_choice':        list_id
+        { 'list_choice':        "_list/"+list_id
         , 'continuation_url':   ""
         , 'search_for':         ""
         , 'entity_select':      ["_type/%s"%(type_id)]

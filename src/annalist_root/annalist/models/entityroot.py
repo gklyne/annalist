@@ -29,6 +29,7 @@ from annalist               import util
 from annalist.exceptions    import Annalist_Error
 from annalist.identifiers   import ANNAL, RDF, RDFS
 from annalist.resourcetypes import file_extension, file_extension_for_content_type
+from annalist.util          import make_type_entity_id
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -94,9 +95,9 @@ class EntityRoot(object):
 
     def get_type_entity_id(self):
         """
-        return Id that is unique within collection
+        Return type+entity Id that is unique within collection
         """
-        return self._entitytypeid + "/" + self._entityid
+        return make_type_entity_id(self._entitytypeid, self._entityid)
 
     def get_label(self):
         """

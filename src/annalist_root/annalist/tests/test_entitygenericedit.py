@@ -301,7 +301,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                       render_choice_options(
                         "view_choice",
                         self.view_options,
-                        "Type_view")+
+                        "_view/Type_view")+
                     """
                   </div>
                   <div class="small-3 columns">

@@ -178,7 +178,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.no_options = [ FieldChoice('', label="(no options)") ]
         self.type_options   = get_site_types_linked("testcoll")
         self.type_options.append(
-            FieldChoice("testtype", 
+            FieldChoice("_type/testtype", 
                 label="RecordType testcoll/testtype", 
                 link=entity_url("testcoll", "_type", "testtype")
             ))
@@ -341,7 +341,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                   render_choice_options(
                     "List_type",
                     self.list_type_opts,
-                    "List")+
+                    "Enum_list_type/List")+
                 """
                 </div>
               </div>
@@ -388,7 +388,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "List_default_type", "Record type",
                     no_selection("(default record type)") + self.type_options,
-                    "Default_type")+
+                    "_type/Default_type")+
                 """
                 </div>
               </div>
@@ -405,7 +405,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "List_default_view", "View",
                     no_selection("(view id)") + self.view_options,
-                    "Default_view")+
+                    "_view/Default_view")+
                 """
                 </div>
               </div>

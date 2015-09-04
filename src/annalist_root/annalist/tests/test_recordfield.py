@@ -206,7 +206,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.ref_type_options   = (
             [FieldChoice("", label="(no type selected)")] +
             self.type_options +
-            [ FieldChoice("testtype", 
+            [ FieldChoice("_type/testtype", 
                 label="RecordType testcoll/testtype", 
                 link=entity_url("testcoll", "_type", "testtype")
             )])
@@ -592,7 +592,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                   render_choice_options(
                     "Field_render",
                     get_site_field_types_sorted(),
-                    "Text")+
+                    "Enum_render_type/Text")+
                 """
                 </div>
               </div>
@@ -609,7 +609,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                   render_choice_options(
                     "Field_value_mode",
                     get_site_value_modes_sorted(),
-                    "Value_direct")+
+                    "Enum_value_mode/Value_direct")+
                 """
                 </div>
               </div>

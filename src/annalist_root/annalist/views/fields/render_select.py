@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 
 from annalist               import message
 from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
+from annalist.util          import fill_type_entity_id
 
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
@@ -37,7 +38,7 @@ from django.template        import Template, Context
 
 edit_options = (
     '''{% for opt in field_options %} '''+
-      '''{% if opt.value == field.field_value %} '''+
+      '''{% if opt.value == encoded_field_value %} '''+
         '''{% if opt.value == "" %} '''+
           '''<option value="" selected="selected">{{field.field_placeholder}}</option>\n'''+
         '''{% else %} '''+
@@ -56,7 +57,7 @@ edit_options = (
 view_select = (
     """<!-- fields.render_select.view_select -->
     {% if field_linkval %}
-      <a href="{{field.field_value_link_continuation}}">{{field_labelval}}</a>
+      <a href="{{field_linkval}}{{field_continuation_param}}">{{field_labelval}}</a>
     {% elif field_textval and field_textval != "" %}
       <span>{{field_labelval}}</span>
     {% else %}
@@ -91,7 +92,7 @@ edit_select = (
 view_choice = (
     """<!-- fields.render_select.view_choice -->
     {% if field_linkval %}
-      <a href="{{field.field_value_link_continuation}}">{{field_labelval}}</a>
+      <a href="{{field_linkval}}{{field_continuation_param}}">{{field_labelval}}</a>
     {% elif field_textval and field_textval != "" %}
       <span>{{field_labelval}}</span>
     {% else %}
@@ -100,7 +101,6 @@ view_choice = (
     """</span>
     {% endif %}
     """)
-
 
 edit_choice = (
     """<!-- fields.render_select.edit_choice -->
@@ -114,7 +114,7 @@ edit_choice = (
 view_entitytype = (
     """<!-- fields.render_select.view_entitytype -->
     {% if field_linkval %}
-      <a href="{{field.field_value_link_continuation}}">{{field_labelval}}</a>
+      <a href="{{field_linkval}}{{field_continuation_param}}">{{field_labelval}}</a>
     {% elif field_textval and field_textval != "" %}
       <span>{{field_labelval}}</span>
     {% else %}
@@ -134,12 +134,32 @@ edit_entitytype = (
     </select>
     """)
 
+view_view_choice = (
+    """<!-- field/annalist_view_view_choice.html -->
+    <span>{{field.field_value}}</span>
+    """)
+
+edit_view_choice = (
+    """<!-- field/annalist_edit_view_choice.html -->
+    <div class="row">
+      <div class="small-9 columns">
+        <select name="{{repeat_prefix}}{{field.field_name}}">
+        """+
+        edit_options+
+        """
+        </select>
+      </div>
+      <div class="small-3 columns">
+        <input type="submit" name="use_view" value="Show view" />
+      </div>
+    </div>
+    """)
+
 #   ----------------------------------------------------------------------------
 #
 #   Select text value mapping
 #
 #   ----------------------------------------------------------------------------
-
 
 class SelectValueMapper(RenderBase):
     """
@@ -150,7 +170,7 @@ class SelectValueMapper(RenderBase):
     def encode(cls, data_value):
         """
         Encodes supplied data value as an option value to be selected in a 
-        <select> form inbput.
+        <select> form input.
         """
         return data_value or ""
 
@@ -163,6 +183,7 @@ class SelectValueMapper(RenderBase):
 class Select_view_renderer(object):
     """
     Render select value for viewing using supplied template
+
     """
     def __init__(self, template):
         self._template = Template(template)
@@ -172,11 +193,14 @@ class Select_view_renderer(object):
         try:
             # val      = get_field_view_value(context, None)
             val      = get_field_edit_value(context, None)
-            textval  = SelectValueMapper.encode(val)
+            typval   = fill_type_entity_id(val, context['field']['field_ref_type'])
+            textval  = SelectValueMapper.encode(typval)
             labelval = textval
             linkval  = None
+            linkcont = context['field']['continuation_param']
             options  = context['field']['options']
             for o in options:
+                log.info("Select_view_renderer.render: option %r"%(o,))
                 if textval == o.value:
                     labelval = o.label
                     linkval  = o.link
@@ -197,7 +221,8 @@ class Select_view_renderer(object):
         with context.push(
             field_textval=textval, 
             field_labelval=labelval, 
-            field_linkval=linkval):
+            field_linkval=linkval,
+            field_continuation_param=linkcont):
             try:
                 result = self._template.render(context)
             except Exception as e:
@@ -216,8 +241,10 @@ class Select_edit_renderer(object):
 
     def render(self, context):
         try:
-            val     = get_field_edit_value(context, None)
-            textval = SelectValueMapper.encode(val)
+            val     = get_field_edit_value(context, None) or ""
+            # Use refer-to type if value does not include type..
+            typval  = fill_type_entity_id(val, context['field']['field_ref_type'])
+            textval = SelectValueMapper.encode(typval)
             options = context['field']['options']
             # options is a list of FieldChoice values
             # print repr(options)
@@ -227,8 +254,14 @@ class Select_edit_renderer(object):
             with context.push(encoded_field_value=textval, field_options=options):
                 result = self._template.render(context)
         except Exception as e:
-            log.error(e)
-            result = str(e)
+            log.exception("Exception in Select_edit_renderer.render")
+            log.error("Select_edit_renderer.render: "+repr(e))
+            # log.error("Field val %r"%(val,))
+            # log.error("Field name %r"%(context['field']['field_name'],))
+            # log.error("Field type ref %r"%(context['field']['field_ref_type'],))
+            # ex_type, ex, tb = sys.exc_info()
+            # traceback.print_tb(tb)
+            result = repr(e)
         return result
 
 #   ----------------------------------------------------------------------------
@@ -262,6 +295,15 @@ def get_entitytype_renderer():
     return RenderFieldValue(
         view_renderer=Select_view_renderer(view_entitytype),
         edit_renderer=Select_edit_renderer(edit_entitytype),
+        )
+
+def get_view_choice_renderer():
+    """
+    Return field renderer object for entitytype
+    """
+    return RenderFieldValue(
+        view_renderer=Select_view_renderer(view_view_choice),
+        edit_renderer=Select_edit_renderer(edit_view_choice),
         )
 
 # End.

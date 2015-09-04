@@ -337,9 +337,10 @@ class EntityGenericListView(AnnalistGenericView):
                 params = listinfo.get_continuation_url_dict()
                 if search:
                     params = dict(params, search=search)
+                post_type_id, post_list_id = split_type_entity_id(request.POST['list_choice'])
                 list_uri_params = (
                     { 'coll_id': coll_id
-                    , 'list_id': request.POST['list_choice']
+                    , 'list_id': post_list_id
                     })
                 if "view_all" in request.POST:
                     list_uri_params['scope']  = "all"

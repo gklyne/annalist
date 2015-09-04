@@ -70,9 +70,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] rename __new to __new_edit?
 - [x] remove redundant field render types (Type, List, View, Field, etc.)
     - Need to keep entries in render_utils for backwards compatibility
-- [ ] Apply subtype selection logic to dropdowns (as well as lists)
+- [x] Apply subtype selection logic to dropdowns (as well as lists)
     - select by type (as now)
-    - enumerate over all types with matchging type URI
+    - enumerate over all types with matching type URI
+- [ ] Add test case for refer to type field with subtypes defined
 
 (release 0.1.18?)
 
@@ -172,6 +173,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 Technical debt:
 
+- [ ] Customize view getting out of sync with other page styles
 - [ ] Refactor entity edit response handling
 - [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
 - [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.

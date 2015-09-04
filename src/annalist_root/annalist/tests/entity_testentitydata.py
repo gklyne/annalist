@@ -355,7 +355,7 @@ def entitydata_form_add_field(form_data_dict, field_name, dup_index, value):
 
 def entitydata_delete_form_data(entity_id=None, type_id="Default_type", list_id="Default_list"):
     return (
-        { 'list_choice':        list_id
+        { 'list_choice':        "_list/"+list_id
         , 'continuation_url':   ""
         , 'search_for':         ""
         , 'entity_select':      ["%s/%s"%(type_id, entity_id)]
@@ -627,7 +627,7 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
     list_form_data = (
         { 'search_for':         ""
         , 'search':             "Find"
-        , 'list_choice':        "Default_list"
+        , 'list_choice':        "_list/Default_list"
         , 'list_view':          "View"
         , 'entity_select':      ["{{entity.entity_id}}"]
         , 'new':                "New"
@@ -654,7 +654,7 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
         continuation_url = "" # collection_edit_url("testcoll")
     form_data = (
         { 'search_for':         search
-        , 'list_choice':        list_id
+        , 'list_choice':        "_list/"+list_id
         , 'continuation_url':   continuation_url
         })
     if entities is not None:

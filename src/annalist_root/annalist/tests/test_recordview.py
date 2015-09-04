@@ -532,7 +532,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "View_fields__0__Field_id", "Field id",
                     no_selection("(field sel)") + get_site_default_entity_fields_sorted(),
-                    "Entity_id")+
+                    "_field/Entity_id")+
                 """
                 </div>
               </div>
@@ -633,7 +633,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "View_fields__0__Field_id", "Field id",
                     no_selection("(field sel)") + get_site_bibentry_fields_sorted(),
-                    "Entity_id")+
+                    "_field/Entity_id")+
                 """
                 </div>
               </div>

@@ -31,18 +31,21 @@ def expect_render_option(choice_val, select_val, placeholder):
         choice_text = placeholder
         value_text  = ''' value=""'''
     else:
-        choice_text = choice_val
-        value_text  = ''' value="%s"'''%choice_val
+        choice_text = "label "+choice_val
+        value_text  = ''' value="opt_type/%s"'''%choice_val
     return '''<option%s%s>%s</option>'''%(value_text, selected, choice_text)
 
 def expect_render_select(select_name, choice_list, select_val, placeholder):
-    if select_val not in choice_list:
-        choice_list = list(choice_list)     # Clone
-        choice_list.insert(0, select_val)
     sel  = """<select name="%s">"""%select_name
+    if select_val not in choice_list:
+        val = "opt_type/"+select_val if select_val else ""
+        lab = "opt_type/"+select_val if select_val else placeholder
+        nopt = ['''<option value="%s" selected="selected">%s</option>'''%(val, lab)]
+    else:
+        nopt = []
     opts = [ expect_render_option(choice_val, select_val, placeholder) for choice_val in choice_list ]
     end  = "</select>\n"
-    return "\n".join([sel]+opts+[end])
+    return "\n".join([sel]+nopt+opts+[end])
 
 #   ---- test class ----
 
@@ -54,49 +57,56 @@ class SelectRenderingTest(FieldRendererTestSupport):
     def tearDown(self):
         return
 
-    def _make_select_test_context(self, valtext, vallink, valchoices):
-        if valtext not in valchoices:
+    def _make_select_test_context(self, valkey, vallink, valchoices, valplaceholder):
+        valtext = "opt_type/"+valkey if valkey else ""
+        if valkey not in valchoices:
             vallink = None
         # log.info(
-        #     "_make_select_test_context: valtext %r, valchoices %r, vallink %s"%
-        #     (valtext, valchoices, vallink)
+        #     "_make_select_test_context: valtext %r, vallink %r, valchoices %r"%
+        #     (valtext, vallink, valchoices)
         #     )
         valoptions = []
-        for v in valchoices:
-            l = vallink if v == valtext else "@@no_link@@"
-            valoptions.append(FieldChoice(v, link=l))
+        for c in valchoices:
+            if c != "":
+                val = "opt_type/"+c
+                lab = "label "+c
+            else:
+                val = ""
+                lab = valplaceholder
+            lnk = vallink if val == valtext else "@@no_link@@"
+            valoptions.append(FieldChoice(val, label=lab, link=lnk))
         # log.info(
         #     "_make_select_test_context: valoptions %r"%
         #     (valoptions,)
         #     )
-        return self._make_test_context(valtext, options=valoptions, field_link=vallink)
+        return self._make_test_context(valtext, field_ref_type="ref_type", options=valoptions, field_link=vallink)
 
     def test_RenderChoiceValue(self):
-        def expect_render(valtext, vallabel, vallink, valchoices):
-            if vallink and valtext in valchoices:
+        def expect_render(valkey, vallabel, vallink, valchoices):
+            if vallink and valkey in valchoices:
                 render_view = """<a href="%s">%s</a> """%(vallink+"?continuation_url=test_cont", vallabel)
-            elif valtext == "":
+            elif valkey == "":
                 render_view = """<span class="value-missing">%s</span> """%(vallabel)
             else:
                 render_view = """<span>%s</span> """%(vallabel)
             render_edit = expect_render_select(
                 "repeat_prefix_test_field",
                 valchoices, 
-                valtext, 
+                valkey, 
                 "(test placeholder)"
                 )
             return {'view': render_view, 'edit': render_edit}
         noval = "(No 'test label' selected)"
         test_values = (
-            [ ( "aa", "aa",  "http://example.org/aa", ["aa", "bb", "cc"])
-            , ( "",   noval, None,                    ["", "aa", "bb", "cc"])
-            , ( "dd", "dd",  "http://example.org/dd", ["aa", "bb", "cc"])
-            , ( "",   noval, None,                    ["aa", "bb", "cc"])
+            [ ( "aa", "label aa",    "http://example.org/aa", ["aa", "bb", "cc"])
+            , ( "",   noval,         None,                    ["", "aa", "bb", "cc"])
+            , ( "dd", "opt_type/dd", "http://example.org/dd", ["aa", "bb", "cc"])
+            , ( "",   noval,         None,                    ["aa", "bb", "cc"])
             ])
         test_value_context_renders = (
-            [ ( self._make_select_test_context(valtext, vallink, valchoices), 
-                expect_render(valtext, vallabel, vallink, valchoices)
-              ) for valtext, vallabel, vallink, valchoices in test_values
+            [ ( self._make_select_test_context(valkey, vallink, valchoices, noval), 
+                expect_render(valkey, vallabel, vallink, valchoices)
+              ) for valkey, vallabel, vallink, valchoices in test_values
             ])
         renderer = get_choice_renderer()
         for render_context, expect_render in test_value_context_renders:
@@ -112,20 +122,20 @@ class SelectRenderingTest(FieldRendererTestSupport):
         return
 
     def test_RenderSelectValue(self):
-        def expect_render(valtext, vallabel, vallink, valchoices):
-            if vallink and valtext in valchoices:
+        def expect_render(valkey, vallabel, vallink, valchoices):
+            if vallink and valkey in valchoices:
                 render_view = (
                     """<a href="%s">%s</a> """%
                     (vallink+"?continuation_url=test_cont", vallabel)
                     )
-            elif valtext == "":
+            elif valkey == "":
                 render_view = """<span class="value-missing">%s</span> """%(vallabel)
             else:
                 render_view = """<span>%s</span> """%(vallabel)
             select = expect_render_select(
                 "repeat_prefix_test_field",
                 valchoices, 
-                valtext, 
+                valkey, 
                 "(test placeholder)"
                 )
             render_edit = (
@@ -147,13 +157,13 @@ class SelectRenderingTest(FieldRendererTestSupport):
             return {'view': render_view, 'edit': render_edit}
         noval = "(No 'test label' selected)"
         test_values = (
-            [ ( u"aa", "aa",  "http://example.org/aa", ["aa", "bb", "cc"])
-            , ( u"",   noval, None,                    ["", "aa", "bb", "cc"])
-            , ( u"dd", "dd",  "http://example.org/dd", ["aa", "bb", "cc"])
-            , ( u"",   noval, None,                    ["aa", "bb", "cc"])
+            [ ( "aa", "label aa",    "http://example.org/aa", ["aa", "bb", "cc"])
+            , ( "",   noval,         None,                    ["", "aa", "bb", "cc"])
+            , ( "dd", "opt_type/dd", "http://example.org/dd", ["aa", "bb", "cc"])
+            , ( "",   noval,         None,                    ["aa", "bb", "cc"])
             ])
         test_value_context_renders = (
-            [ ( self._make_select_test_context(valtext, vallink, valchoices), 
+            [ ( self._make_select_test_context(valtext, vallink, valchoices, noval), 
                 expect_render(valtext, vallabel, vallink, valchoices)
               ) for valtext, vallabel, vallink, valchoices in test_values
             ])

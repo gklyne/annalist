@@ -21,6 +21,8 @@ class FieldChoice(_FieldChoice_tuple):
     >>> c1 = FieldChoice('id1', 'value1', 'label1', 'link1')
     >>> c1
     FieldChoice(id='id1', value='value1', label='label1', link='link1')
+    >>> str(c1)
+    FieldChoice(id='id1', value='value1', label='label1', link='link1')
     >>> c1.id
     'id1'
     >>> c1.value

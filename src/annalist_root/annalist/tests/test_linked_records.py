@@ -174,7 +174,7 @@ def testsrc_entity_create_values(entity_id, tgtref_id):
     return (
         { 'rdfs:label':                 "testsrc_entity %s label"%entity_id
         , 'rdfs:comment':               "testsrc_entity %s comment"%entity_id
-        , 'test:testtgtref':            tgtref_id
+        , 'test:testtgtref':            "testtgt_type/"+tgtref_id
         })
 
 def testtgt_entity_create_values(entity_id):
@@ -208,7 +208,7 @@ class LinkedRecordTest(AnnalistTestCase):
         self.testtgtref_field = RecordField.create(self.testcoll, "testtgtref_field", testtgtref_field_create_values)
         self.no_options   = [ FieldChoice('', label="(no options)") ]
         self.tgt_options  = (
-            [ FieldChoice(v, 
+            [ FieldChoice("testtgt_type/"+v, 
                 label="testtgt_entity %s label"%v,
                 link=entity_url("testcoll", "testtgt_type", v))
               for v in ["testtgt1", "testtgt2"]
@@ -248,7 +248,7 @@ class LinkedRecordTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i].options,          self.no_options)
         i = 1
         self.assertEqual(r.context['fields'][i].field_id,         "testtgtref_field")
-        self.assertEqual(r.context['fields'][i].field_value,      "testtgt1")
+        self.assertEqual(r.context['fields'][i].field_value,      "testtgt_type/testtgt1")
         self.assertEqual(r.context['fields'][i].field_value_link, "/testsite/c/testcoll/d/testtgt_type/testtgt1/")
         self.assertEqual(r.context['fields'][i].options,          self.tgt_options)
         i = 2
@@ -274,7 +274,11 @@ class LinkedRecordTest(AnnalistTestCase):
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(entities),    2)
         self.assertEqual(len(head_fields), 3)
-        for entc, esrc, etgt in ((entities[0], "testsrc1", "testtgt1"), (entities[1], "testsrc2", "testtgt2")):
+        entity_values = (
+            (entities[0], "testsrc1", "testtgt1"), 
+            (entities[1], "testsrc2", "testtgt2")
+            )
+        for entc, esrc, etgt in entity_values:
             item_fields = context_list_item_fields(r.context, entc)
             self.assertEqual(len(item_fields), 3)
             self.assertEqual(entc['entity_id'],               esrc)
@@ -283,7 +287,7 @@ class LinkedRecordTest(AnnalistTestCase):
             self.assertEqual(item_fields[0].field_value,      esrc)
             self.assertEqual(item_fields[0].field_value_link, None)
             self.assertEqual(item_fields[1].field_id,         "testtgtref_field")
-            self.assertEqual(item_fields[1].field_value,      etgt)
+            self.assertEqual(item_fields[1].field_value,      "testtgt_type/"+etgt)
             self.assertEqual(item_fields[1].field_value_link, "/testsite/c/testcoll/d/testtgt_type/%s/"%etgt)
             self.assertEqual(item_fields[2].field_id,         "Entity_label")
             self.assertEqual(item_fields[2].field_value,      "testsrc_entity %s label"%esrc)
