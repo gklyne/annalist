@@ -227,8 +227,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_help="(?type_help)",
             type_uri="(?type_uri)",
             type_supertype_uris="",
-            type_view="Default_view",
-            type_list="Default_list"
+            type_view="_view/Default_view",
+            type_list="_list/Default_list"
             ):
         r = response
         self.assertEqual(len(r.context['fields']), 8)

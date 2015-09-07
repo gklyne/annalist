@@ -78,9 +78,9 @@ class FieldDescription(object):
         field_property      = field_property or recordfield.get(ANNAL.CURIE.property_uri, "")
         field_placement     = field_placement or recordfield.get(ANNAL.CURIE.field_placement, "")
         field_placeholder   = recordfield.get(ANNAL.CURIE.placeholder, "")
-        field_render_type   = recordfield.get(ANNAL.CURIE.field_render_type, "")
-        field_value_mode    = recordfield.get(ANNAL.CURIE.field_value_mode, "@@FieldDescription:value_mode@@")
-        field_ref_type      = recordfield.get(ANNAL.CURIE.field_ref_type, None)
+        field_render_type   = extract_entity_id(recordfield.get(ANNAL.CURIE.field_render_type, ""))
+        field_value_mode    = extract_entity_id(recordfield.get(ANNAL.CURIE.field_value_mode, "@@FieldDescription:value_mode@@"))
+        field_ref_type      = extract_entity_id(recordfield.get(ANNAL.CURIE.field_ref_type, None))
         field_val_type      = recordfield.get(ANNAL.CURIE.field_value_type, "")
         self._field_desc    = (
             { 'field_id':                   field_id

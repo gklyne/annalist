@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 import copy
 
 from annalist                       import message
-from annalist                       import util
+from annalist.util                  import valid_id, extract_entity_id
 
 from annalist.identifiers           import ANNAL, RDF, RDFS
 
@@ -337,21 +337,10 @@ class EntityTypeInfo(object):
             (entity_id, self.entityparent, entity_values)
             )
         # Set type URI for entity; previous types are not carried forwards
-        # If type does not define a URI, use type URL
-        # typeuri = self.get_type_uri()
-        # assert typeuri is not None
-        # entity_values['@type'] = [typeuri]    # NOTE: previous types not carried forward
-        # # Add supertype URIs to new entity record
-        # supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uris, None)
-        # if supertypes:
-        #     for tr in supertypes:
-        #         t = tr.get(ANNAL.CURIE.supertype_uri, None)
-        #         if t:
-        #             entity_values['@type'].append(t)
-        entity_values['@type'] = self.get_all_type_uris() # NOTE: previous types not carried forward
         # Don't save entity URI if same as URL
         if entity_values.get(ANNAL.CURIE.uri) == entity_values.get(ANNAL.CURIE.url):
             entity_values.pop(ANNAL.CURIE.uri, None)
+        entity_values['@type'] = self.get_all_type_uris() # NOTE: previous types not carried forward
         return self.entityclass.create(self.entityparent, entity_id, entity_values)
 
     def remove_entity(self, entity_id):
@@ -376,7 +365,7 @@ class EntityTypeInfo(object):
             (entity_id, self.entityparent, self.entityaltparent, action)
             )
         entity = None
-        if util.valid_id(entity_id):
+        if valid_id(entity_id):
             if action == "new":
                 entity = self._new_entity(entity_id)
                 entity_initial_values = self.get_initial_entity_values(entity_id)
@@ -520,7 +509,7 @@ class EntityTypeInfo(object):
         """
         view_id = None
         if self.recordtype:
-            view_id = self.recordtype.get(ANNAL.CURIE.type_view, None)
+            view_id = extract_entity_id(self.recordtype.get(ANNAL.CURIE.type_view, None))
         else:
             log.warning("EntityTypeInfo.get_default_view_id: no type data for %s"%(self.type_id))
         return view_id or "Default_view"

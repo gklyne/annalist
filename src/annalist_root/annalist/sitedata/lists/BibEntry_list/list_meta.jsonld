@@ -6,8 +6,8 @@
 , "rdfs:comment":               "Description of list of views"
 , "annal:display_type":         "List"
 , "annal:record_type":          "bib:BibEntry"
-, "annal:default_view":         "BibEntry_view"
-, "annal:default_type":         "BibEntry_type"
+, "annal:default_view":         "_view/BibEntry_view"
+, "annal:default_type":         "_type/BibEntry_type"
 , "annal:list_entity_selector": "'bib:BibEntry' in [@type]"
 , "annal:list_fields":
   [ { "annal:field_id":             "_field/Entity_id"

@@ -124,8 +124,8 @@ def recordtype_create_values(
         { 'annal:type':         "annal:Type"
         , 'rdfs:label':         "%s %s/%s"%(update, coll_id, type_id)
         , 'rdfs:comment':       "%s help for %s in collection %s"%(update, type_id, coll_id)
-        , 'annal:type_view':    "Default_view"
-        , 'annal:type_list':    "Default_list"
+        , 'annal:type_view':    "_view/Default_view"
+        , 'annal:type_list':    "_list/Default_list"
         })
     if type_uri:
         d['annal:uri'] = type_uri
@@ -296,8 +296,8 @@ def recordtype_entity_view_form_data(
         form_data_dict['Type_label']          = '%s %s/%s'%(update, coll_id, type_id)
         form_data_dict['Type_comment']        = type_help
         form_data_dict['Type_uri']            = type_url or ""
-        form_data_dict['Type_view']           = "Default_view"
-        form_data_dict['Type_list']           = "Default_list"
+        form_data_dict['Type_view']           = "_view/Default_view"
+        form_data_dict['Type_list']           = "_list/Default_list"
         form_data_dict['orig_type']           = "_type"
     if orig_id:
         form_data_dict['orig_id']   = orig_id

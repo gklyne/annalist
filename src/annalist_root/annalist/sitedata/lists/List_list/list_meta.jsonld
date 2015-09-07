@@ -5,8 +5,8 @@
 , "rdfs:label":                 "List lists"
 , "rdfs:comment":               "Description of list of lists"
 , "annal:display_type":         "List"
-, "annal:default_view":         "List_view"
-, "annal:default_type":         "_list"
+, "annal:default_view":         "_view/List_view"
+, "annal:default_type":         "_type/_list"
 , "annal:list_entity_selector": "'annal:List' in [@type]"
 , "annal:record_type":          "annal:List"
 , "annal:list_fields":

@@ -124,8 +124,8 @@ def recordlist_create_values(
         , 'rdfs:label':                 "%s %s/%s"%(update, coll_id, list_id)
         , 'rdfs:comment':               "%s help for %s/%s"%(update, coll_id, list_id)
         , "annal:display_type":         "List"
-        , "annal:default_view":         "Default_view"
-        , "annal:default_type":         "Default_type"
+        , "annal:default_view":         "_view/Default_view"
+        , "annal:default_type":         "_type/Default_type"
         , "annal:list_entity_selector": "ALL"
         , "annal:list_fields":
           [ { "annal:field_id":             "_field/Entity_id"
@@ -234,7 +234,7 @@ def recordlist_view_context_data(
             , 'field_render_type':  'Enum_optional'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_value':        'Default_type'
+            , 'field_value':        '_type/Default_type'
             , 'options':            []
             }
           , { 'field_id':           'List_default_view'         # fields[5]
@@ -244,7 +244,7 @@ def recordlist_view_context_data(
             , 'field_render_type':  'Enum_optional'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
-            , 'field_value':        'Default_view'
+            , 'field_value':        '_view/Default_view'
             , 'options':            []
             }
           , { 'field_id':           'List_entity_selector'      # fields[6]
@@ -300,8 +300,8 @@ def recordlist_view_form_data(
         , 'List_label':             '%s list (%s/@@list_id@@)'%(update, coll_id)
         , 'List_comment':           '%s help (%s/@@list_id@@)'%(update, coll_id)
         # , 'List_type':      'List'
-        , 'List_default_type':      'Default_type'
-        , 'List_default_view':      'Default_view'
+        , 'List_default_type':      '_type/Default_type'
+        , 'List_default_view':      '_view/Default_view'
         , 'List_entity_selector':   'ALL'
         # List repeating fields
         , 'List_fields__0__Field_id':           "_field/Entity_id"

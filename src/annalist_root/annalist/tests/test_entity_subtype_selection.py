@@ -139,13 +139,13 @@ class SubtypeSelectionTest(AnnalistTestCase):
             , 'annal:uri':          "test:ref_type_view"
             , 'rdfs:label':         "Test view label"
             , 'rdfs:comment':       "Test view comment"
-            , 'annal:record_type':  "ref_type"
+            , 'annal:record_type':  "_type/ref_type"
             , 'annal:add_field':    True
             , 'annal:view_fields':
-              [ { 'annal:field_id':         "Entity_id"
+              [ { 'annal:field_id':         "_field/Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
                 }
-              , { 'annal:field_id':         "Test_ref_type_field"
+              , { 'annal:field_id':         "_field/Test_ref_type_field"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
                 }
               ]
@@ -158,13 +158,13 @@ class SubtypeSelectionTest(AnnalistTestCase):
             { "annal:type":                 "annal:Field"
             , "rdfs:label":                 "Type reference"
             , "rdfs:comment":               "Type reference field comment"
-            , "annal:field_render_type":    "Enum_choice"
-            , "annal:field_value_mode":     "Value_direct"
+            , "annal:field_render_type":    "Enum_render_type/Enum_choice"
+            , "annal:field_value_mode":     "Enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "test:ref_type"
             , "annal:placeholder":          "(ref type field)"
             , "annal:property_uri":         "test:ref_type"
             , "annal:field_placement":      "small:0,12;medium:0,6"
-            , "annal:field_ref_type":       "testtypes"
+            , "annal:field_ref_type":       "_type/testtypes"
             })
         self.assertTrue(ref_type_field is not None)
         return ref_type_field

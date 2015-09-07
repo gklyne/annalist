@@ -523,7 +523,7 @@ class GenericEntityEditView(AnnalistGenericView):
                         viewinfo.get_continuation_url_dict()
                         )
                     )
-            responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+                responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
             return responseinfo.get_http_response()
 
         # If "Edit" or "Copy" button invoked, initiate new view of current entity

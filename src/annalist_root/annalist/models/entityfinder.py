@@ -14,6 +14,8 @@ import re
 from pyparsing import Word, QuotedString, Literal, Group, Empty, StringEnd, ParseException
 from pyparsing import alphas, alphanums
 
+from annalist.util                  import extract_entity_id
+
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitytypeinfo import EntityTypeInfo, get_built_in_type_ids
 
@@ -109,8 +111,8 @@ class EntityFinder(object):
         Iterate over entities from collection that are of the indicated type
         or any of its subtypes.
 
-        'scope' is used to determine the extent of data top be included in the listing:
-        a value of 'all' means that site-wide entyioties are icnluded in the listing.
+        'scope' is used to determine the extent of data to be included in the listing:
+        a value of 'all' means that site-wide entities are included in the listing.
         Otherwise only collection entities are included.        
         """
         include_sitedata = (scope == "all")

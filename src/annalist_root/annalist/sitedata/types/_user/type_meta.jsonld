@@ -5,6 +5,6 @@
 , "annal:uri":          "annal:User"
 , "rdfs:label":         "User"
 , "rdfs:comment":       "Type of user permissions record."
-, "annal:type_view":    "User_view"
-, "annal:type_list":    "User_list"
+, "annal:type_view":    "_view/User_view"
+, "annal:type_list":    "_list/User_list"
 }

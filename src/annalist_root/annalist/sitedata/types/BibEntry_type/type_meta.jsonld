@@ -6,8 +6,8 @@
 , "rdfs:label":         "Bibliographic record"
 , "rdfs:comment":
     "Bibliographic record type, adopted as a use case for using Annalist to create BibJSON records."
-, "annal:type_view":    "BibEntry_view"
-, "annal:type_list":    "BibEntry_list"
+, "annal:type_view":    "_view/BibEntry_view"
+, "annal:type_list":    "_list/BibEntry_list"
 , "annal:field_aliases": [
     { "annal:alias_target":     "rdfs:label"
     , "annal:alias_source":     "bib:title"

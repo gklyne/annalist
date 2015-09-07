@@ -5,6 +5,6 @@
 , "annal:uri":          "annal:Type"
 , "rdfs:label":         "Type"
 , "rdfs:comment":       "Type of type description record."
-, "annal:type_view":    "Type_view"
-, "annal:type_list":    "Type_list"
+, "annal:type_view":    "_view/Type_view"
+, "annal:type_list":    "_list/Type_list"
 }

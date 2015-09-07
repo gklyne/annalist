@@ -227,8 +227,8 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_url="(?list_url)",
             list_uri="(?list_uri)",
             list_type="List",
-            list_default_type="Default_type",
-            list_default_view="Default_view",
+            list_default_type="_type/Default_type",
+            list_default_view="_view/Default_view",
             list_selector="ALL",
             list_target_type=""
             ):
@@ -466,8 +466,6 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_url=list_url,
             list_uri=None,
             list_type="List",
-            list_default_type="Default_type",
-            list_default_view="Default_view",
             list_selector="ALL"
             )
         return

@@ -24,6 +24,7 @@ from django.core.urlresolvers       import resolve, reverse
 import annalist
 from annalist                       import message
 from annalist.identifiers           import RDF, RDFS, ANNAL
+from annalist.util                  import valid_id, extract_entity_id
 
 from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.collection     import Collection
@@ -311,7 +312,9 @@ class DisplayInfo(object):
         list_id = None
         if type_id:
             if self.entitytypeinfo.recordtype:
-                list_id = self.entitytypeinfo.recordtype.get(ANNAL.CURIE.type_list, None)
+                list_id = extract_entity_id(
+                    self.entitytypeinfo.recordtype.get(ANNAL.CURIE.type_list, None)
+                    )
             else:
                 log.warning("DisplayInfo.get_type_list_id no type data for %s"%(type_id))
         return list_id
@@ -333,10 +336,14 @@ class DisplayInfo(object):
         return list_id
 
     def get_list_view_id(self):
-        return self.recordlist.get(ANNAL.CURIE.default_view, None) or "Default_view"
+        return extract_entity_id(
+            self.recordlist.get(ANNAL.CURIE.default_view, None) or "Default_view"
+            )
 
     def get_list_type_id(self):
-        return self.recordlist.get(ANNAL.CURIE.default_type, None) or "Default_type"
+        return extract_entity_id(
+            self.recordlist.get(ANNAL.CURIE.default_type, None) or "Default_type"
+            )
 
     def check_collection_entity(self, entity_id, entity_type, msg):
         """

@@ -5,6 +5,6 @@
 , "annal:uri":          "annal:Enum_list_type"
 , "rdfs:label":         "List display type"
 , "rdfs:comment":       "List display type (e.g. List or Grid)"
-, "annal:type_view":    "Default_view"
-, "annal:type_list":    "Default_list"
+, "annal:type_view":    "_view/Default_view"
+, "annal:type_list":    "_list/Default_list"
 }
