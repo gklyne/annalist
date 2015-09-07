@@ -13,6 +13,7 @@ log = logging.getLogger(__name__)
 
 from annalist.identifiers   import RDFS, ANNAL
 from annalist.exceptions    import Annalist_Error, EntityNotFound_Error
+from annalist.util          import extract_entity_id
 
 from annalist.models.recordgroup            import RecordGroup
 from annalist.models.recordfield            import RecordField
@@ -145,7 +146,7 @@ class FieldDescription(object):
                     self._field_desc['field_choices'][val] = FieldChoice(
                         val, label=e.get_label(), link=e.get_view_url_path()
                         )
-            log.info("typeref %s: %r"%
+            log.debug("FieldDescription: typeref %s: %r"%
                 (self._field_desc['field_ref_type'], list(self._field_desc['field_choices'].items()))
                 )
         # If field references group, pull in field details
@@ -390,7 +391,7 @@ def field_description_from_view_field(collection, field, view_context=None, grou
     #@@TODO: for resilience, revert this when all tests pass?
     # field_id    = field.get(ANNAL.CURIE.field_id, "Field_id_missing")  # Field ID slug in URI
     #@@
-    field_id    = field[ANNAL.CURIE.field_id]
+    field_id    = extract_entity_id(field[ANNAL.CURIE.field_id])
     recordfield = RecordField.load(collection, field_id, collection._parentsite)
     if recordfield is None:
         log.warning("Can't retrieve definition for field %s"%(field_id))

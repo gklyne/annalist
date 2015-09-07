@@ -153,7 +153,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.client.logout()
         f = entitydata_default_view_form_data(
                 entity_id="entityuseview", action="view",
-                use_view="Type_view", 
+                use_view="_view/Type_view", 
                 )
         u = entity_url("testcoll", "testtype", "entity1")
         r = self.client.post(u, f)

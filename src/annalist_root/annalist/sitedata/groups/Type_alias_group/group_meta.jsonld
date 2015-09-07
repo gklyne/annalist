@@ -8,7 +8,7 @@
 , "rdfs:comment":       "Fields describing a single field alias associated with a type."
 , "annal:record_type":  "annal:Type_alias"
 , "annal:group_fields": 
-    [ { "annal:field_id":   "Type_alias_target" }
-    , { "annal:field_id":   "Type_alias_source" }
+    [ { "annal:field_id":       "_field/Type_alias_target" }
+    , { "annal:field_id":       "_field/Type_alias_source" }
     ]
 }

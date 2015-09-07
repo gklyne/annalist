@@ -73,6 +73,14 @@ def split_type_entity_id(eid, default_type_id=None):
             return (default_type_id, sub_ids[0])
     return (default_type_id, None)
 
+def extract_entity_id(eid):
+    """
+    Accepts an entity id which may be have `type_id/entity_id` form, and returns
+    the bare `entity_id` value.
+    """
+    type_id, entity_id = split_type_entity_id(eid)
+    return entity_id
+
 def fill_type_entity_id(eid, default_type_id=None):
     """
     Assemble a type+entity compisite identifier based on a supplied id string.

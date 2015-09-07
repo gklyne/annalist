@@ -287,10 +287,10 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][7]['field_value'], list_target_type)
         # 9th field - list of fields from target entity for each list entry
         expect_field_data = (
-            [ { 'annal:field_id':             "Entity_id"
+            [ { 'annal:field_id':             "_field/Entity_id"
               , 'annal:field_placement':      "small:0,3"
               }
-            , { 'annal:field_id':             "Entity_label"
+            , { 'annal:field_id':             "_field/Entity_label"
               , 'annal:field_placement':      "small:3,9"
               }
             ])

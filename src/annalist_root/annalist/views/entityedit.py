@@ -19,7 +19,10 @@ from django.core.urlresolvers           import resolve, reverse
 from annalist.identifiers               import RDFS, ANNAL
 from annalist.exceptions                import Annalist_Error
 from annalist                           import message
-from annalist                           import util
+from annalist.util                      import (
+    valid_id, extract_entity_id,
+    open_url, copy_resource_to_fileobj
+    )
 
 from annalist.models.entitytypeinfo     import EntityTypeInfo, get_built_in_type_ids
 from annalist.models.recordtype         import RecordType
@@ -116,6 +119,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # Create local entity object or load values from existing
         typeinfo = viewinfo.entitytypeinfo
         entity   = self.get_entity(viewinfo.entity_id, typeinfo, action)
+        # log.debug("GenericEntityEditView.get %r"%(entity,))
         if entity is None:
             entity_label = (message.ENTITY_MESSAGE_LABEL%
                 { 'coll_id':    viewinfo.coll_id
@@ -183,7 +187,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # Except for entity_id, use values from URI when form does not supply a value
         entity_id            = request.POST.get('entity_id', None)
         orig_entity_id       = request.POST.get('orig_id', entity_id)
-        entity_type_id       = request.POST.get('entity_type', type_id)
+        entity_type_id       = extract_entity_id(request.POST.get('entity_type', type_id))
         orig_entity_type_id  = request.POST.get('orig_type', type_id)
         view_id              = request.POST.get('view_id', view_id)
         viewinfo.set_type_entity_id(
@@ -403,6 +407,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 self.add_entity_field(add_field_desc, entity)
         #@@
         entityvals  = get_entity_values(viewinfo.entitytypeinfo, entity, entity_id)
+        # log.info("form_render.entityvals %r"%(entityvals,))        
         if viewinfo.action == "copy":
             entityvals.pop(ANNAL.CURIE.uri, None)
         context_extra_values = (
@@ -419,6 +424,7 @@ class GenericEntityEditView(AnnalistGenericView):
         viewcontext = self.get_form_display_context(
             viewinfo, entityvaluemap, entityvals, **context_extra_values
             )
+        # log.info("form_render.viewcontext['fields'] %r"%(viewcontext['fields'],))        
         # Generate and return form data
         return (
             self.render_html(viewcontext, self.formtemplate) or 
@@ -507,7 +513,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 view_uri_params = (
                     { 'coll_id':    viewinfo.coll_id
                     , 'type_id':    viewinfo.curr_type_id
-                    , 'view_id':    form_data['view_choice']
+                    , 'view_id':    extract_entity_id(form_data['view_choice'])
                     , 'entity_id':  viewinfo.curr_entity_id or viewinfo.entity_id
                     , 'action':     self.uri_action
                     })
@@ -577,14 +583,14 @@ class GenericEntityEditView(AnnalistGenericView):
 
         new_enum = self.find_new_enum(entityvaluemap, form_data)
         if new_enum:
-            new_type_id  = new_enum['field_ref_type']
+            new_type_id  = extract_entity_id(new_enum['field_ref_type'])
             new_typeinfo = EntityTypeInfo(
                 viewinfo.site, viewinfo.collection, new_type_id
                 )
             new_view_id  = new_typeinfo.get_default_view_id()
 
         if new_type_id is not None:
-            edit_entity_id = new_enum and new_enum.get('enum_value', None)
+            edit_entity_id = new_enum and extract_entity_id(new_enum.get('enum_value', None))
             edit_action    = "new"
             edit_url_id    = "AnnalistEntityNewView"
             if edit_entity_id:
@@ -769,8 +775,8 @@ class GenericEntityEditView(AnnalistGenericView):
         # @@TODO: factor out repeated re-rendering logic
 
         # Check for valid id and type to be saved
-        if not util.valid_id(entity_id):
-            log.debug("form_response: entity_id not util.valid_id('%s')"%entity_id)
+        if not valid_id(entity_id):
+            log.debug("form_response: entity_id not valid_id('%s')"%entity_id)
             return responseinfo.set_http_response(
                 self.form_re_render(
                     viewinfo, entityvaluemap, entityformvals, context_extra_values,
@@ -778,8 +784,8 @@ class GenericEntityEditView(AnnalistGenericView):
                     error_message=messages['entity_invalid_id']
                     )
                 )
-        if not util.valid_id(entity_type_id):
-            log.debug("form_response: entity_type_id not util.valid_id('%s')"%entity_type_id)
+        if not valid_id(entity_type_id):
+            log.info("form_response: entity_type_id not valid_id('%s')"%entity_type_id)
             return responseinfo.set_http_response(
                 self.form_re_render(
                     viewinfo, entityvaluemap, entityformvals, context_extra_values,
@@ -1059,7 +1065,7 @@ class GenericEntityEditView(AnnalistGenericView):
             return
         def read_resource(field_desc, field_name, field_vals):
             import_url = field_vals['import_url']
-            resource_fileobj, resource_url, resource_type = util.open_url(import_url)
+            resource_fileobj, resource_url, resource_type = open_url(import_url)
             log.debug(
                 "import_field: import_url %s, resource_url %s, resource_type %s"%
                 (import_url, resource_url, resource_type)
@@ -1076,7 +1082,7 @@ class GenericEntityEditView(AnnalistGenericView):
                         , 'resource_type':  resource_type
                         })
                     #@@TODO: timeout / size limit?  (Potential DoS?)
-                    util.copy_resource_to_fileobj(resource_fileobj, local_fileobj)
+                    copy_resource_to_fileobj(resource_fileobj, local_fileobj)
             finally:
                 resource_fileobj.close()
             return
@@ -1563,11 +1569,11 @@ class GenericEntityEditView(AnnalistGenericView):
                     yield field_desc
                 if field_desc.has_field_group_ref():
                     groupref = field_desc.group_ref()
-                    if not util.valid_id(groupref):
+                    if not valid_id(groupref):
                         # this is for resilience in the face of bad data
                         log.warning(
                             "entityedit.find_fields: invalid group_ref %s in field description for %s"%
-                            (groupref, field_desc['field_id'])
+                               (groupref, field_desc['field_id'])
                             )
                     else:
                         log.debug(

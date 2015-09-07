@@ -128,10 +128,10 @@ def recordlist_create_values(
         , "annal:default_type":         "Default_type"
         , "annal:list_entity_selector": "ALL"
         , "annal:list_fields":
-          [ { "annal:field_id":             "Entity_id"
+          [ { "annal:field_id":             "_field/Entity_id"
             , "annal:field_placement":      "small:0,3"
             }
-          , { "annal:field_id":             "Entity_label"
+          , { "annal:field_id":             "_field/Entity_label"
             , "annal:field_placement":      "small:3,9"
             }
           ]
@@ -173,10 +173,10 @@ def recordlist_view_context_data(
         action=None, update="RecordList"
     ):
     list_fields = (
-        [ { "annal:field_id":         "Entity_id"
+        [ { "annal:field_id":         "_field/Entity_id"
           , "annal:field_placement":  "small:0,3"
           }
-        , { "annal:field_id":         "Entity_label"
+        , { "annal:field_id":         "_field/Entity_label"
           , "annal:field_placement":  "small:3,9"
           }
         ])
@@ -304,9 +304,9 @@ def recordlist_view_form_data(
         , 'List_default_view':      'Default_view'
         , 'List_entity_selector':   'ALL'
         # List repeating fields
-        , 'List_fields__0__Field_id':           "Entity_id"
+        , 'List_fields__0__Field_id':           "_field/Entity_id"
         , 'List_fields__0__Field_placement':    "small:0,3"
-        , 'List_fields__1__Field_id':           "Entity_label"
+        , 'List_fields__1__Field_id':           "_field/Entity_label"
         , 'List_fields__1__Field_placement':    "small:3,9"
         # Hidden fields
         , 'action':                 '@@TBD@@'

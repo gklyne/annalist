@@ -74,6 +74,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - select by type (as now)
     - enumerate over all types with matching type URI
 - [ ] Add test case for refer to type field with subtypes defined
+- [x] Add/update test cases for selecting entity type
+- [x] Add/update test cases for selecting entity view
+- [x] Add/update test cases for selecting entity list
+- [x] Update site data to ensure new enumeration logic is tested for fields
 
 (release 0.1.18?)
 

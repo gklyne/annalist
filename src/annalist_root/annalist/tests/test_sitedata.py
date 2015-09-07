@@ -36,6 +36,8 @@ from django.test.client         import Client
 from bs4                        import BeautifulSoup
 
 from annalist.identifiers                   import RDF, RDFS, ANNAL
+from annalist.util                          import extract_entity_id
+
 from annalist.models.site                   import Site
 from annalist.models.collection             import Collection
 from annalist.models.recordtype             import RecordType
@@ -278,7 +280,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     def check_type_fields(self, type_id, type_uri, view_fields):
         # print "t: " + type_id
         for f in view_fields:
-            field_id   = f[ANNAL.CURIE.field_id]
+            field_id   = extract_entity_id(f[ANNAL.CURIE.field_id])
             # print "f: " + field_id
             view_field = RecordField.load(self.coll1, field_id, self.testsite)
             field_type = view_field[ANNAL.CURIE.field_render_type]

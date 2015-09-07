@@ -17,7 +17,7 @@ from django.core.urlresolvers           import resolve, reverse
 from annalist                           import message
 from annalist.exceptions                import Annalist_Error
 from annalist.identifiers               import RDFS, ANNAL
-from annalist.util                      import split_type_entity_id
+from annalist.util                      import split_type_entity_id, extract_entity_id
 
 from annalist.models.collection         import Collection
 from annalist.models.recordtype         import RecordType
@@ -337,7 +337,7 @@ class EntityGenericListView(AnnalistGenericView):
                 params = listinfo.get_continuation_url_dict()
                 if search:
                     params = dict(params, search=search)
-                post_type_id, post_list_id = split_type_entity_id(request.POST['list_choice'])
+                post_list_id = extract_entity_id(request.POST['list_choice'])
                 list_uri_params = (
                     { 'coll_id': coll_id
                     , 'list_id': post_list_id
