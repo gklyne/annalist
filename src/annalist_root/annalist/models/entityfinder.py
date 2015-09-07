@@ -79,13 +79,21 @@ class EntityFinder(object):
         """
         supertypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
         supertypeuri  = supertypeinfo.get_type_uri()
-        if supertypeuri is not None:
+        return self.get_collection_uri_subtypes(supertypeuri)
+
+    def get_collection_uri_subtypes(self, type_uri):
+        """
+        Returns a iterator of `entitytypeinfo` objects for all subtypes
+        of the supplied type in the current collection, including the 
+        identified type itself.
+        """
+        if type_uri is not None:
             for tid in self.get_collection_type_ids():
                 tinfo = EntityTypeInfo(self._site, self._coll, tid)
-                if supertypeuri in tinfo.get_all_type_uris():
+                if type_uri in tinfo.get_all_type_uris():
                     # log.info(
                     #     "supertype %s, yield %s: %s"%
-                    #     (supertypeuri, tinfo.get_type_id(), tinfo.get_type_uri())
+                    #     (type_uri, tinfo.get_type_id(), tinfo.get_type_uri())
                     #     )
                     yield tinfo
         return 
