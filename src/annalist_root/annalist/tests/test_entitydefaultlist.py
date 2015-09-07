@@ -80,7 +80,7 @@ from entity_testlistdata            import recordlist_url
 
 class EntityDefaultListViewTest(AnnalistTestCase):
     """
-    Tests for record type edit views
+    Tests for default list views
     """
 
     def setUp(self):

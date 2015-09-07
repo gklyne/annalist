@@ -161,7 +161,7 @@ class RefMultifieldTest(AnnalistTestCase):
             , "rdfs:label":                 "Image reference"
             , "rdfs:comment":               "Image reference field comment"
             , "annal:field_render_type":    "RefMultifield"
-            #@@ , "annal:field_value_mode":     "Value_entity"    #@@TODO: Use migration logic for now; later, make explicit
+            , "annal:field_value_mode":     "Value_entity"
             , "annal:field_target_type":    "annal:Field_group"
             , "annal:field_entity_type":    "test:img_type"
             , "annal:placeholder":          "(ref image field)"
@@ -194,7 +194,7 @@ class RefMultifieldTest(AnnalistTestCase):
             , "rdfs:label":                 "Repeat image reference"
             , "rdfs:comment":               "Repeat image reference field comment"
             , "annal:field_render_type":    "RepeatGroupRow"
-            #@@ , "annal:field_value_mode":     "Value_direct"      #@@TODO: Use migration logic for now; later, make explicit
+            , "annal:field_value_mode":     "Value_direct"
             , "annal:field_target_type":    "annal:Field_group"
             , "annal:placeholder":          "(repeat image field)"
             , "annal:property_uri":         "test:rpt_image"

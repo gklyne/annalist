@@ -118,3 +118,7 @@ List all commits on branch b1 that are not also on branch b2:
 
     git log b1 ^b2 --no-merges
 
+
+## More incantations
+
+* https://github.com/blog/2019-how-to-undo-almost-anything-with-git

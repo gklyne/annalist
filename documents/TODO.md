@@ -73,7 +73,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Apply subtype selection logic to dropdowns (as well as lists)
     - select by type (as now)
     - enumerate over all types with matching type URI
-- [ ] Add test case for refer to type field with subtypes defined
+- [x] Add test case for refer to type field with subtypes defined
 - [x] Add/update test cases for selecting entity type
 - [x] Add/update test cases for selecting entity view
 - [x] Add/update test cases for selecting entity list

@@ -115,7 +115,7 @@ def recordtype_load_keys(type_uri=False, supertype_uris=False):
 
 def recordtype_create_values(
         coll_id="testcoll", type_id="testtype", update="RecordType",
-        type_uri=None
+        type_uri=None, supertype_uris=None
         ):
     """
     Entity values used when creating a record type entity
@@ -129,10 +129,15 @@ def recordtype_create_values(
         })
     if type_uri:
         d['annal:uri'] = type_uri
-        d['annal:supertype_uris'] = (
-            [ { 'annal:supertype_uri': type_uri+"/super1" }
-            , { 'annal:supertype_uri': type_uri+"/super2" }
-            ])
+        if supertype_uris is not None:
+            d['annal:supertype_uris'] = (
+                [ { 'annal:supertype_uri': st } for st in supertype_uris ]
+                )
+        else:
+            d['annal:supertype_uris'] = (
+                [ { 'annal:supertype_uri': type_uri+"/super1" }
+                , { 'annal:supertype_uri': type_uri+"/super2" }
+                ])
     return d
 
 def recordtype_values(
