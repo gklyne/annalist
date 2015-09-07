@@ -82,6 +82,7 @@ class FieldDescription(object):
         field_value_mode    = extract_entity_id(recordfield.get(ANNAL.CURIE.field_value_mode, "@@FieldDescription:value_mode@@"))
         field_ref_type      = extract_entity_id(recordfield.get(ANNAL.CURIE.field_ref_type, None))
         field_val_type      = recordfield.get(ANNAL.CURIE.field_value_type, "")
+        field_entity_type   = recordfield.get(ANNAL.CURIE.field_entity_type, None)
         self._field_desc    = (
             { 'field_id':                   field_id
             , 'field_name':                 field_name
@@ -99,8 +100,9 @@ class FieldDescription(object):
             , 'field_placeholder':          field_placeholder
             , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
             , 'field_ref_type':             field_ref_type
-            , 'field_ref_restriction':      recordfield.get(ANNAL.CURIE.field_ref_restriction, "ALL")
             , 'field_ref_field':            recordfield.get(ANNAL.CURIE.field_ref_field, None)
+            , 'field_ref_restriction':      recordfield.get(ANNAL.CURIE.field_ref_restriction, "ALL")
+            , 'field_entity_type':          field_entity_type
             , 'field_choices':              None
             # , 'field_choice_labels':        None
             # , 'field_choice_links':         None
@@ -129,8 +131,18 @@ class FieldDescription(object):
         if type_ref:
             restrict_values = self._field_desc['field_ref_restriction']
             entity_finder   = EntityFinder(collection, selector=restrict_values)
+            # Determine subtypes of field entity type, if specified
+            if field_entity_type and restrict_values:
+                field_entity_subtypes = (
+                    [ t.get_type_uri()
+                      for t in entity_finder.get_collection_uri_subtypes(field_entity_type)
+                    ])
+                self._field_desc['field_entity_subtypes'] = field_entity_subtypes
+                field_view_context = dict(view_context or {}, field={'subtypes': field_entity_subtypes})
+            else:
+                field_view_context = view_context
             entities        = entity_finder.get_entities_sorted(
-                type_id=type_ref, context=view_context, scope="all"
+                type_id=type_ref, context=field_view_context, scope="all"
                 )
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list

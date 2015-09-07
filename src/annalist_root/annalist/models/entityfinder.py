@@ -392,7 +392,6 @@ class EntitySelector(object):
         def get_context(name, field_id):
             "Get field from named value in current display context"
             def get_context_f(e, c):
-                # Raises error if context value not supplied
                 if name in c and c[name]:
                     return c[name].get(field_id, None)
                 return None
