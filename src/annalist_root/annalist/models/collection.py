@@ -160,6 +160,16 @@ class Collection(Entity):
         s = RecordType.remove(self, type_id)
         return s
 
+    def get_uri_type(self, type_uri, include_alt=True):
+        """
+        Return type entity corresponding to the supplied type URI
+        """
+        for t in self.types(include_alt=include_alt):
+            turi = t.get_uri()
+            if turi == type_uri:
+                return t
+        return None
+
     # Record views
 
     def views(self, include_alt=True):

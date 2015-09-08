@@ -20,7 +20,7 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitytypeinfo import EntityTypeInfo, get_built_in_type_ids
 
 #   -------------------------------------------------------------------
-#   Auxilliary fiunctions
+#   Auxilliary functions
 #   -------------------------------------------------------------------
 
 def order_entity_key(entity):
@@ -45,7 +45,7 @@ def order_entity_key(entity):
 
 class EntityFinder(object):
     """
-    Logic for enumerting entities matching a supplied type, selector and/or search string.
+    Logic for enumerating entities matching a supplied type, selector and/or search string.
     """
 
     def __init__(self, coll, selector=None):
@@ -55,8 +55,8 @@ class EntityFinder(object):
         super(EntityFinder, self).__init__()
         self._coll     = coll
         self._site     = coll.get_site()
-        self._selector = EntitySelector(selector)
-        self._subtypes = None
+        self._selector = EntitySelector(selector, FieldComparison(coll))
+        # self._subtypes = None
         return
 
     def get_collection_type_ids(self):
@@ -227,7 +227,7 @@ class EntitySelector(object):
     """
     This class implements a selector filter.  It is initialized with a selector
     expression, and may be invoked as a filter applied to an entity generator,
-    or as a predicater applied to a single entity.
+    or as a predicate applied to a single entity.
 
     >>> e  = { 'p:a': '1', 'p:b': '2', 'p:c': '3', '@type': ["http://example.com/type", "foo:bar"] }
     >>> c  = { 'view': { 'v:a': '1', 'v:b': ['2', '3'] } }
@@ -268,9 +268,10 @@ class EntitySelector(object):
     >>> EntitySelector(f12).select_entity(e, c)
     False
     """
-    def __init__(self, selector):
+    def __init__(self, selector, fieldcomp=None):
+        self._fieldcomp = fieldcomp
         # Returns None if no filter is applied, otherwise a predcicate function
-        self._selector = self.compile_selector_filter(selector)
+        self._selector  = self.compile_selector_filter(selector)
         return
 
     def filter(self, entities, context=None):
@@ -315,6 +316,8 @@ class EntitySelector(object):
             <val1> == <val2>            values are same
             <val1> in <val2>            second value is list containing 1st value, 
                                         or values are same, or val1 is None.
+            <val1> <name> <val2>        invoke comparison method from supplied 
+                                        FieldComparison object
 
             <val1> and <val2> may be:
 
@@ -332,6 +335,8 @@ class EntitySelector(object):
            gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
            sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
                          / "*" / "+" / "," / ";" / "="
+
+        Parser uses pyparsing combinators (cf. http://pyparsing.wikispaces.com).
         """
         def get_value(val_list):
             if len(val_list) == 1:
@@ -350,7 +355,7 @@ class EntitySelector(object):
                      | Group( QuotedString("'", "\\") )
                      | Group( p_id )
                      )
-        p_comp     = ( Literal("==") | Literal("in") )
+        p_comp     = ( Literal("==") | Literal("in") | p_name )
         p_selector = ( p_val + p_comp + p_val + StringEnd() )
         try:
             resultlist = p_selector.parseString(selector).asList()
@@ -363,25 +368,15 @@ class EntitySelector(object):
             resultdict['val2'] = get_value(resultlist[2])
         return resultdict
 
-    @classmethod  #@@TODO: @staticmethod, no cls?
-    def compile_selector_filter(cls, selector):
+    def compile_selector_filter(self, selector):
         """
         Return filter for for testing entities matching a supplied selector.
 
         Returns None if no selection is performed; i.e. all possible entities are selected.
 
-        Selector formats:
-            ALL (or blank)              match any entity
-            <val1> == <val2>            values are same
-            <val1> in <val2>            second value is list containing 1st value, 
-                                        or values are same, or val1 is None.
+        Selector formats: see `parse_selector` above.
 
-            <val1> and <val2> may be:
-
-            [<field-id>]                refers to field in entity under test
-            <name>[<field-id>]          refers to field of context value, or None if the
-                                        indicated context value or field is not defined.
-            "<string>"                  literal string value.  Quotes within are escaped.
+        This function returns a filter function compiled from the supplied selector.
         """
         def get_entity(field_id):
             "Get field from entity tested by filter"
@@ -429,9 +424,14 @@ class EntitySelector(object):
                 return v1 == v2
             return match_in_f
         #
+        def match_subtype(v1f, v2f):
+            def match_subtype_f(e, c):
+                return self._fieldcomp.subtype(v1f(e, c), v2f(e, c))
+            return match_subtype_f
+        #
         if selector in {None, "", "ALL"}:
             return None
-        sel = cls.parse_selector(selector)
+        sel = self.parse_selector(selector)
         if not sel:
             raise ValueError("Unrecognized selector syntax (%s)"%selector)
         v1f = get_val_f(sel['val1'])
@@ -440,8 +440,44 @@ class EntitySelector(object):
             return match_eq(v1f, v2f)
         if sel['comp'] == "in":
             return match_in(v1f, v2f)
+        if sel['comp'] == "subtype":
+            return match_subtype(v1f, v2f)
         # Drop through: raise error
         raise ValueError("Unrecognized entity selector (%s)"%selector)
+
+#   -------------------------------------------------------------------
+#   FieldComparison
+#   -------------------------------------------------------------------
+
+class FieldComparison(object):
+    """
+    Logic for comparing fields using additional context information not available
+    directly to 'EntitySelector'
+    """
+
+    def __init__(self, coll):
+        super(FieldComparison, self).__init__()
+        self._coll     = coll
+        self._site     = coll.get_site()
+        return
+
+    def get_uri_type_info(self, type_uri, include_alt=True):
+        """
+        Return typeinfo corresponding to the supplied type URI
+        """
+        t     = self._coll.get_uri_type(type_uri)
+        return t and EntityTypeInfo(self._site, self._coll, t.get_id())
+
+    def subtype(self, type1_uri, type2_uri):
+        """
+        Returns True if the first type is a subtype of the second type, where both
+        types are supplied as type URIs.  Returns True if both URIs are the same.
+        """
+        if not type1_uri or (type1_uri == type2_uri):
+            return True
+        type2_info = self.get_uri_type_info(type2_uri)
+        type2_uris = (type2_info and type2_info.get_all_type_uris()) or []
+        return type1_uri in type2_uris
 
 if __name__ == "__main__":
     import doctest

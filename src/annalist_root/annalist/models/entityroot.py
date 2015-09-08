@@ -163,6 +163,13 @@ class EntityRoot(object):
         """
         return self._values
 
+    def get_uri(self):
+        """
+        Return URI for current entity, which may be set explicitly or derived from
+        its present URL.
+        """
+        return self._values.get(ANNAL.CURIE.uri, self._values[ANNAL.CURIE.url])
+
     def enum_fields(self):
         """
         Enumerate fields in entity.

@@ -78,6 +78,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Add/update test cases for selecting entity view
 - [x] Add/update test cases for selecting entity list
 - [x] Update site data to ensure new enumeration logic is tested for fields
+- [ ] Add test case for field available for subtype of declared entity type
 
 (release 0.1.18?)
 
@@ -177,13 +178,21 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 Technical debt:
 
+- [ ] Re-think access to entities and types:
+    - [ ] There is repeated reading of RecordType values in EntityFinder
+          (cf. collection.types() and EntityTypeInfo constructor; also URI access)
+    - [ ] Need more direct way to locate type (and other entities?) by URI
+    - [ ] Review common mechanism to retreive URI for entity?  
+          (Current mechanism fixes use of annal:uri for all entities; maybe OK)
+    - [ ] Think about how to optimize retreival of subtypes/supertypes
+    - [ ] Do special case for types, or more generic caching approach?
 - [ ] Customize view getting out of sync with other page styles
 - [ ] Refactor entity edit response handling
 - [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
 - [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
     - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
     - [ ]remove corresponding special case code in bound_field.
-- [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
+- [x] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
 - [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, dues somewhat to the early template-based logic for field rendering.  Withn the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special login in bound_field.
 - [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
 - [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
