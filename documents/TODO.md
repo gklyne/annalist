@@ -81,6 +81,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Add test case for field available for subtype of declared entity type
 - [x] Improve performance of collection type access
 - [x] Improve performance of test suite setup
+- [x] BUG: "Entity not found: u'Group _group/Employed_r used in field Employed_r'"
 
 (release 0.1.18?)
 

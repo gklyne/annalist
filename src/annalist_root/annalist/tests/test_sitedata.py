@@ -310,7 +310,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                         )
                 if field_type in ["RepeatGroup", "RepeatGroupRow"]:
                     # Check extra fields
-                    group_id = view_field[ANNAL.CURIE.group_ref]
+                    group_id = extract_entity_id(view_field[ANNAL.CURIE.group_ref])
                     self.assertIn(ANNAL.CURIE.repeat_label_add,    view_field)
                     self.assertIn(ANNAL.CURIE.repeat_label_delete, view_field)
                     # Check field group

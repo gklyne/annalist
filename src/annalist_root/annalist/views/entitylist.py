@@ -129,7 +129,7 @@ class EntityGenericListView(AnnalistGenericView):
             , ANNAL.CURIE.field_name:           "List_rows"
             , ANNAL.CURIE.field_render_type:    "RepeatListRow"
             , ANNAL.CURIE.property_uri:         "_list_entities_"
-            , ANNAL.CURIE.group_ref:            "List_fields"
+            , ANNAL.CURIE.group_ref:            "_group/List_fields"
             })
         repeatrows_group_descr = (
             { ANNAL.CURIE.id:           "List_fields"

@@ -13,7 +13,7 @@
 , "annal:placeholder":          "(field aliases)"
 , "annal:property_uri":         "annal:field_aliases"
 , "annal:field_placement":      "small:0,12"
-, "annal:group_ref":            "Type_alias_group"
+, "annal:group_ref":            "_group/Type_alias_group"
 , "annal:repeat_label_add":     "Add alias"
 , "annal:repeat_label_delete":  "Remove alias"
 }

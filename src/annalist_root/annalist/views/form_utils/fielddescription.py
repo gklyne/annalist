@@ -83,6 +83,7 @@ class FieldDescription(object):
         field_ref_type      = extract_entity_id(recordfield.get(ANNAL.CURIE.field_ref_type, None))
         field_val_type      = recordfield.get(ANNAL.CURIE.field_value_type, "")
         field_entity_type   = recordfield.get(ANNAL.CURIE.field_entity_type, None)
+        field_group_ref     = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
         self._field_desc    = (
             { 'field_id':                   field_id
             , 'field_name':                 field_name
@@ -106,7 +107,7 @@ class FieldDescription(object):
             , 'field_choices':              None
             # , 'field_choice_labels':        None
             # , 'field_choice_links':         None
-            , 'field_group_ref':            recordfield.get(ANNAL.CURIE.group_ref, None)
+            , 'field_group_ref':            field_group_ref
             , 'group_label':                None
             , 'group_add_label':            None
             , 'group_delete_label':         None
@@ -328,7 +329,7 @@ class FieldDescription(object):
 
         @@@ (Currently, this function duplicates `is_repeat_group`.)
 
-        @@@ tesat for:  group_ref, group_field_descs, and group_id
+        @@@ test for:  group_ref, group_field_descs, and group_id
         """
         field_group_types = ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"]
         return self._field_desc['field_render_type'] in field_group_types
@@ -421,7 +422,7 @@ def field_description_from_view_field(collection, field, view_context=None, grou
         recordfield.get(ANNAL.CURIE.field_placement, "")
         )
     # If field references group, pull in field details
-    group_ref = recordfield.get(ANNAL.CURIE.group_ref, None)
+    group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
     if group_ref:
         group_view = RecordGroup.load(collection, group_ref, collection._parentsite)
         if not group_view:
