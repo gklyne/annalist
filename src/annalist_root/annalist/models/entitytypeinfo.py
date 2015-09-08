@@ -248,7 +248,7 @@ class EntityTypeInfo(object):
         self.type_id         = type_id
         self.permissions_map = None
         if type_id in TYPE_CLASS_MAP:
-            self.recordtype      = RecordType.load(coll, type_id, site)
+            self.recordtype      = coll.get_type(type_id)
             self.entityparent    = coll
             self.entityaltparent = site
             self.entityclass     = TYPE_CLASS_MAP[type_id]
@@ -256,7 +256,7 @@ class EntityTypeInfo(object):
             self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
         else:
             if RecordType.exists(coll, type_id, site):
-                self.recordtype     = RecordType.load(coll, type_id, site)
+                self.recordtype     = coll.get_type(type_id)
             if create_typedata and not RecordTypeData.exists(coll, type_id):
                 self.entityparent   = RecordTypeData.create(coll, type_id, {})
             else:

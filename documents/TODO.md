@@ -78,7 +78,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Add/update test cases for selecting entity view
 - [x] Add/update test cases for selecting entity list
 - [x] Update site data to ensure new enumeration logic is tested for fields
-- [ ] Add test case for field available for subtype of declared entity type
+- [x] Add test case for field available for subtype of declared entity type
+- [x] Improve performance of collection type access
+- [ ] Improve performance of test suite setup
 
 (release 0.1.18?)
 

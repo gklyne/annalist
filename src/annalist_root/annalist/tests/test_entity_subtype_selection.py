@@ -94,13 +94,19 @@ class SubtypeSelectionTest(AnnalistTestCase):
         self.ref_data  = RecordTypeData.create(self.testcoll, "ref_type",  {})
         # Create test type data
         es = EntityData.create(self.testdatas, "entitys", 
-            entitydata_create_values("entitys", type_id="testtypes", )
+            entitydata_create_values(
+                "entitys", type_id="testtypes", extra_fields={"test:turi": "test:testtypes"} 
+                )
             )
         e1 = EntityData.create(self.testdata1, "entity1", 
-            entitydata_create_values("entity1", type_id="testtype1", )
+            entitydata_create_values(
+                "entity1", type_id="testtype1", extra_fields={"test:turi": "test:testtype1"} 
+                )
             )
         e2 = EntityData.create(self.testdata2, "entity2", 
-            entitydata_create_values("entity2", type_id="testtype2", )
+            entitydata_create_values(
+                "entity2", type_id="testtype2", extra_fields={"test:turi": "test:testtype2"} 
+                )
             )
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
@@ -133,13 +139,13 @@ class SubtypeSelectionTest(AnnalistTestCase):
             self.assertEqual(entities[eid]['entity_id'], expect_entities[eid][1])
         return
 
-    def _create_ref_type_view(self):
-        ref_type_view = RecordView.create(self.testcoll, "Test_ref_type_view",
+    def _create_ref_type_view(self, view_id="Test_ref_type_view", record_type="test:testtypes"):
+        ref_type_view = RecordView.create(self.testcoll, view_id,
             { 'annal:type':         "annal:View"
-            , 'annal:uri':          "test:ref_type_view"
+            , 'annal:uri':          "test:"+view_id
             , 'rdfs:label':         "Test view label"
             , 'rdfs:comment':       "Test view comment"
-            , 'annal:record_type':  "_type/ref_type"
+            , 'annal:record_type':  record_type
             , 'annal:add_field':    True
             , 'annal:view_fields':
               [ { 'annal:field_id':         "_field/Entity_id"
@@ -153,18 +159,20 @@ class SubtypeSelectionTest(AnnalistTestCase):
         self.assertTrue(ref_type_view is not None)
         return ref_type_view
 
-    def _create_ref_type_field(self):
+    def _create_ref_type_field(self, entity_type="test:testtypes"):
         ref_type_field = RecordField.create(self.testcoll, "Test_ref_type_field",
-            { "annal:type":                 "annal:Field"
-            , "rdfs:label":                 "Type reference"
-            , "rdfs:comment":               "Type reference field comment"
-            , "annal:field_render_type":    "Enum_render_type/Enum_choice"
-            , "annal:field_value_mode":     "Enum_value_mode/Value_direct"
-            , "annal:field_entity_type":    "test:ref_type"
-            , "annal:placeholder":          "(ref type field)"
-            , "annal:property_uri":         "test:ref_type"
-            , "annal:field_placement":      "small:0,12;medium:0,6"
-            , "annal:field_ref_type":       "_type/testtypes"
+            { "annal:type":                     "annal:Field"
+            , "rdfs:label":                     "Type reference"
+            , "rdfs:comment":                   "Type reference field comment"
+            , "annal:field_render_type":        "Enum_render_type/Enum_choice"
+            , "annal:field_value_mode":         "Enum_value_mode/Value_direct"
+            , "annal:field_entity_type":        "test:ref_type"
+            , "annal:placeholder":              "(ref type field)"
+            , "annal:property_uri":             "test:ref_type"
+            , "annal:field_placement":          "small:0,12;medium:0,6"
+            , "annal:field_ref_type":           "_type/testtypes"
+            , "annal:field_ref_restriction":    "[test:turi] subtype %s"%entity_type
+            , "annal:field_entity_type":        entity_type
             })
         self.assertTrue(ref_type_field is not None)
         return ref_type_field
@@ -219,6 +227,87 @@ class SubtypeSelectionTest(AnnalistTestCase):
               for opt in ['testtype1/entity1', 'testtype2/entity2', 'testtypes/entitys']
             ])
         self.assertEqual(r.context['fields'][1]['options'], ref_options)
+        return
+
+    def test_select_notype_fields(self):
+        ref_view  = self._create_ref_type_view(view_id="Test_ref_notype_view", record_type="test:notypes")
+        ref_field = self._create_ref_type_field(entity_type="test:sometypes")
+        u = entitydata_edit_url(
+            "new", "testcoll", "ref_type", view_id="Test_ref_notype_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Check render context
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "ref_type")
+        # Fields
+        self.assertEqual(len(r.context['fields']), 2)
+        self.assertEqual(r.context['fields'][0]['field_id'], "Entity_id")
+        self.assertEqual(r.context['fields'][1]['field_id'], "Test_ref_type_field")
+        baselabel = "Entity testcoll/"
+        baseuri   = TestBasePath+"/c/testcoll/d/%s/"
+        ref_options = []
+        self.assertEqual(r.context['fields'][1]['options'], ref_options)
+        return
+
+    def test_select_subtype1_fields(self):
+        ref_view  = self._create_ref_type_view(view_id="Test_ref_type1_view", record_type="test:testtypes")
+        ref_field = self._create_ref_type_field(entity_type="test:testtype1")
+        u = entitydata_edit_url(
+            "new", "testcoll", "ref_type", view_id="Test_ref_type1_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Check render context
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "ref_type")
+        # Fields
+        self.assertEqual(len(r.context['fields']), 2)
+        self.assertEqual(r.context['fields'][0]['field_id'], "Entity_id")
+        self.assertEqual(r.context['fields'][1]['field_id'], "Test_ref_type_field")
+        baselabel = "Entity testcoll/"
+        baseuri   = TestBasePath+"/c/testcoll/d/%s/"
+        ref_options = (
+            [ FieldChoice(opt, label=baselabel+opt, link=baseuri%opt)
+              for opt in ['testtype1/entity1']
+            ])
+        self.assertEqual(r.context['fields'][1]['options'], ref_options)
+        return
+
+    def _no_test_test_select_view_subtype_fields(self):
+        # @@INCOMPLETE:  this was an attempt to check field selction from the view context,
+        #                but abandoned to to complexity of reconstructing bound fields.
+        #                NOTE: sitedata tests use Beautifulsoup representation of rendered
+        #                page for these tests
+        ref_view  = self._create_ref_type_view()
+        ref_field = self._create_ref_type_field()
+        u = entitydata_edit_url(
+            "edit", "testcoll", "_view", "Test_ref_type_view", view_id="View_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Check render context
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "_view")
+        # Fields
+        self.assertEqual(len(r.context['fields']), 6)
+        self.assertEqual(r.context['fields'][0]['field_id'], "View_id")
+        self.assertEqual(r.context['fields'][1]['field_id'], "View_label")
+        self.assertEqual(r.context['fields'][2]['field_id'], "View_comment")
+        self.assertEqual(r.context['fields'][3]['field_id'], "View_target_type")
+        self.assertEqual(r.context['fields'][4]['field_id'], "View_edit_view")
+        self.assertEqual(r.context['fields'][5]['field_id'], "View_fields")
+        print repr(r.context['fields'][5])
+        baselabel = "Entity testcoll/"
+        baseuri   = TestBasePath+"/c/testcoll/d/%s/"
+        ref_options = (
+            [ FieldChoice(opt, label=baselabel+opt, link=baseuri%opt)
+              for opt in ['testtype1/entity1', 'testtype2/entity2', 'testtypes/entitys']
+            ])
+        self.assertEqual(r.context['fields'][5]['options'], ref_options)
         return
 
 # End.

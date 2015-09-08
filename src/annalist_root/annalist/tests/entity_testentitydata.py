@@ -149,7 +149,8 @@ def entitydata_value_keys(entity_uri=False):
 
 def entitydata_create_values(
         entity_id, update="Entity", coll_id="testcoll", type_id="testtype", 
-        entity_uri=None, type_uri=None, hosturi=TestHostUri):
+        entity_uri=None, type_uri=None, hosturi=TestHostUri,
+        extra_fields=None):
     """
     Data used when creating entity test data
     """
@@ -166,6 +167,8 @@ def entitydata_create_values(
         })
     if entity_uri:
         d['annal:uri'] = entity_uri
+    if extra_fields:
+        d.update(extra_fields)
     return d
 
 def entitydata_values_add_field(data, property_uri, dup_index, value):

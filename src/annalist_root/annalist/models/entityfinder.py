@@ -477,13 +477,15 @@ class FieldComparison(object):
 
         If type2_uri is not specified, assume it does not satisfy the restriction.
         """
+        # log.info("FieldComparison.subtype(%s, %s)"%(type1_uri, type2_uri))
         if not type2_uri or (type1_uri == type2_uri):
             return True
         if not type1_uri:
             return False
-        type2_info = self.get_uri_type_info(type2_uri)
-        type2_uris = (type2_info and type2_info.get_all_type_uris()) or []
-        return type1_uri in type2_uris
+        type1_info = self.get_uri_type_info(type1_uri)
+        type1_uris = (type1_info and type1_info.get_all_type_uris()) or []
+        # log.info("FieldComparison.subtype: type1_uris (supertypes) %r"%(type1_uris,))
+        return type2_uri in type1_uris
 
 if __name__ == "__main__":
     import doctest
