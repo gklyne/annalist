@@ -37,7 +37,7 @@ from annalist.views.fields.render_placement import (
     )
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site
+from tests                          import init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testfielddata           import (
     recordfield_dir,
@@ -92,6 +92,11 @@ class RecordFieldTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_RecordFieldTest(self):
@@ -221,35 +226,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             [FieldChoice("", label="(field position and size)")] + 
             get_placement_options()
             )
-        #@@
-        # type_option_values       = [""] + get_site_types_sorted()+["testtype"]
-        # view_option_values       = get_site_views_sorted()
-        # group_option_values      = [""] + get_site_field_groups_sorted()
-        # render_option_values     = get_site_field_types_sorted()
-        # value_mode_option_values = get_site_value_modes_sorted()
-        # self.no_options          = [ FieldChoice('', label="(no options)") ]
-        # self.type_options = [
-        #     FieldChoice(v, link=recordtype_url("testcoll", v)) 
-        #     for v in type_option_values 
-        #     ]
-        # self.view_options = [ 
-        #     FieldChoice(v, link=recordview_url("testcoll", v)) 
-        #     for v in view_option_values 
-        #     ]
-        # self.group_options= [ 
-        #     FieldChoice(v, link=recordgroup_url("testcoll", v)) 
-        #     for v in group_option_values 
-        #     ]
-        # self.render_options = [ 
-        #     FieldChoice(v, link=collection_entity_view_url("testcoll", "Enum_render_type", v)) 
-        #     for v in render_option_values 
-        #     ]
-        # self.value_mode_options =[ 
-        #     FieldChoice(v, link=collection_entity_view_url("testcoll", "Enum_value_mode", v)) 
-        #     for v in value_mode_option_values 
-        #     ]
-        #@@
-
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -258,6 +234,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------

@@ -32,7 +32,7 @@ from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
 from annalist.views.fields.render_text          import RenderText
 from annalist.views.fields.render_fieldvalue    import RenderFieldValue, get_template
 
-from tests                      import init_annalist_test_site
+from tests                      import init_annalist_test_site, resetSitedata
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from field_rendering_support    import FieldRendererTestSupport
 
@@ -58,6 +58,12 @@ class FieldRenderingTest(FieldRendererTestSupport):
         return
 
     def tearDown(self):
+        # resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def _get_repeatgroup_context(self):

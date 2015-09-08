@@ -80,7 +80,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Update site data to ensure new enumeration logic is tested for fields
 - [x] Add test case for field available for subtype of declared entity type
 - [x] Improve performance of collection type access
-- [ ] Improve performance of test suite setup
+- [x] Improve performance of test suite setup
 
 (release 0.1.18?)
 

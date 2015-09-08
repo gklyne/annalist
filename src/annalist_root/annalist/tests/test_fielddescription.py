@@ -26,7 +26,7 @@ from annalist.views.fields.render_placement     import Placement
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
 from annalist.views.form_utils.fieldchoice      import FieldChoice
 
-from tests                  import init_annalist_test_site
+from tests                  import init_annalist_test_site, resetSitedata
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from AnnalistTestCase       import AnnalistTestCase
 
@@ -62,6 +62,12 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        # resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_FieldDescriptionTest(self):

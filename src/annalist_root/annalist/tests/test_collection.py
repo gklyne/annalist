@@ -30,7 +30,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.views.collection      import CollectionEditView
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import dict_to_str, init_annalist_test_site
+from tests                          import dict_to_str, init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     site_dir, collection_dir,
@@ -105,6 +105,12 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        # resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_CollectionTest(self):
@@ -322,6 +328,11 @@ class CollectionEditViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_CollectionEditViewTest(self):

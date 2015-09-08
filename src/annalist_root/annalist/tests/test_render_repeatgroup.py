@@ -27,7 +27,7 @@ from annalist.models.recordgroup        import RecordGroup
 from annalist.models.entitydata         import EntityData
 
 from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                              import init_annalist_test_site
+from tests                              import init_annalist_test_site, resetSitedata
 from annalist.tests.AnnalistTestCase    import AnnalistTestCase
 from entity_testutils               import (
     collection_create_values,
@@ -58,6 +58,12 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        # resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     # Support methods

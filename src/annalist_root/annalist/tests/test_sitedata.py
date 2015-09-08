@@ -50,7 +50,7 @@ from annalist.views.fields.render_placement import get_placement_options
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from AnnalistTestCase           import AnnalistTestCase
-from tests                      import dict_to_str, init_annalist_test_site
+from tests                      import dict_to_str, init_annalist_test_site, resetSitedata
 from tests                      import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
@@ -128,6 +128,12 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        # resetSitedata()
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     # --------------------------------------------------------------------------

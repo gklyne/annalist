@@ -25,7 +25,7 @@ from annalist.models.entitydata     import EntityData
 from annalist.views.entitydelete    import EntityDataDeleteConfirmedView
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site
+from tests                          import init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import create_test_user
 from entity_testentitydata          import (
@@ -53,6 +53,11 @@ class ConfirmEntityDataDeleteTests(AnnalistTestCase):
         return
 
     def tearDown(self):
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_CollectionActionViewTest(self):

@@ -39,7 +39,7 @@ from annalist.views.form_utils.fieldchoice  import FieldChoice
 from tests                              import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
-from tests                              import init_annalist_test_site
+from tests                              import init_annalist_test_site, resetSitedata
 from AnnalistTestCase                   import AnnalistTestCase
 from entity_testutils                   import (
     site_dir, collection_dir,
@@ -85,6 +85,11 @@ class RecordViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_RecordViewTest(self):
@@ -209,6 +214,12 @@ class RecordViewEditViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------

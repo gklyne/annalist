@@ -21,7 +21,7 @@ from annalist.identifiers       import ANNAL
 from annalist.models.entity     import EntityRoot, Entity
 
 from tests                      import TestBaseDir, TestBaseUri, TestHost, TestBasePath
-from tests                      import dict_to_str, init_annalist_test_site
+from tests                      import dict_to_str, init_annalist_test_site, resetSitedata
 from AnnalistTestCase           import AnnalistTestCase
 
 #   -----------------------------------------------------------------------------
@@ -47,6 +47,11 @@ class EntityRootTest(TestCase):
         return
 
     def tearDown(self):
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_EntityRootTest(self):
@@ -287,6 +292,11 @@ class EntityTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     #   ----------------------------------------
