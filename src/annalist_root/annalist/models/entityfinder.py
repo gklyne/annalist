@@ -472,9 +472,15 @@ class FieldComparison(object):
         """
         Returns True if the first type is a subtype of the second type, where both
         types are supplied as type URIs.  Returns True if both URIs are the same.
+
+        If type1_uri is not specified, assume no restruction.
+
+        If type2_uri is not specified, assume it does not satisfy the restriction.
         """
-        if not type1_uri or (type1_uri == type2_uri):
+        if not type2_uri or (type1_uri == type2_uri):
             return True
+        if not type1_uri:
+            return False
         type2_info = self.get_uri_type_info(type2_uri)
         type2_uris = (type2_info and type2_info.get_all_type_uris()) or []
         return type1_uri in type2_uris

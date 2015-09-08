@@ -169,7 +169,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_placement':            expect_placement
             , 'field_ref_type':             '_field'
             , 'field_choices':              expect_choices
-            , 'field_ref_restriction':      '[annal:field_entity_type] in entity[annal:record_type]'
+            , 'field_ref_restriction':      'entity[annal:record_type] subtype [annal:field_entity_type]'
             , 'field_group_ref':            None
             })
         # print repr(fd)

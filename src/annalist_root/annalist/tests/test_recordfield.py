@@ -740,7 +740,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_restrict" 
-                         placeholder="(enumeration value restriction; e.g. &#39;[annal:field_entity_type] in entity[annal:record_type]&#39;)"
+                         placeholder="(enumeration value restriction; e.g. &#39;entity[annal:record_type] subtype [annal:field_entity_type]&#39;)"
                          value=""/>
                 </div>
               </div>
