@@ -100,6 +100,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
     - [ ] JSON-LD @contexts support
     - [ ] Alternative RDF formats support (e.g. content negotiation)
+    - [ ] Cater for use of annal:member for repeated properties (see further TODOs below)?
 
 (release?)
 
@@ -243,6 +244,7 @@ Notes for Future TODOs:
 - [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
 - [ ] field renderer for unified import or upload resource?
 - [ ] `annal:member` - used to "lift" repeated values to the property that references a repeat group?
+    - e.g. see /annalist/c/Carolan_Guitar/d/_field/Event_r/
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
     - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.
