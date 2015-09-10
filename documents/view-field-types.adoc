@@ -164,7 +164,7 @@ A repeated field description contains three particular elements not used by othe
 
 1. a reference to a field group
 2. a label for a button used to create a new repetition
-3. a label for a button used to delete a repeated value
+3. a label for a button used to delete a repeated value (or values)
 
 The field group is a separately defined entity that mainly consists of a list of field references, along with optional property URI and placement information which, if present, overrides the default values from the individual field descriptions.
 
@@ -177,7 +177,13 @@ Thus, to create a repeated field in a view, the following steps must be performe
 
 (@@TODO: provide a simplified interface for doing the above through a single form)
 
-(@@TODO: reordering of fields within a group)
+When displayed in editing mode, each value in the repeated structure has an associated checkbox, and buttons are added for the following options:
+
+* to create a new instance of the repeated structure; this is labelled with a value from the field description.
+* to remove one or more selected instances (i.e. those selected via their checkboxes)
+* to move one or more selected instances up by one place in the repeat list
+* to move one or more selected instances down by one place in the repeat list
+
 
 == Resource references, imports and file uploads
 
@@ -316,11 +322,11 @@ A special case renderer used for describing repeated fields in a view descriptio
 
 Viewed as a repeated group of fields with a common heading.
 
-When editing, additional controls are provided to add a new value or delete an existing value from the repeat group.
+When editing, additional controls are provided to add a new value or delete existing values from the repeat group.  Also, for moving selected entries up or down within the list.
+
+(Hint: to move a single entry up by several places, select the entries over which it will be moved and select the button to move them all in the opposite direction.)
 
 A repeat group can also be used for optional values in an entity record.
-
-(@@TODO: provide means to change ordering of values in repeat group)
 
 === Repeated field group as rows of table `RepeatGroupRow`
 

@@ -5,6 +5,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 # Documentation
 
+- [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
 - [ ] HOWTOs for common tasks; task-oriented documentation
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
@@ -30,17 +31,17 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] Missing enumerated value field: displays blank; should be diagnostic
 - [x] Revise add field buttons to use save+redirect rather than re-render
 - [x] Introduce separate data-compatibility version (may lag current version)
-- [x] Enum selection - include labels in dropdown (then can use built-in IDs more easily)
+- [x] ** Enum selection - include labels in dropdown (then can use built-in IDs more easily)
 - [x] _group annal:record_type fields updated to treat grouped field description data as subtype.
 - [x] Update save_entity to return responseinfo
 - [x] Confirmation message when resource is imported/uploaded
 - [x] Use responseinfo values for status reporting to user
     - changes made for save and import.  Make others as the need arises.
-- [x] Option to re-order fields on view form
+- [x] ** Option to re-order fields on view form
     - [x] add move-up/move-down buttons
     - [x] add handler logic to reorder list when move up/down clicked
     - [x] test cases - top/middle/bottom, up/down
-- [x] Multiple URIs for type, and instances of type - add "supertypes" field
+- [x] ** Multiple URIs for type, and instances of type - add "supertypes" field
       to type description, and propagate these to the @types field of created 
       instances.
       - [x] Create new supertype URIs field in type description
@@ -58,7 +59,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
           - [x] Update tests in test_recordtype to include supertypes.
           - [x] Update tests in test_entitygenericedit to include supertypes.
 - [x] When testing site data, check for entity type of repeated field match with value type of referencing field and group
-- [x] When using "+" to add an enum entry, also need quick route to edit entry?
+- [x] ** When using "+" to add an enum entry, also need quick route to edit entry?
     - existing tests generate __new button submission - cf. render_select.py
     - [x] when item is selected, change "+" to edit?  (Use &#x270D; - "writing hand" ?)
         - [x] when rendering, use &#x270D; when value is selected
@@ -70,7 +71,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] rename __new to __new_edit?
 - [x] remove redundant field render types (Type, List, View, Field, etc.)
     - Need to keep entries in render_utils for backwards compatibility
-- [x] Apply subtype selection logic to dropdowns (as well as lists)
+- [x] ** Apply subtype selection logic to dropdowns (as well as lists)
     - select by type (as now)
     - enumerate over all types with matching type URI
 - [x] Add test case for refer to type field with subtypes defined
