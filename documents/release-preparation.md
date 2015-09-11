@@ -49,8 +49,8 @@
     - `cat annalist.out`
 - [x] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
         cp ~annalist/uploads/pages/index.html /var/www
-- [ ] Commit changes
-- [ ] Upload to PyPI (see below)
+- [x] Commit changes
+- [x] Upload to PyPI (see below)
 - [ ] Tag release on release branch
     - `git tag -a release-x.y.z`
 - [ ] Merge release branch to master
