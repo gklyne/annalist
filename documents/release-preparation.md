@@ -16,31 +16,29 @@
 - [ ] Documentation updates
 - [ ] Demo screencast update
 
-- [ ] Create release preparation branch
+- [x] Create release preparation branch
     - `git checkout -b release-prep-x.y.z develop`
     - *NOTE* use a different name to that which will be used to tag the release
-- [ ] Add TODO list to release notes (edit out working notes)
-- [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
-- [ ] Bump data compatibility version if new data is not compatible with older releases
-- [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`), reinstall and re-test
-- [ ] Add release highlights description to release notes
-- [ ] Review issues list in GitHub
-- [ ] Review roadmap (`documents/roadmap.md`)
-- [ ] Update version number in scripts, documents, etc.
-    - [ ] Release notes
-    - [ ] documents/installing-annalist.md
-    - [ ] documents/roadmap.md
-    - [ ] documents/pages/index.html
-    - [ ] src/newkit_to_annalist_net.sh
-    - [ ] src/newkit_to_conina_ubuntu.sh
-    - [ ] Docker build scripts
-- [ ] Create announcement text in `documents/release-notes/announce_0.1.*.md`
-- [ ] Create and post updated kit download and web pages to annalist.net
+- [x] Add TODO list to release notes (edit out working notes)
+- [x] Bump version to even value in `src/annalist_root/annalist/__init__.py`
+- [x] Bump data compatibility version if new data is not compatible with older releases
+- [x] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
+- [x] Reinstall and re-run test suite
+- [x] Add release highlights description to release notes
+- [x] Review issues list in GitHub
+- [x] Review roadmap (`documents/roadmap.md`)
+- [x] Update version number in scripts, documents, etc.
+    - [x] Release notes
+    - [x] documents/installing-annalist.md
+    - [x] documents/roadmap.md
+    - [x] documents/pages/index.html
+    - [x] src/newkit_to_annalist_net.sh
+    - [x] src/newkit_to_conina_ubuntu.sh
+    - [x] Docker build scripts
+- [x] Create announcement text in `documents/release-notes/announce_0.1.*.md`
+- [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Demo deployment; test
-- [ ] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
-        cp ~annalist/uploads/pages/index.html /var/www
-- [ ] Update demo installation on annalist.net; test
+- [x] Update demo installation on annalist.net; test
     - ssh to annalist@annalist.net
     - `killall python`
     - `. anenv/bin/activate`
@@ -49,6 +47,8 @@
     - `annalist-manager runtests`
     - `. update-run-annalist.sh`
     - `cat annalist.out`
+- [x] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
+        cp ~annalist/uploads/pages/index.html /var/www
 - [ ] Commit changes
 - [ ] Upload to PyPI (see below)
 - [ ] Tag release on release branch

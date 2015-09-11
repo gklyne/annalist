@@ -1,8 +1,8 @@
 {
   "rdfs:label": "RecordList coll3/list1",
   "rdfs:comment": "RecordList help for coll3/list1",
-  "annal:default_view": "Default_view",
-  "annal:default_type": "Default_type",
+  "annal:default_view": "_view/Default_view",
+  "annal:default_type": "_type/Default_type",
   "annal:type_id": "_list",
   "annal:list_entity_selector": "ALL",
   "annal:display_type": "List",
