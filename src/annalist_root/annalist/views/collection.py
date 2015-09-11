@@ -72,12 +72,14 @@ class CollectionEditView(AnnalistGenericView):
         Form for editing (customizing) the current collection 
         """
         def resultdata(viewinfo):
+            def get_id(e):
+                return e.get_id()
             coll = viewinfo.collection
             context = (
                 { 'continuation_url':   viewinfo.get_continuation_url() or ""
-                , 'types':              sorted( [t.get_id() for t in coll.types(include_alt=False)] )
-                , 'lists':              sorted( [l.get_id() for l in coll.lists(include_alt=False)] )
-                , 'views':              sorted( [v.get_id() for v in coll.views(include_alt=False)] )
+                , 'types':              sorted(coll.types(include_alt=False), key=get_id)
+                , 'lists':              sorted(coll.lists(include_alt=False), key=get_id)
+                , 'views':              sorted(coll.views(include_alt=False), key=get_id)
                 , 'select_rows':        "6"
                 })
             context.update(viewinfo.context_data())

@@ -7,19 +7,19 @@
 , "rdfs:label":         "BibEntry book fields"
 , "rdfs:comment":       "Group of fields describing a book entry in a BibEntry record"
 , "annal:group_fields":
-  [ { "annal:field_id":         "Bib_booktitle"
+  [ { "annal:field_id":         "_field/Bib_booktitle"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_volume"
+  , { "annal:field_id":         "_field/Bib_volume"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_chapter"
+  , { "annal:field_id":         "_field/Bib_chapter"
     , "annal:field_placement":  "small:0,12;medium:0,6"
     }
-  , { "annal:field_id":         "Bib_pages"
+  , { "annal:field_id":         "_field/Bib_pages"
     , "annal:field_placement":  "small:0,12;medium:6,6"
     }
-  , { "annal:field_id":         "Bib_edition"
+  , { "annal:field_id":         "_field/Bib_edition"
     , "annal:field_placement":  "small:0,12"
     }
   ]

@@ -1,6 +1,7 @@
 # Development roadmap
 
-Current status: public prototype release 0.1.16; the main update from release 0.1.14 is improvements to handling media attachments.
+Current status: public prototype release 0.1.18; this release introduces 
+interface changes to address some usabaility problems and fixes several bugs.
 
 
 # V1.0 release
@@ -13,9 +14,14 @@ More generally, features planned for future releases are recorded in the [issues
 # Desired features, not yet scheduled
 
 
-## Web backend storage
+## Data bridges
 
-(Moved to [issue #32](https://github.com/gklyne/annalist/issues/32))
+Especially spreadsheets.  See https://github.com/ninebynine/sds
+
+
+## Research objects
+
+Mechanisms for packaging to submitting to RO repositories.  Could be based on [DIP work](https://github.com/CottageLabs/dip), etc.
 
 
 ## Linked data formats and API
@@ -29,6 +35,11 @@ Notes:
 - alternate format renderers and content negotiation
 
 There are also some issues around entity renaming and link preservation to be considered.
+
+
+## Web backend storage
+
+(Moved to [issue #32](https://github.com/gklyne/annalist/issues/32))
 
 
 ### Alternative formats to support
@@ -99,16 +110,6 @@ Notes:
 
 - provenance data capture (e.g. - look at creating additional resource in entity directory)
 - provenance pingbacks - distributed provenance for real data?
-
-
-## Data bridges
-
-Especially spreadsheets.  See https://github.com/ninebynine/sds
-
-
-## Research objects
-
-Mechanisms for packaging to submitting to RO repositories.  Could be based on [DIP work](https://github.com/CottageLabs/dip), etc.
 
 
 ## ResourceSync

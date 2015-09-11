@@ -31,7 +31,7 @@ from annalist.models.annalistuser   import AnnalistUser
 from annalist.views.site            import SiteView, SiteActionView
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import dict_to_str, init_annalist_test_site
+from tests                          import dict_to_str, init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     site_view_url, collection_view_url, collection_edit_url, 
@@ -71,6 +71,12 @@ class SiteTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_SiteTest(self):
@@ -201,6 +207,11 @@ class SiteViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_SiteViewTest(self):

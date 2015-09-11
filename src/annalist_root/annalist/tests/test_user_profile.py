@@ -26,7 +26,7 @@ from annalist.models.site       import Site
 from annalist.views.profile     import ProfileView
 
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                      import dict_to_str, init_annalist_test_site
+from tests                      import dict_to_str, init_annalist_test_site, resetSitedata
 from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import site_title
 
@@ -41,6 +41,11 @@ class UserProfileTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_UserProfileTest(self):

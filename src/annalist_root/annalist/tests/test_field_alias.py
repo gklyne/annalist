@@ -27,47 +27,21 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site
+from tests                          import init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 
 from entity_testutils               import (
-    # site_dir, collection_dir,
-    # site_view_url,
-    # collection_edit_url,
-    # continuation_url_param,
-    # confirm_delete_params,
     collection_create_values,
-    # site_title,
-    # render_select_options,
     create_test_user, create_user_permissions,
     context_list_entities,
     context_list_head_fields, context_list_item_fields,
     context_list_item_field, context_list_item_field_value
     )
 
-# from entity_testtypedata            import (
-    # recordtype_edit_url,
-    # recordtype_create_values,
-    # )
 from entity_testentitydata          import (
-    # recorddata_dir,  entitydata_dir,
     entity_url, entitydata_edit_url, 
     entitydata_list_type_url,
-    # entitydata_value_keys, entitydata_create_values, entitydata_values, 
-    # entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
-    # entitydata_recordtype_view_form_data,
-    # default_fields, default_label, default_comment, error_label,
-    # layout_classes
     )
-# from entity_testsitedata            import (
-    # get_site_types, get_site_types_sorted,
-    # get_site_lists, get_site_lists_sorted,
-    # get_site_list_types, get_site_list_types_sorted,
-    # get_site_views, get_site_views_sorted,
-    # get_site_field_groups, get_site_field_groups_sorted, 
-    # get_site_fields, get_site_fields_sorted, 
-    # get_site_field_types, get_site_field_types_sorted, 
-    # )
 
 #   -----------------------------------------------------------------------------
 #
@@ -122,6 +96,12 @@ class FieldAliasTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        # resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_view_field_alias(self):

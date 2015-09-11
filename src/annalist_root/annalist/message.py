@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 SITE_NAME_DEFAULT           = "Annalist linked data notebook"
 ACTION_COMPLETED            = "Action completed"
 NO_ACTION_PERFORMED         = "No action performed"
+NO_SELECTION                = "(No '%(id)s' selected)"
 INPUT_ERROR                 = "Problem with input"
 SYSTEM_ERROR                = "System error"
 IMPORT_ERROR                = "Resource import error"
@@ -23,7 +24,7 @@ IMPORT_DONE_DETAIL          = ("Imported <%(resource_url)s>"+
                                " for entity %(type_id)s/%(id)s")
 UPLOAD_ERROR                = "File upload error"
 UPLOAD_ERROR_REASON         = ("Failed to upload file %(uploaded_file)s as %(upload_name)s"+
-                               " for %(type_id)s/%(id)s: %(upload_exc)s")
+                               " for %(type_id)s/%(id)s: %(import_exc)s")
 UPLOAD_DONE                 = "File uploaded"
 UPLOAD_DONE_DETAIL          = ("Uploaded <%(uploaded_file)s>"+
                                " as %(upload_name)s"+
@@ -120,9 +121,10 @@ ENTITY_DATA_EXISTS          = "Entity %(id)s of type %(type_id)s in collection %
 ENTITY_DATA_NOT_EXISTS      = "Entity %(id)s of type %(type_id)s in collection %(coll_id)s does not exist"
 ENTITY_DATA_REMOVED         = "Entity %(id)s of type %(type_id)s in collection %(coll_id)s was removed"
 ENTITY_TYPE_ID              = "Problem with entity type identifier"
-ENTITY_TYPE_ID_INVALID      = "The entity type identifier is missing, too long, or not a valid identifier"
+ENTITY_TYPE_ID_INVALID      = "The entity type identifier is missing, too long, or not a valid identifier (%(type_id)s)"
 DEFAULT_VIEW_UPDATED        = "Default list view for collection %(coll_id)s changed to %(list_id)s"
 REMOVE_FIELD_ERROR          = "Problem with remove field(s) request"
+MOVE_FIELD_ERROR            = "Problem with move field up/down request"
 NO_FIELD_SELECTED           = "No field(s) selected"
 VIEW_DESCRIPTION_HEADING    = "Problem with view description"
 VIEW_PROPERTY_DUPLICATE     = "Field %(field_id)s repeats use of property %(property_uri)s in view"

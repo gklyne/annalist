@@ -2,7 +2,7 @@
 , "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
 , "annal:id":           "Markdown"
 , "annal:type_id":      "Enum_render_type"
-, "rdfs:label":         "annal:field_render_type/Markdown"
+, "rdfs:label":         "Markdown rich text"
 , "rdfs:comment":       "Text value rendered for viewing as Markdown"
 , "annal:uri":          "annal:field_render_type/Markdown"
 }

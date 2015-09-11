@@ -23,7 +23,7 @@
                         <select name="typelist" size="{{ select_rows }}" 
                                 class="small-size-4 medium-size-12 medium-add-margin">
                             {% for t in types %}
-                            <option>{{ t }}</option>
+                            <option value="{{t.get_id}}">{{t.get_label}}</option>
                             {% endfor %}
                          </select>
                         <input type="submit" name="type_new"    value="New" />
@@ -36,7 +36,7 @@
                         <select name="listlist" size="{{ select_rows }}" 
                                 class="small-size-4 medium-size-12 medium-add-margin">
                             {% for l in lists %}
-                            <option>{{ l }}</option>
+                            <option value="{{l.get_id}}">{{l.get_label}}</option>
                             {% endfor %}
                          </select>
                         <input type="submit" name="list_new"    value="New" />
@@ -49,7 +49,7 @@
                         <select name="viewlist" size="{{ select_rows }}" 
                                 class="small-size-4 medium-size-12 medium-add-margin">
                             {% for v in views %}
-                            <option>{{ v }}</option>
+                            <option value="{{v.get_id}}">{{v.get_label}}</option>
                             {% endfor %}
                          </select>
                         <input type="submit" name="view_new"    value="New" />

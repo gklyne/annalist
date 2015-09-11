@@ -31,10 +31,11 @@ from annalist.models.sitedata           import SiteData
 from annalist.models.collection         import Collection
 from annalist.models.recordlist         import RecordList
 
-from annalist.views.recordlistdelete    import RecordListDeleteConfirmedView
+from annalist.views.recordlistdelete        import RecordListDeleteConfirmedView
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                              import init_annalist_test_site
+from tests                              import init_annalist_test_site, resetSitedata
 from AnnalistTestCase                   import AnnalistTestCase
 from entity_testutils                   import (
     site_dir, collection_dir,
@@ -60,10 +61,11 @@ from entity_testentitydata              import (
     layout_classes
     )
 from entity_testsitedata            import (
-    get_site_types, get_site_types_sorted,
-    get_site_lists, get_site_lists_sorted,
+    make_field_choices, no_selection,
+    get_site_types, get_site_types_sorted, get_site_types_linked,
+    get_site_lists, get_site_lists_sorted, get_site_lists_linked,
+    get_site_views, get_site_views_sorted, get_site_views_linked,
     get_site_list_types, get_site_list_types_sorted,
-    get_site_views, get_site_views_sorted,
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
@@ -88,6 +90,11 @@ class RecordListTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_RecordListTest(self):
@@ -170,10 +177,19 @@ class RecordListEditViewTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
-        self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.no_options = ['(no options)']
+        self.testsite   = Site(TestBaseUri, TestBaseDir)
+        self.testcoll   = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_list")
+        self.no_options = [ FieldChoice('', label="(no options)") ]
+        self.type_options   = get_site_types_linked("testcoll")
+        self.type_options.append(
+            FieldChoice("_type/testtype", 
+                label="RecordType testcoll/testtype", 
+                link=entity_url("testcoll", "_type", "testtype")
+            ))
+        self.view_options   = get_site_views_linked("testcoll")
+        self.list_options   = get_site_lists_linked("testcoll")
+        self.list_type_opts = get_site_list_types_sorted()
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -182,6 +198,12 @@ class RecordListEditViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
@@ -216,8 +238,8 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_url="(?list_url)",
             list_uri="(?list_uri)",
             list_type="List",
-            list_default_type="Default_type",
-            list_default_view="Default_view",
+            list_default_type="_type/Default_type",
+            list_default_view="_view/Default_view",
             list_selector="ALL",
             list_target_type=""
             ):
@@ -276,15 +298,15 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][7]['field_value'], list_target_type)
         # 9th field - list of fields from target entity for each list entry
         expect_field_data = (
-            [ { 'annal:field_id':             "Entity_id"
+            [ { 'annal:field_id':             "_field/Entity_id"
               , 'annal:field_placement':      "small:0,3"
               }
-            , { 'annal:field_id':             "Entity_label"
+            , { 'annal:field_id':             "_field/Entity_label"
               , 'annal:field_placement':      "small:3,9"
               }
             ])
-        self.assertEqual(r.context['fields'][8]['field_id'],           'List_repeat_fields')
-        self.assertEqual(r.context['fields'][8]['field_name'],         'List_repeat_fields')
+        self.assertEqual(r.context['fields'][8]['field_id'],           'List_fields')
+        self.assertEqual(r.context['fields'][8]['field_name'],         'List_fields')
         self.assertEqual(r.context['fields'][8]['field_label'],        'Fields')
         self.assertEqual(r.context['fields'][8]['field_property_uri'], "annal:list_fields")
         self.assertEqual(r.context['fields'][8]['field_value_mode'],   "Value_direct")
@@ -329,8 +351,8 @@ class RecordListEditViewTest(AnnalistTestCase):
                 """+
                   render_choice_options(
                     "List_type",
-                    get_site_list_types_sorted(),
-                    "List")+
+                    self.list_type_opts,
+                    "Enum_list_type/List")+
                 """
                 </div>
               </div>
@@ -376,8 +398,8 @@ class RecordListEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "List_default_type", "Record type",
-                    get_site_types_sorted()+["testtype"],
-                    "Default_type")+
+                    no_selection("(default record type)") + self.type_options,
+                    "_type/Default_type")+
                 """
                 </div>
               </div>
@@ -393,8 +415,8 @@ class RecordListEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "List_default_view", "View",
-                    sorted(get_site_views()),
-                    "Default_view")+
+                    no_selection("(view id)") + self.view_options,
+                    "_view/Default_view")+
                 """
                 </div>
               </div>
@@ -455,8 +477,6 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_url=list_url,
             list_uri=None,
             list_type="List",
-            list_default_type="Default_type",
-            list_default_view="Default_view",
             list_selector="ALL"
             )
         return

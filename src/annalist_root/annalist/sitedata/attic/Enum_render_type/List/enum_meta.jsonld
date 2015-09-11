@@ -2,7 +2,7 @@
 , "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
 , "annal:id":           "List"
 , "annal:type_id":      "Enum_render_type"
-, "rdfs:label":         "annal:field_render_type/List"
-, "rdfs:comment":       "A list identifier, which may be rendered as a drop-down selection."
+, "rdfs:label":         "List Id"
+, "rdfs:comment":       "A list identifier, which may be rendered as a drop-down selection.  @@Deprecated."
 , "annal:uri":          "annal:field_render_type/List"
 }

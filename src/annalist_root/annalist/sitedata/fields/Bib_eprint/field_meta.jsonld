@@ -2,7 +2,7 @@
 , "@type":                      ["annal:Field"]
 , "annal:id":                   "Bib_eprint"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Bib_eprint"
+, "rdfs:label":                 "ePrint"
 , "rdfs:comment":               "BibJSON(ish) field Bib_eprint"
 , "annal:field_render_type":    "Text"
 , "annal:field_value_mode":     "Value_direct"

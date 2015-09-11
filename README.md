@@ -25,7 +25,7 @@ See [Installing and setting up Annalist](documents/installing-annalist.md), and 
 Using Annalist
 --------------
 
-See the [Guide to using Annalist](documents/using-annalist.md)
+See the [Guide to using Annalist](documents/using-annalist.adoc)
 
 There are also a number of demonstration screencast videos, and accompanying scripts, which can be found at [demonstration/evaluation scripts](documents/demo-script.md) page.
 

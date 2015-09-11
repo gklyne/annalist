@@ -3,59 +3,59 @@
 , "annal:type_id":      "_view"
 , "annal:id":           "Field_view"
 , "annal:record_type":  "annal:Field"
-, "rdfs:label":         "View description for view field description"
+, "rdfs:label":         "Field description view"
 , "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing fields in a record view"
 , "annal:open_view":    false
 , "annal:view_fields":
-  [ { "annal:field_id":         "Field_id"
+  [ { "annal:field_id":         "_field/Field_id"
     , "annal:field_placement":  "small:0,12;medium:0,6"
     }
-  , { "annal:field_id":         "Field_type"
+  , { "annal:field_id":         "_field/Field_type"
     , "annal:field_placement":  "small:0,12;medium:6,6"
     }
-  , { "annal:field_id":         "Field_label"
+  , { "annal:field_id":         "_field/Field_label"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Field_comment"
+  , { "annal:field_id":         "_field/Field_comment"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Field_property"
+  , { "annal:field_id":         "_field/Field_property"
     , "annal:field_placement":  "small:0,12;medium:0,6"
     }
-  , { "annal:field_id":         "Field_placement"
+  , { "annal:field_id":         "_field/Field_placement"
     , "annal:field_placement":  "small:0,12;medium:6,6"
     }
-  , { "annal:field_id":         "Field_render"
+  , { "annal:field_id":         "_field/Field_render"
     , "annal:field_placement":  "small:0,12;medium:0,6"
     }
-  , { "annal:field_id":         "Field_value_mode"
+  , { "annal:field_id":         "_field/Field_value_mode"
     , "annal:field_placement":  "small:0,12;medium:6,6"
     }
-  , { "annal:field_id":         "Field_typeref"
+  , { "annal:field_id":         "_field/Field_typeref"
     , "annal:field_placement":  "small:0,12;medium:0,6"
     }
-  , { "annal:field_id":         "Field_fieldref"
+  , { "annal:field_id":         "_field/Field_fieldref"
     , "annal:field_placement":  "small:0,12;medium:6,6"
     }
-  , { "annal:field_id":         "Field_placeholder"
+  , { "annal:field_id":         "_field/Field_placeholder"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Field_default"
+  , { "annal:field_id":         "_field/Field_default"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Field_groupref"
+  , { "annal:field_id":         "_field/Field_groupref"
     , "annal:field_placement":  "small:0,12;medium:0,6"
     }
-  , { "annal:field_id":         "Field_repeat_label_add"
+  , { "annal:field_id":         "_field/Field_repeat_label_add"
     , "annal:field_placement":  "small:0,12;medium:0,6"
     }
-  , { "annal:field_id":         "Field_repeat_label_delete"
+  , { "annal:field_id":         "_field/Field_repeat_label_delete"
     , "annal:field_placement":  "small:0,12;medium:6,6"
     }
-  , { "annal:field_id":         "Field_entity_type"
+  , { "annal:field_id":         "_field/Field_entity_type"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Field_restrict"
+  , { "annal:field_id":         "_field/Field_restrict"
     , "annal:field_placement":  "small:0,12"
     }
   ]

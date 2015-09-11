@@ -2,7 +2,7 @@
 , "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
 , "annal:id":           "RefMultifield"
 , "annal:type_id":      "Enum_render_type"
-, "rdfs:label":         "Multiple fields of referenced entity"
-, "rdfs:comment":       "Field description consists of a group of sub-fields and an entity type reference.  In edit mode, an entity is selected from a dropdown list.  In view mode, the indicated fields are displayed from the referenced entity.  E.g. used for displaying annotated images."
+, "rdfs:label":         "Fields of referenced entity"
+, "rdfs:comment":       "Field contains multiple fields from referenced entity.  The description contains an entity type, and refers to a group of fields that are displayed from a referenced entity of the specified type..  In edit mode, an entity is selected from a dropdown list.  In edit mode, a drop-down is used to select a target entity.  In view mode, the indicated fields are displayed from the referenced entity.  E.g. often used for displaying images with annotations."
 , "annal:uri":          "annal:field_render_type/RefMultifield"
 }

@@ -70,7 +70,8 @@ class UriLinkRenderingTest(FieldRendererTestSupport):
                 renderer,
                 context=render_context,
                 expect_rendered_view=expect_render['view'],
-                expect_rendered_edit=expect_render['edit']
+                expect_rendered_edit=expect_render['edit'],
+                collapse_whitespace=True
                 )
         return
 

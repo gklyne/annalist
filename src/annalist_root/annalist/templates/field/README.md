@@ -13,3 +13,9 @@ where `<context>` is one of:
 * [`grid` - used to render an element to display a field value in a grid NOT YET IMPLEMENTED]
 
 and `<value-type>` is a value used in a field definition `annal:field_value_type` value (see `sitedata/fields` for field definitions by field id).
+
+
+## Notes
+
+* http://stackoverflow.com/questions/1480588/input-size-vs-width
+

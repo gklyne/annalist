@@ -80,6 +80,86 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 # History
 
+
+## Version 0.1.18
+
+This release introduces several interface changes to address usability problems, 
+bug-fixes (many associated with resource import/file upload logic), and embodies 
+some fairly extensive changes to the internal code structure.
+
+New features include:
+* an option to reorder repeated field entries in a view (via move up/down buttons)
+* ability to declare simple type hierarchies with different presentation of subtypes.  
+Lists of a given type also include any subtypes.  
+Consistent with the Annalist philosophy, type hierarchies can be adjusted 
+dynamically and are not baked in to the data storage structure.
+* option to edit existing referenced values from entity edit view, 
+in addition to creating new values.
+* in entity edit view, entity-reference dropdown lists display labels rather
+than internal entity Ids, which it is hoped will lead to more user-friendly 
+presentation when creating and editing entity data records.
+
+(More details are given in the release notes change summary for version 0.1.17)
+
+## Version 0.1.17, towards 0.1.18
+
+- [x] Option to re-order fields on view form: add move-up/move-down buttons
+- [x] Multiple URIs for type, and instances of type - add "supertypes" field
+      to type description, and propagate these to the @types field of created 
+      instances.
+- [x] List of type also includes subtypes
+- [x] Dropdowns to select value of type also presents subtypes
+- [x] When using "+" to add an enum entry, also provide quick route to edit entry.
+    - [x] when existing item is selected, change button label "+" to "writing hand" (&#x270D;)
+    - [x] when button is clicked, edit existing value if selected.
+- [x] Enumerated selection - include labels rather than Ids in dropdown
+
+- [x] Introduce separate data-compatibility version (may lag current version).  
+This means that older software may continue to work with newer data when 
+no compatibility-breaking changes are introduced.
+- [x] _group annal:record_type fields updated to treat grouped field 
+description data as separate record type.
+- [x] Confirmation message when resource is imported/uploaded
+- [x] Missing enumerated value reference: provide better diagnostic
+- [x] Missing enumerated value field: display diagnostic instead of blank
+- [x] Remove redundant field render types (Type, List, View, Field, etc.)
+    - keep entries in render_utils for backwards compatibility
+
+- [x] BUG: if alternative field is defined for "Entity_id" (e.g. for different label), 
+can't save entity, because internal expected form of field name was not used.  
+When RenderType is "EntityId, force use of standard field name.  
+Similar for "EntityTypeId".
+- [x] BUG: if Value_entity field does not include "refer to type" value, 
+barfs with 500 error.
+- [x] BUG: Multifield ref inside a repeat field not occupying the entire 
+width of the field generates messed up layout of labels vs content.  
+Added an additional layer of row/cols for the headers of the 
+multifield reference.
+- [x] BUG: import resource in new entity raises internal error
+- [x] BUG: import image when new or changed changed record ID gives error
+- [x] BUG: import image when changing record ID causes error on save
+- [x] BUG: if multiple repeated field groups are selected for deletion, 
+only the last is deleted
+- [x] BUG: follow links to edit view, then save, does not return to entity view.
+
+- [x] Internal refactoring of error handling and reporting via "responsinfo" structure
+- [x] Built-in `Entity_id` and `Entity_label` fields position/size values updated
+- [x] Revise add field buttons to use save+redirect rather than re-render
+- [x] Use responseinfo values for status reporting to user
+    - changes made for save and import.
+    - other changes to be applied as the need arises.
+- [x] When testing site data, additional consistency check that entity type of 
+repeated field matches with value type of referencing field and group
+- [x] Add test cases for references to type with subtypes defined: 
+check that subtype instances are also presented.
+- [x] Add/update test cases for selecting entity type
+- [x] Add/update test cases for selecting entity view
+- [x] Add/update test cases for selecting entity list
+- [x] Update site data to ensure new enumerated-value logic is tested
+- [x] Small improvement of performance for collection type access
+- [x] Small improvement of performance for test suite setup
+
+
 ## Version 0.1.16
 
 The main advances in this release are improvement of the file upload and resource import logic, and improvements to the form rendering to make it easier to use media attachments.  One strategy adopted is to use an entity type as a "media library" to which resources can be attached, and to provide new field rendering options to reference the attached resources and associated metadata.  These new capabilities have been used to enhance the picture displays in the "CruisingLog" demo collection at http://demo.annalistr.net/ (see definitions for `DailyLog`, `Place` and `Picture`).

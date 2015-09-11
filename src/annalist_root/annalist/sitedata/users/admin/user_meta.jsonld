@@ -10,8 +10,8 @@
     "UPDATE",
     "DELETE",
     "CONFIG",
-    "CREATE_COLL",
-    "DELETE_COLL",
+    "CREATE_COLLECTION",
+    "DELETE_COLLECTION",
     "ADMIN"
   ],
   "annal:id": "admin",

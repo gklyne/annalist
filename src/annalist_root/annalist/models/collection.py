@@ -54,6 +54,8 @@ class Collection(Entity):
         """
         super(Collection, self).__init__(parentsite, coll_id)
         self._parentsite = parentsite
+        self._types_by_id  = None
+        self._types_by_uri = None
         return
 
     # Site
@@ -113,6 +115,39 @@ class Collection(Entity):
 
     # Record types
 
+    def _update_type_cache(self, type_entity):
+        """
+        Add single type entity to type cache
+        """
+        if type_entity:
+            self._types_by_id[type_entity.get_id()]   = type_entity
+            self._types_by_uri[type_entity.get_uri()] = type_entity
+        return
+
+    def _flush_type(self, type_id):
+        """
+        Remove single identified type entity from type cache
+        """
+        if self._types_by_id:
+            t = self._types_by_id.get(type_id, None)
+            if t:
+                type_uri = t.get_uri()
+                self._types_by_id.pop(type_id, None)
+                self._types_by_uri.pop(type_uri, None)
+        return
+
+    def _load_types(self):
+        """
+        Initialize cache of RecordType entities
+        """
+        if not (self._types_by_id and self._types_by_uri):
+            self._types_by_id  = {}
+            self._types_by_uri = {}
+            for type_id in self._children(RecordType, altparent=self._parentsite):
+                t = RecordType.load(self, type_id, altparent=self._parentsite)
+                self._update_type_cache(t)
+        return
+
     def types(self, include_alt=True):
         """
         Generator enumerates and returns record types that may be stored
@@ -133,9 +168,11 @@ class Collection(Entity):
         type_meta   a dictionary providing additional information about
                     the type to be created.
 
-        returns a RecordType object for the newly created type.
+        Returns a RecordType object for the newly created type.
         """
         t = RecordType.create(self, type_id, type_meta)
+        if self._types_by_id:
+            self._update_type_cache(t)
         return t
 
     def get_type(self, type_id):
@@ -146,8 +183,30 @@ class Collection(Entity):
 
         returns a RecordType object for the identified type, or None.
         """
-        t = RecordType.load(self, type_id, altparent=self._parentsite)
+        self._load_types()
+        t = self._types_by_id.get(type_id, None)
+        # Was it created but not cached?
+        if not t and RecordType.exists(self, type_id, altparent=self._parentsite):
+            t = RecordType.load(self, type_id, altparent=self._parentsite)
+            self._update_type_cache(t)
         return t
+        #@@
+        # t = RecordType.load(self, type_id, altparent=self._parentsite)
+        #@@
+
+    def get_uri_type(self, type_uri, include_alt=True):
+        """
+        Return type entity corresponding to the supplied type URI
+        """
+        self._load_types()
+        t = self._types_by_uri.get(type_uri, None)
+        return t
+        #@@
+        # for t in self.types(include_alt=include_alt):
+        #     turi = t.get_uri()
+        #     if turi == type_uri:
+        #         return t
+        #@@
 
     def remove_type(self, type_id):
         """
@@ -157,6 +216,7 @@ class Collection(Entity):
 
         Returns a non-False status code if the type is not removed.
         """
+        self._flush_type(type_id)
         s = RecordType.remove(self, type_id)
         return s
 

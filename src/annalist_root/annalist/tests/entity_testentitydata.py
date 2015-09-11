@@ -17,7 +17,7 @@ from django.http                import QueryDict
 from django.utils.http          import urlquote, urlunquote
 from django.core.urlresolvers   import resolve, reverse
 
-from annalist.util              import valid_id
+from annalist.util              import valid_id, extract_entity_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import layout
 from annalist                   import message
@@ -149,13 +149,15 @@ def entitydata_value_keys(entity_uri=False):
 
 def entitydata_create_values(
         entity_id, update="Entity", coll_id="testcoll", type_id="testtype", 
-        entity_uri=None, typeuri=None, hosturi=TestHostUri):
+        entity_uri=None, type_uri=None, hosturi=TestHostUri,
+        extra_fields=None):
     """
     Data used when creating entity test data
     """
-    if typeuri is None:
-        typeuri = entity_url(coll_id, "_type", type_id)
-    types   = [entitydata_type(type_id), typeuri]
+    if type_uri is not None:
+        types = [entitydata_type(type_id), type_uri, type_uri+"/super1", type_uri+"/super2"]
+    else:
+        types = [entitydata_type(type_id), entity_url(coll_id, "_type", type_id)]
     # log.info('entitydata_create_values: types %r'%(types,)) 
     d = (
         { '@type':          types
@@ -165,6 +167,8 @@ def entitydata_create_values(
         })
     if entity_uri:
         d['annal:uri'] = entity_uri
+    if extra_fields:
+        d.update(extra_fields)
     return d
 
 def entitydata_values_add_field(data, property_uri, dup_index, value):
@@ -184,12 +188,13 @@ def entitydata_values(
         entity_id, update="Entity", 
         coll_id="testcoll", type_id="testtype", 
         entity_uri=None,
-        typeuri=None, hosturi=TestHostUri):
-    typeuri = entity_url(coll_id, "_type", type_id)
+        type_uri=None, hosturi=TestHostUri
+        ):
+    # type_uri = entity_url(coll_id, "_type", type_id)
     dataurl = entity_url(coll_id, type_id, entity_id)
     d = entitydata_create_values(
         entity_id, update=update, coll_id=coll_id, type_id=type_id, 
-        entity_uri=entity_uri, typeuri=typeuri, hosturi=hosturi
+        entity_uri=entity_uri, type_uri=type_uri, hosturi=hosturi
         ).copy() #@@ copy needed here?
     d.update(
         { '@id':            './'
@@ -255,7 +260,7 @@ def entitydata_context_data(
         })
     if entity_id:
         context_dict['fields'][0]['field_value'] = entity_id
-        context_dict['fields'][1]['field_value'] = type_id if valid_id(type_id) else None
+        context_dict['fields'][1]['field_value'] = "_type/"+type_id if valid_id(type_id) else None
         context_dict['fields'][2]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
         context_dict['fields'][3]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
         context_dict['orig_id']     = entity_id
@@ -315,7 +320,7 @@ def entitydata_form_data(
         })
     if entity_id:
         form_data_dict['entity_id']         = entity_id
-        form_data_dict['entity_type']       = type_id
+        form_data_dict['entity_type']       = "_type/"+type_id
         form_data_dict['Entity_label']      = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Entity_comment']    = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['orig_id']           = entity_id
@@ -353,7 +358,7 @@ def entitydata_form_add_field(form_data_dict, field_name, dup_index, value):
 
 def entitydata_delete_form_data(entity_id=None, type_id="Default_type", list_id="Default_list"):
     return (
-        { 'list_choice':        list_id
+        { 'list_choice':        "_list/"+list_id
         , 'continuation_url':   ""
         , 'search_for':         ""
         , 'entity_select':      ["%s/%s"%(type_id, entity_id)]
@@ -460,7 +465,7 @@ def entitydata_default_view_form_data(
         })
     if entity_id:
         form_data_dict['entity_id']       = entity_id
-        form_data_dict['entity_type']     = type_id
+        form_data_dict['entity_type']     = "_type/"+type_id
         form_data_dict['Entity_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Entity_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['orig_id']         = entity_id
@@ -592,10 +597,10 @@ def entitydata_recordtype_view_form_data(
         form_data_dict['Type_uri']        = "" # type_url
         form_data_dict['orig_id']         = entity_id
     if type_id:
-        form_data_dict['entity_type']     = type_id
-        form_data_dict['orig_type']       = type_id
+        form_data_dict['entity_type']     = "_type/"+type_id
+        form_data_dict['orig_type']       = extract_entity_id(type_id)
     if type_uri:
-        form_data_dict['Type_uri']        = type_uri        
+        form_data_dict['Type_uri']        = type_uri
     if orig_id:
         form_data_dict['orig_id']         = orig_id
     if orig_type:
@@ -625,7 +630,7 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
     list_form_data = (
         { 'search_for':         ""
         , 'search':             "Find"
-        , 'list_choice':        "Default_list"
+        , 'list_choice':        "_list/Default_list"
         , 'list_view':          "View"
         , 'entity_select':      ["{{entity.entity_id}}"]
         , 'new':                "New"
@@ -652,7 +657,7 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
         continuation_url = "" # collection_edit_url("testcoll")
     form_data = (
         { 'search_for':         search
-        , 'list_choice':        list_id
+        , 'list_choice':        "_list/"+list_id
         , 'continuation_url':   continuation_url
         })
     if entities is not None:

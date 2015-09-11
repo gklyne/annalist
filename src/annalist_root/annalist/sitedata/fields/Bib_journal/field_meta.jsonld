@@ -12,7 +12,7 @@
 , "annal:property_uri":         "bib:journal"
 , "annal:field_entity_type":    "bib:BibEntry"
   // Reference to description of journal field
-, "annal:group_ref":            "Bib_journal_group"
+, "annal:group_ref":            "_group/Bib_journal_group"
 , "annal:repeat_label_add":     "Add journal"
 , "annal:repeat_label_delete":  "Remove selected journal"
 }

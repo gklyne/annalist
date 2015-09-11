@@ -36,11 +36,12 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.uri_builder     import uri_params, uri_with_params
-from annalist.views.entitylist      import EntityGenericListView #, EntityDataDeleteConfirmedView
+from annalist.views.uri_builder             import uri_params, uri_with_params
+from annalist.views.entitylist              import EntityGenericListView
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site
+from tests                          import init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     site_dir, collection_dir,
@@ -69,14 +70,16 @@ from entity_testentitydata          import (
     entitylist_form_data
     )
 from entity_testsitedata            import (
-    get_site_types, get_site_types_sorted,
-    get_site_lists, get_site_lists_sorted,
+    make_field_choices, no_selection,
+    get_site_types, get_site_types_sorted, get_site_types_linked,
+    get_site_lists, get_site_lists_sorted, get_site_lists_linked,
+    get_site_views, get_site_views_sorted, get_site_views_linked,
     get_site_list_types, get_site_list_types_sorted,
-    get_site_views, get_site_views_sorted,
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
+from entity_testlistdata            import recordlist_url
 
 #   -----------------------------------------------------------------------------
 #
@@ -110,10 +113,16 @@ class EntityGenericListViewTest(AnnalistTestCase):
         e4 = EntityData.create(self.testdata2, "entity4", 
             entitydata_create_values("entity4", type_id="testtype2")
             )
-        self.initial_list_ids = get_site_lists()
+        self.list_ids = get_site_lists_linked("testcoll")
         return
 
     def tearDown(self):
+        # resetSitedata()
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
@@ -158,7 +167,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
                   </div>
                   <div class="view-value small-2 columns">
-                    <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">testtype</a>
+                    <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">RecordType testcoll/testtype</a>
                   </div>
                   <div class="view-value small-7 columns">
                     <span>Entity testcoll/testtype/entity1</span>
@@ -177,7 +186,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          None)
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         list_choices = r.context['list_choices']
-        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
+        self.assertEqual(set(list_choices.options),     set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Default_list_all")
         # Unbound field descriptions
         head_fields = context_list_head_fields(r.context)
@@ -231,7 +240,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          None)
         list_choices = r.context['list_choices']
-        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
+        self.assertEqual(set(list_choices.options),     set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Default_list_all")
         # Unbound field descriptions
         head_fields = context_list_head_fields(r.context)
@@ -241,7 +250,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 196)    # Will change with site data
+        self.assertEqual(len(entities), 201)    # Will change with site data
         return
 
     def test_get_types_list(self):
@@ -328,7 +337,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Text</a>
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up"><span>annal:Text</span></div>
                   <div class="view-value small-4 medium-3 columns"><span>Address</span></div>
@@ -344,7 +353,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         list_choices = r.context['list_choices']
-        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
+        self.assertEqual(set(list_choices.options),     set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         head_fields = context_list_head_fields(r.context)
@@ -407,16 +416,16 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Field_render',      "Enum_choice",   "annal:Slug",          "Field render type")
             , ('Field_default',     "Text",          "annal:Text",          "Default")
             , ('Field_typeref',     "Enum_optional", "annal:Slug",          "Refer to type")
-            , ('Field_restrict',    "Text",          "annal:Text",          "Enum restriction")
+            , ('Field_restrict',    "Text",          "annal:Text",          "Value restriction")
             , ('List_comment',      "Markdown",      "annal:Richtext",      "Help")
-            , ('List_default_type', "Type",          "annal:Type",          "Record type")
-            , ('List_default_view', "View",          "annal:View",          "View")
+            , ('List_default_type', "Enum_optional", "annal:Type",          "Record type")
+            , ('List_default_view', "Enum_optional", "annal:View",          "View")
             , ('Type_label',        "Text",          "annal:Text",          "Label")
             , ('Type_comment',      "Markdown",      "annal:Richtext",      "Comment")
             , ('Type_uri',          "Identifier",    "annal:Identifier",    "URI")
-            , ('List_choice',       "List_sel",      "annal:Slug",          "List view")
+            , ('List_choice',       "Enum_choice",   "annal:Slug",          "List view")
             , ('View_choice',       "View_choice",   "annal:Slug",          "Choose view")
-            , ('Group_field_sel',   "Field",         "annal:Slug",          "Field id")
+            , ('Group_field_sel',   "Enum_optional", "annal:Slug",          "Field id")
             })
         for f in field_entities:
             for eid in range(len(entities)):
@@ -458,7 +467,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Text</a>
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up"><span>annal:Text</span></div>
                   <div class="view-value small-4 medium-3 columns"><span>Address</span></div>
@@ -473,7 +482,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['continuation_url'], "")
         list_choices = r.context['list_choices']
-        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
+        self.assertEqual(set(list_choices.options),     set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         head_fields = context_list_head_fields(r.context)
@@ -502,7 +511,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Text</a>
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up"><span>annal:Text</span></div>
                   <div class="view-value small-4 medium-3 columns"><span>Address</span></div>
@@ -519,7 +528,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         self.assertEqual(r.context['search_for'],       "Bib_")
         list_choices = r.context['list_choices']
-        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
+        self.assertEqual(set(list_choices.options),     set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         head_fields = context_list_head_fields(r.context)
@@ -581,7 +590,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
         list_choices = r.context['list_choices']
-        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
+        self.assertEqual(set(list_choices.options),     set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         return
 

@@ -11,15 +11,16 @@ import collections
 import logging
 log = logging.getLogger(__name__)
 
-from annalist.identifiers               import RDFS, ANNAL
-from annalist.exceptions                import Annalist_Error, EntityNotFound_Error
+from annalist.identifiers   import RDFS, ANNAL
+from annalist.exceptions    import Annalist_Error, EntityNotFound_Error
+from annalist.util          import extract_entity_id
 
-from annalist.models.recordgroup        import RecordGroup
-from annalist.models.recordfield        import RecordField
-from annalist.models.entitytypeinfo     import EntityTypeInfo
-from annalist.models.entityfinder       import EntityFinder
+from annalist.models.recordgroup            import RecordGroup
+from annalist.models.recordfield            import RecordField
+from annalist.models.entitytypeinfo         import EntityTypeInfo
+from annalist.models.entityfinder           import EntityFinder
 
-from annalist.views.fields.render_utils import (
+from annalist.views.fields.render_utils     import (
     get_view_renderer,
     get_edit_renderer, 
     get_label_view_renderer,
@@ -35,6 +36,7 @@ from annalist.views.fields.render_utils import (
 from annalist.views.fields.render_placement import (
     get_placement_classes
     )
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 class FieldDescription(object):
     """
@@ -75,10 +77,13 @@ class FieldDescription(object):
         field_label         = recordfield.get(RDFS.CURIE.label, "")
         field_property      = field_property or recordfield.get(ANNAL.CURIE.property_uri, "")
         field_placement     = field_placement or recordfield.get(ANNAL.CURIE.field_placement, "")
-        field_render_type   = recordfield.get(ANNAL.CURIE.field_render_type, "")
-        field_value_mode    = recordfield.get(ANNAL.CURIE.field_value_mode, "@@FieldDescription:value_mode@@")
-        field_ref_type      = recordfield.get(ANNAL.CURIE.field_ref_type, None)
+        field_placeholder   = recordfield.get(ANNAL.CURIE.placeholder, "")
+        field_render_type   = extract_entity_id(recordfield.get(ANNAL.CURIE.field_render_type, ""))
+        field_value_mode    = extract_entity_id(recordfield.get(ANNAL.CURIE.field_value_mode, "@@FieldDescription:value_mode@@"))
+        field_ref_type      = extract_entity_id(recordfield.get(ANNAL.CURIE.field_ref_type, None))
         field_val_type      = recordfield.get(ANNAL.CURIE.field_value_type, "")
+        field_entity_type   = recordfield.get(ANNAL.CURIE.field_entity_type, None)
+        field_group_ref     = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
         self._field_desc    = (
             { 'field_id':                   field_id
             , 'field_name':                 field_name
@@ -93,14 +98,16 @@ class FieldDescription(object):
             #@@TODO: LATER: rename 'field_target_type' to 'field_value_type' when old references are flushed out
             #@@      See also references to 'field_target_type' in entityedit.py
             , 'field_target_type':          recordfield.get(ANNAL.CURIE.field_target_type, field_val_type)
-            , 'field_placeholder':          recordfield.get(ANNAL.CURIE.placeholder, "")
+            , 'field_placeholder':          field_placeholder
             , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
             , 'field_ref_type':             field_ref_type
-            , 'field_ref_restriction':      recordfield.get(ANNAL.CURIE.field_ref_restriction, "ALL")
             , 'field_ref_field':            recordfield.get(ANNAL.CURIE.field_ref_field, None)
-            , 'field_choice_labels':        None
-            , 'field_choice_links':         None
-            , 'field_group_ref':            recordfield.get(ANNAL.CURIE.group_ref, None)
+            , 'field_ref_restriction':      recordfield.get(ANNAL.CURIE.field_ref_restriction, "ALL")
+            , 'field_entity_type':          field_entity_type
+            , 'field_choices':              None
+            # , 'field_choice_labels':        None
+            # , 'field_choice_links':         None
+            , 'field_group_ref':            field_group_ref
             , 'group_label':                None
             , 'group_add_label':            None
             , 'group_delete_label':         None
@@ -125,26 +132,40 @@ class FieldDescription(object):
         if type_ref:
             restrict_values = self._field_desc['field_ref_restriction']
             entity_finder   = EntityFinder(collection, selector=restrict_values)
+            # Determine subtypes of field entity type, if specified
+            # @@TODO: subtype logic here is just wrong...
+            #         need context to conver info that can be used to calculate supertypes
+            #         on-the-fly as needed by the field restriction expression.  E.g. include
+            #         collection object in context.
+            if field_entity_type and restrict_values:
+                field_entity_subtypes = (
+                    [ t.get_type_uri()
+                      for t in entity_finder.get_collection_uri_subtypes(field_entity_type)
+                    ])
+                self._field_desc['field_entity_subtypes'] = field_entity_subtypes
+                field_view_context = dict(view_context or {}, field={'subtypes': field_entity_subtypes})
+            else:
+                field_view_context = view_context
             entities        = entity_finder.get_entities_sorted(
-                type_id=type_ref, context=view_context, scope="all"
+                type_id=type_ref, context=field_view_context, scope="all"
                 )
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
             # Uses collections.OrderedfDict to preserve entity ordering
             # 'Enum_optional' adds a blank entry at the start of the list
-            self._field_desc['field_choice_labels'] = collections.OrderedDict()
-            self._field_desc['field_choice_links']  = collections.OrderedDict()
+            self._field_desc['field_choices'] = collections.OrderedDict()
             if field_render_type == "Enum_optional":
-                self._field_desc['field_choice_labels'][''] = ""
-                self._field_desc['field_choice_links']['']  = None
+                self._field_desc['field_choices'][''] = FieldChoice('', label=field_placeholder)
             for e in entities:
                 eid = e.get_id()
+                val = e.get_type_entity_id()
                 if eid != "_initial_values":
-                    self._field_desc['field_choice_labels'][eid] = eid   # @@TODO: be smarter about label?
-                    self._field_desc['field_choice_links'][eid]  = e.get_view_url_path()
-            # log.info("typeref %s: %r"%
-            #     (self._field_desc['field_ref_type'], list(self._field_desc['field_choices']))
-            #     )
+                    self._field_desc['field_choices'][val] = FieldChoice(
+                        val, label=e.get_label(), link=e.get_view_url_path()
+                        )
+            log.debug("FieldDescription: typeref %s: %r"%
+                (self._field_desc['field_ref_type'], list(self._field_desc['field_choices'].items()))
+                )
         # If field references group, pull in field details
         if group_view:
             if field_id in group_ids_seen:
@@ -308,7 +329,7 @@ class FieldDescription(object):
 
         @@@ (Currently, this function duplicates `is_repeat_group`.)
 
-        @@@ tesat for:  group_ref, group_field_descs, and group_id
+        @@@ test for:  group_ref, group_field_descs, and group_id
         """
         field_group_types = ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"]
         return self._field_desc['field_render_type'] in field_group_types
@@ -373,7 +394,7 @@ def field_description_from_view_field(collection, field, view_context=None, grou
     a field reference in a view description record (i.e. a dictionary
     containing a field id value and optional field property URI and
     placement values.  (The optional values, if not provided, are 
-    obtained from the referenced field descriptionb)
+    obtained from the referenced field description)
 
     collection      is a collection from which data is being rendered.
     field           is a dictionary with the field description from a view or list 
@@ -387,7 +408,7 @@ def field_description_from_view_field(collection, field, view_context=None, grou
     #@@TODO: for resilience, revert this when all tests pass?
     # field_id    = field.get(ANNAL.CURIE.field_id, "Field_id_missing")  # Field ID slug in URI
     #@@
-    field_id    = field[ANNAL.CURIE.field_id]
+    field_id    = extract_entity_id(field[ANNAL.CURIE.field_id])
     recordfield = RecordField.load(collection, field_id, collection._parentsite)
     if recordfield is None:
         log.warning("Can't retrieve definition for field %s"%(field_id))
@@ -401,7 +422,7 @@ def field_description_from_view_field(collection, field, view_context=None, grou
         recordfield.get(ANNAL.CURIE.field_placement, "")
         )
     # If field references group, pull in field details
-    group_ref = recordfield.get(ANNAL.CURIE.group_ref, None)
+    group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
     if group_ref:
         group_view = RecordGroup.load(collection, group_ref, collection._parentsite)
         if not group_view:

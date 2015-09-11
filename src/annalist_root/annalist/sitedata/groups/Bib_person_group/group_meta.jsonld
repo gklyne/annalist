@@ -7,23 +7,23 @@
 , "rdfs:label":         "BibEntry person fields"
 , "rdfs:comment":       "Group of fields describing a person in a BibEntry record"
 , "annal:group_fields":
-  [ { "annal:field_id":         "Bib_id"
+  [ { "annal:field_id":         "_field/Bib_id"
     , "annal:property_uri":     "bib:id"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_name"
+  , { "annal:field_id":         "_field/Bib_name"
     , "annal:property_uri":     "bib:name"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_alternate"
+  , { "annal:field_id":         "_field/Bib_alternate"
     , "annal:property_uri":     "bib:alternate"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_firstname"
+  , { "annal:field_id":         "_field/Bib_firstname"
     , "annal:property_uri":     "bib:firstname"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_lastname"
+  , { "annal:field_id":         "_field/Bib_lastname"
     , "annal:property_uri":     "bib:lastname"
     , "annal:field_placement":  "small:0,12"
     }

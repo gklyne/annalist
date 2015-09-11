@@ -5,6 +5,6 @@
 , "annal:uri":          "annal:Enum_render_type"
 , "rdfs:label":         "Field render type"
 , "rdfs:comment":       "Field type controlling the kind of data displayed and how it is rendered."
-, "annal:type_view":    "Default_view"
-, "annal:type_list":    "Default_list"
+, "annal:type_view":    "_view/Default_view"
+, "annal:type_list":    "_list/Default_list"
 }

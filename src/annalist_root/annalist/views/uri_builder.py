@@ -41,7 +41,7 @@ def uri_query_key_val(p):
 
 def uri_param_dict(uri):
     """
-    Extract parameter dictionary from the suppliued URI
+    Extract parameter dictionary from the supplied URI
 
     >>> uri_param_dict("base:path?q1=p1&q2=p2#frag") == { 'q1': "p1", 'q2': "p2"}
     True

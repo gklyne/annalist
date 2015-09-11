@@ -124,14 +124,14 @@ def recordlist_create_values(
         , 'rdfs:label':                 "%s %s/%s"%(update, coll_id, list_id)
         , 'rdfs:comment':               "%s help for %s/%s"%(update, coll_id, list_id)
         , "annal:display_type":         "List"
-        , "annal:default_view":         "Default_view"
-        , "annal:default_type":         "Default_type"
+        , "annal:default_view":         "_view/Default_view"
+        , "annal:default_type":         "_type/Default_type"
         , "annal:list_entity_selector": "ALL"
         , "annal:list_fields":
-          [ { "annal:field_id":             "Entity_id"
+          [ { "annal:field_id":             "_field/Entity_id"
             , "annal:field_placement":      "small:0,3"
             }
-          , { "annal:field_id":             "Entity_label"
+          , { "annal:field_id":             "_field/Entity_label"
             , "annal:field_placement":      "small:3,9"
             }
           ]
@@ -173,10 +173,10 @@ def recordlist_view_context_data(
         action=None, update="RecordList"
     ):
     list_fields = (
-        [ { "annal:field_id":         "Entity_id"
+        [ { "annal:field_id":         "_field/Entity_id"
           , "annal:field_placement":  "small:0,3"
           }
-        , { "annal:field_id":         "Entity_label"
+        , { "annal:field_id":         "_field/Entity_label"
           , "annal:field_placement":  "small:3,9"
           }
         ])
@@ -231,20 +231,20 @@ def recordlist_view_context_data(
             , 'field_name':         'List_default_type'
             , 'field_target_type':  'annal:Type'
             , 'field_label':        'Record type'
-            , 'field_render_type':  'Type'
+            , 'field_render_type':  'Enum_optional'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_value':        'Default_type'
+            , 'field_value':        '_type/Default_type'
             , 'options':            []
             }
           , { 'field_id':           'List_default_view'         # fields[5]
             , 'field_name':         'List_default_view'
             , 'field_target_type':  'annal:View'
             , 'field_label':        'View'
-            , 'field_render_type':  'View'
+            , 'field_render_type':  'Enum_optional'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
-            , 'field_value':        'Default_view'
+            , 'field_value':        '_view/Default_view'
             , 'options':            []
             }
           , { 'field_id':           'List_entity_selector'      # fields[6]
@@ -267,8 +267,8 @@ def recordlist_view_context_data(
             , 'field_value':        ''
             , 'options':            []
             }
-          , { "field_id":           "List_repeat_fields"        # fields[8]
-            , 'field_name':         'List_repeat_fields'
+          , { "field_id":           "List_fields"           # fields[8]
+            , 'field_name':         'List_fields'
             , 'field_target_type':  'annal:Field_group'
             , 'field_label':        'Fields'
             , 'field_render_type':  'RepeatGroupRow'
@@ -300,14 +300,14 @@ def recordlist_view_form_data(
         , 'List_label':             '%s list (%s/@@list_id@@)'%(update, coll_id)
         , 'List_comment':           '%s help (%s/@@list_id@@)'%(update, coll_id)
         # , 'List_type':      'List'
-        , 'List_default_type':      'Default_type'
-        , 'List_default_view':      'Default_view'
+        , 'List_default_type':      '_type/Default_type'
+        , 'List_default_view':      '_view/Default_view'
         , 'List_entity_selector':   'ALL'
         # List repeating fields
-        , 'List_repeat_fields__0__Field_id':           "Entity_id"
-        , 'List_repeat_fields__0__Field_placement':    "small:0,3"
-        , 'List_repeat_fields__1__Field_id':           "Entity_label"
-        , 'List_repeat_fields__1__Field_placement':    "small:3,9"
+        , 'List_fields__0__Field_id':           "_field/Entity_id"
+        , 'List_fields__0__Field_placement':    "small:0,3"
+        , 'List_fields__1__Field_id':           "_field/Entity_label"
+        , 'List_fields__1__Field_placement':    "small:3,9"
         # Hidden fields
         , 'action':                 '@@TBD@@'
         , 'view_id':                'List_view'

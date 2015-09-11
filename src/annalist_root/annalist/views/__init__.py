@@ -12,6 +12,7 @@ import os
 if 'DJANGO_SETTINGS_MODULE' not in os.environ:
     os.environ['DJANGO_SETTINGS_MODULE'] = 'annalist_site.settings.devel'
 
+# Allow modules from form_utils to be imported from annalist.views
 __path__.append(os.path.join(os.path.dirname(__file__), "form_utils"))
 
 # from annalist.views.form_utils import (

@@ -2,7 +2,7 @@
 , "@type":                      ["annal:Field"]
 , "annal:id":                   "Bib_number"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Number"
+, "rdfs:label":                 "Issue number"
 , "rdfs:comment":               "The '(issue) number' of a journal, magazine, or tech-report, if applicable. (Most publications have a 'volume', but no 'number' field.)"
 , "annal:field_render_type":    "Text"
 , "annal:field_value_mode":     "Value_direct"

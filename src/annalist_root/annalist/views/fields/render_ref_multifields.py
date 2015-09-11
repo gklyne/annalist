@@ -17,8 +17,10 @@ import traceback
 import logging
 log = logging.getLogger(__name__)
 
-from django.http        import HttpResponse
-from django.template    import Template, Context
+from django.http            import HttpResponse
+from django.template        import Template, Context
+
+from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
 
 from annalist.views.fields.render_select    import edit_select, Select_edit_renderer, SelectValueMapper
 from annalist.views.fields.bound_field      import bound_field
@@ -30,29 +32,30 @@ from annalist.views.fields.render_fieldvalue    import (
 
 col_head_view = (
     { 'head':
-        """<!-- views.fields.render_ref_multifield.col_head_view head (mode:{{render_mode}}) -->
-        """
+        """\n"""+
+        """<!-- views.fields.render_ref_multifield.col_head_view head (mode:{{render_mode}}) -->\n"""
     , 'body':
         """<!-- views.fields.render_ref_multifield.col_head_view body (mode:{{render_mode}}) -->\n"""+
-        """{% for f in group_bound_fields %}"""+
-        #@@ """  <!-- field {{f}} -->"""+ #@@
-        """  {% include f.field_render_mode with field=f %}"""+
-        """{% endfor %}"""
+        """<div class="view-grouprow col-head row">\n"""+
+        """  {% for f in group_bound_fields %}"""+
+        """    {% include f.field_render_mode with field=f %}"""+
+        """  {% endfor %}"""+
+        """</div>\n"""
     , 'tail':
-        """<!-- views.fields.render_ref_multifield.col_head_view tail (mode:{{render_mode}}) -->
-        """
+        """<!-- views.fields.render_ref_multifield.col_head_view tail (mode:{{render_mode}}) -->\n"""
     })
 
 view_multifield = (
     { 'head':
-        """<!-- views.fields.render_ref_multifield.view_multifield head (mode:{{render_mode}}) -->
-        """
+        """\n"""+
+        """<!-- views.fields.render_ref_multifield.view_multifield head (mode:{{render_mode}}) -->\n"""
     , 'body':
-        """<!-- views.fields.render_ref_multifield.view_multifield body (mode:{{render_mode}}) -->
-        {% for f in group_bound_fields %}
-          {% include f.field_render_mode with field=f %}\
-        {% endfor %}
-        """
+        """<!-- views.fields.render_ref_multifield.view_multifield body (mode:{{render_mode}}) -->\n"""+
+        """<div class="view-grouprow row">\n"""+
+        """  {% for f in group_bound_fields %}"""+
+        """    {% include f.field_render_mode with field=f %}"""+
+        """  {% endfor %}"""+
+        """</div>\n"""
     , 'tail':
         """<!-- views.fields.render_ref_multifield.view_multifield tail (mode:{{render_mode}})-->
         """
@@ -105,10 +108,14 @@ class RenderMultiFields_label(object):
             { 'group_bound_fields':  group_fields
             })
         # log.info("RenderMultiFields_label.render group_dict: %r"%(group_dict))
-        response_parts = [self._template_head.render(context)]
         with context.push(group_dict):
+            response_parts = [self._template_head.render(context)]
             response_parts.append(self._template_body.render(context))
-        response_parts.append(self._template_tail.render(context))
+            response_parts.append(self._template_tail.render(context))
+    except TargetIdNotFound_Error as e:
+        response_parts = [ str(e) ]
+    except TargetEntityNotFound_Error as e:        
+        response_parts = [ str(e) ]
     except Exception as e:
         log.exception("Exception in RenderMultiFields_label.render")
         ex_type, ex, tb = sys.exc_info()
@@ -186,6 +193,10 @@ class RenderMultiFields_value(object):
         with context.push(group_dict):
             response_parts.append(self._template_body.render(context))
         response_parts.append(self._template_tail.render(context))
+    except TargetIdNotFound_Error as e:
+        response_parts = [ str(e) ]
+    except TargetEntityNotFound_Error as e:        
+        response_parts = [ str(e) ]
     except Exception as e:
         log.exception("Exception in RenderMultiFields_value.render")
         ex_type, ex, tb = sys.exc_info()

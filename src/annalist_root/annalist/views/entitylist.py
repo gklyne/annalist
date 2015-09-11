@@ -17,6 +17,7 @@ from django.core.urlresolvers           import resolve, reverse
 from annalist                           import message
 from annalist.exceptions                import Annalist_Error
 from annalist.identifiers               import RDFS, ANNAL
+from annalist.util                      import split_type_entity_id, extract_entity_id
 
 from annalist.models.collection         import Collection
 from annalist.models.recordtype         import RecordType
@@ -128,7 +129,7 @@ class EntityGenericListView(AnnalistGenericView):
             , ANNAL.CURIE.field_name:           "List_rows"
             , ANNAL.CURIE.field_render_type:    "RepeatListRow"
             , ANNAL.CURIE.property_uri:         "_list_entities_"
-            , ANNAL.CURIE.group_ref:            "List_fields"
+            , ANNAL.CURIE.group_ref:            "_group/List_fields"
             })
         repeatrows_group_descr = (
             { ANNAL.CURIE.id:           "List_fields"
@@ -223,10 +224,10 @@ class EntityGenericListView(AnnalistGenericView):
                 continuation_url=listinfo.get_continuation_url()
                 )
         else:
-            (entity_type, entity_id) = (
-                entity_ids[0].split("/") if len(entity_ids) == 1 else (None, None)
-                )
-            entity_type = entity_type or type_id or listinfo.get_list_type_id()
+            entity_type = type_id or listinfo.get_list_type_id()
+            entity_id   = None
+            if len(entity_ids) == 1:
+                (entity_type, entity_id) = split_type_entity_id(entity_ids[0], entity_type)
             if "new" in request.POST:
                 action = "new"
                 redirect_uri = uri_with_params(
@@ -336,9 +337,10 @@ class EntityGenericListView(AnnalistGenericView):
                 params = listinfo.get_continuation_url_dict()
                 if search:
                     params = dict(params, search=search)
+                post_list_id = extract_entity_id(request.POST['list_choice'])
                 list_uri_params = (
                     { 'coll_id': coll_id
-                    , 'list_id': request.POST['list_choice']
+                    , 'list_id': post_list_id
                     })
                 if "view_all" in request.POST:
                     list_uri_params['scope']  = "all"

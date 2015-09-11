@@ -27,20 +27,22 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.defaultedit     import EntityDefaultEditView
+from annalist.views.defaultedit             import EntityDefaultEditView
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site
+from tests                          import init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     site_dir, collection_dir, 
     collection_edit_url,
     collection_create_values,
     site_title,
-    render_select_options,
+    render_select_options, render_choice_options,
     create_test_user
     )
 from entity_testtypedata            import (
+    recordtype_url,
     recordtype_edit_url,
     recordtype_create_values,
     )
@@ -55,7 +57,7 @@ from entity_testentitydata          import (
     layout_classes
     )
 from entity_testsitedata            import (
-    get_site_types, get_site_types_sorted,
+    get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted,
     get_site_list_types, get_site_list_types_sorted,
     get_site_views, get_site_views_sorted,
@@ -79,10 +81,14 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
+        self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testcoll", "testtype"))
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
-        self.type_ids   = get_site_types_sorted() + ['testtype']
-        self.no_options = ['(no options)']
+        self.type_ids = get_site_types_linked("testcoll")
+        self.type_ids.append(FieldChoice("_type/testtype", 
+                label="RecordType testcoll/testtype",
+                link=recordtype_url("testcoll", "testtype")
+            ))
+        self.no_options = [ FieldChoice('', label="(no options)") ]
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -91,6 +97,12 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
@@ -159,10 +171,10 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   </div>
                   <div class="%(input_classes)s">
                   """+
-                    render_select_options(
-                      "entity_type", "Type",
-                      get_site_types_sorted()+["testtype"],
-                      "testtype")+
+                    render_choice_options(
+                        "entity_type",
+                        self.type_ids,
+                        "_type/testtype")+
                   """
                   </div>
                 </div>

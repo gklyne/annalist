@@ -5,62 +5,41 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 # Documentation
 
+- [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
 - [ ] HOWTOs for common tasks; task-oriented documentation
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
 - [ ] New demo screencasts
 
 
-# Version 0.1.15, towards 0.1.16
+# Version 0.1.19, towards 0.1.20
 
-- [x] rationalize field rendering so that it consistently uses target_value for viewing ("field_view_value"?), so that referenced-field values can work as expected for all render types (techdebt; currently fixed ad hoc for markdown rendering) 
-- [x] create picture gallery demonstration collection to test file uploads
-- [x] BUG: file upload when creating entity appears to not work; need to create first then upload.
-- [x] ensure attachments are moved when entity is renamed.
-- [x] test case for upload image displayed in same entity
-- [x] test case for rename with attachments
-- [x] test case for edit entity with attachment
-- [x] file upload view/edit: display uploaded filename as well as link (use for link text?)
-- [x] rename render type URIImage as RefImage; update documentation
-- [x] allow multiple fields displayed from referenced entity (e.g. image for file upload).
-    - [x] initial implementation
-    - [x] edit test case
-    - [x] test on CruisingLog place description
-    - [x] test case for ref_multifield in repeat field (add to test_ref_multifields.py)
-- [x] add render type RefAudio (use embedded HTML player); update documentation
-    - [x] implement new renderer
-    - [x] create test case for new renderer
-    - [x] update resourcetypes.py with supported audio types
-    - [x] update documentation
-- [x] rationalize field description form to make handling of upload/import and references to fields in other entities more obvious
-    - Note that `field_value_type` is overloaded as it is used to trigger upload renderers *and* (indirectly as default for `field_target_type`) to guide Mime type selection.
-    - [x] Add `field_value_mode` to field description, with values `value_direct` (default), `value_entity`, `value_field`, `value_import` and `value_upload`.
-        - [x] define new enumeration type `Value_mode`
-        - [x] define new field type `Field_value_mode` (`annal:value_mode`)
-        - [x] update view definitions to use new field type
-        - [x] update field view test case(s)
-    - [x] Relabel "Enum type" -> "Referenced entity type"
-    - [x] Add migration logic to set view mode appropriately in field definitions
-    - [x] Rename FieldDescription method `has_import_button` to `is_import_field`.
-    - [x] Use `field_value_mode` to determine `is_import_field` and `is_upload_field`.  
-    - [x] Find all references to `field_value_type` and change logic to use `field_value_mode`
-        - [x] render_utils.get_field_edit_renderer
-        - [x] modify all get_xxx_renderer functions to accept just `field_render_type` and `field_value_mode` parameters.
-            - This removes the overloading on `field_value_type`.
-        - [x] Remove references to `field_ref_type` when selecting renderer (`get_edit_type`, others?)
-    - [x] Remove 'field_value_type' from `FieldDescription`.  Update all tests to use 'field_target_type'
-    - [x] Add 'field_value_mode' to all field descriptions in site data
-    - [x] Add 'field_value_mode' value to field descriptions in example data (cruising log)
-    - [x] Remove `annal:Import` and `annal:Upload` as instances of `field_value_type` in site and demo data
-        - [x] Collection: Picture_gallery (`annal:Upload`)
-    - [x] Update all references in code to 'annal:...' value types to use ANNAL.CURIE.... values instead.
-- [x] Audio widget not responsive over entire height; box sizing messed up?
-- [x] Update documentation (including README.md status summary)
+- [ ] Usability: 3 key tasks need to be easier (at the level of a single form fill-out):
+    - [ ] Create a new type+view+list, suitably interconnected
+    - [x] Define a new field type and add to a view
+    - [ ] Create repeating fields in a view.  (a) Define a repeating field type and add to view, or (b) define a repeating group containing an existing field type, and add to a view. (a) could a checkbox choice on the previous task.  See also: [#41](https://github.com/gklyne/annalist/issues/41)
+    - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
+    - See also discussion below of introducing "tasks" - this would be an early candidate for that.
+    - Need to think how the interface would work.  Option to add "task" button to any form?
+- [ ] Simplified field-definition interface (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
+
+(release?)
+
+- [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
+    - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
+    - [ ] JSON-LD @contexts support
+    - [ ] Alternative RDF formats support (e.g. content negotiation)
+    - [ ] Cater for use of annal:member for repeated properties (see further TODOs below)?
+
+(release?)
+
+- [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
+- [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
+- [ ] The bibiographic definitions currently part of site data should be mived to a "built-in" collection and inherited only when required.
 
 (release?)
 
 - [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
-- [ ] field renderer for unified import or upload resource?
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?
@@ -69,21 +48,10 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - plus new logic to render the padding elements
     - Another option: take field-loop out of template and run it as a `render_all_fields` method
         - still needs placement parser to return position+width information
-- [ ] Usability: 3 key tasks need to be easier (at the level of a single form fill-out):
-    - [ ] Create a new type+view+list, suitably interconnected
-    - [ ] Define a new field type and add to a view
-    - [ ] Create repeating fields in a view.  (a) Define a repeating field type and add to view, or (b) define a repeating group containing an existing field type, and add to a view. (a) could a checkbox choice on the previous task.  See also: [#41](https://github.com/gklyne/annalist/issues/41)
-    - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
-    - See also discussion below of introducing "tasks" - this would be an early candidate for that.
-    - Need to think how the interface would work.  Option to add "task" button to any form?
 
-- [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
-    - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
-    - [ ] JSON-LD @contexts support
-    - [ ] Alternative RDF formats support (e.g. content negotiation)
+(release?)
 
 - [ ] Use site/collection data to populate help panes on displays; use Markdown.
-
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Login: support continuation URI
 
@@ -108,10 +76,16 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 (feature freeze for V0.9alpha?)
 
+- [ ] update Django version used to 1.8 (designated for long term support)
+- [ ] review renderers and revise to take all message strings from messages.py
+- [ ] look into entity cacheing (esp. RecordType) for performance improvement
+- [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
+    - Should be easy to add.  Just need a name.
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types
 - [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+    - [ ] Check out https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
     - [ ] Shared deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
@@ -127,24 +101,43 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] annalist-manager deleteuser [ username ] [ CONFIG ]
     - [ ] annalist-manager createsitedata [ CONFIG ]
     - [ ] annalist-manager updatesitedata [ CONFIG ]
+    - etc.
 - [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
-- [x] Improve formatting of README sent to PyPI
-    - renamed src/README.md to README.rst
+- [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 
 
 Technical debt:
 
-- [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
+- [ ] Re-think access to entities and types:
+    - [ ] There is repeated reading of RecordType values in EntityFinder
+          (cf. collection.types() and EntityTypeInfo constructor; also URI access)
+    - [ ] Need more direct way to locate type (and other entities?) by URI
+    - [ ] Review common mechanism to retreive URI for entity?  
+          (Current mechanism fixes use of annal:uri for all entities; maybe OK)
+    - [ ] Think about how to optimize retreival of subtypes/supertypes
+    - [ ] Do special case for types, or more generic caching approach?
+- [ ] Customize view getting out of sync with other page styles
+- [ ] Refactor entity edit response handling
+- [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
+- [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
+    - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
+    - [ ]remove corresponding special case code in bound_field.
+- [x] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
+- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, dues somewhat to the early template-based logic for field rendering.  Withn the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special login in bound_field.
+- [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
+- [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
+- [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
 
 
 Usability notes:
 
-- [x] Need easier way to make new entries for fields that are referenced from a record; e.g. a `New value` button as part of an enum field.
-- [x] Clearer linkage between related records - hyperlinks on non-editing views
-- [ ] List dropdown: normally show only those lists defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
+- [ ] Persist item selection to refreshed display when move-up/movedown clicked?
+- [ ] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
+- [ ] OR... allow an entity to specify its own default view?
+- [ ] Type/List/View dropdowns: normally show only those types/lists/views defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
 - [ ] View forms need title (indicating type of thing viewed)?  Or let user define label for Id field?
 - [ ] Provide field type that can be used to place fixed annotations/instructions in a form
 - [ ] Add title attributes to all buttons - used as tooltip
@@ -164,7 +157,7 @@ Usability notes:
         - [ ] initial value/identifier templates (e.g. create ID from current date)
             - NOTE: default and initial values behave differently
         - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
-- [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?  In particular, getting the entity type for a field is tricky.
+- [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?  In particular, getting the entity type for a field is error-prone.
 - [ ] Use pop-up text based on field comment to tell user how a field value is used
 - [ ] Option to re-order fields on view form
 - [ ] When creating type, default URI to be based on id entered
@@ -177,7 +170,10 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
-- [ ] PyPI description: see https://pypi.python.org/pypi/setuptools-markdown, or just use .rst extension (see https://github.com/xaralis/django-static-sitemaps for example)  (Also needed to fix link and highlighting syntax; ReST is pig-ugly IMO).  Let's see if it formats OK in 0.1.16 release.
+- [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
+- [ ] field renderer for unified import or upload resource?
+- [ ] `annal:member` - used to "lift" repeated values to the property that references a repeat group?
+    - e.g. see /annalist/c/Carolan_Guitar/d/_field/Event_r/
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
     - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.
@@ -186,14 +182,11 @@ Notes for Future TODOs:
     - [ ] pass continuation data into view_setup, list_setup, collection_view_setup for ^^.  For site, just use default/empty continuation.
     - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
 - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
-- [ ] Create image-viewing page to avoid download options, and link to that. (cf. UriImage renderer)
-- [ ] Vary layout for editing and viewing?  Sounds hard.
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
-- [ ] When creating (e.g.) bibliographic information, it would be useful if an author id could be linked to another record type (enumeration-style) and use the linked value to populate fields in the referring record.
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
 - [ ] Rationalize common fields to reduce duplication?
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?  But note that general philosophy is to avoid unnecessary validity checks that might impede data entry.
-- [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions
+- [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions.
 - [ ] Make default values smarter; e.g. field renderer logic to scan collection data for candidates?
 - [ ] Allow type definition to include template for new id, e.g. based on current date
 - [ ] Use local prefix for type URI (when prefixes are handled properly); e.g. coll:Type/<id>
@@ -202,32 +195,24 @@ Notes for Future TODOs:
 - [ ] Provide a way to edit site metadata (e.g. via link from site front page)
 - [ ] Provide a way to view/edit site user permissions (e.g. via link from site front page)
 - [ ] Provide a way to view/edit site type/view/list/etc descriptions (e.g. via link from site front page)
+    - not edit: site data should be stable and controlled.  Consider collection structure inheritiance instead.
 - [ ] Undefined list error display, or any error - include link to collection in top bar
 - [ ] Help display for view: use commentary text from view descrtiption; thus can tailor help for each view.
-- [x] Introduce markdown rendering type
 - [ ] Use markdown directly for help text
-- [x] Consider associating property URI with view rather than/as well as field, so fields can be re-used
-- [x] Option to auto-generate unique property URI for field in view, maybe using field definition as base
 - [ ] Think about fields that return subgraph
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.
+    - cf. [JSON-LD framing](http://json-ld.org/spec/latest/json-ld-framing/)
 - [ ] For rendering of additional info, think about template-based URIs filled in from other data.  (e.g. URI to pull an image from CLAROS, or Google graph API like)
 - [ ] Generate form-level DIFF displays from git JSON diffs
 - [ ] 3D rendering - check out JSMOL - http://wiki.jmol.org/index.php/JSmol
 - [ ] Visualize data structures from view definitions; generate OWL descriptions; etc.
 - [ ] Remixing spreadsheets: spreadsheet generation from queries as well as ingesting through data bridges.
+- [ ] SPARQL data bridge: use copmbination opf SPARQL CONSTRUCT query + JSON-LD frame?
+- [ ] View selection based on pattern match; e.g. JSON PATCH "Test" operation.
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
     - [ ] internal options to save history in per-collection git repo
-- [x] Think about selective updates to complex field values (e.g. import_field logic).
-    - Currently, the save_entity logic in `views.entityedit` assumes that fields are completely replaced at the top-level of keys in `entityvals`.  There is no support for partial replacement of a field from a form input: either the entire field is replaced or the original field value is kept in its entirety.  The import_field logic generates additional values when the `Import` button is activated, but not when the URL field is updates. Possible approaches:
-        - re-work the whole entity form data mapping logic so that fields can be partially updated.  This will involve accessing the original entity data before `save_entity` is called, and arranging that original field values are available while form data valuesare being mapped.  This is a fairly comploex re-work is desired.  This is the approach adopted.
-        - separate complex field values into separate fields that can be updated all-or-nothing
-        - save original field data in a hidden form field (similar to `views.confirm`)
-- [ ] Consider refactoring form generator around Idiom/Formlet work; cf.
-    - http://groups.inf.ed.ac.uk/links/papers/formlets-essence.pdf
-    - http://homepages.inf.ed.ac.uk/wadler/papers/formlets/formlets.pdf
-    - http://homepages.inf.ed.ac.uk/slindley/papers/dbwiki-sigmod2011.pdf
 
 
 # Feedback

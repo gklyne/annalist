@@ -15,28 +15,31 @@ from collections import OrderedDict
 import logging
 log = logging.getLogger(__name__)
 
-from django.test.client                 import Client
+from django.test.client                     import Client
 
-from annalist.models.site               import Site
-from annalist.models.collection         import Collection
-from annalist.models.recordtype         import RecordType
-from annalist.models.recordtypedata     import RecordTypeData
-from annalist.models.recordview         import RecordView
-from annalist.models.recordfield        import RecordField
-from annalist.models.recordgroup        import RecordGroup
-from annalist.models.entitydata         import EntityData
+from annalist.models.site                   import Site
+from annalist.models.collection             import Collection
+from annalist.models.recordtype             import RecordType
+from annalist.models.recordtypedata         import RecordTypeData
+from annalist.models.recordview             import RecordView
+from annalist.models.recordfield            import RecordField
+from annalist.models.recordgroup            import RecordGroup
+from annalist.models.entitydata             import EntityData
 
-from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                              import init_annalist_test_site
-from annalist.tests.AnnalistTestCase    import AnnalistTestCase
-from entity_testutils               import (
+from annalist.views.form_utils.fieldchoice  import FieldChoice
+
+from tests                                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from tests                                  import init_annalist_test_site, resetSitedata
+from annalist.tests.AnnalistTestCase        import AnnalistTestCase
+from entity_testutils       import (
     collection_create_values,
+    render_select_options, render_choice_options,
     create_test_user
     )
-from entity_testtypedata            import (
+from entity_testtypedata    import (
     recordtype_create_values, 
     )
-from entity_testentitydata          import (
+from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
     default_fields
     )
@@ -62,6 +65,12 @@ class RefMultifieldTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        # resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     # Support methods
@@ -158,7 +167,7 @@ class RefMultifieldTest(AnnalistTestCase):
             , "rdfs:label":                 "Image reference"
             , "rdfs:comment":               "Image reference field comment"
             , "annal:field_render_type":    "RefMultifield"
-            #@@ , "annal:field_value_mode":     "Value_entity"    #@@TODO: Use migration logic for now; later, make explicit
+            , "annal:field_value_mode":     "Value_entity"
             , "annal:field_target_type":    "annal:Field_group"
             , "annal:field_entity_type":    "test:img_type"
             , "annal:placeholder":          "(ref image field)"
@@ -191,7 +200,7 @@ class RefMultifieldTest(AnnalistTestCase):
             , "rdfs:label":                 "Repeat image reference"
             , "rdfs:comment":               "Repeat image reference field comment"
             , "annal:field_render_type":    "RepeatGroupRow"
-            #@@ , "annal:field_value_mode":     "Value_direct"      #@@TODO: Use migration logic for now; later, make explicit
+            , "annal:field_value_mode":     "Value_direct"
             , "annal:field_target_type":    "annal:Field_group"
             , "annal:placeholder":          "(repeat image field)"
             , "annal:property_uri":         "test:rpt_image"
@@ -435,34 +444,25 @@ class RefMultifieldTest(AnnalistTestCase):
             field_id="Test_refimg_field",
             basepath=TestBasePath
             )
-        formrow2 = """
+        formrow2 = ("""
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Image reference</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <div class="row">
-                    <div class="small-10 columns view-value less-new-button">
-                      <select name="%(field_id)s">
-                       <option selected="selected">%(entity_id)s</option>
-                      </select>
-                    </div>
-                    <div class="small-2 columns view-value new-button left small-text-right">
-                      <button type="submit"
-                              name="%(field_id)s__new"
-                              value="New"
-                              title="Define new Image reference"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
+                """+
+                render_select_options(
+                    "%(field_id)s", 
+                    "Image reference",
+                    [FieldChoice("%(type_id)s/%(entity_id)s", label="Label %(entity_id)s")],
+                    "%(type_id)s/%(entity_id)s"
+                    )+
+                """
                 </div>
               </div>
             </div>
-            """%tgt_field_vals(width=6)
-
+            """)%tgt_field_vals(width=6)
         # log.info(r.content)
         self.assertContains(r, formrow1,  html=True)
         self.assertContains(r, formrow2,  html=True)
@@ -525,7 +525,7 @@ class RefMultifieldTest(AnnalistTestCase):
               <span>Repeat image reference</span>
             </div>
             """
-        formrow2b = """
+        formrow2b = """ # Old
             <div class="small-12 medium-10 columns hide-for-small-only">
               <div class="row">
                 <div class="small-12 columns">
@@ -535,6 +535,27 @@ class RefMultifieldTest(AnnalistTestCase):
                     </div>
                     <div class="%(col_head_classes)s">
                       <span>View image field</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        # Note two grou wrappers here: one for repeat and one for multifield ref...
+        formrow2b = """
+            <div class="small-12 medium-10 columns hide-for-small-only">
+              <div class="row">
+                <div class="small-12 columns">
+                  <div class="view-grouprow col-head row">
+                    <div class="view-label col-head small-12 medium-6 columns">
+                      <div class="view-grouprow col-head row">
+                        <div class="%(col_head_classes)s">
+                          <span>View comment field</span>
+                        </div>
+                        <div class="%(col_head_classes)s">
+                          <span>View image field</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -567,6 +588,7 @@ class RefMultifieldTest(AnnalistTestCase):
                       </div>
                       <div class="row view-value-col">
                         <div class="view-value small-12 columns">
+                          <div class="view-grouprow row">
                             <div class="%(col_item_classes)s">
                               <div class="row show-for-small-only">
                                 <div class="view-label small-12 columns">
@@ -579,17 +601,18 @@ class RefMultifieldTest(AnnalistTestCase):
                                 </div>
                               </div>
                             </div>
-                          <div class="%(col_item_classes)s">
-                            <div class="row show-for-small-only">
-                              <div class="view-label small-12 columns">
-                                <span>View image field</span>
+                            <div class="%(col_item_classes)s">
+                              <div class="row show-for-small-only">
+                                <div class="view-label small-12 columns">
+                                  <span>View image field</span>
+                                </div>
                               </div>
-                            </div>
-                            <div class="row view-value-col">
-                              <div class="view-value small-12 columns">
-                                <a href="%(ref_image)s" target="_blank">
-                                  <img src="%(ref_image)s" alt="Image at '%(ref_image)s'" />
-                                </a>
+                              <div class="row view-value-col">
+                                <div class="view-value small-12 columns">
+                                  <a href="%(ref_image)s" target="_blank">
+                                    <img src="%(ref_image)s" alt="Image at '%(ref_image)s'" />
+                                  </a>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -713,22 +736,14 @@ class RefMultifieldTest(AnnalistTestCase):
                       </div>
                       <div class="row view-value-col">
                         <div class="view-value small-12 columns">
-                          <div class="row">
-                            <div class="small-10 columns view-value less-new-button">
-                              <select name="%(repeat_id)s__0__%(field_id)s">
-                                <option selected="selected">%(entity_id)s</option>
-                              </select>
-                            </div>
-                            <div class="small-2 columns view-value new-button left small-text-right">
-                              <button type="submit"
-                                      name="%(repeat_id)s__0__%(field_id)s__new"
-                                      value="New"
-                                      title="Define new Image reference"
-                              >
-                                +
-                              </button>
-                            </div>
-                          </div>
+                        """+
+                        render_select_options(
+                            "%(repeat_id)s__0__%(field_id)s", 
+                            "Image reference",
+                            [FieldChoice("%(type_id)s/%(entity_id)s", label="Label %(entity_id)s")],
+                            "%(type_id)s/%(entity_id)s"
+                            )+
+                        """
                         </div>
                       </div>
                     </div>

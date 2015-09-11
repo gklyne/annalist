@@ -2,7 +2,7 @@
 , "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
 , "annal:id":           "RefAudio"
 , "annal:type_id":      "Enum_render_type"
-, "rdfs:label":         "annal:field_render_type/RefAudio"
+, "rdfs:label":         "Ref audio file"
 , "rdfs:comment":       "String URI reference: resource rendered as an audio player widget"
 , "annal:uri":          "annal:field_render_type/RefAudio"
 }

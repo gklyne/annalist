@@ -6,14 +6,14 @@
 , "rdfs:label":                 "List entities"
 , "rdfs:comment":               "Default list of entities of given type"
 , "annal:display_type":         "List"
-, "annal:default_view":         "Default_view"
-, "annal:default_type":         "Default_type"
+, "annal:default_view":         "_view/Default_view"
+, "annal:default_type":         "_type/Default_type"
 , "annal:list_entity_selector": "ALL"
 , "annal:list_fields":
-  [ { "annal:field_id":             "Entity_id"
+  [ { "annal:field_id":             "_field/Entity_id"
     , "annal:field_placement":      "small:0,3"
     }
-  , { "annal:field_id":             "Entity_label"
+  , { "annal:field_id":             "_field/Entity_label"
     , "annal:field_placement":      "small:3,9"
     }
   ]

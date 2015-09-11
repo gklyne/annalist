@@ -81,7 +81,7 @@ class FieldValueMap(object):
         value is saved for this field.
         """
         if self.e:
-            log.debug("FieldValueMap.map_form_to_entity %s, %r"%(self.e, formvals))
+            # log.debug("FieldValueMap.map_form_to_entity %s, %r"%(self.e, formvals))
             v = formvals.get(self.i, None)
             self.f['field_value_mapper'].decode_store(v, entityvals, self.e)
         return entityvals
@@ -95,7 +95,7 @@ class FieldValueMap(object):
         termination condition.
         """
         if self.e:
-            log.debug("FieldValueMap.map_form_to_entity_repeated_item %s, %r"%(self.e, formvals))
+            # log.debug("FieldValueMap.map_form_to_entity_repeated_item %s, %r"%(self.e, formvals))
             v = formvals.get(prefix+self.i, None)
             if v is not None:
                 self.f['field_value_mapper'].decode_store(v, entityvals, self.e)

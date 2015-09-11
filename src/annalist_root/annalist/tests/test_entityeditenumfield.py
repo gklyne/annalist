@@ -35,7 +35,7 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site
+from tests                          import init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     collection_create_values,
@@ -79,6 +79,12 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
@@ -247,14 +253,15 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.assertFalse(EntityData.exists(self.testdata, "entitynewtype"))
         f = entitydata_default_view_form_data(
                 entity_id="entitynewtype", action="new", update="Updated entity", 
-                new_enum="entity_type__new"
+                new_enum="entity_type__new_edit"
                 )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        # v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        v = entitydata_edit_url("edit", "testcoll", "_type", "testtype", view_id="Type_view")
         w = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entitynewtype", 
             view_id="Default_view"
@@ -269,7 +276,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.client.logout()
         f = entitydata_default_view_form_data(
                 entity_id="entitynewtype", action="new", update="Updated entity", 
-                new_enum="entity_type__new"
+                new_enum="entity_type__new_edit"
                 )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
@@ -395,7 +402,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         e1 = self._check_entity_data_values("entitynewtype")
         f  = entitydata_default_view_form_data(
                 entity_id="entitynewtype", action="edit", update="Updated entity", 
-                new_enum="entity_type__new"
+                new_enum="entity_type__new_edit"
                 )
         u  = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entitynewtype", 
@@ -405,7 +412,8 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        # v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        v = entitydata_edit_url("edit", "testcoll", "_type", "testtype", view_id="Type_view")
         w = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entitynewtype", 
             view_id="Default_view"
@@ -420,7 +428,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.client.logout()
         f = entitydata_default_view_form_data(
                 entity_id="entitynewtype", action="edit", update="Updated entity", 
-                new_enum="entity_type__new"
+                new_enum="entity_type__new_edit"
                 )
         u  = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entitynewtype", 
@@ -439,7 +447,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         f = recordview_entity_view_form_data(
             view_id="editview", orig_id="editview", 
             action="edit", update="Updated RecordView",
-            new_enum="View_fields__3__Field_id__new"
+            new_enum="View_fields__3__Field_id__new_edit"
             )
         u = entitydata_edit_url(
             "edit", "testcoll", "_view", 
@@ -450,7 +458,8 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        v = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        # v = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        v = entitydata_edit_url("edit", "testcoll", "_field", "Entity_comment", view_id="Field_view")
         w = entitydata_edit_url(
             "edit", "testcoll", "_view", entity_id="editview", 
             view_id="View_view"

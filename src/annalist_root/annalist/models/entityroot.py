@@ -27,8 +27,9 @@ from django.conf import settings
 
 from annalist               import util
 from annalist.exceptions    import Annalist_Error
-from annalist.identifiers   import ANNAL, RDF
+from annalist.identifiers   import ANNAL, RDF, RDFS
 from annalist.resourcetypes import file_extension, file_extension_for_content_type
+from annalist.util          import make_type_entity_id
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -92,6 +93,18 @@ class EntityRoot(object):
     def get_type_id(self):
         return self._entitytypeid
 
+    def get_type_entity_id(self):
+        """
+        Return type+entity Id that is unique within collection
+        """
+        return make_type_entity_id(self._entitytypeid, self._entityid)
+
+    def get_label(self):
+        """
+        Return label string for the current entity.
+        """
+        return self._values.get(RDFS.CURIE.label, self._entityid)
+
     def get_url(self, baseurl=""):
         """
         Get fully qualified URL referred to supplied base.
@@ -149,6 +162,13 @@ class EntityRoot(object):
         Return collection metadata values
         """
         return self._values
+
+    def get_uri(self):
+        """
+        Return URI for current entity, which may be set explicitly or derived from
+        its present URL.
+        """
+        return self._values.get(ANNAL.CURIE.uri, self._values[ANNAL.CURIE.url])
 
     def enum_fields(self):
         """

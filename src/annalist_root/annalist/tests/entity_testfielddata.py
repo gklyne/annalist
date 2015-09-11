@@ -66,7 +66,8 @@ def recordfield_url(coll_id, field_id):
     URI for record field description data; also view using default entity view
     """
     if not valid_id(field_id):
-        field_id = "___"
+        return None
+        # field_id = "___"
     return collection_entity_view_url(coll_id=coll_id, type_id="_field", entity_id=field_id)
 
 def recordfield_edit_url(action=None, coll_id=None, field_id=None):
@@ -426,7 +427,7 @@ def recordfield_entity_view_context_data(
             }
           , { 'field_id':               "Field_restrict"            # 16
             , 'field_name':             "Field_restrict"
-            , 'field_label':            "Enum restriction"
+            , 'field_label':            "Value restriction"
             , 'field_target_type':      "annal:Text"
             , 'field_render_type':      "Text"
             , 'field_value_mode':       "Value_direct"

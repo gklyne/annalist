@@ -110,7 +110,7 @@ class CreateSiteData(AnnalistTestCase):
         coll123_create_data(testsite)
         #
         testcoll = Collection.create(testsite, "testcoll", collection_create_values("testcoll"))
-        testtype = RecordType.create(testcoll, "testtype", recordtype_create_values("testtype"))
+        testtype = RecordType.create(testcoll, "testtype", recordtype_create_values("testcoll", "testtype"))
         # testview = RecordView.create(testcoll, "testview", recordview_create_values("testview"))
         # testlist = RecordList.create(testcoll, "testlist", recordlist_create_values("testlist"))
         testdata = RecordTypeData.create(testcoll, "testtype", {})

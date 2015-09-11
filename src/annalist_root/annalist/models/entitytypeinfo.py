@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 import copy
 
 from annalist                       import message
-from annalist                       import util
+from annalist.util                  import valid_id, extract_entity_id
 
 from annalist.identifiers           import ANNAL, RDF, RDFS
 
@@ -167,7 +167,7 @@ TYPE_CLASS_MAP = (
     , '_field':             RecordField
     , 'Enum_list_type':     RecordEnumFactory('Enum_list_type',   'Enum_list_type')
     , 'Enum_render_type':   RecordEnumFactory('Enum_render_type', 'Enum_render_type')
-    , 'Enum_value_mode':    RecordEnumFactory('Enum_value_mode',    'Enum_value_mode')
+    , 'Enum_value_mode':    RecordEnumFactory('Enum_value_mode',  'Enum_value_mode')
     , 'Enum_bib_type':      RecordEnumFactory('Enum_bib_type',    'Enum_bib_type')
     })
 
@@ -248,7 +248,7 @@ class EntityTypeInfo(object):
         self.type_id         = type_id
         self.permissions_map = None
         if type_id in TYPE_CLASS_MAP:
-            self.recordtype      = RecordType.load(coll, type_id, site)
+            self.recordtype      = coll.get_type(type_id)
             self.entityparent    = coll
             self.entityaltparent = site
             self.entityclass     = TYPE_CLASS_MAP[type_id]
@@ -256,7 +256,7 @@ class EntityTypeInfo(object):
             self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
         else:
             if RecordType.exists(coll, type_id, site):
-                self.recordtype     = RecordType.load(coll, type_id, site)
+                self.recordtype     = coll.get_type(type_id)
             if create_typedata and not RecordTypeData.exists(coll, type_id):
                 self.entityparent   = RecordTypeData.create(coll, type_id, {})
             else:
@@ -274,6 +274,40 @@ class EntityTypeInfo(object):
             # Used in render_utils to get link to type record
             log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
         return
+
+    def get_type_id(self):
+        """
+        Return id for current type
+        """
+        if self.recordtype:
+            return self.recordtype[ANNAL.CURIE.id]
+        return None
+
+    def get_type_uri(self):
+        """
+        Return identiftying URI for the current type
+        """
+        typeuri = None
+        if self.recordtype:
+            if ANNAL.CURIE.uri in self.recordtype:
+                typeuri = self.recordtype[ANNAL.CURIE.uri]
+            if not typeuri:
+                typeuri = self.recordtype[ANNAL.CURIE.url]
+        return typeuri
+
+    def get_all_type_uris(self):
+        """
+        Return list of all type URIs for this type
+        """
+        types = [self.get_type_uri()]
+        supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uris, None)
+        if supertypes:
+            for st in supertypes:
+                # supertype_uris is list of objects { 'annal:supertype_uri': uri }
+                t = st.get(ANNAL.CURIE.supertype_uri, None)
+                if t:
+                    types.append(t)
+        return types
 
     def _new_entity(self, entity_id):
         """
@@ -303,17 +337,10 @@ class EntityTypeInfo(object):
             (entity_id, self.entityparent, entity_values)
             )
         # Set type URI for entity; previous types are not carried forwards
-        # If type does not define a URI, use type URL
-        typeuri = None
-        if self.recordtype:
-            if ANNAL.CURIE.uri in self.recordtype:
-                typeuri = self.recordtype[ANNAL.CURIE.uri]
-            if not typeuri:
-                typeuri = self.recordtype[ANNAL.CURIE.url]
-        entity_values['@type'] = typeuri    # NOTE: previous type not carried forward
         # Don't save entity URI if same as URL
         if entity_values.get(ANNAL.CURIE.uri) == entity_values.get(ANNAL.CURIE.url):
             entity_values.pop(ANNAL.CURIE.uri, None)
+        entity_values['@type'] = self.get_all_type_uris() # NOTE: previous types not carried forward
         return self.entityclass.create(self.entityparent, entity_id, entity_values)
 
     def remove_entity(self, entity_id):
@@ -338,7 +365,7 @@ class EntityTypeInfo(object):
             (entity_id, self.entityparent, self.entityaltparent, action)
             )
         entity = None
-        if util.valid_id(entity_id):
+        if valid_id(entity_id):
             if action == "new":
                 entity = self._new_entity(entity_id)
                 entity_initial_values = self.get_initial_entity_values(entity_id)
@@ -482,7 +509,7 @@ class EntityTypeInfo(object):
         """
         view_id = None
         if self.recordtype:
-            view_id = self.recordtype.get(ANNAL.CURIE.type_view, None)
+            view_id = extract_entity_id(self.recordtype.get(ANNAL.CURIE.type_view, None))
         else:
             log.warning("EntityTypeInfo.get_default_view_id: no type data for %s"%(self.type_id))
         return view_id or "Default_view"

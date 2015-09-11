@@ -34,10 +34,11 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.entityedit      import GenericEntityEditView
+from annalist.views.entityedit              import GenericEntityEditView
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site
+from tests                          import init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     collection_create_values,
@@ -67,14 +68,16 @@ from entity_testentitydata          import (
     layout_classes
     )
 from entity_testsitedata            import (
-    get_site_types, get_site_types_sorted,
-    get_site_lists, get_site_lists_sorted,
+    get_site_types, get_site_types_sorted, get_site_types_linked,
+    get_site_lists, get_site_lists_sorted, get_site_lists_linked,
+    get_site_views, get_site_views_sorted, get_site_views_linked,
     get_site_list_types, get_site_list_types_sorted,
-    get_site_views, get_site_views_sorted,
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
+from entity_testviewdata            import recordview_url
+from entity_testlistdata            import recordlist_url
 
 #   -----------------------------------------------------------------------------
 #
@@ -90,16 +93,11 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
-        self.type_ids   = ['testtype', 'Default_type']
-        self.no_options = ['(no options)']
-        self.view_options    = sorted(
-            [ vid for vid in self.testcoll.child_entity_ids(RecordView, self.testsite) 
-                  if vid != "_initial_values"
-            ])
-        self.list_options    = sorted(
-            [ lid for lid in self.testcoll.child_entity_ids(RecordList, self.testsite) 
-                  if lid != "_initial_values"
-            ])
+        self.no_options = [ FieldChoice('', label="(no options)") ]
+        self.no_view_id = [ FieldChoice('', label="(view id)") ]
+        self.no_list_id = [ FieldChoice('', label="(list id)") ]
+        self.view_options = get_site_views_linked("testcoll")
+        self.list_options = get_site_lists_linked("testcoll")
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -108,6 +106,12 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        # resetSitedata()
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
@@ -155,7 +159,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.client.logout()
         f = entitydata_default_view_form_data(
                 entity_id="entityuseview", action="view",
-                use_view="Type_view", 
+                use_view="_view/Type_view", 
                 )
         u = entity_url("testcoll", "testtype", "entity1")
         r = self.client.post(u, f)
@@ -252,7 +256,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
                   <span>Default view</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <a href="%(default_view_url)s">Default_view</a>
+                  <a href="%(default_view_url)s">Default record view</a>
                 </div>
               </div>
             </div>
@@ -264,7 +268,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
                   <span>Default list</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <a href="%(default_list_url)s">Default_list</a>
+                  <a href="%(default_list_url)s">List entities</a>
                 </div>
               </div>
             </div>
@@ -309,8 +313,8 @@ class GenericEntityViewViewTest(AnnalistTestCase):
                   """+
                     render_choice_options(
                       "view_choice",
-                      sorted(get_site_views()),
-                      "Type_view")+
+                      self.view_options,
+                      "_view/Type_view")+
                   """
                   </div>
                   <div class="small-3 columns">
@@ -362,7 +366,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['orig_id'],          "entity1")
         self.assertEqual(r.context['action'],           "edit")
         # Fields
-        self.assertEqual(len(r.context['fields']), 7)
+        self.assertEqual(len(r.context['fields']), 8)
         # 1st field - Id
         self.assertEqual(r.context['fields'][0]['field_id'],           'Type_id')
         self.assertEqual(r.context['fields'][0]['field_name'],         'entity_id')
@@ -411,26 +415,41 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value'],        "")
         self.assertEqual(r.context['fields'][3]['options'],            self.no_options)
-        # 5th field - view id
-        self.assertEqual(r.context['fields'][4]['field_id'],           'Type_view')
-        self.assertEqual(r.context['fields'][4]['field_name'],         'Type_view')
-        self.assertEqual(r.context['fields'][4]['field_label'],        'Default view')
-        self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:type_view")
+        # 5th field - Supertype URIs
+        type_supertype_uris_help = (
+            "References to URIs/CURIEs of supertypes."
+            )
+        self.assertEqual(r.context['fields'][4]['field_id'],          'Type_supertype_uris')
+        self.assertEqual(r.context['fields'][4]['field_name'],        'Type_supertype_uris')
+        self.assertEqual(r.context['fields'][4]['field_label'],       'Supertype URIs')
+        self.assertEqual(r.context['fields'][4]['field_help'],        type_supertype_uris_help)
+        self.assertEqual(r.context['fields'][4]['field_placeholder'], "(Supertype URIs or CURIEs)")
+        self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:supertype_uris")
         self.assertEqual(r.context['fields'][4]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][4]['field_target_type'],  "annal:View")
-        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][4]['field_value'],        "Default_view")
-        self.assertEqual(r.context['fields'][4]['options'],            self.view_options)
-        # 6th field - list id
-        self.assertEqual(r.context['fields'][5]['field_id'],           'Type_list')
-        self.assertEqual(r.context['fields'][5]['field_name'],         'Type_list')
-        self.assertEqual(r.context['fields'][5]['field_label'],        'Default list')
-        self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_list")
+        self.assertEqual(r.context['fields'][4]['field_target_type'],  "annal:Type_supertype_uri")
+        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 columns")
+        self.assertEqual(r.context['fields'][4]['field_value'],        "") #@@
+        self.assertEqual(r.context['fields'][4]['options'],            self.no_options)
+        # 6th field - view id
+        self.assertEqual(r.context['fields'][5]['field_id'],           'Type_view')
+        self.assertEqual(r.context['fields'][5]['field_name'],         'Type_view')
+        self.assertEqual(r.context['fields'][5]['field_label'],        'Default view')
+        self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_view")
         self.assertEqual(r.context['fields'][5]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][5]['field_target_type'],  "annal:List")
+        self.assertEqual(r.context['fields'][5]['field_target_type'],  "annal:View")
         self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][5]['field_value'],        "Default_list")
-        self.assertEqual(r.context['fields'][5]['options'],            self.list_options)
+        self.assertEqual(r.context['fields'][5]['field_value'],        "Default_view")
+        self.assertEqual(r.context['fields'][5]['options'],            self.no_view_id + self.view_options)
+        # 7th field - list id
+        self.assertEqual(r.context['fields'][6]['field_id'],           'Type_list')
+        self.assertEqual(r.context['fields'][6]['field_name'],         'Type_list')
+        self.assertEqual(r.context['fields'][6]['field_label'],        'Default list')
+        self.assertEqual(r.context['fields'][6]['field_property_uri'], "annal:type_list")
+        self.assertEqual(r.context['fields'][6]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][6]['field_target_type'],  "annal:List")
+        self.assertEqual(r.context['fields'][6]['field_placement'].field, "small-12 medium-6 columns")
+        self.assertEqual(r.context['fields'][6]['field_value'],        "Default_list")
+        self.assertEqual(r.context['fields'][6]['options'],            self.no_list_id + self.list_options)
         return
 
     def test_get_view_no_collection(self):

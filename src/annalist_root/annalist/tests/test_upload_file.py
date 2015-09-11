@@ -32,7 +32,7 @@ from annalist.models.entitytypeinfo import EntityTypeInfo
 from tests                          import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
-from tests                          import init_annalist_test_site
+from tests                          import init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     create_test_user,
@@ -298,7 +298,7 @@ def test_ref_entity_create_values(entity_id):
     return (
         { 'rdfs:label':                 "test_ref_entity %s label"%entity_id
         , 'rdfs:comment':               "test_ref_entity %s comment"%entity_id
-        , 'test:reference':             entity_id
+        , 'test:reference':             "testupltype/"+entity_id
         })
 
 def test_img_entity_create_values(entity_id):
@@ -377,15 +377,27 @@ class UploadResourceTest(AnnalistTestCase):
         # Create data records for testing import and references:
         test_entity_ids = ("test1", "test2")
         test_entity_ids = ("test1",)
-        self.test_upl_type_info = EntityTypeInfo(self.testsite, self.testcoll, "testupltype", create_typedata=True)
+        self.test_upl_type_info = EntityTypeInfo(
+            self.testsite, self.testcoll, "testupltype", create_typedata=True
+            )
         for entity_id in test_entity_ids:
-            self.test_upl_type_info.create_entity(entity_id, test_imp_entity_create_values(entity_id))
-        self.test_ref_type_info = EntityTypeInfo(self.testsite, self.testcoll, "testreftype", create_typedata=True)
+            self.test_upl_type_info.create_entity(
+                entity_id, test_imp_entity_create_values(entity_id)
+                )
+        self.test_ref_type_info = EntityTypeInfo(
+            self.testsite, self.testcoll, "testreftype", create_typedata=True
+            )
         for entity_id in test_entity_ids:
-            self.test_ref_type_info.create_entity(entity_id, test_ref_entity_create_values(entity_id))
-        self.test_img_type_info = EntityTypeInfo(self.testsite, self.testcoll, "testimgtype", create_typedata=True)
+            self.test_ref_type_info.create_entity(
+                entity_id, test_ref_entity_create_values(entity_id)
+                )
+        self.test_img_type_info = EntityTypeInfo(
+            self.testsite, self.testcoll, "testimgtype", create_typedata=True
+            )
         for entity_id in test_entity_ids:
-            self.test_img_type_info.create_entity(entity_id, test_img_entity_create_values(entity_id))
+            self.test_img_type_info.create_entity(
+                entity_id, test_img_entity_create_values(entity_id)
+                )
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -394,6 +406,12 @@ class UploadResourceTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        # resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     # Utility functions
@@ -470,12 +488,16 @@ class UploadResourceTest(AnnalistTestCase):
         with open(self.filepath) as fp:
             f = entitydata_default_view_form_data(entity_id="test1", action="edit")
             f['upl_field'] = fp     # Upload file with submission
-            u = entitydata_edit_url("view", "testcoll", "testupltype", entity_id="test1", view_id="testuplfileview")
+            u = entitydata_edit_url(
+                "view", "testcoll", "testupltype", entity_id="test1", view_id="testuplfileview"
+                )
             r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         # Display resource with reference
-        u = entitydata_edit_url("view", "testcoll", "testreftype", entity_id="test1", view_id="testrefview")
+        u = entitydata_edit_url(
+            "view", "testcoll", "testreftype", entity_id="test1", view_id="testrefview"
+            )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -494,7 +516,7 @@ class UploadResourceTest(AnnalistTestCase):
         basepath = TestBasePath + "/c/testcoll/d/testupltype/"
         # print "\n*****\n"+repr(r.context['fields'][i].target_value)+"\n*****\n"
         self.assertEqual(r.context['fields'][i].field_id,     "Test_reference")
-        self.assertEqual(r.context['fields'][i].field_value,        "test1")
+        self.assertEqual(r.context['fields'][i].field_value,        "testupltype/test1")
         self.assertEqual(r.context['fields'][i].field_value_link,   basepath+"test1/")
         self.assertEqual(r.context['fields'][i].target_value['upload_name'],   "upl_field")
         self.assertEqual(r.context['fields'][i].target_value['resource_name'], "upl_field.md")
@@ -559,7 +581,7 @@ class UploadResourceTest(AnnalistTestCase):
         basepath = TestBasePath + "/c/testcoll/d/testupltype/"
         # print "\n*****\n"+repr(r.context['fields'][i].target_value)+"\n*****\n"
         self.assertEqual(r.context['fields'][i].field_id,     "Test_image_ref")
-        self.assertEqual(r.context['fields'][i].field_value,        "test1")
+        self.assertEqual(r.context['fields'][i].field_value,        "testupltype/test1")
         self.assertEqual(r.context['fields'][i].field_value_link,   basepath+"test1/")
         self.assertEqual(r.context['fields'][i].target_value['upload_name'],   "upl_field")
         self.assertEqual(r.context['fields'][i].target_value['resource_name'], "upl_field.jpg")

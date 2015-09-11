@@ -31,7 +31,7 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site
+from tests                          import init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     create_user_permissions,
@@ -176,6 +176,12 @@ class AuthorizationTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     # Utility functions
@@ -1054,7 +1060,7 @@ class AuthorizationTest(AnnalistTestCase):
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 2)
         entity_fields = (
-            [ ('testtype',    '_type',    'RecordType testtype/testtype')
+            [ ('testtype',    '_type',    'RecordType testcoll/testtype')
             , ('entity1',     'testtype', 'Entity testcoll/testtype/entity1')
             ])
         for eid in range(2):

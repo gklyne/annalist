@@ -132,16 +132,16 @@ def recordview_create_values(
         , 'annal:record_type':  target_record_type
         , 'annal:open_view':    True
         , 'annal:view_fields':
-          [ { 'annal:field_id':         "Entity_id"
+          [ { 'annal:field_id':         "_field/Entity_id"
             , 'annal:field_placement':  "small:0,12;medium:0,6"
             }
-          , { 'annal:field_id':         "Entity_type"
+          , { 'annal:field_id':         "_field/Entity_type"
             , 'annal:field_placement':  "small:0,12;medium:6,6"
             }
-          , { 'annal:field_id':         "Entity_label"
+          , { 'annal:field_id':         "_field/Entity_label"
             , 'annal:field_placement':  "small:0,12"
             }
-          , { 'annal:field_id':         "Entity_comment"
+          , { 'annal:field_id':         "_field/Entity_comment"
             # , 'annal:field_placement':  field3_placement
             }
           ]
@@ -219,26 +219,29 @@ def recordview_entity_view_context_data(
         coll_id="testcoll", view_id=None, orig_id=None, view_ids=[],
         action=None, 
         target_record_type="annal:View",
-        add_field=None, remove_field=None, 
+        add_field=None, remove_field=None, move_up=None, move_down=None,
         update="RecordView"
     ):
     # Target record fields listed in the view description
     view_fields = (
-          [ { 'annal:field_id':         "Entity_id"
+          [ { 'annal:field_id':         "_field/Entity_id"
             , 'annal:field_placement':  "small:0,12;medium:0,6"
             }
-          , { 'annal:field_id':         "Entity_type"
+          , { 'annal:field_id':         "_field/Entity_type"
             , 'annal:field_placement':  "small:0,12;medium:6,6"
             }
-          , { 'annal:field_id':         "Entity_label"
+          , { 'annal:field_id':         "_field/Entity_label"
             , 'annal:property_uri':     "rdfs:label"
             , 'annal:field_placement':  "small:0,12"
             }
-          , { 'annal:field_id':         "Entity_comment"
+          , { 'annal:field_id':         "_field/Entity_comment"
             , 'annal:property_uri':     "rdfs:comment"
             # , 'annal:field_placement':  field3_placement
             }
           ])
+    # NOTE: context['fields'][i]['field_id'] comes from FieldDescription instance via
+    #       bound_field, so type prefix is stripped.  This does not apply to the field
+    #       ids actually coming from the view form.
     context_dict = (
         { 'title':              "Collection %s"%(coll_id)
         , 'coll_id':            coll_id
@@ -296,7 +299,7 @@ def recordview_entity_view_context_data(
             , 'field_value':        True
             , 'options':            []
             }
-          , { "field_id":           "View_fields"           # fields[5]
+          , { "field_id":           'View_fields'           # fields[5]
             , 'field_render_type':  'RepeatGroupRow'
             , 'field_name':         'View_fields'
             , 'field_target_type':  'annal:Field_group'
@@ -327,6 +330,14 @@ def recordview_entity_view_context_data(
             })
     if remove_field:
         context_dict['fields'][5]['field_value'][3:4] = []
+    if move_up:
+        assert move_up == [2,3]
+        fields = context_dict['fields'][5]['field_value']
+        context_dict['fields'][5]['field_value'] = [ fields[i]  for i in [0,2,3,1] ]
+    if move_down:
+        assert move_down == [1]
+        fields = context_dict['fields'][5]['field_value']
+        context_dict['fields'][5]['field_value'] = [ fields[i]  for i in [0,2,1,3] ]
     return context_dict
 
 def recordview_entity_view_form_data(
@@ -339,6 +350,8 @@ def recordview_entity_view_form_data(
         extra_field_uri=None,   # Extra field property URI to add in
         add_field=None,         # True for add field option
         remove_fields=None,     # List of field numbers to remove (as strings)
+        move_up_fields=None,    # List of field numbers to move up
+        move_down_fields=None,  # List of field numbers to move down
         new_enum=None,          # Id of new-value button enumerated value field
         update="RecordView"
         ):
@@ -351,20 +364,20 @@ def recordview_entity_view_form_data(
         , 'record_type':        'annal:View'
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
         # View fields
-        , 'View_fields__0__Field_id':           "Entity_id"
+        , 'View_fields__0__Field_id':           "_field/Entity_id"
         , 'View_fields__0__Field_placement':    "small:0,12;medium:0,6"
-        , 'View_fields__1__Field_id':           "Entity_type"
+        , 'View_fields__1__Field_id':           "_field/Entity_type"
         , 'View_fields__1__Field_placement':    "small:0,12;medium:6,6"
-        , 'View_fields__2__Field_id':           "Entity_label"
+        , 'View_fields__2__Field_id':           "_field/Entity_label"
         , 'View_fields__2__Field_property':     "rdfs:label"
         , 'View_fields__2__Field_placement':    "small:0,12"
-        , 'View_fields__3__Field_id':           "Entity_comment"
+        , 'View_fields__3__Field_id':           "_field/Entity_comment"
         , 'View_fields__3__Field_property':     "rdfs:comment"
         , 'View_fields__3__Field_placement':    field3_placement
         })
     if extra_field:
         # Insert extra field with supplied Id
-        form_data_dict['View_fields__4__Field_id']        = extra_field
+        form_data_dict['View_fields__4__Field_id']        = "_field/"+extra_field
         form_data_dict['View_fields__4__Field_placement'] = "small:0,12"
         if extra_field_uri:
             form_data_dict['View_fields__4__Field_property'] = extra_field_uri
@@ -387,6 +400,14 @@ def recordview_entity_view_form_data(
         form_data_dict['View_fields__remove'] = "Remove field"
         if remove_fields != "no-selection":
             form_data_dict['View_fields__select_fields'] = remove_fields
+    elif move_up_fields:
+        form_data_dict['View_fields__up'] = "Move up"
+        if move_up_fields != "no-selection":
+            form_data_dict['View_fields__select_fields'] = move_up_fields
+    elif move_down_fields:
+        form_data_dict['View_fields__down'] = "Move down"
+        if move_down_fields != "no-selection":
+            form_data_dict['View_fields__select_fields'] = move_down_fields
     elif new_enum:
         form_data_dict[new_enum]        = new_enum
     else:

@@ -34,19 +34,41 @@ from django.template.loaders.app_directories    import Loader
 #   These templatres all expect the value renderer to be provided in the
 #   view context as `value_renderer`
 
+# Render-type-independent templates
+
 label_template = (
-    """<div class="view-label {{field.field_placement.field}}">"""+
-    """  <span>{{field.field_label|default:"&nbsp;"}}</span>"""+
+    """<span>{{field.field_label|default:"&nbsp;"}}</span>"""
+    )
+
+_unused_col_head_template = (
+    """<div class="view-label col-head {{field.field_placement.field}}">"""+
+    """  <span>{{field.field_label}}</span>"""+
     """</div>"""
     )
 
-value_wrapper_template = (
-    """<div class="view-value {{field.field_placement.field}}">"""+
-    """  {% include value_renderer %}"""+
-    """</div>"""
-    )
+# Renderer wrapper templates
+# NOTE: _get_renderer method creates context value "value_renderer" for the wrapped renderer;
+#       hence "{% include value_renderer %}" in the following
 
+# @@TODO: change label rendering to use wrapper via _get_renderer
+#         save renderer for label in class init, based on (reduced) label_template (above)
+
+# Wrap field label
 label_wrapper_template = (
+    """<div class="view-label {{field.field_placement.field}}">\n"""+
+    """  {% include value_renderer %}\n"""+
+    "</div>"""
+    )
+
+# Wrap bare value (e.g. column value)
+value_wrapper_template = (
+    """<div class="view-value {{field.field_placement.field}}">\n"""+
+    """  {% include value_renderer %}\n"""+
+    """</div>"""
+    )
+
+# Wrap value and include label
+label_value_wrapper_template = (
     """<div class="{{field.field_placement.field}}">\n"""+
     """  <div class="row view-value-row">\n"""+
     """    <div class="view-label {{field.field_placement.label}}">\n"""+
@@ -59,13 +81,13 @@ label_wrapper_template = (
     """</div>"""
     )
 
-col_head_template = (
-    """<div class="view-label col-head {{field.field_placement.field}}">"""+
-    """  <span>{{field.field_label}}</span>"""+
+col_head_wrapper_template = (
+    """<div class="view-label col-head {{field.field_placement.field}}">\n"""+
+    """  {% include value_renderer %}\n"""+
     """</div>"""
     )
 
-col_label_wrapper_template = (
+col_label_value_wrapper_template = (
     """<div class="{{field.field_placement.field}}">\n"""+
     """  <div class="row show-for-small-only">\n"""+
     """    <div class="view-label small-12 columns">\n"""+
@@ -136,6 +158,8 @@ class RenderFieldValue(object):
         """
         # log.info("RenderFieldValue: viewrender %s, editrender %s"%(viewrender, edit_file))
         super(RenderFieldValue, self).__init__()
+        # Save label renderer
+        self._label_renderer = Template(label_template)
         # Save view renderer
         if view_renderer is not None:
             self._view_renderer = view_renderer
@@ -157,6 +181,7 @@ class RenderFieldValue(object):
         # Initialize various renderer caches
         self._col_head_view_renderer = col_head_view_renderer
         self._col_head_edit_renderer = col_head_edit_renderer
+        self._render_label           = None
         self._render_view            = None
         self._render_edit            = None
         self._render_label_view      = None
@@ -196,7 +221,20 @@ class RenderFieldValue(object):
                 pass
             def render(self, context):
                 with context.push(value_renderer=value_renderer):
-                    return compiled_wrapper.render(context)
+                    try:
+                        return compiled_wrapper.render(context)
+                    except Exception as e:
+                        log.exception("Exception in (_get_renderer) _renderer.render")
+                        ex_type, ex, tb = sys.exc_info()
+                        traceback.print_tb(tb)
+                        response_parts = (
+                            ["Exception in (_get_renderer) _renderer.render"]+
+                            [repr(e)]+
+                            traceback.format_exception(ex_type, ex, tb)+
+                            ["***(_get_renderer) _renderer.render***"]
+                            )
+                        del tb
+                        return "\n".join(response_parts)
         # Compile wrapper template and return inner renderer class
         compiled_wrapper = Template(wrapper_template)
         return _renderer()
@@ -252,23 +290,24 @@ class RenderFieldValue(object):
                         ["***render_fieldvalue.render_mode.render***"]
                         )
                     del tb
-                    return "".join(response_parts)
+                    return "\n".join(response_parts)
         return _renderer()
 
     # Template access functions
 
-    def label(self):
+    #@@ Is this used - seems not???
+    def _unused_label(self):
         """
         Returns a renderer object to display a field label from the 
         supplied `context['field']` value.
         """
-        if not self._render_label_view:
-            self._render_label_view = self._set_render_mode(
+        if not self._render_label:
+            self._render_label = self._set_render_mode(
                 self._get_renderer(label_template, None),
                 "label"
                 )
-        # log.info("self._render_label_view %r"%self._render_label_view)
-        return self._render_label_view
+        # log.info("self._render_label %r"%self._render_label)
+        return self._render_label
 
     def view(self):
         """
@@ -299,7 +338,7 @@ class RenderFieldValue(object):
         """
         if not self._render_label_view:
             self._render_label_view = self._set_render_mode(
-                self._get_renderer(label_wrapper_template, self._view_renderer),
+                self._get_renderer(label_value_wrapper_template, self._view_renderer),
                 "label_view"
                 )
         return self._render_label_view
@@ -310,7 +349,7 @@ class RenderFieldValue(object):
         """
         if not self._render_label_edit:
             self._render_label_edit = self._set_render_mode(
-                self._get_renderer(label_wrapper_template, self._edit_renderer),
+                self._get_renderer(label_value_wrapper_template, self._edit_renderer),
                 "label_edit"
                 )
         return self._render_label_edit
@@ -322,7 +361,8 @@ class RenderFieldValue(object):
         """
         if not self._render_col_head:
             self._render_col_head = self._set_render_mode(
-                Template(col_head_template),
+                self._get_renderer(col_head_wrapper_template, self._label_renderer),
+                #@@ Template(col_head_template),
                 "col_head"
                 )
         return self._render_col_head
@@ -335,7 +375,7 @@ class RenderFieldValue(object):
         """
         if not self._render_col_head_view and self._col_head_view_renderer:
             self._render_col_head_view = self._set_render_mode(
-                self._col_head_view_renderer,
+                self._get_renderer(col_head_wrapper_template, self._col_head_view_renderer),
                 "col_head_view"
                 )
         return self._render_col_head_view or self.col_head()
@@ -348,7 +388,7 @@ class RenderFieldValue(object):
         """
         if not self._render_col_head_edit and self._col_head_edit_renderer:
             self._render_col_head_edit = self._set_render_mode(
-                self._col_head_edit_renderer,
+                self._get_renderer(col_head_wrapper_template, self._col_head_edit_renderer),
                 "col_head_edit"
                 )
         return self._render_col_head_edit or self.col_head()
@@ -360,7 +400,7 @@ class RenderFieldValue(object):
         """
         if not self._render_col_view:
             self._render_col_view = self._set_render_mode(
-                self._get_renderer(col_label_wrapper_template, self._view_renderer),
+                self._get_renderer(col_label_value_wrapper_template, self._view_renderer),
                 "col_view"
                 )
         return self._render_col_view
@@ -372,7 +412,7 @@ class RenderFieldValue(object):
         """
         if not self._render_col_edit:
             self._render_col_edit = self._set_render_mode(
-                self._get_renderer(col_label_wrapper_template, self._edit_renderer),
+                self._get_renderer(col_label_value_wrapper_template, self._edit_renderer),
                 "col_edit"
                 )
         return self._render_col_edit

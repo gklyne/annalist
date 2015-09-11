@@ -1,6 +1,6 @@
-{ "@id":                        "annal:fields/Group_repeat_fields"
+{ "@id":                        "annal:fields/Group_fields"
 , "@type":                      ["annal:Field"]
-, "annal:id":                   "Group_repeat_fields"
+, "annal:id":                   "Group_fields"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Fields"
 , "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a field group description (yes, it is self-referential)."
@@ -12,7 +12,7 @@
 , "annal:property_uri":         "annal:group_fields"
 , "annal:field_placement":      "small:0,12"
   // Reference to description of repeated field
-, "annal:group_ref":            "Group_field_group"
+, "annal:group_ref":            "_group/Group_field_group"
 , "annal:repeat_label_add":     "Add field"
 , "annal:repeat_label_delete":  "Remove selected field(s)"
 }

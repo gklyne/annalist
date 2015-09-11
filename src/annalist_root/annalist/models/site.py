@@ -125,7 +125,7 @@ class Site(EntityRoot):
         site_data["collections"] = colls
         return site_data
 
-    def add_collection(self, coll_id, coll_meta, annal_ver=annalist.__version__):
+    def add_collection(self, coll_id, coll_meta, annal_ver=annalist.__version_data__):
         """
         Add a new collection to the current site
 

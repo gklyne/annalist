@@ -7,19 +7,19 @@
 , "rdfs:label":         "BibEntry license fields"
 , "rdfs:comment":       "Group of fields describing a content license in a BibEntry record"
 , "annal:group_fields":
-  [ { "annal:field_id":         "Bib_type"
+  [ { "annal:field_id":         "_field/Bib_type"
     , "annal:property_uri":     "bib:type"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_jurisdiction"
+  , { "annal:field_id":         "_field/Bib_jurisdiction"
     , "annal:property_uri":     "bib:jurisdiction"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_url"
+  , { "annal:field_id":         "_field/Bib_url"
     , "annal:property_uri":     "bib:url"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "Bib_description"
+  , { "annal:field_id":         "_field/Bib_description"
     , "annal:property_uri":     "bib:description"
     , "annal:field_placement":  "small:0,12"
     }

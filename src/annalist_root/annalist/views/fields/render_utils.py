@@ -24,7 +24,10 @@ from render_bool_checkbox       import get_bool_checkbox_renderer, BoolCheckboxV
 from render_ref_audio           import get_ref_audio_renderer, RefAudioValueMapper
 from render_ref_image           import get_ref_image_renderer, RefImageValueMapper
 from render_text_markdown       import get_text_markdown_renderer, TextMarkdownValueMapper
-from render_select              import get_select_renderer, get_choice_renderer, SelectValueMapper
+from render_select              import (
+    get_select_renderer, get_choice_renderer, get_entitytype_renderer, get_view_choice_renderer,
+    SelectValueMapper
+    )
 from render_uri_link            import get_uri_link_renderer, URILinkValueMapper
 from render_uri_import          import get_uri_import_renderer, URIImportValueMapper
 from render_file_upload         import get_file_upload_renderer, FileUploadValueMapper
@@ -41,16 +44,7 @@ _field_view_files = (
     , "Slug":           "field/annalist_view_slug.html"
     , "EntityId":       "field/annalist_view_entityid.html"
     , "Identifier":     "field/annalist_view_identifier.html"
-    , "View_choice":    "field/annalist_view_view_choice.html"
-    # , "EntityTypeId":   "field/annalist_view_select.html"
-    # , "Type":           "field/annalist_view_select.html"
-    # , "View":           "field/annalist_view_select.html"
-    # , "List":           "field/annalist_view_select.html"
-    # , "Field":          "field/annalist_view_select.html"
-    # , "Enum":           "field/annalist_view_select.html"
-    # , "Enum_optional":  "field/annalist_view_select.html"
-    # , "Enum_choice":    "field/annalist_view_choice.html"
-    # , "List_sel":       "field/annalist_view_choice.html"
+    # , "View_choice":    "field/annalist_view_view_choice.html"
     })
 
 _field_edit_files = (
@@ -59,16 +53,7 @@ _field_edit_files = (
     , "Slug":           "field/annalist_edit_slug.html"
     , "EntityId":       "field/annalist_edit_entityid.html"
     , "Identifier":     "field/annalist_edit_identifier.html"
-    , "View_choice":    "field/annalist_edit_view_choice.html"
-    # , "EntityTypeId":   "field/annalist_edit_select.html"
-    # , "Type":           "field/annalist_edit_select.html"
-    # , "View":           "field/annalist_edit_select.html"
-    # , "List":           "field/annalist_edit_select.html"
-    # , "Field":          "field/annalist_edit_select.html"
-    # , "Enum":           "field/annalist_edit_select.html"
-    # , "Enum_optional":  "field/annalist_edit_select.html"
-    # , "Enum_choice":    "field/annalist_edit_choice.html"
-    # , "List_sel":       "field/annalist_edit_choice.html"
+    # , "View_choice":    "field/annalist_edit_view_choice.html"
     })
 
 _field_get_renderer_functions = (
@@ -78,20 +63,22 @@ _field_get_renderer_functions = (
     , "Markdown":       get_text_markdown_renderer
     , "RefAudio":       get_ref_audio_renderer
     , "RefImage":       get_ref_image_renderer
-    , "URIImage":       get_ref_image_renderer      # For backwards compatibility
     , "URILink":        get_uri_link_renderer
     , "URIImport":      get_uri_import_renderer
     , "FileUpload":     get_file_upload_renderer
-    , "EntityTypeId":   get_select_renderer
+    , "EntityTypeId":   get_entitytype_renderer
+    , "Enum":           get_select_renderer
+    , "Enum_optional":  get_select_renderer
+    , "Enum_choice":    get_choice_renderer
+    , "View_choice":    get_view_choice_renderer
+    , "RefMultifield":  get_ref_multifield_renderer
+    # Render types recognized for backward compatibility
+    , "URIImage":       get_ref_image_renderer
     , "Type":           get_select_renderer
     , "View":           get_select_renderer
     , "List":           get_select_renderer
     , "Field":          get_select_renderer
-    , "Enum":           get_select_renderer
-    , "Enum_optional":  get_select_renderer
-    , "Enum_choice":    get_choice_renderer
     , "List_sel":       get_choice_renderer
-    , "RefMultifield":  get_ref_multifield_renderer
     })
 
 _field_value_mappers = (
@@ -100,22 +87,22 @@ _field_value_mappers = (
     , "Markdown":       TextMarkdownValueMapper
     , "RefAudio":       RefAudioValueMapper
     , "RefImage":       RefImageValueMapper
-    , "URIImage":       RefImageValueMapper         # For backwards compatibility
     , "URILink":        URILinkValueMapper
     , "URIImport":      URIImportValueMapper
     , "FileUpload":     FileUploadValueMapper
-
     , "EntityTypeId":   SelectValueMapper
+    , "Enum":           SelectValueMapper
+    , "Enum_optional":  SelectValueMapper
+    , "Enum_choice":    SelectValueMapper
+    , "View_choice":    SelectValueMapper
+    , "RefMultifield":  RefMultifieldValueMapper
+    # Render types recognized for backward compatibility
+    , "URIImage":       RefImageValueMapper
     , "Type":           SelectValueMapper
     , "View":           SelectValueMapper
     , "List":           SelectValueMapper
     , "Field":          SelectValueMapper
-    , "Enum":           SelectValueMapper
-    , "Enum_optional":  SelectValueMapper
-    , "Enum_choice":    SelectValueMapper
     , "List_sel":       SelectValueMapper
-
-    , "RefMultifield":  RefMultifieldValueMapper
     })
 
 def get_field_base_renderer(field_render_type):

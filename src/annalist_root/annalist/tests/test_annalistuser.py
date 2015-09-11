@@ -37,7 +37,7 @@ from annalist.views.annalistuserdelete      import AnnalistUserDeleteConfirmedVi
 from annalist.views.fields.render_tokenset  import get_field_tokenset_renderer
 
 from AnnalistTestCase                       import AnnalistTestCase
-from tests                                  import init_annalist_test_site
+from tests                                  import init_annalist_test_site, resetSitedata
 from tests                                  import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
@@ -82,6 +82,7 @@ class AnnalistUserTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        resetSitedata()
         return
 
     def test_AnnalistUserTest(self):
@@ -183,6 +184,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
@@ -504,6 +506,7 @@ class ConfirmAnnalistUserDeleteTests(AnnalistTestCase):
         return
 
     def tearDown(self):
+        resetSitedata()
         return
 
     def test_DeleteConfirmedViewTest(self):

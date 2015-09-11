@@ -24,12 +24,25 @@ from annalist.views.fielddescription    import FieldDescription, field_descripti
 
 from annalist.views.fields.render_placement     import Placement
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
+from annalist.views.form_utils.fieldchoice      import FieldChoice
 
-from tests                  import init_annalist_test_site
+from tests                  import init_annalist_test_site, resetSitedata
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from AnnalistTestCase       import AnnalistTestCase
 
 from entity_testentitydata  import entity_url
+
+from entity_testsitedata            import (
+    make_field_choices, no_selection,
+    get_site_types, get_site_types_sorted, get_site_types_linked,
+    get_site_lists, get_site_lists_sorted, get_site_lists_linked,
+    get_site_views, get_site_views_sorted, get_site_views_linked,
+    get_site_list_types, get_site_list_types_sorted,
+    get_site_field_groups, get_site_field_groups_sorted, 
+    get_site_fields, get_site_fields_sorted, 
+    get_site_field_types, get_site_field_types_sorted, 
+    get_site_default_entity_fields, get_site_default_entity_fields_sorted, get_site_default_entity_fields_linked, 
+    )
 
 #   -----------------------------------------------------------------------------
 #
@@ -49,6 +62,12 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        # resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_FieldDescriptionTest(self):
@@ -82,7 +101,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_default_value':        None
             , 'field_placement':            expect_placement
             , 'field_ref_type':             None
-            , 'field_choice_links':         None
+            , 'field_choices':              None
             , 'field_ref_restriction':      'ALL'
             , 'field_group_ref':            None
             })
@@ -113,7 +132,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_default_value':        None
             , 'field_placement':            expect_placement
             , 'field_ref_type':             None
-            , 'field_choice_links':         None
+            , 'field_choices':              None
             , 'field_ref_restriction':      'ALL'
             , 'field_group_ref':            None
             })
@@ -132,34 +151,31 @@ class FieldDescriptionTest(AnnalistTestCase):
             label='small-12 medium-4 columns', 
             value='small-12 medium-8 columns'
             )
-        expect_choice_ids = (
-            [ 'Entity_comment'
-            , 'Entity_id'
-            , 'Entity_label'
-            , 'Entity_type'
-            ])
-        expect_choice_labels = OrderedDict(
-            [ (id, id) for id in expect_choice_ids]
-            )
-        expect_choice_links = OrderedDict(
-            [ (id, entity_url("testcoll", "_field", id)) 
-              for id in expect_choice_ids
+        # expect_choice_id_labels = (
+        #     [ ('Entity_comment',  "Comment")
+        #     , ('Entity_id',       "Id"     )
+        #     , ('Entity_label',    "Label"  )
+        #     , ('Entity_type',     "Type"   )
+        #     ])
+        expect_choices = OrderedDict(
+            [ (fc.id, fc) 
+              for fc in no_selection("(field sel)") + 
+                        get_site_default_entity_fields_linked("testcoll") 
             ])
         expect_field_desc = (
             { 'field_id':                   'Group_field_sel'
             , 'field_name':                 'Field_id'
             , 'field_target_type':           ANNAL.CURIE.Slug
             , 'field_label':                'Field id'
-            , 'field_render_type':          'Field'
+            , 'field_render_type':          'Enum_optional'
             , 'field_value_mode':           'Value_direct'
             , 'field_property_uri':         ANNAL.CURIE.field_id
             , 'field_placeholder':          '(field sel)'
             , 'field_default_value':        ''
             , 'field_placement':            expect_placement
             , 'field_ref_type':             '_field'
-            , 'field_choice_labels':        expect_choice_labels
-            , 'field_choice_links':         expect_choice_links
-            , 'field_ref_restriction':      '[annal:field_entity_type] in entity[annal:record_type]'
+            , 'field_choices':              expect_choices
+            , 'field_ref_restriction':      'entity[annal:record_type] subtype [annal:field_entity_type]'
             , 'field_group_ref':            None
             })
         # print repr(fd)
@@ -189,8 +205,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_default_value':        None
             , 'field_placement':            expect_placement
             , 'field_ref_type':             None
-            , 'field_choice_labels':        None
-            , 'field_choice_links':         None
+            , 'field_choices':              None
             , 'field_ref_restriction':      'ALL'
             , 'field_group_ref':            'View_field_group'
             })
@@ -215,11 +230,11 @@ class FieldDescriptionTest(AnnalistTestCase):
             value='small-12 medium-6 columns'
             )
         expect_field0_desc = (
-            { 'field_id':                   'Group_field_sel'
+            { 'field_id':                   'View_field_sel'
             , 'field_name':                 'Field_id'
             , 'field_target_type':           ANNAL.CURIE.Slug
             , 'field_label':                'Field id'
-            , 'field_render_type':          'Field'
+            , 'field_render_type':          'Enum_optional'
             , 'field_value_mode':           'Value_direct'
             , 'field_property_uri':         ANNAL.CURIE.field_id
             , 'field_placement':            expect_field0_placement
@@ -232,7 +247,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             value='small-12 medium-6 columns'
             )
         expect_field1_desc = (
-            { 'field_id':                   'Group_field_property'
+            { 'field_id':                   'View_field_property'
             , 'field_name':                 'Field_property'
             , 'field_target_type':          ANNAL.CURIE.Identifier
             , 'field_label':                'Property'
@@ -249,7 +264,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             value='small-12 medium-6 columns'
             )
         expect_field2_desc = (
-            { 'field_id':                   'Group_field_placement'
+            { 'field_id':                   'View_field_placement'
             , 'field_name':                 'Field_placement'
             , 'field_target_type':          ANNAL.CURIE.Placement
             , 'field_label':                'Position/size'

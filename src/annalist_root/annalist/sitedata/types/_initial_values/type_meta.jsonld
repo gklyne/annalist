@@ -2,6 +2,6 @@
 , "annal:type_id":      "_type"
 , "rdfs:label":         ""
 , "rdfs:comment":       ""
-, "annal:type_view":    "Default_view"
-, "annal:type_list":    "Default_list"
+, "annal:type_view":    "_view/Default_view"
+, "annal:type_list":    "_list/Default_list"
 }

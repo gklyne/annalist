@@ -36,8 +36,13 @@ The data type of a property value is not formally constrained.  Multiple instanc
 
 *Record types* provide a simple, coarse-grained way of distinguishing different types of record from a user perspective, and associating with different content presentation as appropriate.  Each data record has exactly one data type, which is used directly to help organize the underlying data storage.  The intent is that data types are used to ceate a top-level organization of different kinds of data within a collection.  Finer-grained and cross-cutting type distinctions may be made though properties on each data record.
 
-In keeping with the idea that properties can be added to any data record at any tine, the description of a record type does not include any structural information.  Rather, it includes descriptive information, and association with default view and list presentations (other view and list presentations can be used, but must be explicitly selected).
+In keeping with the idea that properties can be added to any data record at any time, the description of a record type does not include any structural information.  Rather, it includes descriptive information, and association with default view and list presentations (other view and list presentations can be used, but must be explicitly selected).
 
+Although record types do not constrain the structure of records, they do define some structure-dependent options that affect the way they are processed:
+
+. each type can indicate any number of supertype URIs.  When lists or view fields are defined to include a particular type, all subtypes of that type (i.e. all types for which the designated type is a supertype) are also included.  This affects entity lists and drop-down lists for enumerated values in entity editing views.
+
+. each type can indicate any number of field aliases.  This allows certain field property URIs to be recognized as aliases for some more commonly used URIs.  For example, `foaf:name` considered as an an instance of `rdfs:label` means that records describing a `foaf:Person` can be included in lists of entities with labels defined by `rdfs:label`.
 
 === Record views
 

@@ -5,21 +5,21 @@
 , "rdfs:label":                 "List fields"
 , "rdfs:comment":               "Description of list of fields"
 , "annal:display_type":         "List"
-, "annal:default_view":         "Field_view"
-, "annal:default_type":         "_field"
+, "annal:default_view":         "_view/Field_view"
+, "annal:default_type":         "_type/_field"
 , "annal:list_entity_selector": "'annal:Field' in [@type]"
 , "annal:record_type":          "annal:Field"
 , "annal:list_fields":
-  [ { "annal:field_id":             "Entity_id"
+  [ { "annal:field_id":             "_field/Entity_id"
     , "annal:field_placement":      "small:0,4;medium:0,3"
     }
-  , { "annal:field_id":             "Field_render"
+  , { "annal:field_id":             "_field/Field_render"
     , "annal:field_placement":      "small:4,4;medium:3,3"
     }
-  , { "annal:field_id":             "Field_type"
+  , { "annal:field_id":             "_field/Field_type"
     , "annal:field_placement":      "small:0,12,hide;medium:6,3"
     }
-  , { "annal:field_id":             "Entity_label"
+  , { "annal:field_id":             "_field/Entity_label"
     , "annal:field_placement":      "small:8,4;medium:9,3"
     }
   ]

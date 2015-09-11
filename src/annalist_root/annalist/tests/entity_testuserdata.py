@@ -206,7 +206,7 @@ def annalistuser_view_form_data(
 
 def annalistuser_delete_form_data(user_id=None, list_id="Default_list"):
     return (
-        { 'list_choice':        list_id
+        { 'list_choice':        "_list/"+list_id
         , 'continuation_url':   ""
         , 'search_for':         ""
         , 'entity_select':      ["_user/%s"%(user_id)]

@@ -27,11 +27,12 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.uri_builder     import uri_params, uri_with_params
-from annalist.views.defaultlist     import EntityDefaultListView
+from annalist.views.uri_builder             import uri_params, uri_with_params
+from annalist.views.defaultlist             import EntityDefaultListView
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site
+from tests                          import init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     site_dir, collection_dir, 
@@ -59,14 +60,15 @@ from entity_testentitydata          import (
     entitylist_form_data
     )
 from entity_testsitedata            import (
-    get_site_types, get_site_types_sorted,
-    get_site_lists, get_site_lists_sorted,
+    get_site_types, get_site_types_sorted, get_site_types_linked,
+    get_site_lists, get_site_lists_sorted, get_site_lists_linked,
+    get_site_views, get_site_views_sorted, get_site_views_linked,
     get_site_list_types, get_site_list_types_sorted,
-    get_site_views, get_site_views_sorted,
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
+from entity_testlistdata            import recordlist_url
 
 
 #   -----------------------------------------------------------------------------
@@ -78,7 +80,7 @@ from entity_testsitedata            import (
 
 class EntityDefaultListViewTest(AnnalistTestCase):
     """
-    Tests for record type edit views
+    Tests for default list views
     """
 
     def setUp(self):
@@ -95,7 +97,12 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         e4 = EntityData.create(self.testdata2, "entity4", 
             entitydata_create_values("entity4", type_id="testtype2")
             )
-        self.initial_list_ids = get_site_lists()
+        self.type_ids = get_site_types_linked("testcoll")
+        self.type_ids.append(FieldChoice("testtype", 
+                label="RecordType testcoll/testtype",
+                link=recordtype_url("testcoll", "testtype")
+            ))
+        self.list_ids = get_site_lists_linked("testcoll")
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -104,6 +111,12 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        # resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
@@ -134,16 +147,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>List entities with type information</h3>", html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         cont = uri_params({"continuation_url": u})
-        # rowdata = """
-        #     <tr class="select-row">
-        #         <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a></td>
-        #         <td class="small-2 columns"><a href="%(base)s/c/testcoll/d/_type/testtype/%(cont)s">testtype</a></td>
-        #         <td class="small-8 columns">Entity testcoll/testtype/entity1</td>
-        #         <td class="select-row">
-        #             <input type="checkbox" name="entity_select" value="testtype/entity1" />
-        #         </td>
-        #     </tr>
-        #     """%({'base': TestBasePath, 'cont': cont})
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -156,7 +159,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
                   </div>
                   <div class="view-value small-2 columns">
-                    <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">testtype</a>
+                    <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">RecordType testcoll/testtype</a>
                   </div>
                   <div class="view-value small-7 columns">
                     <span>Entity testcoll/testtype/entity1</span>
@@ -173,7 +176,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          None)
         list_choices = r.context['list_choices']
-        self.assertEqual(set(list_choices.options),    set(self.initial_list_ids))
+        self.assertEqual(set(list_choices.options),    set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Default_list_all")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
 
@@ -280,7 +283,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         list_choices = r.context['list_choices']
-        self.assertEqual(set(list_choices.options),     set(self.initial_list_ids))
+        self.assertEqual(set(list_choices.options),     set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Default_list")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields

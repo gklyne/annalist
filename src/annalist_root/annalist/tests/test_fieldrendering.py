@@ -32,7 +32,7 @@ from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
 from annalist.views.fields.render_text          import RenderText
 from annalist.views.fields.render_fieldvalue    import RenderFieldValue, get_template
 
-from tests                      import init_annalist_test_site
+from tests                      import init_annalist_test_site, resetSitedata
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from field_rendering_support    import FieldRendererTestSupport
 
@@ -58,6 +58,12 @@ class FieldRenderingTest(FieldRendererTestSupport):
         return
 
     def tearDown(self):
+        # resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def _get_repeatgroup_context(self):
@@ -145,10 +151,11 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="0" class="right" />'''
             , '''<select name="View_fields__0__Field_id">'''+
-              ''' <option>Entity_comment</option>'''+
-              ''' <option selected="selected">Entity_id</option>'''+
-              ''' <option>Entity_label</option>'''+
-              ''' <option>Entity_type</option>'''+
+              ''' <option value="">(field sel)</option>'''+
+              ''' <option value="_field/Entity_comment">Comment</option>'''+
+              ''' <option value="_field/Entity_id" selected="selected">Id</option>'''+
+              ''' <option value="_field/Entity_label">Label</option>'''+
+              ''' <option value="_field/Entity_type">Type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__0__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -157,10 +164,11 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="1" class="right" />'''
             , '''<select name="View_fields__1__Field_id">'''+
-              ''' <option>Entity_comment</option>'''+
-              ''' <option>Entity_id</option>'''+
-              ''' <option>Entity_label</option>'''+
-              ''' <option selected="selected">Entity_type</option>'''+
+              ''' <option value="">(field sel)</option>'''+
+              ''' <option value="_field/Entity_comment">Comment</option>'''+
+              ''' <option value="_field/Entity_id">Id</option>'''+
+              ''' <option value="_field/Entity_label">Label</option>'''+
+              ''' <option value="_field/Entity_type" selected="selected">Type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__1__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -169,10 +177,11 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="2" class="right" />'''
             , '''<select name="View_fields__2__Field_id">'''+
-              ''' <option>Entity_comment</option>'''+
-              ''' <option>Entity_id</option>'''+
-              ''' <option selected="selected">Entity_label</option>'''+
-              ''' <option>Entity_type</option>'''+
+              ''' <option value="">(field sel)</option>'''+
+              ''' <option value="_field/Entity_comment">Comment</option>'''+
+              ''' <option value="_field/Entity_id">Id</option>'''+
+              ''' <option value="_field/Entity_label" selected="selected">Label</option>'''+
+              ''' <option value="_field/Entity_type">Type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__2__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -181,10 +190,11 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="3" class="right" />'''
             , ''' <select name="View_fields__3__Field_id">'''+
-              ''' <option selected="selected">Entity_comment</option>'''+
-              ''' <option>Entity_id</option>'''+
-              ''' <option>Entity_label</option>'''+
-              ''' <option>Entity_type</option>'''+
+              ''' <option value="">(field sel)</option>'''+
+              ''' <option value="_field/Entity_comment" selected="selected">Comment</option>'''+
+              ''' <option value="_field/Entity_id">Id</option>'''+
+              ''' <option value="_field/Entity_label">Label</option>'''+
+              ''' <option value="_field/Entity_type">Type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__3__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+

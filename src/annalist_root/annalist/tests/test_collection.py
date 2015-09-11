@@ -30,7 +30,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.views.collection      import CollectionEditView
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import dict_to_str, init_annalist_test_site
+from tests                          import dict_to_str, init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     site_dir, collection_dir,
@@ -105,6 +105,12 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        # resetSitedata(scope="collections")
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
         return
 
     def test_CollectionTest(self):
@@ -324,6 +330,11 @@ class CollectionEditViewTest(AnnalistTestCase):
     def tearDown(self):
         return
 
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
+        return
+
     def test_CollectionEditViewTest(self):
         self.assertEqual(CollectionEditView.__name__, "CollectionEditView", "Check CollectionView class name")
         return
@@ -384,9 +395,9 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertEquals(r.context['title'],   "Collection coll1")
         self.assertEquals(r.context['coll_id'], "coll1")
-        self.assertEquals(r.context['types'],   ["type1", "type2"])
-        self.assertEquals(r.context['lists'],   ["list1", "list2"])
-        self.assertEquals(r.context['views'],   ["view1", "view2"])
+        self.assertEquals([e.get_id() for e in r.context['types']],   ["type1", "type2"])
+        self.assertEquals([e.get_id() for e in r.context['lists']],   ["list1", "list2"])
+        self.assertEquals([e.get_id() for e in r.context['views']],   ["view1", "view2"])
         self.assertEquals(r.context['select_rows'], "6")
         return
 

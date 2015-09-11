@@ -2,7 +2,7 @@
 , "@type":                      ["annal:Field"]
 , "annal:id":                   "Bib_type"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Type"
+, "rdfs:label":                 "Publication type"
 , "rdfs:comment":               "The type of publication."
 , "annal:field_render_type":    "Enum"
 , "annal:field_value_mode":     "Value_direct"

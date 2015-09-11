@@ -9,4 +9,6 @@
 , "annal:field_value_type":     "annal:Richtext"
 , "annal:placeholder":          "(description)"
 , "annal:property_uri":         "rdfs:comment"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
 }

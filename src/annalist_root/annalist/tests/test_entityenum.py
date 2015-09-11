@@ -26,7 +26,7 @@ from annalist.models.recordenum     import RecordEnumBase, RecordEnumFactory
 
 from entity_testutils               import collection_dir, site_view_url, site_title
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site
+from tests                          import init_annalist_test_site, resetSitedata
 from AnnalistTestCase               import AnnalistTestCase
 
 #   -----------------------------------------------------------------------------
@@ -120,6 +120,11 @@ class RecordEnumTest(AnnalistTestCase):
     def tearDown(self):
         return
 
+    @classmethod
+    def tearDownClass(cls):
+        resetSitedata()
+        return
+
     def test_RecordEnumTest(self):
         self.assertEqual(self.testenum.__name__, "testenum", "Check enumeration class name")
         return
@@ -146,6 +151,7 @@ class RecordEnumTest(AnnalistTestCase):
         self.assertEqual(e._entityurl,      TestHostUri + recordenum_url("testenum2", coll_id="testcoll", type_id="_enum"))
         self.assertEqual(e._entitydir,      recordenum_dir("testenum2", coll_id="testcoll", type_id="_enum"))
         self.assertEqual(e._values,         None)
+        resetSitedata()
         return
 
     def test_recordenum1_data(self):

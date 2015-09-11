@@ -9,19 +9,26 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+import traceback
 import re
 
-from urlparse       import urljoin  # py3: from urllib.parse ...
-from collections    import OrderedDict, namedtuple
+from urlparse               import urljoin  # py3: from urllib.parse ...
+from collections            import OrderedDict, namedtuple
 
-from django.conf                    import settings
+from django.conf            import settings
 
-from annalist.identifiers           import RDFS, ANNAL
+from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
+from annalist.identifiers   import RDFS, ANNAL
+from annalist.util          import split_type_entity_id
 
-from annalist.models.entitytypeinfo import EntityTypeInfo
-from annalist.models.entity         import EntityRoot
+from annalist.models.entitytypeinfo         import EntityTypeInfo
+from annalist.models.entity                 import EntityRoot
 
-from annalist.views.uri_builder     import uri_params, uri_with_params, continuation_params
+from annalist.views.uri_builder             import (
+    uri_params, uri_with_params, continuation_params
+    )
+from annalist.views.form_utils.fieldchoice  import FieldChoice
+
 
 class bound_field(object):
     """
@@ -141,6 +148,8 @@ class bound_field(object):
             return self.entity_type_link+self.get_continuation_param()
         elif name == "continuation_url":
             return self.get_continuation_url()
+        elif name == "continuation_param":
+            return self.get_continuation_param()
         elif name == "field_description":
             return self._field_description
         elif name == "field_value_key":
@@ -174,10 +183,16 @@ class bound_field(object):
     def get_field_link(self):
         # Return link corresponding to field value that is a selection from an enumeration of entities
         # (or some other value with an associated link), or None
-        links = self._field_description['field_choice_links']
-        v     = self.field_value
-        if links and v in links:
-            return links[v]
+        #@@
+        # links = self._field_description['field_choice_links']
+        # v     = self.field_value
+        # if links and v in links:
+        #     return links[v]
+        #@@
+        choices = self._field_description['field_choices']  # OrderedDict
+        v       = self.field_value
+        if choices and v in choices:
+            return choices[v].link
         return None
 
     def get_target_value(self):
@@ -242,24 +257,53 @@ class bound_field(object):
         log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
         if self._targetvals is None:
             if target_type:
+                # Extract entity_id and type_id; default to type id from field descr
+                type_id, entity_id = split_type_entity_id(self.get_field_value(), target_type)
                 # Get entity type info
                 #@@TODO: eliminate site param...
-                coll           = self._field_description._collection
-                targettypeinfo = EntityTypeInfo(coll.get_site(), coll, target_type)
+                coll     = self._field_description._collection
+                typeinfo = EntityTypeInfo(coll.get_site(), coll, type_id)
                 # Check access permission, assuming user has "VIEW" permission in current collection
                 # This is primarily to prevent a loophole for accessing user account details
                 #@@TODO: pass actual user permissions in to bound_field or field description or extra params
                 user_permissions = ["VIEW"]
-                req_permissions  = list(set( targettypeinfo.permissions_map[a] for a in ["view", "list"] ))
+                req_permissions  = list(set( typeinfo.permissions_map[a] for a in ["view", "list"] ))
                 if all([ p in user_permissions for p in req_permissions]):
-                    target_id        = self.get_field_value()
-                    self._targetvals = get_entity_values(targettypeinfo, targettypeinfo.get_entity(target_id))
+                    if entity_id is None or entity_id == "":
+                        raise TargetIdNotFound_Error(value=(typeinfo.type_id, self.field_name))
+                    targetentity = typeinfo.get_entity(entity_id)
+                    if targetentity is None:
+                        raise TargetEntityNotFound_Error(value=(target_type, entity_id))
+                    self._targetvals = get_entity_values(typeinfo, targetentity)
                     log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
                 else:
                     log.warning(
                         "bound_field.get_targetvals: target value type %s requires %r permissions"%
                         (target_type, req_permissions)
                         )
+                # # Get entity type info
+                # #@@TODO: eliminate site param...
+                # coll           = self._field_description._collection
+                # targettypeinfo = EntityTypeInfo(coll.get_site(), coll, target_type)
+                # # Check access permission, assuming user has "VIEW" permission in current collection
+                # # This is primarily to prevent a loophole for accessing user account details
+                # #@@TODO: pass actual user permissions in to bound_field or field description or extra params
+                # user_permissions = ["VIEW"]
+                # req_permissions  = list(set( targettypeinfo.permissions_map[a] for a in ["view", "list"] ))
+                # if all([ p in user_permissions for p in req_permissions]):
+                #     target_id    = self.get_field_value()
+                #     if target_id is None or target_id == "":
+                #         raise TargetIdNotFound_Error(value=(targettypeinfo.type_id, self.field_name))
+                #     targetentity = targettypeinfo.get_entity(target_id)
+                #     if targetentity is None:
+                #         raise TargetEntityNotFound_Error(value=(targettypeinfo.type_id, target_id))
+                #     self._targetvals = get_entity_values(targettypeinfo, targetentity)
+                #     log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
+                # else:
+                #     log.warning(
+                #         "bound_field.get_targetvals: target value type %s requires %r permissions"%
+                #         (target_type, req_permissions)
+                #         )
         log.debug("bound_field.get_targetvals: targetvals %r"%(self._targetvals,))
         return self._targetvals
 
@@ -297,8 +341,14 @@ class bound_field(object):
         return chere
 
     def get_field_options(self):
-        options = self._field_description['field_choice_labels']
-        options = options.values() if options is not None else ["(no options)"]
+        #@@
+        # options = self._field_description['field_choice_labels']  # OrderedDict
+        # options = options.values() if options is not None else ["(no options)"]
+        #@@
+        options = self._field_description['field_choices']      # OrderedDict
+        options = ( options.values() if options is not None else 
+                    [ FieldChoice('', label="(no options)") ]
+                  )
         return options
 
     def __getitem__(self, name):
@@ -323,6 +373,7 @@ class bound_field(object):
         yield "target_value_link"
         yield "target_value_link_continuation"
         yield "continuation_url"
+        yield "continuation_param"
         yield "options"
         for k in self._field_description:
             yield k
@@ -389,6 +440,12 @@ def get_entity_values(typeinfo=None, entity=None, entity_id=None):
     #@@ typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
     if typeinfo and typeinfo.recordtype:
         entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
+    # This is red herring:  working version also has this
+    # else:
+    #     log.error("get_entity_values: No recordtype: typeinfo %r"%(typeinfo,))
+    #     log.error("get_entity_values: No recordtype: entity id %s/%s"%(type_id,entity_id))
+    #     log.error("get_entity_values: No recordtype: entity %r"%(entity,))
+    #     traceback.print_stack()
     return entityvals
 
 if __name__ == "__main__":
