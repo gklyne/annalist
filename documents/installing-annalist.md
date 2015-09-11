@@ -32,7 +32,7 @@ If Annalist Docker containers have been used previously on the host system, the 
 If this is the first time Annalist has been run on this system, create a new Annalist site data container:
 
     docker run --name=annalist_site --detach gklyne/annalist_site
-
+    
 Then
 
     docker run --interactive --tty --rm \
