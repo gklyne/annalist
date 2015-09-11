@@ -51,14 +51,16 @@
         cp ~annalist/uploads/pages/index.html /var/www
 - [x] Commit changes
 - [x] Upload to PyPI (see below)
-- [ ] Tag release on release branch
+- [x] Tag release on release branch
     - `git tag -a release-x.y.z`
-- [ ] Merge release branch to master
+- [x] Merge release branch to master
     - e.g.
         - `git checkout master`
         - `git merge release-prep-x.y.z`
-- [ ] Test again on master branch
-- [ ] Push master branch, and tags
+- [x] Test again on master branch
+- [x] Push master branch, and tags
+    - `git add ..`
+    - `git commit -m "Master branch updated to Vx.y.z"`
     - `git push`
     - `git push --tags`
 - [ ] Merge release branch to develop
