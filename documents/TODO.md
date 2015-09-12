@@ -14,14 +14,37 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 # Version 0.1.19, towards 0.1.20
 
-- [ ] Usability: 3 key tasks need to be easier (at the level of a single form fill-out):
-    - [ ] Create a new type+view+list, suitably interconnected
-    - [x] Define a new field type and add to a view
-    - [ ] Create repeating fields in a view.  (a) Define a repeating field type and add to view, or (b) define a repeating group containing an existing field type, and add to a view. (a) could a checkbox choice on the previous task.  See also: [#41](https://github.com/gklyne/annalist/issues/41)
-    - Currently it gets tedious creating view forms with repeated fields; need to figure a way to streamline this.
-    - See also discussion below of introducing "tasks" - this would be an early candidate for that.
-    - Need to think how the interface would work.  Option to add "task" button to any form?
-- [ ] Simplified field-definition interface (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
+Usability: key tasks need to be easier (at the level of a single form fill-out):
+- Create a new type+view+list, suitably interconnected
+- Create repeating fields in a view
+- Create multifield reference in a view/group
+- See also: [#41](https://github.com/gklyne/annalist/issues/41)
+- See also discussion below of introducing generic "tasks" - this would be an early pathfinder for that.
+
+- [ ] Create a new type+view+list, suitably interconnected
+    - [x] Add task-button description to view description for type; use structure for repeat values
+        - For each: Button Id, button label
+    - [x] Render task buttons on view (generic logic)
+        - [x] Add button rendering to edit template
+        - [x] Update view template to match
+        - [x] Add button details to view context for rendering
+        - [x] Add test to render test in test_recordtype
+    - [ ] Add logic to catch and dispatch view+list task-button click
+    - [ ] Add logic to create/update view+list from type form data
+        - hand-coded for now
+    - [ ] Create test case(s)
+- [ ] Create repeating fields in a view.
+    - [ ] Add task button to field definition form: define repeat field
+    - [ ] Add logic to catch and dispatch define-repeat click
+    - [ ] Add logic to create repeat group that references current field
+    - [ ] Add logic to create repeat field that references group
+    - [ ] Create test case(s)
+- [ ] Create multifield reference fields in a view or group.
+    - [ ] Add task button to field definition form: define field reference
+    - [ ] Add logic to catch and dispatch define-multifield click
+    - [ ] Add logic to create multifield group that references current field
+    - [ ] Add logic to create multifield reference field that references group
+    - [ ] Create test case(s)
 
 (release?)
 
@@ -134,6 +157,7 @@ Technical debt:
 
 Usability notes:
 
+- [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
 - [ ] Persist item selection to refreshed display when move-up/movedown clicked?
 - [ ] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
 - [ ] OR... allow an entity to specify its own default view?

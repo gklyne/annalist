@@ -112,6 +112,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
     , "field_render_type", "field_value_mode", "field_entity_type"
     , "field_value_type", "field_target_type"
     , "group_ref", "repeat_label_add", "repeat_label_delete"
+    , "task_buttons", "button_id", "button_label"
     # Deprecated properties - in migration tables
     , "options_typeref", "restrict_values", "target_field"
     ])

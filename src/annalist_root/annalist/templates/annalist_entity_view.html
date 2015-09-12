@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <div class="small-6 columns">
+        <div class="small-4 columns">
           <div class="row">
             <div class="form-buttons small-12 columns">
               <input type="submit" name="edit"             value="Edit" />
@@ -37,19 +37,16 @@
             </div>
           </div>
         </div>
-        {% if auth_config and edit_view_button and edit_view_button != "no" %}
-        <div class="small-4 columns">
+        <div class="small-6 columns">
           <div class="row">
             <div class="form-buttons small-12 columns text-right">
-              <input type="submit" name="open_view"     value="View description" />
+              &nbsp;
+              {% if auth_config and edit_view_button and edit_view_button != "no" %}
+              <input type="submit" name="open_view"        value="View description" />
+              {% endif %}
             </div>
           </div>
         </div>
-        {% else %}
-        <div class="small-3 columns">
-          &nbsp;
-        </div>
-        {% endif %}
       </div>
 
       <hr />

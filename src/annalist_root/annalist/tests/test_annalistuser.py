@@ -388,7 +388,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                 </div>
               </div>
             </div>
-            """%field_vals(width=6)
+            """%field_vals(width=4)
         # log.info(r.content)
         self.assertContains(r, formrow1,  html=True)
         self.assertContains(r, formrow2,  html=True)

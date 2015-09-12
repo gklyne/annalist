@@ -285,7 +285,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                 </div>
               </div>
             </div>
-            """%field_vals(width=6)
+            """%field_vals(width=4)
         # formrow5c = """
         #     <div class="%(button_wide_classes)s">
         #       <div class="row">

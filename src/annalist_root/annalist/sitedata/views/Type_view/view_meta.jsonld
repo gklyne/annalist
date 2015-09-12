@@ -32,4 +32,9 @@
     , "annal:field_placement":  "small:0,12"
     }
   ]
+, "annal:task_buttons":
+  [ { "annal:button_id":        "_task/Define_view_list" 
+    , "annal:button_label":     "Define view+list"
+    }
+  ]
 }

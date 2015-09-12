@@ -509,11 +509,37 @@ class DisplayInfo(object):
             context.update(
                 { 'view_label': self.recordview[RDFS.CURIE.label]
                 })
+            task_buttons = self.recordview.get(ANNAL.CURIE.task_buttons, None)
+            self.add_task_button_context(task_buttons, context)
         if self.recordlist:
             context.update(
                 { 'list_label': self.recordlist[RDFS.CURIE.label]
                 })
         return context
+
+    def add_task_button_context(self, task_buttons, context):
+        """
+        Adds context values to a supplied context dictionary corresponding 
+        to the supplied task_buttons value(s) from a view description.
+
+        @NOTE: subsequent versions of this function may extract values from
+        an identified task description record.
+        """
+        if isinstance(task_buttons, list):
+            context.update(
+                { 'task_buttons':
+                    [ { 'button_id':    b[ANNAL.CURIE.button_id]
+                      , 'button_name':  extract_entity_id(b[ANNAL.CURIE.button_id])
+                      , 'button_label': b[ANNAL.CURIE.button_label]
+                      } for b in task_buttons
+                    ]
+                })
+        elif task_buttons is not None:
+            log.error(
+                "DisplayInfo.context_data: Unexpected value for task_buttons: %r"%
+                (task_buttons)
+                )
+        return
 
     def __str__(self):
         attrs = (

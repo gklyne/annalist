@@ -292,7 +292,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
                 </div>
               </div>
             </div>
-            """%field_vals(width=6)
+            """%field_vals(width=4)
         formrow7c = """
             <div class="%(button_wide_classes)s">
               <div class="row">

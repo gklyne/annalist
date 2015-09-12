@@ -455,6 +455,16 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                 </div>
               </div>
             </div>
+            """%field_vals(width=4)
+        formrow5c = """
+            <div class="%(button_wide_classes)s">
+              <div class="row">
+                <div class="%(button_right_classes)s">
+                  &nbsp;
+                  <input name="Define_view_list" value="Define view+list" type="submit">
+                </div>
+              </div>
+            </div>
             """%field_vals(width=6)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
@@ -462,6 +472,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow4, html=True)
         self.assertContains(r, formrow5a, html=True)
         self.assertContains(r, formrow5b, html=True)
+        self.assertContains(r, formrow5c, html=True)
         return
 
     def test_get_new(self):
