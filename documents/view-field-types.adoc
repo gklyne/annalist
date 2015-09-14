@@ -72,9 +72,15 @@ A default property CURIE or URI can be specified as part of the field descriptio
 
 Used to specifying the position of of a field in a form display, specified in terms of width and horizontal placement on a responsive display grid <sup>1,2</sup>.
 
-Internally, the placement is stored as a specially formatted string.  It is presenrted for viewing as a rough visual indication of the filed placement, and for  editing as a dropdown list of options.
+Internally, the placement is stored as a specially formatted string.  It is presented for viewing as a rough visual indication of the filed placement, and for editing as a dropdown list of options.
 
 Default placement can be specified as part of the field description, and overridden when the field is included in a particular view.
+
+Normal field placement uses the indicated field width on larger displays, and uses the full widthj of smaller displays.
+
+Also offered are "column" placement values that use the indicated width on display of all sizes - these should be used with care as values can easily overflow the available field widthj on smaller displays.  They are intended to be used with list displays where the columns present a one-line summary of the record contents.
+
+@@NOTE As of release 0.1.18, the current implementation does not fully implement field positioning:  the width provided is used, but the position is ignored, so if there are gaps in a row the next field may appear in a location other than that requested by the placement.  This should be adressed in a future release.
 
 === Field renderer type (`Field_render`)
 

@@ -33,6 +33,7 @@ UPLOAD_DONE_DETAIL          = ("Uploaded <%(uploaded_file)s>"+
 #                                " as %(import_name)s"+
 #                                " for entity %(type_id)s/%(id)s")
 UNEXPECTED_FORM_DATA        = "Unexpected form data: %r"
+UNKNOWN_TASK_ID             = "Unknown task Id in form response: %s"
 MISSING_COLLECTION_ID       = "Missing identifier for new collection"
 INVALID_COLLECTION_ID       = "Invalid identifier for new collection: '%(coll_id)s'"
 CREATED_COLLECTION_ID       = "Created new collection: '%(coll_id)s'"

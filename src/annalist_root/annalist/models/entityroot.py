@@ -495,6 +495,18 @@ class EntityRoot(object):
         # log.info("entityroot.get key %r, self._values %r"%(key, self._values))
         return self[key] if self._values and key in self._values else default
 
+    def setdefault(self, key, default):
+        """
+        Equivalent to dict.setdefault() function, 
+        except that blank values also are overridden
+        """
+        if self._values and key in self._values and self._values[key]:
+            result = self._values[key]
+        else:
+            self._values[key] = default
+            result = default
+        return result
+
     def __getitem__(self, k):
         """
         Allow direct indexing to access collection metadata value fields

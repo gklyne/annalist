@@ -21,6 +21,8 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 - See also: [#41](https://github.com/gklyne/annalist/issues/41)
 - See also discussion below of introducing generic "tasks" - this would be an early pathfinder for that.
 
+- [x] BUG: view types > view type > task button > (error) > Cancel.  Returns to type list rather than view of edited type.
+- [x] BUG: extend render placement to handle list columns defined for small only
 - [ ] Create a new type+view+list, suitably interconnected
     - [x] Add task-button description to view description for type; use structure for repeat values
         - For each: Button Id, button label
@@ -29,7 +31,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
         - [x] Update view template to match
         - [x] Add button details to view context for rendering
         - [x] Add test to render test in test_recordtype
-    - [ ] Add logic to catch and dispatch view+list task-button click
+    - [x] Add logic to catch and dispatch view+list task-button click
     - [ ] Add logic to create/update view+list from type form data
         - hand-coded for now
     - [ ] Create test case(s)

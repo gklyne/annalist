@@ -365,6 +365,7 @@ class EntityTypeInfo(object):
             (entity_id, self.entityparent, self.entityaltparent, action)
             )
         entity = None
+        entity_id = extract_entity_id(entity_id)
         if valid_id(entity_id):
             if action == "new":
                 entity = self._new_entity(entity_id)
@@ -373,7 +374,21 @@ class EntityTypeInfo(object):
             elif self.entityclass.exists(
                     self.entityparent, entity_id, altparent=self.entityaltparent
                     ):
-                entity = self.entityclass.load(self.entityparent, entity_id, altparent=self.entityaltparent)
+                entity = self.entityclass.load(
+                    self.entityparent, entity_id, altparent=self.entityaltparent
+                    )
+        return entity
+
+    def get_create_entity(self, entity_id):
+        """
+        Read or create an entity with the indicated entity_id.
+
+        If the identified entity does not already exist, a new entity is created 
+        and returned, but not (yet) saved.
+        """
+        entity = self.get_entity(entity_id)
+        if entity is None:
+            entity = self.get_entity(entity_id, action="new")
         return entity
 
     # @@TODO: rename inferred -> implied

@@ -297,21 +297,39 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][7]['field_label'], 'Record type URI')
         self.assertEqual(r.context['fields'][7]['field_value'], list_target_type)
         # 9th field - list of fields from target entity for each list entry
-        expect_field_data = (
-            [ { 'annal:field_id':             "_field/Entity_id"
-              , 'annal:field_placement':      "small:0,3"
-              }
-            , { 'annal:field_id':             "_field/Entity_label"
-              , 'annal:field_placement':      "small:3,9"
-              }
-            ])
+        if num_fields == 2:
+            expect_field_data = (
+                [ { "annal:field_id":         "_field/Entity_id" 
+                  , "annal:field_placement":  "small:0,3"
+                  } 
+                , { "annal:field_id":         "_field/Entity_label" 
+                  , "annal:field_placement":  "small:3,9"
+                  } 
+                ])
+        elif num_fields == 3:
+            expect_field_data = (
+                [ { "annal:field_id":         "_field/Entity_id" 
+                  , "annal:field_placement":  "small:0,3"
+                  } 
+                , { "annal:field_id":         "_field/Entity_type" 
+                  , "annal:field_placement":  "small:3,3"
+                  } 
+                , { "annal:field_id":         "_field/Entity_label" 
+                  , "annal:field_placement":  "small:6,6"
+                  } 
+                ])
+        else:
+            self.fail(
+                "_check_list_view_context_fields expect num_fields 2 or 3, got %d"
+                %(num_fields,)
+                )
         self.assertEqual(r.context['fields'][8]['field_id'],           'List_fields')
         self.assertEqual(r.context['fields'][8]['field_name'],         'List_fields')
         self.assertEqual(r.context['fields'][8]['field_label'],        'Fields')
         self.assertEqual(r.context['fields'][8]['field_property_uri'], "annal:list_fields")
         self.assertEqual(r.context['fields'][8]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][8]['field_target_type'],  "annal:Field_group")
-        self.assertEqual(len(r.context['fields'][8]['field_value']),   2)
+        self.assertEqual(len(r.context['fields'][8]['field_value']),   num_fields)
         self.assertEqual(r.context['fields'][8]['field_value'],        expect_field_data)
         self.assertEqual(r.context['fields'][8]['options'],            self.no_options)
         return
@@ -470,7 +488,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         # Fields
         self._check_list_view_context_fields(r, 
             action="new",
-            num_fields=2,
+            num_fields=3,
             list_id="00000001",
             list_label=default_label("testcoll", "_list", "00000001"),
             list_help=default_comment("testcoll", "_list", "00000001"),

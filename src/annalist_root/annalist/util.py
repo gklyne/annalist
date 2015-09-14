@@ -40,6 +40,8 @@ def valid_id(id):
     False
     >>> valid_id("_annalist_collection")
     False
+    >>> valid_id("")
+    False
     """
     reserved = (
         [ "_annalist_site"

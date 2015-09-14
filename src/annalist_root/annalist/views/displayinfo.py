@@ -428,7 +428,8 @@ class DisplayInfo(object):
         """
         Return dictionary with continuation URL specified for the current request.
         """
-        return {'continuation_url': self.continuation_url} if self.continuation_url else {}
+        c = self.get_continuation_url()
+        return {'continuation_url': c} if c else {}
 
     def get_continuation_next(self):
         """
