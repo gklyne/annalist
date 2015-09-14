@@ -273,7 +273,7 @@ def recordtype_entity_view_context_data(
 def recordtype_entity_view_form_data(
         coll_id="testcoll", 
         type_id=None, orig_id=None, 
-        action=None, cancel=None, close=None, edit=None, copy=None, 
+        action=None, cancel=None, close=None, edit=None, copy=None, task=None,
         update="RecordType",
         type_uri=None
         ):
@@ -311,6 +311,8 @@ def recordtype_entity_view_form_data(
         form_data_dict['edit']      = "Edit"
     elif copy:
         form_data_dict['copy']      = "Copy"
+    elif task:
+        form_data_dict[task]        = task
     else:
         form_data_dict['save']      = "Save"
     if type_uri:

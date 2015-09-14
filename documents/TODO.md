@@ -23,7 +23,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 
 - [x] BUG: view types > view type > task button > (error) > Cancel.  Returns to type list rather than view of edited type.
 - [x] BUG: extend render placement to handle list columns defined for small only
-- [ ] Create a new type+view+list, suitably interconnected
+- [x] Create a new type+view+list, suitably interconnected
     - [x] Add task-button description to view description for type; use structure for repeat values
         - For each: Button Id, button label
     - [x] Render task buttons on view (generic logic)
@@ -32,9 +32,9 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
         - [x] Add button details to view context for rendering
         - [x] Add test to render test in test_recordtype
     - [x] Add logic to catch and dispatch view+list task-button click
-    - [ ] Add logic to create/update view+list from type form data
+    - [x] Add logic to create/update view+list from type form data
         - hand-coded for now
-    - [ ] Create test case(s)
+    - [x] Create test case(s)
 - [ ] Create repeating fields in a view.
     - [ ] Add task button to field definition form: define repeat field
     - [ ] Add logic to catch and dispatch define-repeat click
