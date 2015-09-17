@@ -23,6 +23,9 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 
 - [x] BUG: view types > view type > task button > (error) > Cancel.  Returns to type list rather than view of edited type.
 - [x] BUG: extend render placement to handle list columns defined for small only
+- [x] BUG: unclosed <div> in RepeatGroupRow renderer was causing formatting errors.  (Ugly but not fatal.)
+- [x] BUG: `<form action="" ...>` fails HTML validation.  Use `action="#"` instead.
+- [ ] When rendering missing entity reference in view mode, use alternative style/colour
 - [x] Create a new type+view+list, suitably interconnected
     - [x] Add task-button description to view description for type; use structure for repeat values
         - For each: Button Id, button label
@@ -41,6 +44,9 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
     - [ ] Add logic to create repeat group that references current field
     - [ ] Add logic to create repeat field that references group
     - [ ] Create test case(s)
+    - Repeat member pattern:
+        - (entity) -> (property) -> [ { 'annal:member' -> (entity) }, ... ]
+        - repeat group overrides property from field description
 - [ ] Create multifield reference fields in a view or group.
     - [ ] Add task button to field definition form: define field reference
     - [ ] Add logic to catch and dispatch define-multifield click
@@ -54,7 +60,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
     - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
     - [ ] JSON-LD @contexts support
     - [ ] Alternative RDF formats support (e.g. content negotiation)
-    - [ ] Cater for use of annal:member for repeated properties (see further TODOs below)?
+    - [ ] Cater for repeated properties (see further TODOs below)?
 
 (release?)
 
@@ -196,10 +202,16 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Extend task definitions to include validation: allow error reporting
 - [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
 - [ ] field renderer for unified import or upload resource?
 - [ ] `annal:member` - used to "lift" repeated values to the property that references a repeat group?
     - e.g. see /annalist/c/Carolan_Guitar/d/_field/Event_r/
+    - DOES NOT WORK:  if used to reference group, can only have one repeat group; if used to reference item, cannot use item field in isolation.
+    - Options (#1 looking favourite):
+        1. use same property for group and field; recognize and elide when generating/reading RDF?
+        2. use auto-generated unique property for group ref.  Can recognize for RDF?
+        3. group description to use 'annal:member' property override
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
     - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.
