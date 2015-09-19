@@ -25,6 +25,8 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 - [x] BUG: extend render placement to handle list columns defined for small only
 - [x] BUG: unclosed <div> in RepeatGroupRow renderer was causing formatting errors.  (Ugly but not fatal.)
 - [x] BUG: `<form action="" ...>` fails HTML validation.  Use `action="#"` instead.
+- [x] BUG: attempting to create new referenced entity while current entity Id is invalid gives a very obscure server error message (message with Save is sort-of OK).
+- [x] BUG: Edit referenced field button in edit view doesn't work if entity type has been changed to subtype.
 - [ ] When rendering missing entity reference in view mode, use alternative style/colour
 - [x] Create a new type+view+list, suitably interconnected
     - [x] Add task-button description to view description for type; use structure for repeat values
@@ -165,6 +167,7 @@ Technical debt:
 
 Usability notes:
 
+- [ ] Display entity-id *and* label values in drop-downs?  (e.g. "id (label)")
 - [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
 - [ ] Persist item selection to refreshed display when move-up/movedown clicked?
 - [ ] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
@@ -202,6 +205,8 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Pingbacks?  Cf. [prov-aq/#provenance-pingback](http://www.w3.org/TR/prov-aq/#provenance-pingback)
+- [ ] Option to scan for broken entity references (e.g., due to removal, renaming)
 - [ ] Extend task definitions to include validation: allow error reporting
 - [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
 - [ ] field renderer for unified import or upload resource?

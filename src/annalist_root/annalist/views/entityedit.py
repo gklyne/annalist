@@ -20,7 +20,7 @@ from annalist.identifiers               import RDFS, ANNAL
 from annalist.exceptions                import Annalist_Error
 from annalist                           import message
 from annalist.util                      import (
-    valid_id, extract_entity_id,
+    valid_id, split_type_entity_id, extract_entity_id,
     open_url, copy_resource_to_fileobj
     )
 
@@ -502,7 +502,11 @@ class GenericEntityEditView(AnnalistGenericView):
                 import_field=import_field,
                 responseinfo=responseinfo
                 )
-            return responseinfo.http_redirect(self, self.get_form_refresh_uri(viewinfo))
+            if not responseinfo.has_http_response():
+                responseinfo.set_http_response(
+                    HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
+                    )
+            return responseinfo.get_http_response()
 
         # Update or define new view or type (invoked from generic entity editing view)
         # Save current entity and redirect to view edit with new field added, and
@@ -555,10 +559,11 @@ class GenericEntityEditView(AnnalistGenericView):
         # New entity buttons
         #
         # These may use explicit button ids per the table below, or may be part of
-        # an enumered-value field used to create a new enumerated value instance.
+        # an enumerated-value field used to create a new referenced entity instance.
         #
         # In all cases, the current entity is saved and the browser is redirected 
-        # to a new page to enter details of a new entity of the appropriate type.
+        # to a new page to enter details of a new/updated entity of the appropriate 
+        # type.
         #
         new_button_map = (
             { 'new_type':  
@@ -587,28 +592,39 @@ class GenericEntityEditView(AnnalistGenericView):
 
         new_enum = self.find_new_enum(entityvaluemap, form_data)
         if new_enum:
-            new_type_id  = extract_entity_id(new_enum['field_ref_type'])
+            new_type_id    = extract_entity_id(new_enum['field_ref_type'])
             new_typeinfo = EntityTypeInfo(
                 viewinfo.site, viewinfo.collection, new_type_id
                 )
             new_view_id  = new_typeinfo.get_default_view_id()
 
-        if new_type_id is not None:
-            edit_entity_id = new_enum and extract_entity_id(new_enum.get('enum_value', None))
+        if new_type_id:
+            edit_entity_id = None
+            edit_type_id, edit_entity_id = split_type_entity_id(
+                new_enum and new_enum.get('enum_value', None), 
+                default_type_id=new_type_id)
             edit_action    = "new"
             edit_url_id    = "AnnalistEntityNewView"
             if edit_entity_id:
-                edit_action = "edit"
+                # Entity selected: edit (use type from selected entity)
+                edit_typeinfo = EntityTypeInfo(
+                    viewinfo.site, viewinfo.collection, edit_type_id
+                    )
+                edit_view_id  = edit_typeinfo.get_default_view_id()
+                edit_action   = "edit"
                 new_edit_url_base = self.view_uri("AnnalistEntityEditView",
                     coll_id=viewinfo.coll_id, 
-                    view_id=new_view_id, type_id=new_type_id, 
+                    view_id=edit_view_id, 
+                    type_id=edit_type_id, 
                     entity_id=edit_entity_id,
                     action=edit_action
                     )
             else:
+                # No entity selected: create new
                 new_edit_url_base = self.view_uri("AnnalistEntityNewView",
                     coll_id=viewinfo.coll_id, 
-                    view_id=new_view_id, type_id=new_type_id, 
+                    view_id=new_view_id, 
+                    type_id=new_type_id, 
                     action=edit_action
                     )
             responseinfo = self.save_invoke_edit_entity(
@@ -652,18 +668,21 @@ class GenericEntityEditView(AnnalistGenericView):
                     **context_extra_values
                     )
                 )
-            responseinfo.set_http_response(
-                HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
-                )
+            if not responseinfo.has_http_response():
+                responseinfo.set_http_response(
+                    HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
+                    )
             return responseinfo.get_http_response()
 
         # Remove Field(s), and redisplay
         remove_field = self.find_remove_field(entityvaluemap, form_data)
         if remove_field:
             if remove_field['remove_fields']:
-                http_response = self.update_repeat_field_group(
-                    viewinfo, remove_field, entityvaluemap, entityformvals, 
-                    **context_extra_values
+                responseinfo.set_http_response(
+                    self.update_repeat_field_group(
+                        viewinfo, remove_field, entityvaluemap, entityformvals, 
+                        **context_extra_values
+                        )
                     )
             else:
                 log.debug("form_response: No field(s) selected for remove_field")
@@ -674,9 +693,10 @@ class GenericEntityEditView(AnnalistGenericView):
                         error_message=messages['no_field_selected']
                         )
                     )
-            responseinfo.set_http_response(
-                HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
-                )
+            if not responseinfo.has_http_response():
+                responseinfo.set_http_response(
+                    HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
+                    )
             return responseinfo.get_http_response()
 
         # Move field and redisplay
@@ -695,9 +715,10 @@ class GenericEntityEditView(AnnalistGenericView):
                         error_message=messages['no_field_selected']
                         )
                     )
-            responseinfo.set_http_response(
-                HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
-                )
+            if not responseinfo.has_http_response():
+                responseinfo.set_http_response(
+                    HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
+                    )
             return responseinfo.get_http_response()
 
         # Task buttons
@@ -714,9 +735,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 responseinfo=responseinfo
                 )
             # Default refresh current display (if no other response provided)
-            responseinfo.set_http_response(
-                HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
-                )
+            if not responseinfo.has_http_response():
+                responseinfo.set_http_response(
+                    HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
+                    )
             return responseinfo.get_http_response()
 
         # Report unexpected form data
@@ -1272,14 +1294,15 @@ class GenericEntityEditView(AnnalistGenericView):
             viewinfo, entityvaluemap, entityvals, context_extra_values,
             responseinfo=responseinfo
             )
-        responseinfo.set_http_response(
-            self.invoke_edit_entity(
-                viewinfo, edit_perm,
-                config_edit_url, url_params, 
-                viewinfo.curr_type_id,
-                viewinfo.curr_entity_id or viewinfo.orig_entity_id
+        if not responseinfo.has_http_response():
+            responseinfo.set_http_response(
+                self.invoke_edit_entity(
+                    viewinfo, edit_perm,
+                    config_edit_url, url_params, 
+                    viewinfo.curr_type_id,
+                    viewinfo.curr_entity_id or viewinfo.orig_entity_id
+                    )
                 )
-            )
         return responseinfo
 
     def invoke_edit_entity(self, 
