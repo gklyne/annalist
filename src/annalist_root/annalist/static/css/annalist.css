@@ -413,7 +413,8 @@ div.columns.view-value > span.value-placeholder
     height:         1.4rem;
 }
 
-div.columns.view-value > span.value-missing
+div.columns.view-value > span.value-missing ,
+div.columns.view-value > span.value-blank
 {
     margin-top:     0rem;
     margin-bottom:  0rem;

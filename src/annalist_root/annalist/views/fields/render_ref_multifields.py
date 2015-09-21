@@ -61,6 +61,10 @@ view_multifield = (
         """
     })
 
+target_blank = """<span class="value-blank">%s</span>"""
+
+target_missing = """<span class="value-missing">%s</span>"""
+
 #   ----------------------------------------------------------------------------
 #
 #   Multi-field reference field label renderer for viewing
@@ -113,9 +117,9 @@ class RenderMultiFields_label(object):
             response_parts.append(self._template_body.render(context))
             response_parts.append(self._template_tail.render(context))
     except TargetIdNotFound_Error as e:
-        response_parts = [ str(e) ]
+        response_parts = [ target_blank%str(e) ]
     except TargetEntityNotFound_Error as e:        
-        response_parts = [ str(e) ]
+        response_parts = [ target_missing%str(e) ]
     except Exception as e:
         log.exception("Exception in RenderMultiFields_label.render")
         ex_type, ex, tb = sys.exc_info()
@@ -194,9 +198,9 @@ class RenderMultiFields_value(object):
             response_parts.append(self._template_body.render(context))
         response_parts.append(self._template_tail.render(context))
     except TargetIdNotFound_Error as e:
-        response_parts = [ str(e) ]
+        response_parts = [ target_blank%str(e) ]
     except TargetEntityNotFound_Error as e:        
-        response_parts = [ str(e) ]
+        response_parts = [ target_missing%str(e) ]
     except Exception as e:
         log.exception("Exception in RenderMultiFields_value.render")
         ex_type, ex, tb = sys.exc_info()

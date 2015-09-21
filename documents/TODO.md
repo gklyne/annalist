@@ -27,7 +27,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 - [x] BUG: `<form action="" ...>` fails HTML validation.  Use `action="#"` instead.
 - [x] BUG: attempting to create new referenced entity while current entity Id is invalid gives a very obscure server error message (message with Save is sort-of OK).
 - [x] BUG: Edit referenced field button in edit view doesn't work if entity type has been changed to subtype.
-- [ ] When rendering missing entity reference in view mode, use alternative style/colour
+- [x] When rendering missing entity reference in view mode, use alternative style/colour
 - [x] Create a new type+view+list, suitably interconnected
     - [x] Add task-button description to view description for type; use structure for repeat values
         - For each: Button Id, button label
@@ -205,6 +205,7 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Scrolling through views from list - e.g. Next/Prev item buttons? (Iris G)
 - [ ] Pingbacks?  Cf. [prov-aq/#provenance-pingback](http://www.w3.org/TR/prov-aq/#provenance-pingback)
 - [ ] Option to scan for broken entity references (e.g., due to removal, renaming)
 - [ ] Extend task definitions to include validation: allow error reporting
