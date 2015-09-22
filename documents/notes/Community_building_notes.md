@@ -2,9 +2,9 @@
 
 ## As of 2015-09-22
 
-Although Annalist development has been open from the outset, it has initially been conducted as a personal project with limited wider engagement.  Using Annalist with the [FAST](http://www.semanticaudio.ac.uk/) and [CREAM](https://blog.soton.ac.uk/cream/) projects has provided much valuable feedback to guide its development, but this collaboration has not been so far pressed beyond using Annalist as an information model prototyping tool.
+Although Annalist development has been open from the outset, it has initially been conducted as a personal project with limited wider engagement.  Using Annalist with the [FAST](http://www.semanticaudio.ac.uk/) and [CREAM](https://blog.soton.ac.uk/cream/) projects has provided much valuable feedback to guide its development, but these collaborations have not been so far pressed beyond using Annalist as an information model prototyping tool.
 
-A longer term goal has always been to try to develop Annalist as a community open source project.  The rough plan has been to develop the system to a viable "version 1" release, and then to promote its use more widely.  A concern has been that starting promotion too early, before it can readily be used by its target audience, will result in potential; users being turned off by poor early experiences.
+A longer term goal has always been to try to develop Annalist as a community open source project.  The rough plan has been to develop the system to a viable "version 1" release, and then to promote its use more widely.  A concern has been that starting promotion too early, before it can readily be used by its target audience, will result in potential users being turned off by poor early experiences.
 
 
 ## Community building strategy
@@ -20,7 +20,7 @@ I envisage a 3-pronged approach:
 
 ## Outline plan
 
-1. prepare a community project governance model and sustainability plan, and seek community review (use [Shuffl governance model](https://github.com/gklyne/shuffl/blob/wiki/OpenSourceSustainabilityPlan.md) as starting point)
+1. prepare a community project governance model and sustainability plan, and seek community review (use [Shuffl sustainability plan](https://github.com/gklyne/shuffl/blob/wiki/OpenSourceSustainabilityPlan.md) as starting point)
 
 2. approach existing contacts to identify possible pilot projects (e.g. HW-C, Zoology, Humanities, ResearchSpace, Marco, Manchester, ISA-tab, ...)
 
