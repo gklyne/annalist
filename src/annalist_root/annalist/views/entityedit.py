@@ -321,6 +321,18 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         return refresh_uri
 
+    def form_refresh_on_success(self, viewinfo, responseinfo):
+        """
+        Helper function returns HttpResponse value that refreshes the current
+        page (via redirect) if the supplied `responseinfo` indicates success, 
+        otherwise returns the indicated error response.
+        """
+        if not responseinfo.has_http_response():
+            responseinfo.set_http_response(
+                HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
+                )
+        return responseinfo.get_http_response()
+
     def get_view_entityvaluemap(self, viewinfo, entity_values):
         """
         Creates an entity/value map table in the current object incorporating
@@ -502,11 +514,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 import_field=import_field,
                 responseinfo=responseinfo
                 )
-            if not responseinfo.has_http_response():
-                responseinfo.set_http_response(
-                    HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
-                    )
-            return responseinfo.get_http_response()
+            return self.form_refresh_on_success(viewinfo, responseinfo)
 
         # Update or define new view or type (invoked from generic entity editing view)
         # Save current entity and redirect to view edit with new field added, and
@@ -668,11 +676,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     **context_extra_values
                     )
                 )
-            if not responseinfo.has_http_response():
-                responseinfo.set_http_response(
-                    HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
-                    )
-            return responseinfo.get_http_response()
+            return self.form_refresh_on_success(viewinfo, responseinfo)
 
         # Remove Field(s), and redisplay
         remove_field = self.find_remove_field(entityvaluemap, form_data)
@@ -693,11 +697,7 @@ class GenericEntityEditView(AnnalistGenericView):
                         error_message=messages['no_field_selected']
                         )
                     )
-            if not responseinfo.has_http_response():
-                responseinfo.set_http_response(
-                    HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
-                    )
-            return responseinfo.get_http_response()
+            return self.form_refresh_on_success(viewinfo, responseinfo)
 
         # Move field and redisplay
         move_field = self.find_move_field(entityvaluemap, form_data)
@@ -715,11 +715,7 @@ class GenericEntityEditView(AnnalistGenericView):
                         error_message=messages['no_field_selected']
                         )
                     )
-            if not responseinfo.has_http_response():
-                responseinfo.set_http_response(
-                    HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
-                    )
-            return responseinfo.get_http_response()
+            return self.form_refresh_on_success(viewinfo, responseinfo)
 
         # Task buttons
         #
@@ -734,12 +730,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 task_id=task_id,
                 responseinfo=responseinfo
                 )
-            # Default refresh current display (if no other response provided)
-            if not responseinfo.has_http_response():
-                responseinfo.set_http_response(
-                    HttpResponseRedirect(self.get_form_refresh_uri(viewinfo))
-                    )
-            return responseinfo.get_http_response()
+            return self.form_refresh_on_success(viewinfo, responseinfo)
 
         # Report unexpected form data
         # This shouldn't happen, but just in case...
