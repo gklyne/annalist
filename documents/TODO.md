@@ -28,7 +28,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 - [x] BUG: attempting to create new referenced entity while current entity Id is invalid gives a very obscure server error message (message with Save is sort-of OK).
 - [x] BUG: Edit referenced field button in edit view doesn't work if entity type has been changed to subtype.
 - [x] When rendering missing entity reference in view mode, use alternative style/colour
-- [ ] Don't include continuation URI with entity links in list, view, etc.?
+- [x] Don't include continuation URI with entity links in list, view, etc.?
 - [x] Create a new type+view+list, suitably interconnected
     - [x] Add task-button description to view description for type; use structure for repeat values
         - For each: Button Id, button label

@@ -155,6 +155,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
+        cont = ""
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -325,6 +326,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
+        cont = ""
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -455,6 +457,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
+        cont = ""
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -499,6 +502,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
+        cont = ""
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">

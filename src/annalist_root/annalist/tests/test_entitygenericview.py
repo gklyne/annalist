@@ -181,23 +181,13 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Collection testcoll</title>")
+        cont_uri = "?continuation_url=%s"%u + "%%3Fcontinuation_url=/xyzzy/"
+        cont_uri = ""
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
-            entity_url = (
-                "/testsite/c/testcoll/d/testtype/entity1/" +
-                "?continuation_url=%s"%u +
-                "%3Fcontinuation_url=/xyzzy/"
-                ),
-            default_view_url = (
-                "/testsite/c/testcoll/d/_view/Default_view/" +
-                "?continuation_url=%s"%u +
-                "%3Fcontinuation_url=/xyzzy/"
-                ),
-            default_list_url = (
-                "/testsite/c/testcoll/d/_list/Default_list/" +
-                "?continuation_url=%s"%u +
-                "%3Fcontinuation_url=/xyzzy/"
-                )
+            entity_url       = "/testsite/c/testcoll/d/testtype/entity1/" + cont_uri,
+            default_view_url = "/testsite/c/testcoll/d/_view/Default_view/" + cont_uri,
+            default_list_url = "/testsite/c/testcoll/d/_list/Default_list/" + cont_uri
             )
         formrow1 = """
             <div class="small-12 medium-6 columns">
