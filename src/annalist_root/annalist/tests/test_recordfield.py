@@ -1082,4 +1082,74 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._check_view_data_values("editfield")
         return
 
+    #   -------- define repeat field and group --------
+
+    def test_define_repeat_field_task(self):
+        # Create new type
+        self._create_view_data("taskrepeatfield")
+        self._check_view_data_values("taskrepeatfield")
+        # Post define repeat field
+        f = recordfield_entity_view_form_data(
+            field_id="taskrepeatfield",
+            field_label="Test repeat field",
+            type_uri="test:repeat_field",
+            property_uri="test:repeat_prop",
+            field_placement="small:0,12",
+            task="Define_repeat_field"
+            )
+        u = entitydata_edit_url("edit", "testcoll", 
+            type_id="_field", view_id="Field_view", entity_id="taskrepeatfield"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        # Check content of type, view and list
+        common_vals = (
+            { 'coll_id':       "testcoll"
+            , 'field_id':      "taskrepeatfield"
+            , 'field_label':   "Test repeat field"
+            , 'type_uri':      "test:repeat_field"
+            , 'property_uri':  "test:repeat_prop"
+            })
+        expect_field_values = (
+            { "annal:id":                   "%(field_id)s"%common_vals
+            , "annal:type":                 "annal:Field"
+            , "rdfs:label":                 "%(field_label)s"%common_vals
+            , "annal:field_render_type":    "Text"
+            , "annal:field_value_mode":     "Value_direct"
+            , "annal:field_entity_type":    "%(type_uri)s"%common_vals
+            , "annal:property_uri":         "%(property_uri)s"%common_vals
+            , "annal:field_placement":      "small:0,12"
+            })
+        expect_repeat_group_values = (
+            { "annal:id":           "%(field_id)s_repeat"%common_vals
+            , "annal:type":         "annal:Field_group"
+            , "rdfs:label":         "Repeat field %(field_label)s"%common_vals
+            , "annal:record_type":  "%(type_uri)s"%common_vals
+            , "annal:group_fields":
+              [ { "annal:field_id":         "_field/%(field_id)s"%common_vals
+                , "annal:property_uri":     "%(property_uri)s"%common_vals
+                , "annal:field_placement":  "small:0,12"
+                }
+              ]
+            })
+        expect_repeat_field_values = (
+            { "annal:id":                   "%(field_id)s_repeat"%common_vals
+            , "annal:type":                 "annal:Field"
+            , "rdfs:label":                 "Repeat field %(field_label)s"%common_vals
+            , "annal:field_render_type":    "RepeatGroupRow"
+            , "annal:field_value_mode":     "Value_direct"
+            , "annal:field_entity_type":    "%(type_uri)s"%common_vals
+            , "annal:property_uri":         "%(property_uri)s_repeat"%common_vals
+            , "annal:field_placement":      "small:0,12"
+            , "annal:placeholder":          "(Repeat field %(field_label)s)"%common_vals
+            , "annal:repeat_label_add":     "Add %(field_label)s"%common_vals
+            , "annal:repeat_label_delete":  "Remove %(field_label)s"%common_vals
+            })
+        self.check_entity_values("_field", "%(field_id)s"%common_vals, expect_field_values)
+        self.check_entity_values("_group", "%(field_id)s_repeat"%common_vals, expect_repeat_group_values)
+        self.check_entity_values("_field", "%(field_id)s_repeat"%common_vals, expect_repeat_field_values)
+        return
+
 # End.

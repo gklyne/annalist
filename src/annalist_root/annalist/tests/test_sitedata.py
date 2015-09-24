@@ -222,6 +222,10 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     def check_list_row_data(self, s, trows_expected):
         trows = s.form.find_all("div", class_="tbody")
+        #@@
+        # for i in range(len(trows)):
+        #     print "\ntrow[%d]:\n%s\n"%(i, trows[i])
+        #@@
         self.assertEqual(len(trows), len(trows_expected))
         for i in range(len(trows_expected)):
             e = trows_expected[i]   # expected
@@ -849,7 +853,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_group/Bib_book_group",           ["Bib_book_group",           "BibEntry book fields"] ]
+            [ [ "_group/_initial_values",          ["_initial_values"] ]
+            , [ "_group/Bib_book_group",           ["Bib_book_group",           "BibEntry book fields"] ]
             , [ "_group/Bib_identifier_group",     ["Bib_identifier_group",     "BibEntry identifier fields"] ]
             , [ "_group/Bib_journal_group",        ["Bib_journal_group",        "BibEntry journal fields"] ]
             , [ "_group/Bib_license_group",        ["Bib_license_group",        "BibEntry license fields"] ]

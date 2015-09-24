@@ -148,9 +148,16 @@ See also the section "Repeated field groups"
 
 Type (URI or CURIE) of entity to which field applies.
 
-This is used to restrict the fields that are offered when editing a view or list description (see also field `View_target_type` used in view descriptions).  If in doubt, leave this field blank.
+This is used to restrict the fields that are offered when editing a view or list description (see also field `View_target_type` used in view descriptions).  If in doubt, leave this field blank (and the field will be offered as an option jn views of any record type).
 
 Many, or even most, field descriptions are specific to a particular entity type, but some are generic.  If this value is not specified, the corresponding field is offered as an option for any entity type, but if given then it is offered only when editing a view or list for the specified type.
+
+Note that field groups are an implicit type, named by the field `annal:Record_type` in the group description (similar to the same field in a View description which names the type to which a view is intended to apply).  Sometimes, this is the same URI as the record type/view with which the group is used, but may also be a disticnt URI.  Using a distinct URIs means that field desriptions that appear only as part of a group can be presented for that group.  An example of this is the `View_field_sel`, `View_field_property` and `View_field_placement` fields that may appear in a `Vioew_field_group` which is used in a `View_view` view description; the type URI associated with the `View_field_group` is `annal:View_field`.
+
+Note that the `Field_entity_type` has no direct effect on the underlying data: it is used simply to control options that are presented through the user interface used when defining views.
+
+If in doubt, leave this field blank, or specify the same type URI as the view with which it will be used (and use the same type URI in any group description).
+
 
 === Entity restriction (`Field_restrict`)
 

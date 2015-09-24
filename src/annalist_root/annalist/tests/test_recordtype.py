@@ -810,7 +810,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     #   -------- define view+list --------
 
     def test_define_view_list_task(self):
-        # Crearte new type
+        # Create new type
         self._create_record_type("tasktype")
         self._check_record_type_values("tasktype")
         # Post define view+list

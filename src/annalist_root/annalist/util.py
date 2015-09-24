@@ -73,6 +73,8 @@ def split_type_entity_id(eid, default_type_id=None):
             return (sub_ids[0], sub_ids[1])
         elif len(sub_ids) == 1:
             return (default_type_id, sub_ids[0])
+        else:
+            return (default_type_id, "")
     return (default_type_id, None)
 
 def extract_entity_id(eid):

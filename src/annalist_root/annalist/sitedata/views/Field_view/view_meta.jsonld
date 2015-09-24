@@ -59,4 +59,12 @@
     , "annal:field_placement":  "small:0,12"
     }
   ]
+, "annal:task_buttons":
+  [ { "annal:button_id":        "_task/Define_repeat_field" 
+    , "annal:button_label":     "Define repeat field"
+    }
+  , { "annal:button_id":        "_task/Define_field_ref" 
+    , "annal:button_label":     "Define field reference"
+    }
+  ]
 }

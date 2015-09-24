@@ -457,8 +457,10 @@ def recordfield_entity_view_context_data(
 def recordfield_entity_view_form_data(
         field_id=None, orig_id=None, 
         coll_id="testcoll", 
+        field_label=None,
         render_type="Text", value_mode="Value_direct",
-        action=None, cancel=None, 
+        type_uri=None, property_uri=None, field_placement="",
+        action=None, cancel=None, task=None,
         update="Field"):
     # log.info("recordfield_entity_view_form_data: field_id %s"%(field_id))
     form_data_dict = (
@@ -471,20 +473,30 @@ def recordfield_entity_view_form_data(
         })
     if field_id:
         field_url = recordfield_url(coll_id=coll_id, field_id=field_id)
-        form_data_dict['entity_id']     = field_id
-        form_data_dict['Field_label']   = '%s %s/%s/%s'%(update, coll_id, "_field", field_id)
-        form_data_dict['Field_comment'] = '%s help for %s in collection %s'%(update, field_id, coll_id)
-        form_data_dict['Field_uri']     = field_url
-        form_data_dict['orig_id']       = field_id
-        form_data_dict['orig_type']     = "_field"
+        form_data_dict['entity_id']         = field_id
+        form_data_dict['Field_label']       = '%s %s/%s/%s'%(update, coll_id, "_field", field_id)
+        form_data_dict['Field_comment']     = '%s help for %s in collection %s'%(update, field_id, coll_id)
+        form_data_dict['Field_uri']         = field_url
+        form_data_dict['Field_placement']   = field_placement
+        form_data_dict['orig_id']           = field_id
+        form_data_dict['orig_type']         = "_field"
     if orig_id:
-        form_data_dict['orig_id']       = orig_id
+        form_data_dict['orig_id']           = orig_id
+    if field_label:
+        form_data_dict['Field_label']       = field_label
+        form_data_dict['Field_comment']     = "Help for "+field_label
+    if type_uri:
+        form_data_dict['Field_entity_type'] = type_uri
+    if property_uri:
+        form_data_dict['Field_property']    = property_uri
     if action:
-        form_data_dict['action']        = action
+        form_data_dict['action']            = action
     if cancel:
-        form_data_dict['cancel']        = "Cancel"
+        form_data_dict['cancel']    = "Cancel"
+    elif task:
+        form_data_dict[task]        = task
     else:
-        form_data_dict['save']          = 'Save'
+        form_data_dict['save']      = 'Save'
     return form_data_dict
 
 # End.

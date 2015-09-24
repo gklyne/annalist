@@ -149,7 +149,7 @@ def get_site_views():
 #   ----- Field groups -----
 
 site_field_groups = (
-    [ FieldChoice("_initial_values")
+    [ FieldChoice("_group/_initial_values")
     , FieldChoice("_group/Bib_book_group",             label="BibEntry book fields"       )
     , FieldChoice("_group/Bib_identifier_group",       label="BibEntry identifier fields" )
     , FieldChoice("_group/Bib_journal_group",          label="BibEntry journal fields"    )
