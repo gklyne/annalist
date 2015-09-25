@@ -57,6 +57,9 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
     - [x] Fix up formatting for reference field not in a repeated group
     - [x] Create test case(s)
 - [x] Close top-level list display: return to collection default view, not Home
+- [ ] Change "List users" heading to "List user permissions"
+- [ ] Initial tutorial/task-oriented documentation
+    - (Use home inventory example? Photo library? Something else?)
 
 (release?)
 
@@ -70,7 +73,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 
 - [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
 - [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
-- [ ] The bibiographic definitions currently part of site data should be mived to a "built-in" collection and inherited only when required.
+- [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required.
 
 (release?)
 
@@ -97,6 +100,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 - [ ] profile_uri now not included in Google JSON file of client secrets
     - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
     - cf. oauth2/views.py:364
+- [ ] implement at least one other identify provider (ORCID?)
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
@@ -114,8 +118,6 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 - [ ] update Django version used to 1.8 (designated for long term support)
 - [ ] review renderers and revise to take all message strings from messages.py
 - [ ] look into entity cacheing (esp. RecordType) for performance improvement
-- [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
-    - Should be easy to add.  Just need a name.
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types
 - [ ] Provide content for the links in the page footer
@@ -163,7 +165,7 @@ Technical debt:
     - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
     - [ ]remove corresponding special case code in bound_field.
 - [x] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
-- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, dues somewhat to the early template-based logic for field rendering.  Withn the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special login in bound_field.
+- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special login in bound_field.
 - [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
 - [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
 - [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
@@ -174,17 +176,17 @@ Usability notes:
 - [ ] Display entity-id *and* label values in drop-downs?  (e.g. "id (label)")
 - [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
 - [ ] Persist item selection to refreshed display when move-up/movedown clicked?
-- [ ] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
-- [ ] OR... allow an entity to specify its own default view?
+- [x] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
+- [x] OR... allow an entity to specify its own default view? (this is now handled by subtyping)
 - [ ] Type/List/View dropdowns: normally show only those types/lists/views defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
 - [ ] View forms need title (indicating type of thing viewed)?  Or let user define label for Id field?
 - [ ] Provide field type that can be used to place fixed annotations/instructions in a form
 - [ ] Add title attributes to all buttons - used as tooltip
 - [ ] Add title to field controls based on field help, to use as tooltip.
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
-    - [ ] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
-        - test by creating contacts/supplies listy for CruisingLog
-    - [ ] Create a "wizard-like" (or one-form) interface for creating field+field-group set.
+    - [x] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
+        - test by creating contacts/supplies list for CruisingLog
+    - [x] Create a "wizard-like" (or one-form) interface for creating field+field-group set.
         - needs to create (a) individual fields in group, (b) field group and (c) field referring to group.
     - [ ] Procedure for creating type + view definition + list definition + field definitions from a simple overview description
     - [ ] Procedure for creating enumeration type from simple description of options
@@ -198,7 +200,7 @@ Usability notes:
         - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
 - [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?  In particular, getting the entity type for a field is error-prone.
 - [ ] Use pop-up text based on field comment to tell user how a field value is used
-- [ ] Option to re-order fields on view form
+- [x] Option to re-order fields on view form
 - [ ] When creating type, default URI to be based on id entered
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] List display paging
@@ -209,6 +211,8 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
+    - Should be easy to add.  Just need a name.
 - [ ] Scrolling through views from list - e.g. Next/Prev item buttons? (Iris G)
 - [ ] Pingbacks?  Cf. [prov-aq/#provenance-pingback](http://www.w3.org/TR/prov-aq/#provenance-pingback)
 - [ ] Option to scan for broken entity references (e.g., due to removal, renaming)
