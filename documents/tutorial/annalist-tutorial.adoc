@@ -39,17 +39,17 @@ If the User ID has already been used by a different user, a message is displayed
 After the first time, use the same details and click "Login".  Typically, if this is a personal machine you have used before, the login will complete without any further interaction.
 
 .Annalist login form
-image::screenshot-login-form.png[Annalist login form,width=400]
+image::screenshot-login-form.png[Annalist login form,width=400,float="right"]
 
 The login sequence associates an authenticated email address with the User ID given, which is used to determine appropriate access permissions (see "User permissions" below).
 
 .Annalist logged in
-image::screenshot-login-form.png[Annalist logged in,width=400]
+image::screenshot-login-form.png[Annalist logged in,width=400,float="right"]
 
 Once the login is complete, click on "Home" in the menu bar to return to the main Annalist site
 
 .Annalist home page
-image::screenshot-login-form.png[Annalist home page,width=400]
+image::screenshot-login-form.png[Annalist home page,width=400,float="right"]
 
 
 === Using public computers
@@ -89,7 +89,7 @@ Site-wide permissions are defined using the `annlist-manager`command line admini
 Within a collection, a user with `ADMIN` permissions on that collection can view the user permissions for the collection in the List view `List users`.  To view the list of user permissions for a collection, browse to that collection which will display some list of records.  In the `List view` dropdown, select option `List users`, and click `View` see see user permissions defined for the collection only, or `View all` to also list site-wide user permissions.
 
 .List user permissions for an Annalist collection
-image::screenshot-annalist-permissions.png[Annalist collection user permissions,width=400]
+image::screenshot-annalist-permissions.png[Annalist collection user permissions,width=400,float="right"]
 
 There are two "special" users that are used to select access permissions applied to users for whom no more specific permissions are available:
 
