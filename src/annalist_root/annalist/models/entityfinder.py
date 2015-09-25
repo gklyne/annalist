@@ -473,7 +473,7 @@ class FieldComparison(object):
         Returns True if the first type is a subtype of the second type, where both
         types are supplied as type URIs.  Returns True if both URIs are the same.
 
-        If type1_uri is not specified, assume no restruction.
+        If type1_uri is not specified, assume no restriction.
 
         If type2_uri is not specified, assume it does not satisfy the restriction.
         """
@@ -483,9 +483,9 @@ class FieldComparison(object):
         if not type1_uri:
             return False
         type1_info = self.get_uri_type_info(type1_uri)
-        type1_uris = (type1_info and type1_info.get_all_type_uris()) or []
+        type1_supertype_uris = (type1_info and type1_info.get_all_type_uris()) or []
         # log.info("FieldComparison.subtype: type1_uris (supertypes) %r"%(type1_uris,))
-        return type2_uri in type1_uris
+        return type2_uri in type1_supertype_uris
 
 if __name__ == "__main__":
     import doctest

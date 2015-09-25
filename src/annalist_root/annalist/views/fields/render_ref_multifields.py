@@ -61,6 +61,22 @@ view_multifield = (
         """
     })
 
+_alt_view_multifield = (
+    { 'head':
+        """\n"""+
+        """<!-- views.fields.render_ref_multifield.view_multifield head (mode:{{render_mode}}) -->\n"""
+    , 'body':
+        """<!-- views.fields.render_ref_multifield.view_multifield body (mode:{{render_mode}}) -->\n"""+
+        """<div class="view-grouprow row">\n"""+
+        """  {% for f in group_bound_fields %}"""+
+        """    {% include f.field_render_colview with field=f %}"""+
+        """  {% endfor %}"""+
+        """</div>\n"""
+    , 'tail':
+        """<!-- views.fields.render_ref_multifield.view_multifield tail (mode:{{render_mode}})-->
+        """
+    })
+
 target_blank = """<span class="value-blank">%s</span>"""
 
 target_missing = """<span class="value-missing">%s</span>"""
@@ -141,7 +157,7 @@ class RenderMultiFields_label(object):
 
 class RenderMultiFields_value(object):
   """
-  Render class for a field group in a referenced entity.
+  Render class for field values in a referenced entity.
   """
 
   def __init__(self, templates=None):
@@ -163,19 +179,13 @@ class RenderMultiFields_value(object):
 
   def render(self, context):
     """
-    Renders a repeating field group.
+    Renders column values for multiple fields in a group
 
     `context`   is a dictionary-like object that provides information for the
-                rendering operation.
+                rendering operation.  `context['field']` contains the group 
+                field descriptions.
 
     returns a string that is incorporated into the resulting web page.
-
-    `context['field']` is a `bound_field` value that combines the field 
-    definition, entity values and additional context information.  
-
-    The entity value is either the entire entity that is currently 
-    being rendered, or sub-element containing a list of repeated values that 
-    are each formatted using the supplied body template.
     """
     # log.info("RenderMultiFields_value.render (mode: %s)"%context['render_mode'])
     try:

@@ -158,5 +158,5 @@ VIEW_PROPERTY_DUPLICATE     = "Field %(field_id)s repeats use of property %(prop
 UNKNOWN_TASK_ID             = "Unknown task Id in form response: %(task_id)s"
 TASK_CREATE_VIEW_LIST       = "Created view and list for %(label)s"
 TASK_CREATE_REPEAT_FIELD    = "Created repeating-value field and group %(field_id)s for %(label)s"
-
+TASK_CREATE_REFERENCE_FIELD = "Created reference to field %(field_id)s: select 'Refer to type' value and re-save"
 # End.

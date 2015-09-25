@@ -53,8 +53,10 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
     - [x] Add task button to field definition form: define field reference
         - "Define field reference"  ('_ref'; was '_m'), `_task/Define_field_ref`
     - [x] Add logic to catch and dispatch define-multifield click
-    - [ ] Add logic to create multifield group that references current field
-    - [ ] Add logic to create multifield reference field that references group
+    - [x] Add logic to create multifield group that references current field
+        - refer to field: is this now redundant?  (given there is not multifield_ref)
+    - [x] Add logic to create multifield reference field that references group
+    - [x] Fix up formattimng for reference field not in a repeated group
     - [ ] Create test case(s)
 - [ ] Close top-level display: return to collection default view, not Home
 
@@ -146,6 +148,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 
 Technical debt:
 
+- [ ] `annal:Slug` for entity references - is now type/id: rename type?  (annal:Entity_ref?)
 - [ ] Inconsistent `@id` values in site data
 - [ ] Re-think access to entities and types:
     - [ ] There is repeated reading of RecordType values in EntityFinder
