@@ -38,18 +38,21 @@ If the User ID has already been used by a different user, a message is displayed
 
 After the first time, use the same details and click "Login".  Typically, if this is a personal machine you have used before, the login will complete without any further interaction.
 
+[.right.text-center]
 .Annalist login form
-image::screenshot-login-form.png[Annalist login form,width=400,float="right"]
+image::screenshot-login-form.png[Annalist login form,width=400]
 
 The login sequence associates an authenticated email address with the User ID given, which is used to determine appropriate access permissions (see "User permissions" below).
 
+[.right.text-center]
 .Annalist logged in
-image::screenshot-login-form.png[Annalist logged in,width=400,float="right"]
+image::screenshot-login-form.png[Annalist logged in,width=400]
 
 Once the login is complete, click on "Home" in the menu bar to return to the main Annalist site
 
+[.right.text-center]
 .Annalist home page
-image::screenshot-login-form.png[Annalist home page,width=400,float="right"]
+image::screenshot-login-form.png[Annalist home page,width=400]
 
 
 === Using public computers
@@ -88,8 +91,9 @@ Site-wide permissions are defined using the `annlist-manager`command line admini
 
 Within a collection, a user with `ADMIN` permissions on that collection can view the user permissions for the collection in the List view `List users`.  To view the list of user permissions for a collection, browse to that collection which will display some list of records.  In the `List view` dropdown, select option `List users`, and click `View` see see user permissions defined for the collection only, or `View all` to also list site-wide user permissions.
 
+[.right.text-center]
 .List user permissions for an Annalist collection
-image::screenshot-annalist-permissions.png[Annalist collection user permissions,width=400,float="right"]
+image::screenshot-annalist-permissions.png[Annalist collection user permissions,width=400]
 
 There are two "special" users that are used to select access permissions applied to users for whom no more specific permissions are available:
 
@@ -99,6 +103,7 @@ There are two "special" users that are used to select access permissions applied
 
 New permissions may be added from the "List user permissions" page by clicking `New`:
 
+[.right.text-center]
 .Creating new user permissions for an Annalist collection
 image::screenshot-annalist-permissions-new.png[Annalist collection new user permissions,width=400]
 
