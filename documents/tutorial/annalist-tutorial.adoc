@@ -46,25 +46,28 @@ The login sequence associates an authenticated email address with the User ID gi
 
 [.right.text-center]
 .Annalist logged in
-image::screenshot-login-form.png[Annalist logged in,width=250]
+image::screenshot-login-done.png[Annalist logged in,width=250]
 
 Once the login is complete, click on "Home" in the menu bar to return to the main Annalist site
 
 [.right.text-center]
 .Annalist home page
-image::screenshot-login-form.png[Annalist home page,width=250]
+image::screenshot-annalist-home.png[Annalist home page,width=250]
 
 
 === Using public computers
 
 If you login from a public computer, remember to log out from your identity provider when you have finished using Annalist and before leaving the computer.
 
+****
 @@details for logout from Google.
-
+****
 
 === Local authentication
 
+****
 @@Update this when "Local" is implemented as a login service
+****
 
 Annalist has been designed to use third party authentication.  This avoids having to deal with the tricky technical and operational difficulties of managing password files;  leaked password files are a very common form of security failure, so by leaving this to the ID provider professionals, user security should be improved.  This also allows users to log in using an existing account rather than having to allocate and remember a new password for Annalist.
 
