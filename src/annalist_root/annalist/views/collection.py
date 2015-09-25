@@ -63,6 +63,7 @@ class CollectionEditView(AnnalistGenericView):
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
         viewinfo.check_authorization(action)
+        self.default_continuation = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
         return viewinfo
 
     # GET

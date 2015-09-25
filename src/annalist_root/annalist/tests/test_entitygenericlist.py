@@ -46,7 +46,7 @@ from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     site_dir, collection_dir,
     site_view_url,
-    collection_edit_url,
+    collection_view_url, collection_edit_url,
     continuation_url_param,
     confirm_delete_params,
     collection_create_values,
@@ -645,7 +645,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_new_all_entity(self):
         # Also tests continuation_url parameter handling
-        s = site_view_url()
+        #@@ s = site_view_url()
+        s = collection_view_url(coll_id="testcoll")
         f = entitylist_form_data("new", list_id="Field_list", continuation_url=s)
         u = entitydata_list_all_url("testcoll", list_id="Field_list")
         r = self.client.post(u, f)
@@ -911,7 +912,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + site_view_url()
+        v = TestHostUri + collection_view_url(coll_id="testcoll")
         self.assertEqual(v, r['location'])
         return
 

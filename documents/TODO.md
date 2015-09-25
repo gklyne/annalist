@@ -43,22 +43,20 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
     - [x] Create test case(s)
 - [x] Create repeating fields in a view.
     - [x] Add task button to field definition form: define repeat field
-        - "Define repeat field" ('_repeat', was '_r'), `_task/Define_repeat_field`
     - [x] Add logic to catch and dispatch define-repeat click
     - [x] Add logic to create repeat group that references current field
     - [x] Add logic to create repeat field that references group
     - [x] Create test case(s)
     - Repeat member pattern: (entity) -> (property)_repeat -> [ { (property) -> (entity) }, ... ]
-- [ ] Create multifield reference fields in a view or group.
+- [x] Create multifield reference fields in a view or group.
     - [x] Add task button to field definition form: define field reference
-        - "Define field reference"  ('_ref'; was '_m'), `_task/Define_field_ref`
     - [x] Add logic to catch and dispatch define-multifield click
     - [x] Add logic to create multifield group that references current field
         - refer to field: is this now redundant?  (given there is not multifield_ref)
     - [x] Add logic to create multifield reference field that references group
-    - [x] Fix up formattimng for reference field not in a repeated group
-    - [ ] Create test case(s)
-- [ ] Close top-level display: return to collection default view, not Home
+    - [x] Fix up formatting for reference field not in a repeated group
+    - [x] Create test case(s)
+- [x] Close top-level list display: return to collection default view, not Home
 
 (release?)
 

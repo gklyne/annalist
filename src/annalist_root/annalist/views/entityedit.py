@@ -254,7 +254,7 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Assemble display information for entity view request handler
         """
-        self.site_view_url        = self.view_uri("AnnalistSiteView")
+        #@@ self.site_view_url        = self.view_uri("AnnalistSiteView")
         self.collection_view_url  = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
         self.default_continuation_url = self.view_uri(
             "AnnalistEntityDefaultListType", coll_id=coll_id, type_id=type_id
@@ -1478,7 +1478,6 @@ class GenericEntityEditView(AnnalistGenericView):
             if not group_entity.get(ANNAL.CURIE.group_fields, None):
                 group_entity[ANNAL.CURIE.group_fields] = (
                     [ { ANNAL.CURIE.field_id:           "_field/"+field_entity_id
-                      # , ANNAL.CURIE.property_uri:       field_property_uri
                       , ANNAL.CURIE.field_placement:    "small:0,12"
                       }
                     ])
@@ -1496,6 +1495,7 @@ class GenericEntityEditView(AnnalistGenericView):
             field_entity.setdefault(ANNAL.CURIE.placeholder,      "(Reference field "+field_label+")")
             field_entity.setdefault(ANNAL.CURIE.property_uri,     ref_property_uri)
             field_entity.setdefault(ANNAL.CURIE.field_placement,  "small:0,12")
+            field_entity.setdefault(ANNAL.CURIE.field_ref_type,   "Default_type")
             field_entity._save()
             # Display new reference field view with message; continuation same as current view
             info_values = self.info_params(
