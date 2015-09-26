@@ -58,6 +58,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
     - [x] Create test case(s)
 - [x] Close top-level list display: return to collection default view, not Home
 - [ ] Change "List users" heading to "List user permissions"
+- [ ] Possible bug with "Define view+list" while defining a new type.  Investigate.
 - [ ] Initial tutorial/task-oriented documentation
     - (Use home inventory example? Photo library? Something else?)
 
