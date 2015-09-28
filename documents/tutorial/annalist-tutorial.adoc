@@ -12,9 +12,9 @@ toc::[]
 
 == Running example
 
-This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entitiues involved in the picture-taking process.
+This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entitiues involved in the picture-taking process.  For this example, we use a prefix `pcat` for URIs (actually "Compact URIs", or CURIEs) defined specifically for the photograph catalogue.  This prefix will eventually be associated with a base URI to allow identification on the World Wide Web.  (@@TODO: full linked data support.)
 
-The final example can be seen at the http://demo.annalist.net/[Annalist demo site], as collection [Annalist photo collection].  (@@TODO)
+The completed example can be seen at the http://demo.annalist.net/[Annalist demo site], as collection [Annalist photo collection].  (@@TODO)
 
 
 == Log in to Annalist
@@ -144,6 +144,12 @@ The standard Annalist permission tokens include:
 == Browsing an existing Annalist collection
 
 @@TODO
+
+@@Top bar (Home, collection, type)
+
+@@Bottom bar (About, Contact, Sitemap, Admin)
+
+@@Other common controls:  Choose view; List view / view all; Customize; Set default
 
 
 == Creating a new collection
@@ -303,44 +309,175 @@ The key fields to note here are:
 * `Render field type`: the value `Ref image file` indicates the field value is a reference to an image file.
 * `Value mode`: the value `File upload` indicates the referenced image will be an uploaded file.
 
-With the field details entered, click 'Save' to return to the view editing form.  Select Field Id `Image` for the newly added field, select a value for size/position, click `Save` to return to the `Customize page`, and `Close` to return to the list of photiographs.
+With the field details entered, click 'Save' to return to the view editing form.
 
 .Add new image field to view description
 
+Select Field Id `Image` for the newly added field, select a value for size/position, click `Save` to return to the `Customize page`, and `Close` to return to the list of photiographs:
+
 [.right.text-center]
-.Set details of new field
-image::screenshot-edit-photograph-view-4.png[Set details of new field,width=400]
+.New "Image" field added
+image::screenshot-edit-photograph-view-4.png[Photograph record with "Image" field added,width=400]
 
 .Upload image to Photograph record
 
-To upload am image, click on the link for a photograph, then click `Edit`;  the photograph editing form, is displayed, now with an additional `Image` field with a `Browse` button:
+To upload an image, click on the link for a photograph, then click `Edit`;  the photograph editing form, is displayed, now with an additional `Image` field with a `Browse` button:
 
 [.right.text-center]
 .Edit photograph record with Image field
-image::screenshot-edit-photograph-3.png[Edit photograph record with Image field,width=400]
+image::screenshot-edit-photograph-3.png[Edit Photograph record with Image field,width=400]
 
-Click `Browse`, select an image file to be uploaded, then `Open` (or equivalent for the browser being used).  On the photo editomng page, click `Save`.  The photograph record is now displayed with the uploaded image:
+Click `Browse`, select an image file to be uploaded, then `Open` (or equivalent for the browser being used).  On the photo editing page, click `Save`.  The Photograph record is now displayed with the uploaded image:
 
 [.right.text-center]
 .View photograph record with uploaded Image
 image::screenshot-view-photograph-3.png[View photograph record with uploaded Image,width=400]
 
-Clicking on the displayed image here will show the image alone occupying a full browser window.
+Clicking on the displayed image here will show the image alone in a new tab (or possibly a new window, depending on the browser used), occupying the full browser window.
 
 
 == Add repeating fields to a data record
 
-@@TODO
+Sometimes, it is desirable to have a field or group of fields in a record that can be repeated an arbitrary number of times.  We have already seen this when editing a view description which may contain an arebitrary number of fields.  Annalist implements such repeated fields as a special type of field that itself contains references to other fields via a "Field group" description.
+
+Thus, to create a repeating field or group of fields within a view, the following must be defined:
+
+. One or more ordinary individual fields that are to be repeated.
+. A field group that references the field(s) that are to be repeated.
+. A repeating-value field that references the field group.
+
+Annalist provides a short-cut for creating these various descriptions in the form of a "task button" that appears on the field description editing form.
+
+For our example, we create a field that allows multiple keywords to be associated with a Photograph, starting with a view of a photograph record.  Click on `View description`, then on the next page displayed click `Edit`, `Add field`, and then on the `+` button beside the newly added field.
+
+Now fill in details for a single keyword field, as shown.  When the details have been entered, click on `Define repeat field`.
+
+[.right.text-center]
+.New keyword field details
+image::screenshot-create-new-field-keyword.png[New keyword field details,width=400]
+
+Now click on `Save`, and select `Repeat field 'Keyword'` for the new field id.
+
+[.right.text-center]
+.New "Repeat field 'Keyword'" field added
+image::screenshot-edit-photograph-view-5.png[Photograph view with "Repeat field 'Keyword'" field added,width=400]
+
+The repeat field structure just created is perfectly functional, but the automatically generated label field could be improved.  Click on the writing hand button beside the "Repeat field 'Keyword'" id.  Change the `Label` and `Placeholder` fields as shown, then click on `Save`:
+
+[.right.text-center]
+.Edit labels used with "Keyword_repeat" field
+image::screenshot-edit-field-keyword_repeat.png[Edit labels used with "Keyword_repeat" field,width=400]
+
+On reeturning the the view editing form, noteice that the selection label for the newly added field is changed to "Keywords":
+
+[.right.text-center]
+.New field label updated
+image::screenshot-edit-photograph-view-6.png[New field label updated,width=400]
+
+Click `Save` then `Close` to return to the Photograph record view.  To add some keywords, click `Edit`, then `Add keyword`, and fill in key word or phrase text.  repeat for as many keywords as desired:
+
+[.right.text-center]
+.Edit photograph record keyword fields
+image::screenshot-edit-photograph-4.png[Edit photograph record keyword fields,width=400]
+
+Click on `Save` to view the resulting record:
+
+[.right.text-center]
+.View photograph record keyword fields
+image::screenshot-view-photograph-4.png[View photograph record keyword fields,width=400]
 
 
 == Create an additional data type
 
-@@TODO
+The examples so far have been based on a single "Photograph" record type.  Many interesting data collections consist of multiple cross-referenced record types.  For example, we might want to create "Location notes" records that can be references from individual Photograph records.
+
+Start by creating a new Type, with corresponding View and List definitions; e.g.
+
+. Click on `Photo_collection` in the top menu bar
+. Select `List types` from the `List view` drop-down, then click `View`
+. Click on `New` to create a new Type
+. Enter details as shown
+. Click `Save`, then select the newly created type and click `Edit`.  (@@This step is a workaround for a bug in the Define view+_list handler, and should not be needed.)
+. Click on `Define view+list`
+. Click on `Save`
+
+[.right.text-center]
+.Create new type Location_notes
+image::screenshot-create-new-type-location_notes.png[Create new type Location_notes,width=400]
+
+Next, edit the Location_notes view to include a map reference field:
+
+. On the `List types` page, click on the link `Location notes`.
+. Click on the link `View of Location notes`
+. Click `Edit`
+. Click `Add field`
+. Click the `+` button by the newly added field
+. Fill in details of the new field as shown.
+. Click `Save`
+. Select `Map refence` for the field id of the newly added field, and a value for Position/size.
+. Clock `Save`, then `Close` ro return to thelist of views.
+
+Now we can create an instance of the new type:
+
+. Click on `Photo_collection` in the top menu bar
+. Select `List of Location notes` from the `List view` drop-down, then click `View`
+. Click on `New` to create a new Location notes record
+
+[.right.text-center]
+.Create new map reference field
+image::screenshot-create-new-field-mapref.png[Create new map reference field,width=400]
+
+A similar process is repeated, but this time also using the `Define repeat field` button, to create a repeating field of links to further information about the location:
+
+[.right.text-center]
+.Create new web link field
+image::screenshot-create-new-field-seeAlso.png[Create new web link field,width=400]
+
+[.right.text-center]
+.Further information field
+image::screenshot-edit-field-see_also_repeat.png[Further information field,width=400]
+
+Now the new fields can be configured in the `Location_notes` view:
+
+[.right.text-center]
+.Location notes view with map reference and further information fields
+image::screenshot-edit-location_notes-view.png[Location notes view with map reference and further information fields,width=400]
+
+A Location notes record can now be created with data for the additional fields:
+
+[.right.text-center]
+.Create a location notes record
+image::screenshot-create-location_notes.png[Create a location notes record,width=400]
 
 
-== Create links to another record
+== Create links between records
 
-@@TODO
+The preceding section created a new record type for location notes. Here, we edit the Photograph view to allow each photograph to be linkled to notes about the location where it was taken.  This will be achieved by changing the type of `Location_taken` field from a simple text field to a reference to a `Location_notes` field.
+
+To do this, open up the form for editing the view description `Photograph` (using any of the navigation paths described previously).  Then click on the writing hand button beside thefield id "Location taken":
+
+[.right.text-center]
+.Edit field "Location taken" in Photograph view
+image::screenshot-edit-photograph-view-7.png[Edit field "Location taken" in Photograph view,width=400]
+
+Edit the "Location taken" field as shown, noting particularly values entered in the fields:
+
+* Field value type - same as URI of `Location_notes` type (currenrly not used other than for documentary purposes, but this might change)
+* Field render type - `Optional entity ref` presents a dropdown of entities to which the field may link
+* Value mode - `Entity reference` indicates this field is a reference to some other Annalist entity in the current collection.
+* Refer to type - `Location notes` indicates the type of entity to which this field may link.
+
+[.right.text-center]
+.Edit field definition for Location taken
+image::screenshot-edit-field-location_taken.png[Edit field definition for Location taken,width=400]
+
+Save the updated field and view descriptions, and redisplay one of the Photograph records:  note that the `Location taken` value is still displayed, but is rendered in a style used for non-existent entity references.  Click on `Edit` to edit the record data, and select the vcalue `Sileby Mill` from the dropdown (corresponding to the previously created `Location notes` record).
+
+[.right.text-center]
+.Select location notes record from dropdown
+image::screenshot-edit-photograph-view-8.png[Select location notes record from dropdown,width=400]
+
+Click `Save` to return to the Phbotograph view, and note that the `Location taken` field now displays as a link to the selected `Location notes` record
 
 
 == Display fields from a linked record

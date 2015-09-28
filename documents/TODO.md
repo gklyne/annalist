@@ -61,6 +61,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 - [ ] Possible bug with "Define view+list" while defining a new type.  Investigate.
 - [ ] Initial tutorial/task-oriented documentation
     - (Use home inventory example? Photo library? Something else?)
+- [ ] BUG: image with placement (0/8) displays incorrect label size; don't allow x/8 or x/9 for regular fields (just columns) (not sub-multiple of 12)
 
 (release?)
 
@@ -189,9 +190,11 @@ Usability notes:
         - test by creating contacts/supplies list for CruisingLog
     - [x] Create a "wizard-like" (or one-form) interface for creating field+field-group set.
         - needs to create (a) individual fields in group, (b) field group and (c) field referring to group.
+    - [ ] Create a "wizard-like" (or one-form) interface for creating subtype+view+list from existing type
     - [ ] Procedure for creating type + view definition + list definition + field definitions from a simple overview description
     - [ ] Procedure for creating enumeration type from simple description of options
     - [ ] Procedure to migrate textual type annotations to enumeration types
+    - [ ] Renderer for generating back-links to records that reference the current record
     - [ ] Simplify repetitive data entry; e.g.
         - Use-case: create bibliographic author details from just full name entered
         - [ ] derived field (possibly hidden) with a rule to guide its creation from other fields in a view

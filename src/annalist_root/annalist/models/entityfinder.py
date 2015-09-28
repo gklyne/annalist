@@ -90,7 +90,7 @@ class EntityFinder(object):
         if type_uri is not None:
             for tid in self.get_collection_type_ids():
                 tinfo = EntityTypeInfo(self._site, self._coll, tid)
-                if type_uri in tinfo.get_all_type_uris():
+                if tinfo and (type_uri in tinfo.get_all_type_uris()):
                     # log.info(
                     #     "supertype %s, yield %s: %s"%
                     #     (type_uri, tinfo.get_type_id(), tinfo.get_type_uri())

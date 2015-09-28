@@ -300,13 +300,14 @@ class EntityTypeInfo(object):
         Return list of all type URIs for this type
         """
         types = [self.get_type_uri()]
-        supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uris, None)
-        if supertypes:
-            for st in supertypes:
-                # supertype_uris is list of objects { 'annal:supertype_uri': uri }
-                t = st.get(ANNAL.CURIE.supertype_uri, None)
-                if t:
-                    types.append(t)
+        if self.recordtype:
+            supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uris, None)
+            if supertypes:
+                for st in supertypes:
+                    # supertype_uris is list of objects { 'annal:supertype_uri': uri }
+                    t = st.get(ANNAL.CURIE.supertype_uri, None)
+                    if t:
+                        types.append(t)
         return types
 
     def _new_entity(self, entity_id):
