@@ -40,19 +40,19 @@ After the first time, use the same details and click "Login".  Typically, if thi
 
 [.right.text-center]
 .Annalist login form
-image::screenshot-login-form.png[Annalist login form,width=300]
+image::screenshot-login-form.png[Annalist login form,width=400]
 
 The login sequence associates an authenticated email address with the User ID given, which is used to determine appropriate access permissions (see "User permissions" below).
 
 [.right.text-center]
 .Annalist logged in
-image::screenshot-login-done.png[Annalist logged in,width=300]
+image::screenshot-login-done.png[Annalist logged in,width=400]
 
 Once the login is complete, click on "Home" in the menu bar to return to the main Annalist site
 
 [.right.text-center]
 .Annalist home page
-image::screenshot-annalist-home.png[Annalist home page,width=300]
+image::screenshot-annalist-home.png[Annalist home page,width=400]
 
 
 === Using public computers
@@ -79,7 +79,7 @@ To log in using a Dango account clock on the "Local user credentials" `login` li
 
 [.right.text-center]
 .Annalist local login form
-image::screenshot-login-django.png[Annalist local login form,width=300]
+image::screenshot-login-django.png[Annalist local login form,width=400]
 
 
 == User permissions
@@ -100,7 +100,7 @@ Within a collection, a user with `ADMIN` permissions on that collection can view
 
 [.right.text-center]
 .List user permissions for an Annalist collection
-image::screenshot-annalist-permissions.png[Annalist collection user permissions,width=300]
+image::screenshot-annalist-permissions.png[Annalist collection user permissions,width=400]
 
 There are two "special" users that are used to select access permissions applied to users for whom no more specific permissions are available:
 
@@ -112,7 +112,7 @@ New permissions may be added from the "List user permissions" page by clicking `
 
 [.right.text-center]
 .Creating new user permissions for an Annalist collection
-image::screenshot-annalist-permissions-new.png[Annalist collection new user permissions,width=300]
+image::screenshot-annalist-permissions-new.png[Annalist collection new user permissions,width=400]
 
 The `User Id` field corresponds to the User Id entered in the login page.
 
@@ -154,13 +154,13 @@ To create a new collection, go to the Annalist site home page and enter an ID an
 
 [.right.text-center]
 .Creating new Annalist collection
-image::screenshot-create-collection.png[Creating a new Annalist collection,width=300]
+image::screenshot-create-collection.png[Creating a new Annalist collection,width=400]
 
 In the updated list of collections, click on the link corresponding to the new collection to view its initial content:
 
 [.right.text-center]
 .View new Annalist collection
-image::screenshot-view-new-collection.png[Creating a new Annalist collection,width=300]
+image::screenshot-view-new-collection.png[Creating a new Annalist collection,width=400]
 
 
 == Create initial record type and views for the new collection
@@ -171,13 +171,13 @@ Switch to a listing of record types, by selecting `List types` from the `List vi
 
 [.right.text-center]
 .List record types in Annalist collection
-image::screenshot-list-types.png[List record types in Annalist collection,width=300]
+image::screenshot-list-types.png[List record types in Annalist collection,width=400]
 
 Click the `New` button to create a new record type, and enter some details about this record type.  To define initial tailorable view and list descriptions for the new record type, click on the `Define view+list` button.  The `Default view` and `Default list` fields are updated accordingly. 
 
 [.right.text-center]
 .Creating new record type, view and list in Annalist collection
-image::screenshot-create-new-type.png[Creating new record type in Annalist collection,width=300]
+image::screenshot-create-new-type.png[Creating new record type in Annalist collection,width=400]
 
 NOTE (there is a possible bug in the software that needs investigating): if an error message is displayed saying the new type already exists, click `Cancel` then select the new type in the "List types" display and click `Edit`.  Then click the `Define view+list` button.
 
@@ -190,7 +190,7 @@ Switch to a listing of "Photograph" records by selecting `List of Photograph` fr
 
 [.right.text-center]
 .Initial, empty, list of Photographs
-image::screenshot-list-photographs-empty.png[Initial, empty, list of Photographs,width=300]
+image::screenshot-list-photographs-empty.png[Initial, empty, list of Photographs,width=400]
 
 Click on the `New` button to bring uo an initial forkm for enterimng details about a photograph.  New record views contain a number of common fields: `Id`, `Type`, `Label` and `Description`.  Only the `Id` field and `Label` fields are mandatory; the others are defined because they are commonly useful.  The `Id` field is used internally to identify the record, and is used in forming a URL that can be used to access the data.  The `Label` field provides a summary description of the record used in lists and drop-down selectors.
 
@@ -198,13 +198,13 @@ Enter some descriptive data into the fields and click `Save`.
 
 [.right.text-center]
 .Creating new Photograph record
-image::screenshot-create-photograph.png[Creating new Photograph record in Annalist collection,width=300]
+image::screenshot-create-photograph.png[Creating new Photograph record in Annalist collection,width=400]
 
 This process can be repeated for additional photographs.
 
 [.right.text-center]
 .List of Photograph records
-image::screenshot-list-photographs.png[List of Photograph records in Annalist collection,width=300]
+image::screenshot-list-photographs.png[List of Photograph records in Annalist collection,width=400]
 
 
 == Add simple fields to a data record
@@ -219,19 +219,19 @@ There are several ways to edit a view description:
 
 The following screenshots illustrate the last of these approaches.
 
-image:screenshot-view-photograph-1.png[View a Photograph record in Annalist,width=300]
-image:screenshot-view-photograph-view.png[View description of view of photograph in Annalist,width=300]
-image:screenshot-edit-photograph-view.png[Edit description of view of photograph in Annalist,width=300]
+image:screenshot-view-photograph-1.png[View a Photograph record in Annalist,width=400]
+image:screenshot-view-photograph-view.png[View description of view of photograph in Annalist,width=400]
+image:screenshot-edit-photograph-view.png[Edit description of view of photograph in Annalist,width=400]
 
 To add a "Date" field: click `Add field`.  A new row is added to the list of fields, with unspecified values for `Field id`, `Property` and `Position/size`. Clicking on the `Field id` value lists a few options, but none of these suggests a "Date" value.  A new type of view field is required here, so click on the `+` button:
 
-image:screenshot-edit-photograph-view-new-field.png[Adding a new field to the Photograph view,width=300]
+image:screenshot-edit-photograph-view-new-field.png[Adding a new field to the Photograph view,width=400]
 
 This opens a new form to define details of a new field type.  Fill in information for `Id`, `Field value type`, `Label`, `Help`, `Property`, `Field render type`, `Value mode` and `Placeholder` as shown.  In ths case, the other fields should be left unspecified.  (The meanings of all these fields are described in link:../view-field-types.adoc[View fields in Annalist].)
 
 [.right.text-center]
 .Defining a new view field type for date
-image::screenshot-create-new-field-date.png[Defining a new view field type for date,width=300]
+image::screenshot-create-new-field-date.png[Defining a new view field type for date,width=400]
 
 When done, click `Save`, which returns to the previous view editing form.  Now, clicking on the `Field id` value includes an option for the new field type just described.  Choose this.  The `Property` and `Posityion/size` columns can be left blank to use values from the field definiotion, or overriding values for the current view can be specified here.  Select an appropriate value (`0/6`) for `Position/size`.
 
@@ -239,25 +239,25 @@ Repeat the above process, starting with `Add field`, to define a new field for t
 
 [.right.text-center]
 .Defining a new view field type for place
-image::screenshot-create-new-field-place.png[Defining a new view field type for place,width=300]
+image::screenshot-create-new-field-place.png[Defining a new view field type for place,width=400]
 
 Returning to the view edit form, the new location field can be selected and its position/size specified.  Next, select the two new fields and click the `Move &#x2b06;` button so that they appear immediately after the `label` field.
 
 [.right.text-center]
 .New fields added to Photograph view
-image::screenshot-edit-photograph-view-2.png[New fields added to Photograph view,width=300]
+image::screenshot-edit-photograph-view-2.png[New fields added to Photograph view,width=400]
 
 Click `Save`, then `Close` to return to the view of a Photograph, which should now look like this:
 
 [.right.text-center]
 .Updated view of a Photograph record in Annalist
-image::screenshot-view-photograph-2.png[Updated view of a Photograph record in Annalist,width=300]
+image::screenshot-view-photograph-2.png[Updated view of a Photograph record in Annalist,width=400]
 
 If the view is now edited, values for the date and location fields can be entered:
 
 [.right.text-center]
 .Adding new field values to a Photograph record
-image::screenshot-edit-photograph-2.png[Adding new field values to a Photograph record,width=300]
+image::screenshot-edit-photograph-2.png[Adding new field values to a Photograph record,width=400]
 
 These new fields are clearly intended to hold specific types of value (date, location) and the examples suggest particular formats be used for them.  But as far as Annalist is concerned, these are just simple text fields, and no attempt is made to check the format of any values entered.  This is consistent with the Annalist pholosophy of making it easy to capture whatever data may be available with a minimum of hindrance to the user.  The intent is that issues of consistency and data quality may be checked separately according to whatever criteria are deemed appropriate to the task at hand.
 
@@ -276,13 +276,13 @@ There are several ways to accomplish these steps (see previous section).  The fo
 
 [.right.text-center]
 .List of Photograph records
-image::screenshot-list-photographs.png[List of Photograph records in Annalist collection,width=300]
+image::screenshot-list-photographs.png[List of Photograph records in Annalist collection,width=400]
 
 Click on the `Customize` button:
 
 [.right.text-center]
 .Customize collection page
-image::screenshot-customize.png[Annalist collection Customize page,width=300]
+image::screenshot-customize.png[Annalist collection Customize page,width=400]
 
 .Create a new field definition for images
 
@@ -290,13 +290,13 @@ Select "View of Photograph" in the "Record views" column, and click the `Edit` b
 
 [.right.text-center]
 .Add new field
-image::screenshot-edit-photograph-view-3.png[Add new field to photograph record,width=300]
+image::screenshot-edit-photograph-view-3.png[Add new field to photograph record,width=400]
 
 Fill in details for the new field as shown:
 
 [.right.text-center]
 .New image field details
-image::screenshot-create-new-field-image.png[New image field details,width=300]
+image::screenshot-create-new-field-image.png[New image field details,width=400]
 
 The key fields to note here are:
 
@@ -309,7 +309,7 @@ With the field details entered, click 'Save' to return to the view editing form.
 
 [.right.text-center]
 .Set details of new field
-image::screenshot-edit-photograph-view-4.png[Set details of new field,width=300]
+image::screenshot-edit-photograph-view-4.png[Set details of new field,width=400]
 
 .Upload image to Photograph record
 
@@ -317,13 +317,15 @@ To upload am image, click on the link for a photograph, then click `Edit`;  the 
 
 [.right.text-center]
 .Edit photograph record with Image field
-image::screenshot-edit-photograph-3.png[Edit photograph record with Image field,width=300]
+image::screenshot-edit-photograph-3.png[Edit photograph record with Image field,width=400]
 
 Click `Browse`, select an image file to be uploaded, then `Open` (or equivalent for the browser being used).  On the photo editomng page, click `Save`.  The photograph record is now displayed with the uploaded image:
 
 [.right.text-center]
 .View photograph record with uploaded Image
-image::screenshot-view-photograph-3.png[View photograph record with uploaded Image,width=300]
+image::screenshot-view-photograph-3.png[View photograph record with uploaded Image,width=400]
+
+Clicking on the displayed image here will show the image alone occupying a full browser window.
 
 
 == Add repeating fields to a data record
