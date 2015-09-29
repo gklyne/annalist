@@ -1,6 +1,6 @@
 = Annalist tutorial
 Graham Klyne
-v0.1.20, 2015-09-25
+v0.1.20, 2015-09-29
 :toc: macro
 :toc-title:
 :linkcss:
