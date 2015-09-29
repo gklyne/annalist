@@ -28,6 +28,12 @@ See also:
 * [oauth2-openid-connect-django.md](./oauth2-openid-connect-django.md)
 * [auth-notes.md](./auth-notes.md)
 
+## Social Linked Data
+
+* https://github.com/solid/solid-spec
+* https://github.com/solid/solid-tools
+* https://github.com/solid/solid-apps
+
 ## Other
 
 * http://pythonhosted.org/Sumatra/ (automated tracking of scientific computations; provenance, electronic notebook)

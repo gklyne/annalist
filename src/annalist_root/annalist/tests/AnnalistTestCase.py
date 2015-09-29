@@ -13,12 +13,24 @@ log = logging.getLogger(__name__)
 
 from django.test import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 
+from annalist.models.entitytypeinfo    import EntityTypeInfo
+
 from annalist.views.fields.bound_field import bound_field
 
 class AnnalistTestCase(TestCase):
     """
     Additonal test methods for Annalist test cases
     """
+
+    def check_entity_values(self, type_id, entity_id, check_values=None):
+        "Helper function checks content of entity record"
+        typeinfo = EntityTypeInfo(self.testsite, self.testcoll, type_id)
+        self.assertTrue(typeinfo.entity_exists(entity_id))
+        t = typeinfo.get_entity(entity_id)
+        self.assertEqual(t.get_id(), entity_id)
+        self.assertEqual(t.get_type_id(), type_id)
+        self.assertDictionaryMatch(t.get_values(), check_values)
+        return t
 
     def assertEqualPrefix(self, actual, expect, prefix=""):
         self.assertEqual(actual, expect, msg="%s: actual %r, expected %r"%(prefix, actual, expect))

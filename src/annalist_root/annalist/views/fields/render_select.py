@@ -57,11 +57,11 @@ edit_options = (
 view_select = (
     """<!-- fields.render_select.view_select -->
     {% if field_linkval %}
-      <a href="{{field_linkval}}{{field_continuation_param}}">{{field_labelval}}</a>
+      <a href="{{field_linkval}}">{{field_labelval}}</a>
     {% elif field_textval and field_textval != "" %}
-      <span>{{field_labelval}}</span>
+      <span class="value-missing">{{field_labelval}}</span>
     {% else %}
-    <span class="value-missing">"""+
+    <span class="value-blank">"""+
       message.NO_SELECTION%{'id': "{{field.field_label}}"}+
     """</span>
     {% endif %}
@@ -92,11 +92,11 @@ edit_select = (
 view_choice = (
     """<!-- fields.render_select.view_choice -->
     {% if field_linkval %}
-      <a href="{{field_linkval}}{{field_continuation_param}}">{{field_labelval}}</a>
+      <a href="{{field_linkval}}">{{field_labelval}}</a>
     {% elif field_textval and field_textval != "" %}
-      <span>{{field_labelval}}</span>
+      <span class="value-missing">{{field_labelval}}</span>
     {% else %}
-    <span class="value-missing">"""+
+    <span class="value-blank">"""+
       message.NO_SELECTION%{'id': "{{field.field_label}}"}+
     """</span>
     {% endif %}
@@ -114,11 +114,11 @@ edit_choice = (
 view_entitytype = (
     """<!-- fields.render_select.view_entitytype -->
     {% if field_linkval %}
-      <a href="{{field_linkval}}{{field_continuation_param}}">{{field_labelval}}</a>
+      <a href="{{field_linkval}}">{{field_labelval}}</a>
     {% elif field_textval and field_textval != "" %}
-      <span>{{field_labelval}}</span>
+      <span class="value-missing">{{field_labelval}}</span>
     {% else %}
-    <span class="value-missing">"""+
+    <span class="value-blank">"""+
       message.NO_SELECTION%{'id': "{{field.field_label}}"}+
     """</span>
     {% endif %}

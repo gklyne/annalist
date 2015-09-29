@@ -77,6 +77,9 @@ Thumbs.db
 *.bak
 *~
 
+# Lock files
+.~lock.*
+
 # Project files
 annalist.sublime*
 /pyenv

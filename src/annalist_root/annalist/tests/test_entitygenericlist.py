@@ -46,7 +46,7 @@ from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import (
     site_dir, collection_dir,
     site_view_url,
-    collection_edit_url,
+    collection_view_url, collection_edit_url,
     continuation_url_param,
     confirm_delete_params,
     collection_create_values,
@@ -155,6 +155,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
+        cont = ""
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -250,7 +251,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 201)    # Will change with site data
+        self.assertEqual(len(entities), 202)    # Will change with site data
         return
 
     def test_get_types_list(self):
@@ -325,6 +326,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
+        cont = ""
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -455,6 +457,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
+        cont = ""
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -499,6 +502,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
+        cont = ""
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -641,7 +645,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_new_all_entity(self):
         # Also tests continuation_url parameter handling
-        s = site_view_url()
+        #@@ s = site_view_url()
+        s = collection_view_url(coll_id="testcoll")
         f = entitylist_form_data("new", list_id="Field_list", continuation_url=s)
         u = entitydata_list_all_url("testcoll", list_id="Field_list")
         r = self.client.post(u, f)
@@ -907,7 +912,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + site_view_url()
+        v = TestHostUri + collection_view_url(coll_id="testcoll")
         self.assertEqual(v, r['location'])
         return
 

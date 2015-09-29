@@ -1,4 +1,6 @@
-To Google group:
+## To Google group:
+
+### Announcing Annalist release 0.1.18
 
 I've just released an update (0.1.18) to the public prototype of Annalist.
 
@@ -17,22 +19,26 @@ in addition to creating new values.
 than internal entity Ids, which it is hoped will lead to more user-friendly 
 presentation when creating and editing entity data records.
 
-Bug fixes are largeley to address some problems associated with file upload and resource import capabilities introduced in the previous release.
+Bug fixes are largely to address some problems associated with file upload and resource import capabilities introduced in the previous release.
 
 More details can be found in the "History" section of the [release notes](https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md), and via the GitHub issues list.
+
+As always, the live demo system is at [demo.annalist.net](http://demo.annalist.net/annalist/site/), and [instructions for installing Annalist](https://github.com/gklyne/annalist/blob/master/documents/installing-annalist.md) are available from, the [Annalist GitHub project](https://github.com/gklyne/annalist).
 
 #g
 
 ...
 
-To research-object and RDS-CREAM:
+## To research-object and RDS-CREAM:
+
+### Announcing Annalist release 0.1.18
 
 I've just released Annalist 0.1.18.
 
 The major new features in this release are user interface changes to allow reordering of repeated fields, presentation of entity labels rather than Ids in entity selection lists, and a simple subtyping mechanism to support data organization and presentation.
 
 The full announcement is at: 
-https://groups.google.com/forum/#!topic/annalist-discuss/????
+https://groups.google.com/d/msg/annalist-discuss/5-4Qu_TrPvk/Vlqtpi8UGAAJ
 
 Release notes (see "history" section for details) at:
 https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md
@@ -45,16 +51,18 @@ http://annalist.net/ and http://demo.annalist.net/
 
 ...
 
-To FAST project:
+## To FAST project:
+
+### Announcing Annalist release 0.1.18
 
 I've just released Annalist 0.1.18.
 
 The major new features in this release are user interface changes to allow reordering of repeated fields, presentation of entity labels rather than Ids in entity selection lists, and a simple subtyping mechanism to support data organization and presentation.
 
-Many of these changes have been driven by requirements coming from my work to capture the Carolan Guitar's digital footprint as linked data, which can be seen at http://localhost:8000/annalist/c/Carolan_Guitar/.
+Many of these changes have been driven by requirements coming from my work to capture the Carolan Guitar's digital footprint as linked data, which can be seen at http://demo.annalist.net/annalist/c/Carolan_Guitar/.
 
 The full release announcement is at: 
-https://groups.google.com/forum/#!topic/annalist-discuss/????
+https://groups.google.com/d/msg/annalist-discuss/5-4Qu_TrPvk/Vlqtpi8UGAAJ
 
 Release notes (see "history" section for details) at:
 https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md

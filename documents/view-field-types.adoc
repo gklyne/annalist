@@ -72,9 +72,15 @@ A default property CURIE or URI can be specified as part of the field descriptio
 
 Used to specifying the position of of a field in a form display, specified in terms of width and horizontal placement on a responsive display grid <sup>1,2</sup>.
 
-Internally, the placement is stored as a specially formatted string.  It is presenrted for viewing as a rough visual indication of the filed placement, and for  editing as a dropdown list of options.
+Internally, the placement is stored as a specially formatted string.  It is presented for viewing as a rough visual indication of the filed placement, and for editing as a dropdown list of options.
 
 Default placement can be specified as part of the field description, and overridden when the field is included in a particular view.
+
+Normal field placement uses the indicated field width on larger displays, and uses the full widthj of smaller displays.
+
+Also offered are "column" placement values that use the indicated width on display of all sizes - these should be used with care as values can easily overflow the available field widthj on smaller displays.  They are intended to be used with list displays where the columns present a one-line summary of the record contents.
+
+@@NOTE As of release 0.1.18, the current implementation does not fully implement field positioning:  the width provided is used, but the position is ignored, so if there are gaps in a row the next field may appear in a location other than that requested by the placement.  This should be adressed in a future release.
 
 === Field renderer type (`Field_render`)
 
@@ -142,9 +148,16 @@ See also the section "Repeated field groups"
 
 Type (URI or CURIE) of entity to which field applies.
 
-This is used to restrict the fields that are offered when editing a view or list description (see also field `View_target_type` used in view descriptions).  If in doubt, leave this field blank.
+This is used to restrict the fields that are offered when editing a view or list description (see also field `View_target_type` used in view descriptions).  If in doubt, leave this field blank (and the field will be offered as an option jn views of any record type).
 
 Many, or even most, field descriptions are specific to a particular entity type, but some are generic.  If this value is not specified, the corresponding field is offered as an option for any entity type, but if given then it is offered only when editing a view or list for the specified type.
+
+Note that field groups are an implicit type, named by the field `annal:Record_type` in the group description (similar to the same field in a View description which names the type to which a view is intended to apply).  Sometimes, this is the same URI as the record type/view with which the group is used, but may also be a disticnt URI.  Using a distinct URIs means that field desriptions that appear only as part of a group can be presented for that group.  An example of this is the `View_field_sel`, `View_field_property` and `View_field_placement` fields that may appear in a `Vioew_field_group` which is used in a `View_view` view description; the type URI associated with the `View_field_group` is `annal:View_field`.
+
+Note that the `Field_entity_type` has no direct effect on the underlying data: it is used simply to control options that are presented through the user interface used when defining views.
+
+If in doubt, leave this field blank, or specify the same type URI as the view with which it will be used (and use the same type URI in any group description).
+
 
 === Entity restriction (`Field_restrict`)
 

@@ -326,10 +326,15 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_value'],         "Test_img_entity")
 
         # Test rendered result
-        field_vals    = default_fields(
+        field_vals = default_fields(
             coll_id="testcoll", type_id="ref_type", entity_id="Test_ref_entity", 
             view_id="Test_refimg_view",
-            basepath=TestBasePath
+            basepath=TestBasePath,
+            cont_uri_param=""
+            )
+        cont_uri_param = (
+            "?continuation_url=%(basepath)s/c/%(coll_id)s/v/%(view_id)s/%(type_id)s/%(entity_id)s/!view"%
+            field_vals()
             )
         formrow1 = """
             <div class="small-12 medium-6 columns">
@@ -338,7 +343,7 @@ class RefMultifieldTest(AnnalistTestCase):
                   <span>Id</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/?continuation_url=%(basepath)s/c/%(coll_id)s/v/%(view_id)s/%(type_id)s/%(entity_id)s/!view">%(entity_id)s</a>
+                  <a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(cont_uri_param)s">%(entity_id)s</a>
                 </div>
               </div>
             </div>
@@ -505,7 +510,12 @@ class RefMultifieldTest(AnnalistTestCase):
         field_vals    = default_fields(
             coll_id="testcoll", type_id="ref_type", entity_id="Test_rpt_entity", 
             view_id="Test_rptimg_view",
-            basepath=TestBasePath
+            basepath=TestBasePath,
+            cont_uri_param=""
+            )
+        cont_uri_param = (
+            "?continuation_url=%(basepath)s/c/%(coll_id)s/v/%(view_id)s/%(type_id)s/%(entity_id)s/!view"%
+            field_vals()
             )
         formrow1 = """
             <div class="small-12 medium-6 columns">
@@ -514,33 +524,16 @@ class RefMultifieldTest(AnnalistTestCase):
                   <span>Id</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/?continuation_url=%(basepath)s/c/%(coll_id)s/v/%(view_id)s/%(type_id)s/%(entity_id)s/!view">%(entity_id)s</a>
+                  <a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(cont_uri_param)s">%(entity_id)s</a>
                 </div>
               </div>
             </div>
             """%field_vals(width=6)
-
         formrow2a = """
             <div class="group-label small-12 medium-2 columns">
               <span>Repeat image reference</span>
             </div>
             """
-        formrow2b = """ # Old
-            <div class="small-12 medium-10 columns hide-for-small-only">
-              <div class="row">
-                <div class="small-12 columns">
-                  <div class="view-grouprow col-head row">
-                    <div class="%(col_head_classes)s">
-                      <span>View comment field</span>
-                    </div>
-                    <div class="%(col_head_classes)s">
-                      <span>View image field</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=6)
         # Note two grou wrappers here: one for repeat and one for multifield ref...
         formrow2b = """
             <div class="small-12 medium-10 columns hide-for-small-only">

@@ -89,7 +89,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         Assemble display information for list view request handlers
         """
-        self.site_view_url       = self.view_uri("AnnalistSiteView")
+        #@@ self.site_view_url       = self.view_uri("AnnalistSiteView")
         self.collection_view_url = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
         listinfo = DisplayInfo(self, "list", request_dict, self.collection_view_url)
         listinfo.get_site_info(self.get_request_host())
@@ -211,7 +211,7 @@ class EntityGenericListView(AnnalistGenericView):
         if listinfo.http_response:
             return listinfo.http_response
         if 'close' in request.POST:
-            return HttpResponseRedirect(listinfo.get_continuation_url() or self.site_view_url)
+            return HttpResponseRedirect(listinfo.get_continuation_url() or self.collection_view_url)
 
         # Process requested action
         redirect_uri = None

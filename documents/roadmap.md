@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: public prototype release 0.1.18; this release introduces 
+Current status: public prototype release 0.1.20; this release introduces 
 interface changes to address some usabaility problems and fixes several bugs.
 
 
@@ -41,6 +41,8 @@ There are also some issues around entity renaming and link preservation to be co
 
 (Moved to [issue #32](https://github.com/gklyne/annalist/issues/32))
 
+(Also consider SoLiD, per discussion with TBL)
+
 
 ### Alternative formats to support
 
@@ -57,7 +59,7 @@ There are also some issues around entity renaming and link preservation to be co
 
 Numbers, Dates, Georeferences, etc.
 
-I also want to look into using "live" links, e.g. to obtain georeference coordinates or environment sensor data for incl,usion into data records.
+I also want to look into using "live" links, e.g. to obtain georeference coordinates or environment sensor data for inclusion into data records.
 
 Notes:
 
@@ -78,6 +80,7 @@ Facilitate the creation of a new collection using the structures (data types, vi
 ## Authentication
 
 - Alternative OIDC identity providers
+- ORCID?
 - Authentication mechanisms
   - Consider using OAuth2-Shibboleth bridge for uni deployment (have link somewhere in notes)
 - OAuth2 dynamic registration - https://tools.ietf.org/html/rfc7591 - if IDPs support it.
@@ -85,7 +88,7 @@ Facilitate the creation of a new collection using the structures (data types, vi
 
 ## Support multiple entity providers
 
-This is an extension of the "Web backend storage" noted above.  An Annalist installation could be able to ropute entety access requests to different providers using different HTTP-based protocols (e.g. WebDav vs AtomPub), or other more specialized access mechanisms.
+This is an extension of the "Web backend storage" noted above.  An Annalist installation could be able to route entety access requests to different providers using different HTTP-based protocols (e.g. WebDav vs AtomPub), or other more specialized access mechanisms.
 
 
 ## Version management integration

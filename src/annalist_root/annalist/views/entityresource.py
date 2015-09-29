@@ -96,8 +96,8 @@ class EntityResourceAccess(AnnalistGenericView):
         Assemble display information for entity view request handler
         """
         action                        = "view"
-        # self.site_view_url            = self.view_uri("AnnalistSiteView")
-        # self.collection_view_url      = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
+        #@@ self.site_view_url            = self.view_uri("AnnalistSiteView")
+        #@@ self.collection_view_url      = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
         self.default_continuation_url = None
         viewinfo = DisplayInfo(self, action, request_dict, self.default_continuation_url)
         viewinfo.get_site_info(self.get_request_host())

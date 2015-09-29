@@ -215,7 +215,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def _check_record_type_values(self, type_id, 
             update="RecordType", 
-            type_uri=None
+            type_uri=None,
+            extra_values=None
             ):
         "Helper function checks content of record type entry with supplied type_id"
         self.assertTrue(RecordType.exists(self.testcoll, type_id))
@@ -227,6 +228,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             update=update, 
             type_uri=type_uri
             )
+        if extra_values:
+            v.update(extra_values)
         # print "t: "+repr(t.get_values())
         # print "v: "+repr(v)
         self.assertDictionaryMatch(t.get_values(), v)
@@ -455,6 +458,16 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                 </div>
               </div>
             </div>
+            """%field_vals(width=4)
+        formrow5c = """
+            <div class="%(button_wide_classes)s">
+              <div class="row">
+                <div class="%(button_right_classes)s">
+                  &nbsp;
+                  <input name="Define_view_list" value="Define view+list" type="submit">
+                </div>
+              </div>
+            </div>
             """%field_vals(width=6)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
@@ -462,6 +475,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow4, html=True)
         self.assertContains(r, formrow5a, html=True)
         self.assertContains(r, formrow5b, html=True)
+        self.assertContains(r, formrow5c, html=True)
         return
 
     def test_get_new(self):
@@ -791,6 +805,57 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(r.context, expect_context)
         # Check original data is unchanged
         self._check_record_type_values("edittype")
+        return
+
+    #   -------- define view+list --------
+
+    def test_define_view_list_task(self):
+        # Create new type
+        self._create_record_type("tasktype")
+        self._check_record_type_values("tasktype")
+        # Post define view+list
+        f = recordtype_entity_view_form_data(
+            type_id="tasktype",
+            type_uri="test:tasktype",
+            task="Define_view_list"
+            )
+        u = entitydata_edit_url(
+            "edit", "testcoll", "_type", entity_id="tasktype", view_id="Type_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        # Check content of type, view and list
+        common_vals = (
+            { 'type_id':      "tasktype"
+            })
+        expect_type_values = (
+            { 'annal:type':         "annal:Type"
+            , 'rdfs:label':         "RecordType testcoll/%(type_id)s"%common_vals
+            , 'annal:uri':          "test:%(type_id)s"%common_vals
+            , 'annal:type_view':    "_view/%(type_id)s"%common_vals
+            , 'annal:type_list':    "_list/%(type_id)s"%common_vals
+            })
+        expect_view_values = (
+            { 'annal:type':         "annal:View"
+            , 'rdfs:label':         "View of RecordType testcoll/%(type_id)s"%common_vals
+            , 'rdfs:comment':       "View of RecordType testcoll/%(type_id)s"%common_vals
+            , 'annal:record_type':  "test:%(type_id)s"%common_vals
+            })
+        expect_list_values = (
+            { 'annal:type':         "annal:List"
+            , 'rdfs:label':         "List of RecordType testcoll/%(type_id)s"%common_vals
+            , 'rdfs:comment':       "List of RecordType testcoll/%(type_id)s"%common_vals
+            , 'annal:default_view': "_view/%(type_id)s"%common_vals
+            , 'annal:default_type': "_type/%(type_id)s"%common_vals
+            , 'annal:record_type':  "test:%(type_id)s"%common_vals
+            , 'annal:display_type': "List"
+            , 'annal:list_entity_selector': "'test:%(type_id)s' in [@type]"%common_vals
+            })
+        self.check_entity_values("_type", "%(type_id)s"%common_vals, expect_type_values)
+        self.check_entity_values("_view", "%(type_id)s"%common_vals, expect_view_values)
+        self.check_entity_values("_list", "%(type_id)s"%common_vals, expect_list_values)
         return
 
 #   -----------------------------------------------------------------------------

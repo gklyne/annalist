@@ -95,7 +95,8 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
     , "Default_type", "unknown_type"
     # Properties
     , "software_version"
-    , "id", "type_id", "type", "label", "help", "url", "uri", "record_type"
+    , "id", "type_id", "type", "member"
+    , "label", "help", "url", "uri", "record_type"
     , "supertype_uris", "supertype_uri"
     , "display_type", "type_list", "type_view"
     , "field_aliases", "alias_target", "alias_source"
@@ -112,6 +113,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
     , "field_render_type", "field_value_mode", "field_entity_type"
     , "field_value_type", "field_target_type"
     , "group_ref", "repeat_label_add", "repeat_label_delete"
+    , "task_buttons", "button_id", "button_label"
     # Deprecated properties - in migration tables
     , "options_typeref", "restrict_values", "target_field"
     ])

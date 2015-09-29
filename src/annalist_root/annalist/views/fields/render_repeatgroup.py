@@ -166,8 +166,6 @@ view_grouprow = (
 edit_grouprow = (
     { 'head':
         """
-        <!-- Force to new row -->
-        <div class="small-12 columns"><div class="row"> 
         <!-- views.fields.render_repeatgroup.edit_grouprow -->
         <div class="small-12 columns">
           <div class="row">

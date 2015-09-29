@@ -57,7 +57,7 @@ site_types = (
     , FieldChoice("_type/_group",                     label="Field group"                 )
     , FieldChoice("_type/_list",                      label="List"                        )
     , FieldChoice("_type/_type",                      label="Type"                        )
-    , FieldChoice("_type/_user",                      label="User"                        )
+    , FieldChoice("_type/_user",                      label="User permissions"                        )
     , FieldChoice("_type/_view",                      label="View"                        )
     , FieldChoice("_type/BibEntry_type",              label="Bibliographic record"        )
     , FieldChoice("_type/Default_type",               label="Default record"              )
@@ -90,7 +90,7 @@ site_lists = (
     , FieldChoice("_list/Field_list",                 label="List fields")
     , FieldChoice("_list/List_list",                  label="List lists")
     , FieldChoice("_list/Type_list",                  label="List types")
-    , FieldChoice("_list/User_list",                  label="List users")
+    , FieldChoice("_list/User_list",                  label="User permissions")
     , FieldChoice("_list/View_list",                  label="List views")
     ])
 
@@ -149,7 +149,7 @@ def get_site_views():
 #   ----- Field groups -----
 
 site_field_groups = (
-    [ FieldChoice("_initial_values")
+    [ FieldChoice("_group/_initial_values")
     , FieldChoice("_group/Bib_book_group",             label="BibEntry book fields"       )
     , FieldChoice("_group/Bib_identifier_group",       label="BibEntry identifier fields" )
     , FieldChoice("_group/Bib_journal_group",          label="BibEntry journal fields"    )

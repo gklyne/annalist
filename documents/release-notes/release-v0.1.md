@@ -80,6 +80,64 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 # History
 
+## Version 0.1.20
+
+This release has tackled a number of usability issues, and in particular introduces a notion of "task buttons" that provide short cuts for some commonly performed collection configuration activities:
+- creating view and list definitions for a new record type
+- creating field and group definitions for a repeated field group
+- creating field and group definitions for displaying fields from a linked record
+
+Other changes include:
+- Simple links no longer include continuation URIs.  This means that the link URLs are more consistently usable as identifiers.
+- Missing entity links are rendered in a more distinctive style.
+- Closing top-level list displays no longer return to the site home page, but rather redisplay the collection default view.  This has the effect of making collections more "sticky" in the sense that a user is less likely to find they are unexpectedly looking at some completely different data collection.
+
+It also fixes a number of bugs, including several introduced by the new logic to allow lists to include subtypes in release 0.1.18.  (This change meant that the way entity references is handled is fundamentally changed, and a few required updates were overlooked and missed by the test suite.)  See the version 0.1.19 task summary for more details.
+
+An [Annalist tutorial](http://annalist.net/documents/tutorial/annalist-tutorial.html) document has been created.  It is still in a very drafty form, but it provides a more task-oriented desription of Annalist capabilities.  There is a generated HTML document and associated resources in directory `documents/tutorial/annalist-tutorial` of the distribution kit.  A copy has been placed online at [http://annalist.net/documents/tutorial/annalist-tutorial.html]().  A [rough rendering](https://github.com/gklyne/annalist/blob/develop/documents/tutorial/annalist-tutorial.adoc) of the latest working draft can be viewed directly from the Annalist Github repository.
+
+
+## Version 0.1.19, towards 0.1.20
+
+Usability: key tasks need to be easier (at the level of a single form fill-out):
+- Create a new type+view+list, suitably interconnected
+- Create repeating fields in a view
+- Create multifield reference in a view/group
+- See also: [#41](https://github.com/gklyne/annalist/issues/41)
+- See also discussion below of introducing generic "tasks" - this would be an early pathfinder for that.
+
+- [x] BUG: view types > view type > task button > (error) > Cancel.  Returns to type list rather than view of edited type.  Fixed up some probvlems with continuation URI generation.
+- [x] BUG: extend render placement to handle list columns defined for small only
+- [x] BUG: unclosed <div> in RepeatGroupRow renderer was causing formatting errors.  (Ugly but not fatal.)
+- [x] BUG: `<form action="" ...>` fails HTML validation.  Use `action="#"` instead.
+- [x] BUG: attempting to create new referenced entity while current entity Id is invalid gives a very obscure server error message (message with Save is sort-of OK).
+- [x] BUG: Edit referenced field button in edit view doesn't work if entity type has been changed to subtype.
+- [x] BUG: image with placement (0/8) displays incorrect label size.   Remove field placement options x/8 or x/9 (not sub-multiple of 12).  These widths are still allowed for columns.
+- [x] BUG: "Define view+list" error when defining a new type; remember when entity has been saved and skip existence check when performing a subsequent save. Added `DisplayInfo.saved()` method.
+- [x] When rendering missing entity reference in view mode, use alternative style/colour
+- [x] Don't include continuation URI with entity links in list, view, etc.?
+- [x] Create a new type+view+list, suitably interconnected
+    - [x] Add task-button description to view description for type; use structure for repeat values: for each: Button Id, button label
+    - [x] Render task buttons on view (generic logic)
+    - [x] Add logic to catch and dispatch view+list task-button click
+    - [x] Add logic to create/update view+list from type form data - hand-coded for now, but subsequent implementation may be data-driven.
+    - [x] Create test case(s)
+- [x] Create repeating fields in a view.
+    - [x] Add task button to field definition form: define repeat field
+    - [x] Add logic to catch and dispatch define-repeat click
+    - [x] Add logic to create repeat group that references current field
+    - [x] Add logic to create repeat field that references group
+    - [x] Create test case(s)
+- [x] Create multifield reference fields in a view or group.
+    - [x] Add task button to field definition form: define field reference
+    - [x] Add logic to catch and dispatch define-multifield click
+    - [x] Add logic to create multifield group that references current field
+    - [x] Add logic to create multifield reference field that references group
+    - [x] Fix up formatting for reference field not in a repeated group
+    - [x] Create test case(s)
+- [x] On closing top-level list display: return to collection default view, not Home.  This has teh effect of keepinbg the user within a single collection unless they explicitly select `Home` from the menu bar.
+- [x] Change "List users" heading to "List user permissions"
+- [x] Initial tutorial/task-oriented documentation. Uses personal photo library example.
 
 ## Version 0.1.18
 

@@ -32,7 +32,7 @@ If Annalist Docker containers have been used previously on the host system, the 
 If this is the first time Annalist has been run on this system, create a new Annalist site data container:
 
     docker run --name=annalist_site --detach gklyne/annalist_site
-
+    
 Then
 
     docker run --interactive --tty --rm \
@@ -156,9 +156,9 @@ The following assumes that software is installed under a directory called $WORKS
 
         pip install annalist
 
-4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.18.tar.gz).  Then install it thus:
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.20.tar.gz).  Then install it thus:
 
-        pip install $WORKSPACE/Annalist-0.1.18.tar.gz
+        pip install $WORKSPACE/Annalist-0.1.20.tar.gz
 
 5.  Finally, test the installed software:
 
@@ -166,19 +166,20 @@ The following assumes that software is installed under a directory called $WORKS
 
     The output from this command should look something like this:
 
-        (anenv)conina:src graham$ annalist-manager runtests
-        INFO:annalist_site.settings.runtests:Annalist version 0.1.18 (test configuration)
+
+        $ annalist-manager runtest
+        INFO:annalist_site.settings.runtests:Annalist version 0.1.20 (test configuration)
         INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
-        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.18-py2.7.egg/annalist_root/sampledata/data
+        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.20-py2.7.egg/annalist_root/sampledata/data
         INFO:annalist_site.settings.runtests:CONFIG_BASE:     /Users/graham/.annalist/
         INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/django
-        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.18-py2.7.egg/annalist_root/annalist_site
-        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.18-py2.7.egg/annalist_root
-        INFO:annalist_site.settings.runtests:DB PATH:         /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.18-py2.7.egg/annalist_root/db.sqlite3
+        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.20-py2.7.egg/annalist_root/annalist_site
+        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.20-py2.7.egg/annalist_root
+        INFO:annalist_site.settings.runtests:DB PATH:         /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.20-py2.7.egg/annalist_root/db.sqlite3
         Creating test database for alias 'default'...
-        ................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+        ...................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
         ----------------------------------------------------------------------
-        Ran 560 tests in 216.177s
+        Ran 563 tests in 213.774s
 
         OK
         Destroying test database for alias 'default'...

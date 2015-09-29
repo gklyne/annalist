@@ -286,8 +286,9 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         # Test rendered result
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
-            view_url=v, cont_url=u 
+            view_url=v, cont_uri_param="" 
             )
+        cont_uri_param = "?continuation_url="+u
         formrow1 = """
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
@@ -295,7 +296,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
                   <span>Id</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <a href="%(view_url)s?continuation_url=%(cont_url)s">testentity</a>
+                  <a href="%(view_url)s%(cont_uri_param)s">testentity</a>
                 </div>
               </div>
             </div>

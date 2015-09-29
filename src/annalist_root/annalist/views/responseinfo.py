@@ -39,7 +39,7 @@ class ResponseInfo(object):
         """
         self._http_response = None      # Set when an HTTP response is determined (typically an error)
         self._response_conf = None      # Operation confirmation message
-        self._response_err  = None      # Error message/glag (string)
+        self._response_err  = None      # Error message/flag (string)
         self._response_info = None      # String reporting details of confirmation or error
         self._templates     = None      # Message templates dictionary
         self._updated       = False     # Set True if entity values need to be updated

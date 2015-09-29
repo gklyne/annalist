@@ -83,12 +83,14 @@ class SelectRenderingTest(FieldRendererTestSupport):
 
     def test_RenderChoiceValue(self):
         def expect_render(valkey, vallabel, vallink, valchoices):
+            valcont = "?continuation_url=test_cont"
+            valcont = ""
             if vallink and valkey in valchoices:
-                render_view = """<a href="%s">%s</a> """%(vallink+"?continuation_url=test_cont", vallabel)
+                render_view = """<a href="%s">%s</a> """%(vallink+valcont, vallabel)
             elif valkey == "":
-                render_view = """<span class="value-missing">%s</span> """%(vallabel)
+                render_view = """<span class="value-blank">%s</span> """%(vallabel)
             else:
-                render_view = """<span>%s</span> """%(vallabel)
+                render_view = """<span class="value-missing">%s</span> """%(vallabel)
             render_edit = expect_render_select(
                 "repeat_prefix_test_field",
                 valchoices, 
@@ -123,15 +125,17 @@ class SelectRenderingTest(FieldRendererTestSupport):
 
     def test_RenderSelectValue(self):
         def expect_render(valkey, vallabel, vallink, valchoices):
+            valcont = "?continuation_url=test_cont"
+            valcont = ""
             if vallink and valkey in valchoices:
                 render_view = (
                     """<a href="%s">%s</a> """%
-                    (vallink+"?continuation_url=test_cont", vallabel)
+                    (vallink+valcont, vallabel)
                     )
             elif valkey == "":
-                render_view = """<span class="value-missing">%s</span> """%(vallabel)
+                render_view = """<span class="value-blank">%s</span> """%(vallabel)
             else:
-                render_view = """<span>%s</span> """%(vallabel)
+                render_view = """<span class="value-missing">%s</span> """%(vallabel)
             select = expect_render_select(
                 "repeat_prefix_test_field",
                 valchoices, 

@@ -2,22 +2,24 @@
 
 ## Summary of release tasks
 
-- [ ] Feature freeze
-- [ ] Uninstall annalist (if installed): `pip uninstall annalist`
-- [ ] Delete contents of build directory (ensure any old files are removed)
-- [ ] Clean old .pyc files - `clean.sh`
-- [ ] Local install
-- [ ] Run test suite
-- [ ] Update site data in local 'personal' installation
+- [x] Feature freeze
+- [x] Uninstall annalist (if installed): `pip uninstall annalist`
+- [x] Delete contents of build directory (ensure any old files are removed)
+- [x] Clean old .pyc files - `clean.sh`
+- [x] Local install
+- [x] Run test suite
+- [x] Update site data in local 'personal' installation
     - `annalist-manager initialize` (is this really needed?  does it wipe users?  No)
     - `annalist-manager updatesitedata`
-- [ ] Test 'personal' deployment in actual use
+- [x] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
-- [ ] Documentation updates
-- [ ] Demo screencast update
+- [x] Documentation updates
+- [x] Demo screencast update
 
 - [x] Create release preparation branch
-    - `git checkout -b release-prep-x.y.z develop`
+    - git stash
+    - git checkout -b release-prep-x.y.z develop
+    - git stash pop
     - *NOTE* use a different name to that which will be used to tag the release
 - [x] Add TODO list to release notes (edit out working notes)
 - [x] Bump version to even value in `src/annalist_root/annalist/__init__.py`
@@ -49,6 +51,8 @@
     - `cat annalist.out`
 - [x] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
         cp ~annalist/uploads/pages/index.html /var/www
+- [x] Update tutorial document at annalist.net
+        cp ~annalist/uploads/documents/tutorial/??? /var/www/documents/tutorial/
 - [x] Commit changes
 - [x] Upload to PyPI (see below)
 - [x] Tag release on release branch
@@ -63,7 +67,7 @@
     - `git commit -m "Master branch updated to Vx.y.z"`
     - `git push`
     - `git push --tags`
-- [ ] Merge release branch to develop
+- [x] Merge release branch to develop
     - take care to ensure the branch is merged, not the tagged release
     - e.g.
         - `git checkout develop`
@@ -103,6 +107,8 @@ The following sequence must be run on any system with docker installed (cf. ssh-
 
 Use a well-connected Linux system for the following steps, and set the python virtual environment.
 
+    # On dev.annalist.net:
+    # ANNALIST=~/github/gklyne/annalist
     cd ${ANNALIST}/src
     git checkout master
     git pull

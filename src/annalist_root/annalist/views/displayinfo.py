@@ -93,6 +93,7 @@ class DisplayInfo(object):
     def __init__(self, view, action, request_dict, default_continue):
         self.view               = view
         self.action             = action
+        self.is_saved           = False
         self.request_dict       = request_dict
         self.continuation_url   = request_dict.get('continuation_url', None)
         self.default_continue   = default_continue
@@ -180,6 +181,14 @@ class DisplayInfo(object):
                 self.collection[ANNAL.CURIE.software_version] = annalist.__version_data__
                 self.collection._save()
         return
+
+    def saved(self, is_saved=None):
+        """
+        Make note that current entity has been saved, and/or return saved status
+        """
+        if is_saved is not None:
+            self.is_saved = is_saved
+        return self.is_saved
 
     def get_type_info(self, type_id):
         """
@@ -428,7 +437,8 @@ class DisplayInfo(object):
         """
         Return dictionary with continuation URL specified for the current request.
         """
-        return {'continuation_url': self.continuation_url} if self.continuation_url else {}
+        c = self.get_continuation_url()
+        return {'continuation_url': c} if c else {}
 
     def get_continuation_next(self):
         """
@@ -509,11 +519,37 @@ class DisplayInfo(object):
             context.update(
                 { 'view_label': self.recordview[RDFS.CURIE.label]
                 })
+            task_buttons = self.recordview.get(ANNAL.CURIE.task_buttons, None)
+            self.add_task_button_context(task_buttons, context)
         if self.recordlist:
             context.update(
                 { 'list_label': self.recordlist[RDFS.CURIE.label]
                 })
         return context
+
+    def add_task_button_context(self, task_buttons, context):
+        """
+        Adds context values to a supplied context dictionary corresponding 
+        to the supplied task_buttons value(s) from a view description.
+
+        @NOTE: subsequent versions of this function may extract values from
+        an identified task description record.
+        """
+        if isinstance(task_buttons, list):
+            context.update(
+                { 'task_buttons':
+                    [ { 'button_id':    b[ANNAL.CURIE.button_id]
+                      , 'button_name':  extract_entity_id(b[ANNAL.CURIE.button_id])
+                      , 'button_label': b[ANNAL.CURIE.button_label]
+                      } for b in task_buttons
+                    ]
+                })
+        elif task_buttons is not None:
+            log.error(
+                "DisplayInfo.context_data: Unexpected value for task_buttons: %r"%
+                (task_buttons)
+                )
+        return
 
     def __str__(self):
         attrs = (
