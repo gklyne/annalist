@@ -4,3 +4,8 @@ scp -i ~/.ssh/id_rsa_openstack_gk \
 
 scp -i ~/.ssh/id_rsa_openstack_gk \
     -r ../documents/pages annalist@annalist.net:uploads
+
+
+scp -i ~/.ssh/id_rsa_openstack_gk \
+    -r ../documents/tutorial annalist@annalist.net:uploads/documents
+
