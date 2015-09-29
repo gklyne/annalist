@@ -67,7 +67,7 @@
     - `git commit -m "Master branch updated to Vx.y.z"`
     - `git push`
     - `git push --tags`
-- [x] Merge release branch to develop
+- [ ] Merge release branch to develop
     - take care to ensure the branch is merged, not the tagged release
     - e.g.
         - `git checkout develop`
