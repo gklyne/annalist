@@ -33,10 +33,12 @@ from annalist.views.form_utils.fieldchoice      import FieldChoice
 # that a grid column is unoccupied or occupied respectively by the field.
 placement_occupancy = OrderedDict(
     [ ("small:0,12"           , "############ (0/12)")
-    , ("small:0,12;medium:0,9", "#########... (0/9)")
-    , ("small:0,12;medium:3,9", "...######### (3/9)")
-    , ("small:0,12;medium:0,8", "########.... (0/8)")
-    , ("small:0,12;medium:4,8", "....######## (4/8)")
+    #@@ Label width calculation doesn't work for placements not sub-multiple of 12
+    #@@ (but still OK for columns)
+    # , ("small:0,12;medium:0,9", "#########... (0/9)")
+    # , ("small:0,12;medium:3,9", "...######### (3/9)")
+    # , ("small:0,12;medium:0,8", "########.... (0/8)")
+    # , ("small:0,12;medium:4,8", "....######## (4/8)")
     , ("small:0,12;medium:0,6", "######...... (0/6)")
     , ("small:0,12;medium:3,6", "...######... (3/6)")
     , ("small:0,12;medium:6,6", "......###### (6/6)")

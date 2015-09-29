@@ -854,18 +854,20 @@ class GenericEntityEditView(AnnalistGenericView):
 
         # Check existence of entity to save according to action performed
         if (action in ["new", "copy"]) or entity_renamed:
-            if new_typeinfo.entity_exists(entity_id):
-                log.warning(
-                    "Entity exists: action %s %s/%s, orig %s/%s"%
-                        (action, entity_type_id, entity_id, orig_type_id, orig_entity_id)
-                    )
-                return responseinfo.set_http_response(
-                    self.form_re_render(
-                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                        error_head=messages['entity_heading'],
-                        error_message=messages['entity_exists']
+            if not viewinfo.saved():
+                # First save - check for existence
+                if new_typeinfo.entity_exists(entity_id):
+                    log.warning(
+                        "Entity exists: action %s %s/%s, orig %s/%s"%
+                            (action, entity_type_id, entity_id, orig_type_id, orig_entity_id)
                         )
-                    )
+                    return responseinfo.set_http_response(
+                        self.form_re_render(
+                            viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                            error_head=messages['entity_heading'],
+                            error_message=messages['entity_exists']
+                            )
+                        )
         else:
             if not typeinfo.entity_exists(entity_id, use_altparent=True):
                 # This shouldn't happen, but just in case...
@@ -948,6 +950,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
                 )
         log.info("Saved %s/%s"%(entity_type_id, entity_id))
+        viewinfo.saved(is_saved=True)
         viewinfo.update_coll_version()
         return responseinfo
 

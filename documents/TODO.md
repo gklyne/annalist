@@ -27,6 +27,11 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 - [x] BUG: `<form action="" ...>` fails HTML validation.  Use `action="#"` instead.
 - [x] BUG: attempting to create new referenced entity while current entity Id is invalid gives a very obscure server error message (message with Save is sort-of OK).
 - [x] BUG: Edit referenced field button in edit view doesn't work if entity type has been changed to subtype.
+- [x] BUG: image with placement (0/8) displays incorrect label size
+    - Remove field placement options x/8 or x/9 (not sub-multiple of 12).
+    - These widths are still allowed for columns.
+- [x] Fixed bug with "Define view+list" while defining a new type; remember when entity has been saved and skip existence check when performing a subsequent save.
+    - Added `DisplayInfo.saved()` method.
 - [x] When rendering missing entity reference in view mode, use alternative style/colour
 - [x] Don't include continuation URI with entity links in list, view, etc.?
 - [x] Create a new type+view+list, suitably interconnected
@@ -58,10 +63,8 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
     - [x] Create test case(s)
 - [x] Close top-level list display: return to collection default view, not Home
 - [x] Change "List users" heading to "List user permissions"
-- [ ] Possible bug with "Define view+list" while defining a new type.  Investigate.
-- [ ] Initial tutorial/task-oriented documentation
-    - (Use home inventory example? Photo library? Something else?)
-- [ ] BUG: image with placement (0/8) displays incorrect label size; don't allow x/8 or x/9 for regular fields (just columns) (not sub-multiple of 12)
+- [x] Initial tutorial/task-oriented documentation.
+    - Uses personal photo library example.
 
 (release?)
 

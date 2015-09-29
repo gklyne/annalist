@@ -93,6 +93,7 @@ class DisplayInfo(object):
     def __init__(self, view, action, request_dict, default_continue):
         self.view               = view
         self.action             = action
+        self.is_saved           = False
         self.request_dict       = request_dict
         self.continuation_url   = request_dict.get('continuation_url', None)
         self.default_continue   = default_continue
@@ -180,6 +181,14 @@ class DisplayInfo(object):
                 self.collection[ANNAL.CURIE.software_version] = annalist.__version_data__
                 self.collection._save()
         return
+
+    def saved(self, is_saved=None):
+        """
+        Make note that current entity has been saved, and/or return saved status
+        """
+        if is_saved is not None:
+            self.is_saved = is_saved
+        return self.is_saved
 
     def get_type_info(self, type_id):
         """
