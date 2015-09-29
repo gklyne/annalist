@@ -2,7 +2,7 @@
 , "@type":                      ["annal:List"]
 , "annal:id":                   "User_list"
 , "annal:type_id":              "_list"
-, "rdfs:label":                 "List users"
+, "rdfs:label":                 "User permissions"
 , "rdfs:comment":               "List of user permissions"
 , "annal:display_type":         "List"
 , "annal:default_view":         "_view/User_view"

@@ -57,7 +57,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
     - [x] Fix up formatting for reference field not in a repeated group
     - [x] Create test case(s)
 - [x] Close top-level list display: return to collection default view, not Home
-- [ ] Change "List users" heading to "List user permissions"
+- [x] Change "List users" heading to "List user permissions"
 - [ ] Possible bug with "Define view+list" while defining a new type.  Investigate.
 - [ ] Initial tutorial/task-oriented documentation
     - (Use home inventory example? Photo library? Something else?)
@@ -121,6 +121,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 - [ ] review renderers and revise to take all message strings from messages.py
 - [ ] look into entity cacheing (esp. RecordType) for performance improvement
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
+- [ ] Review nomenclature, especially labels, for all site data
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types
 - [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)

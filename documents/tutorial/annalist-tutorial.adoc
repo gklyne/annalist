@@ -16,9 +16,9 @@ toc::[]
 
 == Running example
 
-This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entitiues involved in the picture-taking process.  For this example, we use a prefix `pcat` for URIs (actually "Compact URIs", or CURIEs) defined specifically for the photograph catalogue.  This prefix will eventually be associated with a base URI to allow identification on the World Wide Web.  (@@TODO: full linked data support.)
+This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entities involved in the picture-taking process.  For this example, we use a prefix `pcat` for URIs (actually ["Compact URIs"](http://www.w3.org/TR/curie/), or CURIEs) defined specifically for the photograph catalogue.  This prefix will eventually be associated with a base URI to allow identification on the World Wide Web.  (@@TODO: full linked data support.)
 
-The completed example can be seen at the http://demo.annalist.net/[Annalist demo site], as collection [Annalist photo collection].  (@@TODO)
+The completed example can be seen at the http://demo.annalist.net/[Annalist demo site], as collection [Annalist photo collection].  (@@TODO, once current in-development software is deployed.)
 
 
 == Log in to Annalist

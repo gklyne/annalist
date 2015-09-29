@@ -431,13 +431,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             ])
         #@@ Updated
         trows_expected = (
-            [ [ "_list/list1",    ["list1",    "List", "RecordList coll1/list1"] ]
-            , [ "_list/list2",    ["list2",    "List", "RecordList coll1/list2"] ]
-            , [ "_type/type1",    ["type1",    "Type", "RecordType coll1/type1"] ]
-            , [ "_type/type2",    ["type2",    "Type", "RecordType coll1/type2"] ]
-            , [ "_user/testuser", ["testuser", "User", "Test User"] ]
-            , [ "_view/view1",    ["view1",    "View", "RecordView coll1/view1"] ]
-            , [ "_view/view2",    ["view2",    "View", "RecordView coll1/view2"] ]
+            [ [ "_list/list1",    ["list1",    "List",              "RecordList coll1/list1"] ]
+            , [ "_list/list2",    ["list2",    "List",              "RecordList coll1/list2"] ]
+            , [ "_type/type1",    ["type1",    "Type",              "RecordType coll1/type1"] ]
+            , [ "_type/type2",    ["type2",    "Type",              "RecordType coll1/type2"] ]
+            , [ "_user/testuser", ["testuser", "User permissions",  "Test User"] ]
+            , [ "_view/view1",    ["view1",    "View",              "RecordView coll1/view1"] ]
+            , [ "_view/view2",    ["view2",    "View",              "RecordView coll1/view2"] ]
             , [ "type1/entity1",  ["entity1",  "RecordType coll1/type1", "Entity coll1/type1/entity1"] ]
             , [ "type1/entity2",  ["entity2",  "RecordType coll1/type1", "Entity coll1/type1/entity2"] ]
             , [ "type1/entity3",  ["entity3",  "RecordType coll1/type1", "Entity coll1/type1/entity3"] ]
@@ -518,7 +518,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_type/_initial_values",  ["_initial_values",  None] ]
             , [ "_type/_list",            ["_list",            "List"] ]
             , [ "_type/_type",            ["_type",            "Type"] ]
-            , [ "_type/_user",            ["_user",            "User"] ]
+            , [ "_type/_user",            ["_user",            "User permissions"] ]
             , [ "_type/_view",            ["_view",            "View"] ]
             , [ "_type/BibEntry_type",    ["BibEntry_type",    "Bibliographic record"] ]
             , [ "_type/Default_type",     ["Default_type",     "Default record"] ]
@@ -639,7 +639,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_list/Field_list",         ["Field_list",          "List fields"] ]
             , [ "_list/List_list",          ["List_list",           "List lists"] ]
             , [ "_list/Type_list",          ["Type_list",           "List types"] ]
-            , [ "_list/User_list",          ["User_list",           "List users"] ]
+            , [ "_list/User_list",          ["User_list",           "User permissions"] ]
             , [ "_list/View_list",          ["View_list",           "List views"] ]
             , [ "_list/list1",              ["list1",               "RecordList coll1/list1"] ]
             , [ "_list/list2",              ["list2",               "RecordList coll1/list2"] ]   
@@ -1178,7 +1178,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_type_list_view("_user", "User_list", "User_view", ANNAL.CURIE.User)
         return
 
-    # List users using user list
+    # List user permissions using user list
     def test_user_list(self):
         u = collection_entity_list_url(
             coll_id="coll1", list_id="User_list", type_id="_user", scope="all"
@@ -1186,7 +1186,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         s = self.get_page(u)
 
         self.assertEqual(s.title.string, "Collection coll1")
-        self.assertEqual(s.h3.string, "List users")
+        self.assertEqual(s.h3.string, "User permissions")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/User_list")
 
