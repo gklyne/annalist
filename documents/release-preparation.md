@@ -53,34 +53,35 @@
         cp ~annalist/uploads/pages/index.html /var/www
 - [x] Update tutorial document at annalist.net
         cp ~annalist/uploads/documents/tutorial/??? /var/www/documents/tutorial/
-- [ ] Commit changes
-- [ ] Upload to PyPI (see below)
-- [ ] Tag release on release branch
+- [x] Commit changes
+- [x] Upload to PyPI (see below)
+- [x] Tag release on release branch
     - `git tag -a release-x.y.z`
-- [ ] Merge release branch to master
+- [x] Merge release branch to master
     - e.g.
         - `git checkout master`
         - `git merge release-prep-x.y.z`
-- [ ] Test again on master branch
-- [ ] Push master branch, and tags
+- [x] Test again on master branch
+- [x] Push master branch, and tags
     - `git add ..`
     - `git commit -m "Master branch updated to Vx.y.z"`
     - `git push`
     - `git push --tags`
-- [ ] Merge release branch to develop
+- [x] Merge release branch to develop
     - take care to ensure the branch is merged, not the tagged release
     - e.g.
         - `git checkout develop`
         - `git merge release-prep-x.y.z`
-- [ ] On develop branch, bump version number again (back to odd value)
-- [ ] Reset TODO list (remove entries moved to release notes, update version)
-- [ ] Commit and push changes
+- [x] On develop branch, bump version number again (back to odd value)
+- [x] Reset TODO list (remove entries moved to release notes, update version)
+- [x] Commit and push changes
 - [ ] Delete release branch
     - `git branch -d release-prep-x.y.z`
-- [ ] Create Docker image, test (see below)
-- [ ] Push docker image to DockerHub (see below)
 - [ ] Post announcement to Google Group, Twitter and elsewhere
 - [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`), retest
+
+- [ ] Create Docker image, test (see below)
+- [ ] Push docker image to DockerHub (see below)
 
 
 ## Build kit and PyPI upload
