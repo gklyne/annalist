@@ -80,6 +80,14 @@ RDFS = makeNamespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#",
     ])
 
 """
+Partial enumeration of OWL namespace
+"""
+OWL = makeNamespace("owl", "http://www.w3.org/2002/07/owl#",
+    [ "Thing", "Nothing"
+    , "sameAs", "differentFrom", "equivalentClass"
+    ])
+
+"""
 Annalist namespace terms
 """
 ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
@@ -90,7 +98,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
     # Entity types
     , "User", "Type", "List", "View", "Field_group", "Field", "Enum"
     , "Text", "Longtext", "Richtext", "Slug", "Identifier"
-    , "Placement", "Image", "Audio", "User"
+    , "Placement", "Image", "Audio", "User", "Vocabulary"
     , "Import", "Upload"
     , "Default_type", "unknown_type"
     # Properties

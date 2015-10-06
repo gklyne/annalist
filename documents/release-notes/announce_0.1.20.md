@@ -33,10 +33,10 @@ I've just released Annalist 0.1.20.
 
 This release has tackled a number of usability issues, and in particular introduces "task buttons" that provide short cuts for some commonly performed configuration activities.
 
-An [Annalist tutorial](http://annalist.net/documents/tutorial/annalist-tutorial.html) document has been created.  It is still in a very drafty form, but it provides a more task-oriented desription of Annalist capabilities.
+An Annalist tutorial (http://annalist.net/documents/tutorial/annalist-tutorial.html) document has been created.  It is still in a very drafty form, but it provides a more task-oriented desription of Annalist capabilities.
 
 The full announcement is at: 
-https://groups.google.com/d/msg/annalist-discuss/......
+https://groups.google.com/d/msg/annalist-discuss/_xm-zFuCmTY/QVo9WEzxBAAJ
 
 Release notes (see "history" section for details) at:
 https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md

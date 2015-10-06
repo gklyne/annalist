@@ -131,6 +131,13 @@ RECORD_FIELD_EXISTS         = "Record field %(id)s in collection %(coll_id)s alr
 RECORD_FIELD_NOT_EXISTS     = "Record field %(id)s in collection %(coll_id)s does not exist"
 RECORD_FIELD_REMOVED        = "Record field %(id)s in collection %(coll_id)s was removed"
 
+RECORD_VOCAB_ID             = "Problem with vocabulary identifier"
+RECORD_VOCAB_ID_INVALID     = "The vocabulary namespace identifier is missing or not a valid identifier"
+RECORD_VOCAB_LABEL          = "Vocabulary %(id)s in collection %(coll_id)s"
+RECORD_VOCAB_EXISTS         = "Vocabulary %(id)s in collection %(coll_id)s already exists"
+RECORD_VOCAB_NOT_EXISTS     = "Vocabulary %(id)s in collection %(coll_id)s does not exist"
+RECORD_VOCAB_REMOVED        = "Vocabulary %(id)s in collection %(coll_id)s was removed"
+
 RECORD_ENUM_ID              = "Problem with enumeration type identifier"
 RECORD_ENUM_ID_INVALID      = "The enumeration type identifier is missing or not a valid identifier"
 RECORD_ENUM_LABEL           = "Enumeration type %(id)s in collection %(coll_id)s"

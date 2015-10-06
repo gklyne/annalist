@@ -22,6 +22,7 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
 from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordfield    import RecordField
+from annalist.models.recordvocab    import RecordVocab
 from annalist.models.recordenum     import RecordEnumFactory
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
@@ -110,6 +111,18 @@ FIELD_MESSAGES = (
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
+VOCAB_MESSAGES = (
+    { 'parent_heading':         message.COLLECTION_ID
+    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+    , 'entity_heading':         message.RECORD_VOCAB_ID
+    , 'entity_invalid_id':      message.RECORD_VOCAB_ID_INVALID
+    , 'entity_exists':          message.RECORD_VOCAB_EXISTS
+    , 'entity_not_exists':      message.RECORD_VOCAB_NOT_EXISTS
+    , 'entity_removed':         message.RECORD_VOCAB_REMOVED
+    , 'entity_type_heading':    message.ENTITY_TYPE_ID
+    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+    })
+
 ENUM_MESSAGES = (
     { 'parent_heading':         message.COLLECTION_ID
     , 'parent_missing':         message.COLLECTION_NOT_EXISTS
@@ -165,6 +178,7 @@ TYPE_CLASS_MAP = (
     , '_view':              RecordView
     , '_group':             RecordGroup
     , '_field':             RecordField
+    , '_vocab':             RecordVocab
     , 'Enum_list_type':     RecordEnumFactory('Enum_list_type',   'Enum_list_type')
     , 'Enum_render_type':   RecordEnumFactory('Enum_render_type', 'Enum_render_type')
     , 'Enum_value_mode':    RecordEnumFactory('Enum_value_mode',  'Enum_value_mode')
@@ -178,6 +192,7 @@ TYPE_MESSAGE_MAP = (
     , '_view':              VIEW_MESSAGES
     , '_group':             GROUP_MESSAGES
     , '_field':             FIELD_MESSAGES
+    , '_vocab':             VOCAB_MESSAGES
     , 'Enum_list_type':     ENUM_MESSAGES
     , 'Enum_render_type':   ENUM_MESSAGES
     , 'Enum_value_mode':    ENUM_MESSAGES
@@ -191,6 +206,7 @@ TYPE_PERMISSIONS_MAP = (
     , '_view':              CONFIG_PERMISSIONS
     , '_group':             CONFIG_PERMISSIONS
     , '_field':             CONFIG_PERMISSIONS
+    , '_vocab':             CONFIG_PERMISSIONS
     , 'Enum_list_type':     CONFIG_PERMISSIONS
     , 'Enum_render_type':   CONFIG_PERMISSIONS
     , 'Enum_value_mode':    CONFIG_PERMISSIONS

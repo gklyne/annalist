@@ -1,0 +1,10 @@
+{ "@type":          ["annal:Vocabulary", "annal:EntityData"]
+, "annal:type_id":  "_vocab"
+, "annal:type":     "annal:Vocabulary"
+, "rdfs:label":     "... namespace"
+, "rdfs:comment":   "Vocabulary namespace for ..."
+, "annal:uri":      ""
+, "rdfs:seeAlso":
+    [
+    ]
+}

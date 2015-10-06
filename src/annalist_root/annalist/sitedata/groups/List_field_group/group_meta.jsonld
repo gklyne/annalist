@@ -1,8 +1,8 @@
-{ "@id":                "annal:display/List_field_group"
+{ "@id":                "annal:group/List_field_group"
 , "@type":              ["annal:Field_group"]
 , "annal:type_id":      "_group"
 , "annal:id":           "List_field_group"
-, "annal:uri":          "annal:display/List_field_group"
+, "annal:uri":          "annal:group/List_field_group"
 , "annal:record_type":  "annal:List_field"
 , "rdfs:label":         "List field fields"
 , "rdfs:comment":       "This resource describes a list field as presented within a list view"

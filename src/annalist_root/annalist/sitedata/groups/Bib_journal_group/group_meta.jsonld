@@ -1,8 +1,8 @@
-{ "@id":                "annal:display/Bib_journal_group"
+{ "@id":                "annal:group/Bib_journal_group"
 , "@type":              ["annal:Field_group"]
 , "annal:id":           "Bib_journal_group"
 , "annal:type_id":      "_group"
-, "annal:uri":          "annal:display/Bib_journal_group"
+, "annal:uri":          "annal:group/Bib_journal_group"
 , "annal:record_type":  "bib:BibEntry"
 , "rdfs:label":         "BibEntry journal fields"
 , "rdfs:comment":       "Group of fields describing a journal in a BibEntry record"

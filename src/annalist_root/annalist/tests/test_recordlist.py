@@ -237,7 +237,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_help="(?list_help)",
             list_url="(?list_url)",
             list_uri="(?list_uri)",
-            list_type="List",
+            list_type="Enum_list_type/List",
             list_default_type="_type/Default_type",
             list_default_view="_view/Default_view",
             list_selector="ALL",
@@ -494,7 +494,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_help=default_comment("testcoll", "_list", "00000001"),
             list_url=list_url,
             list_uri=None,
-            list_type="List",
+            list_type="Enum_list_type/List",
             list_selector="ALL"
             )
         return

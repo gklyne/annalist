@@ -64,7 +64,7 @@ def copySitedata(src, sitedatasrc, tgt):
     global sitedata_target_reset
     if sitedata_target_reset == "all":
         annalist.util.replacetree(src, tgt)
-        for sdir in ("users", "types", "lists", "views", "groups", "fields", "enums"):
+        for sdir in ("users", "types", "lists", "views", "groups", "fields", "vocabs", "enums"):
             s = os.path.join(sitedatasrc, sdir)
             d = os.path.join(sitedatatgt, sdir)
             shutil.copytree(s, d)

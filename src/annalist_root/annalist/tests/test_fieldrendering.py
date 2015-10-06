@@ -155,6 +155,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
               ''' <option value="_field/Entity_comment">Comment</option>'''+
               ''' <option value="_field/Entity_id" selected="selected">Id</option>'''+
               ''' <option value="_field/Entity_label">Label</option>'''+
+              ''' <option value="_field/Entity_see_also_repeat">See also</option>'''+
               ''' <option value="_field/Entity_type">Type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__0__Field_property"'''+
@@ -168,6 +169,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
               ''' <option value="_field/Entity_comment">Comment</option>'''+
               ''' <option value="_field/Entity_id">Id</option>'''+
               ''' <option value="_field/Entity_label">Label</option>'''+
+              ''' <option value="_field/Entity_see_also_repeat">See also</option>'''+
               ''' <option value="_field/Entity_type" selected="selected">Type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__1__Field_property"'''+
@@ -181,6 +183,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
               ''' <option value="_field/Entity_comment">Comment</option>'''+
               ''' <option value="_field/Entity_id">Id</option>'''+
               ''' <option value="_field/Entity_label" selected="selected">Label</option>'''+
+              ''' <option value="_field/Entity_see_also_repeat">See also</option>'''+
               ''' <option value="_field/Entity_type">Type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__2__Field_property"'''+
@@ -194,6 +197,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
               ''' <option value="_field/Entity_comment" selected="selected">Comment</option>'''+
               ''' <option value="_field/Entity_id">Id</option>'''+
               ''' <option value="_field/Entity_label">Label</option>'''+
+              ''' <option value="_field/Entity_see_also_repeat">See also</option>'''+
               ''' <option value="_field/Entity_type">Type</option>'''+
               ''' </select>'''
             , '''<input type="text" size="64" name="View_fields__3__Field_property"'''+

@@ -3,7 +3,7 @@
 , "annal:type_id":              "_list"
 , "rdfs:label":                 ""
 , "rdfs:comment":               ""
-, "annal:display_type":         "List"
+, "annal:display_type":         "Enum_list_type/List"
 , "annal:default_view":         "_view/Default_view"
 , "annal:default_type":         "_type/Default_type"
 , "annal:list_entity_selector": "ALL"

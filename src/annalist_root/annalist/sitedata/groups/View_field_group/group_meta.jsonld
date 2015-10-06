@@ -1,8 +1,8 @@
-{ "@id":                "annal:display/View_field_group"
+{ "@id":                "annal:group/View_field_group"
 , "@type":              ["annal:Field_group"]
 , "annal:id":           "View_field_group"
 , "annal:type_id":      "_group"
-, "annal:uri":          "annal:display/View_field_group"
+, "annal:uri":          "annal:group/View_field_group"
 , "annal:record_type":  "annal:View_field"
 , "rdfs:label":         "View field fields"
 , "rdfs:comment":       "This resource describes a sub-view single field description used when displaying and/or editing a record view description"

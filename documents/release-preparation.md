@@ -2,45 +2,45 @@
 
 ## Summary of release tasks
 
-- [x] Feature freeze
-- [x] Uninstall annalist (if installed): `pip uninstall annalist`
-- [x] Delete contents of build directory (ensure any old files are removed)
-- [x] Clean old .pyc files - `clean.sh`
-- [x] Local install
-- [x] Run test suite
-- [x] Update site data in local 'personal' installation
+- [ ] Feature freeze
+- [ ] Uninstall annalist (if installed): `pip uninstall annalist`
+- [ ] Delete contents of build directory (ensure any old files are removed)
+- [ ] Clean old .pyc files - `clean.sh`
+- [ ] Local install
+- [ ] Run test suite
+- [ ] Update site data in local 'personal' installation
     - `annalist-manager initialize` (is this really needed?  does it wipe users?  No)
     - `annalist-manager updatesitedata`
-- [x] Test 'personal' deployment in actual use
+- [ ] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
-- [x] Documentation updates
-- [x] Demo screencast update
+- [ ] Documentation updates
+- [ ] Demo screencast update
 
-- [x] Create release preparation branch
+- [ ] Create release preparation branch
     - git stash
     - git checkout -b release-prep-x.y.z develop
     - git stash pop
     - *NOTE* use a different name to that which will be used to tag the release
-- [x] Add TODO list to release notes (edit out working notes)
-- [x] Bump version to even value in `src/annalist_root/annalist/__init__.py`
-- [x] Bump data compatibility version if new data is not compatible with older releases
-- [x] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
-- [x] Reinstall and re-run test suite
-- [x] Add release highlights description to release notes
-- [x] Review issues list in GitHub
-- [x] Review roadmap (`documents/roadmap.md`)
-- [x] Update version number in scripts, documents, etc.
-    - [x] Release notes
-    - [x] documents/installing-annalist.md
-    - [x] documents/roadmap.md
-    - [x] documents/pages/index.html
-    - [x] src/newkit_to_annalist_net.sh
-    - [x] src/newkit_to_conina_ubuntu.sh
-    - [x] Docker build scripts
-- [x] Create announcement text in `documents/release-notes/announce_0.1.*.md`
-- [x] Create and post updated kit download and web pages to annalist.net
+- [ ] Add TODO list to release notes (edit out working notes)
+- [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
+- [ ] Bump data compatibility version if new data is not compatible with older releases
+- [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
+- [ ] Reinstall and re-run test suite
+- [ ] Add release highlights description to release notes
+- [ ] Review issues list in GitHub
+- [ ] Review roadmap (`documents/roadmap.md`)
+- [ ] Update version number in scripts, documents, etc.
+    - [ ] Release notes
+    - [ ] documents/installing-annalist.md
+    - [ ] documents/roadmap.md
+    - [ ] documents/pages/index.html
+    - [ ] src/newkit_to_annalist_net.sh
+    - [ ] src/newkit_to_conina_ubuntu.sh
+    - [ ] Docker build scripts
+- [ ] Create announcement text in `documents/release-notes/announce_0.1.*.md`
+- [ ] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [x] Update demo installation on annalist.net; test
+- [ ] Update demo installation on annalist.net; test
     - ssh to annalist@annalist.net
     - `killall python`
     - `. anenv/bin/activate`
@@ -49,37 +49,37 @@
     - `annalist-manager runtests`
     - `. update-run-annalist.sh`
     - `cat annalist.out`
-- [x] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
+- [ ] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
         cp ~annalist/uploads/pages/index.html /var/www
-- [x] Update tutorial document at annalist.net
+- [ ] Update tutorial document at annalist.net
         cp ~annalist/uploads/documents/tutorial/??? /var/www/documents/tutorial/
-- [x] Commit changes
-- [x] Upload to PyPI (see below)
-- [x] Tag release on release branch
+- [ ] Commit changes
+- [ ] Upload to PyPI (see below)
+- [ ] Tag release on release branch
     - `git tag -a release-x.y.z`
-- [x] Merge release branch to master
+- [ ] Merge release branch to master
     - e.g.
         - `git checkout master`
         - `git merge release-prep-x.y.z`
-- [x] Test again on master branch
-- [x] Push master branch, and tags
+- [ ] Test again on master branch
+- [ ] Push master branch, and tags
     - `git add ..`
     - `git commit -m "Master branch updated to Vx.y.z"`
     - `git push`
     - `git push --tags`
-- [x] Merge release branch to develop
+- [ ] Merge release branch to develop
     - take care to ensure the branch is merged, not the tagged release
     - e.g.
         - `git checkout develop`
         - `git merge release-prep-x.y.z`
-- [x] On develop branch, bump version number again (back to odd value)
-- [x] Reset TODO list (remove entries moved to release notes, update version)
-- [x] Commit and push changes
+- [ ] On develop branch, bump version number again (back to odd value)
+- [ ] Reset TODO list (remove entries moved to release notes, update version)
+- [ ] Commit and push changes
 - [ ] Delete release branch
     - `git branch -d release-prep-x.y.z`
-- [ ] Post announcement to Google Group, Twitter and elsewhere
 - [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`), retest
 
+- [ ] Post announcement to Google Group, Twitter and elsewhere
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)
 

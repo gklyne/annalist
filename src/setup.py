@@ -110,6 +110,7 @@ setup(
             , 'sitedata/types/*/*.jsonld'
             , 'sitedata/views/*/*.jsonld'
             , 'sitedata/users/*/*.jsonld'
+            , 'sitedata/vocabs/*/*.jsonld'
             ]
         , 'annalist_root.annalist.views':
             [ 'help/*.md'

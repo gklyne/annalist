@@ -1,0 +1,12 @@
+{ "@id":            "./"
+, "@type":          ["annal:Vocabulary", "annal:EntityData"]
+, "annal:id":       "annal"
+, "annal:type_id":  "_vocab"
+, "annal:type":     "annal:Vocabulary"
+, "rdfs:label":     "Vocabulary namespace for Annalist-defined terms"
+, "rdfs:comment":   "Vocabulary namespace for URIs that are used internally by Annalist to identify application types and properties."
+, "annal:uri":      "http://purl.org/annalist/#"
+, "rdfs:seeAlso":
+    [ { "owl:sameAs":   "https://github.com/gklyne/annalist/blob/master/src/annalist_root/annalist/identifiers.py" }
+    ]
+}
