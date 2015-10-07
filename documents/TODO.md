@@ -14,31 +14,33 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 # Version 0.1.21, towards 0.1.22
 
+- [x] BUG: add a supertype while editing (copying) a new type loses any type URI entered.
+    - IIRC, old URL is wiped at the point of save.
+    - Need to save original URL and only wipe if not changed?
 - [ ] BUG?: when local type/list/view overrides site definition, appears twice in dropdown lists.
     - Or only when type id is different?  
     - Case for including type_id/entity_id in dropdown text?
-- [ ] BUG: add a supertype while editing (copying) a new type loses any type URI entered.
-    - IIRC, old URL is wiped at the point of save.
-    - Need to save original URL and only wipe if not changed?
 - [ ] BUG?: create instance of type with defined type URI saves with `annal:type` value of `annal:EntityData`
 - [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - Think about use of CURIES in data (e.g. for types, fields, etc.)  
         - Need to store prefix info with collection.
-        - Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
-        - Using `(site_base)/c/(coll_id)/d/` as base URI would mean that entity ids (`type_id/entity_id`) work directly as relative URIs.  Also `type_id` to retreive a list of entities of that type.
-        - (also: seach for "URI" below)
     - [x] Add `_vocab` built-in type that can be defined at site-level for built-in namespaces like `rdf`, `rdfs`, `annal`, etc., and at collection level for user-introduced namespaces.
     - [x] Define built-in vocabularies: RDF, RDFS, XSD, OWL, ANNAL
-    - [ ] Choose URI for collection context. rdf:value? owl:sameAs?
-        - Will probably need a new URI mapping?
+    - [ ] Choose URI for collection context. 
+        - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
         - Think more generally about URI design; avoid explicit reference to `_analist_collection`?
-        - Suggest context data is stored in/accessed at `/c/<coll_id>/d/ directory`? (file `@context`?)
+        - Store/access context data at `/c/<coll_id>/d/ directory`, file `@context`
             - RFC3986: `pchar = unreserved / pct-encoded / sub-delims / ":" / "@"`
-        - Note `@base` ignored if used in external contexts;
-        - need to add something to generated entity data?
-        - can specified value be relative? YES:
-            - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
-            - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
+        - Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
+            - note `@base` ignored if used in external contexts;
+            - can specified value be relative? YES:
+                - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
+                - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
+        - Need to add something to generated entity data?
+        - Using `(site_base)/c/(coll_id)/d/` as base URI would mean that entity ids (`type_id/entity_id`) work directly as relative URIs.  
+            - Also `type_id` to retreive a list of entities of that type.
+            - Thus can use `{ "@base": "../..", @context": "@context", ... }` in entity data.
+        - (also: seach for "URI" below)
     - [ ] Generate JSON-LD context descriptions incorporating the available prefix information.
         - on-the-fly dynamic generation or static?
             - If dynamic, then no context available for data accessed without Annalist
@@ -158,6 +160,7 @@ Technical debt:
 
 Usability notes:
 
+- [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15)
 - [ ] Display entity-id *and* label values in drop-downs?  (e.g. "id (label)")
 - [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
 - [ ] Persist item selection to refreshed display when move-up/movedown clicked?
@@ -213,6 +216,9 @@ Notes for Future TODOs:
         1. use same property for group and field; recognize and elide when generating/reading RDF?
         2. use auto-generated unique property for group ref.  Can recognize for RDF?
         3. group description to use 'annal:member' property override
+    - IMPLEMENTING: use `owl:sameAs` for singleton dictionaries in a JSON list.
+        - equivalent to `[ owl:sameAs <some_resource> ]`
+        - (could use `@id` has key ?)
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
     - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.

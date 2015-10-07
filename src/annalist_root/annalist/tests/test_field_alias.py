@@ -66,7 +66,7 @@ class FieldAliasTest(AnnalistTestCase):
                 [ "bib:BibEntry"
                 , ANNAL.CURIE.EntityData
                 ]
-            , ANNAL.CURIE.type: ANNAL.CURIE.EntityData
+            , ANNAL.CURIE.type:    "bib:BibEntry"
             , ANNAL.CURIE.type_id: "BibEntry_type"
             , "bib:type": "article"
             , "bib:title": "bib:title for bibentity1"

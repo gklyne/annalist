@@ -891,9 +891,13 @@ class GenericEntityEditView(AnnalistGenericView):
         orig_values   = orig_entity.get_values() if orig_entity else {}
         entity_values = self.merge_entity_form_values(orig_values, entityformvals)
         if action == "copy":
-            entity_values.pop(ANNAL.CURIE.uri, None)      # Force new URI on copy
+            # Force new URI on copy
+            orig_uri = orig_values.get(ANNAL.CURIE.uri, None) 
+            new_uri  = entity_values.get(ANNAL.CURIE.uri, None) 
+            if new_uri == orig_uri:
+                entity_values.pop(ANNAL.CURIE.uri, None)
         entity_values[ANNAL.CURIE.type_id] = entity_type_id
-        entity_values[ANNAL.CURIE.type]    = new_typeinfo.entityclass._entitytype
+        entity_values[ANNAL.CURIE.type]    = new_typeinfo.get_type_uri() # or new_typeinfo.entityclass._entitytype
         # log.info("save entity_values%r"%(entity_values))
 
         # Create/update stored data now
@@ -1214,7 +1218,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 data_id   = d.get_id()
                 data_vals = d.get_values()
                 data_vals[ANNAL.CURIE.type_id] = new_type_id
-                data_vals[ANNAL.CURIE.type]    = dst_typeinfo.entityclass._entitytype
+                data_vals[ANNAL.CURIE.type]    = dst_typeinfo.get_type_uri()
                 if self.rename_entity(
                     src_typeinfo, data_id, 
                     dst_typeinfo, data_id, data_vals

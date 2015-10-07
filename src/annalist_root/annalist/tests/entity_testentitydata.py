@@ -155,9 +155,9 @@ def entitydata_create_values(
     Data used when creating entity test data
     """
     if type_uri is not None:
-        types = [entitydata_type(type_id), type_uri, type_uri+"/super1", type_uri+"/super2"]
+        types = [type_uri, type_uri+"/super1", type_uri+"/super2", entitydata_type(type_id)]
     else:
-        types = [entitydata_type(type_id), entity_url(coll_id, "_type", type_id)]
+        types = [entity_url(coll_id, "_type", type_id), entitydata_type(type_id)]
     # log.info('entitydata_create_values: types %r'%(types,)) 
     d = (
         { '@type':          types

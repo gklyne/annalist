@@ -117,7 +117,8 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return e    
 
     def _check_entity_data_values(self, 
-            entity_id, type_id="testtype", update="Entity", parent=None, 
+            entity_id, type_id="testtype", type_uri=None,
+            update="Entity", parent=None, 
             update_dict=None):
         "Helper function checks content of form-updated record type entry with supplied entity_id"
         recorddata = RecordTypeData.load(self.testcoll, type_id)
@@ -125,7 +126,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         e = EntityData.load(recorddata, entity_id)
         self.assertEqual(e.get_id(), entity_id)
         self.assertEqual(e.get_url(""), TestHostUri + entity_url("testcoll", type_id, entity_id))
-        v = entitydata_values(entity_id, type_id=type_id, update=update)
+        v = entitydata_values(entity_id, type_id=type_id, type_uri=type_uri, update=update)
         if update_dict:
             v.update(update_dict)
             for k in update_dict:
@@ -473,9 +474,11 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "Default_type"))
         # Check new entity data created
-        self._check_entity_data_values("newentity", type_id="Default_type", update_dict=
-            { '@type':         ['annal:Default_type', 'annal:EntityData']
-            })
+        self._check_entity_data_values(
+            "newentity", type_id="Default_type", type_uri="annal:Default_type",
+            update_dict=
+                { '@type': ['annal:Default_type', 'annal:EntityData'] }
+            )
         return
 
     def test_new_entity_new_type(self):
