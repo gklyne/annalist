@@ -14,6 +14,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+import json
+from collections                    import OrderedDict
 from distutils.version              import LooseVersion
 
 from django.conf                    import settings
@@ -23,6 +25,7 @@ from django.core.urlresolvers       import resolve, reverse
 
 import annalist
 from annalist                       import message
+from annalist                       import layout
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.util                  import valid_id, extract_entity_id
 
@@ -32,11 +35,22 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
+from annalist.models.recordfield    import RecordField
+from annalist.models.recordgroup    import RecordGroup
+from annalist.models.recordvocab    import RecordVocab
 
 from annalist.views.uri_builder     import (
     uri_with_params, 
     continuation_url_chain, continuation_chain_url,
     url_update_type_entity_id
+    )
+
+from annalist.views.fields.render_utils import (
+    is_render_type_literal,
+    is_render_type_id,
+    is_render_type_set,
+    is_render_type_list,
+    is_render_type_object,
     )
 
 #   -------------------------------------------------------------------------------------------
@@ -143,6 +157,10 @@ class DisplayInfo(object):
         return self.http_response
 
     def get_site_info(self, reqhost):
+        """
+        Get site information: site entity object and a copy of the site description data.
+        Also saves a copy of the host name to which the current request was directed.
+        """
         if not self.http_response:
             self.reqhost        = reqhost
             self.site           = self.view.site(host=reqhost)
@@ -174,12 +192,131 @@ class DisplayInfo(object):
         return self.http_response
 
     def update_coll_version(self):
+        """
+        Called when an entity has been updatred to also update the data version 
+        associated with the collection if it was previously created by an older 
+        version of Annalist.
+        """
         assert (self.collection is not None)
         if not self.http_response:
             ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")
             if LooseVersion(ver) < LooseVersion(annalist.__version_data__):
                 self.collection[ANNAL.CURIE.software_version] = annalist.__version_data__
                 self.collection._save()
+        return
+
+    def generate_coll_jsonld_context(self):
+        """
+        (Re)generate JSON-LD context description for the current collection.
+        This is called whenever a type, view, field, field group or namespace 
+        vocabulary is updated.
+        """
+        assert (self.collection is not None)
+        if not self.http_response:
+            context           = OrderedDict(
+                { "@base": "." 
+                })
+            # Common import/upload fields
+            context.update(
+                { 'resource_name': "annal:resource_name"
+                , 'resource_type': "annal:resource_type"
+                })
+            # upload-file fields
+            context.update(
+                { 'upload_name':   "annal:upload_name"
+                , 'uploaded_file': "annal:uploaded_file"
+                , 'uploaded_size': "annal:uploaded_size"
+                })
+            # import-resource fields
+            context.update(
+                { 'import_name':   "annal:import_name"
+                , 'import_url':    
+                  { "@id": "annal:import_url"
+                  , "@type": "@id"
+                  }
+                })
+            # Scan vocabs, generate prefix data
+            for v in self.collection.child_entities(RecordVocab, altparent=self.site):
+                context[v.get_id()] = v[ANNAL.CURIE.uri]
+            # Scan view fields and generate context data for property URIs used
+            for v in self.collection.child_entities(RecordView, altparent=self.site):
+                for fref in v[ANNAL.CURIE.view_fields]:
+                    fid  = extract_entity_id(fref[ANNAL.CURIE.field_id])
+                    vuri = fref.get(ANNAL.CURIE.property_uri, None)
+                    furi, fcontext = self.get_field_uri_lsonld_context(fid)
+                    # fcontext['vid'] = v.get_id()
+                    # fcontext['fid'] = fid
+                    self.set_field_uri_jsonld_context(vuri or furi, fcontext, context)
+            # Scan group fields and generate context data for property URIs used
+            for g in self.collection.child_entities(RecordGroup, altparent=self.site):
+                for gref in g[ANNAL.CURIE.group_fields]:
+                    fid  = extract_entity_id(gref[ANNAL.CURIE.field_id])
+                    guri = gref.get(ANNAL.CURIE.property_uri, None)
+                    furi, fcontext = self.get_field_uri_lsonld_context(fid)
+                    # fcontext['gid'] = g.get_id()
+                    # fcontext['fid'] = fid
+                    self.set_field_uri_jsonld_context(guri or furi, fcontext, context)
+            # Assemble and write out context description
+            with self.collection._metaobj(
+                    layout.COLL_CONTEXT_PATH,
+                    layout.COLL_CONTEXT_FILE,
+                   "wt"
+                    ) as context_io:
+                json.dump(
+                    { "@context": context }, 
+                    context_io, indent=2, separators=(',', ': ')
+                    )
+        return
+
+    def get_field_uri_lsonld_context(self, fid):
+        """
+        Access field description, and return field property URI and appropriate property description for JSON-LD
+        context.
+        """
+        f     = RecordField.load(self.collection, fid, altparent=self.site)
+        if f is None:
+            raise ValueError("No field '%s' found"%fid)
+        rtype = extract_entity_id(f[ANNAL.CURIE.field_render_type])
+        vmode = extract_entity_id(f[ANNAL.CURIE.field_value_mode])
+        if vmode in ["Value_entity", "Value_field"]:
+            rtype = "Enum"
+        elif vmode == "Value_import":
+            rtype = "URIImport"
+        elif vmode == "Value_upload":
+            rtype = "FileUpload"
+        if is_render_type_literal(rtype):
+            fcontext = { "@type": "xsd:string" }
+        elif is_render_type_id(rtype):
+            fcontext = { "@type": "@id" }   # Add type from field descr?
+        elif is_render_type_set(rtype):
+            fcontext = { "@container": "@set"}
+        elif is_render_type_list(rtype):
+            fcontext = { "@container": "@list"}
+        elif is_render_type_object(rtype):
+            fcontext = {}
+        else:
+            raise ValueError("Unexpected value mode or render type (%s, %s)"%(vmode, rtype))
+        return (f[ANNAL.CURIE.property_uri], fcontext)
+
+    def set_field_uri_jsonld_context(self, puri, fcontext, property_contexts):
+        """
+        Save property context description into supplied property_contexts dictionary.  
+        If the context is already defined, generate warning if there is a compatibility 
+        problem.
+        """
+        if puri:
+            uri_parts = puri.split(":")
+            if len(uri_parts) > 1:
+                if puri in property_contexts:
+                    pcontext = property_contexts[puri]
+                    if ( ( pcontext.get("@type", None)      != fcontext.get("@type", None) ) or
+                         ( pcontext.get("@container", None) != fcontext.get("@container", None) ) ):
+                        log.warning(
+                            "Incompatible use of property %s (%r, %r)"% (puri, fcontext, pcontext)
+                            )
+                elif ( ( uri_parts[0] in property_contexts ) or         # Prefix defined vocab?
+                       ( uri_parts[0] in ["http", "https", "file"] ) ): # Full URI?
+                    property_contexts[puri] = fcontext
         return
 
     def saved(self, is_saved=None):

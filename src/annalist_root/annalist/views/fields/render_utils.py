@@ -36,6 +36,37 @@ import render_repeatgroup
 from render_ref_multifields     import get_ref_multifield_renderer, RefMultifieldValueMapper
 import render_ref_multifields
 
+# Render type classification, used for generating appropriate JSON-LD context values
+
+_render_type_literal = set(
+    [ "Text", "Textarea", "Slug"
+    , "Placement", "CheckBox", "Markdown"
+    , "EntityId"
+    ])
+
+_render_type_id = set(
+    [ "Identifier"
+    , "EntityTypeId"
+    , "RefAudio", "RefImage", "URILink", "URIImage"
+    , "Enum", "Enum_optional", "Enum_choice", "View_choice"
+    , "RefMultifield"
+    , "Type", "View", "List", "Field"
+    ])
+
+_render_type_set = set(
+    [ "TokenSet"
+    ])
+
+_render_type_list = set(
+    [ "RepeatGroup", "RepeatGroupRow"
+    ])
+
+_render_type_object = set(
+    [ "URIImport", "FileUpload"
+    ])
+
+# Render type mappings to templates and/or renderer access functions
+
 _field_renderers = {}   # renderer cache
 
 _field_view_files = (
@@ -328,8 +359,8 @@ def get_mode_renderer(field_render_type, field_value_mode):
 
 def get_value_mapper(field_render_type):
     """
-    Returns a value mapper class instance (with encode and decode methods) which 
-    is used to map values between entity fields and textual form fields.
+    Returns a value mapper class instance (with encode and decode methods) 
+    which is used to map values between entity fields and textual form fields.
 
     The default 'RenderText' object returned contains identity mappings.
     """
@@ -337,6 +368,43 @@ def get_value_mapper(field_render_type):
     if field_render_type in _field_value_mappers:
         mapper_class = _field_value_mappers[field_render_type]
     return mapper_class()
+
+def is_render_type_literal(field_render_type):
+    """
+    Returns True if the supplied render type expects a literral (string) 
+    value to be stored in a corresponding entity field.
+    """
+    return field_render_type in _render_type_literal
+
+def is_render_type_id(field_render_type):
+    """
+    Returns True if the supplied render type expects a id (URI reference) 
+    value to be stored in a corresponding entity field.
+    """
+    return field_render_type in _render_type_id
+
+def is_render_type_set(field_render_type):
+    """
+    Returns True if the supplied render type expects a list value,
+    which is interpreted as a set, to be stored in a corresponding 
+    entity field.
+    """
+    return field_render_type in _render_type_set
+
+def is_render_type_list(field_render_type):
+    """
+    Returns True if the supplied render type expects a list value,
+    which is interpreted as an ordered list, to be stored in a 
+    corresponding entity field.
+    """
+    return field_render_type in _render_type_list
+
+def is_render_type_object(field_render_type):
+    """
+    Returns True if the supplied render type expects a complex (object) 
+    value to be stored in a corresponding entity field.
+    """
+    return field_render_type in _render_type_object
 
 if __name__ == "__main__":
     import doctest

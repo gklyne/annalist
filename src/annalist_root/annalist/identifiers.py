@@ -94,7 +94,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
     [ "EntityRoot", "Entity"
     , "Site", "SiteData", "Collection", "Entity", "EntityRoot"
     , "Collection_Types", "Collection_Views", "Collection_Lists"
-    , "Type_Data", "EntityData"
+    , "Type_Data", "EntityData", "Metadata"
     # Entity types
     , "User", "Type", "List", "View", "Field_group", "Field", "Enum"
     , "Text", "Longtext", "Richtext", "Slug", "Identifier"

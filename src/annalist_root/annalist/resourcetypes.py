@@ -23,37 +23,41 @@ File extensions and MIME types are presented as pairs so that an extension
 can be inferred when a MIME content-type is given, and vice versa.
 """
 resource_types = (
-    { ANNAL.CURIE.Text:
-      [ ("txt",    "text/plain") 
+    { ANNAL.CURIE.Metadata:
+      [ ("jsonld",  "application/ld+json")
+      , ("json",    "application/json")
+      ]
+    , ANNAL.CURIE.Text:
+      [ ("txt",     "text/plain") 
       ]
     , ANNAL.CURIE.Richtext:
-      [ ("md",     "text/markdown")
-      , ("txt",    "text/plain")
+      [ ("md",      "text/markdown")
+      , ("txt",     "text/plain")
       ]
     , ANNAL.CURIE.Image:
-      [ ("png",    "image/png")
-      , ("jpg",    "image/jpeg")
-      , ("jpeg",   "image/jpeg")
-      , ("gif",    "image/gif")
-      , ("tiff",   "image/tiff")
-      , ("svg",    "image/svg")
+      [ ("png",     "image/png")
+      , ("jpg",     "image/jpeg")
+      , ("jpeg",    "image/jpeg")
+      , ("gif",     "image/gif")
+      , ("tiff",    "image/tiff")
+      , ("svg",     "image/svg")
       ]
     , ANNAL.CURIE.Audio:
-      [ ("mp3",    "audio/mpeg")
-      , ("mp4",    "audio/mp4")
-      , ("wav",    "audio/wav")
-      , ("ogg",    "audio/ogg")
+      [ ("mp3",     "audio/mpeg")
+      , ("mp4",     "audio/mp4")
+      , ("wav",     "audio/wav")
+      , ("ogg",     "audio/ogg")
       #@@ needs fleshing out?
       ]
     , ANNAL.CURIE.Upload:
-      [ ("md",     "text/markdown")
-      , ("txt",    "text/plain")
-      , ("png",    "image/png")
-      , ("jpg",    "image/jpeg")
-      , ("jpeg",   "image/jpeg")
-      , ("gif",    "image/gif")
-      , ("tiff",   "image/tiff")
-      , ("svg",    "image/svg")
+      [ ("md",      "text/markdown")
+      , ("txt",     "text/plain")
+      , ("png",     "image/png")
+      , ("jpg",     "image/jpeg")
+      , ("jpeg",    "image/jpeg")
+      , ("gif",     "image/gif")
+      , ("tiff",    "image/tiff")
+      , ("svg",     "image/svg")
       ]
     })
 

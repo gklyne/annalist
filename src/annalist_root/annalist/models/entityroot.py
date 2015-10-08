@@ -448,7 +448,7 @@ class EntityRoot(object):
         Returns a file object for accessing a blob associated with the current entity.
 
         localname   is the local name used to identify the file/resource among all those
-                    associated with the ciurrent entity.
+                    associated with the current entity.
         filetypeuri is a URI/CURIE that identifies the type of data stored in the blob.
         mimetype    is a MIME content-type string for the resource representation used,
                     used in selecting the file extension to be used, or None in which case 
@@ -463,6 +463,21 @@ class EntityRoot(object):
             )
         file_name = os.path.join(body_dir, localname+"."+file_ext)
         return open(file_name, mode)
+
+    def _metaobj(self, localpath, localname, mode):
+        """
+        Returns a file object for accessing a metadata resource associated with 
+        the current entity.
+        localpath   is the local directory path (rel;ative to the ciurrent entity's data)
+                    where the metadata resource will be accessed.
+        localname   is the local name used to identify the file/resource among all those
+                    associated with the current entity.
+        mode        is a string defining how the resource is opened (using the same values
+                    as the built-in `open` function).
+        """
+        (body_dir, body_file) = self._dir_path()  # Same as `_save`
+        filename = os.path.join(body_dir, localpath, localname)
+        return open(filename, mode)
 
     # Special methods to facilitate access to entity values by dictionary operations
     # on the Entity object

@@ -109,7 +109,9 @@ class SiteTest(AnnalistTestCase):
     def test_get_user_permissions(self):
         s = self.testsite
         # Create local permissions
-        usr = AnnalistUser.create(s, "user1", annalistuser_create_values(user_id="user1"), use_altpath=True)
+        usr = AnnalistUser.create(
+            s, "user1", annalistuser_create_values(user_id="user1"), use_altpath=True
+            )
         # Test access to permissions defined in site
         ugp = s.get_user_permissions("user1", "mailto:testuser@example.org")
         self.assertEqual(ugp[ANNAL.CURIE.id],                 "user1")

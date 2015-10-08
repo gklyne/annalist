@@ -17,17 +17,15 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [x] BUG: add a supertype while editing (copying) a new type loses any type URI entered.
     - IIRC, old URL is wiped at the point of save.
     - Need to save original URL and only wipe if not changed?
-- [ ] BUG?: when local type/list/view overrides site definition, appears twice in dropdown lists.
-    - Or only when type id is different?  
-    - Case for including type_id/entity_id in dropdown text?
-- [ ] BUG?: create instance of type with defined type URI saves with `annal:type` value of `annal:EntityData`
+- [x] BUG: create instance of type with defined type URI saves with `annal:type` value of `annal:EntityData`
 - [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - Think about use of CURIES in data (e.g. for types, fields, etc.)  
         - Need to store prefix info with collection.
     - [x] Add `_vocab` built-in type that can be defined at site-level for built-in namespaces like `rdf`, `rdfs`, `annal`, etc., and at collection level for user-introduced namespaces.
     - [x] Define built-in vocabularies: RDF, RDFS, XSD, OWL, ANNAL
-    - [ ] Choose URI for collection context. 
+    - [x] Choose URI for collection context. 
         - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
+        - could use `@id`?
         - Think more generally about URI design; avoid explicit reference to `_analist_collection`?
         - Store/access context data at `/c/<coll_id>/d/ directory`, file `@context`
             - RFC3986: `pchar = unreserved / pct-encoded / sub-delims / ":" / "@"`
@@ -41,19 +39,25 @@ NOTE: this document is used for short-term working notes; longer-term planning i
             - Also `type_id` to retreive a list of entities of that type.
             - Thus can use `{ "@base": "../..", @context": "@context", ... }` in entity data.
         - (also: seach for "URI" below)
-    - [ ] Generate JSON-LD context descriptions incorporating the available prefix information.
+    - [x] Generate JSON-LD context descriptions incorporating the available prefix information.
         - on-the-fly dynamic generation or static?
             - If dynamic, then no context available for data accessed without Annalist
             - If static, when to regenerate?
             - Maybe adopt a hybrid static-as-cache approach?
         - is it sufficiently easy to generate property type info on-the-fly?
+    - [ ] Arrange to regenerate context only when view/group/field/vocab are updated
+    - [ ] Arrange for context to be web-accessible
     - [ ] When generating entity data, incoporate context information
         - by-reference or by-value?  By reference would be more compact, and less repetitive.  Hopefully, the references can be such that the data is still usable without Annalist intervention.  See previous point.
         - base choice in feature negotiaton?
     - [ ] Test that JSON-LD data can be loaded into RDF data stores.
+    - [ ] JSON-LD context test case.
 - [ ] Create schema definitions in Annalist for ANNAL namespace
 - [ ] Alternative RDF formats support (e.g. content negotiation)
 - [ ] Cater for repeated properties (see further TODOs below)?
+- [ ] BUG?: when local type/list/view overrides site definition, appears twice in dropdown lists.
+    - Or only when type id is different?  
+    - Case for including type_id/entity_id in dropdown text?
 
 (release?)
 

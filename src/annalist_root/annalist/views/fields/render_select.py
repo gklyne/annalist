@@ -200,15 +200,15 @@ class Select_view_renderer(object):
             linkcont = context['field']['continuation_param']
             options  = context['field']['options']
             for o in options:
-                log.info("Select_view_renderer.render: option %r"%(o,))
+                # log.info("Select_view_renderer.render: option %r"%(o,))
                 if textval == o.value:
                     labelval = o.label
                     linkval  = o.link
                     break
-            log.info(
-                "Select_view_renderer.render: textval %s, labelval %s, linkval %s"%
-                (textval, labelval, linkval)
-                )
+            # log.info(
+            #     "Select_view_renderer.render: textval %s, labelval %s, linkval %s"%
+            #     (textval, labelval, linkval)
+            #     )
         except TargetIdNotFound_Error as e:
             log.debug(repr(e))
             textval = ""

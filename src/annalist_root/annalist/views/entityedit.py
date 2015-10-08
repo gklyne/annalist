@@ -503,7 +503,9 @@ class GenericEntityEditView(AnnalistGenericView):
                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 responseinfo=responseinfo
                 )
-            log.info("save: continuation_url '%s'"%(viewinfo.get_continuation_next()))
+            #@@TODO: something more refined; for now, regenerate context on "Save"
+            viewinfo.generate_coll_jsonld_context()  #@@ ................
+            # log.info("save: continuation_url '%s'"%(viewinfo.get_continuation_next()))
             return responseinfo.http_redirect(self, viewinfo.get_continuation_next())
 
         # Import data described by a field with an activated "Import" button
@@ -657,7 +659,7 @@ class GenericEntityEditView(AnnalistGenericView):
             add_field_param = (
                 {"add_field": "View_fields"} if ('add_view_field' in form_data) else {}
                 )
-            log.info("Open view: entity_id: %s"%viewinfo.curr_entity_id)
+            # log.info("Open view: entity_id: %s"%viewinfo.curr_entity_id)
             responseinfo = self.save_invoke_edit_entity(
                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 view_edit_uri_base, "config",
@@ -821,7 +823,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
                 )
         if not valid_id(entity_type_id):
-            log.info("form_response: entity_type_id not valid_id('%s')"%entity_type_id)
+            log.debug("form_response: entity_type_id not valid_id('%s')"%entity_type_id)
             return responseinfo.set_http_response(
                 self.form_re_render(
                     viewinfo, entityvaluemap, entityformvals, context_extra_values,
@@ -1776,10 +1778,10 @@ class GenericEntityEditView(AnnalistGenericView):
             ])
         if move_field_desc['move_direction'] == 'up':
             new_index_list = move_up(old_index_list)
-            log.info("***** Move up: %r"%(new_index_list,))
+            # log.info("***** Move up: %r"%(new_index_list,))
         elif move_field_desc['move_direction'] == 'down':
             new_index_list = reverselist(move_up(reverselist(old_index_list)))
-            log.info("***** Move down: %r"%(new_index_list,))
+            # log.info("***** Move down: %r"%(new_index_list,))
         else:
             raise RuntimeError("move_entity_field - 'move_direction' must be 'up' or 'down'")
         new_repeatvals = (
