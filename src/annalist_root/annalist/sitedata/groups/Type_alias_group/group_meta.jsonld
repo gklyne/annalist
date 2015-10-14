@@ -1,5 +1,7 @@
 { "@id":                "./"
 , "@type":              ["annal:Field_group"]
+, "@base":              "../.."
+, "@context":           "coll_context.jsonld"
 , "annal:type_id":      "_group"
 , "annal:type":         "annal:Field_group"
 , "annal:id":           "Type_alias_group"

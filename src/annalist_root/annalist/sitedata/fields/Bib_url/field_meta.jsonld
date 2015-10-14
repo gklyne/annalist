@@ -1,5 +1,7 @@
 { "@id":                        "annal:fields/Bib_url"
 , "@type":                      ["annal:Field"]
+, "@base":                      "../.."
+, "@context":                   "coll_context.jsonld"
 , "annal:id":                   "Bib_url"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "URL"

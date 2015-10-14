@@ -147,6 +147,12 @@ def entitydata_value_keys(entity_uri=False):
         keys.add('annal:uri')
     return keys
 
+def entitydata_load_keys(entity_uri=False):
+    return (
+        recordview_value_keys(entity_uri=entity_uri) | 
+        {"@id", '@type', '@base', '@context'}
+        )
+
 def entitydata_create_values(
         entity_id, update="Entity", coll_id="testcoll", type_id="testtype", 
         entity_uri=None, type_uri=None, hosturi=TestHostUri,
@@ -198,6 +204,8 @@ def entitydata_values(
         ).copy() #@@ copy needed here?
     d.update(
         { '@id':            './'
+        , '@base':          "../.."
+        , '@context':       "coll_context.jsonld"
         , 'annal:id':       entity_id
         , 'annal:type_id':  type_id
         , 'annal:url':      dataurl

@@ -1,5 +1,7 @@
 { "@id":                "./"
 , "@type":              ["annal:List_type", "annal:Enum"]
+, "@base":              "../.."
+, "@context":           "coll_context.jsonld"
 , "annal:id":           "Grid"
 , "annal:type_id":      "Enum_list_type"
 , "rdfs:label":         "Grid display"

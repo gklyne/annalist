@@ -131,8 +131,8 @@ class AnnalistUserTest(AnnalistTestCase):
         usr = AnnalistUser.create(self.testcoll, "user1", annalistuser_create_values(user_id="user1"))
         uld = AnnalistUser.load(self.testcoll, "user1").get_values()
         ued = annalistuser_read_values(user_id="user1")
-        self.assertKeysMatch(uld, ued)
-        self.assertDictionaryMatch(uld, ued)
+        self.assertKeysMatch(ued, uld)
+        self.assertDictionaryMatch(ued, uld)
         return
 
     def test_annalistuser_default_data(self):

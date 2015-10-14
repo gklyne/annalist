@@ -1,5 +1,7 @@
 { "@id":                        "annal:display/Vocab_list"
 , "@type":                      ["annal:List"]
+, "@base":                      "../.."
+, "@context":                   "coll_context.jsonld"
 , "annal:id":                   "Vocab_list"
 , "annal:type_id":              "_list"
 , "rdfs:label":                 "List vocabulary namespaces"

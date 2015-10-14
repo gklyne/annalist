@@ -52,7 +52,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
         - [x] Move context generation functions to collection class
         - [x] Define post-update hook for vocab, etc to regenerate context
     - [x] Arrange for context to be web-accessible
-    - [ ] When generating entity data, incoporate context information
+    - [x] When generating entity data, incoporate context information
+    - [x] Add context references to site data
     - [ ] Test that JSON-LD data can be loaded into RDF data stores.
     - [ ] JSON-LD context test case.
         - create type+view, read context from URL, check expected values
@@ -68,7 +69,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 - [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
 - [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
-- [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required.
+- [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
 
 (release?)
 

@@ -1,5 +1,7 @@
 { "@id":                        "annal:fields/Type_uri"
 , "@type":                      ["annal:Field"]
+, "@base":                      "../.."
+, "@context":                   "coll_context.jsonld"
 , "annal:id":                   "Type_uri"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "URI"

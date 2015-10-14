@@ -1,5 +1,7 @@
 { "@id":                        "annal:fields/List_comment"
 , "@type":                      ["annal:Field"]
+, "@base":                      "../.."
+, "@context":                   "coll_context.jsonld"
 , "annal:id":                   "List_comment"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Help"

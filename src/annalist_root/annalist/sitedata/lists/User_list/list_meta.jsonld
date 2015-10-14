@@ -1,5 +1,7 @@
 { "@id":                        "annal:display/User_list"
 , "@type":                      ["annal:List"]
+, "@base":                      "../.."
+, "@context":                   "coll_context.jsonld"
 , "annal:id":                   "User_list"
 , "annal:type_id":              "_list"
 , "rdfs:label":                 "User permissions"

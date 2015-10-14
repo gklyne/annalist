@@ -1,5 +1,7 @@
 { "@id":                        "annal:display/Default_list"
 , "@type":                      ["annal:List"]
+, "@base":                      "../.."
+, "@context":                   "coll_context.jsonld"
 , "annal:id":                   "Default_list"
 , "annal:type_id":              "_list"
 , "annal:uri":                  "annal:display/Default_list"

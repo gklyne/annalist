@@ -177,6 +177,8 @@ class EntityRootTest(TestCase):
         test_values_returned = (
             { '@id':            '../'
             , '@type':          ['test:EntityRootType']
+            , '@base':          "../.."
+            , '@context':       "coll_context.jsonld"           
             , 'annal:id':       'testId'
             , 'annal:type_id':  None
             , 'annal:type':     'test:EntityRootType'
@@ -341,8 +343,10 @@ class EntityTest(AnnalistTestCase):
             entity_parent_path=entity_parent_path
             )
         vals.update(
-            { '@id':    '../'
-            , '@type':  [entity_type]
+            { '@id':        '../'   # Local testing only: see `TestEntityType`
+            , '@type':      [entity_type]
+            , '@base':      "../.."
+            , '@context':   "coll_context.jsonld"
             })
         return vals
 

@@ -3,8 +3,10 @@
   "rdfs:comment": "Description of Collection coll3",
   "annal:software_version": "0.1.20",
   "annal:type_id": "_collection",
-  "annal:id": "coll3",
+  "@base": "../..",
   "@id": "../",
+  "@context": "coll_context.jsonld",
+  "annal:id": "coll3",
   "@type": [
     "annal:Collection"
   ],

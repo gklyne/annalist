@@ -1,4 +1,6 @@
 { "@type":                      ["annal:List"]
+, "@base":                      "../.."
+, "@context":                   "coll_context.jsonld"
 , "annal:id":                   "_initial_values"
 , "annal:type_id":              "_list"
 , "rdfs:label":                 ""

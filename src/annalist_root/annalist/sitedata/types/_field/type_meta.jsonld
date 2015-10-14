@@ -1,5 +1,7 @@
 { "@id":                "./"
 , "@type":              ["annal:Type"]
+, "@base":              "../.."
+, "@context":           "coll_context.jsonld"
 , "annal:id":           "_field"
 , "annal:type_id":      "_type"
 , "annal:uri":          "annal:Field"

@@ -1,5 +1,7 @@
 { "@id":                        "annal:display/Type_list"
 , "@type":                      ["annal:List"]
+, "@base":                      "../.."
+, "@context":                   "coll_context.jsonld"
 , "annal:id":                   "Type_list"
 , "annal:type_id":              "_list"
 , "rdfs:label":                 "List types"

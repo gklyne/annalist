@@ -1,5 +1,7 @@
 { "@id":                "./"
 , "@type":              ["annal:View"]
+, "@base":              "../.."
+, "@context":           "coll_context.jsonld"
 , "annal:type_id":      "_view"
 , "annal:id":           "Default_view"
 , "annal:uri":          "annal:display/Default_view"

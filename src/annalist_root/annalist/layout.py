@@ -143,6 +143,7 @@ TYPEDATA_ENTITY_PATH    = "%(id)s"
 ENTITY_DATA_FILE        = "entity-data.jsonld"
 ENTITY_PROV_FILE        = "entity-prov.jsonld"
 DATA_ENTITY_REF         = "./"
+ENTITY_CONTEXT_PATH     = "../.."
 
 # and more...
 

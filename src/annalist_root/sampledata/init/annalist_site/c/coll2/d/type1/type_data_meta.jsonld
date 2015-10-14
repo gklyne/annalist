@@ -1,5 +1,7 @@
 {
   "annal:type_id": "_entitytypedata",
+  "@base": "../..",
+  "@context": "coll_context.jsonld",
   "annal:id": "type1",
   "@id": "./",
   "@type": [

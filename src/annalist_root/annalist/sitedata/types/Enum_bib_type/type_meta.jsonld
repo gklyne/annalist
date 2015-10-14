@@ -1,5 +1,7 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum", "annal:Type"]
+, "@base":              "../.."
+, "@context":           "coll_context.jsonld"
 , "annal:id":           "Enum_bib_type"
 , "annal:type_id":      "_type"
 , "annal:uri":          "annal:Enum_bib_type"

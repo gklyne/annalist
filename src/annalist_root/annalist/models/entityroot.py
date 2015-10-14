@@ -25,6 +25,7 @@ log = logging.getLogger(__name__)
 
 from django.conf import settings
 
+from annalist               import layout
 from annalist               import util
 from annalist.exceptions    import Annalist_Error
 from annalist.identifiers   import ANNAL, RDF, RDFS
@@ -309,8 +310,10 @@ class EntityRoot(object):
         # Create directory (if needed) and save data
         util.ensure_dir(body_dir)
         values = self._values.copy()
-        values['@id']   = self._entityref
-        values['@type'] = self._get_types(values.get('@type', None))
+        values['@id']      = self._entityref
+        values['@type']    = self._get_types(values.get('@type', None))
+        values['@base']    = layout.ENTITY_CONTEXT_PATH
+        values['@context'] = layout.COLL_CONTEXT_FILE
         # @TODO: is this next needed?  Put logic in set_values?
         if self._entityid:
             values[ANNAL.CURIE.id] = self._entityid

@@ -18,9 +18,11 @@ for F in `find . -name "field_meta.jsonld"`; do
     # Belt-and-braces: keep timed backup
     # Use 'git clean -nX' (dry run) and 'git clean -fX' to remove .bak files 
     # after updated files have been committed.
+
     cp $F $F.$DATE.bak
 
     # Use sed to apply changes
+
     sed '
         /annal:field_render_type/ {
             a\
@@ -29,6 +31,7 @@ for F in `find . -name "field_meta.jsonld"`; do
 
     # Only do this last command when the script has been debugged and tested:
     # this is the point at which the original data is overwritten.
+
     # mv $F.new $F
 
 done

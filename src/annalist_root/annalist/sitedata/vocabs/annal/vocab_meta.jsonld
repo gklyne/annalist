@@ -1,5 +1,7 @@
 { "@id":            "./"
 , "@type":          ["annal:Vocabulary", "annal:EntityData"]
+, "@base":          "../.."
+, "@context":       "coll_context.jsonld"
 , "annal:id":       "annal"
 , "annal:type_id":  "_vocab"
 , "annal:type":     "annal:Vocabulary"

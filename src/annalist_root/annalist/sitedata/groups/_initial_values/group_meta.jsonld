@@ -1,5 +1,7 @@
 { "@id":                "annal:group/_initial_values"
 , "@type":              ["annal:Field_group"]
+, "@base":              "../.."
+, "@context":           "coll_context.jsonld"
 , "annal:id":           "_initial_values"
 , "annal:type_id":      "_group"
 , "annal:uri":          "annal:group/_initial_values"

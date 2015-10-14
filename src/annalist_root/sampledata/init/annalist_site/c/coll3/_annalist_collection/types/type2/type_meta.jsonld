@@ -2,8 +2,10 @@
   "rdfs:label": "RecordType coll3/type2",
   "rdfs:comment": "RecordType help for type2 in collection coll3",
   "annal:type_id": "_type",
+  "@base": "../..",
   "annal:type_view": "_view/Default_view",
   "annal:type_list": "_list/Default_list",
+  "@context": "coll_context.jsonld",
   "annal:id": "type2",
   "@id": "./",
   "@type": [

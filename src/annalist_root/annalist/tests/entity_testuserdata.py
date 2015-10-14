@@ -104,7 +104,7 @@ def annalistuser_value_keys():
     return keys
 
 def annalistuser_load_keys():
-    return annalistuser_value_keys() | {'@id', '@type'}
+    return annalistuser_value_keys() | {'@id', '@type', '@base', '@context'}
 
 def annalistuser_create_values(
         coll_id="testcoll", user_id="testuser",
@@ -155,6 +155,8 @@ def annalistuser_read_values(
     d.update(
         { '@id':            "./"
         , '@type':          ["annal:User"]
+        , '@base':          "../.."
+        , '@context':       "coll_context.jsonld"
         })
     return d
 

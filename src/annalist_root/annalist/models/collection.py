@@ -383,7 +383,9 @@ class Collection(Entity):
             })
         # Scan vocabs, generate prefix data
         for v in self.child_entities(RecordVocab, altparent=self._parentsite):
-            context[v.get_id()] = v[ANNAL.CURIE.uri]
+            vid = v.get_id()
+            if vid != "_initial_values":
+                context[v.get_id()] = v[ANNAL.CURIE.uri]
         # Scan view fields and generate context data for property URIs used
         for v in self.child_entities(RecordView, altparent=self._parentsite):
             for fref in v[ANNAL.CURIE.view_fields]:

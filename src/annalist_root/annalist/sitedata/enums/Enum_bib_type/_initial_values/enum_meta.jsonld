@@ -1,5 +1,7 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum_bib_type", "annal:Enum", "annal:Type"]
+, "@base":              "../.."
+, "@context":           "coll_context.jsonld"
 , "annal:id":           "_bib_type_id"
 , "annal:type_id":      "Enum_bib_type"
 , "rdfs:label":         "annal:bib_type/_bib_type_id"

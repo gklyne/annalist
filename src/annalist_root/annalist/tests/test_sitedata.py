@@ -1205,7 +1205,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[0].span.string, "Id")
         self.assertEqual(thead[1].span.string, "Label")
         trows_expected = (
-            [ [ "_vocab/annal",                    ["annal",    "Vocabulary namespace for Annalist-defined terms"] ]
+            [ [ "_vocab/_initial_values",          ["_initial_values"] ]
+            , [ "_vocab/annal",                    ["annal",    "Vocabulary namespace for Annalist-defined terms"] ]
             , [ "_vocab/owl",                      ["owl",      "OWL ontology namespace"] ]
             , [ "_vocab/rdf",                      ["rdf",      "RDF core namespace"] ]
             , [ "_vocab/rdfs",                     ["rdfs",     "RDF schema namespace"] ]
@@ -1316,11 +1317,11 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 , "VIEW"
                 ] 
               ]
-            , [ "_user/admin", 
-                [ "admin", "mailto:admin@localhost"
-                , "VIEW CREATE UPDATE DELETE CONFIG CREATE_COLLECTION DELETE_COLLECTION ADMIN"
-                ]
-              ]
+            # , [ "_user/admin", 
+            #     [ "admin", "mailto:admin@localhost"
+            #     , "VIEW CREATE UPDATE DELETE CONFIG CREATE_COLLECTION DELETE_COLLECTION ADMIN"
+            #     ]
+            #   ]
             , [ "_user/testuser",
                 [ "testuser", "mailto:testuser@test.example.com"
                 , "VIEW CREATE UPDATE DELETE CONFIG ADMIN"

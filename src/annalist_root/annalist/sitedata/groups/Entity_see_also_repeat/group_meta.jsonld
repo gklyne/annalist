@@ -1,5 +1,7 @@
 { "@id":                "./"
 , "@type":              ["annal:Field_group"]
+, "@base":              "../.."
+, "@context":           "coll_context.jsonld"
 , "annal:id":           "Entity_see_also_repeat"
 , "annal:type_id":      "_group"
 , "annal:type":         "annal:Field_group"

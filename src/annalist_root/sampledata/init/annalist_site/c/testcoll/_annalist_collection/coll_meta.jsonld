@@ -3,8 +3,10 @@
   "rdfs:comment": "Description of Collection testcoll",
   "annal:software_version": "0.1.20",
   "annal:type_id": "_collection",
-  "annal:id": "testcoll",
+  "@base": "../..",
   "@id": "../",
+  "@context": "coll_context.jsonld",
+  "annal:id": "testcoll",
   "@type": [
     "annal:Collection"
   ],

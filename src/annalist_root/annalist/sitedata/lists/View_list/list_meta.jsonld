@@ -1,5 +1,7 @@
 { "@id":                        "annal:display/View_list"
 , "@type":                      ["annal:List"]
+, "@base":                      "../.."
+, "@context":                   "coll_context.jsonld"
 , "annal:id":                   "View_list"
 , "annal:type_id":              "_list"
 , "rdfs:label":                 "List views"

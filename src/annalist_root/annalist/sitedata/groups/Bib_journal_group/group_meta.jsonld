@@ -1,5 +1,7 @@
 { "@id":                "annal:group/Bib_journal_group"
 , "@type":              ["annal:Field_group"]
+, "@base":              "../.."
+, "@context":           "coll_context.jsonld"
 , "annal:id":           "Bib_journal_group"
 , "annal:type_id":      "_group"
 , "annal:uri":          "annal:group/Bib_journal_group"

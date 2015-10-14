@@ -112,7 +112,7 @@ def recordlist_value_keys(list_uri=False):
     return keys
 
 def recordlist_load_keys(list_uri=False):
-    return recordlist_value_keys(list_uri=list_uri) | {'@id', '@type'}
+    return recordlist_value_keys(list_uri=list_uri) | {'@id', '@type', '@base', '@context'}
 
 def recordlist_create_values(
         coll_id="testcoll", list_id="testlist", list_uri=None, update="RecordList"):
@@ -159,6 +159,8 @@ def recordlist_read_values(
     d.update(
         { '@id':            "./"
         , '@type':          ["annal:List"]
+        , '@base':          "../.."
+        , '@context':       "coll_context.jsonld"
         })
     return d
 

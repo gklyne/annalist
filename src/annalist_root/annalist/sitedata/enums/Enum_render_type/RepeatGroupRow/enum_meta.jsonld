@@ -1,5 +1,7 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
+, "@base":              "../.."
+, "@context":           "coll_context.jsonld"
 , "annal:id":           "RepeatGroupRow"
 , "annal:type_id":      "Enum_render_type"
 , "rdfs:label":         "Repeating fields as row"
