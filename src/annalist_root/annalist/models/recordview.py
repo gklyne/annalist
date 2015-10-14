@@ -43,7 +43,20 @@ class RecordView(EntityData):
                     allowing site-wide RecordView values to be found.
         """
         super(RecordView, self).__init__(parent, view_id, altparent)
+        self._parent = parent
         log.debug("RecordView %s: dir %s, alt %s"%(view_id, self._entitydir, self._entityaltdir))
         return
+
+    def _post_update_processing(self, entitydata):
+        """
+        Default post-update processing.
+
+        This method is called when a RecordView entity has been updated.  
+
+        It invokes the containing collection method to regenerate the JSON LD context 
+        for the collection to which the entity belongs.
+        """
+        self._parent.generate_coll_jsonld_context()
+        return entitydata
 
 # End.

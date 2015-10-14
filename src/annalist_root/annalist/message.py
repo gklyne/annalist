@@ -88,6 +88,7 @@ COLLECTION_NOT_EXISTS       = "Collection %(id)s does not exist"
 COLLECTION_NEWER_VERSION    = ("Cannot access collection %(id)s, "+
                                "which was created by software version %(ver)s. "+
                                "(Update Annalist server software to use this collection)")
+COLLECTION_RESOURCE_NOT_DEF = "Resource %(ref)s is not recogized for collection %(id)s"
 
 ANNALIST_USER_ID            = "Problem with user identifier"
 ANNALIST_USER_ID_INVALID    = "The user identifier is missing or not a valid identifier"

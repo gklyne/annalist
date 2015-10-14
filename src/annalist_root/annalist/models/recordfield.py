@@ -40,9 +40,10 @@ class RecordField(EntityData):
         altparent   is a site object to search for this new entity,
                     allowing site-wide RecordField values to be found.
         """
-        log.debug("RecordField %s"%(field_id))
         # assert altparent, "RecordField instantiated with no altparent"
         super(RecordField, self).__init__(parent, field_id, altparent=altparent)
+        self._parent = parent
+        log.debug("RecordField %s"%(field_id))
         return
 
     def _migrate_values(self, entitydata):
@@ -113,6 +114,18 @@ class RecordField(EntityData):
                         )
                     )
         # Return result
+        return entitydata
+
+    def _post_update_processing(self, entitydata):
+        """
+        Default post-update processing.
+
+        This method is called when a RecordField entity has been updated.  
+
+        It invokes the containing collection method to regenerate the JSON LD context 
+        for the collection to which the field belongs.
+        """
+        self._parent.generate_coll_jsonld_context()
         return entitydata
 
 # End.

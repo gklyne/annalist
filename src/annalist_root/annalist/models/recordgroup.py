@@ -43,7 +43,20 @@ class RecordGroup(EntityData):
                     allowing site-wide RecordGroup values to be found.
         """
         super(RecordGroup, self).__init__(parent, group_id, altparent)
+        self._parent = parent
         log.debug("RecordGroup %s: dir %s, alt %s"%(group_id, self._entitydir, self._entityaltdir))
         return
+
+    def _post_update_processing(self, entitydata):
+        """
+        Default post-update processing.
+
+        This method is called when a RecordGroup entity has been updated.  
+
+        It invokes the containing collection method to regenerate the JSON LD context 
+        for the collection to which the group belongs.
+        """
+        self._parent.generate_coll_jsonld_context()
+        return entitydata
 
 # End.

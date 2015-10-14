@@ -18,6 +18,8 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - IIRC, old URL is wiped at the point of save.
     - Need to save original URL and only wipe if not changed?
 - [x] BUG: create instance of type with defined type URI saves with `annal:type` value of `annal:EntityData`
+- [ ] BUG: renaming a field used by a view results in confusing Server Error messages (missing field)
+- [ ] BUG(ish): when supertypes are changed, need to regenerate @type fields of instances, or be smarter about entries for listing are selected.
 - [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - Think about use of CURIES in data (e.g. for types, fields, etc.)  
         - Need to store prefix info with collection.
@@ -45,13 +47,16 @@ NOTE: this document is used for short-term working notes; longer-term planning i
             - If static, when to regenerate?
             - Maybe adopt a hybrid static-as-cache approach?
         - is it sufficiently easy to generate property type info on-the-fly?
-    - [ ] Arrange to regenerate context only when view/group/field/vocab are updated
-    - [ ] Arrange for context to be web-accessible
+    - [x] Arrange to regenerate context only when view/group/field/vocab are updated
+        - [x] Implement post-update processing hook in EntityRoot
+        - [x] Move context generation functions to collection class
+        - [x] Define post-update hook for vocab, etc to regenerate context
+    - [x] Arrange for context to be web-accessible
     - [ ] When generating entity data, incoporate context information
-        - by-reference or by-value?  By reference would be more compact, and less repetitive.  Hopefully, the references can be such that the data is still usable without Annalist intervention.  See previous point.
-        - base choice in feature negotiaton?
     - [ ] Test that JSON-LD data can be loaded into RDF data stores.
     - [ ] JSON-LD context test case.
+        - create type+view, read context from URL, check expected values
+        - read entity into RDF store (rdflib), check graph content
 - [ ] Create schema definitions in Annalist for ANNAL namespace
 - [ ] Alternative RDF formats support (e.g. content negotiation)
 - [ ] Cater for repeated properties (see further TODOs below)?

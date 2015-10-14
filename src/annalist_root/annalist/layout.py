@@ -73,6 +73,7 @@ COLL_META_FILE          = "_annalist_collection/coll_meta.jsonld"
 COLL_PROV_FILE          = "_annalist_collection/coll_prov.jsonld"
 META_COLL_REF           = "../"
 
+SITE_COLL_CONTEXT_PATH  = "c/%(id)s/d/"
 COLL_CONTEXT_PATH       = "../d/"
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
 

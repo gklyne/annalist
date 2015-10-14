@@ -43,7 +43,20 @@ class RecordVocab(EntityData):
                     allowing site-wide RecordVocab values to be found.
         """
         super(RecordVocab, self).__init__(parent, vocab_id, altparent)
+        self._parent = parent
         log.debug("RecordVocab %s: dir %s, alt %s"%(vocab_id, self._entitydir, self._entityaltdir))
         return
+
+    def _post_update_processing(self, entitydata):
+        """
+        Default post-update processing.
+
+        This method is called when a RecordVocab entity has been updated.  
+
+        It invokes the containing collection method to regenerate the JSON LD context 
+        for the collection to which the entity belongs.
+        """
+        self._parent.generate_coll_jsonld_context()
+        return entitydata
 
 # End.

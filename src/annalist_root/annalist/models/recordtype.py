@@ -50,6 +50,7 @@ class RecordType(EntityData):
                     allowing site-wide RecordType values to be found.
         """
         super(RecordType, self).__init__(parent, type_id, altparent=altparent)
+        self._parent = parent
         log.debug("RecordType %s: dir %s, alt %s"%(type_id, self._entitydir, self._entityaltdir))
         log.debug("RecordType %s: uri %s, alt %s"%(type_id, self._entityurl, self._entityalturi))
         return

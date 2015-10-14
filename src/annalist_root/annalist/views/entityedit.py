@@ -503,8 +503,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 responseinfo=responseinfo
                 )
-            #@@TODO: something more refined; for now, regenerate context on "Save"
-            viewinfo.generate_coll_jsonld_context()  #@@ ................
             # log.info("save: continuation_url '%s'"%(viewinfo.get_continuation_next()))
             return responseinfo.http_redirect(self, viewinfo.get_continuation_next())
 

@@ -318,6 +318,7 @@ class EntityRoot(object):
         with open(fullpath, "wt") as entity_io:
             json.dump(values, entity_io, indent=2, separators=(',', ': '))
         self._entityuseurl  = self._entityurl
+        self._post_update_processing(values)
         return
 
     def _load_values(self):
@@ -362,6 +363,18 @@ class EntityRoot(object):
         to conform to the current format of the data.  The migration function should 
         be idempotent; i.e.
             x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
+        """
+        return entitydata
+
+    def _post_update_processing(self, entitydata):
+        """
+        Default method for post-update processing.
+
+        This method is called when an entity has been updated.  
+
+        Individual entity classes may provide their own override methiods for this.  
+        (e.g. to trigger regeneration of context data when groups, views, fields or 
+        vocabulary descriptions are updated.)
         """
         return entitydata
 
@@ -468,7 +481,7 @@ class EntityRoot(object):
         """
         Returns a file object for accessing a metadata resource associated with 
         the current entity.
-        localpath   is the local directory path (rel;ative to the ciurrent entity's data)
+        localpath   is the local directory path (relative to the current entity's data)
                     where the metadata resource will be accessed.
         localname   is the local name used to identify the file/resource among all those
                     associated with the current entity.
@@ -476,7 +489,9 @@ class EntityRoot(object):
                     as the built-in `open` function).
         """
         (body_dir, body_file) = self._dir_path()  # Same as `_save`
-        filename = os.path.join(body_dir, localpath, localname)
+        local_dir = os.path.join(body_dir, localpath)
+        util.ensure_dir(local_dir)
+        filename = os.path.join(local_dir, localname)
         return open(filename, mode)
 
     # Special methods to facilitate access to entity values by dictionary operations
