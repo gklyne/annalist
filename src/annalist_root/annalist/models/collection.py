@@ -20,7 +20,7 @@ import os.path
 import urlparse
 import shutil
 import json
-from collections                    import OrderedDict
+from collections    import OrderedDict
 
 import logging
 log = logging.getLogger(__name__)
@@ -63,6 +63,7 @@ class Collection(Entity):
     _entitypath     = layout.SITE_COLL_PATH
     _entityfile     = layout.COLL_META_FILE
     _entityref      = layout.META_COLL_REF
+    _contextref     = layout.COLL_CONTEXT_FILE
 
     def __init__(self, parentsite, coll_id):
         """
@@ -359,8 +360,27 @@ class Collection(Entity):
                 is a supplied function that accepts a RecordField object abnd
                 returns a context dictionary for the field thus described.
         """
+        # Build context data
+        context = self.get_coll_jsonld_context()
+        # Assemble and write out context description
+        with self._metaobj(
+                layout.COLL_META_CONTEXT_PATH,
+                layout.COLL_CONTEXT_FILE,
+                "wt"
+                ) as context_io:
+            json.dump(
+                { "@context": context }, 
+                context_io, indent=2, separators=(',', ': ')
+                )
+        return
+
+    def get_coll_jsonld_context(self):
+        """
+        Return dictionary containing context structure for collection.
+        """
         context           = OrderedDict(
-            { "@base": "." 
+            { "@base":          self.get_url() + layout.COLL_CONTEXT_PATH
+            , ANNAL.CURIE.type: { "@type": "@id" }
             })
         # Common import/upload fields
         context.update(
@@ -404,17 +424,7 @@ class Collection(Entity):
                 # fcontext['gid'] = g.get_id()
                 # fcontext['fid'] = fid
                 self.set_field_uri_jsonld_context(guri or furi, fcontext, context)
-        # Assemble and write out context description
-        with self._metaobj(
-                layout.COLL_CONTEXT_PATH,
-                layout.COLL_CONTEXT_FILE,
-               "wt"
-                ) as context_io:
-            json.dump(
-                { "@context": context }, 
-                context_io, indent=2, separators=(',', ': ')
-                )
-        return
+        return context
 
     def get_field_uri_jsonld_context(self, fid, get_field_context):
         """

@@ -213,7 +213,7 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the new entity - this is 
                     required to be unique among descendents of a common parent.
         entitybody  is a dictionary of values that are stored for the created entity.
-        use_altpath is set True if this entity is situated at the alternative
+        use_altpath is set True if the entity is to be situated at the alternative
                     path relative to its parent.
 
         Returns the created entity as an instance of the supplied class object.

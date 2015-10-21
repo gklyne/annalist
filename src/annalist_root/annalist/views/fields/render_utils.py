@@ -41,12 +41,11 @@ import render_ref_multifields
 _render_type_literal = set(
     [ "Text", "Textarea", "Slug"
     , "Placement", "CheckBox", "Markdown"
-    , "EntityId"
+    , "EntityId", "EntityTypeId"
     ])
 
 _render_type_id = set(
     [ "Identifier"
-    , "EntityTypeId"
     , "RefAudio", "RefImage", "URILink", "URIImage"
     , "Enum", "Enum_optional", "Enum_choice", "View_choice"
     , "RefMultifield"

@@ -27,8 +27,11 @@ from annalist.models.entitydata     import EntityData
 
 from annalist.views.defaultedit     import EntityDefaultEditView
 
-from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import test_layout, copySitedata
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from tests                  import test_layout
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from init_tests             import copySitedata
 
 from AnnalistTestCase               import AnnalistTestCase
 from entity_testutils               import collection_create_values
@@ -109,15 +112,15 @@ class CreateSiteData(AnnalistTestCase):
         testsite = Site(TestBaseUri, TestBaseDir)
         coll123_create_data(testsite)
         #
-        testcoll = Collection.create(testsite, "testcoll", collection_create_values("testcoll"))
-        testtype = RecordType.create(testcoll, "testtype", recordtype_create_values("testcoll", "testtype"))
-        # testview = RecordView.create(testcoll, "testview", recordview_create_values("testview"))
-        # testlist = RecordList.create(testcoll, "testlist", recordlist_create_values("testlist"))
-        testdata = RecordTypeData.create(testcoll, "testtype", {})
-        teste    = EntityData.create(
-            testdata, "entity1", 
-            entitydata_create_values(testcoll,testtype,"entity1")
-            )
+        # testcoll = Collection.create(testsite, "testcoll", collection_create_values("testcoll"))
+        # testtype = RecordType.create(testcoll, "testtype", recordtype_create_values("testcoll", "testtype"))
+        # # testview = RecordView.create(testcoll, "testview", recordview_create_values("testview"))
+        # # testlist = RecordList.create(testcoll, "testlist", recordlist_create_values("testlist"))
+        # testdata = RecordTypeData.create(testcoll, "testtype", {})
+        # teste    = EntityData.create(
+        #     testdata, "entity1", 
+        #     entitydata_create_values(testcoll,testtype,"entity1")
+        #     )
         return
 
     def test_CreateEmptySiteData(self):

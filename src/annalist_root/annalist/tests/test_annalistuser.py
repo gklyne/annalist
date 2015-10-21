@@ -36,12 +36,10 @@ from annalist.models.annalistuser           import AnnalistUser
 from annalist.views.annalistuserdelete      import AnnalistUserDeleteConfirmedView
 from annalist.views.fields.render_tokenset  import get_field_tokenset_renderer
 
-from AnnalistTestCase                       import AnnalistTestCase
-from tests                                  import init_annalist_test_site, resetSitedata
-from tests                                  import (
-    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-    )
-from entity_testutils                       import (
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from entity_testutils       import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_entity_view_url,
@@ -49,7 +47,7 @@ from entity_testutils                       import (
     create_user_permissions,
     create_test_user
     )
-from entity_testuserdata                    import (
+from entity_testuserdata    import (
     annalistuser_dir,
     annalistuser_site_url, annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
     annalistuser_value_keys, annalistuser_load_keys,
@@ -57,7 +55,7 @@ from entity_testuserdata                    import (
     annalistuser_view_form_data,
     annalistuser_delete_confirm_form_data
     )
-from entity_testentitydata                  import (
+from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes
@@ -94,7 +92,7 @@ class AnnalistUserTest(AnnalistTestCase):
         url = annalistuser_coll_url(self.testsite, coll_id="testcoll", user_id="testuser")
         self.assertEqual(usr._entitytype,   ANNAL.CURIE.User)
         self.assertEqual(usr._entityfile,   layout.USER_META_FILE)
-        self.assertEqual(usr._entityref,    layout.META_USER_REF)
+        self.assertEqual(usr._entityref,    layout.META_USER_REF%{'id': "testuser"})
         self.assertEqual(usr._entityid,     "testuser")
         self.assertEqual(usr._entityurl,    url)
         self.assertEqual(usr._entitydir,    annalistuser_dir(user_id="testuser"))

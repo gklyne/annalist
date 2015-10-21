@@ -26,7 +26,7 @@ def am_initialize(annroot, userhome, userconfig, options):
     """
     Initialize Annalist server data, database, etc.
 
-    annroot     is the root directory for theannalist software installation.
+    annroot     is the root directory for the annalist software installation.
     userhome    is the home directory for the host system user issuing the initialize command.
     userconfig  is the directory used for user-specific configuration files.
     options     contains options parsed from the command line.

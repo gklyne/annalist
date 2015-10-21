@@ -20,6 +20,7 @@ log = logging.getLogger(__name__)
 #       _annalist-site/
 #           site_meta.json_ld
 #           site_prov.json_ld
+#           site_context.json_ld
 #       c/
 #         <collection-id>/
 #           _annalist_collection/
@@ -66,6 +67,7 @@ SITEDATA_VIEW           = "%(id)s/"
 SITEDATA_PATH           = "%(id)s"
 SITEDATA_META_FILE      = "sitedata_meta.jsonld"
 META_SITEDATA_REF       = "./"
+SITEDATA_CONTEXT_FILE   = "site_context.jsonld"
 
 SITE_COLL_VIEW          = "c/%(id)s/"
 SITE_COLL_PATH          = "c/%(id)s"
@@ -74,7 +76,8 @@ COLL_PROV_FILE          = "_annalist_collection/coll_prov.jsonld"
 META_COLL_REF           = "../"
 
 SITE_COLL_CONTEXT_PATH  = "c/%(id)s/d/"
-COLL_CONTEXT_PATH       = "../d/"
+COLL_CONTEXT_PATH       = "d/"
+COLL_META_CONTEXT_PATH  = META_COLL_REF+COLL_CONTEXT_PATH
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
 
 COLL_TYPE_VIEW          = "d/_type/%(id)s/"
@@ -124,7 +127,9 @@ COLL_USER_PATH          = "_annalist_collection/users/%(id)s"
 SITE_USER_PATH          = "_annalist_site/users/%(id)s"
 USER_META_FILE          = "user_meta.jsonld"
 USER_PROV_FILE          = "user_prov.jsonld"
-META_USER_REF           = "./"
+META_USER_REF           = "_user/%(id)s/"
+USER_CONTEXT_REF        = "../.."
+USER_CONTEXT_FILE       = USER_CONTEXT_REF + "/" + SITEDATA_CONTEXT_FILE
 
 COLL_ENUM_VIEW          = "d/%(type_id)s/%(id)s/"
 COLL_ENUM_PATH          = "_annalist_collection/enums/%(type_id)s/%(id)s"
@@ -140,10 +145,16 @@ META_TYPEDATA_REF       = "./"
 
 TYPEDATA_ENTITY_VIEW    = "%(id)s/"
 TYPEDATA_ENTITY_PATH    = "%(id)s"
+COLL_ENTITY_VIEW        = "d/%(type_id)s/%(id)s/"
+COLL_ENTITY_PATH        = "d/%(type_id)s/%(id)s"
+SITE_ENTITY_VIEW        = "c/%(coll_id)s/d/%(type_id)s/%(id)s/"
+SITE_ENTITY_PATH        = "c/%(coll_id)s/d/%(type_id)s/%(id)s"
 ENTITY_DATA_FILE        = "entity-data.jsonld"
 ENTITY_PROV_FILE        = "entity-prov.jsonld"
 DATA_ENTITY_REF         = "./"
-ENTITY_CONTEXT_PATH     = "../.."
+CONTEXT_ENTITY_REF      = "%(type_id)s/%(id)s/"
+ENTITY_CONTEXT_REF      = "../.."
+ENTITY_CONTEXT_FILE     = ENTITY_CONTEXT_REF + "/" + COLL_CONTEXT_FILE
 
 # and more...
 

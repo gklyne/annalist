@@ -26,13 +26,11 @@ from annalist.views.fields.render_placement     import Placement
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
 from annalist.views.form_utils.fieldchoice      import FieldChoice
 
-from tests                  import init_annalist_test_site, resetSitedata
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from AnnalistTestCase       import AnnalistTestCase
-
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testentitydata  import entity_url
-
-from entity_testsitedata            import (
+from entity_testsitedata    import (
     make_field_choices, no_selection,
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,

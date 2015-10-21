@@ -48,6 +48,7 @@ class EntityRoot(object):
         cls._entitytypeid   local type id (slug) used in local URI construction
         cls._entityfile     relative path to file where entity body is stored
         cls._entityref      relative reference to entity from body file
+        cls._contextref     relative reference to context from body file
         self._entityid      ID of entity; may be None for "root" entities (e.g. site?)
         self._entityurl     URI at which entity is accessed
         # self._entityurlhost URI host at which entity is accessed (per HTTP host: header)
@@ -60,6 +61,7 @@ class EntityRoot(object):
     _entitytypeid   = None          # To be overridden
     _entityfile     = None          # To be overriden by entity subclasses..
     _entityref      = None          # Relative reference to entity from body file
+    _contextref     = None         # Relative reference to context file from body file
 
     def __init__(self, entityurl, entitydir):
         """
@@ -299,6 +301,8 @@ class EntityRoot(object):
         # @@TODO: think about capturing provenance metadata too.
         if not self._entityref:
             raise ValueError("Entity._save without defined entity reference")
+        if not self._contextref:
+            raise ValueError("Entity._save without defined context reference")
         if not self._values:
             raise ValueError("Entity._save without defined entity values")
         (body_dir, body_file) = self._dir_path()
@@ -312,8 +316,12 @@ class EntityRoot(object):
         values = self._values.copy()
         values['@id']      = self._entityref
         values['@type']    = self._get_types(values.get('@type', None))
-        values['@base']    = layout.ENTITY_CONTEXT_PATH
-        values['@context'] = layout.COLL_CONTEXT_FILE
+        values['@context'] = (
+            [ self._contextref
+            # layout.COLL_CONTEXT_FILE
+            # layout.ENTITY_CONTEXT_PATH + "/" + layout.COLL_CONTEXT_FILE
+            # , { '@base': layout.ENTITY_CONTEXT_PATH }
+            ])
         # @TODO: is this next needed?  Put logic in set_values?
         if self._entityid:
             values[ANNAL.CURIE.id] = self._entityid
@@ -333,7 +341,9 @@ class EntityRoot(object):
         body_file = self._exists_path()
         if body_file:
             try:
-                with open(body_file, "r") as f:
+                # @@TODO: rework name access to support different underlays
+                # @@was: with open(body_file, "r") as f:
+                with self._read_stream() as f:
                     entitydata = json.load(util.strip_comments(f))
                     entitydata[ANNAL.CURIE.url] = self.get_view_url_path()
                     return entitydata
@@ -484,6 +494,7 @@ class EntityRoot(object):
         """
         Returns a file object for accessing a metadata resource associated with 
         the current entity.
+
         localpath   is the local directory path (relative to the current entity's data)
                     where the metadata resource will be accessed.
         localname   is the local name used to identify the file/resource among all those
@@ -495,7 +506,34 @@ class EntityRoot(object):
         local_dir = os.path.join(body_dir, localpath)
         util.ensure_dir(local_dir)
         filename = os.path.join(local_dir, localname)
+        log.info("entityroot._metaobj: self._entitydir %s"%(self._entitydir,))
+        log.info("entityroot._metaobj: body_dir %s, body_file %s"%(body_dir, body_file))
+        log.info("entityroot._metaobj: filename %s"%(filename,))
         return open(filename, mode)
+
+    def _read_stream(self):
+        """
+        Opens a (file-like) stream to read entity data.
+
+        Returns the stream object, which implements the context protocol to
+        close the stream on exit from a containign with block; e.g.
+
+            with e._read_stream() as f:
+                // read data from f
+            // f is closed here
+
+        """
+        # @@TODO: factor out logic in common with _metaobj/_fileobj
+        f_stream  = None
+        body_file = self._exists_path()
+        if body_file:
+            try:
+                f_stream = open(body_file, "rt")
+            except IOError, e:
+                if e.errno != errno.ENOENT:
+                    raise
+                log.error("EntityRoot._read_stream: no file %s"%(body_file))
+        return f_stream
 
     # Special methods to facilitate access to entity values by dictionary operations
     # on the Entity object

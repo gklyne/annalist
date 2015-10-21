@@ -34,19 +34,17 @@ from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
-from tests                          import (
-    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-    )
-from tests                          import init_annalist_test_site, resetSitedata
-from AnnalistTestCase               import AnnalistTestCase
-from entity_testutils               import (
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from entity_testutils       import (
     create_test_user,
     create_user_permissions,
     context_list_entities,
     context_list_head_fields,
     context_list_item_fields
     )
-from entity_testentitydata          import (
+from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
     entitydata_default_view_context_data, entitydata_default_view_form_data,
     )
@@ -125,6 +123,7 @@ class ImageReferenceTest(AnnalistTestCase):
         self.imagepath = "%s/test-image.jpg"%TestBaseDir
         self.imageuri  = "file://"+self.filepath
         init_annalist_test_site()
+        init_annalist_test_coll()
         self.testsite    = Site(TestBaseUri, TestBaseDir)
         self.testcoll    = Collection(self.testsite, "testcoll")
         # Populate collection with linked record types, views and lists

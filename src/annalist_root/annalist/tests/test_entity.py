@@ -20,9 +20,9 @@ from django.test.client         import Client
 from annalist.identifiers       import ANNAL
 from annalist.models.entity     import EntityRoot, Entity
 
-from tests                      import TestBaseDir, TestBaseUri, TestHost, TestBasePath
-from tests                      import dict_to_str, init_annalist_test_site, resetSitedata
-from AnnalistTestCase           import AnnalistTestCase
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 
 #   -----------------------------------------------------------------------------
 #

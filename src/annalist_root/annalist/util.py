@@ -282,9 +282,9 @@ def entity_url_path(baseuri, entityref):
 def strip_comments(f):
     """
     Returns a file-like object that returns content from the supplied file-like
-    but with comments removed.
+    object, but with comment lines replaced with blank lines.
 
-    >>> f1 = StringIO.StringIO("// coment\\ndata\\n// another comment\\n\\n")
+    >>> f1 = StringIO.StringIO("// comment\\ndata\\n// another comment\\n\\n")
     >>> f2 = strip_comments(f1)
     >>> f2.read()
     '\\ndata\\n\\n\\n'

@@ -26,7 +26,7 @@ from annalist.models.site       import Site
 from annalist.views.profile     import ProfileView
 
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                      import dict_to_str, init_annalist_test_site, resetSitedata
+from init_tests                 import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from AnnalistTestCase           import AnnalistTestCase
 from entity_testutils           import site_title
 

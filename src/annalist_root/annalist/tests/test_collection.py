@@ -29,10 +29,10 @@ from annalist.models.recordtype     import RecordType
 
 from annalist.views.collection      import CollectionEditView
 
-from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import dict_to_str, init_annalist_test_site, resetSitedata
-from AnnalistTestCase               import AnnalistTestCase
-from entity_testutils               import (
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from entity_testutils       import (
     site_dir, collection_dir,
     site_view_url, 
     collection_view_url, 
@@ -43,23 +43,23 @@ from entity_testutils               import (
     site_title,
     create_test_user
     )
-from entity_testuserdata            import (
+from entity_testuserdata    import (
     annalistuser_create_values, annalistuser_values, annalistuser_read_values
     )
-from entity_testtypedata            import (
+from entity_testtypedata    import (
     recordtype_edit_url,
     recordtype_create_values, recordtype_read_values
     )
-from entity_testviewdata            import (
+from entity_testviewdata    import (
     recordview_create_values, recordview_read_values,
     )
-from entity_testlistdata            import (
+from entity_testlistdata    import (
     recordlist_create_values, recordlist_read_values,
     )
-from entity_testentitydata          import (
+from entity_testentitydata  import (
     entitydata_list_all_url
     )
-from entity_testsitedata            import (
+from entity_testsitedata    import (
     get_site_types, get_site_types_sorted,
     get_site_lists, get_site_lists_sorted,
     get_site_list_types, get_site_list_types_sorted,
@@ -86,6 +86,7 @@ class CollectionTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
+        init_annalist_test_coll()
         self.testsite     = Site(TestBaseUri, TestBaseDir)
         self.testcoll     = Collection(self.testsite, "testcoll")
         self.coll1        = collection_values("coll1")

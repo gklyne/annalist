@@ -7,6 +7,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 
 - [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
 - [ ] HOWTOs for common tasks; task-oriented documentation
+    - Have tutorial; can this be used?
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
 - [ ] New demo screencasts
@@ -19,7 +20,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - Need to save original URL and only wipe if not changed?
 - [x] BUG: create instance of type with defined type URI saves with `annal:type` value of `annal:EntityData`
 - [ ] BUG: renaming a field used by a view results in confusing Server Error messages (missing field)
-- [ ] BUG(ish): when supertypes are changed, need to regenerate @type fields of instances, or be smarter about entries for listing are selected.
+- [ ] BUG(ish): when supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.
 - [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - Think about use of CURIES in data (e.g. for types, fields, etc.)  
         - Need to store prefix info with collection.
@@ -110,6 +111,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 
 (feature freeze for V0.9alpha?)
+(0.2?)
 
 - [ ] update Django version used to 1.8 (designated for long term support)
 - [ ] review renderers and revise to take all message strings from messages.py
@@ -141,10 +143,13 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
+- [ ] Move outstanding TODOs to GitHub issues
 
 
 Technical debt:
 
+- [ ] After reworking site adta access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
+    - The various relative references for accessing context data are particularly unclear in the current software.
 - [ ] `annal:Slug` for entity references - is now type/id: rename type?  (annal:Entity_ref?)
 - [ ] Inconsistent `@id` values in site data
 - [ ] Re-think access to entities and types:
@@ -156,6 +161,7 @@ Technical debt:
     - [ ] Think about how to optimize retreival of subtypes/supertypes
     - [ ] Do special case for types, or more generic caching approach?
 - [ ] Customize view getting out of sync with other page styles
+    - possible enhancements to form generator to generate custoimize page using form logic?
 - [ ] Refactor entity edit response handling
 - [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
 - [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
@@ -263,7 +269,7 @@ Notes for Future TODOs:
 - [ ] 3D rendering - check out JSMOL - http://wiki.jmol.org/index.php/JSmol
 - [ ] Visualize data structures from view definitions; generate OWL descriptions; etc.
 - [ ] Remixing spreadsheets: spreadsheet generation from queries as well as ingesting through data bridges.
-- [ ] SPARQL data bridge: use copmbination opf SPARQL CONSTRUCT query + JSON-LD frame?
+- [ ] SPARQL data bridge: use combination opf SPARQL CONSTRUCT query + JSON-LD frame?
 - [ ] View selection based on pattern match; e.g. JSON PATCH "Test" operation.
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)

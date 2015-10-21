@@ -32,8 +32,8 @@ from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
 from annalist.views.fields.render_text          import RenderText
 from annalist.views.fields.render_fieldvalue    import RenderFieldValue, get_template
 
-from tests                      import init_annalist_test_site, resetSitedata
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests                 import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from field_rendering_support    import FieldRendererTestSupport
 
 #   -----------------------------------------------------------------------------

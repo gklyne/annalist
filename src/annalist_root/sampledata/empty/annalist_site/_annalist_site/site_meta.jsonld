@@ -1,5 +1,6 @@
-{
-    "@id":      	"../",
-    "rdfs:label": 	"Annalist data notebook site",
-    "rdfs:comment": "Annalist site metadata and site-wide values."
+{ "@id":            "../"
+, "@context":       "site_context.jsonld"
+, "rdfs:label":     "Annalist data notebook site"
+, "rdfs:comment":   "Annalist site metadata and site-wide values."
+, "annal:comment":  "Initialized from `sampledata/empty/annalist_site/_annalist_site/site_meta.jsonld`"
 }

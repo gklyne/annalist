@@ -34,23 +34,23 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site, resetSitedata
-from AnnalistTestCase               import AnnalistTestCase
-from entity_testutils               import (
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from entity_testutils       import (
     collection_create_values,
     continuation_url_param,
     create_test_user
     )
-from entity_testtypedata            import (
+from entity_testtypedata    import (
     recordtype_create_values, 
     )
-from entity_testviewdata            import (
+from entity_testviewdata    import (
     recordview_url, 
     recordview_create_values, recordview_values,
     recordview_entity_view_form_data, 
     )
-from entity_testentitydata          import (
+from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
     entitydata_value_keys, entitydata_create_values, entitydata_values,
     entitydata_default_view_form_data,

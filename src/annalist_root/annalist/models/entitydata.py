@@ -29,7 +29,8 @@ class EntityData(Entity):
     _entityview     = layout.TYPEDATA_ENTITY_VIEW
     _entitypath     = layout.TYPEDATA_ENTITY_PATH
     _entityfile     = layout.ENTITY_DATA_FILE
-    _entityref      = layout.DATA_ENTITY_REF
+    # _entityref      = layout.DATA_ENTITY_REF
+    _contextref     = layout.ENTITY_CONTEXT_FILE
 
     def __init__(self, parent, entity_id, altparent=None, use_altpath=False):
         """
@@ -46,7 +47,9 @@ class EntityData(Entity):
         """
         super(EntityData, self).__init__(parent, entity_id, altparent=altparent, use_altpath=use_altpath)
         self._entitytypeid  = self._entitytypeid or parent.get_id()
-        self._entityviewuri = parent._entityurl+self._entityview%{'type_id': self._entitytypeid, 'id': entity_id}
+        self._paramdict     = { 'type_id': self._entitytypeid, 'id': entity_id }
+        self._entityviewuri = parent._entityurl+self._entityview%self._paramdict
+        self._entityref     = layout.CONTEXT_ENTITY_REF%self._paramdict
         log.debug("EntityData: _entityviewuri %s"%(self._entityviewuri))
         return
 

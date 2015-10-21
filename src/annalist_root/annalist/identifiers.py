@@ -90,7 +90,7 @@ OWL = makeNamespace("owl", "http://www.w3.org/2002/07/owl#",
 """
 Annalist namespace terms
 """
-ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
+ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     [ "EntityRoot", "Entity"
     , "Site", "SiteData", "Collection", "Entity", "EntityRoot"
     , "Collection_Types", "Collection_Views", "Collection_Lists"

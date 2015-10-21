@@ -11,8 +11,9 @@ import os.path
 import collections
 import urlparse
 import json
-import traceback
+from collections    import OrderedDict
 
+import traceback
 import logging
 log = logging.getLogger(__name__)
 
@@ -26,12 +27,13 @@ from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
 from annalist                       import layout
 from annalist                       import message
+from annalist                       import util
 
 from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.entityroot     import EntityRoot
 from annalist.models.sitedata       import SiteData
 from annalist.models.collection     import Collection
-from annalist                       import util
+from annalist.models.recordvocab    import RecordVocab
 
 class Site(EntityRoot):
 
@@ -153,5 +155,87 @@ class Site(EntityRoot):
         """
         log.debug("remove_collection: %s"%(coll_id))
         return Collection.remove(self, coll_id)
+
+    # JSON-LD context data
+
+    def generate_site_jsonld_context(self):
+        """
+        (Re)generate JSON-LD context description for the current collection.
+
+        get_field_uri_context
+                is a supplied function that accepts a RecordField object abnd
+                returns a context dictionary for the field thus described.
+        """
+        # Build context data
+        context = self.get_site_jsonld_context()
+        # Assemble and write out context description
+        with self._metaobj("", layout.SITEDATA_CONTEXT_FILE, "wt") as context_io:
+            json.dump(
+                { "@context": context }, 
+                context_io, indent=2, separators=(',', ': ')
+                )
+        return
+
+    def get_site_jsonld_context(self):
+        """
+        Return dictionary containing context structure for collection.
+        """
+        context           = OrderedDict(
+            { "@base": self.get_url() + layout.SITEDATA_DIR + "/"
+            })
+        # context           = OrderedDict(
+        #     { "@base": "./"
+        #     })
+        # Scan vocabs, generate prefix data
+        for v in self._site_children(RecordVocab):
+            vid = v.get_id()
+            if vid != "_initial_values":
+                context[v.get_id()] = v[ANNAL.CURIE.uri]
+        return context
+
+    # Temporary helper functions
+    #
+    # @@TODO - temporary fix
+    #
+    # These helpers return children of the site object.  
+    #
+    # It works like the EntityRoot._children method except that it uses the 
+    # alternative parent path for the supplied class.  This alternative path
+    # logic should be eliminated when the site data is moved to a special
+    # site data collection: then the access for all child data should be
+    # unified.
+
+    def _site_children_ids(self, cls):
+        """
+        Iterates over candidate child entyity ids that are possible instances 
+        of an indicated class.  The supplied class is used to determine a 
+        subdirectory to be scanned.
+
+        cls         is a subclass of Entity indicating the type of children to
+                    iterate over.
+        """
+        site_dir = os.path.dirname(os.path.join(self._entitydir, cls._entityaltpath))
+        assert "%" not in site_dir, "_entitypath/_entityaltpath template variable interpolation may be in filename part only"
+        site_files = []
+        if site_dir and os.path.isdir(site_dir):
+            site_files = os.listdir(site_dir)
+        for fil in site_files:
+            if util.valid_id(fil):
+                yield fil
+        return
+
+    def _site_children(self, cls):
+        """
+        Iterates over candidate children of the current site object that are instances 
+        of an indicated class.
+
+        cls         is a subclass of Entity indicating the type of children to
+                    iterate over.
+        """
+        for i in self._site_children_ids(cls):
+            e = cls.load(self, i, use_altpath=True)
+            if e:
+                yield e
+        return
 
 # End.

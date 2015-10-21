@@ -1,5 +1,7 @@
 """
 Create Annalist/Django site data.
+
+Note: uses data in `sampledata/empty/annalist_site`
 """
 
 from __future__ import print_function

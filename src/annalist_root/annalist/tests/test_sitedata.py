@@ -35,26 +35,24 @@ from django.test.client         import Client
 
 from bs4                        import BeautifulSoup
 
-from annalist.identifiers                   import RDF, RDFS, ANNAL
-from annalist.util                          import extract_entity_id
+from annalist.identifiers           import RDF, RDFS, ANNAL
+from annalist.util                  import extract_entity_id
 
-from annalist.models.site                   import Site
-from annalist.models.collection             import Collection
-from annalist.models.recordtype             import RecordType
-from annalist.models.recordlist             import RecordList
-from annalist.models.recordview             import RecordView
-from annalist.models.recordgroup            import RecordGroup
-from annalist.models.recordfield            import RecordField
+from annalist.models.site           import Site
+from annalist.models.collection     import Collection
+from annalist.models.recordtype     import RecordType
+from annalist.models.recordlist     import RecordList
+from annalist.models.recordview     import RecordView
+from annalist.models.recordgroup    import RecordGroup
+from annalist.models.recordfield    import RecordField
 
 from annalist.views.fields.render_placement import get_placement_options
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from AnnalistTestCase           import AnnalistTestCase
-from tests                      import dict_to_str, init_annalist_test_site, resetSitedata
-from tests                      import (
-    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-    )
-from entity_testutils           import (
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from entity_testutils       import (
     site_view_url,
     collection_view_url,
     collection_edit_url,
@@ -63,7 +61,7 @@ from entity_testutils           import (
     collection_entity_edit_url,
     create_user_permissions, create_test_user
     )
-from entity_testsitedata        import (
+from entity_testsitedata    import (
     make_field_choices, no_selection,
     get_site_types,        get_site_types_sorted,
     get_site_lists,        get_site_lists_sorted,
@@ -353,7 +351,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         # Check displayed collections (check site setup)
         self.assertEqual(s.title.string, "Annalist data notebook test site")
         trows = s.select("form > div > div > div")
-        self.assertEqual(len(trows), 5)
+        self.assertEqual(len(trows), 4)
         for i in (1,2,3):
             tcols = trows[i].find_all("div", class_="view-value")
             colln = "coll%d"%i

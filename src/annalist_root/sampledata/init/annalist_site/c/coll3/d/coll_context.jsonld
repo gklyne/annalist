@@ -1,6 +1,9 @@
 {
   "@context": {
-    "@base": ".",
+    "@base": "http://test.example.com/testsite/c/coll3/d/",
+    "annal:type": {
+      "@type": "@id"
+    },
     "resource_name": "annal:resource_name",
     "resource_type": "annal:resource_type",
     "upload_name": "annal:upload_name",
@@ -11,14 +14,11 @@
       "@id": "annal:import_url",
       "@type": "@id"
     },
-    "annal": "http://purl.org/annalist/#",
+    "annal": "http://purl.org/annalist/2014/#",
     "owl": "http://www.w3.org/2002/07/owl#",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
-    "annal:type_id": {
-      "@type": "@id"
-    },
     "annal:record_type": {
       "@type": "@id"
     },
