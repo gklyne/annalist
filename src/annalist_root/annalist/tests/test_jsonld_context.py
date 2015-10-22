@@ -282,11 +282,12 @@ class JsonldContextTest(AnnalistTestCase):
                 ) + 
               "/"
             )
-        # print "*****"+repr(b)
+        print("***** b: (entity1)")
+        print(repr(b))
         result = g.parse(source=s, publicID=b, format="json-ld")
         # print "*****"+repr(result)
-        # print "***** g: (entity1)"
-        # print(g.serialize(format='turtle', indent=4))
+        print("***** g: (entity1)")
+        print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
         subj        = entity1.get_url()
