@@ -1,7 +1,6 @@
 { "@id":                "annal:display/List_view"
 , "@type":              ["annal:View"]
-, "@base":              "../.."
-, "@context":           "coll_context.jsonld"
+, "@context":           ["../../coll_context.jsonld"]
 , "annal:type_id":      "_view"
 , "annal:id":           "List_view"
 , "annal:record_type":  "annal:List"

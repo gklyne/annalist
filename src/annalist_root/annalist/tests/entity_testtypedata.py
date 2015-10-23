@@ -113,7 +113,7 @@ def recordtype_value_keys(type_uri=False, supertype_uris=False):
 def recordtype_load_keys(type_uri=False, supertype_uris=False):
     return (
         recordtype_value_keys(type_uri=type_uri, supertype_uris=supertype_uris) | 
-        {'@id', '@type', '@base', '@context'}
+        {'@id', '@type', '@context'}
         )
 
 def recordtype_create_values(

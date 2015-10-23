@@ -150,7 +150,7 @@ def entitydata_value_keys(entity_uri=False):
 def entitydata_load_keys(entity_uri=False):
     return (
         recordview_value_keys(entity_uri=entity_uri) | 
-        {"@id", '@type', '@base', '@context'}
+        {"@id", '@type', '@context'}
         )
 
 def entitydata_create_values(

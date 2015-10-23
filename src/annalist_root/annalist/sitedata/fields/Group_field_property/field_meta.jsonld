@@ -1,7 +1,6 @@
 { "@id":                        "annal:fields/Group_field_property"
 , "@type":                      ["annal:Field"]
-, "@base":                      "../.."
-, "@context":                   "coll_context.jsonld"
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Group_field_property"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Property"

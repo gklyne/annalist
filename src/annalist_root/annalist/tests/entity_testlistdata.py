@@ -112,7 +112,7 @@ def recordlist_value_keys(list_uri=False):
     return keys
 
 def recordlist_load_keys(list_uri=False):
-    return recordlist_value_keys(list_uri=list_uri) | {'@id', '@type', '@base', '@context'}
+    return recordlist_value_keys(list_uri=list_uri) | {'@id', '@type', '@context'}
 
 def recordlist_create_values(
         coll_id="testcoll", list_id="testlist", list_uri=None, update="RecordList"):
