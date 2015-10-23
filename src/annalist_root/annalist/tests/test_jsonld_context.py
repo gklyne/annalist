@@ -220,6 +220,7 @@ class JsonldContextTest(AnnalistTestCase):
 
         # Check the resulting graph contents
         subj      = URIRef(self.testsite.get_url())
+        subj      = URIRef("file://" + TestBaseDir + "/")
         site_data = self.testsite.site_data()
         label     = Literal(site_data[RDFS.CURIE.label])
         comment   = Literal(site_data[RDFS.CURIE.comment])
@@ -237,7 +238,7 @@ class JsonldContextTest(AnnalistTestCase):
         # Read collection data as JSON-LD
         g = Graph()
         s = self.testcoll._read_stream()
-        b = "file://" + os.path.join(TestBaseDir, layout.SITE_COLL_CONTEXT_PATH%{'id': self.testcoll.get_id()}) + "/"
+        b = "file://" + os.path.join(TestBaseDir, layout.SITE_COLL_CONTEXT_PATH%{'id': self.testcoll.get_id()})
         result = g.parse(source=s, publicID=b, format="json-ld")
         # print "*****"+repr(result)
         # print "***** coll:"
@@ -245,6 +246,7 @@ class JsonldContextTest(AnnalistTestCase):
 
         # Check the resulting graph contents
         subj      = self.testcoll.get_url()
+        subj      = "file://" + os.path.join(TestBaseDir, layout.SITE_COLL_PATH%{'id': self.testcoll.get_id()}) + "/"
         coll_data = self.testcoll._load_values()
         for (s, p, o) in (
             [ (subj, RDFS.label,             Literal(coll_data[RDFS.CURIE.label])       )
@@ -282,15 +284,15 @@ class JsonldContextTest(AnnalistTestCase):
                 ) + 
               "/"
             )
-        print("***** b: (entity1)")
-        print(repr(b))
+        # print("***** b: (entity1)")
+        # print(repr(b))
         result = g.parse(source=s, publicID=b, format="json-ld")
         # print "*****"+repr(result)
-        print("***** g: (entity1)")
-        print(g.serialize(format='turtle', indent=4))
+        # print("***** g: (entity1)")
+        # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj        = entity1.get_url()
+        subj        = b #@@ entity1.get_url()
         entity_data = entity1.get_values()
         for (s, p, o) in (
             [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])       )

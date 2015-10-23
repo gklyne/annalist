@@ -127,7 +127,7 @@ COLL_USER_PATH          = "_annalist_collection/users/%(id)s"
 SITE_USER_PATH          = "_annalist_site/users/%(id)s"
 USER_META_FILE          = "user_meta.jsonld"
 USER_PROV_FILE          = "user_prov.jsonld"
-META_USER_REF           = "_user/%(id)s/"
+META_USER_REF           = "./"
 USER_CONTEXT_REF        = "../.."
 USER_CONTEXT_FILE       = USER_CONTEXT_REF + "/" + SITEDATA_CONTEXT_FILE
 

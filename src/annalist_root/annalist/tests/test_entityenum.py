@@ -99,8 +99,8 @@ def recordenum_read_values(
         ).copy()
     d.update(
         { '@id':            "./"
-        , '@base':          "../.."
-        , '@context':       "coll_context.jsonld"
+        # , '@base':          "../.."
+        , '@context':       ["../../coll_context.jsonld"]
         })
     return d
 

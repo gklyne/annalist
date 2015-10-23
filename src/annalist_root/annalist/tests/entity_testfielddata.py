@@ -165,8 +165,8 @@ def recordfield_read_values(
     d.update(
         { '@id':            "./"
         , '@type':          ["annal:Field"]
-        , '@base':          "../.."
-        , '@context':       "coll_context.jsonld"
+        # , '@base':          "../.."
+        , '@context':       ["../../coll_context.jsonld"]
         })
     return d
 

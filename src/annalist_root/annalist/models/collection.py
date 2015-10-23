@@ -378,9 +378,18 @@ class Collection(Entity):
         """
         Return dictionary containing context structure for collection.
         """
+        # @@REVIEW: as a workaround for a problem with @base handling in rdflib-jsonld, don't
+        #           include @base in context.
+        #
+        # context           = OrderedDict(
+        #     { "@base":          self.get_url() + layout.COLL_CONTEXT_PATH
+        #     , ANNAL.CURIE.type: { "@type": "@id" }
+        #     })
+        #
+        # Use OrderedDict to allow some control over ordering of context file contents:
+        # this is for humane purposes only, and is not technically important.
         context           = OrderedDict(
-            { "@base":          self.get_url() + layout.COLL_CONTEXT_PATH
-            , ANNAL.CURIE.type: { "@type": "@id" }
+            { ANNAL.CURIE.type: { "@type": "@id" }
             })
         # Common import/upload fields
         context.update(

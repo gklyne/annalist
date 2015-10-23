@@ -180,12 +180,19 @@ class Site(EntityRoot):
         """
         Return dictionary containing context structure for collection.
         """
-        context           = OrderedDict(
-            { "@base": self.get_url() + layout.SITEDATA_DIR + "/"
-            })
+        # @@REVIEW: as a workaround for a problem with @base handling in rdflib-jsonld, don't
+        #           include @base in context.
+        #
+        # context           = OrderedDict(
+        #     { "@base": self.get_url() + layout.SITEDATA_DIR + "/"
+        #     })
         # context           = OrderedDict(
         #     { "@base": "./"
         #     })
+        #
+        # Use OrderedDict to allow some control over ordering of context file contents:
+        # this is for humane purposes only, and is not technically important.
+        context           = OrderedDict()
         # Scan vocabs, generate prefix data
         for v in self._site_children(RecordVocab):
             vid = v.get_id()

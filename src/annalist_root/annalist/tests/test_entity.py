@@ -36,6 +36,7 @@ class TestEntityRootType(EntityRoot):
     _entitypath = None
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
+    _contextref = "../../coll_context.jsonld"
 
 class EntityRootTest(TestCase):
     """
@@ -177,8 +178,8 @@ class EntityRootTest(TestCase):
         test_values_returned = (
             { '@id':            '../'
             , '@type':          ['test:EntityRootType']
-            , '@base':          "../.."
-            , '@context':       "coll_context.jsonld"           
+            # , '@base':          "../.."
+            , '@context':       ["../../coll_context.jsonld"]
             , 'annal:id':       'testId'
             , 'annal:type_id':  None
             , 'annal:type':     'test:EntityRootType'
@@ -275,6 +276,7 @@ class TestEntityType(Entity):
     _entityview = "%(id)s/"
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
+    _contextref = "../../coll_context.jsonld"
 
 class TestEntityTypeSub(Entity):
 
@@ -283,6 +285,7 @@ class TestEntityTypeSub(Entity):
     _entityview = "sub/%(id)s/"
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
+    _contextref = "../../coll_context.jsonld"
 
 class EntityTest(AnnalistTestCase):
     """
@@ -345,8 +348,8 @@ class EntityTest(AnnalistTestCase):
         vals.update(
             { '@id':        '../'   # Local testing only: see `TestEntityType`
             , '@type':      [entity_type]
-            , '@base':      "../.."
-            , '@context':   "coll_context.jsonld"
+            # , '@base':      "../.."
+            , '@context':   ["../../coll_context.jsonld"]
             })
         return vals
 

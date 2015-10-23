@@ -49,7 +49,7 @@ from entity_testtypedata    import (
 
 # Keys in side metadata entity
 site_data_keys = (
-    { '@id', '@base', '@context'
+    { '@id', '@context'
     , 'annal:url', 'annal:comment'
     , 'rdfs:label', 'rdfs:comment'
     , 'collections', 'title'

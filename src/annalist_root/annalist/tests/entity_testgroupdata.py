@@ -120,7 +120,7 @@ def _todo_recordgroup_value_keys(field_uri=False):
         })
 
 def _todo_recordgroup_load_keys(field_uri=False):
-    return recordgroup_value_keys(field_uri=field_uri) | {'@id', '@type', '@base', '@context'}
+    return recordgroup_value_keys(field_uri=field_uri) | {'@id', '@type', '@context'}
 
 def _todo_recordgroup_create_values(coll_id="testcoll", group_id="testgroup", 
         render_type="Text", value_mode="Value_direct",
@@ -161,8 +161,8 @@ def _todo_recordgroup_read_values(
     d.update(
         { '@id':            "./"
         , '@type':          ["annal:Field"]
-        , '@base':          "../.."
-        , '@context':       "coll_context.jsonld"
+        # , '@base':          "../.."
+        , '@context':       ["../../coll_context.jsonld"]
         })
     return d
 

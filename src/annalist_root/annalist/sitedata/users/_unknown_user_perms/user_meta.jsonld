@@ -1,4 +1,4 @@
-{ "@id":                    "_user/_unknown_user_perms/"
+{ "@id":                    "./"
 , "@type":                  ["annal:User"]
 , "@context":               ["../../site_context.jsonld"]
 , "annal:id":               "_unknown_user_perms"
