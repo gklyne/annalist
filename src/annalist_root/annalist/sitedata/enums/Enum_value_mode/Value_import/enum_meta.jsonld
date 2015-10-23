@@ -1,7 +1,6 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum_value_mode", "annal:Enum", "annal:Type"]
-, "@base":              "../.."
-, "@context":           "coll_context.jsonld"
+, "@context":           ["../../site_context.jsonld"]
 , "annal:id":           "Value_import"
 , "annal:type_id":      "Enum_value_mode"
 , "annal:uri":          "annal:value_mode/Value_import"

@@ -1,7 +1,6 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
-, "@base":              "../.."
-, "@context":           "coll_context.jsonld"
+, "@context":           ["../../site_context.jsonld"]
 , "annal:id":           "Slug"
 , "annal:type_id":      "Enum_render_type"
 , "rdfs:label":         "Short name"

@@ -9,7 +9,7 @@
 
 DATE=`date "+%Y-%m-%dT%H:%M:%S"`
 
-for F in `find . -name "type_meta.jsonld"`; do
+for F in `find . -name "vocab_meta.jsonld"`; do
 
     echo Processing $F ...
 
@@ -24,7 +24,7 @@ for F in `find . -name "type_meta.jsonld"`; do
     sed -e '/"@base":/d' \
         -e '/"@context":/ {
               c\
-              \, "@context":           ["../../site_context.jsonld"]
+              \, "@context":       ["../../site_context.jsonld"]
             }' \
         $F >$F.new
 

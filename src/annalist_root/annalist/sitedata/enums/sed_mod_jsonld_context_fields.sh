@@ -9,7 +9,7 @@
 
 DATE=`date "+%Y-%m-%dT%H:%M:%S"`
 
-for F in `find . -name "type_meta.jsonld"`; do
+for F in `find . -name "enum_meta.jsonld"`; do
 
     echo Processing $F ...
 
