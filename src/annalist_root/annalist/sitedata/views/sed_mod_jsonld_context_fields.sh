@@ -24,7 +24,7 @@ for F in `find . -name "view_meta.jsonld"`; do
     sed -e '/"@base":/d' \
         -e '/"@context":/ {
               c\
-              \, "@context":           ["../../coll_context.jsonld"]
+              \, "@context":           ["../../site_context.jsonld"]
             }' \
         $F >$F.new
 
@@ -52,6 +52,6 @@ for F in `find . -name "view_meta.jsonld"`; do
     # Only do this last command when the script has been debugged and tested:
     # this is the point at which the original data is overwritten.
 
-    # mv $F.new $F
+    mv $F.new $F
 
 done

@@ -559,7 +559,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                   "Field_placement",
                   self.placement_options,
                   "", 
-                  select_class="placement-text")+
+                  select_class="placement-text",
+                  placeholder="(field position and size)"
+                  )+
                 """
                 </div>
               </div>
@@ -610,7 +612,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "Field_typeref", "Refer to type",
                     self.ref_type_options,
-                    "")+
+                    "",
+                    placeholder="(no type selected)"
+                    )+
                 """
                 </div>
               </div>

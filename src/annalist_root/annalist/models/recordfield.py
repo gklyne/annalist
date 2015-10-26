@@ -31,7 +31,7 @@ class RecordField(EntityData):
     _entityfile     = layout.FIELD_META_FILE
     _entityref      = layout.META_FIELD_REF
 
-    def __init__(self, parent, field_id, altparent=None):
+    def __init__(self, parent, field_id, altparent=None, use_altpath=False):
         """
         Initialize a new RecordField object, without metadta (yet).
 
@@ -41,7 +41,7 @@ class RecordField(EntityData):
                     allowing site-wide RecordField values to be found.
         """
         # assert altparent, "RecordField instantiated with no altparent"
-        super(RecordField, self).__init__(parent, field_id, altparent=altparent)
+        super(RecordField, self).__init__(parent, field_id, altparent=altparent, use_altpath=use_altpath)
         self._parent = parent
         log.debug("RecordField %s"%(field_id))
         return

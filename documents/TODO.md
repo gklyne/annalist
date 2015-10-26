@@ -19,9 +19,15 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - IIRC, old URL is wiped at the point of save.
     - Need to save original URL and only wipe if not changed?
 - [x] BUG: create instance of type with defined type URI saves with `annal:type` value of `annal:EntityData`
-- [ ] BUG: renaming a field used by a view results in confusing Server Error messages (missing field)
+- [x] BUG: renaming a field used by a view results in confusing Server Error messages (missing field)
+   - Entity not found: u'Group Entity_label_ref used in field Entity_label_ref'
+   - Note: this is renaming a group, not a field
+- [x] BUG?: when local type/list/view overrides site definition, appears twice in dropdown lists.
+    - Or only when type id is different?  
+    - Case for including type_id/entity_id in dropdown text?
+    - Done, but review this
 - [ ] BUG(ish): when supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.
-- [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
+- [x] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - Think about use of CURIES in data (e.g. for types, fields, etc.)  
         - Need to store prefix info with collection.
     - [x] Add `_vocab` built-in type that can be defined at site-level for built-in namespaces like `rdf`, `rdfs`, `annal`, etc., and at collection level for user-introduced namespaces.
@@ -55,22 +61,20 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] Arrange for context to be web-accessible
     - [x] When generating entity data, incoporate context information
     - [x] Add context references to site data
-    - [ ] Test that JSON-LD data can be loaded into RDF data stores.
-    - [ ] JSON-LD context test case.
+    - [x] JSON-LD context test case.
         - create type+view, read context from URL, check expected values
         - read entity into RDF store (rdflib), check graph content
-- [ ] Create schema definitions in Annalist for ANNAL namespace
-- [ ] Alternative RDF formats support (e.g. content negotiation)
-- [ ] Cater for repeated properties (see further TODOs below)?
-- [ ] BUG?: when local type/list/view overrides site definition, appears twice in dropdown lists.
-    - Or only when type id is different?  
-    - Case for including type_id/entity_id in dropdown text?
+- [ ] Ensure that raw entity JSON is accessible directly from the Annalist server, subject to permissions (e.g. <entity>/entity_data.jsonld, content negotiation, etc.  Also for types, views, fields, etc.)
 
 (release?)
 
+- [ ] `render_utils.get_mode_render`, handling of repeat fields?
+- [ ] Cater for repeated properties (see further TODOs below)?
+- [ ] Create schema definitions in Annalist for ANNAL namespace
 - [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
 - [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
 - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
+- [ ] Alternative RDF formats support (e.g. content negotiation)
 
 (release?)
 
@@ -217,6 +221,7 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Issues raised by Cerys in email of 23-Oct-2015.  Some good points there - should break out into issues.
 - [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
     - Should be easy to add.  Just need a name.
 - [ ] Scrolling through views from list - e.g. Next/Prev item buttons? (Iris G)

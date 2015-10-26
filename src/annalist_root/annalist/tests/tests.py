@@ -37,12 +37,14 @@ def load_tests(loader, tests, ignore):
         # The doctest stuff doesn't seem to work on Windows
         # (These add a total of 12 tests to the overall test)
         tests.addTests(doctest.DocTestSuite(annalist.util))
+        tests.addTests(doctest.DocTestSuite(annalist.identifiers))
         tests.addTests(doctest.DocTestSuite(annalist.views.uri_builder))
         tests.addTests(doctest.DocTestSuite(annalist.views.form_utils.fieldchoice))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_utils))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_placement))
         tests.addTests(doctest.DocTestSuite(annalist.models.entityfinder))
+        # For some reason, this won't load in the full test suite
         # tests.addTests(doctest.DocTestSuite(annalist.tests.entity_testutils))
     else:
         log.warning("Skipping doctests for non-posix system")

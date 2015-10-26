@@ -7,6 +7,7 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2015, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import re
 import logging
 log = logging.getLogger(__name__)
 
@@ -66,6 +67,28 @@ class FieldChoice(_FieldChoice_tuple):
 
     def add_link(self, link=None):
         return FieldChoice(self.id, self.value, self.label, link)
+
+    def option_label(self, sep=u"\xa0\xa0\xa0"):
+        """
+        Returns string used for displayed option label.
+
+        This function is used mainly for testing, to isolate details of 
+        option  presentation from the majority of test cases.
+        """
+        if self.label:
+            if ( (self.value == "%(type_id)s/%(entity_id)s") or
+                 re.match(r"^\w{1,32}/\w{1,32}$", self.value) ):
+                return u"%s%s(%s)"%(self.label, sep, self.value)
+            else:
+                return self.label
+        else:
+            return self.value
+
+    def option_label_html(self, sep=u"&nbsp;&nbsp;&nbsp;"):
+        """
+        Variation of option_label returns HTML-encoded form of label text
+        """
+        return self.option_label(sep=sep)
 
 if __name__ == "__main__":
     import doctest

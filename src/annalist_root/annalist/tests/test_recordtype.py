@@ -160,6 +160,7 @@ class RecordTypeTest(AnnalistTestCase):
             { 'rdfs:label':     'Default record'
             , 'rdfs:comment':   'Default record type, applied when no type is specified when creating a record.'
             , 'annal:uri':      'annal:Default_type'
+            , '@context':       ["../../site_context.jsonld"]
             })
         self.assertDictionaryMatch(td, v)
         return

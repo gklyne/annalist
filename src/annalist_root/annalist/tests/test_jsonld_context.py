@@ -18,15 +18,18 @@ from django.test.client             import Client
 
 import annalist
 from annalist                       import layout
-from annalist.identifiers           import RDF, RDFS, ANNAL
+from annalist.identifiers           import makeNamespace, RDF, RDFS, ANNAL
 
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
-# from annalist.models.recordtype     import RecordType
-# from annalist.models.recordview     import RecordView
-# from annalist.models.recordfield    import RecordField
+from annalist.models.recordtype     import RecordType
+from annalist.models.recordview     import RecordView
+from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
+from annalist.models.recordvocab    import RecordVocab
+from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.entitydata     import EntityData
+from annalist.models.entitytypeinfo import EntityTypeInfo
 
 # from annalist.views.form_utils.fieldchoice  import FieldChoice
 
@@ -49,6 +52,91 @@ from entity_testutils       import (
 
 #   -----------------------------------------------------------------------------
 #
+#   RDF graph utilities
+#
+#   -----------------------------------------------------------------------------
+
+def property_value(graph, item, prop):
+    """
+    Returns property value associated with a node in a graph, or None
+    """
+    return graph.value(item, URIRef(prop))
+
+def scan_list(graph, head):
+    """
+    Returns an iterator over a list whose head node is supplied.
+    """
+    while head != URIRef(RDF.nil):
+        yield property_value(graph, head, RDF.first)
+        head = property_value(graph, head, RDF.rest)
+    return
+
+#   -----------------------------------------------------------------------------
+#
+#   Test data
+#
+#   -----------------------------------------------------------------------------
+
+test_test_vocab_create_values = (
+    { "annal:type":     "annal:Vocabulary"
+    , "rdfs:label":     "Vocabulary namespace for test terms"
+    , "rdfs:comment":   "Vocabulary namespace for URIs that are used internally by Annalist to identify application types and properties."
+    , "annal:uri":      "http://example.org/test/#"
+    })
+
+test_image_ref_type_create_values = (
+    { 'annal:type':                 "annal:Type"
+    , 'rdfs:label':                 "test_reference_type label"
+    , 'rdfs:comment':               "test_reference_type comment"
+    , 'annal:uri':                  "test:type/test_reference_type"
+    , 'annal:type_view':            "test_reference_view"
+    , 'annal:type_list':            "test_reference_list"
+    })
+
+test_image_ref_view_create_values = (
+    { 'annal:type':                 "annal:View"
+    , 'rdfs:label':                 "test_image_view label"
+    , 'rdfs:comment':               "test_image_view comment"
+    , 'annal:record_type':          ""
+    , 'annal:add_field':            "yes"
+    , 'annal:view_fields':
+      [ { 'annal:field_id':             "Entity_id"
+        , 'annal:field_placement':      "small:0,12;medium:0,6"
+        }
+      , { 'annal:field_id':             "Entity_label"
+        , 'annal:field_placement':      "small:0,12"
+        }
+      , { 'annal:field_id':             "Entity_comment"
+        , 'annal:field_placement':      "small:0,12"
+        }
+      , { 'annal:field_id':             "Test_image_ref"
+        , 'annal:field_placement':      "small:0,12"
+        }
+      ]
+    })
+
+test_image_ref_field_create_values = (
+    { 'annal:type':                     "annal:Field"
+    , 'annal:field_name':               "ref_image"
+    , 'rdfs:label':                     "test_image_ref_field label"
+    , 'rdfs:comment':                   "test_image_ref_field comment"
+    , 'annal:property_uri':             "test:reference"
+    , 'annal:field_render_type':        "RefImage"
+    , 'annal:field_value_mode':         "Value_direct"
+    , 'annal:field_target_type':        "annal:Identifier"
+    , 'annal:placeholder':              "(Image reference)"
+    , 'annal:default_value':            ""
+    })
+
+def test_ref_entity_create_values(image_uri):
+    return (
+        { 'rdfs:label':                 "test_ref_image label"
+        , 'rdfs:comment':               "test_ref_image comment"
+        , 'test:reference':             image_uri
+        })
+
+#   -----------------------------------------------------------------------------
+#
 #   JSON-LD context generation tests
 #
 #   -----------------------------------------------------------------------------
@@ -61,64 +149,6 @@ class JsonldContextTest(AnnalistTestCase):
     def setUp(self):
         self.testsite = init_annalist_test_site()
         self.testcoll = init_annalist_test_coll()
-
-        # self.testsite = Site(TestBaseUri, TestBaseDir)
-        # self.testcoll = Collection(self.testsite, "testcoll")
-
-        # Create test types
-
-        #@@
-        # self.testtypes = RecordType.create(
-        #     self.testcoll, "testtypes", 
-        #     recordtype_create_values(
-        #         coll_id="testcoll", type_id="testtypes", type_uri="test:testtypes",
-        #         supertype_uris=[]
-        #         )
-        #     )
-        # self.testtype1 = RecordType.create(
-        #     self.testcoll, "testtype1",
-        #     recordtype_create_values(
-        #         coll_id="testcoll", type_id="testtype1", type_uri="test:testtype1", 
-        #         supertype_uris=["test:testtypes"]
-        #         )
-        #     )
-        # self.testtype2 = RecordType.create(
-        #     self.testcoll, "testtype2",
-        #     recordtype_create_values(
-        #         coll_id="testcoll", type_id="testtype2", type_uri="test:testtype2", 
-        #         supertype_uris=["test:testtypes"]
-        #         )
-        #     )
-        # self.ref_type  = RecordType.create(
-        #     self.testcoll, "ref_type", 
-        #     recordtype_create_values(
-        #         coll_id="testcoll", type_id="ref_type", type_uri="test:ref_type",
-        #         supertype_uris=[]
-        #         )
-        #     )
-        # # Create test type data parents
-        # self.testdatas = RecordTypeData.create(self.testcoll, "testtypes", {})
-        # self.testdata1 = RecordTypeData.create(self.testcoll, "testtype1", {})
-        # self.testdata2 = RecordTypeData.create(self.testcoll, "testtype2", {})
-        # self.ref_data  = RecordTypeData.create(self.testcoll, "ref_type",  {})
-        # # Create test type data
-        # es = EntityData.create(self.testdatas, "entitys", 
-        #     entitydata_create_values(
-        #         "entitys", type_id="testtypes", extra_fields={"test:turi": "test:testtypes"} 
-        #         )
-        #     )
-        # e1 = EntityData.create(self.testdata1, "entity1", 
-        #     entitydata_create_values(
-        #         "entity1", type_id="testtype1", extra_fields={"test:turi": "test:testtype1"} 
-        #         )
-        #     )
-        # e2 = EntityData.create(self.testdata2, "entity2", 
-        #     entitydata_create_values(
-        #         "entity2", type_id="testtype2", extra_fields={"test:turi": "test:testtype2"} 
-        #         )
-        #     )
-        #@@
-
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -134,65 +164,6 @@ class JsonldContextTest(AnnalistTestCase):
     def tearDownClass(cls):
         resetSitedata()
         return
-
-    #   -----------------------------------------------------------------------------
-    #   Helpers
-    #   -----------------------------------------------------------------------------
-
-    # def _check_entity_list(self, type_id, expect_entities):
-    #     u = entitydata_list_type_url("testcoll", type_id)
-    #     r = self.client.get(u)
-    #     self.assertEqual(r.status_code,   200)
-    #     self.assertEqual(r.reason_phrase, "OK")
-    #     self.assertContains(r, "<title>Collection testcoll</title>")
-    #     self.assertContains(r, "<h3>List entities</h3>", html=True)
-    #     # Test context
-    #     self.assertEqual(r.context['coll_id'],  "testcoll")
-    #     self.assertEqual(r.context['type_id'],  type_id)
-    #     entities = context_list_entities(r.context)
-    #     self.assertEqual(len(entities), len(expect_entities))
-    #     for eid in range(len(expect_entities)):
-    #         self.assertEqual(entities[eid]['entity_type_id'], expect_entities[eid][0])
-    #         self.assertEqual(entities[eid]['entity_id'], expect_entities[eid][1])
-    #     return
-
-    # def _create_ref_type_view(self, view_id="Test_ref_type_view", record_type="test:testtypes"):
-    #     ref_type_view = RecordView.create(self.testcoll, view_id,
-    #         { 'annal:type':         "annal:View"
-    #         , 'annal:uri':          "test:"+view_id
-    #         , 'rdfs:label':         "Test view label"
-    #         , 'rdfs:comment':       "Test view comment"
-    #         , 'annal:record_type':  record_type
-    #         , 'annal:add_field':    True
-    #         , 'annal:view_fields':
-    #           [ { 'annal:field_id':         "_field/Entity_id"
-    #             , 'annal:field_placement':  "small:0,12;medium:0,6"
-    #             }
-    #           , { 'annal:field_id':         "_field/Test_ref_type_field"
-    #             , 'annal:field_placement':  "small:0,12;medium:0,6"
-    #             }
-    #           ]
-    #         })
-    #     self.assertTrue(ref_type_view is not None)
-    #     return ref_type_view
-
-    # def _create_ref_type_field(self, entity_type="test:testtypes"):
-    #     ref_type_field = RecordField.create(self.testcoll, "Test_ref_type_field",
-    #         { "annal:type":                     "annal:Field"
-    #         , "rdfs:label":                     "Type reference"
-    #         , "rdfs:comment":                   "Type reference field comment"
-    #         , "annal:field_render_type":        "Enum_render_type/Enum_choice"
-    #         , "annal:field_value_mode":         "Enum_value_mode/Value_direct"
-    #         , "annal:field_entity_type":        "test:ref_type"
-    #         , "annal:placeholder":              "(ref type field)"
-    #         , "annal:property_uri":             "test:ref_type"
-    #         , "annal:field_placement":          "small:0,12;medium:0,6"
-    #         , "annal:field_ref_type":           "_type/testtypes"
-    #         , "annal:field_ref_restriction":    "[test:turi] subtype %s"%entity_type
-    #         , "annal:field_entity_type":        entity_type
-    #         })
-    #     self.assertTrue(ref_type_field is not None)
-    #     return ref_type_field
 
     #   -----------------------------------------------------------------------------
     #   JSON-LD context tests
@@ -295,13 +266,247 @@ class JsonldContextTest(AnnalistTestCase):
         subj        = b #@@ entity1.get_url()
         entity_data = entity1.get_values()
         for (s, p, o) in (
-            [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])       )
-            , (subj, RDFS.comment,           Literal(entity_data[RDFS.CURIE.comment])     )
-            , (subj, ANNAL.id,               Literal(entity_data[ANNAL.CURIE.id])         )
-            , (subj, ANNAL.type_id,          Literal(entity_data[ANNAL.CURIE.type_id])    )
-            , (subj, ANNAL.type,             URIRef(ANNAL.EntityData)                     )
+            [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.comment,           Literal(entity_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.id,               Literal(entity_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.type_id,          Literal(entity_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.type,             URIRef(ANNAL.EntityData)                  )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
+        return
+
+    def test_jsonld_type_vocab(self):
+        """
+        Read type data as JSON-LD, and check resulting RDF triples
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+        type_vocab = self.testcoll.get_type("_vocab")
+
+        # Read type data as JSON-LD
+        g = Graph()
+        s = type_vocab._read_stream()
+        b = ( "file://" + 
+              os.path.join(
+                TestBaseDir, 
+                layout.SITE_TYPE_PATH%{ 'id': type_vocab.get_id() }
+                ) + 
+              "/"
+            )
+        # print("***** b: (type_vocab)")
+        # print(repr(b))
+        result = g.parse(source=s, publicID=b, format="json-ld")
+        # print "*****"+repr(result)
+        # print("***** g: (type_vocab)")
+        # print(g.serialize(format='turtle', indent=4))
+
+        # Check the resulting graph contents
+        subj            = b #@@ type_vocab.get_url()
+        type_vocab_data = type_vocab.get_values()
+        for (s, p, o) in (
+            [ (subj, RDF.type,        URIRef(ANNAL.Type)                              )
+            , (subj, RDFS.label,      Literal(type_vocab_data[RDFS.CURIE.label])      )
+            , (subj, RDFS.comment,    Literal(type_vocab_data[RDFS.CURIE.comment])    )
+            , (subj, ANNAL.id,        Literal(type_vocab_data[ANNAL.CURIE.id])        )
+            , (subj, ANNAL.type_id,   Literal(type_vocab_data[ANNAL.CURIE.type_id])   )
+            , (subj, ANNAL.type_list, Literal(type_vocab_data[ANNAL.CURIE.type_list]) )
+            , (subj, ANNAL.type_view, Literal(type_vocab_data[ANNAL.CURIE.type_view]) )
+            , (subj, ANNAL.uri,       URIRef(ANNAL.Vocabulary)                        )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g )
+        return
+
+    def test_jsonld_view_user(self):
+        """
+        Read view data as JSON-LD, and check resulting RDF triples
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+        view_user = self.testcoll.get_view("User_view")
+
+        # Read view data as JSON-LD
+        g = Graph()
+        s = view_user._read_stream()
+        b = ( "file://" + 
+              os.path.join(
+                TestBaseDir, 
+                layout.SITE_TYPE_PATH%{ 'id': view_user.get_id() }
+                ) + 
+              "/"
+            )
+        # print("***** b: (view_user)")
+        # print(repr(b))
+        result = g.parse(source=s, publicID=b, format="json-ld")
+        # print "*****"+repr(result)
+        # print("***** g: (view_user)")
+        # print(g.serialize(format='turtle', indent=4))
+
+        # Check the resulting graph contents
+        subj           = b #@@ view_user.get_url()
+        view_user_data = view_user.get_values()
+        view_uri       = ANNAL.to_uri(view_user_data[ANNAL.CURIE.uri])
+        for (s, p, o) in (
+            [ (subj, RDF.type,          URIRef(ANNAL.View)                           )
+            , (subj, RDFS.label,        Literal(view_user_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.comment,      Literal(view_user_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.id,          Literal(view_user_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.type_id,     Literal(view_user_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.uri,         URIRef(view_uri)                             )
+            , (subj, ANNAL.open_view,   Literal(False)                               )
+            , (subj, ANNAL.record_type, URIRef(ANNAL.User)                           )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g )
+
+        # # Check field list contents
+        # fields = view_user_data[ANNAL.CURIE.view_fields]
+        # nextfn = g.value(URIRef(subj), URIRef(ANNAL.view_fields))
+        # for f in fields:
+        #     fi  = Literal(f[ANNAL.CURIE.field_id])
+        #     fp  = Literal(f[ANNAL.CURIE.field_placement])
+        #     fn  = g.value(nextfn, URIRef(RDF.first))
+        #     fni = g.value(fn, URIRef(ANNAL.field_id))
+        #     fnp = g.value(fn, URIRef(ANNAL.field_placement))
+        #     self.assertEqual(fni, fi)
+        #     self.assertEqual(fnp, fp)
+        #     nextfn = g.value(nextfn, URIRef(RDF.rest))
+        # self.assertEqual(nextfn, URIRef(RDF.nil))
+
+        # Check field list contents
+        fields = view_user_data[ANNAL.CURIE.view_fields]
+        head   = property_value(g, URIRef(subj), ANNAL.view_fields)
+        items  = scan_list(g, head)
+        for f in fields:
+            fi  = Literal(f[ANNAL.CURIE.field_id])
+            fp  = Literal(f[ANNAL.CURIE.field_placement])
+            fn  = items.next()
+            fni = property_value(g, fn, ANNAL.field_id)
+            fnp = property_value(g, fn, ANNAL.field_placement)
+            self.assertEqual(fni, fi)
+            self.assertEqual(fnp, fp)
+        # self.assertRaises as context manager, see http://stackoverflow.com/a/28223420/324122
+        with self.assertRaises(StopIteration):
+            items.next()
+        return
+
+    def test_jsonld_user_default(self):
+        """
+        Read user data as JSON-LD, and check resulting RDF triples
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+        user_default = AnnalistUser.load(
+            self.testcoll, "_default_user_perms", altparent=self.testsite
+            )
+
+        # Read user data as JSON-LD
+        g = Graph()
+        s = user_default._read_stream()
+        b = ( "file://" + 
+              os.path.join(
+                TestBaseDir, 
+                layout.SITE_TYPE_PATH%{ 'id': user_default.get_id() }
+                ) + 
+              "/"
+            )
+        # print("***** b: (user_default)")
+        # print(repr(b))
+        result = g.parse(source=s, publicID=b, format="json-ld")
+        # print "*****"+repr(result)
+        # print("***** g: (user_default)")
+        # print(g.serialize(format='turtle', indent=4))
+
+        # Check the resulting graph contents
+        subj              = b #@@ user_default.get_url()
+        user_default_data = user_default.get_values()
+        user_uri          = ANNAL.to_uri(user_default_data[ANNAL.CURIE.user_uri])
+        user_perms        = user_default_data[ANNAL.CURIE.user_permissions]
+        for (s, p, o) in (
+            [ (subj, RDF.type,          URIRef(ANNAL.User)                              )
+            , (subj, RDFS.label,        Literal(user_default_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.comment,      Literal(user_default_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.id,          Literal(user_default_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.type_id,     Literal(user_default_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.user_uri,    URIRef(user_uri)                                )
+            , (subj, ANNAL.user_permissions, Literal(user_perms[0])                     )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g )
+
+        return
+
+    def test_jsonld_image_ref(self):
+        """
+        Read image reference data as JSON-LD, and check resulting RDF triples
+        """
+        # Populate collection with record type, view and field
+        # filepath  = "%s/README.md"%TestBaseDir
+        # fileuri   = "file://"+self.filepath
+        imagepath = "%s/test-image.jpg"%TestBaseDir
+        imageuri  = "file://"+imagepath
+
+        test_ref_type = RecordVocab.create(
+            self.testcoll, "test", test_test_vocab_create_values
+            )
+        test_ref_type = RecordType.create(
+            self.testcoll, "testreftype", test_image_ref_type_create_values
+            )
+        test_ref_view = RecordView.create(
+            self.testcoll, "testrefview", test_image_ref_view_create_values
+            )
+        test_ref_field = RecordField.create(
+            self.testcoll, "Test_image_ref", test_image_ref_field_create_values
+            )
+        # Create data records for testing image references:
+        test_ref_type_info = EntityTypeInfo(
+            self.testsite, self.testcoll, "testreftype", create_typedata=True
+            )
+        test_ref_type_info.create_entity("refentity", test_ref_entity_create_values(imageuri))
+
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+
+        # Create entity object to access image reference data 
+        testdata  = RecordTypeData.load(self.testcoll, "testreftype")
+        ref_image = EntityData.load(testdata, "refentity")
+
+        # Read user data as JSON-LD
+        g = Graph()
+        s = ref_image._read_stream()
+        b = ( "file://" + 
+              os.path.join(
+                TestBaseDir, 
+                layout.SITE_ENTITY_PATH%
+                  { 'coll_id': self.testcoll.get_id()
+                  , 'type_id': testdata.get_id()
+                  , 'id':      ref_image.get_id()
+                  }
+                ) + 
+              "/"
+            )
+        # print("***** b: (ref_image)")
+        # print(repr(b))
+        result = g.parse(source=s, publicID=b, format="json-ld")
+        # print "*****"+repr(result)
+        # print("***** g: (ref_image)")
+        # print(g.serialize(format='turtle', indent=4))
+
+        # Check the resulting graph contents
+        subj           = b #@@ ref_image.get_url()
+        ref_image_data = ref_image.get_values()
+        # print "***** ref_image_data:"
+        # print repr(ref_image_data)
+        testns = makeNamespace("test", "http://example.org/test/#", ["reference"])
+        type_uri       = testns.to_uri(ref_image_data['@type'][0]) 
+        for (s, p, o) in (
+            [ (subj, RDF.type,          URIRef(ANNAL.EntityData)                     )
+            , (subj, RDF.type,          URIRef(type_uri)                             )
+            , (subj, RDFS.label,        Literal(ref_image_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.comment,      Literal(ref_image_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.id,          Literal(ref_image_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.type_id,     Literal(ref_image_data[ANNAL.CURIE.type_id]) )
+            , (subj, testns.reference,  URIRef(imageuri)                             )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g )
+
         return
 
 # End.

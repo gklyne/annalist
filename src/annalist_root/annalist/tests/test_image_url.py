@@ -126,7 +126,7 @@ class ImageReferenceTest(AnnalistTestCase):
         init_annalist_test_coll()
         self.testsite    = Site(TestBaseUri, TestBaseDir)
         self.testcoll    = Collection(self.testsite, "testcoll")
-        # Populate collection with linked record types, views and lists
+        # Populate collection with record type, view and field
         self.test_ref_type = RecordType.create(
             self.testcoll, "testreftype", test_image_ref_type_create_values
             )

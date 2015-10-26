@@ -6,6 +6,8 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import sys
+import traceback
 import collections
 
 import logging
@@ -426,7 +428,10 @@ def field_description_from_view_field(collection, field, view_context=None, grou
     if group_ref:
         group_view = RecordGroup.load(collection, group_ref, collection._parentsite)
         if not group_view:
-            raise EntityNotFound_Error("Group %s used in field %s"%(group_ref, field_id))
+            log.error("Group %s used in field %s"%(group_ref, field_id))
+            ex_type, ex, tb = sys.exc_info()
+            traceback.print_tb(tb)
+            # raise EntityNotFound_Error("Group %s used in field %s"%(group_ref, field_id))
     else:
         group_view = None
     return FieldDescription(

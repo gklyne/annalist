@@ -42,13 +42,13 @@ edit_options = (
         '''{% if opt.value == "" %} '''+
           '''<option value="" selected="selected">{{field.field_placeholder}}</option>\n'''+
         '''{% else %} '''+
-          '''<option value="{{opt.value}}" selected="selected">{{opt.label}}</option>\n'''+
+          '''<option value="{{opt.value}}" selected="selected">{{opt.label}}&nbsp;&nbsp;&nbsp;({{opt.value}})</option>\n'''+
         '''{% endif %} '''+
       '''{% else %} '''+
         '''{% if opt.value == "" %} '''+
           '''<option value="">{{field.field_placeholder}}</option>\n'''+
         '''{% else %} '''+
-          '''<option value="{{opt.value}}">{{opt.label}}</option>\n'''+
+          '''<option value="{{opt.value}}">{{opt.label}}&nbsp;&nbsp;&nbsp;({{opt.value}})</option>\n'''+
         '''{% endif %} '''+
       '''{% endif %} '''+
     '''{% endfor %} '''

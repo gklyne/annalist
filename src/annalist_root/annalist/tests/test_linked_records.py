@@ -1,8 +1,8 @@
 """
 Tests for linked record functions.
 
-This test suite uses a setup that is specifically intended to test functions that involve 
-links between entities.
+This test suite uses a setup that is specifically intended to test functions 
+that involve links between entities.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"

@@ -152,9 +152,10 @@ class RecordViewTest(AnnalistTestCase):
             )
         v = recordview_read_values(view_id="Default_view")
         v.update(
-            { 'rdfs:label':   'Default record view'
-            , 'rdfs:comment': 'Default record view, applied when no view is specified when creating a record.'
-            , 'annal:uri':    'annal:display/Default_view'
+            { 'rdfs:label':     'Default record view'
+            , 'rdfs:comment':   'Default record view, applied when no view is specified when creating a record.'
+            , 'annal:uri':      'annal:display/Default_view'
+            , '@context':       ["../../site_context.jsonld"]
             })
         v.pop('annal:record_type', None)
         self.assertDictionaryMatch(td, v)
@@ -549,7 +550,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "View_fields__0__Field_id", "Field id",
                     no_selection("(field sel)") + get_site_default_entity_fields_sorted(),
-                    "_field/Entity_id")+
+                    "_field/Entity_id",
+                    placeholder="(field sel)"
+                    )+
                 """
                 </div>
               </div>
@@ -650,7 +653,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "View_fields__0__Field_id", "Field id",
                     no_selection("(field sel)") + get_site_bibentry_fields_sorted(),
-                    "_field/Entity_id")+
+                    "_field/Entity_id",
+                    placeholder="(field sel)"
+                    )+
                 """
                 </div>
               </div>

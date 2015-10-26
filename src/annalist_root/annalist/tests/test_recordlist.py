@@ -419,7 +419,9 @@ class RecordListEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "List_default_type", "Record type",
                     no_selection("(default record type)") + self.type_options,
-                    "_type/Default_type")+
+                    "_type/Default_type",
+                    placeholder="(default record type)"
+                    )+
                 """
                 </div>
               </div>
@@ -436,7 +438,9 @@ class RecordListEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "List_default_view", "View",
                     no_selection("(view id)") + self.view_options,
-                    "_view/Default_view")+
+                    "_view/Default_view",
+                    placeholder="(view id)"
+                    )+
                 """
                 </div>
               </div>

@@ -231,9 +231,9 @@ def render_select_options(name, label, opts, sel, placeholder=None):
     <div class="row">
       <div class="small-10 columns view-value less-new-button">
         <select name="foo">
-          <option>aa</option>
-          <option selected="selected">bb</option>
-          <option>cc</option>
+          <option value="aa">aa</option>
+          <option value="bb" selected="selected">bb</option>
+          <option value="cc">cc</option>
         </select>
       </div>
       <div class="small-2 columns view-value new-button left small-text-right">
@@ -245,15 +245,16 @@ def render_select_options(name, label, opts, sel, placeholder=None):
         </button>
       </div>
     </div>
-    >>> print render_select_options("foo", "foo_label", ["", aa", "bb", "cc"], "", placeholder=("select)")
+    <BLANKLINE>
+    >>> print render_select_options("foo", "foo_label", ["", "aa", "bb", "cc"], "", placeholder="(select)")
     <div class="row">
       <div class="small-10 columns view-value less-new-button">
-          <select name="foo">
-            <option value="" selected="selected">(select)</option>
-            <option>aa</option>
-            <option>bb</option>
-            <option>cc</option>
-          </select>
+        <select name="foo">
+          <option value="" selected="selected">(select)</option>
+          <option value="aa">aa</option>
+          <option value="bb">bb</option>
+          <option value="cc">cc</option>
+        </select>
       </div>
       <div class="small-2 columns view-value new-button left small-text-right">
         <button type="submit" 
@@ -264,14 +265,19 @@ def render_select_options(name, label, opts, sel, placeholder=None):
         </button>
       </div>
     </div>
+    <BLANKLINE>
     """
     # Local helper to render single option
     def select_option(opt):
         if isinstance(opt, (str, unicode)):
             opt = FieldChoice(opt)
+        # selected = ('' if opt.value != sel else ' selected="selected"')
+        # label    = (placeholder or "") if opt.value == "" else opt.label
+        # label    = opt.label or opt.value or placeholder or ""
+        # return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
         selected = ('' if opt.value != sel else ' selected="selected"')
-        label    = (placeholder or "") if opt.value == "" else opt.label
-        label    = opt.label or opt.value or placeholder or ""
+        label    = (placeholder or "") if opt.value == "" else opt.option_label_html()
+        # label    = opt.label or opt.value or placeholder or ""
         return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
     #
     select_template = (
@@ -279,7 +285,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
         """  <div class="small-10 columns view-value less-new-button">\n"""+
         """    <select name="%(name)s">\n"""+
         """      %(options)s\n"""+
-        """    </select>"""+
+        """    </select>\n"""+
         """  </div>\n"""+
         """  <div class="small-2 columns view-value new-button left small-text-right">\n"""+
         """    <button type="submit" \n"""+
@@ -294,7 +300,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
     return select_template%(
         { 'name':       name
         , 'label':      label
-        , 'options':    "\n  ".join([ select_option(o) for o in opts ])
+        , 'options':    "\n      ".join([ select_option(o) for o in opts ])
         })
 
 def render_choice_options(name, opts, sel, placeholder=None, select_class=None, _unused_value_dict={}):
@@ -302,13 +308,13 @@ def render_choice_options(name, opts, sel, placeholder=None, select_class=None, 
     Cf. `templates.field.annalist_edit_choice.html`.
     Like select, but without the "New" button.
 
-    >>> print render_choice_options("foo", "foo_label", ["aa", "bb", "cc"], "bb")
+    >>> print render_choice_options("foo", ["aa", "bb", "cc"], "bb")
     <select name="foo">
       <option value="aa">aa</option>
       <option value="bb" selected="selected">bb</option>
       <option value="cc">cc</option>
     </select>
-    >>> print render_choice_options("foo", "foo_label", ["", aa", "bb", "cc"], "", placeholder=("select)")
+    >>> print render_choice_options("foo", ["", "aa", "bb", "cc"], "", placeholder="(select)")
     <select name="foo">
       <option value="" selected="selected">(select)</option>
       <option value="aa">aa</option>
@@ -321,8 +327,8 @@ def render_choice_options(name, opts, sel, placeholder=None, select_class=None, 
         if isinstance(opt, (str, unicode)):
             opt = FieldChoice(opt)
         selected = ('' if opt.value != sel else ' selected="selected"')
-        label    = (placeholder or "") if opt.value == "" else opt.label
-        label    = opt.label or opt.value or placeholder or ""
+        label    = (placeholder or "") if opt.value == "" else opt.option_label_html()
+        # label    = opt.label or opt.value or placeholder or ""
         return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
     def _unused_select_option(o):
         selected = ('' if o != sel else ' selected="selected"')
@@ -334,14 +340,14 @@ def render_choice_options(name, opts, sel, placeholder=None, select_class=None, 
         return '<option%s%s>%s</option>'%(selected,value,o)
     #
     select_template = (
-        """<select %(select_class)s name="%(name)s">\n"""+
+        """<select name="%(name)s"%(select_class)s>\n"""+
         """  %(options)s\n"""+
         """</select>"""+
         "")
     return select_template%(
         { 'name':           name
         , 'options':        "\n  ".join([ select_option(o) for o in opts ])
-        , 'select_class':   '''class="%s"'''%select_class if select_class is not None else ""
+        , 'select_class':   ''' class="%s"'''%select_class if select_class is not None else ""
         })
 
 #   -----------------------------------------------------------------------------

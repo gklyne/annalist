@@ -196,7 +196,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         option_labels_here     = (
             [self.html_encode(o.string) for o in select_elem.find_all("option")]
             )
-        option_labels_expected = [ fc.label for fc in options ]
+        option_labels_expected = [ fc.option_label() for fc in options ]
         if option_labels_here != option_labels_expected:
             log.info("option_labels_here:     %r"%(option_labels_here,))
             log.info("option_labels_expected: %r"%(option_labels_expected,))

@@ -25,15 +25,31 @@ from django.core.urlresolvers       import resolve, reverse
 import annalist
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
+from annalist.util                  import valid_id, extract_entity_id
 from annalist                       import layout
 from annalist                       import message
-from annalist                       import util
 
 from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.entityroot     import EntityRoot
 from annalist.models.sitedata       import SiteData
 from annalist.models.collection     import Collection
 from annalist.models.recordvocab    import RecordVocab
+from annalist.models.recordview     import RecordView
+from annalist.models.recordgroup    import RecordGroup
+from annalist.models.recordfield    import RecordField
+
+# @@TODO: look for way to remove this view dependency from model code.  Move to RecordField 
+#   module?  Hmmm... not so easy: information about render types and methods is concentrated
+#   in render_utils module.  Maybe need to split render_utils functionality between
+#   model and view modules?
+#
+from annalist.views.fields.render_utils import (
+    is_render_type_literal,
+    is_render_type_id,
+    is_render_type_set,
+    is_render_type_list,
+    is_render_type_object,
+    )
 
 class Site(EntityRoot):
 
@@ -198,7 +214,98 @@ class Site(EntityRoot):
             vid = v.get_id()
             if vid != "_initial_values":
                 context[v.get_id()] = v[ANNAL.CURIE.uri]
+        # Set type info for predefined URI fields
+        # for f in [ANNAL.CURIE.user_uri]:
+        #     self.set_field_uri_jsonld_context(f, { "@type": "@id" }, context)
+        # Scan view fields and generate context data for property URIs used
+        for v in self._site_children(RecordView):
+            for fref in v[ANNAL.CURIE.view_fields]:
+                fid  = extract_entity_id(fref[ANNAL.CURIE.field_id])
+                vuri = fref.get(ANNAL.CURIE.property_uri, None)
+                furi, fcontext = self.get_field_uri_jsonld_context(fid, self.get_field_jsonld_context)
+                # fcontext['vid'] = v.get_id()
+                # fcontext['fid'] = fid
+                self.set_field_uri_jsonld_context(vuri or furi, fcontext, context)
+        # Scan group fields and generate context data for property URIs used
+        for g in self._site_children(RecordGroup):
+            for gref in g[ANNAL.CURIE.group_fields]:
+                fid  = extract_entity_id(gref[ANNAL.CURIE.field_id])
+                guri = gref.get(ANNAL.CURIE.property_uri, None)
+                furi, fcontext = self.get_field_uri_jsonld_context(fid, self.get_field_jsonld_context)
+                # fcontext['gid'] = g.get_id()
+                # fcontext['fid'] = fid
+                self.set_field_uri_jsonld_context(guri or furi, fcontext, context)
         return context
+
+    def get_field_uri_jsonld_context(self, fid, get_field_context):
+        """
+        Access field description, and return field property URI and appropriate 
+        property description for JSON-LD context.
+
+        If there is no corresponding field description, returns (None, None)
+
+        If no context should be generated for the field URI, returns (uri, None)
+        """
+        f = RecordField.load(self, fid, use_altpath=True)
+        if f is None:
+            return (None, None)
+        return (f[ANNAL.CURIE.property_uri], get_field_context(f))
+
+    # @@TODO: Make static and use common copy with `collection`
+    def set_field_uri_jsonld_context(self, puri, fcontext, property_contexts):
+        """
+        Save property context description into supplied property_contexts dictionary.  
+        If the context is already defined, generate warning if there is a compatibility 
+        problem.
+        """
+        if puri:
+            uri_parts = puri.split(":")
+            if len(uri_parts) > 1:
+                # Ignore URIs without ':'
+                if puri in property_contexts:
+                    pcontext = property_contexts[puri]
+                    if ( ( not fcontext ) or
+                         ( pcontext.get("@type", None)      != fcontext.get("@type", None) ) or
+                         ( pcontext.get("@container", None) != fcontext.get("@container", None) ) ):
+                        log.warning(
+                            "Incompatible use of property %s (%r, %r)"% (puri, fcontext, pcontext)
+                            )
+                elif ( fcontext and
+                       ( uri_parts[0] in property_contexts ) or         # Prefix defined vocab?
+                       ( uri_parts[0] in ["http", "https", "file"] ) ): # Full URI?
+                    property_contexts[puri] = fcontext
+        return
+
+    # @@TODO: move this away from model logic, as it represents a dependency on view logic?
+    @staticmethod
+    def get_field_jsonld_context(fdesc):
+        """
+        Returns a context description for the supplied field description.
+
+        Returns None if no property context information is needed for the 
+        supplied field.
+        """
+        rtype = extract_entity_id(fdesc[ANNAL.CURIE.field_render_type])
+        vmode = extract_entity_id(fdesc[ANNAL.CURIE.field_value_mode])
+        if vmode in ["Value_entity", "Value_field"]:
+            rtype = "Enum"
+        elif vmode == "Value_import":
+            rtype = "URIImport"
+        elif vmode == "Value_upload":
+            rtype = "FileUpload"
+        if is_render_type_literal(rtype):
+            fcontext = None # { "@type": "xsd:string" }
+        elif is_render_type_id(rtype):
+            fcontext = { "@type": "@id" }   # Add type from field descr?
+        elif is_render_type_set(rtype):
+            fcontext = { "@container": "@set"}
+        elif is_render_type_list(rtype):
+            fcontext = { "@container": "@list"}
+        elif is_render_type_object(rtype):
+            fcontext = None
+        else:
+            raise ValueError("Unexpected value mode or render type (%s, %s)"%(vmode, rtype))
+        return fcontext
 
     # Temporary helper functions
     #
@@ -227,7 +334,7 @@ class Site(EntityRoot):
         if site_dir and os.path.isdir(site_dir):
             site_files = os.listdir(site_dir)
         for fil in site_files:
-            if util.valid_id(fil):
+            if valid_id(fil):
                 yield fil
         return
 

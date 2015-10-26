@@ -108,4 +108,11 @@ class AnnalistTestCase(TestCase):
         # log.info("\n****** matched")
         return
 
+    def assertInIgnoreWS(self, first, second, msg=None):
+        """
+        Test if string `first` is contained within `second`, ignoring all whitespace.
+        """
+        self.assertIn(re.sub(r'\s+', " ", first), re.sub(r'\s+', " ", second), msg=msg)
+        return
+
 # End.

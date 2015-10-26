@@ -21,7 +21,19 @@ class Namespace(object):
     """
     Class represents namespace of URI identifiers.
 
-    Provides expressions for URI and CURIE values of each identrifier in the namespace.
+    Provides expressions for URI and CURIE values of each identifier in the namespace.
+
+    >>> ns = Namespace("test", "http://example.com/test/")
+    >>> cf = ns.mk_curie("foo")
+    >>> cf
+    'test:foo'
+    >>> uf = ns.mk_uri("foo")
+    >>> uf
+    'http://example.com/test/foo'
+    >>> ns.to_uri(cf)
+    'http://example.com/test/foo'
+    >>> ns.to_uri("notest:bar")
+    'notest:bar'
     """
 
     def __init__(self, prefix, baseUri):
@@ -47,6 +59,15 @@ class Namespace(object):
         Make a URI string for an identifier in this namespace
         """
         return self._baseUri+name
+
+    def to_uri(self, curie):
+        """
+        Converts a supplied CURIE to a URI if it uses the current namespace prefix.
+        """
+        parts = curie.split(':', 1)
+        if (len(parts) == 2) and (parts[0] == self._prefix):
+            return self.mk_uri(parts[1])
+        return curie
 
 def makeNamespace(prefix, baseUri, names):
     """

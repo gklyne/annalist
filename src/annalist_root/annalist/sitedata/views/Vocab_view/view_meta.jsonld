@@ -1,6 +1,6 @@
 { "@id":                "./"
 , "@type":              ["annal:View"]
-, "@context":           ["../../coll_context.jsonld"]
+, "@context":           ["../../site_context.jsonld"]
 , "annal:id":           "Vocab_view"
 , "annal:type_id":      "_view"
 , "rdfs:label":         "Vocabulary namespace view"
