@@ -1,6 +1,6 @@
 # Annalist TODO
 
-NOTE: this document is used for short-term working notes; longer-term planning information has been migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
+NOTE: this document is used for short-term working notes; some longer-term planning information has been migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
 
 
 # Documentation
@@ -26,7 +26,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - Or only when type id is different?  
     - Case for including type_id/entity_id in dropdown text?
     - Done, but review this
-- [ ] BUG(ish): when supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.
+- [ ] BUG: Naming inconsistency: entity-data.jsonld should be entity_data.jsonld.  Needs migration strategy.
 - [x] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - Think about use of CURIES in data (e.g. for types, fields, etc.)  
         - Need to store prefix info with collection.
@@ -64,10 +64,35 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [x] JSON-LD context test case.
         - create type+view, read context from URL, check expected values
         - read entity into RDF store (rdflib), check graph content
-- [ ] Ensure that raw entity JSON is accessible directly from the Annalist server, subject to permissions (e.g. <entity>/entity_data.jsonld, content negotiation, etc.  Also for types, views, fields, etc.)
+- [x] Generate site JSON-LD context data as part of 'updatesite' installation step
+- [x] Ensure that raw entity JSON is HTTP-accessible directly from the Annalist server, subject to permissions (e.g. <entity>/entity_data.jsonld.  Also for types, views, fields, etc.)
+    - [x] coll entity data
+    - [x] coll type data
+    - [x] coll list data
+    - [x] coll view data
+    - [x] coll field data
+    - [x] coll group data
+    - [x] coll vocab data
+    - [x] coll user data
+    - [x] site type
+    - [x] site list data
+    - [x] site view data
+    - [x] site field data
+    - [x] site group data
+    - [x] site vocab data
+    - [x] site user data
+- [x] Ensure JSONLD contexts can be accessed by HTTP.  
+    - Collection and site, with correct relative location to entity data:
+    - [x] entity -> collection context
+    - [x] type -> collection context
+    - [x] site-defined type -> site context
+- [ ] HTTP access test case: can load JSONLD as graph via HTTP; entity and type tests
+- [ ] Add HTTP and HTML links to data to responses.  Also, link to data on view form.
+- [ ] Content migration for entity-data.jsonld -> entity_data.jsonld
 
 (release?)
 
+- [ ] BUG?: when supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration utility?
 - [ ] `render_utils.get_mode_render`, handling of repeat fields?
 - [ ] Cater for repeated properties (see further TODOs below)?
 - [ ] Create schema definitions in Annalist for ANNAL namespace
@@ -75,6 +100,7 @@ NOTE: this document is used for short-term working notes; longer-term planning i
 - [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
 - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
 - [ ] Alternative RDF formats support (e.g. content negotiation)
+- [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
 
 (release?)
 
@@ -129,6 +155,9 @@ NOTE: this document is used for short-term working notes; longer-term planning i
     - [ ] Shared deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
+- [ ] Remove dependency of analist-manager on test-suite-generated data when creating/updating site
+    - copy site data in directly from `sitedata`
+    - generate all other site data on-the-fly as needed (e.g. context, etc.)
 - [ ] Figure out how to preserve defined users when reinstalling the software.
     - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
     - Seems to be working, but needs explicit testing to make sure.

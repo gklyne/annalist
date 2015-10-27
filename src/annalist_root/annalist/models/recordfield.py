@@ -92,7 +92,7 @@ class RecordField(EntityData):
         if val_mode == "Value_field":
             if ( not (ref_type and ref_field) ):
                log.warning(
-                    "RecordField %s: Value_field mode requires values for %s and %s"%( 
+                    "RecordField %s: val_mode 'Value_field' requires values for %s and %s"%( 
                         entitydata[ANNAL.CURIE.id], 
                         ANNAL.CURIE.field_ref_type, 
                         ANNAL.CURIE.field_ref_field
@@ -101,14 +101,14 @@ class RecordField(EntityData):
         elif val_mode == "Value_entity":
             if not ref_type:
                log.warning(
-                    "RecordField %s: Value_entity val_mode requires value for %s"%( 
+                    "RecordField %s: val_mode 'Value_entity' requires value for %s"%( 
                         entitydata[ANNAL.CURIE.id], 
                         ANNAL.CURIE.field_ref_type, 
                         )
                     )
             if ref_field:
                log.warning(
-                    "RecordField %s: Value_entity mode should not define value for %s"%( 
+                    "RecordField %s: val_mode 'Value_entity' should not define value for %s"%( 
                         entitydata[ANNAL.CURIE.id], 
                         ANNAL.CURIE.field_ref_field
                         )

@@ -128,6 +128,8 @@ class CreateSiteData(AnnalistTestCase):
             settings.SITE_SRC_ROOT+"/sampledata/empty/"+test_layout.SITE_DIR, 
             settings.SITE_SRC_ROOT+"/annalist/sitedata",
             TestBaseDir)
+        # testsite = Site(TestBaseUri, TestBaseDir)
+        # testsite.generate_site_jsonld_context()
         # develsite = Site("http://localhost:8000/annalist/", TestBaseDir)
         return
 

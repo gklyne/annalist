@@ -76,7 +76,8 @@ class EntityRoot(object):
         self._entitydir     = entitydir if entitydir.endswith("/") else entitydir + "/"
         self._entityalturl  = None
         self._entityaltdir  = None
-        self._entityuseurl  = self._entityurl
+        self._entityuseurl  = None # self._entityurl
+        self._entityusedir  = None # self._entitydir
         self._values        = None
         log.debug("EntityRoot.__init__: entity URI %s, entity dir %s"%(self._entityurl, self._entitydir))
         return
@@ -199,15 +200,18 @@ class EntityRoot(object):
                 yield f
         return
 
-    def field_resource_file(self, resource_ref):
+    def resource_file(self, resource_ref):
         """
         Returns a file object value for a resource associated with an entity,
-        or None if the resouce is not present.
+        or None if the resource is not present.
         """
-        (body_dir, _) = self._dir_path()
-        file_name = os.path.join(body_dir, resource_ref)
-        if os.path.isfile(file_name):
-            return open(file_name, "rb")
+        if self._exists_path():
+            # (body_dir, _) = self._dir_path()
+            body_dir = self._entityusedir
+            log.info("EntityRoot.resource_file: dir %s, resource_ref %s"%(body_dir, resource_ref))
+            file_name = os.path.join(body_dir, resource_ref)
+            if os.path.isfile(file_name):
+                return open(file_name, "rb")
         return None
 
     def get_field(self, path):
@@ -263,6 +267,7 @@ class EntityRoot(object):
             # log.info("_exists %s"%(p))
             if d and os.path.isdir(d):
                 if p and os.path.isfile(p):
+                    self._entityusedir = d
                     self._entityuseurl = u
                     return p
         return None
@@ -328,6 +333,7 @@ class EntityRoot(object):
         values.pop(ANNAL.CURIE.url, None)
         with open(fullpath, "wt") as entity_io:
             json.dump(values, entity_io, indent=2, separators=(',', ': '))
+        self._entityusedir  = self._entitydir
         self._entityuseurl  = self._entityurl
         self._post_update_processing(values)
         return
@@ -506,9 +512,9 @@ class EntityRoot(object):
         local_dir = os.path.join(body_dir, localpath)
         util.ensure_dir(local_dir)
         filename = os.path.join(local_dir, localname)
-        log.info("entityroot._metaobj: self._entitydir %s"%(self._entitydir,))
-        log.info("entityroot._metaobj: body_dir %s, body_file %s"%(body_dir, body_file))
-        log.info("entityroot._metaobj: filename %s"%(filename,))
+        log.debug("entityroot._metaobj: self._entitydir %s"%(self._entitydir,))
+        log.debug("entityroot._metaobj: body_dir %s, body_file %s"%(body_dir, body_file))
+        log.debug("entityroot._metaobj: filename %s"%(filename,))
         return open(filename, mode)
 
     def _read_stream(self):

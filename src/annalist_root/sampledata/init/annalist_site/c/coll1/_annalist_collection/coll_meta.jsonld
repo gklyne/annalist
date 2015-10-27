@@ -2,11 +2,12 @@
   "rdfs:label": "Collection coll1",
   "rdfs:comment": "Description of Collection coll1",
   "annal:software_version": "0.1.20",
+  "@context": [
+    "coll_context.jsonld"
+  ],
   "annal:type_id": "_collection",
-  "@base": "../..",
-  "@id": "../",
-  "@context": "coll_context.jsonld",
   "annal:id": "coll1",
+  "@id": "../",
   "@type": [
     "annal:Collection"
   ],

@@ -16,8 +16,9 @@
       "annal:field_id": "_field/Entity_label"
     }
   ],
-  "@base": "../..",
-  "@context": "coll_context.jsonld",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
   "annal:id": "list2",
   "@id": "./",
   "@type": [

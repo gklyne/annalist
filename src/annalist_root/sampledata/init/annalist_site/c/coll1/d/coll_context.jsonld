@@ -1,6 +1,5 @@
 {
   "@context": {
-    "@base": "http://test.example.com/testsite/c/coll1/d/",
     "annal:type": {
       "@type": "@id"
     },
@@ -31,31 +30,10 @@
     "annal:property_uri": {
       "@type": "@id"
     },
-    "annal:field_render_type": {
-      "@type": "@id"
-    },
-    "annal:field_value_mode": {
-      "@type": "@id"
-    },
-    "annal:field_ref_type": {
-      "@type": "@id"
-    },
     "annal:field_ref_field": {
       "@type": "@id"
     },
-    "annal:group_ref": {
-      "@type": "@id"
-    },
     "annal:field_entity_type": {
-      "@type": "@id"
-    },
-    "annal:display_type": {
-      "@type": "@id"
-    },
-    "annal:default_type": {
-      "@type": "@id"
-    },
-    "annal:default_view": {
       "@type": "@id"
     },
     "annal:list_fields": {
@@ -67,14 +45,11 @@
     "annal:supertype_uris": {
       "@container": "@list"
     },
-    "annal:type_view": {
-      "@type": "@id"
-    },
-    "annal:type_list": {
-      "@type": "@id"
-    },
     "annal:field_aliases": {
       "@container": "@list"
+    },
+    "annal:user_uri": {
+      "@type": "@id"
     },
     "annal:user_permissions": {
       "@container": "@set"
@@ -86,9 +61,6 @@
       "@container": "@list"
     },
     "owl:sameAs": {
-      "@type": "@id"
-    },
-    "annal:field_id": {
       "@type": "@id"
     },
     "annal:alias_target": {

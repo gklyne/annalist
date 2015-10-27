@@ -80,6 +80,9 @@ REMOVE_RECORD_TYPE          = "Remove record type %(id)s in collection %(coll_id
 REMOVE_RECORD_LIST          = "Remove record list %(id)s in collection %(coll_id)s"
 REMOVE_RECORD_VIEW          = "Remove record view %(id)s in collection %(coll_id)s"
 
+SITE_RESOURCE_NOT_DEFINED   = "Resource %(ref)s is not recogized for site"
+SITE_RESOURCE_NOT_EXIST     = "Site resource %(ref)s does not exist"
+
 COLLECTION_ID               = "Problem with collection identifier"
 COLLECTION_ID_INVALID       = "The collection identifier is missing or not a valid identifier"
 COLLECTION_LABEL            = "Collection %(id)s"
@@ -88,7 +91,8 @@ COLLECTION_NOT_EXISTS       = "Collection %(id)s does not exist"
 COLLECTION_NEWER_VERSION    = ("Cannot access collection %(id)s, "+
                                "which was created by software version %(ver)s. "+
                                "(Update Annalist server software to use this collection)")
-COLLECTION_RESOURCE_NOT_DEF = "Resource %(ref)s is not recogized for collection %(id)s"
+COLL_RESOURCE_NOT_DEFINED   = "Resource %(ref)s is not recogized for collection %(id)s"
+COLL_RESOURCE_NOT_EXIST     = "Resource %(ref)s for collection %(id)s does not exist"
 
 ANNALIST_USER_ID            = "Problem with user identifier"
 ANNALIST_USER_ID_INVALID    = "The user identifier is missing or not a valid identifier"

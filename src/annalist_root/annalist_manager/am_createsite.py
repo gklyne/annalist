@@ -26,6 +26,8 @@ from annalist.identifiers           import ANNAL, RDFS
 from annalist.layout                import Layout
 from annalist.util                  import removetree, replacetree, updatetree
 
+from annalist.models.site           import Site
+
 import am_errors
 from am_settings                    import am_get_settings
 
@@ -126,6 +128,10 @@ def am_updatesite(annroot, userhome, options):
         d = os.path.join(sitedatatgt, sdir)
         print("- %s +> %s"%(sdir, d))
         updatetree(s, d)
+    # --- (Re)generate site context data
+    print("- generating %s"%(site_layout.SITEDATA_CONTEXT_PATH))
+    testsite = Site("http://nosite.example.com/", site_layout.SITE_PATH)
+    testsite.generate_site_jsonld_context()
     return status
 
 # End.

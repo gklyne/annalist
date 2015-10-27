@@ -19,6 +19,7 @@ log = logging.getLogger(__name__)
 from django.http                        import HttpResponse
 
 from annalist                           import message
+from annalist                           import layout
 
 from annalist.models.entitytypeinfo     import EntityTypeInfo, get_built_in_type_ids
 
@@ -67,7 +68,7 @@ class EntityResourceAccess(AnnalistGenericView):
                     message=message.ENTITY_DOES_NOT_EXIST%{'id': entity_label}
                     )
                 )
-        # Locate resource
+        # Locate and open resource file
         resource_info = self.find_resource(viewinfo, entity, resource_ref)
         if resource_info is None:
             return self.error(
@@ -78,7 +79,16 @@ class EntityResourceAccess(AnnalistGenericView):
                         }
                     )
                 )
-        resource_file = entity.field_resource_file(resource_ref)
+        resource_file = entity.resource_file(resource_ref)
+        if resource_file is None:
+            return self.error(
+                dict(self.error404values(),
+                    message=message.RESOURCE_DOES_NOT_EXIST%
+                        { 'id':  entity_label
+                        , 'ref': resource_ref
+                        }
+                    )
+                )
         # Return resource
         try:
             response = self.resource_response(resource_file, resource_info["resource_type"])
@@ -89,6 +99,8 @@ class EntityResourceAccess(AnnalistGenericView):
                     message=str(e)+" - see server log for details"
                     )
                 )
+        finally:
+            resource_file.close()
         return response
 
     def view_setup(self, coll_id, type_id, entity_id, request_dict):
@@ -112,6 +124,38 @@ class EntityResourceAccess(AnnalistGenericView):
         """
         Return a description for the indicated entity resource, or None
         """
+        log.debug("EntityResourceAccess.find_resource %s/%s/%s"%(entity.get_type_id(), entity.get_id(), resource_ref))
+        fixed_resources = (
+            [ { "resource_name": layout.SITE_META_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.SITE_PROV_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.SITEDATA_META_FILE,    "resource_type": "application/ld+json" }
+            , { "resource_name": layout.SITEDATA_CONTEXT_FILE, "resource_type": "application/ld+json" }
+            , { "resource_name": layout.COLL_META_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.COLL_PROV_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.COLL_CONTEXT_FILE,     "resource_type": "application/ld+json" }
+            , { "resource_name": layout.TYPE_META_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.TYPE_PROV_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.LIST_META_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.LIST_PROV_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.VIEW_META_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.VIEW_PROV_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.GROUP_META_FILE,       "resource_type": "application/ld+json" }
+            , { "resource_name": layout.GROUP_PROV_FILE,       "resource_type": "application/ld+json" }
+            , { "resource_name": layout.FIELD_META_FILE,       "resource_type": "application/ld+json" }
+            , { "resource_name": layout.FIELD_PROV_FILE,       "resource_type": "application/ld+json" }
+            , { "resource_name": layout.VOCAB_META_FILE,       "resource_type": "application/ld+json" }
+            , { "resource_name": layout.VOCAB_PROV_FILE,       "resource_type": "application/ld+json" }
+            , { "resource_name": layout.USER_META_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.USER_PROV_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.ENUM_META_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.ENUM_PROV_FILE,        "resource_type": "application/ld+json" }
+            , { "resource_name": layout.TYPEDATA_META_FILE,    "resource_type": "application/ld+json" }
+            , { "resource_name": layout.ENTITY_DATA_FILE,      "resource_type": "application/ld+json" }
+            , { "resource_name": layout.ENTITY_PROV_FILE,      "resource_type": "application/ld+json" }
+            ])
+        for fr in fixed_resources:
+            if fr["resource_name"] == resource_ref:
+                return fr
         for t, f in entity.enum_fields():
             # log.debug("find_resource: t %s, f %r"%(t,f))
             if isinstance(f, dict):

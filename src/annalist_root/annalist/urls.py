@@ -25,8 +25,10 @@ from annalist.views.defaultedit         import EntityDefaultEditView
 from annalist.views.entityedit          import GenericEntityEditView
 from annalist.views.entitylist          import EntityGenericListView
 from annalist.views.entitydelete        import EntityDataDeleteConfirmedView
-from annalist.views.entityresource      import EntityResourceAccess
+
+from annalist.views.siteresource        import SiteResourceAccess
 from annalist.views.collectionresource  import CollectionResourceAccess
+from annalist.views.entityresource      import EntityResourceAccess
 
 
 # c - collections
@@ -146,19 +148,23 @@ urlpatterns = patterns('',
                             name='AnnalistEntityEditView'),
 
     # Additional resource access (context, attachments, etc.)
-    url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<resource_ref>[\w.]{1,250})$',
+    url(r'^site/(?P<resource_ref>[\w.-]{1,250})$',
+                            SiteResourceAccess.as_view(),
+                            name='AnnalistSiteResourceAccess'),
+    url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<resource_ref>[\w.-]{1,250})$',
+                            SiteResourceAccess.as_view(),
+                            name='AnnalistSiteResourceAccess'),
+    url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<resource_ref>[\w.-]{1,250})$',
                             CollectionResourceAccess.as_view(),
                             name='AnnalistCollectionResourceAccess'),
-    url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})/(?P<entity_id>\w{1,32})/(?P<resource_ref>[\w.]{0,250})$',
+    url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})/(?P<entity_id>\w{1,32})/(?P<resource_ref>[\w.-]{1,250})$',
                             EntityResourceAccess.as_view(),
                             name='AnnalistEntityResourceAccess'),
-    url(r'^c/(?P<coll_id>\w{1,32})/v/(?P<view_id>\w{1,32})/(?P<type_id>\w{1,32})/(?P<entity_id>\w{1,32})/(?P<resource_ref>[\w.]{0,250})$',
+    url(r'^c/(?P<coll_id>\w{1,32})/v/(?P<view_id>\w{1,32})/(?P<type_id>\w{1,32})/(?P<entity_id>\w{1,32})/(?P<resource_ref>[\w.-]{1,250})$',
                             EntityResourceAccess.as_view(),
                             name='AnnalistEntityResourceAccess'),
 
     ) # End of urlpatterns
-
-
 
 urlpatterns += patterns('',
     url(r'^login/$',      LoginUserView.as_view(),      name='LoginUserView'),

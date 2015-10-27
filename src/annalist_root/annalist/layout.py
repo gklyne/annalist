@@ -171,7 +171,11 @@ class Layout(object):
         self.BASE_DIR       = base_data_dir
         self.SITE_DIR       = SITE_DIR
         self.SITEDATA_DIR   = SITEDATA_DIR
-        self.SITE_PATH      = os.path.join(base_data_dir, SITE_DIR)
+        self.SITE_PATH      = os.path.join(base_data_dir, SITE_DIR)     # e.g. /data/annalist_site
+        self.SITEDATA_PATH  = os.path.join(base_data_dir, SITEDATA_DIR) # e.g. /data/annalist_site/_annalist_site
+        self.SITEDATA_CONTEXT_PATH = os.path.join(                      # e.g. /data/annalist_site/_annalist_site/site_context.jsonld
+            base_data_dir, SITEDATA_DIR, SITEDATA_CONTEXT_FILE
+            ) 
         return
 
 # End.
