@@ -22,12 +22,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] BUG: renaming a field used by a view results in confusing Server Error messages (missing field)
    - Entity not found: u'Group Entity_label_ref used in field Entity_label_ref'
    - Note: this is renaming a group, not a field
-- [x] BUG?: when local type/list/view overrides site definition, appears twice in dropdown lists.
+- [x] BUG: when local type/list/view overrides site definition, appears twice in dropdown lists.
     - Or only when type id is different?  
     - Case for including type_id/entity_id in dropdown text?
     - Done, but review this
-- [ ] BUG: Naming inconsistency: entity-data.jsonld should be entity_data.jsonld.  Needs migration strategy.
-- [ ] Content migration for entity-data.jsonld -> entity_data.jsonld
+- [x] BUG: Naming inconsistency: entity-data.jsonld should be entity_data.jsonld.
+- [x] Content migration for entity-data.jsonld -> entity_data.jsonld
 - [x] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - Think about use of CURIES in data (e.g. for types, fields, etc.)  
         - Need to store prefix info with collection.
@@ -105,6 +105,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 (release?)
 
 - [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
+- [ ] Implement "get the data" link as a field renderer?
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?

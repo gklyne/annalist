@@ -276,6 +276,7 @@ class Entity(EntityRoot):
             (cls._entitytype, parent._entitydir, entityid)
             )
         e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
+        e._migrate_path()
         return e._exists()
 
     @classmethod

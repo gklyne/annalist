@@ -149,12 +149,13 @@ COLL_ENTITY_VIEW        = "d/%(type_id)s/%(id)s/"
 COLL_ENTITY_PATH        = "d/%(type_id)s/%(id)s"
 SITE_ENTITY_VIEW        = "c/%(coll_id)s/d/%(type_id)s/%(id)s/"
 SITE_ENTITY_PATH        = "c/%(coll_id)s/d/%(type_id)s/%(id)s"
-ENTITY_DATA_FILE        = "entity-data.jsonld"
-ENTITY_PROV_FILE        = "entity-prov.jsonld"
+ENTITY_DATA_FILE        = "entity_data.jsonld"
+ENTITY_PROV_FILE        = "entity_prov.jsonld"
 DATA_ENTITY_REF         = "./"
 CONTEXT_ENTITY_REF      = "%(type_id)s/%(id)s/"
 ENTITY_CONTEXT_REF      = "../.."
 ENTITY_CONTEXT_FILE     = ENTITY_CONTEXT_REF + "/" + COLL_CONTEXT_FILE
+ENTITY_OLD_DATA_FILE    = "entity-data.jsonld"
 
 # and more...
 

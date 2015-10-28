@@ -344,6 +344,7 @@ class EntityRoot(object):
 
         Adds value for 'annal:url' to the entity data returned.
         """
+        self._migrate_path()
         body_file = self._exists_path()
         if body_file:
             try:
@@ -364,6 +365,40 @@ class EntityRoot(object):
                     { "@error": body_file 
                     , "@message": "Error loading entity values %r"%(e,)
                     })
+
+        return None
+
+    def _migrate_path(self):
+        """
+        Migrate entity data filenames from those used in older software versions.
+        """
+        if self._migrate_filenames() is None:
+            return
+        if not self._exists():
+            for old_data_filename in self._migrate_filenames():
+                # This logic migrates data from previous filenames
+                (basedir, old_data_filepath) = util.entity_dir_path(self._entitydir, [], old_data_filename)
+                if basedir and os.path.isdir(basedir):
+                    if old_data_filepath and os.path.isfile(old_data_filepath):
+                        # Old body file found here
+                        (d, new_data_filepath) = self._dir_path()
+                        log.info("Migrate file %s to %s"%(old_data_filepath, new_data_filepath))
+                        os.rename(old_data_filepath, new_data_filepath)
+                        break
+        return
+
+    def _migrate_filenames(self):
+        """
+        Default method for filename migration.
+
+        Returns a list of filenames used for the current entity type in previous
+        versions of Annalist software.  If the expected filename is not found when 
+        attempting to read a file, the _load_values() method calls this function to
+        and looks for any of the filenames returned.  If found, the file is renamed
+        to the current version filename.
+
+        Default method returns None, which signals that no migration is to be performed.
+        """
         return None
 
     def _migrate_values(self, entitydata):
@@ -456,7 +491,7 @@ class EntityRoot(object):
 
     def _exists_file(self, f):
         """
-        Test if a file named 'f' exists inthe current entity directory
+        Test if a file named 'f' exists in the current entity directory
         """
         return os.path.isfile(os.path.join(self._entitydir, f))
 

@@ -338,6 +338,7 @@ def renametree_temp(src):
 def removetree(tgt):
     """
     Work-around for python problem with shutils tree remove functions on Windows.
+
     See:
         http://stackoverflow.com/questions/23924223/
         http://stackoverflow.com/questions/1213706/

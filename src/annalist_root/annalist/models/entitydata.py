@@ -53,4 +53,18 @@ class EntityData(Entity):
         log.debug("EntityData: _entityviewuri %s"%(self._entityviewuri))
         return
 
+    def _migrate_filenames(self):
+        """
+        Default method for filename migration.
+
+        Returns a list of filenames used for the current entity type in previous
+        versions of Annalist software.  If the expected filename is not found when 
+        attempting to read a file, the _load_values() method calls this function to
+        and looks for any of the filenames returned.  If found, the file is renamed
+        to the current version filename.
+
+        Default method returns an empty list.
+        """
+        return [layout.ENTITY_OLD_DATA_FILE]
+
 # End.
