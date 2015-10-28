@@ -4,12 +4,15 @@
 {% load static %}
 
 <head>
+  <title>{% block title %}Annalist linked data journal{% endblock %}</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="{% static 'foundation/css/foundation.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/annalist.css' %}" />
+  {% if entity_data_ref %}
+  <link rel="alternate" href="{{entity_data_ref}}" type="application/ld+json" />
+  {% endif %}
   <script src="{% static 'foundation/js/vendor/modernizr.js' %}"></script>
-  <title>{% block title %}Annalist linked data journal{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'css/annalist.css' %}">
 </head>
 
 <body>

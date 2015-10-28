@@ -548,6 +548,10 @@ class DisplayInfo(object):
             context.update(
                 { 'list_label': self.recordlist[RDFS.CURIE.label]
                 })
+        if self.entitytypeinfo:
+            context.update(
+                { 'entity_data_ref': self.entitytypeinfo.entityclass._entityfile
+                })
         return context
 
     def add_task_button_context(self, task_buttons, context):

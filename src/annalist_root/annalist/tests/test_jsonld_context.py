@@ -7,6 +7,7 @@ __copyright__   = "Copyright 2015, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
+import urlparse
 import unittest
 
 import logging
@@ -33,22 +34,23 @@ from annalist.models.entitytypeinfo import EntityTypeInfo
 
 # from annalist.views.form_utils.fieldchoice  import FieldChoice
 
+from miscutils.MockHttpResources    import MockHttpFileResources, MockHttpDictResources
+
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
+    site_dir, collection_dir,
+    site_view_url, collection_view_url,
     collection_create_values,
-    create_test_user,
-    # context_list_entities,
+    create_test_user
     )
-# from entity_testtypedata            import (
-#     recordtype_create_values
-#     )
-# from entity_testentitydata          import (
-#     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
-#     entitydata_list_type_url, entitydata_list_all_url,
-#     entitydata_value_keys, entitydata_create_values, entitydata_values, 
-#     )
+from entity_testtypedata            import (
+    recordtype_url
+    )
+from entity_testentitydata          import (
+    entity_url, entity_resource_url
+    )
 
 #   -----------------------------------------------------------------------------
 #
@@ -134,6 +136,29 @@ def test_ref_entity_create_values(image_uri):
         , 'rdfs:comment':               "test_ref_image comment"
         , 'test:reference':             image_uri
         })
+
+#   -----------------------------------------------------------------------------
+#
+#   RDFLib input source from file-like object
+#
+#   -----------------------------------------------------------------------------
+
+# @@ not used for now.  Originally created for use with HTTPResponse object to 
+#    read content returned.
+
+from rdflib.parser import InputSource
+
+class StreamInputSource(InputSource):
+
+    def __init__(self, stream, system_id):
+        super(StreamInputSource, self).__init__(system_id)
+        self.file = stream
+        self.setByteStream(stream)
+        # TODO: self.setEncoding(encoding)
+
+    def __repr__(self):
+        return repr(self.file)
+
 
 #   -----------------------------------------------------------------------------
 #
@@ -507,6 +532,170 @@ class JsonldContextTest(AnnalistTestCase):
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
 
+        return
+
+    def get_context_mock_dict(self, base_path):
+        """
+        Uses Djamngo test client results to create a dictionary of mock results for 
+        accessing JSONLD context resources.  Works with MockHttpDictResources.
+        """
+        mock_refs = (
+            [ "../../coll_context.jsonld"
+            , "../../site_context.jsonld" 
+            ])
+        mock_dict = {}
+        for mock_ref in mock_refs:
+            mu = urlparse.urljoin(base_path, mock_ref)
+            mr = self.client.get(mu)
+            self.assertEqual(mr.status_code,   200)
+            mock_dict[mock_ref] = mr.content
+        # print "***** mu: %s, mock_dict: %r"%(mu, mock_dict.keys())
+        return mock_dict
+
+    def test_http_jsonld_entity1(self):
+        """
+        Read default entity data as JSON-LD using HTTP, and check resulting RDF triples
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+
+        # Create entity object to access entity data 
+        testdata = RecordTypeData.load(self.testcoll, "testtype")
+        entity1  = EntityData.load(testdata, "entity1")
+
+        # Read entity data as JSON-LD
+        v = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
+        u = TestHostUri + entity_resource_url(
+            coll_id="testcoll", type_id="testtype", entity_id="entity1",
+            resource_ref=layout.ENTITY_DATA_FILE
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        g = Graph()
+        # print("***** u: (entity1)")
+        # print(repr(u))
+        # print("***** c: (entity1)")
+        # print r.content
+        with MockHttpDictResources(u, self.get_context_mock_dict(v)):
+            result = g.parse(data=r.content, publicID=u, base=u, format="json-ld")
+        # print "*****"+repr(result)
+        # print("***** g: (entity1)")
+        # print(g.serialize(format='turtle', indent=4))
+
+        # Check the resulting graph contents
+        subj        = entity1.get_url()
+        entity_data = entity1.get_values()
+        for (s, p, o) in (
+            [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.comment,           Literal(entity_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.id,               Literal(entity_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.type_id,          Literal(entity_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.type,             URIRef(ANNAL.EntityData)                  )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g)
+        return
+
+    def test_http_jsonld_type_vocab(self):
+        """
+        Read type data as JSON-LD, and check resulting RDF triples
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+        type_vocab = self.testcoll.get_type("_vocab")
+
+        # Read type data as JSON-LD
+        v = recordtype_url(coll_id="testcoll", type_id=type_vocab.get_id())
+        p = v + layout.TYPE_META_FILE
+        u = TestHostUri + p
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        g = Graph()
+        # print("***** u: (type_vocab)")
+        # print(repr(u))
+        # print("***** c: (type_vocab)")
+        # print r.content
+
+        # Read graph data with HTTP mocking for context references
+        with MockHttpDictResources(u, self.get_context_mock_dict(p)):
+            result = g.parse(data=r.content, publicID=u, base=u, format="json-ld")
+        # print "*****"+repr(result)
+        # print("***** g: (type_vocab)")
+        # print(g.serialize(format='turtle', indent=4))
+
+        # Check the resulting graph contents
+        subj            = TestHostUri + v
+        type_vocab_data = type_vocab.get_values()
+        for (s, p, o) in (
+            [ (subj, RDF.type,        URIRef(ANNAL.Type)                              )
+            , (subj, RDFS.label,      Literal(type_vocab_data[RDFS.CURIE.label])      )
+            , (subj, RDFS.comment,    Literal(type_vocab_data[RDFS.CURIE.comment])    )
+            , (subj, ANNAL.id,        Literal(type_vocab_data[ANNAL.CURIE.id])        )
+            , (subj, ANNAL.type_id,   Literal(type_vocab_data[ANNAL.CURIE.type_id])   )
+            , (subj, ANNAL.type_list, Literal(type_vocab_data[ANNAL.CURIE.type_list]) )
+            , (subj, ANNAL.type_view, Literal(type_vocab_data[ANNAL.CURIE.type_view]) )
+            , (subj, ANNAL.uri,       URIRef(ANNAL.Vocabulary)                        )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g )
+        return
+
+    def test_http_jsonld_type_new(self):
+        """
+        Create new type in collection, then read type data as JSON-LD, 
+        and check resulting RDF triples
+        """
+        # Create new type in collection
+        test_new_type_create_values = (
+            { 'annal:type':                 "annal:Type"
+            , 'rdfs:label':                 "test_new_type label"
+            , 'rdfs:comment':               "test_new_type comment"
+            , 'annal:uri':                  "test:type/test_new_type"
+            , 'annal:type_view':            "Default_view"
+            , 'annal:type_list':            "Default_list"
+            })
+        new_type = RecordType.create(
+            self.testcoll, "newtype", test_new_type_create_values
+            )
+
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+        type_new = self.testcoll.get_type("newtype")
+
+        # Read type data as JSON-LD
+        v = recordtype_url(coll_id="testcoll", type_id=type_new.get_id())
+        p = v + layout.TYPE_META_FILE
+        u = TestHostUri + p
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        g = Graph()
+        # print("***** u: (type_new)")
+        # print(repr(u))
+        # print("***** c: (type_new)")
+        # print r.content
+
+        # Read graph data with HTTP mocking for context references
+        with MockHttpDictResources(u, self.get_context_mock_dict(p)):
+            result = g.parse(data=r.content, publicID=u, base=u, format="json-ld")
+        # print "*****"+repr(result)
+        # print("***** g: (type_new)")
+        # print(g.serialize(format='turtle', indent=4))
+
+        # Check the resulting graph contents
+        subj            = TestHostUri + v
+        type_new_data = type_new.get_values()
+        for (s, p, o) in (
+            [ (subj, RDF.type,        URIRef(ANNAL.Type)                            )
+            , (subj, RDFS.label,      Literal(type_new_data[RDFS.CURIE.label])      )
+            , (subj, RDFS.comment,    Literal(type_new_data[RDFS.CURIE.comment])    )
+            , (subj, ANNAL.id,        Literal(type_new_data[ANNAL.CURIE.id])        )
+            , (subj, ANNAL.type_id,   Literal(type_new_data[ANNAL.CURIE.type_id])   )
+            , (subj, ANNAL.type_list, Literal(type_new_data[ANNAL.CURIE.type_list]) )
+            , (subj, ANNAL.type_view, Literal(type_new_data[ANNAL.CURIE.type_view]) )
+            , (subj, ANNAL.uri,       URIRef(type_new_data[ANNAL.CURIE.uri])        )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
 
 # End.

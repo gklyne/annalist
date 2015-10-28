@@ -27,6 +27,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Case for including type_id/entity_id in dropdown text?
     - Done, but review this
 - [ ] BUG: Naming inconsistency: entity-data.jsonld should be entity_data.jsonld.  Needs migration strategy.
+- [ ] Content migration for entity-data.jsonld -> entity_data.jsonld
 - [x] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
     - Think about use of CURIES in data (e.g. for types, fields, etc.)  
         - Need to store prefix info with collection.
@@ -86,9 +87,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] entity -> collection context
     - [x] type -> collection context
     - [x] site-defined type -> site context
-- [ ] HTTP access test case: can load JSONLD as graph via HTTP; entity and type tests
-- [ ] Add HTTP and HTML links to data to responses.  Also, link to data on view form.
-- [ ] Content migration for entity-data.jsonld -> entity_data.jsonld
+- [x] HTTP access test case: can load JSONLD as graph via HTTP; entity and type tests
+- [x] Add HTTP and HTML links to data to responses.  Also, link to data on view form.
 
 (release?)
 

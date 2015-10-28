@@ -69,6 +69,16 @@ def entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
         entity_id = "___"
     return collection_entity_view_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
 
+def entity_resource_url(
+    coll_id="testcoll", type_id="testtype", entity_id="entity_id", 
+    resource_ref=layout.ENTITY_DATA_FILE
+    ):
+    """
+    URI for entity data; also view using default entity view
+    """
+    base = entity_url(coll_id, type_id, entity_id)
+    return urlparse.urljoin(base, resource_ref)
+
 def entitydata_edit_url(action=None, coll_id="testcoll", type_id=None, entity_id=None, view_id="Default_view"):
     viewname = ( 
         'AnnalistEntityNewView'             if action == "new" else

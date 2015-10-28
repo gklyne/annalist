@@ -71,7 +71,10 @@ class CollectionResourceAccess(AnnalistGenericView):
                         }
                     )
                 )
-        resource_file = coll.resource_file(resource_info["resource_name"])
+        resource_file = (
+            coll.resource_file(resource_info["resource_name"]) or
+            viewinfo.site.resource_file(resource_info["resource_name"])
+            )
         if resource_file is None:
             return self.error(
                 dict(self.error404values(),
@@ -113,12 +116,17 @@ class CollectionResourceAccess(AnnalistGenericView):
         Return a description for the indicated collection resource, or None
         """
         # @@TODO: this is a bit ad-hoc; try to work out structure that works more
-        #         uniformly for cllections, entities, sites, etc.
+        #         uniformly for collections, entities, sites, etc.
         log.info("CollectionResourceAccess.find_resource %s/d/%s"%(coll.get_id(), resource_ref))
         if resource_ref == layout.COLL_CONTEXT_FILE:
             return (
                 { 'resource_type': "application/ld+json"
                 , 'resource_name': layout.COLL_META_CONTEXT_PATH + resource_ref
+                })
+        if resource_ref == layout.SITEDATA_CONTEXT_FILE:
+            return (
+                { 'resource_type': "application/ld+json"
+                , 'resource_name': resource_ref
                 })
         return None
 

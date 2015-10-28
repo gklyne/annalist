@@ -423,7 +423,10 @@ class AnnalistGenericView(ContentNegotiationView):
         template  = loader.get_template(template_name)
         context   = RequestContext(self.request, resultdata)
         # log.debug("render_html - data: %r"%(resultdata))
-        return HttpResponse(template.render(context))
+        response = HttpResponse(template.render(context))
+        if "entity_data_ref" in resultdata:
+            response["Link"] = "<%(entity_data_ref)s>; rel=alternate"%resultdata
+        return response
 
     # Default view methods return 405 Forbidden
 
