@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/Bib_note"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Bib_note"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Note"

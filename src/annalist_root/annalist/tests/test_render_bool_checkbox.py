@@ -15,10 +15,6 @@ from collections import OrderedDict
 import logging
 log = logging.getLogger(__name__)
 
-# from django.conf                                import settings
-# from django.test                                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
-# from django.template                            import Context, Template, loader
-
 from annalist.views.fields.render_bool_checkbox import (
     get_bool_checkbox_renderer, 
     BoolCheckboxValueMapper

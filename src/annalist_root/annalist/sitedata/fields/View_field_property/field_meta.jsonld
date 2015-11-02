@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/View_field_property"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "View_field_property"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Property"

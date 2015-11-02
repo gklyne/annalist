@@ -1,8 +1,9 @@
-{ "@id":                "annal:display/Bib_license_group"
+{ "@id":                "annal:group/Bib_license_group"
 , "@type":              ["annal:Field_group"]
+, "@context":           ["../../site_context.jsonld"]
 , "annal:id":           "Bib_license_group"
 , "annal:type_id":      "_group"
-, "annal:uri":          "annal:display/Bib_license_group"
+, "annal:uri":          "annal:group/Bib_license_group"
 , "annal:record_type":  "bib:BibEntry"
 , "rdfs:label":         "BibEntry license fields"
 , "rdfs:comment":       "Group of fields describing a content license in a BibEntry record"

@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/Bib_shortcode"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Bib_shortcode"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Short code"

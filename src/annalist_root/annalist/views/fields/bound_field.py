@@ -437,10 +437,8 @@ def get_entity_values(typeinfo=None, entity=None, entity_id=None):
     entityvals['entity_link']      = entity.get_view_url_path()
     # log.info("type_id %s"%(type_id))
     entityvals['entity_type_id']   = type_id
-    #@@ typeinfo   = EntityTypeInfo(displayinfo.site, displayinfo.collection, type_id)
     if typeinfo and typeinfo.recordtype:
         entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
-    # This is red herring:  working version also has this
     # else:
     #     log.error("get_entity_values: No recordtype: typeinfo %r"%(typeinfo,))
     #     log.error("get_entity_values: No recordtype: entity id %s/%s"%(type_id,entity_id))

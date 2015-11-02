@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/Field_repoeat_label_add"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Field_repeat_label_add"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Add fields label"

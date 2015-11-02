@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/Field_typeref"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Field_typeref"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Refer to type"

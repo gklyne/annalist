@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/Bib_identifiers"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Bib_identifiers"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Identifiers"

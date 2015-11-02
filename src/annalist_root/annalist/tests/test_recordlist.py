@@ -34,10 +34,10 @@ from annalist.models.recordlist         import RecordList
 from annalist.views.recordlistdelete        import RecordListDeleteConfirmedView
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                              import init_annalist_test_site, resetSitedata
-from AnnalistTestCase                   import AnnalistTestCase
-from entity_testutils                   import (
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from entity_testutils       import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_entity_view_url,
@@ -46,7 +46,7 @@ from entity_testutils                   import (
     render_choice_options,
     create_test_user
     )
-from entity_testlistdata                import (
+from entity_testlistdata    import (
     recordlist_dir,
     recordlist_coll_url, recordlist_site_url, recordlist_url, recordlist_edit_url,
     recordlist_value_keys, recordlist_load_keys, 
@@ -55,12 +55,12 @@ from entity_testlistdata                import (
     recordlist_view_context_data, recordlist_view_form_data, 
     recordlist_delete_confirm_form_data
     )
-from entity_testentitydata              import (
+from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
-from entity_testsitedata            import (
+from entity_testsitedata    import (
     make_field_choices, no_selection,
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
@@ -84,6 +84,7 @@ class RecordListTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
+        init_annalist_test_coll()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.sitedata = SiteData(self.testsite)
         self.testcoll = Collection(self.testsite, "testcoll")
@@ -177,6 +178,7 @@ class RecordListEditViewTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
+        init_annalist_test_coll()
         self.testsite   = Site(TestBaseUri, TestBaseDir)
         self.testcoll   = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_list")
@@ -237,7 +239,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_help="(?list_help)",
             list_url="(?list_url)",
             list_uri="(?list_uri)",
-            list_type="List",
+            list_type="Enum_list_type/List",
             list_default_type="_type/Default_type",
             list_default_view="_view/Default_view",
             list_selector="ALL",
@@ -417,7 +419,9 @@ class RecordListEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "List_default_type", "Record type",
                     no_selection("(default record type)") + self.type_options,
-                    "_type/Default_type")+
+                    "_type/Default_type",
+                    placeholder="(default record type)"
+                    )+
                 """
                 </div>
               </div>
@@ -434,7 +438,9 @@ class RecordListEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "List_default_view", "View",
                     no_selection("(view id)") + self.view_options,
-                    "_view/Default_view")+
+                    "_view/Default_view",
+                    placeholder="(view id)"
+                    )+
                 """
                 </div>
               </div>
@@ -494,7 +500,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_help=default_comment("testcoll", "_list", "00000001"),
             list_url=list_url,
             list_uri=None,
-            list_type="List",
+            list_type="Enum_list_type/List",
             list_selector="ALL"
             )
         return

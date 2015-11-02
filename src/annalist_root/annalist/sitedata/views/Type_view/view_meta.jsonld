@@ -1,5 +1,6 @@
 { "@id":                "annal:display/Type_view"
 , "@type":              ["annal:View"]
+, "@context":           ["../../site_context.jsonld"]
 , "annal:type_id":      "_view"
 , "annal:id":           "Type_view"
 , "annal:record_type":  "annal:Type"

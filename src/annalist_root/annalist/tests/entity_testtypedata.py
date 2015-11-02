@@ -111,7 +111,10 @@ def recordtype_value_keys(type_uri=False, supertype_uris=False):
     return ks
 
 def recordtype_load_keys(type_uri=False, supertype_uris=False):
-    return recordtype_value_keys(type_uri=type_uri, supertype_uris=supertype_uris) | {'@id', '@type'}
+    return (
+        recordtype_value_keys(type_uri=type_uri, supertype_uris=supertype_uris) | 
+        {'@id', '@type', '@context'}
+        )
 
 def recordtype_create_values(
         coll_id="testcoll", type_id="testtype", update="RecordType",
@@ -164,6 +167,8 @@ def recordtype_read_values(
     d.update(
         { '@id':            "./"
         , '@type':          ["annal:Type"]
+        # , '@base':          "../.."
+        , '@context':       ["../../coll_context.jsonld"]
         })
     return d
 

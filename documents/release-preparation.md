@@ -3,13 +3,16 @@
 ## Summary of release tasks
 
 - [x] Feature freeze
+- [x] Check all recent changes are committed (`git status`)
 - [x] Uninstall annalist (if installed): `pip uninstall annalist`
-- [x] Delete contents of build directory (ensure any old files are removed)
-- [x] Clean old .pyc files - `clean.sh`
+- [x] Delete contents of build directory (remove old files) - python setup.py clean --all
+- [x] Clean old .pyc and temporary files
+    - `git clean -nX` (trial run)
+    - `git clean -fX` (do it)
 - [x] Local install
-- [x] Run test suite
+- [x] Run test suite - `annalist-manager runtest`
 - [x] Update site data in local 'personal' installation
-    - `annalist-manager initialize` (is this really needed?  does it wipe users?  No)
+    - `annalist-manager initialize`
     - `annalist-manager updatesitedata`
 - [x] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
@@ -27,7 +30,7 @@
 - [x] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
 - [x] Reinstall and re-run test suite
 - [x] Add release highlights description to release notes
-- [x] Review issues list in GitHub
+- [x] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
 - [x] Review roadmap (`documents/roadmap.md`)
 - [x] Update version number in scripts, documents, etc.
     - [x] Release notes
@@ -38,9 +41,10 @@
     - [x] src/newkit_to_conina_ubuntu.sh
     - [x] Docker build scripts
 - [x] Create announcement text in `documents/release-notes/announce_0.1.*.md`
+- [x] Check for new dependencies; update setup.py as needed.
 - [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [x] Update demo installation on annalist.net; test
+- [x] Update and test demo installation on annalist.net
     - ssh to annalist@annalist.net
     - `killall python`
     - `. anenv/bin/activate`
@@ -77,10 +81,11 @@
 - [ ] Commit and push changes
 - [ ] Delete release branch
     - `git branch -d release-prep-x.y.z`
+- [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`), retest
+
+- [ ] Post announcement to Google Group, Twitter and elsewhere
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)
-- [ ] Post announcement to Google Group, Twitter and elsewhere
-- [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`), retest
 
 
 ## Build kit and PyPI upload

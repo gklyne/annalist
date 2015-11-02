@@ -19,6 +19,8 @@ import os
 import os.path
 import urlparse
 import shutil
+import json
+from collections    import OrderedDict
 
 import logging
 log = logging.getLogger(__name__)
@@ -28,13 +30,30 @@ from django.conf import settings
 from annalist                       import layout
 from annalist.exceptions            import Annalist_Error
 from annalist.identifiers           import RDF, RDFS, ANNAL
-from annalist                       import util
+# from annalist                       import util
+from annalist.util                  import valid_id, extract_entity_id
 
 from annalist.models.entity         import Entity
 from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordview     import RecordView
 from annalist.models.recordlist     import RecordList
+from annalist.models.recordfield    import RecordField
+from annalist.models.recordgroup    import RecordGroup
+from annalist.models.recordvocab    import RecordVocab
+
+# @@TODO: look for way to remove this view dependency from model code.  Move to RecordField 
+#   module?  Hmmm... not so easy: information about render types and methods is concentrated
+#   in render_utils module.  Maybe need to split render_utils functionality between
+#   model and view modules?
+#
+from annalist.views.fields.render_utils import (
+    is_render_type_literal,
+    is_render_type_id,
+    is_render_type_set,
+    is_render_type_list,
+    is_render_type_object,
+    )
 
 class Collection(Entity):
 
@@ -44,6 +63,7 @@ class Collection(Entity):
     _entitypath     = layout.SITE_COLL_PATH
     _entityfile     = layout.COLL_META_FILE
     _entityref      = layout.META_COLL_REF
+    _contextref     = layout.COLL_CONTEXT_FILE
 
     def __init__(self, parentsite, coll_id):
         """
@@ -190,9 +210,6 @@ class Collection(Entity):
             t = RecordType.load(self, type_id, altparent=self._parentsite)
             self._update_type_cache(t)
         return t
-        #@@
-        # t = RecordType.load(self, type_id, altparent=self._parentsite)
-        #@@
 
     def get_uri_type(self, type_uri, include_alt=True):
         """
@@ -201,12 +218,6 @@ class Collection(Entity):
         self._load_types()
         t = self._types_by_uri.get(type_uri, None)
         return t
-        #@@
-        # for t in self.types(include_alt=include_alt):
-        #     turi = t.get_uri()
-        #     if turi == type_uri:
-        #         return t
-        #@@
 
     def remove_type(self, type_id):
         """
@@ -338,4 +349,159 @@ class Collection(Entity):
                 )
             list_id = None
         return list_id 
+
+    # JSON-LD context data
+
+    def generate_coll_jsonld_context(self):
+        """
+        (Re)generate JSON-LD context description for the current collection.
+
+        get_field_uri_context
+                is a supplied function that accepts a RecordField object abnd
+                returns a context dictionary for the field thus described.
+        """
+        # Build context data
+        context = self.get_coll_jsonld_context()
+        # Assemble and write out context description
+        with self._metaobj(
+                layout.COLL_META_CONTEXT_PATH,
+                layout.COLL_CONTEXT_FILE,
+                "wt"
+                ) as context_io:
+            json.dump(
+                { "@context": context }, 
+                context_io, indent=2, separators=(',', ': ')
+                )
+        return
+
+    def get_coll_jsonld_context(self):
+        """
+        Return dictionary containing context structure for collection.
+        """
+        # @@REVIEW: as a workaround for a problem with @base handling in rdflib-jsonld, don't
+        #           include @base in context.
+        #
+        # context           = OrderedDict(
+        #     { "@base":          self.get_url() + layout.COLL_CONTEXT_PATH
+        #     , ANNAL.CURIE.type: { "@type": "@id" }
+        #     })
+        #
+        # Use OrderedDict to allow some control over ordering of context file contents:
+        # this is for humane purposes only, and is not technically important.
+        context           = OrderedDict(
+            { ANNAL.CURIE.type: { "@type": "@id" }
+            })
+        # Common import/upload fields
+        context.update(
+            { 'resource_name': "annal:resource_name"
+            , 'resource_type': "annal:resource_type"
+            })
+        # upload-file fields
+        context.update(
+            { 'upload_name':   "annal:upload_name"
+            , 'uploaded_file': "annal:uploaded_file"
+            , 'uploaded_size': "annal:uploaded_size"
+            })
+        # import-resource fields
+        context.update(
+            { 'import_name':   "annal:import_name"
+            , 'import_url':    
+              { "@id": "annal:import_url"
+              , "@type": "@id"
+              }
+            })
+        # Scan vocabs, generate prefix data
+        for v in self.child_entities(RecordVocab, altparent=self._parentsite):
+            vid = v.get_id()
+            if vid != "_initial_values":
+                context[v.get_id()] = v[ANNAL.CURIE.uri]
+        # Scan view fields and generate context data for property URIs used
+        for v in self.child_entities(RecordView, altparent=self._parentsite):
+            for fref in v[ANNAL.CURIE.view_fields]:
+                fid  = extract_entity_id(fref[ANNAL.CURIE.field_id])
+                vuri = fref.get(ANNAL.CURIE.property_uri, None)
+                furi, fcontext = self.get_field_uri_jsonld_context(fid, self.get_field_jsonld_context)
+                # fcontext['vid'] = v.get_id()
+                # fcontext['fid'] = fid
+                self.set_field_uri_jsonld_context(vuri or furi, fcontext, context)
+        # Scan group fields and generate context data for property URIs used
+        for g in self.child_entities(RecordGroup, altparent=self._parentsite):
+            for gref in g[ANNAL.CURIE.group_fields]:
+                fid  = extract_entity_id(gref[ANNAL.CURIE.field_id])
+                guri = gref.get(ANNAL.CURIE.property_uri, None)
+                furi, fcontext = self.get_field_uri_jsonld_context(fid, self.get_field_jsonld_context)
+                # fcontext['gid'] = g.get_id()
+                # fcontext['fid'] = fid
+                self.set_field_uri_jsonld_context(guri or furi, fcontext, context)
+        return context
+
+    def get_field_uri_jsonld_context(self, fid, get_field_context):
+        """
+        Access field description, and return field property URI and appropriate 
+        property description for JSON-LD context.
+
+        If there is no corresponding field description, returns (None, None)
+
+        If no context should be generated for the field URI, returns (uri, None)
+        """
+        f = RecordField.load(self, fid, altparent=self._parentsite)
+        if f is None:
+            return (None, None)
+        return (f[ANNAL.CURIE.property_uri], get_field_context(f))
+
+    def set_field_uri_jsonld_context(self, puri, fcontext, property_contexts):
+        """
+        Save property context description into supplied property_contexts dictionary.  
+        If the context is already defined, generate warning if there is a compatibility 
+        problem.
+        """
+        if puri:
+            uri_parts = puri.split(":")
+            if len(uri_parts) > 1:
+                # Ignore URIs without ':'
+                if puri in property_contexts:
+                    pcontext = property_contexts[puri]
+                    if ( ( not fcontext ) or
+                         ( pcontext.get("@type", None)      != fcontext.get("@type", None) ) or
+                         ( pcontext.get("@container", None) != fcontext.get("@container", None) ) ):
+                        log.warning(
+                            "Incompatible use of property %s (%r, %r)"% (puri, fcontext, pcontext)
+                            )
+                elif ( fcontext and
+                       ( uri_parts[0] in property_contexts ) or         # Prefix defined vocab?
+                       ( uri_parts[0] in ["http", "https", "file"] ) ): # Full URI?
+                    property_contexts[puri] = fcontext
+        return
+
+    # @@TODO: move this away from model logic, as it represents a dependency on view logic?
+    @staticmethod
+    def get_field_jsonld_context(fdesc):
+        """
+        Returns a context description for the supplied field description.
+
+        Returns None if no property context information is needed for the 
+        supplied field.
+        """
+        rtype = extract_entity_id(fdesc[ANNAL.CURIE.field_render_type])
+        vmode = extract_entity_id(fdesc[ANNAL.CURIE.field_value_mode])
+        if vmode in ["Value_entity", "Value_field"]:
+            rtype = "Enum"
+        elif vmode == "Value_import":
+            rtype = "URIImport"
+        elif vmode == "Value_upload":
+            rtype = "FileUpload"
+        if is_render_type_literal(rtype):
+            fcontext = None # { "@type": "xsd:string" }
+        elif is_render_type_id(rtype):
+            fcontext = { "@type": "@id" }   # Add type from field descr?
+        elif is_render_type_set(rtype):
+            fcontext = { "@container": "@set"}
+        elif is_render_type_list(rtype):
+            fcontext = { "@container": "@list"}
+        elif is_render_type_object(rtype):
+            fcontext = None
+        else:
+            raise ValueError("Unexpected value mode or render type (%s, %s)"%(vmode, rtype))
+        return fcontext
+
 # End.

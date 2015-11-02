@@ -112,6 +112,8 @@ class SiteView(AnnalistGenericView):
                 , RDFS.CURIE.comment:  ""
                 })
             coll = self.site().add_collection(new_id, coll_meta)
+            # Generate initial context
+            coll.generate_coll_jsonld_context()
             # Create full permissions in new collection for creating user
             user = self.request.user
             user_id = user.username

@@ -6,6 +6,8 @@
 
 {% block content %}
 
+{% load static %}
+
 <div class="row">
   <div class="large-12 columns">
     <form method="POST" action="#">
@@ -51,10 +53,25 @@
 
       <hr />
 
+      <!-- View options -->
       <div class="row">
+
         {% with field=view_choices %}
         {% include field.field_render_label_edit %}
-        {% endwith %} 
+        {% endwith %}
+
+        <div class="small-12 medium-6 columns text-right">
+          <div class="row view-value-row">
+            <div class="view-value small-12 columns">
+              <!-- Cf. https://github.com/BetaNYC/getDataButton -->
+              <a href="{{entity_data_ref}}">JSON-LD</a>
+              <a href="{{entity_data_ref}}">
+                <img src="{% static 'images/get_the_data_88x31.png' %}" alt="get_the_data">
+              </a>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <input type="hidden" name="orig_id"          value="{{orig_id}}" />

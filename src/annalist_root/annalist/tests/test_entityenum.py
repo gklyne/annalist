@@ -24,10 +24,10 @@ from annalist.models.collection     import Collection
 from annalist.models.recordenum     import RecordEnumBase, RecordEnumFactory
 
 
-from entity_testutils               import collection_dir, site_view_url, site_title
-from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site, resetSitedata
-from AnnalistTestCase               import AnnalistTestCase
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from entity_testutils       import collection_dir, site_view_url, site_title
 
 #   -----------------------------------------------------------------------------
 #
@@ -99,6 +99,8 @@ def recordenum_read_values(
         ).copy()
     d.update(
         { '@id':            "./"
+        # , '@base':          "../.."
+        , '@context':       ["../../coll_context.jsonld"]
         })
     return d
 

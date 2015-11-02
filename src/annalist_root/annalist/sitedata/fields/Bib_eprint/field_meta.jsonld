@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/Bib_eprint"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Bib_eprint"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "ePrint"

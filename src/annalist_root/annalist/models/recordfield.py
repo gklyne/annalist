@@ -31,7 +31,7 @@ class RecordField(EntityData):
     _entityfile     = layout.FIELD_META_FILE
     _entityref      = layout.META_FIELD_REF
 
-    def __init__(self, parent, field_id, altparent=None):
+    def __init__(self, parent, field_id, altparent=None, use_altpath=False):
         """
         Initialize a new RecordField object, without metadta (yet).
 
@@ -40,9 +40,10 @@ class RecordField(EntityData):
         altparent   is a site object to search for this new entity,
                     allowing site-wide RecordField values to be found.
         """
-        log.debug("RecordField %s"%(field_id))
         # assert altparent, "RecordField instantiated with no altparent"
-        super(RecordField, self).__init__(parent, field_id, altparent=altparent)
+        super(RecordField, self).__init__(parent, field_id, altparent=altparent, use_altpath=use_altpath)
+        self._parent = parent
+        log.debug("RecordField %s"%(field_id))
         return
 
     def _migrate_values(self, entitydata):
@@ -91,7 +92,7 @@ class RecordField(EntityData):
         if val_mode == "Value_field":
             if ( not (ref_type and ref_field) ):
                log.warning(
-                    "RecordField %s: Value_field mode requires values for %s and %s"%( 
+                    "RecordField %s: val_mode 'Value_field' requires values for %s and %s"%( 
                         entitydata[ANNAL.CURIE.id], 
                         ANNAL.CURIE.field_ref_type, 
                         ANNAL.CURIE.field_ref_field
@@ -100,19 +101,31 @@ class RecordField(EntityData):
         elif val_mode == "Value_entity":
             if not ref_type:
                log.warning(
-                    "RecordField %s: Value_entity val_mode requires value for %s"%( 
+                    "RecordField %s: val_mode 'Value_entity' requires value for %s"%( 
                         entitydata[ANNAL.CURIE.id], 
                         ANNAL.CURIE.field_ref_type, 
                         )
                     )
             if ref_field:
                log.warning(
-                    "RecordField %s: Value_entity mode should not define value for %s"%( 
+                    "RecordField %s: val_mode 'Value_entity' should not define value for %s"%( 
                         entitydata[ANNAL.CURIE.id], 
                         ANNAL.CURIE.field_ref_field
                         )
                     )
         # Return result
+        return entitydata
+
+    def _post_update_processing(self, entitydata):
+        """
+        Default post-update processing.
+
+        This method is called when a RecordField entity has been updated.  
+
+        It invokes the containing collection method to regenerate the JSON LD context 
+        for the collection to which the field belongs.
+        """
+        self._parent.generate_coll_jsonld_context()
         return entitydata
 
 # End.

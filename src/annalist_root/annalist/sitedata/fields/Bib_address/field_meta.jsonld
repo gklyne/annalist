@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/Bib_address"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Bib_address"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Address"

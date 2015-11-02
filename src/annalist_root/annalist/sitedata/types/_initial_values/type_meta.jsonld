@@ -1,4 +1,5 @@
 { "@type":              ["annal:Type"]
+, "@context":           ["../../site_context.jsonld"]
 , "annal:type_id":      "_type"
 , "rdfs:label":         ""
 , "rdfs:comment":       ""

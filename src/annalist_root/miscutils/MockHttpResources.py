@@ -1,17 +1,25 @@
 # Utilities to mock HTTP resources for testing.
 #
-#     with HttpMockResources(baseuri, path):
+#     with MockHttpFileResources(baseuri, path):
 #         # test code here
 # or
-#     @HttpMockResourcesZZZZ(baseuri, path)
-#     def test_stuff(...)
+#     with @HttpMockDictResources(baseuri, 
+#         { 'rel_path_1': body_1
+#         , 'rel_path_2': body_2
+#           (etc.)
+#         }):
+#         # test_stuff(...)
 #
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, University of Oxford"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import urllib
+import urlparse
 import httpretty
 import ScanDirectories
 
@@ -41,6 +49,7 @@ class MockHttpFileResources(object):
         for r in refs:
             ru = self._baseuri + urllib.pathname2url(r)
             rt = HttpContentType(r)
+            # log.info("MockHttpFileResource uri %s, file %s"%(ru, self._path+r))
             with open(self._path+r, 'r') as cf:
                 httpretty.register_uri(httpretty.GET,  ru, status=200, content_type=rt,
                     body=cf.read())
@@ -63,7 +72,7 @@ class MockHttpDictResources(object):
         httpretty.enable()
         # register stuff...
         for r in self._dict.keys():
-            ru = self._baseuri + r
+            ru = urlparse.urljoin(self._baseuri, r)
             rt = HttpContentType(r)
             httpretty.register_uri(httpretty.GET,  ru, status=200, content_type=rt,
                 body=self._dict[r])

@@ -14,6 +14,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+import json
+from collections                    import OrderedDict
 from distutils.version              import LooseVersion
 
 from django.conf                    import settings
@@ -23,6 +25,7 @@ from django.core.urlresolvers       import resolve, reverse
 
 import annalist
 from annalist                       import message
+from annalist                       import layout
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.util                  import valid_id, extract_entity_id
 
@@ -32,11 +35,22 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
+from annalist.models.recordfield    import RecordField
+from annalist.models.recordgroup    import RecordGroup
+from annalist.models.recordvocab    import RecordVocab
 
 from annalist.views.uri_builder     import (
     uri_with_params, 
     continuation_url_chain, continuation_chain_url,
     url_update_type_entity_id
+    )
+
+from annalist.views.fields.render_utils import (
+    is_render_type_literal,
+    is_render_type_id,
+    is_render_type_set,
+    is_render_type_list,
+    is_render_type_object,
     )
 
 #   -------------------------------------------------------------------------------------------
@@ -143,6 +157,10 @@ class DisplayInfo(object):
         return self.http_response
 
     def get_site_info(self, reqhost):
+        """
+        Get site information: site entity object and a copy of the site description data.
+        Also saves a copy of the host name to which the current request was directed.
+        """
         if not self.http_response:
             self.reqhost        = reqhost
             self.site           = self.view.site(host=reqhost)
@@ -174,6 +192,11 @@ class DisplayInfo(object):
         return self.http_response
 
     def update_coll_version(self):
+        """
+        Called when an entity has been updatred to also update the data version 
+        associated with the collection if it was previously created by an older 
+        version of Annalist.
+        """
         assert (self.collection is not None)
         if not self.http_response:
             ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")
@@ -524,6 +547,10 @@ class DisplayInfo(object):
         if self.recordlist:
             context.update(
                 { 'list_label': self.recordlist[RDFS.CURIE.label]
+                })
+        if self.entitytypeinfo:
+            context.update(
+                { 'entity_data_ref': self.entitytypeinfo.entityclass._entityfile
                 })
         return context
 

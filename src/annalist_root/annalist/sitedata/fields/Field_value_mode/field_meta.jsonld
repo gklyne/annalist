@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/Field_value_mode"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Field_value_mode"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Value mode"

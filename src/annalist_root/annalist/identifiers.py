@@ -21,7 +21,19 @@ class Namespace(object):
     """
     Class represents namespace of URI identifiers.
 
-    Provides expressions for URI and CURIE values of each identrifier in the namespace.
+    Provides expressions for URI and CURIE values of each identifier in the namespace.
+
+    >>> ns = Namespace("test", "http://example.com/test/")
+    >>> cf = ns.mk_curie("foo")
+    >>> cf
+    'test:foo'
+    >>> uf = ns.mk_uri("foo")
+    >>> uf
+    'http://example.com/test/foo'
+    >>> ns.to_uri(cf)
+    'http://example.com/test/foo'
+    >>> ns.to_uri("notest:bar")
+    'notest:bar'
     """
 
     def __init__(self, prefix, baseUri):
@@ -47,6 +59,15 @@ class Namespace(object):
         Make a URI string for an identifier in this namespace
         """
         return self._baseUri+name
+
+    def to_uri(self, curie):
+        """
+        Converts a supplied CURIE to a URI if it uses the current namespace prefix.
+        """
+        parts = curie.split(':', 1)
+        if (len(parts) == 2) and (parts[0] == self._prefix):
+            return self.mk_uri(parts[1])
+        return curie
 
 def makeNamespace(prefix, baseUri, names):
     """
@@ -80,22 +101,30 @@ RDFS = makeNamespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#",
     ])
 
 """
+Partial enumeration of OWL namespace
+"""
+OWL = makeNamespace("owl", "http://www.w3.org/2002/07/owl#",
+    [ "Thing", "Nothing"
+    , "sameAs", "differentFrom", "equivalentClass"
+    ])
+
+"""
 Annalist namespace terms
 """
-ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/",
+ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     [ "EntityRoot", "Entity"
     , "Site", "SiteData", "Collection", "Entity", "EntityRoot"
     , "Collection_Types", "Collection_Views", "Collection_Lists"
-    , "Type_Data", "EntityData"
+    , "Type_Data", "EntityData", "Metadata"
     # Entity types
     , "User", "Type", "List", "View", "Field_group", "Field", "Enum"
     , "Text", "Longtext", "Richtext", "Slug", "Identifier"
-    , "Placement", "Image", "Audio", "User"
+    , "Placement", "Image", "Audio", "User", "Vocabulary"
     , "Import", "Upload"
     , "Default_type", "unknown_type"
     # Properties
     , "software_version"
-    , "id", "type_id", "type", "member"
+    , "id", "type_id", "type"
     , "label", "help", "url", "uri", "record_type"
     , "supertype_uris", "supertype_uri"
     , "display_type", "type_list", "type_view"

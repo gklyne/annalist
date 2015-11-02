@@ -1,5 +1,6 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
+, "@context":           ["../../site_context.jsonld"]
 , "annal:id":           "CheckBox"
 , "annal:type_id":      "Enum_render_type"
 , "rdfs:label":         "CheckBox"

@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/List_default_view"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "List_default_view"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "View"

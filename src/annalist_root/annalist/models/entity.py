@@ -64,7 +64,10 @@ class Entity(EntityRoot):
                     installed metadata entites (i.e. types, views, etc.)
         idcheck     is set False to skip the valid-identifier check
         use_altpath is set True if this entity is situated at the alternative
-                    path relative to its parent.
+                    path relative to its parent.  This is used by test code to force
+                    an entity to be located on the alternative parent path.  In normal
+                    use, this value is left unspecified (i.e. False).
+                    @@TODO: when collection-inheritance is introduced, this should go.
         """
         if idcheck and not util.valid_id(entityid):
             raise ValueError("Invalid entity identifier: %s"%(entityid))
@@ -123,7 +126,8 @@ class Entity(EntityRoot):
     @classmethod
     def altpath(cls, entityid):
         """
-        Returns parent-relative path string for an identified entity of the given class.
+        Returns alternative-parent-relative path string for an identified entity 
+        of the given class.
 
         cls         is the class of the entity whose alternative relative path is returned.
         entityid    is the local identifier (slug) for the entity.
@@ -209,7 +213,7 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the new entity - this is 
                     required to be unique among descendents of a common parent.
         entitybody  is a dictionary of values that are stored for the created entity.
-        use_altpath is set True if this entity is situated at the alternative
+        use_altpath is set True if the entity is to be situated at the alternative
                     path relative to its parent.
 
         Returns the created entity as an instance of the supplied class object.
@@ -272,6 +276,7 @@ class Entity(EntityRoot):
             (cls._entitytype, parent._entitydir, entityid)
             )
         e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
+        e._migrate_path()
         return e._exists()
 
     @classmethod

@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/Type_supertype_uris"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Type_supertype_uris"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Supertype URIs"

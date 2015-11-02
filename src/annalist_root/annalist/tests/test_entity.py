@@ -20,9 +20,9 @@ from django.test.client         import Client
 from annalist.identifiers       import ANNAL
 from annalist.models.entity     import EntityRoot, Entity
 
-from tests                      import TestBaseDir, TestBaseUri, TestHost, TestBasePath
-from tests                      import dict_to_str, init_annalist_test_site, resetSitedata
-from AnnalistTestCase           import AnnalistTestCase
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 
 #   -----------------------------------------------------------------------------
 #
@@ -36,6 +36,7 @@ class TestEntityRootType(EntityRoot):
     _entitypath = None
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
+    _contextref = "../../coll_context.jsonld"
 
 class EntityRootTest(TestCase):
     """
@@ -177,6 +178,8 @@ class EntityRootTest(TestCase):
         test_values_returned = (
             { '@id':            '../'
             , '@type':          ['test:EntityRootType']
+            # , '@base':          "../.."
+            , '@context':       ["../../coll_context.jsonld"]
             , 'annal:id':       'testId'
             , 'annal:type_id':  None
             , 'annal:type':     'test:EntityRootType'
@@ -273,6 +276,7 @@ class TestEntityType(Entity):
     _entityview = "%(id)s/"
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
+    _contextref = "../../coll_context.jsonld"
 
 class TestEntityTypeSub(Entity):
 
@@ -281,6 +285,7 @@ class TestEntityTypeSub(Entity):
     _entityview = "sub/%(id)s/"
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
+    _contextref = "../../coll_context.jsonld"
 
 class EntityTest(AnnalistTestCase):
     """
@@ -341,8 +346,10 @@ class EntityTest(AnnalistTestCase):
             entity_parent_path=entity_parent_path
             )
         vals.update(
-            { '@id':    '../'
-            , '@type':  [entity_type]
+            { '@id':        '../'   # Local testing only: see `TestEntityType`
+            , '@type':      [entity_type]
+            # , '@base':      "../.."
+            , '@context':   ["../../coll_context.jsonld"]
             })
         return vals
 

@@ -24,18 +24,19 @@ from annalist.models.entitydata     import EntityData
 
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site, resetSitedata
-from AnnalistTestCase               import AnnalistTestCase
-from entity_testutils               import (
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from AnnalistTestCase       import AnnalistTestCase
+from entity_testutils       import (
     collection_create_values,
     create_test_user,
     context_list_entities,
     )
-from entity_testtypedata            import (
+from entity_testtypedata    import (
     recordtype_create_values
     )
-from entity_testentitydata          import (
+from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_type_url, entitydata_list_all_url,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 

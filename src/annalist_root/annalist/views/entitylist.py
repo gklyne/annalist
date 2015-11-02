@@ -160,37 +160,45 @@ class EntityGenericListView(AnnalistGenericView):
             return listinfo.http_response
         log.debug("listinfo.list_id %s"%listinfo.list_id)
         # Prepare list and entity IDs for rendering form
-        selector    = listinfo.recordlist.get_values().get(ANNAL.CURIE.list_entity_selector, "")
-        search_for  = request.GET.get('search', "")
-        user_perms  = self.get_permissions(listinfo.collection)
-        entity_list = (
-            EntityFinder(listinfo.collection, selector=selector)
-                .get_entities_sorted(
-                    user_perms, type_id=type_id, scope=scope,
-                    context=listinfo.recordlist, search=search_for
+        try:
+            selector    = listinfo.recordlist.get_values().get(ANNAL.CURIE.list_entity_selector, "")
+            search_for  = request.GET.get('search', "")
+            user_perms  = self.get_permissions(listinfo.collection)
+            entity_list = (
+                EntityFinder(listinfo.collection, selector=selector)
+                    .get_entities_sorted(
+                        user_perms, type_id=type_id, scope=scope,
+                        context=listinfo.recordlist, search=search_for
+                        )
+                )
+            typeinfo      = listinfo.entitytypeinfo
+            entityvallist = { '_list_entities_': [ get_entity_values(typeinfo, e) for e in entity_list ] }
+            # Set up initial view context
+            context_extra_values = (
+                { 'continuation_url':       listinfo.get_continuation_url() or ""
+                , 'request_url':            self.get_request_path()
+                , 'coll_id':                coll_id
+                , 'type_id':                type_id
+                , 'list_id':                listinfo.list_id
+                , 'search_for':             search_for
+                , 'list_choices':           self.get_list_choices_field(listinfo)
+                , 'collection_view':        self.collection_view_url
+                , 'default_view_id':        listinfo.recordlist[ANNAL.CURIE.default_view]
+                , 'default_view_enable':    ("" if list_id else 'disabled="disabled"')
+                })
+            entityvaluemap = self.get_list_entityvaluemap(listinfo, context_extra_values)
+            listcontext = entityvaluemap.map_value_to_context(
+                entityvallist,
+                **context_extra_values
+                )
+            listcontext.update(listinfo.context_data())
+        except Exception as e:
+            log.exception(str(e))
+            return self.error(
+                dict(self.error500values(),
+                    message=str(e)+" - see server log for details"
                     )
-            )
-        typeinfo      = listinfo.entitytypeinfo
-        entityvallist = { '_list_entities_': [ get_entity_values(typeinfo, e) for e in entity_list ] }
-        # Set up initial view context
-        context_extra_values = (
-            { 'continuation_url':       listinfo.get_continuation_url() or ""
-            , 'request_url':            self.get_request_path()
-            , 'coll_id':                coll_id
-            , 'type_id':                type_id
-            , 'list_id':                listinfo.list_id
-            , 'search_for':             search_for
-            , 'list_choices':           self.get_list_choices_field(listinfo)
-            , 'collection_view':        self.collection_view_url
-            , 'default_view_id':        listinfo.recordlist[ANNAL.CURIE.default_view]
-            , 'default_view_enable':    ("" if list_id else 'disabled="disabled"')
-            })
-        entityvaluemap = self.get_list_entityvaluemap(listinfo, context_extra_values)
-        listcontext = entityvaluemap.map_value_to_context(
-            entityvallist,
-            **context_extra_values
-            )
-        listcontext.update(listinfo.context_data())
+                )
         # log.debug("EntityGenericListView.get listcontext %r"%(listcontext))
         # Generate and return form data
         return (

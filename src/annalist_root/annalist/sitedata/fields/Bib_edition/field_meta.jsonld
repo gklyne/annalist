@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/Bib_edition"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Bib_edition"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Edition"

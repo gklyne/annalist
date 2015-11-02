@@ -50,6 +50,7 @@ class RecordList(EntityData):
                     allowing site-wide RecordType values to be found.
         """
         super(RecordList, self).__init__(parent, list_id, altparent)
+        self._parent = parent
         log.debug("RecordList %s: dir %s, alt %s"%(list_id, self._entitydir, self._entityaltdir))
         return
 

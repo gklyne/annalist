@@ -113,7 +113,7 @@ def recordview_value_keys(view_uri=False, target_record_type=True):
 def recordview_load_keys(view_uri=False, target_record_type=True):
     return (
         recordview_value_keys(view_uri=view_uri, target_record_type=target_record_type) | 
-        {"@id", '@type'}
+        {"@id", '@type', '@context'}
         )
 
 def recordview_create_values(
@@ -194,6 +194,8 @@ def recordview_read_values(
     d.update(
         { '@id':            "./"
         , '@type':          ["annal:View"]
+        # , '@base':          "../.."
+        , '@context':       ["../../coll_context.jsonld"]
         })
     return d
 

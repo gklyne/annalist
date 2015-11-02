@@ -104,7 +104,7 @@ def annalistuser_value_keys():
     return keys
 
 def annalistuser_load_keys():
-    return annalistuser_value_keys() | {'@id', '@type'}
+    return annalistuser_value_keys() | {'@id', '@type', '@context'}
 
 def annalistuser_create_values(
         coll_id="testcoll", user_id="testuser",
@@ -153,8 +153,9 @@ def annalistuser_read_values(
             hosturi=hosturi
             )
     d.update(
-        { '@id':            "./"
+        { '@id':            layout.META_USER_REF%{'id': user_id}
         , '@type':          ["annal:User"]
+        , '@context':       [layout.USER_CONTEXT_FILE]
         })
     return d
 

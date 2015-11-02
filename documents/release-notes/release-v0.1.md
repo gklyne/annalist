@@ -80,6 +80,71 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 # History
 
+## Version 0.1.22
+
+This release puts "linked data" in the Annalist linked data notebook.  Up to this point, Annalist data has been stored and indirectly accessible as JSON, with Compact URI strings (CURIEs) used as key values for attributes.  This release augments the JSON data with auto-generated JSON-LD context files so that the JSON data can be read and processed as [JSON-LD](http://json-ld.org/#), hence loaded and processed with other data presented as RDF.
+
+Also, the web pages for Annalist records now return links to the underlying JSON-LD data:
+
+1. as "get the data" clickable links in the web pages,
+2. as HTML `<link>` elements (with `rel=alternate` and content type attribute) in the web page header, and
+3. as HTTP `Link:` headers (also with `rel=alternate` and content type attributes).
+
+(Not implemented in this release, but intended for a future release, is HTTP content negotiation available on the primary URI for each entity record.)
+
+Some bugs have been fixed, as noted in the version 0.1.21 summary.
+
+
+## Version 0.1.21, towards 0.1.22
+
+- [x] BUG: add a supertype while editing (copying) a new type loses any type URI entered.
+- [x] BUG: create instance of type with defined type URI saves with `annal:type` value of `annal:EntityData`
+- [x] BUG: renaming a group used by a view results in confusing Server Error messages (missing field)
+- [x] BUG: (confusing interface) when local type/list/view overrides site definition, appears twice in dropdown lists.
+    - include type/entity ids in drop-down lists; may want to review this choice later
+- [x] Fix naming inconsistency: entity-data.jsonld should be entity_data.jsonld.
+- [x] Content migration logic for entity-data.jsonld -> entity_data.jsonld
+- [x] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
+    - [x] Add `_vocab` built-in type that can be defined at site-level for built-in namespaces like `rdf`, `rdfs`, `annal`, etc., and at collection level for user-introduced namespaces.
+    - [x] Define built-in vocabularies: RDF, RDFS, XSD, OWL, ANNAL
+    - [x] Generate JSON-LD context descriptions incorporating the available prefix information.
+        - site context data is created during installation as part of `annalist-manager updatesite`
+        - collection context is created when collection is created
+    - [x] Arrange to regenerate collection context when view/group/field/vocab are updated
+        - [x] Implement post-update processing hook in EntityRoot
+        - [x] Move context generation functions to collection class
+        - [x] Define post-update hook for vocab, etc to regenerate context
+    - [x] Arrange for context to be web-accessible via Annalist server
+    - [x] When generating entity data, incoporate context information
+    - [x] Add context references to site data
+    - [x] JSON-LD context data test case (read as RDF using Python rdflib-jsonld)
+- [x] Generate site JSON-LD context data as part of 'updatesite' installation step
+- [x] Ensure that raw entity JSON is HTTP-accessible directly from the Annalist server, subject to permissions (e.g. <entity>/entity_data.jsonld.  Also for types, views, fields, etc.)
+    - [x] coll entity data
+    - [x] coll type data
+    - [x] coll list data
+    - [x] coll view data
+    - [x] coll field data
+    - [x] coll group data
+    - [x] coll vocab data
+    - [x] coll user data
+    - [x] site type
+    - [x] site list data
+    - [x] site view data
+    - [x] site field data
+    - [x] site group data
+    - [x] site vocab data
+    - [x] site user data
+- [x] Test cases to ensure JSONLD contexts can be accessed by HTTP.  
+    - Collection and site, with correct relative location to entity data:
+    - [x] entity -> collection context
+    - [x] type -> collection context
+    - [x] site-defined type -> site context
+- [x] Add HTTP and HTML links to data to responses.  Also, link to data on view form.
+- [x] Save 'annal:type' URI value in entity that matches corresponding type data.
+- [x] Closed https://github.com/gklyne/annalist/issues/19
+
+
 ## Version 0.1.20
 
 This release has tackled a number of usability issues, and in particular introduces a notion of "task buttons" that provide short cuts for some commonly performed collection configuration activities:
@@ -139,6 +204,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 - [x] Change "List users" heading to "List user permissions"
 - [x] Initial tutorial/task-oriented documentation. Uses personal photo library example.
 
+
 ## Version 0.1.18
 
 This release introduces several interface changes to address usability problems, 
@@ -158,6 +224,7 @@ than internal entity Ids, which it is hoped will lead to more user-friendly
 presentation when creating and editing entity data records.
 
 (More details are given in the release notes change summary for version 0.1.17)
+
 
 ## Version 0.1.17, towards 0.1.18
 

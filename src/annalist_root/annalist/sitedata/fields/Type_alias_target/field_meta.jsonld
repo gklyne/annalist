@@ -1,5 +1,6 @@
 { "@id":                        "./"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Type_alias_target"
 , "annal:type_id":              "_field"
 , "annal:type":                 "annal:Field"

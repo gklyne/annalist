@@ -69,6 +69,16 @@ def entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
         entity_id = "___"
     return collection_entity_view_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
 
+def entity_resource_url(
+    coll_id="testcoll", type_id="testtype", entity_id="entity_id", 
+    resource_ref=layout.ENTITY_DATA_FILE
+    ):
+    """
+    URI for entity data; also view using default entity view
+    """
+    base = entity_url(coll_id, type_id, entity_id)
+    return urlparse.urljoin(base, resource_ref)
+
 def entitydata_edit_url(action=None, coll_id="testcoll", type_id=None, entity_id=None, view_id="Default_view"):
     viewname = ( 
         'AnnalistEntityNewView'             if action == "new" else
@@ -147,6 +157,12 @@ def entitydata_value_keys(entity_uri=False):
         keys.add('annal:uri')
     return keys
 
+def entitydata_load_keys(entity_uri=False):
+    return (
+        recordview_value_keys(entity_uri=entity_uri) | 
+        {"@id", '@type', '@context'}
+        )
+
 def entitydata_create_values(
         entity_id, update="Entity", coll_id="testcoll", type_id="testtype", 
         entity_uri=None, type_uri=None, hosturi=TestHostUri,
@@ -155,9 +171,9 @@ def entitydata_create_values(
     Data used when creating entity test data
     """
     if type_uri is not None:
-        types = [entitydata_type(type_id), type_uri, type_uri+"/super1", type_uri+"/super2"]
+        types = [type_uri, type_uri+"/super1", type_uri+"/super2", entitydata_type(type_id)]
     else:
-        types = [entitydata_type(type_id), entity_url(coll_id, "_type", type_id)]
+        types = [entity_url(coll_id, "_type", type_id), entitydata_type(type_id)]
     # log.info('entitydata_create_values: types %r'%(types,)) 
     d = (
         { '@type':          types
@@ -198,6 +214,8 @@ def entitydata_values(
         ).copy() #@@ copy needed here?
     d.update(
         { '@id':            './'
+        # , '@base':          "../.."
+        , '@context':       ["../../coll_context.jsonld"]
         , 'annal:id':       entity_id
         , 'annal:type_id':  type_id
         , 'annal:url':      dataurl

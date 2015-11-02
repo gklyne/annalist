@@ -36,33 +36,33 @@ from annalist.views.fields.render_placement import (
     get_placement_options, get_placement_option_value_dict
     )
 
-from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site, resetSitedata
-from AnnalistTestCase               import AnnalistTestCase
-from entity_testfielddata           import (
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from entity_testfielddata   import (
     recordfield_dir,
     recordfield_coll_url, recordfield_url,
     recordfield_init_keys, recordfield_value_keys, recordfield_load_keys,
     recordfield_create_values, recordfield_values, recordfield_read_values,
     recordfield_entity_view_context_data, recordfield_entity_view_form_data
     )
-from entity_testutils               import (
+from entity_testutils       import (
     collection_entity_view_url,
     collection_create_values,
     render_select_options,
     render_choice_options,
     create_test_user
     )
-from entity_testentitydata          import (
+from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
-from entity_testtypedata                import recordtype_url
-from entity_testviewdata                import recordview_url
-from entity_testlistdata                import recordlist_url
-from entity_testgroupdata               import recordgroup_url
-from entity_testsitedata            import (
+from entity_testtypedata    import recordtype_url
+from entity_testviewdata    import recordview_url
+from entity_testlistdata    import recordlist_url
+from entity_testgroupdata   import recordgroup_url
+from entity_testsitedata    import (
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
     get_site_views, get_site_views_sorted, get_site_views_linked,
@@ -86,6 +86,7 @@ class RecordFieldTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
+        init_annalist_test_coll()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         # self.sitedata = SiteData(self.testsite)
         self.testcoll = Collection(self.testsite, "testcoll")
@@ -204,6 +205,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
+        init_annalist_test_coll()
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.no_options         = [ FieldChoice('', label="(no options)") ]
@@ -557,7 +559,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                   "Field_placement",
                   self.placement_options,
                   "", 
-                  select_class="placement-text")+
+                  select_class="placement-text",
+                  placeholder="(field position and size)"
+                  )+
                 """
                 </div>
               </div>
@@ -608,7 +612,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "Field_typeref", "Refer to type",
                     self.ref_type_options,
-                    "")+
+                    "",
+                    placeholder="(no type selected)"
+                    )+
                 """
                 </div>
               </div>

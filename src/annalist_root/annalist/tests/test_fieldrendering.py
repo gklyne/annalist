@@ -31,10 +31,14 @@ from annalist.views.fields                      import render_repeatgroup
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
 from annalist.views.fields.render_text          import RenderText
 from annalist.views.fields.render_fieldvalue    import RenderFieldValue, get_template
+from annalist.views.form_utils.fieldchoice      import FieldChoice
 
-from tests                      import init_annalist_test_site, resetSitedata
 from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests                 import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from field_rendering_support    import FieldRendererTestSupport
+from entity_testutils       import (
+    render_select_options, render_choice_options
+    )
 
 #   -----------------------------------------------------------------------------
 #
@@ -141,6 +145,14 @@ class FieldRenderingTest(FieldRendererTestSupport):
         # print "\n**************\n"
         # replace runs of whitespace/newlines with single space:
         rendered_text = re.sub(r'\s+', " ", rendered_text)
+        field_choices = (
+                  [ FieldChoice(id="")
+                  , FieldChoice(id="_field/Entity_comment",         label="Comment")
+                  , FieldChoice(id="_field/Entity_id",              label="Id")
+                  , FieldChoice(id="_field/Entity_label",           label="Label")
+                  , FieldChoice(id="_field/Entity_see_also_repeat", label="See also")
+                  , FieldChoice(id="_field/Entity_type",            label="Type")
+                  ])
         expect_elements = (
             [ '''<div class="group-label small-2 columns"> <span>Fields</span> </div>'''
             , '''<div class="row selectable">'''
@@ -150,52 +162,40 @@ class FieldRenderingTest(FieldRendererTestSupport):
             # 1st field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="0" class="right" />'''
-            , '''<select name="View_fields__0__Field_id">'''+
-              ''' <option value="">(field sel)</option>'''+
-              ''' <option value="_field/Entity_comment">Comment</option>'''+
-              ''' <option value="_field/Entity_id" selected="selected">Id</option>'''+
-              ''' <option value="_field/Entity_label">Label</option>'''+
-              ''' <option value="_field/Entity_type">Type</option>'''+
-              ''' </select>'''
+            , re.sub(r'\s+', " ", 
+                render_choice_options("View_fields__0__Field_id", field_choices, 
+                  "_field/Entity_id", placeholder="(field sel)"
+                ))
             , '''<input type="text" size="64" name="View_fields__0__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value=""/>'''
             # 2nd field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="1" class="right" />'''
-            , '''<select name="View_fields__1__Field_id">'''+
-              ''' <option value="">(field sel)</option>'''+
-              ''' <option value="_field/Entity_comment">Comment</option>'''+
-              ''' <option value="_field/Entity_id">Id</option>'''+
-              ''' <option value="_field/Entity_label">Label</option>'''+
-              ''' <option value="_field/Entity_type" selected="selected">Type</option>'''+
-              ''' </select>'''
+            , re.sub(r'\s+', " ", 
+                render_choice_options("View_fields__1__Field_id", field_choices, 
+                  "_field/Entity_type", placeholder="(field sel)"
+                ))
             , '''<input type="text" size="64" name="View_fields__1__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value=""/>'''
             # 3rd field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="2" class="right" />'''
-            , '''<select name="View_fields__2__Field_id">'''+
-              ''' <option value="">(field sel)</option>'''+
-              ''' <option value="_field/Entity_comment">Comment</option>'''+
-              ''' <option value="_field/Entity_id">Id</option>'''+
-              ''' <option value="_field/Entity_label" selected="selected">Label</option>'''+
-              ''' <option value="_field/Entity_type">Type</option>'''+
-              ''' </select>'''
+            , re.sub(r'\s+', " ", 
+                render_choice_options("View_fields__2__Field_id", field_choices, 
+                  "_field/Entity_label", placeholder="(field sel)"
+                ))
             , '''<input type="text" size="64" name="View_fields__2__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value="rdfs:label"/>'''
             # 4th field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="3" class="right" />'''
-            , ''' <select name="View_fields__3__Field_id">'''+
-              ''' <option value="">(field sel)</option>'''+
-              ''' <option value="_field/Entity_comment" selected="selected">Comment</option>'''+
-              ''' <option value="_field/Entity_id">Id</option>'''+
-              ''' <option value="_field/Entity_label">Label</option>'''+
-              ''' <option value="_field/Entity_type">Type</option>'''+
-              ''' </select>'''
+            , re.sub(r'\s+', " ", 
+                render_choice_options("View_fields__3__Field_id", field_choices, 
+                  "_field/Entity_comment", placeholder="(field sel)"
+                ))
             , '''<input type="text" size="64" name="View_fields__3__Field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value="rdfs:comment"/>'''
@@ -204,7 +204,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
             , '''<input type="submit" name="View_fields__add" value="Add field" />'''
             ])
         for e in expect_elements:
-            self.assertIn(e, rendered_text)
+            self.assertInIgnoreWS(e, rendered_text)
         return
 
     def test_RenderFieldValue_renderers(self):

@@ -1,0 +1,14 @@
+{
+  "rdfs:label": "Entity coll2/type2/entity1",
+  "rdfs:comment": "Entity coll coll2, type type2, entity entity1",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:type_id": "type2",
+  "annal:id": "entity1",
+  "@id": "./",
+  "@type": [
+    "annal:EntityData"
+  ],
+  "annal:type": "annal:EntityData"
+}

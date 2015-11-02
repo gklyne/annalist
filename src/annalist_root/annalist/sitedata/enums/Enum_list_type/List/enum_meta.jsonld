@@ -1,5 +1,6 @@
 { "@id":                "./"
 , "@type":              ["annal:List_type", "annal:Enum"]
+, "@context":           ["../../site_context.jsonld"]
 , "annal:id":           "List"
 , "annal:type_id":      "Enum_list_type"
 , "rdfs:label":         "List display"

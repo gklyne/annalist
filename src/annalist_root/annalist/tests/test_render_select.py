@@ -22,25 +22,32 @@ from annalist.views.fields.render_select        import (
 from annalist.views.form_utils.fieldchoice      import FieldChoice
 
 from annalist.tests.field_rendering_support     import FieldRendererTestSupport
+# from entity_testutils       import (
+#     render_select_options, render_choice_options
+#     )
 
 #   ---- support methods ----
 
 def expect_render_option(choice_val, select_val, placeholder):
     selected    = ''' selected="selected"''' if choice_val == select_val else ''''''
     if choice_val == "":
+        option_val  = ""
         choice_text = placeholder
         value_text  = ''' value=""'''
     else:
+        option_val  = "opt_type/"+choice_val
         choice_text = "label "+choice_val
-        value_text  = ''' value="opt_type/%s"'''%choice_val
-    return '''<option%s%s>%s</option>'''%(value_text, selected, choice_text)
+        value_text  = ''' value="%s"'''%option_val
+    fc = FieldChoice(id=option_val, label=choice_text)
+    return '''<option%s%s>%s</option>'''%(value_text, selected, fc.option_label_html())
 
 def expect_render_select(select_name, choice_list, select_val, placeholder):
     sel  = """<select name="%s">"""%select_name
     if select_val not in choice_list:
         val = "opt_type/"+select_val if select_val else ""
         lab = "opt_type/"+select_val if select_val else placeholder
-        nopt = ['''<option value="%s" selected="selected">%s</option>'''%(val, lab)]
+        fc = FieldChoice(id=val, label=lab)
+        nopt = ['''<option value="%s" selected="selected">%s</option>'''%(val, fc.option_label_html())]
     else:
         nopt = []
     opts = [ expect_render_option(choice_val, select_val, placeholder) for choice_val in choice_list ]

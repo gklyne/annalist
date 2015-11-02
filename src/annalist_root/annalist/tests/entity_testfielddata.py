@@ -124,7 +124,7 @@ def recordfield_value_keys(field_uri=False):
         })
 
 def recordfield_load_keys(field_uri=False):
-    return recordfield_value_keys(field_uri=field_uri) | {'@id', '@type'}
+    return recordfield_value_keys(field_uri=field_uri) | {'@id', '@type', '@context'}
 
 def recordfield_create_values(coll_id="testcoll", field_id="testfield", 
         render_type="Text", value_mode="Value_direct",
@@ -165,6 +165,8 @@ def recordfield_read_values(
     d.update(
         { '@id':            "./"
         , '@type':          ["annal:Field"]
+        # , '@base':          "../.."
+        , '@context':       ["../../coll_context.jsonld"]
         })
     return d
 

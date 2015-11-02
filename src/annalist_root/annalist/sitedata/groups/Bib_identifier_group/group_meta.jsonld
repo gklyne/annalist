@@ -1,8 +1,9 @@
-{ "@id":                "annal:display/Bib_identifier_group"
+{ "@id":                "annal:group/Bib_identifier_group"
 , "@type":              ["annal:Field_group"]
+, "@context":           ["../../site_context.jsonld"]
 , "annal:id":           "Bib_identifier_group"
 , "annal:type_id":      "_group"
-, "annal:uri":          "annal:display/Bib_identifier_group"
+, "annal:uri":          "annal:group/Bib_identifier_group"
 , "annal:record_type":  "bib:BibEntry"
 , "rdfs:label":         "BibEntry identifier fields"
 , "rdfs:comment":       "Group of fields describing an identifier or reference in a BibEntry record.  Bib_type is the type of identifier, such as 'DOI', 'crossref', 'link', etc."

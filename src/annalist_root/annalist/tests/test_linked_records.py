@@ -1,8 +1,8 @@
 """
 Tests for linked record functions.
 
-This test suite uses a setup that is specifically intended to test functions that involve 
-links between entities.
+This test suite uses a setup that is specifically intended to test functions 
+that involve links between entities.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -34,11 +34,10 @@ from annalist.models.entitytypeinfo import EntityTypeInfo
 
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-
-from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import init_annalist_test_site, resetSitedata
-from AnnalistTestCase               import AnnalistTestCase
-from entity_testutils               import (
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from entity_testutils       import (
     collection_entity_view_url,
     create_test_user,
     create_user_permissions,
@@ -46,7 +45,7 @@ from entity_testutils               import (
     context_list_head_fields,
     context_list_item_fields
     )
-from entity_testentitydata          import (
+from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_type_url, entitydata_list_all_url,
     )
@@ -196,6 +195,7 @@ class LinkedRecordTest(AnnalistTestCase):
 
     def setUp(self):
         init_annalist_test_site()
+        init_annalist_test_coll()
         self.testsite    = Site(TestBaseUri, TestBaseDir)
         self.testcoll    = Collection(self.testsite, "testcoll")
         # Populate collection with linked record types, views and lists

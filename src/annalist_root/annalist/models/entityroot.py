@@ -25,6 +25,7 @@ log = logging.getLogger(__name__)
 
 from django.conf import settings
 
+from annalist               import layout
 from annalist               import util
 from annalist.exceptions    import Annalist_Error
 from annalist.identifiers   import ANNAL, RDF, RDFS
@@ -47,6 +48,7 @@ class EntityRoot(object):
         cls._entitytypeid   local type id (slug) used in local URI construction
         cls._entityfile     relative path to file where entity body is stored
         cls._entityref      relative reference to entity from body file
+        cls._contextref     relative reference to context from body file
         self._entityid      ID of entity; may be None for "root" entities (e.g. site?)
         self._entityurl     URI at which entity is accessed
         # self._entityurlhost URI host at which entity is accessed (per HTTP host: header)
@@ -59,6 +61,7 @@ class EntityRoot(object):
     _entitytypeid   = None          # To be overridden
     _entityfile     = None          # To be overriden by entity subclasses..
     _entityref      = None          # Relative reference to entity from body file
+    _contextref     = None         # Relative reference to context file from body file
 
     def __init__(self, entityurl, entitydir):
         """
@@ -73,7 +76,8 @@ class EntityRoot(object):
         self._entitydir     = entitydir if entitydir.endswith("/") else entitydir + "/"
         self._entityalturl  = None
         self._entityaltdir  = None
-        self._entityuseurl  = self._entityurl
+        self._entityuseurl  = None # self._entityurl
+        self._entityusedir  = None # self._entitydir
         self._values        = None
         log.debug("EntityRoot.__init__: entity URI %s, entity dir %s"%(self._entityurl, self._entitydir))
         return
@@ -196,15 +200,18 @@ class EntityRoot(object):
                 yield f
         return
 
-    def field_resource_file(self, resource_ref):
+    def resource_file(self, resource_ref):
         """
         Returns a file object value for a resource associated with an entity,
-        or None if the resouce is not present.
+        or None if the resource is not present.
         """
-        (body_dir, _) = self._dir_path()
-        file_name = os.path.join(body_dir, resource_ref)
-        if os.path.isfile(file_name):
-            return open(file_name, "rb")
+        if self._exists_path():
+            # (body_dir, _) = self._dir_path()
+            body_dir = self._entityusedir
+            log.info("EntityRoot.resource_file: dir %s, resource_ref %s"%(body_dir, resource_ref))
+            file_name = os.path.join(body_dir, resource_ref)
+            if os.path.isfile(file_name):
+                return open(file_name, "rb")
         return None
 
     def get_field(self, path):
@@ -260,6 +267,7 @@ class EntityRoot(object):
             # log.info("_exists %s"%(p))
             if d and os.path.isdir(d):
                 if p and os.path.isfile(p):
+                    self._entityusedir = d
                     self._entityuseurl = u
                     return p
         return None
@@ -298,6 +306,8 @@ class EntityRoot(object):
         # @@TODO: think about capturing provenance metadata too.
         if not self._entityref:
             raise ValueError("Entity._save without defined entity reference")
+        if not self._contextref:
+            raise ValueError("Entity._save without defined context reference")
         if not self._values:
             raise ValueError("Entity._save without defined entity values")
         (body_dir, body_file) = self._dir_path()
@@ -309,15 +319,23 @@ class EntityRoot(object):
         # Create directory (if needed) and save data
         util.ensure_dir(body_dir)
         values = self._values.copy()
-        values['@id']   = self._entityref
-        values['@type'] = self._get_types(values.get('@type', None))
+        values['@id']      = self._entityref
+        values['@type']    = self._get_types(values.get('@type', None))
+        values['@context'] = (
+            [ self._contextref
+            # layout.COLL_CONTEXT_FILE
+            # layout.ENTITY_CONTEXT_PATH + "/" + layout.COLL_CONTEXT_FILE
+            # , { '@base': layout.ENTITY_CONTEXT_PATH }
+            ])
         # @TODO: is this next needed?  Put logic in set_values?
         if self._entityid:
             values[ANNAL.CURIE.id] = self._entityid
         values.pop(ANNAL.CURIE.url, None)
         with open(fullpath, "wt") as entity_io:
             json.dump(values, entity_io, indent=2, separators=(',', ': '))
+        self._entityusedir  = self._entitydir
         self._entityuseurl  = self._entityurl
+        self._post_update_processing(values)
         return
 
     def _load_values(self):
@@ -326,10 +344,13 @@ class EntityRoot(object):
 
         Adds value for 'annal:url' to the entity data returned.
         """
+        self._migrate_path()
         body_file = self._exists_path()
         if body_file:
             try:
-                with open(body_file, "r") as f:
+                # @@TODO: rework name access to support different underlays
+                # @@was: with open(body_file, "r") as f:
+                with self._read_stream() as f:
                     entitydata = json.load(util.strip_comments(f))
                     entitydata[ANNAL.CURIE.url] = self.get_view_url_path()
                     return entitydata
@@ -344,6 +365,40 @@ class EntityRoot(object):
                     { "@error": body_file 
                     , "@message": "Error loading entity values %r"%(e,)
                     })
+
+        return None
+
+    def _migrate_path(self):
+        """
+        Migrate entity data filenames from those used in older software versions.
+        """
+        if self._migrate_filenames() is None:
+            return
+        if not self._exists():
+            for old_data_filename in self._migrate_filenames():
+                # This logic migrates data from previous filenames
+                (basedir, old_data_filepath) = util.entity_dir_path(self._entitydir, [], old_data_filename)
+                if basedir and os.path.isdir(basedir):
+                    if old_data_filepath and os.path.isfile(old_data_filepath):
+                        # Old body file found here
+                        (d, new_data_filepath) = self._dir_path()
+                        log.info("Migrate file %s to %s"%(old_data_filepath, new_data_filepath))
+                        os.rename(old_data_filepath, new_data_filepath)
+                        break
+        return
+
+    def _migrate_filenames(self):
+        """
+        Default method for filename migration.
+
+        Returns a list of filenames used for the current entity type in previous
+        versions of Annalist software.  If the expected filename is not found when 
+        attempting to read a file, the _load_values() method calls this function to
+        and looks for any of the filenames returned.  If found, the file is renamed
+        to the current version filename.
+
+        Default method returns None, which signals that no migration is to be performed.
+        """
         return None
 
     def _migrate_values(self, entitydata):
@@ -362,6 +417,18 @@ class EntityRoot(object):
         to conform to the current format of the data.  The migration function should 
         be idempotent; i.e.
             x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
+        """
+        return entitydata
+
+    def _post_update_processing(self, entitydata):
+        """
+        Default method for post-update processing.
+
+        This method is called when an entity has been updated.  
+
+        Individual entity classes may provide their own override methiods for this.  
+        (e.g. to trigger regeneration of context data when groups, views, fields or 
+        vocabulary descriptions are updated.)
         """
         return entitydata
 
@@ -424,7 +491,7 @@ class EntityRoot(object):
 
     def _exists_file(self, f):
         """
-        Test if a file named 'f' exists inthe current entity directory
+        Test if a file named 'f' exists in the current entity directory
         """
         return os.path.isfile(os.path.join(self._entitydir, f))
 
@@ -448,7 +515,7 @@ class EntityRoot(object):
         Returns a file object for accessing a blob associated with the current entity.
 
         localname   is the local name used to identify the file/resource among all those
-                    associated with the ciurrent entity.
+                    associated with the current entity.
         filetypeuri is a URI/CURIE that identifies the type of data stored in the blob.
         mimetype    is a MIME content-type string for the resource representation used,
                     used in selecting the file extension to be used, or None in which case 
@@ -463,6 +530,51 @@ class EntityRoot(object):
             )
         file_name = os.path.join(body_dir, localname+"."+file_ext)
         return open(file_name, mode)
+
+    def _metaobj(self, localpath, localname, mode):
+        """
+        Returns a file object for accessing a metadata resource associated with 
+        the current entity.
+
+        localpath   is the local directory path (relative to the current entity's data)
+                    where the metadata resource will be accessed.
+        localname   is the local name used to identify the file/resource among all those
+                    associated with the current entity.
+        mode        is a string defining how the resource is opened (using the same values
+                    as the built-in `open` function).
+        """
+        (body_dir, body_file) = self._dir_path()  # Same as `_save`
+        local_dir = os.path.join(body_dir, localpath)
+        util.ensure_dir(local_dir)
+        filename = os.path.join(local_dir, localname)
+        log.debug("entityroot._metaobj: self._entitydir %s"%(self._entitydir,))
+        log.debug("entityroot._metaobj: body_dir %s, body_file %s"%(body_dir, body_file))
+        log.debug("entityroot._metaobj: filename %s"%(filename,))
+        return open(filename, mode)
+
+    def _read_stream(self):
+        """
+        Opens a (file-like) stream to read entity data.
+
+        Returns the stream object, which implements the context protocol to
+        close the stream on exit from a containign with block; e.g.
+
+            with e._read_stream() as f:
+                // read data from f
+            // f is closed here
+
+        """
+        # @@TODO: factor out logic in common with _metaobj/_fileobj
+        f_stream  = None
+        body_file = self._exists_path()
+        if body_file:
+            try:
+                f_stream = open(body_file, "rt")
+            except IOError, e:
+                if e.errno != errno.ENOENT:
+                    raise
+                log.error("EntityRoot._read_stream: no file %s"%(body_file))
+        return f_stream
 
     # Special methods to facilitate access to entity values by dictionary operations
     # on the Entity object

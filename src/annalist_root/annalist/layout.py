@@ -20,6 +20,7 @@ log = logging.getLogger(__name__)
 #       _annalist-site/
 #           site_meta.json_ld
 #           site_prov.json_ld
+#           site_context.json_ld
 #       c/
 #         <collection-id>/
 #           _annalist_collection/
@@ -66,12 +67,18 @@ SITEDATA_VIEW           = "%(id)s/"
 SITEDATA_PATH           = "%(id)s"
 SITEDATA_META_FILE      = "sitedata_meta.jsonld"
 META_SITEDATA_REF       = "./"
+SITEDATA_CONTEXT_FILE   = "site_context.jsonld"
 
 SITE_COLL_VIEW          = "c/%(id)s/"
 SITE_COLL_PATH          = "c/%(id)s"
 COLL_META_FILE          = "_annalist_collection/coll_meta.jsonld"
 COLL_PROV_FILE          = "_annalist_collection/coll_prov.jsonld"
 META_COLL_REF           = "../"
+
+SITE_COLL_CONTEXT_PATH  = "c/%(id)s/d/"
+COLL_CONTEXT_PATH       = "d/"
+COLL_META_CONTEXT_PATH  = META_COLL_REF+COLL_CONTEXT_PATH
+COLL_CONTEXT_FILE       = "coll_context.jsonld"
 
 COLL_TYPE_VIEW          = "d/_type/%(id)s/"
 COLL_TYPE_PATH          = "_annalist_collection/types/%(id)s"
@@ -108,12 +115,21 @@ FIELD_META_FILE         = "field_meta.jsonld"
 FIELD_PROV_FILE         = "field_prov.jsonld"
 META_FIELD_REF          = "./"
 
-COLL_USER_VIEW         = "d/_user/%(id)s/"
-COLL_USER_PATH         = "_annalist_collection/users/%(id)s"
-SITE_USER_PATH         = "_annalist_site/users/%(id)s"
-USER_META_FILE         = "user_meta.jsonld"
-USER_PROV_FILE         = "user_prov.jsonld"
-META_USER_REF          = "./"
+COLL_VOCAB_VIEW         = "d/_vocab/%(id)s/"
+COLL_VOCAB_PATH         = "_annalist_collection/vocabs/%(id)s"
+SITE_VOCAB_PATH         = "_annalist_site/vocabs/%(id)s"
+VOCAB_META_FILE         = "vocab_meta.jsonld"
+VOCAB_PROV_FILE         = "vocab_prov.jsonld"
+META_VOCAB_REF          = "./"
+
+COLL_USER_VIEW          = "d/_user/%(id)s/"
+COLL_USER_PATH          = "_annalist_collection/users/%(id)s"
+SITE_USER_PATH          = "_annalist_site/users/%(id)s"
+USER_META_FILE          = "user_meta.jsonld"
+USER_PROV_FILE          = "user_prov.jsonld"
+META_USER_REF           = "./"
+USER_CONTEXT_REF        = "../.."
+USER_CONTEXT_FILE       = USER_CONTEXT_REF + "/" + SITEDATA_CONTEXT_FILE
 
 COLL_ENUM_VIEW          = "d/%(type_id)s/%(id)s/"
 COLL_ENUM_PATH          = "_annalist_collection/enums/%(type_id)s/%(id)s"
@@ -129,9 +145,17 @@ META_TYPEDATA_REF       = "./"
 
 TYPEDATA_ENTITY_VIEW    = "%(id)s/"
 TYPEDATA_ENTITY_PATH    = "%(id)s"
-ENTITY_DATA_FILE        = "entity-data.jsonld"
-ENTITY_PROV_FILE        = "entity-prov.jsonld"
+COLL_ENTITY_VIEW        = "d/%(type_id)s/%(id)s/"
+COLL_ENTITY_PATH        = "d/%(type_id)s/%(id)s"
+SITE_ENTITY_VIEW        = "c/%(coll_id)s/d/%(type_id)s/%(id)s/"
+SITE_ENTITY_PATH        = "c/%(coll_id)s/d/%(type_id)s/%(id)s"
+ENTITY_DATA_FILE        = "entity_data.jsonld"
+ENTITY_PROV_FILE        = "entity_prov.jsonld"
 DATA_ENTITY_REF         = "./"
+CONTEXT_ENTITY_REF      = "%(type_id)s/%(id)s/"
+ENTITY_CONTEXT_REF      = "../.."
+ENTITY_CONTEXT_FILE     = ENTITY_CONTEXT_REF + "/" + COLL_CONTEXT_FILE
+ENTITY_OLD_DATA_FILE    = "entity-data.jsonld"
 
 # and more...
 
@@ -148,7 +172,11 @@ class Layout(object):
         self.BASE_DIR       = base_data_dir
         self.SITE_DIR       = SITE_DIR
         self.SITEDATA_DIR   = SITEDATA_DIR
-        self.SITE_PATH      = os.path.join(base_data_dir, SITE_DIR)
+        self.SITE_PATH      = os.path.join(base_data_dir, SITE_DIR)     # e.g. /data/annalist_site
+        self.SITEDATA_PATH  = os.path.join(base_data_dir, SITEDATA_DIR) # e.g. /data/annalist_site/_annalist_site
+        self.SITEDATA_CONTEXT_PATH = os.path.join(                      # e.g. /data/annalist_site/_annalist_site/site_context.jsonld
+            base_data_dir, SITEDATA_DIR, SITEDATA_CONTEXT_FILE
+            ) 
         return
 
 # End.

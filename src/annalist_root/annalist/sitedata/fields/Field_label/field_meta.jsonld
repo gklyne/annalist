@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/Field_label"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Field_label"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Label"

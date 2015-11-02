@@ -120,10 +120,17 @@ class RenderMultiFields_label(object):
     returns a string that is incorporated into the resulting web page.
     """
     # log.info("RenderMultiFields_label.render (mode: %s)"%context['render_mode'])
+    group_field_descs = context['field']['group_field_descs']
+    if group_field_descs is None:
+        return (
+            """<span class="value-missing">Missing field group for %(group_id)s</span>"""%
+            context['field']
+            )
     try:
         # log.info("RenderMultiFields_label.render field: %r"%(context['field'],))
         # log.info("RenderMultiFields_label.render descs: %r"%(context['field']['group_field_descs'],))
-        group_fields = [ f for f in context['field']['group_field_descs'] ]
+
+        group_fields = [ f for f in group_field_descs ]
         group_dict = (
             { 'group_bound_fields':  group_fields
             })
@@ -188,6 +195,12 @@ class RenderMultiFields_value(object):
     returns a string that is incorporated into the resulting web page.
     """
     # log.info("RenderMultiFields_value.render (mode: %s)"%context['render_mode'])
+    group_field_descs = context['field']['group_field_descs']
+    if group_field_descs is None:
+        return (
+            """<span class="value-missing">Missing field group for %(field_id)s</span>"""%
+            context['field']
+            )
     try:
         # log.info("RenderMultiFields_value.render field: %r"%(context['field'],))
         # log.info("RenderMultiFields_value.render descs: %r"%(context['field']['group_field_descs'],))
@@ -196,7 +209,7 @@ class RenderMultiFields_value(object):
         log.debug("RenderMultiFields_value.render target_vals: %r"%(target_vals))
         group_fields = [ 
             bound_field(f, target_vals, context_extra_values=extras) 
-            for f in context['field']['group_field_descs'] 
+            for f in group_field_descs 
             ]
         group_dict = (
             { 'group_bound_fields':  group_fields

@@ -1,8 +1,9 @@
-{ "@id":                "annal:display/Group_field_group"
+{ "@id":                "annal:group/Group_field_group"
 , "@type":              ["annal:Field_group"]
+, "@context":           ["../../site_context.jsonld"]
 , "annal:id":           "Group_field_group"
 , "annal:type_id":      "_group"
-, "annal:uri":          "annal:display/Group_field_group"
+, "annal:uri":          "annal:group/Group_field_group"
 , "annal:record_type":  "annal:Field_group_field"
 , "rdfs:label":         "Group field fields"
 , "rdfs:comment":       "This resource describes a group of fields used to define a display field when displaying and/or editing a field group description"

@@ -80,6 +80,9 @@ REMOVE_RECORD_TYPE          = "Remove record type %(id)s in collection %(coll_id
 REMOVE_RECORD_LIST          = "Remove record list %(id)s in collection %(coll_id)s"
 REMOVE_RECORD_VIEW          = "Remove record view %(id)s in collection %(coll_id)s"
 
+SITE_RESOURCE_NOT_DEFINED   = "Resource %(ref)s is not recogized for site"
+SITE_RESOURCE_NOT_EXIST     = "Site resource %(ref)s does not exist"
+
 COLLECTION_ID               = "Problem with collection identifier"
 COLLECTION_ID_INVALID       = "The collection identifier is missing or not a valid identifier"
 COLLECTION_LABEL            = "Collection %(id)s"
@@ -88,6 +91,8 @@ COLLECTION_NOT_EXISTS       = "Collection %(id)s does not exist"
 COLLECTION_NEWER_VERSION    = ("Cannot access collection %(id)s, "+
                                "which was created by software version %(ver)s. "+
                                "(Update Annalist server software to use this collection)")
+COLL_RESOURCE_NOT_DEFINED   = "Resource %(ref)s is not recogized for collection %(id)s"
+COLL_RESOURCE_NOT_EXIST     = "Resource %(ref)s for collection %(id)s does not exist"
 
 ANNALIST_USER_ID            = "Problem with user identifier"
 ANNALIST_USER_ID_INVALID    = "The user identifier is missing or not a valid identifier"
@@ -130,6 +135,13 @@ RECORD_FIELD_LABEL          = "Record field %(id)s in collection %(coll_id)s"
 RECORD_FIELD_EXISTS         = "Record field %(id)s in collection %(coll_id)s already exists"
 RECORD_FIELD_NOT_EXISTS     = "Record field %(id)s in collection %(coll_id)s does not exist"
 RECORD_FIELD_REMOVED        = "Record field %(id)s in collection %(coll_id)s was removed"
+
+RECORD_VOCAB_ID             = "Problem with vocabulary identifier"
+RECORD_VOCAB_ID_INVALID     = "The vocabulary namespace identifier is missing or not a valid identifier"
+RECORD_VOCAB_LABEL          = "Vocabulary %(id)s in collection %(coll_id)s"
+RECORD_VOCAB_EXISTS         = "Vocabulary %(id)s in collection %(coll_id)s already exists"
+RECORD_VOCAB_NOT_EXISTS     = "Vocabulary %(id)s in collection %(coll_id)s does not exist"
+RECORD_VOCAB_REMOVED        = "Vocabulary %(id)s in collection %(coll_id)s was removed"
 
 RECORD_ENUM_ID              = "Problem with enumeration type identifier"
 RECORD_ENUM_ID_INVALID      = "The enumeration type identifier is missing or not a valid identifier"

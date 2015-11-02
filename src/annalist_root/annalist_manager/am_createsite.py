@@ -1,5 +1,7 @@
 """
 Create Annalist/Django site data.
+
+Note: uses data in `sampledata/empty/annalist_site`
 """
 
 from __future__ import print_function
@@ -23,6 +25,8 @@ from utils.SuppressLoggingContext   import SuppressLogging
 from annalist.identifiers           import ANNAL, RDFS
 from annalist.layout                import Layout
 from annalist.util                  import removetree, replacetree, updatetree
+
+from annalist.models.site           import Site
 
 import am_errors
 from am_settings                    import am_get_settings
@@ -75,7 +79,7 @@ def am_createsite(annroot, userhome, options):
     sitedatasrc = os.path.join(annroot, "annalist/sitedata")
     sitedatatgt = os.path.join(sitebasedir, site_layout.SITEDATA_DIR)
     print("Copy Annalist site data from %s to %s"%(sitedatasrc, sitedatatgt))
-    for sdir in ("types", "lists", "views", "groups", "fields", "enums", "users"):
+    for sdir in ("types", "lists", "views", "groups", "fields", "vocabs", "users", "enums"):
         s = os.path.join(sitedatasrc, sdir)
         d = os.path.join(sitedatatgt, sdir)
         print("- %s -> %s"%(sdir, d))
@@ -119,11 +123,15 @@ def am_updatesite(annroot, userhome, options):
         d = os.path.join(sitedatatgt, sdir)
         print("- %s => %s"%(sdir, d))
         replacetree(s, d)
-    for sdir in ("users",):
+    for sdir in ("users", "vocabs"):
         s = os.path.join(sitedatasrc, sdir)
         d = os.path.join(sitedatatgt, sdir)
         print("- %s +> %s"%(sdir, d))
         updatetree(s, d)
+    # --- (Re)generate site context data
+    print("- generating %s"%(site_layout.SITEDATA_CONTEXT_PATH))
+    testsite = Site("http://nosite.example.com/", site_layout.SITE_PATH)
+    testsite.generate_site_jsonld_context()
     return status
 
 # End.

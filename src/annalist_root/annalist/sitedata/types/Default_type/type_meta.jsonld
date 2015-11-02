@@ -1,5 +1,6 @@
 { "@id":                "./"
 , "@type":              ["annal:Type"]
+, "@context":           ["../../site_context.jsonld"]
 , "annal:id":           "Default_type"
 , "annal:type_id":      "_type"
 , "annal:uri":          "annal:Default_type"

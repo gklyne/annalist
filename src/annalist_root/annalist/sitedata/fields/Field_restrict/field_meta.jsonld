@@ -1,5 +1,6 @@
 { "@id":                        "annal:fields/Field_restrict"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Field_restrict"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Value restriction"

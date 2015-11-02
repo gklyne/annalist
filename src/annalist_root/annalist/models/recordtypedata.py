@@ -31,6 +31,7 @@ class RecordTypeData(Entity):
     _entitypath     = layout.COLL_TYPEDATA_PATH
     _entityfile     = layout.TYPEDATA_META_FILE
     _entityref      = layout.META_TYPEDATA_REF
+    _contextref     = layout.COLL_CONTEXT_FILE
 
     def __init__(self, parent, type_id):
         """

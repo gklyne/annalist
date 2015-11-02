@@ -35,26 +35,24 @@ from django.test.client         import Client
 
 from bs4                        import BeautifulSoup
 
-from annalist.identifiers                   import RDF, RDFS, ANNAL
-from annalist.util                          import extract_entity_id
+from annalist.identifiers           import RDF, RDFS, ANNAL
+from annalist.util                  import extract_entity_id
 
-from annalist.models.site                   import Site
-from annalist.models.collection             import Collection
-from annalist.models.recordtype             import RecordType
-from annalist.models.recordlist             import RecordList
-from annalist.models.recordview             import RecordView
-from annalist.models.recordgroup            import RecordGroup
-from annalist.models.recordfield            import RecordField
+from annalist.models.site           import Site
+from annalist.models.collection     import Collection
+from annalist.models.recordtype     import RecordType
+from annalist.models.recordlist     import RecordList
+from annalist.models.recordview     import RecordView
+from annalist.models.recordgroup    import RecordGroup
+from annalist.models.recordfield    import RecordField
 
 from annalist.views.fields.render_placement import get_placement_options
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from AnnalistTestCase           import AnnalistTestCase
-from tests                      import dict_to_str, init_annalist_test_site, resetSitedata
-from tests                      import (
-    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-    )
-from entity_testutils           import (
+from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from entity_testutils       import (
     site_view_url,
     collection_view_url,
     collection_edit_url,
@@ -63,7 +61,7 @@ from entity_testutils           import (
     collection_entity_edit_url,
     create_user_permissions, create_test_user
     )
-from entity_testsitedata        import (
+from entity_testsitedata    import (
     make_field_choices, no_selection,
     get_site_types,        get_site_types_sorted,
     get_site_lists,        get_site_lists_sorted,
@@ -76,6 +74,7 @@ from entity_testsitedata        import (
     get_site_type_fields,  get_site_type_fields_sorted, 
     get_site_list_fields,  get_site_list_fields_sorted, 
     get_site_view_fields,  get_site_view_fields_sorted, 
+    get_site_vocab_fields, get_site_vocab_fields_sorted, 
     get_site_field_fields, get_site_field_fields_sorted,
     get_site_group_fields, get_site_group_fields_sorted,
     get_site_user_fields,  get_site_user_fields_sorted, 
@@ -150,7 +149,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         s = BeautifulSoup(r.content, "html.parser")
         return s
 
-    # Test named input has specified type and value
+    # Test named input field has specified type and value
     def check_input_type_value(self, 
             s, name, 
             input_type, input_value=None, input_text=None):
@@ -197,7 +196,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         option_labels_here     = (
             [self.html_encode(o.string) for o in select_elem.find_all("option")]
             )
-        option_labels_expected = [ fc.label for fc in options ]
+        option_labels_expected = [ fc.option_label() for fc in options ]
         if option_labels_here != option_labels_expected:
             log.info("option_labels_here:     %r"%(option_labels_here,))
             log.info("option_labels_expected: %r"%(option_labels_expected,))
@@ -267,7 +266,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_list["@type"],                    [ANNAL.CURIE.List])
         self.assertEqual(type_list[ANNAL.CURIE.id],             list_id)
         self.assertEqual(type_list[ANNAL.CURIE.type_id],        "_list")
-        self.assertEqual(type_list[ANNAL.CURIE.display_type],   "List")
+        self.assertEqual(type_list[ANNAL.CURIE.display_type],   "Enum_list_type/List")
         self.assertEqual(type_list[ANNAL.CURIE.default_type],   "_type/"+type_id)
         self.assertEqual(type_list[ANNAL.CURIE.default_view],   "_view/"+view_id)
         self.assertEqual(type_list[ANNAL.CURIE.record_type],    type_uri)
@@ -308,10 +307,12 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 self.assertIn(ANNAL.CURIE.placeholder,            view_field)
                 self.assertIn(ANNAL.CURIE.field_placement,        view_field)
                 if ANNAL.CURIE.field_entity_type in view_field:
-                    # @@TODO: make this required?
-                    self.assertEqual(
-                        view_field[ANNAL.CURIE.field_entity_type], type_uri
-                        )
+                    if view_field[ANNAL.CURIE.field_entity_type] != "":
+                        # Field is restricted to named type
+                        # @@TODO: allow for subtypes?
+                        self.assertEqual(
+                            view_field[ANNAL.CURIE.field_entity_type], type_uri
+                            )
                 if field_type in ["RepeatGroup", "RepeatGroupRow"]:
                     # Check extra fields
                     group_id = extract_entity_id(view_field[ANNAL.CURIE.group_ref])
@@ -350,7 +351,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         # Check displayed collections (check site setup)
         self.assertEqual(s.title.string, "Annalist data notebook test site")
         trows = s.select("form > div > div > div")
-        self.assertEqual(len(trows), 5)
+        self.assertEqual(len(trows), 4)
         for i in (1,2,3):
             tcols = trows[i].find_all("div", class_="view-value")
             colln = "coll%d"%i
@@ -520,6 +521,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_type/_type",            ["_type",            "Type"] ]
             , [ "_type/_user",            ["_user",            "User permissions"] ]
             , [ "_type/_view",            ["_view",            "View"] ]
+            , [ "_type/_vocab",           ["_vocab",           "Vocab namespace"] ]
             , [ "_type/BibEntry_type",    ["BibEntry_type",    "Bibliographic record"] ]
             , [ "_type/Default_type",     ["Default_type",     "Default record"] ]
             , [ "_type/Enum_bib_type",    ["Enum_bib_type",    "Bibliographic entry type"] ]
@@ -641,6 +643,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_list/Type_list",          ["Type_list",           "List types"] ]
             , [ "_list/User_list",          ["User_list",           "User permissions"] ]
             , [ "_list/View_list",          ["View_list",           "List views"] ]
+            , [ "_list/Vocab_list",         ["Vocab_list",          "List vocabulary namespaces"] ]
             , [ "_list/list1",              ["list1",               "RecordList coll1/list1"] ]
             , [ "_list/list2",              ["list2",               "RecordList coll1/list2"] ]   
             ])
@@ -755,6 +758,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_view/Type_view",          ["Type_view",           "Type description view"] ]
             , [ "_view/User_view",          ["User_view",           "User permissions view"] ]
             , [ "_view/View_view",          ["View_view",           "View description view"] ]
+            , [ "_view/Vocab_view",         ["Vocab_view",          "Vocabulary namespace view"] ]
             , [ "_view/view1",              ["view1",               "RecordView coll1/view1"] ]
             , [ "_view/view2",              ["view2",               "RecordView coll1/view2"] ]   
             ])
@@ -860,6 +864,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_group/Bib_license_group",        ["Bib_license_group",        "BibEntry license fields"] ]
             , [ "_group/Bib_person_group",         ["Bib_person_group",         "BibEntry person fields"] ]
             , [ "_group/Bib_publication_group",    ["Bib_publication_group",    "BibEntry publication fields"] ]
+            , [ "_group/Entity_see_also_repeat",   ["Entity_see_also_repeat",   "Links to further information"] ]
             , [ "_group/Group_field_group",        ["Group_field_group",        "Group field fields"] ]
             , [ "_group/List_field_group",         ["List_field_group",         "List field fields"] ]
             , [ "_group/Type_alias_group",         ["Type_alias_group",         "Field alias fields"] ]
@@ -963,6 +968,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[3].span.string, "Label")
 
         trows_expected = (
+            #     Field selector                      Field id             Render type      Value type   Field label (?)
             [ [ "_field/_initial_values",           ["_initial_values",   "Short text",    "annal:Text", None       ] ]
             , [ "_field/Bib_address",               ["Bib_address",       "Short text",    "annal:Text", "Address"  ] ]
             , [ "_field/Bib_alternate",             ["Bib_alternate",     "Short text",    "annal:Text"             ] ]
@@ -1003,6 +1009,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Entity_comment",            ["Entity_comment",    "Markdown rich text", "annal:Richtext"    ] ]
             , [ "_field/Entity_id",                 ["Entity_id",         "Entity Id",     "annal:Slug"             ] ]
             , [ "_field/Entity_label",              ["Entity_label",      "Short text",    "annal:Text"             ] ]
+            , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",      "annal:Identifier"       ] ]
+            , [ "_field/Entity_see_also_repeat",    ["Entity_see_also_repeat", "Repeating fields as row", "annal:Field_group"] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:Slug"            ] ]
             , [ "_field/Field_comment",             ["Field_comment",     "Markdown rich text", "annal:Richtext"    ] ]
             , [ "_field/Field_default",             ["Field_default",     "Short text",    "annal:Text"             ] ]
@@ -1069,6 +1077,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/View_id",                   ["View_id"                   ] ]
             , [ "_field/View_label",                ["View_label"                ] ]
             , [ "_field/View_target_type",          ["View_target_type"          ] ]
+            , [ "_field/Vocab_uri",                 ["Vocab_uri"                 ] ]
             ])
         self.check_list_row_data(s, trows_expected)
 
@@ -1170,6 +1179,107 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         return
 
     # --------------------------------------------------------------------------
+    # Test site data for vocabulary namespaces
+    # --------------------------------------------------------------------------
+
+    # Test type / list / view / field consistency for RecordGroup
+    def test_recordlist_type_group_view(self):
+        self.check_type_list_view(
+            "_vocab", "Vocab_list", "Vocab_view", ANNAL.CURIE.Vocabulary
+            )
+        return
+
+    # List vocabularies using vocab list
+    def test_vocab_list(self):
+        u = collection_entity_list_url(
+            coll_id="coll1", list_id="Vocab_list", type_id="_vocab", scope="all"
+            )
+        s = self.get_page(u)
+        self.assertEqual(s.title.string, "Collection coll1")
+        self.assertEqual(s.h3.string, "List vocabulary namespaces")
+        self.check_input_type_value(s, "search_for", "text", "")
+        self.check_select_field(s, "list_choice", self.lists_expected, "_list/Vocab_list")
+        thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
+        self.assertEqual(thead[0].span.string, "Id")
+        self.assertEqual(thead[1].span.string, "Label")
+        trows_expected = (
+            [ [ "_vocab/_initial_values",          ["_initial_values"] ]
+            , [ "_vocab/annal",                    ["annal",    "Vocabulary namespace for Annalist-defined terms"] ]
+            , [ "_vocab/owl",                      ["owl",      "OWL ontology namespace"] ]
+            , [ "_vocab/rdf",                      ["rdf",      "RDF core namespace"] ]
+            , [ "_vocab/rdfs",                     ["rdfs",     "RDF schema namespace"] ]
+            , [ "_vocab/xsd",                      ["xsd",      "XML Schema datatypes namespace"] ]
+            ])
+        self.check_list_row_data(s, trows_expected)
+        return
+
+    # Create/edit Vocabulary using vocab view
+    def test_vocab_edit_new(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_vocab",
+            view_id="Vocab_view", action="new"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id",              "text",     None)
+        self.check_input_type_value(s, "Entity_label",           "text",     None)
+        self.check_input_type_value(s, "Entity_comment",         "textarea", None)
+        self.check_input_type_value(s, "Vocab_uri",              "text",     None)
+        #@@
+        # No repeated values present:
+        # self.check_input_type_value(s, "Entity_see_also_repeat", "text",     None)
+        #@@
+        self.check_select_field(
+            s, "view_choice", self.views_expected, "_view/Vocab_view"
+            )
+        return
+
+    # Edit/view vocabulary view
+    def test_view_edit_vocab_view(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_view", entity_id="Vocab_view",
+            view_id="View_view", action="edit"
+            )
+        s = self.get_page(u)
+        expect_field_choices = no_selection("(field sel)") + get_site_vocab_fields_sorted()
+        expect_fields = (
+            [ "_field/Entity_id"
+            , "_field/Entity_label"
+            , "_field/Entity_comment"
+            , "_field/Vocab_uri"
+            , "_field/Entity_see_also_repeat"
+            ])
+        self.check_view_fields(s, expect_fields, expect_field_choices)
+        self.check_select_field(s, "view_choice", self.views_expected, "_view/View_view")
+        return
+
+    # Edit/view vocabulary list
+    def test_view_edit_vocab_list(self):
+        u = collection_entity_edit_url(
+            coll_id="coll1", type_id="_list", entity_id="Vocab_list",
+            view_id="List_view", action="edit"
+            )
+        s = self.get_page(u)
+        self.check_input_type_value(s, "entity_id", "text", "Vocab_list")
+        self.check_input_type_value(s, "List_label", "text", None)
+        self.check_input_type_value(s, "List_comment", "textarea", None)
+        self.check_input_type_value(
+            s, "List_entity_selector", "text", "'annal:Vocabulary' in [@type]"
+            )
+        self.check_input_type_value(s, "List_target_type", "text", "annal:Vocabulary")
+        self.check_select_field(s, "List_type", self.list_types_expected, "Enum_list_type/List")
+        self.check_select_field(
+            s, "List_default_type", 
+            no_selection("(default record type)") + self.types_expected, 
+            "_type/_vocab"
+            )
+        self.check_select_field(
+            s, "List_default_view", 
+            no_selection("(view id)") + self.views_expected, 
+            "_view/Vocab_view"
+            )
+        return
+
+    # --------------------------------------------------------------------------
     # Test site data for user permissions
     # --------------------------------------------------------------------------
 
@@ -1205,11 +1315,11 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 , "VIEW"
                 ] 
               ]
-            , [ "_user/admin", 
-                [ "admin", "mailto:admin@localhost"
-                , "VIEW CREATE UPDATE DELETE CONFIG CREATE_COLLECTION DELETE_COLLECTION ADMIN"
-                ]
-              ]
+            # , [ "_user/admin", 
+            #     [ "admin", "mailto:admin@localhost"
+            #     , "VIEW CREATE UPDATE DELETE CONFIG CREATE_COLLECTION DELETE_COLLECTION ADMIN"
+            #     ]
+            #   ]
             , [ "_user/testuser",
                 [ "testuser", "mailto:testuser@test.example.com"
                 , "VIEW CREATE UPDATE DELETE CONFIG ADMIN"

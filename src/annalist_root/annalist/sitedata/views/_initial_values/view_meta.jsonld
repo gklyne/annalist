@@ -1,4 +1,5 @@
 { "@type":              ["annal:View"]
+, "@context":           ["../../site_context.jsonld"]
 , "annal:id":           "_initial_values"
 , "annal:type_id":      "_view"
 , "rdfs:label":         ""

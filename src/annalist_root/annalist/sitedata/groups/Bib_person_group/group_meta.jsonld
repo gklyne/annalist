@@ -1,8 +1,9 @@
-{ "@id":                "annal:display/Bib_person_group"
+{ "@id":                "annal:group/Bib_person_group"
 , "@type":              ["annal:Field_group"]
+, "@context":           ["../../site_context.jsonld"]
 , "annal:id":           "Bib_person_group"
 , "annal:type_id":      "_group"
-, "annal:uri":          "annal:display/Bib_person_group"
+, "annal:uri":          "annal:group/Bib_person_group"
 , "annal:record_type":  "bib:BibEntry"
 , "rdfs:label":         "BibEntry person fields"
 , "rdfs:comment":       "Group of fields describing a person in a BibEntry record"

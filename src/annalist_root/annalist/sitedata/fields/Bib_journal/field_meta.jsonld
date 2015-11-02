@@ -1,6 +1,7 @@
 // @@TODO: introduce new render type for optional/grouped fields.  For now using RepeatGroup
 { "@id":                        "annal:fields/Bib_journal"
 , "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Bib_journal"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Journal"

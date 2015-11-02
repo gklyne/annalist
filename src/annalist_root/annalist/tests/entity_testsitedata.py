@@ -57,8 +57,9 @@ site_types = (
     , FieldChoice("_type/_group",                     label="Field group"                 )
     , FieldChoice("_type/_list",                      label="List"                        )
     , FieldChoice("_type/_type",                      label="Type"                        )
-    , FieldChoice("_type/_user",                      label="User permissions"                        )
+    , FieldChoice("_type/_user",                      label="User permissions"            )
     , FieldChoice("_type/_view",                      label="View"                        )
+    , FieldChoice("_type/_vocab",                     label="Vocab namespace"             )
     , FieldChoice("_type/BibEntry_type",              label="Bibliographic record"        )
     , FieldChoice("_type/Default_type",               label="Default record"              )
     , FieldChoice("_type/Enum_bib_type",              label="Bibliographic entry type"    )
@@ -92,6 +93,7 @@ site_lists = (
     , FieldChoice("_list/Type_list",                  label="List types")
     , FieldChoice("_list/User_list",                  label="User permissions")
     , FieldChoice("_list/View_list",                  label="List views")
+    , FieldChoice("_list/Vocab_list",                 label="List vocabulary namespaces")
     ])
 
 def get_site_lists_sorted():
@@ -132,6 +134,7 @@ site_views = (
     , FieldChoice("_view/Type_view",                  label="Type description view"   )
     , FieldChoice("_view/User_view",                  label="User permissions view"   )
     , FieldChoice("_view/View_view",                  label="View description view"   )
+    , FieldChoice("_view/Vocab_view",                 label="Vocabulary namespace view")
     ])
 
 def get_site_views_sorted():
@@ -156,6 +159,7 @@ site_field_groups = (
     , FieldChoice("_group/Bib_license_group",          label="BibEntry license fields"    )
     , FieldChoice("_group/Bib_person_group",           label="BibEntry person fields"     )
     , FieldChoice("_group/Bib_publication_group",      label="BibEntry publication fields")
+    , FieldChoice("_group/Entity_see_also_repeat",     label="Links to further information")
     , FieldChoice("_group/Group_field_group",          label="Group field fields"         )
     , FieldChoice("_group/List_field_group",           label="List field fields"          )
     , FieldChoice("_group/Type_alias_group",           label="Field alias fields"         )
@@ -182,6 +186,7 @@ site_default_entity_fields = (
     , FieldChoice("_field/Entity_comment",             label="Comment"          )
     , FieldChoice("_field/Entity_id",                  label="Id"               )
     , FieldChoice("_field/Entity_label",               label="Label"            )
+    , FieldChoice("_field/Entity_see_also_repeat",     label="See also"         )
     , FieldChoice("_field/Entity_type",                label="Type"             )
     ])
 
@@ -334,6 +339,11 @@ site_view_field_group_fields = (
     , FieldChoice("_field/View_field_sel",             label="Field id"            )
     ])
 
+site_vocab_fields = (
+    [ FieldChoice("_field/_initial_values")
+    , FieldChoice("_field/Vocab_uri",                  label="Vocabulary URI"      )
+    ])
+
 site_fields = (
     [ FieldChoice("_field/_initial_values")] +
     site_bibentry_fields[1:] +
@@ -344,6 +354,7 @@ site_fields = (
     site_type_fields[1:] +
     site_user_fields[1:] +
     site_view_fields[1:] +
+    site_vocab_fields[1:] +
     [])
 
 def get_site_fields_sorted():
@@ -403,6 +414,15 @@ def get_site_user_fields_sorted():
 def get_site_user_fields():
     return set( ( id_from_field_choice(fc) for fc in get_site_user_fields_sorted() ) )
 
+def get_site_vocab_fields_sorted():
+    return ( 
+        site_default_entity_fields[1:] + 
+        site_vocab_fields[1:]
+        )
+
+def get_site_vocab_fields():
+    return set( ( id_from_field_choice(fc) for fc in get_site_vocab_fields_sorted() ) )
+
 def get_site_bibentry_fields_sorted():
     return site_bibentry_fields[1:] + site_default_entity_fields[1:]
 
@@ -451,6 +471,29 @@ def get_site_field_types_linked(coll_id):
 
 def get_site_field_types():
     return set( ( id_from_field_choice(fc) for fc in get_site_field_types_sorted() ) )
+
+#   ----- Vocabulary namespaces -----
+
+site_vocabs = (
+    [ FieldChoice("_vocab/_initial_values")
+    , FieldChoice("_vocab/annal",      label="Vocabulary namespace for Annalist-defined terms")
+    , FieldChoice("_vocab/owl",        label="OWL ontology namespace")
+    , FieldChoice("_vocab/rdf",        label="RDF core namespace")
+    , FieldChoice("_vocab/rdfs",       label="RDF schema namespace")
+    , FieldChoice("_vocab/xsd",        label="XML Schema datatypes namespace")
+    ])
+
+def get_site_vocabs_sorted():
+    return site_vocabs[1:]
+
+def get_site_vocabs_linked(coll_id):
+    return (
+        [ add_link_to_field_choice(fc, coll_id, "_vocab") 
+          for fc in get_site_vocabs_sorted()
+        ])
+
+def get_site_vocabs():
+    return set( ( id_from_field_choice(fc) for fc in get_site_vocabs_sorted() )  )
 
 #   ----- Field value mode types -----
 

@@ -1,88 +1,110 @@
 # Annalist TODO
 
-NOTE: this document is used for short-term working notes; longer-term planning information has been migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
+NOTE: this document is used for short-term working notes; some longer-term planning information has been migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
 
 
 # Documentation
 
 - [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
 - [ ] HOWTOs for common tasks; task-oriented documentation
+    - Have tutorial; can this be used?
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
 - [ ] New demo screencasts
 
 
-# Version 0.1.19, towards 0.1.20
+# Version 0.1.21, towards 0.1.22
 
-Usability: key tasks need to be easier (at the level of a single form fill-out):
-- Create a new type+view+list, suitably interconnected
-- Create repeating fields in a view
-- Create multifield reference in a view/group
-- See also: [#41](https://github.com/gklyne/annalist/issues/41)
-- See also discussion below of introducing generic "tasks" - this would be an early pathfinder for that.
-
-- [x] BUG: view types > view type > task button > (error) > Cancel.  Returns to type list rather than view of edited type.
-- [x] BUG: extend render placement to handle list columns defined for small only
-- [x] BUG: unclosed <div> in RepeatGroupRow renderer was causing formatting errors.  (Ugly but not fatal.)
-- [x] BUG: `<form action="" ...>` fails HTML validation.  Use `action="#"` instead.
-- [x] BUG: attempting to create new referenced entity while current entity Id is invalid gives a very obscure server error message (message with Save is sort-of OK).
-- [x] BUG: Edit referenced field button in edit view doesn't work if entity type has been changed to subtype.
-- [x] BUG: image with placement (0/8) displays incorrect label size
-    - Remove field placement options x/8 or x/9 (not sub-multiple of 12).
-    - These widths are still allowed for columns.
-- [x] Fixed bug with "Define view+list" while defining a new type; remember when entity has been saved and skip existence check when performing a subsequent save.
-    - Added `DisplayInfo.saved()` method.
-- [x] When rendering missing entity reference in view mode, use alternative style/colour
-- [x] Don't include continuation URI with entity links in list, view, etc.?
-- [x] Create a new type+view+list, suitably interconnected
-    - [x] Add task-button description to view description for type; use structure for repeat values
-        - For each: Button Id, button label
-    - [x] Render task buttons on view (generic logic)
-        - [x] Add button rendering to edit template
-        - [x] Update view template to match
-        - [x] Add button details to view context for rendering
-        - [x] Add test to render test in test_recordtype
-    - [x] Add logic to catch and dispatch view+list task-button click
-    - [x] Add logic to create/update view+list from type form data
-        - hand-coded for now
-    - [x] Create test case(s)
-- [x] Create repeating fields in a view.
-    - [x] Add task button to field definition form: define repeat field
-    - [x] Add logic to catch and dispatch define-repeat click
-    - [x] Add logic to create repeat group that references current field
-    - [x] Add logic to create repeat field that references group
-    - [x] Create test case(s)
-    - Repeat member pattern: (entity) -> (property)_repeat -> [ { (property) -> (entity) }, ... ]
-- [x] Create multifield reference fields in a view or group.
-    - [x] Add task button to field definition form: define field reference
-    - [x] Add logic to catch and dispatch define-multifield click
-    - [x] Add logic to create multifield group that references current field
-        - refer to field: is this now redundant?  (given there is not multifield_ref)
-    - [x] Add logic to create multifield reference field that references group
-    - [x] Fix up formatting for reference field not in a repeated group
-    - [x] Create test case(s)
-- [x] Close top-level list display: return to collection default view, not Home
-- [x] Change "List users" heading to "List user permissions"
-- [x] Initial tutorial/task-oriented documentation.
-    - Uses personal photo library example.
+- [x] BUG: add a supertype while editing (copying) a new type loses any type URI entered.
+    - IIRC, old URL is wiped at the point of save.
+    - Need to save original URL and only wipe if not changed?
+- [x] BUG: create instance of type with defined type URI saves with `annal:type` value of `annal:EntityData`
+- [x] BUG: renaming a field used by a view results in confusing Server Error messages (missing field)
+   - Entity not found: u'Group Entity_label_ref used in field Entity_label_ref'
+   - Note: this is renaming a group, not a field
+- [x] BUG: when local type/list/view overrides site definition, appears twice in dropdown lists.
+    - Or only when type id is different?  
+    - Case for including type_id/entity_id in dropdown text?
+    - Done, but review this
+- [x] BUG: Naming inconsistency: entity-data.jsonld should be entity_data.jsonld.
+- [x] Content migration for entity-data.jsonld -> entity_data.jsonld
+- [x] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
+    - Think about use of CURIES in data (e.g. for types, fields, etc.)  
+        - Need to store prefix info with collection.
+    - [x] Add `_vocab` built-in type that can be defined at site-level for built-in namespaces like `rdf`, `rdfs`, `annal`, etc., and at collection level for user-introduced namespaces.
+    - [x] Define built-in vocabularies: RDF, RDFS, XSD, OWL, ANNAL
+    - [x] Choose URI for collection context. 
+        - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
+        - could use `@id`?
+        - Think more generally about URI design; avoid explicit reference to `_analist_collection`?
+        - Store/access context data at `/c/<coll_id>/d/ directory`, file `@context`
+            - RFC3986: `pchar = unreserved / pct-encoded / sub-delims / ":" / "@"`
+        - Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
+            - note `@base` ignored if used in external contexts;
+            - can specified value be relative? YES:
+                - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
+                - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
+        - Need to add something to generated entity data?
+        - Using `(site_base)/c/(coll_id)/d/` as base URI would mean that entity ids (`type_id/entity_id`) work directly as relative URIs.  
+            - Also `type_id` to retreive a list of entities of that type.
+            - Thus can use `{ "@base": "../..", @context": "@context", ... }` in entity data.
+        - (also: seach for "URI" below)
+    - [x] Generate JSON-LD context descriptions incorporating the available prefix information.
+        - on-the-fly dynamic generation or static?
+            - If dynamic, then no context available for data accessed without Annalist
+            - If static, when to regenerate?
+            - Maybe adopt a hybrid static-as-cache approach?
+        - is it sufficiently easy to generate property type info on-the-fly?
+    - [x] Arrange to regenerate context only when view/group/field/vocab are updated
+        - [x] Implement post-update processing hook in EntityRoot
+        - [x] Move context generation functions to collection class
+        - [x] Define post-update hook for vocab, etc to regenerate context
+    - [x] Arrange for context to be web-accessible
+    - [x] When generating entity data, incoporate context information
+    - [x] Add context references to site data
+    - [x] JSON-LD context test case.
+    - [x] Closed https://github.com/gklyne/annalist/issues/19
+- [x] Generate site JSON-LD context data as part of 'updatesite' installation step
+- [x] Ensure that raw entity JSON is HTTP-accessible directly from the Annalist server, subject to permissions (e.g. <entity>/entity_data.jsonld.  Also for types, views, fields, etc.)
+    - [x] coll entity data
+    - [x] coll type data
+    - [x] coll list data
+    - [x] coll view data
+    - [x] coll field data
+    - [x] coll group data
+    - [x] coll vocab data
+    - [x] coll user data
+    - [x] site type
+    - [x] site list data
+    - [x] site view data
+    - [x] site field data
+    - [x] site group data
+    - [x] site vocab data
+    - [x] site user data
+- [x] Test cases to ensure JSONLD contexts can be accessed by HTTP.  
+    - Collection and site, with correct relative location to entity data:
+    - [x] entity -> collection context
+    - [x] type -> collection context
+    - [x] site-defined type -> site context
+- [x] Add HTTP and HTML links to data to responses.  Also, link to data on view form.
+- [x] Save 'annal:type' URI value in entity that matches corresponding type data.
 
 (release?)
 
-- [ ] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
-    - [ ] Think about use of CURIES in data (e.g. for types, fields, etc.)  Need to store prefix info with collection.  Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
-    - [ ] JSON-LD @contexts support
-    - [ ] Alternative RDF formats support (e.g. content negotiation)
-    - [ ] Cater for repeated properties (see further TODOs below)?
-
-(release?)
-
+- [ ] BUG?: when supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration utility?
+- [ ] `render_utils.get_mode_render`, handling of repeat fields? (cf. comment from Cerys.)
+- [ ] Cater for repeated properties (see further TODOs below, re 'annal:member')?  
+- [ ] Create schema definitions in Annalist for ANNAL namespace
 - [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
 - [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
-- [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required.
+- [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
+- [ ] Alternative RDF formats support (e.g. content negotiation)
+- [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
 
 (release?)
 
 - [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
+- [ ] Implement "get the data" link as a field renderer?
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?
@@ -91,6 +113,8 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
         - plus new logic to render the padding elements
     - Another option: take field-loop out of template and run it as a `render_all_fields` method
         - still needs placement parser to return position+width information
+- at the time of writing, there is a problem with rdflib-jsonld base URI handling; for now, avoid use of @base.  This means that entity references treated as URIs are not handled as expected, hence for now are stored as literals, wghich means these links are not directly visible in RDF.
+    - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
 
 (release?)
 
@@ -119,6 +143,7 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 
 (feature freeze for V0.9alpha?)
+(0.2?)
 
 - [ ] update Django version used to 1.8 (designated for long term support)
 - [ ] review renderers and revise to take all message strings from messages.py
@@ -132,6 +157,9 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
     - [ ] Shared deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
+- [ ] Remove dependency of analist-manager on test-suite-generated data when creating/updating site
+    - copy site data in directly from `sitedata`
+    - generate all other site data on-the-fly as needed (e.g. context, etc.)
 - [ ] Figure out how to preserve defined users when reinstalling the software.
     - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
     - Seems to be working, but needs explicit testing to make sure.
@@ -150,10 +178,13 @@ Usability: key tasks need to be easier (at the level of a single form fill-out):
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
+- [ ] Move outstanding TODOs to GitHub issues
 
 
 Technical debt:
 
+- [ ] After reworking site adta access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
+    - The various relative references for accessing context data are particularly unclear in the current software.
 - [ ] `annal:Slug` for entity references - is now type/id: rename type?  (annal:Entity_ref?)
 - [ ] Inconsistent `@id` values in site data
 - [ ] Re-think access to entities and types:
@@ -165,6 +196,7 @@ Technical debt:
     - [ ] Think about how to optimize retreival of subtypes/supertypes
     - [ ] Do special case for types, or more generic caching approach?
 - [ ] Customize view getting out of sync with other page styles
+    - possible enhancements to form generator to generate custoimize page using form logic?
 - [ ] Refactor entity edit response handling
 - [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
 - [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
@@ -179,6 +211,7 @@ Technical debt:
 
 Usability notes:
 
+- [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15)
 - [ ] Display entity-id *and* label values in drop-downs?  (e.g. "id (label)")
 - [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
 - [ ] Persist item selection to refreshed display when move-up/movedown clicked?
@@ -219,10 +252,10 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Issues raised by Cerys in email of 23-Oct-2015.  Some good points there - should break out into issues.
 - [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
     - Should be easy to add.  Just need a name.
 - [ ] Scrolling through views from list - e.g. Next/Prev item buttons? (Iris G)
-- [ ] Pingbacks?  Cf. [prov-aq/#provenance-pingback](http://www.w3.org/TR/prov-aq/#provenance-pingback)
 - [ ] Option to scan for broken entity references (e.g., due to removal, renaming)
 - [ ] Extend task definitions to include validation: allow error reporting
 - [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
@@ -234,6 +267,9 @@ Notes for Future TODOs:
         1. use same property for group and field; recognize and elide when generating/reading RDF?
         2. use auto-generated unique property for group ref.  Can recognize for RDF?
         3. group description to use 'annal:member' property override
+    - IMPLEMENTING: use `owl:sameAs` for singleton dictionaries in a JSON list.
+        - equivalent to `[ owl:sameAs <some_resource> ]`
+        - (could use `@id` has key ?)
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
     - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.
@@ -268,7 +304,7 @@ Notes for Future TODOs:
 - [ ] 3D rendering - check out JSMOL - http://wiki.jmol.org/index.php/JSmol
 - [ ] Visualize data structures from view definitions; generate OWL descriptions; etc.
 - [ ] Remixing spreadsheets: spreadsheet generation from queries as well as ingesting through data bridges.
-- [ ] SPARQL data bridge: use copmbination opf SPARQL CONSTRUCT query + JSON-LD frame?
+- [ ] SPARQL data bridge: use combination opf SPARQL CONSTRUCT query + JSON-LD frame?
 - [ ] View selection based on pattern match; e.g. JSON PATCH "Test" operation.
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
