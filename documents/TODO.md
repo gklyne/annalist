@@ -13,93 +13,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] New demo screencasts
 
 
-# Version 0.1.21, towards 0.1.22
-
-- [x] BUG: add a supertype while editing (copying) a new type loses any type URI entered.
-    - IIRC, old URL is wiped at the point of save.
-    - Need to save original URL and only wipe if not changed?
-- [x] BUG: create instance of type with defined type URI saves with `annal:type` value of `annal:EntityData`
-- [x] BUG: renaming a field used by a view results in confusing Server Error messages (missing field)
-   - Entity not found: u'Group Entity_label_ref used in field Entity_label_ref'
-   - Note: this is renaming a group, not a field
-- [x] BUG: when local type/list/view overrides site definition, appears twice in dropdown lists.
-    - Or only when type id is different?  
-    - Case for including type_id/entity_id in dropdown text?
-    - Done, but review this
-- [x] BUG: Naming inconsistency: entity-data.jsonld should be entity_data.jsonld.
-- [x] Content migration for entity-data.jsonld -> entity_data.jsonld
-- [x] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
-    - Think about use of CURIES in data (e.g. for types, fields, etc.)  
-        - Need to store prefix info with collection.
-    - [x] Add `_vocab` built-in type that can be defined at site-level for built-in namespaces like `rdf`, `rdfs`, `annal`, etc., and at collection level for user-introduced namespaces.
-    - [x] Define built-in vocabularies: RDF, RDFS, XSD, OWL, ANNAL
-    - [x] Choose URI for collection context. 
-        - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
-        - could use `@id`?
-        - Think more generally about URI design; avoid explicit reference to `_analist_collection`?
-        - Store/access context data at `/c/<coll_id>/d/ directory`, file `@context`
-            - RFC3986: `pchar = unreserved / pct-encoded / sub-delims / ":" / "@"`
-        - Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
-            - note `@base` ignored if used in external contexts;
-            - can specified value be relative? YES:
-                - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
-                - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
-        - Need to add something to generated entity data?
-        - Using `(site_base)/c/(coll_id)/d/` as base URI would mean that entity ids (`type_id/entity_id`) work directly as relative URIs.  
-            - Also `type_id` to retreive a list of entities of that type.
-            - Thus can use `{ "@base": "../..", @context": "@context", ... }` in entity data.
-        - (also: seach for "URI" below)
-    - [x] Generate JSON-LD context descriptions incorporating the available prefix information.
-        - on-the-fly dynamic generation or static?
-            - If dynamic, then no context available for data accessed without Annalist
-            - If static, when to regenerate?
-            - Maybe adopt a hybrid static-as-cache approach?
-        - is it sufficiently easy to generate property type info on-the-fly?
-    - [x] Arrange to regenerate context only when view/group/field/vocab are updated
-        - [x] Implement post-update processing hook in EntityRoot
-        - [x] Move context generation functions to collection class
-        - [x] Define post-update hook for vocab, etc to regenerate context
-    - [x] Arrange for context to be web-accessible
-    - [x] When generating entity data, incoporate context information
-    - [x] Add context references to site data
-    - [x] JSON-LD context test case.
-    - [x] Closed https://github.com/gklyne/annalist/issues/19
-- [x] Generate site JSON-LD context data as part of 'updatesite' installation step
-- [x] Ensure that raw entity JSON is HTTP-accessible directly from the Annalist server, subject to permissions (e.g. <entity>/entity_data.jsonld.  Also for types, views, fields, etc.)
-    - [x] coll entity data
-    - [x] coll type data
-    - [x] coll list data
-    - [x] coll view data
-    - [x] coll field data
-    - [x] coll group data
-    - [x] coll vocab data
-    - [x] coll user data
-    - [x] site type
-    - [x] site list data
-    - [x] site view data
-    - [x] site field data
-    - [x] site group data
-    - [x] site vocab data
-    - [x] site user data
-- [x] Test cases to ensure JSONLD contexts can be accessed by HTTP.  
-    - Collection and site, with correct relative location to entity data:
-    - [x] entity -> collection context
-    - [x] type -> collection context
-    - [x] site-defined type -> site context
-- [x] Add HTTP and HTML links to data to responses.  Also, link to data on view form.
-- [x] Save 'annal:type' URI value in entity that matches corresponding type data.
-
-(release?)
+# Version 0.1.23, towards 0.1.24
 
 - [ ] BUG?: when supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration utility?
-- [ ] `render_utils.get_mode_render`, handling of repeat fields? (cf. comment from Cerys.)
-- [ ] Cater for repeated properties (see further TODOs below, re 'annal:member')?  
-- [ ] Create schema definitions in Annalist for ANNAL namespace
+- [ ] BUG?: `render_utils.get_mode_render`, handling of repeat fields? (cf. comment from Cerys.)
 - [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
-- [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
-- [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
-- [ ] Alternative RDF formats support (e.g. content negotiation)
+    - [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
+    - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
+- [ ] Create schema definitions in Annalist for ANNAL namespace
 
 (release?)
 
@@ -113,8 +35,23 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - plus new logic to render the padding elements
     - Another option: take field-loop out of template and run it as a `render_all_fields` method
         - still needs placement parser to return position+width information
-- at the time of writing, there is a problem with rdflib-jsonld base URI handling; for now, avoid use of @base.  This means that entity references treated as URIs are not handled as expected, hence for now are stored as literals, wghich means these links are not directly visible in RDF.
-    - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
+- [ ] Review URI usage
+    - [ ] eliminate use of /c/ in path?  (Not sure.)
+    - [ ] avoid explicit reference to `_analist_collection`?
+    - [ ] review base URI designation in JSON-LD:
+        - note `@base` ignored if used in external contexts;
+        - can specified value be relative? YES:
+            - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
+            - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
+        - Add `@base` to generated entity data:
+            - Using `(site_base)/c/(coll_id)/d/` as base URI would mean that entity ids (`type_id/entity_id`) work directly as relative URIs.  
+            - Also `type_id` to retreive a list of entities of that type.
+            - Thus use `{ "@base": "../..", @context": "@context", ... }` in entity data.
+        - at the time of writing, there is a problem with rdflib-jsonld base URI handling; for now, avoid use of @base.  This means that entity references treated as URIs are not handled as expected, hence for now are stored as literals, wghich means these links are not directly visible in RDF.
+            - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
+    - [ ] collections and repeated properties:
+        - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
+        - could use `@id`?
 
 (release?)
 
