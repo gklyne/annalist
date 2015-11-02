@@ -357,7 +357,8 @@ class EntityTypeInfo(object):
         # Don't save entity URI if same as URL
         if entity_values.get(ANNAL.CURIE.uri) == entity_values.get(ANNAL.CURIE.url):
             entity_values.pop(ANNAL.CURIE.uri, None)
-        entity_values['@type'] = self.get_all_type_uris() # NOTE: previous types not carried forward
+        entity_values['@type']          = self.get_all_type_uris() # NOTE: previous types not carried forward
+        entity_values[ANNAL.CURIE.type] = self.get_type_uri()
         return self.entityclass.create(self.entityparent, entity_id, entity_values)
 
     def remove_entity(self, entity_id):
