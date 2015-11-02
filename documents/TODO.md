@@ -15,13 +15,17 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.23, towards 0.1.24
 
-- [ ] BUG?: when supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration utility?
+- [ ] BUG?: resolve model dependency on view module introduced by context-generation logic
+    - (causes Django configuration settings to be invoked too early, and spurious log output)
+    - cf. TODOs in model.site and model.collection
 - [ ] BUG?: `render_utils.get_mode_render`, handling of repeat fields? (cf. comment from Cerys.)
 - [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
     - [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
     - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
 - [ ] Create schema definitions in Annalist for ANNAL namespace
+- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Caroplan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data.
+- [ ] When supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration utility?
 
 (release?)
 
@@ -70,13 +74,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
-- [ ] Add software version to site_meta.
-    - [ ] Add when creating site
-        - as part of installation
-    - [ ] Update when updating site
-        - as part of installation
-    - [ ] Check this when accessing site.
-        - at server startup.
 - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 
 (feature freeze for V0.9alpha?)
@@ -110,6 +107,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] annalist-manager createsitedata [ CONFIG ]
     - [ ] annalist-manager updatesitedata [ CONFIG ]
     - etc.
+- [ ] Review docker files: reduce number of separate commands used; always build on clean python setup
 - [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)

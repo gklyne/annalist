@@ -28,12 +28,10 @@ As always, the live demo system is at [demo.annalist.net](http://demo.annalist.n
 
 ### Announcing Annalist release 0.1.22
 
-I've just released Annalist 0.1.22.
-
-This release puts "linked data" in the Annalist linked data notebook, with support for access to Annalist data records as [JSON-LD](http://json-ld.org/#).
+I've just released Annalist 0.1.22.  This release puts "linked data" in the Annalist linked data notebook, with support for access to Annalist data records as [JSON-LD](http://json-ld.org/#).
 
 The full announcement is at: 
-https://groups.google.com/d/msg/annalist-discuss/....
+https://groups.google.com/d/msg/annalist-discuss/1yFEhQ3-yGg/xqvEZEz2AAAJ
 
 Release notes (see "history" section for details) at:
 https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md
@@ -51,3 +49,41 @@ http://annalist.net/documents/tutorial/annalist-tutorial.html
 
 ...
 
+## To FAST:
+
+### Announcing Annalist release 0.1.22
+
+I've just released Annalist 0.1.22.  This release puts "linked data" in the Annalist linked data notebook, with support for access to Annalist data records as JSON-LD (http://json-ld.org/).
+
+The full announcement is at: 
+https://groups.google.com/d/msg/annalist-discuss/1yFEhQ3-yGg/xqvEZEz2AAAJ
+
+Release notes (see "history" section for details) at:
+https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md
+
+Annalist project on Github:
+https://github.com/gklyne/annalist
+
+Live demonstrator:
+http://annalist.net/ and http://demo.annalist.net/
+
+Online tutorial document (draft, work-in-progress):
+http://annalist.net/documents/tutorial/annalist-tutorial.html
+
+#g
+
+...
+
+### First pass of linked data for the Carolan Guitar's story
+
+Using Annalist, I've also just completed a first pass of creating a linked data overlay for the Carolan Guitar's story as represented by its blog (http://carolanguitar.com/).  The Annalist data is at
+
+  http://demo.annalist.net/annalist/c/Carolan_Guitar/
+
+and the record describing the Carolan Guitar itself is:
+
+  http://demo.annalist.net/annalist/c/Carolan_Guitar/d/Artifact/Carolan_Guitar/
+
+(note the link at the bottom of the page for accessing the data programmatically as JSON-LD).
+
+#g
