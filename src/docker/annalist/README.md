@@ -10,7 +10,7 @@ NOTE: the commands below should be run with an installed copy of the annalist ve
 
 The line:
 
-    RUN pip install annalist=0.1.20
+    RUN pip install annalist=0.1.22
 
 in `Dockerfile` should be updated a new release of Annalist is created, to ensure a new Docker image is created as needed.
 

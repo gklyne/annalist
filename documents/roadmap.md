@@ -1,7 +1,6 @@
 # Development roadmap
 
-Current status: public prototype release 0.1.20; this release introduces 
-interface changes to address some usabaility problems and fixes several bugs.
+Current status: public prototype release 0.1.22; this release introduces support for presenting Annalist data and linked data, using JSON-LD syntax.
 
 
 # V1.0 release
@@ -22,19 +21,6 @@ Especially spreadsheets.  See https://github.com/ninebynine/sds
 ## Research objects
 
 Mechanisms for packaging to submitting to RO repositories.  Could be based on [DIP work](https://github.com/CottageLabs/dip), etc.
-
-
-## Linked data formats and API
-
-Currently, data is stored as JSON using JSON-LD elements and conventions (in particular property names, '@id' and '@type' fields). The intent is for Annalist data to be interpretable and presentable as RDF, which requires putting a number of additional elements in place:
-
-Notes:
-
-- namespaces and prefix URIs
-- jsonld contexts
-- alternate format renderers and content negotiation
-
-There are also some issues around entity renaming and link preservation to be considered.
 
 
 ## Web backend storage
@@ -65,6 +51,7 @@ Notes:
 
 - more field types, including link browser
     - image grid + metadata pop-up for mobile browsing?
+- see also: discussion with Cerys, and philosophy of minimal hurdles to data entry
 
 
 ## Grid view
@@ -108,6 +95,7 @@ Notes:
 
 1. Capture provenance informnation as data records are updated (authenticated user, date+time, records view used, etc.)
 2. Support provenance pingbacks, e.g. for discovery of downstream use.
+    - Cf. [prov-aq/#provenance-pingback](http://www.w3.org/TR/prov-aq/#provenance-pingback)
 
 Notes:
 
@@ -130,8 +118,6 @@ Implement ResourceSync protocol for sharing and propagation of Annalist data set
 
 ## Sample applications
 
-* Cruising log
-* Digital Music Object experiments
 * Image database (bioimage revisited)
 
 

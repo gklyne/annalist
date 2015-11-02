@@ -63,8 +63,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] When generating entity data, incoporate context information
     - [x] Add context references to site data
     - [x] JSON-LD context test case.
-        - create type+view, read context from URL, check expected values
-        - read entity into RDF store (rdflib), check graph content
+    - [x] Closed https://github.com/gklyne/annalist/issues/19
 - [x] Generate site JSON-LD context data as part of 'updatesite' installation step
 - [x] Ensure that raw entity JSON is HTTP-accessible directly from the Annalist server, subject to permissions (e.g. <entity>/entity_data.jsonld.  Also for types, views, fields, etc.)
     - [x] coll entity data
@@ -82,19 +81,19 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] site group data
     - [x] site vocab data
     - [x] site user data
-- [x] Ensure JSONLD contexts can be accessed by HTTP.  
+- [x] Test cases to ensure JSONLD contexts can be accessed by HTTP.  
     - Collection and site, with correct relative location to entity data:
     - [x] entity -> collection context
     - [x] type -> collection context
     - [x] site-defined type -> site context
-- [x] HTTP access test case: can load JSONLD as graph via HTTP; entity and type tests
 - [x] Add HTTP and HTML links to data to responses.  Also, link to data on view form.
+- [x] Save 'annal:type' URI value in entity that matches corresponding type data.
 
 (release?)
 
 - [ ] BUG?: when supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration utility?
-- [ ] `render_utils.get_mode_render`, handling of repeat fields?
-- [ ] Cater for repeated properties (see further TODOs below)?
+- [ ] `render_utils.get_mode_render`, handling of repeat fields? (cf. comment from Cerys.)
+- [ ] Cater for repeated properties (see further TODOs below, re 'annal:member')?  
 - [ ] Create schema definitions in Annalist for ANNAL namespace
 - [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
 - [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
@@ -114,6 +113,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - plus new logic to render the padding elements
     - Another option: take field-loop out of template and run it as a `render_all_fields` method
         - still needs placement parser to return position+width information
+- at the time of writing, there is a problem with rdflib-jsonld base URI handling; for now, avoid use of @base.  This means that entity references treated as URIs are not handled as expected, hence for now are stored as literals, wghich means these links are not directly visible in RDF.
+    - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
 
 (release?)
 
@@ -255,7 +256,6 @@ Notes for Future TODOs:
 - [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
     - Should be easy to add.  Just need a name.
 - [ ] Scrolling through views from list - e.g. Next/Prev item buttons? (Iris G)
-- [ ] Pingbacks?  Cf. [prov-aq/#provenance-pingback](http://www.w3.org/TR/prov-aq/#provenance-pingback)
 - [ ] Option to scan for broken entity references (e.g., due to removal, renaming)
 - [ ] Extend task definitions to include validation: allow error reporting
 - [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.

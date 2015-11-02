@@ -142,17 +142,18 @@ setup(
           , 'wsgiref==0.1.2'
         , 'oauth2client==1.2'
           , 'httplib2==0.9'
-        , 'pyparsing==2.0.2'    # Does RDFlib need 1.5.7?
+        , 'pyparsing==2.0.2'
         , 'Markdown==2.5.2'
         # For testing:
-        , 'beautifulsoup4'
-        # For development - used by miscutils/MockHttpResources:
-        # , 'httpretty==0.7.1'
-        # Probably used by RDFlib stuff..
-        # , 'SPARQLWrapper==1.5.2'
-        # , 'html5lib==1.0b3'
-        # , 'isodate==0.4.9'
-        # , 'six==1.4.1'
+        , 'httpretty==0.8.10'
+        , 'beautifulsoup4==4.4.0'
+          , 'html5lib==1.0b8'
+        , 'rdflib==4.2.1'
+        , 'rdflib-jsonld==0.3'
+          , 'SPARQLWrapper==1.6.4'
+          , 'isodate==0.5.1'
+          , 'wsgiref==0.1.2'
+          , 'six==1.10.0'
         ],
     entry_points =
         {
