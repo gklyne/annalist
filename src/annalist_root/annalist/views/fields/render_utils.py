@@ -320,13 +320,20 @@ def get_mode_renderer(field_render_type, field_value_mode):
     current render_mode (used for nested renderers which can be invoked in different 
     view contexts).
     """
-    renderer = get_field_base_renderer(field_render_type)
+    # @@TODO: factor out this selection?
+    #         (common with get_view_renderer, get_label_view_renderer)
+    if field_render_type == "RepeatGroup":
+        renderer = RenderRepeatGroup(render_repeatgroup.view_group)
+    elif field_render_type == "RepeatListRow":
+        renderer = RenderRepeatGroup(render_repeatgroup.view_listrow)
+    elif field_render_type == "RepeatGroupRow":
+        renderer = RenderRepeatGroup(render_repeatgroup.view_grouprow)
+    else:
+        renderer = get_field_base_renderer(field_render_type)
     if not renderer:
+        # Repeat group: revert to normal renderer ....
         # Default to simple text for unknown renderer type
-        if field_render_type not in ["RepeatListRow", "RepeatGroup", "RepeatGroupRow"]:
-            log.warning("get_mode_renderer: %s not found"%field_render_type)
-        # else:
-        #     log.warning("get_mode_renderer: %s not currently supported"%field_render_type)
+        log.warning("get_mode_renderer: %s not supported"%field_render_type)
         renderer = get_field_base_renderer("Text")
     return renderer.render_mode()
 

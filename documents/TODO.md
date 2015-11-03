@@ -15,10 +15,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.23, towards 0.1.24
 
-- [x] BUG?: resolve model dependency on view module introduced by context-generation logic
+- [x] BUG: resolve model dependency on view module introduced by context-generation logic
     - (causes Django configuration settings to be invoked too early, and spurious log output)
     - cf. TODOs in model.site and model.collection
-- [ ] BUG?: `render_utils.get_mode_render`, handling of repeat fields? (cf. comment from Cerys.)
+- [x] BUG: `render_utils.get_mode_renderer`, handling of repeat fields? (cf. comment from Cerys.)
+    - Added logic so that repeat fields also support current-mode rendering (but rendering as a normal view)
 - [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
     - [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
     - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
