@@ -15,7 +15,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.23, towards 0.1.24
 
-- [ ] BUG?: resolve model dependency on view module introduced by context-generation logic
+- [x] BUG?: resolve model dependency on view module introduced by context-generation logic
     - (causes Django configuration settings to be invoked too early, and spurious log output)
     - cf. TODOs in model.site and model.collection
 - [ ] BUG?: `render_utils.get_mode_render`, handling of repeat fields? (cf. comment from Cerys.)
@@ -118,6 +118,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 Technical debt:
 
+- [ ] Delay accessing settings data until actually needed, so that new dependencies (e.g. models on views) don't cause premature selection.  This will help to avoid certain unexpected problems cropping up as happened with release 0.1.22 logging setup for annalist-manager.
 - [ ] After reworking site adta access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
     - The various relative references for accessing context data are particularly unclear in the current software.
 - [ ] `annal:Slug` for entity references - is now type/id: rename type?  (annal:Entity_ref?)

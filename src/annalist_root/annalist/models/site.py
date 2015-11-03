@@ -37,13 +37,7 @@ from annalist.models.recordvocab    import RecordVocab
 from annalist.models.recordview     import RecordView
 from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordfield    import RecordField
-
-# @@TODO: look for way to remove this view dependency from model code.  Move to RecordField 
-#   module?  Hmmm... not so easy: information about render types and methods is concentrated
-#   in render_utils module.  Maybe need to split render_utils functionality between
-#   model and view modules?
-#
-from annalist.views.fields.render_utils import (
+from annalist.models.rendertypeinfo import (
     is_render_type_literal,
     is_render_type_id,
     is_render_type_set,

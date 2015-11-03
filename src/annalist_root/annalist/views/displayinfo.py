@@ -45,14 +45,6 @@ from annalist.views.uri_builder     import (
     url_update_type_entity_id
     )
 
-from annalist.views.fields.render_utils import (
-    is_render_type_literal,
-    is_render_type_id,
-    is_render_type_set,
-    is_render_type_list,
-    is_render_type_object,
-    )
-
 #   -------------------------------------------------------------------------------------------
 #
 #   Table of authorization symbols added to the display context according to 
