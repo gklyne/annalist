@@ -1,0 +1,14 @@
+{ "@id":                        "annal:fields/Bib_title"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Bib_title"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Title"
+, "rdfs:comment":               "The title of the work"
+, "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:placeholder":          "(title of work)"
+, "annal:property_uri":         "bib:title"
+, "annal:field_entity_type":    "bib:BibEntry"
+}

@@ -62,7 +62,9 @@ class Entity(EntityRoot):
                     the alternative path for the entity type: this is used to augment 
                     explicitly created entities in a collection with site-wide 
                     installed metadata entites (i.e. types, views, etc.)
-        idcheck     is set False to skip the valid-identifier check
+        idcheck     is set False to skip the valid-identifier check; used when initializing 
+                    (unidentified) site data element
+                    @@TODO: when collection-inheritance is introduced, this should go.
         use_altpath is set True if this entity is situated at the alternative
                     path relative to its parent.  This is used by test code to force
                     an entity to be located on the alternative parent path.  In normal

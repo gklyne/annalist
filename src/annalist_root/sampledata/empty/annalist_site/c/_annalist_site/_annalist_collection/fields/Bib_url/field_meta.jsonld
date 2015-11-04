@@ -1,0 +1,14 @@
+{ "@id":                        "annal:fields/Bib_url"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Bib_url"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "URL"
+, "rdfs:comment":               "URL"
+, "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:placeholder":          "(URL)"
+, "annal:property_uri":         "bib:url"
+, "annal:field_entity_type":    "bib:BibEntry"
+}

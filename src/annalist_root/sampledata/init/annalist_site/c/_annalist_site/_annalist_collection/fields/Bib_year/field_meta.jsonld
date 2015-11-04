@@ -1,0 +1,14 @@
+{ "@id":                        "annal:fields/Bib_year"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Bib_year"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Year"
+, "rdfs:comment":               "The year of publication (or, if unpublished, the year of creation)"
+, "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:placeholder":          "(Bib_year)"
+, "annal:property_uri":         "bib:year"
+, "annal:field_entity_type":    "bib:BibEntry"
+}

@@ -205,7 +205,7 @@ class JsonldContextTest(AnnalistTestCase):
         g = Graph()
         s = self.testsite._read_stream()
         # b = self.testsite.get_url()
-        b = "file://" + os.path.join(TestBaseDir, layout.SITEDATA_DIR) + "/"
+        b = "file://" + os.path.join(TestBaseDir, layout.SITEDATA_META_DIR) + "/"
         # print "*****"+repr(b)
         # print "*****"+repr(s)
         # print "*****"+repr(b)
@@ -215,13 +215,22 @@ class JsonldContextTest(AnnalistTestCase):
         # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj      = URIRef(self.testsite.get_url())
-        subj      = URIRef("file://" + TestBaseDir + "/")
-        site_data = self.testsite.site_data()
-        label     = Literal(site_data[RDFS.CURIE.label])
-        comment   = Literal(site_data[RDFS.CURIE.comment])
-        self.assertIn((subj, URIRef(RDFS.label),   label),   g)
-        self.assertIn((subj, URIRef(RDFS.comment), comment), g)
+        subj             = URIRef(self.testsite.get_url())
+        subj             = URIRef("file://" + TestBaseDir + "/")
+        subj             = URIRef("file://" + os.path.join(TestBaseDir, layout.SITEDATA_DIR) + "/")
+        site_data        = self.testsite.site_data()
+        ann_id           = Literal(layout.SITEDATA_ID)
+        ann_type         = URIRef(ANNAL.Collection)
+        ann_type_id      = Literal(Collection._entitytypeid)
+        software_version = Literal(annalist.__version_data__)
+        label            = Literal(site_data[RDFS.CURIE.label])
+        comment          = Literal(site_data[RDFS.CURIE.comment])
+        self.assertIn((subj, URIRef(ANNAL.id),      ann_id),      g)
+        self.assertIn((subj, URIRef(ANNAL.type),    ann_type),    g)
+        self.assertIn((subj, URIRef(ANNAL.type_id), ann_type_id), g)
+        self.assertIn((subj, URIRef(RDFS.label),    label),       g)
+        self.assertIn((subj, URIRef(RDFS.comment),  comment),     g)
+        self.assertIn((subj, URIRef(ANNAL.software_version), software_version), g)
         return
 
     def test_jsonld_collection(self):
@@ -541,7 +550,7 @@ class JsonldContextTest(AnnalistTestCase):
         """
         mock_refs = (
             [ "../../coll_context.jsonld"
-            , "../../site_context.jsonld" 
+            # , "../../site_context.jsonld" 
             ])
         mock_dict = {}
         for mock_ref in mock_refs:

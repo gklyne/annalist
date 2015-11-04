@@ -1,0 +1,14 @@
+{ "@id":                        "annal:fields/Bib_organization"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Bib_organization"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Organization"
+, "rdfs:comment":               "The conference sponsor"
+, "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:placeholder":          "(conference sponsor organization)"
+, "annal:property_uri":         "bib:organization"
+, "annal:field_entity_type":    "bib:BibEntry"
+}

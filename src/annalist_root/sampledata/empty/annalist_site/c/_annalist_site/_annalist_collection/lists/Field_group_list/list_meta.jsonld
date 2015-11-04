@@ -1,0 +1,21 @@
+{ "@id":                        "annal:display/Field_group_list"
+, "@type":                      ["annal:List"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Field_group_list"
+, "annal:type_id":              "_list"
+, "rdfs:label":                 "List field groups"
+, "rdfs:comment":               "Description of list of field groups"
+, "annal:display_type":         "Enum_list_type/List"
+, "annal:default_view":         "_view/Field_group_view"
+, "annal:default_type":         "_type/_group"
+, "annal:list_entity_selector": "'annal:Field_group' in [@type]"
+, "annal:record_type":          "annal:Field_group"
+, "annal:list_fields":
+  [ { "annal:field_id":             "_field/Entity_id"
+    , "annal:field_placement":      "small:0,4"
+    }
+  , { "annal:field_id":             "_field/Entity_label"
+    , "annal:field_placement":      "small:4,8"
+    }
+  ]
+}

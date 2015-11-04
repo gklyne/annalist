@@ -1,0 +1,17 @@
+{ "@id":                        "annal:fields/Entity_type"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Entity_type"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Type"
+, "rdfs:comment":               "A short identifier that identifies the type of the corresponding entity."
+, "annal:field_name":           "entity_type"
+, "annal:field_render_type":    "EntityTypeId"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "annal:Slug"
+, "annal:placeholder":          "(type id)"
+, "annal:property_uri":         "annal:type_id"
+, "annal:field_ref_type":       "_type"
+, "annal:field_placement":      "small:0,12;medium:6,6"
+, "annal:default_value":        ""
+}

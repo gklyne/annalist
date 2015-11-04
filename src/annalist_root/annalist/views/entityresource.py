@@ -126,10 +126,8 @@ class EntityResourceAccess(AnnalistGenericView):
         """
         log.debug("EntityResourceAccess.find_resource %s/%s/%s"%(entity.get_type_id(), entity.get_id(), resource_ref))
         fixed_resources = (
-            [ { "resource_name": layout.SITE_META_FILE,        "resource_type": "application/ld+json" }
-            , { "resource_name": layout.SITE_PROV_FILE,        "resource_type": "application/ld+json" }
-            , { "resource_name": layout.SITEDATA_META_FILE,    "resource_type": "application/ld+json" }
-            , { "resource_name": layout.SITEDATA_CONTEXT_FILE, "resource_type": "application/ld+json" }
+            [ { "resource_name": layout.SITEDATA_META_FILE,    "resource_type": "application/ld+json" }
+            , { "resource_name": layout.SITEDATA_PROV_FILE,    "resource_type": "application/ld+json" }
             , { "resource_name": layout.COLL_META_FILE,        "resource_type": "application/ld+json" }
             , { "resource_name": layout.COLL_PROV_FILE,        "resource_type": "application/ld+json" }
             , { "resource_name": layout.COLL_CONTEXT_FILE,     "resource_type": "application/ld+json" }

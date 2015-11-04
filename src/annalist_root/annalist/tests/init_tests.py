@@ -17,7 +17,7 @@ import shutil
 # from django.test import TestCase
 from django.conf import settings
 
-from annalist.util                  import replacetree
+from annalist.util                  import replacetree, removetree
 # from annalist.layout import Layout
 
 from annalist.models.site           import Site
@@ -60,14 +60,15 @@ def copySitedata(src, sitedatasrc, tgt):
     assert os.path.exists(sitedatasrc), "Check site data source directory (%s)"%(sitedatasrc)
     assert tgt.startswith(TestBaseDir)
     # Site data is not updated by the tests, so initialize it just once for each test suite run
-    sitedatatgt = os.path.join(tgt, test_layout.SITEDATA_DIR)
+    sitedatatgt = os.path.join(tgt, test_layout.SITEDATA_META_DIR)
     global sitedata_target_reset
     if sitedata_target_reset == "all":
         replacetree(src, tgt)
         for sdir in ("users", "types", "lists", "views", "groups", "fields", "vocabs", "enums"):
             s = os.path.join(sitedatasrc, sdir)
             d = os.path.join(sitedatatgt, sdir)
-            shutil.copytree(s, d)
+            # shutil.copytree(s, d)
+            replacetree(s, d)
     elif sitedata_target_reset == "collections":
         ds = os.path.join(src, "c")
         dt = os.path.join(tgt, "c")

@@ -1,0 +1,16 @@
+{ "@id":                        "annal:fields/Type_comment"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Type_comment"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Comment"
+, "rdfs:comment":               "Descriptive text about a record type"
+, "annal:field_render_type":    "Markdown"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "annal:Richtext"
+, "annal:field_entity_type":    "annal:Type"
+, "annal:placeholder":          "(type description)"
+, "annal:property_uri":         "rdfs:comment"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

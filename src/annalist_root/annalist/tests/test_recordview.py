@@ -155,7 +155,7 @@ class RecordViewTest(AnnalistTestCase):
             { 'rdfs:label':     'Default record view'
             , 'rdfs:comment':   'Default record view, applied when no view is specified when creating a record.'
             , 'annal:uri':      'annal:display/Default_view'
-            , '@context':       ["../../site_context.jsonld"]
+            , '@context':       [layout.ENTITY_CONTEXT_FILE]
             })
         v.pop('annal:record_type', None)
         self.assertDictionaryMatch(td, v)

@@ -1,0 +1,16 @@
+{ "@id":                        "annal:fields/Field_default"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Field_default"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Default"
+, "rdfs:comment":               "Default value (if any) for field."
+, "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:placeholder":          "(field default value)"
+, "annal:property_uri":         "annal:default_value"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

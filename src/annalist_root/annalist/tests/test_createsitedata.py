@@ -15,6 +15,7 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 
+import annalist
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
 from annalist.models.site           import Site
@@ -53,6 +54,26 @@ def entitydata_create_values(coll, etype, entity_id, update="Entity"):
         { 'rdfs:label': '%s %s/%s/%s'%(update, coll._entityid, etype._entityid, entity_id)
         , 'rdfs:comment': '%s coll %s, type %s, entity %s'%(update, coll._entityid, etype._entityid, entity_id)
         })
+
+def site_create_data(site_base_uri, data_source):
+        # Note: copysitedata copies also copies from source tree
+        #       def copySitedata(src, sitedatasrc, tgt):
+        copySitedata(
+            settings.SITE_SRC_ROOT + data_source + test_layout.SITE_DIR, 
+            settings.SITE_SRC_ROOT + "/annalist/sitedata",
+            TestBaseDir)
+        site = Site(site_base_uri, TestBaseDir)
+        sitedata_values = collection_create_values(layout.SITEDATA_ID)
+        sitedata_values.update(
+            { 'rdfs:label':             "Annalist data notebook test site"
+            , 'rdfs:comment':           "Annalist test site metadata and site-wide values."
+            , 'annal:software_version': annalist.__version_data__
+            , "annal:comment":          "Initialized by annalist.tests.test_createsitedata.py"
+            })
+        sitedata  = Collection.create(site, layout.SITEDATA_ID, sitedata_values)
+        sitedata.generate_coll_jsonld_context()
+        return site
+
 
 def coll123_create_data(site):
     coll1 = Collection.create(site, "coll1", collection_create_values("coll1"))
@@ -96,41 +117,24 @@ class CreateSiteData(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
 
     def test_CreateDevelSiteData(self):
+        # Note: copysitedata copies also copies from source tree
+        #       def copySitedata(src, sitedatasrc, tgt):
         copySitedata(
             settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
             settings.SITE_SRC_ROOT+"/annalist/sitedata",
             TestBaseDir)
-        develsite = Site("http://localhost:8000/annalist/", TestBaseDir)
+        # Use localhost base URI for devel site
+        develsite = site_create_data("http://localhost:8000/annalist/", "/sampledata/init/")
         coll123_create_data(develsite)
         return
 
     def test_CreateTestSiteData(self):
-        copySitedata(
-            settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
-            settings.SITE_SRC_ROOT+"/annalist/sitedata",
-            TestBaseDir)
-        testsite = Site(TestBaseUri, TestBaseDir)
+        testsite = site_create_data(TestBaseUri, "/sampledata/init/")
         coll123_create_data(testsite)
-        #
-        # testcoll = Collection.create(testsite, "testcoll", collection_create_values("testcoll"))
-        # testtype = RecordType.create(testcoll, "testtype", recordtype_create_values("testcoll", "testtype"))
-        # # testview = RecordView.create(testcoll, "testview", recordview_create_values("testview"))
-        # # testlist = RecordList.create(testcoll, "testlist", recordlist_create_values("testlist"))
-        # testdata = RecordTypeData.create(testcoll, "testtype", {})
-        # teste    = EntityData.create(
-        #     testdata, "entity1", 
-        #     entitydata_create_values(testcoll,testtype,"entity1")
-        #     )
         return
 
     def test_CreateEmptySiteData(self):
-        copySitedata(
-            settings.SITE_SRC_ROOT+"/sampledata/empty/"+test_layout.SITE_DIR, 
-            settings.SITE_SRC_ROOT+"/annalist/sitedata",
-            TestBaseDir)
-        # testsite = Site(TestBaseUri, TestBaseDir)
-        # testsite.generate_site_jsonld_context()
-        # develsite = Site("http://localhost:8000/annalist/", TestBaseDir)
+        emptysite = site_create_data(TestBaseUri, "/sampledata/empty/")
         return
 
 # End.

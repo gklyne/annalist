@@ -1,0 +1,18 @@
+{ "@id":                        "annal:fields/Field_groupref"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Field_groupref"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Field group"
+, "rdfs:comment":               "Reference to view whose fields are used for a composite field."
+, "annal:field_name":           "Field_groupref"
+, "annal:field_render_type":    "Enum_optional"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_ref_type":       "_group"
+, "annal:field_value_type":     "annal:Slug"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:placeholder":          "(no field group selected)"
+, "annal:property_uri":         "annal:group_ref"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+}

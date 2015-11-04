@@ -351,9 +351,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         # Check displayed collections (check site setup)
         self.assertEqual(s.title.string, "Annalist data notebook test site")
         trows = s.select("form > div > div > div")
-        self.assertEqual(len(trows), 4)
+        self.assertEqual(len(trows), 5)
         for i in (1,2,3):
-            tcols = trows[i].find_all("div", class_="view-value")
+            tcols = trows[i+1].find_all("div", class_="view-value")
             colln = "coll%d"%i
             self.assertEqual(tcols[0].a.string,  colln)
             self.assertEqual(tcols[0].a['href'], collection_view_url(colln))

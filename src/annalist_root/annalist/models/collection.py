@@ -366,6 +366,25 @@ class Collection(Entity):
                 { "@context": context }, 
                 context_io, indent=2, separators=(',', ': ')
                 )
+        with self._metaobj(
+                layout.SITEDATA_CONTEXT_PATH,
+                layout.COLL_CONTEXT_FILE,
+                "wt"
+                ) as context_io:
+            json.dump(
+                { "@context": context }, 
+                context_io, indent=2, separators=(',', ': ')
+                )
+        # @@TODO: fix ad-hocery used to ensure enum data can reference context in file system:
+        with self._metaobj(
+                layout.SITEDATA_ENUM_PATH,
+                layout.COLL_CONTEXT_FILE,
+                "wt"
+                ) as context_io:
+            json.dump(
+                { "@context": context }, 
+                context_io, indent=2, separators=(',', ': ')
+                )
         return
 
     def get_coll_jsonld_context(self):

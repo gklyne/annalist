@@ -44,8 +44,7 @@ def valid_id(id):
     False
     """
     reserved = (
-        [ "_annalist_site"
-        , "_annalist_collection"
+        [ "_annalist_collection"
         ])
     # cf. urls.py:
     if id and re.match(r"\w{1,32}$", id):

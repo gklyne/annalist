@@ -49,7 +49,7 @@ class Site(EntityRoot):
 
     _entitytype     = ANNAL.CURIE.Site
     _entitytypeid   = "_site"
-    _entityfile     = layout.SITE_META_FILE
+    _entityfile     = layout.SITEDATA_META_FILE
     _entityref      = layout.META_SITE_REF
 
     def __init__(self, sitebaseuri, sitebasedir, host=""):
@@ -179,7 +179,7 @@ class Site(EntityRoot):
         # Build context data
         context = self.get_site_jsonld_context()
         # Assemble and write out context description
-        with self._metaobj("", layout.SITEDATA_CONTEXT_FILE, "wt") as context_io:
+        with self._metaobj(layout.SITEDATA_CONTEXT_PATH, layout.COLL_CONTEXT_FILE, "wt") as context_io:
             json.dump(
                 { "@context": context }, 
                 context_io, indent=2, separators=(',', ': ')
@@ -202,7 +202,9 @@ class Site(EntityRoot):
         #
         # Use OrderedDict to allow some control over ordering of context file contents:
         # this is for humane purposes only, and is not technically important.
-        context           = OrderedDict()
+        context           = OrderedDict(
+            { ANNAL.CURIE.type: { "@type": "@id" }
+            })
         # Scan vocabs, generate prefix data
         for v in self._site_children(RecordVocab):
             vid = v.get_id()

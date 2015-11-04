@@ -1,0 +1,16 @@
+{
+  "rdfs:label": "Annalist data notebook site",
+  "rdfs:comment": "Annalist site metadata and site-wide values.",
+  "annal:software_version": "0.1.22",
+  "annal:comment": "Initialized by annalist.tests.test_createsitedata.py",
+  "annal:type_id": "_collection",
+  "@context": [
+    "coll_context.jsonld"
+  ],
+  "annal:id": "_annalist_site",
+  "@id": "../",
+  "@type": [
+    "annal:Collection"
+  ],
+  "annal:type": "annal:Collection"
+}

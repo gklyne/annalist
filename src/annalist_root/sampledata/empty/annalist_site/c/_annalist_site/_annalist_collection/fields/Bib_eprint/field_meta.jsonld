@@ -1,0 +1,14 @@
+{ "@id":                        "annal:fields/Bib_eprint"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Bib_eprint"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "ePrint"
+, "rdfs:comment":               "BibJSON(ish) field Bib_eprint"
+, "annal:field_render_type":    "Text"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:placeholder":          "(Bib_eprint)"
+, "annal:property_uri":         "bib:Bib_eprint"
+, "annal:field_entity_type":    "bib:BibEntry"
+}

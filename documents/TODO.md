@@ -26,12 +26,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] Elimninate use_altpath parameter; test
     - [ ] re-implement SiteData as instance of collection; use this as collection parent; test
     - [ ] protect sitedata collection from updates
+    - [ ] updates to annalist-manager (esp createsite, updatesite): don't rely on sample data
     - [ ] re-work access to parent to call linked object rather than direct file access
     - [ ] when creating a collection, allow to specify alternate parent(s); ensure no loops: must end up at sitedata; test
     - [ ] provision for editing collection data (label, comment, parents, etc.); test
-    - [ ] 
+    - [ ] ensure that _annalist_site collection cannot be removed
     - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
-    - [ ] updates to annalist-manager (esp createsite, updatesite)
 - [ ] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
 - [ ] Update JSON-LD spike code, and test with latest rdflib-jsonld
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.

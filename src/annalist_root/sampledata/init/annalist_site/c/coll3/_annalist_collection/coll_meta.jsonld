@@ -1,7 +1,7 @@
 {
   "rdfs:label": "Collection coll3",
   "rdfs:comment": "Description of Collection coll3",
-  "annal:software_version": "0.1.22",
+  "annal:software_version": "0.1.23",
   "@context": [
     "coll_context.jsonld"
   ],

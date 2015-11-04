@@ -123,11 +123,6 @@ class CollectionResourceAccess(AnnalistGenericView):
                 { 'resource_type': "application/ld+json"
                 , 'resource_name': layout.COLL_META_CONTEXT_PATH + resource_ref
                 })
-        if resource_ref == layout.SITEDATA_CONTEXT_FILE:
-            return (
-                { 'resource_type': "application/ld+json"
-                , 'resource_name': resource_ref
-                })
         return None
 
     def resource_response(self, resource_file, resource_type):
