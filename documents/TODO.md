@@ -21,8 +21,19 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] BUG: `render_utils.get_mode_renderer`, handling of repeat fields? (cf. comment from Cerys.)
     - Added logic so that repeat fields also support current-mode rendering (but rendering as a normal view)
 - [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
-    - [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
+    - [ ] Move annalist sitedata to collection location; relocate and rename site_meta.jsonld, update layout; test
+    - [ ] Eliminate altpath values in entities; test
+    - [ ] Elimninate use_altpath parameter; test
+    - [ ] re-implement SiteData as instance of collection; use this as collection parent; test
+    - [ ] protect sitedata collection from updates
+    - [ ] re-work access to parent to call linked object rather than direct file access
+    - [ ] when creating a collection, allow to specify alternate parent(s); ensure no loops: must end up at sitedata; test
+    - [ ] provision for editing collection data (label, comment, parents, etc.); test
+    - [ ] 
     - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
+    - [ ] updates to annalist-manager (esp createsite, updatesite)
+- [ ] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
+- [ ] Update JSON-LD spike code, and test with latest rdflib-jsonld
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
 - [ ] Create schema definitions in Annalist for ANNAL namespace
 - [ ] Think further about how data migration can be handled.  E.g. several properties used in the Caroplan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data.
