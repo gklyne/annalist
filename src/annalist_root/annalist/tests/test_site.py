@@ -96,7 +96,7 @@ class SiteTest(AnnalistTestCase):
     def test_site_init(self):
         s = Site(TestBaseUri, TestBaseDir)
         self.assertEqual(s._entitytype,     ANNAL.CURIE.Site)
-        self.assertEqual(s._entityfile,     layout.SITEDATA_META_FILE)
+        self.assertEqual(s._entityfile,     layout.SITE_META_FILE)
         self.assertEqual(s._entityref,      layout.META_SITE_REF)
         self.assertEqual(s._entityid,       None)
         self.assertEqual(s._entityurl,      TestBaseUri+"/")

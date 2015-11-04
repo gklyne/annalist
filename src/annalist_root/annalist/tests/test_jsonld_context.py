@@ -203,7 +203,7 @@ class JsonldContextTest(AnnalistTestCase):
 
         # Read site data as JSON-LD
         g = Graph()
-        s = self.testsite._read_stream()
+        s = self.testsite.site_data_stream()
         # b = self.testsite.get_url()
         b = "file://" + os.path.join(TestBaseDir, layout.SITEDATA_META_DIR) + "/"
         # print "*****"+repr(b)

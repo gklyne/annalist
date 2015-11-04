@@ -17,8 +17,8 @@ import shutil
 # from django.test import TestCase
 from django.conf import settings
 
+from annalist                       import layout
 from annalist.util                  import replacetree, removetree
-# from annalist.layout import Layout
 
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
@@ -72,7 +72,16 @@ def copySitedata(src, sitedatasrc, tgt):
     elif sitedata_target_reset == "collections":
         ds = os.path.join(src, "c")
         dt = os.path.join(tgt, "c")
-        replacetree(ds, dt)
+        # Update collections, not site data; first remove old collections
+        for coll_id in os.listdir(dt):
+            if coll_id != layout.SITEDATA_ID:
+                d = os.path.join(dt, coll_id)
+                removetree(d)
+        for coll_id in os.listdir(ds):
+            if coll_id != layout.SITEDATA_ID:
+                s = os.path.join(ds, coll_id)
+                d = os.path.join(dt, coll_id)
+                shutil.copytree(s, d)
     sitedata_target_reset = "none"
     # Confirm existence of target directories
     assert os.path.exists(tgt), "checking target directory created (%s)"%(tgt)

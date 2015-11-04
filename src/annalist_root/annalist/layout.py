@@ -75,6 +75,9 @@ log = logging.getLogger(__name__)
 #          :
 
 SITE_DIR                = "annalist_site"
+SITE_META_PATH          = "./"
+SITE_META_FILE          = "site_meta.jsonld"
+META_SITE_REF           = "./"
 
 SITE_COLL_VIEW          = "c/%(id)s/"
 SITE_COLL_PATH          = "c/%(id)s"
@@ -99,7 +102,7 @@ SITEDATA_ENUM_PATH      = "enums/"
 SITEDATA_META_DIR       = SITEDATA_DIR + "/" + COLL_META_DIR
 SITEDATA_META_FILE      = SITEDATA_META_DIR + "/coll_meta.jsonld"
 SITEDATA_PROV_FILE      = SITEDATA_META_DIR + "/coll_prov.jsonld"
-META_SITE_REF           = "../../../"
+SITEDATA_META_SITE_REF  = "../../../"
 
 COLL_TYPE_VIEW          = "d/_type/%(id)s/"
 COLL_TYPE_PATH          = COLL_META_DIR + "/types/%(id)s"

@@ -13,4 +13,7 @@ python manage.py test \
 echo "cp -r $BASEDIR/sampledata/data/annalist_site/c $BASEDIR/sampledata/empty/annalist_site/"
 cp -r $BASEDIR/sampledata/data/annalist_site/c $BASEDIR/sampledata/empty/annalist_site/
 
+echo "cp $BASEDIR/sampledata/data/annalist_site/README.md $BASEDIR/sampledata/empty/annalist_site/"
+cp $BASEDIR/sampledata/data/annalist_site/README.md $BASEDIR/sampledata/empty/annalist_site/
+
 # End.

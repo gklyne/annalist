@@ -11,6 +11,7 @@ import os.path
 import collections
 import urlparse
 import json
+import datetime
 from collections    import OrderedDict
 
 import traceback
@@ -25,7 +26,7 @@ from django.core.urlresolvers       import resolve, reverse
 import annalist
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
-from annalist.util                  import valid_id, extract_entity_id
+from annalist.util                  import valid_id, extract_entity_id, replacetree
 from annalist                       import layout
 from annalist                       import message
 
@@ -49,7 +50,7 @@ class Site(EntityRoot):
 
     _entitytype     = ANNAL.CURIE.Site
     _entitytypeid   = "_site"
-    _entityfile     = layout.SITEDATA_META_FILE
+    _entityfile     = layout.SITE_META_FILE
     _entityref      = layout.META_SITE_REF
 
     def __init__(self, sitebaseuri, sitebasedir, host=""):
@@ -117,6 +118,18 @@ class Site(EntityRoot):
         coll = [ (c.get_id(), c) for c in self.collections() ]
         return collections.OrderedDict(sorted(coll))
 
+    def site_data_entity(self):
+        """
+        Return collection entity that contains the site data.
+        """
+        return Collection.load(self, layout.SITEDATA_ID)
+
+    def site_data_stream(self):
+        """
+        Return stream containing the raw site data.
+        """
+        return self.site_data_entity()._read_stream()
+
     def site_data(self):
         """
         Return dictionary of site data
@@ -125,7 +138,7 @@ class Site(EntityRoot):
         #         This is currently a bit of a kludge, designed to match the site
         #         view template.  In due course, it may be reviewed and implemented
         #         using the generic Annalist form generating framework
-        site_data = self._load_values()
+        site_data  = self.site_data_entity().get_values()
         if not site_data:
             return None
         site_data["title"] = site_data.get(RDFS.CURIE.label, message.SITE_NAME_DEFAULT)
@@ -272,7 +285,6 @@ class Site(EntityRoot):
                     property_contexts[puri] = fcontext
         return
 
-    # @@TODO: move this away from model logic, as it represents a dependency on view logic?
     @staticmethod
     def get_field_jsonld_context(fdesc):
         """
@@ -347,5 +359,143 @@ class Site(EntityRoot):
             if e:
                 yield e
         return
+
+
+    # Site data
+
+    @staticmethod
+    def initialize_site_data(site_base_uri, site_base_dir, site_data_src, label=None, description=None, report=False):
+        """
+        Initializes site data for a new site.
+
+        Creates a README.md file in the site base directory, and creates a
+        collection _annalist_site containing built-in types, views, etc.
+        """
+        def do_report(msg):
+            if report:
+                print(msg)
+            else:
+                log.info(msg)
+            return
+        # Create collection for site-wide data
+        datetime_now = datetime.datetime.today().replace(microsecond=0)
+        if label is None:
+            label = "Annalist linked data notebook site"
+        if description is None:
+            description = "Annalist test site metadata and site-wide values."
+        annal_comment = (
+            "Initialized by annalist.tests.test_createsitedata.py at "+
+            datetime_now.isoformat(' ')
+            )
+        site = Site(site_base_uri, site_base_dir)
+        sitedata_values = (
+            { RDFS.CURIE.label:             label
+            , RDFS.CURIE.comment:           description
+            , ANNAL.CURIE.comment:          annal_comment                                    
+            , ANNAL.CURIE.software_version: annalist.__version_data__
+            })
+        sitedata  = Collection.create(site, layout.SITEDATA_ID, sitedata_values)
+        # Create site README
+        README = ((
+            """%(site_base_dir)s\n"""+
+            """\n"""+
+            """This directory contains Annalist site data for %(site_base_uri)s.\n"""+
+            """\n"""+
+            """Directory layout:\n"""+
+            """\n"""+
+            """    %(site_base_dir)s\n"""+
+            """      c/\n"""+
+            """        _annalist_site/\n"""+
+            """          _annalist_collection/         (site-wide definitions)\n"""+
+            """            coll_meta.jsonld            (site metadata)\n"""+
+            """            coll_context.jsonld         (JSON-LD context for site definitions)\n"""+
+            """            enums/\n"""+
+            """              (enumerated type values)\n"""+
+            """               :\n"""+
+            """            fields/\n"""+
+            """              (view-field definitions)\n"""+
+            """               :\n"""+
+            """            groups/\n"""+
+            """              (field group definitions)\n"""+
+            """               :\n"""+
+            """            lists/\n"""+
+            """              (entity list definitions)\n"""+
+            """               :\n"""+
+            """            types/\n"""+
+            """              (type definitions)\n"""+
+            """               :\n"""+
+            """            users/\n"""+
+            """              (user permissions)\n"""+
+            """               :\n"""+
+            """            views/\n"""+
+            """              (entity view definitions)\n"""+
+            """               :\n"""+
+            """            vocabs/\n"""+
+            """              (vocabulary namespace definitions)\n"""+
+            """               :\n"""+
+            """        (collection-id)/                (user-created data collection)\n"""+
+            """          _annalist_collection/         (collection definitions)\n"""+
+            """            coll_meta.jsonld            (collection metadata)\n"""+
+            """            coll_context.jsonld         (JSON-LD context for collection definitions)\n"""+
+            """            types/                      (collection type definitions\n"""+
+            """              (type-id)/\n"""+
+            """                type_meta.jsonld\n"""+
+            """               :\n"""+
+            """            lists/                      (collection list definitions\n"""+
+            """              (list-id)/\n"""+
+            """                list_meta.jsonld\n"""+
+            """               :\n"""+
+            """            views/                      (collection view definitions\n"""+
+            """              (view-id)/\n"""+
+            """                view_meta.jsonld\n"""+
+            """               :\n"""+
+            """            fields/                     (collection field definitions\n"""+
+            """              (field-id)/\n"""+
+            """                field_meta.jsonld\n"""+
+            """               :\n"""+
+            """            groups/                     (collection field group definitions\n"""+
+            """              (group-id)/\n"""+
+            """                group_meta.jsonld\n"""+
+            """               :\n"""+
+            """            users/                      (collection user permissions\n"""+
+            """              (user-id)/\n"""+
+            """                user_meta.jsonld\n"""+
+            """               :\n"""+
+            """          d/\n"""+
+            """            (type-id)/                  (contains all entity data for identified type)\n"""+
+            """              (entity-id)/              (contains data for identified type/entity)\n"""+
+            """                entity_data.jsonld      (entity data)\n"""+
+            """                entity_prov.jsonld      (entity provenance @@TODO)\n"""+
+            """                (attachment files)      (uploaded/imported attachments)\n"""+
+            """\n"""+
+            """               :                        (repeat for entities of this type)\n"""+
+            """\n"""+
+            """             :                          (repeat for types in collection)\n"""+
+            """\n"""+
+            """         :                              (repeat for collections in site)\n"""+
+            """\n"""+
+            """Created by annalist.models.site.initialize_site_data.py\n"""+
+            """by Annalist %(version)s at %(datetime)s\n"""+
+            """\n"""+
+            """\n""")%
+                { 'site_base_dir': site_base_dir
+                , 'site_base_uri': site_base_uri
+                , 'datetime':      datetime_now.isoformat(' ')
+                , 'version':       annalist.__version__
+                }
+            )
+        with site._fileobj("README", ANNAL.CURIE.Richtext, "text/markdown", "wt") as readme:
+            readme.write(README)
+        # Copy site-wide definitions to site-wide data collection
+        site_data_tgt, site_data_file = sitedata._dir_path()
+        do_report("Copy Annalist site data from %s to %s"%(site_data_src, site_data_tgt))
+        for sdir in ("types", "lists", "views", "groups", "fields", "vocabs", "users", "enums"):
+            s = os.path.join(site_data_src, sdir)
+            d = os.path.join(site_data_tgt, sdir)
+            do_report("- %s -> %s"%(sdir, d))
+            replacetree(s, d)
+        # Generate JSON-LD context for collection
+        sitedata.generate_coll_jsonld_context()
+        return site
 
 # End.

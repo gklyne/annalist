@@ -21,7 +21,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] BUG: `render_utils.get_mode_renderer`, handling of repeat fields? (cf. comment from Cerys.)
     - Added logic so that repeat fields also support current-mode rendering (but rendering as a normal view)
 - [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
-    - [ ] Move annalist sitedata to collection location; relocate and rename site_meta.jsonld, update layout; test
+    - [x] Move annalist sitedata to collection location; relocate and rename site_meta.jsonld, update layout; test
     - [ ] Eliminate altpath values in entities; test
     - [ ] Elimninate use_altpath parameter; test
     - [ ] re-implement SiteData as instance of collection; use this as collection parent; test

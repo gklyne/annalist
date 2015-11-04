@@ -33,12 +33,10 @@ from tests                  import TestHost, TestHostUri, TestBasePath, TestBase
 from tests                  import test_layout
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from init_tests             import copySitedata
-
-from AnnalistTestCase               import AnnalistTestCase
-from entity_testutils               import collection_create_values
-from entity_testtypedata            import recordtype_create_values
-from entity_testviewdata            import recordview_create_values
-from entity_testlistdata            import recordlist_create_values
+from entity_testutils       import collection_create_values
+from entity_testtypedata    import recordtype_create_values
+from entity_testviewdata    import recordview_create_values
+from entity_testlistdata    import recordlist_create_values
 
 #   -----------------------------------------------------------------------------
 #
@@ -56,24 +54,30 @@ def entitydata_create_values(coll, etype, entity_id, update="Entity"):
         })
 
 def site_create_data(site_base_uri, data_source):
-        # Note: copysitedata copies also copies from source tree
-        #       def copySitedata(src, sitedatasrc, tgt):
-        copySitedata(
-            settings.SITE_SRC_ROOT + data_source + test_layout.SITE_DIR, 
-            settings.SITE_SRC_ROOT + "/annalist/sitedata",
-            TestBaseDir)
-        site = Site(site_base_uri, TestBaseDir)
-        sitedata_values = collection_create_values(layout.SITEDATA_ID)
-        sitedata_values.update(
-            { 'rdfs:label':             "Annalist data notebook test site"
-            , 'rdfs:comment':           "Annalist test site metadata and site-wide values."
-            , 'annal:software_version': annalist.__version_data__
-            , "annal:comment":          "Initialized by annalist.tests.test_createsitedata.py"
-            })
-        sitedata  = Collection.create(site, layout.SITEDATA_ID, sitedata_values)
-        sitedata.generate_coll_jsonld_context()
-        return site
-
+    # Note: copysitedata copies also copies from source tree
+    #       def copySitedata(src, sitedatasrc, tgt):
+    # copySitedata(
+    #     settings.SITE_SRC_ROOT + data_source + test_layout.SITE_DIR, 
+    #     settings.SITE_SRC_ROOT + "/annalist/sitedata",
+    #     TestBaseDir)
+    # site = Site(site_base_uri, TestBaseDir)
+    # sitedata_values = collection_create_values(layout.SITEDATA_ID)
+    # sitedata_values.update(
+    #     { 'rdfs:label':             "Annalist data notebook test site"
+    #     , 'rdfs:comment':           "Annalist test site metadata and site-wide values."
+    #     , 'annal:software_version': annalist.__version_data__
+    #     , "annal:comment":          "Initialized by annalist.tests.test_createsitedata.py"
+    #     })
+    # sitedata  = Collection.create(site, layout.SITEDATA_ID, sitedata_values)
+    # sitedata.generate_coll_jsonld_context()
+    site = Site.initialize_site_data(
+        site_base_uri, TestBaseDir, 
+        settings.SITE_SRC_ROOT + "/annalist/sitedata",
+        label="Annalist data notebook test site", 
+        description="Annalist test site metadata and site-wide values.", 
+        report=False
+        )
+    return site
 
 def coll123_create_data(site):
     coll1 = Collection.create(site, "coll1", collection_create_values("coll1"))
