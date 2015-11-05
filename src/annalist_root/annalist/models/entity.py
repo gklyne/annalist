@@ -198,10 +198,13 @@ class Entity(EntityRoot):
         Instantiate a child entity (e.g. for create and load methods)
         """
         if use_altpath:
+            log.info(" __ Entity._child_init: (use_altpath) "+entityid)
             e = cls(parent, entityid, use_altpath=use_altpath)
         elif altparent:
+            log.info(" __ Entity._child_init: (altparent) "+entityid)
             e = cls(parent, entityid, altparent=altparent)
         else:
+            log.info(" __ Entity._child_init: (no altparent) "+entityid)
             e = cls(parent, entityid)
         return e
 
@@ -250,7 +253,9 @@ class Entity(EntityRoot):
         entity = None
         if util.valid_id(entityid):
             e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
+            log.info(" __ Entity.load: _child_init "+repr(e))
             v = e._load_values()
+            log.info(" __ Entity.load: _load_values "+repr(v))
             # log.info("entity.load %r"%(v,))
             if v:
                 v = e._migrate_values(v)

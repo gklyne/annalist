@@ -23,7 +23,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
     - [x] Move annalist sitedata to collection location; relocate and rename site_meta.jsonld, update layout; test
     - [ ] Eliminate altpath values in entities; test
-    - [ ] Elimninate use_altpath parameter; test
+        - [ ] eliminate _entityaltpath references in EntityRoot - use other _entitypath; test
+        - [ ] eliminate _entityaltpath references in Entity; test
+        - [ ] eliminate altpath() from Entity; test
+        - [ ] eliminate _entityaltpath references in Site; if ppssible, get rid iof temporary helpers; test
+        - [ ] eliminate all other _entityaltpath occurrences; test
+    - [ ] Eliminate use_altpath parameter; test
+    - [ ] Use altparent entity to access alternative data
+        - Note that RecordEnum is based on EntityData, so parent handling might be different.
+        - Consider treating Enum types as regular types under /d/?
     - [ ] re-implement SiteData as instance of collection; use this as collection parent; test
     - [ ] protect sitedata collection from updates
     - [ ] updates to annalist-manager (esp createsite, updatesite): don't rely on sample data

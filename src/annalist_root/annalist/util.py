@@ -202,7 +202,7 @@ def entity_dir_path(base_dir, path, filename):
     >>> entity_dir_path("/base/dir",[],"sub/file.ext")
     ('/base/dir/sub', '/base/dir/sub/file.ext')
     """
-    log.debug("entity_dir_path %s, %r, %s"%(base_dir, path, filename))
+    log.debug("util.entity_dir_path %s, %r, %s"%(base_dir, path, filename))
     if path:
         if isinstance(path, (list, tuple)):
             d = os.path.join(base_dir, *path)

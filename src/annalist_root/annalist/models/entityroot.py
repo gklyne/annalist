@@ -243,6 +243,8 @@ class EntityRoot(object):
         if not self._entityfile:
             raise ValueError("Entity._alt_dir_path without defined entity file path")
         if self._entityaltdir:
+            log.info("    _ EntityRoot._alt_dir_path _entityaltdir %s"%(self._entityaltdir,))
+            log.info("    _ EntityRoot._alt_dir_path _entityfile   %s"%(self._entityfile,))
             (basedir, filepath) = util.entity_dir_path(self._entityaltdir, [], self._entityfile)
             return (basedir, filepath)
         return (None, None)
@@ -263,12 +265,14 @@ class EntityRoot(object):
 
         returns path of of object body, or None
         """
+        log.info(" __ EntityRoot._exists_path")
         for (d, p, u) in (self._dir_path_uri(), self._alt_dir_path_uri()):
-            # log.info("_exists %s"%(p))
+            log.info("    EntityRoot._exists_path %s"%(p))
             if d and os.path.isdir(d):
                 if p and os.path.isfile(p):
                     self._entityusedir = d
                     self._entityuseurl = u
+                    log.info("    EntityRoot._exists_path return %s"%(p))
                     return p
         return None
 
@@ -344,6 +348,7 @@ class EntityRoot(object):
 
         Adds value for 'annal:url' to the entity data returned.
         """
+        log.info(" __ EntityRoot._load_values")
         self._migrate_path()
         body_file = self._exists_path()
         if body_file:
@@ -444,8 +449,12 @@ class EntityRoot(object):
                     of the current entity are returned.
         """
         dir1 = os.path.dirname(os.path.join(self._entitydir, cls._entitypath or ""))
+        #@@
         if altparent and cls._entityaltpath:
             dir2 = os.path.dirname(os.path.join(altparent._entitydir, cls._entityaltpath))
+        # if altparent:
+        #     dir2 = os.path.dirname(os.path.join(altparent._entitydir, cls._entitypath))
+        #@@
         else:
             dir2 = None
         return (dir1, dir2)
@@ -463,7 +472,7 @@ class EntityRoot(object):
                     current entity are returned.
         """
         coll_dir, site_dir = self._child_dirs(cls, altparent)
-        assert "%" not in coll_dir, "_entitypath/_entityaltpath template variable interpolation may be in filename part only"
+        assert "%" not in coll_dir, "_entitypath template variable interpolation may be in filename part only"
         site_files = []
         coll_files = []
         if site_dir and os.path.isdir(site_dir):
