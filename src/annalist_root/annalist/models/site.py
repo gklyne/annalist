@@ -329,7 +329,7 @@ class Site(EntityRoot):
 
     def _site_children_ids(self, cls):
         """
-        Iterates over candidate child entyity ids that are possible instances 
+        Iterates over candidate child entity ids that are possible instances 
         of an indicated class.  The supplied class is used to determine a 
         subdirectory to be scanned.
 

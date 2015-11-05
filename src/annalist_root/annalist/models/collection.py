@@ -68,6 +68,10 @@ class Collection(Entity):
         """
         super(Collection, self).__init__(parentsite, coll_id)
         self._parentsite = parentsite
+        self._parentcoll = (
+            None if coll_id == layout.SITEDATA_ID else 
+            parentsite.site_data_entity()
+            )
         self._types_by_id  = None
         self._types_by_uri = None
         return
@@ -79,6 +83,12 @@ class Collection(Entity):
         Return site object for the site from which the current collection is accessed.
         """
         return self._parentsite
+
+    def get_site_data(self):
+        """
+        Return parent object for accessing site data.
+        """
+        return self._parentcoll
 
     # User permissions
 
@@ -157,8 +167,8 @@ class Collection(Entity):
         if not (self._types_by_id and self._types_by_uri):
             self._types_by_id  = {}
             self._types_by_uri = {}
-            for type_id in self._children(RecordType, altparent=self._parentsite):
-                t = RecordType.load(self, type_id, altparent=self._parentsite)
+            for type_id in self._children(RecordType, altparent=self._parentcoll):
+                t = RecordType.load(self, type_id, altparent=self._parentcoll)
                 self._update_type_cache(t)
         return
 
@@ -168,6 +178,7 @@ class Collection(Entity):
         """
         altparent = self._parentsite if include_alt else None
         for f in self._children(RecordType, altparent=altparent):
+            log.debug("___ Collection.types: "+f)
             t = self.get_type(f)
             if t and t.get_id() != "_initial_values":
                 yield t
@@ -201,6 +212,7 @@ class Collection(Entity):
         t = self._types_by_id.get(type_id, None)
         # Was it created but not cached?
         if not t and RecordType.exists(self, type_id, altparent=self._parentsite):
+            log.info("___ Collection.get_type: "+type_id)
             t = RecordType.load(self, type_id, altparent=self._parentsite)
             self._update_type_cache(t)
         return t
