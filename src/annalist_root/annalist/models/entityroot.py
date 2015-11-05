@@ -63,7 +63,7 @@ class EntityRoot(object):
     _entityref      = None          # Relative reference to entity from body file
     _contextref     = None         # Relative reference to context file from body file
 
-    def __init__(self, entityurl, entitydir):
+    def __init__(self, entityurl, entitydir, entitybasedir):
         """
         Initialize a new Entity object, possibly without values.  The created
         entity is not saved to disk at this stage - see .save() method.
@@ -74,6 +74,7 @@ class EntityRoot(object):
         self._entityid      = None
         self._entityurl     = entityurl if entityurl.endswith("/") else entityurl + "/"
         self._entitydir     = entitydir if entitydir.endswith("/") else entitydir + "/"
+        self._entitybasedir = entitybasedir
         self._entityalturl  = None
         self._entityaltdir  = None
         self._entityuseurl  = None # self._entityurl
@@ -126,6 +127,7 @@ class EntityRoot(object):
         presented as belonging to a collection.  This allows for collection-specific
         specializations to be created without changing the URI used.
         """
+        log.debug("EntityRoot.get_url: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
         return urlparse.urljoin(baseurl, self._entityurl)
 
     def get_view_url(self, baseurl=""):
@@ -139,6 +141,7 @@ class EntityRoot(object):
         collection the URL is mapped via the web application to the underlying storage
         location.
         """
+        log.debug("EntityRoot.get_view_url: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
         return self.get_url(baseurl=baseurl)
 
     def get_view_url_path(self, baseurl=""):
@@ -146,6 +149,7 @@ class EntityRoot(object):
         Return URL path used to view entity data.  This is the URI-path of the URL
         returned by get_view_url (above)
         """
+        log.debug("EntityRoot.get_view_url_path: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
         return util.entity_url_path(self.get_view_url(), "")
 
     def set_values(self, values):
@@ -233,6 +237,8 @@ class EntityRoot(object):
         """
         if not self._entityfile:
             raise ValueError("Entity._dir_path without defined entity file path")
+        # log.info("    _ EntityRoot._dir_path _entitydir  %s"%(self._entitydir,))
+        # log.info("    _ EntityRoot._dir_path _entityfile %s"%(self._entityfile,))
         (basedir, filepath) = util.entity_dir_path(self._entitydir, [], self._entityfile)
         return (basedir, filepath)
 
@@ -243,8 +249,8 @@ class EntityRoot(object):
         if not self._entityfile:
             raise ValueError("Entity._alt_dir_path without defined entity file path")
         if self._entityaltdir:
-            log.info("    _ EntityRoot._alt_dir_path _entityaltdir %s"%(self._entityaltdir,))
-            log.info("    _ EntityRoot._alt_dir_path _entityfile   %s"%(self._entityfile,))
+            # log.info("    _ EntityRoot._alt_dir_path _entityaltdir %s"%(self._entityaltdir,))
+            # log.info("    _ EntityRoot._alt_dir_path _entityfile   %s"%(self._entityfile,))
             (basedir, filepath) = util.entity_dir_path(self._entityaltdir, [], self._entityfile)
             return (basedir, filepath)
         return (None, None)
@@ -265,14 +271,14 @@ class EntityRoot(object):
 
         returns path of of object body, or None
         """
-        log.info(" __ EntityRoot._exists_path")
+        # log.debug(" __ EntityRoot._exists_path")
         for (d, p, u) in (self._dir_path_uri(), self._alt_dir_path_uri()):
-            log.info("    EntityRoot._exists_path %s"%(p))
+            # log.debug("    EntityRoot._exists_path %s"%(p))
             if d and os.path.isdir(d):
                 if p and os.path.isfile(p):
                     self._entityusedir = d
                     self._entityuseurl = u
-                    log.info("    EntityRoot._exists_path return %s"%(p))
+                    # log.info("    EntityRoot._exists_path return %s"%(p))
                     return p
         return None
 
@@ -348,7 +354,7 @@ class EntityRoot(object):
 
         Adds value for 'annal:url' to the entity data returned.
         """
-        log.info(" __ EntityRoot._load_values")
+        # log.info(" __ EntityRoot._load_values")
         self._migrate_path()
         body_file = self._exists_path()
         if body_file:
@@ -357,6 +363,7 @@ class EntityRoot(object):
                 # @@was: with open(body_file, "r") as f:
                 with self._read_stream() as f:
                     entitydata = json.load(util.strip_comments(f))
+                    log.debug("EntityRoot._load_values: url_path %s"%(self.get_view_url_path()))
                     entitydata[ANNAL.CURIE.url] = self.get_view_url_path()
                     return entitydata
             except IOError, e:
@@ -376,7 +383,9 @@ class EntityRoot(object):
         """
         Migrate entity data filenames from those used in older software versions.
         """
+        log.debug("EntityRoot._migrate_path (%r)"%(self._migrate_filenames(),))
         if self._migrate_filenames() is None:
+            log.debug("EntityRoot._migrate_path (none)")
             return
         if not self._exists():
             for old_data_filename in self._migrate_filenames():
@@ -386,9 +395,13 @@ class EntityRoot(object):
                     if old_data_filepath and os.path.isfile(old_data_filepath):
                         # Old body file found here
                         (d, new_data_filepath) = self._dir_path()
-                        log.info("Migrate file %s to %s"%(old_data_filepath, new_data_filepath))
+                        log.info(
+                            "EntityRoot._migrate_path: Migrate file %s to %s"%
+                            (old_data_filepath, new_data_filepath)
+                            )
                         os.rename(old_data_filepath, new_data_filepath)
                         break
+        log.debug("EntityRoot._migrate_path (done)")
         return
 
     def _migrate_filenames(self):

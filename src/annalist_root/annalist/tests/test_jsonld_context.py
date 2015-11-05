@@ -190,6 +190,17 @@ class JsonldContextTest(AnnalistTestCase):
         resetSitedata()
         return
 
+    def get_coll_url(self, coll):
+        return ("file://" + 
+            os.path.normpath(
+                os.path.join(
+                    TestBaseDir, 
+                    layout.SITEDATA_DIR,
+                    layout.SITE_COLL_PATH%{'id': self.testcoll.get_id()}
+                    )
+                ) + "/"
+            )
+
     #   -----------------------------------------------------------------------------
     #   JSON-LD context tests
     #   -----------------------------------------------------------------------------
@@ -217,7 +228,9 @@ class JsonldContextTest(AnnalistTestCase):
         # Check the resulting graph contents
         subj             = URIRef(self.testsite.get_url())
         subj             = URIRef("file://" + TestBaseDir + "/")
-        subj             = URIRef("file://" + os.path.join(TestBaseDir, layout.SITEDATA_DIR) + "/")
+        subj             = URIRef(
+            "file://" + os.path.join(TestBaseDir, layout.SITEDATA_DIR) + "/"
+            )
         site_data        = self.testsite.site_data()
         ann_id           = Literal(layout.SITEDATA_ID)
         ann_type         = URIRef(ANNAL.Collection)
@@ -238,20 +251,23 @@ class JsonldContextTest(AnnalistTestCase):
         Read new collection data as JSON-LD, and check resulting RDF triples
         """
         # Generate collection JSON-LD context data
-        # self.testcoll.generate_coll_jsonld_context()
+        self.testcoll.generate_coll_jsonld_context()
 
         # Read collection data as JSON-LD
         g = Graph()
         s = self.testcoll._read_stream()
-        b = "file://" + os.path.join(TestBaseDir, layout.SITE_COLL_CONTEXT_PATH%{'id': self.testcoll.get_id()})
+        b = "file://" + os.path.join(
+            TestBaseDir,
+            layout.SITEDATA_DIR,
+            layout.SITE_COLL_CONTEXT_PATH%{'id': self.testcoll.get_id()}
+            )
         result = g.parse(source=s, publicID=b, format="json-ld")
         # print "*****"+repr(result)
         # print "***** coll:"
         # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj      = self.testcoll.get_url()
-        subj      = "file://" + os.path.join(TestBaseDir, layout.SITE_COLL_PATH%{'id': self.testcoll.get_id()}) + "/"
+        subj      = self.get_coll_url(self.testcoll)
         coll_data = self.testcoll._load_values()
         for (s, p, o) in (
             [ (subj, RDFS.label,             Literal(coll_data[RDFS.CURIE.label])       )
@@ -323,6 +339,7 @@ class JsonldContextTest(AnnalistTestCase):
         b = ( "file://" + 
               os.path.join(
                 TestBaseDir, 
+                layout.SITEDATA_DIR,
                 layout.SITE_TYPE_PATH%{ 'id': type_vocab.get_id() }
                 ) + 
               "/"
@@ -364,6 +381,7 @@ class JsonldContextTest(AnnalistTestCase):
         b = ( "file://" + 
               os.path.join(
                 TestBaseDir, 
+                layout.SITEDATA_DIR,
                 layout.SITE_TYPE_PATH%{ 'id': view_user.get_id() }
                 ) + 
               "/"
@@ -438,6 +456,7 @@ class JsonldContextTest(AnnalistTestCase):
         b = ( "file://" + 
               os.path.join(
                 TestBaseDir, 
+                layout.SITEDATA_DIR,
                 layout.SITE_TYPE_PATH%{ 'id': user_default.get_id() }
                 ) + 
               "/"

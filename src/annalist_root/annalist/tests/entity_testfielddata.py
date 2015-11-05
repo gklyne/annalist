@@ -59,7 +59,11 @@ def recordfield_site_url(site, field_id="testfield"):
     return site._entityurl + layout.SITE_FIELD_PATH%{'id': field_id} + "/"
 
 def recordfield_coll_url(site, coll_id="testcoll", field_id="testfield"):
-    return site._entityurl + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_FIELD_PATH%{'id': field_id} + "/"
+    return urlparse.urljoin(
+        site._entityurl,
+        layout.SITE_COLL_PATH%{'id': coll_id} + "/" + 
+        layout.COLL_FIELD_PATH%{'id': field_id} + "/"
+        )
 
 def recordfield_url(coll_id, field_id):
     """

@@ -38,6 +38,7 @@ class TestEntityRootType(EntityRoot):
     _entityref  = "../"
     _contextref = "../../coll_context.jsonld"
 
+
 class EntityRootTest(TestCase):
     """
     Tests for EntityRoot object interface
@@ -60,7 +61,7 @@ class EntityRootTest(TestCase):
         return
 
     def test_entityroot_init(self):
-        e = EntityRoot(TestBaseUri, TestBaseDir)
+        e = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertEqual(e._entitytype,     ANNAL.CURIE.EntityRoot)
         self.assertEqual(e._entityfile,     None)
         self.assertEqual(e._entityref,      None)
@@ -71,14 +72,14 @@ class EntityRootTest(TestCase):
         return
 
     def test_entityroot_id(self):
-        e = EntityRoot(TestBaseUri, TestBaseDir)
+        e = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertEqual(e.get_id(),        None)
         e.set_id("testId")
         self.assertEqual(e.get_id(),        "testId")
         return
 
     def test_entityroot_type_id(self):
-        e = EntityRoot(TestBaseUri, TestBaseDir)
+        e = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertEqual(e.get_type_id(),   None)
         return
 
@@ -111,7 +112,7 @@ class EntityRootTest(TestCase):
             , 'type':           'annal:EntityRoot'
             , 'rdfs:label':     'Name collection coll2'
             })
-        e = EntityRoot(TestBaseUri, TestBaseDir)
+        e = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertEqual(e.get_values(),    None)
         e.set_values(test_values1)
         self.assertEqual(e.get_values(),    test_values1_returned)
@@ -142,7 +143,7 @@ class EntityRootTest(TestCase):
             , 'type':           'annal:EntityRoot'
             , 'title':          'new title'
             })
-        e = EntityRoot(TestBaseUri, TestBaseDir)
+        e = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertEqual(e.get_values(),    None)
         e.set_values(test_values1)
         self.assertEqual(set(e.get_values().keys()), set(test_values1_returned.keys()))
@@ -158,7 +159,7 @@ class EntityRootTest(TestCase):
         return
 
     def test_entityroot_subclass(self):
-        e = TestEntityRootType(TestBaseUri, TestBaseDir)
+        e = TestEntityRootType(TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertEqual(e._entitytype,     "test:EntityRootType")
         self.assertEqual(e._entityfile,     ".sub/manifest.jsonld")
         self.assertEqual(e._entityref,      "../")
@@ -187,7 +188,7 @@ class EntityRootTest(TestCase):
             , 'title':          'Name collection coll1'
             , 'type':           'annal:EntityRoot'
             })
-        e = TestEntityRootType(TestBaseUri, TestBaseDir)
+        e = TestEntityRootType(TestBaseUri, TestBaseDir, TestBaseDir)
         e.set_id("testId")
         self.assertEqual(e._entitytype,     "test:EntityRootType")
         self.assertEqual(e._entityfile,     ".sub/manifest.jsonld")
@@ -198,7 +199,7 @@ class EntityRootTest(TestCase):
         self.assertEqual(e._values,         None)
         e.set_values(test_values)
         e._save()
-        e2 = TestEntityRootType(TestBaseUri, TestBaseDir)
+        e2 = TestEntityRootType(TestBaseUri, TestBaseDir, TestBaseDir)
         e2.set_id("testId")
         v2 = e2._load_values()
         self.assertEqual(set(v2.keys()), set(test_values_returned.keys()))
@@ -211,7 +212,7 @@ class EntityRootTest(TestCase):
             , 'title':  'Name collection coll1'
             # , 'uri':    '/annalist/coll1'
             })
-        e = TestEntityRootType(TestBaseUri, TestBaseDir)
+        e = TestEntityRootType(TestBaseUri, TestBaseDir, TestBaseDir)
         e.set_id("testId")
         e.set_values(test_values)
         self.assertFalse(e._exists())
@@ -235,7 +236,7 @@ class EntityRootTest(TestCase):
               ]
             , "e": { "ex": "ex", "ey": "ey"}
             })
-        e = TestEntityRootType(TestBaseUri, TestBaseDir)
+        e = TestEntityRootType(TestBaseUri, TestBaseDir, TestBaseDir)
         e.set_id("testId")
         e.set_values(test_values)
         test_fields_returned = (
@@ -364,7 +365,7 @@ class EntityTest(AnnalistTestCase):
         return
 
     def test_entity_init(self):
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         e = Entity(r, "testid")
         self.assertEqual(e._entitytype,     ANNAL.CURIE.Entity)
         self.assertEqual(e._entityfile,     None)
@@ -376,7 +377,7 @@ class EntityTest(AnnalistTestCase):
         return
 
     def test_entity_type_id(self):
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertEqual(r.get_type_id(),   None)
         e1 = Entity(r, "testid1")
         self.assertEqual(e1.get_type_id(),  None)
@@ -385,7 +386,7 @@ class EntityTest(AnnalistTestCase):
         return
 
     def test_entity_subclass(self):
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         e = TestEntityType(r, "testid")
         self.assertEqual(e._entitytype,     "test:EntityType")
         self.assertEqual(e._entityfile,     ".sub/manifest.jsonld")
@@ -398,7 +399,7 @@ class EntityTest(AnnalistTestCase):
         return
 
     def test_entity_dict(self):
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         e = TestEntityType(r, "testid")
         self.assertEqual(e.get("foo",  "bar"),    "bar")
         self.assertEqual(e.get("type", "notype"), "notype")
@@ -424,7 +425,7 @@ class EntityTest(AnnalistTestCase):
 
     def test_entity_path(self):
         test_values = ({})
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         e = TestEntityType(r, "testid")
         e.set_values(test_values)
         e._save()
@@ -437,7 +438,7 @@ class EntityTest(AnnalistTestCase):
         test_values_returned = self.values_returned(
             entity_id='testid', entity_type='test:EntityType', entity_title='Name entity test'
             )
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertFalse(TestEntityType.exists(r, "testid"))
         e = TestEntityType.create(r, "testid", test_values)
         self.assertTrue(TestEntityType.exists(r, "testid"))
@@ -451,7 +452,7 @@ class EntityTest(AnnalistTestCase):
         test_values_returned = self.values_reloaded(
             entity_id='testid2', entity_type='test:EntityType', entity_title='Name entity test2'
             )
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         e = TestEntityType.create(r, "testid2", test_values)
         e2 = TestEntityType.load(r, "testid2")
         v = e2.get_values()
@@ -470,7 +471,7 @@ class EntityTest(AnnalistTestCase):
             entity_id='testid2', entity_type='test:EntityType', entity_title='Name entity test2',
             entity_parent_path="/testbase"
             )
-        r  = EntityRoot(TestBaseUri, TestBaseDir)
+        r  = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         b  = TestEntityType.create(r, "testbase", {})
         e1 = TestEntityType.create(b, "testid1", test_values1)
         e2 = TestEntityType.create(b, "testid2", test_values2)
@@ -491,7 +492,7 @@ class EntityTest(AnnalistTestCase):
 
     def test_entity_create_remove(self):
         test_values = self.values_created(entity_type='test:EntityType', entity_title='Name entity test')
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertFalse(TestEntityType.exists(r, "testid3"))
         e = TestEntityType.create(r, "testid3", test_values)
         self.assertTrue(TestEntityType.exists(r, "testid3"))
@@ -504,7 +505,7 @@ class EntityTest(AnnalistTestCase):
 
     def test_entity_sub_path(self):
         test_values = self.values_created(entity_type='annal:EntityRoot', entity_title='Name collection coll1')
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         e = TestEntityTypeSub(r, "testid")
         self.assertEqual(e._entitydir, TestBaseDir+"/sub/testid/")
         e.set_values(test_values)
@@ -519,7 +520,7 @@ class EntityTest(AnnalistTestCase):
             entity_id='testid', entity_type='test:EntityTypeSub', entity_title='Name entity test',
             entity_parent_path="/sub"
             )
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertFalse(TestEntityTypeSub.exists(r, "testid"))
         e = TestEntityTypeSub.create(r, "testid", test_values)
         self.assertTrue(TestEntityTypeSub.exists(r, "testid"))
@@ -537,7 +538,7 @@ class EntityTest(AnnalistTestCase):
             entity_parent_path="/sub"
             )
 
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         e = TestEntityTypeSub.create(r, "testid2", test_values)
         e2 = TestEntityTypeSub.load(r, "testid2")
         v = e2.get_values()
@@ -547,7 +548,7 @@ class EntityTest(AnnalistTestCase):
 
     def test_entity_sub_create_remove(self):
         test_values = self.values_created(entity_type='test:EntityTypeSub', entity_title='Name entity test')
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertFalse(TestEntityTypeSub.exists(r, "testid3"))
         e = TestEntityTypeSub.create(r, "testid3", test_values)
         self.assertTrue(TestEntityTypeSub.exists(r, "testid3"))
@@ -557,7 +558,7 @@ class EntityTest(AnnalistTestCase):
 
     def test_entity_allocate_id(self):
         test_values = self.values_created(entity_type='test:EntityType', entity_title='Name entity test')
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseDir, TestBaseDir)
         eid = TestEntityType.allocate_new_id(r)
         self.assertEqual(eid, "00000001")
         self.assertFalse(TestEntityType.exists(r, eid))

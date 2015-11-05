@@ -66,6 +66,7 @@ class Collection(Entity):
         parentsite  is the parent site from which the new collection is descended.
         coll_id     the collection identifier for the collection
         """
+        log.debug("Collection.__init__: coll_id %s, parent dir %s"%(coll_id, parentsite._entitydir))
         super(Collection, self).__init__(parentsite, coll_id)
         self._parentsite = parentsite
         self._parentcoll = (
@@ -176,7 +177,7 @@ class Collection(Entity):
         """
         Generator enumerates and returns record types that may be stored
         """
-        altparent = self._parentsite if include_alt else None
+        altparent = self._parentcoll if include_alt else None
         for f in self._children(RecordType, altparent=altparent):
             log.debug("___ Collection.types: "+f)
             t = self.get_type(f)

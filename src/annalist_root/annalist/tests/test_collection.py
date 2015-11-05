@@ -119,6 +119,7 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def test_collection_init(self):
+        log.debug("test_collection_init: TestBaseUri %s, TestBaseDir %s"%(TestBaseUri,TestBaseDir))
         s = Site(TestBaseUri, TestBaseDir)
         c = Collection(s, "testcoll")
         self.assertEqual(c._entitytype,     ANNAL.CURIE.Collection)
@@ -192,7 +193,6 @@ class CollectionTest(AnnalistTestCase):
         ugp = c.get_user_permissions("_unknown_user_perms", "annal:User/_another_user")
         self.assertIsNone(ugp)
         return
-
 
     # Record types
 

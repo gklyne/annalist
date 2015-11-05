@@ -60,8 +60,13 @@ class Site(EntityRoot):
         sitebaseuri     the base URI of the site
         sitebasedir     the base directory for site information
         """
-        log.debug("Site init: %s"%(sitebasedir))
-        super(Site, self).__init__(host+sitebaseuri, sitebasedir)
+        log.debug("Site.__init__: sitebaseuri %s, sitebasedir %s"%(sitebaseuri, sitebasedir))
+        sitebaseuri = sitebaseuri if sitebaseuri.endswith("/") else sitebaseuri + "/"
+        sitebasedir = sitebasedir if sitebasedir.endswith("/") else sitebasedir + "/"
+        sitepath    = layout.SITE_META_PATH
+        siteuripath = urlparse.urljoin(sitebaseuri, sitepath) 
+        sitedir     = os.path.join(sitebasedir, sitepath)
+        super(Site, self).__init__(host+siteuripath, sitedir, sitebasedir)
         self._sitedata = SiteData(self)
         return
 
@@ -113,7 +118,7 @@ class Site(EntityRoot):
 
     def collections_dict(self):
         """
-        Return an ordered dictionary of collection URIs indexed by collection id
+        Return an ordered dictionary of collections indexed by collection id
         """
         coll = [ (c.get_id(), c) for c in self.collections() ]
         return collections.OrderedDict(sorted(coll))

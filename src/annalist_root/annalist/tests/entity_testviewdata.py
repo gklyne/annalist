@@ -57,7 +57,11 @@ def recordview_site_url(site, view_id="testview"):
     return site._entityurl + layout.SITE_VIEW_PATH%{'id': view_id} + "/"
 
 def recordview_coll_url(site, coll_id="testcoll", view_id="testview"):
-    return site._entityurl + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_VIEW_PATH%{'id': view_id} + "/"
+    return urlparse.urljoin(
+        site._entityurl,
+        layout.SITE_COLL_PATH%{'id': coll_id} + "/" + 
+        layout.COLL_VIEW_PATH%{'id': view_id} + "/"
+        )
 
 def recordview_url(coll_id, view_id):
     """

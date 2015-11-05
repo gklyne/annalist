@@ -58,7 +58,11 @@ def recordtype_site_url(site, type_id="testtype"):
     return site._entityurl + layout.SITE_TYPE_PATH%{'id': type_id} + "/"
 
 def recordtype_coll_url(site, coll_id="testcoll", type_id="testtype"):
-    return site._entityurl + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_TYPE_PATH%{'id': type_id} + "/"
+    return urlparse.urljoin(
+        site._entityurl,
+        layout.SITE_COLL_PATH%{'id': coll_id} + "/" + 
+        layout.COLL_TYPE_PATH%{'id': type_id} + "/"
+        )
 
 def recordtype_url(coll_id="testcoll", type_id="testtype"):
     """

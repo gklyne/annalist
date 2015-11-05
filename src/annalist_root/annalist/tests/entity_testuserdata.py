@@ -8,6 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import unittest
+import urlparse
 
 import logging
 log = logging.getLogger(__name__)
@@ -54,7 +55,11 @@ def annalistuser_site_url(site, user_id="testuser"):
     return site._entityurl + layout.SITE_USER_PATH%{'id': user_id} + "/"
 
 def annalistuser_coll_url(site, coll_id="testcoll", user_id="testuser"):
-    return site._entityurl + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_USER_PATH%{'id': user_id} + "/"
+    return urlparse.urljoin(
+        site._entityurl,
+        layout.SITE_COLL_PATH%{'id': coll_id} + "/" + 
+        layout.COLL_USER_PATH%{'id': user_id} + "/"
+        )
 
 def annalistuser_url(coll_id="testcoll", user_id="testuser"):
     """

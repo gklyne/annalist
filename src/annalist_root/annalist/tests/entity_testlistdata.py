@@ -57,7 +57,11 @@ def recordlist_site_url(site, list_id="testlist"):
     return site._entityurl + layout.SITE_LIST_PATH%{'id': list_id} + "/"
 
 def recordlist_coll_url(site, coll_id="testcoll", list_id="testlist"):
-    return site._entityurl + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_LIST_PATH%{'id': list_id} + "/"
+    return urlparse.urljoin(
+        site._entityurl,
+        layout.SITE_COLL_PATH%{'id': coll_id} + "/" + 
+        layout.COLL_LIST_PATH%{'id': list_id} + "/"
+        )
 
 def recordlist_url(coll_id, list_id):
     """

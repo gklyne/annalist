@@ -76,8 +76,24 @@ class Entity(EntityRoot):
         relpath = self.relpath(entityid)
         if use_altpath:
             relpath = self.altpath(entityid)
-        super(Entity, self).__init__(parent._entityurl+relpath, parent._entitydir+relpath)
-        self._entityviewuri = parent._entityurl+self._entityview%{'id': entityid, 'type_id': self._entitytypeid}
+        # log.debug(
+        #     "  _ Entity.__init__: id %s, parenturl %s, parentdir %s, relpath %s"%
+        #     (entityid, parent._entityurl, parent._entitydir, relpath)
+        #     )
+        entity_url  = urlparse.urljoin(parent._entityurl, relpath) 
+        entity_dir  = os.path.normpath(os.path.join(parent._entitydir, relpath))
+        entity_base = parent._entitydir   # Used as safety check when removing data
+        if not entity_dir.startswith(entity_base):
+            entity_base = parent._entitybasedir
+        # log.debug(
+        #     "  _ Entity.__init__: entity_url %s, entity_dir %s"%
+        #     (entity_url, entity_dir)
+        #     )
+        super(Entity, self).__init__(entity_url, entity_dir, entity_base)
+        self._entityviewuri = urlparse.urljoin(
+            parent._entityurl,
+            self._entityview%{'id': entityid, 'type_id': self._entitytypeid}
+            )
         self._entityalturi  = None
         self._entityaltdir  = None
         if altparent:
@@ -97,6 +113,10 @@ class Entity(EntityRoot):
         The intent is to provide a URI that works regardless of whether the metadata
         is stored as site-wide or collection-specific data.
         """
+        # log.debug(
+        #     "Entity.get_view_url: baseurl %s, _entityviewuri %s"%
+        #     (baseurl, self._entityviewuri)
+        #     )
         return urlparse.urljoin(baseurl, self._entityviewuri)
 
     # I/O helper functions
@@ -120,9 +140,9 @@ class Entity(EntityRoot):
         cls         is the class of the entity whose relative path is returned.
         entityid    is the local identifier (slug) for the entity.
         """
-        log.debug("Entity.relpath: entitytype %s, entityid %s"%(cls._entitytype, entityid))
+        # log.debug("Entity.relpath: entitytype %s, entityid %s"%(cls._entitytype, entityid))
         relpath = (cls._entitypath or "%(id)s")%{'id': entityid, 'type_id': cls._entitytypeid}
-        log.debug("Entity.relpath: %s"%(relpath))
+        # log.debug("Entity.relpath: %s"%(relpath))
         return relpath
 
     @classmethod
@@ -134,9 +154,9 @@ class Entity(EntityRoot):
         cls         is the class of the entity whose alternative relative path is returned.
         entityid    is the local identifier (slug) for the entity.
         """
-        log.debug("Entity.altpath: entitytype %s, entityid %s"%(cls._entitytype, entityid))
+        # log.debug("Entity.altpath: entitytype %s, entityid %s"%(cls._entitytype, entityid))
         altpath = (cls._entityaltpath or "%(id)s")%{'id': entityid, 'type_id': cls._entitytypeid}
-        log.debug("Entity.altpath: %s"%(altpath))
+        # log.debug("Entity.altpath: %s"%(altpath))
         return altpath
 
     @classmethod
@@ -148,9 +168,9 @@ class Entity(EntityRoot):
         parent      is the parent from which the entity is descended.
         entityid    is the local identifier (slug) for the entity.
         """
-        log.debug("Entity.path: entitytype %s, parentdir %s, entityid %s"%
-            (cls._entitytype, parent._entitydir, entityid)
-            )
+        # log.debug("Entity.path: entitytype %s, parentdir %s, entityid %s"%
+        #     (cls._entitytype, parent._entitydir, entityid)
+        #     )
         assert cls._entityfile is not None
         p = util.entity_path(parent._entitydir, [cls.relpath(entityid)], cls._entityfile)
         log.debug("Entity.path: %s"%(p))
@@ -198,13 +218,13 @@ class Entity(EntityRoot):
         Instantiate a child entity (e.g. for create and load methods)
         """
         if use_altpath:
-            log.info(" __ Entity._child_init: (use_altpath) "+entityid)
+            # log.info(" __ Entity._child_init: (use_altpath) "+entityid)
             e = cls(parent, entityid, use_altpath=use_altpath)
         elif altparent:
-            log.info(" __ Entity._child_init: (altparent) "+entityid)
+            # log.info(" __ Entity._child_init: (altparent) "+entityid)
             e = cls(parent, entityid, altparent=altparent)
         else:
-            log.info(" __ Entity._child_init: (no altparent) "+entityid)
+            # log.info(" __ Entity._child_init: (no altparent) "+entityid)
             e = cls(parent, entityid)
         return e
 
@@ -253,9 +273,9 @@ class Entity(EntityRoot):
         entity = None
         if util.valid_id(entityid):
             e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
-            log.info(" __ Entity.load: _child_init "+repr(e))
+            # log.info(" __ Entity.load: _child_init "+repr(e))
             v = e._load_values()
-            log.info(" __ Entity.load: _load_values "+repr(v))
+            # log.info(" __ Entity.load: _load_values "+repr(v))
             # log.info("entity.load %r"%(v,))
             if v:
                 v = e._migrate_values(v)
@@ -299,16 +319,16 @@ class Entity(EntityRoot):
 
         Returns None on success, or a status value indicating a reason for value.
         """
-        log.debug("Colllection.remove: id %s"%(entityid))
+        log.debug("Entity.remove: id %s"%(entityid))
         e = cls.load(parent, entityid, use_altpath=use_altpath)
         if e:
             d = e._entitydir
             # Extra check to guard against accidentally deleting wrong thing
-            if cls._entitytype in e['@type'] and d.startswith(parent._entitydir):
+            if cls._entitytype in e['@type'] and d.startswith(parent._entitybasedir):
                 shutil.rmtree(d)
             else:
-                log.error("Expected type_id: %s, got %s"%(cls._entitytypeid, e[ANNAL.CURIE.type_id]))
-                log.error("Expected dirbase: %s, got %s"%(parent._entitydir, d))
+                log.error("Expected type_id: %r, got %r"%(cls._entitytypeid, e[ANNAL.CURIE.type_id]))
+                log.error("Expected dirbase: %r, got %r"%(parent._entitydir, d))
                 raise Annalist_Error("Entity %s unexpected type %s or path %s"%(entityid, e[ANNAL.CURIE.type_id], d))
         else:
             return Annalist_Error("Entity %s not found"%(entityid))
@@ -339,7 +359,7 @@ class Entity(EntityRoot):
 
         Returns a file object value, or None.
         """
-        log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%
+        log.debug("Entity.fileobj: entitytype %s, parentdir %s, entityid %s"%
             (cls._entitytype, parent._entitydir, entityid)
             )
         e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)

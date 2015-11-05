@@ -47,7 +47,7 @@ class bound_field(object):
 
     See also: http://docs.python.org/2/reference/datamodel.html#slots
 
-    >>> entity = EntityRoot("entityuri", "entitydir")
+    >>> entity = EntityRoot("entityuri", "entitydir", "entitydir")
     >>> entity.set_id("testentity")
     >>> vals = entity.set_values({"foo": "foo_val", "bar": "bar_val"})
     >>> field_foo_desc = {"field_id": "foo_id", "field_property_uri": "foo", "field_type": "foo_type"}

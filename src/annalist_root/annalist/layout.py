@@ -75,24 +75,23 @@ log = logging.getLogger(__name__)
 #          :
 
 SITE_DIR                = "annalist_site"
-SITE_META_PATH          = "./"
+SITEDATA_ID             = "_annalist_site"
+SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
+SITE_META_PATH          = SITEDATA_DIR
 SITE_META_FILE          = "site_meta.jsonld"
-META_SITE_REF           = "./"
+META_SITE_REF           = "../../"
+SITE_COLL_VIEW          = "../%(id)s/"
+SITE_COLL_PATH          = "../%(id)s"
+SITE_COLL_CONTEXT_PATH  = "../%(id)s/d/"
 
-SITE_COLL_VIEW          = "c/%(id)s/"
-SITE_COLL_PATH          = "c/%(id)s"
 COLL_META_DIR           = "_annalist_collection"
 COLL_META_FILE          = COLL_META_DIR + "/coll_meta.jsonld"
 COLL_PROV_FILE          = COLL_META_DIR + "/coll_prov.jsonld"
 META_COLL_REF           = "../"
-
-SITE_COLL_CONTEXT_PATH  = "c/%(id)s/d/"
 COLL_CONTEXT_PATH       = "d/"
 COLL_META_CONTEXT_PATH  = META_COLL_REF+COLL_CONTEXT_PATH
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
 
-SITEDATA_ID             = "_annalist_site"
-SITEDATA_DIR            = SITE_COLL_PATH%{'id': SITEDATA_ID}
 SITEDATA_VIEW           = "%(id)s/"
 SITEDATA_PATH           = "%(id)s"
 SITEDATA_META_FILE      = COLL_META_FILE
@@ -106,42 +105,42 @@ SITEDATA_META_SITE_REF  = "../../../"
 
 COLL_TYPE_VIEW          = "d/_type/%(id)s/"
 COLL_TYPE_PATH          = COLL_META_DIR + "/types/%(id)s"
-SITE_TYPE_PATH          = SITEDATA_DIR + "/" + COLL_TYPE_PATH
+SITE_TYPE_PATH          = COLL_TYPE_PATH
 TYPE_META_FILE          = "type_meta.jsonld"
 TYPE_PROV_FILE          = "type_prov.jsonld"
 META_TYPE_REF           = "./"
 
 COLL_LIST_VIEW          = "d/_list/%(id)s/"
 COLL_LIST_PATH          = COLL_META_DIR + "/lists/%(id)s"
-SITE_LIST_PATH          = SITEDATA_DIR + "/" + COLL_LIST_PATH
+SITE_LIST_PATH          = COLL_LIST_PATH
 LIST_META_FILE          = "list_meta.jsonld"
 LIST_PROV_FILE          = "list_prov.jsonld"
 META_LIST_REF           = "./"
 
 COLL_VIEW_VIEW          = "d/_view/%(id)s/"
 COLL_VIEW_PATH          = COLL_META_DIR + "/views/%(id)s"
-SITE_VIEW_PATH          = SITEDATA_DIR + "/" + COLL_VIEW_PATH
+SITE_VIEW_PATH          = COLL_VIEW_PATH
 VIEW_META_FILE          = "view_meta.jsonld"
 VIEW_PROV_FILE          = "view_prov.jsonld"
 META_VIEW_REF           = "./"
 
 COLL_GROUP_VIEW         = "d/_group/%(id)s/"
 COLL_GROUP_PATH         = COLL_META_DIR + "/groups/%(id)s"
-SITE_GROUP_PATH         = SITEDATA_DIR + "/" + COLL_GROUP_PATH
+SITE_GROUP_PATH         = COLL_GROUP_PATH
 GROUP_META_FILE         = "group_meta.jsonld"
 GROUP_PROV_FILE         = "group_prov.jsonld"
 META_GROUP_REF          = "./"
 
 COLL_FIELD_VIEW         = "d/_field/%(id)s/"
 COLL_FIELD_PATH         = COLL_META_DIR + "/fields/%(id)s"
-SITE_FIELD_PATH         = SITEDATA_DIR + "/" + COLL_FIELD_PATH
+SITE_FIELD_PATH         = COLL_FIELD_PATH
 FIELD_META_FILE         = "field_meta.jsonld"
 FIELD_PROV_FILE         = "field_prov.jsonld"
 META_FIELD_REF          = "./"
 
 COLL_USER_VIEW          = "d/_user/%(id)s/"
 COLL_USER_PATH          = COLL_META_DIR + "/users/%(id)s"
-SITE_USER_PATH          = SITEDATA_DIR + "/" + COLL_USER_PATH
+SITE_USER_PATH          = COLL_USER_PATH
 USER_META_FILE          = "user_meta.jsonld"
 USER_PROV_FILE          = "user_prov.jsonld"
 META_USER_REF           = "./"
@@ -150,14 +149,14 @@ USER_CONTEXT_FILE       = USER_CONTEXT_REF + "/" + COLL_CONTEXT_FILE
 
 COLL_VOCAB_VIEW         = "d/_vocab/%(id)s/"
 COLL_VOCAB_PATH         = COLL_META_DIR + "/vocabs/%(id)s"
-SITE_VOCAB_PATH         = SITEDATA_DIR + "/" + COLL_VOCAB_PATH
+SITE_VOCAB_PATH         = COLL_VOCAB_PATH
 VOCAB_META_FILE         = "vocab_meta.jsonld"
 VOCAB_PROV_FILE         = "vocab_prov.jsonld"
 META_VOCAB_REF          = "./"
 
 COLL_ENUM_VIEW          = "d/%(type_id)s/%(id)s/"
 COLL_ENUM_PATH          = COLL_META_DIR + "/enums/%(type_id)s/%(id)s"
-SITE_ENUM_PATH          = SITEDATA_DIR + "/" + COLL_ENUM_PATH
+SITE_ENUM_PATH          = COLL_ENUM_PATH
 ENUM_META_FILE          = "enum_meta.jsonld"
 ENUM_PROV_FILE          = "enum_prov.jsonld"
 META_ENUM_REF           = "./"
