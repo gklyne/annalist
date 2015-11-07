@@ -51,9 +51,8 @@ class EntityRoot(object):
         cls._contextref     relative reference to context from body file
         self._entityid      ID of entity; may be None for "root" entities (e.g. site?)
         self._entityurl     URI at which entity is accessed
-        # self._entityurlhost URI host at which entity is accessed (per HTTP host: header)
-        # self._entityurlpath URI absolute path at which entity is accessed
         self._entitydir     directory where entity is stored
+        self._entitybasedir base directory where all data is stored
         self._values        dictionary of values in entity body
     """
 
@@ -75,10 +74,6 @@ class EntityRoot(object):
         self._entityurl     = entityurl if entityurl.endswith("/") else entityurl + "/"
         self._entitydir     = entitydir if entitydir.endswith("/") else entitydir + "/"
         self._entitybasedir = entitybasedir
-        self._entityalturl  = None
-        self._entityaltdir  = None
-        self._entityuseurl  = None # self._entityurl
-        self._entityusedir  = None # self._entitydir
         self._values        = None
         log.debug("EntityRoot.__init__: entity URI %s, entity dir %s"%(self._entityurl, self._entitydir))
         return
@@ -152,6 +147,13 @@ class EntityRoot(object):
         log.debug("EntityRoot.get_view_url_path: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
         return util.entity_url_path(self.get_view_url(), "")
 
+    def get_alt_ancestry(self, altscope=None):
+        """
+        Returns a list of alternative entities to the current entity to search for possible 
+        child entities.  The root entity has no such alternatives.
+        """
+        return []
+
     def set_values(self, values):
         """
         Set or update values for a collection
@@ -211,8 +213,8 @@ class EntityRoot(object):
         """
         if self._exists_path():
             # (body_dir, _) = self._dir_path()
-            body_dir = self._entityusedir
-            log.info("EntityRoot.resource_file: dir %s, resource_ref %s"%(body_dir, resource_ref))
+            body_dir = self._entitydir
+            log.debug("EntityRoot.resource_file: dir %s, resource_ref %s"%(body_dir, resource_ref))
             file_name = os.path.join(body_dir, resource_ref)
             if os.path.isfile(file_name):
                 return open(file_name, "rb")
@@ -242,44 +244,25 @@ class EntityRoot(object):
         (basedir, filepath) = util.entity_dir_path(self._entitydir, [], self._entityfile)
         return (basedir, filepath)
 
-    def _alt_dir_path(self):
-        """
-        Return alternate directory and path for current entity body file
-        """
-        if not self._entityfile:
-            raise ValueError("Entity._alt_dir_path without defined entity file path")
-        if self._entityaltdir:
-            # log.info("    _ EntityRoot._alt_dir_path _entityaltdir %s"%(self._entityaltdir,))
-            # log.info("    _ EntityRoot._alt_dir_path _entityfile   %s"%(self._entityfile,))
-            (basedir, filepath) = util.entity_dir_path(self._entityaltdir, [], self._entityfile)
-            return (basedir, filepath)
-        return (None, None)
-
     def _dir_path_uri(self):
         (d, p) = self._dir_path()
         return (d, p, self._entityurl)
-
-    def _alt_dir_path_uri(self):
-        (d, p) = self._alt_dir_path()
-        return (d, p, self._entityalturl)
 
     def _exists_path(self):
         """
         Test if the entity denoted by the current object has been created.
 
-        If found, also sets the enity in-use URL value for .get_url()
+        If found, also sets the entity in-use URL value for .get_url()
 
         returns path of of object body, or None
         """
         # log.debug(" __ EntityRoot._exists_path")
-        for (d, p, u) in (self._dir_path_uri(), self._alt_dir_path_uri()):
-            # log.debug("    EntityRoot._exists_path %s"%(p))
-            if d and os.path.isdir(d):
-                if p and os.path.isfile(p):
-                    self._entityusedir = d
-                    self._entityuseurl = u
-                    # log.info("    EntityRoot._exists_path return %s"%(p))
-                    return p
+        (d, p, u) = self._dir_path_uri()
+        log.debug("EntityRoot._exists_path %s"%(p))
+        if d and os.path.isdir(d):
+            if p and os.path.isfile(p):
+                # log.debug("EntityRoot._exists_path return %s"%(p))
+                return p
         return None
 
     def _exists(self):
@@ -343,9 +326,22 @@ class EntityRoot(object):
         values.pop(ANNAL.CURIE.url, None)
         with open(fullpath, "wt") as entity_io:
             json.dump(values, entity_io, indent=2, separators=(',', ': '))
-        self._entityusedir  = self._entitydir
-        self._entityuseurl  = self._entityurl
         self._post_update_processing(values)
+        return
+
+    def _remove(self, type_uri):
+        """
+        Remove current entity from Annalist storage.  Requires typ_uri supplied as a 
+        double-check that the expected enytity is being removed.
+        """
+        d = self._entitydir
+        # Extra check to guard against accidentally deleting wrong thing
+        if type_uri in self._values['@type'] and d.startswith(self._entitybasedir):
+            shutil.rmtree(d)
+        else:
+            log.error("Expected type_uri: %r, got %r"%(type_uri, e[ANNAL.CURIE.type]))
+            log.error("Expected dirbase:  %r, got %r"%(parent._entitydir, d))
+            raise Annalist_Error("Entity %s unexpected type %s or path %s"%(entityid, e[ANNAL.CURIE.type_id], d))
         return
 
     def _load_values(self):
@@ -354,16 +350,17 @@ class EntityRoot(object):
 
         Adds value for 'annal:url' to the entity data returned.
         """
-        # log.info(" __ EntityRoot._load_values")
+        log.debug("EntityRoot._load_values %s/%s"%(self.get_type_id(), self.get_id()))
         self._migrate_path()
         body_file = self._exists_path()
+        # log.debug("EntityRoot._load_values body_file %r"%(body_file,))
         if body_file:
             try:
                 # @@TODO: rework name access to support different underlays
                 # @@was: with open(body_file, "r") as f:
                 with self._read_stream() as f:
                     entitydata = json.load(util.strip_comments(f))
-                    log.debug("EntityRoot._load_values: url_path %s"%(self.get_view_url_path()))
+                    # log.debug("EntityRoot._load_values: url_path %s"%(self.get_view_url_path()))
                     entitydata[ANNAL.CURIE.url] = self.get_view_url_path()
                     return entitydata
             except IOError, e:
@@ -449,30 +446,7 @@ class EntityRoot(object):
         """
         return entitydata
 
-    def _child_dirs(self, cls, altparent):
-        """
-        Returns a pair of directories that may contain child entities.
-        The second of the pair is descended from the "altparent", which is 
-        used only for entities that are not in the main directory.
-
-        cls         is a subclass of Entity indicating the type of children to
-                    be located
-        altparent   is an alternative parent entity to be checked using the specified
-                    class's alternate relative path, or None if only potential children 
-                    of the current entity are returned.
-        """
-        dir1 = os.path.dirname(os.path.join(self._entitydir, cls._entitypath or ""))
-        #@@
-        if altparent and cls._entityaltpath:
-            dir2 = os.path.dirname(os.path.join(altparent._entitydir, cls._entityaltpath))
-        # if altparent:
-        #     dir2 = os.path.dirname(os.path.join(altparent._entitydir, cls._entitypath))
-        #@@
-        else:
-            dir2 = None
-        return (dir1, dir2)
-
-    def _children(self, cls, altparent=None):
+    def _base_children(self, cls):
         """
         Iterates over candidate child identifiers that are possible instances of an 
         indicated class.  The supplied class is used to determine a subdirectory to 
@@ -480,19 +454,13 @@ class EntityRoot(object):
 
         cls         is a subclass of Entity indicating the type of children to
                     iterate over.
-        altparent   is an alternative parent entity to be checked using the class's
-                    alternate relative path, or None if only potential child IDs of the
-                    current entity are returned.
         """
-        coll_dir, site_dir = self._child_dirs(cls, altparent)
-        assert "%" not in coll_dir, "_entitypath template variable interpolation may be in filename part only"
-        site_files = []
-        coll_files = []
-        if site_dir and os.path.isdir(site_dir):
-            site_files = os.listdir(site_dir)
-        if os.path.isdir(coll_dir):
-            coll_files = os.listdir(coll_dir)
-        for fil in [ f for f in site_files if f not in coll_files] + coll_files:
+        parent_dir = os.path.dirname(os.path.join(self._entitydir, cls._entitypath or ""))
+        assert "%" not in parent_dir, "_entitypath template variable interpolation may be in filename part only"
+        child_files = []
+        if os.path.isdir(parent_dir):
+            child_files = os.listdir(parent_dir)
+        for fil in child_files:
             if util.valid_id(fil):
                 yield fil
         return

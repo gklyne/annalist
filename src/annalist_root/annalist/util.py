@@ -49,6 +49,7 @@ def valid_id(id):
     # cf. urls.py:
     if id and re.match(r"\w{1,32}$", id):
         return id not in reserved
+    # log.warning("util.valid_id: id %s"%(id))
     return False
 
 def split_type_entity_id(eid, default_type_id=None):
@@ -202,7 +203,7 @@ def entity_dir_path(base_dir, path, filename):
     >>> entity_dir_path("/base/dir",[],"sub/file.ext")
     ('/base/dir/sub', '/base/dir/sub/file.ext')
     """
-    log.debug("util.entity_dir_path %s, %r, %s"%(base_dir, path, filename))
+    # log.debug("util.entity_dir_path %s, %r, %s"%(base_dir, path, filename))
     if path:
         if isinstance(path, (list, tuple)):
             d = os.path.join(base_dir, *path)

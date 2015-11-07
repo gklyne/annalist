@@ -77,12 +77,12 @@ log = logging.getLogger(__name__)
 SITE_DIR                = "annalist_site"
 SITEDATA_ID             = "_annalist_site"
 SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
-SITE_META_PATH          = SITEDATA_DIR
+SITE_META_PATH          = ""
 SITE_META_FILE          = "site_meta.jsonld"
-META_SITE_REF           = "../../"
-SITE_COLL_VIEW          = "../%(id)s/"
-SITE_COLL_PATH          = "../%(id)s"
-SITE_COLL_CONTEXT_PATH  = "../%(id)s/d/"
+META_SITE_REF           = "./"
+SITE_COLL_VIEW          = "c/%(id)s/"
+SITE_COLL_PATH          = "c/%(id)s"
+SITE_COLL_CONTEXT_PATH  = "c/%(id)s/d/"    # Used for testing
 
 COLL_META_DIR           = "_annalist_collection"
 COLL_META_FILE          = COLL_META_DIR + "/coll_meta.jsonld"

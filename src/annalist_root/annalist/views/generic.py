@@ -8,12 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import os.path
-# import json
-# import random
-# import uuid
-# import copy
-# import httplib2
-
+import traceback
 import logging
 log = logging.getLogger(__name__)
 
@@ -277,7 +272,7 @@ class AnnalistGenericView(ContentNegotiationView):
                 self.site().get_user_permissions("_default_user_perms", "annal:User/_default_user_perms")
                 )
             self._user_perms = user_perms
-            log.debug("get_user_permissions %r"%(self._user_perms,))
+            # log.debug("get_user_permissions %r"%(self._user_perms,))
         return self._user_perms
 
     def get_permissions(self, collection):
@@ -307,6 +302,7 @@ class AnnalistGenericView(ContentNegotiationView):
         user_perms = self.get_user_permissions(collection, user_id, user_uri)
         if not user_perms:
             log.warning("No user permissions found for user_id %s, URI %s"%(user_id, user_uri))
+            log.warning("".join(traceback.format_stack()))
             return self.error(self.error403values(scope=scope))
         # log.info("Authorize %s in %s, %s, %r"%(user_id, coll_id, scope, user_perms[ANNAL.CURIE.user_permissions]))
         # user_perms is an AnnalistrUser object

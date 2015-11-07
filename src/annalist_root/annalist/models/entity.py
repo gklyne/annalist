@@ -5,8 +5,8 @@ This module implements a common pattern whereby an entity is related to a parent
 with storage directories and URIs allocated by combining the parent entity and a
 local identifier (slug) for the descendent.
 
-Part of the purpose of this module is to abstract the underlying storage access
-from the Annalist organization of presented entities.
+This module also implements the logic used to locate entities on alternate search paths,
+such as site data or data inherited from other collections.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -16,10 +16,11 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import os
 import os.path
 import urlparse
+import itertools
 import shutil
 import json
 import errno
-
+import traceback
 import logging
 log = logging.getLogger(__name__)
 
@@ -30,6 +31,24 @@ from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
 
 from annalist.models.entityroot import EntityRoot
+
+#   -------------------------------------------------------------------------------------------
+#
+#   Helpers
+#
+#   -------------------------------------------------------------------------------------------
+
+def test_not_none(v):
+    """
+    Helper function tests for a non-None value
+    """
+    return v is not None
+
+def test_is_true(v):
+    """
+    Helper function tests for a value that evaluates to Boolean True
+    """
+    return bool(v)
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -90,18 +109,23 @@ class Entity(EntityRoot):
         #     (entity_url, entity_dir)
         #     )
         super(Entity, self).__init__(entity_url, entity_dir, entity_base)
-        self._entityviewuri = urlparse.urljoin(
+        self._entityviewurl = urlparse.urljoin(
             parent._entityurl,
             self._entityview%{'id': entityid, 'type_id': self._entitytypeid}
             )
-        self._entityalturi  = None
+        self._parent        = parent
+        self._altparent     = altparent     # Alternative to current entity to search
+        self._entityalturl  = None
         self._entityaltdir  = None
         if altparent:
             altpath = self.altpath(entityid)
-            self._entityalturi = altparent._entityurl+altpath
+            self._entityalturl = altparent._entityurl+altpath
             self._entityaltdir = altparent._entitydir+altpath
-            self._entityuseuri = None   # URI not known until entity is created or accessed
-            log.debug("Entity.__init__: entity alt URI %s, entity alt dir %s"%(self._entityalturi, self._entityaltdir))
+            self._entityuseurl = None       # URI not known until entity is created or accessed
+            log.debug(
+                "Entity.__init__: entity alt URI %s, entity alt dir %s"%
+                (self._entityalturl, self._entityaltdir)
+                )
         self._entityid = entityid
         log.debug("Entity.__init__: entity_id %s, type_id %s"%(self._entityid, self.get_type_id()))
         return
@@ -114,12 +138,111 @@ class Entity(EntityRoot):
         is stored as site-wide or collection-specific data.
         """
         # log.debug(
-        #     "Entity.get_view_url: baseurl %s, _entityviewuri %s"%
-        #     (baseurl, self._entityviewuri)
+        #     "Entity.get_view_url: baseurl %s, _entityviewurl %s"%
+        #     (baseurl, self._entityviewurl)
         #     )
-        return urlparse.urljoin(baseurl, self._entityviewuri)
+        return urlparse.urljoin(baseurl, self._entityviewurl)
 
-    # I/O helper functions
+    def get_alt_ancestry(self, altscope=None):
+        """
+        Returns a list of alternative entities to the current entity to search for possible 
+        child entities.  Thne supplied altscope parameter indicates the scope to be searched.
+
+        Currently, only one alternative may be declared, but a list is returned to 
+        facilitate future developments supporting multiple inheritance paths.
+
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  Currently defined values are:
+                    "none" or None - search current entity only
+                    "all" - search current entity and all alternative parent entities,
+                    including their parents and alternatives.
+        """
+        if altscope is not None:
+            if not isinstance(altscope, (unicode, str)):
+                log.error("altscope must be string (%r supplied)"%(altscope))
+                log.error("".join(traceback.format_stack()))
+                raise ValueError("altscope must be string (%r supplied)"%(altscope))
+        log.debug("Entity.get_alt_ancestry: %s/%s"%(self.get_type_id(), self.get_id()))
+        return [self._altparent] if (altscope == "all" and self._altparent) else []
+
+    def try_alt_ancestry(self, func, test=test_is_true, altscope=None):
+        """
+        Try applying the supplied function to the superclass object of current entity and 
+        then any alternative ancestry of the current entity, until a result is obtained 
+        that satisfies the supplied test.
+
+        By default, looks for a result that evaluates as Boolan True
+
+        If no satisfying value is found, returns the result from the last function
+        executed (i.e. with the default test, returns None).
+        """
+        log.debug("Entity.try_alt_ancestry: %s/%s"%(self.get_type_id(), self.get_id()))
+        # if altscope is not None:
+        #     if not isinstance(altscope, (unicode, str)):
+        #         log.error("altscope must be string (%r supplied)"%(altscope))
+        #         log.error("".join(traceback.format_stack()))
+        #         raise ValueError("altscope must be string (%r supplied)"%(altscope))
+        v = func(super(Entity, self))
+        if test(v):
+            return v
+        alt_parents = self._parent.get_alt_ancestry(altscope=altscope)
+        for altparent in alt_parents:
+            log.debug("Entity.try_alt_ancestry: alt %s/%s"%(altparent.get_type_id(), altparent.get_id()))
+            v = func(altparent)
+            if test(v):
+                return v
+        return v
+
+    @classmethod
+    def try_alt_parentage(cls, parent, entityid, func, test=test_is_true, altscope=None):
+        """
+        Try applying the supplied function to an entity descended from the supplied
+        parent, then any alternative parents to that parent, until a result is obtained 
+        that satisfies the supplied test.
+
+        By default, looks for a result that evaluates as Boolan True
+
+        Returns a pair consising of the satisfied entity and the corresponding value.
+
+        If no satisfying value is found, returns the result for the last entity tried
+        executed;  i.e., with the default test, returns (None,None).
+        """
+        # log.debug(
+        #     "Entity.try_alt_parentage: %s/%s with parent %r"%
+        #     (cls._entitytypeid, entityid, parent)
+        #     )
+        e = cls._child_init(parent, entityid)
+        #@@ TODO: review this: currently force URL returned to be that of original parent, not alt
+        #         This is done to minimize disruption to tests while changing logic.
+        #         If choose to stay with this, the logic should probably be pushed to get_view_url(),
+        #         with actual view URL specified whenparent entity ()i.e. Collection) is initialized
+        ub = e._entityurl       #@@
+        uv = e._entityviewurl   #@@
+        # log.warning("@@try_alt_parentage: ub %s, uv %s"%(ub, uv))
+        # log.debug("Entity.try_alt_parentage: _child_init "+repr(e))
+        v = func(e)
+        if test(v):
+            return (e, v)
+        alt_parents = parent.get_alt_ancestry(altscope=altscope)
+        # log.debug(
+        #     "Entity.try_alt_parentage: alt_parents %r"%(alt_parents,)
+        #     )
+        for altparent in alt_parents:
+            e = cls._child_init(altparent, entityid)
+            e._entityurl = ub       #@@
+            e._entityviewurl = uv   #@@
+            v = func(e)
+            if test(v):
+                return (e, v)
+        # Failed: log details
+        log.debug(
+            " __ no entity found for %s/%s with parent %s"%
+            (cls._entitytypeid, entityid, parent)
+            )
+        log.debug("    alt parents tried: %r"%(alt_parents,))
+        return (None, v)
+
+    # Class helper methods
 
     @classmethod
     def allocate_new_id(cls, parent):
@@ -176,25 +299,74 @@ class Entity(EntityRoot):
         log.debug("Entity.path: %s"%(p))
         return p
 
+    # I/O helper functions (moved/copied from EntityRoot)
+
+    def _alt_dir_path(self):
+        """
+        Return alternate directory and path for current entity body file
+        """
+        if not self._entityfile:
+            raise ValueError("Entity._alt_dir_path without defined entity file path")
+        if self._entityaltdir:
+            # log.info("    _ Entity._alt_dir_path _entityaltdir %s"%(self._entityaltdir,))
+            # log.info("    _ Entity._alt_dir_path _entityfile   %s"%(self._entityfile,))
+            (basedir, filepath) = util.entity_dir_path(self._entityaltdir, [], self._entityfile)
+            return (basedir, filepath)
+        return (None, None)
+
+    def _alt_dir_path_uri(self):
+        (d, p) = self._alt_dir_path()
+        return (d, p, self._entityalturl)
+
+    def _children(self, cls, altscope=None):
+        """
+        Iterates over candidate child identifiers that are possible instances of an 
+        indicated class.  The supplied class is used to determine a subdirectory to 
+        be scanned.
+
+        cls         is a subclass of Entity indicating the type of children to
+                    iterate over.
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `get_alt_ancestry` for more details.
+        """
+        coll_entity_ids = list(self._base_children(cls))
+        site_entity_ids = list(itertools.chain.from_iterable(
+            (alt._children(cls, altscope=altscope) for alt in self.get_alt_ancestry(altscope=altscope))
+            ))
+        # if altscope == "all" and self._altparent:
+        #     site_entity_ids = self._altparent._children(cls, altscope=altscope)
+        for entity_id in [f for f in site_entity_ids if f not in coll_entity_ids] + coll_entity_ids:
+            if util.valid_id(entity_id):
+                yield entity_id
+        return
+
+    def resource_file(self, resource_ref):
+        """
+        Returns a file object value for a resource associated with the current
+        entity, or with a corresponding entity with the samem id descended from an 
+        alternative parent, or None if the resource is not present.
+        """
+        file_obj = self.try_alt_ancestry(lambda e: e.resource_file(resource_ref), altscope="all")
+        return file_obj
+
     # Create and access functions
 
-    def child_entity_ids(self, cls, altparent=None):
+    def child_entity_ids(self, cls, altscope=None):
         """
         Iterates over child entity identifiers of an indicated class.
         The supplied class is used to determine a subdirectory to be scanned.
 
         cls         is a subclass of Entity indicating the type of children to
                     iterate over.
-        altparent   is an alternative parent entity to be checked using the class's
-                    alternate relative path, or None if only potential child IDs of the
-                    current entity are returned.
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `get_alt_ancestry` for more details.
         """
-        for i in self._children(cls, altparent=altparent):
-            if cls.exists(self, i, altparent=altparent):
+        for i in self._children(cls, altscope=altscope):
+            if cls.exists(self, i, altscope=altscope):
                 yield i
         return
 
-    def child_entities(self, cls, altparent=None):
+    def child_entities(self, cls, altscope=None):
         """
         Iterates over child entities of an indicated class.
         The supplied class is used to determine a subdirectory to be scanned, 
@@ -202,29 +374,34 @@ class Entity(EntityRoot):
 
         cls         is a subclass of Entity indicating the type of children to
                     iterate over.
-        altparent   is an alternative parent entity to be checked using the class's
-                    alternate relative path, or None if only potential child IDs of the
-                    current entity are returned.
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `get_alt_ancestry` for more details.
         """
-        for i in self._children(cls, altparent=altparent):
-            e = cls.load(self, i, altparent=altparent)
+        for i in self._children(cls, altscope=altscope):
+            e = cls.load(self, i, altscope=altscope)
             if e:
                 yield e
         return
 
     @classmethod
-    def _child_init(cls, parent, entityid, altparent=None, use_altpath=False):
+    def _child_init(cls, parent, entityid, altscope=None, use_altpath=False):
         """
-        Instantiate a child entity (e.g. for create and load methods)
+        Instantiate a child entity (e.g. for create and load methods) of a specified
+        parent entity.
+
+        parent      is the parent entity for which a child is instantiated.
+        entityid    is the entity id of the child to be instantiated.
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `get_alt_ancestry` for more details.
         """
         if use_altpath:
             # log.info(" __ Entity._child_init: (use_altpath) "+entityid)
             e = cls(parent, entityid, use_altpath=use_altpath)
-        elif altparent:
-            # log.info(" __ Entity._child_init: (altparent) "+entityid)
-            e = cls(parent, entityid, altparent=altparent)
+        elif altscope:
+            # log.info(" __ Entity._child_init: (altscope) "+entityid)
+            e = cls(parent, entityid, altscope=altscope)
         else:
-            # log.info(" __ Entity._child_init: (no altparent) "+entityid)
+            # log.info(" __ Entity._child_init: (no altscope) "+entityid)
             e = cls(parent, entityid)
         return e
 
@@ -250,63 +427,6 @@ class Entity(EntityRoot):
         return e
 
     @classmethod
-    def load(cls, parent, entityid, altparent=None, use_altpath=False):
-        """
-        Return an entity with given identifier belonging to some given parent,
-        or None if there is not such identity.
-
-        cls         is the class of the entity to be loaded
-        parent      is the parent from which the entity is descended.
-        entityid    is the local identifier (slug) for the entity.
-        altparent   is an alternative parent entity to search for the loaded entity, 
-                    using the alternative path for the entity type.
-        use_altpath is set True if this entity is situated at the alternative
-                    path relative to its parent.
-
-        Returns an instance of the indicated class with data loaded from the
-        corresponding Annalist storage, or None if there is no such entity.
-        """
-        log.debug("Entity.load: entitytype %s, parentdir %s, entityid %s, altparentdir %s"%
-            (cls._entitytype, parent._entitydir, entityid,
-                altparent._entitydir if altparent else "(no alt)")
-            )
-        entity = None
-        if util.valid_id(entityid):
-            e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
-            # log.info(" __ Entity.load: _child_init "+repr(e))
-            v = e._load_values()
-            # log.info(" __ Entity.load: _load_values "+repr(v))
-            # log.info("entity.load %r"%(v,))
-            if v:
-                v = e._migrate_values(v)
-                e.set_values(v)
-                entity = e
-        return entity
-
-    @classmethod
-    def exists(cls, parent, entityid, altparent=None, use_altpath=False):
-        """
-        Method tests for existence of identified entity descended from given parent.
-
-        cls         is the class of the entity to be tested
-        parent      is the parent from which the entity is descended.
-        entityid    is the local identifier (slug) for the entity.
-        altparent   is an alternative parent entity to search for the tested entity, 
-                    using the alternative path for the entity type.
-        use_altpath is set True if this entity is situated at the alternative
-                    path relative to its parent.
-
-        Returns True if the entity exists, as determined by existence of the 
-        entity description metadata file.
-        """
-        log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%
-            (cls._entitytype, parent._entitydir, entityid)
-            )
-        e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
-        e._migrate_path()
-        return e._exists()
-
-    @classmethod
     def remove(cls, parent, entityid, use_altpath=False):
         """
         Method removes an entity, deleting its details, data and descendents from Annalist storage.
@@ -322,20 +442,86 @@ class Entity(EntityRoot):
         log.debug("Entity.remove: id %s"%(entityid))
         e = cls.load(parent, entityid, use_altpath=use_altpath)
         if e:
-            d = e._entitydir
-            # Extra check to guard against accidentally deleting wrong thing
-            if cls._entitytype in e['@type'] and d.startswith(parent._entitybasedir):
-                shutil.rmtree(d)
-            else:
-                log.error("Expected type_id: %r, got %r"%(cls._entitytypeid, e[ANNAL.CURIE.type_id]))
-                log.error("Expected dirbase: %r, got %r"%(parent._entitydir, d))
-                raise Annalist_Error("Entity %s unexpected type %s or path %s"%(entityid, e[ANNAL.CURIE.type_id], d))
+            e._remove(cls._entitytype)
         else:
             return Annalist_Error("Entity %s not found"%(entityid))
         return None
 
     @classmethod
-    def fileobj(cls, parent, entityid, filename, filetypeuri, mimetype, mode, altparent=None, use_altpath=False):
+    def load(cls, parent, entityid, altscope=None, use_altpath=False):
+        """
+        Return an entity with given identifier belonging to some given parent,
+        or None if there is not such identity.
+
+        cls         is the class of the entity to be loaded
+        parent      is the parent from which the entity is descended.
+        entityid    is the local identifier (slug) for the entity.
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `get_alt_ancestry` for more details.
+        use_altpath is set True if this entity is situated at the alternative
+                    path relative to its parent.
+
+        Returns an instance of the indicated class with data loaded from the
+        corresponding Annalist storage, or None if there is no such entity.
+        """
+        log.debug("Entity.load: entity %s/%s, altscope %s"%
+            (cls._entitytype, entityid, altscope)
+            )
+        # if altscope is not None:
+        #     if not isinstance(altscope, (unicode, str)):
+        #         log.error("altscope must be string (%r supplied)"%(altscope))
+        #         log.error("".join(traceback.format_stack()))
+        #         raise ValueError("altscope must be string (%r supplied)"%(altscope))
+        entity = None
+        if util.valid_id(entityid):
+            (e, v) = cls.try_alt_parentage(
+                parent, entityid, (lambda e: e._load_values()), 
+                altscope=altscope
+                )
+            # log.info(" __ Entity.load: _load_values "+repr(v))
+            # log.info("entity.load %r"%(v,))
+            if v:
+                v = e._migrate_values(v)
+                e.set_values(v)
+                entity = e
+        # log.warning("@@Entity.load ub %r"%(entity._entityurl))
+        # log.warning("@@Entity.load uv %r"%(entity._entityviewurl))
+        # log.warning("@@Entity.load e  %r"%(entity))
+        # log.warning("@@Entity.load v  %r"%(v))
+        return entity
+
+    @classmethod
+    def exists(cls, parent, entityid, altscope=None, use_altpath=False):
+        """
+        Method tests for existence of identified entity descended from given parent.
+
+        cls         is the class of the entity to be tested
+        parent      is the parent from which the entity is descended.
+        entityid    is the local identifier (slug) for the entity.
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `get_alt_ancestry` for more details.
+        use_altpath is set True if this entity is situated at the alternative
+                    path relative to its parent.
+
+        Returns True if the entity exists, as determined by existence of the 
+        entity description metadata file.
+        """
+        log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%
+            (cls._entitytype, parent._entitydir, entityid)
+            )
+        # if altscope is not None:
+        #     if not isinstance(altscope, (unicode, str)):
+        #         log.error("altscope must be string (%r supplied)"%(altscope))
+        #         log.error("".join(traceback.format_stack()))
+        #         raise ValueError("altscope must be string (%r supplied)"%(altscope))
+        (e, v) = cls.try_alt_parentage(
+            parent, entityid, (lambda e: e._exists()), 
+            altscope=altscope
+            )
+        return v
+
+    @classmethod
+    def fileobj(cls, parent, entityid, filename, filetypeuri, mimetype, mode, altscope=None, use_altpath=False):
         """
         Method returns a file object value (like `open`) for accessing an imported
         resource associated with an entity (e.g. image, binary blob, etc.)
@@ -352,8 +538,8 @@ class Entity(EntityRoot):
                     that are used with the standard `open` method (as far as they are 
                     applicable).  E.g. "wb" to create a new resource, and "r" to read 
                     an existing one.
-        altparent   is an alternative parent entity to search for the tested entity, 
-                    using the alternative path for the entity type.
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `get_alt_ancestry` for more details.
         use_altpath is set True if this entity is situated at the alternative
                     path relative to its parent.
 
@@ -362,7 +548,16 @@ class Entity(EntityRoot):
         log.debug("Entity.fileobj: entitytype %s, parentdir %s, entityid %s"%
             (cls._entitytype, parent._entitydir, entityid)
             )
-        e = cls._child_init(parent, entityid, altparent=altparent, use_altpath=use_altpath)
-        return e._fileobj(filename, filetypeuri, mimetype, mode)
+        if altscope is not None:
+            if not isinstance(altscope, (unicode, str)):
+                log.error("altscope must be string (%r supplied)"%(altscope))
+                log.error("".join(traceback.format_stack()))
+                raise ValueError("altscope must be string (%r supplied)"%(altscope))
+        (e, v) = cls.try_alt_parentage(
+            parent, entityid, 
+            (lambda e: e._fileobj(filename, filetypeuri, mimetype, mode)), 
+            altscope=altscope
+            )
+        return v
 
 # End.

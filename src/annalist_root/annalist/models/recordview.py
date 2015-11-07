@@ -33,18 +33,16 @@ class RecordView(EntityData):
     _entityfile     = layout.VIEW_META_FILE
     _entityref      = layout.META_VIEW_REF
 
-    def __init__(self, parent, view_id, altparent=None, use_altpath=False):
+    def __init__(self, parent, view_id):
         """
         Initialize a new RecordView object, without metadta (yet).
 
         parent      is the parent entity from which the view is descended.
         view_id     the local identifier for the record view
-        altparent   is a site object to search for this new entity,
-                    allowing site-wide RecordView values to be found.
         """
-        super(RecordView, self).__init__(parent, view_id, altparent, use_altpath=use_altpath)
+        super(RecordView, self).__init__(parent, view_id)
         self._parent = parent
-        log.debug("RecordView %s: dir %s, alt %s"%(view_id, self._entitydir, self._entityaltdir))
+        log.debug("RecordView %s: dir %s"%(view_id, self._entitydir))
         return
 
     def _post_update_processing(self, entitydata):

@@ -99,8 +99,8 @@ class SiteTest(AnnalistTestCase):
         self.assertEqual(s._entityfile,     layout.SITE_META_FILE)
         self.assertEqual(s._entityref,      layout.META_SITE_REF)
         self.assertEqual(s._entityid,       None)
-        self.assertEqual(s._entityurl,      TestBaseUri+"/"+layout.SITEDATA_DIR+"/")
-        self.assertEqual(s._entitydir,      TestBaseDir+"/"+layout.SITEDATA_DIR+"/")
+        self.assertEqual(s._entityurl,      TestBaseUri + "/")
+        self.assertEqual(s._entitydir,      TestBaseDir + "/")
         self.assertEqual(s._values,         None)
         return
 
@@ -117,9 +117,10 @@ class SiteTest(AnnalistTestCase):
 
     def test_get_user_permissions(self):
         s = self.testsite
+        c = s.site_data_collection()
         # Create local permissions
         usr = AnnalistUser.create(
-            s, "user1", annalistuser_create_values(user_id="user1"), use_altpath=True
+            c, "user1", annalistuser_create_values(user_id="user1"), use_altpath=True
             )
         # Test access to permissions defined in site
         ugp = s.get_user_permissions("user1", "mailto:testuser@example.org")
@@ -139,8 +140,9 @@ class SiteTest(AnnalistTestCase):
 
     def test_get_user_uri_mismatch(self):
         s = self.testsite
+        c = s.site_data_collection()
         # Create local permissions
-        usr = AnnalistUser.create(s, "user1", annalistuser_create_values(user_id="user1"))
+        usr = AnnalistUser.create(c, "user1", annalistuser_create_values(user_id="user1"))
         # Test access to permissions defined locally in collection
         ugp = s.get_user_permissions("user1", "mailto:anotheruser@example.org")
         self.assertIsNone(ugp)
@@ -208,7 +210,7 @@ class SiteViewTest(AnnalistTestCase):
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         create_user_permissions(
-            self.testsite, "testuser",
+            self.testsite.site_data_collection(), "testuser",
             user_permissions=
               [ "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"
               , "CREATE_COLLECTION", "DELETE_COLLECTION"
@@ -439,7 +441,7 @@ class SiteActionViewTests(AnnalistTestCase):
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         create_user_permissions(
-            self.testsite, "testuser",
+            self.testsite.site_data_collection(), "testuser",
             user_permissions=
               [ "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"
               , "CREATE_COLLECTION", "DELETE_COLLECTION"
@@ -474,7 +476,10 @@ class SiteActionViewTests(AnnalistTestCase):
         self.assertEqual(r.status_code,     302)
         self.assertEqual(r.reason_phrase,   "FOUND")
         self.assertEqual(r.content,         "")
-        self.assertMatch(r['location'],     "^"+TestHostUri+reverse("AnnalistSiteView")+"\\?info_head=.*&info_message=.*coll1,.*coll3.*$")
+        self.assertMatch(
+            r['location'],
+            "^"+TestHostUri+reverse("AnnalistSiteView")+"\\?info_head=.*&info_message=.*coll1,.*coll3.*$"
+            )
         # Confirm collections deleted
         r = self.client.get(TestBasePath+"/site/")
         colls = r.context['collections']

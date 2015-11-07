@@ -21,25 +21,45 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] BUG: `render_utils.get_mode_renderer`, handling of repeat fields? (cf. comment from Cerys.)
     - Added logic so that repeat fields also support current-mode rendering (but rendering as a normal view)
 - [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
-    - [x] Move annalist sitedata to collection location; relocate and rename site_meta.jsonld, update layout; test
+    - [x] move annalist sitedata to collection location; relocate and rename site_meta.jsonld, update layout; test
+    - [x] re-work alternative-directory logic to be controlled by the parent rather than the child.
+        - [x] add 'altscope' parameter to calls that may access the alternative search path (replacing `altparent` parameter)
+        - [x] factor alermnative search logic into `get_alt_ancestry` and `_children` methods.
+        - [x] implement search logic in Entity._exists_path, Entity._chidren, Entity._child_dirs overriding methods from EntityRoot.
+        - [x] remove all alt path/parent logic from EntityRoot: resulting base should be ultra-simple.
+        - [x] move resource_file access logic to EntityRoot, with search logic invoked in Entity.
+        - [x] remove all references to _entityusedir from _entityroot.
+        - [x] eliminate use of _entityusedir in Entity - use _entitydir
+        - [x] change altparent parameter for altscope flag (None, "all", ...)
+            - altparent is still used with Collection constructor to indicate alternative search path
+        - [x] eliminate `altparent=` parameter from most constructors
+        - [x] revert path declared for site entity
+        - [ ] make SiteData class a simple subclass of collection.
+        - [ ] review view URL returned for entities found with alternative parentage:
+            - currently force URL returned to be that of original parent, not alt. 
+            - This is done to minimize disruption to tests while changing logic.
+            - If choose to stay with this, the logic should probably be pushed to get_view_url(), with actual view URL specified whenparent entity ()i.e. Collection) is initialized
     - [ ] Eliminate altpath values in entities; test
-        - [ ] eliminate _entityaltpath references in EntityRoot - use other _entitypath; test
+        - [x] eliminate _entityaltpath references in EntityRoot - use other _entitypath; test
         - [ ] eliminate _entityaltpath references in Entity; test
         - [ ] eliminate altpath() from Entity; test
-        - [ ] eliminate _entityaltpath references in Site; if ppssible, get rid iof temporary helpers; test
+        - [ ] eliminate use_altpath parameter; test
+        - [ ] eliminate _entityaltpath references in Site; if possible, get rid of temporary helpers; test
         - [ ] eliminate all other _entityaltpath occurrences; test
-    - [ ] Eliminate use_altpath parameter; test
-    - [ ] Use altparent entity to access alternative data
-        - Note that RecordEnum is based on EntityData, so parent handling might be different.
-        - Consider treating Enum types as regular types under /d/?
+        - [ ] move remove file/path logic to EntityRoot
+        - [ ] Isolate all file access or file-dependent logic to EntityRoot (to simplify alternate storage later)
+            - check os.path usage
+        - [ ] eliminate os.path/shutil inclusion in Entity
+    - [x] use altparent entity to access alternative data
+    - [ ] consider treating Enum types as regular types under /d/?
     - [ ] re-implement SiteData as instance of collection; use this as collection parent; test
-    - [ ] protect sitedata collection from updates
     - [ ] updates to annalist-manager (esp createsite, updatesite): don't rely on sample data
-    - [ ] re-work access to parent to call linked object rather than direct file access
+    - [x] re-work access to parent to call linked object rather than direct file access
     - [ ] when creating a collection, allow to specify alternate parent(s); ensure no loops: must end up at sitedata; test
     - [ ] provision for editing collection data (label, comment, parents, etc.); test
+    - [ ] protect sitedata collection from updates
     - [ ] ensure that _annalist_site collection cannot be removed
-    - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
+    - [ ] the bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
 - [ ] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
 - [ ] Update JSON-LD spike code, and test with latest rdflib-jsonld
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.

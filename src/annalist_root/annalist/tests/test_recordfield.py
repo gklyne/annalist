@@ -149,7 +149,7 @@ class RecordFieldTest(AnnalistTestCase):
         return
 
     def test_recordfield_default_data(self):
-        t = RecordField.load(self.testcoll, "Field_type", altparent=self.testsite)
+        t = RecordField.load(self.testcoll, "Field_type", altscope="all")
         self.assertEqual(t.get_id(), "Field_type")
         self.assertIn("/c/testcoll/_annalist_collection/fields/Field_type", t.get_url())
         self.assertEqual(t.get_type_id(), "_field")
@@ -257,8 +257,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     def _check_view_data_values(self, field_id, update="Field", parent=None):
         "Helper function checks content of form-updated record type entry with supplied field_id"
-        self.assertTrue(RecordField.exists(self.testcoll, field_id, altparent=self.testsite))
-        e = RecordField.load(self.testcoll, field_id, altparent=self.testsite)
+        self.assertTrue(RecordField.exists(self.testcoll, field_id, altscope="all"))
+        e = RecordField.load(self.testcoll, field_id, altscope="all")
         u = recordfield_coll_url(self.testsite, coll_id="testcoll", field_id=field_id)
         self.assertEqual(e.get_id(), field_id)
         self.assertEqual(e.get_url(), u)

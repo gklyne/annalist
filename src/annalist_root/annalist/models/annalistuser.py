@@ -45,7 +45,7 @@ class AnnalistUser(EntityData):
     _entityref      = layout.META_USER_REF
     _contextref     = layout.USER_CONTEXT_FILE
 
-    def __init__(self, parent, type_id, altparent=None, use_altpath=False):
+    def __init__(self, parent, type_id, use_altpath=False):
         """
         Initialize a new AnnalistUser object, without metadata (yet).
 
@@ -57,9 +57,9 @@ class AnnalistUser(EntityData):
                     path relative to its parent.  This is used to access
                     user permissions when there is no collection context.
         """
-        super(AnnalistUser, self).__init__(parent, type_id, altparent=altparent, use_altpath=use_altpath)
+        super(AnnalistUser, self).__init__(parent, type_id, use_altpath=use_altpath)
         log.debug("AnnalistUser %s: dir %s, alt %s"%(type_id, self._entitydir, self._entityaltdir))
-        log.debug("AnnalistUser %s: uri %s, alt %s"%(type_id, self._entityurl, self._entityalturi))
+        log.debug("AnnalistUser %s: uri %s, alt %s"%(type_id, self._entityurl, self._entityalturl))
         return
 
 # End.

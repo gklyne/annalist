@@ -33,7 +33,7 @@ class RecordVocab(EntityData):
     _entityfile     = layout.VOCAB_META_FILE
     _entityref      = layout.META_VOCAB_REF
 
-    def __init__(self, parent, vocab_id, altparent=None, use_altpath=False):
+    def __init__(self, parent, vocab_id, use_altpath=False):
         """
         Initialize a new RecordVocab object, without metadata (yet).
 
@@ -42,7 +42,7 @@ class RecordVocab(EntityData):
         altparent   is a site object to search for this new entity,
                     allowing site-wide RecordVocab values to be found.
         """
-        super(RecordVocab, self).__init__(parent, vocab_id, altparent, use_altpath=use_altpath)
+        super(RecordVocab, self).__init__(parent, vocab_id, use_altpath=use_altpath)
         self._parent = parent
         log.debug("RecordVocab %s: dir %s, alt %s"%(vocab_id, self._entitydir, self._entityaltdir))
         return

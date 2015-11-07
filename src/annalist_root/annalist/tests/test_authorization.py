@@ -130,7 +130,7 @@ class AuthorizationTest(AnnalistTestCase):
                 )
             )
         self.user_site_admin  = AnnalistUser.create(
-            self.testsite, 
+            self.testsite.site_data_collection(), 
             "user_site_admin", 
             annalistuser_create_values(
                 coll_id="testcoll", user_id="user_site_admin",
@@ -141,7 +141,7 @@ class AuthorizationTest(AnnalistTestCase):
             use_altpath=True
             )
         self.user_site_create_coll  = AnnalistUser.create(
-            self.testsite, 
+            self.testsite.site_data_collection(), 
             "user_site_create_coll", 
             annalistuser_create_values(
                 coll_id="testcoll", user_id="user_site_create_coll",
@@ -152,7 +152,7 @@ class AuthorizationTest(AnnalistTestCase):
             use_altpath=True
             )
         self.user_site_delete_coll  = AnnalistUser.create(
-            self.testsite, 
+            self.testsite.site_data_collection(), 
             "user_site_delete_coll", 
             annalistuser_create_values(
                 coll_id="testcoll", user_id="user_site_delete_coll_coll",
@@ -163,7 +163,7 @@ class AuthorizationTest(AnnalistTestCase):
             use_altpath=True
             )
         self.user_site_view  = AnnalistUser.create(
-            self.testsite, 
+            self.testsite.site_data_collection(), 
             "user_site_view", 
             annalistuser_create_values(
                 coll_id="testcoll", user_id="user_site_view",

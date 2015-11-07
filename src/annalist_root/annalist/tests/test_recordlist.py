@@ -103,7 +103,7 @@ class RecordListTest(AnnalistTestCase):
         return
 
     def test_recordlist_init(self):
-        t = RecordList(self.testcoll, "testlist", self.testsite)
+        t = RecordList(self.testcoll, "testlist")
         u = recordlist_coll_url(self.testsite, coll_id="testcoll", list_id="testlist")
         self.assertEqual(t._entitytype,     ANNAL.CURIE.List)
         self.assertEqual(t._entityfile,     layout.LIST_META_FILE)
@@ -115,7 +115,7 @@ class RecordListTest(AnnalistTestCase):
         return
 
     def test_recordlist1_data(self):
-        t = RecordList(self.testcoll, "list1", self.testsite)
+        t = RecordList(self.testcoll, "list1")
         self.assertEqual(t.get_id(), "list1")
         self.assertEqual(t.get_type_id(), "_list")
         self.assertIn("/c/testcoll/_annalist_collection/lists/list1/", t.get_url())
@@ -128,7 +128,7 @@ class RecordListTest(AnnalistTestCase):
         return
 
     def test_recordlist2_data(self):
-        t = RecordList(self.testcoll, "list2", self.testsite)
+        t = RecordList(self.testcoll, "list2")
         self.assertEqual(t.get_id(), "list2")
         self.assertEqual(t.get_type_id(), "_list")
         self.assertIn("/c/testcoll/_annalist_collection/lists/list2/", t.get_url())
@@ -149,7 +149,7 @@ class RecordListTest(AnnalistTestCase):
         return
 
     def test_recordlist_default_data(self):
-        t = RecordList.load(self.testcoll, "Default_list", altparent=self.testsite)
+        t = RecordList.load(self.testcoll, "Default_list", altscope="all")
         self.assertEqual(t.get_id(), "Default_list")
         self.assertIn("/c/testcoll/_annalist_collection/lists/Default_list", t.get_url())
         self.assertEqual(t.get_type_id(), "_list")

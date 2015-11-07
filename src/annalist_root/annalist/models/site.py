@@ -88,7 +88,16 @@ class Site(EntityRoot):
         returns an AnnalistUser object for the identified user, or None.  This object contains
                 information about permissions granted to the user in the current collection.
         """
-        user = AnnalistUser.load(self, user_id, use_altpath=True)
+        #@@TODO: remove this method        
+        user = AnnalistUser.load(self.site_data_collection(), user_id, use_altpath=True)
+        # if not user:
+        #     sitedata = self.site_data_collection()
+        #     log.warning("Site.get_user_permissions: site_data %r"%(sitedata,))
+        #     log.warning("Site.get_user_permissions: site_data._entitydir %s"%(sitedata._entitydir,))
+        #     log.warning(
+        #         "Site.get_user_permissions: user_id %s, user_uri %s, user %r"%
+        #         (user_id, user_uri, user)
+        #         )
         log.debug(
             "Site.get_user_permissions: user_id %s, user_uri %s, user %r"%
             (user_id, user_uri, user)
@@ -109,7 +118,7 @@ class Site(EntityRoot):
         Yielded values are collection objects.
         """
         log.debug("site.collections: basedir: %s"%(self._entitydir))
-        for f in self._children(Collection):
+        for f in self._base_children(Collection):
             c = Collection.load(self, f)
             # log.info("Site.colections: Collection.load %s %r"%(f, c.get_values()))
             if c:
@@ -123,7 +132,7 @@ class Site(EntityRoot):
         coll = [ (c.get_id(), c) for c in self.collections() ]
         return collections.OrderedDict(sorted(coll))
 
-    def site_data_entity(self):
+    def site_data_collection(self):
         """
         Return collection entity that contains the site data.
         """
@@ -133,7 +142,7 @@ class Site(EntityRoot):
         """
         Return stream containing the raw site data.
         """
-        return self.site_data_entity()._read_stream()
+        return self.site_data_collection()._read_stream()
 
     def site_data(self):
         """
@@ -143,7 +152,7 @@ class Site(EntityRoot):
         #         This is currently a bit of a kludge, designed to match the site
         #         view template.  In due course, it may be reviewed and implemented
         #         using the generic Annalist form generating framework
-        site_data  = self.site_data_entity().get_values()
+        site_data  = self.site_data_collection().get_values()
         if not site_data:
             return None
         site_data["title"] = site_data.get(RDFS.CURIE.label, message.SITE_NAME_DEFAULT)
@@ -326,7 +335,7 @@ class Site(EntityRoot):
     #
     # These helpers return children of the site object.  
     #
-    # It works like the EntityRoot._children method except that it uses the 
+    # It works like the EntityRoot._base_children method except that it uses the 
     # alternative parent path for the supplied class.  This alternative path
     # logic should be eliminated when the site data is moved to a special
     # site data collection: then the access for all child data should be

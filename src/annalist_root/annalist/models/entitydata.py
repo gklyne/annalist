@@ -32,7 +32,7 @@ class EntityData(Entity):
     _entityref      = layout.DATA_ENTITY_REF
     _contextref     = layout.ENTITY_CONTEXT_FILE
 
-    def __init__(self, parent, entity_id, altparent=None, use_altpath=False):
+    def __init__(self, parent, entity_id, use_altpath=False):
         """
         Initialize a new Entity Data object, without metadata.
 
@@ -45,7 +45,7 @@ class EntityData(Entity):
         use_altpath is set True if this entity is situated at the alternative
                     path relative to its parent.
         """
-        super(EntityData, self).__init__(parent, entity_id, altparent=altparent, use_altpath=use_altpath)
+        super(EntityData, self).__init__(parent, entity_id, use_altpath=use_altpath)
         self._entitytypeid  = self._entitytypeid or parent.get_id()
         self._paramdict     = { 'type_id': self._entitytypeid, 'id': entity_id }
         self._entityviewuri = parent._entityurl+self._entityview%self._paramdict

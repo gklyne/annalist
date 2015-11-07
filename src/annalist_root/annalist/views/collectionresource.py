@@ -42,7 +42,7 @@ class CollectionResourceAccess(AnnalistGenericView):
         """
         Access specified entity resource
         """
-        log.info(
+        log.debug(
             "CollectionResourceAccess.get: coll_id %s, resource_ref %s"%
             (coll_id, resource_ref)
             )
@@ -117,11 +117,11 @@ class CollectionResourceAccess(AnnalistGenericView):
         """
         # @@TODO: this is a bit ad-hoc; try to work out structure that works more
         #         uniformly for collections, entities, sites, etc.
-        log.info("CollectionResourceAccess.find_resource %s/d/%s"%(coll.get_id(), resource_ref))
+        log.debug("CollectionResourceAccess.find_resource %s/d/%s"%(coll.get_id(), resource_ref))
         if resource_ref == layout.COLL_CONTEXT_FILE:
             return (
                 { 'resource_type': "application/ld+json"
-                , 'resource_name': layout.COLL_META_CONTEXT_PATH + resource_ref
+                , 'resource_name': layout.COLL_CONTEXT_PATH + resource_ref
                 })
         return None
 

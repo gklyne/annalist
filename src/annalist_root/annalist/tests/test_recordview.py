@@ -95,7 +95,7 @@ class RecordViewTest(AnnalistTestCase):
         return
 
     def test_recordview_init(self):
-        t = RecordView(self.testcoll, "testview", self.testsite)
+        t = RecordView(self.testcoll, "testview")
         u = recordview_coll_url(self.testsite, coll_id="testcoll", view_id="testview")
         self.assertEqual(t._entitytype,     ANNAL.CURIE.View)
         self.assertEqual(t._entityfile,     layout.VIEW_META_FILE)
@@ -107,7 +107,7 @@ class RecordViewTest(AnnalistTestCase):
         return
 
     def test_recordview1_data(self):
-        t = RecordView(self.testcoll, "view1", self.testsite)
+        t = RecordView(self.testcoll, "view1")
         self.assertEqual(t.get_id(), "view1")
         self.assertEqual(t.get_type_id(), "_view")
         self.assertIn("/c/testcoll/_annalist_collection/views/view1/", t.get_url())
@@ -120,7 +120,7 @@ class RecordViewTest(AnnalistTestCase):
         return
 
     def test_recordview2_data(self):
-        t = RecordView(self.testcoll, "view2", self.testsite)
+        t = RecordView(self.testcoll, "view2")
         self.assertEqual(t.get_id(), "view2")
         self.assertEqual(t.get_type_id(), "_view")
         self.assertIn("/c/testcoll/_annalist_collection/views/view2/", t.get_url())
@@ -141,7 +141,7 @@ class RecordViewTest(AnnalistTestCase):
         return
 
     def test_recordview_default_data(self):
-        t = RecordView.load(self.testcoll, "Default_view", altparent=self.testsite)
+        t = RecordView.load(self.testcoll, "Default_view", altscope="all")
         self.assertEqual(t.get_id(), "Default_view")
         self.assertIn("/c/testcoll/_annalist_collection/views/Default_view", t.get_url())
         self.assertEqual(t.get_type_id(), "_view")
@@ -186,19 +186,19 @@ class RecordViewEditViewTest(AnnalistTestCase):
                 fid.startswith("User_")
                 )
         self.field_options    = sorted(
-            [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
+            [ fid for fid in self.testcoll.child_entity_ids(RecordField, altscope="all") 
                   if fid != "_initial_values"
             ])
         self.field_options_no_bibentry = sorted(
-            [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
+            [ fid for fid in self.testcoll.child_entity_ids(RecordField, altscope="all") 
                   if fid != "_initial_values" and not fid.startswith("Bib_")
             ])
         self.field_options_bib_no_special = sorted(
-            [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
+            [ fid for fid in self.testcoll.child_entity_ids(RecordField, altscope="all") 
                   if fid != "_initial_values" and not special_field(fid)
             ])
         self.field_options_no_special = sorted(
-            [ fid for fid in self.testcoll.child_entity_ids(RecordField, self.testsite) 
+            [ fid for fid in self.testcoll.child_entity_ids(RecordField, altscope="all") 
                   if fid != "_initial_values" and 
                       not (fid.startswith("Bib_") or special_field(fid))
             ])

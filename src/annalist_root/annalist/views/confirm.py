@@ -76,7 +76,7 @@ class ConfirmView(AnnalistGenericView):
             title=None):
         """
         Render form that requests a user to confirm an action to be performed and,
-        depending onthe user's response, redirects to 'confirmed_action_uri' or 
+        depending on the user's response, redirects to 'confirmed_action_uri' or 
         'cancel_action_uri'
         """
         form_data = (

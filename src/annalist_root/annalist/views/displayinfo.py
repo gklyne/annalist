@@ -11,12 +11,12 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import logging
-log = logging.getLogger(__name__)
-
-import json
 from collections                    import OrderedDict
 from distutils.version              import LooseVersion
+import json
+import traceback
+import logging
+log = logging.getLogger(__name__)
 
 from django.conf                    import settings
 from django.http                    import HttpResponse
@@ -173,7 +173,7 @@ class DisplayInfo(object):
                     )
             else:
                 self.coll_id    = coll_id
-                self.collection = Collection.load(self.site, coll_id)
+                self.collection = Collection.load(self.site, coll_id, altscope="all")
                 ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")
                 if LooseVersion(ver) > LooseVersion(annalist.__version__):
                     self.http_response = self.view.error(
@@ -231,7 +231,7 @@ class DisplayInfo(object):
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
             assert list_id
-            if not RecordList.exists(self.collection, list_id, self.site):
+            if not RecordList.exists(self.collection, list_id, altscope="all"):
                 log.warning("DisplayInfo.get_list_info: RecordList %s not found"%list_id)
                 self.http_response = self.view.error(
                     dict(self.view.error404values(),
@@ -241,7 +241,7 @@ class DisplayInfo(object):
                     )
             else:
                 self.list_id    = list_id
-                self.recordlist = RecordList.load(self.collection, list_id, self.site)
+                self.recordlist = RecordList.load(self.collection, list_id, altscope="all")
                 log.debug("DisplayInfo.get_list_info: %r"%(self.recordlist.get_values()))
         return self.http_response
 
@@ -251,8 +251,11 @@ class DisplayInfo(object):
         """
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
-            if not RecordView.exists(self.collection, view_id, self.site):
+            if not RecordView.exists(self.collection, view_id, altscope="all"):
                 log.warning("DisplayInfo.get_view_info: RecordView %s not found"%view_id)
+                log.warning("Collection: %r"%(self.collection))
+                log.warning("Collection._altparent: %r"%(self.collection._altparent))
+                # log.warning("\n".join(traceback.format_stack()))
                 self.http_response = self.view.error(
                     dict(self.view.error404values(),
                         message=message.RECORD_VIEW_NOT_EXISTS%(
@@ -261,7 +264,7 @@ class DisplayInfo(object):
                     )
             else:
                 self.view_id    = view_id
-                self.recordview = RecordView.load(self.collection, view_id, self.site)
+                self.recordview = RecordView.load(self.collection, view_id, altscope="all")
                 log.debug("DisplayInfo.get_view_info: %r"%(self.recordview.get_values()))
         return self.http_response
 
@@ -276,20 +279,6 @@ class DisplayInfo(object):
                     self.entitytypeinfo.entityparent
                     )
             self.entity_id = entity_id
-        return self.http_response
-
-    def _unused_get_entity_data(self):
-        """
-        Retrieve entity data to use for display
-        """
-        if not self.http_response:
-            assert self.entity_id is not None
-            self.entitydata = self.entitytypeinfo.entityclass.load(
-                self.entitytypeinfo.entityparent, 
-                self.entity_id, 
-                self.entitytypeinfo.entityaltparent)
-            if self.entitydata:
-                log.debug("DisplayInfo.get_entity_data: %r"%(self.entitydata.get_values()))
         return self.http_response
 
     def check_authorization(self, action):

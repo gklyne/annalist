@@ -254,7 +254,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     # Test consistency of type / list / view / field descriptions
     def check_type_list_view(self, type_id, list_id, view_id, type_uri):
         # Read type description - check required fields are present
-        type_type = RecordType.load(self.coll1, type_id, self.testsite)
+        type_type = RecordType.load(self.coll1, type_id, altscope="all")
         self.assertEqual(type_type["@type"],                [ANNAL.CURIE.Type])
         self.assertEqual(type_type[ANNAL.CURIE.id],         type_id)
         self.assertEqual(type_type[ANNAL.CURIE.type_id],    "_type")
@@ -262,7 +262,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_type[ANNAL.CURIE.type_list],  "_list/"+list_id)
         self.assertEqual(type_type[ANNAL.CURIE.type_view],  "_view/"+view_id)
         # Read type list description
-        type_list = RecordList.load(self.coll1, list_id, self.testsite)
+        type_list = RecordList.load(self.coll1, list_id, altscope="all")
         self.assertEqual(type_list["@type"],                    [ANNAL.CURIE.List])
         self.assertEqual(type_list[ANNAL.CURIE.id],             list_id)
         self.assertEqual(type_list[ANNAL.CURIE.type_id],        "_list")
@@ -272,7 +272,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_list[ANNAL.CURIE.record_type],    type_uri)
         self.assertIn(ANNAL.CURIE.list_entity_selector,         type_list)
         # Read type view description
-        type_view = RecordView.load(self.coll1, view_id, self.testsite)
+        type_view = RecordView.load(self.coll1, view_id, altscope="all")
         self.assertEqual(type_view["@type"],                    [ANNAL.CURIE.View])
         self.assertEqual(type_view[ANNAL.CURIE.id],             view_id)
         self.assertEqual(type_view[ANNAL.CURIE.type_id],        "_view")
@@ -291,7 +291,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         for f in view_fields:
             field_id   = extract_entity_id(f[ANNAL.CURIE.field_id])
             # print "f: " + field_id
-            view_field = RecordField.load(self.coll1, field_id, self.testsite)
+            view_field = RecordField.load(self.coll1, field_id, altscope="all")
             field_type = view_field[ANNAL.CURIE.field_render_type]
             value_type = view_field[ANNAL.CURIE.field_value_type]
             try:
@@ -319,7 +319,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                     self.assertIn(ANNAL.CURIE.repeat_label_add,    view_field)
                     self.assertIn(ANNAL.CURIE.repeat_label_delete, view_field)
                     # Check field group
-                    field_group = RecordGroup.load(self.coll1, group_id, self.testsite)
+                    field_group = RecordGroup.load(self.coll1, group_id, altscope="all")
                     self.assertEqual(field_group["@type"], [ANNAL.CURIE.Field_group])
                     self.assertEqual(field_group[ANNAL.CURIE.id],          group_id)
                     self.assertEqual(field_group[ANNAL.CURIE.type_id],     "_group")

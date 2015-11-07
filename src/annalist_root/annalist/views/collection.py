@@ -78,9 +78,9 @@ class CollectionEditView(AnnalistGenericView):
             coll = viewinfo.collection
             context = (
                 { 'continuation_url':   viewinfo.get_continuation_url() or ""
-                , 'types':              sorted(coll.types(include_alt=False), key=get_id)
-                , 'lists':              sorted(coll.lists(include_alt=False), key=get_id)
-                , 'views':              sorted(coll.views(include_alt=False), key=get_id)
+                , 'types':              sorted(coll.types(altscope=None), key=get_id)
+                , 'lists':              sorted(coll.lists(altscope=None), key=get_id)
+                , 'views':              sorted(coll.views(altscope=None), key=get_id)
                 , 'select_rows':        "6"
                 })
             context.update(viewinfo.context_data())

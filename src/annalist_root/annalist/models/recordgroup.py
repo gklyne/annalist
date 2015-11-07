@@ -33,7 +33,7 @@ class RecordGroup(EntityData):
     _entityfile     = layout.GROUP_META_FILE
     _entityref      = layout.META_GROUP_REF
 
-    def __init__(self, parent, group_id, altparent=None, use_altpath=False):
+    def __init__(self, parent, group_id, use_altpath=False):
         """
         Initialize a new RecordGroup object, without metadta (yet).
 
@@ -42,7 +42,7 @@ class RecordGroup(EntityData):
         altparent   is a site object to search for this new entity,
                     allowing site-wide RecordGroup values to be found.
         """
-        super(RecordGroup, self).__init__(parent, group_id, altparent, use_altpath=use_altpath)
+        super(RecordGroup, self).__init__(parent, group_id, use_altpath=use_altpath)
         self._parent = parent
         log.debug("RecordGroup %s: dir %s, alt %s"%(group_id, self._entitydir, self._entityaltdir))
         return

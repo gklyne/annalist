@@ -869,7 +869,7 @@ class GenericEntityEditView(AnnalistGenericView):
                             )
                         )
         else:
-            if not typeinfo.entity_exists(entity_id, use_altparent=True):
+            if not typeinfo.entity_exists(entity_id, altscope="all"):
                 # This shouldn't happen, but just in case...
                 log.warning("Expected %s/%s not found; action %s, entity_renamed %r"%
                       (entity_type_id, entity_id, action, entity_renamed)

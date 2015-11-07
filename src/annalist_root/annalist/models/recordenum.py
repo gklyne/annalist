@@ -34,9 +34,9 @@ class RecordEnumBase(EntityData):
     _entityprov     = layout.ENUM_PROV_FILE
     _entityref      = layout.META_ENUM_REF
 
-    def __init__(self, parent, entity_id, type_id, altparent=None):
+    def __init__(self, parent, entity_id, type_id):
         self._entitytypeid = type_id
-        super(RecordEnumBase, self).__init__(parent, entity_id, altparent=altparent)
+        super(RecordEnumBase, self).__init__(parent, entity_id)
         return
 
 def RecordEnumFactory(name, type_id):
@@ -44,9 +44,8 @@ def RecordEnumFactory(name, type_id):
     Returns a dynamically-subclassed instance of RecordEnumBase using the supplied 
     class name and type_id for all created instances.
     """
-    def RecordEnumInit(self, parent, entity_id, altparent=None):
-        super(RecordEnumBase, self).__init__(parent, entity_id, altparent=altparent)
-        # self.__init__(parent, entity_id, type_id, altparent=altparent)
+    def RecordEnumInit(self, parent, entity_id):
+        super(RecordEnumBase, self).__init__(parent, entity_id)
         return
     return type(name, (RecordEnumBase,), 
         { '_entitytypeid':  type_id

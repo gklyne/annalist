@@ -88,7 +88,7 @@ class AnnalistUserTest(AnnalistTestCase):
         return
 
     def test_annalistuser_init(self):
-        usr = AnnalistUser(self.testcoll, "testuser", self.testsite)
+        usr = AnnalistUser(self.testcoll, "testuser")
         url = annalistuser_coll_url(self.testsite, coll_id="testcoll", user_id="testuser")
         self.assertEqual(usr._entitytype,   ANNAL.CURIE.User)
         self.assertEqual(usr._entityfile,   layout.USER_META_FILE)
@@ -100,7 +100,7 @@ class AnnalistUserTest(AnnalistTestCase):
         return
 
     def test_annalistuser1_data(self):
-        usr = AnnalistUser(self.testcoll, "user1", self.testsite)
+        usr = AnnalistUser(self.testcoll, "user1")
         self.assertEqual(usr.get_id(), "user1")
         self.assertEqual(usr.get_type_id(), "_user")
         self.assertIn("/c/testcoll/_annalist_collection/users/user1/", usr.get_url())
@@ -113,7 +113,7 @@ class AnnalistUserTest(AnnalistTestCase):
         return
 
     def test_annalistuser2_data(self):
-        usr = AnnalistUser(self.testcoll, "user2", self.testsite)
+        usr = AnnalistUser(self.testcoll, "user2")
         self.assertEqual(usr.get_id(), "user2")
         self.assertEqual(usr.get_type_id(), "_user")
         self.assertIn("/c/testcoll/_annalist_collection/users/user2/", usr.get_url())
@@ -134,7 +134,7 @@ class AnnalistUserTest(AnnalistTestCase):
         return
 
     def test_annalistuser_default_data(self):
-        usr = AnnalistUser.load(self.testcoll, "_unknown_user_perms", altparent=self.testsite)
+        usr = AnnalistUser.load(self.testcoll, "_unknown_user_perms", altscope="all")
         self.assertEqual(usr.get_id(), "_unknown_user_perms")
         self.assertIn("/c/testcoll/_annalist_collection/users/_unknown_user_perms", usr.get_url())
         self.assertEqual(usr.get_type_id(), "_user")

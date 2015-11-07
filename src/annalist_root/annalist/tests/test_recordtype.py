@@ -103,7 +103,7 @@ class RecordTypeTest(AnnalistTestCase):
         return
 
     def test_recordtype_init(self):
-        t = RecordType(self.testcoll, "testtype", self.testsite)
+        t = RecordType(self.testcoll, "testtype")
         u = recordtype_coll_url(self.testsite, coll_id="testcoll", type_id="testtype")
         self.assertEqual(t._entitytype,     ANNAL.CURIE.Type)
         self.assertEqual(t._entityfile,     layout.TYPE_META_FILE)
@@ -115,7 +115,7 @@ class RecordTypeTest(AnnalistTestCase):
         return
 
     def test_recordtype1_data(self):
-        t = RecordType(self.testcoll, "type1", self.testsite)
+        t = RecordType(self.testcoll, "type1")
         self.assertEqual(t.get_id(), "type1")
         self.assertEqual(t.get_type_id(), "_type")
         self.assertIn("/c/testcoll/_annalist_collection/types/type1/", t.get_url())
@@ -128,7 +128,7 @@ class RecordTypeTest(AnnalistTestCase):
         return
 
     def test_recordtype2_data(self):
-        t = RecordType(self.testcoll, "type2", self.testsite)
+        t = RecordType(self.testcoll, "type2")
         self.assertEqual(t.get_id(), "type2")
         self.assertEqual(t.get_type_id(), "_type")
         self.assertIn("/c/testcoll/_annalist_collection/types/type2/", t.get_url())
@@ -149,7 +149,7 @@ class RecordTypeTest(AnnalistTestCase):
         return
 
     def test_recordtype_default_data(self):
-        t = RecordType.load(self.testcoll, "Default_type", altparent=self.testsite)
+        t = RecordType.load(self.testcoll, "Default_type", altscope="all")
         self.assertEqual(t.get_id(), "Default_type")
         self.assertIn("/c/testcoll/_annalist_collection/types/Default_type", t.get_url())
         self.assertEqual(t.get_type_id(), "_type")

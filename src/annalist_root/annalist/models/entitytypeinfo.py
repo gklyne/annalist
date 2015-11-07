@@ -271,7 +271,7 @@ class EntityTypeInfo(object):
             self.entitymessages  = TYPE_MESSAGE_MAP[type_id]
             self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
         else:
-            if RecordType.exists(coll, type_id, site):
+            if RecordType.exists(coll, type_id, altscope="all"):
                 self.recordtype     = coll.get_type(type_id)
             if create_typedata and not RecordTypeData.exists(coll, type_id):
                 self.entityparent   = RecordTypeData.create(coll, type_id, {})
@@ -338,12 +338,11 @@ class EntityTypeInfo(object):
         """
         return self.entityparent._exists()
 
-    def entity_exists(self, entity_id, use_altparent=False):
+    def entity_exists(self, entity_id, altscope=None):
         """
         Test for existence of identified entity of the current type.
         """
-        altparent = self.entityaltparent if use_altparent else None
-        return self.entityclass.exists(self.entityparent, entity_id, altparent=altparent)
+        return self.entityclass.exists(self.entityparent, entity_id, altscope=altscope)
 
     def create_entity(self, entity_id, entity_values):
         """
@@ -389,11 +388,9 @@ class EntityTypeInfo(object):
                 entity = self._new_entity(entity_id)
                 entity_initial_values = self.get_initial_entity_values(entity_id)
                 entity.set_values(entity_initial_values)
-            elif self.entityclass.exists(
-                    self.entityparent, entity_id, altparent=self.entityaltparent
-                    ):
+            elif self.entityclass.exists(self.entityparent, entity_id, altscope="all"):
                 entity = self.entityclass.load(
-                    self.entityparent, entity_id, altparent=self.entityaltparent
+                    self.entityparent, entity_id, altscope="all"
                     )
         return entity
 
@@ -461,54 +458,45 @@ class EntityTypeInfo(object):
                 )
         return
 
-    def enum_entity_ids(self, usealtparent=False):
+    def enum_entity_ids(self, altscope=None):
         """
         Iterate over entity identifiers in collection with current type.
-
-        usealtparent    is True if site-wide entities are to be included.
         """
-        altparent = self.entityaltparent if usealtparent else None
         if self.entityparent:
             for eid in self.entityparent.child_entity_ids(
                     self.entityclass, 
-                    altparent=altparent):
+                    altscope=altscope):
                 yield eid
         else:
             log.warning("EntityTypeInfo.enum_entity_ids: missing entityparent; type_id %s"%(self.type_id))
         return
 
-    def enum_entities(self, user_perms=None, usealtparent=False):
+    def enum_entities(self, user_perms=None, altscope=None):
         """
         Iterate over entities in collection with current type.
-
-        usealtparent    is True if site-wide entities are to be included.
         """
         if (not user_perms or 
             self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
-            altparent = self.entityaltparent if usealtparent else None
             if self.entityparent:
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
-                        altparent=altparent):
+                        altscope=altscope):
                     yield self.get_entity(eid)
             else:
                 log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
         return
 
-    def enum_entities_with_inferred_values(self, user_perms=None, usealtparent=False):
+    def enum_entities_with_inferred_values(self, user_perms=None, altscope=None):
         """
         Iterate over entities in collection with current type.
         Returns entities with alias and inferred fields instantiated.
-
-        usealtparent    is True if site-wide entities are to be included.
         """
         if (not user_perms or 
             self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
-            altparent = self.entityaltparent if usealtparent else None
             if self.entityparent:
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
-                        altparent=altparent):
+                        altscope=altscope):
                     yield self.get_entity_inferred_values(self.get_entity(eid))
             else:
                 log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))

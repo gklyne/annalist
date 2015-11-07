@@ -43,10 +43,10 @@ def site_dir():
     return TestBaseDir + "/"
 
 def collection_dir(coll_id="testcoll"):
-    return os.path.normpath(
-        site_dir() + layout.SITEDATA_DIR + "/" + 
-        layout.SITE_COLL_PATH%{'id': coll_id}
-        ) + "/"
+    return (
+        os.path.normpath(site_dir() + layout.SITE_COLL_PATH%{'id': coll_id})
+        + "/"
+        )
 
 #   -----------------------------------------------------------------------------
 #

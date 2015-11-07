@@ -132,20 +132,18 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def test_collection_data(self):
-        c = self.testcoll
-        c.set_values(self.testcoll_add)
-        cd = c.get_values()
+        self.testcoll.set_values(self.testcoll_add)
+        cd = self.testcoll.get_values()
         self.assertDictionaryMatch(cd, self.testcoll_add)
         return
 
     # User permissions
 
     def test_get_local_user_permissions(self):
-        c = self.testcoll
         # Create local permissions
-        usr = AnnalistUser.create(c, "user1", annalistuser_create_values(user_id="user1"))
+        usr = AnnalistUser.create(self.testcoll, "user1", annalistuser_create_values(user_id="user1"))
         # Test access to permissions defined locally in collection
-        ugp = c.get_user_permissions("user1", "mailto:testuser@example.org")
+        ugp = self.testcoll.get_user_permissions("user1", "mailto:testuser@example.org")
         self.assertEqual(ugp[ANNAL.CURIE.id],                 "user1")
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Test User")
@@ -155,15 +153,13 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def test_get_local_user_not_defined(self):
-        c = self.testcoll
-        ugp = c.get_user_permissions("user1", "mailto:testuser@example.org")
+        ugp = self.testcoll.get_user_permissions("user1", "mailto:testuser@example.org")
         self.assertIsNone(ugp)
         return
 
     def test_get_local_user_uri_mismatch(self):
-        c = self.testcoll
-        usr = AnnalistUser.create(c, "user1", annalistuser_create_values(user_id="user1"))
-        ugp = c.get_user_permissions("user1", "mailto:anotheruser@example.org")
+        usr = AnnalistUser.create(self.testcoll, "user1", annalistuser_create_values(user_id="user1"))
+        ugp = self.testcoll.get_user_permissions("user1", "mailto:anotheruser@example.org")
         self.assertIsNone(ugp)
         return
 
@@ -171,15 +167,13 @@ class CollectionTest(AnnalistTestCase):
         # E.g. what happens if user record is created through default view?  Don't return value.
         d = annalistuser_create_values(user_id="user1")
         d.pop(ANNAL.CURIE.user_permissions)
-        c = self.testcoll
-        usr = AnnalistUser.create(c, "user1", d)
-        ugp = c.get_user_permissions("user1", "mailto:testuser@example.org")
+        usr = AnnalistUser.create(self.testcoll, "user1", d)
+        ugp = self.testcoll.get_user_permissions("user1", "mailto:testuser@example.org")
         self.assertIsNone(ugp)
         return
 
     def test_get_site_user_permissions(self):
-        c   = self.testcoll
-        ugp = c.get_user_permissions("_unknown_user_perms", "annal:User/_unknown_user_perms")
+        ugp = self.testcoll.get_user_permissions("_unknown_user_perms", "annal:User/_unknown_user_perms")
         self.assertEqual(ugp[ANNAL.CURIE.id],                 "_unknown_user_perms")
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Unknown user")
@@ -189,8 +183,7 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def test_get_site_user_uri_mismatch(self):
-        c   = self.testcoll
-        ugp = c.get_user_permissions("_unknown_user_perms", "annal:User/_another_user")
+        ugp = self.testcoll.get_user_permissions("_unknown_user_perms", "annal:User/_another_user")
         self.assertIsNone(ugp)
         return
 
@@ -223,16 +216,16 @@ class CollectionTest(AnnalistTestCase):
         self.testcoll.remove_type("type1")
         typenames =  { t.get_id() for t in self.testcoll.types() }
         self.assertEqual(typenames, {"type2", "testtype"}|site_types)
-        typenames =  { t.get_id() for t in self.testcoll.types(include_alt=False) }
+        typenames =  { t.get_id() for t in self.testcoll.types(altscope=None) }
         self.assertEqual(typenames, {"type2", "testtype"})
         return
 
     def test_exists_type(self):
-        # Some type existence tests takling accounbt of site data default type
+        # Some type existence tests taking account of site data default type
         self.assertTrue(RecordType.exists(self.testcoll, "testtype"))
         self.assertFalse(RecordType.exists(self.testcoll, "notype"))
         self.assertFalse(RecordType.exists(self.testcoll, "Default_type"))
-        self.assertTrue(RecordType.exists(self.testcoll, "Default_type", self.testsite))
+        self.assertTrue(RecordType.exists(self.testcoll, "Default_type", altscope="all"))
         return
 
     # Record views
@@ -266,7 +259,7 @@ class CollectionTest(AnnalistTestCase):
         self.testcoll.remove_view("view1")
         viewnames = { t.get_id() for t in self.testcoll.views() }
         self.assertEqual(viewnames, {"view2"}|site_views)
-        viewnames = { t.get_id() for t in self.testcoll.views(include_alt=False) }
+        viewnames = { t.get_id() for t in self.testcoll.views(altscope=None) }
         self.assertEqual(viewnames, {"view2"})
         return
 
@@ -280,7 +273,7 @@ class CollectionTest(AnnalistTestCase):
         t2 = self.testcoll.add_list("list2", self.list2_add)
         listnames = { t.get_id() for t in self.testcoll.lists() }
         self.assertEqual(listnames, {"list1", "list2"}|site_lists)
-        listnames = { t.get_id() for t in self.testcoll.lists(include_alt=False) }
+        listnames = { t.get_id() for t in self.testcoll.lists(altscope=None) }
         self.assertEqual(listnames, {"list1", "list2"})
         return
 

@@ -195,7 +195,6 @@ class JsonldContextTest(AnnalistTestCase):
             os.path.normpath(
                 os.path.join(
                     TestBaseDir, 
-                    layout.SITEDATA_DIR,
                     layout.SITE_COLL_PATH%{'id': self.testcoll.get_id()}
                     )
                 ) + "/"
@@ -258,7 +257,6 @@ class JsonldContextTest(AnnalistTestCase):
         s = self.testcoll._read_stream()
         b = "file://" + os.path.join(
             TestBaseDir,
-            layout.SITEDATA_DIR,
             layout.SITE_COLL_CONTEXT_PATH%{'id': self.testcoll.get_id()}
             )
         result = g.parse(source=s, publicID=b, format="json-ld")
@@ -447,7 +445,7 @@ class JsonldContextTest(AnnalistTestCase):
         # Generate collection JSON-LD context data
         self.testcoll.generate_coll_jsonld_context()
         user_default = AnnalistUser.load(
-            self.testcoll, "_default_user_perms", altparent=self.testsite
+            self.testcoll, "_default_user_perms", altscope="all"
             )
 
         # Read user data as JSON-LD
@@ -564,7 +562,7 @@ class JsonldContextTest(AnnalistTestCase):
 
     def get_context_mock_dict(self, base_path):
         """
-        Uses Djamngo test client results to create a dictionary of mock results for 
+        Uses Django test client results to create a dictionary of mock results for 
         accessing JSONLD context resources.  Works with MockHttpDictResources.
         """
         mock_refs = (
@@ -574,7 +572,16 @@ class JsonldContextTest(AnnalistTestCase):
         mock_dict = {}
         for mock_ref in mock_refs:
             mu = urlparse.urljoin(base_path, mock_ref)
+            # log.debug(
+            #     "get_context_mock_dict: base_path %s, mock_ref %s, mu %s"%
+            #     (base_path, mock_ref, mu)
+            #     )
             mr = self.client.get(mu)
+            if mr.status_code != 200:
+                log.error(
+                    "get_context_mock_dict: uri %s, status_code %d, reason_phrase %s"%
+                    (mu, mr.status_code, mr.reason_phrase)
+                    )
             self.assertEqual(mr.status_code,   200)
             mock_dict[mock_ref] = mr.content
         # print "***** mu: %s, mock_dict: %r"%(mu, mock_dict.keys())
