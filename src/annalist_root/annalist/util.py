@@ -106,6 +106,19 @@ def make_type_entity_id(type_id=None, entity_id=None):
         return type_id + "/" + entity_id
     return ""
 
+def make_entity_base_url(url):
+    """
+    Returns an entity URL with a trailing "/" so that it can be used consistently
+    with urlparse.urljoin to obtain URLs for specific resources associated with the 
+    entity.
+
+    >>> make_entity_base_url("/example/path/")
+    '/example/path/'
+    >>> make_entity_base_url("/example/path")
+    '/example/path/'
+    """
+    return url if url.endswith("/") else url + "/"
+
 def slug_from_name(filename):
     """
     Extracts a slug (id) value from a filename

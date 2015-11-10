@@ -136,7 +136,14 @@ class AnnalistUserTest(AnnalistTestCase):
     def test_annalistuser_default_data(self):
         usr = AnnalistUser.load(self.testcoll, "_unknown_user_perms", altscope="all")
         self.assertEqual(usr.get_id(), "_unknown_user_perms")
-        self.assertIn("/c/testcoll/_annalist_collection/users/_unknown_user_perms", usr.get_url())
+        self.assertIn(
+            "/c/_annalist_site/_annalist_collection/users/_unknown_user_perms/", 
+            usr.get_url()
+            )
+        self.assertIn(
+            "/c/testcoll/d/_user/_unknown_user_perms", 
+            usr.get_view_url()
+            )
         self.assertEqual(usr.get_type_id(), "_user")
         uld = usr.get_values()
         self.assertEqual(set(uld.keys()), set(annalistuser_load_keys()))

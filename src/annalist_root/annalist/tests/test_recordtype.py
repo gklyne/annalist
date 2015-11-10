@@ -151,7 +151,8 @@ class RecordTypeTest(AnnalistTestCase):
     def test_recordtype_default_data(self):
         t = RecordType.load(self.testcoll, "Default_type", altscope="all")
         self.assertEqual(t.get_id(), "Default_type")
-        self.assertIn("/c/testcoll/_annalist_collection/types/Default_type", t.get_url())
+        self.assertIn("/c/_annalist_site/_annalist_collection/types/Default_type", t.get_url())
+        self.assertIn("/c/testcoll/d/_type/Default_type", t.get_view_url())
         self.assertEqual(t.get_type_id(), "_type")
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_load_keys(type_uri=True)))

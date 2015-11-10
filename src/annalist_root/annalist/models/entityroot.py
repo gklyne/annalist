@@ -30,7 +30,7 @@ from annalist               import util
 from annalist.exceptions    import Annalist_Error
 from annalist.identifiers   import ANNAL, RDF, RDFS
 from annalist.resourcetypes import file_extension, file_extension_for_content_type
-from annalist.util          import make_type_entity_id
+from annalist.util          import make_type_entity_id, make_entity_base_url
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -60,19 +60,27 @@ class EntityRoot(object):
     _entitytypeid   = None          # To be overridden
     _entityfile     = None          # To be overriden by entity subclasses..
     _entityref      = None          # Relative reference to entity from body file
-    _contextref     = None         # Relative reference to context file from body file
+    _contextref     = None          # Relative reference to context file from body file
 
-    def __init__(self, entityurl, entitydir, entitybasedir):
+    def __init__(self, entityurl, entityviewurl, entitydir, entitybasedir):
         """
         Initialize a new Entity object, possibly without values.  The created
         entity is not saved to disk at this stage - see .save() method.
 
-        entityurl   is the base URI at which the entity is accessed
-        entitydir   is the base directory containing the entity
+        entityurl       is the base URI at which the entity is accessed
+        entityviewurl   is a URI reference that indicates the preferred URI path
+                        for accessing the current entity, where this may be the same
+        entitydir       is the base directory containing the entity
+        entitybasedir   is a directory that contains all data, directly or indirectly,
+                        associated with this entity or any possible descendents.  The
+                        value is used as a safety check to ensure that data is not 
+                        created or deleted outside an area that is known to contain 
+                        only annalist data.
         """
         self._entityid      = None
-        self._entityurl     = entityurl if entityurl.endswith("/") else entityurl + "/"
-        self._entitydir     = entitydir if entitydir.endswith("/") else entitydir + "/"
+        self._entityurl     = make_entity_base_url(entityurl)
+        self._entityviewurl = make_entity_base_url(entityviewurl)
+        self._entitydir     = make_entity_base_url(entitydir)
         self._entitybasedir = entitybasedir
         self._values        = None
         log.debug("EntityRoot.__init__: entity URI %s, entity dir %s"%(self._entityurl, self._entitydir))
@@ -137,7 +145,7 @@ class EntityRoot(object):
         location.
         """
         log.debug("EntityRoot.get_view_url: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
-        return self.get_url(baseurl=baseurl)
+        return urlparse.urljoin(baseurl, self._entityviewurl)
 
     def get_view_url_path(self, baseurl=""):
         """
@@ -357,7 +365,6 @@ class EntityRoot(object):
         if body_file:
             try:
                 # @@TODO: rework name access to support different underlays
-                # @@was: with open(body_file, "r") as f:
                 with self._read_stream() as f:
                     entitydata = json.load(util.strip_comments(f))
                     # log.debug("EntityRoot._load_values: url_path %s"%(self.get_view_url_path()))

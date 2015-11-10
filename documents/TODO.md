@@ -20,7 +20,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - cf. TODOs in model.site and model.collection
 - [x] BUG: `render_utils.get_mode_renderer`, handling of repeat fields? (cf. comment from Cerys.)
     - Added logic so that repeat fields also support current-mode rendering (but rendering as a normal view)
-- [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
+- [x] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection. This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
     - [x] move annalist sitedata to collection location; relocate and rename site_meta.jsonld, update layout; test
     - [x] re-work alternative-directory logic to be controlled by the parent rather than the child.
         - [x] add 'altscope' parameter to calls that may access the alternative search path (replacing `altparent` parameter)
@@ -39,12 +39,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] add test cases for `set_alt_ancestry`
         - [x] make SiteData class a simple subclass of Collection
         - [x] strip out unused or duplicative code in model.site module
-        - [ ] review view URL returned for entities found with alternative parentage:
-            - currently force URL returned to be that of original parent, not alt. 
-            - This is done to minimize disruption to tests while changing logic.
-            - If choose to stay with this, the logic should probably be pushed to get_view_url(), with actual view URL specified whenparent entity ()i.e. Collection) is initialized
+        - [x] use altparent entity to access alternative data
     - [ ] Eliminate altpath values in entities; test
-        - [x] eliminate _entityaltpath references in EntityRoot - use other _entitypath; test
+        - [x] eliminate _entityaltpath references in EntityRoot - use _entitypath; test
         - [ ] eliminate _entityaltpath references in Entity; test
         - [ ] eliminate altpath() from Entity; test
         - [ ] eliminate use_altpath parameter; test
@@ -54,7 +51,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [ ] Isolate all file access or file-dependent logic to EntityRoot (to simplify alternate storage later)
             - check os.path usage
         - [ ] eliminate os.path/shutil inclusion in Entity
-    - [x] use altparent entity to access alternative data
     - [ ] consider treating Enum types as regular types under /d/?
     - [ ] re-implement SiteData as instance of collection; use this as collection parent; test
     - [ ] updates to annalist-manager (esp createsite, updatesite): don't rely on sample data
@@ -162,6 +158,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 Technical debt:
 
+- [ ] review view URL returned for entities found with alternative parentage:
+    - currently force URL returned to be that of original parent, not alt. 
+    - This is done to minimize disruption to tests while changing logic.
+    - See: _entityviewurl member variable
+    - logic is handled in `Entity.try_alt_parentage` and _init_child`
+    - may want to consider promoting entityviewurl to constructor parameter for all Entity.
 - [ ] Delay accessing settings data until actually needed, so that new dependencies (e.g. models on views) don't cause premature selection.  This will help to avoid certain unexpected problems cropping up as happened with release 0.1.22 logging setup for annalist-manager.
 - [ ] After reworking site adta access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
     - The various relative references for accessing context data are particularly unclear in the current software.

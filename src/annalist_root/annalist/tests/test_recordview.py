@@ -143,7 +143,8 @@ class RecordViewTest(AnnalistTestCase):
     def test_recordview_default_data(self):
         t = RecordView.load(self.testcoll, "Default_view", altscope="all")
         self.assertEqual(t.get_id(), "Default_view")
-        self.assertIn("/c/testcoll/_annalist_collection/views/Default_view", t.get_url())
+        self.assertIn("/c/_annalist_site/_annalist_collection/views/Default_view", t.get_url())
+        self.assertIn("/c/testcoll/d/_view/Default_view", t.get_view_url())
         self.assertEqual(t.get_type_id(), "_view")
         td = t.get_values()
         self.assertEqual(

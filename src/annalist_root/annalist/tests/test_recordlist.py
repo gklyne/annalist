@@ -151,7 +151,8 @@ class RecordListTest(AnnalistTestCase):
     def test_recordlist_default_data(self):
         t = RecordList.load(self.testcoll, "Default_list", altscope="all")
         self.assertEqual(t.get_id(), "Default_list")
-        self.assertIn("/c/testcoll/_annalist_collection/lists/Default_list", t.get_url())
+        self.assertIn("/c/_annalist_site/_annalist_collection/lists/Default_list", t.get_url())
+        self.assertIn("/c/testcoll/d/_list/Default_list", t.get_view_url())
         self.assertEqual(t.get_type_id(), "_list")
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordlist_load_keys(list_uri=True)))

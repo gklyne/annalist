@@ -108,11 +108,11 @@ class Entity(EntityRoot):
         #     "  _ Entity.__init__: entity_url %s, entity_dir %s"%
         #     (entity_url, entity_dir)
         #     )
-        super(Entity, self).__init__(entity_url, entity_dir, entity_base)
-        self._entityviewurl = urlparse.urljoin(
-            parent._entityurl,
+        entityviewurl = urlparse.urljoin(
+            parent._entityviewurl,
             self._entityview%{'id': entityid, 'type_id': self._entitytypeid}
             )
+        super(Entity, self).__init__(entity_url, entityviewurl, entity_dir, entity_base)
         self._parent        = parent
         self._altparent     = altparent     # Alternative to current entity to search
         self._entityalturl  = None
@@ -232,32 +232,20 @@ class Entity(EntityRoot):
         #     "Entity.try_alt_parentage: %s/%s with parent %r"%
         #     (cls._entitytypeid, entityid, parent)
         #     )
-        e = cls._child_init(parent, entityid)
-        #@@ TODO: review this: currently force URL returned to be that of original parent, not alt
-        #         This is done to minimize disruption to tests while changing logic.
-        #         If choose to stay with this, the logic should probably be pushed to get_view_url(),
-        #         with actual view URL specified whenparent entity ()i.e. Collection) is initialized
-        ub = e._entityurl       #@@
-        uv = e._entityviewurl   #@@
-        # log.warning("@@try_alt_parentage: ub %s, uv %s"%(ub, uv))
-        # log.debug("Entity.try_alt_parentage: _child_init "+repr(e))
-        v = func(e)
+        e  = cls._child_init(parent, entityid)
+        uv = e._entityviewurl
+        v  = func(e)
         if test(v):
             return (e, v)
         alt_parents = parent.get_alt_ancestry(altscope=altscope)
-        # log.debug(
-        #     "Entity.try_alt_parentage: alt_parents %r"%(alt_parents,)
-        #     )
         for altparent in alt_parents:
-            e = cls._child_init(altparent, entityid)
-            e._entityurl = ub       #@@
-            e._entityviewurl = uv   #@@
+            e = cls._child_init(altparent, entityid, entityviewurl=uv)
             v = func(e)
             if test(v):
                 return (e, v)
         # Failed: log details
         log.debug(
-            " __ no entity found for %s/%s with parent %s"%
+            "Entity.try_alt_parentage: no entity found for %s/%s with parent %s"%
             (cls._entitytypeid, entityid, parent)
             )
         log.debug("    alt parents tried: %r"%(alt_parents,))
@@ -405,25 +393,20 @@ class Entity(EntityRoot):
         return
 
     @classmethod
-    def _child_init(cls, parent, entityid, altscope=None, use_altpath=False):
+    def _child_init(cls, parent, entityid, entityviewurl=None):
         """
-        Instantiate a child entity (e.g. for create and load methods) of a specified
-        parent entity.
+        Instantiate a child entity (e.g. for create and load methods) of a 
+        specified parent entity.
 
-        parent      is the parent entity for which a child is instantiated.
-        entityid    is the entity id of the child to be instantiated.
-        altscope    if supplied, indicates a scope other than the current entity to
-                    search for children.  See method `get_alt_ancestry` for more details.
+        parent          is the parent entity for which a child is instantiated.
+        entityid        is the entity id of the child to be instantiated.
+        entityviewurl   if supplied, indicates an alternative URL bto be used as the
+                        view URL fir the initialized entitty.
         """
-        if use_altpath:
-            # log.info(" __ Entity._child_init: (use_altpath) "+entityid)
-            e = cls(parent, entityid, use_altpath=use_altpath)
-        elif altscope:
-            # log.info(" __ Entity._child_init: (altscope) "+entityid)
-            e = cls(parent, entityid, altscope=altscope)
-        else:
-            # log.info(" __ Entity._child_init: (no altscope) "+entityid)
-            e = cls(parent, entityid)
+        # log.info(" __ Entity._child_init: "+entityid)
+        e = cls(parent, entityid)
+        if entityviewurl is not None:
+            e._entityviewurl = entityviewurl
         return e
 
     @classmethod
@@ -442,7 +425,7 @@ class Entity(EntityRoot):
         Returns the created entity as an instance of the supplied class object.
         """
         log.debug("Entity.create: entityid %s"%(entityid))
-        e = cls._child_init(parent, entityid, use_altpath=use_altpath)
+        e = cls._child_init(parent, entityid)
         e.set_values(entitybody)
         e._save()
         return e
