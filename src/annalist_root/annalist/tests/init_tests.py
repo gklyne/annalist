@@ -67,7 +67,6 @@ def copySitedata(src, sitedatasrc, tgt):
         for sdir in ("users", "types", "lists", "views", "groups", "fields", "vocabs", "enums"):
             s = os.path.join(sitedatasrc, sdir)
             d = os.path.join(sitedatatgt, sdir)
-            # shutil.copytree(s, d)
             replacetree(s, d)
     elif sitedata_target_reset == "collections":
         ds = os.path.join(src, "c")

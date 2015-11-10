@@ -20,6 +20,8 @@ from django.contrib.auth.models     import User
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client             import Client
 
+from utils.SuppressLoggingContext   import SuppressLogging
+
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
 from annalist.models.site           import Site
@@ -295,6 +297,47 @@ class CollectionTest(AnnalistTestCase):
         listnames = { t.get_id() for t in self.testcoll.lists() }
         self.assertEqual(listnames, {"list2"}|site_lists)
         return
+
+    # Alternative parent setting
+
+    def test_set_alt_ancestry_1(self):
+        altcoll1  = Collection(self.testsite, "altcoll1")
+        parents   = self.testcoll.set_alt_ancestry(altcoll1)
+        parentids = [ p.get_id() for p in parents ]
+        self.assertEqual( parentids, ["testcoll", "altcoll1", layout.SITEDATA_ID])
+        return
+
+    def test_set_alt_ancestry_2(self):
+        altcoll1  = Collection(self.testsite, "altcoll1")
+        parents   = altcoll1.set_alt_ancestry(self.testcoll)
+        parentids = [ p.get_id() for p in parents ]
+        self.assertEqual( parentids, ["altcoll1", "testcoll", layout.SITEDATA_ID])
+        return
+
+    def test_set_alt_ancestry_loop(self):
+        altcoll1  = Collection(self.testsite, "altcoll1")
+        parents   = self.testcoll.set_alt_ancestry(altcoll1)
+        parentids = [ p.get_id() for p in parents ]
+        self.assertEqual( parentids, ["testcoll", "altcoll1", layout.SITEDATA_ID])
+        with SuppressLogging(logging.ERROR):
+            with self.assertRaises(ValueError):
+                parents   = altcoll1.set_alt_ancestry(self.testcoll)
+        return
+
+    def test_set_alt_ancestry_no_site(self):
+        # self.testcoll     = Collection(self.testsite, "testcoll")
+        # self.coll1        = collection_values("coll1")
+        # self.testcoll_add = collection_create_values("testcoll")        
+        altcoll1  = Collection(self.testsite, "altcoll1")
+        parents   = self.testcoll.set_alt_ancestry(altcoll1)
+        parentids = [ p.get_id() for p in parents ]
+        self.assertEqual( parentids, ["testcoll", "altcoll1", layout.SITEDATA_ID])
+        altcoll1._altparent = None
+        with SuppressLogging(logging.ERROR):
+            with self.assertRaises(ValueError):
+                parents   = self.testcoll.set_alt_ancestry(altcoll1)
+        return
+
 
 #   -----------------------------------------------------------------------------
 #

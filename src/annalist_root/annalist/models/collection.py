@@ -62,21 +62,28 @@ class Collection(Entity):
 
     def __init__(self, parentsite, coll_id, altparent=None):
         """
-        Initialize a new Collection object, without metadta (yet).
+        Initialize a new Collection object.
 
         parentsite  is the parent site from which the new collection is descended.
         coll_id     the collection identifier for the collection
+        altparent   is an alternative parent to search for descendents of the new 
+                    Collection.  Effectively, the new Collection inherits definitions
+                    from this alternative parent.
         """
-        # @@TODO: remove alterent param
         log.debug("Collection.__init__: coll_id %s, parent dir %s"%(coll_id, parentsite._entitydir))
         if altparent is not None:
-            msg = (
-                "Collection %s initialised with altparent %s"%
-                (coll_id, altparent.get_id())
-                )
-            raise ValueError(msg)
+            if not isinstance(altparent, Collection):
+                msg = "Collection altparent value must be a Collection (got %r)"%(altparent,)
+                log.error(msg)
+                raise ValueError(msg)
+            # msg = (
+            #     "Collection %s initialised with altparent %s"%
+            #     (coll_id, altparent.get_id())
+            #     )
+            # raise ValueError(msg)
         self._parentsite = parentsite
         self._parentcoll = (
+            altparent or
             None if coll_id == layout.SITEDATA_ID else 
             parentsite.site_data_collection()
             )
@@ -98,6 +105,29 @@ class Collection(Entity):
         Return parent object for accessing site data.
         """
         return self._parentcoll
+
+    # Alternate parent
+
+    def set_alt_ancestry(self, altparent):
+        """
+        Update the alternative parent for the current collection.
+
+        Returns a list of parents accessible from the supplied altparent (including itself)
+        """
+        if not isinstance(altparent, Collection):
+            msg = "Collection.set_alt_ancestry value must be a Collection (got %r)"%(altparent,)
+            log.error(msg)
+            raise ValueError(msg)
+        parents   = super(Collection, self).set_alt_ancestry(altparent)
+        parentids = [ p.get_id() for p in parents ]
+        if layout.SITEDATA_ID not in parentids:
+            msg = (
+                "Entity.set_alt_ancestry cannot access site data (%s) via %r)"%
+                (layout.SITEDATA_ID, altparent)
+                )
+            log.error(msg)
+            raise ValueError(msg)
+        return parents
 
     # User permissions
 

@@ -34,7 +34,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
             - altparent is still used with Collection constructor to indicate alternative search path
         - [x] eliminate `altparent=` parameter from most constructors
         - [x] revert path declared for site entity
-        - [ ] make SiteData class a simple subclass of collection.
+        - [x] require Collection `altparent` to itself be a Collection.  Support later alteration of the `altparent`.
+        - [x] when setting `altparent`, ensure that site data remains accessible.
+        - [x] add test cases for `set_alt_ancestry`
+        - [x] make SiteData class a simple subclass of Collection
+        - [x] strip out unused or duplicative code in model.site module
         - [ ] review view URL returned for entities found with alternative parentage:
             - currently force URL returned to be that of original parent, not alt. 
             - This is done to minimize disruption to tests while changing logic.

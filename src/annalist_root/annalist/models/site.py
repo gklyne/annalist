@@ -61,82 +61,22 @@ class Site(EntityRoot):
         sitebasedir     the base directory for site information
         """
         log.debug("Site.__init__: sitebaseuri %s, sitebasedir %s"%(sitebaseuri, sitebasedir))
-        sitebaseuri = sitebaseuri if sitebaseuri.endswith("/") else sitebaseuri + "/"
-        sitebasedir = sitebasedir if sitebasedir.endswith("/") else sitebasedir + "/"
-        sitepath    = layout.SITE_META_PATH
-        siteuripath = urlparse.urljoin(sitebaseuri, sitepath) 
-        sitedir     = os.path.join(sitebasedir, sitepath)
+        sitebaseuri    = sitebaseuri if sitebaseuri.endswith("/") else sitebaseuri + "/"
+        sitebasedir    = sitebasedir if sitebasedir.endswith("/") else sitebasedir + "/"
+        sitepath       = layout.SITE_META_PATH
+        siteuripath    = urlparse.urljoin(sitebaseuri, sitepath) 
+        sitedir        = os.path.join(sitebasedir, sitepath)
+        self._sitedata = None
         super(Site, self).__init__(host+siteuripath, sitedir, sitebasedir)
-        self._sitedata = SiteData(self)
         return
-
-    def get_user_permissions(self, user_id, user_uri):
-        """
-        Get a site-wide user permissions record (AnnalistUser).
-
-        To return a value, both the user_id and the user_uri (typically a mailto: URI, but
-        may be any *authenticated* identifier) must match.  This is to prevent access to 
-        records of a deleted account being granted to a new account created with the 
-        same user_id (username).
-
-        user_id         local identifier for the type to retrieve.
-        user_uri        authenticated identifier associated with the user_id.  That is,
-                        the authentication service used is presumed to confirm that
-                        the identifier belongs to the user currently logged in with
-                        the supplied username.
-
-        returns an AnnalistUser object for the identified user, or None.  This object contains
-                information about permissions granted to the user in the current collection.
-        """
-        #@@TODO: remove this method        
-        user = AnnalistUser.load(self.site_data_collection(), user_id, use_altpath=True)
-        # if not user:
-        #     sitedata = self.site_data_collection()
-        #     log.warning("Site.get_user_permissions: site_data %r"%(sitedata,))
-        #     log.warning("Site.get_user_permissions: site_data._entitydir %s"%(sitedata._entitydir,))
-        #     log.warning(
-        #         "Site.get_user_permissions: user_id %s, user_uri %s, user %r"%
-        #         (user_id, user_uri, user)
-        #         )
-        log.debug(
-            "Site.get_user_permissions: user_id %s, user_uri %s, user %r"%
-            (user_id, user_uri, user)
-            )
-        if user:
-            for f in [RDFS.CURIE.label, RDFS.CURIE.comment, ANNAL.CURIE.user_uri, ANNAL.CURIE.user_permissions]:
-                if f not in user:
-                    user = None
-                    break
-        if user and user[ANNAL.CURIE.user_uri] != user_uri:
-            user = None         # URI mismatch: return None.
-        return user
-
-    def collections(self):
-        """
-        Generator enumerates and returns collection descriptions that are part of a site.
-
-        Yielded values are collection objects.
-        """
-        log.debug("site.collections: basedir: %s"%(self._entitydir))
-        for f in self._base_children(Collection):
-            c = Collection.load(self, f)
-            # log.info("Site.colections: Collection.load %s %r"%(f, c.get_values()))
-            if c:
-                yield c
-        return
-
-    def collections_dict(self):
-        """
-        Return an ordered dictionary of collections indexed by collection id
-        """
-        coll = [ (c.get_id(), c) for c in self.collections() ]
-        return collections.OrderedDict(sorted(coll))
 
     def site_data_collection(self):
         """
         Return collection entity that contains the site data.
         """
-        return Collection.load(self, layout.SITEDATA_ID)
+        if self._sitedata is None:
+            self._sitedata = SiteData.load_sitedata(self)
+        return self._sitedata
 
     def site_data_stream(self):
         """
@@ -163,6 +103,47 @@ class Site(EntityRoot):
             colls[k] = dict(v.items(), id=k, url=v[ANNAL.CURIE.url], title=v[RDFS.CURIE.label])
         site_data["collections"] = colls
         return site_data
+
+    def get_user_permissions(self, user_id, user_uri):
+        """
+        Get a site-wide user permissions record (AnnalistUser).
+
+        To return a value, both the user_id and the user_uri (typically a mailto: URI, but
+        may be any *authenticated* identifier) must match.  This is to prevent access to 
+        records of a deleted account being granted to a new account created with the 
+        same user_id (username).
+
+        user_id         local identifier for the type to retrieve.
+        user_uri        authenticated identifier associated with the user_id.  That is,
+                        the authentication service used is presumed to confirm that
+                        the identifier belongs to the user currently logged in with
+                        the supplied username.
+
+        returns an AnnalistUser object for the identified user, or None.  This object contains
+                information about permissions granted to the user in the current collection.
+        """
+        return self.site_data_collection().get_user_permissions(user_id, user_uri)
+
+    def collections(self):
+        """
+        Generator enumerates and returns collection descriptions that are part of a site.
+
+        Yielded values are collection objects.
+        """
+        log.debug("site.collections: basedir: %s"%(self._entitydir))
+        for f in self._base_children(Collection):
+            c = Collection.load(self, f)
+            # log.info("Site.colections: Collection.load %s %r"%(f, c.get_values()))
+            if c:
+                yield c
+        return
+
+    def collections_dict(self):
+        """
+        Return an ordered dictionary of collections indexed by collection id
+        """
+        coll = [ (c.get_id(), c) for c in self.collections() ]
+        return collections.OrderedDict(sorted(coll))
 
     def add_collection(self, coll_id, coll_meta, annal_ver=annalist.__version_data__):
         """
@@ -204,7 +185,8 @@ class Site(EntityRoot):
                 returns a context dictionary for the field thus described.
         """
         # Build context data
-        context = self.get_site_jsonld_context()
+        #@@ context = self.get_site_jsonld_context()
+        context = self.site_data_collection().get_coll_jsonld_context()
         # Assemble and write out context description
         with self._metaobj(layout.SITEDATA_CONTEXT_PATH, layout.COLL_CONTEXT_FILE, "wt") as context_io:
             json.dump(
@@ -213,7 +195,7 @@ class Site(EntityRoot):
                 )
         return
 
-    def get_site_jsonld_context(self):
+    def _x_get_site_jsonld_context(self):
         """
         Return dictionary containing context structure for collection.
         """
@@ -260,7 +242,7 @@ class Site(EntityRoot):
                 self.set_field_uri_jsonld_context(guri or furi, fcontext, context)
         return context
 
-    def get_field_uri_jsonld_context(self, fid, get_field_context):
+    def _x_get_field_uri_jsonld_context(self, fid, get_field_context):
         """
         Access field description, and return field property URI and appropriate 
         property description for JSON-LD context.
@@ -275,7 +257,7 @@ class Site(EntityRoot):
         return (f[ANNAL.CURIE.property_uri], get_field_context(f))
 
     # @@TODO: Make static and use common copy with `collection`
-    def set_field_uri_jsonld_context(self, puri, fcontext, property_contexts):
+    def _x_set_field_uri_jsonld_context(self, puri, fcontext, property_contexts):
         """
         Save property context description into supplied property_contexts dictionary.  
         If the context is already defined, generate warning if there is a compatibility 
@@ -300,7 +282,7 @@ class Site(EntityRoot):
         return
 
     @staticmethod
-    def get_field_jsonld_context(fdesc):
+    def _x_get_field_jsonld_context(fdesc):
         """
         Returns a context description for the supplied field description.
 
@@ -341,7 +323,7 @@ class Site(EntityRoot):
     # site data collection: then the access for all child data should be
     # unified.
 
-    def _site_children_ids(self, cls):
+    def _x_site_children_ids(self, cls):
         """
         Iterates over candidate child entity ids that are possible instances 
         of an indicated class.  The supplied class is used to determine a 
@@ -360,7 +342,7 @@ class Site(EntityRoot):
                 yield fil
         return
 
-    def _site_children(self, cls):
+    def _x_site_children(self, cls):
         """
         Iterates over candidate children of the current site object that are instances 
         of an indicated class.
@@ -408,7 +390,7 @@ class Site(EntityRoot):
             , ANNAL.CURIE.comment:          annal_comment                                    
             , ANNAL.CURIE.software_version: annalist.__version_data__
             })
-        sitedata  = Collection.create(site, layout.SITEDATA_ID, sitedata_values)
+        sitedata  = SiteData.create_sitedata(site, sitedata_values)
         # Create site README
         README = ((
             """%(site_base_dir)s\n"""+

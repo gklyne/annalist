@@ -143,6 +143,27 @@ class Entity(EntityRoot):
         #     )
         return urlparse.urljoin(baseurl, self._entityviewurl)
 
+    def set_alt_ancestry(self, altparent):
+        """
+        Update the alternative parent for the current collection.
+
+        Returns a list of parents accessible from the supplied altparent (including itself)
+        """
+        # Build list of accessible parents, check for recurdion
+        parents     = [self, altparent]
+        moreparents = altparent.get_alt_ancestry(altscope="all")
+        while moreparents:
+            nextparent = moreparents.pop(0)
+            if nextparent in parents:
+                msg = "Entity.set_alt_ancestry makes recursive reference via %r)"%(altparent,)
+                log.error(msg)
+                raise ValueError(msg)
+            parents.append(nextparent)
+            moreparents.extend(nextparent.get_alt_ancestry(altscope="all"))
+        # Set new alternative parent
+        self._altparent = altparent
+        return parents
+
     def get_alt_ancestry(self, altscope=None):
         """
         Returns a list of alternative entities to the current entity to search for possible 
