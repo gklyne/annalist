@@ -41,7 +41,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] strip out unused or duplicative code in model.site module
         - [x] use altparent entity to access alternative data
         - [x] Isolate all file access or file-dependent logic to EntityRoot (to simplify alternate storage later)
-    - [.] Eliminate altpath values in entities; test
+    - [x] Eliminate altpath values in entities; test
         - [x] eliminate _entityaltpath references in EntityRoot - use _entitypath; test
         - [x] eliminate _entityaltpath references in Entity; test
         - [x] eliminate altpath() from Entity; test
@@ -54,15 +54,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] re-work access to parent to call linked object rather than direct file access
     - [x] when creating a collection, allow to specify alternate parent(s); ensure no loops: must end up at sitedata; test
     - [x] ensure that _annalist_site collection cannot be removed
-    - [ ] site data migration
-        - if _annalist_site directory exists at top level:
-            - create collection _analist_site
-            - read _site_meta and use it to pupolate collection metadata
-            - move subdirectories (enums, fields, ... views, vocabs) to _annalist_collection
-            - rename original directory to (say) _old_annalist_site
-- [ ] ensure that _annalist_site collection data cannot be updated
-    - [x] Add new permission map in model.entitytypeinfo.
-    - [ ] Needs testing
+- [x] site data migration
+    - [x] `annalist_manager updatesite` updated create data in new location.
+    - [x] `annalist_manager updatesite` copies previous users and vocabs to new location.
+- [x] ensure that _annalist_site collection data cannot be updated
+    - [x] Add new site permission map in model.entitytypeinfo that forbids modifications except users
 - [ ] updates to annalist-manager (esp createsite, updatesite): don't rely on sample data
 - [ ] the bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
 - [ ] provision for editing collection data (label, comment, parents, etc.); test
@@ -71,7 +67,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Update JSON-LD spike code, and test with latest rdflib-jsonld
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
 - [ ] Create schema definitions in Annalist for ANNAL namespace
-- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Caroplan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data.
+- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data.
 - [ ] When supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration utility?
 
 (release?)

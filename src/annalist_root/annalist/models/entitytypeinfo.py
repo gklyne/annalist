@@ -219,7 +219,7 @@ SITE_PERMISSIONS_MAP = (
     , '_view':              SITE_PERMISSIONS
     , '_group':             SITE_PERMISSIONS
     , '_field':             SITE_PERMISSIONS
-    , '_vocab':             SITE_PERMISSIONS
+    , '_vocab':             ADMIN_PERMISSIONS
     , 'Enum_list_type':     SITE_PERMISSIONS
     , 'Enum_render_type':   SITE_PERMISSIONS
     , 'Enum_value_mode':    SITE_PERMISSIONS

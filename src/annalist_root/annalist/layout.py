@@ -77,6 +77,7 @@ log = logging.getLogger(__name__)
 SITE_DIR                = "annalist_site"
 SITEDATA_ID             = "_annalist_site"
 SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
+SITEDATA_OLD_DIR        = "_annalist_site"
 SITE_META_PATH          = ""
 SITE_META_FILE          = "site_meta.jsonld"
 META_SITE_REF           = "./"
@@ -92,8 +93,6 @@ COLL_CONTEXT_PATH       = "d/"
 COLL_META_CONTEXT_PATH  = META_COLL_REF+COLL_CONTEXT_PATH
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
 
-SITEDATA_VIEW           = "%(id)s/"
-SITEDATA_PATH           = "%(id)s"
 SITEDATA_META_FILE      = COLL_META_FILE
 META_SITEDATA_REF       = META_COLL_REF
 SITEDATA_CONTEXT_PATH   = "./"
@@ -194,10 +193,10 @@ class Layout(object):
         """
         self.BASE_DIR           = base_data_dir
         self.SITE_DIR           = SITE_DIR
-        self.SITEDATA_META_DIR  = SITEDATA_META_DIR
+        self.SITEDATA_OLD_DIR   = SITEDATA_OLD_DIR
+        self.SITEDATA_META_DIR  = SITEDATA_META_DIR                         # e.g. c/_annalist_site/_annalist_collection
         self.SITE_PATH          = os.path.join(base_data_dir, SITE_DIR)     # e.g. /data/annalist_site
-        self.SITEDATA_PATH      = os.path.join(base_data_dir, SITEDATA_DIR) # e.g. /data/annalist_site/_annalist_site
-        self.SITEDATA_CONTEXT_PATH = os.path.join(                          # e.g. /data/annalist_site/_annalist_site/site_context.jsonld
+        self.SITEDATA_CONTEXT_PATH = os.path.join(                          # e.g. /data/annalist_site/c/_annalist_site/_annalist_collection/site_context.jsonld
             base_data_dir, SITEDATA_META_DIR, COLL_CONTEXT_FILE
             ) 
         return

@@ -77,7 +77,7 @@ def am_createsite(annroot, userhome, options):
     # --- Copy built-in types and views data to target area
     site_layout = Layout(sitesettings.BASE_DATA_DIR)
     sitedatasrc = os.path.join(annroot, "annalist/sitedata")
-    sitedatatgt = os.path.join(sitebasedir, site_layout.SITEDATA_DIR)
+    sitedatatgt = os.path.join(sitebasedir, site_layout.SITEDATA_META_DIR)
     print("Copy Annalist site data from %s to %s"%(sitedatasrc, sitedatatgt))
     for sdir in ("types", "lists", "views", "groups", "fields", "vocabs", "users", "enums"):
         s = os.path.join(sitedatasrc, sdir)
@@ -116,7 +116,17 @@ def am_updatesite(annroot, userhome, options):
     # --- Copy built-in types and views data to target area
     site_layout = Layout(sitesettings.BASE_DATA_DIR)
     sitedatasrc = os.path.join(annroot, "annalist/sitedata")
-    sitedatatgt = os.path.join(sitebasedir, site_layout.SITEDATA_DIR)
+    sitedatatgt = os.path.join(sitebasedir, site_layout.SITEDATA_META_DIR)
+    sitedataold = os.path.join(sitebasedir, site_layout.SITEDATA_OLD_DIR)
+    print("Copy Annalist old user, vocab data from %s to %s"%(sitedataold, sitedatatgt))
+    for sdir in ("users", "vocabs"):
+        s     = os.path.join(sitedataold, sdir)
+        old_s = os.path.join(sitedataold, "old_"+sdir)
+        d     = os.path.join(sitedatatgt, sdir)
+        if os.path.isdir(s):
+            print("- %s +> %s (rename)"%(sdir, d))
+            updatetree(s, d)
+            os.rename(s, old_s)
     print("Copy Annalist site data from %s to %s"%(sitedatasrc, sitedatatgt))
     for sdir in ("types", "lists", "views", "groups", "fields", "enums"):
         s = os.path.join(sitedatasrc, sdir)
@@ -129,7 +139,7 @@ def am_updatesite(annroot, userhome, options):
         print("- %s +> %s"%(sdir, d))
         updatetree(s, d)
     # --- (Re)generate site context data
-    print("- generating %s"%(site_layout.SITEDATA_CONTEXT_PATH))
+    print("Generating %s"%(site_layout.SITEDATA_CONTEXT_PATH))
     testsite = Site("http://nosite.example.com/", site_layout.SITE_PATH)
     testsite.generate_site_jsonld_context()
     return status

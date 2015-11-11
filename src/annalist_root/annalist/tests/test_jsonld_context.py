@@ -22,6 +22,7 @@ from annalist                       import layout
 from annalist.identifiers           import makeNamespace, RDF, RDFS, ANNAL
 
 from annalist.models.site           import Site
+from annalist.models.sitedata       import SiteData
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordview     import RecordView
@@ -232,8 +233,8 @@ class JsonldContextTest(AnnalistTestCase):
             )
         site_data        = self.testsite.site_data()
         ann_id           = Literal(layout.SITEDATA_ID)
-        ann_type         = URIRef(ANNAL.Collection)
-        ann_type_id      = Literal(Collection._entitytypeid)
+        ann_type         = URIRef(ANNAL.SiteData)
+        ann_type_id      = Literal(SiteData._entitytypeid)
         software_version = Literal(annalist.__version_data__)
         label            = Literal(site_data[RDFS.CURIE.label])
         comment          = Literal(site_data[RDFS.CURIE.comment])
