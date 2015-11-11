@@ -36,11 +36,11 @@ def create_user_permissions(site, user_id, user_uri, user_name, user_comment, us
         , ANNAL.CURIE.user_uri:         "%s"%(user_uri)
         , ANNAL.CURIE.user_permissions: user_permissions
         })
-    user = AnnalistUser.create(site, user_id, user_values, use_altpath=True)
+    user = AnnalistUser.create(site, user_id, user_values)
     return user
 
 def delete_user_permissions(site, user_id):
-    AnnalistUser.remove(site, user_id, use_altpath=True)
+    AnnalistUser.remove(site, user_id)
     return
 
 def get_site_settings(annroot, userhome, options):

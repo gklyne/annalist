@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 import copy
 
 from annalist                       import message
+from annalist                       import layout
 from annalist.util                  import valid_id, extract_entity_id
 
 from annalist.identifiers           import ANNAL, RDF, RDFS
@@ -135,6 +136,18 @@ ENUM_MESSAGES = (
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
+SITE_PERMISSIONS = (
+    { "view":   "VIEW"      # View site config data
+    , "list":   "VIEW"      # ..
+    , "search": "VIEW"      # ..
+    , "new":    "FORBIDDEN" # Create user record
+    , "copy":   "FORBIDDEN" # ..
+    , "edit":   "FORBIDDEN" # Update user record
+    , "delete": "FORBIDDEN" # Delete user record
+    , "config": "FORBIDDEN" # Change collection configuration
+    , "admin":  "ADMIN"     # Change users or permissions
+    })
+
 ADMIN_PERMISSIONS = (
     { "view":   "ADMIN"     # View user record
     , "list":   "ADMIN"     # ..
@@ -199,6 +212,21 @@ TYPE_MESSAGE_MAP = (
     , 'Enum_bib_type':      ENUM_MESSAGES
     })
 
+SITE_PERMISSIONS_MAP = (
+    { '_user':              ADMIN_PERMISSIONS
+    , '_type':              SITE_PERMISSIONS
+    , '_list':              SITE_PERMISSIONS
+    , '_view':              SITE_PERMISSIONS
+    , '_group':             SITE_PERMISSIONS
+    , '_field':             SITE_PERMISSIONS
+    , '_vocab':             SITE_PERMISSIONS
+    , 'Enum_list_type':     SITE_PERMISSIONS
+    , 'Enum_render_type':   SITE_PERMISSIONS
+    , 'Enum_value_mode':    SITE_PERMISSIONS
+    , 'Enum_bib_type':      SITE_PERMISSIONS
+    , 'EntityData':         SITE_PERMISSIONS
+    })
+
 TYPE_PERMISSIONS_MAP = (
     { '_user':              ADMIN_PERMISSIONS
     , '_type':              CONFIG_PERMISSIONS
@@ -211,6 +239,7 @@ TYPE_PERMISSIONS_MAP = (
     , 'Enum_render_type':   CONFIG_PERMISSIONS
     , 'Enum_value_mode':    CONFIG_PERMISSIONS
     , 'Enum_bib_type':      CONFIG_PERMISSIONS
+    , 'EntityData':         ENTITY_PERMISSIONS
     })
 
 def get_built_in_type_ids():
@@ -263,6 +292,7 @@ class EntityTypeInfo(object):
         self.coll_id         = coll.get_id()
         self.type_id         = type_id
         self.permissions_map = None
+
         if type_id in TYPE_CLASS_MAP:
             self.recordtype      = coll.get_type(type_id)
             self.entityparent    = coll
@@ -270,6 +300,10 @@ class EntityTypeInfo(object):
             self.entityclass     = TYPE_CLASS_MAP[type_id]
             self.entitymessages  = TYPE_MESSAGE_MAP[type_id]
             self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
+            if self.coll_id == layout.SITEDATA_ID:
+                self.permissions_map = SITE_PERMISSIONS_MAP[type_id]
+            else:
+                self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
         else:
             if RecordType.exists(coll, type_id, altscope="all"):
                 self.recordtype     = coll.get_type(type_id)

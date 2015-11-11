@@ -29,7 +29,6 @@ class RecordEnumBase(EntityData):
     _entitytypeid   = "_enum"
     _entityview     = layout.COLL_ENUM_VIEW
     _entitypath     = layout.COLL_ENUM_PATH
-    _entityaltpath  = layout.SITE_ENUM_PATH
     _entityfile     = layout.ENUM_META_FILE
     _entityprov     = layout.ENUM_PROV_FILE
     _entityref      = layout.META_ENUM_REF
@@ -50,7 +49,6 @@ def RecordEnumFactory(name, type_id):
     return type(name, (RecordEnumBase,), 
         { '_entitytypeid':  type_id
         , '_entitypath':    layout.COLL_ENUM_PATH%{'id': "%(id)s", 'type_id': type_id}
-        , '_entityaltpath': layout.SITE_ENUM_PATH%{'id': "%(id)s", 'type_id': type_id}
         , '__init__': RecordEnumInit}
         )
 

@@ -18,6 +18,7 @@ from annalist.identifiers       import ANNAL, RDFS
 from annalist.exceptions        import Annalist_Error, EntityNotFound_Error
 from annalist                   import message
 from annalist                   import util
+from annalist                   import layout
 
 from annalist.models.site       import Site
 
@@ -65,12 +66,17 @@ class SiteView(AnnalistGenericView):
         if "remove" in request.POST:
             collections = request.POST.getlist("select", [])
             if collections:
-                # Get user to confirm action before actually doing it
-                auth_required = (
-                    self.authorize("ADMIN", None) and           # either of these..
-                    self.authorize("DELETE_COLLECTION", None)
-                    )
+                # Check authorization
+                if layout.SITEDATA_ID in collections:
+                    log.warning("Attempt to delete site data collection %r"%(collections))
+                    auth_required = self.error(self.error403values(scope="DELETE_SITE"))
+                else:
+                    auth_required = (
+                        self.authorize("ADMIN", None) and           # either of these..
+                        self.authorize("DELETE_COLLECTION", None)
+                        )
                 return (
+                    # Get user to confirm action before actually doing it
                     auth_required or
                     ConfirmView.render_form(request,
                         action_description=     message.REMOVE_COLLECTIONS%{'ids': ", ".join(collections)},
@@ -156,7 +162,11 @@ class SiteActionView(AnnalistGenericView):
                 return auth_required
             coll_ids = request.POST.getlist("select")
             for coll_id in coll_ids:
-                err = self.site().remove_collection(coll_id)
+                if coll_id == layout.SITEDATA_ID:
+                    err = Annalist_Error("Attempt to delete site data collection (%s)"%coll_id)
+                    log.warning(str(err))
+                else:
+                    err = self.site().remove_collection(coll_id)
                 if err:
                     return self.redirect_error(
                         self.view_uri("AnnalistSiteView"), 

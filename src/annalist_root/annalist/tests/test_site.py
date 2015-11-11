@@ -120,7 +120,7 @@ class SiteTest(AnnalistTestCase):
         c = s.site_data_collection()
         # Create local permissions
         usr = AnnalistUser.create(
-            c, "user1", annalistuser_create_values(user_id="user1"), use_altpath=True
+            c, "user1", annalistuser_create_values(user_id="user1")
             )
         # Test access to permissions defined in site
         ugp = s.get_user_permissions("user1", "mailto:testuser@example.org")
@@ -214,8 +214,7 @@ class SiteViewTest(AnnalistTestCase):
             user_permissions=
               [ "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"
               , "CREATE_COLLECTION", "DELETE_COLLECTION"
-              ],
-            use_altpath=True
+              ]
             )
         return
 
@@ -445,8 +444,7 @@ class SiteActionViewTests(AnnalistTestCase):
             user_permissions=
               [ "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"
               , "CREATE_COLLECTION", "DELETE_COLLECTION"
-              ],
-            use_altpath=True
+              ]
             )
         return
 

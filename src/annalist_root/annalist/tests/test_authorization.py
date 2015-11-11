@@ -137,8 +137,7 @@ class AuthorizationTest(AnnalistTestCase):
                 user_name="Site_admin User",
                 user_uri="mailto:user_site_admin@%s"%TestHost, 
                 user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
-                ),
-            use_altpath=True
+                )
             )
         self.user_site_create_coll  = AnnalistUser.create(
             self.testsite.site_data_collection(), 
@@ -148,8 +147,7 @@ class AuthorizationTest(AnnalistTestCase):
                 user_name="Site_create User",
                 user_uri="mailto:user_site_create_coll@%s"%TestHost, 
                 user_permissions=["VIEW", "CREATE_COLLECTION"]
-                ),
-            use_altpath=True
+                )
             )
         self.user_site_delete_coll  = AnnalistUser.create(
             self.testsite.site_data_collection(), 
@@ -159,8 +157,7 @@ class AuthorizationTest(AnnalistTestCase):
                 user_name="Site_delete User",
                 user_uri="mailto:user_site_delete_coll@%s"%TestHost, 
                 user_permissions=["VIEW", "CREATE_COLLECTION", "DELETE_COLLECTION"]
-                ),
-            use_altpath=True
+                )
             )
         self.user_site_view  = AnnalistUser.create(
             self.testsite.site_data_collection(), 
@@ -170,8 +167,7 @@ class AuthorizationTest(AnnalistTestCase):
                 user_name="Site_view User",
                 user_uri="mailto:user_site_view@%s"%TestHost, 
                 user_permissions=["VIEW"]
-                ),
-            use_altpath=True
+                )
             )
         return
 
@@ -215,6 +211,15 @@ class AuthorizationTest(AnnalistTestCase):
         u = reverse("AnnalistSiteView")
         f = collection_remove_form_data(["coll1", "coll3"])
         r = self.client.post(u, f)
+        return r
+
+    # Remove site data: should always be refused
+
+    def remove_site_data(self):
+        u = reverse("AnnalistSiteView")
+        f = collection_remove_form_data(["_annalist_site"])
+        with SuppressLogging(logging.WARNING):
+            r = self.client.post(u, f)
         return r
 
     # User access - requires ADMIN permission
@@ -601,6 +606,7 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             200)
         self.assertEqual(self.view_user_get().status_code,          200)
@@ -639,6 +645,7 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.view_user_get().status_code,          403)
@@ -677,6 +684,7 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.view_user_get().status_code,          403)
@@ -715,6 +723,7 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.view_user_get().status_code,          403)
@@ -753,6 +762,7 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.view_user_get().status_code,          403)
@@ -791,6 +801,7 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.view_user_get().status_code,          403)
@@ -829,6 +840,7 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.view_user_get().status_code,          403)
@@ -866,6 +878,7 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      401)
         self.assertEqual(self.remove_collection().status_code,      401)
+        self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             401)
         self.assertEqual(self.view_user_get().status_code,          401)
@@ -905,6 +918,7 @@ class AuthorizationTest(AnnalistTestCase):
         # try each function, test result
         self.assertEqual(self.create_collection().status_code,      302)
         self.assertEqual(self.remove_collection().status_code,      200)
+        self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             200)
         self.assertEqual(self.view_user_get().status_code,          200)
@@ -942,6 +956,7 @@ class AuthorizationTest(AnnalistTestCase):
         # try each function, test result
         self.assertEqual(self.create_collection().status_code,      302)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.view_user_get().status_code,          403)
@@ -979,6 +994,7 @@ class AuthorizationTest(AnnalistTestCase):
         # try each function, test result
         self.assertEqual(self.create_collection().status_code,      302)
         self.assertEqual(self.remove_collection().status_code,      200)
+        self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.view_user_get().status_code,          403)
@@ -1015,6 +1031,7 @@ class AuthorizationTest(AnnalistTestCase):
         # try each function, test result
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
         self.assertEqual(self.view_user_get().status_code,          403)

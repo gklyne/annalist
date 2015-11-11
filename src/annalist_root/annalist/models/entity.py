@@ -17,7 +17,6 @@ import os
 import os.path
 import urlparse
 import itertools
-import shutil
 import json
 import errno
 import traceback
@@ -70,7 +69,7 @@ class Entity(EntityRoot):
     _entityref      = None          # Relative reference to entity from body file
     _last_id        = None          # Last ID allocated
 
-    def __init__(self, parent, entityid, altparent=None, idcheck=True, use_altpath=False):
+    def __init__(self, parent, entityid, altparent=None):
         """
         Initialize a new Entity object, possibly without values.  The created
         entity is not saved to disk at this stage - see ._save() method.
@@ -81,20 +80,10 @@ class Entity(EntityRoot):
                     the alternative path for the entity type: this is used to augment 
                     explicitly created entities in a collection with site-wide 
                     installed metadata entites (i.e. types, views, etc.)
-        idcheck     is set False to skip the valid-identifier check; used when initializing 
-                    (unidentified) site data element
-                    @@TODO: when collection-inheritance is introduced, this should go.
-        use_altpath is set True if this entity is situated at the alternative
-                    path relative to its parent.  This is used by test code to force
-                    an entity to be located on the alternative parent path.  In normal
-                    use, this value is left unspecified (i.e. False).
-                    @@TODO: when collection-inheritance is introduced, this should go.
         """
-        if idcheck and not util.valid_id(entityid):
+        if not util.valid_id(entityid):
             raise ValueError("Invalid entity identifier: %s"%(entityid))
         relpath = self.relpath(entityid)
-        if use_altpath:
-            relpath = self.altpath(entityid)
         # log.debug(
         #     "  _ Entity.__init__: id %s, parenturl %s, parentdir %s, relpath %s"%
         #     (entityid, parent._entityurl, parent._entitydir, relpath)
@@ -113,20 +102,9 @@ class Entity(EntityRoot):
             self._entityview%{'id': entityid, 'type_id': self._entitytypeid}
             )
         super(Entity, self).__init__(entity_url, entityviewurl, entity_dir, entity_base)
-        self._parent        = parent
-        self._altparent     = altparent     # Alternative to current entity to search
-        self._entityalturl  = None
-        self._entityaltdir  = None
-        if altparent:
-            altpath = self.altpath(entityid)
-            self._entityalturl = altparent._entityurl+altpath
-            self._entityaltdir = altparent._entitydir+altpath
-            self._entityuseurl = None       # URI not known until entity is created or accessed
-            log.debug(
-                "Entity.__init__: entity alt URI %s, entity alt dir %s"%
-                (self._entityalturl, self._entityaltdir)
-                )
-        self._entityid = entityid
+        self._entityid  = entityid
+        self._parent    = parent
+        self._altparent = altparent     # Alternative to current entity to search
         log.debug("Entity.__init__: entity_id %s, type_id %s"%(self._entityid, self.get_type_id()))
         return
 
@@ -278,20 +256,6 @@ class Entity(EntityRoot):
         return relpath
 
     @classmethod
-    def altpath(cls, entityid):
-        """
-        Returns alternative-parent-relative path string for an identified entity 
-        of the given class.
-
-        cls         is the class of the entity whose alternative relative path is returned.
-        entityid    is the local identifier (slug) for the entity.
-        """
-        # log.debug("Entity.altpath: entitytype %s, entityid %s"%(cls._entitytype, entityid))
-        altpath = (cls._entityaltpath or "%(id)s")%{'id': entityid, 'type_id': cls._entitytypeid}
-        # log.debug("Entity.altpath: %s"%(altpath))
-        return altpath
-
-    @classmethod
     def path(cls, parent, entityid):
         """
         Returns path string for accessing the body of the indicated entity.
@@ -309,23 +273,6 @@ class Entity(EntityRoot):
         return p
 
     # I/O helper functions (moved/copied from EntityRoot)
-
-    def _alt_dir_path(self):
-        """
-        Return alternate directory and path for current entity body file
-        """
-        if not self._entityfile:
-            raise ValueError("Entity._alt_dir_path without defined entity file path")
-        if self._entityaltdir:
-            # log.info("    _ Entity._alt_dir_path _entityaltdir %s"%(self._entityaltdir,))
-            # log.info("    _ Entity._alt_dir_path _entityfile   %s"%(self._entityfile,))
-            (basedir, filepath) = util.entity_dir_path(self._entityaltdir, [], self._entityfile)
-            return (basedir, filepath)
-        return (None, None)
-
-    def _alt_dir_path_uri(self):
-        (d, p) = self._alt_dir_path()
-        return (d, p, self._entityalturl)
 
     def _children(self, cls, altscope=None):
         """
@@ -410,7 +357,7 @@ class Entity(EntityRoot):
         return e
 
     @classmethod
-    def create(cls, parent, entityid, entitybody, use_altpath=False):
+    def create(cls, parent, entityid, entitybody):
         """
         Method creates a new entity or rewrites an existing entity.
 
@@ -419,8 +366,6 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the new entity - this is 
                     required to be unique among descendents of a common parent.
         entitybody  is a dictionary of values that are stored for the created entity.
-        use_altpath is set True if the entity is to be situated at the alternative
-                    path relative to its parent.
 
         Returns the created entity as an instance of the supplied class object.
         """
@@ -431,20 +376,18 @@ class Entity(EntityRoot):
         return e
 
     @classmethod
-    def remove(cls, parent, entityid, use_altpath=False):
+    def remove(cls, parent, entityid):
         """
         Method removes an entity, deleting its details, data and descendents from Annalist storage.
 
         cls         is the class of the entity to be removed
         parent      is the parent from which the entity is descended.
         entityid    is the local identifier (slug) for the entity.
-        use_altpath is set True if this entity is situated at the alternative
-                    path relative to its parent.
 
         Returns None on success, or a status value indicating a reason for value.
         """
         log.debug("Entity.remove: id %s"%(entityid))
-        e = cls.load(parent, entityid, use_altpath=use_altpath)
+        e = cls.load(parent, entityid)
         if e:
             e._remove(cls._entitytype)
         else:
@@ -452,7 +395,7 @@ class Entity(EntityRoot):
         return None
 
     @classmethod
-    def load(cls, parent, entityid, altscope=None, use_altpath=False):
+    def load(cls, parent, entityid, altscope=None):
         """
         Return an entity with given identifier belonging to some given parent,
         or None if there is not such identity.
@@ -462,8 +405,6 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the entity.
         altscope    if supplied, indicates a scope other than the current entity to
                     search for children.  See method `get_alt_ancestry` for more details.
-        use_altpath is set True if this entity is situated at the alternative
-                    path relative to its parent.
 
         Returns an instance of the indicated class with data loaded from the
         corresponding Annalist storage, or None if there is no such entity.
@@ -495,7 +436,7 @@ class Entity(EntityRoot):
         return entity
 
     @classmethod
-    def exists(cls, parent, entityid, altscope=None, use_altpath=False):
+    def exists(cls, parent, entityid, altscope=None):
         """
         Method tests for existence of identified entity descended from given parent.
 
@@ -504,8 +445,6 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the entity.
         altscope    if supplied, indicates a scope other than the current entity to
                     search for children.  See method `get_alt_ancestry` for more details.
-        use_altpath is set True if this entity is situated at the alternative
-                    path relative to its parent.
 
         Returns True if the entity exists, as determined by existence of the 
         entity description metadata file.
@@ -525,7 +464,7 @@ class Entity(EntityRoot):
         return v
 
     @classmethod
-    def fileobj(cls, parent, entityid, filename, filetypeuri, mimetype, mode, altscope=None, use_altpath=False):
+    def fileobj(cls, parent, entityid, filename, filetypeuri, mimetype, mode, altscope=None):
         """
         Method returns a file object value (like `open`) for accessing an imported
         resource associated with an entity (e.g. image, binary blob, etc.)
@@ -544,8 +483,6 @@ class Entity(EntityRoot):
                     an existing one.
         altscope    if supplied, indicates a scope other than the current entity to
                     search for children.  See method `get_alt_ancestry` for more details.
-        use_altpath is set True if this entity is situated at the alternative
-                    path relative to its parent.
 
         Returns a file object value, or None.
         """

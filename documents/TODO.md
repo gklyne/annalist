@@ -40,26 +40,33 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] make SiteData class a simple subclass of Collection
         - [x] strip out unused or duplicative code in model.site module
         - [x] use altparent entity to access alternative data
-    - [ ] Eliminate altpath values in entities; test
+        - [x] Isolate all file access or file-dependent logic to EntityRoot (to simplify alternate storage later)
+    - [.] Eliminate altpath values in entities; test
         - [x] eliminate _entityaltpath references in EntityRoot - use _entitypath; test
-        - [ ] eliminate _entityaltpath references in Entity; test
-        - [ ] eliminate altpath() from Entity; test
-        - [ ] eliminate use_altpath parameter; test
-        - [ ] eliminate _entityaltpath references in Site; if possible, get rid of temporary helpers; test
-        - [ ] eliminate all other _entityaltpath occurrences; test
-        - [ ] move remove file/path logic to EntityRoot
-        - [ ] Isolate all file access or file-dependent logic to EntityRoot (to simplify alternate storage later)
-            - check os.path usage
-        - [ ] eliminate os.path/shutil inclusion in Entity
-    - [ ] consider treating Enum types as regular types under /d/?
-    - [ ] re-implement SiteData as instance of collection; use this as collection parent; test
-    - [ ] updates to annalist-manager (esp createsite, updatesite): don't rely on sample data
+        - [x] eliminate _entityaltpath references in Entity; test
+        - [x] eliminate altpath() from Entity; test
+        - [x] eliminate _entityaltpath references in Site; if possible, get rid of temporary helpers; test
+        - [x] eliminate all other _entityaltpath occurrences; test
+        - [x] eliminate use_altpath parameter; test
+        - [x] eliminate idcheck parameter from Entity constructor - no longer needed or used.
+        - considered moving all remove file/path logic to EntityRoot and eliminating os.path inclusion in Entity, but still have directory path setup in Entity constructor.  The allocation of directory names is somewhat bound up with parent/child reklationships, so this limited file name handling logic remains in Entity.
+    - [x] re-implement SiteData as instance of collection; use this as collection parent; test
     - [x] re-work access to parent to call linked object rather than direct file access
-    - [ ] when creating a collection, allow to specify alternate parent(s); ensure no loops: must end up at sitedata; test
-    - [ ] provision for editing collection data (label, comment, parents, etc.); test
-    - [ ] protect sitedata collection from updates
-    - [ ] ensure that _annalist_site collection cannot be removed
-    - [ ] the bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
+    - [x] when creating a collection, allow to specify alternate parent(s); ensure no loops: must end up at sitedata; test
+    - [x] ensure that _annalist_site collection cannot be removed
+    - [ ] site data migration
+        - if _annalist_site directory exists at top level:
+            - create collection _analist_site
+            - read _site_meta and use it to pupolate collection metadata
+            - move subdirectories (enums, fields, ... views, vocabs) to _annalist_collection
+            - rename original directory to (say) _old_annalist_site
+- [ ] ensure that _annalist_site collection data cannot be updated
+    - [x] Add new permission map in model.entitytypeinfo.
+    - [ ] Needs testing
+- [ ] updates to annalist-manager (esp createsite, updatesite): don't rely on sample data
+- [ ] the bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
+- [ ] provision for editing collection data (label, comment, parents, etc.); test
+- [ ] consider treating Enum types as regular types under /d/?
 - [ ] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
 - [ ] Update JSON-LD spike code, and test with latest rdflib-jsonld
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.

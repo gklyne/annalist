@@ -172,6 +172,8 @@ class Site(EntityRoot):
         Returns a non-False status code if the collection is not removed.
         """
         log.debug("remove_collection: %s"%(coll_id))
+        if coll_id == layout.SITEDATA_ID:
+            raise ValueError("Attempt to remove site data collection (%s)"%coll_id)
         return Collection.remove(self, coll_id)
 
     # JSON-LD context data
@@ -188,7 +190,9 @@ class Site(EntityRoot):
         #@@ context = self.get_site_jsonld_context()
         context = self.site_data_collection().get_coll_jsonld_context()
         # Assemble and write out context description
-        with self._metaobj(layout.SITEDATA_CONTEXT_PATH, layout.COLL_CONTEXT_FILE, "wt") as context_io:
+        with self._metaobj(
+            layout.SITEDATA_CONTEXT_PATH, layout.COLL_CONTEXT_FILE, "wt"
+            ) as context_io:
             json.dump(
                 { "@context": context }, 
                 context_io, indent=2, separators=(',', ': ')
@@ -198,7 +202,9 @@ class Site(EntityRoot):
     # Site data
 
     @staticmethod
-    def initialize_site_data(site_base_uri, site_base_dir, site_data_src, label=None, description=None, report=False):
+    def initialize_site_data(
+        site_base_uri, site_base_dir, site_data_src, 
+        label=None, description=None, report=False):
         """
         Initializes site data for a new site.
 

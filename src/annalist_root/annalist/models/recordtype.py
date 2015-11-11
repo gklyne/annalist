@@ -36,7 +36,6 @@ class RecordType(EntityData):
     _entitytypeid   = "_type"
     _entityview     = layout.COLL_TYPE_VIEW
     _entitypath     = layout.COLL_TYPE_PATH
-    _entityaltpath  = layout.SITE_TYPE_PATH
     _entityfile     = layout.TYPE_META_FILE
     _entityref      = layout.META_TYPE_REF
 

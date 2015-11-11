@@ -360,8 +360,7 @@ def render_choice_options(name, opts, sel, placeholder=None, select_class=None, 
 
 def create_user_permissions(parent, 
         user_id,
-        user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"],
-        use_altpath=False
+        user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"]
         ):
     user_values = (
         { 'annal:type':             "annal:User"
@@ -370,7 +369,7 @@ def create_user_permissions(parent,
         , 'annal:user_uri':         "mailto:%s@%s"%(user_id, TestHost)
         , 'annal:user_permissions': user_permissions
         })
-    user = AnnalistUser.create(parent, user_id, user_values, use_altpath=use_altpath)
+    user = AnnalistUser.create(parent, user_id, user_values)
     return user
 
 def create_test_user(

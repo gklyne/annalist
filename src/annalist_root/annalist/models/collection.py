@@ -55,7 +55,6 @@ class Collection(Entity):
     _entitytypeid   = "_collection"
     _entityview     = layout.SITE_COLL_VIEW
     _entitypath     = layout.SITE_COLL_PATH
-    _entityaltpath  = layout.SITE_COLL_PATH
     _entityfile     = layout.COLL_META_FILE
     _entityref      = layout.META_COLL_REF
     _contextref     = layout.COLL_CONTEXT_FILE

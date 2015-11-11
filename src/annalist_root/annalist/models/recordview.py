@@ -29,7 +29,6 @@ class RecordView(EntityData):
     _entitytypeid   = "_view"
     _entityview     = layout.COLL_VIEW_VIEW
     _entitypath     = layout.COLL_VIEW_PATH
-    _entityaltpath  = layout.SITE_VIEW_PATH
     _entityfile     = layout.VIEW_META_FILE
     _entityref      = layout.META_VIEW_REF
 

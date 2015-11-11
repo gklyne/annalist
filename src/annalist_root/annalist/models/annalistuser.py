@@ -40,12 +40,11 @@ class AnnalistUser(EntityData):
     _entitytypeid   = "_user"
     _entityview     = layout.COLL_USER_VIEW
     _entitypath     = layout.COLL_USER_PATH
-    _entityaltpath  = layout.SITE_USER_PATH
     _entityfile     = layout.USER_META_FILE
     _entityref      = layout.META_USER_REF
     _contextref     = layout.USER_CONTEXT_FILE
 
-    def __init__(self, parent, type_id, use_altpath=False):
+    def __init__(self, parent, type_id):
         """
         Initialize a new AnnalistUser object, without metadata (yet).
 
@@ -53,13 +52,10 @@ class AnnalistUser(EntityData):
         type_id     the local identifier for the record type
         altparent   is a site object to search for this new entity,
                     allowing site-wide AnnalistUser values to be found.
-        use_altpath is set True if this entity is situated at the alternative
-                    path relative to its parent.  This is used to access
-                    user permissions when there is no collection context.
         """
-        super(AnnalistUser, self).__init__(parent, type_id, use_altpath=use_altpath)
-        log.debug("AnnalistUser %s: dir %s, alt %s"%(type_id, self._entitydir, self._entityaltdir))
-        log.debug("AnnalistUser %s: uri %s, alt %s"%(type_id, self._entityurl, self._entityalturl))
+        super(AnnalistUser, self).__init__(parent, type_id)
+        log.debug("AnnalistUser %s: dir %s"%(type_id, self._entitydir))
+        log.debug("AnnalistUser %s: url %s, viewurl %s"%(type_id, self._entityurl, self._entityviewurl))
         return
 
 # End.
