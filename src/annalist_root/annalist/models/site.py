@@ -200,24 +200,18 @@ class Site(EntityRoot):
         return
 
     # Site data
+    #
+    # These methods are used by test_createsitedata and annalist-manager to initialize
+    # or update Annalist site data.  Tests are run using data copied from sampledata/init
+    # to sampledata/data, allowing for additional test fixture files to be included.
 
     @staticmethod
-    def initialize_site_data(
-        site_base_uri, site_base_dir, site_data_src, 
-        label=None, description=None, report=False):
+    def create_empty_site_data(site_base_uri, site_base_dir, 
+        label=None, description=None):
         """
-        Initializes site data for a new site.
-
-        Creates a README.md file in the site base directory, and creates a
-        collection _annalist_site containing built-in types, views, etc.
+        Create empty directory structure for a new site, and returns the
+        Site object.
         """
-        def do_report(msg):
-            if report:
-                print(msg)
-            else:
-                log.info(msg)
-            return
-        # Create collection for site-wide data
         datetime_now = datetime.datetime.today().replace(microsecond=0)
         if label is None:
             label = "Annalist linked data notebook site"
@@ -235,7 +229,14 @@ class Site(EntityRoot):
             , ANNAL.CURIE.software_version: annalist.__version_data__
             })
         sitedata  = SiteData.create_sitedata(site, sitedata_values)
-        # Create site README
+        return site
+
+    @staticmethod
+    def create_site_readme(sitedata):
+        """
+        Create new site README.md.
+        """
+        datetime_now = datetime.datetime.today().replace(microsecond=0)
         README = ((
             """%(site_base_dir)s\n"""+
             """\n"""+
@@ -314,27 +315,64 @@ class Site(EntityRoot):
             """\n"""+
             """         :                              (repeat for collections in site)\n"""+
             """\n"""+
-            """Created by annalist.models.site.initialize_site_data.py\n"""+
-            """by Annalist %(version)s at %(datetime)s\n"""+
+            """Created by annalist.models.site.py\n"""+
+            """for Annalist %(version)s at %(datetime)s\n"""+
             """\n"""+
             """\n""")%
-                { 'site_base_dir': site_base_dir
-                , 'site_base_uri': site_base_uri
+                { 'site_base_dir': sitedata._entitydir
+                , 'site_base_uri': sitedata._entityurl
                 , 'datetime':      datetime_now.isoformat(' ')
                 , 'version':       annalist.__version__
                 }
             )
-        with site._fileobj("README", ANNAL.CURIE.Richtext, "text/markdown", "wt") as readme:
+        with sitedata._fileobj("README", ANNAL.CURIE.Richtext, "text/markdown", "wt") as readme:
             readme.write(README)
-        # Copy site-wide definitions to site-wide data collection
+        return
+
+    @staticmethod
+    def replace_site_data_dir(sitedata, sdir, site_data_src):
+        """
+        Replace indicated sitedata directory data from source: 
+        old data for the directory is removed.
+        """
         site_data_tgt, site_data_file = sitedata._dir_path()
-        do_report("Copy Annalist site data from %s to %s"%(site_data_src, site_data_tgt))
+        s = os.path.join(site_data_src, sdir)
+        d = os.path.join(site_data_tgt, sdir)
+        replacetree(s, d)
+        return
+
+    @staticmethod
+    def update_site_data_dir(sitedata, sdir, site_data_src):
+        """
+        Update indicated sitedata directory data from source: 
+        old data for the directory thgat ios not updated is left as-is.
+        """
+        site_data_tgt, site_data_file = sitedata._dir_path()
+        s = os.path.join(site_data_src, sdir)
+        d = os.path.join(site_data_tgt, sdir)
+        updatetree(s, d)
+        return
+
+    @staticmethod
+    def initialize_site_data(
+        site_base_uri, site_base_dir, site_data_src, 
+        label=None, description=None):
+        """
+        Initializes site data for a new site for testing.
+
+        Creates a README.md file in the site base directory, and creates a
+        collection _annalist_site containing built-in types, views, etc.
+        """
+        site = Site.create_empty_site_data(
+            site_base_uri, site_base_dir, label=label, description=description
+            )
+        sitedata = site.site_data_collection()
+        Site.create_site_readme(site)
+        site_data_tgt, site_data_file = sitedata._dir_path()
+        log.info("Copy Annalist site data from %s to %s"%(site_data_src, site_data_tgt))
         for sdir in ("types", "lists", "views", "groups", "fields", "vocabs", "users", "enums"):
-            s = os.path.join(site_data_src, sdir)
-            d = os.path.join(site_data_tgt, sdir)
-            do_report("- %s -> %s"%(sdir, d))
-            replacetree(s, d)
-        # Generate JSON-LD context for collection
+            log.info("- %s -> %s"%(sdir, site_data_tgt))
+            Site.replace_site_data_dir(sitedata, sdir, site_data_src)
         sitedata.generate_coll_jsonld_context()
         return site
 

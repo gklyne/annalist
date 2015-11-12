@@ -54,26 +54,29 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] re-work access to parent to call linked object rather than direct file access
     - [x] when creating a collection, allow to specify alternate parent(s); ensure no loops: must end up at sitedata; test
     - [x] ensure that _annalist_site collection cannot be removed
-- [x] site data migration
+- [x] Site data migration
     - [x] `annalist_manager updatesite` updated create data in new location.
     - [x] `annalist_manager updatesite` copies previous users and vocabs to new location.
-- [x] ensure that _annalist_site collection data cannot be updated
+- [x] Ensure that _annalist_site collection data cannot be updated
     - [x] Add new site permission map in model.entitytypeinfo that forbids modifications except users
-- [ ] updates to annalist-manager (esp createsite, updatesite): don't rely on sample data
-- [ ] the bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
-- [ ] provision for editing collection data (label, comment, parents, etc.); test
-- [ ] consider treating Enum types as regular types under /d/?
-- [ ] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
+- [ ] Updates to annalist-manager (esp createsite, updatesite): don't rely on sample data
+    - [x] refactor site initializaton logc in models.sitre.py
+    - [ ] re-work am_createsite to use just models.site functions.
+- [ ] Provision for editing collection data (label, comment, parents, etc.); test
+- [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
+    - [ ] use new layout for site data in source tree to separate Bibliographic data and maybe others
+    - [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
+    - [ ] copy bibliographic data collection into test data fixture
+- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data.
+
 - [ ] Update JSON-LD spike code, and test with latest rdflib-jsonld
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
 - [ ] Create schema definitions in Annalist for ANNAL namespace
-- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data.
 - [ ] When supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration utility?
 
 (release?)
 
 - [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
-- [ ] Implement "get the data" link as a field renderer?
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?
@@ -161,6 +164,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 Technical debt:
 
+- [ ] Implement "get the data" link as a field renderer?
+- [ ] consider treating Enum types as regular types under /d/?
+- [ ] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
 - [ ] review view URL returned for entities found with alternative parentage:
     - currently force URL returned to be that of original parent, not alt. 
     - This is done to minimize disruption to tests while changing logic.

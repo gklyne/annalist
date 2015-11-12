@@ -54,28 +54,11 @@ def entitydata_create_values(coll, etype, entity_id, update="Entity"):
         })
 
 def site_create_data(site_base_uri, data_source):
-    # Note: copysitedata copies also copies from source tree
-    #       def copySitedata(src, sitedatasrc, tgt):
-    # copySitedata(
-    #     settings.SITE_SRC_ROOT + data_source + test_layout.SITE_DIR, 
-    #     settings.SITE_SRC_ROOT + "/annalist/sitedata",
-    #     TestBaseDir)
-    # site = Site(site_base_uri, TestBaseDir)
-    # sitedata_values = collection_create_values(layout.SITEDATA_ID)
-    # sitedata_values.update(
-    #     { 'rdfs:label':             "Annalist data notebook test site"
-    #     , 'rdfs:comment':           "Annalist test site metadata and site-wide values."
-    #     , 'annal:software_version': annalist.__version_data__
-    #     , "annal:comment":          "Initialized by annalist.tests.test_createsitedata.py"
-    #     })
-    # sitedata  = Collection.create(site, layout.SITEDATA_ID, sitedata_values)
-    # sitedata.generate_coll_jsonld_context()
     site = Site.initialize_site_data(
         site_base_uri, TestBaseDir, 
         settings.SITE_SRC_ROOT + "/annalist/sitedata",
         label="Annalist data notebook test site", 
-        description="Annalist test site metadata and site-wide values.", 
-        report=False
+        description="Annalist test site metadata and site-wide values."
         )
     return site
 
