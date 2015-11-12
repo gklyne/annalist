@@ -59,20 +59,20 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] `annalist_manager updatesite` copies previous users and vocabs to new location.
 - [x] Ensure that _annalist_site collection data cannot be updated
     - [x] Add new site permission map in model.entitytypeinfo that forbids modifications except users
-- [ ] Updates to annalist-manager (esp createsite, updatesite): don't rely on sample data
+- [x] Updates to annalist-manager (createsite, updatesite): don't rely on sample data
     - [x] refactor site initializaton logc in models.sitre.py
-    - [ ] re-work am_createsite to use just models.site functions.
+    - [x] re-work am_createsite to use just models.site functions.
 - [ ] Provision for editing collection data (label, comment, parents, etc.); test
 - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
     - [ ] use new layout for site data in source tree to separate Bibliographic data and maybe others
     - [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
     - [ ] copy bibliographic data collection into test data fixture
-- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data.
+- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
 
 - [ ] Update JSON-LD spike code, and test with latest rdflib-jsonld
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
 - [ ] Create schema definitions in Annalist for ANNAL namespace
-- [ ] When supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration utility?
+- [ ] When supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration?
 
 (release?)
 

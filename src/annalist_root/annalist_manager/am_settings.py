@@ -9,9 +9,13 @@ __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
+import importlib
 import logging
-
 log = logging.getLogger(__name__)
+
+import django
+
+from utils.SuppressLoggingContext   import SuppressLogging
 
 from annalist.layout                import Layout
 from annalist.models.site           import Site
@@ -64,6 +68,20 @@ def am_get_settings(annroot, userhome, options):
     except Annalist_Manager_Error:
         return None
     return am_settings
+
+def am_get_site_settings(annroot, userhome, options):
+    """
+    Access site settings, set up corresponding django configuration and return the settings module
+    """
+    settings = am_get_settings(annroot, userhome, options)
+    if not settings:
+        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+        return None
+    with SuppressLogging(logging.INFO):
+        os.environ['DJANGO_SETTINGS_MODULE'] = settings.modulename
+        django.setup()
+        site_settings = importlib.import_module(settings.modulename)
+    return site_settings
 
 def am_get_site(sitesettings):
     """

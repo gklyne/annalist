@@ -26,7 +26,7 @@ from django.core.urlresolvers       import resolve, reverse
 import annalist
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
-from annalist.util                  import valid_id, extract_entity_id, replacetree
+from annalist.util                  import valid_id, extract_entity_id, replacetree, updatetree
 from annalist                       import layout
 from annalist                       import message
 
@@ -228,11 +228,11 @@ class Site(EntityRoot):
             , ANNAL.CURIE.comment:          annal_comment                                    
             , ANNAL.CURIE.software_version: annalist.__version_data__
             })
-        sitedata  = SiteData.create_sitedata(site, sitedata_values)
+        sitedata = SiteData.create_sitedata(site, sitedata_values)
         return site
 
     @staticmethod
-    def create_site_readme(sitedata):
+    def create_site_readme(site):
         """
         Create new site README.md.
         """
@@ -319,13 +319,13 @@ class Site(EntityRoot):
             """for Annalist %(version)s at %(datetime)s\n"""+
             """\n"""+
             """\n""")%
-                { 'site_base_dir': sitedata._entitydir
-                , 'site_base_uri': sitedata._entityurl
+                { 'site_base_dir': site._entitydir
+                , 'site_base_uri': site._entityurl
                 , 'datetime':      datetime_now.isoformat(' ')
                 , 'version':       annalist.__version__
                 }
             )
-        with sitedata._fileobj("README", ANNAL.CURIE.Richtext, "text/markdown", "wt") as readme:
+        with site._fileobj("README", ANNAL.CURIE.Richtext, "text/markdown", "wt") as readme:
             readme.write(README)
         return
 
