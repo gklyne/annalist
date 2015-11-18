@@ -23,7 +23,7 @@ from annalist.models.collection import Collection
 class SiteData(Collection):
 
     _entitytype     = ANNAL.CURIE.SiteData
-    _entitytypeid   = "_sitedata"
+    # _entitytypeid   = "_sitedata"
 
     def __init__(self, parentsite, entityid=layout.SITEDATA_ID):
         """
@@ -63,6 +63,8 @@ class SiteData(Collection):
         such collection data.
         """
         log.debug("SiteData.create: entityid %s"%(layout.SITEDATA_ID))
-        return cls.load(parent, layout.SITEDATA_ID)
+        d = cls.load(parent, layout.SITEDATA_ID)
+        assert d, "Site data for %r not found"%(parent,)
+        return d
 
 # End.

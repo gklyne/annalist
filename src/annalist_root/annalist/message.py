@@ -45,9 +45,12 @@ UPLOAD_DONE_DETAIL          = ("Uploaded <%(uploaded_file)s>"+
                                " as %(upload_name)s"+
                                " for entity %(type_id)s/%(id)s")
 
+NO_COLLECTION_VIEW          = "No collection selected for viewing"
+MANY_COLLECTIONS_VIEW       = "Too many collections selected for viewing:  %(ids)s"
+NO_COLLECTION_EDIT          = "No collection selected for editing"
+MANY_COLLECTIONS_EDIT       = "Too many collections selected for viewing:  %(ids)s"
+NO_COLLECTIONS_REMOVE       = "No collections selected for removal"
 REMOVE_COLLECTIONS          = "Remove collection(s): %(ids)s"
-NO_COLLECTIONS_SELECTED     = "No collections selected for removal"
-COLLECTIONS_REMOVED         = "The following collections were removed: %(ids)s"
 
 TOO_MANY_ENTITIES_SEL       = "Too many items selected"
 NO_ENTITY_FOR_COPY          = "No data record selected to copy"
@@ -88,6 +91,8 @@ COLLECTION_ID_INVALID       = "The collection identifier is missing or not a val
 COLLECTION_LABEL            = "Collection %(id)s"
 COLLECTION_EXISTS           = "Collection %(id)s already exists"
 COLLECTION_NOT_EXISTS       = "Collection %(id)s does not exist"
+COLLECTION_REMOVED          = "The following collections were removed: %(ids)s"
+
 COLLECTION_NEWER_VERSION    = ("Cannot access collection %(id)s, "+
                                "which was created by software version %(ver)s. "+
                                "(Update Annalist server software to use this collection)")

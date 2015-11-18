@@ -63,7 +63,7 @@ from entity_testentitydata  import (
 
 #   -----------------------------------------------------------------------------
 #
-#   AnnalistUser tests
+#   AnnalistUser model tests
 #
 #   -----------------------------------------------------------------------------
 
@@ -165,11 +165,7 @@ class AnnalistUserTest(AnnalistTestCase):
 
 class AnnalistUserEditViewTest(AnnalistTestCase):
     """
-    Tests for record user edit view
-
-    This view is generated entirely by generic view code, so opnly the form rendering test is included
-    here to cross-check the form definmition.  Other logic is already tested by the generic form
-    handling tests.
+    Tests Annalist user edit view
     """
 
     def setUp(self):
@@ -483,7 +479,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_url)
-        # Check that new record type exists
+        # Check that new user exists
         self.assertTrue(AnnalistUser.exists(self.testcoll, "copyuser"))
         self._check_annalist_user_values("copyuser", ["VIEW", "CREATE", "UPDATE", "DELETE"])
         return
@@ -496,7 +492,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
 
 class ConfirmAnnalistUserDeleteTests(AnnalistTestCase):
     """
-    Tests for record type deletion on response to confirmation form
+    Tests for Annalist user deletion on response to confirmation form
     """
 
     def setUp(self):

@@ -272,7 +272,7 @@ class Entity(EntityRoot):
         log.debug("Entity.path: %s"%(p))
         return p
 
-    # I/O helper functions (moved/copied from EntityRoot)
+    # I/O helper functions (copied from or overriding EntityRoot)
 
     def _children(self, cls, altscope=None):
         """

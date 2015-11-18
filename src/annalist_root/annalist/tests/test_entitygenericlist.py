@@ -251,7 +251,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 215)    # Will change with site data
+        self.assertEqual(len(entities), 209)    # Will change with site data
         return
 
     def test_get_types_list(self):
@@ -309,8 +309,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Entities
         entities   = context_list_entities(r.context)
         listed_entities = { e['entity_id']: e for e in entities }
-        self.assertIn('_initial_values', listed_entities)
-        type_entities = get_site_types() | {"_initial_values", "testtype", "testtype2"}
+        #@@ self.assertIn('_initial_values', listed_entities)
+        type_entities = get_site_types() | {"testtype", "testtype2"}
         self.assertEqual(set(listed_entities.keys()), type_entities)
         return
 
@@ -404,7 +404,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Entities
         entities = context_list_entities(r.context)
         entity_ids = [ context_list_item_field_value(r.context, e, 0) for e in entities ]
-        self.assertIn('_initial_values', entity_ids)
+        #@@ self.assertIn('_initial_values', entity_ids)
         field_entities = (
             { ('Entity_id',         "EntityId",      "annal:Slug",          "Id")
             , ('Bib_address',       "Text",          "annal:Text",          "Address")

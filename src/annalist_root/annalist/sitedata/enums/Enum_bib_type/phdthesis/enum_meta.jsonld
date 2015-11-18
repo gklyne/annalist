@@ -1,5 +1,5 @@
 { "@id":                "./"
-, "@type":              ["annal:Enum_bib_type", "annal:Enum", "annal:Type"]
+, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
 , "@context":           ["../../coll_context.jsonld"]
 , "annal:id":           "phdthesis"
 , "annal:type_id":      "Enum_bib_type"

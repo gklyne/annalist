@@ -5,7 +5,7 @@
   "@context": [
     "coll_context.jsonld"
   ],
-  "annal:type_id": "_collection",
+  "annal:type_id": "_coll",
   "annal:id": "coll3",
   "@id": "../",
   "@type": [

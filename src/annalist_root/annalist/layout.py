@@ -79,28 +79,33 @@ SITEDATA_ID             = "_annalist_site"
 SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
 SITEDATA_OLD_DIR        = "_annalist_site"
 SITE_META_PATH          = ""
-SITE_META_FILE          = "site_meta.jsonld"
-META_SITE_REF           = "./"
+SITE_META_FILE          = "@@unused@@site_meta.jsonld"
+META_SITE_REF           = "@@unused@@./"
 SITE_COLL_VIEW          = "c/%(id)s/"
 SITE_COLL_PATH          = "c/%(id)s"
 SITE_COLL_CONTEXT_PATH  = "c/%(id)s/d/"    # Used for testing
 
 COLL_META_DIR           = "_annalist_collection"
-COLL_META_FILE          = COLL_META_DIR + "/coll_meta.jsonld"
-COLL_PROV_FILE          = COLL_META_DIR + "/coll_prov.jsonld"
+COLL_META_FILE          = "coll_meta.jsonld"
+COLL_PROV_FILE          = "coll_prov.jsonld"
+COLL_META_REF           = COLL_META_DIR + "/" + COLL_META_FILE
 META_COLL_REF           = "../"
+COLL_PROV_REF           = COLL_META_DIR + "/" + COLL_PROV_FILE
 COLL_CONTEXT_PATH       = "d/"
-COLL_META_CONTEXT_PATH  = META_COLL_REF+COLL_CONTEXT_PATH
+COLL_META_CONTEXT_PATH  = META_COLL_REF+COLL_CONTEXT_PATH           # used in models
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
 
-SITEDATA_META_FILE      = COLL_META_FILE
-META_SITEDATA_REF       = META_COLL_REF
-SITEDATA_CONTEXT_PATH   = "./"
+SITEDATA_META_DIR       = SITEDATA_DIR + "/" + COLL_META_DIR        # used in tests
+SITEDATA_META_FILE      = COLL_META_FILE                            # used in views
+SITEDATA_PROV_FILE      = COLL_PROV_FILE                            # used in views
+#@@ SITEDATA_META_REF       = SITEDATA_META_DIR + "/" + SITEDATA_META_FILE
+#@@ META_SITEDATA_REF       = META_COLL_REF
+SITEDATA_CONTEXT_PATH   = "./"                                      # used in models
 SITEDATA_ENUM_PATH      = "enums/"
-SITEDATA_META_DIR       = SITEDATA_DIR + "/" + COLL_META_DIR
-SITEDATA_META_FILE      = SITEDATA_META_DIR + "/coll_meta.jsonld"
-SITEDATA_PROV_FILE      = SITEDATA_META_DIR + "/coll_prov.jsonld"
-SITEDATA_META_SITE_REF  = "../../../"
+# SITEDATA_PROV_REF       = SITEDATA_META_DIR + "/coll_prov.jsonld"
+# SITEDATA_META_SITE_REF  = "../../../"
+
+COLL_COLLDATA_VIEW      = "d/_coll/%(id)s/"
 
 COLL_TYPE_VIEW          = "d/_type/%(id)s/"
 COLL_TYPE_PATH          = COLL_META_DIR + "/types/%(id)s"

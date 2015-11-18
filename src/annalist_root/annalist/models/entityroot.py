@@ -87,7 +87,10 @@ class EntityRoot(object):
         return
 
     def __repr__(self):
-        return "Entity: entityid %s, values %r"%(self._entityid, self._values)
+        return (
+            "EntityRoot: entitytypeid %s, entityid %s, entitydir %s, values %r"%
+            (self._entitytypeid, self._entityid, self._entitydir, self._values)
+            )
 
     # General entity access methods
 
@@ -472,6 +475,18 @@ class EntityRoot(object):
                 yield fil
         return
 
+    def _children(self, cls, altscope=None):
+        """
+        Iterates over candidate child identifiers that are possible instances of an 
+        indicated class.  The supplied class is used to determine a subdirectory to 
+        be scanned.
+
+        cls         is a subclass of Entity indicating the type of children to
+                    iterate over.
+        altscope    Ignored, accepoted for compatibility with Entity._children()
+        """
+        return self._base_children(cls)
+
     def _entity_files(self):
         """
         Iterates over files/resources (not subdirectories) that are part of the current entity.
@@ -482,6 +497,19 @@ class EntityRoot(object):
         for f in os.listdir(self._entitydir):
             p = os.path.join(self._entitydir, f)
             if os.path.isfile(p):
+                yield (p, f)
+        return
+
+    def _entity_files_dirs(self):
+        """
+        Iterates over files/resources that are part of the current entity.
+
+        Returns pairs (p,f), where 'p' is a full path name, and 'f' is a filename within the 
+        current entity directory. 
+        """
+        for f in os.listdir(self._entitydir):
+            p = os.path.join(self._entitydir, f)
+            if os.path.exists(p):
                 yield (p, f)
         return
 
@@ -504,6 +532,32 @@ class EntityRoot(object):
         except IOError as e:
             log.error('shutil.copy IOError: %s' % e.strerror)
             return None
+        return new_p
+
+    def _rename_files(self, old_entity):
+        """
+        Rename old entity files to path of current entity (which must not exist),
+        and return path to resulting entity, otherwise None.
+        """
+        new_p = None
+        if os.path.exists(self._entitydir):
+            log.error("EntityRoot._rename_files: destination %s already exists"%(self._entitydir,))
+        elif not self._entitydir.startswith(self._entitybasedir):
+            log.error(
+                "EntityRoot._rename_files: new expected dirbase:  %r, got %r"%
+                (self._entitybasedir, self._entitydir)
+                )
+        elif not old_entity._entitydir.startswith(self._entitybasedir):
+            log.error(
+                "EntityRoot._rename_files: old expected dirbase:  %r, got %r"%
+                (self._entitybasedir, old_entity._entitydir)
+                )
+        else:
+            try:
+                os.rename(old_entity._entitydir, self._entitydir)
+                new_p = self._entitydir
+            except IOError as e:
+                log.error("EntityRoot._rename_files: os.rename IOError: %s" % e.strerror)
         return new_p
 
     def _fileobj(self, localname, filetypeuri, mimetype, mode):

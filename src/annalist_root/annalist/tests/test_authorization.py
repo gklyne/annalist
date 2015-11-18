@@ -57,6 +57,9 @@ from entity_testuserdata    import (
     annalistuser_delete_form_data,
     annalistuser_delete_confirm_form_data
     )
+from entity_testcolldata    import (
+    collectiondata_view_form_data
+    )
 from entity_testtypedata    import (
     recordtype_create_values, 
     recordtype_entity_view_form_data,
@@ -197,19 +200,59 @@ class AuthorizationTest(AnnalistTestCase):
         r = self.client.get(u)
         return r
 
-    # Create collection: requires site-level CREATE permission
+    # ----- Collection access -----
 
     def create_collection(self):
+        # Create collection: requires site-level CREATE permission
         u = reverse("AnnalistSiteView")
         f = collection_new_form_data("testnew")
         r = self.client.post(u, f)
         return r
 
-    # Remove collection: requires site-level DELETE permission
-
     def remove_collection(self):
+        # Remove collection: requires site-level DELETE permission
         u = reverse("AnnalistSiteView")
         f = collection_remove_form_data(["coll1", "coll3"])
+        r = self.client.post(u, f)
+        return r
+
+    def view_coll_get(self):
+        u = entitydata_edit_url(action="view", 
+            coll_id="_annalist_site", type_id="_coll", entity_id="testcoll", 
+            view_id="Collection_view"
+            )
+        r = self.client.get(u)
+        return r
+
+    def view_coll_post_edit(self):
+        u = entitydata_edit_url(action="view", 
+            coll_id="_annalist_site", type_id="_coll", entity_id="testcoll", 
+            view_id="Collection_view"
+            )
+        f = collectiondata_view_form_data(action="view",
+            coll_id="testcoll",
+            edit="edit"
+            )
+        r = self.client.post(u, f)
+        return r
+
+    def edit_coll_get(self):
+        u = entitydata_edit_url(action="edit", 
+            coll_id="_annalist_site", type_id="_coll", entity_id="testcoll", 
+            view_id="Collection_view"
+            )
+        r = self.client.get(u)
+        return r
+
+    def edit_coll_post_edit(self):
+        u = entitydata_edit_url(action="edit", 
+            coll_id="_annalist_site", type_id="_coll", entity_id="testcoll", 
+            view_id="Collection_view"
+            )
+        f = collectiondata_view_form_data(action="edit",
+            coll_id="testcoll",
+            edit="edit"
+            )
         r = self.client.post(u, f)
         return r
 
@@ -222,7 +265,7 @@ class AuthorizationTest(AnnalistTestCase):
             r = self.client.post(u, f)
         return r
 
-    # User access - requires ADMIN permission
+    # ----- User access - requires ADMIN permission -----
 
     def create_user(self, user_id):
         # Create placeholder for testing
@@ -606,6 +649,10 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    302)
+        self.assertEqual(self.edit_coll_get().status_code,          200)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    302)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             200)
@@ -645,6 +692,10 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    302)
+        self.assertEqual(self.edit_coll_get().status_code,          200)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    302)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
@@ -684,6 +735,10 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    403)
+        self.assertEqual(self.edit_coll_get().status_code,          403)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    403)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
@@ -723,6 +778,10 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    403)
+        self.assertEqual(self.edit_coll_get().status_code,          403)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    403)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
@@ -762,6 +821,10 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    403)
+        self.assertEqual(self.edit_coll_get().status_code,          403)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    403)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
@@ -801,6 +864,10 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    403)
+        self.assertEqual(self.edit_coll_get().status_code,          403)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    403)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
@@ -840,6 +907,10 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    403)
+        self.assertEqual(self.edit_coll_get().status_code,          403)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    403)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
@@ -878,7 +949,11 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.view_site_home_page().status_code,    200)
         self.assertEqual(self.create_collection().status_code,      401)
         self.assertEqual(self.remove_collection().status_code,      401)
-        self.assertEqual(self.remove_site_data().status_code,       403)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    401)
+        self.assertEqual(self.edit_coll_get().status_code,          401)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    401)
+        self.assertEqual(self.remove_site_data().status_code,       401)
         #
         self.assertEqual(self.list_users().status_code,             401)
         self.assertEqual(self.view_user_get().status_code,          401)
@@ -918,6 +993,10 @@ class AuthorizationTest(AnnalistTestCase):
         # try each function, test result
         self.assertEqual(self.create_collection().status_code,      302)
         self.assertEqual(self.remove_collection().status_code,      200)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    302)
+        self.assertEqual(self.edit_coll_get().status_code,          200)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    302)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             200)
@@ -956,6 +1035,10 @@ class AuthorizationTest(AnnalistTestCase):
         # try each function, test result
         self.assertEqual(self.create_collection().status_code,      302)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    403)
+        self.assertEqual(self.edit_coll_get().status_code,          403)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    403)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
@@ -994,6 +1077,10 @@ class AuthorizationTest(AnnalistTestCase):
         # try each function, test result
         self.assertEqual(self.create_collection().status_code,      302)
         self.assertEqual(self.remove_collection().status_code,      200)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    403)
+        self.assertEqual(self.edit_coll_get().status_code,          403)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    403)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)
@@ -1031,6 +1118,10 @@ class AuthorizationTest(AnnalistTestCase):
         # try each function, test result
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    403)
+        self.assertEqual(self.edit_coll_get().status_code,          403)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    403)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)

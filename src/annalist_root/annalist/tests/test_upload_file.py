@@ -263,7 +263,7 @@ def test_upload_file_field_value():
         { "resource_name":              "upl_field.md"
         , "resource_type":              "text/markdown"
         , "upload_name":                "upl_field"
-        , "uploaded_size":              2974
+        , "uploaded_size":              2957
         , "uploaded_file":              "README.md"
         })
 
@@ -521,7 +521,7 @@ class UploadResourceTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i].target_value['resource_name'], "upl_field.md")
         self.assertEqual(r.context['fields'][i].target_value['resource_type'], "text/markdown")
         self.assertEqual(r.context['fields'][i].target_value['uploaded_file'], "README.md")
-        self.assertEqual(r.context['fields'][i].target_value['uploaded_size'], 2974)
+        self.assertEqual(r.context['fields'][i].target_value['uploaded_size'], 2957)
         self.assertEqual(r.context['fields'][i].target_value_link,  basepath+"test1/upl_field.md")
         return
 

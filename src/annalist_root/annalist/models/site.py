@@ -70,6 +70,27 @@ class Site(EntityRoot):
         super(Site, self).__init__(host+siteuripath, siteuripath, sitedir, sitebasedir)
         return
 
+    def _exists(self):
+        """
+        The site entity has no explicit data, so always respond with 'True' to an _exists() query
+        """
+        return True
+
+    def _children(self, cls, altscope=None):
+        """
+        Iterates over candidate child identifiers that are possible instances of an 
+        indicated class.  The supplied class is used to determine a subdirectory to 
+        be scanned.  As a spoecial case, the children are iterated only in a special 
+        `altscope` called "site".
+
+        cls         is a subclass of Entity indicating the type of children to
+                    iterate over.
+        altscope    Ignored, accepoted for compatibility with Entity._children()
+        """
+        if altscope == "site":
+            return self._base_children(cls)
+        return iter(())     # Empty iterator
+
     def site_data_collection(self):
         """
         Return collection entity that contains the site data.

@@ -379,9 +379,13 @@ class AnnalistGenericView(ContentNegotiationView):
                 typeinfo.entityaltparent.get_id() if typeinfo.entityaltparent 
                 else "(none)"
                 )
-            log.debug(
+            log.info(
                 "Entity not found: parent %s, altparent %s, entity_id %s"%
                 (parent_id, altparent_id, entity_id)
+                )
+            log.info(
+                "get_entity id %s, parent %s, action %s, altparent %s"%
+                (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
                 )
         return entity
 

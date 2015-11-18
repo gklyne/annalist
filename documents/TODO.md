@@ -20,6 +20,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - cf. TODOs in model.site and model.collection
 - [x] BUG: `render_utils.get_mode_renderer`, handling of repeat fields? (cf. comment from Cerys.)
     - Added logic so that repeat fields also support current-mode rendering (but rendering as a normal view)
+- [x] BUG: enumerated values listed as types (when using "View all")
+- [x] Suppress display of _initial_values when listing entities (is this the right choice?)
 - [x] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection. This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
     - [x] move annalist sitedata to collection location; relocate and rename site_meta.jsonld, update layout; test
     - [x] re-work alternative-directory logic to be controlled by the parent rather than the child.
@@ -60,9 +62,24 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Ensure that _annalist_site collection data cannot be updated
     - [x] Add new site permission map in model.entitytypeinfo that forbids modifications except users
 - [x] Updates to annalist-manager (createsite, updatesite): don't rely on sample data
-    - [x] refactor site initializaton logc in models.sitre.py
+    - [x] refactor site initializaton logc in models.site.py
     - [x] re-work am_createsite to use just models.site functions.
-- [ ] Provision for editing collection data (label, comment, parents, etc.); test
+- [x] Provision for editing collection data (label, comment, parents, etc.); test
+    - [x] on site display, add "Edit selected" and/or "View selected" buttons alongside "Remove selected"
+    - [x] in site response handler, if edit/view selected, invoke entity viewer for collection data by means of redirect to 'c/_annalist_site/_coll/(coll_id)'
+    - [x] in EntityTypeInfo, provide that site is parent for any _coll values, etc.
+    - [x] define type for collection data
+    - [x] define view for collection data
+    - [x] edit/view collection continue back to site
+    - [x] collection id rename needs to rename directory too
+    - [x] view collection data JSON not working
+    - [x] collections showing up in local entity lists
+    - [x] test cases for collection enumeration, editing
+- [ ] Re-think protections for viewing/editing collection metadata: really want the authorization to be based on permissions in the collection being accessed.  Require CONFIG_PERMISSIONS in collection?
+    - affects `views.entityedit` and `views.displayinfo` updated
+    - still affects `views.site` 
+    - see also `models.entitytypeinfo`
+- [ ] Provision for specifying *and using* inherited collections
 - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
     - [ ] use new layout for site data in source tree to separate Bibliographic data and maybe others
     - [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
@@ -76,7 +93,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (release?)
 
-- [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?
@@ -85,9 +101,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - plus new logic to render the padding elements
     - Another option: take field-loop out of template and run it as a `render_all_fields` method
         - still needs placement parser to return position+width information
+- [ ] Provide collection overview that allows to see users what is present
+    - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
+    - long term, this might be a high-level graphical display (like PROV diag.)
+- [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
 - [ ] Review URI usage
-    - [ ] eliminate use of /c/ in path?  (Not sure.)
-    - [ ] avoid explicit reference to `_analist_collection`?
+    - [x] avoid explicit reference to `_analist_collection`?
     - [ ] review base URI designation in JSON-LD:
         - note `@base` ignored if used in external contexts;
         - can specified value be relative? YES:
@@ -108,7 +127,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Use site/collection data to populate help panes on displays; use Markdown.
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Login: support continuation URI
-
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
     - [ ] site link to download log, if admin permissions
@@ -133,11 +151,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types
 - [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+    - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and foce use of HTTPS.
+        - [ ] Document setup process.
     - [ ] Check out https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
-    - [ ] Shared deployment should generate a new secret key in settings
+    - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
-- [ ] Remove dependency of analist-manager on test-suite-generated data when creating/updating site
+- [x] Remove dependency of analist-manager on test-suite-generated data when creating/updating site
     - copy site data in directly from `sitedata`
     - generate all other site data on-the-fly as needed (e.g. context, etc.)
 - [ ] Figure out how to preserve defined users when reinstalling the software.
@@ -154,7 +174,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] annalist-manager updatesitedata [ CONFIG ]
     - etc.
 - [ ] Review docker files: reduce number of separate commands used; always build on clean python setup
-- [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
@@ -164,8 +183,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 Technical debt:
 
+- [ ] Implement in-memory entity stiorage tio speed up test suite, and lay groundwork for LDP back-end
+- [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
+- [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
 - [ ] Implement "get the data" link as a field renderer?
-- [ ] consider treating Enum types as regular types under /d/?
+- [ ] Consider treating Enum types as regular types under /d/?
 - [ ] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
 - [ ] review view URL returned for entities found with alternative parentage:
     - currently force URL returned to be that of original parent, not alt. 
@@ -174,7 +196,7 @@ Technical debt:
     - logic is handled in `Entity.try_alt_parentage` and _init_child`
     - may want to consider promoting entityviewurl to constructor parameter for all Entity.
 - [ ] Delay accessing settings data until actually needed, so that new dependencies (e.g. models on views) don't cause premature selection.  This will help to avoid certain unexpected problems cropping up as happened with release 0.1.22 logging setup for annalist-manager.
-- [ ] After reworking site adta access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
+- [ ] After reworking site data access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
     - The various relative references for accessing context data are particularly unclear in the current software.
 - [ ] `annal:Slug` for entity references - is now type/id: rename type?  (annal:Entity_ref?)
 - [ ] Inconsistent `@id` values in site data
@@ -243,6 +265,7 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Issues raised by Cerys in email of 23-Oct-2015.  Some good points there - should break out into issues.
 - [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
     - Should be easy to add.  Just need a name.

@@ -348,8 +348,14 @@ class SiteViewTest(AnnalistTestCase):
             self.assertEqual(tcols[0].input['value'],  ivalue)
             self.assertEqual(tcols[1].a.string,        ivalue)
             self.assertEqual(tcols[1].a['href'],       collection_view_url(ivalue))
-        # button to remove selected
-        btn_remove = trows[5].select("div > input")[0]
+        # buttons to view/edit/remove selected
+        btn_view = trows[5].select("div > input")[0]
+        self.assertEqual(btn_view["type"],  "submit")
+        self.assertEqual(btn_view["name"],  "view")
+        btn_edit = trows[5].select("div > input")[1]
+        self.assertEqual(btn_edit["type"],  "submit")
+        self.assertEqual(btn_edit["name"],  "edit")
+        btn_remove = trows[5].select("div > input")[2]
         self.assertEqual(btn_remove["type"],  "submit")
         self.assertEqual(btn_remove["name"],  "remove")
         # Input fields for new collection

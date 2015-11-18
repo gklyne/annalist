@@ -17,6 +17,7 @@ from annalist.util                  import valid_id, extract_entity_id
 
 from annalist.identifiers           import ANNAL, RDF, RDFS
 
+from annalist.models.collection     import Collection
 from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordlist     import RecordList
@@ -27,6 +28,28 @@ from annalist.models.recordvocab    import RecordVocab
 from annalist.models.recordenum     import RecordEnumFactory
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
+
+COLL_ID     = '_coll'
+USER_ID     = '_user'
+TYPE_ID     = '_type'
+LIST_ID     = '_list'
+VIEW_ID     = '_view'
+GROUP_ID    = '_group'
+FIELD_ID    = '_field'
+VOCAB_ID    = '_vocab'
+TASK_ID     = '_task'
+
+COLL_MESSAGES = (
+    { 'parent_heading':         "(@@ COLL_MESSAGES.parent_heading - unused message @@)"
+    , 'parent_missing':         "(@@ COLL_MESSAGES.parent_missing - unused message @@)"
+    , 'entity_heading':         message.COLLECTION_ID
+    , 'entity_invalid_id':      message.COLLECTION_ID_INVALID
+    , 'entity_exists':          message.COLLECTION_EXISTS
+    , 'entity_not_exists':      message.COLLECTION_NOT_EXISTS
+    , 'entity_removed':         message.COLLECTION_REMOVED
+    , 'entity_type_heading':    "(@@ COLL_MESSAGES.entity_type_heading - unused message @@)"
+    , 'entity_type_invalid':    "(@@ COLL_MESSAGES.entity_type_invalid - unused message @@)"
+    })
 
 ENTITY_MESSAGES = (
     { 'parent_heading':         message.RECORD_TYPE_ID
@@ -140,10 +163,10 @@ SITE_PERMISSIONS = (
     { "view":   "VIEW"      # View site config data
     , "list":   "VIEW"      # ..
     , "search": "VIEW"      # ..
-    , "new":    "FORBIDDEN" # Create user record
+    , "new":    "FORBIDDEN" # Create collection record
     , "copy":   "FORBIDDEN" # ..
-    , "edit":   "FORBIDDEN" # Update user record
-    , "delete": "FORBIDDEN" # Delete user record
+    , "edit":   "FORBIDDEN" # Update collection record
+    , "delete": "FORBIDDEN" # Delete collection record
     , "config": "FORBIDDEN" # Change collection configuration
     , "admin":  "ADMIN"     # Change users or permissions
     })
@@ -185,13 +208,14 @@ ENTITY_PERMISSIONS = (
     })
 
 TYPE_CLASS_MAP = (
-    { '_user':              AnnalistUser
-    , '_type':              RecordType
-    , '_list':              RecordList
-    , '_view':              RecordView
-    , '_group':             RecordGroup
-    , '_field':             RecordField
-    , '_vocab':             RecordVocab
+    { COLL_ID:              Collection
+    , USER_ID:              AnnalistUser
+    , TYPE_ID:              RecordType
+    , LIST_ID:              RecordList
+    , VIEW_ID:              RecordView
+    , GROUP_ID:             RecordGroup
+    , FIELD_ID:             RecordField
+    , VOCAB_ID:             RecordVocab
     , 'Enum_list_type':     RecordEnumFactory('Enum_list_type',   'Enum_list_type')
     , 'Enum_render_type':   RecordEnumFactory('Enum_render_type', 'Enum_render_type')
     , 'Enum_value_mode':    RecordEnumFactory('Enum_value_mode',  'Enum_value_mode')
@@ -199,13 +223,14 @@ TYPE_CLASS_MAP = (
     })
 
 TYPE_MESSAGE_MAP = (
-    { '_user':              USER_MESSAGES
-    , '_type':              TYPE_MESSAGES
-    , '_list':              LIST_MESSAGES
-    , '_view':              VIEW_MESSAGES
-    , '_group':             GROUP_MESSAGES
-    , '_field':             FIELD_MESSAGES
-    , '_vocab':             VOCAB_MESSAGES
+    { COLL_ID:              COLL_MESSAGES
+    , USER_ID:              USER_MESSAGES
+    , TYPE_ID:              TYPE_MESSAGES
+    , LIST_ID:              LIST_MESSAGES
+    , VIEW_ID:              VIEW_MESSAGES
+    , GROUP_ID:             GROUP_MESSAGES
+    , FIELD_ID:             FIELD_MESSAGES
+    , VOCAB_ID:             VOCAB_MESSAGES
     , 'Enum_list_type':     ENUM_MESSAGES
     , 'Enum_render_type':   ENUM_MESSAGES
     , 'Enum_value_mode':    ENUM_MESSAGES
@@ -213,13 +238,14 @@ TYPE_MESSAGE_MAP = (
     })
 
 SITE_PERMISSIONS_MAP = (
-    { '_user':              ADMIN_PERMISSIONS
-    , '_type':              SITE_PERMISSIONS
-    , '_list':              SITE_PERMISSIONS
-    , '_view':              SITE_PERMISSIONS
-    , '_group':             SITE_PERMISSIONS
-    , '_field':             SITE_PERMISSIONS
-    , '_vocab':             ADMIN_PERMISSIONS
+    { COLL_ID:              SITE_PERMISSIONS
+    , USER_ID:              ADMIN_PERMISSIONS
+    , TYPE_ID:              SITE_PERMISSIONS
+    , LIST_ID:              SITE_PERMISSIONS
+    , VIEW_ID:              SITE_PERMISSIONS
+    , GROUP_ID:             SITE_PERMISSIONS
+    , FIELD_ID:             SITE_PERMISSIONS
+    , VOCAB_ID:             ADMIN_PERMISSIONS
     , 'Enum_list_type':     SITE_PERMISSIONS
     , 'Enum_render_type':   SITE_PERMISSIONS
     , 'Enum_value_mode':    SITE_PERMISSIONS
@@ -228,13 +254,14 @@ SITE_PERMISSIONS_MAP = (
     })
 
 TYPE_PERMISSIONS_MAP = (
-    { '_user':              ADMIN_PERMISSIONS
-    , '_type':              CONFIG_PERMISSIONS
-    , '_list':              CONFIG_PERMISSIONS
-    , '_view':              CONFIG_PERMISSIONS
-    , '_group':             CONFIG_PERMISSIONS
-    , '_field':             CONFIG_PERMISSIONS
-    , '_vocab':             CONFIG_PERMISSIONS
+    { COLL_ID:              CONFIG_PERMISSIONS
+    , USER_ID:              ADMIN_PERMISSIONS
+    , TYPE_ID:              CONFIG_PERMISSIONS
+    , LIST_ID:              CONFIG_PERMISSIONS
+    , VIEW_ID:              CONFIG_PERMISSIONS
+    , GROUP_ID:             CONFIG_PERMISSIONS
+    , FIELD_ID:             CONFIG_PERMISSIONS
+    , VOCAB_ID:             CONFIG_PERMISSIONS
     , 'Enum_list_type':     CONFIG_PERMISSIONS
     , 'Enum_render_type':   CONFIG_PERMISSIONS
     , 'Enum_value_mode':    CONFIG_PERMISSIONS
@@ -292,14 +319,19 @@ class EntityTypeInfo(object):
         self.coll_id         = coll.get_id()
         self.type_id         = type_id
         self.permissions_map = None
-
-        if type_id in TYPE_CLASS_MAP:
+        if type_id == "_coll":
+            self.recordtype      = site.site_data_collection().get_type(type_id)
+            self.entityparent    = site
+            self.entityaltparent = None
+            self.entityclass     = Collection
+            self.entitymessages  = COLL_MESSAGES
+            self.permissions_map = CONFIG_PERMISSIONS
+        elif type_id in TYPE_CLASS_MAP:
             self.recordtype      = coll.get_type(type_id)
             self.entityparent    = coll
             self.entityaltparent = site
             self.entityclass     = TYPE_CLASS_MAP[type_id]
             self.entitymessages  = TYPE_MESSAGE_MAP[type_id]
-            self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
             if self.coll_id == layout.SITEDATA_ID:
                 self.permissions_map = SITE_PERMISSIONS_MAP[type_id]
             else:
@@ -402,6 +434,8 @@ class EntityTypeInfo(object):
             "remove_entity id %s, parent %s"%
             (entity_id, self.entityparent)
             )
+        if self.type_id == COLL_ID:
+            raise ValueError("EntitytypeInfo.remove_entity: Attempt to remove collection")
         return self.entityclass.remove(self.entityparent, entity_id)
 
     def get_entity(self, entity_id, action="view"):
@@ -425,6 +459,11 @@ class EntityTypeInfo(object):
             elif self.entityclass.exists(self.entityparent, entity_id, altscope="all"):
                 entity = self.entityclass.load(
                     self.entityparent, entity_id, altscope="all"
+                    )
+            else:
+                log.info(
+                    "EntityTypeInfo.get_entity %s/%s at %s not found"%
+                    (self.type_id, entity_id, self.entityparent._entitydir)
                     )
         return entity
 
@@ -492,6 +531,29 @@ class EntityTypeInfo(object):
                 )
         return
 
+    def rename_entity(self, new_entity_id, old_typeinfo, old_entity_id):
+        """
+        Copy associated data files from specified entity to new.
+        The calling program is expected to update data associated with the new entity.
+
+        Subdirectories are copied as entire subtrees.
+        """
+        if old_typeinfo.entity_exists(old_entity_id):
+            new_entity = self._new_entity(new_entity_id)
+            old_entity = old_typeinfo._new_entity(old_entity_id)
+            p_new      = new_entity._rename_files(old_entity)
+            if not p_new:
+                log.warning(
+                    "EntityTypeInfo.rename_entity: error renaming entity %s from %s to %s"%
+                    (old_entity.get_url(), old_entity_id, new_entity_id)
+                    )
+        else:
+            log.warning(
+                "EntityTypeInfo.rename_entity: source entity not found %s/%s"%
+                (old_typeinfo.type_id, old_entity_id)
+                )
+        return
+
     def enum_entity_ids(self, altscope=None):
         """
         Iterate over entity identifiers in collection with current type.
@@ -528,10 +590,15 @@ class EntityTypeInfo(object):
         if (not user_perms or 
             self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
             if self.entityparent:
-                for eid in self.entityparent.child_entity_ids(
-                        self.entityclass, 
-                        altscope=altscope):
-                    yield self.get_entity_inferred_values(self.get_entity(eid))
+                #@@
+                # for eid in self.entityparent.child_entity_ids(
+                #         self.entityclass, 
+                #         altscope=altscope):
+                #@@
+                for eid in self.entityparent._children(self.entityclass, altscope=altscope):
+                    if self.entityclass.exists(self.entityparent, eid, altscope=altscope):
+                        yield self.get_entity_inferred_values(self.get_entity(eid))
+                #@@
             else:
                 log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
         return

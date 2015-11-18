@@ -117,6 +117,7 @@ class DisplayInfo(object):
         self.sitedata           = None
         self.coll_id            = None
         self.collection         = None
+        self.coll_perms         = None  # Collection used for permissions checking
         self.type_id            = None
         self.entitytypeinfo     = None
         self.list_id            = None
@@ -174,6 +175,7 @@ class DisplayInfo(object):
             else:
                 self.coll_id    = coll_id
                 self.collection = Collection.load(self.site, coll_id, altscope="all")
+                self.coll_perms = self.collection
                 ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")
                 if LooseVersion(ver) > LooseVersion(annalist.__version__):
                     self.http_response = self.view.error(
@@ -270,7 +272,9 @@ class DisplayInfo(object):
 
     def get_entity_info(self, action, entity_id):
         """
-        Retrieve entity data to use for display
+        Set up entity id and info to use for display
+
+        Also handles some special case permissions settings if the entity is a Collection.
         """
         if not self.http_response:
             assert self.entitytypeinfo is not None
@@ -279,6 +283,11 @@ class DisplayInfo(object):
                     self.entitytypeinfo.entityparent
                     )
             self.entity_id = entity_id
+            # Special case permissions...
+            if self.type_id == "_coll":
+                c = Collection.load(self.site, entity_id, altscope="all")
+                if c:
+                    self.coll_perms = c
         return self.http_response
 
     def check_authorization(self, action):
@@ -292,7 +301,7 @@ class DisplayInfo(object):
             for p in authorization_map[k]:
                 self.authorizations[k] = (
                     self.authorizations[k] or 
-                    self.view.authorize(p, self.collection) is None
+                    self.view.authorize(p, self.coll_perms) is None
                     )
         # Check requested action
         action = action or "view"

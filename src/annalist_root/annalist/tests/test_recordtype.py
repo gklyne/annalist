@@ -382,7 +382,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # log.info(r.content)
         self.assertContains(r, "<title>Collection testcoll</title>")
         self.assertContains(r, "<h3>'_type' data in collection 'testcoll'</h3>")
-        field_vals = default_fields(coll_id="testcoll", type_id="_type", entity_id="00000001")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_type", entity_id="00000001",
+            default_label="(New type initial values - label)",
+            default_comment="(New type initial values - comment/help)",
+            default_label_esc="(New type initial values - label)",
+            default_comment_esc="(New type initial values - comment/help)"
+            )
         formrow1 = """
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
@@ -497,8 +503,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Fields
         self._check_context_fields(r, 
             type_id="00000001",
-            type_label=default_label("testcoll", "_type", "00000001"),
-            type_help=default_comment("testcoll", "_type", "00000001"),
+            type_label="(New type initial values - label)",
+            type_help="(New type initial values - comment/help)",
             type_uri="", type_supertype_uris=""
             )
         return

@@ -83,16 +83,6 @@ def collection_entity_edit_url(
         ):
     """
     Return URL for edit view of entity
-
-    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/!(?P<action>new)$',
-                            GenericEntityEditView.as_view(),
-                            name='AnnalistEntityNewView'),
-    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>copy)$',
-                            GenericEntityEditView.as_view(),
-                            name='AnnalistEntityEditView'),
-    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>edit)$',
-                            GenericEntityEditView.as_view(),
-                            name='AnnalistEntityEditView'),
     """
     viewname = ( 
         'AnnalistEntityNewView'             if action == "new" else

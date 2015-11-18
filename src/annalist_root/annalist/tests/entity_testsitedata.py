@@ -53,6 +53,7 @@ def add_link_to_field_choice(fc, coll_id, default_type_id=None):
 
 site_types = (
     [ FieldChoice("_type/_initial_values")
+    , FieldChoice("_type/_coll",                      label="Collection"                  )
     , FieldChoice("_type/_field",                     label="View field"                  )
     , FieldChoice("_type/_group",                     label="Field group"                 )
     , FieldChoice("_type/_list",                      label="List"                        )
@@ -127,6 +128,7 @@ def get_site_list_types():
 site_views = (
     [ FieldChoice("_view/_initial_values")
     , FieldChoice("_view/BibEntry_view",              label="Bibliographic metadata"  )
+    , FieldChoice("_view/Collection_view",            label="Collection view"  )
     , FieldChoice("_view/Default_view",               label="Default record view"     )
     , FieldChoice("_view/Field_group_view",           label="Field group view"        )
     , FieldChoice("_view/Field_view",                 label="Field description view"  )

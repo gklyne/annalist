@@ -52,10 +52,10 @@ from annalist.models.rendertypeinfo import (
 class Collection(Entity):
 
     _entitytype     = ANNAL.CURIE.Collection
-    _entitytypeid   = "_collection"
+    _entitytypeid   = "_coll"
     _entityview     = layout.SITE_COLL_VIEW
     _entitypath     = layout.SITE_COLL_PATH
-    _entityfile     = layout.COLL_META_FILE
+    _entityfile     = layout.COLL_META_REF
     _entityref      = layout.META_COLL_REF
     _contextref     = layout.COLL_CONTEXT_FILE
 
@@ -90,6 +90,14 @@ class Collection(Entity):
         self._types_by_id  = None
         self._types_by_uri = None
         return
+
+    def _migrate_values(self, collmetadata):
+        """
+        Collection data format migration method.
+        """
+        if collmetadata[ANNAL.CURIE.type_id] == "_collection":
+            collmetadata[ANNAL.CURIE.type_id] = self._entitytypeid
+        return collmetadata
 
     # Site
 

@@ -125,7 +125,7 @@ class CollectionTest(AnnalistTestCase):
         s = Site(TestBaseUri, TestBaseDir)
         c = Collection(s, "testcoll")
         self.assertEqual(c._entitytype,     ANNAL.CURIE.Collection)
-        self.assertEqual(c._entityfile,     layout.COLL_META_FILE)
+        self.assertEqual(c._entityfile,     layout.COLL_META_REF)
         self.assertEqual(c._entityref,      layout.META_COLL_REF)
         self.assertEqual(c._entityid,       "testcoll")
         self.assertEqual(c._entityurl,      TestHostUri + collection_view_url(coll_id="testcoll"))

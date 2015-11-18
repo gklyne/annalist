@@ -110,7 +110,8 @@ class EntityFinder(object):
         for e in entitytypeinfo.enum_entities_with_inferred_values(
                 user_permissions, altscope=altscope
                 ):
-            yield e
+            if e.get_id() != "_initial_values":
+                yield e
         return
 
     def get_subtype_entities(self, type_id, user_permissions, altscope):
@@ -130,7 +131,8 @@ class EntityFinder(object):
                 #     "get_subtype_entities type_id %s, yield %s/%s"%
                 #     (type_id, e.get_type_id(), e.get_id())
                 #     )
-                yield e
+                if e.get_id() != "_initial_values":
+                    yield e
         return
 
     def get_all_types_entities(self, types, user_permissions, altscope):

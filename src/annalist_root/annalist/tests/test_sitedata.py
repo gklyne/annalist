@@ -514,9 +514,10 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_type/_field",           ["_field",           "View field"] ]
+            [ [ "_type/_coll",            ["_coll",            "Collection"] ]
+            , [ "_type/_field",           ["_field",           "View field"] ]
             , [ "_type/_group",           ["_group",           "Field group"] ]
-            , [ "_type/_initial_values",  ["_initial_values",  None] ]
+            # , [ "_type/_initial_values",  ["_initial_values",  None] ]
             , [ "_type/_list",            ["_list",            "List"] ]
             , [ "_type/_type",            ["_type",            "Type"] ]
             , [ "_type/_user",            ["_user",            "User permissions"] ]
@@ -633,8 +634,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_list/_initial_values",    ["_initial_values",     None] ]
-            , [ "_list/BibEntry_list",      ["BibEntry_list",       "List bibliographic entries"] ]
+            # [ [ "_list/_initial_values",    ["_initial_values",     None] ]
+            [ [ "_list/BibEntry_list",      ["BibEntry_list",       "List bibliographic entries"] ]
             , [ "_list/Default_list",       ["Default_list",        "List entities"] ]
             , [ "_list/Default_list_all",   ["Default_list_all",    "List entities with type information"] ]
             , [ "_list/Field_group_list",   ["Field_group_list",    "List field groups"] ]
@@ -749,8 +750,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_view/_initial_values",    ["_initial_values",     None] ]
-            , [ "_view/BibEntry_view",      ["BibEntry_view",       "Bibliographic metadata"] ]
+            # [ [ "_view/_initial_values",    ["_initial_values",     None] ]
+            [ [ "_view/BibEntry_view",      ["BibEntry_view",       "Bibliographic metadata"] ]
+            , [ "_view/Collection_view",    ["Collection_view",     "Collection view"] ]
             , [ "_view/Default_view",       ["Default_view",        "Default record view"] ]
             , [ "_view/Field_group_view",   ["Field_group_view",    "Field group view"] ]
             , [ "_view/Field_view",         ["Field_view",          "Field description view"] ]
@@ -857,8 +859,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_group/_initial_values",          ["_initial_values"] ]
-            , [ "_group/Bib_book_group",           ["Bib_book_group",           "BibEntry book fields"] ]
+            # [ [ "_group/_initial_values",          ["_initial_values"] ]
+            [ [ "_group/Bib_book_group",           ["Bib_book_group",           "BibEntry book fields"] ]
             , [ "_group/Bib_identifier_group",     ["Bib_identifier_group",     "BibEntry identifier fields"] ]
             , [ "_group/Bib_journal_group",        ["Bib_journal_group",        "BibEntry journal fields"] ]
             , [ "_group/Bib_license_group",        ["Bib_license_group",        "BibEntry license fields"] ]
@@ -969,8 +971,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         trows_expected = (
             #     Field selector                      Field id             Render type      Value type   Field label (?)
-            [ [ "_field/_initial_values",           ["_initial_values",   "Short text",    "annal:Text", None       ] ]
-            , [ "_field/Bib_address",               ["Bib_address",       "Short text",    "annal:Text", "Address"  ] ]
+            # [ [ "_field/_initial_values",           ["_initial_values",   "Short text",    "annal:Text", None       ] ]
+            [ [ "_field/Bib_address",               ["Bib_address",       "Short text",    "annal:Text", "Address"  ] ]
             , [ "_field/Bib_alternate",             ["Bib_alternate",     "Short text",    "annal:Text"             ] ]
             , [ "_field/Bib_authors",               ["Bib_authors",       "Repeating field group", "bib:Authors"    ] ]
             , [ "_field/Bib_bookentry",             ["Bib_bookentry",     "Repeating field group", "bib:BookEntry"  ] ]
@@ -1006,6 +1008,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Bib_url",                   ["Bib_url",           "Short text",    "annal:Text"             ] ]
             , [ "_field/Bib_volume",                ["Bib_volume",        "Short text",    "annal:Text"             ] ]
             , [ "_field/Bib_year",                  ["Bib_year",          "Short text",    "annal:Text"             ] ]
+            , [ "_field/Coll_comment",              ["Coll_comment",      "Multiline text", "annal:Longtext"        ] ]
+            , [ "_field/Coll_software_version",     ["Coll_software_version", "Short text", "annal:Text", "S/W version" ] ]
             , [ "_field/Entity_comment",            ["Entity_comment",    "Markdown rich text", "annal:Richtext"    ] ]
             , [ "_field/Entity_id",                 ["Entity_id",         "Entity Id",     "annal:Slug"             ] ]
             , [ "_field/Entity_label",              ["Entity_label",      "Short text",    "annal:Text"             ] ]
@@ -1203,8 +1207,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[0].span.string, "Id")
         self.assertEqual(thead[1].span.string, "Label")
         trows_expected = (
-            [ [ "_vocab/_initial_values",          ["_initial_values"] ]
-            , [ "_vocab/annal",                    ["annal",    "Vocabulary namespace for Annalist-defined terms"] ]
+            # [ [ "_vocab/_initial_values",          ["_initial_values"] ]
+            [ [ "_vocab/annal",                    ["annal",    "Vocabulary namespace for Annalist-defined terms"] ]
             , [ "_vocab/owl",                      ["owl",      "OWL ontology namespace"] ]
             , [ "_vocab/rdf",                      ["rdf",      "RDF core namespace"] ]
             , [ "_vocab/rdfs",                     ["rdfs",     "RDF schema namespace"] ]
