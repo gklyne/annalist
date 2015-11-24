@@ -245,7 +245,7 @@ SITE_PERMISSIONS_MAP = (
     , VIEW_ID:              SITE_PERMISSIONS
     , GROUP_ID:             SITE_PERMISSIONS
     , FIELD_ID:             SITE_PERMISSIONS
-    , VOCAB_ID:             ADMIN_PERMISSIONS
+    , VOCAB_ID:             ADMIN_PERMISSIONS  #@@ CONFIG??
     , 'Enum_list_type':     SITE_PERMISSIONS
     , 'Enum_render_type':   SITE_PERMISSIONS
     , 'Enum_value_mode':    SITE_PERMISSIONS
@@ -320,6 +320,17 @@ class EntityTypeInfo(object):
         self.type_id         = type_id
         self.permissions_map = None
         if type_id == "_coll":
+            # NOTE: 
+            #
+            # this setup requires all collection operations to be performed using 
+            # site-level permissions.  Thus the creator of a collection cannot 
+            # always modify things like the collection comment.  This is because 
+            # all collection data is considered to be part of the top-level site
+            # collection.
+            #
+            # Allowing collection metadata edits based on collection permissions 
+            # would require more subtle logic applying permissions at the entity 
+            # level for collections.
             self.recordtype      = site.site_data_collection().get_type(type_id)
             self.entityparent    = site
             self.entityaltparent = None
@@ -582,6 +593,7 @@ class EntityTypeInfo(object):
                 log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
         return
 
+    # @@TODO: rename inferred -> implied
     def enum_entities_with_inferred_values(self, user_perms=None, altscope=None):
         """
         Iterate over entities in collection with current type.
@@ -591,13 +603,14 @@ class EntityTypeInfo(object):
             self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
             if self.entityparent:
                 #@@
-                # for eid in self.entityparent.child_entity_ids(
-                #         self.entityclass, 
-                #         altscope=altscope):
+                for eid in self.entityparent.child_entity_ids(
+                        self.entityclass, 
+                        altscope=altscope):
+                    yield self.get_entity_inferred_values(self.get_entity(eid))
                 #@@
-                for eid in self.entityparent._children(self.entityclass, altscope=altscope):
-                    if self.entityclass.exists(self.entityparent, eid, altscope=altscope):
-                        yield self.get_entity_inferred_values(self.get_entity(eid))
+                # for eid in self.entityparent._children(self.entityclass, altscope=altscope):
+                #     if self.entityclass.exists(self.entityparent, eid, altscope=altscope):
+                #         yield self.get_entity_inferred_values(self.get_entity(eid))
                 #@@
             else:
                 log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))

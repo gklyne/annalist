@@ -60,8 +60,7 @@ class AnnalistGenericView(ContentNegotiationView):
         self._sitebasedir = os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR)
         self._site        = None
         self._site_data   = None
-        self._user_perms  = None
-        ## self.credential = None
+        self._user_perms  = {}
         return
 
     # @@TODO: make host parameter required in the following?
@@ -261,7 +260,8 @@ class AnnalistGenericView(ContentNegotiationView):
 
         returns an AnnalistUser object containing permissions for the identified user.
         """
-        if not self._user_perms:
+        coll_id = collection.get_id() if collection else layout.SITEDATA_ID
+        if coll_id not in self._user_perms:
             # if collection:
             #     log.info("user_id %s (%s), coll_id %s, %r"%
             #         (user_id, user_uri, collection.get_id(), collection.get_user_permissions(user_id, user_uri))
@@ -271,9 +271,9 @@ class AnnalistGenericView(ContentNegotiationView):
                 self.site().get_user_permissions(user_id, user_uri) or
                 self.site().get_user_permissions("_default_user_perms", "annal:User/_default_user_perms")
                 )
-            self._user_perms = user_perms
+            self._user_perms[coll_id] = user_perms
             # log.debug("get_user_permissions %r"%(self._user_perms,))
-        return self._user_perms
+        return self._user_perms[coll_id]
 
     def get_permissions(self, collection):
         """

@@ -285,7 +285,7 @@ class Entity(EntityRoot):
         altscope    if supplied, indicates a scope other than the current entity to
                     search for children.  See method `get_alt_ancestry` for more details.
         """
-        coll_entity_ids = list(self._base_children(cls))
+        coll_entity_ids = list(super(Entity, self)._children(cls, altscope=altscope))
         site_entity_ids = list(itertools.chain.from_iterable(
             (alt._children(cls, altscope=altscope) for alt in self.get_alt_ancestry(altscope=altscope))
             ))
@@ -307,7 +307,7 @@ class Entity(EntityRoot):
 
     # Create and access functions
 
-    def child_entity_ids(self, cls, altscope=None):
+    def _moved_child_entity_ids(self, cls, altscope=None):
         """
         Iterates over child entity identifiers of an indicated class.
         The supplied class is used to determine a subdirectory to be scanned.

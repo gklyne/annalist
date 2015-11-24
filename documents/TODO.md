@@ -21,7 +21,16 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] BUG: `render_utils.get_mode_renderer`, handling of repeat fields? (cf. comment from Cerys.)
     - Added logic so that repeat fields also support current-mode rendering (but rendering as a normal view)
 - [x] BUG: enumerated values listed as types (when using "View all")
+- [ ] BUG (from 0.1.22 release): creating admin user in new site fails:
+    - 1. annlist-manager createadminuser fauls with "no such table: auth_user"
+    - 2. running django `manage.py` with `syncdb` fixes that, but...
+    - 3. subsequent attempt to create admin user fails with:
+        - "ValueError: Attempt to create entity file outside Annalist site tree"
 - [x] Suppress display of _initial_values when listing entities (is this the right choice?)
+- [x] moved 'child_entity_ids' method to root so it can be used with `Site` objects
+    - [ ] @@TODO: old `Entity` method renamed, should be deleted when all tests pass
+- [x] moved site scoping enumeration logic from `Site` to `EntityRoot`
+    - [ ] @@TODO: old `Site` method renamed, should be deleted when all tests pass
 - [x] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection. This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
     - [x] move annalist sitedata to collection location; relocate and rename site_meta.jsonld, update layout; test
     - [x] re-work alternative-directory logic to be controlled by the parent rather than the child.
@@ -75,10 +84,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] view collection data JSON not working
     - [x] collections showing up in local entity lists
     - [x] test cases for collection enumeration, editing
-- [ ] Re-think protections for viewing/editing collection metadata: really want the authorization to be based on permissions in the collection being accessed.  Require CONFIG_PERMISSIONS in collection?
-    - affects `views.entityedit` and `views.displayinfo` updated
-    - still affects `views.site` 
-    - see also `models.entitytypeinfo`
+- [?] Re-think protections for viewing/editing collection metadata: really want the authorization to be based on permissions in the collection being accessed.
+    - it turns out this is tricky, as all collection data is part of collection _annalist_site, hence site-level permissions apply.  To make this work fully, would need some form of entity-level permission to be applied, or more special-casesfior handling collection data editing.
 - [ ] Provision for specifying *and using* inherited collections
 - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
     - [ ] use new layout for site data in source tree to separate Bibliographic data and maybe others
@@ -265,6 +272,10 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Collection metadata editing requires site-level permissions; 
+    - to apply collection level permissions wout require entity level access control settings
+    - think about this?
+    - see EntityTypeInfo.__init__
 - [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Issues raised by Cerys in email of 23-Oct-2015.  Some good points there - should break out into issues.
 - [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).

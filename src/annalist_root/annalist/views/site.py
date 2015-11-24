@@ -9,24 +9,26 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                import settings
-from django.http                import HttpResponse
-from django.http                import HttpResponseRedirect
-from django.core.urlresolvers   import resolve, reverse
+from django.conf                    import settings
+from django.http                    import HttpResponse
+from django.http                    import HttpResponseRedirect
+from django.core.urlresolvers       import resolve, reverse
 
-from annalist.identifiers       import ANNAL, RDFS
-from annalist.exceptions        import Annalist_Error, EntityNotFound_Error
-from annalist                   import message
-from annalist                   import util
-from annalist                   import layout
+from annalist.identifiers           import ANNAL, RDFS
+from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
+from annalist                       import message
+from annalist                       import util
+from annalist                       import layout
 
-from annalist.models.site       import Site
-# from annalist.models.collection import Collection
+from annalist.models.entitytypeinfo import CONFIG_PERMISSIONS
+from annalist.models.site           import Site
+from annalist.models.collection     import Collection
 
-from annalist.views.displayinfo import DisplayInfo
-from annalist.views.generic     import AnnalistGenericView
-from annalist.views.confirm     import ConfirmView
-from annalist.views.uri_builder import uri_with_params
+
+from annalist.views.displayinfo     import DisplayInfo
+from annalist.views.generic         import AnnalistGenericView
+from annalist.views.confirm         import ConfirmView
+from annalist.views.uri_builder     import uri_with_params
 
 class SiteView(AnnalistGenericView):
     """
@@ -70,13 +72,17 @@ class SiteView(AnnalistGenericView):
         coll_id       = collections[0] if collections else "_"
         coll_ids      = {'ids': ", ".join(collections)}
         perm_req      = None
+        perm_scope    = None
         none_msg      = None
         many_msg      = None
         redirect_uri  = None
         http_response = None
         # Process POST option
         if   "view" in request.POST:
-            perm_req     = "VIEW_COLLECTION"
+            # Collection data is considered part of configuration, hence CONFIG_PERMISSIONS:
+            perm_req     = CONFIG_PERMISSIONS["view"]
+            # Use Collection or Site permissions:
+            perm_scope   = "all"
             none_msg     = message.NO_COLLECTION_VIEW
             many_msg     = message.MANY_COLLECTIONS_VIEW
             target_uri   = self.view_uri("AnnalistEntityEditView",
@@ -91,10 +97,11 @@ class SiteView(AnnalistGenericView):
                     {'continuation_url': self.continuation_here()}
                     )
         elif "edit" in  request.POST:
-            perm_req     = "EDIT_COLLECTION"
-            none_msg     = message.NO_COLLECTION_EDIT
-            many_msg     = message.MANY_COLLECTIONS_EDIT
-            target_uri   = self.view_uri("AnnalistEntityEditView",
+            perm_req    = CONFIG_PERMISSIONS["edit"]
+            perm_scope  = "all"
+            none_msg    = message.NO_COLLECTION_EDIT
+            many_msg    = message.MANY_COLLECTIONS_EDIT
+            target_uri  = self.view_uri("AnnalistEntityEditView",
                 coll_id=layout.SITEDATA_ID,
                 view_id="Collection_view",
                 type_id="_coll",
@@ -106,12 +113,14 @@ class SiteView(AnnalistGenericView):
                     {'continuation_url': self.continuation_here()}
                     )
         elif "remove" in request.POST:
-            perm_req     = "DELETE_COLLECTION"
-            none_msg     = message.NO_COLLECTIONS_REMOVE
+            perm_req    = "DELETE_COLLECTION"
+            perm_scope  = "all"    # Collection or site permissions
+            none_msg    = message.NO_COLLECTIONS_REMOVE
         elif "new" in request.POST:
-            perm_req  = "CREATE_COLLECTION"
-            new_id    = request.POST["new_id"]
-            new_label = request.POST["new_label"]
+            perm_req    = "CREATE_COLLECTION"
+            perm_scope  = "site"    # Site permission required
+            new_id      = request.POST["new_id"]
+            new_label   = request.POST["new_label"]
         # Common checks
         if none_msg and not collections:
             http_response = self.redirect_info(
@@ -125,12 +134,25 @@ class SiteView(AnnalistGenericView):
                 info_head=message.NO_ACTION_PERFORMED
                 )
         elif perm_req:
-            # @@TODO: test authority against target collection permissions
-            http_response = (
-                self.authorize("ADMIN", None) and   # Either of these...
-                self.authorize(perm_req, None)
-                )
-        if http_response:
+            if perm_scope == "all":
+                # Check collections for permissions
+                for cid in collections:
+                    if http_response is None:
+                        site     = self.site(host=self.get_request_host())
+                        sitedata = self.site_data()
+                        coll     = Collection.load(site, cid, altscope="site")
+                        http_response = (
+                            self.authorize("ADMIN", coll) and   # Either of these...
+                            self.authorize(perm_req, coll)
+                            )
+                        coll = None
+            else:
+                # Check site only for permissions
+                http_response = (
+                    self.authorize("ADMIN", None) and 
+                    self.authorize(perm_req, None)
+                    )
+        if http_response is not None:
             return http_response            
         # Perform selected option
         if redirect_uri:

@@ -76,6 +76,8 @@ class Site(EntityRoot):
         """
         return True
 
+    #@@TODO: delete this when tests all pass
+    #        NOTE: tried that, but EntityRoot includes collections too.
     def _children(self, cls, altscope=None):
         """
         Iterates over candidate child identifiers that are possible instances of an 

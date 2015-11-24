@@ -174,6 +174,7 @@ class DisplayInfo(object):
                     )
             else:
                 self.coll_id    = coll_id
+                #@@TODO: try with altscope="site"?
                 self.collection = Collection.load(self.site, coll_id, altscope="all")
                 self.coll_perms = self.collection
                 ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")

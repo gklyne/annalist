@@ -242,6 +242,21 @@ class EntityRoot(object):
                 return get_f(p[1:], v[p[0]])
         return get_f(path, self._values)
 
+    def child_entity_ids(self, cls, altscope=None):
+        """
+        Iterates over child entity identifiers of an indicated class.
+        The supplied class is used to determine a subdirectory to be scanned.
+
+        cls         is a subclass of Entity indicating the type of children to
+                    iterate over.
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `get_alt_ancestry` for more details.
+        """
+        for i in self._children(cls, altscope=altscope):
+            if cls.exists(self, i, altscope=altscope):
+                yield i
+        return
+
     # I/O helper functions
 
     def _dir_path(self):
@@ -319,7 +334,13 @@ class EntityRoot(object):
         fullpath = os.path.join(settings.BASE_DATA_DIR, "annalist_site", body_file)
         # Next is partial protection against code errors
         if not fullpath.startswith(os.path.join(settings.BASE_DATA_DIR, "annalist_site")):
-            raise ValueError("Attempt to create entity file outside Annalist site tree")
+            log.error("EntityRoot._save: Failing to create entity at %s"%(fullpath,))
+            log.info("EntityRoot._save: dir %s, file %s"%(body_dir, body_file))
+            log.info("EntityRoot._save: settings.BASE_DATA_DIR %s"%(settings.BASE_DATA_DIR,))
+            raise ValueError(
+                "Attempt to create entity file outside Annalist site tree (%s)"%
+                fullpath
+                )
         # Create directory (if needed) and save data
         util.ensure_dir(body_dir)
         values = self._values.copy()
@@ -483,9 +504,14 @@ class EntityRoot(object):
 
         cls         is a subclass of Entity indicating the type of children to
                     iterate over.
-        altscope    Ignored, accepoted for compatibility with Entity._children()
+        altscope    if supplied value is not "all" or "site", returns empty iterator,
+                    otherwise an iterator over child entities.
+
+        NOTE: `Site` class overrides this.
         """
-        return self._base_children(cls)
+        if altscope != "site":
+            return self._base_children(cls)
+        return iter(())     # Empty iterator
 
     def _entity_files(self):
         """
