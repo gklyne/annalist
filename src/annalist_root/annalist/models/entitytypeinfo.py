@@ -322,21 +322,18 @@ class EntityTypeInfo(object):
         if type_id == "_coll":
             # NOTE: 
             #
-            # this setup requires all collection operations to be performed using 
-            # site-level permissions.  Thus the creator of a collection cannot 
-            # always modify things like the collection comment.  This is because 
-            # all collection data is considered to be part of the top-level site
-            # collection.
+            # This setup defaults to using site permissions for collection operations.
+            # But there is some special-case code in views.displayinfo that uses the 
+            # collection itself if it exists.
             #
-            # Allowing collection metadata edits based on collection permissions 
-            # would require more subtle logic applying permissions at the entity 
-            # level for collections.
+            # (See use of attribute DisplayInfo.coll_perms.)
+            #
             self.recordtype      = site.site_data_collection().get_type(type_id)
             self.entityparent    = site
             self.entityaltparent = None
             self.entityclass     = Collection
             self.entitymessages  = COLL_MESSAGES
-            self.permissions_map = CONFIG_PERMISSIONS
+            self.permissions_map = CONFIG_PERMISSIONS # unless entity is layout.SITEDATA_ID?
         elif type_id in TYPE_CLASS_MAP:
             self.recordtype      = coll.get_type(type_id)
             self.entityparent    = coll

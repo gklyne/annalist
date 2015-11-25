@@ -16,6 +16,8 @@ from django.http                        import HttpResponse
 from annalist                           import message
 from annalist                           import layout
 
+import annalist.models.entitytypeinfo as entitytypeinfo
+
 from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.generic             import AnnalistGenericView
 
@@ -108,6 +110,7 @@ class CollectionResourceAccess(AnnalistGenericView):
         viewinfo = DisplayInfo(self, action, request_dict, self.default_continuation_url)
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
+        viewinfo.get_type_info(entitytypeinfo.COLL_ID)
         viewinfo.check_authorization(action)
         return viewinfo
 

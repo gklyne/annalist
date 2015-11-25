@@ -286,6 +286,7 @@ class DisplayInfo(object):
             self.entity_id = entity_id
             # Special case permissions...
             if self.type_id == "_coll":
+                # log.info("DisplayInfo.get_entity_info: access collection data for %s"%entity_id)
                 c = Collection.load(self.site, entity_id, altscope="all")
                 if c:
                     self.coll_perms = c
@@ -297,23 +298,25 @@ class DisplayInfo(object):
 
         Also, save copy of key authorizations for later rendering.
         """
-        # Save key authorizations for later rendering
-        for k in authorization_map:
-            for p in authorization_map[k]:
-                self.authorizations[k] = (
-                    self.authorizations[k] or 
-                    self.view.authorize(p, self.coll_perms) is None
-                    )
-        # Check requested action
-        action = action or "view"
-        if self.entitytypeinfo:
-            permissions_map = self.entitytypeinfo.permissions_map
-        else:
-            permissions_map = {}
-        self.http_response = (
-            self.http_response or 
-            self.view.form_action_auth(action, self.collection, permissions_map)
-            )
+        if not self.http_response:
+            # Save key authorizations for later rendering
+            for k in authorization_map:
+                for p in authorization_map[k]:
+                    self.authorizations[k] = (
+                        self.authorizations[k] or 
+                        self.view.authorize(p, self.coll_perms) is None
+                        )
+            # Check requested action
+            action = action or "view"
+            if self.entitytypeinfo:
+                permissions_map = self.entitytypeinfo.permissions_map
+            else:
+                raise ValueError("displayinfo.check_authorization without entitytypeinfo")
+                # permissions_map = {}
+            self.http_response = (
+                self.http_response or 
+                self.view.form_action_auth(action, self.collection, permissions_map)
+                )
         return self.http_response
 
     def report_error(self, message):
@@ -387,10 +390,9 @@ class DisplayInfo(object):
         # log.info("check_collection_entity: entityparent: %s"%(self.entityparent.get_id()))
         # log.info("check_collection_entity: entityclass: %s"%(self.entityclass))
         redirect_uri = None
-        typeinfo     = (
-            self.entitytypeinfo or 
-            EntityTypeInfo(self.site, self.collection, entity_type)
-            )
+        typeinfo     = self.entitytypeinfo
+        if not typeinfo or typeinfo.get_type_id() != entity_type:
+            typeinfo = EntityTypeInfo(self.site, self.collection, entity_type)
         if not typeinfo.entityclass.exists(typeinfo.entityparent, entity_id):
             redirect_uri = (
                 uri_with_params(

@@ -206,10 +206,10 @@ class Entity(EntityRoot):
         If no satisfying value is found, returns the result for the last entity tried
         executed;  i.e., with the default test, returns (None,None).
         """
-        # log.debug(
-        #     "Entity.try_alt_parentage: %s/%s with parent %r"%
-        #     (cls._entitytypeid, entityid, parent)
-        #     )
+        log.debug(
+            "Entity.try_alt_parentage: %s/%s with parent %r"%
+            (cls._entitytypeid, entityid, parent)
+            )
         e  = cls._child_init(parent, entityid)
         uv = e._entityviewurl
         v  = func(e)

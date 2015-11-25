@@ -20,7 +20,9 @@ from annalist                       import message
 from annalist                       import util
 from annalist                       import layout
 
-from annalist.models.entitytypeinfo import CONFIG_PERMISSIONS
+
+import annalist.models.entitytypeinfo as entitytypeinfo
+from annalist.models.entitytypeinfo import CONFIG_PERMISSIONS, SITE_PERMISSIONS
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 
@@ -48,6 +50,8 @@ class SiteView(AnnalistGenericView):
         """
         viewinfo = DisplayInfo(self, "view", {}, None)    # No continuation
         viewinfo.get_site_info(self.get_request_host())
+        viewinfo.get_coll_info(layout.SITEDATA_ID)
+        viewinfo.get_type_info(entitytypeinfo.COLL_ID)
         viewinfo.check_authorization("view")
         if viewinfo.http_response:
             return viewinfo.http_response

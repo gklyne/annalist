@@ -84,8 +84,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] view collection data JSON not working
     - [x] collections showing up in local entity lists
     - [x] test cases for collection enumeration, editing
-- [?] Re-think protections for viewing/editing collection metadata: really want the authorization to be based on permissions in the collection being accessed.
-    - it turns out this is tricky, as all collection data is part of collection _annalist_site, hence site-level permissions apply.  To make this work fully, would need some form of entity-level permission to be applied, or more special-casesfior handling collection data editing.
+- [x] Re-think protections for viewing/editing collection metadata: really want the authorization to be based on permissions in the collection being accessed.
 - [ ] Provision for specifying *and using* inherited collections
 - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
     - [ ] use new layout for site data in source tree to separate Bibliographic data and maybe others

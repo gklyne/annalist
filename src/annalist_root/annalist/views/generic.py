@@ -332,25 +332,25 @@ class AnnalistGenericView(ContentNegotiationView):
         an HTTP response value to return an error condition.
         """
         # @@TODO: in due course, eliminate action_scope.
-        action_scope = (
-            { "view":   "VIEW"      # View data record
-            , "list":   "VIEW"      # ..
-            , "search": "VIEW"      # ..
-            , "new":    "CREATE"    # Create data record
-            , "copy":   "CREATE"    # ..
-            , "edit":   "UPDATE"    # Update data record
-            , "delete": "DELETE"    # Delete datra record
-            , "config": "CONFIG"    # Change collection configuration
-            , "admin":  "ADMIN"     # Change users or permissions
-            })
+        # action_scope = (
+        #     { "view":   "VIEW"      # View data record
+        #     , "list":   "VIEW"      # ..
+        #     , "search": "VIEW"      # ..
+        #     , "new":    "CREATE"    # Create data record
+        #     , "copy":   "CREATE"    # ..
+        #     , "edit":   "UPDATE"    # Update data record
+        #     , "delete": "DELETE"    # Delete datra record
+        #     , "config": "CONFIG"    # Change collection configuration
+        #     , "admin":  "ADMIN"     # Change users or permissions
+        #     })
         if action in perm_required:
             auth_scope = perm_required[action]
-        elif action in action_scope:
-            auth_scope = action_scope[action]
+        # elif action in action_scope:
+        #     auth_scope = action_scope[action]
         else:
             log.warning("form_action_auth: unknown action: %s"%(action))
+            log.warning("perm_required: %r"%(perm_required,))
             auth_scope = "UNKNOWN"
-        # return self.authorize(auth_scope, auth_resource)
         return self.authorize(auth_scope, auth_collection)
 
     # Entity access
