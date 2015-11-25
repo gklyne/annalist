@@ -234,6 +234,10 @@ class DisplayInfo(object):
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
             assert list_id
+            log.info(
+                "DisplayInfo.get_list_info: collection.get_alt_entities %r"%
+                [ c.get_id() for c in  self.collection.get_alt_entities(altscope="all") ]
+                )
             if not RecordList.exists(self.collection, list_id, altscope="all"):
                 log.warning("DisplayInfo.get_list_info: RecordList %s not found"%list_id)
                 self.http_response = self.view.error(

@@ -1009,6 +1009,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Bib_volume",                ["Bib_volume",        "Short text",    "annal:Text"             ] ]
             , [ "_field/Bib_year",                  ["Bib_year",          "Short text",    "annal:Text"             ] ]
             , [ "_field/Coll_comment",              ["Coll_comment",      "Multiline text", "annal:Longtext"        ] ]
+            , [ "_field/Coll_parent",               ["Coll_parent",       "Entity choice",  "annal:Slug"            ] ]
             , [ "_field/Coll_software_version",     ["Coll_software_version", "Short text", "annal:Text", "S/W version" ] ]
             , [ "_field/Entity_comment",            ["Entity_comment",    "Markdown rich text", "annal:Richtext"    ] ]
             , [ "_field/Entity_id",                 ["Entity_id",         "Entity Id",     "annal:Slug"             ] ]

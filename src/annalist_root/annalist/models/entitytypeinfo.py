@@ -595,7 +595,14 @@ class EntityTypeInfo(object):
         """
         Iterate over entities in collection with current type.
         Returns entities with alias and inferred fields instantiated.
+
+        If user_perms is supplied and not None, checks that they contain permission to
+        list values of the appropriate type. 
         """
+        log.info(
+            "enum_entities_with_inferred_values: parent %s, altscope %s"%
+            (self.entityparent.get_id(), altscope)
+            )
         if (not user_perms or 
             self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
             if self.entityparent:

@@ -85,7 +85,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] collections showing up in local entity lists
     - [x] test cases for collection enumeration, editing
 - [x] Re-think protections for viewing/editing collection metadata: really want the authorization to be based on permissions in the collection being accessed.
-- [ ] Provision for specifying *and using* inherited collections
+- [ ] Create altscope="user" that skips alt parents and checks just local and site permissions
+- [x] Provision for specifying and using inherited collections
+    - [x] Add parent collection selector in collection data view
+        - [x] allow collections to be listed for enum choice
+        - [x] introduce altscope="select" so that collections can be listed by select renderer
+    - [x] When loading a collection, add logic to set alternate parent based on specified parent in collection metadata.  Uses Collection.set_alt_ancestry
+        - alt parent specified breaks access to site data
+    - [x] Test case; e.g. coll1 define type, coll2 inherit from coll1 and reference type.
 - [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
     - [ ] use new layout for site data in source tree to separate Bibliographic data and maybe others
     - [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data

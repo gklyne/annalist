@@ -113,28 +113,62 @@ class Collection(Entity):
         """
         return self._parentcoll
 
-    # Alternate parent
+    # Alternate collections handling
 
-    def set_alt_ancestry(self, altparent):
+    def set_alt_entities(self, altparent):
         """
         Update the alternative parent for the current collection.
 
         Returns a list of parents accessible from the supplied altparent (including itself)
         """
+        # log.info("Collection.set_alt_entities: coll_id %s, altparent_id %s"%(self.get_id(), altparent.get_id()))
         if not isinstance(altparent, Collection):
-            msg = "Collection.set_alt_ancestry value must be a Collection (got %r)"%(altparent,)
+            msg = "Collection.set_alt_entities value must be a Collection (got %r)"%(altparent,)
             log.error(msg)
             raise ValueError(msg)
-        parents   = super(Collection, self).set_alt_ancestry(altparent)
+        parents   = super(Collection, self).set_alt_entities(altparent)
         parentids = [ p.get_id() for p in parents ]
+        # log.info("Collection.set_alt_entities: parentids %r"%parentids)
         if layout.SITEDATA_ID not in parentids:
             msg = (
-                "Entity.set_alt_ancestry cannot access site data (%s) via %r)"%
+                "Entity.set_alt_entities cannot access site data (%s) via %r)"%
                 (layout.SITEDATA_ID, altparent)
                 )
             log.error(msg)
             raise ValueError(msg)
         return parents
+
+    @classmethod
+    def load(cls, parent, entityid, altscope=None):
+        """
+        Overload Entity.load with logic to set alternative parent details for 
+        collection configuration inheritance, if an alternative is specified in 
+        the collection data loaded.
+
+        cls         is the Collection class of the entity to be loaded
+        parent      is the parent from which the entity is descended.
+        entityid    is the local identifier (slug) for the entity.
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `get_alt_entities` for more details.
+
+        Returns an instance of the indicated Collection class with data loaded from 
+        the corresponding Annalist storage, or None if there is no such entity.
+        """
+        log.debug("Collection.load: %s, altscope %s"%(entityid, altscope))
+        coll = super(Collection, cls).load(parent, entityid, altscope=altscope)
+        if coll is not None:
+            # "annal:inherit_from": "_coll/parent",
+            parent_coll_id = extract_entity_id(coll.get(ANNAL.CURIE.inherit_from, None))
+            if parent_coll_id and parent_coll_id != layout.SITEDATA_ID:
+                parent_coll = super(Collection, cls).load(parent, parent_coll_id)
+                if parent_coll is None:
+                    log.warning(
+                        "Collection.load: coll %s references non-existent parent %s"%
+                        (entityid, parent_coll_id)
+                        )
+                else:
+                    coll.set_alt_entities(parent_coll)
+        return coll
 
     # User permissions
 

@@ -158,7 +158,7 @@ class EntityRoot(object):
         log.debug("EntityRoot.get_view_url_path: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
         return util.entity_url_path(self.get_view_url(), "")
 
-    def get_alt_ancestry(self, altscope=None):
+    def get_alt_entities(self, altscope=None):
         """
         Returns a list of alternative entities to the current entity to search for possible 
         child entities.  The root entity has no such alternatives.
@@ -250,8 +250,10 @@ class EntityRoot(object):
         cls         is a subclass of Entity indicating the type of children to
                     iterate over.
         altscope    if supplied, indicates a scope other than the current entity to
-                    search for children.  See method `get_alt_ancestry` for more details.
+                    search for children.  See method `get_alt_entities` for more details.
         """
+        if altscope == "select":
+            altscope = "all"
         for i in self._children(cls, altscope=altscope):
             if cls.exists(self, i, altscope=altscope):
                 yield i

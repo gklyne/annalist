@@ -68,6 +68,7 @@ class Site(EntityRoot):
         sitedir        = os.path.join(sitebasedir, sitepath)
         self._sitedata = None
         super(Site, self).__init__(host+siteuripath, siteuripath, sitedir, sitebasedir)
+        self.set_id(layout.SITEDATA_ID)
         return
 
     def _exists(self):
@@ -76,8 +77,6 @@ class Site(EntityRoot):
         """
         return True
 
-    #@@TODO: delete this when tests all pass
-    #        NOTE: tried that, but EntityRoot includes collections too.
     def _children(self, cls, altscope=None):
         """
         Iterates over candidate child identifiers that are possible instances of an 
@@ -92,6 +91,21 @@ class Site(EntityRoot):
         if altscope == "site":
             return self._base_children(cls)
         return iter(())     # Empty iterator
+
+    def child_entity_ids(self, cls, altscope=None):
+        """
+        Iterates over child entity identifiers of an indicated class.
+        If the altscope is "all" or not specified, the altscope value
+        used is "site".
+
+        cls         is a subclass of Entity indicating the type of children to
+                    iterate over.
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `get_alt_entities` for more details.
+        """
+        if altscope == "select":
+            altscope = "site"
+        return super(Site, self).child_entity_ids(cls, altscope=altscope)
 
     def site_data_collection(self):
         """

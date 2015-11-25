@@ -106,6 +106,7 @@ class EntityFinder(object):
         a value of 'all' means that site-wide entyities are icnluded in the listing.
         Otherwise only collection entities are included.        
         """
+        log.info("get_type_entities: type_id %s"%type_id)
         entitytypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
         for e in entitytypeinfo.enum_entities_with_inferred_values(
                 user_permissions, altscope=altscope
@@ -123,14 +124,15 @@ class EntityFinder(object):
         a value of 'all' means that site-wide entities are included in the listing.
         Otherwise only collection entities are included.        
         """
+        log.info("get_subtype_entities: type_id %s"%type_id)
         for entitytypeinfo in self.get_collection_subtypes(type_id):
             for e in entitytypeinfo.enum_entities_with_inferred_values(
                     user_permissions, altscope=altscope
                     ):
-                # log.info(
-                #     "get_subtype_entities type_id %s, yield %s/%s"%
-                #     (type_id, e.get_type_id(), e.get_id())
-                #     )
+                log.info(
+                    "get_subtype_entities type_id %s, yield %s/%s"%
+                    (type_id, e.get_type_id(), e.get_id())
+                    )
                 if e.get_id() != "_initial_values":
                     yield e
         return
@@ -152,9 +154,11 @@ class EntityFinder(object):
         If a type_id is supplied, site data values are included.
         """
         if type_id:
+            log.info("get_base_entities: type_id %s"%type_id)
             return self.get_subtype_entities(type_id, user_permissions, altscope)
             # return self.get_type_entities(type_id, user_permissions, scope)
         else:
+            log.info("get_base_entities: all types")
             return self.get_all_types_entities(
                 self.get_collection_type_ids(), user_permissions, altscope
                 )

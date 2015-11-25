@@ -135,8 +135,8 @@ class FieldDescription(object):
             restrict_values = self._field_desc['field_ref_restriction']
             entity_finder   = EntityFinder(collection, selector=restrict_values)
             # Determine subtypes of field entity type, if specified
-            # @@TODO: subtype logic here is just wrong...
-            #         need context to conver info that can be used to calculate supertypes
+            # @@TODO: subtype logic here is just ugly...
+            #         need context to convert info that can be used to calculate supertypes
             #         on-the-fly as needed by the field restriction expression.  E.g. include
             #         collection object in context.
             if field_entity_type and restrict_values:
@@ -149,7 +149,7 @@ class FieldDescription(object):
             else:
                 field_view_context = view_context
             entities        = entity_finder.get_entities_sorted(
-                type_id=type_ref, context=field_view_context, scope="all"
+                type_id=type_ref, context=field_view_context, scope="select"
                 )
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list

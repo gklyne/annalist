@@ -300,44 +300,68 @@ class CollectionTest(AnnalistTestCase):
 
     # Alternative parent setting
 
-    def test_set_alt_ancestry_1(self):
+    def test_set_alt_entities_1(self):
         altcoll1  = Collection(self.testsite, "altcoll1")
-        parents   = self.testcoll.set_alt_ancestry(altcoll1)
+        parents   = self.testcoll.set_alt_entities(altcoll1)
         parentids = [ p.get_id() for p in parents ]
         self.assertEqual( parentids, ["testcoll", "altcoll1", layout.SITEDATA_ID])
         return
 
-    def test_set_alt_ancestry_2(self):
+    def test_set_alt_entities_2(self):
         altcoll1  = Collection(self.testsite, "altcoll1")
-        parents   = altcoll1.set_alt_ancestry(self.testcoll)
+        parents   = altcoll1.set_alt_entities(self.testcoll)
         parentids = [ p.get_id() for p in parents ]
         self.assertEqual( parentids, ["altcoll1", "testcoll", layout.SITEDATA_ID])
         return
 
-    def test_set_alt_ancestry_loop(self):
+    def test_set_alt_entities_loop(self):
         altcoll1  = Collection(self.testsite, "altcoll1")
-        parents   = self.testcoll.set_alt_ancestry(altcoll1)
+        parents   = self.testcoll.set_alt_entities(altcoll1)
         parentids = [ p.get_id() for p in parents ]
         self.assertEqual( parentids, ["testcoll", "altcoll1", layout.SITEDATA_ID])
         with SuppressLogging(logging.ERROR):
             with self.assertRaises(ValueError):
-                parents   = altcoll1.set_alt_ancestry(self.testcoll)
+                parents   = altcoll1.set_alt_entities(self.testcoll)
         return
 
-    def test_set_alt_ancestry_no_site(self):
+    def test_set_alt_entities_no_site(self):
         # self.testcoll     = Collection(self.testsite, "testcoll")
         # self.coll1        = collection_values("coll1")
         # self.testcoll_add = collection_create_values("testcoll")        
         altcoll1  = Collection(self.testsite, "altcoll1")
-        parents   = self.testcoll.set_alt_ancestry(altcoll1)
+        parents   = self.testcoll.set_alt_entities(altcoll1)
         parentids = [ p.get_id() for p in parents ]
         self.assertEqual( parentids, ["testcoll", "altcoll1", layout.SITEDATA_ID])
         altcoll1._altparent = None
         with SuppressLogging(logging.ERROR):
             with self.assertRaises(ValueError):
-                parents   = self.testcoll.set_alt_ancestry(altcoll1)
+                parents   = self.testcoll.set_alt_entities(altcoll1)
         return
 
+    def test_alt_parent_inherit_coll(self):
+        # Test inheritance of definitions from an alternative collection
+        # (tescoll is set up with testtype created)
+        coll_id = "newcoll"
+        newcoll = Collection.create(self.testsite, coll_id, collection_create_values(coll_id))
+        altparents = newcoll.set_alt_entities(self.testcoll)
+        parentids  = [ p.get_id() for p in altparents ]
+        self.assertEqual(parentids, ["newcoll", "testcoll", layout.SITEDATA_ID])
+        self.assertTrue(RecordType.exists(newcoll, "testtype", altscope="all"))
+        testtype = RecordType.load(newcoll, "testtype", altscope="all")
+        self.assertEquals(testtype["rdfs:label"], "RecordType testcoll/testtype")
+        return
+
+    def test_alt_parent_inherit_site(self):
+        # Test inheritance of definitions from site with an alternative collection set
+        coll_id = "newcoll"
+        newcoll = Collection.create(self.testsite, coll_id, collection_create_values(coll_id))
+        altparents = newcoll.set_alt_entities(self.testcoll)
+        parentids  = [ p.get_id() for p in altparents ]
+        self.assertEqual(parentids, ["newcoll", "testcoll", layout.SITEDATA_ID])
+        self.assertTrue(RecordType.exists(newcoll, "Default_type", altscope="all"))
+        def_type = RecordType.load(newcoll, "Default_type", altscope="all")
+        self.assertEquals(def_type["rdfs:label"], "Default record")
+        return
 
 #   -----------------------------------------------------------------------------
 #
