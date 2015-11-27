@@ -25,6 +25,7 @@ log = logging.getLogger(__name__)
 
 from django.conf                import settings
 
+from annalist                   import layout
 from annalist                   import util
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
@@ -155,7 +156,13 @@ class Entity(EntityRoot):
                     search for children.  Currently defined values are:
                     "none" or None - search current entity only
                     "all" - search current entity and all alternative parent entities,
-                    including their parents and alternatives.
+                        including their parents and alternatives.
+                    "user" - search current entity and site entity if it is on the 
+                        alternatives list; skips intervening entities.  Used to avoid 
+                        inheriting user permissions with other configuration data.
+                    "site" - site-level only: used for listing collections; by default, 
+                        collections are not included in enumerations of entities. 
+                        (See EntityRoot. and Site._children methods)
         """
         if altscope is not None:
             if not isinstance(altscope, (unicode, str)):
@@ -164,8 +171,11 @@ class Entity(EntityRoot):
                 raise ValueError("altscope must be string (%r supplied)"%(altscope))
         log.debug("Entity.get_alt_entities: %s/%s"%(self.get_type_id(), self.get_id()))
         alt_ancestry = []
-        if altscope == "all" and self._altparent:
-            alt_ancestry = [self._altparent] + self._altparent.get_alt_entities(altscope=altscope)
+        if self._altparent:
+            if ( (altscope == "all") or
+                 (altscope == "user") and (self._altparent.get_id() == layout.SITEDATA_ID)):
+                alt_ancestry.append(self._altparent)
+            alt_ancestry.extend(self._altparent.get_alt_entities(altscope=altscope))
         # log.info(
         #     "Entity.get_alt_entities: %s/%s -> %r"%
         #     (self.get_type_id(), self.get_id(), [ p.get_id() for p in alt_ancestry ])

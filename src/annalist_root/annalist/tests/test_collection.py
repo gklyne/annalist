@@ -363,6 +363,22 @@ class CollectionTest(AnnalistTestCase):
         self.assertEquals(def_type["rdfs:label"], "Default record")
         return
 
+    def test_alt_parent_inherit_user(self):
+        # Test inheritance of "user" scope definitions
+        coll_id = "newcoll"
+        newcoll = Collection.create(self.testsite, coll_id, collection_create_values(coll_id))
+        user1   = AnnalistUser.create(self.testcoll, "user1", annalistuser_create_values(user_id="user1"))
+        user2   = AnnalistUser.create(newcoll,       "user2", annalistuser_create_values(user_id="user2"))
+        altparents = newcoll.set_alt_entities(self.testcoll)
+        parentids  = [ p.get_id() for p in altparents ]
+        self.assertEqual(parentids, ["newcoll", "testcoll", layout.SITEDATA_ID])
+        self.assertFalse(AnnalistUser.exists(newcoll, "user1", altscope="user"))
+        self.assertTrue(AnnalistUser.exists(newcoll, "_default_user_perms", altscope="user"))   # Access site data
+        self.assertTrue(AnnalistUser.exists(newcoll, "user2", altscope="user"))
+        testuser = AnnalistUser.load(newcoll, "user2", altscope="user")
+        self.assertEquals(testuser["rdfs:label"], "Test User")
+        return
+
 #   -----------------------------------------------------------------------------
 #
 #   CollectionEditView tests

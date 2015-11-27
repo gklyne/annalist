@@ -85,7 +85,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] collections showing up in local entity lists
     - [x] test cases for collection enumeration, editing
 - [x] Re-think protections for viewing/editing collection metadata: really want the authorization to be based on permissions in the collection being accessed.
-- [ ] Create altscope="user" that skips alt parents and checks just local and site permissions
+- [.] Create altscope="user" that skips alt parents and checks just local and site permissions
 - [x] Provision for specifying and using inherited collections
     - [x] Add parent collection selector in collection data view
         - [x] allow collections to be listed for enum choice

@@ -204,7 +204,7 @@ class Collection(Entity):
         returns an AnnalistUser object for the identified user, or None.  This object contains
                 information about permissions granted to the user in the current collection.
         """
-        user = AnnalistUser.load(self, user_id, altscope="all")
+        user = AnnalistUser.load(self, user_id, altscope="user")
         # log.debug("Collection.get_user_permissions: user_id %s, user_uri %s, user %r"%
         #     (user_id, user_uri, user)
         #     )
