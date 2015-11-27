@@ -91,7 +91,7 @@ def init_annalist_test_site():
     log.debug("init_annalist_test_site")
     copySitedata(
         settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
-        settings.SITE_SRC_ROOT+"/annalist/sitedata",
+        settings.SITE_SRC_ROOT+"/annalist/data/sitedata",
         TestBaseDir)
     testsite = Site(TestBaseUri, TestBaseDir)
     testsite.generate_site_jsonld_context()

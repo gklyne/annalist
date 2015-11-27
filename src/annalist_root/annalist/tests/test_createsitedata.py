@@ -56,7 +56,7 @@ def entitydata_create_values(coll, etype, entity_id, update="Entity"):
 def site_create_data(site_base_uri, data_source):
     site = Site.initialize_site_data(
         site_base_uri, TestBaseDir, 
-        settings.SITE_SRC_ROOT + "/annalist/sitedata",
+        settings.SITE_SRC_ROOT + "/annalist/data/sitedata",
         label="Annalist data notebook test site", 
         description="Annalist test site metadata and site-wide values."
         )
@@ -108,7 +108,7 @@ class CreateSiteData(AnnalistTestCase):
         #       def copySitedata(src, sitedatasrc, tgt):
         copySitedata(
             settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
-            settings.SITE_SRC_ROOT+"/annalist/sitedata",
+            settings.SITE_SRC_ROOT+"/annalist/data/sitedata",
             TestBaseDir)
         # Use localhost base URI for devel site
         develsite = site_create_data("http://localhost:8000/annalist/", "/sampledata/init/")

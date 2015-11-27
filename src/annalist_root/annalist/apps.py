@@ -27,7 +27,7 @@ class AnnalistConfig(AppConfig):
         log.info("DJANGO_ROOT:      "+settings.DJANGO_ROOT)
         log.info("SITE_CONFIG_DIR:  "+settings.SITE_CONFIG_DIR)
         log.info("SITE_SRC_ROOT:    "+settings.SITE_SRC_ROOT)
-        log.info("STATICFILES_DIRS: "+settings.STATICFILES_DIRS[1])
+        log.info("STATICFILES_DIRS: "+repr(settings.STATICFILES_DIRS))
         log.info("DB PATH:          "+settings.DATABASES['default']['NAME'])
         log.info("ALLOWED_HOSTS:    "+",".join(settings.ALLOWED_HOSTS))
         log.info("LOGGING_FILE:     "+settings.LOGGING_FILE)
