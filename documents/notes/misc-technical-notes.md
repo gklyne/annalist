@@ -128,4 +128,6 @@ on locally installable (but web-connected) facilities for individuals and small 
 
 - http://www.w3.org/2011/gld/wiki/Main_Page (check out data cube vocab for spreadsheet bridge)
 
+- http://www.w3.org/wiki/Pingback#Semantic_Pingback
+
 
