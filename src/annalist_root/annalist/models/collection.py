@@ -30,8 +30,7 @@ from django.conf import settings
 from annalist                       import layout
 from annalist.exceptions            import Annalist_Error
 from annalist.identifiers           import RDF, RDFS, ANNAL
-# from annalist                       import util
-from annalist.util                  import valid_id, extract_entity_id
+from annalist.util                  import valid_id, extract_entity_id, make_type_entity_id
 
 from annalist.models.entity         import Entity
 from annalist.models.annalistuser   import AnnalistUser
@@ -136,6 +135,14 @@ class Collection(Entity):
                 )
             log.error(msg)
             raise ValueError(msg)
+        if not self._ensure_values_loaded():
+            msg = (
+                "Entity.set_alt_entities cannot load collection data for %s)"%
+                (self.get_id(),)
+                )
+            log.error(msg)
+            raise ValueError(msg)
+        self[ANNAL.CURIE.inherit_from] = make_type_entity_id("_coll", altparent.get_id())
         return parents
 
     @classmethod

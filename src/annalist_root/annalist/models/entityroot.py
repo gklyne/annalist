@@ -409,6 +409,19 @@ class EntityRoot(object):
                     })
         return None
 
+    def _ensure_values_loaded(self):
+        """
+        If values are not loaded and present for the current entity, read and store them.
+
+        Returns the values loaded, or None.
+        """
+        if self._values is None:
+            vals = self._load_values()
+            if vals:
+                vals = self._migrate_values(vals)
+                self.set_values(vals)
+        return self._values
+
     def _migrate_path(self):
         """
         Migrate entity data filenames from those used in older software versions.

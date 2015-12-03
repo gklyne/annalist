@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "CheckBox"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "CheckBox"
+, "rdfs:comment":       "Boolean yes/no value rendered as checkbox"
+, "annal:uri":          "annal:field_render_type/CheckBox"
+}

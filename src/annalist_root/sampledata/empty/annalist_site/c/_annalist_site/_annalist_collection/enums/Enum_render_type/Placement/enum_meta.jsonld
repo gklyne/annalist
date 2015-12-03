@@ -1,9 +1,0 @@
-{ "@id":                "./"
-, "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
-, "@context":           ["../../coll_context.jsonld"]
-, "annal:id":           "Placement"
-, "annal:type_id":      "Enum_render_type"
-, "rdfs:label":         "Position/size"
-, "rdfs:comment":       "A field placement option, which may be rendered as a drop-down selection."
-, "annal:uri":          "annal:field_render_type/Placement"
-}

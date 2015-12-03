@@ -362,7 +362,9 @@ class EntityTypeInfo(object):
             # Also used in entityedit for getting @type URI/CURIE values.
             #
             # Used in render_utils to get link to type record
-            log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
+            if type_id not in get_built_in_type_ids():
+                log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
+            # raise ValueError("Trace")
         return
 
     def get_type_id(self):

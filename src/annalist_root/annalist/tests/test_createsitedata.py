@@ -53,9 +53,17 @@ def entitydata_create_values(coll, etype, entity_id, update="Entity"):
         , 'rdfs:comment': '%s coll %s, type %s, entity %s'%(update, coll._entityid, etype._entityid, entity_id)
         })
 
-def site_create_data(site_base_uri, data_source):
-    site = Site.initialize_site_data(
-        site_base_uri, TestBaseDir, 
+def site_create_data(site_base_uri, target_subdir):
+    """
+    Create site data in `target_subdir`...
+
+    @@NOTE: due to the way EntityRoot is defenfensively coded, all test data is created
+    under settings.BASE_SITE_DIR, and the supplied 'target_subdir' parameter is ignored.
+    """
+    # target_dir = os.path.join(settings.SAMPLEDATA_DIR, target_subdir)
+    target_dir = settings.BASE_SITE_DIR
+    site       = Site.initialize_site_data(
+        site_base_uri, target_dir,
         settings.SITE_SRC_ROOT + "/annalist/data/sitedata",
         label="Annalist data notebook test site", 
         description="Annalist test site metadata and site-wide values."
@@ -80,6 +88,14 @@ def coll123_create_data(site):
         for t,d in [(type1,data1),(type2,data2)]:
             for eid in ["entity1", "entity2", "entity3"]:
                 e = EntityData.create(d, eid, entitydata_create_values(coll,t,eid))
+    return
+
+def collbib_create_data(site):
+    bibcoll = Site.initialize_bib_data(site, 
+        settings.SITE_SRC_ROOT+"/annalist/data/bibdata",
+        label="Bibliographic definitions", 
+        description="Bibliographic definitions for testing"
+        )
     return
 
 #   -----------------------------------------------------------------------------
@@ -107,21 +123,27 @@ class CreateSiteData(AnnalistTestCase):
         # Note: copysitedata copies also copies from source tree
         #       def copySitedata(src, sitedatasrc, tgt):
         copySitedata(
-            settings.SITE_SRC_ROOT+"/sampledata/init/"+test_layout.SITE_DIR, 
+            settings.SITE_SRC_ROOT+"/devel/"+test_layout.SITE_DIR, 
             settings.SITE_SRC_ROOT+"/annalist/data/sitedata",
             TestBaseDir)
         # Use localhost base URI for devel site
-        develsite = site_create_data("http://localhost:8000/annalist/", "/sampledata/init/")
+        develsite = site_create_data("http://localhost:8000/annalist/", "devel")
         coll123_create_data(develsite)
         return
 
     def test_CreateTestSiteData(self):
-        testsite = site_create_data(TestBaseUri, "/sampledata/init/")
+        testsite = site_create_data(TestBaseUri, "testinit")
+        coll123_create_data(testsite)
+        return
+
+    def test_CreateBibTestSiteData(self):
+        testsite = site_create_data(TestBaseUri, "bibtestinit")
+        collbib_create_data(testsite)
         coll123_create_data(testsite)
         return
 
     def test_CreateEmptySiteData(self):
-        emptysite = site_create_data(TestBaseUri, "/sampledata/empty/")
+        emptysite = site_create_data(TestBaseUri, "empty")
         return
 
 # End.

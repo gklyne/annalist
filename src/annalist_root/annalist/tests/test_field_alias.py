@@ -28,7 +28,11 @@ from annalist.models.entitydata     import EntityData
 
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from init_tests             import (
+    init_annalist_test_site, init_annalist_bib_site, 
+    init_annalist_test_coll, init_annalist_bib_coll, 
+    resetSitedata
+    )
 from entity_testutils       import (
     collection_create_values,
     create_test_user, create_user_permissions,
@@ -53,9 +57,11 @@ class FieldAliasTest(AnnalistTestCase):
     """
 
     def setUp(self):
-        init_annalist_test_site()
-        self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
+        self.testsite  = init_annalist_bib_site()
+        self.testcoll  = init_annalist_bib_coll()
+        # init_annalist_test_site()
+        # self.testsite = Site(TestBaseUri, TestBaseDir)
+        # self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         # self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
         # Create BibEntry record (BibEntry_type defines field alias)
         self.testdata   = RecordTypeData.create(self.testcoll, "BibEntry_type", {})

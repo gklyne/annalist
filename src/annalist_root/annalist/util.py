@@ -87,8 +87,8 @@ def extract_entity_id(eid):
 
 def fill_type_entity_id(eid, default_type_id=None):
     """
-    Assemble a type+entity compisite identifier based on a supplied id string.
-    If the string does not alreadyt include a type_id value, thne supplied default
+    Assemble a type+entity comopisite identifier based on a supplied id string.
+    If the string does not already include a type_id value, the supplied default
     is used.
     """
     type_id, entity_id = split_type_entity_id(eid, default_type_id=default_type_id)

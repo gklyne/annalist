@@ -1,8 +1,0 @@
-{ "@id":                "./"
-, "@type":              ["annal:Enum_render_type", "annal:Enum", "annal:Type"]
-, "annal:id":           "Type"
-, "annal:type_id":      "Enum_render_type"
-, "rdfs:label":         "Type Id"
-, "rdfs:comment":       "A type identifier, which may be rendered as a drop-down selection.  @@Deprecated."
-, "annal:uri":          "annal:field_render_type/Type"
-}

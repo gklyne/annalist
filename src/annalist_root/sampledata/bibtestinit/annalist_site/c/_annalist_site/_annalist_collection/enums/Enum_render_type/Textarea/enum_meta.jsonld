@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "Textarea"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "Multiline text"
+, "rdfs:comment":       "Field rendered as multiple lines of text"
+, "annal:uri":          "annal:field_render_type/Textarea"
+}

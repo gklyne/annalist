@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "inbook"
+, "annal:type_id":      "Enum_bib_type"
+, "rdfs:label":         "In book"
+, "rdfs:comment":       "A part of a book, usually untitled. May be a chapter (or section, etc.) and/or a range of pages.  Other fields: author/editor, title, chapter/pages, publisher, year, volume/number, series, type, address, edition, month, note."
+, "annal:uri":          "annal:bib_type/inbook"
+}

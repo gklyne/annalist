@@ -253,9 +253,9 @@ class Site(EntityRoot):
         if label is None:
             label = "Annalist linked data notebook site"
         if description is None:
-            description = "Annalist test site metadata and site-wide values."
+            description = "Annalist site metadata and site-wide values."
         annal_comment = (
-            "Initialized by annalist.tests.test_createsitedata.py at "+
+            "Initialized by annalist.models.site.create_empty_site_data at "+
             datetime_now.isoformat(' ')
             )
         site = Site(site_base_uri, site_base_dir)
@@ -367,6 +367,31 @@ class Site(EntityRoot):
         return
 
     @staticmethod
+    def create_empty_coll_data(
+        site, coll_id,
+        label=None, description=None):
+        """
+        Create empty collection, and returns the Collection object.
+        """
+        datetime_now = datetime.datetime.today().replace(microsecond=0)
+        if label is None:
+            label = "Collection %s"%coll_id
+        if description is None:
+            description = "Annalist data collection %s"%coll_id
+        annal_comment = (
+            "Initialized by annalist.models.site.create_empty_coll_data at "+
+            datetime_now.isoformat(' ')
+            )
+        coll_values = (
+            { RDFS.CURIE.label:             label
+            , RDFS.CURIE.comment:           description
+            , ANNAL.CURIE.comment:          annal_comment                                    
+            , ANNAL.CURIE.software_version: annalist.__version_data__
+            })
+        coll = Collection.create(site, coll_id, coll_values)
+        return coll
+
+    @staticmethod
     def replace_site_data_dir(sitedata, sdir, site_data_src):
         """
         Replace indicated sitedata directory data from source: 
@@ -412,5 +437,26 @@ class Site(EntityRoot):
             Site.replace_site_data_dir(sitedata, sdir, site_data_src)
         sitedata.generate_coll_jsonld_context()
         return site
+
+    @staticmethod
+    def initialize_bib_data(
+        site, bib_data_src, 
+        label=None, description=None):
+        """
+        Initializes bibliography definitions data for a new site for testing.
+        """
+        bibdatacoll = site.create_empty_coll_data(site, layout.BIBDATA_ID, 
+            label="Bibliographic record definitions", 
+            description=
+                "Definitions for bibliographic records, broadly following BibJSON. "+
+                "Used for some Annalist test cases."
+            )
+        bib_data_tgt, bib_data_file = bibdatacoll._dir_path()
+        log.info("Copy Annalist bibliographic definitions data from %s to %s"%(bib_data_src, bib_data_tgt))
+        for sdir in ("types", "lists", "views", "groups", "fields", "enums"):
+            log.info("- %s -> %s"%(sdir, bib_data_tgt))
+            Site.replace_site_data_dir(bibdatacoll, sdir, bib_data_src)
+        bibdatacoll.generate_coll_jsonld_context()
+        return bibdatacoll
 
 # End.

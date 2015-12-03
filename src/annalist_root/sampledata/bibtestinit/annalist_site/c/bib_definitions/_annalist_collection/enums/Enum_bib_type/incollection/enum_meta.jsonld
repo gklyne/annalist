@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "incollection"
+, "annal:type_id":      "Enum_bib_type"
+, "rdfs:label":         "In collection"
+, "rdfs:comment":       "A part of a book having its own title.  Other fields: author, title, booktitle, publisher, year, editor, volume/number, series, type, chapter, pages, address, edition, month, note"
+, "annal:uri":          "annal:bib_type/incollection"
+}

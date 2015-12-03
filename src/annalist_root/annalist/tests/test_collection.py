@@ -308,7 +308,8 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def test_set_alt_entities_2(self):
-        altcoll1  = Collection(self.testsite, "altcoll1")
+        coll_id   = "altcoll1"
+        altcoll1  = Collection.create(self.testsite, coll_id, collection_create_values(coll_id))
         parents   = altcoll1.set_alt_entities(self.testcoll)
         parentids = [ p.get_id() for p in parents ]
         self.assertEqual( parentids, ["altcoll1", "testcoll", layout.SITEDATA_ID])
@@ -325,9 +326,6 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def test_set_alt_entities_no_site(self):
-        # self.testcoll     = Collection(self.testsite, "testcoll")
-        # self.coll1        = collection_values("coll1")
-        # self.testcoll_add = collection_create_values("testcoll")        
         altcoll1  = Collection(self.testsite, "altcoll1")
         parents   = self.testcoll.set_alt_entities(altcoll1)
         parentids = [ p.get_id() for p in parents ]

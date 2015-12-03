@@ -26,6 +26,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - 2. running django `manage.py` with `syncdb` fixes that, but...
     - 3. subsequent attempt to create admin user fails with:
         - "ValueError: Attempt to create entity file outside Annalist site tree"
+- [ ] BUG: uploading PDF as image results in file extension PNG
 - [x] Suppress display of _initial_values when listing entities (is this the right choice?)
 - [x] moved 'child_entity_ids' method to root so it can be used with `Site` objects
     - [ ] @@TODO: old `Entity` method renamed, should be deleted when all tests pass
@@ -93,19 +94,21 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] When loading a collection, add logic to set alternate parent based on specified parent in collection metadata.  Uses Collection.set_alt_ancestry
         - alt parent specified breaks access to site data
     - [x] Test case; e.g. coll1 define type, coll2 inherit from coll1 and reference type.
-- [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
-    - [ ] use new layout for site data in source tree to separate Bibliographic data and maybe others
-    - [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
-    - [ ] copy bibliographic data collection into test data fixture
-- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
-
+- [x] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
+    - [x] revise layout of site data in source tree to facilitate separate subsets (e.g. Bibliographic data)
+    - [x] use new layout for site data to separate Bibliographic datam from "core" site data
+    - [x] copy bibliographic data collection into test data fixture
+    - [x] update tests to work with bublio data in separate collection
 - [ ] Update JSON-LD spike code, and test with latest rdflib-jsonld
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
-- [ ] Create schema definitions in Annalist for ANNAL namespace
-- [ ] When supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration?
 
 (release?)
 
+- [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
+- [ ] Create schema definitions in Annalist for ANNAL namespace
+- [ ] When supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration?
+- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
+- [ ] In drop-down list, try including typeid/entityid only for entries whose labels are not unique.
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?

@@ -1,9 +1,0 @@
-{ "@id":                "./"
-, "@type":              ["annal:Enum_value_mode", "annal:Enum", "annal:Type"]
-, "@context":           ["../../coll_context.jsonld"]
-, "annal:id":           "_initial_values"
-, "annal:type_id":      "Enum_value_mode"
-, "annal:uri":          "annal:value_mode/ZZZZ"
-, "rdfs:label":         "annal:value_mode/ZZZZ"
-, "rdfs:comment":       "..."
-}

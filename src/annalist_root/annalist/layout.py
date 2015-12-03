@@ -76,6 +76,7 @@ log = logging.getLogger(__name__)
 
 SITE_DIR                = "annalist_site"
 SITEDATA_ID             = "_annalist_site"
+BIBDATA_ID              = "bib_definitions"
 SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
 SITEDATA_OLD_DIR        = "_annalist_site"
 SITE_META_PATH          = ""

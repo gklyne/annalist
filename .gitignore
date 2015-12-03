@@ -83,6 +83,7 @@ Thumbs.db
 
 # Project files
 annalist.sublime*
+_old_*
 /pyenv
 /anenv
 /setupenv
@@ -90,6 +91,8 @@ annalist.sublime*
 /src/annalist_root/devel
 /src/annalist_root/sampledata/data
 /src/annalist_root/sampledata/init_old
+/src/annalist_root/annalist/data/attic
+/src/annalist_root/annalist/data/old-*
 /src/build
 /src/dist
 /src/*.egg-info
