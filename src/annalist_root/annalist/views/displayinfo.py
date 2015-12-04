@@ -29,7 +29,7 @@ from annalist                       import layout
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.util                  import valid_id, extract_entity_id
 
-from annalist.models.entitytypeinfo import EntityTypeInfo
+from annalist.models.entitytypeinfo import EntityTypeInfo, SITE_PERMISSIONS
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
@@ -249,6 +249,10 @@ class DisplayInfo(object):
             else:
                 self.list_id    = list_id
                 self.recordlist = RecordList.load(self.collection, list_id, altscope="all")
+                if self.type_id is None and self.entitytypeinfo is None:
+                    self.get_type_info(
+                        extract_entity_id(self.recordlist[ANNAL.CURIE.default_type])
+                        )
                 log.debug("DisplayInfo.get_list_info: %r"%(self.recordlist.get_values()))
         return self.http_response
 
@@ -313,10 +317,17 @@ class DisplayInfo(object):
             # Check requested action
             action = action or "view"
             if self.entitytypeinfo:
+                # print "@@ type permissions map, action %s"%action
                 permissions_map = self.entitytypeinfo.permissions_map
             else:
-                raise ValueError("displayinfo.check_authorization without entitytypeinfo")
-                # permissions_map = {}
+                # Use Collection permissions map
+                # print "@@ site permissions map, action %s"%action
+                permissions_map = SITE_PERMISSIONS
+                # raise ValueError("displayinfo.check_authorization without entitytypeinfo")
+                # # permissions_map = {}
+
+            # Previously, default permission map was applied in view.form_action_auth if no 
+            # type-based map was provided.
             self.http_response = (
                 self.http_response or 
                 self.view.form_action_auth(action, self.collection, permissions_map)
@@ -340,6 +351,7 @@ class DisplayInfo(object):
         Return default list_id for listing defined type, or None
         """
         list_id = None
+        # print "@@ get_type_list_id type_id %s, list_id %s"%(type_id, list_id)
         if type_id:
             if self.entitytypeinfo.recordtype:
                 list_id = extract_entity_id(
@@ -347,6 +359,7 @@ class DisplayInfo(object):
                     )
             else:
                 log.warning("DisplayInfo.get_type_list_id no type data for %s"%(type_id))
+        # print "@@ get_type_list_id %s"%list_id
         return list_id
 
     def get_list_id(self, type_id, list_id):
@@ -354,6 +367,7 @@ class DisplayInfo(object):
         Return supplied list_id if defined, otherwise find default list_id for
         entity type or collection (unless an error has been detected).
         """
+        # print "@@ get_list_id 1 %s"%list_id
         if not self.http_response:
             list_id = (
                 list_id or 
@@ -361,8 +375,10 @@ class DisplayInfo(object):
                 self.collection.get_default_list() or
                 ("Default_list" if type_id else "Default_list_all")
                 )
+            # print "@@ get_list_id 2 %s"%list_id
             if not list_id:
                 log.warning("get_list_id: %s, type_id %s"%(list_id, type_id))
+            # print "@@ get_list_id 3 %s"%list_id
         return list_id
 
     def get_list_view_id(self):

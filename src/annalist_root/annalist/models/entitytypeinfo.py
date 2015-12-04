@@ -601,10 +601,12 @@ class EntityTypeInfo(object):
         If user_perms is supplied and not None, checks that they contain permission to
         list values of the appropriate type. 
         """
-        log.info(
-            "enum_entities_with_inferred_values: parent %s, altscope %s"%
-            (self.entityparent.get_id(), altscope)
-            )
+        #@@
+        # log.info(
+        #     "enum_entities_with_inferred_values: parent %s, altscope %s"%
+        #     (self.entityparent.get_id(), altscope)
+        #     )
+        #@@
         if (not user_perms or 
             self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
             if self.entityparent:

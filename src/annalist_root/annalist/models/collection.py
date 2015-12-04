@@ -433,6 +433,7 @@ class Collection(Entity):
         Return the default list to be displayed for the current collection.
         """
         list_id = self.get(ANNAL.CURIE.default_list, None)
+        # print "@@ get_default_list %s"%list_id
         if list_id and not RecordList.exists(self, list_id, altscope="all"):
             log.warning(
                 "Default list %s for collection %s does not exist"%
