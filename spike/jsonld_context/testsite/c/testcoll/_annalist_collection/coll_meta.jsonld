@@ -1,0 +1,13 @@
+{
+  "@context": [
+    {"@base": "../"},
+    "coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [ "annal:Collection" ],
+  "rdfs:label": "Collection testcoll",
+  "rdfs:comment": "Description of Collection testcoll",
+  "annal:type_id": "_coll",
+  "annal:id": "testcoll",
+  "annal:type": "annal:Collection"
+}

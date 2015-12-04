@@ -441,7 +441,7 @@ class JsonldContextTest(AnnalistTestCase):
 
     def test_jsonld_user_default(self):
         """
-        Read user data as JSON-LD, and check resulting RDF triples
+        Read user view data as JSON-LD, and check resulting RDF triples
         """
         # Generate collection JSON-LD context data
         self.testcoll.generate_coll_jsonld_context()
