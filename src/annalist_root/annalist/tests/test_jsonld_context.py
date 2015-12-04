@@ -1,5 +1,5 @@
 """
-Test JSONB-:LD context generat5iobn logic
+Test JSONB-LD context generation logic
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
