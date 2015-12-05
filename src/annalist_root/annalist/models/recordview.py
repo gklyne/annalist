@@ -44,6 +44,12 @@ class RecordView(EntityData):
         log.debug("RecordView %s: dir %s"%(view_id, self._entitydir))
         return
 
+    def _migrate_filenames(self):
+        """
+        Override EntityData method
+        """
+        return None
+
     def _post_update_processing(self, entitydata):
         """
         Default post-update processing.

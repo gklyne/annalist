@@ -228,7 +228,7 @@ class Select_view_renderer(object):
             except Exception as e:
                 log.error(repr(e))
                 result = repr(e)
-        log.debug("Select_view_renderer.render: result %r"%(result,))
+        # log.debug("Select_view_renderer.render: result %r"%(result,))
         return result
 
 class Select_edit_renderer(object):

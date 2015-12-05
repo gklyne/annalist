@@ -165,7 +165,6 @@ class Collection(Entity):
         log.debug("Collection.load: %s, altscope %s"%(entityid, altscope))
         coll = super(Collection, cls).load(parent, entityid, altscope=altscope)
         if coll is not None:
-            # "annal:inherit_from": "_coll/parent",
             parent_coll_id = extract_entity_id(coll.get(ANNAL.CURIE.inherit_from, None))
             if parent_coll_id and parent_coll_id != layout.SITEDATA_ID:
                 parent_coll = super(Collection, cls).load(parent, parent_coll_id)
@@ -175,7 +174,13 @@ class Collection(Entity):
                         (entityid, parent_coll_id)
                         )
                 else:
+                    log.debug(
+                        "Collection.load: coll %s references parent %s"%
+                        (entityid, parent_coll_id)
+                        )
                     coll.set_alt_entities(parent_coll)
+            else:
+                log.debug("Collection.load: coll %s references no parent"%(entityid,))
         return coll
 
     # User permissions

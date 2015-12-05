@@ -52,4 +52,10 @@ class RecordType(EntityData):
         log.debug("RecordType %s: uri %s"%(type_id, self._entityurl))
         return
 
+    def _migrate_filenames(self):
+        """
+        Override EntityData method
+        """
+        return None
+
 # End.

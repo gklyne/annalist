@@ -119,7 +119,7 @@ class CreateSiteData(AnnalistTestCase):
     #   Create site data
     #   -----------------------------------------------------------------------------
 
-    def test_CreateDevelSiteData(self):
+    def make_CreateDevelSiteData(self):
         # Note: copysitedata copies also copies from source tree
         #       def copySitedata(src, sitedatasrc, tgt):
         copySitedata(

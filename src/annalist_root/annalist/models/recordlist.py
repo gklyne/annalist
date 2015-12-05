@@ -53,4 +53,10 @@ class RecordList(EntityData):
         log.debug("RecordList %s: dir %s"%(list_id, self._entitydir))
         return
 
+    def _migrate_filenames(self):
+        """
+        Override EntityData method
+        """
+        return None
+
 # End.

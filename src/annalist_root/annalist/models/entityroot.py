@@ -83,7 +83,7 @@ class EntityRoot(object):
         self._entitydir     = make_entity_base_url(entitydir)
         self._entitybasedir = entitybasedir
         self._values        = None
-        log.debug("EntityRoot.__init__: entity URI %s, entity dir %s"%(self._entityurl, self._entitydir))
+        # log.debug("EntityRoot.__init__: entity URI %s, entity dir %s"%(self._entityurl, self._entitydir))
         return
 
     def __repr__(self):
@@ -284,13 +284,13 @@ class EntityRoot(object):
 
         returns path of of object body, or None
         """
-        # log.debug(" __ EntityRoot._exists_path")
         (d, p, u) = self._dir_path_uri()
-        log.debug("EntityRoot._exists_path %s"%(p))
+        # log.debug("EntityRoot._exists_path %s"%(p))
         if d and os.path.isdir(d):
             if p and os.path.isfile(p):
-                # log.debug("EntityRoot._exists_path return %s"%(p))
+                log.debug("EntityRoot._exists_path %s: OK"%(p))
                 return p
+        log.debug("EntityRoot._exists_path %s: not present"%(p))
         return None
 
     def _exists(self):
@@ -385,10 +385,11 @@ class EntityRoot(object):
         Adds value for 'annal:url' to the entity data returned.
         """
         log.debug("EntityRoot._load_values %s/%s"%(self.get_type_id(), self.get_id()))
+        #@@TODO: rework logic to that _migrate_path is called only when expected filename is not found.
         self._migrate_path()
         body_file = self._exists_path()
-        # log.debug("EntityRoot._load_values body_file %r"%(body_file,))
         if body_file:
+            # log.debug("EntityRoot._load_values body_file %r"%(body_file,))
             try:
                 # @@TODO: rework name access to support different underlays
                 with self._read_stream() as f:
@@ -426,9 +427,9 @@ class EntityRoot(object):
         """
         Migrate entity data filenames from those used in older software versions.
         """
-        log.debug("EntityRoot._migrate_path (%r)"%(self._migrate_filenames(),))
+        # log.debug("EntityRoot._migrate_path (%r)"%(self._migrate_filenames(),))
         if self._migrate_filenames() is None:
-            log.debug("EntityRoot._migrate_path (none)")
+            # log.debug("EntityRoot._migrate_path (skip)")
             return
         if not self._exists():
             for old_data_filename in self._migrate_filenames():

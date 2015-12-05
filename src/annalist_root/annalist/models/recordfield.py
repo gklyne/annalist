@@ -43,6 +43,12 @@ class RecordField(EntityData):
         log.debug("RecordField %s"%(field_id))
         return
 
+    def _migrate_filenames(self):
+        """
+        Override EntityData method
+        """
+        return None
+
     def _migrate_values(self, entitydata):
         """
         Field description entity format migration method.

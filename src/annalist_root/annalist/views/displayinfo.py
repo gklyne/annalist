@@ -234,7 +234,7 @@ class DisplayInfo(object):
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
             assert list_id
-            log.info(
+            log.debug(
                 "DisplayInfo.get_list_info: collection.get_alt_entities %r"%
                 [ c.get_id() for c in  self.collection.get_alt_entities(altscope="all") ]
                 )

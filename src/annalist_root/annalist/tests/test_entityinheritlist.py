@@ -160,8 +160,9 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        # for e in entities:
-        #     print "%s/%s"%(e['annal:type_id'], e['annal:id'])
+        if len(entities) != 210:
+            for e in entities:
+                log.debug("All entities: %s/%s"%(e['annal:type_id'], e['annal:id']))
         self.assertEqual(len(entities), 210)    # Will change with site data
         return
 

@@ -38,6 +38,12 @@ class RecordEnumBase(EntityData):
         super(RecordEnumBase, self).__init__(parent, entity_id)
         return
 
+    def _migrate_filenames(self):
+        """
+        Override EntityData method
+        """
+        return None
+
 def RecordEnumFactory(name, type_id):
     """
     Returns a dynamically-subclassed instance of RecordEnumBase using the supplied 

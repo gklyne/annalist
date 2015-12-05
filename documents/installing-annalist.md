@@ -166,34 +166,23 @@ The following assumes that software is installed under a directory called $WORKS
 
     The output from this command should look something like this:
 
-        (anenv)conina:src graham$ annalist-manager runtest
-        INFO:annalist.apps:Annalist version 0.1.22 (development configuration)
-        INFO:annalist.apps:SETTINGS_MODULE:  annalist_site.settings.devel
-        INFO:annalist.apps:BASE_DATA_DIR:    /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.22-py2.7.egg/annalist_root/devel
-        INFO:annalist.apps:CONFIG_BASE:      /Users/graham/.annalist/
-        INFO:annalist.apps:DJANGO_ROOT:      /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/django
-        INFO:annalist.apps:SITE_CONFIG_DIR:  /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.22-py2.7.egg/annalist_root/annalist_site
-        INFO:annalist.apps:SITE_SRC_ROOT:    /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.22-py2.7.egg/annalist_root
-        INFO:annalist.apps:STATICFILES_DIRS: /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.22-py2.7.egg/annalist_root/annalist/static/
-        INFO:annalist.apps:DB PATH:          /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.22-py2.7.egg/annalist_root/db.sqlite3
-        INFO:annalist.apps:ALLOWED_HOSTS:
-        INFO:annalist.apps:LOGGING_FILE:     None (output to console)
-        INFO:annalist_site.settings.runtests:Annalist version 0.1.22 (test configuration)
-        INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
-        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.22-py2.7.egg/annalist_root/sampledata/data
-        INFO:annalist_site.settings.runtests:CONFIG_BASE:     /Users/graham/.annalist/
-        INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/django
-        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.22-py2.7.egg/annalist_root/annalist_site
-        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.22-py2.7.egg/annalist_root
-        INFO:annalist_site.settings.runtests:DB PATH:         /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.22-py2.7.egg/annalist_root/db.sqlite3
-        INFO:rdflib:RDFLib Version: 4.2.1
-        Creating test database for alias 'default'...
-        ..................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
-        ----------------------------------------------------------------------
-        Ran 578 tests in 421.863s
+$ annalist-manager runte
+INFO:annalist_site.settings.runtests:Annalist version 0.1.23 (test configuration)
+INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
+INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.23-py2.7.egg/annalist_root/sampledata/data
+INFO:annalist_site.settings.runtests:CONFIG_BASE:     /Users/graham/.annalist/
+INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/django
+INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.23-py2.7.egg/annalist_root/annalist_site
+INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.23-py2.7.egg/annalist_root
+INFO:annalist_site.settings.runtests:DB PATH:         /usr/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.23-py2.7.egg/annalist_root/db.sqlite3
+INFO:rdflib:RDFLib Version: 4.2.1
+Creating test database for alias 'default'...
+........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 600 tests in 363.183s
 
-        OK
-        Destroying test database for alias 'default'...
+OK
+Destroying test database for alias 'default'...
 
 ## Setting up an Annalist site
 

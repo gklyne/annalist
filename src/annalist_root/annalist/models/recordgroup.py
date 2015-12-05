@@ -44,6 +44,12 @@ class RecordGroup(EntityData):
         log.debug("RecordGroup %s: dir %s"%(group_id, self._entitydir))
         return
 
+    def _migrate_filenames(self):
+        """
+        Override EntityData method
+        """
+        return None
+
     def _post_update_processing(self, entitydata):
         """
         Default post-update processing.
