@@ -36,7 +36,7 @@ def create_user_permissions(site, user_id, user_uri, user_name, user_comment, us
         , ANNAL.CURIE.user_uri:         "%s"%(user_uri)
         , ANNAL.CURIE.user_permissions: user_permissions
         })
-    user = AnnalistUser.create(site, user_id, user_values)
+    user = AnnalistUser.create(site.site_data_collection(), user_id, user_values)
     return user
 
 def delete_user_permissions(site, user_id):
@@ -107,6 +107,11 @@ def create_django_user(user_type, user_details):
     """
     Create Django user (prompts for password)
     """
+    # Check user does not already exist
+    from django.contrib.auth.models import User     # import deferred until after sitesettings import
+    if User.objects.filter(username=user_details['name']):
+        print("User %s already exists"%user_details['name'], file=sys.stderr)
+        return am_errors.AM_USEREXISTS
     # Get password
     user_password_prompt    = "Password: "
     user_password_c_prompt  = "Re-enter password: "
@@ -121,7 +126,6 @@ def create_django_user(user_type, user_details):
     # see:
     #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
     #   https://docs.djangoproject.c om/en/1.7/ref/contrib/auth/#manager-methods
-    from django.contrib.auth.models import User     # import deferred until after sitesettings import
     user = User.objects.create_user(user_details['name'], user_details['email'], user_password)
     user.first_name   = user_details['first_name']
     user.last_name    = user_details['last_name']

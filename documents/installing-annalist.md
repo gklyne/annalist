@@ -186,11 +186,11 @@ Destroying test database for alias 'default'...
 
 ## Setting up an Annalist site
 
-Before setting up an Annalist configuration, there are two issues to be aware of.  Or if you just want a quick installation for evaluation purposes, skip ahead to "Initial site setup",
+Before setting up an Annalist configuration, there are two issues to be aware of.  Or if you just want a quick installation for evaluation purposes, skip ahead to "Initial site setup".
 
 ### Annalist site options
 
-Annalist deploymemnt details are controlled by files in the `src/annalist_rot/annalist_site/settings` directory.  Annalist comes with three pre-defined configurations: deveopment, personal, and shared.  The main differences between these are the location of the Annalist site data files, and the location of certain private configuration files.  (Other configuration options are possible by defining a new settings file.)
+Annalist deployment details are controlled by files in the `src/annalist_root/annalist_site/settings` directory.  Annalist comes with three pre-defined configurations: deveopment, personal, and shared.  The main differences between these are the location of the Annalist site data files, and the location of certain private configuration files.  (Other configuration options are possible by defining a new settings file.)
 
 **Development**: Annalist site data is kept in a directory within the Annalist software source tree, and configuration files are in subdirectory `.annalist` of the installing user's home directory.
 
@@ -247,8 +247,6 @@ NOTE: using the development configuration, data files are stored within the soft
         annalist-manager defaultadminuser
 
     As before, enter and re-enter a password when prompted.
-
-    NOTE: the initial Annalist site data contains details of the default `admin` user to facilitate development testing, but still requires the Django user to be created for this account to
 
 
 5.  Start the Annalist server

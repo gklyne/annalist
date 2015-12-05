@@ -22,7 +22,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Added logic so that repeat fields also support current-mode rendering (but rendering as a normal view)
 - [x] BUG: enumerated values listed as types (when using "View all")
 - [x] BUG: default view setting is not applied.
-- [ ] BUG (from 0.1.22 release): creating admin user in new site fails:
+- [x] BUG (from 0.1.22 release): creating admin user in new site fails:
     - 1. annlist-manager createadminuser fails with "no such table: auth_user"
     - 2. running django `manage.py` with `syncdb` fixes that, but...
     - 3. subsequent attempt to create admin user fails with:

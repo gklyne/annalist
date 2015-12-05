@@ -56,7 +56,7 @@ def am_createsite(annroot, userhome, options):
     sitebasedir = site_layout.SITE_PATH
     sitebaseurl = "/annalist/"     # @@TODO: figure more robust way to define this
     # --- If old site exists and --force option given, remove it
-    if os.path.exists(sitebasedir):
+    if os.path.exists(os.path.join(sitebasedir, site_layout.SITEDATA_DIR)):
         if options.force:
             print("Removing old Annalist site at %s"%(sitebasedir))
             log.info("rmtree: %s"%(sitebasedir))
@@ -76,7 +76,7 @@ def am_createsite(annroot, userhome, options):
         )
     sitedata = site.site_data_collection()
     Site.create_site_readme(site)
-    site_data_src = os.path.join(annroot, "annalist/sitedata")     # @@TODO: more robust definition
+    site_data_src = os.path.join(annroot, "annalist/data/sitedata")     # @@TODO: more robust definition
     site_data_tgt, site_data_file = sitedata._dir_path()
     print("Copy Annalist site data")
     print("from %s"%site_data_src)
@@ -117,7 +117,7 @@ def am_updatesite(annroot, userhome, options):
     sitebaseurl   = "/annalist/"                # @@TODO: figure more robust way to define this
     site          = Site(sitebaseurl, site_layout.SITE_PATH)
     sitedata      = site.site_data_collection()
-    site_data_src = os.path.join(annroot, "annalist/sitedata")  # @@TODO: more robust definition
+    site_data_src = os.path.join(annroot, "annalist/data/sitedata")  # @@TODO: more robust definition
     site_data_tgt, site_data_file = sitedata._dir_path()
     # --- Migrate old data to target directory
     site_data_old = os.path.join(sitebasedir, site_layout.SITEDATA_OLD_DIR)

@@ -199,6 +199,8 @@ class Layout(object):
         """
         self.BASE_DIR           = base_data_dir
         self.SITE_DIR           = SITE_DIR
+        self.SITEDATA_ID        = SITEDATA_ID
+        self.SITEDATA_DIR       = SITEDATA_DIR
         self.SITEDATA_OLD_DIR   = SITEDATA_OLD_DIR
         self.SITEDATA_META_DIR  = SITEDATA_META_DIR                         # e.g. c/_annalist_site/_annalist_collection
         self.SITE_PATH          = os.path.join(base_data_dir, SITE_DIR)     # e.g. /data/annalist_site

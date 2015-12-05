@@ -79,8 +79,10 @@ def am_get_site_settings(annroot, userhome, options):
         return None
     with SuppressLogging(logging.INFO):
         os.environ['DJANGO_SETTINGS_MODULE'] = settings.modulename
-        django.setup()
         site_settings = importlib.import_module(settings.modulename)
+        if not os.path.exists(site_settings.BASE_SITE_DIR):
+            os.makedirs(site_settings.BASE_SITE_DIR)
+        django.setup()
     return site_settings
 
 def am_get_site(sitesettings):
