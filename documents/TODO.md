@@ -8,6 +8,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
+- [ ] Update tutorial to cover inheritance of definitions
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
 - [ ] New demo screencasts
@@ -22,19 +23,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Added logic so that repeat fields also support current-mode rendering (but rendering as a normal view)
 - [x] BUG: enumerated values listed as types (when using "View all")
 - [x] BUG: default view setting is not applied.
-- [x] BUG (from 0.1.22 release): creating admin user in new site fails:
-    - 1. annlist-manager createadminuser fails with "no such table: auth_user"
-    - 2. running django `manage.py` with `syncdb` fixes that, but...
-    - 3. subsequent attempt to create admin user fails with:
-        - "ValueError: Attempt to create entity file outside Annalist site tree"
+- [x] BUG (from 0.1.22 release): creating admin user in new site fails
 - [x] Suppress display of _initial_values when listing entities (is this the right choice?)
 - [x] moved 'child_entity_ids' method to root so it can be used with `Site` objects
 - [x] moved site scoping enumeration logic from `Site` to `EntityRoot`
-- [x] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection. This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
+- [x] Re-work site/collection structure to allow cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection. This will    allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
     - [x] move annalist sitedata to collection location; relocate and rename site_meta.jsonld, update layout; test
     - [x] re-work alternative-directory logic to be controlled by the parent rather than the child.
         - [x] add 'altscope' parameter to calls that may access the alternative search path (replacing `altparent` parameter)
-        - [x] factor alermnative search logic into `get_alt_ancestry` and `_children` methods.
+        - [x] factor alernative search logic into `get_alt_ancestry` and `_children` methods.
         - [x] implement search logic in Entity._exists_path, Entity._chidren, Entity._child_dirs overriding methods from EntityRoot.
         - [x] remove all alt path/parent logic from EntityRoot: resulting base should be ultra-simple.
         - [x] move resource_file access logic to EntityRoot, with search logic invoked in Entity.
