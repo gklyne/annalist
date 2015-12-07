@@ -15,36 +15,40 @@
     - `annalist-manager initialize`
 - [ ] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
-- [ ] Documentation updates
+- [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 - [ ] Check all recent changes are committed (`git status`)
 
-- [ ] Create release preparation branch
+- [x] Create release preparation branch
     - git stash
     - git checkout -b release-prep-x.y.z develop
     - git stash pop
     - *NOTE* use a different name to that which will be used to tag the release
-- [ ] Add TODO list to release notes (edit out working notes)
-- [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
-- [ ] Bump data compatibility version if new data is not compatible with older releases
-- [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
-- [ ] Reinstall and re-run test suite
-- [ ] Add release highlights description to release notes
-- [ ] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
-- [ ] Review roadmap (`documents/roadmap.md`)
-- [ ] Update version number in scripts, documents, etc.
-    - [ ] Release notes
-    - [ ] documents/installing-annalist.md
-    - [ ] documents/roadmap.md
-    - [ ] documents/pages/index.html
-    - [ ] src/newkit_to_annalist_net.sh
-    - [ ] src/newkit_to_conina_ubuntu.sh
-    - [ ] Docker build scripts
-- [ ] Create announcement text in `documents/release-notes/announce_0.1.*.md`
-- [ ] Check for new dependencies; update setup.py as needed.
-- [ ] Create and post updated kit download and web pages to annalist.net
+- [x] Add TODO list to release notes (edit out working notes)
+- [x] Bump version to even value in `src/annalist_root/annalist/__init__.py`
+- [x] Bump data compatibility version if new data is not compatible with older releases
+- [x] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`)
+- [x] Reinstall and re-run test suite
+- [x] Add release highlights description to release notes
+- [x] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
+- [x] Review roadmap (`documents/roadmap.md`)
+- [x] Update version number in scripts, documents, etc.
+    - [x] Release notes
+    - [x] documents/installing-annalist.md
+    - [x] documents/roadmap.md
+    - [x] documents/pages/index.html
+    - [x] documents/tutorial/annalist-tutorial.adoc
+    - [x] src/newkit_to_annalist_net.sh
+    - [x] src/newkit_to_conina_ubuntu.sh
+    - [x] Docker build scripts
+- [x] Create announcement text in `documents/release-notes/announce_0.1.*.md`
+- [x] Check for new dependencies; update setup.py as needed.
+- [x] Regenerate tutorial document
+    - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
+- [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Update and test demo installation on annalist.net
+- [.] Install/update demo at cream.annalist.net (annalist.cloudapp.net)
+- [x] Update and test demo installation on annalist.net
     - ssh to annalist@annalist.net
     - `killall python`
     - `. anenv/bin/activate`
@@ -53,11 +57,11 @@
     - `annalist-manager runtests`
     - `. update-run-annalist.sh`
     - `cat annalist.out`
-- [ ] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
+- [x] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
         cp ~annalist/uploads/pages/index.html /var/www
-- [ ] Update tutorial document at annalist.net
+- [x] Update tutorial document at annalist.net
         cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/
-- [ ] Commit changes
+- [x] Commit changes
 - [ ] Upload to PyPI (see below)
 - [ ] Tag release on release branch
     - `git tag -a release-x.y.z`

@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_value_mode", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "Value_field"
+, "annal:type_id":      "Enum_value_mode"
+, "annal:uri":          "annal:value_mode/Value_field"
+, "rdfs:label":         "Field reference"
+, "rdfs:comment":       "Field value is a reference to a separate entity.  The displayed value is taken from a specified field of the referenced entity.\n\nThe \"Field value type\" field (`Field_type`) identifies the type of value presented (e.g. `annal:Text`, `annal:Identifier` or `annal:Image`), the \"Refer to type\" field (`Field_typeref`) indicates the type of the referenced entity, and the \"Refer to field\" field (`Field_fieldref`) is the property URI of the field of the referenced entity that is presented.\n\nSome render types (e.g. `RefImage`, `RefAudio`) treat the value as a reference to a resource, and when viewing an entity will present a rendering (e.g., image or audio player) of the referenced resource."
+}

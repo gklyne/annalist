@@ -1,0 +1,30 @@
+{ "@id":                "./"
+, "@type":              ["annal:View"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:type_id":      "_view"
+, "annal:id":           "Collection_view"
+, "annal:uri":          "annal:display/Collection_view"
+, "rdfs:label":         "Collection view"
+, "rdfs:comment":       "Collection view, presents information about a collection."
+, "annal:open_view":    false
+, "annal:view_fields":
+  [ { "annal:field_id":         "_field/Entity_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/Coll_software_version"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "_field/Entity_label"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Entity_comment"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Coll_parent"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/Coll_comment"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

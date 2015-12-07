@@ -1,0 +1,28 @@
+{ "@id":                "annal:display/Field_group_view"
+, "@type":              ["annal:View"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "Field_group_view"
+, "annal:type_id":      "_view"
+, "annal:uri":          "annal:display/Field_group_view"
+, "annal:record_type":  "annal:Field_group"
+, "rdfs:label":         "Field group view"
+, "rdfs:comment":       "This resource describes a group of fields used in a form to define an optional or repeating field group."
+, "annal:open_view":    false
+, "annal:view_fields":
+  [ { "annal:field_id":               "_field/Group_id"
+    , "annal:field_placement":        "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":               "_field/Group_label"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "_field/Group_comment"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "_field/Group_target_type"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "_field/Group_fields"
+    , "annal:field_placement":        "small:0,12"
+    }
+  ]
+}

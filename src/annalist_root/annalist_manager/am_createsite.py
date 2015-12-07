@@ -116,7 +116,15 @@ def am_updatesite(annroot, userhome, options):
     sitebasedir   = site_layout.SITE_PATH
     sitebaseurl   = "/annalist/"                # @@TODO: figure more robust way to define this
     site          = Site(sitebaseurl, site_layout.SITE_PATH)
-    sitedata      = site.site_data_collection()
+    sitedata      = site.site_data_collection(test_exists=False)
+    if sitedata is None:
+        print("Initializing Annalist site metadata in %s (migrating to new layout)"%(sitebasedir))
+        site = Site.create_empty_site_data(
+            sitebaseurl, sitebasedir,
+            label="Annalist site (%s configuration)"%options.configuration, 
+            description="Annalist %s site metadata and site-wide values."%options.configuration
+            )
+        sitedata      = site.site_data_collection()
     site_data_src = os.path.join(annroot, "annalist/data/sitedata")  # @@TODO: more robust definition
     site_data_tgt, site_data_file = sitedata._dir_path()
     # --- Migrate old data to target directory

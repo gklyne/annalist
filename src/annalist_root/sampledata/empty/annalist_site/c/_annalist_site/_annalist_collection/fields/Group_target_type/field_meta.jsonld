@@ -1,0 +1,17 @@
+{ "@id":                        "annal:fields/Group_target_type"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Group_target_type"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Record type"
+, "rdfs:comment":               "Type (URI or CURIE) of record displayed using this field group.  Used to determine field choices appropriate to this group."
+, "annal:field_name":           "Group_target_type"
+, "annal:field_render_type":    "Identifier"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_entity_type":    "annal:Field_group"
+, "annal:placeholder":          "(target record type URI/CURIE)"
+, "annal:property_uri":         "annal:record_type"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

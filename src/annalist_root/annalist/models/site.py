@@ -107,12 +107,15 @@ class Site(EntityRoot):
             altscope = "site"
         return super(Site, self).child_entity_ids(cls, altscope=altscope)
 
-    def site_data_collection(self):
+    def site_data_collection(self, test_exists=True):
         """
         Return collection entity that contains the site data.
+
+        test_exists unless this is supllied as False, generates an error if the site
+                    metadata does not exist.
         """
         if self._sitedata is None:
-            self._sitedata = SiteData.load_sitedata(self)
+            self._sitedata = SiteData.load_sitedata(self, test_exists=test_exists)
         return self._sitedata
 
     def site_data_stream(self):

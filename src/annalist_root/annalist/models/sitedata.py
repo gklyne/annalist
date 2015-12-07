@@ -51,12 +51,14 @@ class SiteData(Collection):
         return cls.create(parent, layout.SITEDATA_ID, sitedata)
 
     @classmethod
-    def load_sitedata(cls, parent):
+    def load_sitedata(cls, parent, test_exists=True):
         """
         Method loads a site data entity
 
         cls         is a class value used to construct the new entity value
         parent      is the parent site from which the new SiteData entity is descended.
+        test_exists unless this is supllied as False, generates an error if the site
+                    metadata does not exist.
 
         Returns the site data collection as an instance of the supplied SiteData class,
         with data oaded from the corresponding Annalist storage, or None if there is no
@@ -64,7 +66,8 @@ class SiteData(Collection):
         """
         log.debug("SiteData.create: entityid %s"%(layout.SITEDATA_ID))
         d = cls.load(parent, layout.SITEDATA_ID)
-        assert d, "Site data for %r not found"%(parent,)
+        if test_exists:
+            assert d, "Site data for %r not found"%(parent,)
         return d
 
 # End.

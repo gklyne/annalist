@@ -1,6 +1,6 @@
 = Annalist tutorial
 Graham Klyne
-v0.1.22, 2015-09-29
+v0.1.24, 2015-12-07
 :toc: macro
 :toc-title:
 :linkcss:
@@ -122,10 +122,12 @@ The `Permissions` field is a list of tokens (names) corresponding to permissions
 
 === Adding site-wide user access permissions
 
-Site-wide permissions are defined using the `annalist-manager`command line administration tool, and cannot currently be defined through the web interface.  See link:../installing-annalist.md[Installing and setting up Annalist] for more information about `annalist-manager`, or run the command `annalist-manager help`.
+Site-wide permissions are initially defined using the `annalist-manager` command line administration tool. See link:../installing-annalist.md[Installing and setting up Annalist] for more information about `annalist-manager`, or run the command `annalist-manager help`.
+
+Once basic administrative access has been established, additional site-wide permissions can be created by creating or editing user permissions in the `_annalist_site` collection.
 
 ****
-@@Update this when the web interface can define site-wide permissions.
+@@Update with more detailed instructions.
 
 @@`analist-manager` currently has a bare miniumum of capabilities to create users, mainly intended to bootstrap a system with admin users.
 ****
