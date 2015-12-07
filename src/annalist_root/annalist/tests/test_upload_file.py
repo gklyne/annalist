@@ -263,8 +263,8 @@ def test_upload_file_field_value():
         { "resource_name":              "upl_field.md"
         , "resource_type":              "text/markdown"
         , "upload_name":                "upl_field"
-        , "uploaded_size":              2957
-        , "uploaded_file":              "README.md"
+        , "uploaded_size":              1000
+        , "uploaded_file":              "testdatafile.md"
         })
 
 def test_upload_image_field_value():
@@ -318,7 +318,7 @@ class UploadResourceTest(AnnalistTestCase):
     """
 
     def setUp(self):
-        self.filepath  = "%s/README.md"%TestBaseDir
+        self.filepath  = "%s/testdatafile.md"%TestBaseDir
         self.fileuri   = "file://"+self.filepath
         self.imagepath = "%s/test-image.jpg"%TestBaseDir
         self.imageuri  = "file://"+self.imagepath
@@ -444,7 +444,7 @@ class UploadResourceTest(AnnalistTestCase):
         resource_fileobj.close()
         testobj1.close()
         # Read back both and compare
-        siteobj = open(TestBaseDir+"/README.md", "rb")
+        siteobj = open(TestBaseDir+"/testdatafile.md", "rb")
         testobj = self.test_upl_type_info.get_fileobj(
             "test1", "test1res", "annal:Richtext", resource_type, "rb"
             )
@@ -520,8 +520,8 @@ class UploadResourceTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i].target_value['upload_name'],   "upl_field")
         self.assertEqual(r.context['fields'][i].target_value['resource_name'], "upl_field.md")
         self.assertEqual(r.context['fields'][i].target_value['resource_type'], "text/markdown")
-        self.assertEqual(r.context['fields'][i].target_value['uploaded_file'], "README.md")
-        self.assertEqual(r.context['fields'][i].target_value['uploaded_size'], 2957)
+        self.assertEqual(r.context['fields'][i].target_value['uploaded_file'], "testdatafile.md")
+        self.assertEqual(r.context['fields'][i].target_value['uploaded_size'], 1000)
         self.assertEqual(r.context['fields'][i].target_value_link,  basepath+"test1/upl_field.md")
         return
 
