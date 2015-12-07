@@ -3,7 +3,6 @@
 ## Summary of release tasks
 
 - [ ] Feature freeze
-- [ ] Check all recent changes are committed (`git status`)
 - [ ] Uninstall annalist (if installed): `pip uninstall annalist`
 - [ ] Delete contents of build directory (remove old files) - python setup.py clean --all
 - [ ] Clean old .pyc and temporary files
@@ -12,12 +11,13 @@
 - [ ] Local install
 - [ ] Run test suite - `annalist-manager runtest`
 - [ ] Update site data in local 'personal' installation
-    - `annalist-manager initialize`
     - `annalist-manager updatesitedata`
+    - `annalist-manager initialize`
 - [ ] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
 - [ ] Documentation updates
 - [ ] Demo screencast update
+- [ ] Check all recent changes are committed (`git status`)
 
 - [ ] Create release preparation branch
     - git stash

@@ -183,6 +183,25 @@ In the updated list of collections, click on the link corresponding to the new c
 image::screenshot-view-new-collection.png[Creating a new Annalist collection,width=500,align=center]
 
 
+== Change collection metadata
+
+Modifying collection metadata requires `CONFIG` permissions.
+
+A collection name, label, description and other metadata may be edited by viewing the site home page, selecting the checkbox by the collection to be edited, then clicking on the "Edit selected" button:
+
+[.text-center]
+.Edit Annalist collection metadata
+image::screenshot-edit-collection-metadata.png[Edit Annalist collection metadata,width=500,align=center]
+
+[.text-center]
+.Annalist collection metadata edit view
+image::screenshot-edit-collection-metadata-view.png[Annalist collection metadata edit view,width=500,align=center]
+
+@@TODO: update home page screenshot from demo site when deployed
+
+By default, a collection inherits site-wide type, view and field definitions that are defined by the Annalisty software.  It may also inherit definitions from another existing collection on the same site by selecting that collection in the `Parent` field.  This feature is intended to allow a collection to be based on an existing set of definitions rather than starting from scratch.
+
+
 == Create initial record type and views
 
 It is possible to start creating new data records straight away in a newly created collection, using the in-built default type and views.  But for practical use, it is probably better to start by creating a new record type and corresponding views to match the initial data to be collected.

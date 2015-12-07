@@ -123,8 +123,6 @@ The intended means of Annalist user authentication is via a third party identity
 
 . If this is an existing Annalist account, and the email from the IDP matches the Annalist account email, you will be logged in.  If the username given does not match an existing Annalist account, a new account is created with the appropriate details and you are logged in to it.  Being logged in does not necessarily mean you have permissions to access Annalist data;  it simply means that Annalist has an indicator of who you are.
 
-(@@NOTE: Currently, the authorization system is not fully implememted, and all authenticated users have full access to the Annalist data, but that will change before the first non-prototype software release.  See https://github.com/gklyne/annalist/issues/11)[Annalist issue 11])
-
 
 === Log in with local user credentials
 
@@ -255,20 +253,34 @@ Now click on the 'New' button:
 
 image::screenshots/Front-page-collection-created.png[alt="Front page showing new collection created"]
 
-Click on the link in the Id column to view the new collection:
 
-image::screenshots/Collection-initial-view.png[alt="Initial view of new collection"]
+== Modifying Annlist collection metadata
 
-From this screen, you can start to add data to this collection.
+A collection name, label, description and other metadata may be edited by viewing the site home page, selecting the checkbox by the collection to be edited, then clicking on the "Edit selected" button.
+
+By default, a collection inherits site-wide type, view and field definitions that are defined by the Annalisty software.  It may also inherit definitions from another existing collection on the same site by selecting that collection in the `Parent` field.  This feature is intended to allow a collection to be based on an existing set of definitions rather than starting from scratch.
+
+****
+@@TODO: git integration to support import and saving of collection details.  For now, collections can be copied in and versioned by hand.
+****
+
+NOTE: there is a special collection called `_annalist_site` that is used to hold site-wide metadata, including a name and description for the site itself (e.g. used in the title of all pages).  This data can be edited usingh the same technique as above (assuming apprpriate site permissions), but *DO NOT ATTEMPT TO CHANGE THE COLLECTION ID*.
 
 
 == Create and modify data records
 
-@@TODO: flesh out, add screenshots
+On the site home page, click on a link in the Id column to view a collection:
+
+image::screenshots/Collection-initial-view.png[alt="Initial view of new collection"]
+
+From the resulting screen, you can start to add data to this collection, though you might first want to consider creating some initial types and views for the data you have in mind.
+
+More instructions about how to add types, views and data to a collection are provided in the http://annalist.net/documents/tutorial/annalist-tutorial.html[Annalist tutorial].
+
 
 === Create a data record
 
-Click the *New* button at the foot of any record list page.  A new form, is displayed for entering details of some new entity.  The initial type of new entity, and the data entry form displayed, are determined based on the list view used, but these can be overridden using thew *Type* and *Choose view* dropdowns.
+Click the *New* button at the foot of any record list page.  A new form, is displayed for entering details of some new entity.  The initial type of new entity, and the data entry form displayed, are determined based on the list view used, but these can be overridden using thew *Type* and *Choose view* dropdowns and associated view buttons.
 
 Example list display:
 
@@ -291,6 +303,7 @@ Select the checkbox beside the record to be copied.
 
 Click the *Copy* button at the foot of the record list page.  This brings up a view of the selected record which can be edited as required, and saved as a new record by clinking the *Save* button.  The new record must be given a unique identifier (`Id` field) before it can be saved.
 
+
 === Edit an existing data record
 
 Select a record list display that includes the record to be edited.
@@ -298,6 +311,7 @@ Select a record list display that includes the record to be edited.
 Select the checkbox beside the record to be edited.
 
 Click the *Edit* button at the foot of the record list page.  This brings up a view of the selected record which can be edited as required, and saved by clinking the *Save* button.
+
 
 === Delete an existing data record
 
@@ -308,6 +322,7 @@ Select the checkbox beside the record to be deleted.
 Click the *Delete* button at the foot of the record list page.
 
 A new page will be displayed requesting confirmation that the record should be deleted.  Click on *Confirm* to delete the record, or *Cancel* abort the delete operation to teturn to the record list page.
+
 
 === Data record editing page
 
@@ -322,6 +337,7 @@ The *Add field* button causes any entered data to be saved, and a record view ed
 The *Choose view* dropdown box and *Show view* buttons allow an alternative record view to be used to display the current record data.
 
 The *New view*, *New field* and *New type* buttons cause the current data record to be saved, and new a new form to be displayed for entry of details about a new record view, field or data type respectively.  When new details entered are saved, or cancelled, the current page is redisplayed, possible any new values entered.  These views are intended to allow new structure to be added to a collection as needs may be recognized while data is being entered.
+
 
 === Record list page
 
