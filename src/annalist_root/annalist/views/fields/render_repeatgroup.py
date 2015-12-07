@@ -338,87 +338,96 @@ edit_listrow_unused = (
 
 
 class RenderRepeatGroup(object):
-  """
-  Render class for repeated field group
-  """
-
-  def __init__(self, templates=None):
-    # Later, may introduce a template_file= option to read from templates directory
     """
-    Creates a renderer object for a simple text field
+    Render class for repeated field group
     """
-    # log.info("RenderRepeatGroup: __init__ %r"%(templates))
-    super(RenderRepeatGroup, self).__init__()
-    assert templates is not None, "RenderRepeatGroup template must be supplied (.edit, .view or .item)"
-    self._template_head  = Template(templates.get('head', ""))
-    self._template_body  = Template(templates.get('body', "@@missing body@@"))
-    self._template_tail  = Template(templates.get('tail', ""))
-    self._template_empty = self._template_head
-    if 'head_empty' in templates:
-        self._template_empty = Template(templates['head_empty'])
-    return
 
-  def __str__(self):
-    return "RenderRepeatGroup %r"%(self._template_head)
-    # return "RenderRepeatGroup %r, %s"%(self._template_head,self.render(context))
+    def __init__(self, templates=None):
+        # Later, may introduce a template_file= option to read from templates directory
+        """
+        Creates a renderer object for a simple text field
+        """
+        # log.info("RenderRepeatGroup: __init__ %r"%(templates))
+        super(RenderRepeatGroup, self).__init__()
+        assert templates is not None, "RenderRepeatGroup template must be supplied (.edit, .view or .item)"
+        self._template_head  = Template(templates.get('head', ""))
+        self._template_body  = Template(templates.get('body', "@@missing body@@"))
+        self._template_tail  = Template(templates.get('tail', ""))
+        self._template_empty = self._template_head
+        if 'head_empty' in templates:
+            self._template_empty = Template(templates['head_empty'])
+        return
 
-  def render(self, context):
-    """
-    Renders a repeating field group.
+    def __str__(self):
+        return "RenderRepeatGroup %r"%(self._template_head)
+        # return "RenderRepeatGroup %r, %s"%(self._template_head,self.render(context))
 
-    `context`   is a dictionary-like object that provides information for the
-                rendering operation.
+    def render(self, context):
+        """
+        Renders a repeating field group.
 
-    returns a string that is incorporated into the resulting web page.
+        `context`   is a dictionary-like object that provides information for the
+                    rendering operation.
 
-    `context['field']` is a `bound_field` value that combines the field 
-    definition, entity values and additional context information.  
+        returns a string that is incorporated into the resulting web page.
 
-    The entity value is either the entire entity that is currently 
-    being rendered, or sub-element containing a list of repeated values that 
-    are each formatted using the supplied body template.
-    """
-    # log.info("RenderRepeatGroup.render")
-    try:
-        # log.info("RenderRepeatGroup.render field: %r"%(context['field'],))
-        # log.info("RenderRepeatGroup.render descs: %r"%(context['field']['group_field_descs'],))
-        value_list     = context['field']['field_value']
-        if len(value_list) > 0:
-            response_parts = [self._template_head.render(context)]
-            repeat_index = 0
-            extras       = context['field']['context_extra_values']
-            for g in value_list:
-                log.debug("RenderRepeatGroup.render field_val: %r"%(g))
-                r = [ bound_field(f, g, context_extra_values=extras) 
-                      for f in context['field']['group_field_descs'] ]
-                repeat_id = context.get('repeat_prefix', "") + context['field']['group_id']
-                repeat_dict = (
-                    { 'repeat_id':            repeat_id
-                    , 'repeat_index':         str(repeat_index)
-                    , 'repeat_prefix':        repeat_id+("__%d__"%repeat_index)
-                    , 'repeat_bound_fields':  r
-                    , 'repeat_entity':        g
-                    })
-                # log.info("RenderRepeatGroup.render repeat_dict: %r"%(repeat_dict))
-                with context.push(repeat_dict):
-                    response_parts.append(self._template_body.render(context))
-                repeat_index += 1
-            response_parts.append(self._template_tail.render(context))
-        else:
-            # Empty list
-            response_parts = [self._template_empty.render(context)]
-            response_parts.append(self._template_tail.render(context))
-    except Exception as e:
-        log.exception("Exception in RenderRepeatGroup.render")
-        ex_type, ex, tb = sys.exc_info()
-        traceback.print_tb(tb)
-        response_parts = (
-            ["Exception in RenderRepeatGroup.render"]+
-            [repr(e)]+
-            traceback.format_exception(ex_type, ex, tb)+
-            ["***RenderRepeatGroup.render***"]
-            )
-        del tb
-    return "".join(response_parts)
+        `context['field']` is a `bound_field` value that combines the field 
+        definition, entity values and additional context information.  
+
+        The entity value is either the entire entity that is currently 
+        being rendered, or sub-element containing a list of repeated values that 
+        are each formatted using the supplied body template.
+        """
+        # log.info("RenderRepeatGroup.render")
+        try:
+            # log.info("RenderRepeatGroup.render field: %r"%(context['field'],))
+            # log.info("RenderRepeatGroup.render descs: %r"%(context['field']['group_field_descs'],))
+            value_list     = context['field']['field_value']
+            if len(value_list) > 0:
+                response_parts = [self._template_head.render(context)]
+                repeat_index = 0
+                extras       = context['field']['context_extra_values']
+                for g in value_list:
+                    log.debug("RenderRepeatGroup.render field_val: %r"%(g))
+                    r = [ bound_field(f, g, context_extra_values=extras) 
+                          for f in context['field']['group_field_descs'] ]
+                    repeat_id = context.get('repeat_prefix', "") + context['field']['group_id']
+                    repeat_dict = (
+                        { 'repeat_id':            repeat_id
+                        , 'repeat_index':         str(repeat_index)
+                        , 'repeat_prefix':        repeat_id+("__%d__"%repeat_index)
+                        , 'repeat_bound_fields':  r
+                        , 'repeat_entity':        g
+                        })
+                    # log.info("RenderRepeatGroup.render repeat_dict: %r"%(repeat_dict))
+                    with context.push(repeat_dict):
+                        response_parts.append(self._template_body.render(context))
+                    repeat_index += 1
+                response_parts.append(self._template_tail.render(context))
+            else:
+                # Empty list
+                response_parts = [self._template_empty.render(context)]
+                response_parts.append(self._template_tail.render(context))
+        except Exception as e:
+            log.exception("Exception in RenderRepeatGroup.render")
+            ex_type, ex, tb = sys.exc_info()
+            traceback.print_tb(tb)
+            response_parts = (
+                ["Exception in RenderRepeatGroup.render"]+
+                [repr(e)]+
+                traceback.format_exception(ex_type, ex, tb)+
+                ["***RenderRepeatGroup.render***"]
+                )
+            del tb
+        return "".join(response_parts)
+
+    def render_mode(self):
+        """
+        Returns a renderer object that renders whatever is required for the 
+        current value of "render_mode" in the view context.
+
+        In the case of a repeat group, invokes the repeat render object.
+        """
+        return self
 
 # End.

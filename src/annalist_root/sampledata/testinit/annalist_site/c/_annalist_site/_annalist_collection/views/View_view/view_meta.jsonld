@@ -1,0 +1,31 @@
+{ "@id":                "annal:display/View_view"
+, "@type":              ["annal:View"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "View_view"
+, "annal:type_id":      "_view"
+, "annal:uri":          "annal:display/View_view"
+, "annal:record_type":  "annal:View"
+, "rdfs:label":         "View description view"
+, "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record view description"
+, "annal:open_view":    false
+, "annal:view_fields":
+  [ { "annal:field_id":               "_field/View_id"
+    , "annal:field_placement":        "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":               "_field/View_label"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "_field/View_comment"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "_field/View_target_type"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "_field/View_edit_view"
+    , "annal:field_placement":        "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":               "_field/View_fields"
+    , "annal:field_placement":        "small:0,12"
+    }
+  ]
+}

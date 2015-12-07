@@ -1,0 +1,16 @@
+{ "@id":                        "annal:fields/User_uri"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "User_uri"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "URI"
+, "rdfs:comment":               "User URI - generally mailto:<email-address>"
+, "annal:placeholder":          "(User URI - e.g. mailto:local-name@example.com)"
+, "annal:field_render_type":    "Identifier"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "annal:URI"
+, "annal:field_entity_type":    "annal:User"
+, "annal:property_uri":         "annal:user_uri"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

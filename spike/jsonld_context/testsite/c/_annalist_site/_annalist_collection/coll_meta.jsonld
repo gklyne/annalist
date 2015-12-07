@@ -1,0 +1,13 @@
+{
+  "@context": [ 
+    {"@base": "../"}, 
+    "coll_context.jsonld" 
+    ],
+  "@id": "./",
+  "@type": [ "annal:SiteData" ],
+  "rdfs:label": "Annalist data notebook test site",
+  "rdfs:comment": "Annalist test site metadata and site-wide values.",
+  "annal:type_id": "_coll",
+  "annal:id": "_annalist_site",
+  "annal:type": "annal:SiteData"
+}

@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "phdthesis"
+, "annal:type_id":      "Enum_bib_type"
+, "rdfs:label":         "PhD thesis"
+, "rdfs:comment":       "A Ph.D. thesis.  Other fields: author, title, school, year, type, address, month, note."
+, "annal:uri":          "annal:bib_type/phdthesis"
+}

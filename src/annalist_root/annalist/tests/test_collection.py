@@ -20,6 +20,8 @@ from django.contrib.auth.models     import User
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client             import Client
 
+from utils.SuppressLoggingContext   import SuppressLogging
+
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
 from annalist.models.site           import Site
@@ -119,10 +121,11 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def test_collection_init(self):
+        log.debug("test_collection_init: TestBaseUri %s, TestBaseDir %s"%(TestBaseUri,TestBaseDir))
         s = Site(TestBaseUri, TestBaseDir)
         c = Collection(s, "testcoll")
         self.assertEqual(c._entitytype,     ANNAL.CURIE.Collection)
-        self.assertEqual(c._entityfile,     layout.COLL_META_FILE)
+        self.assertEqual(c._entityfile,     layout.COLL_META_REF)
         self.assertEqual(c._entityref,      layout.META_COLL_REF)
         self.assertEqual(c._entityid,       "testcoll")
         self.assertEqual(c._entityurl,      TestHostUri + collection_view_url(coll_id="testcoll"))
@@ -131,20 +134,18 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def test_collection_data(self):
-        c = self.testcoll
-        c.set_values(self.testcoll_add)
-        cd = c.get_values()
+        self.testcoll.set_values(self.testcoll_add)
+        cd = self.testcoll.get_values()
         self.assertDictionaryMatch(cd, self.testcoll_add)
         return
 
     # User permissions
 
     def test_get_local_user_permissions(self):
-        c = self.testcoll
         # Create local permissions
-        usr = AnnalistUser.create(c, "user1", annalistuser_create_values(user_id="user1"))
+        usr = AnnalistUser.create(self.testcoll, "user1", annalistuser_create_values(user_id="user1"))
         # Test access to permissions defined locally in collection
-        ugp = c.get_user_permissions("user1", "mailto:testuser@example.org")
+        ugp = self.testcoll.get_user_permissions("user1", "mailto:testuser@example.org")
         self.assertEqual(ugp[ANNAL.CURIE.id],                 "user1")
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Test User")
@@ -154,15 +155,13 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def test_get_local_user_not_defined(self):
-        c = self.testcoll
-        ugp = c.get_user_permissions("user1", "mailto:testuser@example.org")
+        ugp = self.testcoll.get_user_permissions("user1", "mailto:testuser@example.org")
         self.assertIsNone(ugp)
         return
 
     def test_get_local_user_uri_mismatch(self):
-        c = self.testcoll
-        usr = AnnalistUser.create(c, "user1", annalistuser_create_values(user_id="user1"))
-        ugp = c.get_user_permissions("user1", "mailto:anotheruser@example.org")
+        usr = AnnalistUser.create(self.testcoll, "user1", annalistuser_create_values(user_id="user1"))
+        ugp = self.testcoll.get_user_permissions("user1", "mailto:anotheruser@example.org")
         self.assertIsNone(ugp)
         return
 
@@ -170,15 +169,13 @@ class CollectionTest(AnnalistTestCase):
         # E.g. what happens if user record is created through default view?  Don't return value.
         d = annalistuser_create_values(user_id="user1")
         d.pop(ANNAL.CURIE.user_permissions)
-        c = self.testcoll
-        usr = AnnalistUser.create(c, "user1", d)
-        ugp = c.get_user_permissions("user1", "mailto:testuser@example.org")
+        usr = AnnalistUser.create(self.testcoll, "user1", d)
+        ugp = self.testcoll.get_user_permissions("user1", "mailto:testuser@example.org")
         self.assertIsNone(ugp)
         return
 
     def test_get_site_user_permissions(self):
-        c   = self.testcoll
-        ugp = c.get_user_permissions("_unknown_user_perms", "annal:User/_unknown_user_perms")
+        ugp = self.testcoll.get_user_permissions("_unknown_user_perms", "annal:User/_unknown_user_perms")
         self.assertEqual(ugp[ANNAL.CURIE.id],                 "_unknown_user_perms")
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Unknown user")
@@ -188,11 +185,9 @@ class CollectionTest(AnnalistTestCase):
         return
 
     def test_get_site_user_uri_mismatch(self):
-        c   = self.testcoll
-        ugp = c.get_user_permissions("_unknown_user_perms", "annal:User/_another_user")
+        ugp = self.testcoll.get_user_permissions("_unknown_user_perms", "annal:User/_another_user")
         self.assertIsNone(ugp)
         return
-
 
     # Record types
 
@@ -223,16 +218,16 @@ class CollectionTest(AnnalistTestCase):
         self.testcoll.remove_type("type1")
         typenames =  { t.get_id() for t in self.testcoll.types() }
         self.assertEqual(typenames, {"type2", "testtype"}|site_types)
-        typenames =  { t.get_id() for t in self.testcoll.types(include_alt=False) }
+        typenames =  { t.get_id() for t in self.testcoll.types(altscope=None) }
         self.assertEqual(typenames, {"type2", "testtype"})
         return
 
     def test_exists_type(self):
-        # Some type existence tests takling accounbt of site data default type
+        # Some type existence tests taking account of site data default type
         self.assertTrue(RecordType.exists(self.testcoll, "testtype"))
         self.assertFalse(RecordType.exists(self.testcoll, "notype"))
         self.assertFalse(RecordType.exists(self.testcoll, "Default_type"))
-        self.assertTrue(RecordType.exists(self.testcoll, "Default_type", self.testsite))
+        self.assertTrue(RecordType.exists(self.testcoll, "Default_type", altscope="all"))
         return
 
     # Record views
@@ -266,7 +261,7 @@ class CollectionTest(AnnalistTestCase):
         self.testcoll.remove_view("view1")
         viewnames = { t.get_id() for t in self.testcoll.views() }
         self.assertEqual(viewnames, {"view2"}|site_views)
-        viewnames = { t.get_id() for t in self.testcoll.views(include_alt=False) }
+        viewnames = { t.get_id() for t in self.testcoll.views(altscope=None) }
         self.assertEqual(viewnames, {"view2"})
         return
 
@@ -280,7 +275,7 @@ class CollectionTest(AnnalistTestCase):
         t2 = self.testcoll.add_list("list2", self.list2_add)
         listnames = { t.get_id() for t in self.testcoll.lists() }
         self.assertEqual(listnames, {"list1", "list2"}|site_lists)
-        listnames = { t.get_id() for t in self.testcoll.lists(include_alt=False) }
+        listnames = { t.get_id() for t in self.testcoll.lists(altscope=None) }
         self.assertEqual(listnames, {"list1", "list2"})
         return
 
@@ -301,6 +296,85 @@ class CollectionTest(AnnalistTestCase):
         self.testcoll.remove_list("list1")
         listnames = { t.get_id() for t in self.testcoll.lists() }
         self.assertEqual(listnames, {"list2"}|site_lists)
+        return
+
+    # Alternative parent setting
+
+    def test_set_alt_entities_1(self):
+        altcoll1  = Collection(self.testsite, "altcoll1")
+        parents   = self.testcoll.set_alt_entities(altcoll1)
+        parentids = [ p.get_id() for p in parents ]
+        self.assertEqual( parentids, ["testcoll", "altcoll1", layout.SITEDATA_ID])
+        return
+
+    def test_set_alt_entities_2(self):
+        coll_id   = "altcoll1"
+        altcoll1  = Collection.create(self.testsite, coll_id, collection_create_values(coll_id))
+        parents   = altcoll1.set_alt_entities(self.testcoll)
+        parentids = [ p.get_id() for p in parents ]
+        self.assertEqual( parentids, ["altcoll1", "testcoll", layout.SITEDATA_ID])
+        return
+
+    def test_set_alt_entities_loop(self):
+        altcoll1  = Collection(self.testsite, "altcoll1")
+        parents   = self.testcoll.set_alt_entities(altcoll1)
+        parentids = [ p.get_id() for p in parents ]
+        self.assertEqual( parentids, ["testcoll", "altcoll1", layout.SITEDATA_ID])
+        with SuppressLogging(logging.ERROR):
+            with self.assertRaises(ValueError):
+                parents   = altcoll1.set_alt_entities(self.testcoll)
+        return
+
+    def test_set_alt_entities_no_site(self):
+        altcoll1  = Collection(self.testsite, "altcoll1")
+        parents   = self.testcoll.set_alt_entities(altcoll1)
+        parentids = [ p.get_id() for p in parents ]
+        self.assertEqual( parentids, ["testcoll", "altcoll1", layout.SITEDATA_ID])
+        altcoll1._altparent = None
+        with SuppressLogging(logging.ERROR):
+            with self.assertRaises(ValueError):
+                parents   = self.testcoll.set_alt_entities(altcoll1)
+        return
+
+    def test_alt_parent_inherit_coll(self):
+        # Test inheritance of definitions from an alternative collection
+        # (tescoll is set up with testtype created)
+        coll_id = "newcoll"
+        newcoll = Collection.create(self.testsite, coll_id, collection_create_values(coll_id))
+        altparents = newcoll.set_alt_entities(self.testcoll)
+        parentids  = [ p.get_id() for p in altparents ]
+        self.assertEqual(parentids, ["newcoll", "testcoll", layout.SITEDATA_ID])
+        self.assertTrue(RecordType.exists(newcoll, "testtype", altscope="all"))
+        testtype = RecordType.load(newcoll, "testtype", altscope="all")
+        self.assertEquals(testtype["rdfs:label"], "RecordType testcoll/testtype")
+        return
+
+    def test_alt_parent_inherit_site(self):
+        # Test inheritance of definitions from site with an alternative collection set
+        coll_id = "newcoll"
+        newcoll = Collection.create(self.testsite, coll_id, collection_create_values(coll_id))
+        altparents = newcoll.set_alt_entities(self.testcoll)
+        parentids  = [ p.get_id() for p in altparents ]
+        self.assertEqual(parentids, ["newcoll", "testcoll", layout.SITEDATA_ID])
+        self.assertTrue(RecordType.exists(newcoll, "Default_type", altscope="all"))
+        def_type = RecordType.load(newcoll, "Default_type", altscope="all")
+        self.assertEquals(def_type["rdfs:label"], "Default record")
+        return
+
+    def test_alt_parent_inherit_user(self):
+        # Test inheritance of "user" scope definitions
+        coll_id = "newcoll"
+        newcoll = Collection.create(self.testsite, coll_id, collection_create_values(coll_id))
+        user1   = AnnalistUser.create(self.testcoll, "user1", annalistuser_create_values(user_id="user1"))
+        user2   = AnnalistUser.create(newcoll,       "user2", annalistuser_create_values(user_id="user2"))
+        altparents = newcoll.set_alt_entities(self.testcoll)
+        parentids  = [ p.get_id() for p in altparents ]
+        self.assertEqual(parentids, ["newcoll", "testcoll", layout.SITEDATA_ID])
+        self.assertFalse(AnnalistUser.exists(newcoll, "user1", altscope="user"))
+        self.assertTrue(AnnalistUser.exists(newcoll, "_default_user_perms", altscope="user"))   # Access site data
+        self.assertTrue(AnnalistUser.exists(newcoll, "user2", altscope="user"))
+        testuser = AnnalistUser.load(newcoll, "user2", altscope="user")
+        self.assertEquals(testuser["rdfs:label"], "Test User")
         return
 
 #   -----------------------------------------------------------------------------

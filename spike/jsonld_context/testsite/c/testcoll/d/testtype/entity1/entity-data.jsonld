@@ -1,0 +1,13 @@
+{
+  "@context": [
+    { "@base": "../../" },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "testtype/entity1/",
+  "@type": [ "annal:EntityData" ],
+  "rdfs:label": "Entity testcoll/testtype/entity1",
+  "rdfs:comment": "Entity coll testcoll, type testtype, entity entity1",
+  "annal:type_id": "testtype",
+  "annal:id": "entity1",
+  "annal:type": "annal:EntityData"
+}

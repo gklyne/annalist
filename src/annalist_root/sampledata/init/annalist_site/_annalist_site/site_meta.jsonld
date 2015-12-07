@@ -1,6 +1,0 @@
-{ "@id":            "../"
-, "@context":       [ "site_context.jsonld" ]
-, "rdfs:label":     "Annalist data notebook test site"
-, "rdfs:comment":   "Annalist test site metadata"
-, "annal:comment":  "Initialized from `sampledata/init/annalist_site/_annalist_site/site_meta.jsonld`"
-}

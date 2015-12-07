@@ -1,0 +1,16 @@
+{ "@id":                        "annal:fields/Coll_comment"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Coll_comment"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Collection metadata"
+, "rdfs:comment":               "Description of Collection metadata creation details."
+, "annal:field_render_type":    "Textarea"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "annal:Longtext"
+, "annal:field_entity_type":    "annal:Collection"
+, "annal:placeholder":          "(annal:comment)"
+, "annal:property_uri":         "annal:comment"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

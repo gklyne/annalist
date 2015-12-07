@@ -1,0 +1,24 @@
+{ "@id":                "annal:group/Bib_identifier_group"
+, "@type":              ["annal:Field_group"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "Bib_identifier_group"
+, "annal:type_id":      "_group"
+, "annal:uri":          "annal:group/Bib_identifier_group"
+, "annal:record_type":  "bib:BibEntry"
+, "rdfs:label":         "BibEntry identifier fields"
+, "rdfs:comment":       "Group of fields describing an identifier or reference in a BibEntry record.  Bib_type is the type of identifier, such as 'DOI', 'crossref', 'link', etc."
+, "annal:group_fields":
+  [ { "annal:field_id":         "_field/Bib_id"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_idtype"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_url"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_idanchor"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

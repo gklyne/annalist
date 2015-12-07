@@ -1,0 +1,39 @@
+{ "@id":                "annal:display/List_view"
+, "@type":              ["annal:View"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:type_id":      "_view"
+, "annal:id":           "List_view"
+, "annal:record_type":  "annal:List"
+, "rdfs:label":         "List description view"
+, "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record list description"
+, "annal:open_view":    false
+, "annal:view_fields":
+  [ { "annal:field_id":         "_field/List_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/List_type"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "_field/List_label"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/List_comment"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/List_default_type"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/List_default_view"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/List_entity_selector"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/List_target_type"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/List_fields"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

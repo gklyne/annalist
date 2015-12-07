@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "URILink"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "Web link"
+, "rdfs:comment":       "String URI value rendered as a hyperlink"
+, "annal:uri":          "annal:field_render_type/URILink"
+}

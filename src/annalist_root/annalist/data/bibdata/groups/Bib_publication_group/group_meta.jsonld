@@ -1,0 +1,30 @@
+{ "@id":                "annal:group/Bib_publication_group"
+, "@type":              ["annal:Field_group"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "Bib_publication_group"
+, "annal:type_id":      "_group"
+, "annal:uri":          "annal:group/Bib_publication_group"
+, "annal:record_type":  "bib:BibEntry"
+, "rdfs:label":         "BibEntry publication fields"
+, "rdfs:comment":       "Group of fields describing publication details in a BibEntry record"
+, "annal:group_fields":
+  [ { "annal:field_id":         "_field/Bib_publisher"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_address"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_institution"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_organization"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_school"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_howpublished"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

@@ -44,12 +44,12 @@ def valid_id(id):
     False
     """
     reserved = (
-        [ "_annalist_site"
-        , "_annalist_collection"
+        [ "_annalist_collection"
         ])
     # cf. urls.py:
     if id and re.match(r"\w{1,32}$", id):
         return id not in reserved
+    # log.warning("util.valid_id: id %s"%(id))
     return False
 
 def split_type_entity_id(eid, default_type_id=None):
@@ -87,8 +87,8 @@ def extract_entity_id(eid):
 
 def fill_type_entity_id(eid, default_type_id=None):
     """
-    Assemble a type+entity compisite identifier based on a supplied id string.
-    If the string does not alreadyt include a type_id value, thne supplied default
+    Assemble a type+entity comopisite identifier based on a supplied id string.
+    If the string does not already include a type_id value, the supplied default
     is used.
     """
     type_id, entity_id = split_type_entity_id(eid, default_type_id=default_type_id)
@@ -105,6 +105,19 @@ def make_type_entity_id(type_id=None, entity_id=None):
     if entity_id != "":
         return type_id + "/" + entity_id
     return ""
+
+def make_entity_base_url(url):
+    """
+    Returns an entity URL with a trailing "/" so that it can be used consistently
+    with urlparse.urljoin to obtain URLs for specific resources associated with the 
+    entity.
+
+    >>> make_entity_base_url("/example/path/")
+    '/example/path/'
+    >>> make_entity_base_url("/example/path")
+    '/example/path/'
+    """
+    return url if url.endswith("/") else url + "/"
 
 def slug_from_name(filename):
     """
@@ -203,7 +216,7 @@ def entity_dir_path(base_dir, path, filename):
     >>> entity_dir_path("/base/dir",[],"sub/file.ext")
     ('/base/dir/sub', '/base/dir/sub/file.ext')
     """
-    log.debug("entity_dir_path %s, %r, %s"%(base_dir, path, filename))
+    # log.debug("util.entity_dir_path %s, %r, %s"%(base_dir, path, filename))
     if path:
         if isinstance(path, (list, tuple)):
             d = os.path.join(base_dir, *path)

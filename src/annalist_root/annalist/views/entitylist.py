@@ -19,6 +19,7 @@ from annalist.exceptions                import Annalist_Error
 from annalist.identifiers               import RDFS, ANNAL
 from annalist.util                      import split_type_entity_id, extract_entity_id
 
+import annalist.models.entitytypeinfo as entitytypeinfo
 from annalist.models.collection         import Collection
 from annalist.models.recordtype         import RecordType
 from annalist.models.recordtypedata     import RecordTypeData
@@ -89,6 +90,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         Assemble display information for list view request handlers
         """
+        # print "@@ list_setup coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id)
         #@@ self.site_view_url       = self.view_uri("AnnalistSiteView")
         self.collection_view_url = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
         listinfo = DisplayInfo(self, "list", request_dict, self.collection_view_url)

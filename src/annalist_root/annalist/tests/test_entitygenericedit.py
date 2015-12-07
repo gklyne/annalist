@@ -776,7 +776,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     def test_new_entity_builtin_type(self):
         # Create new entity
-        self.assertFalse(RecordField.exists(self.testcoll, "newfield", self.testsite))
+        self.assertFalse(RecordField.exists(self.testcoll, "newfield", altscope="all"))
         f = entitydata_default_view_form_data(
                 entity_id="newfield", type_id="_field", orig_type="Default_type", action="new"
                 )

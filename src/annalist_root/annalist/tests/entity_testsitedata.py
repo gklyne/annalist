@@ -53,6 +53,7 @@ def add_link_to_field_choice(fc, coll_id, default_type_id=None):
 
 site_types = (
     [ FieldChoice("_type/_initial_values")
+    , FieldChoice("_type/_coll",                      label="Collection"                  )
     , FieldChoice("_type/_field",                     label="View field"                  )
     , FieldChoice("_type/_group",                     label="Field group"                 )
     , FieldChoice("_type/_list",                      label="List"                        )
@@ -60,9 +61,7 @@ site_types = (
     , FieldChoice("_type/_user",                      label="User permissions"            )
     , FieldChoice("_type/_view",                      label="View"                        )
     , FieldChoice("_type/_vocab",                     label="Vocab namespace"             )
-    , FieldChoice("_type/BibEntry_type",              label="Bibliographic record"        )
     , FieldChoice("_type/Default_type",               label="Default record"              )
-    , FieldChoice("_type/Enum_bib_type",              label="Bibliographic entry type"    )
     , FieldChoice("_type/Enum_list_type",             label="List display type"           )
     , FieldChoice("_type/Enum_render_type",           label="Field render type"           )
     , FieldChoice("_type/Enum_value_mode",            label="Field value mode"            )
@@ -80,11 +79,30 @@ def get_site_types_linked(coll_id):
 def get_site_types():
     return set( ( id_from_field_choice(fc) for fc in get_site_types_sorted() )  )
 
+site_bib_types = (
+    site_types[0:1]+
+    sorted(site_types[1:] +
+        [ FieldChoice("_type/BibEntry_type",              label="Bibliographic record"        )
+        , FieldChoice("_type/Enum_bib_type",              label="Bibliographic entry type"    )
+        ])
+    )
+
+def get_site_bib_types_sorted():
+    return site_bib_types[1:]
+
+def get_site_bib_types_linked(coll_id):
+    return (
+        [ add_link_to_field_choice(fc, coll_id, "_type") 
+          for fc in get_site_bib_types_sorted() 
+        ])
+
+def get_site_bib_types():
+    return set( ( id_from_field_choice(fc) for fc in get_site_bib_types_sorted() )  )
+
 #   ----- Lists -----
 
 site_lists = (
     [ FieldChoice("_list/_initial_values")
-    , FieldChoice("_list/BibEntry_list",              label="List bibliographic entries")
     , FieldChoice("_list/Default_list",               label="List entities")
     , FieldChoice("_list/Default_list_all",           label="List entities with type information")
     , FieldChoice("_list/Field_group_list",           label="List field groups")
@@ -108,6 +126,25 @@ def get_site_lists_linked(coll_id):
 def get_site_lists():
     return set( ( id_from_field_choice(fc) for fc in get_site_lists_sorted() )  )
 
+site_bib_lists = (
+    site_lists[0:1] +
+    sorted(site_lists[1:] +
+        [ FieldChoice("_list/BibEntry_list",              label="List bibliographic entries")
+        ])
+    )
+
+def get_site_bib_lists_sorted():
+    return site_bib_lists[1:]
+
+def get_site_bib_lists_linked(coll_id):
+    return (
+        [ add_link_to_field_choice(fc, coll_id, "_list") 
+          for fc in get_site_bib_lists_sorted() 
+        ])
+
+def get_site_bib_lists():
+    return set( ( id_from_field_choice(fc) for fc in get_site_bib_lists_sorted() )  )
+
 #   ----- List types -----
 
 site_list_types = (
@@ -126,7 +163,8 @@ def get_site_list_types():
 
 site_views = (
     [ FieldChoice("_view/_initial_values")
-    , FieldChoice("_view/BibEntry_view",              label="Bibliographic metadata"  )
+    # , FieldChoice("_view/BibEntry_view",              label="Bibliographic metadata"  )
+    , FieldChoice("_view/Collection_view",            label="Collection view"  )
     , FieldChoice("_view/Default_view",               label="Default record view"     )
     , FieldChoice("_view/Field_group_view",           label="Field group view"        )
     , FieldChoice("_view/Field_view",                 label="Field description view"  )
@@ -149,16 +187,37 @@ def get_site_views_linked(coll_id):
 def get_site_views():
     return set( ( id_from_field_choice(fc) for fc in get_site_views_sorted() )  )
 
+site_bib_views = (
+    site_views[0:1] +
+    sorted(site_views[1:] +
+        [ FieldChoice("_view/BibEntry_view",              label="Bibliographic metadata"  )
+        ])
+    )
+
+def get_site_bib_views_sorted():
+    return site_bib_views[1:]
+
+def get_site_bib_views_linked(coll_id):
+    return (
+        [ add_link_to_field_choice(fc, coll_id, "_view") 
+          for fc in get_site_bib_views_sorted() 
+        ])
+
+def get_site_bib_views():
+    return set( ( id_from_field_choice(fc) for fc in get_site_bib_views_sorted() )  )
+
+
+
 #   ----- Field groups -----
 
 site_field_groups = (
     [ FieldChoice("_group/_initial_values")
-    , FieldChoice("_group/Bib_book_group",             label="BibEntry book fields"       )
-    , FieldChoice("_group/Bib_identifier_group",       label="BibEntry identifier fields" )
-    , FieldChoice("_group/Bib_journal_group",          label="BibEntry journal fields"    )
-    , FieldChoice("_group/Bib_license_group",          label="BibEntry license fields"    )
-    , FieldChoice("_group/Bib_person_group",           label="BibEntry person fields"     )
-    , FieldChoice("_group/Bib_publication_group",      label="BibEntry publication fields")
+    # , FieldChoice("_group/Bib_book_group",             label="BibEntry book fields"       )
+    # , FieldChoice("_group/Bib_identifier_group",       label="BibEntry identifier fields" )
+    # , FieldChoice("_group/Bib_journal_group",          label="BibEntry journal fields"    )
+    # , FieldChoice("_group/Bib_license_group",          label="BibEntry license fields"    )
+    # , FieldChoice("_group/Bib_person_group",           label="BibEntry person fields"     )
+    # , FieldChoice("_group/Bib_publication_group",      label="BibEntry publication fields")
     , FieldChoice("_group/Entity_see_also_repeat",     label="Links to further information")
     , FieldChoice("_group/Group_field_group",          label="Group field fields"         )
     , FieldChoice("_group/List_field_group",           label="List field fields"          )

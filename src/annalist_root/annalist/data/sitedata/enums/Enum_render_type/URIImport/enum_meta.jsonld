@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "URIImport"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "Web import"
+, "rdfs:comment":       "Import data from specified Web URI.  This is mostly superseded by ``Value_mode` options."
+, "annal:uri":          "annal:field_render_type/URIImport"
+}

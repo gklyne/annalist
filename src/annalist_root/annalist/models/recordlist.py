@@ -36,11 +36,10 @@ class RecordList(EntityData):
     _entitytypeid   = "_list"
     _entityview     = layout.COLL_LIST_VIEW
     _entitypath     = layout.COLL_LIST_PATH
-    _entityaltpath  = layout.SITE_LIST_PATH
     _entityfile     = layout.LIST_META_FILE
     _entityref      = layout.META_LIST_REF
 
-    def __init__(self, parent, list_id, altparent=None):
+    def __init__(self, parent, list_id):
         """
         Initialize a new RecordList object, without metadta (yet).
 
@@ -49,9 +48,15 @@ class RecordList(EntityData):
         altparent   is a site object to search for this new entity,
                     allowing site-wide RecordType values to be found.
         """
-        super(RecordList, self).__init__(parent, list_id, altparent)
+        super(RecordList, self).__init__(parent, list_id)
         self._parent = parent
-        log.debug("RecordList %s: dir %s, alt %s"%(list_id, self._entitydir, self._entityaltdir))
+        log.debug("RecordList %s: dir %s"%(list_id, self._entitydir))
         return
+
+    def _migrate_filenames(self):
+        """
+        Override EntityData method
+        """
+        return None
 
 # End.

@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "Slug"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "Short name"
+, "rdfs:comment":       "Short name (slug)"
+, "annal:uri":          "annal:field_render_type/Slug"
+}

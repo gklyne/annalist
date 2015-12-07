@@ -132,7 +132,7 @@ class RecordEnumTest(AnnalistTestCase):
         return
 
     def test_recordenum_init(self):
-        e = self.testenum(self.testcoll, "testenum", altparent=self.testsite)
+        e = self.testenum(self.testcoll, "testenum")
         self.assertEqual(e._entitytype,     ANNAL.CURIE.Enum)
         self.assertEqual(e._entityfile,     layout.ENUM_META_FILE)
         self.assertEqual(e._entityref,      layout.META_ENUM_REF)
@@ -145,7 +145,7 @@ class RecordEnumTest(AnnalistTestCase):
     def test_recordenum_base_init(self):
         # Note that if base cloass is used directly, the type_id value isn't recognized 
         # as it needs to be a class property.
-        e = RecordEnumBase(self.testcoll, "testenum2", "Enum_list_type", altparent=self.testsite)
+        e = RecordEnumBase(self.testcoll, "testenum2", "Enum_list_type")
         self.assertEqual(e._entitytype,     ANNAL.CURIE.Enum)
         self.assertEqual(e._entityfile,     layout.ENUM_META_FILE)
         self.assertEqual(e._entityref,      layout.META_ENUM_REF)
@@ -157,7 +157,7 @@ class RecordEnumTest(AnnalistTestCase):
         return
 
     def test_recordenum1_data(self):
-        e = self.testenum(self.testcoll, "testenum1", altparent=self.testsite)
+        e = self.testenum(self.testcoll, "testenum1")
         e.set_values(recordenum_create_values("testenum1", type_id="Enum_list_type"))
         ed = e.get_values()
         self.assertEqual(set(ed.keys()), set(recordenum_value_keys()))
@@ -166,7 +166,7 @@ class RecordEnumTest(AnnalistTestCase):
         return
 
     def test_recordenum2_data(self):
-        e = self.testenum(self.testcoll, "testenum2", altparent=self.testsite)
+        e = self.testenum(self.testcoll, "testenum2")
         e.set_values(recordenum_create_values("testenum2", type_id="Enum_list_type"))
         ed = e.get_values()
         self.assertEqual(set(ed.keys()), set(recordenum_value_keys()))
@@ -186,7 +186,7 @@ class RecordEnumTest(AnnalistTestCase):
         return
 
     def test_recordenum_type_id(self):
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertEqual(r.get_type_id(),   None)
         e1 = Entity(r, "testid1")
         self.assertEqual(e1.get_type_id(),  None)
@@ -195,11 +195,11 @@ class RecordEnumTest(AnnalistTestCase):
         return
 
     def test_recordenum_child_ids(self):
-        child_ids1 = self.testcoll.child_entity_ids(self.testenum, altparent=self.testsite)
+        child_ids1 = self.testcoll.child_entity_ids(self.testenum, altscope="all")
         self.assertEqual(set(child_ids1), {'_initial_values', 'Grid', 'List'})
         ev = recordenum_create_values("testenum1", type_id="Enum_list_type")
         e  = self.testenum.create(self.testcoll, "testenum1", ev)
-        child_ids2 = self.testcoll.child_entity_ids(self.testenum, altparent=self.testsite)
+        child_ids2 = self.testcoll.child_entity_ids(self.testenum, altscope="all")
         self.assertEqual(set(child_ids2), {'_initial_values', 'Grid', 'List', 'testenum1'})
         return
 

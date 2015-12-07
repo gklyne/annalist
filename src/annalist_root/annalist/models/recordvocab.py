@@ -29,23 +29,26 @@ class RecordVocab(EntityData):
     _entitytypeid   = "_vocab"
     _entityview     = layout.COLL_VOCAB_VIEW
     _entitypath     = layout.COLL_VOCAB_PATH
-    _entityaltpath  = layout.SITE_VOCAB_PATH
     _entityfile     = layout.VOCAB_META_FILE
     _entityref      = layout.META_VOCAB_REF
 
-    def __init__(self, parent, vocab_id, altparent=None, use_altpath=False):
+    def __init__(self, parent, vocab_id):
         """
         Initialize a new RecordVocab object, without metadata (yet).
 
         parent      is the parent entity from which the view is descended.
         vocab_id    the local identifier for the vocabulary; also used as namespace prefix.
-        altparent   is a site object to search for this new entity,
-                    allowing site-wide RecordVocab values to be found.
         """
-        super(RecordVocab, self).__init__(parent, vocab_id, altparent, use_altpath=use_altpath)
+        super(RecordVocab, self).__init__(parent, vocab_id)
         self._parent = parent
-        log.debug("RecordVocab %s: dir %s, alt %s"%(vocab_id, self._entitydir, self._entityaltdir))
+        log.debug("RecordVocab %s: dir %s"%(vocab_id, self._entitydir))
         return
+
+    def _migrate_filenames(self):
+        """
+        Override EntityData method
+        """
+        return None
 
     def _post_update_processing(self, entitydata):
         """

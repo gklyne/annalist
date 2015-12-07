@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "techreport"
+, "annal:type_id":      "Enum_bib_type"
+, "rdfs:label":         "Tech. report"
+, "rdfs:comment":       "A report published by a school or other institution, usually numbered within a series.  Other fields: author, title, institution, year, type, number, address, month, note."
+, "annal:uri":          "annal:bib_type/techreport"
+}

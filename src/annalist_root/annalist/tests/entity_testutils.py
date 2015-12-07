@@ -43,8 +43,10 @@ def site_dir():
     return TestBaseDir + "/"
 
 def collection_dir(coll_id="testcoll"):
-    return site_dir() + layout.SITE_COLL_PATH%{'id': coll_id} + "/"
-
+    return (
+        os.path.normpath(site_dir() + layout.SITE_COLL_PATH%{'id': coll_id})
+        + "/"
+        )
 
 #   -----------------------------------------------------------------------------
 #
@@ -81,16 +83,6 @@ def collection_entity_edit_url(
         ):
     """
     Return URL for edit view of entity
-
-    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/!(?P<action>new)$',
-                            GenericEntityEditView.as_view(),
-                            name='AnnalistEntityNewView'),
-    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>copy)$',
-                            GenericEntityEditView.as_view(),
-                            name='AnnalistEntityEditView'),
-    url(r'^c/(?P<coll_id>\w{0,32})/v/(?P<view_id>\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/!(?P<action>edit)$',
-                            GenericEntityEditView.as_view(),
-                            name='AnnalistEntityEditView'),
     """
     viewname = ( 
         'AnnalistEntityNewView'             if action == "new" else
@@ -358,8 +350,7 @@ def render_choice_options(name, opts, sel, placeholder=None, select_class=None, 
 
 def create_user_permissions(parent, 
         user_id,
-        user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"],
-        use_altpath=False
+        user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"]
         ):
     user_values = (
         { 'annal:type':             "annal:User"
@@ -368,7 +359,7 @@ def create_user_permissions(parent,
         , 'annal:user_uri':         "mailto:%s@%s"%(user_id, TestHost)
         , 'annal:user_permissions': user_permissions
         })
-    user = AnnalistUser.create(parent, user_id, user_values, use_altpath=use_altpath)
+    user = AnnalistUser.create(parent, user_id, user_values)
     return user
 
 def create_test_user(

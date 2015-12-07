@@ -36,34 +36,6 @@ import render_repeatgroup
 from render_ref_multifields     import get_ref_multifield_renderer, RefMultifieldValueMapper
 import render_ref_multifields
 
-# Render type classification, used for generating appropriate JSON-LD context values
-
-_render_type_literal = set(
-    [ "Text", "Textarea", "Slug"
-    , "Placement", "CheckBox", "Markdown"
-    , "EntityId", "EntityTypeId"
-    , "Enum", "Enum_optional", "Enum_choice", "View_choice"
-    , "RefMultifield"
-    , "Type", "View", "List", "Field"
-    ])
-
-_render_type_id = set(
-    [ "Identifier"
-    , "RefAudio", "RefImage", "URILink", "URIImage"
-    ])
-
-_render_type_set = set(
-    [ "TokenSet"
-    ])
-
-_render_type_list = set(
-    [ "RepeatGroup", "RepeatGroupRow"
-    ])
-
-_render_type_object = set(
-    [ "URIImport", "FileUpload"
-    ])
-
 # Render type mappings to templates and/or renderer access functions
 
 _field_renderers = {}   # renderer cache
@@ -348,13 +320,20 @@ def get_mode_renderer(field_render_type, field_value_mode):
     current render_mode (used for nested renderers which can be invoked in different 
     view contexts).
     """
-    renderer = get_field_base_renderer(field_render_type)
+    # @@TODO: factor out this selection?
+    #         (common with get_view_renderer, get_label_view_renderer)
+    if field_render_type == "RepeatGroup":
+        renderer = RenderRepeatGroup(render_repeatgroup.view_group)
+    elif field_render_type == "RepeatListRow":
+        renderer = RenderRepeatGroup(render_repeatgroup.view_listrow)
+    elif field_render_type == "RepeatGroupRow":
+        renderer = RenderRepeatGroup(render_repeatgroup.view_grouprow)
+    else:
+        renderer = get_field_base_renderer(field_render_type)
     if not renderer:
+        # Repeat group: revert to normal renderer ....
         # Default to simple text for unknown renderer type
-        if field_render_type not in ["RepeatListRow", "RepeatGroup", "RepeatGroupRow"]:
-            log.warning("get_mode_renderer: %s not found"%field_render_type)
-        # else:
-        #     log.warning("get_mode_renderer: %s not currently supported"%field_render_type)
+        log.warning("get_mode_renderer: %s not supported"%field_render_type)
         renderer = get_field_base_renderer("Text")
     return renderer.render_mode()
 
@@ -369,43 +348,6 @@ def get_value_mapper(field_render_type):
     if field_render_type in _field_value_mappers:
         mapper_class = _field_value_mappers[field_render_type]
     return mapper_class()
-
-def is_render_type_literal(field_render_type):
-    """
-    Returns True if the supplied render type expects a literral (string) 
-    value to be stored in a corresponding entity field.
-    """
-    return field_render_type in _render_type_literal
-
-def is_render_type_id(field_render_type):
-    """
-    Returns True if the supplied render type expects a id (URI reference) 
-    value to be stored in a corresponding entity field.
-    """
-    return field_render_type in _render_type_id
-
-def is_render_type_set(field_render_type):
-    """
-    Returns True if the supplied render type expects a list value,
-    which is interpreted as a set, to be stored in a corresponding 
-    entity field.
-    """
-    return field_render_type in _render_type_set
-
-def is_render_type_list(field_render_type):
-    """
-    Returns True if the supplied render type expects a list value,
-    which is interpreted as an ordered list, to be stored in a 
-    corresponding entity field.
-    """
-    return field_render_type in _render_type_list
-
-def is_render_type_object(field_render_type):
-    """
-    Returns True if the supplied render type expects a complex (object) 
-    value to be stored in a corresponding entity field.
-    """
-    return field_render_type in _render_type_object
 
 if __name__ == "__main__":
     import doctest

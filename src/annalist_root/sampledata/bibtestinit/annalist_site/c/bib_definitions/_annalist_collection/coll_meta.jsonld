@@ -1,0 +1,16 @@
+{
+  "rdfs:label": "Bibliographic record definitions",
+  "rdfs:comment": "Definitions for bibliographic records, broadly following BibJSON. Used for some Annalist test cases.",
+  "annal:software_version": "0.1.23",
+  "annal:comment": "Initialized by annalist.models.site.create_empty_coll_data at 2015-12-07 11:28:47",
+  "annal:type_id": "_coll",
+  "@context": [
+    "coll_context.jsonld"
+  ],
+  "annal:id": "bib_definitions",
+  "@id": "../",
+  "@type": [
+    "annal:Collection"
+  ],
+  "annal:type": "annal:Collection"
+}

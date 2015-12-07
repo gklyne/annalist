@@ -1,0 +1,28 @@
+{
+  "rdfs:label": "RecordList coll2/list2",
+  "rdfs:comment": "RecordList help for coll2/list2",
+  "annal:default_view": "_view/Default_view",
+  "annal:default_type": "_type/Default_type",
+  "annal:type_id": "_list",
+  "annal:list_entity_selector": "ALL",
+  "annal:display_type": "Enum_list_type/List",
+  "annal:list_fields": [
+    {
+      "annal:field_placement": "small:0,3",
+      "annal:field_id": "_field/Entity_id"
+    },
+    {
+      "annal:field_placement": "small:3,9",
+      "annal:field_id": "_field/Entity_label"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "list2",
+  "@id": "./",
+  "@type": [
+    "annal:List"
+  ],
+  "annal:type": "annal:List"
+}

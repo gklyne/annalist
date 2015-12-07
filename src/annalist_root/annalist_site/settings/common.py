@@ -20,9 +20,10 @@ from annalist import __version__
 from annalist import layout
 
 DJANGO_ROOT     = os.path.dirname(os.path.realpath(django.__file__))
-SETTINGS_DIR    = os.path.dirname(os.path.realpath(__file__))
-SITE_CONFIG_DIR = os.path.dirname(SETTINGS_DIR)
-SITE_SRC_ROOT   = os.path.dirname(SITE_CONFIG_DIR)
+SETTINGS_DIR    = os.path.dirname(os.path.realpath(__file__))           # src/annalist_root/annalist_site/settings
+SITE_CONFIG_DIR = os.path.dirname(SETTINGS_DIR)                         # src/annalist_root/annalist_site
+SITE_SRC_ROOT   = os.path.dirname(SITE_CONFIG_DIR)                      # src/annalist_root
+SAMPLEDATA_DIR  = SITE_SRC_ROOT+"/sampledata"                           # src/annalist_root/sampledata
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -106,8 +107,8 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    SITE_SRC_ROOT+"/static/",
-    SITE_SRC_ROOT+"/annalist/static/",
+    # SITE_SRC_ROOT+"/static/",
+    SITE_SRC_ROOT+"/annalist/data/static/",
 )
 
 ANNALIST_VERSION = __version__

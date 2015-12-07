@@ -16,6 +16,8 @@ from django.http                        import HttpResponse
 from annalist                           import message
 from annalist                           import layout
 
+import annalist.models.entitytypeinfo as entitytypeinfo
+
 from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.generic             import AnnalistGenericView
 
@@ -42,7 +44,7 @@ class CollectionResourceAccess(AnnalistGenericView):
         """
         Access specified entity resource
         """
-        log.info(
+        log.debug(
             "CollectionResourceAccess.get: coll_id %s, resource_ref %s"%
             (coll_id, resource_ref)
             )
@@ -108,6 +110,7 @@ class CollectionResourceAccess(AnnalistGenericView):
         viewinfo = DisplayInfo(self, action, request_dict, self.default_continuation_url)
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
+        viewinfo.get_type_info(entitytypeinfo.COLL_ID)
         viewinfo.check_authorization(action)
         return viewinfo
 
@@ -117,16 +120,11 @@ class CollectionResourceAccess(AnnalistGenericView):
         """
         # @@TODO: this is a bit ad-hoc; try to work out structure that works more
         #         uniformly for collections, entities, sites, etc.
-        log.info("CollectionResourceAccess.find_resource %s/d/%s"%(coll.get_id(), resource_ref))
+        log.debug("CollectionResourceAccess.find_resource %s/d/%s"%(coll.get_id(), resource_ref))
         if resource_ref == layout.COLL_CONTEXT_FILE:
             return (
                 { 'resource_type': "application/ld+json"
-                , 'resource_name': layout.COLL_META_CONTEXT_PATH + resource_ref
-                })
-        if resource_ref == layout.SITEDATA_CONTEXT_FILE:
-            return (
-                { 'resource_type': "application/ld+json"
-                , 'resource_name': resource_ref
+                , 'resource_name': layout.COLL_CONTEXT_PATH + resource_ref
                 })
         return None
 

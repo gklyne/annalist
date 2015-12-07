@@ -1,0 +1,8 @@
+{ "@type":              ["annal:Type"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:type_id":      "_type"
+, "rdfs:label":         "(New type initial values - label)"
+, "rdfs:comment":       "(New type initial values - comment/help)"
+, "annal:type_view":    "_view/Default_view"
+, "annal:type_list":    "_list/Default_list"
+}

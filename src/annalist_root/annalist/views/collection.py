@@ -17,6 +17,7 @@ from django.core.urlresolvers   import resolve, reverse
 from annalist                   import message
 from annalist.exceptions        import Annalist_Error
 
+import annalist.models.entitytypeinfo as entitytypeinfo
 from annalist.models.site       import Site
 from annalist.models.collection import Collection
 from annalist.models.recordtype import RecordType
@@ -62,6 +63,7 @@ class CollectionEditView(AnnalistGenericView):
         viewinfo = DisplayInfo(self, action, request_dict, self.default_continuation)
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
+        viewinfo.get_type_info(entitytypeinfo.COLL_ID)
         viewinfo.check_authorization(action)
         self.default_continuation = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
         return viewinfo
@@ -78,9 +80,9 @@ class CollectionEditView(AnnalistGenericView):
             coll = viewinfo.collection
             context = (
                 { 'continuation_url':   viewinfo.get_continuation_url() or ""
-                , 'types':              sorted(coll.types(include_alt=False), key=get_id)
-                , 'lists':              sorted(coll.lists(include_alt=False), key=get_id)
-                , 'views':              sorted(coll.views(include_alt=False), key=get_id)
+                , 'types':              sorted(coll.types(altscope=None), key=get_id)
+                , 'lists':              sorted(coll.lists(altscope=None), key=get_id)
+                , 'views':              sorted(coll.views(altscope=None), key=get_id)
                 , 'select_rows':        "6"
                 })
             context.update(viewinfo.context_data())

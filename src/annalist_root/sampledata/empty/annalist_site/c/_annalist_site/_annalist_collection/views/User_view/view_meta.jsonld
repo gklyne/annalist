@@ -1,0 +1,28 @@
+{ "@id":                "./"
+, "@type":              ["annal:View"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:type_id":      "_view"
+, "annal:id":           "User_view"
+, "annal:uri":          "annal:display/User_view"
+, "annal:record_type":  "annal:User"
+, "rdfs:label":         "User permissions view"
+, "rdfs:comment":       "User permissions view."
+, "annal:open_view":    false
+, "annal:view_fields":
+  [ { "annal:field_id":         "_field/User_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/User_name"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/User_description"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/User_uri"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/User_permissions"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

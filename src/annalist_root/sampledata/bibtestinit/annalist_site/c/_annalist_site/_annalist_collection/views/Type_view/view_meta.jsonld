@@ -1,0 +1,41 @@
+{ "@id":                "annal:display/Type_view"
+, "@type":              ["annal:View"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:type_id":      "_view"
+, "annal:id":           "Type_view"
+, "annal:record_type":  "annal:Type"
+, "rdfs:label":         "Type description view"
+, "rdfs:comment":       "This resource describes the form that is used when displaying and/or editing a record type description"
+, "annal:open_view":    false
+, "annal:view_fields":
+  [ { "annal:field_id":         "_field/Type_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/Type_label"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Type_comment"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Type_uri"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Type_supertype_uris"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Type_view"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/Type_list"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "_field/Type_aliases"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+, "annal:task_buttons":
+  [ { "annal:button_id":        "_task/Define_view_list" 
+    , "annal:button_label":     "Define view+list"
+    }
+  ]
+}

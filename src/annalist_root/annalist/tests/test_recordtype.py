@@ -103,7 +103,7 @@ class RecordTypeTest(AnnalistTestCase):
         return
 
     def test_recordtype_init(self):
-        t = RecordType(self.testcoll, "testtype", self.testsite)
+        t = RecordType(self.testcoll, "testtype")
         u = recordtype_coll_url(self.testsite, coll_id="testcoll", type_id="testtype")
         self.assertEqual(t._entitytype,     ANNAL.CURIE.Type)
         self.assertEqual(t._entityfile,     layout.TYPE_META_FILE)
@@ -115,7 +115,7 @@ class RecordTypeTest(AnnalistTestCase):
         return
 
     def test_recordtype1_data(self):
-        t = RecordType(self.testcoll, "type1", self.testsite)
+        t = RecordType(self.testcoll, "type1")
         self.assertEqual(t.get_id(), "type1")
         self.assertEqual(t.get_type_id(), "_type")
         self.assertIn("/c/testcoll/_annalist_collection/types/type1/", t.get_url())
@@ -128,7 +128,7 @@ class RecordTypeTest(AnnalistTestCase):
         return
 
     def test_recordtype2_data(self):
-        t = RecordType(self.testcoll, "type2", self.testsite)
+        t = RecordType(self.testcoll, "type2")
         self.assertEqual(t.get_id(), "type2")
         self.assertEqual(t.get_type_id(), "_type")
         self.assertIn("/c/testcoll/_annalist_collection/types/type2/", t.get_url())
@@ -149,9 +149,10 @@ class RecordTypeTest(AnnalistTestCase):
         return
 
     def test_recordtype_default_data(self):
-        t = RecordType.load(self.testcoll, "Default_type", altparent=self.testsite)
+        t = RecordType.load(self.testcoll, "Default_type", altscope="all")
         self.assertEqual(t.get_id(), "Default_type")
-        self.assertIn("/c/testcoll/_annalist_collection/types/Default_type", t.get_url())
+        self.assertIn("/c/_annalist_site/_annalist_collection/types/Default_type", t.get_url())
+        self.assertIn("/c/testcoll/d/_type/Default_type", t.get_view_url())
         self.assertEqual(t.get_type_id(), "_type")
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_load_keys(type_uri=True)))
@@ -160,7 +161,7 @@ class RecordTypeTest(AnnalistTestCase):
             { 'rdfs:label':     'Default record'
             , 'rdfs:comment':   'Default record type, applied when no type is specified when creating a record.'
             , 'annal:uri':      'annal:Default_type'
-            , '@context':       ["../../site_context.jsonld"]
+            , '@context':       [layout.ENTITY_CONTEXT_FILE]
             })
         self.assertDictionaryMatch(td, v)
         return
@@ -381,7 +382,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # log.info(r.content)
         self.assertContains(r, "<title>Collection testcoll</title>")
         self.assertContains(r, "<h3>'_type' data in collection 'testcoll'</h3>")
-        field_vals = default_fields(coll_id="testcoll", type_id="_type", entity_id="00000001")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_type", entity_id="00000001",
+            default_label="(New type initial values - label)",
+            default_comment="(New type initial values - comment/help)",
+            default_label_esc="(New type initial values - label)",
+            default_comment_esc="(New type initial values - comment/help)"
+            )
         formrow1 = """
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
@@ -496,8 +503,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Fields
         self._check_context_fields(r, 
             type_id="00000001",
-            type_label=default_label("testcoll", "_type", "00000001"),
-            type_help=default_comment("testcoll", "_type", "00000001"),
+            type_label="(New type initial values - label)",
+            type_help="(New type initial values - comment/help)",
             type_uri="", type_supertype_uris=""
             )
         return

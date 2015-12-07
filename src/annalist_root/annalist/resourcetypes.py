@@ -41,6 +41,7 @@ resource_types = (
       , ("gif",     "image/gif")
       , ("tiff",    "image/tiff")
       , ("svg",     "image/svg")
+      , ("pdf",     "application/pdf")
       ]
     , ANNAL.CURIE.Audio:
       [ ("mp3",     "audio/mpeg")
@@ -58,6 +59,7 @@ resource_types = (
       , ("gif",     "image/gif")
       , ("tiff",    "image/tiff")
       , ("svg",     "image/svg")
+      , ("pdf",     "application/pdf")
       ]
     })
 

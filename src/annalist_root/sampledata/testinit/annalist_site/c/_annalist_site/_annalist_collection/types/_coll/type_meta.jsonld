@@ -1,0 +1,11 @@
+{ "@id":                "./"
+, "@type":              ["annal:Type"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "_coll"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Collection"
+, "rdfs:label":         "Collection"
+, "rdfs:comment":       "Type of collection record."
+, "annal:type_view":    "_view/Collection_view"
+, "annal:type_list":    "_list/Default_list_all"
+}

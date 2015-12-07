@@ -33,7 +33,7 @@ LOGGING_FILE = "None (output to console)"
 # log.info("DJANGO_ROOT:      "+DJANGO_ROOT)
 # log.info("SITE_CONFIG_DIR:  "+SITE_CONFIG_DIR)
 # log.info("SITE_SRC_ROOT:    "+SITE_SRC_ROOT)
-# log.info("STATICFILES_DIRS: "+STATICFILES_DIRS[1])
+# log.info("STATICFILES_DIRS: "+repr(STATICFILES_DIRS))
 # log.info("DB PATH:          "+DATABASES['default']['NAME'])
 
 # End.

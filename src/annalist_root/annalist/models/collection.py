@@ -20,6 +20,7 @@ import os.path
 import urlparse
 import shutil
 import json
+import datetime
 from collections    import OrderedDict
 
 import logging
@@ -30,8 +31,7 @@ from django.conf import settings
 from annalist                       import layout
 from annalist.exceptions            import Annalist_Error
 from annalist.identifiers           import RDF, RDFS, ANNAL
-# from annalist                       import util
-from annalist.util                  import valid_id, extract_entity_id
+from annalist.util                  import valid_id, extract_entity_id, make_type_entity_id
 
 from annalist.models.entity         import Entity
 from annalist.models.annalistuser   import AnnalistUser
@@ -41,13 +41,7 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordvocab    import RecordVocab
-
-# @@TODO: look for way to remove this view dependency from model code.  Move to RecordField 
-#   module?  Hmmm... not so easy: information about render types and methods is concentrated
-#   in render_utils module.  Maybe need to split render_utils functionality between
-#   model and view modules?
-#
-from annalist.views.fields.render_utils import (
+from annalist.models.rendertypeinfo import (
     is_render_type_literal,
     is_render_type_id,
     is_render_type_set,
@@ -58,25 +52,52 @@ from annalist.views.fields.render_utils import (
 class Collection(Entity):
 
     _entitytype     = ANNAL.CURIE.Collection
-    _entitytypeid   = "_collection"
+    _entitytypeid   = "_coll"
     _entityview     = layout.SITE_COLL_VIEW
     _entitypath     = layout.SITE_COLL_PATH
-    _entityfile     = layout.COLL_META_FILE
+    _entityfile     = layout.COLL_META_REF
     _entityref      = layout.META_COLL_REF
     _contextref     = layout.COLL_CONTEXT_FILE
 
-    def __init__(self, parentsite, coll_id):
+    def __init__(self, parentsite, coll_id, altparent=None):
         """
-        Initialize a new Collection object, without metadta (yet).
+        Initialize a new Collection object.
 
         parentsite  is the parent site from which the new collection is descended.
         coll_id     the collection identifier for the collection
+        altparent   is an alternative parent to search for descendents of the new 
+                    Collection.  Effectively, the new Collection inherits definitions
+                    from this alternative parent.
         """
-        super(Collection, self).__init__(parentsite, coll_id)
+        log.debug("Collection.__init__: coll_id %s, parent dir %s"%(coll_id, parentsite._entitydir))
+        if altparent is not None:
+            if not isinstance(altparent, Collection):
+                msg = "Collection altparent value must be a Collection (got %r)"%(altparent,)
+                log.error(msg)
+                raise ValueError(msg)
+            # msg = (
+            #     "Collection %s initialised with altparent %s"%
+            #     (coll_id, altparent.get_id())
+            #     )
+            # raise ValueError(msg)
         self._parentsite = parentsite
+        self._parentcoll = (
+            altparent or
+            None if coll_id == layout.SITEDATA_ID else 
+            parentsite.site_data_collection()
+            )
+        super(Collection, self).__init__(parentsite, coll_id, altparent=self._parentcoll)
         self._types_by_id  = None
         self._types_by_uri = None
         return
+
+    def _migrate_values(self, collmetadata):
+        """
+        Collection data format migration method.
+        """
+        if collmetadata[ANNAL.CURIE.type_id] == "_collection":
+            collmetadata[ANNAL.CURIE.type_id] = self._entitytypeid
+        return collmetadata
 
     # Site
 
@@ -85,6 +106,82 @@ class Collection(Entity):
         Return site object for the site from which the current collection is accessed.
         """
         return self._parentsite
+
+    def get_site_data(self):
+        """
+        Return parent object for accessing site data.
+        """
+        return self._parentcoll
+
+    # Alternate collections handling
+
+    def set_alt_entities(self, altparent):
+        """
+        Update the alternative parent for the current collection.
+
+        Returns a list of parents accessible from the supplied altparent (including itself)
+        """
+        # log.info("Collection.set_alt_entities: coll_id %s, altparent_id %s"%(self.get_id(), altparent.get_id()))
+        if not isinstance(altparent, Collection):
+            msg = "Collection.set_alt_entities value must be a Collection (got %r)"%(altparent,)
+            log.error(msg)
+            raise ValueError(msg)
+        parents   = super(Collection, self).set_alt_entities(altparent)
+        parentids = [ p.get_id() for p in parents ]
+        # log.info("Collection.set_alt_entities: parentids %r"%parentids)
+        if layout.SITEDATA_ID not in parentids:
+            msg = (
+                "Entity.set_alt_entities cannot access site data (%s) via %r)"%
+                (layout.SITEDATA_ID, altparent)
+                )
+            log.error(msg)
+            raise ValueError(msg)
+        if not self._ensure_values_loaded():
+            msg = (
+                "Entity.set_alt_entities cannot load collection data for %s)"%
+                (self.get_id(),)
+                )
+            log.error(msg)
+            raise ValueError(msg)
+        self[ANNAL.CURIE.inherit_from] = make_type_entity_id("_coll", altparent.get_id())
+        return parents
+
+    @classmethod
+    def load(cls, parent, entityid, altscope=None):
+        """
+        Overload Entity.load with logic to set alternative parent details for 
+        collection configuration inheritance, if an alternative is specified in 
+        the collection data loaded.
+
+        cls         is the Collection class of the entity to be loaded
+        parent      is the parent from which the entity is descended.
+        entityid    is the local identifier (slug) for the entity.
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `get_alt_entities` for more details.
+
+        Returns an instance of the indicated Collection class with data loaded from 
+        the corresponding Annalist storage, or None if there is no such entity.
+        """
+        log.debug("Collection.load: %s, altscope %s"%(entityid, altscope))
+        coll = super(Collection, cls).load(parent, entityid, altscope=altscope)
+        if coll is not None:
+            parent_coll_id = extract_entity_id(coll.get(ANNAL.CURIE.inherit_from, None))
+            if parent_coll_id and parent_coll_id != layout.SITEDATA_ID:
+                parent_coll = super(Collection, cls).load(parent, parent_coll_id)
+                if parent_coll is None:
+                    log.warning(
+                        "Collection.load: coll %s references non-existent parent %s"%
+                        (entityid, parent_coll_id)
+                        )
+                else:
+                    log.debug(
+                        "Collection.load: coll %s references parent %s"%
+                        (entityid, parent_coll_id)
+                        )
+                    coll.set_alt_entities(parent_coll)
+            else:
+                log.debug("Collection.load: coll %s references no parent"%(entityid,))
+        return coll
 
     # User permissions
 
@@ -120,10 +217,10 @@ class Collection(Entity):
         returns an AnnalistUser object for the identified user, or None.  This object contains
                 information about permissions granted to the user in the current collection.
         """
-        user = AnnalistUser.load(self, user_id, altparent=self._parentsite)
-        log.debug("Collection.get_user_permissions: user_id %s, user_uri %s, user %r"%
-            (user_id, user_uri, user)
-            )
+        user = AnnalistUser.load(self, user_id, altscope="user")
+        # log.debug("Collection.get_user_permissions: user_id %s, user_uri %s, user %r"%
+        #     (user_id, user_uri, user)
+        #     )
         if user:
             for f in [RDFS.CURIE.label, RDFS.CURIE.comment, ANNAL.CURIE.user_uri, ANNAL.CURIE.user_permissions]:
                 if f not in user:
@@ -163,17 +260,17 @@ class Collection(Entity):
         if not (self._types_by_id and self._types_by_uri):
             self._types_by_id  = {}
             self._types_by_uri = {}
-            for type_id in self._children(RecordType, altparent=self._parentsite):
-                t = RecordType.load(self, type_id, altparent=self._parentsite)
+            for type_id in self._children(RecordType, altscope="all"):
+                t = RecordType.load(self, type_id, altscope="all")
                 self._update_type_cache(t)
         return
 
-    def types(self, include_alt=True):
+    def types(self, altscope="all"):
         """
         Generator enumerates and returns record types that may be stored
         """
-        altparent = self._parentsite if include_alt else None
-        for f in self._children(RecordType, altparent=altparent):
+        for f in self._children(RecordType, altscope=altscope):
+            log.debug("___ Collection.types: "+f)
             t = self.get_type(f)
             if t and t.get_id() != "_initial_values":
                 yield t
@@ -206,12 +303,13 @@ class Collection(Entity):
         self._load_types()
         t = self._types_by_id.get(type_id, None)
         # Was it created but not cached?
-        if not t and RecordType.exists(self, type_id, altparent=self._parentsite):
-            t = RecordType.load(self, type_id, altparent=self._parentsite)
+        if not t and RecordType.exists(self, type_id, altscope="all"):
+            log.info("___ Collection.get_type: "+type_id)
+            t = RecordType.load(self, type_id, altscope="all")
             self._update_type_cache(t)
         return t
 
-    def get_uri_type(self, type_uri, include_alt=True):
+    def get_uri_type(self, type_uri):
         """
         Return type entity corresponding to the supplied type URI
         """
@@ -233,12 +331,11 @@ class Collection(Entity):
 
     # Record views
 
-    def views(self, include_alt=True):
+    def views(self, altscope="all"):
         """
         Generator enumerates and returns record views that may be stored
         """
-        altparent = self._parentsite if include_alt else None
-        for f in self._children(RecordView, altparent=altparent):
+        for f in self._children(RecordView, altscope=altscope):
             v = self.get_view(f)
             if v and v.get_id() != "_initial_values":
                 yield v
@@ -266,7 +363,7 @@ class Collection(Entity):
 
         returns a RecordView object for the identified view, or None.
         """
-        v = RecordView.load(self, view_id, altparent=self._parentsite)
+        v = RecordView.load(self, view_id, altscope="all")
         return v
 
     def remove_view(self, view_id):
@@ -282,12 +379,11 @@ class Collection(Entity):
 
     # Record lists
 
-    def lists(self, include_alt=True):
+    def lists(self, altscope="all"):
         """
         Generator enumerates and returns record lists that may be stored
         """
-        altparent = self._parentsite if include_alt else None
-        for f in self._children(RecordList, altparent=altparent):
+        for f in self._children(RecordList, altscope=altscope):
             l = self.get_list(f)
             if l and l.get_id() != "_initial_values":
                 yield l
@@ -315,7 +411,7 @@ class Collection(Entity):
 
         returns a RecordList object for the identified list, or None.
         """
-        l = RecordList.load(self, list_id, altparent=self._parentsite)
+        l = RecordList.load(self, list_id, altscope="all")
         return l
 
     def remove_list(self, list_id):
@@ -342,7 +438,8 @@ class Collection(Entity):
         Return the default list to be displayed for the current collection.
         """
         list_id = self.get(ANNAL.CURIE.default_list, None)
-        if list_id and not RecordList.exists(self, list_id, altparent=self._parentsite):
+        # print "@@ get_default_list %s"%list_id
+        if list_id and not RecordList.exists(self, list_id, altscope="all"):
             log.warning(
                 "Default list %s for collection %s does not exist"%
                 (list_id, self.get_id())
@@ -361,7 +458,9 @@ class Collection(Entity):
                 returns a context dictionary for the field thus described.
         """
         # Build context data
-        context = self.get_coll_jsonld_context()
+        context      = self.get_coll_jsonld_context()
+        datetime_now = datetime.datetime.today().replace(microsecond=0)
+        datetime_str = datetime_now.isoformat(' ')
         # Assemble and write out context description
         with self._metaobj(
                 layout.COLL_META_CONTEXT_PATH,
@@ -369,7 +468,32 @@ class Collection(Entity):
                 "wt"
                 ) as context_io:
             json.dump(
-                { "@context": context }, 
+                { "_comment": "Generated by generate_coll_jsonld_context on %s (for user data)"%datetime_str
+                , "@context": context 
+                }, 
+                context_io, indent=2, separators=(',', ': ')
+                )
+        with self._metaobj(
+                layout.SITEDATA_CONTEXT_PATH,
+                layout.COLL_CONTEXT_FILE,
+                "wt"
+                ) as context_io:
+            json.dump(
+                { "_comment": "Generated by generate_coll_jsonld_context on %s (for collection data)"%datetime_str
+                , "@context": context 
+                }, 
+                context_io, indent=2, separators=(',', ': ')
+                )
+        # @@TODO: fix ad-hocery used to ensure enum data can reference context in file system:
+        with self._metaobj(
+                layout.SITEDATA_ENUM_PATH,
+                layout.COLL_CONTEXT_FILE,
+                "wt"
+                ) as context_io:
+            json.dump(
+                { "_comment": "Generated by generate_coll_jsonld_context on %s (for enums)"%datetime_str
+                , "@context": context 
+                }, 
                 context_io, indent=2, separators=(',', ': ')
                 )
         return
@@ -411,12 +535,12 @@ class Collection(Entity):
               }
             })
         # Scan vocabs, generate prefix data
-        for v in self.child_entities(RecordVocab, altparent=self._parentsite):
+        for v in self.child_entities(RecordVocab, altscope="all"):
             vid = v.get_id()
             if vid != "_initial_values":
                 context[v.get_id()] = v[ANNAL.CURIE.uri]
         # Scan view fields and generate context data for property URIs used
-        for v in self.child_entities(RecordView, altparent=self._parentsite):
+        for v in self.child_entities(RecordView, altscope="all"):
             for fref in v[ANNAL.CURIE.view_fields]:
                 fid  = extract_entity_id(fref[ANNAL.CURIE.field_id])
                 vuri = fref.get(ANNAL.CURIE.property_uri, None)
@@ -425,7 +549,7 @@ class Collection(Entity):
                 # fcontext['fid'] = fid
                 self.set_field_uri_jsonld_context(vuri or furi, fcontext, context)
         # Scan group fields and generate context data for property URIs used
-        for g in self.child_entities(RecordGroup, altparent=self._parentsite):
+        for g in self.child_entities(RecordGroup, altscope="all"):
             for gref in g[ANNAL.CURIE.group_fields]:
                 fid  = extract_entity_id(gref[ANNAL.CURIE.field_id])
                 guri = gref.get(ANNAL.CURIE.property_uri, None)
@@ -444,7 +568,7 @@ class Collection(Entity):
 
         If no context should be generated for the field URI, returns (uri, None)
         """
-        f = RecordField.load(self, fid, altparent=self._parentsite)
+        f = RecordField.load(self, fid, altscope="all")
         if f is None:
             return (None, None)
         return (f[ANNAL.CURIE.property_uri], get_field_context(f))

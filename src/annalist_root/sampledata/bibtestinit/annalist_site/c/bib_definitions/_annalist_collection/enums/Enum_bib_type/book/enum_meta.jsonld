@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "book"
+, "annal:type_id":      "Enum_bib_type"
+, "rdfs:label":         "Book"
+, "rdfs:comment":       "A book with an explicit publisher.  Other fields: author/editor, title, publisher, year, volume/number, series, address, edition, month, note"
+, "annal:uri":          "annal:bib_type/book"
+}

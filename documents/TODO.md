@@ -8,103 +8,110 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
+- [ ] Update tutorial to cover inheritance of definitions
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
 - [ ] New demo screencasts
 
 
-# Version 0.1.21, towards 0.1.22
+# Version 0.1.23, towards 0.1.24
 
-- [x] BUG: add a supertype while editing (copying) a new type loses any type URI entered.
-    - IIRC, old URL is wiped at the point of save.
-    - Need to save original URL and only wipe if not changed?
-- [x] BUG: create instance of type with defined type URI saves with `annal:type` value of `annal:EntityData`
-- [x] BUG: renaming a field used by a view results in confusing Server Error messages (missing field)
-   - Entity not found: u'Group Entity_label_ref used in field Entity_label_ref'
-   - Note: this is renaming a group, not a field
-- [x] BUG: when local type/list/view overrides site definition, appears twice in dropdown lists.
-    - Or only when type id is different?  
-    - Case for including type_id/entity_id in dropdown text?
-    - Done, but review this
-- [x] BUG: Naming inconsistency: entity-data.jsonld should be entity_data.jsonld.
-- [x] Content migration for entity-data.jsonld -> entity_data.jsonld
-- [x] Linked data support [#19](https://github.com/gklyne/annalist/issues/19)
-    - Think about use of CURIES in data (e.g. for types, fields, etc.)  
-        - Need to store prefix info with collection.
-    - [x] Add `_vocab` built-in type that can be defined at site-level for built-in namespaces like `rdf`, `rdfs`, `annal`, etc., and at collection level for user-introduced namespaces.
-    - [x] Define built-in vocabularies: RDF, RDFS, XSD, OWL, ANNAL
-    - [x] Choose URI for collection context. 
-        - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
-        - could use `@id`?
-        - Think more generally about URI design; avoid explicit reference to `_analist_collection`?
-        - Store/access context data at `/c/<coll_id>/d/ directory`, file `@context`
-            - RFC3986: `pchar = unreserved / pct-encoded / sub-delims / ":" / "@"`
-        - Think about base URI designation at the same time, as these both seem to involve JSON-LD contexts.
-            - note `@base` ignored if used in external contexts;
-            - can specified value be relative? YES:
-                - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
-                - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
-        - Need to add something to generated entity data?
-        - Using `(site_base)/c/(coll_id)/d/` as base URI would mean that entity ids (`type_id/entity_id`) work directly as relative URIs.  
-            - Also `type_id` to retreive a list of entities of that type.
-            - Thus can use `{ "@base": "../..", @context": "@context", ... }` in entity data.
-        - (also: seach for "URI" below)
-    - [x] Generate JSON-LD context descriptions incorporating the available prefix information.
-        - on-the-fly dynamic generation or static?
-            - If dynamic, then no context available for data accessed without Annalist
-            - If static, when to regenerate?
-            - Maybe adopt a hybrid static-as-cache approach?
-        - is it sufficiently easy to generate property type info on-the-fly?
-    - [x] Arrange to regenerate context only when view/group/field/vocab are updated
-        - [x] Implement post-update processing hook in EntityRoot
-        - [x] Move context generation functions to collection class
-        - [x] Define post-update hook for vocab, etc to regenerate context
-    - [x] Arrange for context to be web-accessible
-    - [x] When generating entity data, incoporate context information
-    - [x] Add context references to site data
-    - [x] JSON-LD context test case.
-    - [x] Closed https://github.com/gklyne/annalist/issues/19
-- [x] Generate site JSON-LD context data as part of 'updatesite' installation step
-- [x] Ensure that raw entity JSON is HTTP-accessible directly from the Annalist server, subject to permissions (e.g. <entity>/entity_data.jsonld.  Also for types, views, fields, etc.)
-    - [x] coll entity data
-    - [x] coll type data
-    - [x] coll list data
-    - [x] coll view data
-    - [x] coll field data
-    - [x] coll group data
-    - [x] coll vocab data
-    - [x] coll user data
-    - [x] site type
-    - [x] site list data
-    - [x] site view data
-    - [x] site field data
-    - [x] site group data
-    - [x] site vocab data
-    - [x] site user data
-- [x] Test cases to ensure JSONLD contexts can be accessed by HTTP.  
-    - Collection and site, with correct relative location to entity data:
-    - [x] entity -> collection context
-    - [x] type -> collection context
-    - [x] site-defined type -> site context
-- [x] Add HTTP and HTML links to data to responses.  Also, link to data on view form.
-- [x] Save 'annal:type' URI value in entity that matches corresponding type data.
+- [x] BUG: resolve model dependency on view module introduced by context-generation logic
+    - (causes Django configuration settings to be invoked too early, and spurious log output)
+    - cf. TODOs in model.site and model.collection
+- [x] BUG: `render_utils.get_mode_renderer`, handling of repeat fields? (cf. comment from Cerys.)
+    - Added logic so that repeat fields also support current-mode rendering (but rendering as a normal view)
+- [x] BUG: enumerated values listed as types (when using "View all")
+- [x] BUG: default view setting is not applied.
+- [x] BUG (from 0.1.22 release): creating admin user in new site fails
+- [x] Suppress display of _initial_values when listing entities (is this the right choice?)
+- [x] moved 'child_entity_ids' method to root so it can be used with `Site` objects
+- [x] moved site scoping enumeration logic from `Site` to `EntityRoot`
+- [x] Re-work site/collection structure to allow cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection. This will    allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
+    - [x] move annalist sitedata to collection location; relocate and rename site_meta.jsonld, update layout; test
+    - [x] re-work alternative-directory logic to be controlled by the parent rather than the child.
+        - [x] add 'altscope' parameter to calls that may access the alternative search path (replacing `altparent` parameter)
+        - [x] factor alernative search logic into `get_alt_ancestry` and `_children` methods.
+        - [x] implement search logic in Entity._exists_path, Entity._chidren, Entity._child_dirs overriding methods from EntityRoot.
+        - [x] remove all alt path/parent logic from EntityRoot: resulting base should be ultra-simple.
+        - [x] move resource_file access logic to EntityRoot, with search logic invoked in Entity.
+        - [x] remove all references to _entityusedir from _entityroot.
+        - [x] eliminate use of _entityusedir in Entity - use _entitydir
+        - [x] change altparent parameter for altscope flag (None, "all", ...)
+            - altparent is still used with Collection constructor to indicate alternative search path
+        - [x] eliminate `altparent=` parameter from most constructors
+        - [x] revert path declared for site entity
+        - [x] require Collection `altparent` to itself be a Collection.  Support later alteration of the `altparent`.
+        - [x] when setting `altparent`, ensure that site data remains accessible.
+        - [x] add test cases for `set_alt_ancestry`
+        - [x] make SiteData class a simple subclass of Collection
+        - [x] strip out unused or duplicative code in model.site module
+        - [x] use altparent entity to access alternative data
+        - [x] Isolate all file access or file-dependent logic to EntityRoot (to simplify alternate storage later)
+    - [x] Eliminate altpath values in entities; test
+        - [x] eliminate _entityaltpath references in EntityRoot - use _entitypath; test
+        - [x] eliminate _entityaltpath references in Entity; test
+        - [x] eliminate altpath() from Entity; test
+        - [x] eliminate _entityaltpath references in Site; if possible, get rid of temporary helpers; test
+        - [x] eliminate all other _entityaltpath occurrences; test
+        - [x] eliminate use_altpath parameter; test
+        - [x] eliminate idcheck parameter from Entity constructor - no longer needed or used.
+        - considered moving all remove file/path logic to EntityRoot and eliminating os.path inclusion in Entity, but still have directory path setup in Entity constructor.  The allocation of directory names is somewhat bound up with parent/child reklationships, so this limited file name handling logic remains in Entity.
+    - [x] re-implement SiteData as instance of collection; use this as collection parent; test
+    - [x] re-work access to parent to call linked object rather than direct file access
+    - [x] when creating a collection, allow to specify alternate parent(s); ensure no loops: must end up at sitedata; test
+    - [x] ensure that _annalist_site collection cannot be removed
+- [x] Site data migration
+    - [x] `annalist_manager updatesite` updated create data in new location.
+    - [x] `annalist_manager updatesite` copies previous users and vocabs to new location.
+- [x] Ensure that _annalist_site collection data cannot be updated
+    - [x] Add new site permission map in model.entitytypeinfo that forbids modifications except users
+- [x] Updates to annalist-manager (createsite, updatesite): don't rely on sample data
+    - [x] refactor site initializaton logc in models.site.py
+    - [x] re-work am_createsite to use just models.site functions.
+- [x] Provision for editing collection data (label, comment, parents, etc.); test
+    - [x] on site display, add "Edit selected" and/or "View selected" buttons alongside "Remove selected"
+    - [x] in site response handler, if edit/view selected, invoke entity viewer for collection data by means of redirect to 'c/_annalist_site/_coll/(coll_id)'
+    - [x] in EntityTypeInfo, provide that site is parent for any _coll values, etc.
+    - [x] define type for collection data
+    - [x] define view for collection data
+    - [x] edit/view collection continue back to site
+    - [x] collection id rename needs to rename directory too
+    - [x] view collection data JSON not working
+    - [x] collections showing up in local entity lists
+    - [x] test cases for collection enumeration, editing
+- [x] Re-think protections for viewing/editing collection metadata: really want the authorization to be based on permissions in the collection being accessed.
+- [x] Create altscope="user" that skips alt parents and checks just local and site permissions
+- [x] Provision for specifying and using inherited collections
+    - [x] Add parent collection selector in collection data view
+        - [x] allow collections to be listed for enum choice
+        - [x] introduce altscope="select" so that collections can be listed by select renderer
+    - [x] When loading a collection, add logic to set alternate parent based on specified parent in collection metadata.  Uses Collection.set_alt_ancestry
+        - alt parent specified breaks access to site data
+    - [x] Test case; e.g. coll1 define type, coll2 inherit from coll1 and reference type.
+- [x] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
+    - [x] revise layout of site data in source tree to facilitate separate subsets (e.g. Bibliographic data)
+    - [x] use new layout for site data to separate Bibliographic datam from "core" site data
+    - [x] copy bibliographic data collection into test data fixture
+    - [x] update tests to work with bublio data in separate collection
+- [x] Update JSON-LD spike code, and test with latest rdflib-jsonld
+    - See: https://github.com/RDFLib/rdflib-jsonld/issues/33
+    - [x] Add comment (generated by, date) to generated context files
 
 (release?)
 
-- [ ] BUG?: when supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration utility?
-- [ ] `render_utils.get_mode_render`, handling of repeat fields? (cf. comment from Cerys.)
-- [ ] Cater for repeated properties (see further TODOs below, re 'annal:member')?  
-- [ ] Create schema definitions in Annalist for ANNAL namespace
-- [ ] Re-work site/collection structure to use a cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection (e.g. "_site_defs"?). This will allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
-- [ ] Initially, single inheritance path for definitions, but consider possibility of multiple (branching) inheritence.  Precedence?
-- [ ] The bibiographic definitions currently part of site data should be moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
-- [ ] Alternative RDF formats support (e.g. content negotiation)
+- [ ] BUG: uploading PDF as image results in file extension PNG
+    - [x] new resource type aded, but still needs testing
+    - [ ] consider using different default extension?
+- [ ] Home page: change button labels: "view metadata", "edit metadata", "remove collection".
+    - Add renderers for view short text and view markdown.
+- [ ] Collection edit metadata page: make s/w version display-only.
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
-
-(release?)
-
-- [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
-- [ ] Implement "get the data" link as a field renderer?
+- [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
+- [ ] Create schema definitions in Annalist for ANNAL namespace
+- [ ] When supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration?
+- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
+- [ ] In drop-down list, try including typeid/entityid only for entries whose labels are not unique.
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?
@@ -113,15 +120,32 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - plus new logic to render the padding elements
     - Another option: take field-loop out of template and run it as a `render_all_fields` method
         - still needs placement parser to return position+width information
-- at the time of writing, there is a problem with rdflib-jsonld base URI handling; for now, avoid use of @base.  This means that entity references treated as URIs are not handled as expected, hence for now are stored as literals, wghich means these links are not directly visible in RDF.
-    - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
+- [ ] Provide collection overview that allows to see users what is present
+    - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
+    - long term, this might be a high-level graphical display (like PROV diag.)
+- [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
+- [ ] Review URI usage
+    - [x] avoid explicit reference to `_analist_collection`?
+    - [ ] review base URI designation in JSON-LD:
+        - note `@base` ignored if used in external contexts;
+        - can specified value be relative? YES:
+            - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
+            - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
+        - Add `@base` to generated entity data:
+            - Using `(site_base)/c/(coll_id)/d/` as base URI would mean that entity ids (`type_id/entity_id`) work directly as relative URIs.  
+            - Also `type_id` to retreive a list of entities of that type.
+            - Thus use `{ "@base": "../..", @context": "@context", ... }` in entity data.
+        - at the time of writing, there is a problem with rdflib-jsonld base URI handling; for now, avoid use of @base.  This means that entity references treated as URIs are not handled as expected, hence for now are stored as literals, wghich means these links are not directly visible in RDF.
+            - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
+    - [ ] collections and repeated properties:
+        - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
+        - could use `@id`?
 
 (release?)
 
 - [ ] Use site/collection data to populate help panes on displays; use Markdown.
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Login: support continuation URI
-
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
     - [ ] site link to download log, if admin permissions
@@ -133,13 +157,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
-- [ ] Add software version to site_meta.
-    - [ ] Add when creating site
-        - as part of installation
-    - [ ] Update when updating site
-        - as part of installation
-    - [ ] Check this when accessing site.
-        - at server startup.
 - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 
 (feature freeze for V0.9alpha?)
@@ -153,11 +170,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types
 - [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+    - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and foce use of HTTPS.
+        - [ ] Document setup process.
     - [ ] Check out https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
-    - [ ] Shared deployment should generate a new secret key in settings
+    - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
-- [ ] Remove dependency of analist-manager on test-suite-generated data when creating/updating site
+- [x] Remove dependency of analist-manager on test-suite-generated data when creating/updating site
     - copy site data in directly from `sitedata`
     - generate all other site data on-the-fly as needed (e.g. context, etc.)
 - [ ] Figure out how to preserve defined users when reinstalling the software.
@@ -173,7 +192,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] annalist-manager createsitedata [ CONFIG ]
     - [ ] annalist-manager updatesitedata [ CONFIG ]
     - etc.
-- [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
+- [ ] Review docker files: reduce number of separate commands used; always build on clean python setup
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
@@ -183,7 +202,20 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 Technical debt:
 
-- [ ] After reworking site adta access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
+- [ ] Implement in-memory entity stiorage tio speed up test suite, and lay groundwork for LDP back-end
+- [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
+- [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
+- [ ] Implement "get the data" link as a field renderer?
+- [ ] Consider treating Enum types as regular types under /d/?
+- [ ] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
+- [ ] review view URL returned for entities found with alternative parentage:
+    - currently force URL returned to be that of original parent, not alt. 
+    - This is done to minimize disruption to tests while changing logic.
+    - See: _entityviewurl member variable
+    - logic is handled in `Entity.try_alt_parentage` and _init_child`
+    - may want to consider promoting entityviewurl to constructor parameter for all Entity.
+- [ ] Delay accessing settings data until actually needed, so that new dependencies (e.g. models on views) don't cause premature selection.  This will help to avoid certain unexpected problems cropping up as happened with release 0.1.22 logging setup for annalist-manager.
+- [ ] After reworking site data access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
     - The various relative references for accessing context data are particularly unclear in the current software.
 - [ ] `annal:Slug` for entity references - is now type/id: rename type?  (annal:Entity_ref?)
 - [ ] Inconsistent `@id` values in site data
@@ -252,6 +284,11 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Collection metadata editing requires site-level permissions; 
+    - to apply collection level permissions wout require entity level access control settings
+    - think about this?
+    - see EntityTypeInfo.__init__
+- [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Issues raised by Cerys in email of 23-Oct-2015.  Some good points there - should break out into issues.
 - [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
     - Should be easy to add.  Just need a name.

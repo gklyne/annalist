@@ -17,7 +17,7 @@ import logging
 
 log = logging.getLogger(__name__)
 
-import django
+#@@ import django
 
 from annalist.identifiers           import ANNAL, RDFS
 from annalist.models.annalistuser   import AnnalistUser
@@ -25,7 +25,7 @@ from annalist.models.annalistuser   import AnnalistUser
 from utils.SuppressLoggingContext   import SuppressLogging
 
 import am_errors
-from am_settings                    import am_get_settings, am_get_site
+from am_settings                    import am_get_settings, am_get_site_settings, am_get_site
 from am_getargvalue                 import getarg, getargvalue, getsecret
 
 def create_user_permissions(site, user_id, user_uri, user_name, user_comment, user_permissions):
@@ -36,16 +36,16 @@ def create_user_permissions(site, user_id, user_uri, user_name, user_comment, us
         , ANNAL.CURIE.user_uri:         "%s"%(user_uri)
         , ANNAL.CURIE.user_permissions: user_permissions
         })
-    user = AnnalistUser.create(site, user_id, user_values, use_altpath=True)
+    user = AnnalistUser.create(site.site_data_collection(), user_id, user_values)
     return user
 
 def delete_user_permissions(site, user_id):
-    AnnalistUser.remove(site, user_id, use_altpath=True)
+    AnnalistUser.remove(site, user_id)
     return
 
-def get_site_settings(annroot, userhome, options):
+def _x_get_site_settings(annroot, userhome, options):
     """
-    Access site settings, set up correspondingh django configuration and return the settings module
+    Access site settings, set up corresponding django configuration and return the settings module
     """
     settings = am_get_settings(annroot, userhome, options)
     if not settings:
@@ -107,6 +107,11 @@ def create_django_user(user_type, user_details):
     """
     Create Django user (prompts for password)
     """
+    # Check user does not already exist
+    from django.contrib.auth.models import User     # import deferred until after sitesettings import
+    if User.objects.filter(username=user_details['name']):
+        print("User %s already exists"%user_details['name'], file=sys.stderr)
+        return am_errors.AM_USEREXISTS
     # Get password
     user_password_prompt    = "Password: "
     user_password_c_prompt  = "Re-enter password: "
@@ -121,7 +126,6 @@ def create_django_user(user_type, user_details):
     # see:
     #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
     #   https://docs.djangoproject.c om/en/1.7/ref/contrib/auth/#manager-methods
-    from django.contrib.auth.models import User     # import deferred until after sitesettings import
     user = User.objects.create_user(user_details['name'], user_details['email'], user_password)
     user.first_name   = user_details['first_name']
     user.last_name    = user_details['last_name']
@@ -168,7 +172,7 @@ def am_createadminuser(annroot, userhome, options):
     if len(options.args) > 4:
         print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
-    sitesettings = get_site_settings(annroot, userhome, options)
+    sitesettings = am_get_site_settings(annroot, userhome, options)
     if not sitesettings:
         return am_errors.AM_NOSETTINGS
     user_name = get_user_name(options, prompt_prefix)
@@ -209,7 +213,7 @@ def am_defaultadminuser(annroot, userhome, options):
     if len(options.args) > 0:
         print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
-    sitesettings = get_site_settings(annroot, userhome, options)
+    sitesettings = am_get_site_settings(annroot, userhome, options)
     if not sitesettings:
         return am_errors.AM_NOSETTINGS
     default_admin = (
@@ -246,7 +250,7 @@ def am_updateadminuser(annroot, userhome, options):
     if len(options.args) > 1:
         print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
-    sitesettings = get_site_settings(annroot, userhome, options)
+    sitesettings = am_get_site_settings(annroot, userhome, options)
     if not sitesettings:
         return am_errors.AM_NOSETTINGS
     user_name = get_user_name(options, prompt_prefix)
@@ -294,7 +298,7 @@ def am_setdefaultpermissions(annroot, userhome, options):
     if len(options.args) > 1:
         print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
-    sitesettings = get_site_settings(annroot, userhome, options)
+    sitesettings = am_get_site_settings(annroot, userhome, options)
     if not sitesettings:
         return am_errors.AM_NOSETTINGS
     user_permissions = get_user_permissions(options, 0, prompt_prefix)
@@ -323,7 +327,7 @@ def am_setpublicpermissions(annroot, userhome, options):
     if len(options.args) > 1:
         print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
-    sitesettings = get_site_settings(annroot, userhome, options)
+    sitesettings = am_get_site_settings(annroot, userhome, options)
     if not sitesettings:
         return am_errors.AM_NOSETTINGS
     user_permissions = get_user_permissions(options, 0, prompt_prefix)
@@ -352,7 +356,7 @@ def am_deleteuser(annroot, userhome, options):
     if len(options.args) > 1:
         print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
-    sitesettings = get_site_settings(annroot, userhome, options)
+    sitesettings = am_get_site_settings(annroot, userhome, options)
     if not sitesettings:
         return am_errors.AM_NOSETTINGS
     user_name = get_user_name(options, prompt_prefix)

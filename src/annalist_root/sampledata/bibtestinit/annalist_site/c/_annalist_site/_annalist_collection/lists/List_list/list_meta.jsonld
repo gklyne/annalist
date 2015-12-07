@@ -1,0 +1,22 @@
+{ "@id":                        "annal:display/List_list"
+, "@type":                      ["annal:List"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "List_list"
+, "annal:type_id":              "_list"
+, "rdfs:label":                 "List lists"
+, "rdfs:comment":               "Description of list of lists"
+, "annal:display_type":         "Enum_list_type/List"
+, "annal:default_view":         "_view/List_view"
+, "annal:default_type":         "_type/_list"
+, "annal:list_entity_selector": "'annal:List' in [@type]"
+, "annal:record_type":          "annal:List"
+, "annal:list_fields":
+  [ { "annal:field_id":             "_field/Entity_id"
+    , "annal:field_placement":      "small:0,3"
+    }
+  , { "annal:field_id":             "_field/Entity_label"
+    , "annal:field_placement":      "small:3,9"
+    }
+  ]
+}
+ 

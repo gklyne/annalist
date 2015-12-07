@@ -1,0 +1,14 @@
+{ "@id":            "./"
+, "@type":          ["annal:Vocabulary", "annal:EntityData"]
+, "@context":       ["../../coll_context.jsonld"]
+, "annal:id":       "xsd"
+, "annal:type_id":  "_vocab"
+, "annal:type":     "annal:Vocabulary"
+, "rdfs:label":     "XML Schema datatypes namespace"
+, "rdfs:comment":   "Vocabulary namespace for XML Schema datatypes"
+, "annal:uri":      "http://www.w3.org/2001/XMLSchema#"
+, "rdfs:seeAlso":
+    [ { "owl:sameAs":   "http://www.w3.org/TR/xmlschema11-2/" }
+    , { "owl:sameAs":   "http://www.w3.org/TR/xmlschema-2/" }
+    ]
+}

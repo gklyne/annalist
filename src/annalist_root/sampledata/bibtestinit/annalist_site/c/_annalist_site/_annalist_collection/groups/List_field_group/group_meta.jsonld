@@ -1,0 +1,20 @@
+{ "@id":                "annal:group/List_field_group"
+, "@type":              ["annal:Field_group"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:type_id":      "_group"
+, "annal:id":           "List_field_group"
+, "annal:uri":          "annal:group/List_field_group"
+, "annal:record_type":  "annal:List_field"
+, "rdfs:label":         "List field fields"
+, "rdfs:comment":       "This resource describes a list field as presented within a list view"
+, "annal:group_fields":
+  [ { "annal:field_id":         "_field/List_field_sel"
+    , "annal:property_uri":     "annal:field_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/List_field_placement"
+    , "annal:property_uri":     "annal:field_placement"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{ "@id":                "annal:group/Group_field_group"
+, "@type":              ["annal:Field_group"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "Group_field_group"
+, "annal:type_id":      "_group"
+, "annal:uri":          "annal:group/Group_field_group"
+, "annal:record_type":  "annal:Field_group_field"
+, "rdfs:label":         "Group field fields"
+, "rdfs:comment":       "This resource describes a group of fields used to define a display field when displaying and/or editing a field group description"
+, "annal:group_fields":
+  [ { "annal:field_id":         "_field/Group_field_sel"
+    , "annal:property_uri":     "annal:field_id"
+    , "annal:field_placement":  "small:0,12;medium:0,4"
+    }
+  , { "annal:field_id":         "_field/Group_field_property"
+    , "annal:property_uri":     "annal:property_uri"
+    , "annal:field_placement":  "small:0,12;medium:4,4"
+    }
+  , { "annal:field_id":         "_field/Group_field_placement"
+    , "annal:property_uri":     "annal:field_placement"
+    , "annal:field_placement":  "small:0,12;medium:8,4"
+    }
+  ]
+}

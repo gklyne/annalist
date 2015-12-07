@@ -12,10 +12,12 @@ log = logging.getLogger(__name__)
 import copy
 
 from annalist                       import message
+from annalist                       import layout
 from annalist.util                  import valid_id, extract_entity_id
 
 from annalist.identifiers           import ANNAL, RDF, RDFS
 
+from annalist.models.collection     import Collection
 from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordlist     import RecordList
@@ -26,6 +28,28 @@ from annalist.models.recordvocab    import RecordVocab
 from annalist.models.recordenum     import RecordEnumFactory
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
+
+COLL_ID     = '_coll'
+USER_ID     = '_user'
+TYPE_ID     = '_type'
+LIST_ID     = '_list'
+VIEW_ID     = '_view'
+GROUP_ID    = '_group'
+FIELD_ID    = '_field'
+VOCAB_ID    = '_vocab'
+TASK_ID     = '_task'
+
+COLL_MESSAGES = (
+    { 'parent_heading':         "(@@ COLL_MESSAGES.parent_heading - unused message @@)"
+    , 'parent_missing':         "(@@ COLL_MESSAGES.parent_missing - unused message @@)"
+    , 'entity_heading':         message.COLLECTION_ID
+    , 'entity_invalid_id':      message.COLLECTION_ID_INVALID
+    , 'entity_exists':          message.COLLECTION_EXISTS
+    , 'entity_not_exists':      message.COLLECTION_NOT_EXISTS
+    , 'entity_removed':         message.COLLECTION_REMOVED
+    , 'entity_type_heading':    "(@@ COLL_MESSAGES.entity_type_heading - unused message @@)"
+    , 'entity_type_invalid':    "(@@ COLL_MESSAGES.entity_type_invalid - unused message @@)"
+    })
 
 ENTITY_MESSAGES = (
     { 'parent_heading':         message.RECORD_TYPE_ID
@@ -135,6 +159,18 @@ ENUM_MESSAGES = (
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
+SITE_PERMISSIONS = (
+    { "view":   "VIEW"      # View site config data
+    , "list":   "VIEW"      # ..
+    , "search": "VIEW"      # ..
+    , "new":    "FORBIDDEN" # Create collection record
+    , "copy":   "FORBIDDEN" # ..
+    , "edit":   "FORBIDDEN" # Update collection record
+    , "delete": "FORBIDDEN" # Delete collection record
+    , "config": "FORBIDDEN" # Change collection configuration
+    , "admin":  "ADMIN"     # Change users or permissions
+    })
+
 ADMIN_PERMISSIONS = (
     { "view":   "ADMIN"     # View user record
     , "list":   "ADMIN"     # ..
@@ -172,13 +208,14 @@ ENTITY_PERMISSIONS = (
     })
 
 TYPE_CLASS_MAP = (
-    { '_user':              AnnalistUser
-    , '_type':              RecordType
-    , '_list':              RecordList
-    , '_view':              RecordView
-    , '_group':             RecordGroup
-    , '_field':             RecordField
-    , '_vocab':             RecordVocab
+    { COLL_ID:              Collection
+    , USER_ID:              AnnalistUser
+    , TYPE_ID:              RecordType
+    , LIST_ID:              RecordList
+    , VIEW_ID:              RecordView
+    , GROUP_ID:             RecordGroup
+    , FIELD_ID:             RecordField
+    , VOCAB_ID:             RecordVocab
     , 'Enum_list_type':     RecordEnumFactory('Enum_list_type',   'Enum_list_type')
     , 'Enum_render_type':   RecordEnumFactory('Enum_render_type', 'Enum_render_type')
     , 'Enum_value_mode':    RecordEnumFactory('Enum_value_mode',  'Enum_value_mode')
@@ -186,31 +223,50 @@ TYPE_CLASS_MAP = (
     })
 
 TYPE_MESSAGE_MAP = (
-    { '_user':              USER_MESSAGES
-    , '_type':              TYPE_MESSAGES
-    , '_list':              LIST_MESSAGES
-    , '_view':              VIEW_MESSAGES
-    , '_group':             GROUP_MESSAGES
-    , '_field':             FIELD_MESSAGES
-    , '_vocab':             VOCAB_MESSAGES
+    { COLL_ID:              COLL_MESSAGES
+    , USER_ID:              USER_MESSAGES
+    , TYPE_ID:              TYPE_MESSAGES
+    , LIST_ID:              LIST_MESSAGES
+    , VIEW_ID:              VIEW_MESSAGES
+    , GROUP_ID:             GROUP_MESSAGES
+    , FIELD_ID:             FIELD_MESSAGES
+    , VOCAB_ID:             VOCAB_MESSAGES
     , 'Enum_list_type':     ENUM_MESSAGES
     , 'Enum_render_type':   ENUM_MESSAGES
     , 'Enum_value_mode':    ENUM_MESSAGES
     , 'Enum_bib_type':      ENUM_MESSAGES
     })
 
+SITE_PERMISSIONS_MAP = (
+    { COLL_ID:              SITE_PERMISSIONS
+    , USER_ID:              ADMIN_PERMISSIONS
+    , TYPE_ID:              SITE_PERMISSIONS
+    , LIST_ID:              SITE_PERMISSIONS
+    , VIEW_ID:              SITE_PERMISSIONS
+    , GROUP_ID:             SITE_PERMISSIONS
+    , FIELD_ID:             SITE_PERMISSIONS
+    , VOCAB_ID:             ADMIN_PERMISSIONS  #@@ CONFIG??
+    , 'Enum_list_type':     SITE_PERMISSIONS
+    , 'Enum_render_type':   SITE_PERMISSIONS
+    , 'Enum_value_mode':    SITE_PERMISSIONS
+    , 'Enum_bib_type':      SITE_PERMISSIONS
+    , 'EntityData':         SITE_PERMISSIONS
+    })
+
 TYPE_PERMISSIONS_MAP = (
-    { '_user':              ADMIN_PERMISSIONS
-    , '_type':              CONFIG_PERMISSIONS
-    , '_list':              CONFIG_PERMISSIONS
-    , '_view':              CONFIG_PERMISSIONS
-    , '_group':             CONFIG_PERMISSIONS
-    , '_field':             CONFIG_PERMISSIONS
-    , '_vocab':             CONFIG_PERMISSIONS
+    { COLL_ID:              CONFIG_PERMISSIONS
+    , USER_ID:              ADMIN_PERMISSIONS
+    , TYPE_ID:              CONFIG_PERMISSIONS
+    , LIST_ID:              CONFIG_PERMISSIONS
+    , VIEW_ID:              CONFIG_PERMISSIONS
+    , GROUP_ID:             CONFIG_PERMISSIONS
+    , FIELD_ID:             CONFIG_PERMISSIONS
+    , VOCAB_ID:             CONFIG_PERMISSIONS
     , 'Enum_list_type':     CONFIG_PERMISSIONS
     , 'Enum_render_type':   CONFIG_PERMISSIONS
     , 'Enum_value_mode':    CONFIG_PERMISSIONS
     , 'Enum_bib_type':      CONFIG_PERMISSIONS
+    , 'EntityData':         ENTITY_PERMISSIONS
     })
 
 def get_built_in_type_ids():
@@ -263,15 +319,33 @@ class EntityTypeInfo(object):
         self.coll_id         = coll.get_id()
         self.type_id         = type_id
         self.permissions_map = None
-        if type_id in TYPE_CLASS_MAP:
+        if type_id == "_coll":
+            # NOTE: 
+            #
+            # This setup defaults to using site permissions for collection operations.
+            # But there is some special-case code in views.displayinfo that uses the 
+            # collection itself if it exists.
+            #
+            # (See use of attribute DisplayInfo.coll_perms.)
+            #
+            self.recordtype      = site.site_data_collection().get_type(type_id)
+            self.entityparent    = site
+            self.entityaltparent = None
+            self.entityclass     = Collection
+            self.entitymessages  = COLL_MESSAGES
+            self.permissions_map = CONFIG_PERMISSIONS # unless entity is layout.SITEDATA_ID?
+        elif type_id in TYPE_CLASS_MAP:
             self.recordtype      = coll.get_type(type_id)
             self.entityparent    = coll
             self.entityaltparent = site
             self.entityclass     = TYPE_CLASS_MAP[type_id]
             self.entitymessages  = TYPE_MESSAGE_MAP[type_id]
-            self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
+            if self.coll_id == layout.SITEDATA_ID:
+                self.permissions_map = SITE_PERMISSIONS_MAP[type_id]
+            else:
+                self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
         else:
-            if RecordType.exists(coll, type_id, site):
+            if RecordType.exists(coll, type_id, altscope="all"):
                 self.recordtype     = coll.get_type(type_id)
             if create_typedata and not RecordTypeData.exists(coll, type_id):
                 self.entityparent   = RecordTypeData.create(coll, type_id, {})
@@ -288,7 +362,9 @@ class EntityTypeInfo(object):
             # Also used in entityedit for getting @type URI/CURIE values.
             #
             # Used in render_utils to get link to type record
-            log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
+            if type_id not in get_built_in_type_ids():
+                log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
+            # raise ValueError("Trace")
         return
 
     def get_type_id(self):
@@ -338,12 +414,11 @@ class EntityTypeInfo(object):
         """
         return self.entityparent._exists()
 
-    def entity_exists(self, entity_id, use_altparent=False):
+    def entity_exists(self, entity_id, altscope=None):
         """
         Test for existence of identified entity of the current type.
         """
-        altparent = self.entityaltparent if use_altparent else None
-        return self.entityclass.exists(self.entityparent, entity_id, altparent=altparent)
+        return self.entityclass.exists(self.entityparent, entity_id, altscope=altscope)
 
     def create_entity(self, entity_id, entity_values):
         """
@@ -369,6 +444,8 @@ class EntityTypeInfo(object):
             "remove_entity id %s, parent %s"%
             (entity_id, self.entityparent)
             )
+        if self.type_id == COLL_ID:
+            raise ValueError("EntitytypeInfo.remove_entity: Attempt to remove collection")
         return self.entityclass.remove(self.entityparent, entity_id)
 
     def get_entity(self, entity_id, action="view"):
@@ -389,11 +466,14 @@ class EntityTypeInfo(object):
                 entity = self._new_entity(entity_id)
                 entity_initial_values = self.get_initial_entity_values(entity_id)
                 entity.set_values(entity_initial_values)
-            elif self.entityclass.exists(
-                    self.entityparent, entity_id, altparent=self.entityaltparent
-                    ):
+            elif self.entityclass.exists(self.entityparent, entity_id, altscope="all"):
                 entity = self.entityclass.load(
-                    self.entityparent, entity_id, altparent=self.entityaltparent
+                    self.entityparent, entity_id, altscope="all"
+                    )
+            else:
+                log.info(
+                    "EntityTypeInfo.get_entity %s/%s at %s not found"%
+                    (self.type_id, entity_id, self.entityparent._entitydir)
                     )
         return entity
 
@@ -461,55 +541,85 @@ class EntityTypeInfo(object):
                 )
         return
 
-    def enum_entity_ids(self, usealtparent=False):
+    def rename_entity(self, new_entity_id, old_typeinfo, old_entity_id):
+        """
+        Copy associated data files from specified entity to new.
+        The calling program is expected to update data associated with the new entity.
+
+        Subdirectories are copied as entire subtrees.
+        """
+        if old_typeinfo.entity_exists(old_entity_id):
+            new_entity = self._new_entity(new_entity_id)
+            old_entity = old_typeinfo._new_entity(old_entity_id)
+            p_new      = new_entity._rename_files(old_entity)
+            if not p_new:
+                log.warning(
+                    "EntityTypeInfo.rename_entity: error renaming entity %s from %s to %s"%
+                    (old_entity.get_url(), old_entity_id, new_entity_id)
+                    )
+        else:
+            log.warning(
+                "EntityTypeInfo.rename_entity: source entity not found %s/%s"%
+                (old_typeinfo.type_id, old_entity_id)
+                )
+        return
+
+    def enum_entity_ids(self, altscope=None):
         """
         Iterate over entity identifiers in collection with current type.
-
-        usealtparent    is True if site-wide entities are to be included.
         """
-        altparent = self.entityaltparent if usealtparent else None
         if self.entityparent:
             for eid in self.entityparent.child_entity_ids(
                     self.entityclass, 
-                    altparent=altparent):
+                    altscope=altscope):
                 yield eid
         else:
             log.warning("EntityTypeInfo.enum_entity_ids: missing entityparent; type_id %s"%(self.type_id))
         return
 
-    def enum_entities(self, user_perms=None, usealtparent=False):
+    def enum_entities(self, user_perms=None, altscope=None):
         """
         Iterate over entities in collection with current type.
-
-        usealtparent    is True if site-wide entities are to be included.
         """
         if (not user_perms or 
             self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
-            altparent = self.entityaltparent if usealtparent else None
             if self.entityparent:
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
-                        altparent=altparent):
+                        altscope=altscope):
                     yield self.get_entity(eid)
             else:
                 log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
         return
 
-    def enum_entities_with_inferred_values(self, user_perms=None, usealtparent=False):
+    # @@TODO: rename inferred -> implied
+    def enum_entities_with_inferred_values(self, user_perms=None, altscope=None):
         """
         Iterate over entities in collection with current type.
         Returns entities with alias and inferred fields instantiated.
 
-        usealtparent    is True if site-wide entities are to be included.
+        If user_perms is supplied and not None, checks that they contain permission to
+        list values of the appropriate type. 
         """
+        #@@
+        # log.info(
+        #     "enum_entities_with_inferred_values: parent %s, altscope %s"%
+        #     (self.entityparent.get_id(), altscope)
+        #     )
+        #@@
         if (not user_perms or 
             self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
-            altparent = self.entityaltparent if usealtparent else None
             if self.entityparent:
+                #@@
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
-                        altparent=altparent):
+                        altscope=altscope):
                     yield self.get_entity_inferred_values(self.get_entity(eid))
+                #@@
+                # for eid in self.entityparent._children(self.entityclass, altscope=altscope):
+                #     if self.entityclass.exists(self.entityparent, eid, altscope=altscope):
+                #         yield self.get_entity_inferred_values(self.get_entity(eid))
+                #@@
             else:
                 log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
         return

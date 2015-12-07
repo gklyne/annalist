@@ -1,0 +1,16 @@
+{ "@id":                "./"
+, "@type":              ["annal:Type"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "BibEntry_type"
+, "annal:type_id":      "_type"
+, "annal:uri":          "bib:BibEntry"
+, "rdfs:label":         "Bibliographic record"
+, "rdfs:comment":
+    "Bibliographic record type, adopted as a use case for using Annalist to create BibJSON records."
+, "annal:type_view":    "_view/BibEntry_view"
+, "annal:type_list":    "_list/BibEntry_list"
+, "annal:field_aliases": [
+    { "annal:alias_target":     "rdfs:label"
+    , "annal:alias_source":     "bib:title"
+    }]
+}

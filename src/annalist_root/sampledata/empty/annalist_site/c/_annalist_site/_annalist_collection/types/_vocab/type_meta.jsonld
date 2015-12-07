@@ -1,0 +1,11 @@
+{ "@id":                "./"
+, "@type":              ["annal:Type"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "_vocab"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Vocabulary"
+, "rdfs:label":         "Vocab namespace"
+, "rdfs:comment":       "A namespace of terms that make up a vocabulary for a particular concept or application."
+, "annal:type_view":    "_view/Vocab_view"
+, "annal:type_list":    "_list/Vocab_list"
+}

@@ -80,6 +80,66 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 # History
 
+
+## Version 0.1.24
+
+This release adds sharing of collection structure descriptions, which is a first step towards supporting modularization of data structure descriptions.
+
+An Annalist collection can be defined to inherit record type, view, list and other definitions from an existing collection.  This means a new collection can be created based on the structure of an existing collection, and then evolved as before.  Any changes that are made to the collection configuration are recorded in the new collection, and do not affect the original.  It will requiure some experimentation to work out how to best use this capability, but the current thinking is that the collection structure may be defined separately from the data, to be inherited by any collections that use the structure as a starting point.  (The structure descriptions can be extracted from an existing collection by copying the directory `c/_annalist_site` into a new collection.)
+
+A number of bugs have been fixed, and there has been some extensive internal code refactoring, in part to prepare the codebase for separation of the record storage from the Annalist web service (e.g. to allow collections to be stored in separate Linked Data Platform servers).  For more details, see the change notes for release 0.1.23.
+
+
+# Version 0.1.23, towards 0.1.24
+
+- [x] BUG: resolve model dependency on view module introduced by context-generation logic
+    - (caused Django configuration settings to be invoked too early, and spurious log output)
+    - cf. TODOs in model.site and model.collection
+- [x] BUG: `render_utils.get_mode_renderer`, handling of repeat fields? (cf. comment from Cerys.)
+    - Added logic so that repeat fields also support current-mode rendering (but rendering as a normal view; i.e. with label)
+- [x] BUG: enumerated values listed as types (when using "View all")
+- [x] BUG: default view setting is not applied.
+- [x] BUG (from 0.1.22 release): creating admin user in new site fails
+- [x] Suppress display of _initial_values when listing entities (is this the right choice?)
+- [x] moved 'child_entity_ids' method to root so it can be used with `Site` objects
+- [x] moved site scoping enumeration logic from `Site` to `EntityRoot`
+- [x] Re-work site/collection structure to allow cascaded inheritance between collections.  Eliminate site data as separate thing, but instead use a standard, read-only, built-in collection. This will    allow an empty collection to be used as a template for a new collection.  As with site data, edits are always added to the current collection.
+    - [x] move annalist sitedata to special collection location
+    - [x] re-implement SiteData as instance of collection; use this as collection parent; test
+    - [x] re-work alternative-directory logic to be controlled by the parent rather than the child.
+    - [x] add 'altscope' parameter to calls that may access the alternative search path (replacing `altparent` parameter)
+    - [x] when creating a collection, allow to specify alternate parent(s); ensure no loops: must end up at sitedata; test
+    - [x] ensure that _annalist_site collection cannot be removed
+    - [x] implement search logic in Entity._exists_path, Entity._chidren, Entity._child_dirs, overriding methods from EntityRoot.
+    - [x] remove all alt path/parent logic from EntityRoot
+    - [x] change altparent parameter for altscope flag (None, "all", ...)
+        - altparent is still used with Collection constructor to indicate alternative search path
+    - [x] require Collection `altparent` to itself be a Collection.  Support later alteration of the `altparent`.
+     - [x] Isolate all file access or file-dependent logic to EntityRoot (to simplify alternate storage later)
+        - considered moving all remove file/path logic to EntityRoot and eliminating os.path inclusion in Entity, but still have directory path setup in Entity constructor.  The allocation of directory names is somewhat bound up with parent/child reklationships, so this limited file name handling logic remains in Entity.
+- [x] Ensure that _annalist_site collection data cannot be updated
+    - [x] Add new site permission map in model.entitytypeinfo that forbids modifications except users
+- [x] Site data migration
+    - [x] `annalist_manager updatesite` updated to create data in new location.
+    - [x] `annalist_manager updatesite` copies previous users and vocabs to new location.
+- [x] Updates to annalist-manager (createsite, updatesite): don't rely on sample data
+    - [x] refactor site initializaton logic in models.site.py
+    - [x] re-work am_createsite to use just models.site functions.
+- [x] Provision for editing collection data (label, comment, parents, etc.); test
+- [x] Re-think protections for viewing/editing collection metadata: really want the authorization to be based on permissions in the collection being accessed.
+- [x] Create altscope="user" that skips alt parents and checks just local and site permissions
+- [x] Provision for specifying and using inherited collections
+    - [x] When loading a collection, add logic to set alternate parent based on specified parent in collection metadata.  Uses Collection.set_alt_ancestry
+- [x] The bibiographic definitions currently part of site data moved to a "built-in" collection and inherited only when required (e.g., for certain tests).
+    - [x] revise layout of site data in source tree to facilitate separate subsets (e.g. Bibliographic data)
+    - [x] use new layout for site data to separate Bibliographic data from "core" site data
+    - [x] copy bibliographic data collection into test data fixture
+    - [x] update tests to work with biblio data in separate collection
+- [x] Update JSON-LD spike code, and test with latest rdflib-jsonld
+    - See: https://github.com/RDFLib/rdflib-jsonld/issues/33
+    - [x] Add comment (generated by, date) to generated context files
+
+
 ## Version 0.1.22
 
 This release puts "linked data" in the Annalist linked data notebook.  Up to this point, Annalist data has been stored and indirectly accessible as JSON, with Compact URI strings (CURIEs) used as key values for attributes.  This release augments the JSON data with auto-generated JSON-LD context files so that the JSON data can be read and processed as [JSON-LD](http://json-ld.org/#), hence loaded and processed with other data presented as RDF.

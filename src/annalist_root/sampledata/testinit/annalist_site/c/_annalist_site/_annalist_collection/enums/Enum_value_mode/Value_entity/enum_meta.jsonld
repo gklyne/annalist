@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_value_mode", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "Value_entity"
+, "annal:type_id":      "Enum_value_mode"
+, "annal:uri":          "annal:value_mode/Value_entity"
+, "rdfs:label":         "Entity reference"
+, "rdfs:comment":       "Field value is a reference to a separate entity.  The displayed value is the full content of the referenced entity.  In practice, this would be a `RefMultfield` indicating a field group defining one or more fields to be displayed from the referenced entity.\n\nThe \"Field value type\" field (`Field_type`) should be the type URI of the referenced entity, the \"Refer to type\" field (`Field_typeref`) indicates the internal type identifier of the referenced entity, and the \"Refer to field\" field (`Field_fieldref`) is unspecified or blank."
+}

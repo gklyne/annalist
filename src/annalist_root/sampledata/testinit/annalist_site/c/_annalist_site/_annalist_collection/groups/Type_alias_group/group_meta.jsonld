@@ -1,0 +1,15 @@
+{ "@id":                "./"
+, "@type":              ["annal:Field_group"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:type_id":      "_group"
+, "annal:type":         "annal:Field_group"
+, "annal:id":           "Type_alias_group"
+, "annal:uri":          "annal:group/Type_alias_group"
+, "rdfs:label":         "Field alias fields"
+, "rdfs:comment":       "Fields describing a single field alias associated with a type."
+, "annal:record_type":  "annal:Type_alias"
+, "annal:group_fields": 
+    [ { "annal:field_id":       "_field/Type_alias_target" }
+    , { "annal:field_id":       "_field/Type_alias_source" }
+    ]
+}

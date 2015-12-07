@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "RefAudio"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "Ref audio file"
+, "rdfs:comment":       "String URI reference: resource rendered as an audio player widget"
+, "annal:uri":          "annal:field_render_type/RefAudio"
+}

@@ -98,65 +98,75 @@ class EntityFinder(object):
                     yield tinfo
         return 
 
-    def get_type_entities(self, type_id, user_permissions, scope):
+    def get_type_entities(self, type_id, user_permissions, altscope):
         """
         Iterate over entities from collection matching the supplied type.
 
-        'scope' is used to determine the extent of data top be included in the listing:
-        a value of 'all' means that site-wide entyioties are icnluded in the listing.
+        'altscope' is used to determine the extent of data to be included in the listing:
+        a value of 'all' means that site-wide entyities are icnluded in the listing.
         Otherwise only collection entities are included.        
         """
+        #@@
+        # log.info("get_type_entities: type_id %s"%type_id)
+        #@@
         entitytypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
-        include_sitedata = (scope == "all")
         for e in entitytypeinfo.enum_entities_with_inferred_values(
-                user_permissions, usealtparent=include_sitedata
+                user_permissions, altscope=altscope
                 ):
-            yield e
+            if e.get_id() != "_initial_values":
+                yield e
         return
 
-    def get_subtype_entities(self, type_id, user_permissions, scope):
+    def get_subtype_entities(self, type_id, user_permissions, altscope):
         """
         Iterate over entities from collection that are of the indicated type
         or any of its subtypes.
 
-        'scope' is used to determine the extent of data to be included in the listing:
+        'altscope' is used to determine the extent of data to be included in the listing:
         a value of 'all' means that site-wide entities are included in the listing.
         Otherwise only collection entities are included.        
         """
-        include_sitedata = (scope == "all")
+        # log.info("get_subtype_entities: type_id %s"%type_id)
         for entitytypeinfo in self.get_collection_subtypes(type_id):
             for e in entitytypeinfo.enum_entities_with_inferred_values(
-                    user_permissions, usealtparent=include_sitedata
+                    user_permissions, altscope=altscope
                     ):
                 # log.info(
                 #     "get_subtype_entities type_id %s, yield %s/%s"%
                 #     (type_id, e.get_type_id(), e.get_id())
                 #     )
-                yield e
+                if e.get_id() != "_initial_values":
+                    yield e
         return
 
-    def get_all_types_entities(self, types, user_permissions, scope):
+    def get_all_types_entities(self, types, user_permissions, altscope):
         """
         Iterate mover all entities of all type ids from a supplied type iterator
         """
         assert user_permissions is not None
         for t in types:
-            for e in self.get_type_entities(t, user_permissions, scope):
+            for e in self.get_type_entities(t, user_permissions, altscope):
                 yield e
         return
 
-    def get_base_entities(self, type_id=None, user_permissions=None, scope=None):
+    def get_base_entities(self, type_id=None, user_permissions=None, altscope=None):
         """
         Iterate over base entities from collection, matching the supplied type id if supplied.
 
         If a type_id is supplied, site data values are included.
         """
         if type_id:
-            return self.get_subtype_entities(type_id, user_permissions, scope)
+            #@@
+            # log.info("get_base_entities: type_id %s"%type_id)
+            #@@
+            return self.get_subtype_entities(type_id, user_permissions, altscope)
             # return self.get_type_entities(type_id, user_permissions, scope)
         else:
+            #@@
+            # log.info("get_base_entities: all types")
+            #@@
             return self.get_all_types_entities(
-                self.get_collection_type_ids(), user_permissions, scope
+                self.get_collection_type_ids(), user_permissions, altscope
                 )
         return
 
@@ -461,7 +471,7 @@ class FieldComparison(object):
         self._site     = coll.get_site()
         return
 
-    def get_uri_type_info(self, type_uri, include_alt=True):
+    def get_uri_type_info(self, type_uri):
         """
         Return typeinfo corresponding to the supplied type URI
         """

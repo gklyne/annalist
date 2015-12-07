@@ -1,2 +1,2 @@
-docker build -t annalist:0.1.22 .
+docker build -t annalist:0.1.24 .
 

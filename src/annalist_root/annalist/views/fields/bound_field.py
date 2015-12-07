@@ -47,7 +47,7 @@ class bound_field(object):
 
     See also: http://docs.python.org/2/reference/datamodel.html#slots
 
-    >>> entity = EntityRoot("entityuri", "entitydir")
+    >>> entity = EntityRoot("entityuri", "entityuri", "entitydir", "entitydir")
     >>> entity.set_id("testentity")
     >>> vals = entity.set_values({"foo": "foo_val", "bar": "bar_val"})
     >>> field_foo_desc = {"field_id": "foo_id", "field_property_uri": "foo", "field_type": "foo_type"}
@@ -105,7 +105,7 @@ class bound_field(object):
         self._targetvals        = None
         self._key               = self._field_description['field_property_uri']
         self._extras            = context_extra_values
-        eid = entityvals.get('entity_id', "@@@render_utils.__init__@@@")
+        eid = entityvals.get('entity_id', "@@render_utils.__init__@@")
         # log.log(settings.TRACE_FIELD_VALUE,
         #     "bound_field: field_id %s, entity_id %s, value_key %s, value %s"%
         #     (field_description['field_id'], eid, self._key, self['field_value'])

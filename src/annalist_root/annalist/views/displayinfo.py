@@ -11,12 +11,12 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import logging
-log = logging.getLogger(__name__)
-
-import json
 from collections                    import OrderedDict
 from distutils.version              import LooseVersion
+import json
+import traceback
+import logging
+log = logging.getLogger(__name__)
 
 from django.conf                    import settings
 from django.http                    import HttpResponse
@@ -29,7 +29,7 @@ from annalist                       import layout
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.util                  import valid_id, extract_entity_id
 
-from annalist.models.entitytypeinfo import EntityTypeInfo
+from annalist.models.entitytypeinfo import EntityTypeInfo, SITE_PERMISSIONS
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
@@ -43,14 +43,6 @@ from annalist.views.uri_builder     import (
     uri_with_params, 
     continuation_url_chain, continuation_chain_url,
     url_update_type_entity_id
-    )
-
-from annalist.views.fields.render_utils import (
-    is_render_type_literal,
-    is_render_type_id,
-    is_render_type_set,
-    is_render_type_list,
-    is_render_type_object,
     )
 
 #   -------------------------------------------------------------------------------------------
@@ -125,6 +117,7 @@ class DisplayInfo(object):
         self.sitedata           = None
         self.coll_id            = None
         self.collection         = None
+        self.coll_perms         = None  # Collection used for permissions checking
         self.type_id            = None
         self.entitytypeinfo     = None
         self.list_id            = None
@@ -181,7 +174,9 @@ class DisplayInfo(object):
                     )
             else:
                 self.coll_id    = coll_id
-                self.collection = Collection.load(self.site, coll_id)
+                #@@TODO: try with altscope="site"?
+                self.collection = Collection.load(self.site, coll_id, altscope="all")
+                self.coll_perms = self.collection
                 ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")
                 if LooseVersion(ver) > LooseVersion(annalist.__version__):
                     self.http_response = self.view.error(
@@ -239,7 +234,11 @@ class DisplayInfo(object):
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
             assert list_id
-            if not RecordList.exists(self.collection, list_id, self.site):
+            log.debug(
+                "DisplayInfo.get_list_info: collection.get_alt_entities %r"%
+                [ c.get_id() for c in  self.collection.get_alt_entities(altscope="all") ]
+                )
+            if not RecordList.exists(self.collection, list_id, altscope="all"):
                 log.warning("DisplayInfo.get_list_info: RecordList %s not found"%list_id)
                 self.http_response = self.view.error(
                     dict(self.view.error404values(),
@@ -249,7 +248,11 @@ class DisplayInfo(object):
                     )
             else:
                 self.list_id    = list_id
-                self.recordlist = RecordList.load(self.collection, list_id, self.site)
+                self.recordlist = RecordList.load(self.collection, list_id, altscope="all")
+                if self.type_id is None and self.entitytypeinfo is None:
+                    self.get_type_info(
+                        extract_entity_id(self.recordlist[ANNAL.CURIE.default_type])
+                        )
                 log.debug("DisplayInfo.get_list_info: %r"%(self.recordlist.get_values()))
         return self.http_response
 
@@ -259,8 +262,11 @@ class DisplayInfo(object):
         """
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
-            if not RecordView.exists(self.collection, view_id, self.site):
+            if not RecordView.exists(self.collection, view_id, altscope="all"):
                 log.warning("DisplayInfo.get_view_info: RecordView %s not found"%view_id)
+                log.warning("Collection: %r"%(self.collection))
+                log.warning("Collection._altparent: %r"%(self.collection._altparent))
+                # log.warning("\n".join(traceback.format_stack()))
                 self.http_response = self.view.error(
                     dict(self.view.error404values(),
                         message=message.RECORD_VIEW_NOT_EXISTS%(
@@ -269,13 +275,15 @@ class DisplayInfo(object):
                     )
             else:
                 self.view_id    = view_id
-                self.recordview = RecordView.load(self.collection, view_id, self.site)
+                self.recordview = RecordView.load(self.collection, view_id, altscope="all")
                 log.debug("DisplayInfo.get_view_info: %r"%(self.recordview.get_values()))
         return self.http_response
 
     def get_entity_info(self, action, entity_id):
         """
-        Retrieve entity data to use for display
+        Set up entity id and info to use for display
+
+        Also handles some special case permissions settings if the entity is a Collection.
         """
         if not self.http_response:
             assert self.entitytypeinfo is not None
@@ -284,20 +292,12 @@ class DisplayInfo(object):
                     self.entitytypeinfo.entityparent
                     )
             self.entity_id = entity_id
-        return self.http_response
-
-    def _unused_get_entity_data(self):
-        """
-        Retrieve entity data to use for display
-        """
-        if not self.http_response:
-            assert self.entity_id is not None
-            self.entitydata = self.entitytypeinfo.entityclass.load(
-                self.entitytypeinfo.entityparent, 
-                self.entity_id, 
-                self.entitytypeinfo.entityaltparent)
-            if self.entitydata:
-                log.debug("DisplayInfo.get_entity_data: %r"%(self.entitydata.get_values()))
+            # Special case permissions...
+            if self.type_id == "_coll":
+                # log.info("DisplayInfo.get_entity_info: access collection data for %s"%entity_id)
+                c = Collection.load(self.site, entity_id, altscope="all")
+                if c:
+                    self.coll_perms = c
         return self.http_response
 
     def check_authorization(self, action):
@@ -306,23 +306,32 @@ class DisplayInfo(object):
 
         Also, save copy of key authorizations for later rendering.
         """
-        # Save key authorizations for later rendering
-        for k in authorization_map:
-            for p in authorization_map[k]:
-                self.authorizations[k] = (
-                    self.authorizations[k] or 
-                    self.view.authorize(p, self.collection) is None
-                    )
-        # Check requested action
-        action = action or "view"
-        if self.entitytypeinfo:
-            permissions_map = self.entitytypeinfo.permissions_map
-        else:
-            permissions_map = {}
-        self.http_response = (
-            self.http_response or 
-            self.view.form_action_auth(action, self.collection, permissions_map)
-            )
+        if not self.http_response:
+            # Save key authorizations for later rendering
+            for k in authorization_map:
+                for p in authorization_map[k]:
+                    self.authorizations[k] = (
+                        self.authorizations[k] or 
+                        self.view.authorize(p, self.coll_perms) is None
+                        )
+            # Check requested action
+            action = action or "view"
+            if self.entitytypeinfo:
+                # print "@@ type permissions map, action %s"%action
+                permissions_map = self.entitytypeinfo.permissions_map
+            else:
+                # Use Collection permissions map
+                # print "@@ site permissions map, action %s"%action
+                permissions_map = SITE_PERMISSIONS
+                # raise ValueError("displayinfo.check_authorization without entitytypeinfo")
+                # # permissions_map = {}
+
+            # Previously, default permission map was applied in view.form_action_auth if no 
+            # type-based map was provided.
+            self.http_response = (
+                self.http_response or 
+                self.view.form_action_auth(action, self.collection, permissions_map)
+                )
         return self.http_response
 
     def report_error(self, message):
@@ -342,6 +351,7 @@ class DisplayInfo(object):
         Return default list_id for listing defined type, or None
         """
         list_id = None
+        # print "@@ get_type_list_id type_id %s, list_id %s"%(type_id, list_id)
         if type_id:
             if self.entitytypeinfo.recordtype:
                 list_id = extract_entity_id(
@@ -349,6 +359,7 @@ class DisplayInfo(object):
                     )
             else:
                 log.warning("DisplayInfo.get_type_list_id no type data for %s"%(type_id))
+        # print "@@ get_type_list_id %s"%list_id
         return list_id
 
     def get_list_id(self, type_id, list_id):
@@ -356,6 +367,7 @@ class DisplayInfo(object):
         Return supplied list_id if defined, otherwise find default list_id for
         entity type or collection (unless an error has been detected).
         """
+        # print "@@ get_list_id 1 %s"%list_id
         if not self.http_response:
             list_id = (
                 list_id or 
@@ -363,8 +375,10 @@ class DisplayInfo(object):
                 self.collection.get_default_list() or
                 ("Default_list" if type_id else "Default_list_all")
                 )
+            # print "@@ get_list_id 2 %s"%list_id
             if not list_id:
                 log.warning("get_list_id: %s, type_id %s"%(list_id, type_id))
+            # print "@@ get_list_id 3 %s"%list_id
         return list_id
 
     def get_list_view_id(self):
@@ -396,10 +410,9 @@ class DisplayInfo(object):
         # log.info("check_collection_entity: entityparent: %s"%(self.entityparent.get_id()))
         # log.info("check_collection_entity: entityclass: %s"%(self.entityclass))
         redirect_uri = None
-        typeinfo     = (
-            self.entitytypeinfo or 
-            EntityTypeInfo(self.site, self.collection, entity_type)
-            )
+        typeinfo     = self.entitytypeinfo
+        if not typeinfo or typeinfo.get_type_id() != entity_type:
+            typeinfo = EntityTypeInfo(self.site, self.collection, entity_type)
         if not typeinfo.entityclass.exists(typeinfo.entityparent, entity_id):
             redirect_uri = (
                 uri_with_params(

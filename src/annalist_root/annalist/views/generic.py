@@ -8,12 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import os.path
-# import json
-# import random
-# import uuid
-# import copy
-# import httplib2
-
+import traceback
 import logging
 log = logging.getLogger(__name__)
 
@@ -65,8 +60,7 @@ class AnnalistGenericView(ContentNegotiationView):
         self._sitebasedir = os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR)
         self._site        = None
         self._site_data   = None
-        self._user_perms  = None
-        ## self.credential = None
+        self._user_perms  = {}
         return
 
     # @@TODO: make host parameter required in the following?
@@ -266,7 +260,8 @@ class AnnalistGenericView(ContentNegotiationView):
 
         returns an AnnalistUser object containing permissions for the identified user.
         """
-        if not self._user_perms:
+        coll_id = collection.get_id() if collection else layout.SITEDATA_ID
+        if coll_id not in self._user_perms:
             # if collection:
             #     log.info("user_id %s (%s), coll_id %s, %r"%
             #         (user_id, user_uri, collection.get_id(), collection.get_user_permissions(user_id, user_uri))
@@ -276,9 +271,9 @@ class AnnalistGenericView(ContentNegotiationView):
                 self.site().get_user_permissions(user_id, user_uri) or
                 self.site().get_user_permissions("_default_user_perms", "annal:User/_default_user_perms")
                 )
-            self._user_perms = user_perms
-            log.debug("get_user_permissions %r"%(self._user_perms,))
-        return self._user_perms
+            self._user_perms[coll_id] = user_perms
+            # log.debug("get_user_permissions %r"%(self._user_perms,))
+        return self._user_perms[coll_id]
 
     def get_permissions(self, collection):
         """
@@ -307,6 +302,7 @@ class AnnalistGenericView(ContentNegotiationView):
         user_perms = self.get_user_permissions(collection, user_id, user_uri)
         if not user_perms:
             log.warning("No user permissions found for user_id %s, URI %s"%(user_id, user_uri))
+            log.warning("".join(traceback.format_stack()))
             return self.error(self.error403values(scope=scope))
         # log.info("Authorize %s in %s, %s, %r"%(user_id, coll_id, scope, user_perms[ANNAL.CURIE.user_permissions]))
         # user_perms is an AnnalistrUser object
@@ -336,25 +332,25 @@ class AnnalistGenericView(ContentNegotiationView):
         an HTTP response value to return an error condition.
         """
         # @@TODO: in due course, eliminate action_scope.
-        action_scope = (
-            { "view":   "VIEW"      # View data record
-            , "list":   "VIEW"      # ..
-            , "search": "VIEW"      # ..
-            , "new":    "CREATE"    # Create data record
-            , "copy":   "CREATE"    # ..
-            , "edit":   "UPDATE"    # Update data record
-            , "delete": "DELETE"    # Delete datra record
-            , "config": "CONFIG"    # Change collection configuration
-            , "admin":  "ADMIN"     # Change users or permissions
-            })
+        # action_scope = (
+        #     { "view":   "VIEW"      # View data record
+        #     , "list":   "VIEW"      # ..
+        #     , "search": "VIEW"      # ..
+        #     , "new":    "CREATE"    # Create data record
+        #     , "copy":   "CREATE"    # ..
+        #     , "edit":   "UPDATE"    # Update data record
+        #     , "delete": "DELETE"    # Delete datra record
+        #     , "config": "CONFIG"    # Change collection configuration
+        #     , "admin":  "ADMIN"     # Change users or permissions
+        #     })
         if action in perm_required:
             auth_scope = perm_required[action]
-        elif action in action_scope:
-            auth_scope = action_scope[action]
+        # elif action in action_scope:
+        #     auth_scope = action_scope[action]
         else:
             log.warning("form_action_auth: unknown action: %s"%(action))
+            log.warning("perm_required: %r"%(perm_required,))
             auth_scope = "UNKNOWN"
-        # return self.authorize(auth_scope, auth_resource)
         return self.authorize(auth_scope, auth_collection)
 
     # Entity access
@@ -383,9 +379,13 @@ class AnnalistGenericView(ContentNegotiationView):
                 typeinfo.entityaltparent.get_id() if typeinfo.entityaltparent 
                 else "(none)"
                 )
-            log.debug(
+            log.info(
                 "Entity not found: parent %s, altparent %s, entity_id %s"%
                 (parent_id, altparent_id, entity_id)
+                )
+            log.info(
+                "get_entity id %s, parent %s, action %s, altparent %s"%
+                (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
                 )
         return entity
 

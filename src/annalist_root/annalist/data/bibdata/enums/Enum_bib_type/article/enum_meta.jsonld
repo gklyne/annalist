@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "article"
+, "annal:type_id":      "Enum_bib_type"
+, "rdfs:label":         "Article"
+, "rdfs:comment":       "An article from a journal or magazine.  Other fields: author, title, journal, year, volume, number, pages, month, note"
+, "annal:uri":          "annal:bib_type/article"
+}

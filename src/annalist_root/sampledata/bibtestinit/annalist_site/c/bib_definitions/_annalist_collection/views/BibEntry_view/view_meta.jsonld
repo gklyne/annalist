@@ -1,0 +1,51 @@
+{ "@id":                "annal:views/BibEntry_view"
+, "@type":              ["annal:View"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "BibEntry_view"
+, "annal:type_id":      "_view"
+, "annal:record_type":  "bib:BibEntry"
+, "rdfs:label":         "Bibliographic metadata"
+, "rdfs:comment":       "Bibliography entries each contain some subset of standard data entries."
+, "annal:open_view":    true
+, "annal:view_fields":
+  [ { "annal:field_id":         "_field/Entity_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/Bib_type"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "_field/Bib_title"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_month"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/Bib_year"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "_field/Bib_authors"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_editors"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_journal"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_bookentry"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_publication_details"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_identifiers"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_license"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_note"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

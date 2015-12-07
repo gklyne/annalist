@@ -1,5 +1,5 @@
 """
-Tests for AnnalistUser module and view
+Support for AnnalistUser module and view testing
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -8,6 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import unittest
+import urlparse
 
 import logging
 log = logging.getLogger(__name__)
@@ -31,7 +32,6 @@ from entity_testentitydata          import (
     entitydata_list_type_url, entitydata_list_all_url,
     )
 
-
 #   -----------------------------------------------------------------------------
 #
 #   Directory generating functions
@@ -47,18 +47,19 @@ def annalistuser_dir(coll_id="testcoll", user_id="testuser"):
 #
 #   -----------------------------------------------------------------------------
 
-#   These use the Django `reverse` function so they correspond to
-#   the declared URI patterns.
-
 def annalistuser_site_url(site, user_id="testuser"):
     return site._entityurl + layout.SITE_USER_PATH%{'id': user_id} + "/"
 
 def annalistuser_coll_url(site, coll_id="testcoll", user_id="testuser"):
-    return site._entityurl + layout.SITE_COLL_PATH%{'id': coll_id} + "/" + layout.COLL_USER_PATH%{'id': user_id} + "/"
+    return urlparse.urljoin(
+        site._entityurl,
+        layout.SITE_COLL_PATH%{'id': coll_id} + "/" + 
+        layout.COLL_USER_PATH%{'id': user_id} + "/"
+        )
 
 def annalistuser_url(coll_id="testcoll", user_id="testuser"):
     """
-    URI for record type description data; also view using default entity view
+    URI for user permissions data; also view using default entity view
     """
     if not valid_id(user_id):
         user_id = "___"
@@ -66,7 +67,7 @@ def annalistuser_url(coll_id="testcoll", user_id="testuser"):
 
 def annalistuser_edit_url(action=None, coll_id=None, user_id=None):
     """
-    URI for record type description editing view
+    URI for user permissions description editing view
     """
     viewname = ( 
         'AnnalistEntityDataView'        if action == "view"   else
@@ -78,7 +79,7 @@ def annalistuser_edit_url(action=None, coll_id=None, user_id=None):
         )
     kwargs = {'coll_id': coll_id}
     if action != "delete":
-        kwargs.update({'action': action, 'type_id': "_type", 'view_id': "User_view"})
+        kwargs.update({'action': action, 'type_id': "_user", 'view_id': "User_view"})
     if user_id:
         if valid_id(user_id):
             kwargs.update({'entity_id': user_id})

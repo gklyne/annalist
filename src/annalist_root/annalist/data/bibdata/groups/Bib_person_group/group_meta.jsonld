@@ -1,0 +1,32 @@
+{ "@id":                "annal:group/Bib_person_group"
+, "@type":              ["annal:Field_group"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "Bib_person_group"
+, "annal:type_id":      "_group"
+, "annal:uri":          "annal:group/Bib_person_group"
+, "annal:record_type":  "bib:BibEntry"
+, "rdfs:label":         "BibEntry person fields"
+, "rdfs:comment":       "Group of fields describing a person in a BibEntry record"
+, "annal:group_fields":
+  [ { "annal:field_id":         "_field/Bib_id"
+    , "annal:property_uri":     "bib:id"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_name"
+    , "annal:property_uri":     "bib:name"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_alternate"
+    , "annal:property_uri":     "bib:alternate"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_firstname"
+    , "annal:property_uri":     "bib:firstname"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_lastname"
+    , "annal:property_uri":     "bib:lastname"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

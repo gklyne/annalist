@@ -63,7 +63,7 @@ from entity_testentitydata  import (
 
 #   -----------------------------------------------------------------------------
 #
-#   AnnalistUser tests
+#   AnnalistUser model tests
 #
 #   -----------------------------------------------------------------------------
 
@@ -88,7 +88,7 @@ class AnnalistUserTest(AnnalistTestCase):
         return
 
     def test_annalistuser_init(self):
-        usr = AnnalistUser(self.testcoll, "testuser", self.testsite)
+        usr = AnnalistUser(self.testcoll, "testuser")
         url = annalistuser_coll_url(self.testsite, coll_id="testcoll", user_id="testuser")
         self.assertEqual(usr._entitytype,   ANNAL.CURIE.User)
         self.assertEqual(usr._entityfile,   layout.USER_META_FILE)
@@ -100,7 +100,7 @@ class AnnalistUserTest(AnnalistTestCase):
         return
 
     def test_annalistuser1_data(self):
-        usr = AnnalistUser(self.testcoll, "user1", self.testsite)
+        usr = AnnalistUser(self.testcoll, "user1")
         self.assertEqual(usr.get_id(), "user1")
         self.assertEqual(usr.get_type_id(), "_user")
         self.assertIn("/c/testcoll/_annalist_collection/users/user1/", usr.get_url())
@@ -113,7 +113,7 @@ class AnnalistUserTest(AnnalistTestCase):
         return
 
     def test_annalistuser2_data(self):
-        usr = AnnalistUser(self.testcoll, "user2", self.testsite)
+        usr = AnnalistUser(self.testcoll, "user2")
         self.assertEqual(usr.get_id(), "user2")
         self.assertEqual(usr.get_type_id(), "_user")
         self.assertIn("/c/testcoll/_annalist_collection/users/user2/", usr.get_url())
@@ -134,9 +134,16 @@ class AnnalistUserTest(AnnalistTestCase):
         return
 
     def test_annalistuser_default_data(self):
-        usr = AnnalistUser.load(self.testcoll, "_unknown_user_perms", altparent=self.testsite)
+        usr = AnnalistUser.load(self.testcoll, "_unknown_user_perms", altscope="all")
         self.assertEqual(usr.get_id(), "_unknown_user_perms")
-        self.assertIn("/c/testcoll/_annalist_collection/users/_unknown_user_perms", usr.get_url())
+        self.assertIn(
+            "/c/_annalist_site/_annalist_collection/users/_unknown_user_perms/", 
+            usr.get_url()
+            )
+        self.assertIn(
+            "/c/testcoll/d/_user/_unknown_user_perms", 
+            usr.get_view_url()
+            )
         self.assertEqual(usr.get_type_id(), "_user")
         uld = usr.get_values()
         self.assertEqual(set(uld.keys()), set(annalistuser_load_keys()))
@@ -158,11 +165,7 @@ class AnnalistUserTest(AnnalistTestCase):
 
 class AnnalistUserEditViewTest(AnnalistTestCase):
     """
-    Tests for record user edit view
-
-    This view is generated entirely by generic view code, so opnly the form rendering test is included
-    here to cross-check the form definmition.  Other logic is already tested by the generic form
-    handling tests.
+    Tests Annalist user edit view
     """
 
     def setUp(self):
@@ -476,7 +479,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_url)
-        # Check that new record type exists
+        # Check that new user exists
         self.assertTrue(AnnalistUser.exists(self.testcoll, "copyuser"))
         self._check_annalist_user_values("copyuser", ["VIEW", "CREATE", "UPDATE", "DELETE"])
         return
@@ -489,7 +492,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
 
 class ConfirmAnnalistUserDeleteTests(AnnalistTestCase):
     """
-    Tests for record type deletion on response to confirmation form
+    Tests for Annalist user deletion on response to confirmation form
     """
 
     def setUp(self):

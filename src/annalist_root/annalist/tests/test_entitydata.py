@@ -105,7 +105,7 @@ class EntityDataTest(AnnalistTestCase):
         return
 
     def test_entitydata_type_id(self):
-        r = EntityRoot(TestBaseUri, TestBaseDir)
+        r = EntityRoot(TestBaseUri, TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertEqual(r.get_type_id(),   None)
         e1 = Entity(r, "testid1")
         self.assertEqual(e1.get_type_id(),  None)

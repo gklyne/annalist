@@ -135,8 +135,8 @@ class FieldDescription(object):
             restrict_values = self._field_desc['field_ref_restriction']
             entity_finder   = EntityFinder(collection, selector=restrict_values)
             # Determine subtypes of field entity type, if specified
-            # @@TODO: subtype logic here is just wrong...
-            #         need context to conver info that can be used to calculate supertypes
+            # @@TODO: subtype logic here is just ugly...
+            #         need context to convert info that can be used to calculate supertypes
             #         on-the-fly as needed by the field restriction expression.  E.g. include
             #         collection object in context.
             if field_entity_type and restrict_values:
@@ -149,7 +149,7 @@ class FieldDescription(object):
             else:
                 field_view_context = view_context
             entities        = entity_finder.get_entities_sorted(
-                type_id=type_ref, context=field_view_context, scope="all"
+                type_id=type_ref, context=field_view_context, scope="select"
                 )
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
@@ -329,9 +329,9 @@ class FieldDescription(object):
         Returns true if this field contains a reference to a field group,
         which in turn references further field descriptions.
 
-        @@@ (Currently, this function duplicates `is_repeat_group`.)
+        @@ (Currently, this function duplicates `is_repeat_group`.)
 
-        @@@ test for:  group_ref, group_field_descs, and group_id
+        @@ test for:  group_ref, group_field_descs, and group_id
         """
         field_group_types = ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"]
         return self._field_desc['field_render_type'] in field_group_types
@@ -411,10 +411,10 @@ def field_description_from_view_field(collection, field, view_context=None, grou
     # field_id    = field.get(ANNAL.CURIE.field_id, "Field_id_missing")  # Field ID slug in URI
     #@@
     field_id    = extract_entity_id(field[ANNAL.CURIE.field_id])
-    recordfield = RecordField.load(collection, field_id, collection._parentsite)
+    recordfield = RecordField.load(collection, field_id, altscope="all")
     if recordfield is None:
         log.warning("Can't retrieve definition for field %s"%(field_id))
-        recordfield = RecordField.load(collection, "Field_missing", collection._parentsite)
+        recordfield = RecordField.load(collection, "Field_missing", altscope="all")
     field_property  = (
         field.get(ANNAL.CURIE.property_uri, None) or 
         recordfield.get(ANNAL.CURIE.property_uri, "")
@@ -426,7 +426,7 @@ def field_description_from_view_field(collection, field, view_context=None, grou
     # If field references group, pull in field details
     group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
     if group_ref:
-        group_view = RecordGroup.load(collection, group_ref, collection._parentsite)
+        group_view = RecordGroup.load(collection, group_ref, altscope="all")
         if not group_view:
             log.error("Group %s used in field %s"%(group_ref, field_id))
             ex_type, ex, tb = sys.exc_info()

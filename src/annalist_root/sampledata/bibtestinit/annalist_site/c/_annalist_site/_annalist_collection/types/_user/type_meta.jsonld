@@ -1,0 +1,11 @@
+{ "@id":                "./"
+, "@type":              ["annal:Type"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "_user"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:User"
+, "rdfs:label":         "User permissions"
+, "rdfs:comment":       "User permissions record type."
+, "annal:type_view":    "_view/User_view"
+, "annal:type_list":    "_list/User_list"
+}

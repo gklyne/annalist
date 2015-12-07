@@ -1,5 +1,5 @@
 """
-Test JSONB-:LD context generat5iobn logic
+Test JSONB-LD context generation logic
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -22,6 +22,7 @@ from annalist                       import layout
 from annalist.identifiers           import makeNamespace, RDF, RDFS, ANNAL
 
 from annalist.models.site           import Site
+from annalist.models.sitedata       import SiteData
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordview     import RecordView
@@ -190,6 +191,16 @@ class JsonldContextTest(AnnalistTestCase):
         resetSitedata()
         return
 
+    def get_coll_url(self, coll):
+        return ("file://" + 
+            os.path.normpath(
+                os.path.join(
+                    TestBaseDir, 
+                    layout.SITE_COLL_PATH%{'id': self.testcoll.get_id()}
+                    )
+                ) + "/"
+            )
+
     #   -----------------------------------------------------------------------------
     #   JSON-LD context tests
     #   -----------------------------------------------------------------------------
@@ -203,9 +214,9 @@ class JsonldContextTest(AnnalistTestCase):
 
         # Read site data as JSON-LD
         g = Graph()
-        s = self.testsite._read_stream()
+        s = self.testsite.site_data_stream()
         # b = self.testsite.get_url()
-        b = "file://" + os.path.join(TestBaseDir, layout.SITEDATA_DIR) + "/"
+        b = "file://" + os.path.join(TestBaseDir, layout.SITEDATA_META_DIR) + "/"
         # print "*****"+repr(b)
         # print "*****"+repr(s)
         # print "*****"+repr(b)
@@ -215,13 +226,24 @@ class JsonldContextTest(AnnalistTestCase):
         # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj      = URIRef(self.testsite.get_url())
-        subj      = URIRef("file://" + TestBaseDir + "/")
-        site_data = self.testsite.site_data()
-        label     = Literal(site_data[RDFS.CURIE.label])
-        comment   = Literal(site_data[RDFS.CURIE.comment])
-        self.assertIn((subj, URIRef(RDFS.label),   label),   g)
-        self.assertIn((subj, URIRef(RDFS.comment), comment), g)
+        subj             = URIRef(self.testsite.get_url())
+        subj             = URIRef("file://" + TestBaseDir + "/")
+        subj             = URIRef(
+            "file://" + os.path.join(TestBaseDir, layout.SITEDATA_DIR) + "/"
+            )
+        site_data        = self.testsite.site_data()
+        ann_id           = Literal(layout.SITEDATA_ID)
+        ann_type         = URIRef(ANNAL.SiteData)
+        ann_type_id      = Literal(SiteData._entitytypeid)
+        software_version = Literal(annalist.__version_data__)
+        label            = Literal(site_data[RDFS.CURIE.label])
+        comment          = Literal(site_data[RDFS.CURIE.comment])
+        self.assertIn((subj, URIRef(ANNAL.id),      ann_id),      g)
+        self.assertIn((subj, URIRef(ANNAL.type),    ann_type),    g)
+        self.assertIn((subj, URIRef(ANNAL.type_id), ann_type_id), g)
+        self.assertIn((subj, URIRef(RDFS.label),    label),       g)
+        self.assertIn((subj, URIRef(RDFS.comment),  comment),     g)
+        self.assertIn((subj, URIRef(ANNAL.software_version), software_version), g)
         return
 
     def test_jsonld_collection(self):
@@ -229,20 +251,22 @@ class JsonldContextTest(AnnalistTestCase):
         Read new collection data as JSON-LD, and check resulting RDF triples
         """
         # Generate collection JSON-LD context data
-        # self.testcoll.generate_coll_jsonld_context()
+        self.testcoll.generate_coll_jsonld_context()
 
         # Read collection data as JSON-LD
         g = Graph()
         s = self.testcoll._read_stream()
-        b = "file://" + os.path.join(TestBaseDir, layout.SITE_COLL_CONTEXT_PATH%{'id': self.testcoll.get_id()})
+        b = "file://" + os.path.join(
+            TestBaseDir,
+            layout.SITE_COLL_CONTEXT_PATH%{'id': self.testcoll.get_id()}
+            )
         result = g.parse(source=s, publicID=b, format="json-ld")
         # print "*****"+repr(result)
         # print "***** coll:"
         # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj      = self.testcoll.get_url()
-        subj      = "file://" + os.path.join(TestBaseDir, layout.SITE_COLL_PATH%{'id': self.testcoll.get_id()}) + "/"
+        subj      = self.get_coll_url(self.testcoll)
         coll_data = self.testcoll._load_values()
         for (s, p, o) in (
             [ (subj, RDFS.label,             Literal(coll_data[RDFS.CURIE.label])       )
@@ -314,6 +338,7 @@ class JsonldContextTest(AnnalistTestCase):
         b = ( "file://" + 
               os.path.join(
                 TestBaseDir, 
+                layout.SITEDATA_DIR,
                 layout.SITE_TYPE_PATH%{ 'id': type_vocab.get_id() }
                 ) + 
               "/"
@@ -355,6 +380,7 @@ class JsonldContextTest(AnnalistTestCase):
         b = ( "file://" + 
               os.path.join(
                 TestBaseDir, 
+                layout.SITEDATA_DIR,
                 layout.SITE_TYPE_PATH%{ 'id': view_user.get_id() }
                 ) + 
               "/"
@@ -415,12 +441,12 @@ class JsonldContextTest(AnnalistTestCase):
 
     def test_jsonld_user_default(self):
         """
-        Read user data as JSON-LD, and check resulting RDF triples
+        Read user view data as JSON-LD, and check resulting RDF triples
         """
         # Generate collection JSON-LD context data
         self.testcoll.generate_coll_jsonld_context()
         user_default = AnnalistUser.load(
-            self.testcoll, "_default_user_perms", altparent=self.testsite
+            self.testcoll, "_default_user_perms", altscope="all"
             )
 
         # Read user data as JSON-LD
@@ -429,6 +455,7 @@ class JsonldContextTest(AnnalistTestCase):
         b = ( "file://" + 
               os.path.join(
                 TestBaseDir, 
+                layout.SITEDATA_DIR,
                 layout.SITE_TYPE_PATH%{ 'id': user_default.get_id() }
                 ) + 
               "/"
@@ -536,17 +563,26 @@ class JsonldContextTest(AnnalistTestCase):
 
     def get_context_mock_dict(self, base_path):
         """
-        Uses Djamngo test client results to create a dictionary of mock results for 
+        Uses Django test client results to create a dictionary of mock results for 
         accessing JSONLD context resources.  Works with MockHttpDictResources.
         """
         mock_refs = (
             [ "../../coll_context.jsonld"
-            , "../../site_context.jsonld" 
+            # , "../../site_context.jsonld" 
             ])
         mock_dict = {}
         for mock_ref in mock_refs:
             mu = urlparse.urljoin(base_path, mock_ref)
+            # log.debug(
+            #     "get_context_mock_dict: base_path %s, mock_ref %s, mu %s"%
+            #     (base_path, mock_ref, mu)
+            #     )
             mr = self.client.get(mu)
+            if mr.status_code != 200:
+                log.error(
+                    "get_context_mock_dict: uri %s, status_code %d, reason_phrase %s"%
+                    (mu, mr.status_code, mr.reason_phrase)
+                    )
             self.assertEqual(mr.status_code,   200)
             mock_dict[mock_ref] = mr.content
         # print "***** mu: %s, mock_dict: %r"%(mu, mock_dict.keys())

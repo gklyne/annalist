@@ -28,8 +28,9 @@ from django.test.client             import Client
 
 from utils.SuppressLoggingContext   import SuppressLogging
 
-from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
+from annalist.identifiers           import RDF, RDFS, ANNAL
+
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
@@ -184,7 +185,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Test context
         self.assertEqual(r.context['title'],            "Collection testcoll")
         self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          None)
+        self.assertEqual(r.context['type_id'],          "Default_type")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         list_choices = r.context['list_choices']
         self.assertEqual(set(list_choices.options),     set(self.list_ids))
@@ -239,7 +240,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Test context
         self.assertEqual(r.context['title'],            "Collection testcoll")
         self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          None)
+        self.assertEqual(r.context['type_id'],          "Default_type")
         list_choices = r.context['list_choices']
         self.assertEqual(set(list_choices.options),     set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Default_list_all")
@@ -251,7 +252,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 215)    # Will change with site data
+        self.assertEqual(len(entities), 150)    # Will change with site data
         return
 
     def test_get_types_list(self):
@@ -309,8 +310,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Entities
         entities   = context_list_entities(r.context)
         listed_entities = { e['entity_id']: e for e in entities }
-        self.assertIn('_initial_values', listed_entities)
-        type_entities = get_site_types() | {"_initial_values", "testtype", "testtype2"}
+        #@@ self.assertIn('_initial_values', listed_entities)
+        type_entities = get_site_types() | {"testtype", "testtype2"}
         self.assertEqual(set(listed_entities.keys()), type_entities)
         return
 
@@ -331,24 +332,78 @@ class EntityGenericListViewTest(AnnalistTestCase):
             <div class="tbody row select-row">
               <div class="small-1 columns">
                 <input type="checkbox" class="select-box right" name="entity_select"
-                       value="_field/Bib_address" />
+                       value="_field/Coll_comment" />
               </div>
               <div class="small-11 columns">
-                <div class="row view-listrow">
+                <div class="view-listrow row">
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
+                    <a href="%(base)s/c/testcoll/d/_field/Coll_comment/%(cont)s">Coll_comment</a>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Textarea/%(cont)s">Multiline text</a>
+                  </div>
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
+                    <span>annal:Longtext</span>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <span>Collection metadata</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%({'base': TestBasePath, 'cont': cont})
+        rowdata2 = """
+            <div class="tbody row select-row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select-box right" name="entity_select"
+                       value="_field/Coll_parent" />
+              </div>
+              <div class="small-11 columns">
+                <div class="view-listrow row">
+                  <div class="view-value small-4 medium-3 columns">
+                    <a href="%(base)s/c/testcoll/d/_field/Coll_parent/%(cont)s">Coll_parent</a>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Enum_choice/%(cont)s">Entity choice</a>
+                  </div>
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
+                    <span>annal:Slug</span>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <span>Parent</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%({'base': TestBasePath, 'cont': cont})
+        rowdata3 = """
+            <div class="tbody row select-row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select-box right" name="entity_select"
+                       value="_field/Coll_software_version" />
+              </div>
+              <div class="small-11 columns">
+                <div class="view-listrow row">
+                  <div class="view-value small-4 medium-3 columns">
+                    <a href="%(base)s/c/testcoll/d/_field/Coll_software_version/%(cont)s">Coll_software_version</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
                     <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
                   </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up"><span>annal:Text</span></div>
-                  <div class="view-value small-4 medium-3 columns"><span>Address</span></div>
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
+                    <span>annal:Text</span>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <span>S/W version</span>
+                  </div>
                 </div>
               </div>
             </div>
             """%({'base': TestBasePath, 'cont': cont})
         # log.info(r.content)
         self.assertContains(r, rowdata1, html=True)
+        self.assertContains(r, rowdata2, html=True)
+        self.assertContains(r, rowdata3, html=True)
         # Test context
         self.assertEqual(r.context['title'],            "Collection testcoll")
         self.assertEqual(r.context['coll_id'],          "testcoll")
@@ -404,12 +459,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Entities
         entities = context_list_entities(r.context)
         entity_ids = [ context_list_item_field_value(r.context, e, 0) for e in entities ]
-        self.assertIn('_initial_values', entity_ids)
+        #@@ self.assertIn('_initial_values', entity_ids)
         field_entities = (
             { ('Entity_id',         "EntityId",      "annal:Slug",          "Id")
-            , ('Bib_address',       "Text",          "annal:Text",          "Address")
-            , ('Bib_authors',       "RepeatGroup",   "bib:Authors",         "Author(s)")
-            , ('Bib_booktitle',     "Text",          "annal:Text",          "Book title")
+            , ( "Coll_comment",     "Textarea",      "annal:Longtext",      "Collection metadata")
+            , ( "Coll_parent",      "Enum_choice",   "annal:Slug",          "Parent")
+            , ( "Coll_software_version", "Text",     "annal:Text",          "S/W version")
             , ('Entity_type',       "EntityTypeId",  "annal:Slug",          "Type")
             , ('Entity_label',      "Text",          "annal:Text",          "Label")
             , ('Field_comment',     "Markdown",      "annal:Richtext",      "Help")
@@ -462,24 +517,78 @@ class EntityGenericListViewTest(AnnalistTestCase):
             <div class="tbody row select-row">
               <div class="small-1 columns">
                 <input type="checkbox" class="select-box right" name="entity_select"
-                       value="_field/Bib_address" />
+                       value="_field/Coll_comment" />
               </div>
               <div class="small-11 columns">
-                <div class="row view-listrow">
+                <div class="view-listrow row">
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
+                    <a href="%(base)s/c/testcoll/d/_field/Coll_comment/%(cont)s">Coll_comment</a>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Textarea/%(cont)s">Multiline text</a>
+                  </div>
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
+                    <span>annal:Longtext</span>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <span>Collection metadata</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%({'base': TestBasePath, 'cont': cont})
+        rowdata2 = """
+            <div class="tbody row select-row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select-box right" name="entity_select"
+                       value="_field/Coll_parent" />
+              </div>
+              <div class="small-11 columns">
+                <div class="view-listrow row">
+                  <div class="view-value small-4 medium-3 columns">
+                    <a href="%(base)s/c/testcoll/d/_field/Coll_parent/%(cont)s">Coll_parent</a>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Enum_choice/%(cont)s">Entity choice</a>
+                  </div>
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
+                    <span>annal:Slug</span>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <span>Parent</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%({'base': TestBasePath, 'cont': cont})
+        rowdata3 = """
+            <div class="tbody row select-row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select-box right" name="entity_select"
+                       value="_field/Coll_software_version" />
+              </div>
+              <div class="small-11 columns">
+                <div class="view-listrow row">
+                  <div class="view-value small-4 medium-3 columns">
+                    <a href="%(base)s/c/testcoll/d/_field/Coll_software_version/%(cont)s">Coll_software_version</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
                     <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
                   </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up"><span>annal:Text</span></div>
-                  <div class="view-value small-4 medium-3 columns"><span>Address</span></div>
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
+                    <span>annal:Text</span>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <span>S/W version</span>
+                  </div>
                 </div>
               </div>
             </div>
             """%({'base': TestBasePath, 'cont': cont})
         # log.info("*** r.content: "+r.content)
         self.assertContains(r, rowdata1, html=True)
+        self.assertContains(r, rowdata2, html=True)
+        self.assertContains(r, rowdata3, html=True)
         # Test context
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
@@ -495,7 +604,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
     def test_get_fields_list_search(self):
         u = entitydata_list_type_url(
             "testcoll", "_field", list_id="Field_list", scope="all"
-            ) + "?search=Bib_&continuation_url=/xyzzy/"
+            ) + "?search=Coll_&continuation_url=/xyzzy/"
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -503,34 +612,89 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         cont = ""
-        rowdata = """
+        rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
                 <input type="checkbox" class="select-box right" name="entity_select"
-                       value="_field/Bib_address" />
+                       value="_field/Coll_comment" />
               </div>
               <div class="small-11 columns">
-                <div class="row view-listrow">
+                <div class="view-listrow row">
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
+                    <a href="%(base)s/c/testcoll/d/_field/Coll_comment/%(cont)s">Coll_comment</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Textarea/%(cont)s">Multiline text</a>
                   </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up"><span>annal:Text</span></div>
-                  <div class="view-value small-4 medium-3 columns"><span>Address</span></div>
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
+                    <span>annal:Longtext</span>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <span>Collection metadata</span>
+                  </div>
                 </div>
               </div>
             </div>
             """%({'base': TestBasePath, 'cont': cont})
+        rowdata2 = """
+            <div class="tbody row select-row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select-box right" name="entity_select"
+                       value="_field/Coll_parent" />
+              </div>
+              <div class="small-11 columns">
+                <div class="view-listrow row">
+                  <div class="view-value small-4 medium-3 columns">
+                    <a href="%(base)s/c/testcoll/d/_field/Coll_parent/%(cont)s">Coll_parent</a>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Enum_choice/%(cont)s">Entity choice</a>
+                  </div>
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
+                    <span>annal:Slug</span>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <span>Parent</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%({'base': TestBasePath, 'cont': cont})
+        rowdata3 = """
+            <div class="tbody row select-row">
+              <div class="small-1 columns">
+                <input type="checkbox" class="select-box right" name="entity_select"
+                       value="_field/Coll_software_version" />
+              </div>
+              <div class="small-11 columns">
+                <div class="view-listrow row">
+                  <div class="view-value small-4 medium-3 columns">
+                    <a href="%(base)s/c/testcoll/d/_field/Coll_software_version/%(cont)s">Coll_software_version</a>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
+                  </div>
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
+                    <span>annal:Text</span>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns">
+                    <span>S/W version</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%({'base': TestBasePath, 'cont': cont})
+
         # log.info(r.content)
         # If this test fails, check ordering of URI parameters
-        self.assertContains(r, rowdata, html=True)
+        self.assertContains(r, rowdata1, html=True)
+        self.assertContains(r, rowdata2, html=True)
+        self.assertContains(r, rowdata3, html=True)
         # Test context
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
-        self.assertEqual(r.context['search_for'],       "Bib_")
+        self.assertEqual(r.context['search_for'],       "Coll_")
         list_choices = r.context['list_choices']
         self.assertEqual(set(list_choices.options),     set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
@@ -543,29 +707,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[3]['field_id'], 'Entity_label')
         # Entities
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 36)
+        self.assertEqual(len(entities), 3)
         field_entities = (
-            { ('Bib_address',       "Text",        "annal:Text",          "Address")
-            , ('Bib_authors',       "RepeatGroup", "bib:Authors",         "Author(s)")
-            , ('Bib_booktitle',     "Text",        "annal:Text",          "Book title")
-            , ('Bib_chapter',       "Text",        "annal:Text",          "Chapter")
-            , ('Bib_edition',       "Text",        "annal:Text",          "Edition")
-            , ('Bib_editors',       "RepeatGroup", "bib:Editors",         "Editor(s)")
-            , ('Bib_eprint',        "Text",        "annal:Text",          "Bib_eprint")
-            , ('Bib_howpublished',  "Text",        "annal:Text",          "How published")
-            , ('Bib_institution',   "Text",        "annal:Text",          "Institution")
-            , ('Bib_journal',       "RepeatGroup", "bib:Journal",         "Journal")
-            , ('Bib_month',         "Text",        "annal:Text",          "Month")
-            , ('Bib_number',        "Text",        "annal:Text",          "Number")
-            , ('Bib_organization',  "Text",        "annal:Text",          "Organization")
-            , ('Bib_pages',         "Text",        "annal:Text",          "Pages")
-            , ('Bib_publisher',     "Text",        "annal:Text",          "Publisher")
-            , ('Bib_school',        "Text",        "annal:Text",          "School")
-            , ('Bib_title',         "Text",        "annal:Text",          "Title")
-            , ('Bib_type',          "Enum",        "annal:Slug",          "Type")
-            , ('Bib_url',           "Text",        "annal:Text",          "URL")
-            , ('Bib_volume',        "Text",        "annal:Text",          "Volume")
-            , ('Bib_year',          "Text",        "annal:Text",          "Year")
+            { ( "Coll_comment",          "Textarea",    "annal:Longtext", "Collection metadata" )
+            , ( "Coll_parent",           "Enum_choice", "annal:Slug",    "Parent"               )
+            , ( "Coll_software_version", "Text",        "annal:Text",    "S/W version"          )
             })
         for f in field_entities:
             for eid in range(len(entities)):

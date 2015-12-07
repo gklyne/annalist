@@ -254,7 +254,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     # Test consistency of type / list / view / field descriptions
     def check_type_list_view(self, type_id, list_id, view_id, type_uri):
         # Read type description - check required fields are present
-        type_type = RecordType.load(self.coll1, type_id, self.testsite)
+        type_type = RecordType.load(self.coll1, type_id, altscope="all")
         self.assertEqual(type_type["@type"],                [ANNAL.CURIE.Type])
         self.assertEqual(type_type[ANNAL.CURIE.id],         type_id)
         self.assertEqual(type_type[ANNAL.CURIE.type_id],    "_type")
@@ -262,7 +262,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_type[ANNAL.CURIE.type_list],  "_list/"+list_id)
         self.assertEqual(type_type[ANNAL.CURIE.type_view],  "_view/"+view_id)
         # Read type list description
-        type_list = RecordList.load(self.coll1, list_id, self.testsite)
+        type_list = RecordList.load(self.coll1, list_id, altscope="all")
         self.assertEqual(type_list["@type"],                    [ANNAL.CURIE.List])
         self.assertEqual(type_list[ANNAL.CURIE.id],             list_id)
         self.assertEqual(type_list[ANNAL.CURIE.type_id],        "_list")
@@ -272,7 +272,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_list[ANNAL.CURIE.record_type],    type_uri)
         self.assertIn(ANNAL.CURIE.list_entity_selector,         type_list)
         # Read type view description
-        type_view = RecordView.load(self.coll1, view_id, self.testsite)
+        type_view = RecordView.load(self.coll1, view_id, altscope="all")
         self.assertEqual(type_view["@type"],                    [ANNAL.CURIE.View])
         self.assertEqual(type_view[ANNAL.CURIE.id],             view_id)
         self.assertEqual(type_view[ANNAL.CURIE.type_id],        "_view")
@@ -291,14 +291,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         for f in view_fields:
             field_id   = extract_entity_id(f[ANNAL.CURIE.field_id])
             # print "f: " + field_id
-            view_field = RecordField.load(self.coll1, field_id, self.testsite)
+            view_field = RecordField.load(self.coll1, field_id, altscope="all")
             field_type = view_field[ANNAL.CURIE.field_render_type]
             value_type = view_field[ANNAL.CURIE.field_value_type]
             try:
                 self.assertEqual(view_field["@type"], [ANNAL.CURIE.Field])
                 self.assertEqual(view_field[ANNAL.CURIE.id],      field_id)
                 self.assertEqual(view_field[ANNAL.CURIE.type_id], "_field")
-                #@@ self.assertEqual(value_type, type_id)
                 self.assertIn(ANNAL.CURIE.property_uri,           view_field)
                 self.assertIn(ANNAL.CURIE.field_render_type,      view_field)
                 self.assertIn(ANNAL.CURIE.field_value_mode,       view_field)
@@ -319,7 +318,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                     self.assertIn(ANNAL.CURIE.repeat_label_add,    view_field)
                     self.assertIn(ANNAL.CURIE.repeat_label_delete, view_field)
                     # Check field group
-                    field_group = RecordGroup.load(self.coll1, group_id, self.testsite)
+                    field_group = RecordGroup.load(self.coll1, group_id, altscope="all")
                     self.assertEqual(field_group["@type"], [ANNAL.CURIE.Field_group])
                     self.assertEqual(field_group[ANNAL.CURIE.id],          group_id)
                     self.assertEqual(field_group[ANNAL.CURIE.type_id],     "_group")
@@ -351,9 +350,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         # Check displayed collections (check site setup)
         self.assertEqual(s.title.string, "Annalist data notebook test site")
         trows = s.select("form > div > div > div")
-        self.assertEqual(len(trows), 4)
+        self.assertEqual(len(trows), 5)
         for i in (1,2,3):
-            tcols = trows[i].find_all("div", class_="view-value")
+            tcols = trows[i+1].find_all("div", class_="view-value")
             colln = "coll%d"%i
             self.assertEqual(tcols[0].a.string,  colln)
             self.assertEqual(tcols[0].a['href'], collection_view_url(colln))
@@ -514,17 +513,16 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_type/_field",           ["_field",           "View field"] ]
+            [ [ "_type/_coll",            ["_coll",            "Collection"] ]
+            , [ "_type/_field",           ["_field",           "View field"] ]
             , [ "_type/_group",           ["_group",           "Field group"] ]
-            , [ "_type/_initial_values",  ["_initial_values",  None] ]
+            # , [ "_type/_initial_values",  ["_initial_values",  None] ]
             , [ "_type/_list",            ["_list",            "List"] ]
             , [ "_type/_type",            ["_type",            "Type"] ]
             , [ "_type/_user",            ["_user",            "User permissions"] ]
             , [ "_type/_view",            ["_view",            "View"] ]
             , [ "_type/_vocab",           ["_vocab",           "Vocab namespace"] ]
-            , [ "_type/BibEntry_type",    ["BibEntry_type",    "Bibliographic record"] ]
             , [ "_type/Default_type",     ["Default_type",     "Default record"] ]
-            , [ "_type/Enum_bib_type",    ["Enum_bib_type",    "Bibliographic entry type"] ]
             , [ "_type/Enum_list_type",   ["Enum_list_type",   "List display type"] ]
             , [ "_type/Enum_render_type", ["Enum_render_type", "Field render type"] ]
             , [ "_type/Enum_value_mode",  ["Enum_value_mode",  "Field value mode"] ]
@@ -633,9 +631,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_list/_initial_values",    ["_initial_values",     None] ]
-            , [ "_list/BibEntry_list",      ["BibEntry_list",       "List bibliographic entries"] ]
-            , [ "_list/Default_list",       ["Default_list",        "List entities"] ]
+            # [ [ "_list/_initial_values",    ["_initial_values",     None] ]
+            [ [ "_list/Default_list",       ["Default_list",        "List entities"] ]
             , [ "_list/Default_list_all",   ["Default_list_all",    "List entities with type information"] ]
             , [ "_list/Field_group_list",   ["Field_group_list",    "List field groups"] ]
             , [ "_list/Field_list",         ["Field_list",          "List fields"] ]
@@ -749,8 +746,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_view/_initial_values",    ["_initial_values",     None] ]
-            , [ "_view/BibEntry_view",      ["BibEntry_view",       "Bibliographic metadata"] ]
+            # [ [ "_view/_initial_values",    ["_initial_values",     None] ]
+            [ [ "_view/Collection_view",    ["Collection_view",     "Collection view"] ]
             , [ "_view/Default_view",       ["Default_view",        "Default record view"] ]
             , [ "_view/Field_group_view",   ["Field_group_view",    "Field group view"] ]
             , [ "_view/Field_view",         ["Field_view",          "Field description view"] ]
@@ -857,14 +854,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_group/_initial_values",          ["_initial_values"] ]
-            , [ "_group/Bib_book_group",           ["Bib_book_group",           "BibEntry book fields"] ]
-            , [ "_group/Bib_identifier_group",     ["Bib_identifier_group",     "BibEntry identifier fields"] ]
-            , [ "_group/Bib_journal_group",        ["Bib_journal_group",        "BibEntry journal fields"] ]
-            , [ "_group/Bib_license_group",        ["Bib_license_group",        "BibEntry license fields"] ]
-            , [ "_group/Bib_person_group",         ["Bib_person_group",         "BibEntry person fields"] ]
-            , [ "_group/Bib_publication_group",    ["Bib_publication_group",    "BibEntry publication fields"] ]
-            , [ "_group/Entity_see_also_repeat",   ["Entity_see_also_repeat",   "Links to further information"] ]
+            # [ [ "_group/_initial_values",          ["_initial_values"] ]
+            [ [ "_group/Entity_see_also_repeat",   ["Entity_see_also_repeat",   "Links to further information"] ]
             , [ "_group/Group_field_group",        ["Group_field_group",        "Group field fields"] ]
             , [ "_group/List_field_group",         ["List_field_group",         "List field fields"] ]
             , [ "_group/Type_alias_group",         ["Type_alias_group",         "Field alias fields"] ]
@@ -969,43 +960,10 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         trows_expected = (
             #     Field selector                      Field id             Render type      Value type   Field label (?)
-            [ [ "_field/_initial_values",           ["_initial_values",   "Short text",    "annal:Text", None       ] ]
-            , [ "_field/Bib_address",               ["Bib_address",       "Short text",    "annal:Text", "Address"  ] ]
-            , [ "_field/Bib_alternate",             ["Bib_alternate",     "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_authors",               ["Bib_authors",       "Repeating field group", "bib:Authors"    ] ]
-            , [ "_field/Bib_bookentry",             ["Bib_bookentry",     "Repeating field group", "bib:BookEntry"  ] ]
-            , [ "_field/Bib_booktitle",             ["Bib_booktitle",     "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_chapter",               ["Bib_chapter",       "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_description",           ["Bib_description",   "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_edition",               ["Bib_edition",       "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_editors",               ["Bib_editors",       "Repeating field group", "bib:Editors"    ] ]
-            , [ "_field/Bib_eprint",                ["Bib_eprint",        "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_firstname",             ["Bib_firstname",     "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_howpublished",          ["Bib_howpublished",  "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_id",                    ["Bib_id",            "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_idanchor",              ["Bib_idanchor",      "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_identifiers",           ["Bib_identifiers",   "Repeating field group", "bib:Identifiers"] ]
-            , [ "_field/Bib_idtype",                ["Bib_idtype",        "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_institution",           ["Bib_institution",   "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_journal",               ["Bib_journal",       "Repeating field group", "bib:Journal"    ] ]
-            , [ "_field/Bib_jurisdiction",          ["Bib_jurisdiction",  "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_lastname",              ["Bib_lastname",      "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_license",               ["Bib_license",       "Repeating field group", "bib:Licenses"   ] ]
-            , [ "_field/Bib_month",                 ["Bib_month",         "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_name",                  ["Bib_name",          "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_note",                  ["Bib_note",          "Multiline text", "annal:Longtext"        ] ]
-            , [ "_field/Bib_number",                ["Bib_number",        "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_organization",          ["Bib_organization",  "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_pages",                 ["Bib_pages",         "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_publication_details",   ["Bib_publication_details"                                      ] ]
-            , [ "_field/Bib_publisher",             ["Bib_publisher",     "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_school",                ["Bib_school",        "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_shortcode",             ["Bib_shortcode",     "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_title",                 ["Bib_title",         "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_type",                  ["Bib_type",          "Required entity ref", "annal:Slug"       ] ]
-            , [ "_field/Bib_url",                   ["Bib_url",           "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_volume",                ["Bib_volume",        "Short text",    "annal:Text"             ] ]
-            , [ "_field/Bib_year",                  ["Bib_year",          "Short text",    "annal:Text"             ] ]
+            # [ [ "_field/_initial_values",           ["_initial_values",   "Short text",    "annal:Text", None       ] ]
+            [ [ "_field/Coll_comment",              ["Coll_comment",      "Multiline text", "annal:Longtext"        ] ]
+            , [ "_field/Coll_parent",               ["Coll_parent",       "Entity choice",  "annal:Slug"            ] ]
+            , [ "_field/Coll_software_version",     ["Coll_software_version", "Short text", "annal:Text", "S/W version" ] ]
             , [ "_field/Entity_comment",            ["Entity_comment",    "Markdown rich text", "annal:Richtext"    ] ]
             , [ "_field/Entity_id",                 ["Entity_id",         "Entity Id",     "annal:Slug"             ] ]
             , [ "_field/Entity_label",              ["Entity_label",      "Short text",    "annal:Text"             ] ]
@@ -1203,8 +1161,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[0].span.string, "Id")
         self.assertEqual(thead[1].span.string, "Label")
         trows_expected = (
-            [ [ "_vocab/_initial_values",          ["_initial_values"] ]
-            , [ "_vocab/annal",                    ["annal",    "Vocabulary namespace for Annalist-defined terms"] ]
+            # [ [ "_vocab/_initial_values",          ["_initial_values"] ]
+            [ [ "_vocab/annal",                    ["annal",    "Vocabulary namespace for Annalist-defined terms"] ]
             , [ "_vocab/owl",                      ["owl",      "OWL ontology namespace"] ]
             , [ "_vocab/rdf",                      ["rdf",      "RDF core namespace"] ]
             , [ "_vocab/rdfs",                     ["rdfs",     "RDF schema namespace"] ]
@@ -1224,10 +1182,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "Entity_label",           "text",     None)
         self.check_input_type_value(s, "Entity_comment",         "textarea", None)
         self.check_input_type_value(s, "Vocab_uri",              "text",     None)
-        #@@
-        # No repeated values present:
-        # self.check_input_type_value(s, "Entity_see_also_repeat", "text",     None)
-        #@@
         self.check_select_field(
             s, "view_choice", self.views_expected, "_view/Vocab_view"
             )

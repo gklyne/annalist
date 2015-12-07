@@ -95,8 +95,9 @@ class SiteResourceAccess(AnnalistGenericView):
         """
         Return a description for the indicated site resource, or None
         """
+        #@@TODO: still needed?
         log.info("SiteResourceAccess.find_resource %s"%(resource_ref))
-        if resource_ref == layout.SITEDATA_CONTEXT_FILE:
+        if resource_ref == layout.COLL_CONTEXT_FILE:
             return (
                 { 'resource_type': "application/ld+json"
                 , 'resource_name': resource_ref
