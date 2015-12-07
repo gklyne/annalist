@@ -65,12 +65,12 @@
 - [ ] Upload to PyPI (see below)
 - [ ] Tag release on release branch
     - `git tag -a release-x.y.z`
-- [ ] Merge release branch to master
+- [x] Merge release branch to master
     - e.g.
         - `git checkout master`
         - `git merge release-prep-x.y.z`
-- [ ] Test again on master branch
-- [ ] Push master branch, and tags
+- [x] Test again on master branch
+- [.;] Push master branch, and tags
     - `git add ..`
     - `git commit -m "Master branch updated to Vx.y.z"`
     - `git push`
@@ -85,7 +85,7 @@
 - [ ] Commit and push changes
 - [ ] Delete release branch
     - `git branch -d release-prep-x.y.z`
-- [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`), retest
+- [ ] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`), retest
 - [ ] Commit and push changes
 
 - [ ] Post announcement to Google Group, Twitter and elsewhere
