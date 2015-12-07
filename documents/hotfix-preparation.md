@@ -8,7 +8,7 @@
 - [ ] Delete contents of build directory (ensure any old files are removed)
 - [ ] Clean old .pyc files - `clean.sh`
 - [ ] Fix bug, and add test cases
-- [ ] Regenerate test data (e.g. `makeinitsitedata.sh` or `maketestsitedata.sh`)
+- [ ] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`)
 - [ ] Local install
 - [ ] Run test suite
 - [ ] Update site data in local 'personal' installation

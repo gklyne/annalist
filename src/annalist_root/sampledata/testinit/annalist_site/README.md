@@ -1,81 +1,41 @@
-/usr/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/
+src/annalist_root/annalist/sampledata/data/site/
 
-This directory contains Annalist site data for http://test.example.com/testsite/.
+This directory contains sample Annalist site data used for testing
 
 Directory layout:
 
-    /usr/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/
-      c/
-        _annalist_site/
-          _annalist_collection/         (site-wide definitions)
-            coll_meta.jsonld            (site metadata)
-            coll_context.jsonld         (JSON-LD context for site definitions)
-            enums/
-              (enumerated type values)
-               :
-            fields/
-              (view-field definitions)
-               :
-            groups/
-              (field group definitions)
-               :
-            lists/
-              (entity list definitions)
-               :
-            types/
-              (type definitions)
-               :
-            users/
-              (user permissions)
-               :
-            views/
-              (entity view definitions)
-               :
-            vocabs/
-              (vocabulary namespace definitions)
-               :
-        (collection-id)/                (user-created data collection)
-          _annalist_collection/         (collection definitions)
-            coll_meta.jsonld            (collection metadata)
-            coll_context.jsonld         (JSON-LD context for collection definitions)
-            types/                      (collection type definitions
-              (type-id)/
-                type_meta.jsonld
-               :
-            lists/                      (collection list definitions
-              (list-id)/
-                list_meta.jsonld
-               :
-            views/                      (collection view definitions
-              (view-id)/
-                view_meta.jsonld
-               :
-            fields/                     (collection field definitions
-              (field-id)/
-                field_meta.jsonld
-               :
-            groups/                     (collection field group definitions
-              (group-id)/
-                group_meta.jsonld
-               :
-            users/                      (collection user permissions
-              (user-id)/
-                user_meta.jsonld
-               :
-          d/
-            (type-id)/                  (contains all entity data for identified type)
-              (entity-id)/              (contains data for identified type/entity)
-                entity_data.jsonld      (entity data)
-                entity_prov.jsonld      (entity provenance @@TODO)
-                (attachment files)      (uploaded/imported attachments)
-
-               :                        (repeat for entities of this type)
-
-             :                          (repeat for types in collection)
-
-         :                              (repeat for collections in site)
-
-Created by annalist.models.site.py
-for Annalist 0.1.24 at 2015-12-07 17:41:33
-
-
+  $BASE_DATA_DIR
+    annalist-site/
+      _annalist-site/
+        site_meta.json_ld
+      <collection-id>/
+        _annalist_collection/
+          coll_meta.jsonld
+          types/
+            <type-id>/
+              type_meta.jsonld
+             :
+          views/
+            <view-id>/
+              view_meta.jsonld
+             :
+          lists/
+            <list-id>/
+              list_meta.jsonld
+             :
+          bridges/
+            (bridge-description (incl path mapping in collection) - @@TBD)
+             :
+          user-groups/  @@TBD
+            group-description
+             :
+          access/  @@TBD
+            default-access
+            (more details to work through - keep it simple for starters)
+        <type-id>/
+          <entity-id>/
+            entity-data.jsonld
+            entity-prov.jsonld
+           :
+         :
+       :

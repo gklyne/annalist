@@ -16,7 +16,7 @@ mkdir -p $BASEDIR/sampledata/testinit/annalist_site/
 cp -r $BASEDIR/sampledata/data/annalist_site/c $BASEDIR/sampledata/testinit/annalist_site/
 cp $BASEDIR/annalist/data/test/* $BASEDIR/sampledata/testinit/annalist_site/
 
-echo "cp $BASEDIR/sampledata/data/annalist_site/README.md $BASEDIR/sampledata/testinit/annalist_site/"
-cp $BASEDIR/sampledata/data/annalist_site/README.md $BASEDIR/sampledata/testinit/annalist_site/
+# echo "cp $BASEDIR/sampledata/data/annalist_site/README.md $BASEDIR/sampledata/testinit/annalist_site/"
+# cp $BASEDIR/sampledata/data/annalist_site/README.md $BASEDIR/sampledata/testinit/annalist_site/
 
 # End.
