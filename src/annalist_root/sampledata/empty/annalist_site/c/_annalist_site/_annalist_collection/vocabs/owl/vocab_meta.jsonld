@@ -1,0 +1,15 @@
+{ "@id":            "./"
+, "@type":          ["annal:Vocabulary", "annal:EntityData"]
+, "@context":       ["../../coll_context.jsonld"]
+, "annal:id":       "owl"
+, "annal:type_id":  "_vocab"
+, "annal:type":     "annal:Vocabulary"
+, "rdfs:label":     "OWL ontology namespace"
+, "rdfs:comment":   "Vocabulary namespace for terms used to define OWL ontologies.\r\n\r\n(e.g. owl:sameAs to indicate subject === object)\r\n"
+, "annal:uri":      "http://www.w3.org/2002/07/owl#"
+, "rdfs:seeAlso":
+    [ { "owl:sameAs":   "http://www.w3.org/TR/owl2-overview/" }
+    , { "owl:sameAs":   "http://www.w3.org/TR/2012/REC-owl2-quick-reference-20121211/" }
+    , { "owl:sameAs":   "http://www.w3.org/TR/2004/REC-owl-features-20040210/" }
+    ]
+}

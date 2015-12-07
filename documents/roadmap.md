@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: public prototype release 0.1.22; this release introduces support for presenting Annalist data and linked data, using JSON-LD syntax.
+Current status: public prototype release 0.1.24; this release introduces support for sharing structure definitions between collections.
 
 
 # V1.0 release
@@ -57,11 +57,6 @@ Notes:
 ## Grid view
 
 Alternative form of list view, e.g. for image galeries.
-
-
-## Collection templates
-
-Facilitate the creation of a new collection using the structures (data types, views, lists, etc.) from an existing collection.
 
 
 ## Authentication

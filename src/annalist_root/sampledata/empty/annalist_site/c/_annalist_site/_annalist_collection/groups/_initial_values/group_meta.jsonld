@@ -1,0 +1,12 @@
+{ "@id":                "annal:group/_initial_values"
+, "@type":              ["annal:Field_group"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "_initial_values"
+, "annal:type_id":      "_group"
+, "annal:uri":          "annal:group/_initial_values"
+, "annal:record_type":  ""
+, "rdfs:label":         ""
+, "rdfs:comment":       ""
+, "annal:add_field":    true
+, "annal:group_fields": []
+}

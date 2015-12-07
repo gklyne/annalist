@@ -15,6 +15,7 @@ recursive-include annalist_root/annalist *.py *.sh *.md *.txt
 recursive-include annalist_root/annalist/views/help *.md *.html
 recursive-include annalist_root/annalist/templates *.html
 recursive-include annalist_root/annalist/data/sitedata *.jsonld *.md
+recursive-include annalist_root/annalist/data/bibdata *.jsonld *.md
 recursive-include annalist_root/annalist/data/static/css *.css
 recursive-include annalist_root/annalist/data/static/js *.js
 recursive-include annalist_root/annalist/data/static/images *.png *.jpg
@@ -26,5 +27,6 @@ include annalist_root/oauth2/templates/*.html
 include annalist_root/utils/*.py
 include annalist_root/requirements/*.txt
 include annalist_root/sampledata/*.md
-recursive-include annalist_root/sampledata/init *.jsonld *.md *.jpg
+recursive-include annalist_root/sampledata/testinit *.jsonld *.md *.jpg
+recursive-include annalist_root/sampledata/bibtestinit *.jsonld *.md *.jpg
 recursive-include annalist_root/sampledata/empty *.jsonld *.md

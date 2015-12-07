@@ -14,8 +14,8 @@
 <h1>Annalist tutorial</h1>
 <div class="details">
 <span id="author" class="author">Graham Klyne</span><br>
-<span id="revnumber">version 0.1.22,</span>
-<span id="revdate">2015-09-25</span>
+<span id="revnumber">version 0.1.24,</span>
+<span id="revdate">2015-12-07</span>
 </div>
 </div>
 <div id="content">
@@ -59,6 +59,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 </li>
 <li><a href="#_browsing_an_existing_annalist_collection">Browsing an existing Annalist collection</a></li>
 <li><a href="#_creating_a_new_collection">Creating a new collection</a></li>
+<li><a href="#_change_collection_metadata">Change collection metadata</a></li>
 <li><a href="#_create_initial_record_type_and_views">Create initial record type and views</a></li>
 <li><a href="#_create_some_initial_data_records">Create some initial data records</a></li>
 <li><a href="#_add_simple_fields_to_a_data_record">Add simple fields to a data record</a></li>
@@ -81,10 +82,10 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <h2 id="_running_example">Running example</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entitiues involved in the picture-taking process.  For this example, we use a prefix <code>pcat</code> for URIs (actually "Compact URIs", or CURIEs) defined specifically for the photograph catalogue.  This prefix will eventually be associated with a base URI to allow identification on the World Wide Web.  (@@TODO: full linked data support.)</p>
+<p>This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entities involved in the picture-taking process.  For this example, we use a prefix <code>pcat</code> for URIs (actually ["Compact URIs"](<a href="http://www.w3.org/TR/curie/" class="bare">http://www.w3.org/TR/curie/</a>), or CURIEs) defined specifically for the photograph catalogue.  This prefix will eventually be associated with a base URI to allow identification on the World Wide Web.  (@@TODO: full linked data support.)</p>
 </div>
 <div class="paragraph">
-<p>The completed example can be seen at the <a href="http://demo.annalist.net/">Annalist demo site</a>, as collection [Annalist photo collection].  (@@TODO)</p>
+<p>The completed example can be seen at the <a href="http://demo.annalist.net/">Annalist demo site</a>, as collection [Annalist photo collection].  (@@TODO, once current in-development software is deployed.)</p>
 </div>
 </div>
 </div>
@@ -250,12 +251,15 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="sect2">
 <h3 id="_adding_site_wide_user_access_permissions">Adding site-wide user access permissions</h3>
 <div class="paragraph">
-<p>Site-wide permissions are defined using the <code>annalist-manager`command line administration tool, and cannot currently be defined through the web interface.  See <a href="../installing-annalist.md">Installing and setting up Annalist</a> for more information about `annalist-manager</code>, or run the command <code>annalist-manager help</code>.</p>
+<p>Site-wide permissions are initially defined using the <code>annalist-manager</code> command line administration tool. See <a href="../installing-annalist.md">Installing and setting up Annalist</a> for more information about <code>annalist-manager</code>, or run the command <code>annalist-manager help</code>.</p>
+</div>
+<div class="paragraph">
+<p>Once basic administrative access has been established, additional site-wide permissions can be created by creating or editing user permissions in the <code>_annalist_site</code> collection.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
 <div class="paragraph">
-<p>@@Update this when the web interface can define site-wide permissions.</p>
+<p>@@Update with more detailed instructions.</p>
 </div>
 <div class="paragraph">
 <p>@@<code>analist-manager</code> currently has a bare miniumum of capabilities to create users, mainly intended to bootstrap a system with admin users.</p>
@@ -346,6 +350,35 @@ This document is an early draft, and is much in need of improvement.  Please sub
 </div>
 </div>
 <div class="sect1">
+<h2 id="_change_collection_metadata">Change collection metadata</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Modifying collection metadata requires <code>CONFIG</code> permissions.</p>
+</div>
+<div class="paragraph">
+<p>A collection name, label, description and other metadata may be edited by viewing the site home page, selecting the checkbox by the collection to be edited, then clicking on the "Edit selected" button:</p>
+</div>
+<div class="imageblock text-center" style="text-align: center">
+<div class="content">
+<img src="screenshot-edit-collection-metadata.png" alt="Edit Annalist collection metadata" width="500">
+</div>
+<div class="title">Figure 9. Edit Annalist collection metadata</div>
+</div>
+<div class="imageblock text-center" style="text-align: center">
+<div class="content">
+<img src="screenshot-edit-collection-metadata-view.png" alt="Annalist collection metadata edit view" width="500">
+</div>
+<div class="title">Figure 10. Annalist collection metadata edit view</div>
+</div>
+<div class="paragraph">
+<p>@@TODO: update home page screenshot from demo site when deployed</p>
+</div>
+<div class="paragraph">
+<p>By default, a collection inherits site-wide type, view and field definitions that are defined by the Annalisty software.  It may also inherit definitions from another existing collection on the same site by selecting that collection in the <code>Parent</code> field.  This feature is intended to allow a collection to be based on an existing set of definitions rather than starting from scratch.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_create_initial_record_type_and_views">Create initial record type and views</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -361,7 +394,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-list-types.png" alt="List record types in Annalist collection" width="500">
 </div>
-<div class="title">Figure 9. List record types in Annalist collection</div>
+<div class="title">Figure 11. List record types in Annalist collection</div>
 </div>
 <div class="paragraph">
 <p>Click the <code>New</code> button to create a new record type, and enter some details about this record type (e.g. as shown below).  To define an initial tailorable view and list descriptions for the new record type, click on the <code>Define view+list</code> button.  The <code>Default view</code> and <code>Default list</code> fields are updated accordingly:</p>
@@ -370,7 +403,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-create-new-type.png" alt="Creating new record type in Annalist collection" width="500">
 </div>
-<div class="title">Figure 10. Creating new record type, view and list in Annalist collection</div>
+<div class="title">Figure 12. Creating new record type, view and list in Annalist collection</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -394,7 +427,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-photograph-list.png" alt="Edit definition for list of photographs" width="500">
 </div>
-<div class="title">Figure 11. Edit definition for list of photographs</div>
+<div class="title">Figure 13. Edit definition for list of photographs</div>
 </div>
 <div class="paragraph">
 <p>Click <code>Save</code> again to save any final changes to the type description and return to the "Type list" display.</p>
@@ -411,7 +444,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-list-photographs-empty.png" alt="Initial" width="500" height="list of Photographs">
 </div>
-<div class="title">Figure 12. Initial, empty, list of Photographs</div>
+<div class="title">Figure 14. Initial, empty, list of Photographs</div>
 </div>
 <div class="paragraph">
 <p>Click on the <code>New</code> button to bring uo an initial forkm for enterimng details about a photograph.  New record views contain a number of common fields: <code>Id</code>, <code>Type</code>, <code>Label</code> and <code>Description</code>.  Only the <code>Id</code> field and <code>Label</code> fields are mandatory; the others are defined because they are commonly useful.  The <code>Id</code> field is used internally to identify the record, and is used in forming a URL that can be used to access the data.  The <code>Label</code> field provides a summary description of the record used in lists and drop-down selectors.</p>
@@ -423,7 +456,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-create-photograph.png" alt="Creating new Photograph record in Annalist collection" width="500">
 </div>
-<div class="title">Figure 13. Creating new Photograph record</div>
+<div class="title">Figure 15. Creating new Photograph record</div>
 </div>
 <div class="paragraph">
 <p>This process can be repeated for additional photographs.</p>
@@ -432,7 +465,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-list-photographs.png" alt="List of Photograph records in Annalist collection" width="500">
 </div>
-<div class="title">Figure 14. List of Photograph records</div>
+<div class="title">Figure 16. List of Photograph records</div>
 </div>
 </div>
 </div>
@@ -491,7 +524,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-create-new-field-date.png" alt="Defining a new view field type for date" width="500">
 </div>
-<div class="title">Figure 15. Defining a new view field type for date</div>
+<div class="title">Figure 17. Defining a new view field type for date</div>
 </div>
 <div class="paragraph">
 <p>When done, click <code>Save</code>, which returns to the previous view editing form.  Now, clicking on the <code>Field id</code> value includes an option for the new field type just described.  Choose this.  The <code>Property</code> and <code>Posityion/size</code> columns can be left blank to use values from the field definiotion, or overriding values for the current view can be specified here.  Select an appropriate value (<code>0/6</code>) for <code>Position/size</code>.</p>
@@ -503,7 +536,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-create-new-field-place.png" alt="Defining a new view field type for place" width="500">
 </div>
-<div class="title">Figure 16. Defining a new view field type for place</div>
+<div class="title">Figure 18. Defining a new view field type for place</div>
 </div>
 <div class="paragraph">
 <p>Returning to the view edit form, the new location field can be selected and its position/size specified.  Next, select the two new fields and click the <code>Move &#x2b06;</code> button so that they appear immediately after the <code>label</code> field.</p>
@@ -512,7 +545,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-photograph-view-2.png" alt="New fields added to Photograph view" width="500">
 </div>
-<div class="title">Figure 17. New fields added to Photograph view</div>
+<div class="title">Figure 19. New fields added to Photograph view</div>
 </div>
 <div class="paragraph">
 <p>Click <code>Save</code>, then <code>Close</code> to return to the view of a Photograph, which should now look like this:</p>
@@ -521,7 +554,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-view-photograph-2.png" alt="Updated view of a Photograph record in Annalist" width="500">
 </div>
-<div class="title">Figure 18. Updated view of a Photograph record in Annalist</div>
+<div class="title">Figure 20. Updated view of a Photograph record in Annalist</div>
 </div>
 <div class="paragraph">
 <p>If the view is now edited, values for the date and location fields can be entered:</p>
@@ -530,7 +563,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-photograph-2.png" alt="Adding new field values to a Photograph record" width="500">
 </div>
-<div class="title">Figure 19. Adding new field values to a Photograph record</div>
+<div class="title">Figure 21. Adding new field values to a Photograph record</div>
 </div>
 <div class="paragraph">
 <p>These new fields are clearly intended to hold specific types of value (date, location) and the examples suggest particular formats be used for them.  But as far as Annalist is concerned, these are just simple text fields, and no attempt is made to check the format of any values entered.  This is consistent with the Annalist pholosophy of making it easy to capture whatever data may be available with a minimum of hindrance to the user.  The intent is that issues of consistency and data quality may be checked separately according to whatever criteria are deemed appropriate to the task at hand.</p>
@@ -566,7 +599,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-list-photographs.png" alt="List of Photograph records in Annalist collection" width="500">
 </div>
-<div class="title">Figure 20. List of Photograph records</div>
+<div class="title">Figure 22. List of Photograph records</div>
 </div>
 <div class="paragraph">
 <p>Click on the <code>Customize</code> button:</p>
@@ -575,7 +608,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-customize.png" alt="Annalist collection Customize page" width="500">
 </div>
-<div class="title">Figure 21. Customize collection page</div>
+<div class="title">Figure 23. Customize collection page</div>
 </div>
 <div class="sect2">
 <h3 id="_create_a_new_field_definition_for_images">Create a new field definition for images</h3>
@@ -586,7 +619,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-photograph-view-3.png" alt="Add new field to photograph record" width="500">
 </div>
-<div class="title">Figure 22. Add new field</div>
+<div class="title">Figure 24. Add new field</div>
 </div>
 <div class="paragraph">
 <p>Fill in details for the new field as shown:</p>
@@ -595,7 +628,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-create-new-field-image.png" alt="New image field details" width="500">
 </div>
-<div class="title">Figure 23. New image field details</div>
+<div class="title">Figure 25. New image field details</div>
 </div>
 <div class="paragraph">
 <p>The key fields to note here are:</p>
@@ -623,7 +656,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-photograph-view-4.png" alt="Photograph record with "Image" field added" width="500">
 </div>
-<div class="title">Figure 24. New "Image" field added</div>
+<div class="title">Figure 26. New "Image" field added</div>
 </div>
 </div>
 <div class="sect2">
@@ -635,7 +668,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-photograph-3.png" alt="Edit Photograph record with Image field" width="500">
 </div>
-<div class="title">Figure 25. Edit photograph record with Image field</div>
+<div class="title">Figure 27. Edit photograph record with Image field</div>
 </div>
 <div class="paragraph">
 <p>Click <code>Browse</code>, select an image file to be uploaded, then <code>Open</code> (or equivalent for the browser being used).  On the photo editing page, click <code>Save</code>.  The Photograph record is now displayed with the uploaded image:</p>
@@ -644,7 +677,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-view-photograph-3.png" alt="View photograph record with uploaded Image" width="500">
 </div>
-<div class="title">Figure 26. View photograph record with uploaded Image</div>
+<div class="title">Figure 28. View photograph record with uploaded Image</div>
 </div>
 <div class="paragraph">
 <p>Clicking on the displayed image here will show the image alone in a new tab (or possibly a new window, depending on the browser used), occupying the full browser window.</p>
@@ -687,7 +720,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-create-new-field-keyword.png" alt="New keyword field details" width="500">
 </div>
-<div class="title">Figure 27. New keyword field details</div>
+<div class="title">Figure 29. New keyword field details</div>
 </div>
 <div class="paragraph">
 <p>Now click on <code>Save</code>, and select <code>Repeat field 'Keyword'</code> for the new field id.</p>
@@ -696,7 +729,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-photograph-view-5.png" alt="Photograph view with "Repeat field 'Keyword'" field added" width="500">
 </div>
-<div class="title">Figure 28. New "Repeat field 'Keyword'" field added</div>
+<div class="title">Figure 30. New "Repeat field 'Keyword'" field added</div>
 </div>
 <div class="paragraph">
 <p>The repeat field structure just created is perfectly functional, but the automatically generated label field could be improved.  Click on the <span class="image"><img src="button-edit-entity.png" alt="button-edit-entity"></span> button by the "Repeat field 'Keyword'" id.  Change the <code>Label</code> and <code>Placeholder</code> fields as shown, then click on <code>Save</code>:</p>
@@ -705,7 +738,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-field-keyword_repeat.png" alt="Edit labels used with "Keyword_repeat" field" width="500">
 </div>
-<div class="title">Figure 29. Edit labels used with "Keyword_repeat" field</div>
+<div class="title">Figure 31. Edit labels used with "Keyword_repeat" field</div>
 </div>
 <div class="paragraph">
 <p>On reeturning the the view editing form, noteice that the selection label for the newly added field is changed to "Keywords":</p>
@@ -714,7 +747,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-photograph-view-6.png" alt="New field label updated" width="500">
 </div>
-<div class="title">Figure 30. New field label updated</div>
+<div class="title">Figure 32. New field label updated</div>
 </div>
 <div class="paragraph">
 <p>Click <code>Save</code> then <code>Close</code> to return to the Photograph record view.  To add some keywords, click <code>Edit</code>, then <code>Add keyword</code>, and fill in key word or phrase text.  repeat for as many keywords as desired:</p>
@@ -723,7 +756,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-photograph-4.png" alt="Edit photograph record keyword fields" width="500">
 </div>
-<div class="title">Figure 31. Edit photograph record keyword fields</div>
+<div class="title">Figure 33. Edit photograph record keyword fields</div>
 </div>
 <div class="paragraph">
 <p>Click on <code>Save</code> to view the resulting record:</p>
@@ -732,7 +765,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-view-photograph-4.png" alt="View photograph record keyword fields" width="500">
 </div>
-<div class="title">Figure 32. View photograph record keyword fields</div>
+<div class="title">Figure 34. View photograph record keyword fields</div>
 </div>
 </div>
 </div>
@@ -774,7 +807,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-create-new-type-location_notes.png" alt="Create new type Location_notes" width="500">
 </div>
-<div class="title">Figure 33. Create new type Location_notes</div>
+<div class="title">Figure 35. Create new type Location_notes</div>
 </div>
 <div class="paragraph">
 <p>Next, edit the Location notes view to include a map reference field:</p>
@@ -830,7 +863,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-create-new-field-mapref.png" alt="Create new map reference field" width="500">
 </div>
-<div class="title">Figure 34. Create new map reference field</div>
+<div class="title">Figure 36. Create new map reference field</div>
 </div>
 <div class="paragraph">
 <p>A similar process is repeated, but this time also using the <code>Define repeat field</code> button, to create a repeating field of links to further information about the location:</p>
@@ -839,13 +872,13 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-create-new-field-seeAlso.png" alt="Create new web link field" width="500">
 </div>
-<div class="title">Figure 35. Create new web link field</div>
+<div class="title">Figure 37. Create new web link field</div>
 </div>
 <div class="imageblock text-center" style="text-align: center">
 <div class="content">
 <img src="screenshot-edit-field-see_also_repeat.png" alt="Further information field" width="500">
 </div>
-<div class="title">Figure 36. Further information field</div>
+<div class="title">Figure 38. Further information field</div>
 </div>
 <div class="paragraph">
 <p>Now the new fields can be configured in the <code>Location_notes</code> view:</p>
@@ -854,7 +887,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-location_notes-view.png" alt="Location notes view with map reference and further information fields" width="500">
 </div>
-<div class="title">Figure 37. Location notes view with map reference and further information fields</div>
+<div class="title">Figure 39. Location notes view with map reference and further information fields</div>
 </div>
 <div class="paragraph">
 <p>A Location notes record can now be created with data for the additional fields:</p>
@@ -863,7 +896,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-create-location_notes.png" alt="Create a location notes record" width="500">
 </div>
-<div class="title">Figure 38. Create a location notes record</div>
+<div class="title">Figure 40. Create a location notes record</div>
 </div>
 </div>
 </div>
@@ -880,7 +913,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-photograph-view-7.png" alt="Edit field "Location taken" in Photograph view" width="500">
 </div>
-<div class="title">Figure 39. Edit field "Location taken" in Photograph view</div>
+<div class="title">Figure 41. Edit field "Location taken" in Photograph view</div>
 </div>
 <div class="paragraph">
 <p>Edit the "Location taken" field as shown beloiw, noting particularly values entered in these fields:</p>
@@ -905,7 +938,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-field-location_taken.png" alt="Edit field definition for Location taken" width="500">
 </div>
-<div class="title">Figure 40. Edit field definition for Location taken</div>
+<div class="title">Figure 42. Edit field definition for Location taken</div>
 </div>
 <div class="paragraph">
 <p>Save the updated field and view descriptions, and redisplay one of the Photograph records:  note that the <code>Location taken</code> value is still displayed, but is rendered in a style used for non-existent entity references.  Click on <code>Edit</code> to edit the record data, and select the vcalue <code>Sileby Mill</code> from the dropdown (corresponding to the previously created <code>Location notes</code> record).</p>
@@ -914,7 +947,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-photograph-view-8.png" alt="Select location notes record from dropdown" width="500">
 </div>
-<div class="title">Figure 41. Select location notes record from dropdown</div>
+<div class="title">Figure 43. Select location notes record from dropdown</div>
 </div>
 <div class="paragraph">
 <p>Click <code>Save</code> to return to the Phbotograph view, and note that the <code>Location taken</code> field now displays as a link to the selected <code>Location notes</code> record</p>
@@ -945,7 +978,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="content">
 <img src="screenshot-edit-location_mapref-field-1.png" alt="Edit map reference field description form" width="500">
 </div>
-<div class="title">Figure 42. Navigate to edit form of "map reference" field</div>
+<div class="title">Figure 44. Navigate to edit form of "map reference" field</div>
 </div>
 <div class="paragraph">
 <p>An alternative to this slightly long winded navigation path would be to go to the collection front page (click <code>Photo_collection</code> in the menu bar), select <code>List fields</code> from the <code>List view</code> selector, cick <code>View</code>, click on <code>Location_mapref</code>.  Either way, the resulting page should look something like the last screenshot above.</p>
@@ -958,7 +991,7 @@ Before making any changes to the field itself, click on the <span class="image">
 <div class="content">
 <img src="screenshot-edit-location_notes_ref-field-1.png" alt="Edit location notes reference field" width="500">
 </div>
-<div class="title">Figure 43. Edit location notes reference field</div>
+<div class="title">Figure 45. Edit location notes reference field</div>
 </div>
 <div class="paragraph">
 <p>This will display a new form for editing details of the new field group.  In this form:</p>
@@ -983,7 +1016,7 @@ Before making any changes to the field itself, click on the <span class="image">
 <div class="content">
 <img src="screenshot-edit-location_notes_ref-group-1.png" alt="Edit new field group" width="500">
 </div>
-<div class="title">Figure 44. Edit new field group</div>
+<div class="title">Figure 46. Edit new field group</div>
 </div>
 <div class="paragraph">
 <p>Back in the field editing form, change the Id, label and description and property URI of the new field to better reflect its actual usage.  Then click <code>Save</code>.</p>
@@ -992,7 +1025,7 @@ Before making any changes to the field itself, click on the <span class="image">
 <div class="content">
 <img src="screenshot-edit-location_notes_ref-field-2.png" alt="Edit new location notes reference field" width="500">
 </div>
-<div class="title">Figure 45. Edit new location notes reference field</div>
+<div class="title">Figure 47. Edit new location notes reference field</div>
 </div>
 <div class="paragraph">
 <p>At this point, navigate to the view description for Photograph (e.g. by displaying a Photograph record and clicking on <code>View description</code>, or selecting and displaying <code>List views</code> from the collection home page and then clicking on <code>Photograph</code>).  Then click on the <code>Edit</code> button to display the view editing form.  On this form, clicik <code>Add field</code>, select the newly created <code>Location notes</code> field type, and select <code>0/12</code> for the position/size value:</p>
@@ -1001,7 +1034,7 @@ Before making any changes to the field itself, click on the <span class="image">
 <div class="content">
 <img src="screenshot-edit-photograph-view-9.png" alt="Add location notes field to photograph view" width="500">
 </div>
-<div class="title">Figure 46. Add location notes field to photograph view</div>
+<div class="title">Figure 48. Add location notes field to photograph view</div>
 </div>
 <div class="paragraph">
 <p>Click on <code>Save</code>.</p>
@@ -1013,7 +1046,7 @@ Before making any changes to the field itself, click on the <span class="image">
 <div class="content">
 <img src="screenshot-edit-photograph-6.png" alt="Select value for Location notes field" width="500">
 </div>
-<div class="title">Figure 47. Select value for Location notes field</div>
+<div class="title">Figure 49. Select value for Location notes field</div>
 </div>
 <div class="paragraph">
 <p>Click <code>Save</code> to view the photoigraph records, and observe that the <code>Location notes</code> field now displays three values from the selected record:</p>
@@ -1022,15 +1055,15 @@ Before making any changes to the field itself, click on the <span class="image">
 <div class="content">
 <img src="screenshot-view-photograph-6.png" alt="View photograph record with location notes" width="600">
 </div>
-<div class="title">Figure 48. View photograph record with location notes</div>
+<div class="title">Figure 50. View photograph record with location notes</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.1.22<br>
-Last updated 2015-09-29 12:48:39 BST
+Version 0.1.24<br>
+Last updated 2015-12-07 12:47:59 GMT
 </div>
 </div>
 </body>
