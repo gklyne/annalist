@@ -16,7 +16,7 @@
     - `annalist-manager updatesitedata`
 - [ ] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
-- [ ] Bump version to patch release and update history
+- [ ] Bump version to patch release and update release notes history
     - `src/annalist_root/annalist/__init__.py`
 - [ ] Update version number in scripts, documents, etc.
     - [ ] Release notes
@@ -27,14 +27,23 @@
     - [ ] src/newkit_to_conina_ubuntu.sh
 - [ ] Create and post updated kit download to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Demo deployment; test
-- [ ] Update front page link at annalist.net
+    - ssh to annalist@annalist.net
+    - `killall python`
+    - `. anenv/bin/activate`
+    - `pip uninstall annalist`
+    - `pip install /var/www/software/Annalist-0.1.xx.tar.gz --upgrade`
+    - `annalist-manager runtests`
+    - `. update-run-annalist.sh`
+    - `cat annalist.out`
+- [ ] Update front page link at annalist.net 
+    - copy `~annalist/uploads/pages/index.html` to `/var/www`
+        cp ~annalist/uploads/pages/index.html /var/www
 - [ ] Commit changes
 - [ ] Upload to PyPI (see below)
+- [ ] Tag release on hotfix branch
+    - `git tag -a release-x.y.z<PATCH>`
 - [ ] Merge hotfix updates to master
 - [ ] Test again on master branch
-- [ ] Tag release on master branch
-    - `git tag -a release-x.y.z<PATCH>`
 - [ ] Push master branch, and tags
     - `git push --tags`
 - [ ] Merge hotfix updates to develop branch
