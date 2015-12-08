@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: public prototype release 0.1.24; this release introduces support for sharing structure definitions between collections.
+Current status: public prototype release 0.1.24; this release introduces support for sharing structure definitions between collections.  This has been hotfix-patched as 0.1.24a to fix a test suite error.
 
 
 # V1.0 release

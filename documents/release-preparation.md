@@ -65,12 +65,12 @@
 - [ ] Upload to PyPI (see below)
 - [ ] Tag release on release branch
     - `git tag -a release-x.y.z`
-- [x] Merge release branch to master
+- [ ] Merge release branch to master
     - e.g.
         - `git checkout master`
         - `git merge release-prep-x.y.z`
-- [x] Test again on master branch
-- [.;] Push master branch, and tags
+- [ ] Test again on master branch
+- [ ] Push master branch, and tags
     - `git add ..`
     - `git commit -m "Master branch updated to Vx.y.z"`
     - `git push`
