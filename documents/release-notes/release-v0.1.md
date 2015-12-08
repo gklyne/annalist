@@ -83,7 +83,7 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 ## Version 0.1.24a
 
-This patch release fixes a minor bug in the 0.1.24 release which sometimes caused on of the test cases to fail.  The faullt was in the test suite setup rather than the Annalist software, but in the spirit of "no broken windows" is being fixed here.
+This patch release fixes a minor bug in the 0.1.24 release which sometimes caused one of the test cases to fail.  The fault was in the test suite setup rather than the Annalist software, but in the spirit of "no broken windows" is being fixed here.
 
 
 ## Version 0.1.24
