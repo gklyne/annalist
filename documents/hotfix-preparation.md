@@ -27,6 +27,8 @@
     - [ ] src/newkit_to_conina_ubuntu.sh
 - [ ] Create and post updated kit download to annalist.net
     - use `src/newkit_to_annalist_net.sh`
+- [ ] Test in deployment environment where problem seen?
+- [ ] Deploy updated kit on annalist.net
     - ssh to annalist@annalist.net
     - `killall python`
     - `. anenv/bin/activate`
@@ -49,6 +51,8 @@
 - [ ] Merge hotfix updates to develop branch
     - [ ] resolve any conflicts
     - [ ] revert version number (back to odd value)
+    - [ ] update BUG fix record in TODO notes 
+- [ ] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`)
 - [ ] Test again
 - [ ] Delete hotfix branch
     - `git branch -d hotfix-x.y.z<PATCH>`

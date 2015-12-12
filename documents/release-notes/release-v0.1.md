@@ -4,6 +4,12 @@ Release 0.1 is the first public prototype of Annalist.  It contains what I hope 
 
 A summary of issues to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
+## Current release - 0.1.24b
+
+(See "History" below for information about previous releases)
+
+This patch release fixes a data migration bug in the 0.1.24 release.  This bug meant that data from older releases was not being recognized when accessed by the original 0.1.24 release.
+
 
 ## Status
 
@@ -79,6 +85,11 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 
 # History
+
+
+## Version 0.1.24b
+
+This patch release fixes a data migration bug in the 0.1.24 release.  This bug meant that data from older releases was not being recvognized when accessed by the original 0.1.24 release.
 
 
 ## Version 0.1.24a

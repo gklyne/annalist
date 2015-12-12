@@ -6,6 +6,7 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import traceback
 import logging
 log = logging.getLogger(__name__)
 
@@ -362,8 +363,10 @@ class EntityTypeInfo(object):
             # Also used in entityedit for getting @type URI/CURIE values.
             #
             # Used in render_utils to get link to type record
-            if type_id not in get_built_in_type_ids():
+            if ( (type_id not in get_built_in_type_ids()) and
+                 (type_id not in ["BibEntry_type"]) ):
                 log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
+                # log.info("".join(traceback.format_stack()))
             # raise ValueError("Trace")
         return
 
