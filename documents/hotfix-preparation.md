@@ -51,13 +51,13 @@
 - [ ] Merge hotfix updates to develop branch
     - [ ] resolve any conflicts
     - [ ] revert version number (back to odd value)
-    - [ ] update BUG fix record in TODO notes 
 - [ ] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`)
 - [ ] Test again
-- [ ] Delete hotfix branch
-    - `git branch -d hotfix-x.y.z<PATCH>`
 - [ ] Commit and push changes
 - [ ] Post announcement to Google Group, and elsewhere
+- [ ] Delete hotfix branch 
+    - (do this last when all the changes have been checked out.  It further changes are needed, do them on the hotfix branch and re-merge to master and develop)
+    - `git branch -d hotfix-x.y.z<PATCH>`
 
 
 ## Build kit and PyPI upload
