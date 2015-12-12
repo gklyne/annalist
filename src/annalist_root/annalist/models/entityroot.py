@@ -290,6 +290,11 @@ class EntityRoot(object):
             if p and os.path.isfile(p):
                 log.debug("EntityRoot._exists_path %s: OK"%(p))
                 return p
+            mp = self._migrate_path()
+            if mp and os.path.isfile(mp):
+                assert mp == p, "EntityRoot._exists_path: Migrated filename %s, expected %s"%(mp, p)
+                log.info("EntityRoot._exists_path %s: Migrated from %s"%(mp, p))
+                return mp
         log.debug("EntityRoot._exists_path %s: not present"%(p))
         return None
 
@@ -385,8 +390,6 @@ class EntityRoot(object):
         Adds value for 'annal:url' to the entity data returned.
         """
         log.debug("EntityRoot._load_values %s/%s"%(self.get_type_id(), self.get_id()))
-        #@@TODO: rework logic to that _migrate_path is called only when expected filename is not found.
-        self._migrate_path()
         body_file = self._exists_path()
         if body_file:
             # log.debug("EntityRoot._load_values body_file %r"%(body_file,))
@@ -426,27 +429,28 @@ class EntityRoot(object):
     def _migrate_path(self):
         """
         Migrate entity data filenames from those used in older software versions.
+
+        Returns name of migrated file if migration performed, otherwise None
         """
         # log.debug("EntityRoot._migrate_path (%r)"%(self._migrate_filenames(),))
         if self._migrate_filenames() is None:
             # log.debug("EntityRoot._migrate_path (skip)")
             return
-        if not self._exists():
-            for old_data_filename in self._migrate_filenames():
-                # This logic migrates data from previous filenames
-                (basedir, old_data_filepath) = util.entity_dir_path(self._entitydir, [], old_data_filename)
-                if basedir and os.path.isdir(basedir):
-                    if old_data_filepath and os.path.isfile(old_data_filepath):
-                        # Old body file found here
-                        (d, new_data_filepath) = self._dir_path()
-                        log.info(
-                            "EntityRoot._migrate_path: Migrate file %s to %s"%
-                            (old_data_filepath, new_data_filepath)
-                            )
-                        os.rename(old_data_filepath, new_data_filepath)
-                        break
-        log.debug("EntityRoot._migrate_path (done)")
-        return
+        for old_data_filename in self._migrate_filenames():
+            # This logic migrates data from previous filenames
+            (basedir, old_data_filepath) = util.entity_dir_path(self._entitydir, [], old_data_filename)
+            if basedir and os.path.isdir(basedir):
+                if old_data_filepath and os.path.isfile(old_data_filepath):
+                    # Old body file found here
+                    (d, new_data_filepath) = self._dir_path()
+                    log.info(
+                        "EntityRoot._migrate_path: Migrate file %s to %s"%
+                        (old_data_filepath, new_data_filepath)
+                        )
+                    os.rename(old_data_filepath, new_data_filepath)
+                    return new_data_filepath
+        # log.debug("EntityRoot._migrate_path (not found)")
+        return None
 
     def _migrate_filenames(self):
         """
