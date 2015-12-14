@@ -21,11 +21,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] consider using different default extension?
 - [x] Home page: change button labels: "view metadata", "edit metadata", "remove collection".
 - [.] Add read-only renderers for view short text and view markdown.
-    - [ ] "Showtext" template
-    - [ ] "Showtext" test case
-    - [ ] "Markdown" display renderer
-    - [ ] "Markdown" display test case
+    - [x] "Showtext" template
+    - [x] "Showtext" render type option
+    - [x] "Showtext" test case
+    - [ ] "ShowMarkdown" display renderer
+    - [ ] "ShowMarkdown" render type option
+    - [ ] "ShowMarkdown" display test case
 - [ ] Collection edit metadata page: make s/w version display-only.
+    - [ ] Update view description
+    - [ ] Check that nothing untoward happens when saving collection metadata
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
 - [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
 - [ ] Create schema definitions in Annalist for ANNAL namespace

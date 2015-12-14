@@ -51,7 +51,7 @@ class FieldRendererTestSupport(AnnalistTestCase):
 
     def _make_test_context(self, val, 
             repeat_prefix="repeat_prefix_", 
-            target_value= None, 
+            target_value=None, 
             field_link=None, 
             target_link=None, 
             field_ref_type=None,
