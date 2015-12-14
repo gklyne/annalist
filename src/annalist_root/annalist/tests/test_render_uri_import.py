@@ -42,7 +42,8 @@ class UriImportRenderingTest(FieldRendererTestSupport):
     def test_resourcetypes(self):
         self.assertEqual(file_extension("annal:Text"),     "txt")
         self.assertEqual(file_extension("annal:Richtext"), "md")
-        self.assertEqual(file_extension("annal:Image"),    "png")
+        self.assertEqual(file_extension("annal:Image"),    "image")
+        self.assertEqual(file_extension("annal:Audio"),    "audio")
         self.assertEqual(file_extension("ex:foo"),         "dat")
         self.assertEqual(file_extension_for_content_type("annal:Text",     "text/plain"),       "txt")
         self.assertEqual(file_extension_for_content_type("annal:Richtext", "text/markdown"),    "md")

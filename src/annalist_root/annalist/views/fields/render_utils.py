@@ -42,6 +42,7 @@ _field_renderers = {}   # renderer cache
 
 _field_view_files = (
     { "Text":           "field/annalist_view_text.html"
+    , "Showtext":       "field/annalist_view_text.html"
     , "Textarea":       "field/annalist_view_textarea.html"
     , "Slug":           "field/annalist_view_slug.html"
     , "EntityId":       "field/annalist_view_entityid.html"
@@ -51,6 +52,7 @@ _field_view_files = (
 
 _field_edit_files = (
     { "Text":           "field/annalist_edit_text.html"
+    , "Showtext":       "field/annalist_view_text.html"
     , "Textarea":       "field/annalist_edit_textarea.html"
     , "Slug":           "field/annalist_edit_slug.html"
     , "EntityId":       "field/annalist_edit_entityid.html"

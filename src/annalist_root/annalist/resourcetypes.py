@@ -35,7 +35,8 @@ resource_types = (
       , ("txt",     "text/plain")
       ]
     , ANNAL.CURIE.Image:
-      [ ("png",     "image/png")
+      [ ("image",   "image/*")      # Default extension
+      , ("png",     "image/png")
       , ("jpg",     "image/jpeg")
       , ("jpeg",    "image/jpeg")
       , ("gif",     "image/gif")
@@ -44,7 +45,8 @@ resource_types = (
       , ("pdf",     "application/pdf")
       ]
     , ANNAL.CURIE.Audio:
-      [ ("mp3",     "audio/mpeg")
+      [ ("audio",   "audio/*")      # Default extension
+      , ("mp3",     "audio/mpeg")
       , ("mp4",     "audio/mp4")
       , ("wav",     "audio/wav")
       , ("ogg",     "audio/ogg")

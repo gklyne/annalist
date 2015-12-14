@@ -16,11 +16,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.25, towards 0.1.26
 
-- [ ] BUG: uploading PDF as image results in file extension PNG
+- [x] BUG: uploading PDF as image results in file extension PNG
     - [x] new resource type added, but still needs testing
-    - [ ] consider using different default extension?
-- [ ] Home page: change button labels: "view metadata", "edit metadata", "remove collection".
-    - Add renderers for view short text and view markdown.
+    - [x] consider using different default extension?
+- [x] Home page: change button labels: "view metadata", "edit metadata", "remove collection".
+- [.] Add read-only renderers for view short text and view markdown.
+    - [ ] "Showtext" template
+    - [ ] "Showtext" test case
+    - [ ] "Markdown" display renderer
+    - [ ] "Markdown" display test case
 - [ ] Collection edit metadata page: make s/w version display-only.
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
 - [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
