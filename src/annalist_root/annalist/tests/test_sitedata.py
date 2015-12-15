@@ -961,14 +961,18 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         trows_expected = (
             #     Field selector                      Field id             Render type      Value type   Field label (?)
             # [ [ "_field/_initial_values",           ["_initial_values",   "Short text",    "annal:Text", None       ] ]
-            [ [ "_field/Coll_comment",              ["Coll_comment",      "Multiline text", "annal:Longtext"        ] ]
+            [ [ "_field/Coll_comment",              ["Coll_comment",      "Display Markdown rich text", 
+                                                                                            "annal:Richtext"        ] ]
             , [ "_field/Coll_parent",               ["Coll_parent",       "Entity choice",  "annal:Slug"            ] ]
-            , [ "_field/Coll_software_version",     ["Coll_software_version", "Short text", "annal:Text", "S/W version" ] ]
+            , [ "_field/Coll_software_version",     ["Coll_software_version", 
+                                                                          "Display text",   "annal:Text"            ] ]
             , [ "_field/Entity_comment",            ["Entity_comment",    "Markdown rich text", "annal:Richtext"    ] ]
-            , [ "_field/Entity_id",                 ["Entity_id",         "Entity Id",     "annal:Slug"             ] ]
-            , [ "_field/Entity_label",              ["Entity_label",      "Short text",    "annal:Text"             ] ]
-            , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",      "annal:Identifier"       ] ]
-            , [ "_field/Entity_see_also_repeat",    ["Entity_see_also_repeat", "Repeating fields as row", "annal:Field_group"] ]
+            , [ "_field/Entity_id",                 ["Entity_id",         "Entity Id",      "annal:Slug"            ] ]
+            , [ "_field/Entity_label",              ["Entity_label",      "Short text",     "annal:Text"            ] ]
+            , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",       "annal:Identifier"      ] ]
+            , [ "_field/Entity_see_also_repeat",    ["Entity_see_also_repeat", 
+                                                                          "Repeating fields as row", 
+                                                                                            "annal:Field_group"     ] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:Slug"            ] ]
             , [ "_field/Field_comment",             ["Field_comment",     "Markdown rich text", "annal:Richtext"    ] ]
             , [ "_field/Field_default",             ["Field_default",     "Short text",    "annal:Text"             ] ]

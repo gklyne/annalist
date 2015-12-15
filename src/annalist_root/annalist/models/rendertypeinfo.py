@@ -23,8 +23,9 @@ log = logging.getLogger(__name__)
 # Separated from annalist.views.fields.render_utils to avoid model dependency on views
 
 _render_type_literal = set(
-    [ "Text", "Textarea", "Slug"
-    , "Placement", "CheckBox", "Markdown"
+    [ "Text", "Textarea", "Showtext"
+    , "Slug"
+    , "Placement", "CheckBox", "Markdown", "ShowMarkdown"
     , "EntityId", "EntityTypeId"
     , "Enum", "Enum_optional", "Enum_choice", "View_choice"
     , "RefMultifield"

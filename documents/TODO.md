@@ -20,19 +20,17 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] new resource type added, but still needs testing
     - [x] consider using different default extension?
 - [x] Home page: change button labels: "view metadata", "edit metadata", "remove collection".
-- [.] Add read-only renderers for view short text and view markdown.
+- [x] Add read-only renderers for view short text and view markdown.
     - [x] "Showtext" template
     - [x] "Showtext" render type option
     - [x] "Showtext" test case
     - [x] "ShowMarkdown" display renderer
     - [x] "ShowMarkdown" display test case
     - [x] "ShowMarkdown" render type option
-- [ ] Collection edit metadata page: make s/w version display-only.
-    - [ ] Update view description
-    - [ ] Check that nothing untoward happens when saving collection metadata
+- [x] Collection edit metadata page: make s/w version display-only.
+    - [x] Update view description fields
+    - [x] Check that nothing untoward happens when saving collection metadata
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
-- [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
-- [ ] Create schema definitions in Annalist for ANNAL namespace
 - [ ] When supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration?
 - [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
 - [ ] In drop-down list, try including typeid/entityid only for entries whose labels are not unique.
@@ -64,6 +62,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
         - could use `@id`?
+- [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
+- [ ] Create schema definitions in Annalist for ANNAL namespace
 
 (release?)
 

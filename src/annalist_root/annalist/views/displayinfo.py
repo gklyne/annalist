@@ -177,7 +177,7 @@ class DisplayInfo(object):
                 #@@TODO: try with altscope="site"?
                 self.collection = Collection.load(self.site, coll_id, altscope="all")
                 self.coll_perms = self.collection
-                ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")
+                ver = self.collection.get(ANNAL.CURIE.software_version, None) or "0.0.0"
                 if LooseVersion(ver) > LooseVersion(annalist.__version__):
                     self.http_response = self.view.error(
                         dict(self.view.error500values(),
@@ -194,7 +194,7 @@ class DisplayInfo(object):
         """
         assert (self.collection is not None)
         if not self.http_response:
-            ver = self.collection.get(ANNAL.CURIE.software_version, "0.0.0")
+            ver = self.collection.get(ANNAL.CURIE.software_version, None) or "0.0.0"
             if LooseVersion(ver) < LooseVersion(annalist.__version_data__):
                 self.collection[ANNAL.CURIE.software_version] = annalist.__version_data__
                 self.collection._save()

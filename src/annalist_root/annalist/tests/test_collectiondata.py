@@ -140,6 +140,22 @@ class CollectionDataEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=6)
+        #@@
+        # formrow1b = """
+        #     <div class="small-12 medium-6 columns">
+        #         <div class="row view-value-row">
+        #             <div class="%(label_classes)s">
+        #                 <span>S/W version</span>
+        #             </div>
+        #             <div class="%(input_classes)s">
+        #                 <input type="text" size="64" name="Coll_software_version" 
+        #                            placeholder="(software version)"
+        #                            value="" />
+        #             </div>
+        #         </div>
+        #     </div>
+        #     """%field_vals(width=6)
+        #@@
         formrow1b = """
             <div class="small-12 medium-6 columns">
                 <div class="row view-value-row">
@@ -147,13 +163,11 @@ class CollectionDataEditViewTest(AnnalistTestCase):
                         <span>S/W version</span>
                     </div>
                     <div class="%(input_classes)s">
-                        <input type="text" size="64" name="Coll_software_version" 
-                                   placeholder="(software version)"
-                                   value="" />
+                        <span>&nbsp;</span>
                     </div>
                 </div>
             </div>
-            """%field_vals(width=6)
+            """%field_vals(width=6)            
         formrow2 = """
             <div class="small-12 columns">
                 <div class="row view-value-row">
@@ -184,6 +198,24 @@ class CollectionDataEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
+        #@@
+        # formrow4 = """
+        #     <div class="small-12 columns">
+        #         <div class="row view-value-row">
+        #             <div class="%(label_classes)s">
+        #                 <span>Collection metadata</span>
+        #             </div>
+        #             <div class="%(input_classes)s">
+        #                 <textarea cols="64" rows="6" name="Coll_comment" 
+        #                           class="small-rows-4 medium-rows-8" 
+        #                           placeholder="(annal:comment)"
+        #                           >
+        #                 </textarea>
+        #             </div>
+        #         </div>
+        #     </div>
+        #     """%field_vals(width=12)
+        #@@
         formrow4 = """
             <div class="small-12 columns">
                 <div class="row view-value-row">
@@ -191,11 +223,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
                         <span>Collection metadata</span>
                     </div>
                     <div class="%(input_classes)s">
-                        <textarea cols="64" rows="6" name="Coll_comment" 
-                                  class="small-rows-4 medium-rows-8" 
-                                  placeholder="(annal:comment)"
-                                  >
-                        </textarea>
+                        <span class="markdown"></span>
                     </div>
                 </div>
             </div>

@@ -340,10 +340,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Coll_comment/%(cont)s">Coll_comment</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Textarea/%(cont)s">Multiline text</a>
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/ShowMarkdown/%(cont)s">Display Markdown rich text</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up">
-                    <span>annal:Longtext</span>
+                    <span>annal:Richtext</span>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
                     <span>Collection metadata</span>
@@ -388,7 +388,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Coll_software_version/%(cont)s">Coll_software_version</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Showtext/%(cont)s">Display text</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up">
                     <span>annal:Text</span>
@@ -462,9 +462,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         #@@ self.assertIn('_initial_values', entity_ids)
         field_entities = (
             { ('Entity_id',         "EntityId",      "annal:Slug",          "Id")
-            , ( "Coll_comment",     "Textarea",      "annal:Longtext",      "Collection metadata")
+            , ( "Coll_comment",     "ShowMarkdown",  "annal:Richtext",      "Collection metadata")
             , ( "Coll_parent",      "Enum_choice",   "annal:Slug",          "Parent")
-            , ( "Coll_software_version", "Text",     "annal:Text",          "S/W version")
+            , ( "Coll_software_version", "Showtext", "annal:Text",          "S/W version")
             , ('Entity_type',       "EntityTypeId",  "annal:Slug",          "Type")
             , ('Entity_label',      "Text",          "annal:Text",          "Label")
             , ('Field_comment',     "Markdown",      "annal:Richtext",      "Help")
@@ -525,10 +525,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Coll_comment/%(cont)s">Coll_comment</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Textarea/%(cont)s">Multiline text</a>
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/ShowMarkdown/%(cont)s">
+                      Display Markdown rich text
+                    </a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up">
-                    <span>annal:Longtext</span>
+                    <span>annal:Richtext</span>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
                     <span>Collection metadata</span>
@@ -573,7 +575,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Coll_software_version/%(cont)s">Coll_software_version</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Showtext/%(cont)s">Display text</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up">
                     <span>annal:Text</span>
@@ -624,10 +626,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Coll_comment/%(cont)s">Coll_comment</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Textarea/%(cont)s">Multiline text</a>
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/ShowMarkdown/%(cont)s">
+                      Display Markdown rich text
+                    </a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up">
-                    <span>annal:Longtext</span>
+                    <span>annal:Richtext</span>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
                     <span>Collection metadata</span>
@@ -672,7 +676,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Coll_software_version/%(cont)s">Coll_software_version</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Showtext/%(cont)s">Display text</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up">
                     <span>annal:Text</span>
@@ -709,9 +713,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 3)
         field_entities = (
-            { ( "Coll_comment",          "Textarea",    "annal:Longtext", "Collection metadata" )
-            , ( "Coll_parent",           "Enum_choice", "annal:Slug",    "Parent"               )
-            , ( "Coll_software_version", "Text",        "annal:Text",    "S/W version"          )
+            { ( "Coll_comment",          "ShowMarkdown", "annal:Richtext", "Collection metadata" )
+            , ( "Coll_parent",           "Enum_choice",  "annal:Slug",     "Parent"              )
+            , ( "Coll_software_version", "Showtext",     "annal:Text",     "S/W version"         )
             })
         for f in field_entities:
             for eid in range(len(entities)):

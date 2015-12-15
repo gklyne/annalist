@@ -249,12 +249,16 @@ class Site(EntityRoot):
     # or update Annalist site data.  Tests are run using data copied from sampledata/init
     # to sampledata/data, allowing for additional test fixture files to be included.
 
+    #@@TODO: rename as create_site_metadata ??
     @staticmethod
     def create_empty_site_data(site_base_uri, site_base_dir, 
         label=None, description=None):
         """
-        Create empty directory structure for a new site, and returns the
-        Site object.
+        Create new site metadata record for a new site, and 
+        return the Site object.
+
+        This resets the site label and description that 
+        may have been updated by a sirte administrator.
         """
         datetime_now = datetime.datetime.today().replace(microsecond=0)
         if label is None:
@@ -414,7 +418,7 @@ class Site(EntityRoot):
     def update_site_data_dir(sitedata, sdir, site_data_src):
         """
         Update indicated sitedata directory data from source: 
-        old data for the directory thgat ios not updated is left as-is.
+        old data for the directory that is not updated is left as-is.
         """
         site_data_tgt, site_data_file = sitedata._dir_path()
         s = os.path.join(site_data_src, sdir)

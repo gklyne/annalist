@@ -396,8 +396,9 @@ class GenericEntityEditView(AnnalistGenericView):
         # log.info("merge_entity_form_values entityformvals:  %r"%(entityformvals,))
         upd_entityvals = orig_entityvals.copy()
         for k in entityformvals:
-            if not is_previous_upload(orig_entityvals, k):
-                upd_entityvals[k] = entityformvals[k]
+            if entityformvals[k] is not None:
+                if not is_previous_upload(orig_entityvals, k):
+                    upd_entityvals[k] = entityformvals[k]
         # log.info("orig entity_values %r"%(entity_values,))
         return upd_entityvals
 
