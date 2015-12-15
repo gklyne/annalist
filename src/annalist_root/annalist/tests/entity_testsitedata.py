@@ -507,6 +507,7 @@ site_field_types = (
     , FieldChoice("Enum_render_type/RefMultifield",     label="Fields of referenced entity"  )
     , FieldChoice("Enum_render_type/RepeatGroup",       label="Repeating field group"        )
     , FieldChoice("Enum_render_type/RepeatGroupRow",    label="Repeating fields as row"      )
+    , FieldChoice("Enum_render_type/ShowMarkdown",      label="Display Markdown rich text"   )
     , FieldChoice("Enum_render_type/Showtext",          label="Display text"                 )
     , FieldChoice("Enum_render_type/Slug",              label="Short name"                   )
     , FieldChoice("Enum_render_type/Text",              label="Short text"                   )

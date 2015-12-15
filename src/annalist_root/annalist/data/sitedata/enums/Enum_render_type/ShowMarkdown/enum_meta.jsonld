@@ -1,0 +1,9 @@
+{ "@id":                "./"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "ShowMarkdown"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "Display Markdown rich text"
+, "rdfs:comment":       "Display-only Markdown rich text (no input)"
+, "annal:uri":          "annal:field_render_type/ShowMarkdown"
+}

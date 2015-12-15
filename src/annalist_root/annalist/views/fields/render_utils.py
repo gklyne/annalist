@@ -23,7 +23,9 @@ from render_tokenset            import get_field_tokenset_renderer, TokenSetValu
 from render_bool_checkbox       import get_bool_checkbox_renderer, BoolCheckboxValueMapper
 from render_ref_audio           import get_ref_audio_renderer, RefAudioValueMapper
 from render_ref_image           import get_ref_image_renderer, RefImageValueMapper
-from render_text_markdown       import get_text_markdown_renderer, TextMarkdownValueMapper
+from render_text_markdown       import (
+    get_text_markdown_renderer, get_show_markdown_renderer, TextMarkdownValueMapper
+    )
 from render_select              import (
     get_select_renderer, get_choice_renderer, get_entitytype_renderer, get_view_choice_renderer,
     SelectValueMapper
@@ -65,6 +67,7 @@ _field_get_renderer_functions = (
     , "TokenSet":       get_field_tokenset_renderer
     , "CheckBox":       get_bool_checkbox_renderer
     , "Markdown":       get_text_markdown_renderer
+    , "ShowMarkdown":   get_show_markdown_renderer
     , "RefAudio":       get_ref_audio_renderer
     , "RefImage":       get_ref_image_renderer
     , "URILink":        get_uri_link_renderer
@@ -89,6 +92,7 @@ _field_value_mappers = (
     { "TokenSet":       TokenSetValueMapper
     , "CheckBox":       BoolCheckboxValueMapper
     , "Markdown":       TextMarkdownValueMapper
+    , "ShowMarkdown":   TextMarkdownValueMapper
     , "RefAudio":       RefAudioValueMapper
     , "RefImage":       RefImageValueMapper
     , "URILink":        URILinkValueMapper

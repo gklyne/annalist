@@ -24,9 +24,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] "Showtext" template
     - [x] "Showtext" render type option
     - [x] "Showtext" test case
-    - [ ] "ShowMarkdown" display renderer
-    - [ ] "ShowMarkdown" render type option
-    - [ ] "ShowMarkdown" display test case
+    - [x] "ShowMarkdown" display renderer
+    - [x] "ShowMarkdown" display test case
+    - [x] "ShowMarkdown" render type option
 - [ ] Collection edit metadata page: make s/w version display-only.
     - [ ] Update view description
     - [ ] Check that nothing untoward happens when saving collection metadata
