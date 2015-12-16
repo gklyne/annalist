@@ -160,14 +160,14 @@ urlpatterns = patterns('',
                             name='AnnalistEntityResourceAccess'),
     url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})/(?P<entity_id>\w{1,32})/_annalist_collection/(?P<resource_ref>[\w.-]{1,250})$',
                             EntityResourceAccess.as_view(),
-                            name='AnnalistEntityResourceAccess'),
+                            name='AnnalistCollectionResourceAccess'),
 
     url(r'^c/(?P<coll_id>\w{1,32})/v/(?P<view_id>\w{1,32})/(?P<type_id>\w{1,32})/(?P<entity_id>\w{1,32})/(?P<resource_ref>[\w.-]{1,250})$',
                             EntityResourceAccess.as_view(),
                             name='AnnalistEntityResourceAccess'),
     url(r'^c/(?P<coll_id>\w{1,32})/v/(?P<view_id>\w{1,32})/(?P<type_id>\w{1,32})/(?P<entity_id>\w{1,32})/_annalist_collection/(?P<resource_ref>[\w.-]{1,250})$',
                             EntityResourceAccess.as_view(),
-                            name='AnnalistEntityResourceAccess'),
+                            name='AnnalistCollectionResourceAccess'),
 
     ) # End of urlpatterns
 

@@ -50,7 +50,7 @@ from entity_testtypedata            import (
     recordtype_url
     )
 from entity_testentitydata          import (
-    entity_url, entity_resource_url
+entity_url, entity_resource_url
     )
 
 #   -----------------------------------------------------------------------------
@@ -733,5 +733,146 @@ class JsonldContextTest(AnnalistTestCase):
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
+
+    # Content negotiation tests
+
+    def test_http_conneg_jsonld_entity1(self):
+        """
+        Read default entity data as JSON-LD using HTTP, and check resulting RDF triples
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+
+        # Create entity object to access entity data 
+        testdata = RecordTypeData.load(self.testcoll, "testtype")
+        entity1  = EntityData.load(testdata, "entity1")
+
+        # Read entity data as JSON-LD
+        u = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
+        r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_FILE)
+        r = self.client.get(v)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        g = Graph()
+        # print("***** v: (entity1)")
+        # print(repr(v))
+        # print("***** c: (entity1)")
+        # print r.content
+        with MockHttpDictResources(v, self.get_context_mock_dict(v)):
+            result = g.parse(data=r.content, publicID=v, base=v, format="json-ld")
+        # print "*****"+repr(result)
+        # print("***** g: (entity1)")
+        # print(g.serialize(format='turtle', indent=4))
+
+        # Check the resulting graph contents
+        subj        = entity1.get_url()
+        entity_data = entity1.get_values()
+        for (s, p, o) in (
+            [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.comment,           Literal(entity_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.id,               Literal(entity_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.type_id,          Literal(entity_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.type,             URIRef(ANNAL.EntityData)                  )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g)
+            # Content negotiation testsrturn
+
+    def test_http_conneg_json_entity1(self):
+        """
+        Read default entity data as JSON-LD using HTTP, and check resulting RDF triples
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+
+        # Create entity object to access entity data 
+        testdata = RecordTypeData.load(self.testcoll, "testtype")
+        entity1  = EntityData.load(testdata, "entity1")
+
+        # Read entity data as JSON-LD
+        u = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
+        r = self.client.get(u, HTTP_ACCEPT="application/json")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_FILE)
+        r = self.client.get(v)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        g = Graph()
+        # print("***** v: (entity1)")
+        # print(repr(v))
+        # print("***** c: (entity1)")
+        # print r.content
+        with MockHttpDictResources(v, self.get_context_mock_dict(v)):
+            result = g.parse(data=r.content, publicID=v, base=v, format="json-ld")
+        # print "*****"+repr(result)
+        # print("***** g: (entity1)")
+        # print(g.serialize(format='turtle', indent=4))
+
+        # Check the resulting graph contents
+        subj        = entity1.get_url()
+        entity_data = entity1.get_values()
+        for (s, p, o) in (
+            [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.comment,           Literal(entity_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.id,               Literal(entity_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.type_id,          Literal(entity_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.type,             URIRef(ANNAL.EntityData)                  )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g)
+            # Content negotiation testsrturn
+
+    def test_http_conneg_jsonld_type_vocab(self):
+        """
+        Read type data as JSON-LD, and check resulting RDF triples
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+        type_vocab = self.testcoll.get_type("_vocab")
+
+        # Read type data as JSON-LD
+        u = recordtype_url(coll_id="testcoll", type_id=type_vocab.get_id())
+        r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+u+layout.TYPE_META_FILE)
+        r = self.client.get(v)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        g = Graph()
+        # print("***** u: (type_vocab)")
+        # print(repr(u))
+        # print("***** c: (type_vocab)")
+        # print r.content
+
+        # Read graph data with HTTP mocking for context references
+        with MockHttpDictResources(v, self.get_context_mock_dict(v)):
+            result = g.parse(data=r.content, publicID=v, base=v, format="json-ld")
+        # print "*****"+repr(result)
+        # print("***** g: (type_vocab)")
+        # print(g.serialize(format='turtle', indent=4))
+
+        # Check the resulting graph contents
+        subj            = TestHostUri + u
+        type_vocab_data = type_vocab.get_values()
+        for (s, p, o) in (
+            [ (subj, RDF.type,        URIRef(ANNAL.Type)                              )
+            , (subj, RDFS.label,      Literal(type_vocab_data[RDFS.CURIE.label])      )
+            , (subj, RDFS.comment,    Literal(type_vocab_data[RDFS.CURIE.comment])    )
+            , (subj, ANNAL.id,        Literal(type_vocab_data[ANNAL.CURIE.id])        )
+            , (subj, ANNAL.type_id,   Literal(type_vocab_data[ANNAL.CURIE.type_id])   )
+            , (subj, ANNAL.type_list, Literal(type_vocab_data[ANNAL.CURIE.type_list]) )
+            , (subj, ANNAL.type_view, Literal(type_vocab_data[ANNAL.CURIE.type_view]) )
+            , (subj, ANNAL.uri,       URIRef(ANNAL.Vocabulary)                        )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g )
+        return
+
+
 
 # End.

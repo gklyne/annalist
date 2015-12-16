@@ -525,6 +525,14 @@ class DisplayInfo(object):
             self.continuation_url = curi
         return curi
 
+    def get_entity_ref(self):
+        """
+        Returns a string that can be used as a reference to the entity metadata resource
+        relative to an entity URL.
+        """
+        assert self.entitytypeinfo is not None
+        return self.entitytypeinfo.entityclass._entityfile
+
     def context_data(self):
         """
         Return dictionary of rendering context data available from the elements assembled.
@@ -563,7 +571,7 @@ class DisplayInfo(object):
                 })
         if self.entitytypeinfo:
             context.update(
-                { 'entity_data_ref': self.entitytypeinfo.entityclass._entityfile
+                { 'entity_data_ref': self.get_entity_ref()
                 })
         return context
 

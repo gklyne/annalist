@@ -32,7 +32,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Check that nothing untoward happens when saving collection metadata
     - [x] Change collection metadata field back to Markdown (i.e. allow editing)
 - [x] Add "Codearea" render type for unflowed, unformatted text with non-propo font
-- [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
+- [ ] Content negotiation for alternative formats (initially just HTML (form), JSON-LD); others later.
+    - [x] Content negotiation for entity view (e.g. `.../c/Carolan_Guitar/d/Artifact/Carolan_Guitar/`)
+    - [x] Test case for contenmt negotiated entity JSON
+    - [ ] Generate JSON-formatted list of entities (e.g. `.../c/Carolan_Guitar/d/` or `.../c/Carolan_Guitar/d/Entity/` or `.../c/Carolan_Guitar/l/Artifacts/`)
+    - [ ] Content negotiation for list view
+    - [ ] Test case for content negotiated list view JSON
 - [ ] In drop-down list, try including typeid/entityid only for entries whose labels are not unique.
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
@@ -46,6 +51,21 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
     - longer term, this might be a high-level graphical display (like PROV diag.)
     - use this to think about linking to alternative displays
+- [ ] When supertypes are changed, need to regenerate @type fields of instances
+    - Or be smarter about how entries for listing are selected.  
+    - Link to migration?
+- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
+- [ ] Create schema definitions in Annalist for ANNAL namespace
+
+(release?)
+
+- [ ] Use site/collection data to populate help panes on displays; use Markdown.
+- [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
+- [ ] Login: support continuation URI
+- [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
+    - [x] annalist-manager serverlog command returns log file name
+    - [ ] site link to download log, if admin permissions
+    - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
 - [ ] Review URI usage
     - [x] avoid explicit reference to `_analist_collection`?
     - [ ] review base URI designation in JSON-LD:
@@ -62,20 +82,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
         - could use `@id`?
-- [ ] When supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration?
-- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
+- [ ] annalist-manager option for migrating collection data
+    - needs to load and save every entity in a collection to force rewriting of context data.  
+    - Or option on customize page?
 - [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
-- [ ] Create schema definitions in Annalist for ANNAL namespace
-
-(release?)
-
-- [ ] Use site/collection data to populate help panes on displays; use Markdown.
-- [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
-- [ ] Login: support continuation URI
-- [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
-    - [x] annalist-manager serverlog command returns log file name
-    - [ ] site link to download log, if admin permissions
-    - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
 - [ ] profile_uri now not included in Google JSON file of client secrets
     - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
     - cf. oauth2/views.py:364

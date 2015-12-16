@@ -20,6 +20,9 @@ class ContentNegotiationView(generic.View):
     def accept_types(types):
         """
         Decorator to use associated function to render the indicated content types 
+
+        Invokes decorated method and returns its result if accept content type matches,
+         otherwise returns None.
         """
         def decorator(func):
             def guard(self, *values):
@@ -36,7 +39,11 @@ class ContentNegotiationView(generic.View):
     @staticmethod
     def content_types(types):
         """
-        Decorator to use associated function when supplied with the indicated content types 
+        Decorator to use associated function when supplied with (one of)
+        the indicated content types in a POST request.
+
+        Invokes decorated method and returns its result if content type matches, 
+        otherwise returns None.
         """
         def decorator(func):
             def guard(self, *values):

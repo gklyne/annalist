@@ -90,6 +90,13 @@ class GenericEntityEditView(AnnalistGenericView):
         super(GenericEntityEditView, self).__init__()
         return
 
+    def get_entity_json_url(self, coll_id, type_id, entity_id, resource_ref):
+        return self.view_uri(
+            "AnnalistEntityResourceAccess", 
+            coll_id=coll_id, type_id=type_id, entity_id=entity_id, 
+            resource_ref=resource_ref
+            )
+
     # GET
 
     def get(self, request, 
@@ -448,6 +455,12 @@ class GenericEntityEditView(AnnalistGenericView):
         # Generate and return form data
         return (
             self.render_html(viewcontext, self.formtemplate) or 
+            self.redirect_json(
+                self.get_entity_json_url(
+                    coll_id, type_id, entity_id, 
+                    viewinfo.get_entity_ref()
+                    )
+                ) or
             self.error(self.error406values())
             )
 

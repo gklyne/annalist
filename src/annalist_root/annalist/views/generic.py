@@ -8,7 +8,9 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import os.path
+import json
 import traceback
+
 import logging
 log = logging.getLogger(__name__)
 
@@ -426,6 +428,49 @@ class AnnalistGenericView(ContentNegotiationView):
         response = HttpResponse(template.render(context))
         if "entity_data_ref" in resultdata:
             response["Link"] = "<%(entity_data_ref)s>; rel=alternate"%resultdata
+        return response
+
+    # JSON rendering
+
+    @ContentNegotiationView.accept_types(["application/json", "application/ld+json"])
+    def render_json(self, jsondata, links={}):
+        """
+        Construct a JSON response based on the supplied data.
+
+        jsondata    is the data to be formatted and returned.
+        links       is an optional array of link valuyes to be added to the HTTP response, 
+                    where each link is specified as:
+                      { "rel": <relation-type>
+                      , "ref": <target-url>
+                      }
+        """
+        # log.debug("render_json - data: %r"%(jsondata))
+        response = HttpResponse(json.dumps(values, indent=2, separators=(',', ': ')))
+        link_headers = []
+        for l in links:
+            link_headers.append('''<%(ref)s>; rel="%(rel)s"'''%l)
+        if len(link_headers) > 0:
+            response["Link"] = ",".join(link_headers)
+        return response
+
+    @ContentNegotiationView.accept_types(["application/json", "application/ld+json"])
+    def redirect_json(self, jsonref, links={}):
+        """
+        Construct a redirect response tp access JSON data at the designated URL.
+
+        jsonref     is the URL from which JSON data may be retrieved.
+        links       is an optional array of link valuyes to be added to the HTTP response, 
+                    where each link is specified as:
+                      { "rel": <relation-type>
+                      , "ref": <target-url>
+                      }
+        """
+        response = HttpResponseRedirect(jsonref)
+        link_headers = []
+        for l in links:
+            link_headers.append('''<%(ref)s>; rel="%(rel)s"'''%l)
+        if len(link_headers) > 0:
+            response["Link"] = ",".join(link_headers)
         return response
 
     # Default view methods return 405 Forbidden

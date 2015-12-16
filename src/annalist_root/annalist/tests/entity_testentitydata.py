@@ -74,7 +74,7 @@ def entity_resource_url(
     resource_ref=layout.ENTITY_DATA_FILE
     ):
     """
-    URI for entity data; also view using default entity view
+    URI for entity resource data
     """
     base = entity_url(coll_id, type_id, entity_id)
     return urlparse.urljoin(base, resource_ref)
