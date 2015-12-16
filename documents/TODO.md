@@ -31,7 +31,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Update view description fields
     - [x] Check that nothing untoward happens when saving collection metadata
     - [x] Change collection metadata field back to Markdown (i.e. allow editing)
-- [ ] Add "Codearea" render type for unflowed, unformatted text with non-propo font
+- [x] Add "Codearea" render type for unflowed, unformatted text with non-propo font
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
 - [ ] In drop-down list, try including typeid/entityid only for entries whose labels are not unique.
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)

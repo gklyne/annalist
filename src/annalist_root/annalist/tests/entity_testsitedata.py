@@ -493,6 +493,7 @@ def get_site_bibentry_fields():
 site_field_types = (
     [ FieldChoice("Enum_render_type/_initial_values")
     , FieldChoice("Enum_render_type/CheckBox",          label="CheckBox"                     )
+    , FieldChoice("Enum_render_type/Codearea",          label="Monospace text"               )
     , FieldChoice("Enum_render_type/EntityId",          label="Entity Id"                    )
     , FieldChoice("Enum_render_type/EntityTypeId",      label="Entity type Id"               )
     , FieldChoice("Enum_render_type/Enum",              label="Required entity ref"          )

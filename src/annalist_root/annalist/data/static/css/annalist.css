@@ -555,6 +555,23 @@ div.columns.view-value > span.markdown h4
     font-style:  italic;
 }
 
+
+/* Code area field text styling */
+/* See: http://stackoverflow.com/questions/2032652/ */
+
+div.columns.view-value > div.codearea
+{
+    background-color: #fceaff;
+    /* border:           1px solid #ecdcfc; */
+    border:           1px solid #f4e4f8;
+    padding:          0.4rem 0.25rem 0.2rem 0.25rem;
+    white-space:      pre;
+    font-family:      Consolas,Monaco,Lucida Console,
+                      Liberation Mono,DejaVu Sans Mono,
+                      Bitstream Vera Sans Mono,Courier New, 
+                      monospace;
+}
+
 /*
 div.columns > input[type=text] , 
 div.columns > textarea , 
