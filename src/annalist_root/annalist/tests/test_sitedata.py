@@ -961,7 +961,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         trows_expected = (
             #     Field selector                      Field id             Render type      Value type   Field label (?)
             # [ [ "_field/_initial_values",           ["_initial_values",   "Short text",    "annal:Text", None       ] ]
-            [ [ "_field/Coll_comment",              ["Coll_comment",      "Display Markdown rich text", 
+            [ [ "_field/Coll_comment",              ["Coll_comment",      "Markdown rich text", 
                                                                                             "annal:Richtext"        ] ]
             , [ "_field/Coll_parent",               ["Coll_parent",       "Entity choice",  "annal:Slug"            ] ]
             , [ "_field/Coll_software_version",     ["Coll_software_version", 

@@ -198,6 +198,22 @@ class CollectionDataEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
+        formrow4 = """
+            <div class="small-12 columns">
+                <div class="row view-value-row">
+                    <div class="%(label_classes)s">
+                        <span>Collection metadata</span>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <textarea cols="64" rows="6" name="Coll_comment" 
+                                  class="small-rows-4 medium-rows-8" 
+                                  placeholder="(annal:comment)"
+                                  >
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=12)
         #@@
         # formrow4 = """
         #     <div class="small-12 columns">
@@ -206,28 +222,12 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         #                 <span>Collection metadata</span>
         #             </div>
         #             <div class="%(input_classes)s">
-        #                 <textarea cols="64" rows="6" name="Coll_comment" 
-        #                           class="small-rows-4 medium-rows-8" 
-        #                           placeholder="(annal:comment)"
-        #                           >
-        #                 </textarea>
+        #                 <span class="markdown"></span>
         #             </div>
         #         </div>
         #     </div>
         #     """%field_vals(width=12)
         #@@
-        formrow4 = """
-            <div class="small-12 columns">
-                <div class="row view-value-row">
-                    <div class="%(label_classes)s">
-                        <span>Collection metadata</span>
-                    </div>
-                    <div class="%(input_classes)s">
-                        <span class="markdown"></span>
-                    </div>
-                </div>
-            </div>
-            """%field_vals(width=12)
         formrow5a = """
             <div class="%(space_classes)s">
               <div class="row">

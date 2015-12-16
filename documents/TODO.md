@@ -30,9 +30,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Collection edit metadata page: make s/w version display-only.
     - [x] Update view description fields
     - [x] Check that nothing untoward happens when saving collection metadata
+    - [x] Change collection metadata field back to Markdown (i.e. allow editing)
+- [ ] Add "Codearea" render type for unflowed, unformatted text with non-propo font
 - [ ] Content negotiation on entity URI for alternative formats (initially just HTML (form), JSON-LD); others later.
-- [ ] When supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration?
-- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
 - [ ] In drop-down list, try including typeid/entityid only for entries whose labels are not unique.
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
@@ -42,10 +42,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - plus new logic to render the padding elements
     - Another option: take field-loop out of template and run it as a `render_all_fields` method
         - still needs placement parser to return position+width information
-- [ ] Provide collection overview that allows to see users what is present
+- [ ] Provide collection overview that allows users to see what is present
     - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
-    - long term, this might be a high-level graphical display (like PROV diag.)
-- [ ] Add "CodeArea" field type for unflowed, unformatted text with non-propo font
+    - longer term, this might be a high-level graphical display (like PROV diag.)
+    - use this to think about linking to alternative displays
 - [ ] Review URI usage
     - [x] avoid explicit reference to `_analist_collection`?
     - [ ] review base URI designation in JSON-LD:
@@ -62,6 +62,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
         - could use `@id`?
+- [ ] When supertypes are changed, need to regenerate @type fields of instances, or be smarter about how entries for listing are selected.  Link to migration?
+- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
 - [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
 - [ ] Create schema definitions in Annalist for ANNAL namespace
 
@@ -126,7 +128,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 Technical debt:
 
-- [ ] Implement in-memory entity stiorage tio speed up test suite, and lay groundwork for LDP back-end
+- [ ] Implement in-memory entity storage tio speed up test suite, and lay groundwork for LDP back-end
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
 - [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
 - [ ] Implement "get the data" link as a field renderer?
@@ -152,14 +154,14 @@ Technical debt:
     - [ ] Think about how to optimize retreival of subtypes/supertypes
     - [ ] Do special case for types, or more generic caching approach?
 - [ ] Customize view getting out of sync with other page styles
-    - possible enhancements to form generator to generate custoimize page using form logic?
+    - possible enhancements to form generator to generate customize page using form logic?
 - [ ] Refactor entity edit response handling
 - [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
 - [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
     - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
     - [ ]remove corresponding special case code in bound_field.
 - [x] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
-- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special login in bound_field.
+- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
 - [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
 - [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
 - [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
@@ -168,14 +170,14 @@ Technical debt:
 Usability notes:
 
 - [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15)
-- [ ] Display entity-id *and* label values in drop-downs?  (e.g. "id (label)")
+- [x] Display entity-id *and* label values in drop-downs?  (e.g. "id (label)")
 - [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
 - [ ] Persist item selection to refreshed display when move-up/movedown clicked?
 - [x] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
 - [x] OR... allow an entity to specify its own default view? (this is now handled by subtyping)
 - [ ] Type/List/View dropdowns: normally show only those types/lists/views defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
 - [ ] View forms need title (indicating type of thing viewed)?  Or let user define label for Id field?
-- [ ] Provide field type that can be used to place fixed annotations/instructions in a form
+- [x] Provide field type that can be used to place fixed annotations/instructions in a form
 - [ ] Add title attributes to all buttons - used as tooltip
 - [ ] Add title to field controls based on field help, to use as tooltip.
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
@@ -248,13 +250,13 @@ Notes for Future TODOs:
 - [ ] Allow type definition to include template for new id, e.g. based on current date
 - [ ] Use local prefix for type URI (when prefixes are handled properly); e.g. coll:Type/<id>
 - [ ] Associate a prefix with a collection? 
-- [ ] Provide a way to edit collection metadata (e.g. link from Customize page)
-- [ ] Provide a way to edit site metadata (e.g. via link from site front page)
+- [x] Provide a way to edit collection metadata (e.g. link from Customize page)
+- [x] Provide a way to edit site metadata (e.g. via link from site front page)
 - [ ] Provide a way to view/edit site user permissions (e.g. via link from site front page)
 - [ ] Provide a way to view/edit site type/view/list/etc descriptions (e.g. via link from site front page)
     - not edit: site data should be stable and controlled.  Consider collection structure inheritiance instead.
 - [ ] Undefined list error display, or any error - include link to collection in top bar
-- [ ] Help display for view: use commentary text from view descrtiption; thus can tailor help for each view.
+- [ ] Help display for view: use commentary text from view description; thus can tailor help for each view.
 - [ ] Use markdown directly for help text
 - [ ] Think about fields that return subgraph
     - how to splice subgraph into parent - "lambda nodes"?

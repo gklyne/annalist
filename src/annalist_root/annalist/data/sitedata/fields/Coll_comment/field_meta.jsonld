@@ -5,7 +5,7 @@
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Collection metadata"
 , "rdfs:comment":               "Description of Collection metadata creation details."
-, "annal:field_render_type":    "ShowMarkdown"
+, "annal:field_render_type":    "Markdown"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Richtext"
 , "annal:field_entity_type":    "annal:Collection"

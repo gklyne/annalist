@@ -340,7 +340,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Coll_comment/%(cont)s">Coll_comment</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/ShowMarkdown/%(cont)s">Display Markdown rich text</a>
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Markdown/%(cont)s">Markdown rich text</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up">
                     <span>annal:Richtext</span>
@@ -462,7 +462,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         #@@ self.assertIn('_initial_values', entity_ids)
         field_entities = (
             { ('Entity_id',         "EntityId",      "annal:Slug",          "Id")
-            , ( "Coll_comment",     "ShowMarkdown",  "annal:Richtext",      "Collection metadata")
+            , ( "Coll_comment",     "Markdown",      "annal:Richtext",      "Collection metadata")
             , ( "Coll_parent",      "Enum_choice",   "annal:Slug",          "Parent")
             , ( "Coll_software_version", "Showtext", "annal:Text",          "S/W version")
             , ('Entity_type',       "EntityTypeId",  "annal:Slug",          "Type")
@@ -525,8 +525,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Coll_comment/%(cont)s">Coll_comment</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/ShowMarkdown/%(cont)s">
-                      Display Markdown rich text
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Markdown/%(cont)s">
+                      Markdown rich text
                     </a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up">
@@ -626,8 +626,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Coll_comment/%(cont)s">Coll_comment</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/ShowMarkdown/%(cont)s">
-                      Display Markdown rich text
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Markdown/%(cont)s">
+                      Markdown rich text
                     </a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up">
@@ -713,7 +713,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 3)
         field_entities = (
-            { ( "Coll_comment",          "ShowMarkdown", "annal:Richtext", "Collection metadata" )
+            { ( "Coll_comment",          "Markdown",     "annal:Richtext", "Collection metadata" )
             , ( "Coll_parent",           "Enum_choice",  "annal:Slug",     "Parent"              )
             , ( "Coll_software_version", "Showtext",     "annal:Text",     "S/W version"         )
             })
