@@ -445,7 +445,7 @@ class AnnalistGenericView(ContentNegotiationView):
                       }
         """
         # log.debug("render_json - data: %r"%(jsondata))
-        response = HttpResponse(json.dumps(values, indent=2, separators=(',', ': ')))
+        response = HttpResponse(json.dumps(jsondata, indent=2, separators=(',', ': ')))
         link_headers = []
         for l in links:
             link_headers.append('''<%(ref)s>; rel="%(rel)s"'''%l)

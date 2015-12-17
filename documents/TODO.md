@@ -34,10 +34,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Add "Codearea" render type for unflowed, unformatted text with non-propo font
 - [ ] Content negotiation for alternative formats (initially just HTML (form), JSON-LD); others later.
     - [x] Content negotiation for entity view (e.g. `.../c/Carolan_Guitar/d/Artifact/Carolan_Guitar/`)
-    - [x] Test case for contenmt negotiated entity JSON
+    - [x] Test case for content negotiated entity JSON
     - [ ] Generate JSON-formatted list of entities (e.g. `.../c/Carolan_Guitar/d/` or `.../c/Carolan_Guitar/d/Entity/` or `.../c/Carolan_Guitar/l/Artifacts/`)
     - [ ] Content negotiation for list view
     - [ ] Test case for content negotiated list view JSON
+- [ ] In list view, provide scope as query parameter not path segment (`?scope=all`)
+    - [ ] Change entitylist.py - retrueve scope value from request
+    - [ ] Remove !all entries from urls.py
+    - [ ] Revise URI construction for list all in entitylist and test cases
 - [ ] In drop-down list, try including typeid/entityid only for entries whose labels are not unique.
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.

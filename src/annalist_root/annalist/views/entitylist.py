@@ -205,6 +205,7 @@ class EntityGenericListView(AnnalistGenericView):
         # Generate and return form data
         return (
             self.render_html(listcontext, self._entityformtemplate) or 
+            self.render_json(entityvallist) or
             self.error(self.error406values())
             )
 
@@ -342,24 +343,33 @@ class EntityGenericListView(AnnalistGenericView):
                         )
                     )
             if ("view" in request.POST) or ("view_all" in request.POST):
-                action = "list"         
-                search = request.POST['search_for']
-                params = listinfo.get_continuation_url_dict()
-                if search:
-                    params = dict(params, search=search)
-                post_list_id = extract_entity_id(request.POST['list_choice'])
-                list_uri_params = (
-                    { 'coll_id': coll_id
-                    , 'list_id': post_list_id
-                    })
-                if "view_all" in request.POST:
-                    list_uri_params['scope']  = "all"
-                redirect_uri = (
-                    uri_with_params(
-                        self.view_uri("AnnalistEntityGenericList", **list_uri_params),
-                        params
-                        )
+                action = "list"  
+                redirect_uri = self.get_list_url(
+                    coll_id, extract_entity_id(request.POST['list_choice']),
+                    type_id=type_id,
+                    scope="all" if "view_all" in request.POST else None,
+                    search=request.POST['search_for'],
+                    query_params=listinfo.get_continuation_url_dict()
                     )
+                #@@
+                # search = request.POST['search_for']
+                # params = listinfo.get_continuation_url_dict()
+                # if search:
+                #     params = dict(params, search=search)
+                # post_list_id = extract_entity_id(request.POST['list_choice'])
+                # list_uri_params = (
+                #     { 'coll_id': coll_id
+                #     , 'list_id': post_list_id
+                #     })
+                # if "view_all" in request.POST:
+                #     list_uri_params['scope']  = "all"
+                # redirect_uri = (
+                #     uri_with_params(
+                #         self.view_uri("AnnalistEntityGenericList", **list_uri_params),
+                #         params
+                #         )
+                #     )
+                #@@
             if "customize" in request.POST:
                 action       = "config"
                 redirect_uri = (
@@ -422,5 +432,28 @@ class EntityGenericListView(AnnalistGenericView):
                         )
                     )
         return None
+
+    def get_list_url(self, coll_id, list_id, type_id=None, scope=None, search=None, query_params={}):
+        """
+        Return a URL for accessing the current list display
+        """
+        list_uri_params = (
+            { 'coll_id': coll_id
+            , 'list_id': list_id
+            })
+        if type_id:
+            list_uri_params['type_id']  = type_id
+        if scope:
+            list_uri_params['scope']  = scope
+        if search:
+            query_params = dict(query_params, search=search)
+        list_url = (
+            uri_with_params(
+                self.view_uri("AnnalistEntityGenericList", **list_uri_params),
+                query_params
+                )
+            )
+        # print "get_list_url: %s"%list_url
+        return list_url
 
 # End.
