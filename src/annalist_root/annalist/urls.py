@@ -24,6 +24,7 @@ from annalist.views.defaultedit         import EntityDefaultEditView
 
 from annalist.views.entityedit          import GenericEntityEditView
 from annalist.views.entitylist          import EntityGenericListView
+from annalist.views.entitylistjson      import EntityGenericListJsonView
 from annalist.views.entitydelete        import EntityDataDeleteConfirmedView
 
 from annalist.views.siteresource        import SiteResourceAccess
@@ -104,6 +105,14 @@ urlpatterns = patterns('',
                             EntityDefaultEditView.as_view(),
                             name='AnnalistEntityAccessView'),
 
+    # JSON list views without list_id specified
+    url(r'^c/(?P<coll_id>\w{1,32})/d/entity_list.jsonld$',
+                            EntityGenericListJsonView.as_view(),
+                            name='AnnalistEntityJsonListAll'),
+    url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})/entity_list.jsonld$',
+                            EntityGenericListJsonView.as_view(),
+                            name='AnnalistEntityJsonListType'),
+
     # Specified list views
     url(r'^c/(?P<coll_id>\w{1,32})/l/$',
                             EntityDefaultListView.as_view(),
@@ -114,6 +123,17 @@ urlpatterns = patterns('',
     url(r'^c/(?P<coll_id>\w{1,32})/l/(?P<list_id>\w{1,32})/(?P<type_id>\w{1,32})/$',
                             EntityGenericListView.as_view(),
                             name='AnnalistEntityGenericList'),
+
+    # JSON list views
+    url(r'^c/(?P<coll_id>\w{1,32})/l/entity_list.jsonld$',
+                            EntityGenericListJsonView.as_view(),
+                            name='AnnalistEntityJsonListAll'),
+    url(r'^c/(?P<coll_id>\w{1,32})/l/(?P<list_id>\w{1,32})/entity_list.jsonld$',
+                            EntityGenericListJsonView.as_view(),
+                            name='AnnalistEntityJsonListAll'),
+    url(r'^c/(?P<coll_id>\w{1,32})/l/(?P<list_id>\w{1,32})/(?P<type_id>\w{1,32})/entity_list.jsonld$',
+                            EntityGenericListJsonView.as_view(),
+                            name='AnnalistEntityJsonListType'),
 
     # Specified entity edit/view forms
     url(r'^c/(?P<coll_id>\w{1,32})/v/(?P<view_id>\w{1,32})/(?P<type_id>\w{1,32})/(?P<entity_id>\w{1,32})/$',

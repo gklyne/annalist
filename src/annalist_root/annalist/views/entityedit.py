@@ -90,6 +90,12 @@ class GenericEntityEditView(AnnalistGenericView):
         super(GenericEntityEditView, self).__init__()
         return
 
+    def get_entity_base_url(self, coll_id, type_id, entity_id):
+        return self.view_uri(
+            "AnnalistEntityAccessView", 
+            coll_id=coll_id, type_id=type_id, entity_id=entity_id
+            )
+
     def get_entity_json_url(self, coll_id, type_id, entity_id, resource_ref):
         return self.view_uri(
             "AnnalistEntityResourceAccess", 
@@ -459,7 +465,11 @@ class GenericEntityEditView(AnnalistGenericView):
                 self.get_entity_json_url(
                     coll_id, type_id, entity_id, 
                     viewinfo.get_entity_ref()
-                    )
+                    ),
+                links=[
+                    { "rel": "canonical"
+                    , "ref": self.get_entity_base_url(coll_id, type_id, entity_id)
+                    }]
                 ) or
             self.error(self.error406values())
             )

@@ -438,19 +438,15 @@ class AnnalistGenericView(ContentNegotiationView):
         Construct a JSON response based on the supplied data.
 
         jsondata    is the data to be formatted and returned.
-        links       is an optional array of link valuyes to be added to the HTTP response, 
-                    where each link is specified as:
-                      { "rel": <relation-type>
-                      , "ref": <target-url>
-                      }
+        links       is an optional array of link valuyes to be added to the HTTP response
+                    (see method add_link_header for description).
         """
         # log.debug("render_json - data: %r"%(jsondata))
-        response = HttpResponse(json.dumps(jsondata, indent=2, separators=(',', ': ')))
-        link_headers = []
-        for l in links:
-            link_headers.append('''<%(ref)s>; rel="%(rel)s"'''%l)
-        if len(link_headers) > 0:
-            response["Link"] = ",".join(link_headers)
+        response = HttpResponse(
+            json.dumps(jsondata, indent=2, separators=(',', ': ')),
+            content_type="application/ld+json"
+            )
+        response = self.add_link_header(response, links)
         return response
 
     @ContentNegotiationView.accept_types(["application/json", "application/ld+json"])
@@ -459,13 +455,24 @@ class AnnalistGenericView(ContentNegotiationView):
         Construct a redirect response tp access JSON data at the designated URL.
 
         jsonref     is the URL from which JSON data may be retrieved.
+        links       is an optional array of link valuyes to be added to the HTTP response
+                    (see method add_link_header for description).
+        """
+        response = HttpResponseRedirect(jsonref)
+        response = self.add_link_header(response, links)
+        return response
+
+    def add_link_header(self, response, links={}):
+        """
+        Add HTTP link header to response, and return the updated response.
+
+        response    response to be returned
         links       is an optional array of link valuyes to be added to the HTTP response, 
                     where each link is specified as:
                       { "rel": <relation-type>
                       , "ref": <target-url>
                       }
         """
-        response = HttpResponseRedirect(jsonref)
         link_headers = []
         for l in links:
             link_headers.append('''<%(ref)s>; rel="%(rel)s"'''%l)

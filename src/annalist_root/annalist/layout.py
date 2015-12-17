@@ -179,6 +179,7 @@ SITE_ENTITY_VIEW        = "c/%(coll_id)s/d/%(type_id)s/%(id)s/"
 SITE_ENTITY_PATH        = "c/%(coll_id)s/d/%(type_id)s/%(id)s"
 ENTITY_DATA_FILE        = "entity_data.jsonld"
 ENTITY_PROV_FILE        = "entity_prov.jsonld"
+ENTITY_LIST_FILE        = "entity_list.jsonld"  # Entity list as JSON resource
 DATA_ENTITY_REF         = "./"
 CONTEXT_ENTITY_REF      = "%(type_id)s/%(id)s/"
 ENTITY_CONTEXT_REF      = "../.."

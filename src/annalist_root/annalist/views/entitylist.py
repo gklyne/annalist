@@ -6,6 +6,8 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import urlparse
+
 import logging
 log = logging.getLogger(__name__)
 
@@ -14,6 +16,7 @@ from django.http                        import HttpResponse
 from django.http                        import HttpResponseRedirect
 from django.core.urlresolvers           import resolve, reverse
 
+from annalist                           import layout
 from annalist                           import message
 from annalist.exceptions                import Annalist_Error
 from annalist.identifiers               import RDFS, ANNAL
@@ -205,7 +208,8 @@ class EntityGenericListView(AnnalistGenericView):
         # Generate and return form data
         return (
             self.render_html(listcontext, self._entityformtemplate) or 
-            self.render_json(entityvallist) or
+            self.redirect_json(layout.ENTITY_LIST_FILE) or
+            #@@ self.render_json(entityvallist) or
             self.error(self.error406values())
             )
 
@@ -435,5 +439,11 @@ class EntityGenericListView(AnnalistGenericView):
                 )
             )
         return list_url
+
+    def get_collection_base_url(self):
+        """
+        Return URL used as base for relative references within a collection.
+        """
+        return urlparse.urljoin(self.collection_view_url, layout.COLL_CONTEXT_PATH)
 
 # End.

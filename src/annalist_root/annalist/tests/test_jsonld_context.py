@@ -749,6 +749,7 @@ class JsonldContextTest(AnnalistTestCase):
 
         # Read entity data as JSON-LD
         u = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
+        # print "@@ test_http_conneg_jsonld_entity1: uri %s"%u
         r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
