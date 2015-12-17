@@ -46,6 +46,7 @@ from tests                  import TestHost, TestHostUri, TestBasePath, TestBase
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
     site_dir, collection_dir,
+    entitydata_list_url_query,
     site_view_url,
     collection_view_url, collection_edit_url,
     continuation_url_param,
@@ -230,8 +231,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # List all entities in current collection and site-wiude
         # This repeats parts of the previous test but with scope='all'
         u = entitydata_list_all_url(
-            "testcoll", list_id="Default_list_all", scope="all"
-            ) + "?continuation_url=/xyzzy/"
+            "testcoll", list_id="Default_list_all", 
+            scope="all", continuation_url="/xyzzy/"
+            )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -318,8 +320,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
     def test_get_fields_list(self):
         # List fields in current collection
         u = entitydata_list_type_url(
-            "testcoll", "_field", list_id="Field_list", scope="all"
-            )+"?continuation_url=/xyzzy/"
+            "testcoll", "_field", list_id="Field_list", 
+            scope="all",
+            continuation_url="/xyzzy/"
+            )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -504,9 +508,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_get_fields_list_no_continuation(self):
         u = entitydata_list_type_url(
-            "testcoll", "_field", list_id="Field_list", scope="all"
+            "testcoll", "_field", list_id="Field_list", scope="all",
+            query_params={"foo": "bar"}
             )
-        r = self.client.get(u+"?foo=bar")
+        r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # self.assertContains(r, site_title("<title>%s</title>"))
@@ -605,8 +610,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_get_fields_list_search(self):
         u = entitydata_list_type_url(
-            "testcoll", "_field", list_id="Field_list", scope="all"
-            ) + "?search=Coll_&continuation_url=/xyzzy/"
+            "testcoll", "_field", list_id="Field_list", scope="all",
+            continuation_url="/xyzzy/",
+            query_params={"search": "Coll_"}
+            )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")

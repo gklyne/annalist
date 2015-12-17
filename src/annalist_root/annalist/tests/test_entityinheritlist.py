@@ -138,8 +138,10 @@ class EntityInheritListViewTest(AnnalistTestCase):
     def test_get_default_all_scope_all_list(self):
         # List all entities in current collection and site-wide
         u = entitydata_list_all_url(
-            "testcoll", list_id="Default_list_all", scope="all"
-            ) + "?continuation_url=/xyzzy/"
+            "testcoll", list_id="Default_list_all", 
+            scope="all",
+            continuation_url="/xyzzy/"
+            )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -199,8 +201,9 @@ class EntityInheritListViewTest(AnnalistTestCase):
     def test_get_fields_list(self):
         # List fields in current collection
         u = entitydata_list_type_url(
-            "testcoll", "_field", list_id="Field_list", scope="all"
-            )+"?continuation_url=/xyzzy/"
+            "testcoll", "_field", list_id="Field_list", scope="all",
+            continuation_url="/xyzzy/"
+            )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -331,9 +334,10 @@ class EntityInheritListViewTest(AnnalistTestCase):
 
     def test_get_fields_list_no_continuation(self):
         u = entitydata_list_type_url(
-            "testcoll", "_field", list_id="Field_list", scope="all"
+            "testcoll", "_field", list_id="Field_list", scope="all",
+            query_params={"foo": "bar"}
             )
-        r = self.client.get(u+"?foo=bar")
+        r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # self.assertContains(r, site_title("<title>%s</title>"))
@@ -376,8 +380,10 @@ class EntityInheritListViewTest(AnnalistTestCase):
 
     def test_get_fields_list_search(self):
         u = entitydata_list_type_url(
-            "testcoll", "_field", list_id="Field_list", scope="all"
-            ) + "?search=Bib_&continuation_url=/xyzzy/"
+            "testcoll", "_field", list_id="Field_list", scope="all",
+            continuation_url="/xyzzy/",
+            query_params={"search": "Bib_"}
+            )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")

@@ -55,8 +55,9 @@ def uri_param_dict(uri):
 def build_dict(*param_dicts, **param_dict):
     merged_param_dict = param_dict.copy()
     for d in param_dicts:
-        # log.info("param_dicts %r"%(d,))
-        merged_param_dict.update(d)
+        if d is not None:
+            # log.info("param_dicts %r"%(d,))
+            merged_param_dict.update(d)
     return merged_param_dict
 
 def uri_params(*param_dicts, **param_dict):

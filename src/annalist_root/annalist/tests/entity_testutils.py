@@ -25,6 +25,7 @@ from annalist                       import layout
 
 from annalist.models.annalistuser   import AnnalistUser
 
+from annalist.views.uri_builder             import uri_params, uri_with_params
 from annalist.views.fields.bound_field      import bound_field, get_entity_values
 from annalist.views.fields.render_placement import get_placement_classes
 from annalist.views.form_utils.fieldchoice  import FieldChoice
@@ -56,6 +57,13 @@ def collection_dir(coll_id="testcoll"):
 
 #   These all use the Django `reverse` function so they correspond to
 #   the declared URI patterns.
+
+def entitydata_list_url_query(viewname, kwargs, query_params, more_params):
+    """
+    Helper function for generatinglist URLs
+    """
+    list_url=reverse(viewname, kwargs=kwargs)
+    return uri_with_params(list_url, query_params, more_params)
 
 def site_view_url():
     return reverse("AnnalistSiteView")
@@ -117,9 +125,9 @@ def collection_entity_list_url(coll_id="testcoll", list_id=None, type_id=None, s
         args['list_id'] = list_id
     if type_id is not None:
         args['type_id'] = type_id
-    if scope is not None:
-        args['scope'] = scope
-    return reverse(view, kwargs=args)
+    return entitydata_list_url_query(view, args, None,
+        { 'scope': scope
+        })
 
 def continuation_url_param(uri, prev_cont=None):
     if prev_cont:

@@ -22,12 +22,15 @@ from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import layout
 from annalist                   import message
 
+from annalist.views.uri_builder import uri_base, uri_params, uri_with_params
+
 from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
 from entity_testutils import (
     collection_dir, 
+    entitydata_list_url_query,
     site_view_url,
     collection_edit_url,
     collection_entity_view_url,
@@ -91,27 +94,41 @@ def entitydata_edit_url(action=None, coll_id="testcoll", type_id=None, entity_id
         kwargs.update({'entity_id': entity_id})
     return reverse(viewname, kwargs=kwargs)
 
-def entitydata_list_all_url(coll_id="testcoll", list_id=None, scope=None):
+def entitydata_list_all_url(
+        coll_id="testcoll", list_id=None, 
+        scope=None, continuation_url=None, query_params=None):
     if list_id:
         viewname = "AnnalistEntityGenericList"
         kwargs   = {'list_id': list_id, 'coll_id': coll_id}
     else:
         viewname = "AnnalistEntityDefaultListAll"
         kwargs   = {'coll_id': coll_id}
-    if scope is not None:
-        kwargs['scope'] = scope
-    return reverse(viewname, kwargs=kwargs)
+    return entitydata_list_url_query(viewname, kwargs, 
+        query_params,
+        { 'scope': scope
+        , 'continuation_url': continuation_url
+        })
+    # if scope is not None:
+    #     kwargs['scope'] = scope
+    # return reverse(viewname, kwargs=kwargs)
 
-def entitydata_list_type_url(coll_id="testcoll", type_id="testtype", list_id=None, scope=None):
+def entitydata_list_type_url(
+        coll_id="testcoll", type_id="testtype", list_id=None, 
+        scope=None, continuation_url=None, query_params=None):
     if list_id:
         viewname = "AnnalistEntityGenericList"
         kwargs   = {'list_id': list_id, 'coll_id': coll_id, 'type_id': type_id}
     else:
         viewname = "AnnalistEntityDefaultListType"
         kwargs   = {'coll_id': coll_id, 'type_id': type_id}
-    if scope is not None:
-        kwargs['scope'] = scope
-    return reverse(viewname, kwargs=kwargs)
+    return entitydata_list_url_query(viewname, kwargs, 
+        query_params,
+        { 'scope': scope
+        , 'continuation_url': continuation_url
+        })
+    # if scope is not None:
+    #     kwargs['scope'] = scope
+    # return reverse(viewname, kwargs=kwargs)
 
 def entitydata_delete_confirm_url(coll_id="testcoll", type_id="testtype"):
     kwargs = {'coll_id': coll_id, 'type_id': type_id}

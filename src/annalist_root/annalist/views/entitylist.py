@@ -90,8 +90,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         Assemble display information for list view request handlers
         """
-        # print "@@ list_setup coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id)
-        #@@ self.site_view_url       = self.view_uri("AnnalistSiteView")
+        # log.info("list_setup coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
         self.collection_view_url = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
         listinfo = DisplayInfo(self, "list", request_dict, self.collection_view_url)
         listinfo.get_site_info(self.get_request_host())
@@ -149,13 +148,15 @@ class EntityGenericListView(AnnalistGenericView):
 
     # GET
 
-    def get(self, request, coll_id=None, type_id=None, list_id=None, scope=None):
+    def get(self, request, coll_id=None, type_id=None, list_id=None):
         """
         Create a form for listing entities.
         """
+        scope      = request.GET.get('scope', None)
+        search_for = request.GET.get('search', "")
         log.info(
-            "views.entitylist.get:  coll_id %s, type_id %s, list_id %s, scope %s"%
-            (coll_id, type_id, list_id, scope)
+            "views.entitylist.get:  coll_id %s, type_id %s, list_id %s, scope %s, search %s"%
+            (coll_id, type_id, list_id, scope, search_for)
             )
         listinfo    = self.list_setup(coll_id, type_id, list_id, request.GET.dict())
         if listinfo.http_response:
@@ -164,7 +165,6 @@ class EntityGenericListView(AnnalistGenericView):
         # Prepare list and entity IDs for rendering form
         try:
             selector    = listinfo.recordlist.get_values().get(ANNAL.CURIE.list_entity_selector, "")
-            search_for  = request.GET.get('search', "")
             user_perms  = self.get_permissions(listinfo.collection)
             entity_list = (
                 EntityFinder(listinfo.collection, selector=selector)
@@ -211,7 +211,7 @@ class EntityGenericListView(AnnalistGenericView):
 
     # POST
 
-    def post(self, request, coll_id=None, type_id=None, list_id=None, scope=None):
+    def post(self, request, coll_id=None, type_id=None, list_id=None):
         """
         Handle response from dynamically generated list display form.
         """
@@ -351,25 +351,6 @@ class EntityGenericListView(AnnalistGenericView):
                     search=request.POST['search_for'],
                     query_params=listinfo.get_continuation_url_dict()
                     )
-                #@@
-                # search = request.POST['search_for']
-                # params = listinfo.get_continuation_url_dict()
-                # if search:
-                #     params = dict(params, search=search)
-                # post_list_id = extract_entity_id(request.POST['list_choice'])
-                # list_uri_params = (
-                #     { 'coll_id': coll_id
-                #     , 'list_id': post_list_id
-                #     })
-                # if "view_all" in request.POST:
-                #     list_uri_params['scope']  = "all"
-                # redirect_uri = (
-                #     uri_with_params(
-                #         self.view_uri("AnnalistEntityGenericList", **list_uri_params),
-                #         params
-                #         )
-                #     )
-                #@@
             if "customize" in request.POST:
                 action       = "config"
                 redirect_uri = (
@@ -444,7 +425,7 @@ class EntityGenericListView(AnnalistGenericView):
         if type_id:
             list_uri_params['type_id']  = type_id
         if scope:
-            list_uri_params['scope']  = scope
+            query_params = dict(query_params, scope=scope)
         if search:
             query_params = dict(query_params, search=search)
         list_url = (
@@ -453,7 +434,6 @@ class EntityGenericListView(AnnalistGenericView):
                 query_params
                 )
             )
-        # print "get_list_url: %s"%list_url
         return list_url
 
 # End.
