@@ -1,0 +1,35 @@
+{
+  "rdfs:label": "FRBRoo (Erlangen terms)",
+  "rdfs:comment": "FRBRoo: object-oriented definition and mapping of FRBR.  FRBRoo is a formal ontology intended to capture and represent the underlying semantics of bibliographic information and to facilitate the integration, mediation, and interchange of bibliographic and museum information.\r\n\r\nErlangen FRBRoo - An OWL DL 0.1 implementation of the FRBRoo originally created by Judith Merges at the Friedrich-Alexander-University of Erlangen-Nuremberg, Department of Computer Science, Chair of Computer Science 8 (Artificial Intelligence). It is based on the official definition of the FRBRoo (http://www.cidoc-crm.org/docs/frbr_oo/frbr_docs/FRBRoo_V1.0.2.pdf). This implementation is currently under development by the Erlangen CRM community (http://groups.google.com/group/erlangen-crm).The Erlangen FRBRoo implementation is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License. (http://erlangen-crm.org/docs/efrbroo/latest/)",
+  "rdfs:seeAlso": [
+    {
+      "owl:sameAs": "erlangen-crm.org/docs/efrbroo/latest/"
+    },
+    {
+      "owl:sameAs": "http://www.cidoc-crm.org/docs/frbr_oo/frbr_docs/FRBRoo_V1.0.2.pdf"
+    },
+    {
+      "owl:sameAs": "http://erlangen-crm.org/docs/efrbroo/120131/"
+    },
+    {
+      "owl:sameAs": "http://www.ifla.org/files/assets/cataloguing/frbr/frbr_2008.pdf"
+    },
+    {
+      "owl:sameAs": "http://www.cidoc-crm.org/"
+    },
+    {
+      "owl:sameAs": "https://github.com/gklyne/DMO_Experiment/blob/master/CIDOC_CRM_PROV.md"
+    }
+  ],
+  "annal:type_id": "_vocab",
+  "annal:uri": "http://erlangen-crm.org/efrbroo/",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "frbroo",
+  "@id": "./",
+  "@type": [
+    "annal:Vocabulary"
+  ],
+  "annal:type": "annal:Vocabulary"
+}

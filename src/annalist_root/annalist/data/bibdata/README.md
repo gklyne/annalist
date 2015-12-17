@@ -1,3 +1,3 @@
 This directory subtree contains Annalist data that describes bibliographic records, largeely in the style of BibJSON.
 
-NOTE: do not delete _annalist_site/site_meta.jsonld from the target site when updating site data:  that file is site-specific.
+These files are not part of the core Annalist configuration, but they are used by parts of the test suite, as structures required for representing BibJSON were used to guide rearly development of Annalist capabilities.
