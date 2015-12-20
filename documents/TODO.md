@@ -32,13 +32,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Check that nothing untoward happens when saving collection metadata
     - [x] Change collection metadata field back to Markdown (i.e. allow editing)
 - [x] Add "Codearea" render type for unflowed, unformatted text with non-propo font
-- [ ] Content negotiation for alternative formats (initially just HTML (form), JSON-LD); others later.
+- [x] Content negotiation for alternative formats (initially just HTML (form), JSON-LD); others later.
     - [x] Content negotiation for entity view (e.g. `.../c/Carolan_Guitar/d/Artifact/Carolan_Guitar/`)
     - [x] Test case for content negotiated entity JSON
     - [x] Create view to generate JSON-formatted list of entities
     - [x] Content negotiation for list view
-    - [ ] Test case for content negotiated list view JSON
-        - ensure result can be loaded as RDF - see entity example
+    - [x] Test cases for content negotiated list view JSON
+- [ ] Add "get the data" button to list display
 - [x] In list view, provide scope as query parameter not path segment (`?scope=all`)
     - [x] Change entitylist.py - retrieve scope value from request
     - [x] Remove !all entries from urls.py

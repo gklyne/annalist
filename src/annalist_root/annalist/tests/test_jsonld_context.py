@@ -1,5 +1,5 @@
 """
-Test JSONB-LD context generation logic
+Test JSON-LD and context generation logic
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -20,6 +20,7 @@ from django.test.client             import Client
 import annalist
 from annalist                       import layout
 from annalist.identifiers           import makeNamespace, RDF, RDFS, ANNAL
+from annalist.util                  import make_resource_url
 
 from annalist.models.site           import Site
 from annalist.models.sitedata       import SiteData
@@ -50,8 +51,20 @@ from entity_testtypedata            import (
     recordtype_url
     )
 from entity_testentitydata          import (
-entity_url, entity_resource_url
+    entity_url, entity_resource_url,
+    entitydata_list_type_url, entitydata_list_all_url
     )
+from entity_testsitedata    import (
+    # make_field_choices, no_selection,
+    get_site_types, get_site_types_sorted, get_site_types_linked,
+    # get_site_lists, get_site_lists_sorted, get_site_lists_linked,
+    # get_site_views, get_site_views_sorted, get_site_views_linked,
+    # get_site_list_types, get_site_list_types_sorted,
+    # get_site_field_groups, get_site_field_groups_sorted, 
+    # get_site_fields, get_site_fields_sorted, 
+    # get_site_field_types, get_site_field_types_sorted, 
+    )
+
 
 #   -----------------------------------------------------------------------------
 #
@@ -163,7 +176,7 @@ class StreamInputSource(InputSource):
 
 #   -----------------------------------------------------------------------------
 #
-#   JSON-LD context generation tests
+#   JSON-LD and context generation tests
 #
 #   -----------------------------------------------------------------------------
 
@@ -191,6 +204,10 @@ class JsonldContextTest(AnnalistTestCase):
         resetSitedata()
         return
 
+    #   -----------------------------------------------------------------------------
+    #   Helpers
+    #   -----------------------------------------------------------------------------
+
     def get_coll_url(self, coll):
         return ("file://" + 
             os.path.normpath(
@@ -201,8 +218,54 @@ class JsonldContextTest(AnnalistTestCase):
                 ) + "/"
             )
 
+    def scan_rdf_list(self, graph, head):
+        """
+        Iterate over nodes in an RDF list
+        """
+        next = head
+        while (next is not None) and (next != URIRef(RDF.nil)):
+            item = graph.value(subject=next, predicate=URIRef(RDF.first))
+            yield item
+            next = graph.value(subject=next, predicate=URIRef(RDF.rest))
+        return
+
+    def assertTripleIn(self, t, g):
+        """
+        Assert that triple exists in graph, where None values are wildcard
+        """
+        ts = list(g.triples(t))
+        self.assertNotEqual(len(ts), 0, "Triple %r not in graph"%(t,))
+        return
+
+    def get_context_mock_dict(self, base_path, context_path="../../"):
+        """
+        Uses Django test client results to create a dictionary of mock results for 
+        accessing JSONLD context resources.  Works with MockHttpDictResources.
+        """
+        mock_refs = (
+            [ context_path+"coll_context.jsonld"
+            # , "../../site_context.jsonld" 
+            ])
+        mock_dict = {}
+        for mock_ref in mock_refs:
+            mu = urlparse.urljoin(base_path, mock_ref)
+            # log.debug(
+            #     "get_context_mock_dict: base_path %s, mock_ref %s, mu %s"%
+            #     (base_path, mock_ref, mu)
+            #     )
+            mr = self.client.get(mu)
+            if mr.status_code != 200:
+                log.error(
+                    "get_context_mock_dict: uri %s, status_code %d, reason_phrase %s"%
+                    (mu, mr.status_code, mr.reason_phrase)
+                    )
+            self.assertEqual(mr.status_code,   200)
+            mock_dict[mock_ref] = mr.content
+        # print "***** mu: %s, mock_dict: %r"%(mu, mock_dict.keys())
+        return mock_dict
+
     #   -----------------------------------------------------------------------------
-    #   JSON-LD context tests
+    #   JSON-LD and context tests
     #   -----------------------------------------------------------------------------
 
     def test_jsonld_site(self):
@@ -448,7 +511,6 @@ class JsonldContextTest(AnnalistTestCase):
         user_default = AnnalistUser.load(
             self.testcoll, "_default_user_perms", altscope="all"
             )
-
         # Read user data as JSON-LD
         g = Graph()
         s = user_default._read_stream()
@@ -466,7 +528,6 @@ class JsonldContextTest(AnnalistTestCase):
         # print "*****"+repr(result)
         # print("***** g: (user_default)")
         # print(g.serialize(format='turtle', indent=4))
-
         # Check the resulting graph contents
         subj              = b #@@ user_default.get_url()
         user_default_data = user_default.get_values()
@@ -512,14 +573,11 @@ class JsonldContextTest(AnnalistTestCase):
             self.testsite, self.testcoll, "testreftype", create_typedata=True
             )
         test_ref_type_info.create_entity("refentity", test_ref_entity_create_values(imageuri))
-
         # Generate collection JSON-LD context data
         self.testcoll.generate_coll_jsonld_context()
-
         # Create entity object to access image reference data 
         testdata  = RecordTypeData.load(self.testcoll, "testreftype")
         ref_image = EntityData.load(testdata, "refentity")
-
         # Read user data as JSON-LD
         g = Graph()
         s = ref_image._read_stream()
@@ -540,7 +598,6 @@ class JsonldContextTest(AnnalistTestCase):
         # print "*****"+repr(result)
         # print("***** g: (ref_image)")
         # print(g.serialize(format='turtle', indent=4))
-
         # Check the resulting graph contents
         subj           = b #@@ ref_image.get_url()
         ref_image_data = ref_image.get_values()
@@ -558,35 +615,7 @@ class JsonldContextTest(AnnalistTestCase):
             , (subj, testns.reference,  URIRef(imageuri)                             )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
-
         return
-
-    def get_context_mock_dict(self, base_path):
-        """
-        Uses Django test client results to create a dictionary of mock results for 
-        accessing JSONLD context resources.  Works with MockHttpDictResources.
-        """
-        mock_refs = (
-            [ "../../coll_context.jsonld"
-            # , "../../site_context.jsonld" 
-            ])
-        mock_dict = {}
-        for mock_ref in mock_refs:
-            mu = urlparse.urljoin(base_path, mock_ref)
-            # log.debug(
-            #     "get_context_mock_dict: base_path %s, mock_ref %s, mu %s"%
-            #     (base_path, mock_ref, mu)
-            #     )
-            mr = self.client.get(mu)
-            if mr.status_code != 200:
-                log.error(
-                    "get_context_mock_dict: uri %s, status_code %d, reason_phrase %s"%
-                    (mu, mr.status_code, mr.reason_phrase)
-                    )
-            self.assertEqual(mr.status_code,   200)
-            mock_dict[mock_ref] = mr.content
-        # print "***** mu: %s, mock_dict: %r"%(mu, mock_dict.keys())
-        return mock_dict
 
     def test_http_jsonld_entity1(self):
         """
@@ -734,7 +763,9 @@ class JsonldContextTest(AnnalistTestCase):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
 
-    # Content negotiation tests
+    #   -----------------------------------------------------------------------------
+    #   Entity content negotiation tests
+    #   -----------------------------------------------------------------------------
 
     def test_http_conneg_jsonld_entity1(self):
         """
@@ -742,11 +773,9 @@ class JsonldContextTest(AnnalistTestCase):
         """
         # Generate collection JSON-LD context data
         self.testcoll.generate_coll_jsonld_context()
-
         # Create entity object to access entity data 
         testdata = RecordTypeData.load(self.testcoll, "testtype")
         entity1  = EntityData.load(testdata, "entity1")
-
         # Read entity data as JSON-LD
         u = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
         # print "@@ test_http_conneg_jsonld_entity1: uri %s"%u
@@ -768,7 +797,6 @@ class JsonldContextTest(AnnalistTestCase):
         # print "*****"+repr(result)
         # print("***** g: (entity1)")
         # print(g.serialize(format='turtle', indent=4))
-
         # Check the resulting graph contents
         subj        = entity1.get_url()
         entity_data = entity1.get_values()
@@ -780,7 +808,7 @@ class JsonldContextTest(AnnalistTestCase):
             , (subj, ANNAL.type,             URIRef(ANNAL.EntityData)                  )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
-            # Content negotiation testsrturn
+        return
 
     def test_http_conneg_json_entity1(self):
         """
@@ -788,11 +816,9 @@ class JsonldContextTest(AnnalistTestCase):
         """
         # Generate collection JSON-LD context data
         self.testcoll.generate_coll_jsonld_context()
-
         # Create entity object to access entity data 
         testdata = RecordTypeData.load(self.testcoll, "testtype")
         entity1  = EntityData.load(testdata, "entity1")
-
         # Read entity data as JSON-LD
         u = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
         r = self.client.get(u, HTTP_ACCEPT="application/json")
@@ -813,7 +839,6 @@ class JsonldContextTest(AnnalistTestCase):
         # print "*****"+repr(result)
         # print("***** g: (entity1)")
         # print(g.serialize(format='turtle', indent=4))
-
         # Check the resulting graph contents
         subj        = entity1.get_url()
         entity_data = entity1.get_values()
@@ -825,7 +850,7 @@ class JsonldContextTest(AnnalistTestCase):
             , (subj, ANNAL.type,             URIRef(ANNAL.EntityData)                  )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
-            # Content negotiation testsrturn
+        return
 
     def test_http_conneg_jsonld_type_vocab(self):
         """
@@ -834,7 +859,6 @@ class JsonldContextTest(AnnalistTestCase):
         # Generate collection JSON-LD context data
         self.testcoll.generate_coll_jsonld_context()
         type_vocab = self.testcoll.get_type("_vocab")
-
         # Read type data as JSON-LD
         u = recordtype_url(coll_id="testcoll", type_id=type_vocab.get_id())
         r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
@@ -850,14 +874,12 @@ class JsonldContextTest(AnnalistTestCase):
         # print(repr(u))
         # print("***** c: (type_vocab)")
         # print r.content
-
         # Read graph data with HTTP mocking for context references
         with MockHttpDictResources(v, self.get_context_mock_dict(v)):
             result = g.parse(data=r.content, publicID=v, base=v, format="json-ld")
         # print "*****"+repr(result)
         # print("***** g: (type_vocab)")
         # print(g.serialize(format='turtle', indent=4))
-
         # Check the resulting graph contents
         subj            = TestHostUri + u
         type_vocab_data = type_vocab.get_values()
@@ -874,6 +896,154 @@ class JsonldContextTest(AnnalistTestCase):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
 
+    #   -----------------------------------------------------------------------------
+    #   Entity list content negotiation tests
+    #   -----------------------------------------------------------------------------
 
+    def get_list_json(self, list_url, subj_ref, coll_id="testcoll", type_id=None, context_path=""):
+        """
+        Return list of entity nodes from JSON list
+        """
+        #@@
+        # list_url_abs    = urlparse.urljoin(TestHostUri, list_url)
+        # list_url_query = urlparse.urlsplit(list_url).query
+        # if list_url_query != "":
+        #     list_url_query = "?" + list_url_query
+        # expect_json_url = list_url_abs + layout.ENTITY_LIST_FILE + list_url_query
+        #@@
+        self.testcoll.generate_coll_jsonld_context()
+        r = self.client.get(list_url, HTTP_ACCEPT="application/ld+json")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        json_url = r['Location']
+        expect_json_url = make_resource_url(TestHostUri, list_url, layout.ENTITY_LIST_FILE)
+        self.assertEqual(json_url, expect_json_url)
+        r = self.client.get(json_url)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # print("***** json_url: "+json_url)
+        # print("***** c: (testcoll/_type list)")
+        # print r.content
+        g = Graph()
+        with MockHttpDictResources(json_url, self.get_context_mock_dict(json_url, context_path=context_path)):
+            result = g.parse(data=r.content, publicID=json_url, base=json_url, format="json-ld")
+        # print("***** g: (testcoll/_type list)")
+        # print(g.serialize(format='turtle', indent=4))
+        # print("*****")
+        # for t in g.triples((None, None, None)):
+        #     print repr(t)
+        # print("*****")
+        subj = urlparse.urljoin(json_url, subj_ref)
+        for (s, p, o) in (
+            [ (subj, ANNAL.entity_list, None)
+            ]):
+            self.assertTripleIn( (URIRef(s), URIRef(p), o), g)
+        list_head  = g.value(subject=URIRef(subj), predicate=URIRef(ANNAL.entity_list))
+        list_items = list(self.scan_rdf_list(g, list_head))
+        return (json_url, list_items)
+
+    def test_http_conneg_jsonld_list_coll_type(self):
+        """
+        Content negotiate for JSON-LD version of a list of collection-defined types
+        """
+        list_url = entitydata_list_type_url(
+            "testcoll", "_type",
+            scope=None
+            )
+        subj_ref = entitydata_list_type_url(
+            "testcoll", "_type",
+            list_id="Type_list",
+            scope=None
+            )
+        (json_url, list_items) = self.get_list_json(
+            list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../"
+            )
+        t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        self.assertEqual(len(list_items), 1)
+        self.assertIn(URIRef(t_uri), list_items)
+        return
+
+    def test_http_conneg_jsonld_list_coll_all(self):
+        """
+        Content negotiate for JSON-LD version of a list of collection-defined entities of all types
+        """
+        list_url = entitydata_list_all_url("testcoll", scope=None)
+        subj_ref = entitydata_list_all_url(
+            "testcoll", list_id="Default_list_all", scope=None
+            )
+        (json_url, list_items) = self.get_list_json(
+            list_url, subj_ref, coll_id="testcoll", type_id=None, context_path=""
+            )
+        t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        e1uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
+        self.assertEqual(len(list_items), 2)
+        self.assertIn(URIRef(t_uri), list_items)
+        self.assertIn(URIRef(e1uri), list_items)
+        return
+
+    def test_http_conneg_jsonld_list_coll_all_list(self):
+        """
+        Content negotiate for JSON-LD version of a list of collection-defined entities of all types
+        """
+        list_url = entitydata_list_all_url(
+            "testcoll", list_id="Type_list", scope=None
+            )
+        subj_ref = entitydata_list_all_url(
+            "testcoll", list_id="Type_list", scope=None
+            )
+        (json_url, list_items) = self.get_list_json(
+            list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../../d/"
+            )
+        t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        e1uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
+        self.assertEqual(len(list_items), 1)
+        self.assertIn(URIRef(t_uri), list_items)
+        return
+
+    def test_http_conneg_jsonld_list_site_type(self):
+        """
+        Content negotiate for JSON-LD version of a list of collection-defined types
+        """
+        list_url = entitydata_list_type_url(
+            "testcoll", "_type",
+            scope="all"
+            )
+        subj_ref = entitydata_list_type_url(
+            "testcoll", "_type",
+            list_id="Type_list",
+            scope="all"
+            )
+        (json_url, list_items) = self.get_list_json(
+            list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../"
+            )
+        # print "@@ "+repr(list_items)
+        expect_type_ids = get_site_types()
+        expect_type_ids.add("testtype")
+        self.assertEqual(len(list_items), len(expect_type_ids))
+        for entity_id in expect_type_ids:
+            t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
+            self.assertIn(URIRef(t_uri), list_items)
+        return
+
+    def test_http_conneg_jsonld_list_site_all_list(self):
+        """
+        Content negotiate for JSON-LD version of a list of collection-defined entities of all types
+        """
+        list_url = entitydata_list_all_url(
+            "testcoll", list_id="Type_list", scope="all"
+            )
+        subj_ref = entitydata_list_all_url(
+            "testcoll", list_id="Type_list", scope="all"
+            )
+        (json_url, list_items) = self.get_list_json(
+            list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../../d/"
+            )
+        expect_type_ids = get_site_types()
+        expect_type_ids.add("testtype")
+        self.assertEqual(len(list_items), len(expect_type_ids))
+        for entity_id in expect_type_ids:
+            t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
+            self.assertIn(URIRef(t_uri), list_items)
+        return
 
 # End.

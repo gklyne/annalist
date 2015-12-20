@@ -16,11 +16,11 @@ from django.http                        import HttpResponse
 from django.http                        import HttpResponseRedirect
 # from django.core.urlresolvers           import resolve, reverse
 
-# from annalist                           import layout
+from annalist                           import layout
 # from annalist                           import message
 # from annalist.exceptions                import Annalist_Error
 from annalist.identifiers               import RDFS, ANNAL
-# from annalist.util                      import split_type_entity_id, extract_entity_id
+from annalist.util                      import make_type_entity_id
 
 # import annalist.models.entitytypeinfo as entitytypeinfo
 # from annalist.models.collection         import Collection
@@ -59,6 +59,20 @@ class EntityGenericListJsonView(EntityGenericListView):
         super(EntityGenericListJsonView, self).__init__()
         return
 
+    # Helper function returns selected values from entity data
+
+    def strip_context_values(self, entity, base_url):
+        """
+        Return selected values from entity data
+        """
+        entityvals = entity.get_values()
+        del entityvals['@context']
+        entityref = make_type_entity_id(
+            entityvals[ANNAL.CURIE.type_id], entityvals[ANNAL.CURIE.id]
+            )
+        entityvals['@id'] = base_url+entityref+"/"
+        return entityvals
+
     # GET
 
     def get(self, request, coll_id=None, type_id=None, list_id=None):
@@ -69,7 +83,7 @@ class EntityGenericListJsonView(EntityGenericListView):
         selected entities.  If this proves too much, a future implementation 
         may want to consider ways of pruning the result.
         """
-        scope      = request.GET.get('scope', None)
+        scope      = request.GET.get('scope',  None)
         search_for = request.GET.get('search', "")
         log.info(
             "views.entitylistjson.get: coll_id %s, type_id %s, list_id %s, scope %s, search %s"%
@@ -78,6 +92,7 @@ class EntityGenericListJsonView(EntityGenericListView):
         listinfo    = self.list_setup(coll_id, type_id, list_id, request.GET.dict())
         if listinfo.http_response:
             return listinfo.http_response
+        base_url = self.get_collection_base_url()
         # log.debug("listinfo.list_id %s"%listinfo.list_id)
         # Prepare list and entity IDs for rendering form
         try:
@@ -91,7 +106,7 @@ class EntityGenericListJsonView(EntityGenericListView):
                         )
                 )
             typeinfo      = listinfo.entitytypeinfo
-            entityvallist = [ e.get_values() for e in entity_list ]
+            entityvallist = [ self.strip_context_values(e, base_url) for e in entity_list ]
         except Exception as e:
             log.exception(str(e))
             return self.error(
@@ -106,13 +121,15 @@ class EntityGenericListJsonView(EntityGenericListView):
             scope=scope,
             search=search_for
             )
+        #@@ NOTE: temporary code with absolute URIs until newer JSON-LD parser is released
         jsondata = (
             { '@id':            list_url
             , '@context': [
-                { "@base":  self.get_collection_base_url() },
-                "coll_context.jsonld"
+                { "@base":  request.build_absolute_uri(base_url) },
+                base_url+layout.COLL_CONTEXT_FILE
                 ]
-            , 'entity_list':    entityvallist
+            # , ANNAL.CURIE.type_id:      "_list"
+            , ANNAL.CURIE.entity_list:  entityvallist
             })
         response = HttpResponse(
             json.dumps(jsondata, indent=2, separators=(',', ': ')),

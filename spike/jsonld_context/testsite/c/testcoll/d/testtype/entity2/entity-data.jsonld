@@ -1,0 +1,13 @@
+{
+  "@context": [
+    { "@base": "/testsite/c/testcoll/d/" },
+    "file:///usr/workspace/github/gklyne/annalist/spike/jsonld_context/testsite/c/testcoll/d/coll_context.jsonld"
+  ],
+  "@id": "testtype/entity2/",
+  "@type": [ "annal:EntityData" ],
+  "rdfs:label": "Entity testcoll/testtype/entity2",
+  "rdfs:comment": "Entity coll testcoll, type testtype, entity entity2",
+  "annal:type_id": "testtype",
+  "annal:id": "entity2",
+  "annal:type": "annal:EntityData"
+}

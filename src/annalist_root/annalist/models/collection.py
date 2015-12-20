@@ -513,7 +513,12 @@ class Collection(Entity):
         # Use OrderedDict to allow some control over ordering of context file contents:
         # this is for humane purposes only, and is not technically important.
         context           = OrderedDict(
-            { ANNAL.CURIE.type: { "@type": "@id" }
+            { ANNAL.CURIE.type:         { "@type":      "@id"   }
+            , ANNAL.CURIE.entity_list:  { "@container": "@list" }
+            })
+        # Collection-local URI prefix
+        context.update(
+            { 'coll':           self._entityviewurl
             })
         # Common import/upload fields
         context.update(
@@ -530,7 +535,7 @@ class Collection(Entity):
         context.update(
             { 'import_name':   "annal:import_name"
             , 'import_url':    
-              { "@id": "annal:import_url"
+              { "@id":   "annal:import_url"
               , "@type": "@id"
               }
             })

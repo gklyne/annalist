@@ -20,7 +20,7 @@ from annalist                           import layout
 from annalist                           import message
 from annalist.exceptions                import Annalist_Error
 from annalist.identifiers               import RDFS, ANNAL
-from annalist.util                      import split_type_entity_id, extract_entity_id
+from annalist.util                      import split_type_entity_id, extract_entity_id, make_resource_url
 
 import annalist.models.entitytypeinfo as entitytypeinfo
 from annalist.models.collection         import Collection
@@ -206,9 +206,10 @@ class EntityGenericListView(AnnalistGenericView):
                 )
         # log.debug("EntityGenericListView.get listcontext %r"%(listcontext))
         # Generate and return form data
+        json_redirect_url = make_resource_url("", self.get_request_path(), layout.ENTITY_LIST_FILE)
         return (
             self.render_html(listcontext, self._entityformtemplate) or 
-            self.redirect_json(layout.ENTITY_LIST_FILE) or
+            self.redirect_json(json_redirect_url) or
             #@@ self.render_json(entityvallist) or
             self.error(self.error406values())
             )

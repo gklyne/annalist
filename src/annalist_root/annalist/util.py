@@ -292,6 +292,32 @@ def entity_url_path(baseuri, entityref):
     uri = urlparse.urljoin(baseuri, entityref)
     return urlparse.urlparse(uri).path
 
+def make_resource_url(baseuri, entityref, resourceref):
+    """
+    Build a URL for an entity resource that is based on a supplied base URI
+    and entity reference, but including the supplied resource name reference
+    (i.e. filename)
+
+    This function preserves any query parameters from the supplied entityurl.
+
+    >>> make_resource_url("http://example.org/foo/", "/bar/stuff", "entity.ref")
+    'http://example.org/bar/entity.ref'
+    >>> make_resource_url("http://example.org/foo/", "/bar/stuff?query=val", "entity.ref")
+    'http://example.org/bar/entity.ref?query=val'
+    """
+    # print "@@b "+baseuri
+    # print "@@e "+entityref
+    # print "@@r "+resourceref
+    url   = urlparse.urljoin(baseuri, entityref)
+    # print "@@u "+url
+    query = urlparse.urlsplit(entityref).query
+    if query != "":
+        query = "?" + query
+    # print "@@q "+query
+    resource_url = urlparse.urljoin(urlparse.urljoin(url, resourceref), query)
+    # print "@@r "+resource_url
+    return resource_url
+
 def strip_comments(f):
     """
     Returns a file-like object that returns content from the supplied file-like

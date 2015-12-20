@@ -10,7 +10,7 @@ from identifiers import RDF, RDFS, ANNAL
 def read_jsonld():
     g = Graph()
     r = os.path.dirname(os.path.abspath(__file__))
-    b = os.path.join(r, "testcoll/d/testtype/entity1/")
+    b = os.path.join(r, "testcoll/d/testtype/entity2/")
     print("***** b:")
     print(repr(b))
     f = os.path.join(b, "entity-data.jsonld")
@@ -235,6 +235,50 @@ def test_jsonld_coll_type():
     print "test_jsonld_coll_type: OK"
     return
 
+def test_jsonld_entity2():
+    """
+    Read entity data as JSON-LD, and check resulting RDF triples
+
+    entity2 is very similar to entity1, but is coded with an absolute path base URI:
+
+        "@context": [
+          { "@base": "/testsite/c/testcoll/d/" },
+          "file:///usr/workspace/github/gklyne/annalist/spike/jsonld_context/testsite/c/testcoll/d/coll_context.jsonld"
+        ]
+
+    NOTE: this test case is not portable.
+    """
+    testbasedir = os.path.join(os.getcwd(), "testsite")
+    testpath    = "c/testcoll/d/testtype/entity2/entity-data.jsonld"
+    p = _exists_path(testpath, base=testbasedir)
+    b = "http://example.org" + os.path.dirname(p) + "/"
+    s = _read_stream(p)
+    g = Graph()
+    # print "***** p:"+repr(p)
+    # print "***** b:"+repr(b)
+    # print "***** s:"+repr(s)
+    result = g.parse(source=s, publicID=b, format="json-ld")
+    # print "*****"+repr(result)
+    # print "***** entity2 metadata:"
+    # print(g.serialize(format='turtle', indent=4))
+    # Check the resulting graph contents
+    subj             = URIRef(
+        "http://example.org" + 
+        "/testsite/c/testcoll/d/testtype/entity2" +
+        "/"
+        )
+    # print "***** subj:"+repr(subj)
+    ann_id           = Literal("entity2")
+    ann_type         = URIRef(ANNAL.EntityData)
+    ann_type_id      = Literal("testtype")
+    label            = Literal("Entity testcoll/testtype/entity2")
+    assert (subj, URIRef(ANNAL.id),      ann_id     ) in g
+    assert (subj, URIRef(ANNAL.type),    ann_type   ) in g
+    assert (subj, URIRef(ANNAL.type_id), ann_type_id) in g
+    assert (subj, URIRef(RDFS.label),    label      ) in g
+    print "test_jsonld_entity2: OK"
+    return
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     # read_jsonld()
@@ -243,4 +287,5 @@ if __name__ == "__main__":
     test_jsonld_entity1()
     test_jsonld_site_type()
     test_jsonld_coll_type()
+    test_jsonld_entity2()     # Non-portable test case
 
