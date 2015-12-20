@@ -66,7 +66,7 @@ class EntityGenericListJsonView(EntityGenericListView):
         Return selected values from entity data
         """
         entityvals = entity.get_values()
-        del entityvals['@context']
+        entityvals.pop('@context', None)
         entityref = make_type_entity_id(
             entityvals[ANNAL.CURIE.type_id], entityvals[ANNAL.CURIE.id]
             )

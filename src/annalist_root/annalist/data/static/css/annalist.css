@@ -461,8 +461,14 @@ div.columns input[type="checkbox"]
 
 div.columns > input[type=submit] 
 {
+    margin-top:    0.25rem ;
+    /* 
+    Padding doesn't work here, margin isn't needed as input seems to carry its own:
+    margin-left:   0.5rem;
+    margin-right:  0rem;
     padding-left: 1rem;
     padding-right: 1rem;
+    */
 }
 
 div.columns > select[size] ,

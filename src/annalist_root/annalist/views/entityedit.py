@@ -464,7 +464,7 @@ class GenericEntityEditView(AnnalistGenericView):
             self.redirect_json(
                 self.get_entity_json_url(
                     coll_id, type_id, entity_id, 
-                    viewinfo.get_entity_ref()
+                    viewinfo.get_entity_data_ref()
                     ),
                 links=[
                     { "rel": "canonical"

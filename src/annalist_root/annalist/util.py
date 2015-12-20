@@ -305,18 +305,22 @@ def make_resource_url(baseuri, entityref, resourceref):
     >>> make_resource_url("http://example.org/foo/", "/bar/stuff?query=val", "entity.ref")
     'http://example.org/bar/entity.ref?query=val'
     """
-    # print "@@b "+baseuri
-    # print "@@e "+entityref
-    # print "@@r "+resourceref
-    url   = urlparse.urljoin(baseuri, entityref)
-    # print "@@u "+url
+    url          = urlparse.urljoin(baseuri, entityref)
+    resource_url = urlparse.urljoin(url, make_resource_ref_query(entityref, resourceref))
+    return resource_url
+
+def make_resource_ref_query(entityref, resourceref):
+    """
+    Returns `resourceref` with the query component (if any) from entityref.
+
+    This is used to generate a resource reference that is the supplied resource ref
+    treated as relative to the supplied entityref, including any query parameters
+    included in entityref.
+    """
     query = urlparse.urlsplit(entityref).query
     if query != "":
         query = "?" + query
-    # print "@@q "+query
-    resource_url = urlparse.urljoin(urlparse.urljoin(url, resourceref), query)
-    # print "@@r "+resource_url
-    return resource_url
+    return urlparse.urljoin(resourceref, query)
 
 def strip_comments(f):
     """

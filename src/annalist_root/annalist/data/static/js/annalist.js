@@ -16,6 +16,11 @@ annalist = {
             $(".small-rows-4").attr("rows", 4);
             /* $(".small-only-text-right").attr("text-align", "right"); doesn't work */
             $(".medium-add-margin").attr("width", "100%")
+            $(".medium-up-text-right").removeClass("text-right");
+        }
+        else
+        {
+            $(".medium-up-text-right").addClass("text-right");
         };
         if (window.matchMedia(Foundation.media_queries['medium']).matches)
         {

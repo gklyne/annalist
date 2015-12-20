@@ -38,7 +38,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Create view to generate JSON-formatted list of entities
     - [x] Content negotiation for list view
     - [x] Test cases for content negotiated list view JSON
-- [ ] Add "get the data" button to list display
+- [x] Add "get the data" button to list display
 - [x] In list view, provide scope as query parameter not path segment (`?scope=all`)
     - [x] Change entitylist.py - retrieve scope value from request
     - [x] Remove !all entries from urls.py

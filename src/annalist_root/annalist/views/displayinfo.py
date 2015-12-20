@@ -27,7 +27,7 @@ import annalist
 from annalist                       import message
 from annalist                       import layout
 from annalist.identifiers           import RDF, RDFS, ANNAL
-from annalist.util                  import valid_id, extract_entity_id
+from annalist.util                  import valid_id, extract_entity_id, make_resource_ref_query
 
 from annalist.models.entitytypeinfo import EntityTypeInfo, SITE_PERMISSIONS
 from annalist.models.collection     import Collection
@@ -525,13 +525,30 @@ class DisplayInfo(object):
             self.continuation_url = curi
         return curi
 
-    def get_entity_ref(self):
+    def get_entity_data_ref(self):
         """
         Returns a string that can be used as a reference to the entity metadata resource
         relative to an entity URL.
+
+        (Preserves query params from original request)
         """
         assert self.entitytypeinfo is not None
-        return self.entitytypeinfo.entityclass._entityfile
+        request_url = self.view.get_request_path()
+        data_ref = make_resource_ref_query(
+            request_url, self.entitytypeinfo.entityclass._entityfile
+            )
+        return data_ref
+
+    def get_entity_list_ref(self):
+        """
+        Returns a string that can be used as a reference to the entity list data
+        relative to the list URL.
+
+        (Preserves query params from original request)
+        """
+        request_url = self.view.get_request_path()
+        list_ref = make_resource_ref_query(request_url, layout.ENTITY_LIST_FILE)
+        return list_ref
 
     def context_data(self):
         """
@@ -568,10 +585,11 @@ class DisplayInfo(object):
         if self.recordlist:
             context.update(
                 { 'list_label': self.recordlist[RDFS.CURIE.label]
+                , 'entity_list_ref': self.get_entity_list_ref()
                 })
         if self.entitytypeinfo:
             context.update(
-                { 'entity_data_ref': self.get_entity_ref()
+                { 'entity_data_ref': self.get_entity_data_ref()
                 })
         return context
 
