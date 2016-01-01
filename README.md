@@ -7,6 +7,8 @@ _Current status (2015-08-04):  public prototype, released for evaluation and fee
 
 For information about the current release, please refer to the [V0.1 release notes](documents/release-notes/release-v0.1.md)
 
+NOTE: most recent stable software release is on the Git `master` branch; current development work may be foubnd on the `develop` branch.
+
 
 Quick-start
 -----------

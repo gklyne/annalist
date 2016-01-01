@@ -26,8 +26,6 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.defaultedit     import EntityDefaultEditView
-
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                  import test_layout

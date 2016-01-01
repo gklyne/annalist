@@ -44,7 +44,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Remove !all entries from urls.py
     - [x] Revise URI construction for list all in entitylist and test cases
     - [x] Test
-- [ ] Is DefaultList now truly redundant?  Eliminate?
+- [x] BUG?: log report on demo server
+        INFO 2015-12-22 08:58:50,639 views.entityedit.get:  coll_id Carolan_Guitar, type_id _view, entity_id Default_view, view_id None, action None
+        INFO 2015-12-22 09:01:31,753 'foundation/js/foundation/' + url + '' could not be found
+        WARNING 2015-12-22 09:01:31,753 Not Found: /static/foundation/js/foundation/' + url + '
+        WARNING 2015-12-22 09:01:31,753 Not Found: /static/foundation/js/foundation/' + url + '
+        Can't reproduce
+- [x] Eliminate redundant modules `views.defaultlist` and `views.defaultedit` (but keep tests).
 - [ ] In drop-down list, try including typeid/entityid only for entries whose labels are not unique.
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.

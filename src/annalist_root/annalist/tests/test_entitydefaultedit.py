@@ -27,7 +27,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.defaultedit             import EntityDefaultEditView
+#@@ from annalist.views.defaultedit             import EntityDefaultEditView
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from AnnalistTestCase       import AnnalistTestCase
@@ -140,9 +140,11 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
     #   Form rendering tests
     #   -----------------------------------------------------------------------------
 
-    def test_EntityDefaultEditView(self):
-        self.assertEqual(EntityDefaultEditView.__name__, "EntityDefaultEditView", "Check EntityDefaultEditView class name")
-        return
+    #@@
+    # def test_EntityDefaultEditView(self):
+    #     self.assertEqual(EntityDefaultEditView.__name__, "EntityDefaultEditView", "Check EntityDefaultEditView class name")
+    #     return
+    #@@
 
     def test_get_form_rendering(self):
         u = entitydata_edit_url("new", "testcoll", "testtype")

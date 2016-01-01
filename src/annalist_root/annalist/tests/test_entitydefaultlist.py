@@ -29,7 +29,6 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
 from annalist.views.uri_builder             import uri_params, uri_with_params
-from annalist.views.defaultlist             import EntityDefaultListView
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from AnnalistTestCase       import AnnalistTestCase
@@ -134,10 +133,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
     #   Form rendering tests
     #   -----------------------------------------------------------------------------
-
-    def test_EntityDefaultListView(self):
-        self.assertEqual(EntityDefaultListView.__name__, "EntityDefaultListView", "Check EntityDefaultListView class name")
-        return
 
     def test_get_default_all_list(self):
         u = entitydata_list_all_url("testcoll") + "?continuation_url=/xyzzy/"

@@ -19,9 +19,7 @@ from annalist.views.recordviewdelete    import RecordViewDeleteConfirmedView
 from annalist.views.recordlistdelete    import RecordListDeleteConfirmedView
 from oauth2.views                       import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
 
-from annalist.views.defaultlist         import EntityDefaultListView
-from annalist.views.defaultedit         import EntityDefaultEditView
-
+#@@ from annalist.views.defaultedit         import EntityDefaultEditView
 from annalist.views.entityedit          import GenericEntityEditView
 from annalist.views.entitylist          import EntityGenericListView
 from annalist.views.entitylistjson      import EntityGenericListJsonView
@@ -93,16 +91,16 @@ urlpatterns = patterns('',
     # Default/API access lists and data
     # (these may content negotiate for various formats)
     url(r'^c/(?P<coll_id>\w{1,32})/d/$',
-                            EntityDefaultListView.as_view(),
+                            EntityGenericListView.as_view(),
                             name='AnnalistEntityDefaultListAll'),
     url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})/$',
-                            EntityDefaultListView.as_view(),
+                            EntityGenericListView.as_view(),
                             name='AnnalistEntityDefaultListType'),
     url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})/!delete_confirmed$',
                             EntityDataDeleteConfirmedView.as_view(),
                             name='AnnalistEntityDataDeleteView'),
     url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})/(?P<entity_id>\w{1,32})/$',
-                            EntityDefaultEditView.as_view(),
+                            GenericEntityEditView.as_view(),
                             name='AnnalistEntityAccessView'),
 
     # JSON list views without list_id specified
@@ -115,7 +113,7 @@ urlpatterns = patterns('',
 
     # Specified list views
     url(r'^c/(?P<coll_id>\w{1,32})/l/$',
-                            EntityDefaultListView.as_view(),
+                            EntityGenericListView.as_view(),
                             name='AnnalistEntityDefaultList'),
     url(r'^c/(?P<coll_id>\w{1,32})/l/(?P<list_id>\w{1,32})/$',
                             EntityGenericListView.as_view(),
