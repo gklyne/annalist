@@ -77,7 +77,7 @@ class FieldDescription(object):
         field_id            = recordfield.get(ANNAL.CURIE.id,         "_missing_id_")
         field_name          = recordfield.get(ANNAL.CURIE.field_name, field_id)  # Field name in form
         field_label         = recordfield.get(RDFS.CURIE.label, "")
-        field_property      = field_property or recordfield.get(ANNAL.CURIE.property_uri, "")
+        field_property      = field_property  or recordfield.get(ANNAL.CURIE.property_uri, "")
         field_placement     = field_placement or recordfield.get(ANNAL.CURIE.field_placement, "")
         field_placeholder   = recordfield.get(ANNAL.CURIE.placeholder, "")
         field_render_type   = extract_entity_id(recordfield.get(ANNAL.CURIE.field_render_type, ""))
@@ -415,14 +415,16 @@ def field_description_from_view_field(collection, field, view_context=None, grou
     if recordfield is None:
         log.warning("Can't retrieve definition for field %s"%(field_id))
         recordfield = RecordField.load(collection, "Field_missing", altscope="all")
-    field_property  = (
-        field.get(ANNAL.CURIE.property_uri, None) or 
-        recordfield.get(ANNAL.CURIE.property_uri, "")
-        )
-    field_placement = get_placement_classes(
-        field.get(ANNAL.CURIE.field_placement, None) or 
-        recordfield.get(ANNAL.CURIE.field_placement, "")
-        )
+    #@@
+    # field_property  = (
+    #     field.get(ANNAL.CURIE.property_uri, None) or 
+    #     recordfield.get(ANNAL.CURIE.property_uri, "")
+    #     )
+    # field_placement = get_placement_classes(
+    #     field.get(ANNAL.CURIE.field_placement, None) or 
+    #     recordfield.get(ANNAL.CURIE.field_placement, "")
+    #     )
+    #@@
     # If field references group, pull in field details
     group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
     if group_ref:
@@ -434,6 +436,7 @@ def field_description_from_view_field(collection, field, view_context=None, grou
             # raise EntityNotFound_Error("Group %s used in field %s"%(group_ref, field_id))
     else:
         group_view = None
+    # If present, `field_property` and `field_placement` override values in the field dexcription
     return FieldDescription(
         collection, recordfield, view_context=view_context, 
         field_property=field.get(ANNAL.CURIE.property_uri, None),

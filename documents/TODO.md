@@ -19,6 +19,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] BUG: uploading PDF as image results in file extension PNG
     - [x] new resource type added, but still needs testing
     - [x] consider using different default extension?
+- [x] BUG?: log report on demo server
+        INFO 2015-12-22 08:58:50,639 views.entityedit.get:  coll_id Carolan_Guitar, type_id _view, entity_id Default_view, view_id None, action None
+        INFO 2015-12-22 09:01:31,753 'foundation/js/foundation/' + url + '' could not be found
+        WARNING 2015-12-22 09:01:31,753 Not Found: /static/foundation/js/foundation/' + url + '
+        WARNING 2015-12-22 09:01:31,753 Not Found: /static/foundation/js/foundation/' + url + '
+        Can't reproduce
 - [x] Home page: change button labels: "view metadata", "edit metadata", "remove collection".
 - [x] Add read-only renderers for view short text and view markdown.
     - [x] "Showtext" template
@@ -44,19 +50,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Remove !all entries from urls.py
     - [x] Revise URI construction for list all in entitylist and test cases
     - [x] Test
-- [x] BUG?: log report on demo server
-        INFO 2015-12-22 08:58:50,639 views.entityedit.get:  coll_id Carolan_Guitar, type_id _view, entity_id Default_view, view_id None, action None
-        INFO 2015-12-22 09:01:31,753 'foundation/js/foundation/' + url + '' could not be found
-        WARNING 2015-12-22 09:01:31,753 Not Found: /static/foundation/js/foundation/' + url + '
-        WARNING 2015-12-22 09:01:31,753 Not Found: /static/foundation/js/foundation/' + url + '
-        Can't reproduce
 - [x] Eliminate redundant modules `views.defaultlist` and `views.defaultedit` (but keep tests).
-- [x] In drop-down list, try including typeid/entityid only for entries whose labels are not unique.
-- [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
+- [x] In drop-down list, include typeid/entityid only for entries whose labels are not unique.
+- [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.
+    - Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?
     - Possibly precompute padding?
-        - This would require logic in fieldlistvaluemap, fielddescription and render_placement
+        - this would require logic in fieldlistvaluemap, fielddescription and render_placement
         - plus new logic to render the padding elements
     - Another option: take field-loop out of template and run it as a `render_all_fields` method
         - still needs placement parser to return position+width information
@@ -70,7 +71,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
 - [ ] Create schema definitions in Annalist for ANNAL namespace
 
-(release?)
+(release)
 
 - [ ] Use site/collection data to populate help panes on displays; use Markdown.
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.

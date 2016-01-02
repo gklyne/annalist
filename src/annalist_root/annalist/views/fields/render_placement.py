@@ -189,7 +189,7 @@ def get_field_placement_renderer():
 #
 #   ----------------------------------------------------------------------------
 
-Placement = namedtuple("Placement", ['field', 'label', 'value'])
+Placement = namedtuple("Placement", ['width', 'field', 'label', 'value'])
 
 def get_placement_classes(placement):
     """
@@ -201,27 +201,39 @@ def get_placement_classes(placement):
     'small-12 medium-2 columns'
     >>> get_placement_classes("small:0,12").value
     'small-12 medium-10 columns'
-    >>> get_placement_classes("medium:0,12")
-    Placement(field='small-12 columns', label='small-12 medium-2 columns', value='small-12 medium-10 columns')
-    >>> get_placement_classes("large:0,12")
-    Placement(field='small-12 columns', label='small-12 medium-2 columns', value='small-12 medium-10 columns')
+    >>> get_placement_classes("medium:0,12")                        # doctest: +NORMALIZE_WHITESPACE
+    Placement(width=OrderedDict([('small', 12), ('medium', 12), ('large', 12)]), \
+        field='small-12 columns', label='small-12 medium-2 columns', value='small-12 medium-10 columns')
+    >>> get_placement_classes("large:0,12")                         # doctest: +NORMALIZE_WHITESPACE
+    Placement(width=OrderedDict([('small', 12), ('medium', 12), ('large', 12)]), \
+        field='small-12 columns', label='small-12 medium-2 columns', value='small-12 medium-10 columns')
 
-    >>> get_placement_classes("small:0,12;medium:0,4")
-    Placement(field='small-12 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
-    >>> get_placement_classes("small:0,12; medium:0,4")
-    Placement(field='small-12 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    >>> get_placement_classes("small:0,12;medium:0,4")              # doctest: +NORMALIZE_WHITESPACE
+    Placement(width=OrderedDict([('small', 12), ('medium', 4), ('large', 4)]), \
+        field='small-12 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    >>> get_placement_classes("small:0,12; medium:0,4")             # doctest: +NORMALIZE_WHITESPACE
+    Placement(width=OrderedDict([('small', 12), ('medium', 4), ('large', 4)]), \
+        field='small-12 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
 
-    >>> get_placement_classes("small:0,12;medium:0,6;large:0,4")
-    Placement(field='small-12 medium-6 large-4 columns', label='small-12 medium-4 large-6 columns', value='small-12 medium-8 large-6 columns')
-    >>> get_placement_classes("small:0,6;medium:0,4")
-    Placement(field='small-6 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
-    >>> get_placement_classes("small:0,6;medium:0,4,right")
-    Placement(field='small-6 medium-4 columns right', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
-    >>> get_placement_classes("small:0,6")
-    Placement(field='small-6 columns', label='small-12 medium-4 columns', value='small-12 medium-8 columns')
+    >>> get_placement_classes("small:0,12;medium:0,6;large:0,4")    # doctest: +NORMALIZE_WHITESPACE
+    Placement(width=OrderedDict([('small', 12), ('medium', 6), ('large', 4)]), \
+        field='small-12 medium-6 large-4 columns', label='small-12 medium-4 large-6 columns', value='small-12 medium-8 large-6 columns')
 
-    >>> get_placement_classes("small:0,12,hide;medium:0,4")
-    Placement(field='small-12 medium-4 columns show-for-medium-up', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    >>> get_placement_classes("small:0,6;medium:0,4")               # doctest: +NORMALIZE_WHITESPACE
+    Placement(width=OrderedDict([('small', 6), ('medium', 4), ('large', 4)]), \
+        field='small-6 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+
+    >>> get_placement_classes("small:0,6;medium:0,4,right")         # doctest: +NORMALIZE_WHITESPACE
+    Placement(width=OrderedDict([('small', 6), ('medium', 4), ('large', 4)]), \
+        field='small-6 medium-4 columns right', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+
+    >>> get_placement_classes("small:0,6")                          # doctest: +NORMALIZE_WHITESPACE
+    Placement(width=OrderedDict([('small', 6), ('medium', 6), ('large', 6)]), \
+        field='small-6 columns', label='small-12 medium-4 columns', value='small-12 medium-8 columns')
+
+    >>> get_placement_classes("small:0,12,hide;medium:0,4")         # doctest: +NORMALIZE_WHITESPACE
+    Placement(width=OrderedDict([('small', 12), ('medium', 4), ('large', 4)]), \
+        field='small-12 medium-4 columns show-for-medium-up', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
     """
     def set_field_width(pmmode, pmwidth):
         field_width[pmmode] = pmwidth
@@ -250,8 +262,10 @@ def get_placement_classes(placement):
     value_width = OrderedDict()
     pmright     = ""
     pmshow      = ""
-    set_field_width("small", 12)        # Default small-12 columns (may be overridden)
+    set_field_width("small",  12)       # Default small-12  columns (may be overridden)
     set_field_width("medium", 12)       # Default medium-12 columns (may be overridden)
+    set_field_width("large",  12)       # Default large-12  columns (may be overridden)
+
     # Process each placement sub-expression
     for p in ps:
         pm = ppr.match(p)
@@ -268,13 +282,23 @@ def get_placement_classes(placement):
         set_field_width(pmmode, pmwidth)
         if pmmode == "small":
             set_field_width("medium", pmwidth)
+        if pmmode in ["small", "medium"]:
+            set_field_width("large", pmwidth)
     c = Placement(
+            width=field_width.copy(),
             field=format_class(field_width, pmright, pmshow),
             label=format_class(label_width),
             value=format_class(value_width)
             )
     # log.debug("get_placement_class %s, returns %s"%(placement,c))
     return c
+
+def make_field_width(small=12, medium=12, large=12):
+    width = OrderedDict()
+    width['small']  = small
+    width['medium'] = medium
+    width['large']  = large
+    return width
 
 if __name__ == "__main__":
     import doctest
