@@ -28,7 +28,7 @@ from annalist.models.annalistuser   import AnnalistUser
 from annalist.views.uri_builder             import uri_params, uri_with_params
 from annalist.views.fields.bound_field      import bound_field, get_entity_values
 from annalist.views.fields.render_placement import get_placement_classes
-from annalist.views.form_utils.fieldchoice  import FieldChoice
+from annalist.views.form_utils.fieldchoice  import FieldChoice, update_choice_labels
 
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -267,16 +267,23 @@ def render_select_options(name, label, opts, sel, placeholder=None):
     </div>
     <BLANKLINE>
     """
+    # Local helper to cleanup options and acount for duplicate labels
+    def update_options(opts):
+        return update_choice_labels(
+            [ FieldChoice(o) if isinstance(o, (str, unicode)) else o 
+              for o in opts
+            ])
+
     # Local helper to render single option
     def select_option(opt):
-        if isinstance(opt, (str, unicode)):
-            opt = FieldChoice(opt)
+        # if isinstance(opt, (str, unicode)):
+        #     opt = FieldChoice(opt)
         # selected = ('' if opt.value != sel else ' selected="selected"')
         # label    = (placeholder or "") if opt.value == "" else opt.label
         # label    = opt.label or opt.value or placeholder or ""
         # return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
         selected = ('' if opt.value != sel else ' selected="selected"')
-        label    = (placeholder or "") if opt.value == "" else opt.option_label_html()
+        label    = (placeholder or "") if opt.value == "" else opt.choice_html()
         # label    = opt.label or opt.value or placeholder or ""
         return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
     #
@@ -300,7 +307,8 @@ def render_select_options(name, label, opts, sel, placeholder=None):
     return select_template%(
         { 'name':       name
         , 'label':      label
-        , 'options':    "\n      ".join([ select_option(o) for o in opts ])
+        , 'options':    "\n      ".join(
+            [ select_option(o) for o in update_options(opts) ])
         })
 
 def render_choice_options(name, opts, sel, placeholder=None, select_class=None, _unused_value_dict={}):
@@ -327,7 +335,7 @@ def render_choice_options(name, opts, sel, placeholder=None, select_class=None, 
         if isinstance(opt, (str, unicode)):
             opt = FieldChoice(opt)
         selected = ('' if opt.value != sel else ' selected="selected"')
-        label    = (placeholder or "") if opt.value == "" else opt.option_label_html()
+        label    = (placeholder or "") if opt.value == "" else opt.choice()
         # label    = opt.label or opt.value or placeholder or ""
         return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
     def _unused_select_option(o):

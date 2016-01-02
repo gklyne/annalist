@@ -38,8 +38,8 @@ def expect_render_option(choice_val, select_val, placeholder):
         option_val  = "opt_type/"+choice_val
         choice_text = "label "+choice_val
         value_text  = ''' value="%s"'''%option_val
-    fc = FieldChoice(id=option_val, label=choice_text)
-    return '''<option%s%s>%s</option>'''%(value_text, selected, fc.option_label_html())
+    fc = FieldChoice(id=option_val, label=choice_text, choice_value=(choice_val=="dup"))
+    return '''<option%s%s>%s</option>'''%(value_text, selected, fc.choice_html())
 
 def expect_render_select(select_name, choice_list, select_val, placeholder):
     sel  = """<select name="%s">"""%select_name
@@ -47,7 +47,7 @@ def expect_render_select(select_name, choice_list, select_val, placeholder):
         val = "opt_type/"+select_val if select_val else ""
         lab = "opt_type/"+select_val if select_val else placeholder
         fc = FieldChoice(id=val, label=lab)
-        nopt = ['''<option value="%s" selected="selected">%s</option>'''%(val, fc.option_label_html())]
+        nopt = ['''<option value="%s" selected="selected">%s</option>'''%(val, fc.choice_html())]
     else:
         nopt = []
     opts = [ expect_render_option(choice_val, select_val, placeholder) for choice_val in choice_list ]
@@ -107,10 +107,11 @@ class SelectRenderingTest(FieldRendererTestSupport):
             return {'view': render_view, 'edit': render_edit}
         noval = "(No 'test label' selected)"
         test_values = (
-            [ ( "aa", "label aa",    "http://example.org/aa", ["aa", "bb", "cc"])
-            , ( "",   noval,         None,                    ["", "aa", "bb", "cc"])
-            , ( "dd", "opt_type/dd", "http://example.org/dd", ["aa", "bb", "cc"])
-            , ( "",   noval,         None,                    ["aa", "bb", "cc"])
+            [ ( "aa",  "label aa",    "http://example.org/aa",  ["aa", "bb", "cc"])
+            , ( "",    noval,         None,                     ["", "aa", "bb", "cc"])
+            , ( "dd",  "opt_type/dd", "http://example.org/dd",  ["aa", "bb", "cc"])
+            , ( "",    noval,         None,                     ["aa", "bb", "cc"])
+            , ( "dup", "label dup",   "http://example.org/dup", ["aa", "bb", "cc", "dup", "dup"])
             ])
         test_value_context_renders = (
             [ ( self._make_select_test_context(valkey, vallink, valchoices, noval), 
@@ -215,3 +216,5 @@ if __name__ == "__main__":
     # tests  = getSuite(select=sel)
     # if tests: runner.run(tests)
     unittest.main()
+
+

@@ -51,7 +51,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         WARNING 2015-12-22 09:01:31,753 Not Found: /static/foundation/js/foundation/' + url + '
         Can't reproduce
 - [x] Eliminate redundant modules `views.defaultlist` and `views.defaultedit` (but keep tests).
-- [ ] In drop-down list, try including typeid/entityid only for entries whose labels are not unique.
+- [x] In drop-down list, try including typeid/entityid only for entries whose labels are not unique.
 - [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.  Add field padding so that display position is as expected (if possible)
     - RenderFieldValue.label_view and .label_edit seem to be the key functions.
     - How to carry context forward?
@@ -268,6 +268,7 @@ Notes for Future TODOs:
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
 - [ ] Rationalize common fields to reduce duplication?
+    - but note that fields may use different comment/help text, so maybe not.
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?  But note that general philosophy is to avoid unnecessary validity checks that might impede data entry.
 - [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions.
 - [ ] Make default values smarter; e.g. field renderer logic to scan collection data for candidates?

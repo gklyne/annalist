@@ -47,7 +47,7 @@ from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordfield    import RecordField
 
 from annalist.views.fields.render_placement import get_placement_options
-from annalist.views.form_utils.fieldchoice  import FieldChoice
+from annalist.views.form_utils.fieldchoice  import FieldChoice, get_choice_labels
 
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -196,7 +196,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         option_labels_here     = (
             [self.html_encode(o.string) for o in select_elem.find_all("option")]
             )
-        option_labels_expected = [ fc.option_label() for fc in options ]
+        #@@ option_labels_expected = [ fc.choice() for fc in options ]
+        option_labels_expected = get_choice_labels(options)
         if option_labels_here != option_labels_expected:
             log.info("option_labels_here:     %r"%(option_labels_here,))
             log.info("option_labels_expected: %r"%(option_labels_expected,))

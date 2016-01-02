@@ -22,7 +22,7 @@ from annalist.views.fields.render_fieldvalue    import (
     get_field_edit_value,
     get_field_view_value
     )
-from annalist.views.form_utils.fieldchoice      import FieldChoice
+from annalist.views.form_utils.fieldchoice      import FieldChoice, update_choice_labels
 
 from django.template        import Template, Context
 
@@ -42,13 +42,13 @@ edit_options = (
         '''{% if opt.value == "" %} '''+
           '''<option value="" selected="selected">{{field.field_placeholder}}</option>\n'''+
         '''{% else %} '''+
-          '''<option value="{{opt.value}}" selected="selected">{{opt.label}}&nbsp;&nbsp;&nbsp;({{opt.value}})</option>\n'''+
+          '''<option value="{{opt.value}}" selected="selected">{{opt.choice_html}}</option>\n'''+
         '''{% endif %} '''+
       '''{% else %} '''+
         '''{% if opt.value == "" %} '''+
           '''<option value="">{{field.field_placeholder}}</option>\n'''+
         '''{% else %} '''+
-          '''<option value="{{opt.value}}">{{opt.label}}&nbsp;&nbsp;&nbsp;({{opt.value}})</option>\n'''+
+          '''<option value="{{opt.value}}">{{opt.choice_html}}</option>\n'''+
         '''{% endif %} '''+
       '''{% endif %} '''+
     '''{% endfor %} '''
@@ -245,8 +245,7 @@ class Select_edit_renderer(object):
             # Use refer-to type if value does not include type..
             typval  = fill_type_entity_id(val, context['field']['field_ref_type'])
             textval = SelectValueMapper.encode(typval)
-            options = context['field']['options']
-            # options is a list of FieldChoice values
+            options = update_choice_labels(context['field']['options'])
             # print repr(options)
             if textval not in [ o.value for o in options ]:
                 options = list(options)                   # clone
