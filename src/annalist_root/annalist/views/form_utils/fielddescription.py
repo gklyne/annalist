@@ -415,16 +415,6 @@ def field_description_from_view_field(collection, field, view_context=None, grou
     if recordfield is None:
         log.warning("Can't retrieve definition for field %s"%(field_id))
         recordfield = RecordField.load(collection, "Field_missing", altscope="all")
-    #@@
-    # field_property  = (
-    #     field.get(ANNAL.CURIE.property_uri, None) or 
-    #     recordfield.get(ANNAL.CURIE.property_uri, "")
-    #     )
-    # field_placement = get_placement_classes(
-    #     field.get(ANNAL.CURIE.field_placement, None) or 
-    #     recordfield.get(ANNAL.CURIE.field_placement, "")
-    #     )
-    #@@
     # If field references group, pull in field details
     group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
     if group_ref:

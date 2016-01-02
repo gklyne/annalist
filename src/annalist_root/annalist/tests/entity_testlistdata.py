@@ -209,7 +209,7 @@ def recordlist_view_context_data(
             , "field_label":        "List display type"
             , "field_render_type":  "Enum_choice"
             , "field_value_mode":   "Value_direct"
-            , "field_placement":    get_placement_classes("small:0,12;medium:0,6")
+            , "field_placement":    get_placement_classes("small:0,12;medium:6,6")
             , "field_value":        "Enum_list_type/List"
             , "options":            [] # ["list", "grid"]
             }

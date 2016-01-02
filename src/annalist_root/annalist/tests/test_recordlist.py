@@ -721,20 +721,28 @@ class RecordListEditViewTest(AnnalistTestCase):
         f = recordlist_view_form_data(
             action="copy", update="Updated RecordList"
             )
-        u = entitydata_edit_url("copy", "testcoll", "_list", entity_id="Default_list", view_id="List_view")
+        u = entitydata_edit_url(
+            "copy", "testcoll", "_list", entity_id="Default_list", view_id="List_view"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with record list identifier</h3>")
-        expect_context = recordlist_view_context_data(action="copy", update="Updated RecordList")
+        expect_context = recordlist_view_context_data(
+            action="copy", 
+            update="Updated RecordList"
+            )
         self.assertDictionaryMatch(r.context, expect_context)
         return
 
     def test_post_copy_view_invalid_id(self):
         f = recordlist_view_form_data(
-            list_id="!badlist", orig_id="Default_list", action="copy", update="Updated RecordList"
+            list_id="!badlist", orig_id="Default_list", action="copy", 
+            update="Updated RecordList"
             )
-        u = entitydata_edit_url("copy", "testcoll", "_list", entity_id="Default_list", view_id="List_view")
+        u = entitydata_edit_url(
+            "copy", "testcoll", "_list", entity_id="Default_list", view_id="List_view"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -755,7 +763,9 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_id="listview", orig_id="listview", 
             action="edit", update="Updated RecordList"
             )
-        u = entitydata_edit_url("edit", "testcoll", "_list", entity_id="listview", view_id="List_view")
+        u = entitydata_edit_url(
+            "edit", "testcoll", "_list", entity_id="listview", view_id="List_view"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -813,7 +823,10 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with record list identifier</h3>")
         # Test context for re-rendered form
-        expect_context = recordlist_view_context_data(action="edit", update="Updated RecordList")
+        expect_context = recordlist_view_context_data(
+            action="edit", 
+            update="Updated RecordList"
+            )
         self.assertDictionaryMatch(r.context, expect_context)
         # Check original data is unchanged
         self._check_list_view_values("editlist")
