@@ -3,7 +3,7 @@ Define class to represent a field description when processing an entity view.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
-__copyright__   = "Copyright 2014, G. Klyne"
+__copyright__   = "Copyright 2015, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import sys
@@ -48,7 +48,8 @@ class FieldDescription(object):
     def __init__(self, 
             collection, recordfield, view_context=None, 
             field_property=None, field_placement=None, 
-            group_view=None, group_ids_seen=[]
+            group_view=None, group_ids_seen=[],
+            field_placement_classes=None
             ):
         """
         Creates a field description value to use in a context value when
@@ -59,6 +60,7 @@ class FieldDescription(object):
         various field attributes.
 
         collection      is a collection from which data is being rendered.
+                        Used when generating enumerated values.
         recordfield     is a RecordField value or dictionary containing details of
                         the field for which a descriptor is constructed.
         view_context    is a dictionary of additional values that may be used in assembling
@@ -71,14 +73,17 @@ class FieldDescription(object):
                         RecordGroup value or dictionary containing the referenced list 
                         of fields.
         group_ids_seen  group ids expanded so far, to check for recursive reference.
+        field_classes   if supplied, overrides field placement classes derived from value
+                        for `field_placement` string.
         """
-        self._collection = collection
+        self._collection    = collection
         # log.debug("FieldDescription recordfield: %r"%(recordfield,))
         field_id            = recordfield.get(ANNAL.CURIE.id,         "_missing_id_")
         field_name          = recordfield.get(ANNAL.CURIE.field_name, field_id)  # Field name in form
         field_label         = recordfield.get(RDFS.CURIE.label, "")
         field_property      = field_property  or recordfield.get(ANNAL.CURIE.property_uri, "")
         field_placement     = field_placement or recordfield.get(ANNAL.CURIE.field_placement, "")
+        field_placement_c   = field_placement_classes or get_placement_classes(field_placement)
         field_placeholder   = recordfield.get(ANNAL.CURIE.placeholder, "")
         field_render_type   = extract_entity_id(recordfield.get(ANNAL.CURIE.field_render_type, ""))
         field_value_mode    = extract_entity_id(recordfield.get(ANNAL.CURIE.field_value_mode, "@@FieldDescription:value_mode@@"))
@@ -95,7 +100,7 @@ class FieldDescription(object):
             , 'field_label':                field_label
             , 'field_help':                 recordfield.get(RDFS.CURIE.comment, "")
             , 'field_property_uri':         field_property
-            , 'field_placement':            get_placement_classes(field_placement)
+            , 'field_placement':            field_placement_c
             #@@ , 'field_value_type':           field_val_type
             #@@TODO: LATER: rename 'field_target_type' to 'field_value_type' when old references are flushed out
             #@@      See also references to 'field_target_type' in entityedit.py

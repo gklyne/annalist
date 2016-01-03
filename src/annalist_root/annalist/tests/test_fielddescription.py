@@ -22,9 +22,11 @@ from annalist.models.collection         import Collection
 
 from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 
-from annalist.views.fields.render_placement     import Placement, make_field_position
-from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
 from annalist.views.form_utils.fieldchoice      import FieldChoice
+from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
+from annalist.views.fields.render_placement     import (
+    Placement, make_field_width, make_field_offset, make_field_display
+    )
 
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -82,10 +84,12 @@ class FieldDescriptionTest(AnnalistTestCase):
             {}
             )
         expect_placement = Placement(
-            position = make_field_position(sp=0, sw=12, mp=0, mw=12, lp=0, lw=12),
-            field = 'small-12 columns', 
-            label = 'small-12 medium-2 columns', 
-            value = 'small-12 medium-10 columns'
+            width   = make_field_width(sw=12, mw=12, lw=12),
+            offset  = make_field_offset(so=0, mo=0, lo=0),
+            display = make_field_display(sd=True, md=True, ld=True),
+            field   = 'small-12 columns', 
+            label   = 'small-12 medium-2 columns', 
+            value   = 'small-12 medium-10 columns'
             )
         expect_field_desc = (
             { 'field_id':                   '_initial_values'
@@ -115,7 +119,9 @@ class FieldDescriptionTest(AnnalistTestCase):
             {}
             )
         expect_placement = Placement(
-            position = make_field_position(sp=0, sw=12, mp=0, mw=6, lp=0, lw=6),
+            width   = make_field_width(sw=12, mw=6, lw=6),
+            offset  = make_field_offset(so=0, mo=0, lo=0),
+            display = make_field_display(sd=True, md=True, ld=True),
             field = 'small-12 medium-6 columns', 
             label = 'small-12 medium-4 columns', 
             value = 'small-12 medium-8 columns'
@@ -147,7 +153,9 @@ class FieldDescriptionTest(AnnalistTestCase):
             {}
             )
         expect_placement = Placement(
-            position = make_field_position(sp=0, sw=12, mp=0, mw=6, lp=0, lw=6),
+            width   = make_field_width(sw=12, mw=6, lw=6),
+            offset  = make_field_offset(so=0, mo=0, lo=0),
+            display = make_field_display(sd=True, md=True, ld=True),
             field='small-12 medium-6 columns', 
             label='small-12 medium-4 columns', 
             value='small-12 medium-8 columns'
@@ -190,7 +198,9 @@ class FieldDescriptionTest(AnnalistTestCase):
             {}
             )
         expect_placement = Placement(
-            position = make_field_position(sp=0, sw=12, mp=0, mw=12, lp=0, lw=12),
+            width   = make_field_width(sw=12, mw=12, lw=12),
+            offset  = make_field_offset(so=0, mo=0, lo=0),
+            display = make_field_display(sd=True, md=True, ld=True),
             field = 'small-12 columns', 
             label = 'small-12 medium-2 columns', 
             value = 'small-12 medium-10 columns'
@@ -227,7 +237,9 @@ class FieldDescriptionTest(AnnalistTestCase):
         self.assertEqual(len(fd['group_field_descs']), 3)
         # Field type selector
         expect_field0_placement = Placement(
-            position = make_field_position(sp=0, sw=12, mp=0, mw=4, lp=0, lw=4),
+            width   = make_field_width(sw=12, mw=4, lw=4),
+            offset  = make_field_offset(so=0, mo=0, lo=0),
+            display = make_field_display(sd=True, md=True, ld=True),
             field='small-12 medium-4 columns', 
             label='small-12 medium-6 columns', 
             value='small-12 medium-6 columns'
@@ -245,7 +257,9 @@ class FieldDescriptionTest(AnnalistTestCase):
         self.assertDictionaryMatch(fd['group_field_descs'][0], expect_field0_desc)
         # Field property URI
         expect_field1_placement = Placement(
-            position = make_field_position(sp=0, sw=12, mp=4, mw=4, lp=4, lw=4),
+            width   = make_field_width(sw=12, mw=4, lw=4),
+            offset  = make_field_offset(so=0, mo=4, lo=4),
+            display = make_field_display(sd=True, md=True, ld=True),
             field='small-12 medium-4 columns', 
             label='small-12 medium-6 columns', 
             value='small-12 medium-6 columns'
@@ -263,7 +277,9 @@ class FieldDescriptionTest(AnnalistTestCase):
         self.assertDictionaryMatch(fd['group_field_descs'][1], expect_field1_desc)
         # Field placement (within group)
         expect_field2_placement = Placement(
-            position = make_field_position(sp=0, sw=12, mp=8, mw=4, lp=8, lw=4),
+            width   = make_field_width(sw=12, mw=4, lw=4),
+            offset  = make_field_offset(so=0, mo=8, lo=8),
+            display = make_field_display(sd=True, md=True, ld=True),
             field='small-12 medium-4 columns', 
             label='small-12 medium-6 columns', 
             value='small-12 medium-6 columns'

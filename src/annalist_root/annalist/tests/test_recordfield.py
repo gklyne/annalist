@@ -288,7 +288,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_repeat_label_delete=""
             ):
         r = response
-        self.assertEqual(len(r.context['fields']), 17)
+        self.assertEqual(len(r.context['fields']), 18)
         # Field 0: Id
         i = 0
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_id')
@@ -420,7 +420,17 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][i]['field_value'],        field_viewref)
         self.assertEqual(r.context['fields'][i]['options'],            self.group_options)
-        # Field 13: enumeration restriction (for select rendering)
+        # Field 13: padding
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'],           'Field_padding')
+        self.assertEqual(r.context['fields'][i]['field_name'],         'Field_padding')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "")
+        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Padding")
+        self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][i]['field_target_type'],  "")
+        self.assertEqual(r.context['fields'][i]['field_value'],        "")
+        self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
+        # Field 14: enumeration restriction (for select rendering)
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_repeat_label_add')
         self.assertEqual(r.context['fields'][i]['field_name'],         'Field_repeat_label_add')
@@ -430,7 +440,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Text")
         self.assertEqual(r.context['fields'][i]['field_value'],        field_repeat_label_add)
         self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
-        # Field 14: enumeration restriction (for select rendering)
+        # Field 15: enumeration restriction (for select rendering)
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_repeat_label_delete')
         self.assertEqual(r.context['fields'][i]['field_name'],         'Field_repeat_label_delete')
@@ -440,7 +450,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Text")
         self.assertEqual(r.context['fields'][i]['field_value'],        field_repeat_label_delete)
         self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
-        # Field 15: enumeration type (for select rendering)
+        # Field 16: enumeration type (for select rendering)
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_entity_type')
         self.assertEqual(r.context['fields'][i]['field_name'],         'Field_entity_type')
@@ -450,7 +460,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Identifier")
         self.assertEqual(r.context['fields'][i]['field_value'],        field_entity_type)
         self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
-        # Field 16: enumeration restriction (for select rendering)
+        # Field 17: enumeration restriction (for select rendering)
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_restrict')
         self.assertEqual(r.context['fields'][i]['field_name'],         'Field_restrict')

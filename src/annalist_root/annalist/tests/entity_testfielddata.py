@@ -22,6 +22,8 @@ from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import layout
 
 from annalist.views.fields.render_placement import (
+    Placement, LayoutOptions,
+    make_field_width, make_field_offset, make_field_display,
     get_placement_classes
     )
 
@@ -184,6 +186,14 @@ def recordfield_entity_view_context_data(
         field_id=None, orig_id=None, type_ids=[],
         action=None, update="Field"
     ):
+    padding_placement = Placement(
+        width=make_field_width(sw=0, mw=6, lw=6),
+        offset=make_field_offset(so=0, mo=0, lo=0),
+        display=make_field_display(sd=False, md=True, ld=True),
+        field="hide-for-small-only medium-6 large-6 columns",
+        label="small-4 columns",
+        value="small-8 columns"
+        )
     context_dict = (
         { 'title':              "Collection testcoll"
         , 'coll_id':            "testcoll"
@@ -386,7 +396,20 @@ def recordfield_entity_view_context_data(
             , 'field_value':            ""
             , 'options':                []
             }
-          , { 'field_id':               "Field_repeat_label_add"    # 13
+          , { 'field_id':               "Field_padding"             # 13
+            , 'field_name':             "Field_padding"
+            , 'field_label':            ""
+            , 'field_render_type':      "Padding"
+            , 'field_value_mode':       "Value_direct"
+            , 'field_property_uri':     ""
+            , 'field_placement':        padding_placement
+            , 'field_ref_type':         None
+            , 'field_ref_field':        None
+            , 'field_default_value':    None
+            , 'field_value':            ""
+            , 'options':                []
+            }
+          , { 'field_id':               "Field_repeat_label_add"    # 14
             , 'field_name':             "Field_repeat_label_add"
             , 'field_label':            "Add fields label"
             , 'field_target_type':      "annal:Text"
@@ -401,7 +424,7 @@ def recordfield_entity_view_context_data(
             , 'field_value':            ""
             , 'options':                []
             }
-          , { 'field_id':               "Field_repeat_label_delete" # 14
+          , { 'field_id':               "Field_repeat_label_delete" # 15
             , 'field_name':             "Field_repeat_label_delete"
             , 'field_label':            "Delete fields label"
             , 'field_target_type':      "annal:Text"
@@ -416,7 +439,7 @@ def recordfield_entity_view_context_data(
             , 'field_value':            ""
             , 'options':                []
             }
-          , { 'field_id':               "Field_entity_type"         # 15
+          , { 'field_id':               "Field_entity_type"         # 16
             , 'field_name':             "Field_entity_type"
             , 'field_label':            "Entity type"
             , 'field_target_type':      "annal:Identifier"
@@ -431,7 +454,7 @@ def recordfield_entity_view_context_data(
             , 'field_value':            ""
             , 'options':                []
             }
-          , { 'field_id':               "Field_restrict"            # 16
+          , { 'field_id':               "Field_restrict"            # 17
             , 'field_name':             "Field_restrict"
             , 'field_label':            "Value restriction"
             , 'field_target_type':      "annal:Text"

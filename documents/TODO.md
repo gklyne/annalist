@@ -52,15 +52,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Test
 - [x] Eliminate redundant modules `views.defaultlist` and `views.defaultedit` (but keep tests).
 - [x] In drop-down list, include typeid/entityid only for entries whose labels are not unique.
-- [ ] Form field layout: introduce padding so the fields lay out as indicated by the position value.
-    - Add field padding so that display position is as expected (if possible)
-    - RenderFieldValue.label_view and .label_edit seem to be the key functions.
-    - How to carry context forward?
-    - Possibly precompute padding?
-        - this would require logic in fieldlistvaluemap, fielddescription and render_placement
-        - plus new logic to render the padding elements
-    - Another option: take field-loop out of template and run it as a `render_all_fields` method
-        - still needs placement parser to return position+width information
+- [x] Form field layout: arrange that fields lay out as indicated by the position value.
+    - Add padding fields so that display position is as expected.
 - [ ] Provide collection overview that allows users to see what is present
     - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
     - longer term, this might be a high-level graphical display (like PROV diag.)

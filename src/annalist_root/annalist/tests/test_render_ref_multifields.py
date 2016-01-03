@@ -134,7 +134,7 @@ class RefMultifieldTest(AnnalistTestCase):
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
                 }
               , { 'annal:field_id':         "Test_refimg_field"
-                , 'annal:field_placement':  "small:0,12;medium:0,6"
+                , 'annal:field_placement':  "small:0,12;medium:6,6"
                 }
               ]
             })
@@ -154,7 +154,7 @@ class RefMultifieldTest(AnnalistTestCase):
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
                 }
               , { 'annal:field_id':         "Test_rptref_field"
-                , 'annal:field_placement':  "small:0,12;medium:0,6"
+                , 'annal:field_placement':  "small:0,12;medium:6,6"
                 }
               ]
             })

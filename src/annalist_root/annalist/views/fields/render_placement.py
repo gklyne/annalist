@@ -189,13 +189,13 @@ def get_field_placement_renderer():
 #
 #   ----------------------------------------------------------------------------
 
-Position  = namedtuple("Position", ["sp", "sw", "mp", "mw", "lp", "lw"])
+LayoutOptions = namedtuple("LayoutOptions", ["s", "m", "l"])
 
-Placement = namedtuple("Placement", ['position', 'field', 'label', 'value'])
+Placement = namedtuple("Placement", ['width', 'offset', 'display', 'field', 'label', 'value'])
 
 def get_placement_classes(placement):
     """
-    Returns placement classes corresponding to placement string provided.
+    Returns Placement classes corresponding to placement string provided.
 
     >>> get_placement_classes("small:0,12").field
     'small-12 columns'
@@ -204,48 +204,87 @@ def get_placement_classes(placement):
     >>> get_placement_classes("small:0,12").value
     'small-12 medium-10 columns'
     >>> get_placement_classes("medium:0,12")                        # doctest: +NORMALIZE_WHITESPACE
-    Placement(position=Position(sp=0, sw=12, mp=0, mw=12, lp=0, lw=12), \
-        field='small-12 columns', label='small-12 medium-2 columns', value='small-12 medium-10 columns')
+    Placement(width=LayoutOptions(s=12, m=12, l=12), \
+        offset=LayoutOptions(s=0, m=0, l=0), \
+        display=LayoutOptions(s=True, m=True, l=True), \
+        field='small-12 columns', \
+        label='small-12 medium-2 columns', \
+        value='small-12 medium-10 columns')
     >>> get_placement_classes("large:0,12")                         # doctest: +NORMALIZE_WHITESPACE
-    Placement(position=Position(sp=0, sw=12, mp=0, mw=12, lp=0, lw=12), \
-        field='small-12 columns', label='small-12 medium-2 columns', value='small-12 medium-10 columns')
+    Placement(width=LayoutOptions(s=12, m=12, l=12), \
+        offset=LayoutOptions(s=0, m=0, l=0), \
+        display=LayoutOptions(s=True, m=True, l=True), \
+        field='small-12 columns', \
+        label='small-12 medium-2 columns', \
+        value='small-12 medium-10 columns')
 
     >>> get_placement_classes("small:0,12;medium:0,4")              # doctest: +NORMALIZE_WHITESPACE
-    Placement(position=Position(sp=0, sw=12, mp=0, mw=4, lp=0, lw=4), \
-        field='small-12 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    Placement(width=LayoutOptions(s=12, m=4, l=4), \
+        offset=LayoutOptions(s=0, m=0, l=0), \
+        display=LayoutOptions(s=True, m=True, l=True), \
+        field='small-12 medium-4 columns', \
+        label='small-12 medium-6 columns', \
+        value='small-12 medium-6 columns')
     >>> get_placement_classes("small:0,12; medium:0,4")             # doctest: +NORMALIZE_WHITESPACE
-    Placement(position=Position(sp=0, sw=12, mp=0, mw=4, lp=0, lw=4), \
-        field='small-12 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    Placement(width=LayoutOptions(s=12, m=4, l=4), \
+        offset=LayoutOptions(s=0, m=0, l=0), \
+        display=LayoutOptions(s=True, m=True, l=True), \
+        field='small-12 medium-4 columns', \
+        label='small-12 medium-6 columns', \
+        value='small-12 medium-6 columns')
 
     >>> get_placement_classes("small:0,12;medium:0,6;large:0,4")    # doctest: +NORMALIZE_WHITESPACE
-    Placement(position=Position(sp=0, sw=12, mp=0, mw=6, lp=0, lw=4), \
+    Placement(width=LayoutOptions(s=12, m=6, l=4), \
+        offset=LayoutOptions(s=0, m=0, l=0), \
+        display=LayoutOptions(s=True, m=True, l=True), \
         field='small-12 medium-6 large-4 columns', \
         label='small-12 medium-4 large-6 columns', \
         value='small-12 medium-8 large-6 columns')
 
     >>> get_placement_classes("small:0,6;medium:0,4")               # doctest: +NORMALIZE_WHITESPACE
-    Placement(position=Position(sp=0, sw=6, mp=0, mw=4, lp=0, lw=4), \
-        field='small-6 medium-4 columns', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    Placement(width=LayoutOptions(s=6, m=4, l=4), \
+        offset=LayoutOptions(s=0, m=0, l=0), \
+        display=LayoutOptions(s=True, m=True, l=True), \
+        field='small-6 medium-4 columns', \
+        label='small-12 medium-6 columns', \
+        value='small-12 medium-6 columns')
 
     >>> get_placement_classes("small:0,6;medium:0,4,right")         # doctest: +NORMALIZE_WHITESPACE
-    Placement(position=Position(sp=0, sw=6, mp=0, mw=4, lp=0, lw=4), \
-        field='small-6 medium-4 columns right', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    Placement(width=LayoutOptions(s=6, m=4, l=4), \
+        offset=LayoutOptions(s=0, m=0, l=0), \
+        display=LayoutOptions(s=True, m=True, l=True), \
+        field='small-6 medium-4 columns right', \
+        label='small-12 medium-6 columns', \
+        value='small-12 medium-6 columns')
 
     >>> get_placement_classes("small:0,6")                          # doctest: +NORMALIZE_WHITESPACE
-    Placement(position=Position(sp=0, sw=6, mp=0, mw=6, lp=0, lw=6), \
-        field='small-6 columns', label='small-12 medium-4 columns', value='small-12 medium-8 columns')
+    Placement(width=LayoutOptions(s=6, m=6, l=6), \
+        offset=LayoutOptions(s=0, m=0, l=0), \
+        display=LayoutOptions(s=True, m=True, l=True), \
+        field='small-6 columns', \
+        label='small-12 medium-4 columns', \
+        value='small-12 medium-8 columns')
 
     >>> get_placement_classes("small:0,12,hide;medium:0,4")         # doctest: +NORMALIZE_WHITESPACE
-    Placement(position=Position(sp=0, sw=12, mp=0, mw=4, lp=0, lw=4), \
-        field='small-12 medium-4 columns show-for-medium-up', label='small-12 medium-6 columns', value='small-12 medium-6 columns')
+    Placement(width=LayoutOptions(s=12, m=4, l=4), \
+        offset=LayoutOptions(s=0, m=0, l=0), \
+        display=LayoutOptions(s=False, m=True, l=True), \
+        field='small-12 medium-4 columns show-for-medium-up', \
+        label='small-12 medium-6 columns', \
+        value='small-12 medium-6 columns')
     """
     def set_field_width(pmmode, pmwidth):
-        field_width[pmmode] = pmwidth
-        label_width[pmmode] = labelw[pmmode]*(12 // pmwidth)
-        value_width[pmmode] = 12 - label_width[pmmode]
-        if label_width[pmmode] >= 12:
-            label_width[pmmode] = 12
-            value_width[pmmode] = 12
+        if pmwidth == 0:
+            field_width[pmmode] = 0
+            label_width[pmmode] = 0
+            value_width[pmmode] = 0
+        else:
+            field_width[pmmode] = pmwidth
+            label_width[pmmode] = labelw[pmmode]*(12 // pmwidth)
+            value_width[pmmode] = 12 - label_width[pmmode]
+            if label_width[pmmode] >= 12:
+                label_width[pmmode] = 12
+                value_width[pmmode] = 12
         return
     def format_class(cd, right="", show=""):
         prev = cd.get("small", None)
@@ -269,7 +308,8 @@ def get_placement_classes(placement):
     set_field_width("small",  12)       # Default small-12  columns (may be overridden)
     set_field_width("medium", 12)       # Default medium-12 columns (may be overridden)
     set_field_width("large",  12)       # Default large-12  columns (may be overridden)
-    field_offset = {'small': 0, 'medium': 0, 'large': 0}
+    field_offset  = {'small': 0, 'medium': 0, 'large': 0}
+    field_display = {'small': True, 'medium': True, 'large': True}
     # Process each placement sub-expression
     for p in ps:
         pm = ppr.match(p)
@@ -284,7 +324,9 @@ def get_placement_classes(placement):
             pmshow = {'small': "show-for-medium-up", 'medium': "show-for-large-up", 'large': ""}[pmmode]
             # print "pmhide %s, pmmode %s, pmshow %s"%(pmhide, pmmode, pmshow)
         set_field_width(pmmode, pmwidth)
-        field_offset[pmmode] = pmoffset
+        field_offset[pmmode]  = pmoffset
+        if pmhide:
+            field_display[pmmode] = False
         if pmmode == "small":
             set_field_width("medium", pmwidth)
         field_offset["medium"] = pmoffset
@@ -292,10 +334,14 @@ def get_placement_classes(placement):
             set_field_width("large", pmwidth)
             field_offset["large"] = pmoffset
     c = Placement(
-            position=make_field_position(
-                sp=field_offset['small'],  sw=field_width["small"], 
-                mp=field_offset['medium'], mw=field_width["medium"], 
-                lp=field_offset['large'],  lw=field_width["large"]
+            width=make_field_width(
+                sw=field_width["small"], mw=field_width["medium"], lw=field_width["large"]
+                ),
+            offset=make_field_offset(
+                so=field_offset['small'], mo=field_offset['medium'],lo=field_offset['large']
+                ),
+            display=make_field_display(
+                sd=field_display['small'], md=field_display['medium'],ld=field_display['large']
                 ),
             field=format_class(field_width, pmright, pmshow),
             label=format_class(label_width),
@@ -304,8 +350,14 @@ def get_placement_classes(placement):
     # log.debug("get_placement_class %s, returns %s"%(placement,c))
     return c
 
-def make_field_position(sp=0, sw=12, mp=0, mw=12, lp=0, lw=12):
-    return Position(sp=sp, sw=sw, mp=mp, mw=mw, lp=lp, lw=lw)
+def make_field_width(sw=12, mw=12, lw=12):
+    return LayoutOptions(s=sw, m=mw, l=lw)
+
+def make_field_offset(so=0, mo=0, lo=0):
+    return LayoutOptions(s=so, m=mo, l=lo)
+
+def make_field_display(sd=True, md=True, ld=True):
+    return LayoutOptions(s=sd, m=md, l=ld)
 
 if __name__ == "__main__":
     import doctest

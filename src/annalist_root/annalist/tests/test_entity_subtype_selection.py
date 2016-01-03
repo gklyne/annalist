@@ -159,7 +159,7 @@ class SubtypeSelectionTest(AnnalistTestCase):
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
                 }
               , { 'annal:field_id':         "_field/Test_ref_type_field"
-                , 'annal:field_placement':  "small:0,12;medium:0,6"
+                , 'annal:field_placement':  "small:0,12;medium:6,6"
                 }
               ]
             })
