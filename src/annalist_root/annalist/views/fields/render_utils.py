@@ -61,7 +61,7 @@ _field_edit_files = (
     , "Slug":           "field/annalist_edit_slug.html"
     , "EntityId":       "field/annalist_edit_entityid.html"
     , "Identifier":     "field/annalist_edit_identifier.html"
-    , "Padding":        "field/annalist_view_padding.html"
+    , "Padding":        "field/annalist_edit_padding.html"
     })
 
 _field_get_renderer_functions = (

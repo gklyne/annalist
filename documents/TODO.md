@@ -54,6 +54,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] In drop-down list, include typeid/entityid only for entries whose labels are not unique.
 - [x] Form field layout: arrange that fields lay out as indicated by the position value.
     - Add padding fields so that display position is as expected.
+    - Note this only works if the padding field is as height as other fields in the same row.
 - [ ] Provide collection overview that allows users to see what is present
     - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
     - longer term, this might be a high-level graphical display (like PROV diag.)
@@ -146,7 +147,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 Technical debt:
 
-- [ ] Implement in-memory entity storage tio speed up test suite, and lay groundwork for LDP back-end
+- [ ] Field layout padding logic at end of row is dependent on height of edit fields; consider re-working this in `fieldlistvaluemap` to generate fields in groups, where each group is rendered as a separate row.
+- [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
 - [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
 - [ ] Implement "get the data" link as a field renderer?

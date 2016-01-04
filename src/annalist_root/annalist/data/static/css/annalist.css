@@ -314,6 +314,17 @@ div.row div.columns.view-value
     /* vertical-align: middle; */
 }
 
+/* Set height for edit padding to force next field to next row */
+div.row div.column.view-value > div.edit-padding ,
+div.row div.columns.view-value > div.edit-padding
+{
+    margin-top:     0rem;
+    margin-bottom:  0rem;
+    padding-top:    0rem;
+    padding-bottom: 0rem;
+    height:         1.4rem;
+}
+
 /* Suppress margin for nested value rows */
 div.row.view-value-row div.row div.row.view-value-row
 {
