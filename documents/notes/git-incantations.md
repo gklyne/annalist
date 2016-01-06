@@ -96,6 +96,12 @@ Finishing a release branch
     $ git branch -d release-1.2
     Deleted branch release-1.2 (was ff452fe).
 
+If the release branch was pushed to a remote repository as work-in-progress, also do:
+
+    $ git push origin --delete release-1.2
+    To git@github.com:gklyne/annalist.git
+     - [deleted]         release-1.2
+
 
 ## Recovery actions
 
