@@ -1,6 +1,8 @@
 annalist
 ========
 
+[![DOI](https://zenodo.org/badge/19858/gklyne/annalist.svg)](https://zenodo.org/badge/latestdoi/19858/gklyne/annalist)
+
 A free-form web data notebook - "Data management for little guys"
 
 _Current status (2015-08-04):  public prototype, released for evaluation and feedback._ 
