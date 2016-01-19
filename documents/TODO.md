@@ -43,7 +43,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
           File "/home/annalist/anenv/lib/python2.7/site-packages/annalist_root/annalist/views/form_utils/fielddescription.py", line 376, in __getitem__
             return self._field_desc[k]
         KeyError: 'group_id'
-- [ ] BUG: can't save record using form without ID field
+- [x] BUG: can't save record using form without ID field
 - [x] Home page: change button labels: "view metadata", "edit metadata", "remove collection".
 - [x] Add read-only renderers for view short text and view markdown.
     - [x] "Showtext" template

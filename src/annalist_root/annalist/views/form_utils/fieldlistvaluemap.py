@@ -41,10 +41,6 @@ padding_field_data = (
     })
 
 def get_padding_field_desc(pad_s, pad_m, pad_l):
-    log.info(
-        "@@ fieldlistvaluemap.get_padding_field_desc: pad_s %d, pad_m %d, pad_l %d"%
-        (pad_s, pad_m, pad_l)
-        )
     if pad_s == 0:
         if pad_m == 0:
             if pad_l == 0:
@@ -127,8 +123,6 @@ def get_padding_desc(position, field_desc):
     field_desc  is the next field descriptor.
     """
     placement = field_desc['field_placement']
-    log.info("@@ fieldlistvaluemap.get_padding_desc: position %r"%(position,))
-    log.info("@@ fieldlistvaluemap.get_padding_desc: placement %r"%(placement,))
     pad1_s, pad2_s, next_s  = next_field(position.s, placement.offset.s, placement.width.s, placement.display.s)
     pad1_m, pad2_m, next_m  = next_field(position.m, placement.offset.m, placement.width.m, placement.display.m)
     pad1_l, pad2_l, next_l  = next_field(position.l, placement.offset.l, placement.width.l, placement.display.l)
@@ -189,10 +183,8 @@ class FieldListValueMap(object):
             # Add padding to field value map list
             position, pad1_desc, pad2_desc = get_padding_desc(position, field_desc)
             if pad1_desc:
-                #@@ self.fd.append(pad1_desc)
                 self.fm.append(FieldValueMap(c='_fieldlistvaluemap_', f=pad1_desc))
             if pad2_desc:
-                #@@ self.fd.append(pad2_desc)
                 self.fm.append(FieldValueMap(c='_fieldlistvaluemap_', f=pad2_desc))
             # Add field value mapper to field value map list
             if field_desc.is_repeat_group():
