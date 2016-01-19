@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:14.04
 
 MAINTAINER Graham Klyne <gk-annalist@ninebynine.org>
 

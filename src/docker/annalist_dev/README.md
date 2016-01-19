@@ -50,3 +50,7 @@ or
 
     docker rm $(docker ps -a |  awk '!/annalist|CONTAINER/ {print $1}')
 
+Remove all images with given tag (along with tags):
+
+    docker rmi -f $(docker images | grep "<tag>" | awk '{print $3}')
+
