@@ -183,7 +183,7 @@ def recordtype_read_values(
 #   -----------------------------------------------------------------------------
 
 def recordtype_entity_view_context_data(
-        coll_id="testcoll", type_id=None, orig_id=None, type_ids=[],
+        coll_id="testcoll", type_id="", orig_id=None, type_ids=[],
         action=None, update="RecordType",
         type_uri=None, supertype_uris=None #@@ need to deal with these.
     ):
@@ -281,7 +281,7 @@ def recordtype_entity_view_context_data(
 
 def recordtype_entity_view_form_data(
         coll_id="testcoll", 
-        type_id=None, orig_id=None, 
+        type_id="", orig_id=None, 
         action=None, cancel=None, close=None, edit=None, copy=None, task=None,
         update="RecordType",
         type_uri=None
@@ -297,6 +297,8 @@ def recordtype_entity_view_form_data(
         , 'orig_id':            'orig_type_id'
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_type")
         })
+    if type_id is not None:
+        form_data_dict['entity_id']           = type_id
     if type_id:
         type_url  = recordtype_url(coll_id=coll_id, type_id=type_id)
         type_help = '%s help for %s in collection %s'%(update, type_id, coll_id)

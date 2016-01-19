@@ -341,7 +341,7 @@ def entitydata_context_add_field(
     return context_dict
 
 def entitydata_form_data(
-        entity_id=None, orig_id=None, 
+        entity_id="", orig_id=None, 
         type_id="testtype", orig_type=None,
         coll_id="testcoll", 
         action=None, cancel=None, close=None, edit=None, copy=None, 
@@ -353,6 +353,8 @@ def entitydata_form_data(
         , 'orig_id':            'orig_entity_id'
         , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
         })
+    if entity_id is not None:
+        form_data_dict['entity_id']         = entity_id
     if entity_id:
         form_data_dict['entity_id']         = entity_id
         form_data_dict['entity_type']       = "_type/"+type_id
@@ -613,7 +615,7 @@ def entitydata_recordtype_view_context_data(
 def entitydata_recordtype_view_form_data(
         coll_id="testcoll", 
         type_id="testtype", orig_type=None, type_uri=None,
-        entity_id=None, orig_id=None, 
+        entity_id="", orig_id=None, 
         action=None, cancel=None, update="Entity",
         add_view_field=None, open_view=None):
     # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
@@ -623,6 +625,8 @@ def entitydata_recordtype_view_form_data(
         , 'orig_id':            'orig_entity_id'
         , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
         })
+    if entity_id is not None:
+        form_data_dict['entity_id']       = entity_id
     if entity_id and type_id:
         type_url = entity_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
         type_url = type_url.replace("___", entity_id)  # Preserve bad type in form data

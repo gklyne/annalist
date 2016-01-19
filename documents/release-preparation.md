@@ -40,7 +40,7 @@
     - [ ] documents/tutorial/annalist-tutorial.adoc
     - [ ] src/newkit_to_annalist_net.sh
     - [ ] src/newkit_to_conina_ubuntu.sh
-    - [ ] Docker build scripts
+    - [ ] Docker build scripts and makefiles
 - [ ] Create announcement text in `documents/release-notes/announce_0.1.*.md`
 - [ ] Check for new dependencies; update setup.py as needed.
 - [ ] Regenerate tutorial document

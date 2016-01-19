@@ -424,7 +424,7 @@ class bound_field(object):
             "</ul>"
             )
 
-def get_entity_values(typeinfo=None, entity=None, entity_id=None):
+def get_entity_values(typeinfo=None, entity=None, entity_id=None, action="view"):
     """
     Returns an entity values dictionary for a supplied entity, suitable for
     use with a bound_field object.
@@ -437,6 +437,15 @@ def get_entity_values(typeinfo=None, entity=None, entity_id=None):
     entityvals['entity_link']      = entity.get_view_url_path()
     # log.info("type_id %s"%(type_id))
     entityvals['entity_type_id']   = type_id
+    if action == "copy":
+        # Allocate new entity Id and lose values based on original Id 
+        # when performing a copy operation.
+        entity_id = typeinfo.entityclass.allocate_new_id(typeinfo.entityparent)
+        log.info("@@ copy new entity_id %s"%entity_id)
+        entityvals['entity_id'] = entity_id
+        entityvals.pop('entity_link', None)
+        entityvals[ANNAL.CURIE.id] = entity_id
+        entityvals.pop(ANNAL.CURIE.uri, None)
     if typeinfo and typeinfo.recordtype:
         entityvals['entity_type_link'] = typeinfo.recordtype.get_view_url_path()
     # else:

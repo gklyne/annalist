@@ -222,7 +222,7 @@ def recordview_values_add_field(view_data,
 #   -----------------------------------------------------------------------------
 
 def recordview_entity_view_context_data(
-        coll_id="testcoll", view_id=None, orig_id=None, view_ids=[],
+        coll_id="testcoll", view_id="", orig_id=None, view_ids=[],
         action=None, 
         target_record_type="annal:View",
         add_field=None, remove_field=None, move_up=None, move_down=None,
@@ -348,7 +348,7 @@ def recordview_entity_view_context_data(
 
 def recordview_entity_view_form_data(
         coll_id="testcoll", 
-        view_id=None, orig_id=None, 
+        view_id="", orig_id=None, 
         action=None, cancel=None, 
         target_record_type="annal:View",
         field3_placement="small:0,12",
@@ -387,6 +387,8 @@ def recordview_entity_view_form_data(
         form_data_dict['View_fields__4__Field_placement'] = "small:0,12"
         if extra_field_uri:
             form_data_dict['View_fields__4__Field_property'] = extra_field_uri
+    if view_id is not None:
+        form_data_dict['entity_id']     = view_id
     if view_id:
         form_data_dict['entity_id']     = view_id
         form_data_dict['orig_id']       = view_id

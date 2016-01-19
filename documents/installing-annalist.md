@@ -261,7 +261,7 @@ NOTE: for configurations which store the database file in the site data area (in
 
 ## Run annalist as a background process
 
-To run annalist as a long-runnin g background process, use the following command:
+To run annalist as a long-running background process, use the following command:
 
     nohup annalist-manager runserver &
 

@@ -484,7 +484,7 @@ def recordfield_entity_view_context_data(
     return context_dict
 
 def recordfield_entity_view_form_data(
-        field_id=None, orig_id=None, 
+        field_id="", orig_id=None, 
         coll_id="testcoll", 
         field_label=None,
         render_type="Text", value_mode="Value_direct",
@@ -500,6 +500,8 @@ def recordfield_entity_view_form_data(
         , 'orig_id':            'orig_field_id'
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_field")
         })
+    if field_id is not None:
+        form_data_dict['entity_id']         = field_id
     if field_id:
         field_url = recordfield_url(coll_id=coll_id, field_id=field_id)
         form_data_dict['entity_id']         = field_id

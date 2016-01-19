@@ -298,7 +298,7 @@ def recordlist_view_context_data(
 
 def recordlist_view_form_data(
         coll_id="testcoll", 
-        list_id=None, orig_id=None, 
+        list_id="", orig_id=None, 
         action=None, cancel=None,
         update="RecordView"):
     form_data_dict = (
@@ -320,6 +320,8 @@ def recordlist_view_form_data(
         , "orig_type":              "_list"
         , "continuation_url":       entitydata_list_type_url(coll_id, "_list")        
         })
+    if list_id is not None:
+        form_data_dict['entity_id']     = list_id
     if list_id:
         form_data_dict['entity_id']     = list_id
         form_data_dict['orig_id']       = list_id

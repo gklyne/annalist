@@ -614,8 +614,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
         view_url = collection_entity_view_url(coll_id="testcoll", type_id="_view", entity_id="Default_view")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_view")
-        self.assertEqual(r.context['entity_id'],        "Default_view")
-        self.assertEqual(r.context['orig_id'],          "Default_view")
+        self.assertEqual(r.context['entity_id'],        "00000001")
+        self.assertEqual(r.context['orig_id'],          "00000001")
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['edit_view_button'],   False)
@@ -623,7 +623,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # Fields
         self._check_default_entity_context_fields(r, 
             action="copy",
-            view_id="Default_view",
+            view_id="00000001",
             view_label="Default record view",
             view_help="Default record view, applied when no view is specified when creating a record.",
             view_url=view_url,
@@ -773,7 +773,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     def test_post_new_view_missing_id(self):
         f = recordview_entity_view_form_data(
-            view_id=None,
+            view_id="",
             action="new", update="RecordView"
             )
         u = entitydata_edit_url("new", "testcoll", "_view", view_id="View_view")
@@ -785,7 +785,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with record view identifier</h3>")
         # Test context
         expect_context = recordview_entity_view_context_data(
-            view_id=None,
+            view_id="",
             action="new", update="RecordView",
             )
         # print repr(r.context[-1]['fields'][-1]['field_value'])
@@ -846,7 +846,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     def test_post_copy_view_missing_id(self):
         f = recordview_entity_view_form_data(
-            view_id=None, orig_id="Default_view", 
+            view_id="", orig_id="Default_view", 
             action="copy", update="Updated RecordView"
             )
         u = entitydata_edit_url("copy", "testcoll", "_view", entity_id="Default_view", view_id="View_view")
@@ -855,7 +855,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with record view identifier</h3>")
         expect_context = recordview_entity_view_context_data(
-            view_id=None, orig_id="Default_view", 
+            view_id="", orig_id="Default_view", 
             action="copy", update="Updated RecordView"
             )
         self.assertDictionaryMatch(r.context, expect_context)
@@ -952,7 +952,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self._check_recordview_values("editview")
         # Form post with ID missing
         f = recordview_entity_view_form_data(
-            view_id=None, orig_id="editview", 
+            view_id="", orig_id="editview", 
             action="edit", 
             target_record_type="annal:View",
             update="Updated RecordView"

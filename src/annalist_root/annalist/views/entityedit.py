@@ -439,10 +439,29 @@ class GenericEntityEditView(AnnalistGenericView):
                 # Add empty fields per named repeat group
                 self.add_entity_field(add_field_desc, entity)
         #@@
-        entityvals  = get_entity_values(viewinfo.entitytypeinfo, entity, entity_id)
+        entityvals  = get_entity_values(
+            viewinfo.entitytypeinfo, entity, entity_id, 
+            action=viewinfo.action
+            )
         # log.info("form_render.entityvals %r"%(entityvals,))        
-        if viewinfo.action == "copy":
-            entityvals.pop(ANNAL.CURIE.uri, None)
+        # if viewinfo.action == "copy":
+        #     # Allocate new entity Id and lose values based on original Id 
+        #     # when performing a copy operation.
+        #     typeinfo  = viewinfo.entitytypeinfo
+        #     entity_id = typeinfo.entityclass.allocate_new_id(typeinfo.entityparent)
+        #     entityvals['entity_id'] = entity_id
+        #     entityvals.pop(ANNAL.CURIE.uri, None)
+        #     entityvals.pop('entity_link', None)
+        #     #@@
+        #     # entityvals.pop('entity_id', None)
+        #     #@@ allocate new entity id
+        #     # From: bound_field.get_entity_values():
+        #     # entityvals['entity_id']        = entity_id
+        #     # entityvals['entity_link']      = entity.get_view_url_path()
+        #     #
+        #     # See also:
+        #     # Entity.allocate_new_id(cls, parent) - returns new Id string
+        #     #@@
         context_extra_values = (
             { 'edit_view_button':   viewinfo.recordview.get(ANNAL.CURIE.open_view, "yes")
             , 'continuation_url':   viewinfo.get_continuation_url() or ""
@@ -450,7 +469,7 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'coll_id':            coll_id
             , 'type_id':            type_id
             , 'view_choices':       self.get_view_choices_field(viewinfo)
-            , 'orig_id':            entity_id
+            , 'orig_id':            entityvals['entity_id']
             , 'orig_type':          type_id
             , 'view_id':            viewinfo.view_id
             })
@@ -827,11 +846,30 @@ class GenericEntityEditView(AnnalistGenericView):
             # Check "edit" authorization to continue
             if viewinfo.check_authorization("edit"):
                 return responseinfo.set_http_response(viewinfo.http_response)
+
+
+
+
+
+        # If no id field in form, use orig/allocated id
+        #
+        # NOTE: assumes Id value of None corresponds to no form field
+        if entity_id is None:
+            log.info("@@@@@ save_entity: entity_id      "+str(entity_id))
+            log.info("@@@@@ save_entity: orig_entity_id "+str(orig_entity_id))
+            entity_id = orig_entity_id
+
+        #### Copy logic to generate new Id is not working - do tbis first
+
+        #### When no entity_id field, rename logic is getting confused.
+        #### Need to think through for each case (new, edit, copy)
+        #### Introduce use_entity_id for actual save??
         entity_renamed = (
             ( action == "edit" ) and
             ( (entity_id      != orig_entity_id) or 
               (entity_type_id != orig_type_id  ) )
             )
+
 
         # @@TODO: factor out repeated re-rendering logic
 
@@ -894,6 +932,7 @@ class GenericEntityEditView(AnnalistGenericView):
                             )
                         )
         else:
+            # @@@@@@@@@@@@@@@@@@@@@
             if not typeinfo.entity_exists(entity_id, altscope="all"):
                 # This shouldn't happen, but just in case...
                 log.warning("Expected %s/%s not found; action %s, entity_renamed %r"%
