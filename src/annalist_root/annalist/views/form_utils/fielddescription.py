@@ -274,6 +274,7 @@ class FieldDescription(object):
         group_view = self._field_desc['group_view']
         if group_view is None:
             log.error("Field %(field_id)s is missing `group_view` value"%(self._field_desc))
+            # log.error("".join(traceback.format_stack()))
             return []
         return self._field_desc['group_view'][ANNAL.CURIE.group_fields]
 
@@ -420,14 +421,15 @@ def field_description_from_view_field(collection, field, view_context=None, grou
     if recordfield is None:
         log.warning("Can't retrieve definition for field %s"%(field_id))
         recordfield = RecordField.load(collection, "Field_missing", altscope="all")
-    # If field references group, pull in field details
+    # If field references group, pull in group details
     group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
     if group_ref:
         group_view = RecordGroup.load(collection, group_ref, altscope="all")
         if not group_view:
             log.error("Group %s used in field %s"%(group_ref, field_id))
-            ex_type, ex, tb = sys.exc_info()
-            traceback.print_tb(tb)
+            # log.error("".join(traceback.format_stack()))
+            # ex_type, ex, tb = sys.exc_info()
+            # traceback.print_tb(tb)
             # raise EntityNotFound_Error("Group %s used in field %s"%(group_ref, field_id))
     else:
         group_view = None

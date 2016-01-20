@@ -1930,6 +1930,11 @@ class GenericEntityEditView(AnnalistGenericView):
                             "entityedit.find_fields: invalid group_ref %s in field description for %s"%
                                (groupref, field_desc['field_id'])
                             )
+                    elif 'group_id' not in field_desc:
+                        log.error(
+                            "entityedit.find_fields: groupref %s, missing 'group_id' in field description for %s"%
+                               (groupref, field_desc['field_id'])
+                            )
                     else:
                         log.debug(
                             "entityedit.find_fields: Group field desc %s: %s"%

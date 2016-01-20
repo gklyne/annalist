@@ -53,7 +53,8 @@ class RepeatValuesMap(FieldValueMap):
     def map_form_to_entity(self, formvals, entityvals):
         # log.info(repr(formvals))
         # @@TODO: use field_name (self.i) for prefix?
-        prefix_template = self.f['group_id']+"__%d__"
+        # prefix_template = self.f['group_id']+"__%d__"
+        prefix_template = self.i+"__%d__"
         prefix_n        = 0
         repeatvals      = []
         prefix_found    = True

@@ -25,24 +25,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         WARNING 2015-12-22 09:01:31,753 Not Found: /static/foundation/js/foundation/' + url + '
         WARNING 2015-12-22 09:01:31,753 Not Found: /static/foundation/js/foundation/' + url + '
         Can't reproduce
-- [ ] BUG: log report from performance server, shows to user as "Server error" on save when repeat field references non-existent group id:
-        ERROR 2016-01-12 10:49:28,239 Group Recording_part_repeat used in field Recording_part_r
-        ERROR 2016-01-12 10:49:28,246 Field Recording_part_r is missing `group_view` value
-        ERROR 2016-01-12 10:49:28,398 'group_id'
-        Traceback (most recent call last):
-          File "/home/annalist/anenv/lib/python2.7/site-packages/annalist_root/annalist/views/entityedit.py", line 241, in post
-            response = self.form_response(viewinfo, context_extra_values)
-          File "/home/annalist/anenv/lib/python2.7/site-packages/annalist_root/annalist/views/entityedit.py", line 497, in form_response
-            entityformvals = entityvaluemap.map_form_data_to_values(form_data, orig_entity)
-          File "/home/annalist/anenv/lib/python2.7/site-packages/annalist_root/annalist/views/form_utils/entityvaluemap.py", line 93, in map_form_data_to_values
-            kmap.map_form_to_entity(form_data, values)
-          File "/home/annalist/anenv/lib/python2.7/site-packages/annalist_root/annalist/views/form_utils/fieldlistvaluemap.py", line 98, in map_form_to_entity
-            f.map_form_to_entity(formvals, entityvals)
-          File "/home/annalist/anenv/lib/python2.7/site-packages/annalist_root/annalist/views/form_utils/repeatvaluesmap.py", line 56, in map_form_to_entity
-            prefix_template = self.f['group_id']+"__%d__"
-          File "/home/annalist/anenv/lib/python2.7/site-packages/annalist_root/annalist/views/form_utils/fielddescription.py", line 376, in __getitem__
-            return self._field_desc[k]
-        KeyError: 'group_id'
+- [x] BUG: "Server error" on save when repeat field references non-existent group id
 - [x] BUG: can't save record using form without ID field
 - [x] Home page: change button labels: "view metadata", "edit metadata", "remove collection".
 - [x] Add read-only renderers for view short text and view markdown.
