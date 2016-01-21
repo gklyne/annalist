@@ -57,25 +57,40 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Form field layout: arrange that fields lay out as indicated by the position value.
     - Add padding fields so that display position is as expected.
     - Note this only works if the padding field is as height as other fields in the same row.
-- [ ] Provide collection overview that allows users to see what is present
-    - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
-    - think about an item list renderer (what is variable?)
-    - longer term, this might be a high-level graphical display (like PROV diag.)
-    - use this to think about linking to alternative displays
-- [ ] Place record label at start of page title for entity view; collection next
+- [ ] Create wiki-like view and allow use for collection fron page
+    - [x] Expand collection view logic to allow default view display
+    - [ ] Expand collection metadata to include default view details (view only?)
+    - [ ] Add default view button to entity view pages
+- [ ] New test cases:
+    - [ ] New entity save with no entity field
+    - [ ] Edit entity save with no entity field
+    - [ ] Copy entity save with no entity field
+    - [ ] View collectiion with default view defined
+    - [ ] Extra fields in collection metadata form
+    - [ ] Post default view from entity view display
 - [ ] Reinstate continuation URI when following link in view or list
+- [ ] When accessing type without trailing "/", redirect to URI with.
 - [ ] Review labels and IDs used when creating repeat fields and groups
     - field_r for repeat
     - field_g for group (label: Group [field label])
-- [ ] When accessing typer without trailing "/", redirect to URI with.
+    - field_m for multifield reference group
+
+(release)
+
+- [ ] Rethink collection overview that allows users to see what is present
+    - original thoughts, but review in light of default-view approach adopted:
+        - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
+        - think about an item list renderer (what is variable?)
+        - longer term, this might be a high-level graphical display (like PROV diag.)
+        - use this to think about linking to alternative displays
 - [ ] When supertypes are changed, need to regenerate @type fields of instances
     - Or be smarter about how entries for listing are selected.  
     - Link to migration?
 - [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
 - [ ] Create schema definitions in Annalist for ANNAL namespace
-
-(release)
-
+- [ ] Place record label at start of page title for entity view; collection next
+    - [ ] Need to extract or construct label depending on action (new, copy, edit).
+        - see entitytypeinfo.get_entity, entityedity.form_response, etc.
 - [ ] Use site/collection data to populate help panes on displays; use Markdown.
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Login: support continuation URI

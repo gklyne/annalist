@@ -447,6 +447,26 @@ class Collection(Entity):
             list_id = None
         return list_id 
 
+    def set_default_view(self, view_id, type_id, entity_id):
+        """
+        Set and save the default list to be displayed for the current collection.
+        """
+        self[ANNAL.CURIE.default_view_id]     = view_id
+        self[ANNAL.CURIE.default_view_type]   = type_id
+        self[ANNAL.CURIE.default_view_entity] = entity_id
+        self._save()
+        return
+
+    def get_default_view(self):
+        """
+        Return the default view id, type and entity to be displayed for the current collection.
+        """
+        view_id   = self.get(ANNAL.CURIE.default_view_id,     None)
+        type_id   = self.get(ANNAL.CURIE.default_view_type,   None)
+        entity_id = self.get(ANNAL.CURIE.default_view_entity, None)
+        log.info("Collection.get_default_view: %s/%s/%s"%(view_id, type_id, entity_id))
+        return (view_id, type_id, entity_id) 
+
     # JSON-LD context data
 
     def generate_coll_jsonld_context(self):

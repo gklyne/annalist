@@ -332,16 +332,16 @@ div.row.view-value-row div.row div.row.view-value-row
 }
 
 /* Suppress padding for nested column labels */
-div.column.view-value  div.row div.column.view-label,
-div.columns.view-value div.row div.columns.view-label
+div.column.view-value  > div.row > div.column.view-label,
+div.columns.view-value > div.row > div.columns.view-label
 {
     padding-top:    0rem;
     padding-bottom: 0rem;
 }
 
 /* Suppress padding for nested column values */
-div.column.view-value  div.row div.column.view-value,
-div.columns.view-value div.row div.columns.view-value
+div.column.view-value  > div.row > div.column.view-value,
+div.columns.view-value > div.row > div.columns.view-value
 {
     padding-top:    0rem;
     padding-bottom: 0rem;
@@ -572,6 +572,84 @@ div.columns.view-value > span.markdown h4
     font-style:  italic;
 }
 
+/* Markdown field table styling */
+
+div.columns.view-value > span.markdown table
+{   /* Spacing around table */
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+    border:0;
+    /* border-collapse: collapse;  / * Prevents gap before checkbox in table column */
+}
+
+div.columns.view-value > span.markdown > table > thead ,
+div.columns.view-value > span.markdown > table > tfoot 
+{   /* Background colour for header/footer in list */
+    background: whitesmoke;
+}
+
+/* Presentation of table headers - first two entries catch extra layering for selectable row checkboxes */
+div.columns.view-value > span.markdown > table > thead > tr > th ,
+div.columns.view-value > span.markdown > table > tfoot > tr > th 
+{   /* Table headings and footers text styling */
+    text-align: left;
+    /* font-weight: bolder; */
+    font-weight: normal;
+    font-size: 0.875rem;
+    display: table-cell;
+    color: #222222;  /* 222222 */
+}
+
+div.columns.view-value > span.markdown > table > tbody > tr > td
+{   /* Text size and styling for row content */
+    font-size: 0.875rem;
+} 
+
+div.columns.view-value > span.markdown > table
+{
+    margin-left:    -0.5rem;
+    margin-right:   -0.5rem;
+} 
+
+div.columns.view-value > span.markdown > table > thead ,
+div.columns.view-value > span.markdown > table > tfoot ,
+div.columns.view-value > span.markdown > table > tbody
+{   /* Row spacing for entries in table */
+    padding-top:    0.1rem;
+    padding-bottom: 0.1rem;
+    height: auto;
+} 
+
+div.columns.view-value > span.markdown > table > thead > tr ,
+div.columns.view-value > span.markdown > table > tfoot > tr ,
+div.columns.view-value > span.markdown > table > tbody > tr
+{   /* Row spacing for entries in table */
+    padding-top:    0.1rem;
+    padding-bottom: 0.1rem;
+    height: auto;
+} 
+
+div.columns.view-value > span.markdown > table tr > th ,
+div.columns.view-value > span.markdown > table tr > td
+{   /* Cell spacing for entries in table */
+    padding-top:    0rem;
+    padding-bottom: 0rem;
+    padding-left:   0.5rem;
+    padding-right:  0.5rem;
+} 
+
+div.columns.view-value > span.markdown > table > tbody > tr.odd , 
+div.columns.view-value > span.markdown > table > tbody > tr:nth-of-type(odd)
+{   /* Background shading for odd rows in list; first row is #1 (odd) */
+    background: white;
+}
+
+div.columns.view-value > span.markdown > table > tbody > tr.even , 
+div.columns.view-value > span.markdown > table > tbody > tr:nth-of-type(even)
+{   /* Background shading for even rows in list */
+    background: #F8F8F8;
+}
+
 
 /* Code area field text styling */
 /* See: http://stackoverflow.com/questions/2032652/ */
@@ -688,8 +766,13 @@ div.row.table div.row.tfoot
     background: whitesmoke;
 }
 
-div.row.table div.row.thead .columns .row .columns.view-label ,
-div.row.table div.row.tfoot .columns .row .columns.view-label 
+/* Presentation of table headers - first two entries catch extra layering for selectable row checkboxes */
+div.row.table > .columns > div.row.thead > .columns > .row > .columns.view-label ,
+div.row.table > .columns > div.row.tfoot > .columns > .row > .columns.view-label
+/*
+div.row.table > .columns > div.row.thead > .columns.view-label ,
+div.row.table > .columns > div.row.tfoot > .columns.view-label 
+*/
 {   /* List headings (and footers?) text styling and psacing */
     /* padding-top: 0.5rem; */
     /* padding-bottom: 0.625rem; */

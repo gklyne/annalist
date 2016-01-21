@@ -425,13 +425,9 @@ class CollectionEditViewTest(AnnalistTestCase):
     def test_get_view_no_collection(self):
         u = collection_view_url(coll_id="no_collection")
         r = self.client.get(u)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        u1 = TestHostUri + entitydata_list_all_url(coll_id="no_collection")
-        self.assertEqual(r['location'], u1)
-        r1 = self.client.get(u1)
-        self.assertEqual(r1.status_code,   404)
-        self.assertEqual(r1.reason_phrase, "Not found")
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertContains(r, "<p>Collection no_collection does not exist</p>", status_code=404)
         return
 
     def test_get_view_newer_version(self):
@@ -439,14 +435,9 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.testsite.add_collection("newer_version", collmeta, annal_ver="99.99.99")
         u = collection_view_url(coll_id="newer_version")
         r = self.client.get(u)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        u1 = TestHostUri + entitydata_list_all_url(coll_id="newer_version")
-        self.assertEqual(r['location'], u1)
-        r1 = self.client.get(u1)
-        self.assertEqual(r1.status_code,   500)
-        self.assertEqual(r1.reason_phrase, "Server error")
-        self.assertContains(r1, "created by software version 99.99.99", status_code=500)
+        self.assertEqual(r.status_code,   500)
+        self.assertEqual(r.reason_phrase, "Server error")
+        self.assertContains(r, "created by software version 99.99.99", status_code=500)
         return
 
     def test_get_edit(self):

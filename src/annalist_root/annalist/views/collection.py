@@ -34,18 +34,48 @@ class CollectionView(AnnalistGenericView):
     """
     View class to handle requests to display an Annalist collection.
 
-    Redirects to default list view.
+    Redirects to a default view or list view.
     """
     def __init__(self):
         super(CollectionView, self).__init__()
+        self.default_continuation = self.view_uri("AnnalistSiteView")
         return
+
+    def collection_view_setup(self, coll_id, action, request_dict):
+        """
+        Assemble display information for collection view request handler
+        """
+        viewinfo = DisplayInfo(self, action, request_dict, self.default_continuation)
+        viewinfo.get_site_info(self.get_request_host())
+        viewinfo.get_coll_info(coll_id)
+        viewinfo.check_authorization(action)
+        self.default_continuation = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
+        return viewinfo
 
     def get(self, request, coll_id):
         """
         Form for displaying the current collection 
         """
-        return HttpResponseRedirect(self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id))
-
+        viewinfo = self.collection_view_setup(coll_id, "view", request.GET.dict())
+        if viewinfo.http_response:
+            log.debug(
+                "CollectionView.get: response %d: %s"%
+                (viewinfo.http_response.status_code, viewinfo.http_response.reason_phrase)
+                )
+            return viewinfo.http_response
+        default_view, default_type, default_entity = viewinfo.get_default_view()
+        if default_view and default_type and default_entity:
+            redirect_uri = self.view_uri(
+                "AnnalistEntityDataView",
+                coll_id=coll_id, 
+                view_id=default_view, type_id=default_type, entity_id=default_entity
+                )
+        else:
+            redirect_uri = self.view_uri(
+                "AnnalistEntityDefaultListAll", 
+                coll_id=coll_id
+                )
+        return HttpResponseRedirect(redirect_uri)
 
 class CollectionEditView(AnnalistGenericView):
     """
@@ -56,7 +86,7 @@ class CollectionEditView(AnnalistGenericView):
         self.default_continuation = self.view_uri("AnnalistSiteView")
         return
 
-    def collection_view_setup(self, coll_id, action, request_dict):
+    def collection_edit_setup(self, coll_id, action, request_dict):
         """
         Assemble display information for collection view request handler
         """
@@ -88,7 +118,8 @@ class CollectionEditView(AnnalistGenericView):
             context.update(viewinfo.context_data())
             return context
         continuation_url = None
-        viewinfo = self.collection_view_setup(coll_id, "view", request.GET.dict())
+        # View permission only to display form, as it presents useful information even when not editing.
+        viewinfo = self.collection_edit_setup(coll_id, "view", request.GET.dict())
         if viewinfo.http_response:
             return viewinfo.http_response
         return (
@@ -109,7 +140,7 @@ class CollectionEditView(AnnalistGenericView):
         #       URI-wrangling?
         redirect_uri  = None
         http_response = None
-        viewinfo = self.collection_view_setup(coll_id, "config", request.POST.dict())
+        viewinfo = self.collection_edit_setup(coll_id, "config", request.POST.dict())
         if viewinfo.http_response:
             return viewinfo.http_response
         if "close" in request.POST:

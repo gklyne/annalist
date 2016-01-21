@@ -45,7 +45,7 @@
         <!-- Left Nav Section -->
         <ul class="left">
           {% if coll_id %}
-          <li><a href="{% url 'AnnalistEntityDefaultListAll' coll_id=coll_id %}">{{coll_id}}</a></li>
+          <li><a href="{% url 'AnnalistCollectionView' coll_id=coll_id %}">{{coll_id}}</a></li>
           {% if type_id %}
           <li><a href="{% url 'AnnalistEntityDefaultListType' coll_id=coll_id type_id=type_id %}">{{type_id}}</a></li>
           {% endif %}

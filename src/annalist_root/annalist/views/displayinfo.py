@@ -125,7 +125,7 @@ class DisplayInfo(object):
         self.view_id            = None
         self.recordview         = None
         self.entity_id          = None
-        # self.entitydata       = None
+        self.entitydata         = None
         self.http_response      = None
         return
 
@@ -343,6 +343,15 @@ class DisplayInfo(object):
                     )
                 )
         return self.http_response
+
+    # Additional support functions for collection view
+
+    def get_default_view(self):
+        """
+        Return default view_id, type_id and entity_id to display for collection,
+        or None for any values not defined.
+        """
+        return self.collection.get_default_view()
 
     # Additonal support functions for list views
 
