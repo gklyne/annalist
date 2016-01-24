@@ -471,7 +471,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_right_classes)s">
-                  &nbsp;
                   <input name="Define_view_list" value="Define view+list" type="submit">
                 </div>
               </div>
@@ -910,7 +909,12 @@ class ConfirmRecordTypeDeleteTests(AnnalistTestCase):
         self.assertMatch(r['location'],    
             "^"+TestHostUri+
             collection_edit_url("testcoll")+
-            r"\?info_head=.*&info_message=.*deletetype.*testcoll.*$"
+            r"\?.*info_head=.*$"
+            )
+        self.assertMatch(r['location'],    
+            "^"+TestHostUri+
+            collection_edit_url("testcoll")+
+            r"\?.*info_message=.*deletetype.*testcoll.*$"
             )
         # Confirm deletion
         self.assertFalse(RecordType.exists(self.testcoll, "deletetype"))

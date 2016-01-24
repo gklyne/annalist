@@ -59,16 +59,17 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Note this only works if the padding field is as height as other fields in the same row.
 - [ ] Create wiki-like view and allow use for collection fron page
     - [x] Expand collection view logic to allow default view display
+    - [x] Add default view button to view template; update tests
+    - [ ] Add handler for default view button to entity view/edit handler
     - [ ] Expand collection metadata to include default view details (view only?)
-    - [ ] Add default view button to entity view pages
 - [ ] New test cases:
     - [ ] New entity save with no entity field
     - [ ] Edit entity save with no entity field
     - [ ] Copy entity save with no entity field
-    - [ ] View collectiion with default view defined
+    - [ ] View collection with default view defined
     - [ ] Extra fields in collection metadata form
     - [ ] Post default view from entity view display
-- [ ] Reinstate continuation URI when following link in view or list
+- [x] Reinstate continuation URI when following link in view or list (cf. commit f3f3001)
 - [ ] When accessing type without trailing "/", redirect to URI with.
 - [ ] Review labels and IDs used when creating repeat fields and groups
     - field_r for repeat
@@ -77,6 +78,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (release)
 
+- [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
 - [ ] Rethink collection overview that allows users to see what is present
     - original thoughts, but review in light of default-view approach adopted:
         - initially, just provide a "What's here" list that displays default list label for all types + link to display list.

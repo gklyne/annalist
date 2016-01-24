@@ -143,7 +143,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>List entities with type information</h3>", html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         cont = uri_params({"continuation_url": u})
-        cont = ""
+        # cont = ""
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -254,7 +254,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Collection testcoll</title>")
         self.assertContains(r, "<h3>List entities</h3>", html=True)
         cont = uri_params({"continuation_url": u})
-        cont = ""
+        # cont = ""
         # log.info(r.content)
         rowdata = """
             <div class="tbody row select-row">

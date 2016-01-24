@@ -36,7 +36,7 @@
             </div>
           </div>
         </div>
-        <div class="small-4 columns">
+        <div class="small-12 medium-4 columns">
           <div class="row">
             <div class="form-buttons small-12 columns">
               <input type="submit" name="save"          value="Save" />
@@ -45,15 +45,18 @@
             </div>
           </div>
         </div>
-        <div class="small-6 columns">
+        <div class="small-12 medium-6 columns">
           <div class="row">
             <div class="form-buttons small-12 columns text-right">
-              &nbsp;
               {% for b in task_buttons %}
               <input type="submit" name="{{b.button_name}}" value="{{b.button_label}}" />
               {% endfor %}
               {% if auth_config and edit_view_button and edit_view_button != "no" %}
               <input type="submit" name="open_view"       value="Edit view" />
+              {% else %}
+              {%if not task_buttons %}
+              &nbsp;
+              {% endif %}
               {% endif %}
             </div>
           </div>

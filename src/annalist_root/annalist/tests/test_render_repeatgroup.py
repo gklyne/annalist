@@ -284,11 +284,11 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Collection testcoll</title>")
         # Test rendered result
+        cont_uri_param = "?continuation_url="+u
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
-            view_url=v, cont_uri_param="" 
+            view_url=v, cont_uri_param=cont_uri_param
             )
-        cont_uri_param = "?continuation_url="+u
         formrow1 = """
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
@@ -311,7 +311,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        # log.info(r.content)
+        # log.info(r.content) #@@
         self.assertContains(r, formrow1,  html=True)
         self.assertContains(r, formrow2, html=True)
         return

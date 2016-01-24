@@ -182,8 +182,8 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Collection testcoll</title>")
-        cont_uri = "?continuation_url=%s"%u + "%%3Fcontinuation_url=/xyzzy/"
-        cont_uri = ""
+        cont_uri = "?continuation_url=%s"%u + "%3Fcontinuation_url=/xyzzy/"
+        # cont_uri = ""
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
             entity_url       = "/testsite/c/testcoll/d/testtype/entity1/" + cont_uri,

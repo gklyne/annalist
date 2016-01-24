@@ -91,7 +91,6 @@ class SelectRenderingTest(FieldRendererTestSupport):
     def test_RenderChoiceValue(self):
         def expect_render(valkey, vallabel, vallink, valchoices):
             valcont = "?continuation_url=test_cont"
-            valcont = ""
             if vallink and valkey in valchoices:
                 render_view = """<a href="%s">%s</a> """%(vallink+valcont, vallabel)
             elif valkey == "":
@@ -134,7 +133,6 @@ class SelectRenderingTest(FieldRendererTestSupport):
     def test_RenderSelectValue(self):
         def expect_render(valkey, vallabel, vallink, valchoices):
             valcont = "?continuation_url=test_cont"
-            valcont = ""
             if vallink and valkey in valchoices:
                 render_view = (
                     """<a href="%s">%s</a> """%

@@ -37,7 +37,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.uri_builder             import uri_params, uri_with_params
+from annalist.views.uri_builder             import uri_params, uri_with_params, continuation_params_url
 from annalist.views.entitylist              import EntityGenericListView
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
@@ -157,7 +157,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
-        cont = ""
+        #@@ cont = ""
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -331,7 +331,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
-        cont = ""
+        # cont = "/testsite/c/testcoll/l/Field_list/_field/%3Fcontinuation_url=/xyzzy/"
+        #@@ cont = ""
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -516,8 +517,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
-        cont = uri_params({"continuation_url": u})
-        cont = ""
+
+        curi = continuation_params_url(u)
+        cont = uri_params({"continuation_url": curi})
+        #@@ cont = ""
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -592,7 +595,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
               </div>
             </div>
             """%({'base': TestBasePath, 'cont': cont})
-        # log.info("*** r.content: "+r.content)
+        # log.info("*** r.content: "+r.content) #@@
         self.assertContains(r, rowdata1, html=True)
         self.assertContains(r, rowdata2, html=True)
         self.assertContains(r, rowdata3, html=True)
@@ -620,7 +623,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
-        cont = ""
+        #@@ cont = ""
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">

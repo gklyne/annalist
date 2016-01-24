@@ -94,7 +94,17 @@ def continuation_params(*param_dicts, **param_dict):
         { 'continuation_url': uri_param_dict.get('continuation_url') or None
         , 'search':           uri_param_dict.get('search_for')       or 
                               uri_param_dict.get('search')           or None
+        , 'scope':            uri_param_dict.get('scope')            or None
         })
+
+def continuation_params_url(base_url):
+    """
+    Takes a supplied URL and returns a corresponding continuation URL with transient 
+    query parameters removed (cf. continuation_params above).
+    """
+    url_params = uri_param_dict(base_url)
+    cont_url   = uri_with_params(base_url, continuation_params(url_params))
+    return cont_url
 
 def continuation_url_chain(continuation_url):
     """

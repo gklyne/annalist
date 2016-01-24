@@ -336,6 +336,13 @@ class RefMultifieldTest(AnnalistTestCase):
             "?continuation_url=%(basepath)s/c/%(coll_id)s/v/%(view_id)s/%(type_id)s/%(entity_id)s/!view"%
             field_vals()
             )
+
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="ref_type", entity_id="Test_ref_entity", 
+            view_id="Test_refimg_view",
+            basepath=TestBasePath,
+            cont_uri_param=cont_uri_param
+            )
         formrow1 = """
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
@@ -354,7 +361,8 @@ class RefMultifieldTest(AnnalistTestCase):
             view_id="Test_refimg_view",
             field_id="image_field",
             basepath=TestBasePath,
-            ref_image="%s/c/testcoll/d/img_type/Test_img_entity/image_field.jpeg"%(TestBasePath,)
+            ref_image="%s/c/testcoll/d/img_type/Test_img_entity/image_field.jpeg"%(TestBasePath,),
+            cont_uri_param=cont_uri_param
             )
         formrow2a = """
             <div class="small-12 medium-6 columns">
@@ -517,6 +525,13 @@ class RefMultifieldTest(AnnalistTestCase):
             "?continuation_url=%(basepath)s/c/%(coll_id)s/v/%(view_id)s/%(type_id)s/%(entity_id)s/!view"%
             field_vals()
             )
+
+        field_vals    = default_fields(
+            coll_id="testcoll", type_id="ref_type", entity_id="Test_rpt_entity", 
+            view_id="Test_rptimg_view",
+            basepath=TestBasePath,
+            cont_uri_param=cont_uri_param
+            )
         formrow1 = """
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
@@ -561,7 +576,8 @@ class RefMultifieldTest(AnnalistTestCase):
             view_id="Test_rptimg_view",
             field_id="image_field",
             basepath=TestBasePath,
-            ref_image="%s/c/testcoll/d/img_type/Test_img_entity/image_field.jpeg"%(TestBasePath,)
+            ref_image="%s/c/testcoll/d/img_type/Test_img_entity/image_field.jpeg"%(TestBasePath,),
+            cont_uri_param=cont_uri_param
             )
         formrow3a = """
             <div class="small-12 medium-2 columns">

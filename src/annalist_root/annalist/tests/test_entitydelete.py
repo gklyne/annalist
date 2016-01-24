@@ -82,7 +82,10 @@ class ConfirmEntityDataDeleteTests(AnnalistTestCase):
             entitydata_list_all_url("testcoll")
             )
         self.assertMatch(r['location'],    
-            r"info_head=.*&info_message=.*deleteentity.*testcoll.*$"
+            r"info_head=.*$"
+            )
+        self.assertMatch(r['location'],    
+            r"info_message=.*deleteentity.*testcoll.*$"
             )
         self.assertNotIn("search=testcoll", r['location'])
         # Confirm deletion
@@ -104,7 +107,10 @@ class ConfirmEntityDataDeleteTests(AnnalistTestCase):
             entitydata_list_all_url("testcoll")
             )
         self.assertMatch(r['location'],    
-            r"info_head=.*&info_message=.*deleteentity.*testcoll.*$"
+            r"info_head=.*$"
+            )
+        self.assertMatch(r['location'],    
+            r"info_message=.*deleteentity.*testcoll.*$"
             )
         self.assertIn("search=testcoll", r['location'])
         # Confirm deletion

@@ -182,6 +182,7 @@ class EntityGenericListView(AnnalistGenericView):
             context_extra_values = (
                 { 'continuation_url':       listinfo.get_continuation_url() or ""
                 , 'request_url':            self.get_request_path()
+                , 'scope':                  scope
                 , 'coll_id':                coll_id
                 , 'type_id':                type_id
                 , 'list_id':                listinfo.list_id

@@ -30,7 +30,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.uri_builder             import uri_params, uri_with_params
+from annalist.views.uri_builder             import uri_params, uri_with_params, continuation_params_url
 from annalist.views.entitylist              import EntityGenericListView
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
@@ -211,7 +211,6 @@ class EntityInheritListViewTest(AnnalistTestCase):
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
-        cont = ""
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -342,8 +341,8 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
-        cont = uri_params({"continuation_url": u})
-        cont = ""
+        curi = continuation_params_url(u)
+        cont = uri_params({"continuation_url": curi})
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -390,7 +389,6 @@ class EntityInheritListViewTest(AnnalistTestCase):
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         cont = uri_params({"continuation_url": u})
-        cont = ""
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">

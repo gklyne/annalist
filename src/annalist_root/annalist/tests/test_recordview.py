@@ -1218,7 +1218,12 @@ class ConfirmRecordViewDeleteTests(AnnalistTestCase):
         self.assertMatch(r['location'],    
             "^"+TestHostUri+
             collection_edit_url("testcoll")+
-            r"\?info_head=.*&info_message=.*deleteview.*testcoll.*$"
+            r"\?.*info_head=Action%20completed.*$"
+            )
+        self.assertMatch(r['location'],    
+            "^"+TestHostUri+
+            collection_edit_url("testcoll")+
+            r"\?.*info_message=.*deleteview.*testcoll.*$"
             )
         # Confirm deletion
         self.assertFalse(RecordView.exists(self.testcoll, "deleteview"))
