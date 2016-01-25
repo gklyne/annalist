@@ -140,22 +140,6 @@ class CollectionDataEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=6)
-        #@@
-        # formrow1b = """
-        #     <div class="small-12 medium-6 columns">
-        #         <div class="row view-value-row">
-        #             <div class="%(label_classes)s">
-        #                 <span>S/W version</span>
-        #             </div>
-        #             <div class="%(input_classes)s">
-        #                 <input type="text" size="64" name="Coll_software_version" 
-        #                            placeholder="(software version)"
-        #                            value="" />
-        #             </div>
-        #         </div>
-        #     </div>
-        #     """%field_vals(width=6)
-        #@@
         formrow1b = """
             <div class="small-12 medium-6 columns">
                 <div class="row view-value-row">
@@ -198,7 +182,55 @@ class CollectionDataEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow4 = """
+        formrow4a = """
+             <div class="small-12 medium-6 columns">
+                <div class="row view-value-row">
+                    <div class="%(label_classes)s">
+                        <span>Default list</span>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <span>&nbsp;</span>
+                    </div>
+                </div>
+            </div>
+           """%field_vals(width=6)
+        formrow4b = """
+            <div class="small-12 medium-6 columns">
+                <div class="row view-value-row">
+                    <div class="%(label_classes)s">
+                        <span>Default view</span>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <span>&nbsp;</span>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=6)            
+        formrow5a = """
+             <div class="small-12 medium-6 columns">
+                <div class="row view-value-row">
+                    <div class="%(label_classes)s">
+                        <span>Default view type</span>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <span>&nbsp;</span>
+                    </div>
+                </div>
+            </div>
+           """%field_vals(width=6)
+        formrow5b = """
+            <div class="small-12 medium-6 columns">
+                <div class="row view-value-row">
+                    <div class="%(label_classes)s">
+                        <span>Default view entity</span>
+                    </div>
+                    <div class="%(input_classes)s">
+                        <span>&nbsp;</span>
+                    </div>
+                </div>
+            </div>
+            """%field_vals(width=6)            
+        formrow6 = """
             <div class="small-12 columns">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
@@ -214,21 +246,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        #@@
-        # formrow4 = """
-        #     <div class="small-12 columns">
-        #         <div class="row view-value-row">
-        #             <div class="%(label_classes)s">
-        #                 <span>Collection metadata</span>
-        #             </div>
-        #             <div class="%(input_classes)s">
-        #                 <span class="markdown"></span>
-        #             </div>
-        #         </div>
-        #     </div>
-        #     """%field_vals(width=12)
-        #@@
-        formrow5a = """
+        formrow7a = """
             <div class="%(space_classes)s">
               <div class="row">
                 <div class="small-12 columns">
@@ -237,7 +255,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=2)
-        formrow5b = """
+        formrow7b = """
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_left_classes)s">
@@ -253,9 +271,13 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow1b,  html=True)
         self.assertContains(r, formrow2,  html=True)
         self.assertContains(r, formrow3,  html=True)
-        self.assertContains(r, formrow4,  html=True)
-        self.assertContains(r, formrow5a, html=True)
-        self.assertContains(r, formrow5b, html=True)
+        self.assertContains(r, formrow4a,  html=True)
+        self.assertContains(r, formrow4b,  html=True)
+        self.assertContains(r, formrow5a,  html=True)
+        self.assertContains(r, formrow5b,  html=True)
+        self.assertContains(r, formrow6,  html=True)
+        self.assertContains(r, formrow7a, html=True)
+        self.assertContains(r, formrow7b, html=True)
         return
 
     # collection default view

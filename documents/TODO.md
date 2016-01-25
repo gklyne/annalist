@@ -62,20 +62,20 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Add default view button to view template; update tests
     - [x] Add handler for default view button to entity view/edit handler
     - [x] Expand collection metadata to include default view details (view only)
-- [ ] New test cases:
-    - [ ] New entity save with no entity field
-    - [ ] Edit entity save with no entity field
-    - [ ] Copy entity save with no entity field
-    - [ ] View collection with default view defined
-    - [ ] Extra fields in collection metadata form
-    - [ ] Post default view from entity view display
+- [x] New test cases:
+    - [x] New entity save with no entity field
+    - [x] Edit entity save with no entity field
+    - [x] Copy entity save with no entity field
+    - [x] Post default view from entity view display
+    - [x] View collection with default view defined
+    - [x] Extra fields in collection metadata form
 - [x] Reinstate continuation URI when following link in view or list (cf. commit f3f3001)
 - [ ] When accessing type without trailing "/", redirect to URI with.
 - [ ] Review labels and IDs used when creating repeat fields and groups
     - field_r for repeat
     - field_g for group (label: Group [field label])
     - field_m for multifield reference group
-- [ ] When saving Id field, stripo out any leading and trailing spaces
+- [ ] When saving Id field, strip out any leading and trailing spaces
 
 (release)
 
