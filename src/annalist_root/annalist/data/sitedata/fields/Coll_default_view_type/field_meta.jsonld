@@ -1,0 +1,16 @@
+{ "@id":                        "annal:fields/Coll_default_view_type"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Coll_default_view_type"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Default view type"
+, "rdfs:comment":               "Default view entity type"
+, "annal:field_render_type":    "Showtext"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:field_entity_type":    "annal:Collection"
+, "annal:placeholder":          "(default view entity type id)"
+, "annal:property_uri":         "annal:default_view_type"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

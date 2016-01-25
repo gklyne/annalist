@@ -964,6 +964,14 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             # [ [ "_field/_initial_values",           ["_initial_values",   "Short text",    "annal:Text", None       ] ]
             [ [ "_field/Coll_comment",              ["Coll_comment",      "Markdown rich text", 
                                                                                             "annal:Richtext"        ] ]
+            , [ "_field/Coll_default_list_id",      ["Coll_default_list_id", 
+                                                                          "Display text",   "annal:Text"            ] ]
+            , [ "_field/Coll_default_view_entity",  ["Coll_default_view_entity", 
+                                                                          "Display text",   "annal:Text"            ] ]
+            , [ "_field/Coll_default_view_id",      ["Coll_default_view_id", 
+                                                                          "Display text",   "annal:Text"            ] ]
+            , [ "_field/Coll_default_view_type",    ["Coll_default_view_type", 
+                                                                          "Display text",   "annal:Text"            ] ]
             , [ "_field/Coll_parent",               ["Coll_parent",       "Entity choice",  "annal:Slug"            ] ]
             , [ "_field/Coll_software_version",     ["Coll_software_version", 
                                                                           "Display text",   "annal:Text"            ] ]

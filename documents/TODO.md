@@ -57,11 +57,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Form field layout: arrange that fields lay out as indicated by the position value.
     - Add padding fields so that display position is as expected.
     - Note this only works if the padding field is as height as other fields in the same row.
-- [ ] Create wiki-like view and allow use for collection fron page
+- [x] Create wiki-like view and allow use for collection fron page
     - [x] Expand collection view logic to allow default view display
     - [x] Add default view button to view template; update tests
-    - [ ] Add handler for default view button to entity view/edit handler
-    - [ ] Expand collection metadata to include default view details (view only?)
+    - [x] Add handler for default view button to entity view/edit handler
+    - [x] Expand collection metadata to include default view details (view only)
 - [ ] New test cases:
     - [ ] New entity save with no entity field
     - [ ] Edit entity save with no entity field
@@ -75,6 +75,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - field_r for repeat
     - field_g for group (label: Group [field label])
     - field_m for multifield reference group
+- [ ] When saving Id field, stripo out any leading and trailing spaces
 
 (release)
 
@@ -129,6 +130,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
+- [ ] Think about how to incoporate resources from other collections by reference: feed into data bridges?
 
 (feature freeze for V0.9alpha?)
 (0.2?)

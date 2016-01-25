@@ -567,6 +567,40 @@ class GenericEntityEditView(AnnalistGenericView):
                 responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
             return responseinfo.get_http_response()
 
+        # Make the current view default for the current collection.
+        if "default_view" in form_data:
+            responseinfo = self.save_entity(
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                responseinfo=responseinfo
+                )
+            if not responseinfo.has_http_response():
+                if viewinfo.entitytypeinfo:
+                    permissions_map = viewinfo.entitytypeinfo.permissions_map
+                else:
+                    permissions_map = CONFIG_PERMISSIONS
+                auth_check = self.form_action_auth("config", viewinfo.collection, permissions_map)
+                if auth_check:
+                    return auth_check
+                viewinfo.collection.set_default_view(
+                    view_id=viewinfo.view_id, type_id=viewinfo.type_id, entity_id=viewinfo.entity_id
+                    )
+                action = "list"
+                msg    = (message.DEFAULT_VIEW_UPDATED%
+                    { 'coll_id':   viewinfo.coll_id
+                    , 'view_id':   viewinfo.view_id
+                    , 'type_id':   viewinfo.type_id
+                    , 'entity_id': viewinfo.entity_id
+                    })
+                redirect_uri = (
+                    uri_with_params(
+                        self.get_request_path(), 
+                        self.info_params(msg),
+                        viewinfo.get_continuation_url_dict()
+                        )
+                    )
+                responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+            return responseinfo.get_http_response()
+
         # If "Edit" or "Copy" button invoked, initiate new view of current entity
         edit_action = (
             "edit" if 'edit' in form_data else

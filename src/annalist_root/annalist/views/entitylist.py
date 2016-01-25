@@ -340,7 +340,7 @@ class EntityGenericListView(AnnalistGenericView):
                     return auth_check
                 listinfo.collection.set_default_list(list_id)
                 action = "list"
-                msg    = message.DEFAULT_VIEW_UPDATED%{'coll_id': coll_id, 'list_id': list_id}         
+                msg    = message.DEFAULT_LIST_UPDATED%{'coll_id': coll_id, 'list_id': list_id}         
                 redirect_uri = (
                     uri_with_params(
                         self.get_request_path(), 

@@ -254,7 +254,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 153)    # Will change with site data
+        self.assertEqual(len(entities), 157)    # Will change with site data
         return
 
     def test_get_types_list(self):
@@ -721,17 +721,21 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[3]['field_id'], 'Entity_label')
         # Entities
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 3)
+        self.assertEqual(len(entities), 7)
         field_entities = (
-            { ( "Coll_comment",          "Markdown",     "annal:Richtext", "Collection metadata" )
-            , ( "Coll_parent",           "Enum_choice",  "annal:Slug",     "Parent"              )
-            , ( "Coll_software_version", "Showtext",     "annal:Text",     "S/W version"         )
+            { ( "Coll_comment",             "Markdown",     "annal:Richtext", "Collection metadata" )
+            , ( "Coll_default_list_id",     "Showtext",     "annal:Text",     "Default list"        )
+            , ( "Coll_default_view_entity", "Showtext",     "annal:Text",     "Default view entity" )
+            , ( "Coll_default_view_id",     "Showtext",     "annal:Text",     "Default view"        )
+            , ( "Coll_default_view_type",   "Showtext",     "annal:Text",     "Default view type"   )
+            , ( "Coll_parent",              "Enum_choice",  "annal:Slug",     "Parent"              )
+            , ( "Coll_software_version",    "Showtext",     "annal:Text",     "S/W version"         )
             })
         for f in field_entities:
             for eid in range(len(entities)):
                 item_fields = context_list_item_fields(r.context, entities[eid])
                 if item_fields[0]['field_value'] == f[0]:
-                    for fid in range(3):
+                    for fid in range(4):
                         item_field = item_fields[fid]
                         head_field = head_fields[fid]
                         for fkey in (

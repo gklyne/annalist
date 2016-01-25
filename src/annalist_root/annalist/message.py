@@ -164,7 +164,8 @@ ENTITY_DATA_REMOVED         = "Entity %(id)s of type %(type_id)s in collection %
 ENTITY_TYPE_ID              = "Problem with entity type identifier"
 ENTITY_TYPE_ID_INVALID      = "The entity type identifier is missing, too long, or not a valid identifier (%(type_id)s)"
 
-DEFAULT_VIEW_UPDATED        = "Default list view for collection %(coll_id)s changed to %(list_id)s"
+DEFAULT_LIST_UPDATED        = "Default list view for collection %(coll_id)s changed to %(list_id)s"
+DEFAULT_VIEW_UPDATED        = "Default view for collection %(coll_id)s changed to %(view_id)s/%(type_id)s/%(entity_id)s"
 REMOVE_FIELD_ERROR          = "Problem with remove field(s) request"
 MOVE_FIELD_ERROR            = "Problem with move field up/down request"
 NO_FIELD_SELECTED           = "No field(s) selected"
