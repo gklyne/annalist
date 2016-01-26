@@ -17,6 +17,8 @@ from rdflib                         import Graph, URIRef, Literal
 
 from django.test.client             import Client
 
+from utils.SuppressLoggingContext   import SuppressLogging
+
 import annalist
 from annalist                       import layout
 from annalist.identifiers           import makeNamespace, RDF, RDFS, ANNAL
@@ -1027,7 +1029,8 @@ class JsonldContextTest(AnnalistTestCase):
 
     def test_http_conneg_jsonld_list_site_all_list(self):
         """
-        Content negotiate for JSON-LD version of a list of collection-defined entities of all types
+        Content negotiate for JSON-LD version of a list of 
+        collection-defined entities of all types
         """
         list_url = entitydata_list_all_url(
             "testcoll", list_id="Type_list", scope="all"
@@ -1044,6 +1047,23 @@ class JsonldContextTest(AnnalistTestCase):
         for entity_id in expect_type_ids:
             t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
             self.assertIn(URIRef(t_uri), list_items)
+        return
+
+    def test_http_conneg_jsonld_list_coll_wrongname(self):
+        """
+        This is a test of the regular expression used to access list resources,
+        to ensure the '.' must be a literal '.' and not a wildcard.
+        """
+        list_url = entitydata_list_type_url(
+            "testcoll", "_type",
+            scope=None
+            )
+        wrong_name     = layout.ENTITY_LIST_FILE.replace('.', '*')
+        wrong_json_url = make_resource_url(TestHostUri, list_url, wrong_name)
+        with SuppressLogging(logging.WARNING):
+            r = self.client.get(wrong_json_url)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "NOT FOUND")
         return
 
 # End.

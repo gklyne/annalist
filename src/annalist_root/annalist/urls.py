@@ -104,12 +104,21 @@ urlpatterns = patterns('',
                             name='AnnalistEntityAccessView'),
 
     # JSON list views without list_id specified
-    url(r'^c/(?P<coll_id>\w{1,32})/d/entity_list.jsonld$',
+    url(r'^c/(?P<coll_id>\w{1,32})/d/entity_list\.jsonld$',
                             EntityGenericListJsonView.as_view(),
                             name='AnnalistEntityJsonListAll'),
-    url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})/entity_list.jsonld$',
+    url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})/entity_list\.jsonld$',
                             EntityGenericListJsonView.as_view(),
                             name='AnnalistEntityJsonListType'),
+
+    # # Redirect type/entity URIs without trailing '/'
+    # # (Note these cannot match JSON resource names as '.' is not matched here)
+    # url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})$',
+    #                         AnnalistTypeRedirect.as_view(),
+    #                         name='AnnalistTypeRedirect'),
+    # url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})/(?P<entity_id>\w{1,32})$',
+    #                         AnnalistEntityRedirect.as_view(),
+    #                         name='AnnalistEntityRedirect'),
 
     # Specified list views
     url(r'^c/(?P<coll_id>\w{1,32})/l/$',
@@ -123,13 +132,13 @@ urlpatterns = patterns('',
                             name='AnnalistEntityGenericList'),
 
     # JSON list views
-    url(r'^c/(?P<coll_id>\w{1,32})/l/entity_list.jsonld$',
+    url(r'^c/(?P<coll_id>\w{1,32})/l/entity_list\.jsonld$',
                             EntityGenericListJsonView.as_view(),
                             name='AnnalistEntityJsonListAll'),
-    url(r'^c/(?P<coll_id>\w{1,32})/l/(?P<list_id>\w{1,32})/entity_list.jsonld$',
+    url(r'^c/(?P<coll_id>\w{1,32})/l/(?P<list_id>\w{1,32})/entity_list\.jsonld$',
                             EntityGenericListJsonView.as_view(),
                             name='AnnalistEntityJsonListAll'),
-    url(r'^c/(?P<coll_id>\w{1,32})/l/(?P<list_id>\w{1,32})/(?P<type_id>\w{1,32})/entity_list.jsonld$',
+    url(r'^c/(?P<coll_id>\w{1,32})/l/(?P<list_id>\w{1,32})/(?P<type_id>\w{1,32})/entity_list\.jsonld$',
                             EntityGenericListJsonView.as_view(),
                             name='AnnalistEntityJsonListType'),
 
