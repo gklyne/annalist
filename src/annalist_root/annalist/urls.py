@@ -8,7 +8,9 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 from django.conf.urls                   import patterns, url
 
-from annalist.views.home                import AnnalistHomeView
+from annalist.views.home_redirects      import (
+    AnnalistHomeView, AnnalistTypeRedirect, AnnalistEntityRedirect
+    )
 from annalist.views.profile             import ProfileView
 from annalist.views.confirm             import ConfirmView
 from annalist.views.site                import SiteView, SiteActionView
@@ -19,7 +21,6 @@ from annalist.views.recordviewdelete    import RecordViewDeleteConfirmedView
 from annalist.views.recordlistdelete    import RecordListDeleteConfirmedView
 from oauth2.views                       import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
 
-#@@ from annalist.views.defaultedit         import EntityDefaultEditView
 from annalist.views.entityedit          import GenericEntityEditView
 from annalist.views.entitylist          import EntityGenericListView
 from annalist.views.entitylistjson      import EntityGenericListJsonView
@@ -111,14 +112,14 @@ urlpatterns = patterns('',
                             EntityGenericListJsonView.as_view(),
                             name='AnnalistEntityJsonListType'),
 
-    # # Redirect type/entity URIs without trailing '/'
-    # # (Note these cannot match JSON resource names as '.' is not matched here)
-    # url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})$',
-    #                         AnnalistTypeRedirect.as_view(),
-    #                         name='AnnalistTypeRedirect'),
-    # url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})/(?P<entity_id>\w{1,32})$',
-    #                         AnnalistEntityRedirect.as_view(),
-    #                         name='AnnalistEntityRedirect'),
+    # Redirect type/entity URIs without trailing '/'
+    # (Note these cannot match JSON resource names as '.' is not matched here)
+    url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})$',
+                            AnnalistTypeRedirect.as_view(),
+                            name='AnnalistTypeRedirect'),
+    url(r'^c/(?P<coll_id>\w{1,32})/d/(?P<type_id>\w{1,32})/(?P<entity_id>\w{1,32})$',
+                            AnnalistEntityRedirect.as_view(),
+                            name='AnnalistEntityRedirect'),
 
     # Specified list views
     url(r'^c/(?P<coll_id>\w{1,32})/l/$',

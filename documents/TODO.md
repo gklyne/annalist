@@ -70,7 +70,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] View collection with default view defined
     - [x] Extra fields in collection metadata form
 - [x] Reinstate continuation URI when following link in view or list (cf. commit f3f3001)
-- [ ] When accessing type without trailing "/", redirect to URI with.
+- [x] When accessing type without trailing "/", redirect to URI with. (Also for entity)
 - [ ] Review labels and IDs used when creating repeat fields and groups
     - field_r for repeat
     - field_g for group (label: Group [field label])
