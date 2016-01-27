@@ -71,10 +71,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Extra fields in collection metadata form
 - [x] Reinstate continuation URI when following link in view or list (cf. commit f3f3001)
 - [x] When accessing type without trailing "/", redirect to URI with. (Also for entity)
-- [ ] Review labels and IDs used when creating repeat fields and groups
-    - field_r for repeat
-    - field_g for group (label: Group [field label])
-    - field_m for multifield reference group
+- [x] Review labels and IDs used when creating repeat fields and groups; suffixes defined in layout.py
 - [ ] When saving Id field, strip out any leading and trailing spaces
 
 (release)
@@ -135,7 +132,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 (feature freeze for V0.9alpha?)
 (0.2?)
 
-- [ ] update Django version used to 1.8 (designated for long term support)
+- [ ] update Django version used to latest version designated for long term support (1.8?)
 - [ ] review renderers and revise to take all message strings from messages.py
 - [ ] look into entity cacheing (esp. RecordType) for performance improvement
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)

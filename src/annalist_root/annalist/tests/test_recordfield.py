@@ -1129,51 +1129,56 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , 'type_uri':      "test:repeat_field"
             , 'property_uri':  "test:repeat_prop"
             })
+        tgt_field_id  = "%(field_id)s"%common_vals
+        tgt_field_uri = "%(property_uri)s"%common_vals
+        rpt_group_id  = tgt_field_id + layout.SUFFIX_REPEAT_G
+        rpt_field_id  = tgt_field_id + layout.SUFFIX_REPEAT
+        rpt_field_uri = "%(property_uri)s"%(common_vals) + layout.SUFFIX_REPEAT_P
         expect_field_values = (
-            { "annal:id":                   "%(field_id)s"%common_vals
+            { "annal:id":                   tgt_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 "%(field_label)s"%common_vals
             , "annal:field_render_type":    "Text"
             , "annal:field_value_mode":     "Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:property_uri":         "%(property_uri)s"%common_vals
+            , "annal:property_uri":         tgt_field_uri
             , "annal:field_placement":      "small:0,12"
             })
         expect_repeat_group_values = (
-            { "annal:id":           "%(field_id)s_repeat"%common_vals
+            { "annal:id":           rpt_group_id
             , "annal:type":         "annal:Field_group"
             , "rdfs:label":         "Repeat field '%(field_label)s'"%common_vals
             , "annal:record_type":  "%(type_uri)s"%common_vals
             , "annal:group_fields":
               [ { "annal:field_id":         "_field/%(field_id)s"%common_vals
-                , "annal:property_uri":     "%(property_uri)s"%common_vals
+                , "annal:property_uri":     tgt_field_uri
                 , "annal:field_placement":  "small:0,12"
                 }
               ]
             })
         expect_repeat_field_values = (
-            { "annal:id":                   "%(field_id)s_repeat"%common_vals
+            { "annal:id":                   rpt_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 "Repeat field '%(field_label)s'"%common_vals
             , "annal:field_render_type":    "RepeatGroupRow"
             , "annal:field_value_mode":     "Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:property_uri":         "%(property_uri)s_repeat"%common_vals
+            , "annal:property_uri":         rpt_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          "(Repeat field %(field_label)s)"%common_vals
             , "annal:repeat_label_add":     "Add %(field_label)s"%common_vals
             , "annal:repeat_label_delete":  "Remove %(field_label)s"%common_vals
             })
-        self.check_entity_values("_field", "%(field_id)s"%common_vals, expect_field_values)
-        self.check_entity_values("_group", "%(field_id)s_repeat"%common_vals, expect_repeat_group_values)
-        self.check_entity_values("_field", "%(field_id)s_repeat"%common_vals, expect_repeat_field_values)
+        self.check_entity_values("_field", tgt_field_id, expect_field_values)
+        self.check_entity_values("_group", rpt_group_id, expect_repeat_group_values)
+        self.check_entity_values("_field", rpt_field_id, expect_repeat_field_values)
         return
 
     def test_define_field_reference_task(self):
         common_vals = (
             { 'coll_id':       "testcoll"
             , 'field_id':      "taskfieldreference"
-            , 'field_ref_id':  "taskfieldreference_ref"
+            , 'field_ref_id':  "taskfieldreference"+layout.SUFFIX_MULTI
             , 'field_label':   "Test reference field"
             , 'type_uri':      "test:ref_field"
             , 'property_uri':  "test:ref_prop"
@@ -1201,22 +1206,27 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             coll_id="testcoll", type_id="_field", entity_id=common_vals["field_ref_id"], 
             view_id="Field_view"
             )
-        self.assertIn(v, r['location'], v)
+        self.assertIn(v, r['location'])
         w = "Created%%20reference%%20to%%20field%%20%(field_id)s"%common_vals
         self.assertIn(w, r['location'])
         # Check content of type, view and list
+        tgt_field_id  = "%(field_id)s"%common_vals
+        tgt_field_uri = "%(property_uri)s"%common_vals
+        ref_group_id  = tgt_field_id + layout.SUFFIX_MULTI_G
+        ref_field_id  = tgt_field_id + layout.SUFFIX_MULTI
+        ref_field_uri = "%(property_uri)s"%(common_vals) + layout.SUFFIX_MULTI_P
         expect_field_values = (
-            { "annal:id":                   "%(field_id)s"%common_vals
+            { "annal:id":                   tgt_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 "%(field_label)s"%common_vals
             , "annal:field_render_type":    "Text"
             , "annal:field_value_mode":     "Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:property_uri":         "%(property_uri)s"%common_vals
+            , "annal:property_uri":         tgt_field_uri
             , "annal:field_placement":      "small:0,12"
             })
         expect_ref_group_values = (
-            { "annal:id":           "%(field_id)s_ref"%common_vals
+            { "annal:id":           ref_group_id
             , "annal:type":         "annal:Field_group"
             , "rdfs:label":         "Reference field '%(field_label)s'"%common_vals
             , "annal:record_type":  "%(type_uri)s"%common_vals
@@ -1227,20 +1237,20 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               ]
             })
         expect_ref_field_values = (
-            { "annal:id":                   "%(field_id)s_ref"%common_vals
+            { "annal:id":                   ref_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 "Reference field '%(field_label)s'"%common_vals
             , "annal:field_render_type":    "RefMultifield"
             , "annal:field_value_mode":     "Value_entity"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:property_uri":         "%(property_uri)s_ref"%common_vals
+            , "annal:property_uri":         ref_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          "(Reference field %(field_label)s)"%common_vals
             , "annal:field_ref_type":       "Default_type"
             })
-        self.check_entity_values("_field", "%(field_id)s"%common_vals, expect_field_values)
-        self.check_entity_values("_group", "%(field_id)s_ref"%common_vals, expect_ref_group_values)
-        self.check_entity_values("_field", "%(field_id)s_ref"%common_vals, expect_ref_field_values)
+        self.check_entity_values("_field", tgt_field_id, expect_field_values)
+        self.check_entity_values("_group", ref_group_id, expect_ref_group_values)
+        self.check_entity_values("_field", ref_field_id, expect_ref_field_values)
         return
 
 # End.

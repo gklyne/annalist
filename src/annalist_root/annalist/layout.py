@@ -188,6 +188,17 @@ ENTITY_OLD_DATA_FILE    = "entity-data.jsonld"
 
 # and more...
 
+# Name generation suffixes for tasks that generate new records
+SUFFIX_LIST             = ""
+SUFFIX_VIEW             = ""
+SUFFIX_TYPE             = ""
+SUFFIX_REPEAT           = "_r"
+SUFFIX_REPEAT_P         = "_r"
+SUFFIX_REPEAT_G         = "_g"
+SUFFIX_MULTI            = "_m"
+SUFFIX_MULTI_P          = "_m"
+SUFFIX_MULTI_G          = "_g"
+
 class Layout(object):
     """
     A dynamically created layout value with paths that are dynamically constructed 
