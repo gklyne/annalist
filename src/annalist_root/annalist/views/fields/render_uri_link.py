@@ -87,7 +87,7 @@ class uri_link_edit_renderer(object):
 
 def get_uri_link_renderer():
     """
-    Return field renderer object for token list values
+    Return field renderer object for URI link values
     """
     return RenderFieldValue(
         view_renderer=uri_link_view_renderer(), 

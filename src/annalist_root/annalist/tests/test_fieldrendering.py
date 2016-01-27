@@ -29,7 +29,6 @@ from annalist.views.fielddescription    import FieldDescription, field_descripti
 from annalist.views.fields.render_placement     import get_placement_classes
 from annalist.views.fields                      import render_repeatgroup
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
-from annalist.views.fields.render_text          import RenderText
 from annalist.views.fields.render_fieldvalue    import RenderFieldValue, get_template
 from annalist.views.form_utils.fieldchoice      import FieldChoice
 

@@ -72,11 +72,27 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Reinstate continuation URI when following link in view or list (cf. commit f3f3001)
 - [x] When accessing type without trailing "/", redirect to URI with. (Also for entity)
 - [x] Review labels and IDs used when creating repeat fields and groups; suffixes defined in layout.py
-- [ ] When saving Id field, strip out any leading and trailing spaces
+- [x] When saving Id field, strip out any leading and trailing spaces
 
 (release)
 
+- [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
+- [ ] Create schema definitions in Annalist for ANNAL namespace
+- [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
+- [ ] Login: support continuation URI
+- [ ] implement at least one other identify provider (ORCID?)
+- [ ] profile_uri now not included in Google JSON file of client secrets
+    - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
+    - cf. oauth2/views.py:364
+- [ ] Place record label at start of page title for entity view; collection next
+    - [ ] Need to extract or construct label depending on action (new, copy, edit).
+        - see entitytypeinfo.get_entity, entityedity.form_response, etc.
+- [ ] Use site/collection data to populate help panes on displays; use Markdown.
 - [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
+- [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
+    - [x] annalist-manager serverlog command returns log file name
+    - [ ] site link to download log, if admin permissions
+    - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
 - [ ] Rethink collection overview that allows users to see what is present
     - original thoughts, but review in light of default-view approach adopted:
         - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
@@ -86,18 +102,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] When supertypes are changed, need to regenerate @type fields of instances
     - Or be smarter about how entries for listing are selected.  
     - Link to migration?
-- [ ] Think further about how data migration can be handled.  E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
-- [ ] Create schema definitions in Annalist for ANNAL namespace
-- [ ] Place record label at start of page title for entity view; collection next
-    - [ ] Need to extract or construct label depending on action (new, copy, edit).
-        - see entitytypeinfo.get_entity, entityedity.form_response, etc.
-- [ ] Use site/collection data to populate help panes on displays; use Markdown.
-- [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
-- [ ] Login: support continuation URI
-- [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
-    - [x] annalist-manager serverlog command returns log file name
-    - [ ] site link to download log, if admin permissions
-    - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
+- [ ] Think further about how data migration can be handled.  
+    - E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
 - [ ] Review URI usage
     - [x] avoid explicit reference to `_analist_collection`?
     - [ ] review base URI designation in JSON-LD:
@@ -116,18 +122,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - could use `@id`?
 - [ ] annalist-manager option for migrating collection data
     - needs to load and save every entity in a collection to force rewriting of context data.  
-    - Or option on customize page?
+    - or option on customize page?
     - also regenerate collection context data
 - [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
-- [ ] profile_uri now not included in Google JSON file of client secrets
-    - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
-    - cf. oauth2/views.py:364
-- [ ] implement at least one other identify provider (ORCID?)
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
-- [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
-- [ ] Think about how to incoporate resources from other collections by reference: feed into data bridges?
+- [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?
 
 (feature freeze for V0.9alpha?)
 (0.2?)
@@ -146,7 +147,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
-- [x] Remove dependency of analist-manager on test-suite-generated data when creating/updating site
+- [x] Remove dependency of annalist-manager on test-suite-generated data when creating/updating site
     - copy site data in directly from `sitedata`
     - generate all other site data on-the-fly as needed (e.g. context, etc.)
 - [ ] Figure out how to preserve defined users when reinstalling the software.

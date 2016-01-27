@@ -691,6 +691,22 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
         return
 
+    def test_post_new_entity_id_with_leading_treailing_spaces(self):
+        self.assertFalse(EntityData.exists(self.testdata, "newentity"))
+        f = entitydata_recordtype_view_form_data(entity_id="  newentity  ", action="new")
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
+        r = self.client.post(u, f)
+        # print r.content
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        # Check new entity data created, except label, comment
+        self._check_entity_data_values("newentity", 
+            update_dict={'rdfs:label': None, 'rdfs:comment': None}
+            )
+        return
+
     def test_post_new_entity_blank_id(self):
         f = entitydata_recordtype_view_form_data(entity_id="", action="new")
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")

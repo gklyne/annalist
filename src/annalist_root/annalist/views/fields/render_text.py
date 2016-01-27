@@ -14,17 +14,47 @@ from django.template    import Template
 
 from annalist.views.fields.render_base  import RenderBase
 
-class RenderText(RenderBase):
+#   ----------------------------------------------------------------------------
+#
+#   Text value mapping
+#
+#   ----------------------------------------------------------------------------
+
+class TextValueMapper(RenderBase):
     """
-    Render class for simple text entry field.
+    Value mapper for simple text entry field.
     """
 
     def __init__(self):
         """
         Creates a renderer object for a simple text field
         """
-        super(RenderText, self).__init__()
+        super(TextValueMapper, self).__init__()
         return
+
+    # encode, decoide methods default to RenderBase; i.e. identity mappings
+
+
+#   ----------------------------------------------------------------------------
+#
+#   Text field renderers
+#
+#   ----------------------------------------------------------------------------
+
+class text_view_renderer(object):
+
+    def render(self, context):
+        """
+        Renders a simple text field for viewing
+        """
+        responsetemplate = Template("""
+            <!-- views/fields/render_text.py:text_view_renderer -->
+            <span>{{ field.field_value|default:"&nbsp;" }}</span>
+            """)
+        responsebody = responsetemplate.render(context)
+        return responsebody
+
+class text_edit_renderer(object):
 
     def render(self, context):
         """
@@ -34,21 +64,21 @@ class RenderText(RenderBase):
             http://stackoverflow.com/questions/1480588/input-size-vs-width
         """
         responsetemplate = Template("""
-            <!-- views/fields/render_text.py -->
-            <div class="{{field.field_placement.field}}">
-                <div class="row">
-                    <div class="view_label {{field.field_placement.label}}">
-                        <p>{{field.field_label}}</p>
-                    </div>
-                    <div class="{{field.field_placement.value}}">
-                        <input type="text" size="64" name="{{repeat_prefix}}{{field.field_name}}" 
-                               placeholder="{{field.field_placeholder}}"
-                               value="{{field.field_value}}"/>
-                    </div>
-                </div>
-            </div>
+            <!-- views/fields/render_text.py:text_edit_renderer -->
+            <input type="text" size="64" name="{{repeat_prefix}}{{field.field_name}}" 
+                   placeholder="{{field.field_placeholder}}"
+                   value="{{field.field_value}}" />
             """)
         responsebody = responsetemplate.render(context)
         return responsebody
+
+def get_text_renderer():
+    """
+    Return field renderer object for text values
+    """
+    return RenderFieldValue(
+        view_renderer=text_view_renderer(), 
+        edit_renderer=text_edit_renderer(),
+        )
 
 # End.

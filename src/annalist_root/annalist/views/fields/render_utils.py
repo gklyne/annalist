@@ -16,8 +16,9 @@ from collections                import OrderedDict, namedtuple
 
 from django.conf                import settings
 
-from render_text                import RenderText
 from render_fieldvalue          import RenderFieldValue
+from render_text                import TextValueMapper
+from render_entityid            import EntityIdValueMapper
 from render_placement           import get_field_placement_renderer
 from render_tokenset            import get_field_tokenset_renderer, TokenSetValueMapper
 from render_bool_checkbox       import get_bool_checkbox_renderer, BoolCheckboxValueMapper
@@ -100,6 +101,7 @@ _field_value_mappers = (
     , "URILink":        URILinkValueMapper
     , "URIImport":      URIImportValueMapper
     , "FileUpload":     FileUploadValueMapper
+    , "EntityId":       EntityIdValueMapper
     , "EntityTypeId":   SelectValueMapper
     , "Enum":           SelectValueMapper
     , "Enum_optional":  SelectValueMapper
@@ -352,7 +354,7 @@ def get_value_mapper(field_render_type):
 
     The default 'RenderText' object returned contains identity mappings.
     """
-    mapper_class = RenderText
+    mapper_class = TextValueMapper
     if field_render_type in _field_value_mappers:
         mapper_class = _field_value_mappers[field_render_type]
     return mapper_class()

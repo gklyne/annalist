@@ -44,6 +44,8 @@ from annalist.views.uri_builder     import (
     continuation_url_chain, continuation_chain_url,
     url_update_type_entity_id
     )
+from annalist.views.fields.render_entityid  import EntityIdValueMapper
+
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -136,10 +138,10 @@ class DisplayInfo(object):
         """
         Save type and entity ids from form
         """
-        self.orig_type_id       = orig_type_id
-        self.orig_entity_id     = orig_entity_id
-        self.curr_type_id       = curr_type_id
-        self.curr_entity_id     = curr_entity_id
+        self.orig_type_id       = EntityIdValueMapper.decode(orig_type_id)
+        self.orig_entity_id     = EntityIdValueMapper.decode(orig_entity_id)
+        self.curr_type_id       = EntityIdValueMapper.decode(curr_type_id)
+        self.curr_entity_id     = EntityIdValueMapper.decode(curr_entity_id)
         return self.http_response
 
     def set_messages(self, messages):
