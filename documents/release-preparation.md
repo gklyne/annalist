@@ -2,21 +2,21 @@
 
 ## Summary of release tasks
 
-- [ ] Feature freeze
-- [ ] Uninstall annalist (if installed): `pip uninstall annalist`
-- [ ] Delete contents of build directory (remove old files) - python setup.py clean --all
-- [ ] Clean old .pyc and temporary files
+- [x] Feature freeze
+- [x] Uninstall annalist (if installed): `pip uninstall annalist`
+- [x] Delete contents of build directory (remove old files) - python setup.py clean --all
+- [x] Clean old .pyc and temporary files
     - `git clean -nX` (trial run)
     - `git clean -fX` (do it)
-- [ ] Local install
-- [ ] Run test suite - `annalist-manager runtest`
-- [ ] Update site data in local 'personal' installation
+- [x] Local install
+- [x] Run test suite - `annalist-manager runtest`
+- [x] Update site data in local 'personal' installation
     - `annalist-manager updatesitedata`
     - `annalist-manager initialize`
-- [ ] Test 'personal' deployment in actual use
+- [x] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
-- [ ] Documentation and tutorial updates
-- [ ] Demo screencast update
+- [x] Documentation and tutorial updates
+- [x] Demo screencast update
 - [ ] Check all recent changes are committed (`git status`)
 
 - [ ] Create release preparation branch
@@ -47,7 +47,6 @@
     - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
 - [ ] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [.] Install/update demo at cream.annalist.net (annalist.cloudapp.net)
 - [ ] Update and test demo installation on annalist.net
     - ssh to annalist@annalist.net
     - `killall python`

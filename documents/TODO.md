@@ -76,6 +76,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (release)
 
+- [ ] Add journal and note entry definitions to site data
 - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 - [ ] Create schema definitions in Annalist for ANNAL namespace
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.

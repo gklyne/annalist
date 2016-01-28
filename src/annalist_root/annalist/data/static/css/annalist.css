@@ -302,8 +302,9 @@ div.columns.view-label > span
     height: 1.4rem;
 }
 
-div.row div.column.view-value,
-div.row div.columns.view-value
+/* Padding for displayed values */
+div.row > div.column.view-value,
+div.row > div.columns.view-value
 {
     margin-top:     0rem;
     margin-bottom:  0rem;
@@ -312,6 +313,14 @@ div.row div.columns.view-value
     font-size:      0.875rem;
     color:          #444444;
     /* vertical-align: middle; */
+}
+
+/* Suppress padding for nested column values */
+div.row > div.column.view-value  div.row > div.column.view-value,
+div.row > div.columns.view-value div.row > div.columns.view-value
+{
+    padding-top:    0rem;
+    padding-bottom: 0rem;
 }
 
 /* Set height for edit padding to force next field to next row */
