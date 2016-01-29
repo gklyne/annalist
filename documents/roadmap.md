@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: public prototype release 0.1.24; this release introduces support for sharing structure definitions between collections.  This has been hotfix-patched as 0.1.24a to fix a test suite error, and 0.1.24b to fix a data migration bug.
+Current status: public prototype release 0.1.26; this release includes a number of small presentation, usability and bug fixes.
 
 
 # V1.0 release
@@ -113,7 +113,7 @@ Implement ResourceSync protocol for sharing and propagation of Annalist data set
 
 ## Sample applications
 
-* Image database (bioimage revisited)
+* Image database (bioimage/Fly-TED revisited)
 
 
 # Other possibilities (not yet on roadmap)

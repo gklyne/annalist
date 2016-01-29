@@ -4,12 +4,11 @@ Release 0.1 is the first public prototype of Annalist.  It contains what I hope 
 
 A summary of issues to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
-## Current release: 0.1.24b
+## Current release: 0.1.26
 
 (See "History" below for information about previous releases)
 
-This patch release fixes a data migration bug in the 0.1.24 release.  This bug meant that data from older releases was not being recognized when accessed by the original 0.1.24 release.
-
+This release provides usability and presentation improvements, and some bug fixes.
 
 ## Status
 
@@ -85,6 +84,55 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 
 # History
+
+
+## Version 0.1.26
+
+This release provides usability and presentation improvements, and some bug fixes.
+
+The main change is support for a collection "default view" that can be a specific entity view.  This makes it possible to create a front page for a collection that provides a description and overview of the collection's content.
+
+Other changes include:
+- allow entity edit forms that do not include an entity Id field (i.e. always use default generated Id)
+- renderers for fields that display non-editable text in entity edit mode
+- `CodeArea` renderer, like `TextArea` but using a non-proportional font
+- Some fields non-editable on collection metadata form
+- Options to generate JSON-LD for list displays
+- Reinstate continuation URIs on links from entity view and list pages:  this provides more consistent return to the previous page when closing entity list/view pages
+- other small presentation and usability enhancements
+
+For more details, see the change notes for release 0.1.25 (below).
+
+
+## Version 0.1.25, towards 0.1.26
+
+- [x] BUG: uploading PDF as image results in file extension PNG
+- [x] BUG: "Server error" on save when repeat field references non-existent group id
+- [x] BUG: can't save record using form without ID field
+- [x] Home page: change button labels: "view metadata", "edit metadata", "remove collection".
+- [x] Add read-only renderers for view short text and view markdown
+    - `ShowText` and `ShowMarkdown`
+- [x] Collection edit metadata page: make some fields display-only.
+- [x] Add "Codearea" render type for unflowed, unformatted text with non-propo font
+- [x] Content negotiation for alternative formats (initially just HTML (form), JSON-LD); others later.
+    - [x] Content negotiation for entity view (e.g. `.../c/Carolan_Guitar/d/Artifact/Carolan_Guitar/`)
+    - [x] Create view to generate JSON-formatted list of entities
+- [x] Add "get the data" button to list display
+- [x] In list view, provide scope as query parameter not path segment (i.e. `?scope=all`)
+    - This allows relative URI references to work more cleanly.
+- [x] Eliminate redundant modules `views.defaultlist` and `views.defaultedit` (but keep tests).
+- [x] In drop-down list, include typeid/entityid only for entries whose labels are not unique.
+- [x] Form field layout: arrange that fields lay out as indicated by the position value.
+- [x] Create wiki-like view and allow use for collection fron page
+    - [x] Expand collection view logic to allow default view display
+    - [x] Add default view button to view template; update tests
+    - [x] Add handler for default view button to entity view/edit handler
+    - [x] Expand collection metadata to include default view details (view only)
+- [x] Various new test cases
+- [x] Reinstate continuation URI when following link in view or list (cf. commit f3f3001)
+- [x] When accessing type without trailing "/", redirect to URI with. (Also for entity)
+- [x] Review labels and IDs used when creating repeat fields and groups; suffixes defined in layout.py
+- [x] When saving Id field, strip out any leading and trailing spaces
 
 
 ## Version 0.1.24b

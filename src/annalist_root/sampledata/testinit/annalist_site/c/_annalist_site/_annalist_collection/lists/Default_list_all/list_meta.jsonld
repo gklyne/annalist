@@ -15,10 +15,10 @@
     , "annal:field_placement":      "small:0,3"
     }
   , { "annal:field_id":             "_field/Entity_type"
-    , "annal:field_placement":      "small:0,2"
+    , "annal:field_placement":      "small:3,2"
     }
   , { "annal:field_id":             "_field/Entity_label"
-    , "annal:field_placement":      "small:4,7"
+    , "annal:field_placement":      "small:5,7"
     }
   ]
 }

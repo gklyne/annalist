@@ -4,7 +4,7 @@ Annalist application
 
 __author__        = "Graham Klyne"
 __author_email__  = "GK@ACM.ORG"
-__copyright__     = "Copyright 2014, G. Klyne"
+__copyright__     = "Copyright 2014, 2015, 2016 G. Klyne"
 __license__       = "MIT (http://opensource.org/licenses/MIT)"
 
 # https://docs.djangoproject.com/en/dev/ref/applications/
@@ -18,7 +18,7 @@ Even sub-releases are stable versions, except for critical bug-fixes
 
 Odd sub-releases are work-in-progress, and may change from day-to-day.
 """
-__version__        = "0.1.25"   # Software version number (odd = unstable)
+__version__        = "0.1.26"   # Software version number (odd = unstable)
 
 """
 Data compatibility version: this is saved with collection data, and is used to
