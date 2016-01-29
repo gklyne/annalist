@@ -86,11 +86,11 @@
     - The DOI in the badge should update
     - It may take a few minutes for the new DOI to resolve.
 - [x] On develop branch, bump version number again (back to odd value)
-- [ ] Reset TODO list (remove entries moved to release notes, update version)
-- [ ] Commit and push changes
-- [ ] Delete release branch
+- [x] Reset TODO list (remove entries moved to release notes, update version)
+- [x] Commit and push changes
+- [x] Delete release branch
     - `git branch -d release-prep-x.y.z`
-- [ ] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`), retest
+- [x] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`), retest
 - [ ] Commit and push changes
 
 - [ ] Post announcement to Google Group, Twitter and elsewhere
