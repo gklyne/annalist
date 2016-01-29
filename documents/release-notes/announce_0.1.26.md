@@ -22,10 +22,8 @@ The Annalist live demo system is at [demo.annalist.net](http://demo.annalist.net
 
 I've just released Annalist 0.1.26.  The main change is support for a collection "default view" that can be a specific entity view.  This makes it possible to create a front page for a collection that provides a description and overview of the collection's content.  Other changes include usability and presentation improvements, and some bug fixes.
 
-I've just released Annalist 0.1.26.  This release adds sharing of collection structure descriptions, which is a first step towards supporting modularization of data structure descriptions, and several bug fixes.
-
 The full announcement is at: 
-https://groups.google.com/d/msg/annalist-discuss/......
+https://groups.google.com/d/msg/annalist-discuss/wwiOpyCsKYg/w2oXz9ivAQAJ
 
 Release notes (see "history" section for details) at:
 https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md
