@@ -16,6 +16,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.27, towards 0.1.28
 
+- [x] Tweak CSS so that links in display columns wrap rather than overlap the next column
 - [ ] Add journal and note entry definitions to site data
 - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 - [ ] Create schema definitions in Annalist for ANNAL namespace

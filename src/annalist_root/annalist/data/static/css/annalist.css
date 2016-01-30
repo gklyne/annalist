@@ -315,6 +315,15 @@ div.row > div.columns.view-value
     /* vertical-align: middle; */
 }
 
+/* Word-wrap for link fields */
+div.row > div.column.view-value  > a,
+div.row > div.columns.view-value > a
+{
+    word-wrap: break-word;
+}
+
+
+
 /* Suppress padding for nested column values */
 div.row > div.column.view-value  div.row > div.column.view-value,
 div.row > div.columns.view-value div.row > div.columns.view-value
