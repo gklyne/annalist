@@ -101,7 +101,7 @@ class EntityGenericListJsonView(EntityGenericListView):
             entity_list = (
                 EntityFinder(listinfo.collection, selector=selector)
                     .get_entities_sorted(
-                        user_perms, type_id=type_id, scope=scope,
+                        user_perms, type_id=type_id, altscope=scope,
                         context=listinfo.recordlist, search=search_for
                         )
                 )

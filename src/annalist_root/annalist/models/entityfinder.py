@@ -16,8 +16,9 @@ from pyparsing import alphas, alphanums
 
 from annalist.util                  import extract_entity_id
 
+from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
-from annalist.models.entitytypeinfo import EntityTypeInfo, get_built_in_type_ids
+from annalist.models.entitytypeinfo import EntityTypeInfo
 
 #   -------------------------------------------------------------------
 #   Auxilliary functions
@@ -36,7 +37,6 @@ def order_entity_key(entity):
     key = ( 0 if type_id.startswith('_')   else 1, type_id, 
             0 if entity_id.startswith('_') else 1, entity_id
           )
-    # log.info(key)
     return key
 
 #   -------------------------------------------------------------------
@@ -59,19 +59,17 @@ class EntityFinder(object):
         # self._subtypes = None
         return
 
-    def get_collection_type_ids(self):
+    def get_collection_type_ids(self, altscope):
         """
         Returns iterator over possible type ids in current collection.
 
         Each type is returned as a candidate type identifier string
         """
-        for t in get_built_in_type_ids():
-            yield t
-        for t in self._coll._children(RecordTypeData):
+        for t in self._coll._children(RecordType, altscope=altscope):
             yield t
         return
 
-    def get_collection_subtypes(self, type_id):
+    def get_collection_subtypes(self, type_id, altscope):
         """
         Returns a iterator of `entitytypeinfo` objects for all subtypes
         of the supplied type in the current collection, including the 
@@ -79,20 +77,30 @@ class EntityFinder(object):
         """
         supertypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
         supertypeuri  = supertypeinfo.get_type_uri()
-        return self.get_collection_uri_subtypes(supertypeuri)
+        if supertypeuri is None:
+            log.warning("EntityFinder.get_collection_uri_subtypes: no type_uri for %s"%(type_id,))
+        return self.get_collection_uri_subtypes(supertypeuri, altscope)
 
-    def get_collection_uri_subtypes(self, type_uri):
+    def get_collection_uri_subtypes(self, type_uri, altscope=None):
         """
         Returns a iterator of `entitytypeinfo` objects for all subtypes
         of the supplied type in the current collection, including the 
         identified type itself.
         """
+        # log.info(
+        #     "@@ EntityFinder.get_collection_uri_subtypes: type_uri %s, altscope=%s"%
+        #     (type_uri, altscope)
+        #     )
         if type_uri is not None:
-            for tid in self.get_collection_type_ids():
+            for tid in self.get_collection_type_ids(altscope):
                 tinfo = EntityTypeInfo(self._site, self._coll, tid)
+                # log.info(
+                #     "@@ EntityFinder.get_collection_uri_subtypes: tid %s, type_uris %r"%
+                #     (tid, tinfo and tinfo.get_all_type_uris())
+                #     )
                 if tinfo and (type_uri in tinfo.get_all_type_uris()):
                     # log.info(
-                    #     "supertype %s, yield %s: %s"%
+                    #     "@@ EntityFinder.get_collection_uri_subtypes: supertype %s, yield %s: %s"%
                     #     (type_uri, tinfo.get_type_id(), tinfo.get_type_uri())
                     #     )
                     yield tinfo
@@ -126,13 +134,17 @@ class EntityFinder(object):
         a value of 'all' means that site-wide entities are included in the listing.
         Otherwise only collection entities are included.        
         """
-        # log.info("get_subtype_entities: type_id %s"%type_id)
-        for entitytypeinfo in self.get_collection_subtypes(type_id):
+        # log.info(
+        #     "@@ EntityFinder.get_subtype_entities: type_id %s, altscope %s"%(type_id,altscope)
+        #     )
+        #
+        # NOTE: consider types from all scopes, then entities from specifiecd scope
+        for entitytypeinfo in self.get_collection_subtypes(type_id, "all"):
             for e in entitytypeinfo.enum_entities_with_inferred_values(
                     user_permissions, altscope=altscope
                     ):
                 # log.info(
-                #     "get_subtype_entities type_id %s, yield %s/%s"%
+                #     "@@ EntityFinder.get_subtype_entities type_id %s, yield %s/%s"%
                 #     (type_id, e.get_type_id(), e.get_id())
                 #     )
                 if e.get_id() != "_initial_values":
@@ -143,7 +155,8 @@ class EntityFinder(object):
         """
         Iterate mover all entities of all type ids from a supplied type iterator
         """
-        assert user_permissions is not None
+        # types = list(types)
+        # print "@@ get_all_types_entities.types %r"%(types,)
         for t in types:
             for e in self.get_type_entities(t, user_permissions, altscope):
                 yield e
@@ -166,7 +179,7 @@ class EntityFinder(object):
             # log.info("get_base_entities: all types")
             #@@
             return self.get_all_types_entities(
-                self.get_collection_type_ids(), user_permissions, altscope
+                self.get_collection_type_ids(altscope="all"), user_permissions, altscope
                 )
         return
 
@@ -180,30 +193,40 @@ class EntityFinder(object):
         return
 
     def get_entities(self, 
-        user_permissions=None, type_id=None, scope=None, context=None, search=None
+        user_permissions=None, type_id=None, altscope=None, context=None, search=None
         ):
         """
         Get list of entities of the specified type, matching search term and visible to 
         supplied user permissions.
         """
         entities = self._selector.filter(
-            self.get_base_entities(type_id, user_permissions, scope), context=context
+            self.get_base_entities(type_id, user_permissions, altscope), context=context
             )
         if search:
             entities = self.search_entities(entities, search)
         return entities
 
     def get_entities_sorted(self, 
-        user_permissions=None, type_id=None, scope=None, context={}, search=None
+        user_permissions=None, type_id=None, altscope=None, context={}, search=None
         ):
         """
         Get sorted list of entities of the specified type, matching search term and 
         visible to supplied user permissions.
         """
+        # log.info(
+        #     "@@ EntityFinder.get_entities_sorted: type_id %s, altscope=%s, search=%s"%
+        #     (type_id, altscope, search)
+        #     )
         entities = self.get_entities(
-            user_permissions, type_id=type_id, scope=scope, 
+            user_permissions, type_id=type_id, altscope=altscope, 
             context=context, search=search
             )
+        #@@
+        # entities = list(entities)
+        # log.info("EntityFinder.get_entities_sorted: len %d"%(len(entities,)))
+        # for e in entities:
+        #     log.info("EntityFinder.get_entities_sorted: entity %s"%(e.get_id(),))
+        #@@
         return sorted(entities, key=order_entity_key)
 
     @classmethod

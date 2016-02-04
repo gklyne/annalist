@@ -55,6 +55,7 @@ from annalist.views.fields.bound_field  import bound_field, get_entity_values
 baseentityvaluemap  = (
         [ SimpleValueMap(c='coll_id',          e=None,                    f=None               )
         , SimpleValueMap(c='type_id',          e=None,                    f=None               )
+        , SimpleValueMap(c='url_type_id',      e=None,                    f=None               )
         , SimpleValueMap(c='view_choices',     e=None,                    f=None               )
         , SimpleValueMap(c='edit_view_button', e=None,                    f=None               )
         , StableValueMap(c='entity_id',        e=ANNAL.CURIE.id,          f='entity_id'        )
@@ -355,7 +356,10 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         # Locate and read view description
         entitymap = EntityValueMap(baseentityvaluemap)
-        log.debug("entityview: %r"%viewinfo.recordview.get_values())
+        # log.debug(
+        #     "GenericEntityEditView.get_view_entityvaluemap entityview: %r"%
+        #     viewinfo.recordview.get_values()
+        #     )
         fieldlistmap = FieldListValueMap('fields',
             viewinfo.collection, 
             viewinfo.recordview.get_values()[ANNAL.CURIE.view_fields],
@@ -450,6 +454,7 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'request_url':        self.get_request_path()
             , 'coll_id':            coll_id
             , 'type_id':            type_id
+            , 'url_type_id':        type_id
             , 'view_choices':       self.get_view_choices_field(viewinfo)
             , 'orig_id':            entityvals['entity_id']
             , 'orig_type':          type_id

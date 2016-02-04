@@ -371,7 +371,7 @@ class AnnalistGenericView(ContentNegotiationView):
         otherwise a new entity object is created but not yet saved.
         """
         # log.info(
-        #     "get_entity id %s, parent %s, action %s, altparent %s"%
+        #     "AnnalistGenericView.get_entity id %s, parent %s, action %s, altparent %s"%
         #     (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
         #     )
         entity = typeinfo.get_entity(entity_id, action)
@@ -382,12 +382,12 @@ class AnnalistGenericView(ContentNegotiationView):
                 else "(none)"
                 )
             log.info(
-                "Entity not found: parent %s, altparent %s, entity_id %s"%
-                (parent_id, altparent_id, entity_id)
+                "AnnalistGenericView.get_entity id %s, parent %s, action %s, altparent %s"%
+                (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
                 )
             log.info(
-                "get_entity id %s, parent %s, action %s, altparent %s"%
-                (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
+                "Entity not found: parent %s, altparent %s, entity_id %s"%
+                (parent_id, altparent_id, entity_id)
                 )
         return entity
 

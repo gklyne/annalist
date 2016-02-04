@@ -40,7 +40,7 @@ class RecordField(EntityData):
         # assert altparent, "RecordField instantiated with no altparent"
         super(RecordField, self).__init__(parent, field_id)
         self._parent = parent
-        log.debug("RecordField %s"%(field_id))
+        # log.debug("RecordField %s"%(field_id))
         return
 
     def _migrate_filenames(self):

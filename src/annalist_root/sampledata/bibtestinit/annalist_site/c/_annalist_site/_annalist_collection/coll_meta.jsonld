@@ -2,7 +2,7 @@
   "rdfs:label": "Annalist data notebook test site",
   "rdfs:comment": "Annalist test site metadata and site-wide values.",
   "annal:software_version": "0.1.23",
-  "annal:comment": "Initialized by annalist.models.site.create_empty_site_data at 2016-01-29 16:22:06",
+  "annal:comment": "Initialized by annalist.models.site.create_empty_site_data at 2016-02-02 12:26:30",
   "annal:type_id": "_coll",
   "@context": [
     "coll_context.jsonld"

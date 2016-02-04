@@ -388,7 +388,7 @@ class RenderRepeatGroup(object):
                 repeat_index = 0
                 extras       = context['field']['context_extra_values']
                 for g in value_list:
-                    log.debug("RenderRepeatGroup.render field_val: %r"%(g))
+                    # log.debug("RenderRepeatGroup.render field_val: %r"%(g))
                     r = [ bound_field(f, g, context_extra_values=extras) 
                           for f in context['field']['group_field_descs'] ]
                     repeat_id = context.get('repeat_prefix', "") + context['field']['group_id']

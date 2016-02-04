@@ -363,10 +363,15 @@ class EntityTypeInfo(object):
             # Also used in entityedit for getting @type URI/CURIE values.
             #
             # Used in render_utils to get link to type record
-            if ( (type_id not in get_built_in_type_ids()) and
-                 (type_id not in ["BibEntry_type"]) ):
-                log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
-                # log.info("".join(traceback.format_stack()))
+
+            #@@@@@@@
+            # if ( (type_id not in get_built_in_type_ids()) and
+            #      (type_id not in ["BibEntry_type"]) ):
+            #     log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
+            #     log.info("".join(traceback.format_stack()))
+            #@@@@@@@
+
+            log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
             # raise ValueError("Trace")
         return
 
@@ -458,10 +463,10 @@ class EntityTypeInfo(object):
 
         If `action` is "new" then a new entity is initialized (but not saved).
         """
-        log.debug(
-            "get_entity id %s, parent %s, altparent %s, action %s"%
-            (entity_id, self.entityparent, self.entityaltparent, action)
-            )
+        # log.debug(
+        #     "EntityTypeInfo.get_entity id %s, parent %s, altparent %s, action %s"%
+        #     (entity_id, self.entityparent, self.entityaltparent, action)
+        #     )
         entity = None
         entity_id = extract_entity_id(entity_id)
         if valid_id(entity_id):
@@ -474,7 +479,7 @@ class EntityTypeInfo(object):
                     self.entityparent, entity_id, altscope="all"
                     )
             else:
-                log.info(
+                log.debug(
                     "EntityTypeInfo.get_entity %s/%s at %s not found"%
                     (self.type_id, entity_id, self.entityparent._entitydir)
                     )
@@ -499,11 +504,11 @@ class EntityTypeInfo(object):
         and returns a new value with the additional values
 
         Inferred values are determined by the type of the entity, and if type
-        information is not present this fundtion generates a failure.
+        information is not present this function generates a failure.
         """
         if not self.recordtype: 
             raise AssertionError(
-                "add_inferred_values_to_entity called with no type information available.  "+
+                "EntityTypeInfo.get_entity_inferred_values called with no type information available.  "+
                 "entity_id %s/%s, type_id %s"%(entity.get_type_id(), entity.get_id(), self.type_id)
                 )
         inferred_entity = entity
@@ -586,13 +591,13 @@ class EntityTypeInfo(object):
         """
         if (not user_perms or 
             self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
-            if self.entityparent:
+            if not self.entityparent:
+                log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
+            else:
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
                         altscope=altscope):
                     yield self.get_entity(eid)
-            else:
-                log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
         return
 
     # @@TODO: rename inferred -> implied
@@ -612,7 +617,21 @@ class EntityTypeInfo(object):
         #@@
         if (not user_perms or 
             self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
-            if self.entityparent:
+            if not self.entityparent:
+                log.warning(
+                    "EntityTypeInfo.enum_entities_with_inferred_values: missing entityparent; type_id %s"%
+                    (self.type_id)
+                    )
+            elif not self.recordtype:
+                log.warning(
+                    "EntityTypeInfo.enum_entities_with_inferred_values: missing recordtype; type_id %s"%
+                    (self.type_id)
+                    )
+                for eid in self.entityparent.child_entity_ids(
+                        self.entityclass, 
+                        altscope=altscope):
+                    yield self.get_entity(eid)
+            else:
                 #@@
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
@@ -623,8 +642,6 @@ class EntityTypeInfo(object):
                 #     if self.entityclass.exists(self.entityparent, eid, altscope=altscope):
                 #         yield self.get_entity_inferred_values(self.get_entity(eid))
                 #@@
-            else:
-                log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
         return
 
     def get_initial_entity_values(self, entity_id):

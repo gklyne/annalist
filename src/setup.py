@@ -13,7 +13,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 #   https://wiki.python.org/moin/Distutils/Tutorial
 #   https://pypi.python.org/pypi/check-manifest
 
-
 import codecs
 import os
 import sys

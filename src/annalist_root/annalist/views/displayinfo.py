@@ -236,10 +236,10 @@ class DisplayInfo(object):
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
             assert list_id
-            log.debug(
-                "DisplayInfo.get_list_info: collection.get_alt_entities %r"%
-                [ c.get_id() for c in  self.collection.get_alt_entities(altscope="all") ]
-                )
+            # log.debug(
+            #     "DisplayInfo.get_list_info: collection.get_alt_entities %r"%
+            #     [ c.get_id() for c in  self.collection.get_alt_entities(altscope="all") ]
+            #     )
             if not RecordList.exists(self.collection, list_id, altscope="all"):
                 log.warning("DisplayInfo.get_list_info: RecordList %s not found"%list_id)
                 self.http_response = self.view.error(
@@ -255,7 +255,7 @@ class DisplayInfo(object):
                     self.get_type_info(
                         extract_entity_id(self.recordlist[ANNAL.CURIE.default_type])
                         )
-                log.debug("DisplayInfo.get_list_info: %r"%(self.recordlist.get_values()))
+                # log.debug("DisplayInfo.get_list_info: %r"%(self.recordlist.get_values()))
         return self.http_response
 
     def get_view_info(self, view_id):
@@ -278,7 +278,7 @@ class DisplayInfo(object):
             else:
                 self.view_id    = view_id
                 self.recordview = RecordView.load(self.collection, view_id, altscope="all")
-                log.debug("DisplayInfo.get_view_info: %r"%(self.recordview.get_values()))
+                # log.debug("DisplayInfo.get_view_info: %r"%(self.recordview.get_values()))
         return self.http_response
 
     def get_entity_info(self, action, entity_id):

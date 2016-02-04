@@ -422,10 +422,12 @@ div.columns.view-value > div.row > div.columns > select
     /* border: 0; - causes buttons to display differently - WTF? */
 }
 
-div.columns.view-value > input[type="checkbox"]
+div.columns.view-value > input[type="checkbox"] ,
+div.columns.view-value > span > input[type="checkbox"]
 {
-    margin-top:    0.2rem ;
+    margin-top:    0.2rem;
     margin-bottom: 0.2rem;
+    margin-right:  0.2rem;
     height:        1rem;
 }
 
@@ -442,6 +444,11 @@ div.columns.view-value > span
     padding-top:    0rem;
     padding-bottom: 0rem;
     font-size:      0.875rem;
+}
+
+div.columns.view-value > span.checkbox
+{   /* Wrapper for checkbox and label text */
+    white-space: nowrap;
 }
 
 div.columns.view-value > span.value-placeholder

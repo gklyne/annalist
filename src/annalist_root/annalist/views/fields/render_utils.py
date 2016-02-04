@@ -163,7 +163,7 @@ def get_field_edit_renderer(field_render_type, field_value_mode):
     Get edit renderer for supplied field details, taking account of variations on the 
     base renderer due to field reference and field value type.
     """
-    log.debug("Render field_render_type %s, field_value_mode %s"%(field_render_type, field_value_mode))
+    # log.debug("Render field_render_type %s, field_value_mode %s"%(field_render_type, field_value_mode))
     renderer = get_field_base_renderer(field_render_type)
     if field_value_mode in ["Value_entity", "Value_field"]:
         renderer = get_entityref_edit_renderer(renderer, field_render_type)

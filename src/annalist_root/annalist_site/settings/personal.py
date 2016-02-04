@@ -54,7 +54,7 @@ LOGGING = {
         # Log to a text file that can be rotated by logrotate
         'logfile': {
             'class': 'logging.handlers.WatchedFileHandler',
-            'level': 'INFO',
+            'level': TRACE_FIELD_VALUE,
             'filename': LOGGING_FILE,
             'formatter': 'timed'
         },
@@ -84,7 +84,7 @@ LOGGING = {
         },
         'annalist': {
             'handlers': ['logfile'],
-            'level': 'INFO', # Or maybe INFO or DEBUG
+            'level': TRACE_FIELD_VALUE, # Or maybe INFO or DEBUG
             'propagate': False
         },
         'oauth2': {

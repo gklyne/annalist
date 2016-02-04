@@ -133,7 +133,7 @@ class EntityRoot(object):
         presented as belonging to a collection.  This allows for collection-specific
         specializations to be created without changing the URI used.
         """
-        log.debug("EntityRoot.get_url: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
+        # log.debug("EntityRoot.get_url: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
         return urlparse.urljoin(baseurl, self._entityurl)
 
     def get_view_url(self, baseurl=""):
@@ -147,7 +147,7 @@ class EntityRoot(object):
         collection the URL is mapped via the web application to the underlying storage
         location.
         """
-        log.debug("EntityRoot.get_view_url: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
+        # log.debug("EntityRoot.get_view_url: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
         return urlparse.urljoin(baseurl, self._entityviewurl)
 
     def get_view_url_path(self, baseurl=""):
@@ -155,7 +155,7 @@ class EntityRoot(object):
         Return URL path used to view entity data.  This is the URI-path of the URL
         returned by get_view_url (above)
         """
-        log.debug("EntityRoot.get_view_url_path: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
+        # log.debug("EntityRoot.get_view_url_path: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
         return util.entity_url_path(self.get_view_url(), "")
 
     def get_alt_entities(self, altscope=None):
@@ -288,12 +288,12 @@ class EntityRoot(object):
         # log.debug("EntityRoot._exists_path %s"%(p))
         if d and os.path.isdir(d):
             if p and os.path.isfile(p):
-                log.debug("EntityRoot._exists_path %s: OK"%(p))
+                # log.debug("EntityRoot._exists_path %s: OK"%(p))
                 return p
             mp = self._migrate_path()
             if mp and os.path.isfile(mp):
                 assert mp == p, "EntityRoot._exists_path: Migrated filename %s, expected %s"%(mp, p)
-                log.info("EntityRoot._exists_path %s: Migrated from %s"%(mp, p))
+                # log.info("EntityRoot._exists_path %s: Migrated from %s"%(mp, p))
                 return mp
         log.debug("EntityRoot._exists_path %s: not present"%(p))
         return None

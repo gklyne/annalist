@@ -1,3 +1,4 @@
+
 # Annalist TODO
 
 NOTE: this document is used for short-term working notes; some longer-term planning information has been migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
@@ -16,38 +17,62 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.27, towards 0.1.28
 
+- [x] Provide option to remove type constraint when listing entities.
+- [x] Set default from list view: clear default view details so that default reverts to list
+- [x] Update menu bar to indicate explicit/default type id.  Also list id.
+- [x] BUG: 500: Server error: add_inferred_values_to_entity called with no type information available.
+    - Changed calling enumeration logic to log a warning rather when referenced type is absent.
+    - May want to revisit to enumerate values without implied values if type is missing.
 - [x] Tweak CSS so that links in display columns wrap rather than overlap the next column
-- [ ] Add journal and note entry definitions to site data
-- [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
-- [ ] Create schema definitions in Annalist for ANNAL namespace
-- [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
-- [ ] Login: support continuation URI
-- [ ] implement at least one other identify provider (ORCID?)
-- [ ] profile_uri now not included in Google JSON file of client secrets
-    - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
-    - cf. oauth2/views.py:364
+- [x] Re-work entity enumeration to avoid use of predefined built-in types. Fix some enumeration scope bugs.
+- [x] Support references to uploaded OR linked images via subtyping.
+- [x] When referencing fields of a target entity, include implied fields.
+- [x] Adjust use of logging level settings in entity list view.
+- [ ] Set default from list view: always enable?
+- [ ] Add menu bar link to display content of collection rather than default
+    - List of types, linked to lists?
 - [ ] Place record label at start of page title for entity view; collection next
     - [ ] Need to extract or construct label depending on action (new, copy, edit).
         - see entitytypeinfo.get_entity, entityedity.form_response, etc.
-- [ ] Use site/collection data to populate help panes on displays; use Markdown.
-- [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
-- [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
-    - [x] annalist-manager serverlog command returns log file name
-    - [ ] site link to download log, if admin permissions
-    - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
+- [ ] in FieldDescription, setup for value 'field_entity_subtypes' is suspect.  Scope abt line 150.
+- [ ] If no label specified, default to ID with '_' replaced by space
+- [ ] If no comment specified, default to label
+- [ ] From view of list definition, link to show list itself
+- [ ] Add image and audio resource fields to site data
+- [ ] Add journal and note entry definitions to site data
+
+(release?)
+
+- [ ] Task button option to copy type+view+list and update namnes and URIs
 - [ ] Rethink collection overview that allows users to see what is present
     - original thoughts, but review in light of default-view approach adopted:
         - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
         - think about an item list renderer (what is variable?)
         - longer term, this might be a high-level graphical display (like PROV diag.)
         - use this to think about linking to alternative displays
+- [ ] Use site/collection data to populate help panes on displays; use Markdown.
+- [ ] Use Form description as help text on forms
+- [ ] Use field description text as tooltip on forms
+- [ ] Create schema definitions in Annalist for ANNAL namespace
 - [ ] When supertypes are changed, need to regenerate @type fields of instances
     - Or be smarter about how entries for listing are selected.  
     - Link to migration?
+- [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
+- [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?
+
+- [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
+- [ ] Login: support continuation URI
+- [ ] Implement at least one other identify provider (ORCID?)
+- [ ] profile_uri now not included in Google JSON file of client secrets
+    - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
+    - cf. oauth2/views.py:364
+
 - [ ] Think further about how data migration can be handled.  
     - E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
+- [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
+
 - [ ] Review URI usage
-    - [x] avoid explicit reference to `_analist_collection`?
+    - [x] avoid explicit reference to `_annalist_collection`?
     - [ ] review base URI designation in JSON-LD:
         - note `@base` ignored if used in external contexts;
         - can specified value be relative? YES:
@@ -62,6 +87,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
         - could use `@id`?
+
+- [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
+    - [x] annalist-manager serverlog command returns log file name
+    - [ ] site link to download log, if admin permissions
+    - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
 - [ ] annalist-manager option for migrating collection data
     - needs to load and save every entity in a collection to force rewriting of context data.  
     - or option on customize page?
@@ -70,11 +100,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
-- [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?
 
 (feature freeze for V0.9alpha?)
 (0.2?)
 
+- [ ] performance tuning: in EntityTypeInfo: cache type hierarchy for each request; clear when setting up
 - [ ] update Django version used to latest version designated for long term support (1.8?)
 - [ ] review renderers and revise to take all message strings from messages.py
 - [ ] look into entity cacheing (esp. RecordType) for performance improvement
@@ -115,6 +145,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 Technical debt:
 
+- [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplaytInfo?)
+- [ ] Rework Bib_* definitions/enumerations so that they don't need special mention in EntityInfo
 - [ ] Field layout padding logic at end of row is dependent on height of edit fields; consider re-working this in `fieldlistvaluemap` to generate fields in groups, where each group is rendered as a separate row.
 - [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
@@ -157,6 +189,10 @@ Technical debt:
 
 Usability notes:
 
+- [ ] Try to make changing entity type and entity id follow-through more smoothly.
+    -especially when creating a supertype and selecting an appropriate subtype.
+- [ ] Better support for type renaming: hunt out all references and rename them too
+- [ ] Consistency checks for references to missing types (e.g. following rename)
 - [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15)
 - [x] Display entity-id *and* label values in drop-downs?  (e.g. "id (label)")
 - [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)

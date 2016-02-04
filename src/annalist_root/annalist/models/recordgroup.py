@@ -41,7 +41,7 @@ class RecordGroup(EntityData):
         """
         super(RecordGroup, self).__init__(parent, group_id)
         self._parent = parent
-        log.debug("RecordGroup %s: dir %s"%(group_id, self._entitydir))
+        # log.debug("RecordGroup %s: dir %s"%(group_id, self._entitydir))
         return
 
     def _migrate_filenames(self):

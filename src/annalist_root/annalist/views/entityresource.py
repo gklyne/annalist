@@ -21,7 +21,7 @@ from django.http                        import HttpResponse
 from annalist                           import message
 from annalist                           import layout
 
-from annalist.models.entitytypeinfo     import EntityTypeInfo, get_built_in_type_ids
+from annalist.models.entitytypeinfo     import EntityTypeInfo
 
 from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.generic             import AnnalistGenericView

@@ -183,12 +183,6 @@ class bound_field(object):
     def get_field_link(self):
         # Return link corresponding to field value that is a selection from an enumeration of entities
         # (or some other value with an associated link), or None
-        #@@
-        # links = self._field_description['field_choice_links']
-        # v     = self.field_value
-        # if links and v in links:
-        #     return links[v]
-        #@@
         choices = self._field_description['field_choices']  # OrderedDict
         v       = self.field_value
         if choices and v in choices:
@@ -202,7 +196,7 @@ class bound_field(object):
         This may be different from field_value if it references another entity field
         """
         targetvals = self.get_targetvals()
-        log.debug("bound_field.get_target_value: targetvals %r"%(targetvals,))
+        # log.debug("bound_field.get_target_value: targetvals %r"%(targetvals,))
         target_key = self._field_description.get('field_ref_field', None)
         target_key = target_key and target_key.strip()
         if targetvals is not None:
@@ -215,7 +209,7 @@ class bound_field(object):
             target_value = self._entityvals.get(target_key, "(@%s)"%(target_key))
         else:
             target_value = self.field_value
-        log.debug("bound_field.get_target_value result: %r"%(target_value,))
+        # log.debug("bound_field.get_target_value result: %r"%(target_value,))
         return target_value
 
     def get_target_link(self):
@@ -230,7 +224,7 @@ class bound_field(object):
         """
         target_base  = self.get_field_link() or self.entity_link
         target_value = self.get_target_value()
-        log.debug("get_target_link: base %r, value %r"%(target_base, target_value))
+        # log.debug("get_target_link: base %r, value %r"%(target_base, target_value))
         if target_base and target_value:
             if isinstance(target_value, dict) and 'resource_name' in target_value:
                 target_ref = target_value['resource_name']
@@ -251,10 +245,10 @@ class bound_field(object):
         If field description is a reference to a target type entity or field, 
         return a copy of the referenced target entity, otherwise None.
         """
-        log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
+        # log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
         target_type = self._field_description.get('field_ref_type',  None)
         target_key  = self._field_description.get('field_ref_field', None)
-        log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
+        # log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
         if self._targetvals is None:
             if target_type:
                 # Extract entity_id and type_id; default to type id from field descr
@@ -274,6 +268,7 @@ class bound_field(object):
                     targetentity = typeinfo.get_entity(entity_id)
                     if targetentity is None:
                         raise TargetEntityNotFound_Error(value=(target_type, entity_id))
+                    targetentity = typeinfo.get_entity_inferred_values(targetentity)
                     self._targetvals = get_entity_values(typeinfo, targetentity)
                     log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
                 else:
@@ -337,7 +332,7 @@ class bound_field(object):
             requrl = self._extras.get("request_url", "")
             if requrl:
                 chere  = uri_with_params(requrl, continuation_params(self._extras))
-        log.debug('bound_field.get_continuation_url %s'%(chere,))
+        # log.debug('bound_field.get_continuation_url %s'%(chere,))
         return chere
 
     def get_field_options(self):

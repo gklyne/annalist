@@ -429,7 +429,10 @@ class Collection(Entity):
         """
         Set and save the default list to be displayed for the current collection.
         """
-        self[ANNAL.CURIE.default_list] = list_id
+        self[ANNAL.CURIE.default_list]        = list_id
+        self[ANNAL.CURIE.default_view_id]     = None
+        self[ANNAL.CURIE.default_view_type]   = None
+        self[ANNAL.CURIE.default_view_entity] = None
         self._save()
         return
 

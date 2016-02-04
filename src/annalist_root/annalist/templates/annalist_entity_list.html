@@ -40,16 +40,30 @@
           </div>
           <!-- List view entry -->
           {% with field=list_choices %}
-          {% include field.field_render_label_edit %}
-          {% endwith %}
-          <!-- View (refresh) button -->
-          <div class="small-12 medium-2 columns text-right">
+          <div class="small-12 medium-4 columns">
             <div class="view-value-row row">
-              <div class="small-12 columns right">
+              <div class="view-label small-12 medium-3 columns">
+                <span>List</span>
+              </div>
+              {% include field.field_render_edit %}
+            </div>
+          </div>
+          {% endwith %}
+          <!-- View types and refresh buttons -->
+          <div class="small-12 medium-3 columns text-right">
+            <div class="view-value-row row">
+              <div class="view-value small-12 columns">
                 <input type="submit" name="view" value="View" 
                        title="View entities from current collection" />
                 <input type="submit" name="view_all" value="View all" 
                        title="View collection and site-wide entities" />
+                {% if url_type_id %}
+                <span class="checkbox">
+                  <input type="checkbox" name="view_all_types" value="view_all_types" 
+                         title="List all types" />
+                  All types
+                </span>               
+                {% endif %}
                 <!--
                 <button type="submit" name="search" value="Search">
                 <img src="{% static 'images/icons/search_32.png' %}"/>

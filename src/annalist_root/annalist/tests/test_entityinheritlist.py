@@ -96,7 +96,9 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.testsite  = init_annalist_bib_site()
         self.testcoll  = init_annalist_bib_coll()
         self.testdata  = RecordTypeData.load(self.testcoll, "testtype")
-        self.testtype2 = RecordType.create(self.testcoll, "testtype2", recordtype_create_values("testcoll", "testtype2"))
+        self.testtype2 = RecordType.create(
+            self.testcoll, "testtype2", recordtype_create_values("testcoll", "testtype2")
+            )
         self.testdata2 = RecordTypeData.create(self.testcoll, "testtype2", {})
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -162,7 +164,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        if len(entities) != 210:
+        if len(entities) != 217:
             for e in entities:
                 log.debug("All entities: %s/%s"%(e['annal:type_id'], e['annal:id']))
         self.assertEqual(len(entities), 217)    # Will change with site data
