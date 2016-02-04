@@ -28,7 +28,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Support references to uploaded OR linked images via subtyping.
 - [x] When referencing fields of a target entity, include implied fields.
 - [x] Adjust use of logging level settings in entity list view.
-- [ ] Set default from list view: always enable?
 - [ ] Add menu bar link to display content of collection rather than default
     - List of types, linked to lists?
 - [ ] Place record label at start of page title for entity view; collection next
