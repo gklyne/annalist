@@ -295,7 +295,7 @@ class EntityRoot(object):
                 assert mp == p, "EntityRoot._exists_path: Migrated filename %s, expected %s"%(mp, p)
                 # log.info("EntityRoot._exists_path %s: Migrated from %s"%(mp, p))
                 return mp
-        log.debug("EntityRoot._exists_path %s: not present"%(p))
+        # log.debug("EntityRoot._exists_path %s: not present"%(p))
         return None
 
     def _exists(self):

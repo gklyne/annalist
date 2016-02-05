@@ -28,12 +28,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Support references to uploaded OR linked images via subtyping.
 - [x] When referencing fields of a target entity, include implied fields.
 - [x] Adjust use of logging level settings in entity list view.
-- [ ] Add menu bar link to display content of collection rather than default
-    - List of types, linked to lists?
+- [x] In FieldDescription, setup for value 'field_entity_subtypes' (~L150) - use `scope="all"`.
 - [ ] Place record label at start of page title for entity view; collection next
     - [ ] Need to extract or construct label depending on action (new, copy, edit).
-        - see entitytypeinfo.get_entity, entityedity.form_response, etc.
-- [ ] in FieldDescription, setup for value 'field_entity_subtypes' is suspect.  Scope abt line 150.
+        - see entitytypeinfo.get_entity, entityedit L218, displayinfo.context_data
+        - apply refactoring to entityedit so that context code is common for get/post (see comment L150)
+        - always use displayinfo.context_data for title on list/entity displays
+- [ ] Place list label at start of page title for lists
+        - see entitylist, displayinfo.context_data
 - [ ] If no label specified, default to ID with '_' replaced by space
 - [ ] If no comment specified, default to label
 - [ ] From view of list definition, link to show list itself
@@ -188,6 +190,8 @@ Technical debt:
 
 Usability notes:
 
+- [ ] Add menu bar link to display content of collection rather than default
+    - List of types, linked to lists?
 - [ ] Try to make changing entity type and entity id follow-through more smoothly.
     -especially when creating a supertype and selecting an appropriate subtype.
 - [ ] Better support for type renaming: hunt out all references and rename them too

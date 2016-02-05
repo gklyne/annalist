@@ -144,8 +144,6 @@ class FieldDescription(object):
             #         need context to provide info that can be used to calculate supertypes
             #         on-the-fly as needed by the field restriction expression.  E.g. include
             #         collection object in context.
-            # @@TODO: currently limits subtype search to current collection scope.  But if the
-            #         specified type is inherited, maybe its subtypes are too?  Needs review.
             if field_entity_type and restrict_values:
                 field_entity_subtypes = (
                     [ t.get_type_uri()

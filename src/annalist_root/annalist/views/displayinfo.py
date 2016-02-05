@@ -563,19 +563,25 @@ class DisplayInfo(object):
 
     def context_data(self):
         """
-        Return dictionary of rendering context data available from the elements assembled.
+        Return dictionary of rendering context data available from the 
+        elements assembled.
 
-        Values that are added here to the view context are used for view rendering, and
-        are not passed to the entity value mapping process.
+        Values that are added here to the view context are used for view rendering, 
+        and are not passed to the entity value mapping process.
+
+        NOTE: values that are needed to be accessible as part of bound_field values 
+        must be provided earlier in the form generation process, as elements of the 
+        "context_extra_values" dictionary.
         """
         context = (
-            { 'site_title':     self.sitedata["title"]
-            , 'title':          self.sitedata["title"]
-            , 'action':         self.action
-            , 'coll_id':        self.coll_id
-            , 'type_id':        self.type_id
-            , 'view_id':        self.view_id
-            , 'list_id':        self.list_id
+            { 'site_title':         self.sitedata["title"]
+            , 'title':              self.sitedata["title"]
+            , 'action':             self.action
+            , 'coll_id':            self.coll_id
+            , 'type_id':            self.type_id
+            , 'view_id':            self.view_id
+            , 'list_id':            self.list_id
+            # , 'continuation_url':   self.get_continuation_url() or ""
             })
         context.update(self.authorizations)
         if hasattr(self.view, 'help'):
@@ -589,7 +595,8 @@ class DisplayInfo(object):
                 })
         if self.recordview:
             context.update(
-                { 'view_label': self.recordview[RDFS.CURIE.label]
+                { 'view_label':         self.recordview[RDFS.CURIE.label]
+                , 'edit_view_button':   self.recordview.get(ANNAL.CURIE.open_view, "yes")
                 })
             task_buttons = self.recordview.get(ANNAL.CURIE.task_buttons, None)
             self.add_task_button_context(task_buttons, context)

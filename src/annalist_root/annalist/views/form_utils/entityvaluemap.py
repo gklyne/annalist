@@ -80,7 +80,7 @@ class EntityValueMap(object):
             context.update(kval)
         return context
 
-    def map_form_data_to_values(self, form_data, entityvals, **kwargs):
+    def map_form_data_to_values(self, form_data, entityvals):
         """
         Map data from form response to entity data.  
 

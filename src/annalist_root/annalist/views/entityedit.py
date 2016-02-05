@@ -216,19 +216,12 @@ class GenericEntityEditView(AnnalistGenericView):
         #     )
         typeinfo        = viewinfo.entitytypeinfo
         context_extra_values = (
-            { 'site_title':       viewinfo.sitedata["title"]
-            , 'title':            viewinfo.collection[RDFS.CURIE.label]
-            , 'action':           action
-            , 'edit_view_button': viewinfo.recordview.get(ANNAL.CURIE.open_view, "yes")
-            , 'continuation_url': viewinfo.get_continuation_url() or ""
-            , 'request_url':      self.get_request_path()
-            , 'coll_id':          coll_id
-            , 'coll_label':       viewinfo.collection[RDFS.CURIE.label]
-            , 'type_id':          type_id
-            , 'view_choices':     self.get_view_choices_field(viewinfo)
+            { 'request_url':      self.get_request_path()
+            # , 'continuation_url': viewinfo.get_continuation_url() or ""
+            # , 'view_choices':     self.get_view_choices_field(viewinfo)
             , 'orig_id':          orig_entity_id
             , 'orig_type':        orig_entity_type_id
-            , 'view_id':          view_id
+            , 'url_type_id':        type_id     # @@TODO: redundant - use orig_type ?
             })
         message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
         messages = (
@@ -388,6 +381,10 @@ class GenericEntityEditView(AnnalistGenericView):
         augmented with inferred values and other context data.
         """
         # log.info("get_form_display_context, entityvals: %r"%(entityvals,))
+        context_extra_values.update(
+            { 'continuation_url':   viewinfo.get_continuation_url() or ""
+            , 'view_choices':       self.get_view_choices_field(viewinfo)
+            })
         entityvals   = viewinfo.entitytypeinfo.get_entity_inferred_values(entityvals)
         form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
         form_context.update(viewinfo.context_data())
@@ -449,16 +446,12 @@ class GenericEntityEditView(AnnalistGenericView):
             action=viewinfo.action
             )
         context_extra_values = (
-            { 'edit_view_button':   viewinfo.recordview.get(ANNAL.CURIE.open_view, "yes")
-            , 'continuation_url':   viewinfo.get_continuation_url() or ""
-            , 'request_url':        self.get_request_path()
-            , 'coll_id':            coll_id
-            , 'type_id':            type_id
-            , 'url_type_id':        type_id
-            , 'view_choices':       self.get_view_choices_field(viewinfo)
+            { 'request_url':        self.get_request_path()
+            # , 'continuation_url':   viewinfo.get_continuation_url() or ""
+            # , 'view_choices':       self.get_view_choices_field(viewinfo)
             , 'orig_id':            entityvals['entity_id']
             , 'orig_type':          type_id
-            , 'view_id':            viewinfo.view_id
+            , 'url_type_id':        type_id     # @@TODO: redundant - use orig_type ?
             })
         viewcontext = self.get_form_display_context(
             viewinfo, entityvaluemap, entityvals, **context_extra_values
