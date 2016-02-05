@@ -276,29 +276,6 @@ class bound_field(object):
                         "bound_field.get_targetvals: target value type %s requires %r permissions"%
                         (target_type, req_permissions)
                         )
-                # # Get entity type info
-                # #@@TODO: eliminate site param...
-                # coll           = self._field_description._collection
-                # targettypeinfo = EntityTypeInfo(coll.get_site(), coll, target_type)
-                # # Check access permission, assuming user has "VIEW" permission in current collection
-                # # This is primarily to prevent a loophole for accessing user account details
-                # #@@TODO: pass actual user permissions in to bound_field or field description or extra params
-                # user_permissions = ["VIEW"]
-                # req_permissions  = list(set( targettypeinfo.permissions_map[a] for a in ["view", "list"] ))
-                # if all([ p in user_permissions for p in req_permissions]):
-                #     target_id    = self.get_field_value()
-                #     if target_id is None or target_id == "":
-                #         raise TargetIdNotFound_Error(value=(targettypeinfo.type_id, self.field_name))
-                #     targetentity = targettypeinfo.get_entity(target_id)
-                #     if targetentity is None:
-                #         raise TargetEntityNotFound_Error(value=(targettypeinfo.type_id, target_id))
-                #     self._targetvals = get_entity_values(targettypeinfo, targetentity)
-                #     log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
-                # else:
-                #     log.warning(
-                #         "bound_field.get_targetvals: target value type %s requires %r permissions"%
-                #         (target_type, req_permissions)
-                #         )
         log.debug("bound_field.get_targetvals: targetvals %r"%(self._targetvals,))
         return self._targetvals
 

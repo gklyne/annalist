@@ -53,9 +53,7 @@ from annalist.views.fields.bound_field  import bound_field, get_entity_values
 
 # Table used as basis, or initial values, for a dynamically generated entity-value map
 baseentityvaluemap  = (
-        [ SimpleValueMap(c='coll_id',          e=None,                    f=None               )
-        , SimpleValueMap(c='type_id',          e=None,                    f=None               )
-        , SimpleValueMap(c='url_type_id',      e=None,                    f=None               )
+        [ SimpleValueMap(c='url_type_id',      e=None,                    f=None               )
         , SimpleValueMap(c='view_choices',     e=None,                    f=None               )
         , SimpleValueMap(c='edit_view_button', e=None,                    f=None               )
         , StableValueMap(c='entity_id',        e=ANNAL.CURIE.id,          f='entity_id'        )
@@ -147,12 +145,24 @@ class GenericEntityEditView(AnnalistGenericView):
                     message=message.ENTITY_DOES_NOT_EXIST%{'id': entity_label}
                     )
                 )
-        # @@TODO: build context_extra_values here and pass into form_render.
-        #         eventually, form_render will ideally be used for both GET and POST 
-        #         handlers that respond with a rendered form.
+        entityvals  = get_entity_values(
+            viewinfo.entitytypeinfo, entity,
+            action=viewinfo.action
+            )
+
+        # Set up rendered form response
+        context_extra_values = (
+            { 'request_url':        self.get_request_path()
+            , 'url_type_id':        type_id
+            , 'orig_id':            entityvals['entity_id']
+            , 'orig_type':          type_id
+            })
         add_field = request.GET.get('add_field', None)
         try:
-            response = self.form_render(viewinfo, entity, add_field)
+            response = self.form_render(
+                viewinfo, entity, entityvals, context_extra_values, 
+                add_field
+                )
         except Exception as e:
             log.exception(str(e))
             response = self.error(
@@ -217,11 +227,9 @@ class GenericEntityEditView(AnnalistGenericView):
         typeinfo        = viewinfo.entitytypeinfo
         context_extra_values = (
             { 'request_url':      self.get_request_path()
-            # , 'continuation_url': viewinfo.get_continuation_url() or ""
-            # , 'view_choices':     self.get_view_choices_field(viewinfo)
+            , 'url_type_id':      type_id
             , 'orig_id':          orig_entity_id
             , 'orig_type':        orig_entity_type_id
-            , 'url_type_id':        type_id     # @@TODO: redundant - use orig_type ?
             })
         message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
         messages = (
@@ -263,7 +271,6 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Assemble display information for entity view request handler
         """
-        #@@ self.site_view_url        = self.view_uri("AnnalistSiteView")
         self.collection_view_url  = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
         self.default_continuation_url = self.view_uri(
             "AnnalistEntityDefaultListType", coll_id=coll_id, type_id=type_id
@@ -417,7 +424,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # log.info("orig entity_values %r"%(entity_values,))
         return upd_entityvals
 
-    def form_render(self, viewinfo, entity, add_field):
+    def form_render(self, viewinfo, entity, entityvals, context_extra_values, add_field):
         """
         Returns an HTTP response that renders a view of an entity, 
         using supplied entity data
@@ -441,18 +448,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 # Add empty fields per named repeat group
                 self.add_entity_field(add_field_desc, entity)
         #@@
-        entityvals  = get_entity_values(
-            viewinfo.entitytypeinfo, entity, entity_id, 
-            action=viewinfo.action
-            )
-        context_extra_values = (
-            { 'request_url':        self.get_request_path()
-            # , 'continuation_url':   viewinfo.get_continuation_url() or ""
-            # , 'view_choices':       self.get_view_choices_field(viewinfo)
-            , 'orig_id':            entityvals['entity_id']
-            , 'orig_type':          type_id
-            , 'url_type_id':        type_id     # @@TODO: redundant - use orig_type ?
-            })
         viewcontext = self.get_form_display_context(
             viewinfo, entityvaluemap, entityvals, **context_extra_values
             )

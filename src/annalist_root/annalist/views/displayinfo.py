@@ -572,6 +572,9 @@ class DisplayInfo(object):
         NOTE: values that are needed to be accessible as part of bound_field values 
         must be provided earlier in the form generation process, as elements of the 
         "context_extra_values" dictionary.
+
+        Context values set here do not need to be named in the valuye maop used to
+        create the view context.
         """
         context = (
             { 'site_title':         self.sitedata["title"]
@@ -581,7 +584,6 @@ class DisplayInfo(object):
             , 'type_id':            self.type_id
             , 'view_id':            self.view_id
             , 'list_id':            self.list_id
-            # , 'continuation_url':   self.get_continuation_url() or ""
             })
         context.update(self.authorizations)
         if hasattr(self.view, 'help'):

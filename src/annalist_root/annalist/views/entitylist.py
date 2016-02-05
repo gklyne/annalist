@@ -52,15 +52,9 @@ from annalist.views.fields.bound_field  import bound_field, get_entity_values
 # Table used as basis, or initial values, for a dynamically generated 
 # entity-value map for list displays
 listentityvaluemap  = (
-        [ SimpleValueMap(c='title',                 e=None,                  f=None                  )
-        , SimpleValueMap(c='help_filename',         e=None,                  f=None                  )
-        , SimpleValueMap(c='coll_id',               e=None,                  f=None                  )
-        , SimpleValueMap(c='coll_label',            e=None,                  f=None                  )
-        , SimpleValueMap(c='type_id',               e=None,                  f=None                  )
+        [ SimpleValueMap(c='help_filename',         e=None,                  f=None                  )
         , SimpleValueMap(c='url_type_id',           e=None,                  f=None                  )
-        , SimpleValueMap(c='list_id',               e=None,                  f=None                  )
         , SimpleValueMap(c='url_list_id',           e=None,                  f=None                  )
-        , SimpleValueMap(c='list_label',            e=None,                  f=None                  )
         , SimpleValueMap(c='list_choices',          e=None,                  f=None                  )
         , SimpleValueMap(c='collection_view',       e=None,                  f=None                  )
         , SimpleValueMap(c='default_view_id',       e=None,                  f=None                  )
