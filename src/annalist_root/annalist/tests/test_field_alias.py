@@ -118,7 +118,6 @@ class FieldAliasTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Collection testcoll</title>")
         # Test context
         url = entity_url(coll_id="testcoll", type_id="BibEntry_type", entity_id="bibentity1")
         self.assertEqual(r.context['coll_id'],          "testcoll")

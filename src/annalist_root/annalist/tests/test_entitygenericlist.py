@@ -89,7 +89,6 @@ from entity_testlistdata    import recordlist_url
 #
 #   -----------------------------------------------------------------------------
 
-
 class EntityGenericListViewTest(AnnalistTestCase):
     """
     Tests for record type edit views
@@ -152,8 +151,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "Collection testcoll")
-        self.assertContains(r, "<h3>List entities with type information</h3>", html=True)
+        list_label = "List entities with type information" 
+        list_title = "List entities with type information - Collection testcoll"
+        self.assertContains(r, "<title>%s</title>"%list_title, html=True)
+        self.assertContains(r, "<h3>%s</h3>"%list_label, html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
@@ -184,7 +185,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # log.info(r.context["List_rows"])
         self.assertContains(r, rowdata, html=True)
         # Test context
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            list_title)
+        self.assertEqual(r.context['heading'],          list_label)
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "Default_type")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
@@ -237,10 +239,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "Collection testcoll")
-        self.assertContains(r, "<h3>List entities with type information</h3>", html=True)
+        list_label = "List entities with type information" 
+        list_title = "List entities with type information - Collection testcoll"
+        self.assertContains(r, "<title>%s</title>"%list_title, html=True)
+        self.assertContains(r, "<h3>%s</h3>"%list_label, html=True)
         # Test context
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            list_title)
+        self.assertEqual(r.context['heading'],          list_label)
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "Default_type")
         list_choices = r.context['list_choices']
@@ -266,8 +271,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content) #@@
+        list_label = "List types" 
+        list_title = "List types - Collection testcoll"
+        self.assertContains(r, "<title>%s</title>"%list_title, html=True)
+        self.assertContains(r, "<h3>%s</h3>"%list_label, html=True)
         # Test context
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            list_title)
+        self.assertEqual(r.context['heading'],          list_label)
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         # Fields
@@ -296,8 +306,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content) #@@
+        list_label = "List types" 
+        list_title = "List types - Collection testcoll"
+        self.assertContains(r, "<title>%s</title>"%list_title, html=True)
+        self.assertContains(r, "<h3>%s</h3>"%list_label, html=True)
         # Test context
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            list_title)
+        self.assertEqual(r.context['heading'],          list_label)
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         # Fields
@@ -328,11 +343,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content) #@@
-        # self.assertContains(r, site_title("<title>%s</title>"))
-        # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
+        list_label = "List fields" 
+        list_title = "List fields - Collection testcoll"
+        self.assertContains(r, "<title>%s</title>"%list_title, html=True)
+        self.assertContains(r, "<h3>%s</h3>"%list_label, html=True)
         cont = uri_params({"continuation_url": u})
-        # cont = "/testsite/c/testcoll/l/Field_list/_field/%3Fcontinuation_url=/xyzzy/"
-        #@@ cont = ""
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -410,7 +425,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertContains(r, rowdata2, html=True)
         self.assertContains(r, rowdata3, html=True)
         # Test context
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            list_title)
+        self.assertEqual(r.context['heading'],          list_label)
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")

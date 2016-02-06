@@ -561,7 +561,7 @@ class DisplayInfo(object):
         list_ref = make_resource_ref_query(request_url, layout.ENTITY_LIST_FILE)
         return list_ref
 
-    def context_data(self):
+    def context_data(self, entity_label=None):
         """
         Return dictionary of rendering context data available from the 
         elements assembled.
@@ -577,8 +577,9 @@ class DisplayInfo(object):
         create the view context.
         """
         context = (
-            { 'site_title':         self.sitedata["title"]
+            { 'site_label':         self.sitedata["title"]
             , 'title':              self.sitedata["title"]
+            , 'heading':            self.sitedata["title"]
             , 'action':             self.action
             , 'coll_id':            self.coll_id
             , 'type_id':            self.type_id
@@ -592,25 +593,36 @@ class DisplayInfo(object):
                 })
         if self.collection:
             context.update(
-                { 'title':      self.collection[RDFS.CURIE.label]
+                { 'heading':    self.collection[RDFS.CURIE.label]
                 , 'coll_label': self.collection[RDFS.CURIE.label]
                 })
+            context['title'] = "%(coll_label)s"%context
         if self.recordview:
             context.update(
-                { 'view_label':         self.recordview[RDFS.CURIE.label]
+                { 'heading':            self.recordview[RDFS.CURIE.label]
+                , 'view_label':         self.recordview[RDFS.CURIE.label]
                 , 'edit_view_button':   self.recordview.get(ANNAL.CURIE.open_view, "yes")
                 })
+            context['title'] = "%(view_label)s - %(coll_label)s"%context
             task_buttons = self.recordview.get(ANNAL.CURIE.task_buttons, None)
             self.add_task_button_context(task_buttons, context)
         if self.recordlist:
             context.update(
-                { 'list_label': self.recordlist[RDFS.CURIE.label]
-                , 'entity_list_ref': self.get_entity_list_ref()
+                { 'heading':            self.recordlist[RDFS.CURIE.label]
+                , 'list_label':         self.recordlist[RDFS.CURIE.label]
+                , 'entity_list_ref':    self.get_entity_list_ref()
                 })
+            context['title'] = "%(list_label)s - %(coll_label)s"%context
         if self.entitytypeinfo:
             context.update(
-                { 'entity_data_ref': self.get_entity_data_ref()
+                { 'entity_data_ref':    self.get_entity_data_ref()
                 })
+        if entity_label:
+            context.update(
+                { 'entity_label':       entity_label
+                })
+            # context['heading'] = "%(entity_label)s - %(view_label)s"%context
+            context['title']   = "%(entity_label)s - %(view_label)s - %(coll_label)s"%context
         return context
 
     def add_task_button_context(self, task_buttons, context):

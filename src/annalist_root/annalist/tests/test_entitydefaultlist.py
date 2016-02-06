@@ -169,7 +169,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertContains(r, rowdata, html=True)
         # Test context
         # self.assertEqual(r.context['title'],            site_title())
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            "List entities with type information - Collection testcoll")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "Default_type")
         list_choices = r.context['list_choices']
@@ -250,8 +250,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<title>Collection testcoll</title>")
+        self.assertContains(r, "<title>List entities - Collection testcoll</title>")
         self.assertContains(r, "<h3>List entities</h3>", html=True)
         cont = uri_params({"continuation_url": u})
         # cont = ""
@@ -277,7 +276,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertContains(r, rowdata, html=True)
         # Test context
         # self.assertEqual(r.context['title'],            site_title())
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            "List entities - Collection testcoll")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         list_choices = r.context['list_choices']

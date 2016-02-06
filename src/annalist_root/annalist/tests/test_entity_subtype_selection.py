@@ -134,7 +134,7 @@ class SubtypeSelectionTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Collection testcoll</title>")
+        self.assertContains(r, "<title>List entities - Collection testcoll</title>")
         self.assertContains(r, "<h3>List entities</h3>", html=True)
         # Test context
         self.assertEqual(r.context['coll_id'],  "testcoll")

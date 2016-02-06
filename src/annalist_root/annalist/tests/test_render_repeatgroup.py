@@ -282,7 +282,6 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Collection testcoll</title>")
         # Test rendered result
         cont_uri_param = "?continuation_url="+u
         field_vals = default_fields(

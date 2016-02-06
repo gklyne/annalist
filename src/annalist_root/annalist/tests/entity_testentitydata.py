@@ -244,11 +244,18 @@ def entitydata_values(
     return d
 
 def entitydata_context_data(
-        entity_id=None, orig_id=None, type_id="testtype", type_ids=[],
-        action=None, update="Entity"
+        entity_id=None, orig_id=None, coll_id="testcoll", type_id="testtype", type_ids=[],
+        action=None, update="Entity", view_label="Default record view"
     ):
+    if entity_id:
+        entity_label = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
+        entity_descr = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
+    else:
+        entity_label = '%s data ... (%s/%s)'%(update, coll_id, type_id)
+        entity_descr = '%s description ... (%s/%s)'%(update, coll_id, type_id)
     context_dict = (
-        { 'title':              "Collection testcoll"
+        { 'title':              "%s - %s - Collection %s"%(entity_label, view_label, coll_id)
+        , 'heading':            view_label
         , 'coll_id':            'testcoll'
         , 'type_id':            'testtype'
         , 'orig_id':            'orig_entity_id'
@@ -280,7 +287,7 @@ def entitydata_context_data(
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_mode':   'Value_direct'
             , 'field_target_type':  "annal:Text"
-            , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
+            , 'field_value':        entity_label
             , 'options':            []
             }
           , { 'field_label':        'Comment'
@@ -290,7 +297,7 @@ def entitydata_context_data(
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_mode':   'Value_direct'
             , 'field_target_type':  "annal:Richtext"
-            , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
+            , 'field_value':        entity_descr
             , 'options':            []
             }
           ]
@@ -299,8 +306,8 @@ def entitydata_context_data(
     if entity_id:
         context_dict['fields'][0]['field_value'] = entity_id
         context_dict['fields'][1]['field_value'] = "_type/"+type_id if valid_id(type_id) else None
-        context_dict['fields'][2]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
-        context_dict['fields'][3]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
+        # context_dict['fields'][2]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
+        # context_dict['fields'][3]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
         context_dict['orig_id']     = entity_id
     if orig_id:
         context_dict['orig_id']     = orig_id
@@ -556,12 +563,18 @@ def entitydata_default_view_form_data(
 # Used in test_entitygenericedit - move?
 
 def entitydata_recordtype_view_context_data(
-        entity_id=None, orig_id=None, type_id="testtype", type_uri=None, type_ids=[],
-        action=None, update="Entity"
+        entity_id=None, orig_id=None, coll_id="testcoll", type_id="testtype", type_uri=None, type_ids=[],
+        action=None, update="Entity", view_label="Type description view"
     ):
-    coll_id = "testcoll"
+    if entity_id:
+        entity_label = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
+        entity_descr = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
+    else:
+        entity_label = '%s data ... (%s/%s)'%(update, coll_id, type_id)
+        entity_descr = '%s description ... (%s/%s)'%(update, coll_id, type_id)
     context_dict = (
-        { 'title':              "Collection %s"%(coll_id,)
+        { 'title':              "%s - %s - Collection %s"%(entity_label, view_label, coll_id)
+        , 'heading':            view_label
         , 'coll_id':            coll_id
         , 'type_id':            type_id
         , 'orig_id':            'orig_entity_id'
@@ -581,7 +594,7 @@ def entitydata_recordtype_view_context_data(
             , 'field_id':           'Type_label'
             , 'field_value_mode':   'Value_direct'
             , 'field_target_type':  'annal:Text'
-            , 'field_value':        '%s data ... (%s/%s)'%(update, coll_id, type_id)
+            , 'field_value':        entity_label
             , 'options':            []
             }
           , { 'field_label':        'Comment'
@@ -590,7 +603,7 @@ def entitydata_recordtype_view_context_data(
             , 'field_id':           'Type_comment'
             , 'field_value_mode':   'Value_direct'
             , 'field_target_type':  'annal:Richtext'
-            , 'field_value':        '%s description ... (%s/%s)'%(update, coll_id, type_id)
+            , 'field_value':        entity_descr
             , 'options':            []
             }
           , { 'field_label':        'URI'
@@ -606,11 +619,11 @@ def entitydata_recordtype_view_context_data(
         , 'continuation_url':   entitydata_list_type_url(coll_id, type_id)
         })
     if entity_id:
-        label   = "%s %s/%s/%s"%(update, coll_id, type_id, entity_id)
-        comment = "%s coll %s, type %s, entity %s"%(update, coll_id, type_id, entity_id)
+        # label   = "%s %s/%s/%s"%(update, coll_id, type_id, entity_id)
+        # comment = "%s coll %s, type %s, entity %s"%(update, coll_id, type_id, entity_id)
         context_dict['fields'][0]['field_value'] = entity_id
-        context_dict['fields'][1]['field_value'] = label
-        context_dict['fields'][2]['field_value'] = comment
+        # context_dict['fields'][1]['field_value'] = label
+        # context_dict['fields'][2]['field_value'] = comment
         context_dict['orig_id']                  = entity_id
     if type_uri:
         context_dict['fields'][3]['field_value'] = type_uri

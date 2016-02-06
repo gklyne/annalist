@@ -29,13 +29,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] When referencing fields of a target entity, include implied fields.
 - [x] Adjust use of logging level settings in entity list view.
 - [x] In FieldDescription, setup for value 'field_entity_subtypes' (~L150) - use `scope="all"`.
-- [ ] Place record label at start of page title for entity view; collection next
-    - [ ] Need to extract or construct label depending on action (new, copy, edit).
-        - see entitytypeinfo.get_entity, entityedit L218, displayinfo.context_data
-        - apply refactoring to entityedit so that context code is common for get/post (see comment L150)
-        - always use displayinfo.context_data for title on list/entity displays
-- [ ] Place list label at start of page title for lists
-        - see entitylist, displayinfo.context_data
+- [x] Place entity/view labels at start of page title for entity view, edit and list pages
+    - Refactored entityedit for greater symmetry across GET/POST handling
+    - displayinfo.context_data is used to supply additional context needed
+- [x] Place list label at start of page title for lists
 - [ ] If no label specified, default to ID with '_' replaced by space
 - [ ] If no comment specified, default to label
 - [ ] From view of list definition, link to show list itself

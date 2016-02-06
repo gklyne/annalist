@@ -394,7 +394,7 @@ class GenericEntityEditView(AnnalistGenericView):
             })
         entityvals   = viewinfo.entitytypeinfo.get_entity_inferred_values(entityvals)
         form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
-        form_context.update(viewinfo.context_data())
+        form_context.update(viewinfo.context_data(entity_label=entityvals.get(RDFS.CURIE.label, None)))
         return form_context
 
     def merge_entity_form_values(self, orig_entityvals, entityformvals):

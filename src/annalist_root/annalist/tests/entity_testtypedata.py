@@ -187,8 +187,15 @@ def recordtype_entity_view_context_data(
         action=None, update="RecordType",
         type_uri=None, supertype_uris=None #@@ need to deal with these.
     ):
+    if type_id:
+        type_label = "%s %s/%s"%(update, coll_id, type_id)
+        type_descr = "%s help for %s in collection %s"%(update, type_id, coll_id)
+    else:
+        type_label = "%s data ... (%s/%s)"%(update, coll_id, type_id)
+        type_descr = "%s description ... (%s/%s)"%(update, coll_id, type_id)
     context_dict = (
-        { 'title':              "Collection %s"%(coll_id)
+        { 'title':              "%s - Type description view - Collection %s"%(type_label, coll_id)
+        , 'heading':            "Type description view"
         , 'coll_id':            coll_id
         , 'type_id':            '_type'
         , 'orig_id':            'orig_type_id'
@@ -210,7 +217,7 @@ def recordtype_entity_view_context_data(
             , 'field_render_type':  'Text'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value':        '%s data ... (%s/%s)'%(update, coll_id, type_id)
+            , 'field_value':        type_label
             , 'options':            []
             }
           , { 'field_id':           'Type_comment'
@@ -220,7 +227,7 @@ def recordtype_entity_view_context_data(
             , 'field_render_type':  'Markdown'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value':        '%s description ... (%s/%s)'%(update, coll_id, type_id)
+            , 'field_value':        type_descr
             , 'options':            []
             }
           , { 'field_id':           'Type_uri'
@@ -269,8 +276,6 @@ def recordtype_entity_view_context_data(
     if type_id:
         type_url = recordtype_url(coll_id=coll_id, type_id=type_id)
         context_dict['fields'][0]['field_value'] = type_id
-        context_dict['fields'][1]['field_value'] = '%s %s/%s'%(update, coll_id, type_id)
-        context_dict['fields'][2]['field_value'] = '%s help for %s in collection %s'%(update, type_id, coll_id)
         context_dict['fields'][3]['field_value'] = type_url or ""
         context_dict['orig_id']     = type_id
     if orig_id:

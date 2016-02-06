@@ -485,7 +485,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Collection testcoll</title>")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
         field_vals = default_fields(coll_id="testcoll", type_id="_field", entity_id="00000001")
         formrow1col1 = """

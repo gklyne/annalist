@@ -380,7 +380,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content)
-        self.assertContains(r, "<title>Collection testcoll</title>")
         self.assertContains(r, "<h3>'_type' data in collection 'testcoll'</h3>")
         field_vals = default_fields(
             coll_id="testcoll", type_id="_type", entity_id="00000001",

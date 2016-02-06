@@ -150,7 +150,8 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertContains(r, "Collection testcoll")
         self.assertContains(r, "<h3>List entities with type information</h3>", html=True)
         # Test context
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            "List entities with type information - Collection testcoll")
+        self.assertEqual(r.context['heading'],          "List entities with type information")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "Default_type")
         list_choices = r.context['list_choices']
@@ -180,7 +181,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content) #@@
         # Test context
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            "List types - Collection testcoll")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         # Fields
@@ -236,7 +237,8 @@ class EntityInheritListViewTest(AnnalistTestCase):
         # log.info(r.content)
         self.assertContains(r, rowdata1, html=True)
         # Test context
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            "List fields - Collection testcoll")
+        self.assertEqual(r.context['heading'],          "List fields")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")

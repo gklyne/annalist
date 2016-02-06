@@ -178,6 +178,12 @@ def recordlist_view_context_data(
         coll_id="testcoll", list_id=None, orig_id=None, view_ids=[],
         action=None, update="RecordList"
     ):
+    if list_id:
+        list_label = "%s %s/%s"%(update, coll_id, list_id)
+        list_descr = "%s help for %s/%s"%(update, coll_id, list_id)
+    else:
+        list_label = "%s list (%s/@@list_id@@)"%(update, coll_id)
+        list_descr = "%s description ... (%s/%s)"%(update, coll_id, list_id)
     list_fields = (
         [ { "annal:field_id":         "_field/Entity_id"
           , "annal:field_placement":  "small:0,3"
@@ -187,7 +193,8 @@ def recordlist_view_context_data(
           }
         ])
     context_dict = (
-        { "title":              "Collection %s"%(coll_id)
+        { "title":              "%s - List description view - Collection %s"%(list_label, coll_id)
+        , 'heading':            "List description view"
         , "coll_id":            coll_id
         , "type_id":            "_list"
         , "orig_id":            "orig_list_id"
@@ -287,8 +294,8 @@ def recordlist_view_context_data(
         })
     if list_id:
         context_dict['fields'][0]['field_value'] = list_id
-        context_dict['fields'][2]['field_value'] = '%s %s/%s'%(update, coll_id, list_id)
-        context_dict['fields'][3]['field_value'] = '%s help for %s/%s'%(update, coll_id, list_id)
+        context_dict['fields'][2]['field_value'] = list_label
+        context_dict['fields'][3]['field_value'] = list_descr
         context_dict['orig_id']     = list_id
     if orig_id:
         context_dict['orig_id']     = orig_id

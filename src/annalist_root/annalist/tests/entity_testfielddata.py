@@ -183,9 +183,15 @@ def recordfield_read_values(
 #   -----------------------------------------------------------------------------
 
 def recordfield_entity_view_context_data(
-        field_id=None, orig_id=None, type_ids=[],
+        coll_id="testcoll", field_id=None, orig_id=None, type_ids=[],
         action=None, update="Field"
     ):
+    if field_id:
+        field_label = "%s %s/_field/%s"%(update, coll_id, field_id)
+        field_descr = "%s help for %s in collection %s"%(update, field_id, coll_id)
+    else:
+        field_label = "%s data ... (testcoll/_field)"%(update)
+        field_descr = "%s description ... (testcoll/_field)"%(update)
     padding_placement = Placement(
         width=make_field_width(sw=0, mw=6, lw=6),
         offset=make_field_offset(so=0, mo=0, lo=0),
@@ -195,8 +201,9 @@ def recordfield_entity_view_context_data(
         value="small-8 columns"
         )
     context_dict = (
-        { 'title':              "Collection testcoll"
-        , 'coll_id':            "testcoll"
+        { "title":              "%s - Field description view - Collection %s"%(field_label, coll_id)
+        , 'heading':            "Field description view"
+        , 'coll_id':            coll_id
         , 'type_id':            "_field"
         , 'orig_id':            "orig_field_id"
         , 'fields':
@@ -243,7 +250,7 @@ def recordfield_entity_view_context_data(
             , 'field_ref_field':        None
             , 'field_placeholder':      "(field label)"
             , 'field_default_value':    ""
-            , 'field_value':            "%s data ... (testcoll/_field)"%(update)
+            , 'field_value':            field_label
             , 'options':                []
             }
           , { 'field_id':               "Field_comment"             # 3
@@ -258,7 +265,7 @@ def recordfield_entity_view_context_data(
             , 'field_ref_field':        None
             , 'field_placeholder':      "(field usage commentary or help text)"
             , 'field_default_value':    ""
-            , 'field_value':            '%s description ... (testcoll/_field)'%(update)
+            , 'field_value':            field_descr
             , 'options':                []
             }
           , { 'field_id':               "Field_property"            # 4
@@ -470,12 +477,12 @@ def recordfield_entity_view_context_data(
             , 'options':                []
             }
           ]
-        , 'continuation_url':   entitydata_list_type_url("testcoll", "_field")
+        , 'continuation_url':   entitydata_list_type_url(coll_id, "_field")
         })
     if field_id:
         context_dict['fields'][0]['field_value'] = field_id
-        context_dict['fields'][2]['field_value'] = '%s testcoll/_field/%s'%(update,field_id)
-        context_dict['fields'][3]['field_value'] = '%s help for %s in collection testcoll'%(update,field_id)
+        # context_dict['fields'][2]['field_value'] = '%s testcoll/_field/%s'%(update,field_id)
+        # context_dict['fields'][3]['field_value'] = '%s help for %s in collection testcoll'%(update,field_id)
         context_dict['orig_id']     = field_id
     if orig_id:
         context_dict['orig_id']     = orig_id

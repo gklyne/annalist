@@ -118,7 +118,6 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Annalist data notebook test site</title>")
         self.assertContains(r, "<h3>'_coll' data in collection '_annalist_site'</h3>")
         field_vals = default_fields(
             coll_id="_annalist_site", 
