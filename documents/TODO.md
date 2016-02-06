@@ -39,6 +39,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (release?)
 
+- [ ] Use site/collection data to populate help panes on displays; use Markdown.
+- [ ] Use Form description as help text on forms
+- [ ] Use field description text as tooltip on forms
+- [ ] Add title attributes to all buttons - used as tooltip
+- [ ] Add title to field controls based on field help, to use as tooltip.
+- [ ] Use pop-up text based on field comment to tell user how a field value is used
+
 - [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
 - [ ] Task button option to copy type+view+list and update namnes and URIs
 - [ ] Rethink collection overview that allows users to see what is present
@@ -47,27 +54,28 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - think about an item list renderer (what is variable?)
         - longer term, this might be a high-level graphical display (like PROV diag.)
         - use this to think about linking to alternative displays
-- [ ] Use site/collection data to populate help panes on displays; use Markdown.
-- [ ] Use Form description as help text on forms
-- [ ] Use field description text as tooltip on forms
 - [ ] Create schema definitions in Annalist for ANNAL namespace
+
 - [ ] When supertypes are changed, need to regenerate @type fields of instances
     - Or be smarter about how entries for listing are selected.  
     - Link to migration?
+- [ ] Think further about how data migration can be handled.  
+    - E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
+- [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 - [ ] Add image and audio resource fields to site data
 - [ ] Add journal and note entry definitions to site data
 - [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?
 
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
+- [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] Login: support continuation URI
 - [ ] Implement at least one other identify provider (ORCID?)
 - [ ] profile_uri now not included in Google JSON file of client secrets
     - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
     - cf. oauth2/views.py:364
-
-- [ ] Think further about how data migration can be handled.  
-    - E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
-- [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
+- [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15)
+- [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
+    - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
 
 - [ ] Review URI usage
     - [x] avoid explicit reference to `_annalist_collection`?
@@ -85,27 +93,31 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
         - could use `@id`?
+- [ ] Review length restriction on entity/type ids: does it serve any purpose?
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
     - [ ] site link to download log, if admin permissions
     - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
 - [ ] annalist-manager option for migrating collection data
-    - needs to load and save every entity in a collection to force rewriting of context data.  
+    - needs to load and save every entity in a collection and force rewriting of context data.  
     - or option on customize page?
     - also regenerate collection context data
 - [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
+- [ ] `annal:Slug` for entity references - is now type/id: rename type?  (annal:Entity_ref?)
+    - include migration logic
 
 (feature freeze for V0.9alpha?)
 (0.2?)
 
-- [ ] performance tuning: in EntityTypeInfo: cache type hierarchy for each request; clear when setting up
+- [ ] performance tuning: in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
+- [ ] look into entity cacheing (esp. RecordType) for performance improvement
 - [ ] update Django version used to latest version designated for long term support (1.8?)
 - [ ] review renderers and revise to take all message strings from messages.py
-- [ ] look into entity cacheing (esp. RecordType) for performance improvement
+- [ ] review title/heading strings and revise to take all message strings from messages.py
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] Review nomenclature, especially labels, for all site data
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types
@@ -136,21 +148,20 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Review docker files: reduce number of separate commands used; always build on clean python setup
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
-- [ ] Review length restriction on entity/type ids: does it serve any purpose?
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues
 
 
 Technical debt:
 
+- [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 - [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplaytInfo?)
 - [ ] Rework Bib_* definitions/enumerations so that they don't need special mention in EntityInfo
+- [ ] Consider treating Enum types as regular types under /d/?
 - [ ] Field layout padding logic at end of row is dependent on height of edit fields; consider re-working this in `fieldlistvaluemap` to generate fields in groups, where each group is rendered as a separate row.
-- [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
 - [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
 - [ ] Implement "get the data" link as a field renderer?
-- [ ] Consider treating Enum types as regular types under /d/?
 - [ ] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
 - [ ] review view URL returned for entities found with alternative parentage:
     - currently force URL returned to be that of original parent, not alt. 
@@ -161,7 +172,6 @@ Technical debt:
 - [ ] Delay accessing settings data until actually needed, so that new dependencies (e.g. models on views) don't cause premature selection.  This will help to avoid certain unexpected problems cropping up as happened with release 0.1.22 logging setup for annalist-manager.
 - [ ] After reworking site data access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
     - The various relative references for accessing context data are particularly unclear in the current software.
-- [ ] `annal:Slug` for entity references - is now type/id: rename type?  (annal:Entity_ref?)
 - [ ] Inconsistent `@id` values in site data
 - [ ] Re-think access to entities and types:
     - [ ] There is repeated reading of RecordType values in EntityFinder
@@ -171,13 +181,13 @@ Technical debt:
           (Current mechanism fixes use of annal:uri for all entities; maybe OK)
     - [ ] Think about how to optimize retreival of subtypes/supertypes
     - [ ] Do special case for types, or more generic caching approach?
-- [ ] Customize view getting out of sync with other page styles
+- [ ] Customize view style getting out of sync with other page styles
     - possible enhancements to form generator to generate customize page using form logic?
 - [ ] Refactor entity edit response handling
 - [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
 - [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
     - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
-    - [ ]remove corresponding special case code in bound_field.
+    - [ ] Remove corresponding special case code in bound_field.
 - [x] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
 - [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
 - [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
@@ -190,20 +200,17 @@ Usability notes:
 - [ ] Add menu bar link to display content of collection rather than default
     - List of types, linked to lists?
 - [ ] Try to make changing entity type and entity id follow-through more smoothly.
-    -especially when creating a supertype and selecting an appropriate subtype.
+    - especially when creating a supertype and selecting an appropriate subtype.
 - [ ] Better support for type renaming: hunt out all references and rename them too
 - [ ] Consistency checks for references to missing types (e.g. following rename)
-- [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15)
 - [x] Display entity-id *and* label values in drop-downs?  (e.g. "id (label)")
 - [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
 - [ ] Persist item selection to refreshed display when move-up/movedown clicked?
 - [x] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
 - [x] OR... allow an entity to specify its own default view? (this is now handled by subtyping)
 - [ ] Type/List/View dropdowns: normally show only those types/lists/views defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
-- [ ] View forms need title (indicating type of thing viewed)?  Or let user define label for Id field?
+- [x] View forms need title (indicating type of thing viewed)?  Or let user define label for Id field?
 - [x] Provide field type that can be used to place fixed annotations/instructions in a form
-- [ ] Add title attributes to all buttons - used as tooltip
-- [ ] Add title to field controls based on field help, to use as tooltip.
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
     - [x] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
         - test by creating contacts/supplies list for CruisingLog
@@ -222,10 +229,8 @@ Usability notes:
             - NOTE: default and initial values behave differently
         - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
 - [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?  In particular, getting the entity type for a field is error-prone.
-- [ ] Use pop-up text based on field comment to tell user how a field value is used
 - [x] Option to re-order fields on view form
 - [ ] When creating type, default URI to be based on id entered
-- [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] List display paging
 - [ ] When generating a view of an enumerated value, push logic for finding link into the renderer, so that availability of field link does not depend on whether field is available for the selected view.  (Try changing entity type of field to random value - can no longer browse to field description from view/group description)
 
@@ -273,7 +278,6 @@ Notes for Future TODOs:
     - [ ] update displayinfo so that it receives a copy of the continuation data when initialized.
     - [ ] pass continuation data into view_setup, list_setup, collection_view_setup for ^^.  For site, just use default/empty continuation.
     - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
-- [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
 - [ ] Rationalize common fields to reduce duplication?
