@@ -186,6 +186,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         view_label   = "Type description view"
         entity_title = "%s - %s - Collection testcoll"%(entity_label, view_label)
         self.assertContains(r, "<title>%s</title>"%(entity_title,))
+        self.assertContains(r, '<h2 class="page-heading">%s</h2>'%(view_label,), html=True)
         cont_uri = "?continuation_url=%s"%u + "%3Fcontinuation_url=/xyzzy/"
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",

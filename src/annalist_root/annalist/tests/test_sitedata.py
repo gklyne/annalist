@@ -365,7 +365,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         s = self.get_page(u)
 
         self.assertEqual(s.title.string, "List entities with type information - Collection coll1")
-        self.assertEqual(s.h3.string, "List entities with type information")
+        self.assertEqual(s.h2.string, "List entities with type information")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/Default_list_all")
 
@@ -380,7 +380,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     def test_collection_edit(self):
         u = collection_edit_url(coll_id="coll1")
         s = self.get_page(u)
-        self.assertEqual(s.h3.string, "Customize collection coll1")
+        self.assertEqual(s.h2.string, "Customize collection: Collection coll1")
         local_types_expected = make_field_choices(
             [ ("type1", "RecordType coll1/type1")
             , ("type2", "RecordType coll1/type2")
@@ -404,7 +404,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         u = collection_entity_list_url(coll_id="coll1", list_id="Default_list_all")
         s = self.get_page(u)
 
-        self.assertEqual(s.h3.string, "List entities with type information")
+        self.assertEqual(s.h2.string, "List entities with type information")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/Default_list_all")
 
@@ -455,7 +455,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         u = collection_entity_list_url(coll_id="coll1", list_id="Default_list")
         s = self.get_page(u)
 
-        self.assertEqual(s.h3.string, "List entities")
+        self.assertEqual(s.h2.string, "List entities")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/Default_list")
 
@@ -497,7 +497,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         s = self.get_page(u)
 
-        self.assertEqual(s.h3.string, "List types")
+        self.assertEqual(s.h2.string, "List types")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/Type_list")
 
@@ -618,7 +618,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         s = self.get_page(u)
 
-        self.assertEqual(s.h3.string, "List lists")
+        self.assertEqual(s.h2.string, "List lists")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/List_list")
 
@@ -732,7 +732,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         s = self.get_page(u)
 
-        self.assertEqual(s.h3.string, "List views")
+        self.assertEqual(s.h2.string, "List views")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/View_list")
 
@@ -839,7 +839,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         s = self.get_page(u)
 
-        self.assertEqual(s.h3.string, "List field groups")
+        self.assertEqual(s.h2.string, "List field groups")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/Field_group_list")
 
@@ -937,7 +937,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         s = self.get_page(u)
 
-        self.assertEqual(s.h3.string, "List fields")
+        self.assertEqual(s.h2.string, "List fields")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/Field_list")
 
@@ -1158,7 +1158,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             coll_id="coll1", list_id="Vocab_list", type_id="_vocab", scope="all"
             )
         s = self.get_page(u)
-        self.assertEqual(s.h3.string, "List vocabulary namespaces")
+        self.assertEqual(s.h2.string, "List vocabulary namespaces")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/Vocab_list")
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
@@ -1253,7 +1253,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         s = self.get_page(u)
 
-        self.assertEqual(s.h3.string, "User permissions")
+        self.assertEqual(s.h2.string, "User permissions")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/User_list")
 

@@ -116,6 +116,7 @@ class CollectionEditView(AnnalistGenericView):
                 , 'select_rows':        "6"
                 })
             context.update(viewinfo.context_data())
+            context['heading'] = "Customize collection: %(coll_label)s"%context
             return context
         continuation_url = None
         # View permission only to display form, as it presents useful information even when not editing.

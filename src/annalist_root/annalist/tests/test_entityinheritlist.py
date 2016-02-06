@@ -148,7 +148,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "Collection testcoll")
-        self.assertContains(r, "<h3>List entities with type information</h3>", html=True)
+        self.assertContains(r, '<h2 class="page-heading">List entities with type information</h2>', html=True)
         # Test context
         self.assertEqual(r.context['title'],            "List entities with type information - Collection testcoll")
         self.assertEqual(r.context['heading'],          "List entities with type information")

@@ -97,7 +97,11 @@ form div.row .columns .row .columns .row
     ------------------------------------------------------------------------- */
 
 h2.page-heading {
-    padding: 0 0.9375rem;
+    margin-top:    0.2rem;
+    margin-bottom: 0;
+    padding:       0 0.9375rem;
+    font-size:     1.625rem;
+    color:         #666666;
 }
 
 p.djangolinks 

@@ -154,7 +154,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         list_label = "List entities with type information" 
         list_title = "List entities with type information - Collection testcoll"
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
-        self.assertContains(r, "<h3>%s</h3>"%list_label, html=True)
+        self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
@@ -242,7 +242,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         list_label = "List entities with type information" 
         list_title = "List entities with type information - Collection testcoll"
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
-        self.assertContains(r, "<h3>%s</h3>"%list_label, html=True)
+        self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         # Test context
         self.assertEqual(r.context['title'],            list_title)
         self.assertEqual(r.context['heading'],          list_label)
@@ -274,7 +274,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         list_label = "List types" 
         list_title = "List types - Collection testcoll"
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
-        self.assertContains(r, "<h3>%s</h3>"%list_label, html=True)
+        self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         # Test context
         self.assertEqual(r.context['title'],            list_title)
         self.assertEqual(r.context['heading'],          list_label)
@@ -309,7 +309,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         list_label = "List types" 
         list_title = "List types - Collection testcoll"
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
-        self.assertContains(r, "<h3>%s</h3>"%list_label, html=True)
+        self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         # Test context
         self.assertEqual(r.context['title'],            list_title)
         self.assertEqual(r.context['heading'],          list_label)
@@ -346,7 +346,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         list_label = "List fields" 
         list_title = "List fields - Collection testcoll"
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
-        self.assertContains(r, "<h3>%s</h3>"%list_label, html=True)
+        self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         cont = uri_params({"continuation_url": u})
         rowdata1 = """
             <div class="tbody row select-row">
@@ -531,12 +531,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # self.assertContains(r, site_title("<title>%s</title>"))
-        # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
-
+        list_label = "List fields" 
+        list_title = "List fields - Collection testcoll"
+        self.assertContains(r, "<title>%s</title>"%list_title, html=True)
+        self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         curi = continuation_params_url(u)
         cont = uri_params({"continuation_url": curi})
-        #@@ cont = ""
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -636,10 +636,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # self.assertContains(r, site_title("<title>%s</title>"))
-        # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
+        list_label = "List fields" 
+        list_title = "List fields - Collection testcoll"
+        self.assertContains(r, "<title>%s</title>"%list_title, html=True)
+        self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         cont = uri_params({"continuation_url": u})
-        #@@ cont = ""
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">

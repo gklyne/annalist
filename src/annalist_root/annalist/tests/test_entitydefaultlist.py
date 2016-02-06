@@ -140,7 +140,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # self.assertContains(r, site_title("<title>%s</title>"))
-        self.assertContains(r, "<h3>List entities with type information</h3>", html=True)
+        self.assertContains(r, '<h2 class="page-heading">List entities with type information</h2>', html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         cont = uri_params({"continuation_url": u})
         # cont = ""
@@ -251,7 +251,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>List entities - Collection testcoll</title>")
-        self.assertContains(r, "<h3>List entities</h3>", html=True)
+        self.assertContains(r, '<h2 class="page-heading">List entities</h2>', html=True)
         cont = uri_params({"continuation_url": u})
         # cont = ""
         # log.info(r.content)
