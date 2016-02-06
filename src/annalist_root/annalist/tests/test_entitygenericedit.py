@@ -1392,8 +1392,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             )
         self._check_entity_data_values("entityedit", update="Updated entity", 
             update_dict=
-                { 'rdfs:label':   ""
-                , 'rdfs:comment': ""
+                { 'rdfs:label':   "Entityedit"
+                , 'rdfs:comment': "Entityedit"
                 }
             )
         return

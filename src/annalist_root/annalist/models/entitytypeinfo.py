@@ -498,7 +498,7 @@ class EntityTypeInfo(object):
         return entity
 
     # @@TODO: rename inferred -> implied
-    def get_entity_inferred_values(self, entity):
+    def get_entity_implied_values(self, entity):
         """
         Adds inferrable values to the supplied entity value (e.g. aliases),
         and returns a new value with the additional values
@@ -508,7 +508,7 @@ class EntityTypeInfo(object):
         """
         if not self.recordtype: 
             raise AssertionError(
-                "EntityTypeInfo.get_entity_inferred_values called with no type information available.  "+
+                "EntityTypeInfo.get_entity_implied_values called with no type information available.  "+
                 "entity_id %s/%s, type_id %s"%(entity.get_type_id(), entity.get_id(), self.type_id)
                 )
         inferred_entity = entity
@@ -636,11 +636,11 @@ class EntityTypeInfo(object):
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
                         altscope=altscope):
-                    yield self.get_entity_inferred_values(self.get_entity(eid))
+                    yield self.get_entity_implied_values(self.get_entity(eid))
                 #@@
                 # for eid in self.entityparent._children(self.entityclass, altscope=altscope):
                 #     if self.entityclass.exists(self.entityparent, eid, altscope=altscope):
-                #         yield self.get_entity_inferred_values(self.get_entity(eid))
+                #         yield self.get_entity_implied_values(self.get_entity(eid))
                 #@@
         return
 

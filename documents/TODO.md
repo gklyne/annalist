@@ -33,14 +33,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Refactored entityedit for greater symmetry across GET/POST handling
     - displayinfo.context_data is used to supply additional context needed
 - [x] Place list label at start of page title for lists
-- [ ] If no label specified, default to ID with '_' replaced by space
-- [ ] If no comment specified, default to label
+- [x] If no label specified, default to ID with '_' replaced by space
+- [x] If no comment specified, default to label
 - [ ] From view of list definition, link to show list itself
-- [ ] Add image and audio resource fields to site data
-- [ ] Add journal and note entry definitions to site data
 
 (release?)
 
+- [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
 - [ ] Task button option to copy type+view+list and update namnes and URIs
 - [ ] Rethink collection overview that allows users to see what is present
     - original thoughts, but review in light of default-view approach adopted:
@@ -55,7 +54,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] When supertypes are changed, need to regenerate @type fields of instances
     - Or be smarter about how entries for listing are selected.  
     - Link to migration?
-- [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
+- [ ] Add image and audio resource fields to site data
+- [ ] Add journal and note entry definitions to site data
 - [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?
 
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.

@@ -22,6 +22,7 @@ from annalist                           import message
 from annalist                           import layout
 from annalist.util                      import (
     valid_id, split_type_entity_id, extract_entity_id,
+    label_from_id,
     open_url, copy_resource_to_fileobj
     )
 
@@ -392,7 +393,7 @@ class GenericEntityEditView(AnnalistGenericView):
             { 'continuation_url':   viewinfo.get_continuation_url() or ""
             , 'view_choices':       self.get_view_choices_field(viewinfo)
             })
-        entityvals   = viewinfo.entitytypeinfo.get_entity_inferred_values(entityvals)
+        entityvals   = viewinfo.entitytypeinfo.get_entity_implied_values(entityvals)
         form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
         form_context.update(viewinfo.context_data(entity_label=entityvals.get(RDFS.CURIE.label, None)))
         return form_context
@@ -954,6 +955,14 @@ class GenericEntityEditView(AnnalistGenericView):
                 entity_values.pop(ANNAL.CURIE.uri, None)
         entity_values[ANNAL.CURIE.type_id] = entity_type_id
         entity_values[ANNAL.CURIE.type]    = new_typeinfo.get_type_uri() # or new_typeinfo.entityclass._entitytype
+        # Supply values for label and comment if not already provided or aliased
+        entity_implied_vals = typeinfo.get_entity_implied_values(entity_values)
+        entity_label        = entity_implied_vals.get(RDFS.CURIE.label, None)
+        if not entity_label:
+            entity_label = label_from_id(entity_id)
+            entity_values[RDFS.CURIE.label] = entity_label
+        if not entity_implied_vals.get(RDFS.CURIE.comment, None):
+            entity_values[RDFS.CURIE.comment] = entity_label
         # log.info("save entity_values%r"%(entity_values))
 
         # Create/update stored data now

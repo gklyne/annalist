@@ -202,7 +202,8 @@ class FieldAliasTest(AnnalistTestCase):
         del v['bib:author']
         self.assertDictionaryMatch(e.get_values(), v)
         self.assertEqual(e.get_values().get(RDFS.CURIE.label, None),   None)
-        self.assertEqual(e.get_values().get(RDFS.CURIE.comment, None), None)
+        # Comment defaults from aliased label value
+        self.assertEqual(e.get_values().get(RDFS.CURIE.comment, None), f['Bib_title'])
         return
 
     def test_save_field_alias_target(self):

@@ -268,7 +268,7 @@ class bound_field(object):
                     targetentity = typeinfo.get_entity(entity_id)
                     if targetentity is None:
                         raise TargetEntityNotFound_Error(value=(target_type, entity_id))
-                    targetentity = typeinfo.get_entity_inferred_values(targetentity)
+                    targetentity = typeinfo.get_entity_implied_values(targetentity)
                     self._targetvals = get_entity_values(typeinfo, targetentity)
                     log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
                 else:
