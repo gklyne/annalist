@@ -783,8 +783,8 @@ div.row div.new-button button span.select-edit-button-text
 
 div.row.table
 {   /* Spacing around list of entities */
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     border:0;
     /* border-collapse: collapse;  / * Prevents gap before checkbox in table column */
 }
@@ -842,45 +842,75 @@ div.row.table div.tbody div.columns
 
     ------------------------------------------------------------------------- */
 
+div.help {
+    margin-top:     -0.5rem;
+    padding-left:   0.5rem;
+    padding-right:  0.5rem;
+}
+
 div.help > h1 {
-    margin-top: 1rem;
-    border-top: medium solid #CCCCCC;
-    padding-top: 0.75rem;
-    padding-left: 0.75rem;    
-    color: #666666;
-    font-size: 1.25rem;
+    margin-top:     1rem;
+    border-top:     medium solid #CCCCCC;
+    padding-top:    0.75rem;
+    padding-left:   0.5rem;    
+    padding-right:  0.5rem;    
+    color:          #666666;
+    font-size:      1.25rem;
 }
 
 div.help > h2 {
-    padding-top: 0.75rem;
-    padding-left: 0.75rem;    
-    color: #666666;
-    font-size: 1.125rem;
+    padding-top:    0.75rem;
+    padding-left:   0.5rem;    
+    padding-right:  0.5rem;    
+    color:          #666666;
+    font-size:      1.125rem;
 }
 
 div.help > h3 {
-    padding-top: 0.5rem;
-    padding-left: 0.75rem;    
-    color: #666666;
-    font-size: 1rem;
+    padding-top:    0.5rem;
+    padding-left:   0.5rem;    
+    padding-right:  0.5rem;    
+    color:          #666666;
+    font-size:      1rem;
+}
+
+div.help > h4 {
+    padding-top:    0.5rem;
+    padding-left:   0.5rem;    
+    padding-right:  0.5rem;    
+    color:          #666666;
+    font-size:      1rem;
+    font-style:     italic;
 }
 
 div.help > p {
     margin: 0rem;
-    padding-top: 0.25rem;    
-    padding-bottom: 0.25rem;    
-    padding-left: 0.75rem;    
-    color: #666666;
-    font-size: smaller;
+    padding-top:    0.25rem;    
+    padding-bottom: 0rem;    
+    padding-left:   0.5rem;
+    padding-right:  0.5rem;
+    color:          #666666;
+    font-size:      smaller;
 }
 
 div.help li {
-    margin: 0rem;
-    padding-top: 0.25rem;    
+    margin:         0rem;
+    padding-top:    0rem;    
     padding-bottom: 0rem;    
-    padding-left: 0.75rem;    
-    color: #666666;
-    font-size: smaller;
+    padding-left:   0.5rem;
+    padding-right:  0.5rem;
+    color:          #666666;
+    font-size:      smaller;
+}
+
+div.help > ul,
+div.help > ol {
+    list-style-position: inside;
+    margin:         0rem;
+    padding-top:    0rem;    
+    padding-bottom: 0rem;    
+    padding-left:   0.25rem;
+    color:          #666666;
 }
 
 /*  ------------------------------------------------------------------------- 

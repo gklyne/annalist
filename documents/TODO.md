@@ -35,26 +35,42 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Place list label at start of page title for lists
 - [x] If no label specified, default to ID with '_' replaced by space
 - [x] If no comment specified, default to label
-- [ ] From view of list definition, link to show list itself
+
+- [x] Use site comment field to populate help panes on site; use Markdown.
+- [ ] Use collection comment field to populate help panes on collection view display; use Markdown.
+- [ ] What to use for collection edit (customize) view?
+- [ ] Use view description comment as help text on forms
+- [ ] Use field comment text as tooltip on forms, to tell user how a field value is used
+- [ ] Add title attributes to all buttons - used as tooltip
 
 (release?)
 
-- [ ] Use site/collection data to populate help panes on displays; use Markdown.
-- [ ] Use Form description as help text on forms
-- [ ] Use field description text as tooltip on forms
-- [ ] Add title attributes to all buttons - used as tooltip
-- [ ] Add title to field controls based on field help, to use as tooltip.
-- [ ] Use pop-up text based on field comment to tell user how a field value is used
+- [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
+- [ ] Instead of separate link on the login page, have "Local" as a login service option.
+- [ ] Login: support continuation URI
+- [ ] Implement at least one other identify provider (ORCID?)
+- [ ] profile_uri now not included in Google JSON file of client secrets
+    - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
+    - cf. oauth2/views.py:364
+- [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15)
+- [ ] Task button option to copy type+view+list and update names and URIs
+- [ ] Create schema definitions in Annalist for ANNAL namespace
 
-- [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
-- [ ] Task button option to copy type+view+list and update namnes and URIs
+- [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
+    - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
+- [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
+    - hard to find actual provider service other than Google
+    - tried investigating EUDat, which looks promising but fails with invalid certificate
+
 - [ ] Rethink collection overview that allows users to see what is present
     - original thoughts, but review in light of default-view approach adopted:
         - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
         - think about an item list renderer (what is variable?)
         - longer term, this might be a high-level graphical display (like PROV diag.)
         - use this to think about linking to alternative displays
-- [ ] Create schema definitions in Annalist for ANNAL namespace
+- [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
+- [ ] From view of list definition, link to show list itself
+    - Beside "Show view" button, add "Show list"?
 
 - [ ] When supertypes are changed, need to regenerate @type fields of instances
     - Or be smarter about how entries for listing are selected.  
@@ -65,17 +81,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Add image and audio resource fields to site data
 - [ ] Add journal and note entry definitions to site data
 - [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?
-
-- [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
-- [ ] Instead of separate link on the login page, have "Local" as a login service option.
-- [ ] Login: support continuation URI
-- [ ] Implement at least one other identify provider (ORCID?)
-- [ ] profile_uri now not included in Google JSON file of client secrets
-    - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
-    - cf. oauth2/views.py:364
-- [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15)
-- [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
-    - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
 
 - [ ] Review URI usage
     - [x] avoid explicit reference to `_annalist_collection`?

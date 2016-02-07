@@ -9,8 +9,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import os
 import os.path
 import json
+import markdown
 import traceback
-
 import logging
 log = logging.getLogger(__name__)
 
@@ -422,6 +422,8 @@ class AnnalistGenericView(ContentNegotiationView):
             if os.path.isfile(help_filepath):
                 with open(help_filepath, "r") as helpfile:
                     resultdata['help_text'] = helpfile.read()
+        if 'help_markdown' in resultdata:
+            resultdata['help_text'] = markdown.markdown(resultdata['help_markdown'])
         template  = loader.get_template(template_name)
         context   = RequestContext(self.request, resultdata)
         # log.debug("render_html - data: %r"%(resultdata))

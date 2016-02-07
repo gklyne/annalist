@@ -587,9 +587,13 @@ class DisplayInfo(object):
             , 'list_id':            self.list_id
             })
         context.update(self.authorizations)
-        if hasattr(self.view, 'help'):
+        if hasattr(self.view, 'help') and self.view.help:
             context.update(
                 { 'help_filename':  self.view.help
+                })
+        if hasattr(self.view, 'help_markdown') and self.view.help_markdown:
+            context.update(
+                { 'help_markdown':  self.view.help_markdown
                 })
         if self.collection:
             context.update(

@@ -38,7 +38,8 @@ class SiteView(AnnalistGenericView):
     """
     def __init__(self):
         super(SiteView, self).__init__()
-        self.help = "site-help"
+        # self.help = "site-help"
+        self.help_markdown = None
         return
 
     # GET
@@ -55,6 +56,7 @@ class SiteView(AnnalistGenericView):
         viewinfo.check_authorization("view")
         if viewinfo.http_response:
             return viewinfo.http_response
+        self.help_markdown = viewinfo.collection.get(RDFS.CURIE.comment, None)
         resultdata = viewinfo.sitedata
         resultdata.update(viewinfo.context_data())
         # log.info("SiteView.get: site_data %r"%(self.site_data()))
