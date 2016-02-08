@@ -130,6 +130,7 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         if viewinfo.http_response:
             return viewinfo.http_response
+        self.help_markdown = viewinfo.recordview.get(RDFS.CURIE.comment, None)
 
         # Create local entity object or load values from existing
         typeinfo = viewinfo.entitytypeinfo

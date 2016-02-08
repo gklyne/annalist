@@ -17,12 +17,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.27, towards 0.1.28
 
-- [x] Provide option to remove type constraint when listing entities.
-- [x] Set default from list view: clear default view details so that default reverts to list
-- [x] Update menu bar to indicate explicit/default type id.  Also list id.
 - [x] BUG: 500: Server error: add_inferred_values_to_entity called with no type information available.
     - Changed calling enumeration logic to log a warning rather when referenced type is absent.
     - May want to revisit to enumerate values without implied values if type is missing.
+- [x] Provide option to remove type constraint when listing entities.
+- [x] Set default from list view: clear default view details so that default reverts to list
+- [x] Update menu bar to indicate explicit/default type id.  Also list id.
 - [x] Tweak CSS so that links in display columns wrap rather than overlap the next column
 - [x] Re-work entity enumeration to avoid use of predefined built-in types. Fix some enumeration scope bugs.
 - [x] Support references to uploaded OR linked images via subtyping.
@@ -37,9 +37,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] If no comment specified, default to label
 
 - [x] Use site comment field to populate help panes on site; use Markdown.
-- [ ] Use collection comment field to populate help panes on collection view display; use Markdown.
-- [ ] What to use for collection edit (customize) view?
-- [ ] Use view description comment as help text on forms
+- [x] Use collection comment field to populate help panes on collection edit display; use Markdown.
+- [x] Use list comment to populate the help pane for a list display.
+- [x] Use view description comment as help text on forms
+- [ ] Add online help documentation to site data definitions
+- [ ] Top menu bar vertical alignment: menu text should use common baseline
+- [ ] Edit collection metadata button on collection edit (customize) view.
+- [ ] Collection edit (customize) option from view?
+
 - [ ] Use field comment text as tooltip on forms, to tell user how a field value is used
 - [ ] Add title attributes to all buttons - used as tooltip
 

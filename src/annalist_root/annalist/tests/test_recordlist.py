@@ -160,9 +160,9 @@ class RecordListTest(AnnalistTestCase):
         v.update(
             { '@id':            "annal:display/Default_list"
             , 'rdfs:label':     "List entities"
-            , 'rdfs:comment':   "Default list of entities of given type"
             , 'annal:uri':      "annal:display/Default_list"
             })
+        v.pop('rdfs:comment', None)
         self.assertDictionaryMatch(td, v)
         return
 
@@ -237,7 +237,6 @@ class RecordListEditViewTest(AnnalistTestCase):
             num_fields=0,
             list_id="(?list_id)", 
             list_label="(?list_label)",
-            list_help="(?list_help)",
             list_url="(?list_url)",
             list_uri="(?list_uri)",
             list_type="Enum_list_type/List",
@@ -278,7 +277,6 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_id'], 'List_comment')
         self.assertEqual(r.context['fields'][3]['field_name'], 'List_comment')
         self.assertEqual(r.context['fields'][3]['field_label'], 'Help')
-        self.assertEqual(r.context['fields'][3]['field_value'], list_help)
         # 5
         self.assertEqual(r.context['fields'][4]['field_id'], 'List_default_type')
         self.assertEqual(r.context['fields'][4]['field_name'], 'List_default_type')
@@ -498,7 +496,6 @@ class RecordListEditViewTest(AnnalistTestCase):
             num_fields=3,
             list_id="00000001",
             list_label=default_label("testcoll", "_list", "00000001"),
-            list_help=default_comment("testcoll", "_list", "00000001"),
             list_url=list_url,
             list_uri=None,
             list_type="Enum_list_type/List",
@@ -526,7 +523,6 @@ class RecordListEditViewTest(AnnalistTestCase):
             num_fields=2,
             list_id="00000001",
             list_label="List entities",
-            list_help="Default list of entities of given type",
             list_url=list_url,
             list_uri=None
             )
@@ -567,7 +563,6 @@ class RecordListEditViewTest(AnnalistTestCase):
             num_fields=2,
             list_id="Default_list",
             list_label="List entities",
-            list_help="Default list of entities of given type",
             list_url=list_url,
             list_uri="annal:display/Default_list"
             )
@@ -613,7 +608,6 @@ class RecordListEditViewTest(AnnalistTestCase):
             num_fields=2,
             list_id="Default_list",
             list_label="List entities",
-            list_help="Default list of entities of given type",
             list_url=list_url,
             list_uri="annal:display/Default_list"
             )

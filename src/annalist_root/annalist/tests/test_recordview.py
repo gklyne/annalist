@@ -154,10 +154,10 @@ class RecordViewTest(AnnalistTestCase):
         v = recordview_read_values(view_id="Default_view")
         v.update(
             { 'rdfs:label':     'Default record view'
-            , 'rdfs:comment':   'Default record view, applied when no view is specified when creating a record.'
             , 'annal:uri':      'annal:display/Default_view'
             , '@context':       [layout.ENTITY_CONTEXT_FILE]
             })
+        v.pop('rdfs:comment', None)
         v.pop('annal:record_type', None)
         self.assertDictionaryMatch(td, v)
         return
@@ -276,7 +276,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
             num_fields=4,
             view_id="(?view_id)", 
             view_label="(?view_label)",
-            view_help="(?view_help)",
             view_record_type="(?view_record_type)",
             view_url="(?view_url)",
             view_uri="(?view_uri)",
@@ -338,7 +337,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][2]['field_target_type'],  "annal:Richtext")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][2]['field_value'],        view_help)
         self.assertEqual(r.context['fields'][2]['options'],            self.no_options)
         # 4th field - type of entity for view
         # log.info("******\n"+repr(r.context['fields'][3]))
@@ -595,7 +593,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
             num_fields=4,
             view_id="00000001",
             view_label="", # default_label("testcoll", "_view", "00000001"),
-            view_help="", # default_comment("testcoll", "_view", "00000001"),
             view_record_type="",
             view_url=recordview_url("testcoll", "00000001"),
             field_options = self.field_options_no_special
@@ -624,7 +621,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
             action="copy",
             view_id="00000001",
             view_label="Default record view",
-            view_help="Default record view, applied when no view is specified when creating a record.",
             view_url=view_url,
             view_uri=None,
             view_record_type="",
@@ -666,7 +662,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
             action="edit",
             view_id="Default_view",
             view_label="Default record view",
-            view_help="Default record view, applied when no view is specified when creating a record.",
             view_url=view_url,
             view_uri="annal:display/Default_view",
             view_record_type="",

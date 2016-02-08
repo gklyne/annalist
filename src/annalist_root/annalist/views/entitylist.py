@@ -163,6 +163,7 @@ class EntityGenericListView(AnnalistGenericView):
         listinfo    = self.list_setup(coll_id, type_id, list_id, request.GET.dict())
         if listinfo.http_response:
             return listinfo.http_response
+        self.help_markdown = listinfo.recordlist.get(RDFS.CURIE.comment, None)
         log.debug("listinfo.list_id %s"%listinfo.list_id)
         # Prepare list and entity IDs for rendering form
         try:

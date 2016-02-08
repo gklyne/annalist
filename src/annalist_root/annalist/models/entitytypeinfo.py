@@ -497,7 +497,6 @@ class EntityTypeInfo(object):
             entity = self.get_entity(entity_id, action="new")
         return entity
 
-    # @@TODO: rename inferred -> implied
     def get_entity_implied_values(self, entity):
         """
         Adds inferrable values to the supplied entity value (e.g. aliases),
