@@ -251,7 +251,17 @@ class DisplayInfo(object):
             else:
                 self.list_id    = list_id
                 self.recordlist = RecordList.load(self.collection, list_id, altscope="all")
-                if self.type_id is None and self.entitytypeinfo is None:
+                if "@error" in self.recordlist:
+                    self.http_response = self.view.error(
+                        dict(self.view.error500values(),
+                            message=message.RECORD_LIST_LOAD_ERROR%(
+                                { 'id':       list_id
+                                , 'file':     self.recordlist["@error"]
+                                , 'message':  self.recordlist["@message"]
+                                })
+                            )
+                        )
+                elif self.type_id is None and self.entitytypeinfo is None:
                     self.get_type_info(
                         extract_entity_id(self.recordlist[ANNAL.CURIE.default_type])
                         )
@@ -278,6 +288,16 @@ class DisplayInfo(object):
             else:
                 self.view_id    = view_id
                 self.recordview = RecordView.load(self.collection, view_id, altscope="all")
+                if "@error" in self.recordview:
+                    self.http_response = self.view.error(
+                        dict(self.view.error500values(),
+                            message=message.RECORD_VIEW_LOAD_ERROR%(
+                                { 'id':       list_id
+                                , 'file':     self.recordview["@error"]
+                                , 'message':  self.recordview["@message"]
+                                })
+                            )
+                        )
                 # log.debug("DisplayInfo.get_view_info: %r"%(self.recordview.get_values()))
         return self.http_response
 

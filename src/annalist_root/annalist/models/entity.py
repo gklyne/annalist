@@ -27,6 +27,7 @@ from django.conf                import settings
 
 from annalist                   import layout
 from annalist                   import util
+from annalist                   import message
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
 
@@ -407,6 +408,14 @@ class Entity(EntityRoot):
         log.debug("Entity.remove: id %s"%(entityid))
         e = cls.load(parent, entityid)
         if e:
+            if "@error" in e:
+                return Annalist_Error(
+                    message.ENTITY_LOAD_ERROR%(
+                        { 'id':       entityid
+                        , 'file':     e["@error"]
+                        , 'message':  e["@message"]
+                        })
+                    )
             e._remove(cls._entitytype)
         else:
             return Annalist_Error("Entity %s not found"%(entityid))

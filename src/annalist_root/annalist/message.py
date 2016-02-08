@@ -119,6 +119,7 @@ RECORD_LIST_LABEL           = "Record list %(id)s in collection %(coll_id)s"
 RECORD_LIST_EXISTS          = "Record list %(id)s in collection %(coll_id)s already exists"
 RECORD_LIST_NOT_EXISTS      = "Record list %(id)s in collection %(coll_id)s does not exist"
 RECORD_LIST_REMOVED         = "Record list %(id)s in collection %(coll_id)s was removed"
+RECORD_LIST_LOAD_ERROR      = "Error loading list '%(id)s', file %(file)s: %(message)s"
 
 RECORD_VIEW_ID              = "Problem with record view identifier"
 RECORD_VIEW_ID_INVALID      = "The record view identifier is missing or not a valid identifier"
@@ -126,6 +127,7 @@ RECORD_VIEW_LABEL           = "Record view %(id)s in collection %(coll_id)s"
 RECORD_VIEW_EXISTS          = "Record view %(id)s in collection %(coll_id)s already exists"
 RECORD_VIEW_NOT_EXISTS      = "Record view %(id)s in collection %(coll_id)s does not exist"
 RECORD_VIEW_REMOVED         = "Record view %(id)s in collection %(coll_id)s was removed"
+RECORD_VIEW_LOAD_ERROR      = "Error loading view '%(id)s', file %(file)s: %(message)s"
 
 RECORD_GROUP_ID             = "Problem with field group identifier"
 RECORD_GROUP_ID_INVALID     = "The field group identifier is missing or not a valid identifier"
@@ -163,6 +165,7 @@ ENTITY_DATA_NOT_EXISTS      = "Entity %(id)s of type %(type_id)s in collection %
 ENTITY_DATA_REMOVED         = "Entity %(id)s of type %(type_id)s in collection %(coll_id)s was removed"
 ENTITY_TYPE_ID              = "Problem with entity type identifier"
 ENTITY_TYPE_ID_INVALID      = "The entity type identifier is missing, too long, or not a valid identifier (%(type_id)s)"
+ENTITY_LOAD_ERROR           = "Error loading '%(id)s', file %(file)s: %(message)s"
 
 DEFAULT_LIST_UPDATED        = "Default list view for collection %(coll_id)s changed to %(list_id)s"
 DEFAULT_VIEW_UPDATED        = "Default view for collection %(coll_id)s changed to %(view_id)s/%(type_id)s/%(entity_id)s"

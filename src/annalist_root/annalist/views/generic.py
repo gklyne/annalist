@@ -153,13 +153,17 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return {"error_head": error_head, "error_message": error_message}
 
-    def redirect_error(self, viewuri, view_params={}, error_message=None, error_head=message.INPUT_ERROR):
+    def redirect_error(self, 
+        viewuri, view_params={}, error_message=None, error_head=message.INPUT_ERROR
+        ):
         """
         Redirect to a specified view with an error message for display
 
         (see templates/base_generic.html for display details)
         """
-        redirect_uri = uri_with_params(viewuri, view_params, self.error_params(error_head, error_message))
+        redirect_uri = uri_with_params(
+            viewuri, view_params, self.error_params(error_message, error_head=error_head)
+            )
         return HttpResponseRedirect(redirect_uri)
 
     def check_site_data(self):

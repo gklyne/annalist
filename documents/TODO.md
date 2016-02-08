@@ -54,6 +54,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] Login: support continuation URI
+- [ ] New logins: automatically create new user record with default permissions
 - [ ] Implement at least one other identify provider (ORCID?)
 - [ ] profile_uri now not included in Google JSON file of client secrets
     - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?

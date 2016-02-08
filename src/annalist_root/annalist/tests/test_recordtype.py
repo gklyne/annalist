@@ -846,13 +846,11 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         expect_view_values = (
             { 'annal:type':         "annal:View"
             , 'rdfs:label':         "View of RecordType testcoll/%(type_id)s"%common_vals
-            , 'rdfs:comment':       "View of RecordType testcoll/%(type_id)s"%common_vals
             , 'annal:record_type':  "test:%(type_id)s"%common_vals
             })
         expect_list_values = (
             { 'annal:type':         "annal:List"
             , 'rdfs:label':         "List of RecordType testcoll/%(type_id)s"%common_vals
-            , 'rdfs:comment':       "List of RecordType testcoll/%(type_id)s"%common_vals
             , 'annal:default_view': "_view/%(type_id)s"%common_vals
             , 'annal:default_type': "_type/%(type_id)s"%common_vals
             , 'annal:record_type':  "test:%(type_id)s"%common_vals

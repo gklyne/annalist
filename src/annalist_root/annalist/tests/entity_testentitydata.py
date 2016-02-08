@@ -736,13 +736,19 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
 #
 #   -----------------------------------------------------------------------------
 
-def default_fields(coll_id=None, type_id=None, entity_id=None, width=12, **kwargs):
+def default_fields(
+    coll_id=None, type_id=None, entity_id=None, 
+    width=12, **kwargs):
     """
     Returns a function that accepts a field width and returns a dictionary of entity values
     for testing.  The goal is to isolate default entity value settings from the test cases.
     """
-    def_label       = default_label(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
-    def_comment     = default_comment(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+    def_label       = kwargs.get("default_label",
+        default_label(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+        )
+    def_comment     = kwargs.get("default_comment",
+        default_comment(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+        )
     def_label_esc   = def_label.replace("'", "&#39;")
     def_comment_esc = def_comment.replace("'", "&#39;")
     def_entity_url  = collection_entity_view_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)

@@ -345,7 +345,10 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>'_list' data in collection 'testcoll'</h3>")
-        field_vals = default_fields(coll_id="testcoll", type_id="_list", entity_id="00000001")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_list", entity_id="00000001",
+            default_comment=r.context['fields'][3]['field_value']
+            )
         formrow1a = """
             <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
