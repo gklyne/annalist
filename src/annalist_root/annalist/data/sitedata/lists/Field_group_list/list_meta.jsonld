@@ -4,7 +4,7 @@
 , "annal:id":                   "Field_group_list"
 , "annal:type_id":              "_list"
 , "rdfs:label":                 "List field groups"
-, "rdfs:comment":               "Description of list of field groups"
+, "rdfs:comment":               "# Field groups\r\n\r\nField groups are used to present a group of fields for display, referenced by the following field render types: \r\n\r\n* `RepeatGroup` and `RepeatGroupRow`:  to define values presented for each repetition, or\r\n* `RefMultifield`: to describe a number of fields to be displayed from a referenced entity. \r\n\r\n"
 , "annal:display_type":         "Enum_list_type/List"
 , "annal:default_view":         "_view/Field_group_view"
 , "annal:default_type":         "_type/_group"

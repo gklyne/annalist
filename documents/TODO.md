@@ -20,6 +20,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] BUG: 500: Server error: add_inferred_values_to_entity called with no type information available.
     - Changed calling enumeration logic to log a warning rather when referenced type is absent.
     - May want to revisit to enumerate values without implied values if type is missing.
+    - rename "inferred_values" to "implied values".
 - [x] Provide option to remove type constraint when listing entities.
 - [x] Set default from list view: clear default view details so that default reverts to list
 - [x] Update menu bar to indicate explicit/default type id.  Also list id.

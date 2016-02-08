@@ -4,7 +4,7 @@
 , "annal:id":                   "Type_list"
 , "annal:type_id":              "_list"
 , "rdfs:label":                 "List types"
-, "rdfs:comment":               "Description of list of types"
+, "rdfs:comment":               "# Entity type definitions\r\n\r\nThis display lists entity type definitions, which are one of the key Annalist concepts.  Entities are used to provide a high-level distinction between the things described in an Annalist collection.\r\n\r\nEach entity type corresponds separate set of stored entity records.  For structural purposes, entity types form a flat (non-hierarchical) space, but each type may declare one or more supertype URIs so that its members are included in selections of the indicated supertype. \r\n"
 , "annal:display_type":         "Enum_list_type/List"
 , "annal:default_view":         "_view/Type_view"
 , "annal:default_type":         "_type/_type"
