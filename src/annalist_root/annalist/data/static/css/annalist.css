@@ -844,40 +844,40 @@ div.row.table div.tbody div.columns
 
 div.help {
     margin-top:     -0.5rem;
-    padding-left:   0.5rem;
-    padding-right:  0.5rem;
+    padding-left:   1.0rem;
+    padding-right:  1.0rem;
 }
 
 div.help > h1 {
     margin-top:     1rem;
     border-top:     medium solid #CCCCCC;
     padding-top:    0.75rem;
-    padding-left:   0.5rem;    
-    padding-right:  0.5rem;    
+    padding-left:   0rem;    
+    padding-right:  0rem;    
     color:          #666666;
     font-size:      1.25rem;
 }
 
 div.help > h2 {
     padding-top:    0.75rem;
-    padding-left:   0.5rem;    
-    padding-right:  0.5rem;    
+    padding-left:   0rem;    
+    padding-right:  0rem;    
     color:          #666666;
     font-size:      1.125rem;
 }
 
 div.help > h3 {
     padding-top:    0.5rem;
-    padding-left:   0.5rem;    
-    padding-right:  0.5rem;    
+    padding-left:   0rem;    
+    padding-right:  0rem;    
     color:          #666666;
     font-size:      1rem;
 }
 
 div.help > h4 {
     padding-top:    0.5rem;
-    padding-left:   0.5rem;    
-    padding-right:  0.5rem;    
+    padding-left:   0rem;    
+    padding-right:  0rem;    
     color:          #666666;
     font-size:      1rem;
     font-style:     italic;
@@ -885,32 +885,42 @@ div.help > h4 {
 
 div.help > p {
     margin: 0rem;
-    padding-top:    0.25rem;    
+    padding-top:    0.4rem;    
     padding-bottom: 0rem;    
-    padding-left:   0.5rem;
-    padding-right:  0.5rem;
+    padding-left:   0rem;
+    padding-right:  0rem;
     color:          #666666;
     font-size:      smaller;
+    line-height:    1.5;
 }
 
+/* NOTE: with "list-style-position: outside", 
+   use margin, not padding, to indent the bullet *and* item text
+ */
 div.help li {
-    margin:         0rem;
-    padding-top:    0rem;    
-    padding-bottom: 0rem;    
-    padding-left:   0.5rem;
-    padding-right:  0.5rem;
+    margin-top:     0.25rem;
+    margin-bottom:  0rem;    
+    margin-left:    1.5rem;
+    margin-right:   0rem;
     color:          #666666;
     font-size:      smaller;
+    line-height:    1.25;
+}
+
+/* Nexted lists: reduce margin indent; */
+div.help li li {
+    margin-left:    0rem;
 }
 
 div.help > ul,
 div.help > ol {
-    list-style-position: inside;
-    margin:         0rem;
+    list-style-position: outside;
+    margin-left:    0rem;
     padding-top:    0rem;    
     padding-bottom: 0rem;    
-    padding-left:   0.25rem;
+    padding-left:   0rem;
     color:          #666666;
+    line-height:    1.25;
 }
 
 /*  ------------------------------------------------------------------------- 

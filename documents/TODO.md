@@ -41,10 +41,20 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Use collection comment field to populate help panes on collection edit display; use Markdown.
 - [x] Use list comment to populate the help pane for a list display.
 - [x] Use view description comment as help text on forms
-- [ ] Add online help documentation to site data definitions
+- [ ] Add/update online help documentation to site data definitions
+    - [ ] types
+    - [x] views
+    - [x] lists
+    - [ ] fields
+    - [ ] field groups
+    - [ ] enumerations (add label as header)
+    - [ ] default user permissions
+    - [ ] vocabulary namespaces
 - [ ] Top menu bar vertical alignment: menu text should use common baseline
 - [ ] Edit collection metadata button on collection edit (customize) view.
 - [ ] Collection edit (customize) option from view?
+- [ ] Need to establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
+    - relative references are unreliable, and collection name 
 
 - [ ] Use field comment text as tooltip on forms, to tell user how a field value is used
 - [ ] Add title attributes to all buttons - used as tooltip
