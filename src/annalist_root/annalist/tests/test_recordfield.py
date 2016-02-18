@@ -300,57 +300,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][i]['field_value'],        field_id)
         self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
-        # Field 1: Value type
-        i += 1
-        self.assertEqual(r.context['fields'][i]['field_id'],           'Field_type')
-        self.assertEqual(r.context['fields'][i]['field_name'],         'Field_type')
-        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_value_type")
-        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Identifier")
-        self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Identifier")
-        self.assertEqual(r.context['fields'][i]['field_value'],        field_type)
-        self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
-        # Field 2: Label
-        i += 1
-        self.assertEqual(r.context['fields'][i]['field_id'],           'Field_label')
-        self.assertEqual(r.context['fields'][i]['field_name'],         'Field_label')
-        self.assertEqual(r.context['fields'][i]['field_property_uri'], "rdfs:label")
-        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Text")
-        self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Text")
-        self.assertEqual(r.context['fields'][i]['field_value'],        field_label)
-        self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
-        # Field 3: comment
-        i += 1
-        self.assertEqual(r.context['fields'][i]['field_id'],           'Field_comment')
-        self.assertEqual(r.context['fields'][i]['field_name'],         'Field_comment')
-        self.assertEqual(r.context['fields'][i]['field_property_uri'], "rdfs:comment")
-        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Markdown")
-        self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Richtext")
-        self.assertEqual(r.context['fields'][i]['field_value'],        field_comment)
-        self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
-        # Field 4: Field_property URI
-        i += 1
-        self.assertEqual(r.context['fields'][i]['field_id'],           'Field_property')
-        self.assertEqual(r.context['fields'][i]['field_name'],         'Field_property')
-        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:property_uri")
-        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Identifier")
-        self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Identifier")
-        self.assertEqual(r.context['fields'][i]['field_value'],        field_property)
-        self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
-        # Field 5: placement
-        i += 1
-        self.assertEqual(r.context['fields'][i]['field_id'],           'Field_placement')
-        self.assertEqual(r.context['fields'][i]['field_name'],         'Field_placement')
-        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_placement")
-        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Placement")
-        self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Placement")
-        self.assertEqual(r.context['fields'][i]['field_value'],        field_placement)
-        self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
-        # Field 6: Render type
+        # Field 1: Render type
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_render')
         self.assertEqual(r.context['fields'][i]['field_name'],         'Field_render')
@@ -360,7 +310,17 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][i]['field_value'],        field_render)
         self.assertEqual(set(r.context['fields'][i]['options']),       set(self.render_options))
-        # Field 7: Value mode
+        # Field 2: Value type
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'],           'Field_type')
+        self.assertEqual(r.context['fields'][i]['field_name'],         'Field_type')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_value_type")
+        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Identifier")
+        self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Identifier")
+        self.assertEqual(r.context['fields'][i]['field_value'],        field_type)
+        self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
+        # Field 3: Value mode
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_value_mode')
         self.assertEqual(r.context['fields'][i]['field_name'],         'Field_value_mode')
@@ -370,6 +330,46 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][i]['field_value'],        field_value_mode)
         self.assertEqual(set(r.context['fields'][i]['options']),       set(self.value_mode_options))
+        # Field 4: Label
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'],           'Field_label')
+        self.assertEqual(r.context['fields'][i]['field_name'],         'Field_label')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "rdfs:label")
+        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Text")
+        self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Text")
+        self.assertEqual(r.context['fields'][i]['field_value'],        field_label)
+        self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
+        # Field 5: comment
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'],           'Field_comment')
+        self.assertEqual(r.context['fields'][i]['field_name'],         'Field_comment')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "rdfs:comment")
+        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Markdown")
+        self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Richtext")
+        self.assertEqual(r.context['fields'][i]['field_value'],        field_comment)
+        self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
+        # Field 6: Field_property URI
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'],           'Field_property')
+        self.assertEqual(r.context['fields'][i]['field_name'],         'Field_property')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:property_uri")
+        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Identifier")
+        self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Identifier")
+        self.assertEqual(r.context['fields'][i]['field_value'],        field_property)
+        self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
+        # Field 7: placement
+        i += 1
+        self.assertEqual(r.context['fields'][i]['field_id'],           'Field_placement')
+        self.assertEqual(r.context['fields'][i]['field_name'],         'Field_placement')
+        self.assertEqual(r.context['fields'][i]['field_property_uri'], "annal:field_placement")
+        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Placement")
+        self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
+        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Placement")
+        self.assertEqual(r.context['fields'][i]['field_value'],        field_placement)
+        self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
         # Field 8: type of referenced entity
         i += 1
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_typeref')

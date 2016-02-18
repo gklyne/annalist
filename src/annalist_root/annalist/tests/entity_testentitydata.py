@@ -564,7 +564,7 @@ def entitydata_default_view_form_data(
 
 def entitydata_recordtype_view_context_data(
         entity_id=None, orig_id=None, coll_id="testcoll", type_id="testtype", type_uri=None, type_ids=[],
-        action=None, update="Entity", view_label="Type description view"
+        action=None, update="Entity", view_label="Type definition"
     ):
     if entity_id:
         entity_label = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)

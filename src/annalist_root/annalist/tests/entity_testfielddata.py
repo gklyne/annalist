@@ -201,8 +201,8 @@ def recordfield_entity_view_context_data(
         value="small-8 columns"
         )
     context_dict = (
-        { "title":              "%s - Field description view - Collection %s"%(field_label, coll_id)
-        , 'heading':            "Field description view"
+        { "title":              "%s - Field definition - Collection %s"%(field_label, coll_id)
+        , 'heading':            "Field definition"
         , 'coll_id':            coll_id
         , 'type_id':            "_field"
         , 'orig_id':            "orig_field_id"
@@ -223,14 +223,29 @@ def recordfield_entity_view_context_data(
             # , 'field_value':          (Supplied separately)
             , 'options':                []
             }
-          , { 'field_id':               "Field_type"                # 1
+          , { 'field_id':               "Field_render"              # 1
+            , 'field_name':             "Field_render"
+            , 'field_label':            "Field render type"
+            , 'field_target_type':      "annal:Slug"
+            , 'field_render_type':      "Enum_choice"
+            , 'field_value_mode':       "Value_direct"
+            , 'field_property_uri':     "annal:field_render_type"
+            , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
+            , 'field_ref_type':         "Enum_render_type"
+            , 'field_ref_field':        None
+            , 'field_placeholder':      "(field render type)"
+            , 'field_default_value':    "Text"
+            , 'field_value':            "Text"
+            , 'options':                []
+            }
+          , { 'field_id':               "Field_type"                # 2
             , 'field_name':             "Field_type"
             , 'field_label':            "Field value type"
             , 'field_target_type':       "annal:Identifier"
             , 'field_render_type':      "Identifier"
             , 'field_value_mode':       "Value_direct"
             , 'field_property_uri':     "annal:field_value_type"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
+            , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
             , 'field_ref_type':         None
             , 'field_ref_field':        None
             , 'field_placeholder':      "(field value type)"
@@ -238,7 +253,22 @@ def recordfield_entity_view_context_data(
             , 'field_value':            "annal:Text"
             , 'options':                []
             }
-          , { 'field_id':               "Field_label"               # 2
+          , { 'field_id':               "Field_value_mode"          # 3
+            , 'field_name':             "Field_value_mode"
+            , 'field_label':            "Value mode"
+            , 'field_target_type':      "annal:Slug"
+            , 'field_render_type':      "Enum_choice"
+            , 'field_value_mode':       "Value_direct"
+            , 'field_property_uri':     "annal:field_value_mode"
+            , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
+            , 'field_ref_type':         "Enum_value_mode"
+            , 'field_ref_field':        None
+            , 'field_placeholder':      "(field value mode)"
+            , 'field_default_value':    "Value_direct"
+            , 'field_value':            "Value_direct"
+            , 'options':                []
+            }
+          , { 'field_id':               "Field_label"               # 4
             , 'field_name':             "Field_label"
             , 'field_label':            "Label"
             , 'field_target_type':      "annal:Text"
@@ -253,7 +283,7 @@ def recordfield_entity_view_context_data(
             , 'field_value':            field_label
             , 'options':                []
             }
-          , { 'field_id':               "Field_comment"             # 3
+          , { 'field_id':               "Field_comment"             # 5
             , 'field_name':             "Field_comment"
             , 'field_label':            "Help"
             , 'field_target_type':      "annal:Richtext"
@@ -268,7 +298,7 @@ def recordfield_entity_view_context_data(
             , 'field_value':            field_descr
             , 'options':                []
             }
-          , { 'field_id':               "Field_property"            # 4
+          , { 'field_id':               "Field_property"            # 6
             , 'field_name':             "Field_property"
             , 'field_label':            "Property"
             , 'field_target_type':      "annal:Identifier"
@@ -283,7 +313,7 @@ def recordfield_entity_view_context_data(
             , 'field_value':            ""
             , 'options':                []
             }
-          , { 'field_id':               "Field_placement"           # 5
+          , { 'field_id':               "Field_placement"           # 7
             , 'field_name':             "Field_placement"
             , 'field_label':            "Position/size"
             , 'field_target_type':      "annal:Placement"
@@ -296,36 +326,6 @@ def recordfield_entity_view_context_data(
             , 'field_placeholder':      "(field position and size)"
             , 'field_default_value':    ""
             , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_render"              # 6
-            , 'field_name':             "Field_render"
-            , 'field_label':            "Field render type"
-            , 'field_target_type':      "annal:Slug"
-            , 'field_render_type':      "Enum_choice"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:field_render_type"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
-            , 'field_ref_type':         "Enum_render_type"
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field render type)"
-            , 'field_default_value':    "Text"
-            , 'field_value':            "Text"
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_value_mode"          # 7
-            , 'field_name':             "Field_value_mode"
-            , 'field_label':            "Value mode"
-            , 'field_target_type':      "annal:Slug"
-            , 'field_render_type':      "Enum_choice"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:field_value_mode"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
-            , 'field_ref_type':         "Enum_value_mode"
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field value mode)"
-            , 'field_default_value':    "Value_direct"
-            , 'field_value':            "Value_direct"
             , 'options':                []
             }
           , { 'field_id':               "Field_typeref"             # 8

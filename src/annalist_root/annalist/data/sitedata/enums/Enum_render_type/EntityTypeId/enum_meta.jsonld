@@ -4,6 +4,6 @@
 , "annal:id":           "EntityTypeId"
 , "annal:type_id":      "Enum_render_type"
 , "rdfs:label":         "Entity type Id"
-, "rdfs:comment":       "Field is short text string (slug); may be hyperlinked to type record."
-, "annal:uri":          "annal:field_render_type/EntityTypeId"
+, "rdfs:comment":       "# Render type: entity type id\r\n\r\nField is short text string (slug); may be displayed as hyperlink to the type definition."
+, "annal:uri":          "annal:Enum_render_type/EntityTypeId"
 }

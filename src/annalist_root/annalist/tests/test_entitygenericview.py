@@ -183,7 +183,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content)     #@@
         entity_label = "Entity testcoll/testtype/entity1"
-        view_label   = "Type description view"
+        view_label   = "Type definition"
         entity_title = "%s - %s - Collection testcoll"%(entity_label, view_label)
         self.assertContains(r, "<title>%s</title>"%(entity_title,))
         self.assertContains(r, '<h2 class="page-heading">%s</h2>'%(view_label,), html=True)

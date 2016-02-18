@@ -150,10 +150,10 @@ class AnnalistUserTest(AnnalistTestCase):
         uev = annalistuser_read_values(user_id="_unknown_user_perms")
         uev.update(
             { 'rdfs:label':             'Unknown user'
-            , 'rdfs:comment':           'Permissions for unauthenticated user.'
             , 'annal:user_uri':         'annal:User/_unknown_user_perms'
             , 'annal:user_permissions': ['VIEW']
             })
+        uev.pop('rdfs:comment', None)
         self.assertDictionaryMatch(uld, uev)
         return
 

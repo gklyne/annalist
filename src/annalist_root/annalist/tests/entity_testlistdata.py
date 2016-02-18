@@ -193,8 +193,8 @@ def recordlist_view_context_data(
           }
         ])
     context_dict = (
-        { "title":              "%s - List description view - Collection %s"%(list_label, coll_id)
-        , 'heading':            "List description view"
+        { "title":              "%s - List definition - Collection %s"%(list_label, coll_id)
+        , 'heading':            "List definition"
         , "coll_id":            coll_id
         , "type_id":            "_list"
         , "orig_id":            "orig_list_id"

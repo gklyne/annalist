@@ -194,8 +194,8 @@ def recordtype_entity_view_context_data(
         type_label = "%s data ... (%s/%s)"%(update, coll_id, type_id)
         type_descr = "%s description ... (%s/%s)"%(update, coll_id, type_id)
     context_dict = (
-        { 'title':              "%s - Type description view - Collection %s"%(type_label, coll_id)
-        , 'heading':            "Type description view"
+        { 'title':              "%s - Type definition - Collection %s"%(type_label, coll_id)
+        , 'heading':            "Type definition"
         , 'coll_id':            coll_id
         , 'type_id':            '_type'
         , 'orig_id':            'orig_type_id'

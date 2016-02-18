@@ -159,10 +159,10 @@ class RecordTypeTest(AnnalistTestCase):
         v = recordtype_read_values(type_id="Default_type")
         v.update(
             { 'rdfs:label':     'Default record'
-            , 'rdfs:comment':   'Default record type, applied when no type is specified when creating a record.'
             , 'annal:uri':      'annal:Default_type'
             , '@context':       [layout.ENTITY_CONTEXT_FILE]
             })
+        v.pop('rdfs:comment', None)
         self.assertDictionaryMatch(td, v)
         return
 
@@ -294,7 +294,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][2]['field_target_type'],  "annal:Richtext")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][2]['field_value'],        type_help)
+        # self.assertEqual(r.context['fields'][2]['field_value'],        type_help)
         self.assertEqual(r.context['fields'][2]['options'],            self.no_options)
         # 4th field - URI
         type_uri_help = (
@@ -384,9 +384,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         field_vals = default_fields(
             coll_id="testcoll", type_id="_type", entity_id="00000001",
             default_label="(New type initial values - label)",
-            default_comment="(New type initial values - comment/help)",
+            default_comment=r.context['fields'][2]['field_value'],
             default_label_esc="(New type initial values - label)",
-            default_comment_esc="(New type initial values - comment/help)"
+            default_comment_esc=r.context['fields'][2]['field_value']
             )
         formrow1 = """
             <div class="small-12 medium-6 columns">

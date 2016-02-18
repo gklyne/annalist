@@ -271,8 +271,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content) #@@
-        list_label = "List types" 
-        list_title = "List types - Collection testcoll"
+        list_label = "Entity types" 
+        list_title = "Entity types - Collection testcoll"
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
         self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         # Test context
@@ -306,8 +306,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content) #@@
-        list_label = "List types" 
-        list_title = "List types - Collection testcoll"
+        list_label = "Entity types" 
+        list_title = "Entity types - Collection testcoll"
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
         self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         # Test context
@@ -343,8 +343,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content) #@@
-        list_label = "List fields" 
-        list_title = "List fields - Collection testcoll"
+        list_label = "Field definitions" 
+        list_title = "Field definitions - Collection testcoll"
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
         self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         cont = uri_params({"continuation_url": u})
@@ -531,8 +531,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        list_label = "List fields" 
-        list_title = "List fields - Collection testcoll"
+        list_label = "Field definitions" 
+        list_title = "Field definitions - Collection testcoll"
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
         self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         curi = continuation_params_url(u)
@@ -636,8 +636,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        list_label = "List fields" 
-        list_title = "List fields - Collection testcoll"
+        list_label = "Field definitions" 
+        list_title = "Field definitions - Collection testcoll"
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
         self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         cont = uri_params({"continuation_url": u})

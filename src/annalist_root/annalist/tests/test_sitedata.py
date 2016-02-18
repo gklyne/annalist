@@ -497,7 +497,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         s = self.get_page(u)
 
-        self.assertEqual(s.h2.string, "List types")
+        self.assertEqual(s.h2.string, "Entity types")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/Type_list")
 
@@ -511,14 +511,14 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         trows_expected = (
             [ [ "_type/_coll",            ["_coll",            "Collection"] ]
-            , [ "_type/_field",           ["_field",           "View field"] ]
+            , [ "_type/_field",           ["_field",           "Field"] ]
             , [ "_type/_group",           ["_group",           "Field group"] ]
             # , [ "_type/_initial_values",  ["_initial_values",  None] ]
             , [ "_type/_list",            ["_list",            "List"] ]
             , [ "_type/_type",            ["_type",            "Type"] ]
             , [ "_type/_user",            ["_user",            "User permissions"] ]
             , [ "_type/_view",            ["_view",            "View"] ]
-            , [ "_type/_vocab",           ["_vocab",           "Vocab namespace"] ]
+            , [ "_type/_vocab",           ["_vocab",           "Vocabulary namespace"] ]
             , [ "_type/Default_type",     ["Default_type",     "Default record"] ]
             , [ "_type/Enum_list_type",   ["Enum_list_type",   "List display type"] ]
             , [ "_type/Enum_render_type", ["Enum_render_type", "Field render type"] ]
@@ -618,7 +618,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         s = self.get_page(u)
 
-        self.assertEqual(s.h2.string, "List lists")
+        self.assertEqual(s.h2.string, "List definitions")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/List_list")
 
@@ -630,13 +630,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             # [ [ "_list/_initial_values",    ["_initial_values",     None] ]
             [ [ "_list/Default_list",       ["Default_list",        "List entities"] ]
             , [ "_list/Default_list_all",   ["Default_list_all",    "List entities with type information"] ]
-            , [ "_list/Field_group_list",   ["Field_group_list",    "List field groups"] ]
-            , [ "_list/Field_list",         ["Field_list",          "List fields"] ]
-            , [ "_list/List_list",          ["List_list",           "List lists"] ]
-            , [ "_list/Type_list",          ["Type_list",           "List types"] ]
+            , [ "_list/Field_group_list",   ["Field_group_list",    "Field groups"] ]
+            , [ "_list/Field_list",         ["Field_list",          "Field definitions"] ]
+            , [ "_list/List_list",          ["List_list",           "List definitions"] ]
+            , [ "_list/Type_list",          ["Type_list",           "Entity types"] ]
             , [ "_list/User_list",          ["User_list",           "User permissions"] ]
-            , [ "_list/View_list",          ["View_list",           "List views"] ]
-            , [ "_list/Vocab_list",         ["Vocab_list",          "List vocabulary namespaces"] ]
+            , [ "_list/View_list",          ["View_list",           "View definitions"] ]
+            , [ "_list/Vocab_list",         ["Vocab_list",          "Vocabulary namespaces"] ]
             , [ "_list/list1",              ["list1",               "RecordList coll1/list1"] ]
             , [ "_list/list2",              ["list2",               "RecordList coll1/list2"] ]   
             ])
@@ -732,7 +732,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         s = self.get_page(u)
 
-        self.assertEqual(s.h2.string, "List views")
+        self.assertEqual(s.h2.string, "View definitions")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/View_list")
 
@@ -742,15 +742,15 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         trows_expected = (
             # [ [ "_view/_initial_values",    ["_initial_values",     None] ]
-            [ [ "_view/Collection_view",    ["Collection_view",     "Collection view"] ]
+            [ [ "_view/Collection_view",    ["Collection_view",     "Collection metadata"] ]
             , [ "_view/Default_view",       ["Default_view",        "Default record view"] ]
-            , [ "_view/Field_group_view",   ["Field_group_view",    "Field group view"] ]
-            , [ "_view/Field_view",         ["Field_view",          "Field description view"] ]
-            , [ "_view/List_view",          ["List_view",           "List description view"] ]
-            , [ "_view/Type_view",          ["Type_view",           "Type description view"] ]
-            , [ "_view/User_view",          ["User_view",           "User permissions view"] ]
-            , [ "_view/View_view",          ["View_view",           "View description view"] ]
-            , [ "_view/Vocab_view",         ["Vocab_view",          "Vocabulary namespace view"] ]
+            , [ "_view/Field_group_view",   ["Field_group_view",    "Field group definition"] ]
+            , [ "_view/Field_view",         ["Field_view",          "Field definition"] ]
+            , [ "_view/List_view",          ["List_view",           "List definition"] ]
+            , [ "_view/Type_view",          ["Type_view",           "Type definition"] ]
+            , [ "_view/User_view",          ["User_view",           "User permissions"] ]
+            , [ "_view/View_view",          ["View_view",           "View definition"] ]
+            , [ "_view/Vocab_view",         ["Vocab_view",          "Vocabulary namespace"] ]
             , [ "_view/view1",              ["view1",               "RecordView coll1/view1"] ]
             , [ "_view/view2",              ["view2",               "RecordView coll1/view2"] ]   
             ])
@@ -839,7 +839,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         s = self.get_page(u)
 
-        self.assertEqual(s.h2.string, "List field groups")
+        self.assertEqual(s.h2.string, "Field groups")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/Field_group_list")
 
@@ -937,7 +937,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         s = self.get_page(u)
 
-        self.assertEqual(s.h2.string, "List fields")
+        self.assertEqual(s.h2.string, "Field definitions")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/Field_list")
 
@@ -972,7 +972,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Entity_label",              ["Entity_label",      "Short text",     "annal:Text"            ] ]
             , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",       "annal:Identifier"      ] ]
             , [ "_field/Entity_see_also_repeat",    ["Entity_see_also_repeat", 
-                                                                          "Repeating fields as row", 
+                                                                          "Repeating fields as table", 
                                                                                             "annal:Field_group"     ] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:Slug"            ] ]
             , [ "_field/Field_comment",             ["Field_comment",     "Markdown rich text", "annal:Richtext"    ] ]
@@ -1094,13 +1094,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         expect_field_choices = no_selection("(field sel)") + get_site_field_fields_sorted()
         expect_fields = (
             [ "_field/Field_id"
+            , "_field/Field_render"
             , "_field/Field_type"
+            , "_field/Field_value_mode"
             , "_field/Field_label"
             , "_field/Field_comment"
             , "_field/Field_property"
             , "_field/Field_placement"
-            , "_field/Field_render"
-            , "_field/Field_value_mode"
             , "_field/Field_typeref"
             , "_field/Field_fieldref"
             , "_field/Field_placeholder"
@@ -1158,7 +1158,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             coll_id="coll1", list_id="Vocab_list", type_id="_vocab", scope="all"
             )
         s = self.get_page(u)
-        self.assertEqual(s.h2.string, "List vocabulary namespaces")
+        self.assertEqual(s.h2.string, "Vocabulary namespaces")
         self.check_input_type_value(s, "search_for", "text", "")
         self.check_select_field(s, "list_choice", self.lists_expected, "_list/Vocab_list")
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")

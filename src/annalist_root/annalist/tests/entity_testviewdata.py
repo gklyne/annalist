@@ -255,8 +255,8 @@ def recordview_entity_view_context_data(
     #       bound_field, so type prefix is stripped.  This does not apply to the field
     #       ids actually coming from the view form.
     context_dict = (
-        { 'title':              "%s - View description view - Collection %s"%(view_label, coll_id)
-        , 'heading':            "View description view"
+        { 'title':              "%s - View definition - Collection %s"%(view_label, coll_id)
+        , 'heading':            "View definition"
         , 'coll_id':            coll_id
         , 'type_id':            '_view'
         , 'orig_id':            'orig_view_id'
