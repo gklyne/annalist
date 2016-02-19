@@ -934,7 +934,24 @@ div.help > ol {
 
 .top-bar {
     margin-bottom: 0.75rem;
+    vertical-align: text-bottom;
 }
+nav.top-bar                  ul li.name h1 ,
+nav.top-bar                  ul li      h1 {
+    /* Foundation CSS sets line-height for top bar to 45px.         */
+    /* Reducing line height allows the <h1> baseline to be raised   */
+    /* to match other menu items.                                   */
+    line-height:    43px;
+    padding-bottom: 0px;
+}
+
+/*
+nav.top-bar                  ul li a ,
+nav.top-bar .top-bar-section ul li a ,
+nav.top-bar .top-bar-section ul li:not(.has-form) a:not(.button) {
+    vertical-align: inherit;
+}
+*/
 
 /* Footer bar.  Adapted from Foundation / ZURB examples */
 

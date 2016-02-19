@@ -41,7 +41,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Use collection comment field to populate help panes on collection edit display; use Markdown.
 - [x] Use list comment to populate the help pane for a list display.
 - [x] Use view description comment as help text on forms
-- [ ] Add/update online help documentation to site data definitions
+- [x] Add/update online help documentation to site data definitions
     - [x] types
     - [x] views
     - [x] lists
@@ -49,9 +49,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] enumerations (add label as header)
     - [x] default user permissions
     - [x] vocabulary namespaces
-    - [ ] fields
-- [ ] Top menu bar vertical alignment: menu text should use common baseline
+- [x] Top menu bar vertical alignment: menu text should use common baseline
+    - A bit hacky - had to pixel-tweak the height - is there a better way?
 - [ ] Use field comment text as tooltip on forms, to tell user how a field value is used
+    - [ ] Update field help text to match
+    - [ ] Update test cases to avoide help-text sensitivity
 - [ ] Add title attributes to all buttons - used as tooltip
 
 (release?)
