@@ -51,19 +51,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] vocabulary namespaces
 - [x] Top menu bar vertical alignment: menu text should use common baseline
     - A bit hacky - had to pixel-tweak the height - is there a better way?
+    - Converted pixels to REMs - maybe this will be slightly more consistent
 - [ ] Use field comment text as tooltip on forms, to tell user how a field value is used
+    - [x] Update renderer logic to include tool tips based on field help text
+    - [ ] Update test cases to avoid help-text sensitivity
     - [ ] Update field help text to match
-    - [ ] Update test cases to avoide help-text sensitivity
 - [ ] Add title attributes to all buttons - used as tooltip
 
 (release?)
 
-- [ ] Embedded code expansion in help text, and maybe other Markdown:
-    - [ ] {{site}} base URL for site
-    - [ ] {{coll}} base url for collection
-    - [ ] {{url:typeid/entityid}} UREL for referenced entity.
-    - [ ] {{ref:typeid/entityid}} link for referenced entity, using label from target.
-    - [ ] {{field:typeid/entityid#property_uri}} field from referenced entity
 - [ ] Edit collection metadata button on collection edit (customize) view.
 - [ ] Collection edit (customize) option from view?
 - [ ] Need to establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
@@ -80,22 +76,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Create schema definitions in Annalist for ANNAL namespace
 
-- [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
-    - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
-- [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
-    - hard to find actual provider service other than Google
-    - tried investigating EUDat, which looks promising but fails with invalid certificate
-
-- [ ] Rethink collection overview that allows users to see what is present
-    - original thoughts, but review in light of default-view approach adopted:
-        - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
-        - think about an item list renderer (what is variable?)
-        - longer term, this might be a high-level graphical display (like PROV diag.)
-        - use this to think about linking to alternative displays
-- [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
-- [ ] From view of list definition, link to show list itself
-    - Beside "Show view" button, add "Show list"?
-
 - [ ] When supertypes are changed, need to regenerate @type fields of instances
     - Or be smarter about how entries for listing are selected.  
     - Link to migration?
@@ -104,8 +84,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 - [ ] Add image and audio resource fields to site data
 - [ ] Add journal and note entry definitions to site data
-- [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?
-
 - [ ] Review URI usage
     - [x] avoid explicit reference to `_annalist_collection`?
     - [ ] review base URI designation in JSON-LD:
@@ -136,11 +114,16 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
-- [ ] `annal:Slug` for entity references - is now type/id: rename type?  (annal:Entity_ref?)
+- [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
     - include migration logic
 
+- [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
+    - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
+- [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
+    - hard to find actual provider service other than Google
+
 (feature freeze for V0.9alpha?)
-(0.2?)
+(0.5?)
 
 - [ ] performance tuning: in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
 - [ ] look into entity cacheing (esp. RecordType) for performance improvement
@@ -267,6 +250,26 @@ Usability notes:
 Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
+
+- [ ] Rethink collection overview that allows users to see what is present
+    - original thoughts, but review in light of default-view approach adopted:
+        - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
+        - think about an item list renderer (what is variable?)
+        - longer term, this might be a high-level graphical display (like PROV diag.)
+        - use this to think about linking to alternative displays
+- [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
+- [ ] From view of list definition, link to show list itself
+    - Beside "Show view" button, add "Show list"?
+    - tried investigating EUDat, which looks promising but fails with invalid certificate
+
+- [ ] Embedded code expansion in help text, and maybe other Markdown:
+    - [ ] {{site}} base URL for site
+    - [ ] {{coll}} base url for collection
+    - [ ] {{url:typeid/entityid}} UREL for referenced entity.
+    - [ ] {{ref:typeid/entityid}} link for referenced entity, using label from target.
+    - [ ] {{field:typeid/entityid#property_uri}} field from referenced entity
+
+- [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?
 
 - [ ] Think about extending field descrtiptions to include:
     - [ ] superproperty URIs (similar to supertype URIs in types)

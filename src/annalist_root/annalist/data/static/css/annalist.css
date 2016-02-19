@@ -941,7 +941,8 @@ nav.top-bar                  ul li      h1 {
     /* Foundation CSS sets line-height for top bar to 45px.         */
     /* Reducing line height allows the <h1> baseline to be raised   */
     /* to match other menu items.                                   */
-    line-height:    43px;
+    /* line-height:    43px; */
+    line-height:       2.7rem;
     padding-bottom: 0px;
 }
 

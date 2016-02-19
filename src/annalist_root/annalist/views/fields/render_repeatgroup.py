@@ -20,7 +20,7 @@ view_group = (
     { 'head':
         """
         <!-- views.fields.render_repeatgroup.view_group -->
-        <div class="small-12 columns">
+        <div class="small-12 columns" title="{{field.field_help}}">
           <div class="row">
             <div class="group-label small-2 columns">
               <span>{{field.field_label}}</span>
@@ -54,15 +54,19 @@ view_group = (
 edit_group = (
     { 'head':
         """<!-- views.fields.render_repeatgroup.edit_group -->
-        <div class="group-label small-2 columns">
-          <span>{{field.field_label}}</span>
-        </div>
-        <div class="group-placeholder small-10 columns">
-          {{field.field_placeholder}}
+        <div class="small-12 columns" title="{{field.field_help}}">
+          <div class="row">
+            <div class="group-label small-2 columns">
+              <span>{{field.field_label}}</span>
+            </div>
+            <div class="group-placeholder small-10 columns">
+              {{field.field_placeholder}}
+            </div>
+          </div>
         </div>"""
     , 'body':
         """
-        <div class="group-row small-12 columns">
+        <div class="group-row small-12 columns" title="{{field.field_help}}">
           <div class="row selectable">
             <div class="small-2 columns checkbox-in-edit-padding">
               {% if auth_config %}
@@ -104,7 +108,7 @@ view_grouprow = (
     { 'head':
         """
         <!-- views.fields.render_repeatgroup.view_grouprow -->
-        <div class="small-12 columns">
+        <div class="small-12 columns" title="{{field.field_help}}">
           <div class="row">
             <div class="group-label small-12 medium-2 columns">
               <span>{{field.field_label}}</span>
@@ -126,7 +130,7 @@ view_grouprow = (
     , 'head_empty':
         """
         <!-- views.fields.render_repeatgroup.view_grouprow (empty list) -->
-        <div class="small-12 columns">
+        <div class="small-12 columns" title="{{field.field_help}}">
           <div class="row">
             <div class="group-label small-12 medium-2 columns">
               <span>{{field.field_label}}</span>
@@ -167,7 +171,7 @@ edit_grouprow = (
     { 'head':
         """
         <!-- views.fields.render_repeatgroup.edit_grouprow -->
-        <div class="small-12 columns">
+        <div class="small-12 columns" title="{{field.field_help}}">
           <div class="row">
             <div class="group-label small-12 medium-2 columns">
               <span>{{field.field_label}}</span>

@@ -132,6 +132,8 @@ class bound_field(object):
             return self.get_field_value()
         elif name == "field_value_link":
             return self.get_field_link()
+        elif name == "field_help":
+            return self.get_field_help()
         elif name == "field_value_link_continuation":
             return self.get_link_continuation(self.get_field_link())
 
@@ -188,6 +190,17 @@ class bound_field(object):
         if choices and v in choices:
             return choices[v].link
         return None
+
+    def get_field_help(self):
+        """
+        Return help text from field description, for use as tooltip
+        """
+        help_text = (
+            self._field_description['field_help'] or 
+            "@@field help for %(field_label)s@@"%self._field_description
+            )
+        help_text_esc = help_text.replace("'", "&#39;").replace('"', "&quot;")
+        return help_text_esc
 
     def get_target_value(self):
         """
