@@ -478,9 +478,17 @@ class RecordViewEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        field_vals = default_fields(coll_id="testcoll", type_id="_view", entity_id="00000001")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_view", entity_id="00000001",
+            tooltip1=r.context['fields'][0]['field_help'],
+            tooltip2=r.context['fields'][1]['field_help'],
+            tooltip3=r.context['fields'][2]['field_help'],
+            tooltip4=r.context['fields'][3]['field_help'],
+            tooltip5=r.context['fields'][4]['field_help'],
+            tooltip6f1=r.context['fields'][5]._field_description['group_field_descs'][0]['field_help']
+            )
         formrow1 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip1)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Id</span>
@@ -493,7 +501,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow2 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip2)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Label</span>
@@ -507,7 +515,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow3 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip3)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Help</span>
@@ -523,7 +531,21 @@ class RecordViewEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow4 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 columns" title="%(tooltip4)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Record type</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="View_target_type" 
+                         placeholder="(Record type URI/CURIE displayed by view)" 
+                         value=""/>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow5 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip5)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Editable view?</span>
@@ -535,8 +557,15 @@ class RecordViewEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow5 = ("""
-            <div class="small-12 medium-4 columns">
+        formrow6 = """
+            <div class="small-1 columns checkbox-in-edit-padding">
+              <input type="checkbox" class="select-box right" 
+                     name="View_fields__select_fields"
+                     value="0" />
+            </div>        
+            """
+        formrow6f1 = ("""
+            <div class="small-12 medium-4 columns" title="%(tooltip6f1)s">
               <div class="row show-for-small-only">
                 <div class="view-label small-12 columns">
                   <span>Field id</span>
@@ -556,13 +585,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=4)
-        formrow6 = """
-            <div class="small-1 columns checkbox-in-edit-padding">
-              <input type="checkbox" class="select-box right" 
-                     name="View_fields__select_fields"
-                     value="0" />
-            </div>        
-            """
         # log.info("*** View content: "+r.content)
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
@@ -570,6 +592,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow4, html=True)
         self.assertContains(r, formrow5, html=True)
         self.assertContains(r, formrow6, html=True)
+        self.assertContains(r, formrow6f1, html=True)
         return
 
     def test_get_new(self):

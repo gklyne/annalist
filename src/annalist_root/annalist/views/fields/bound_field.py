@@ -16,6 +16,7 @@ from urlparse               import urljoin  # py3: from urllib.parse ...
 from collections            import OrderedDict, namedtuple
 
 from django.conf            import settings
+from django.utils.html      import escape
 
 from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
 from annalist.identifiers   import RDFS, ANNAL
@@ -133,7 +134,9 @@ class bound_field(object):
         elif name == "field_value_link":
             return self.get_field_link()
         elif name == "field_help":
-            return self.get_field_help()
+            return self.get_field_help_esc()
+        elif name == "field_tooltip":
+            return self.get_field_tooltip()
         elif name == "field_value_link_continuation":
             return self.get_link_continuation(self.get_field_link())
 
@@ -169,6 +172,9 @@ class bound_field(object):
             return self._field_description.get(name, "@@bound_field.%s@@"%(name))
 
     def get_field_value(self):
+        """
+        Return field value corresponding to key from field description.
+        """
         field_val = None
         if self._key in self._entityvals:
             field_val = self._entityvals[self._key]
@@ -191,16 +197,21 @@ class bound_field(object):
             return choices[v].link
         return None
 
-    def get_field_help(self):
+    def get_field_help_esc(self):
         """
         Return help text from field description, for use as tooltip
         """
-        help_text = (
+        return escape(
             self._field_description['field_help'] or 
             "@@field help for %(field_label)s@@"%self._field_description
             )
-        help_text_esc = help_text.replace("'", "&#39;").replace('"', "&quot;")
-        return help_text_esc
+
+    def get_field_tooltip(self):
+        """
+        Return tooltip attribute for displaying field help, or blank
+        """
+        help_text_esc = self.get_field_help_esc()
+        return ''' title="%s"'''%help_text_esc if help_text_esc else ''
 
     def get_target_value(self):
         """
@@ -354,6 +365,8 @@ class bound_field(object):
         yield "field_value"
         yield "field_value_link"
         yield "field_value_link_continuation"
+        yield "field_help"
+        yield "field_tooltip"
         yield "target_value"
         yield "target_value_link"
         yield "target_value_link_continuation"

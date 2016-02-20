@@ -169,9 +169,12 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertEqual(len(r.context['fields'][1]['field_value']), 0)
         self.assertEqual(r.context['fields'][1]['field_value'], "") #@@ Really?
         # Test rendered result
-        field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="testtype", entity_id="00000001",
+            tooltip1=r.context['fields'][0]['field_help'],
+            )
         formrow1 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip1)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Id</span>
@@ -286,10 +289,12 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         cont_uri_param = "?continuation_url="+u
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
-            view_url=v, cont_uri_param=cont_uri_param
+            view_url=v, cont_uri_param=cont_uri_param,
+            tooltip1=r.context['fields'][0]['field_help'],
+            tooltip2=r.context['fields'][1]['field_help'],
             )
         formrow1 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip1)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Id</span>

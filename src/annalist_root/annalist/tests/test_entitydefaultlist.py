@@ -139,11 +139,16 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, '<h2 class="page-heading">List entities with type information</h2>', html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         cont = uri_params({"continuation_url": u})
         # cont = ""
+        # print "@@ "+repr(r.context['fields'][0]['field_help'])
+        # print "@@ "+repr(r.context['fields'][1]['field_help'])
+        # print "@@ "+repr(r.context['fields'][2]['field_help'])
+        tooltip1 = r.context['fields'][0]['field_help']
+        tooltip2 = r.context['fields'][1]['field_help']
+        tooltip3 = r.context['fields'][2]['field_help']
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -152,19 +157,26 @@ class EntityDefaultListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row view-listrow">
-                  <div class="view-value small-3 columns">
+                  <div class="view-value small-3 columns" title="%(tooltip1)s">
                     <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
                   </div>
-                  <div class="view-value small-2 columns">
+                  <div class="view-value small-2 columns" title="%(tooltip2)s">
                     <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">RecordType testcoll/testtype</a>
                   </div>
-                  <div class="view-value small-7 columns">
+                  <div class="view-value small-7 columns" title="%(tooltip3)s">
                     <span>Entity testcoll/testtype/entity1</span>
                   </div>
                 </div>
               </div>
             </div>
-            """%({'base': TestBasePath, 'cont': cont})
+            """%(
+                { 'base':     TestBasePath
+                , 'cont':     cont
+                , 'tooltip1': tooltip1
+                , 'tooltip2': tooltip2
+                , 'tooltip3': tooltip3
+                }
+            )
         # log.info(r.content)
         self.assertContains(r, rowdata, html=True)
         # Test context
@@ -255,6 +267,8 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         cont = uri_params({"continuation_url": u})
         # cont = ""
         # log.info(r.content)
+        tooltip1 = r.context['fields'][0]['field_help']
+        tooltip2 = r.context['fields'][1]['field_help']
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -263,16 +277,22 @@ class EntityDefaultListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row view-listrow">
-                  <div class="view-value small-3 columns">
+                  <div class="view-value small-3 columns" title="%(tooltip1)s">
                     <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
                   </div>
-                  <div class="view-value small-9 columns">
+                  <div class="view-value small-9 columns" title="%(tooltip2)s">
                     <span>Entity testcoll/testtype/entity1</span>
                   </div>
                 </div>
               </div>
             </div>
-            """%({'base': TestBasePath, 'cont': cont})
+            """%(
+                { 'base':     TestBasePath
+                , 'cont':     cont
+                , 'tooltip1': tooltip1
+                , 'tooltip2': tooltip2
+                }
+            )
         self.assertContains(r, rowdata, html=True)
         # Test context
         # self.assertEqual(r.context['title'],            site_title())

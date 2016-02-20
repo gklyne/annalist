@@ -596,22 +596,23 @@ class UploadResourceTest(AnnalistTestCase):
             , "type_id":    "testupltype"
             , "entity_id":  "test1"
             , "field_id":   "upl_field"
+            , "tooltip":    r.context['fields'][i].field_help
             })
-        img_element = (
-            """<div class="small-12 columns"> """+
-              """<div class="row view-value-row"> """+
-                """<div class="view-label small-12 medium-2 columns"> """+
-                  """<span>test_image_ref_field label</span> """+
-                """</div> """+
-                """<div class="view-value small-12 medium-10 columns"> """+
-                  """<a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" target="_blank"> """+
-                    """<img src="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" """+
-                    """     alt="Image at '%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg'" /> """+
-                  """</a> """+
-                """</div> """+
-              """</div> """+
-            """</div> """
-            )%field_details
+        img_element = """
+            <div class="small-12 columns" title="%(tooltip)s">
+              <div class="row view-value-row">
+                <div class="view-label small-12 medium-2 columns">
+                  <span>test_image_ref_field label</span>
+                </div>
+                <div class="view-value small-12 medium-10 columns">
+                  <a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" target="_blank">
+                    <img src="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg"
+                         alt="Image at '%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg'" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            """%field_details
         self.assertContains(r, img_element, html=True)
         return
 
@@ -682,22 +683,23 @@ class UploadResourceTest(AnnalistTestCase):
             , "type_id":    "testimgtype"
             , "entity_id":  "test1"
             , "field_id":   "img_field"
+            , "tooltip":    r.context['fields'][i].field_help
             })
-        img_element = (
-            """<div class="small-12 columns"> """+
-              """<div class="row view-value-row"> """+
-                """<div class="view-label small-12 medium-2 columns"> """+
-                  """<span>test_image_field label</span> """+
-                """</div> """+
-                """<div class="view-value small-12 medium-10 columns"> """+
-                  """<a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" target="_blank"> """+
-                    """<img src="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" """+
-                    """     alt="Image at '%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg'" /> """+
-                  """</a> """+
-                """</div> """+
-              """</div> """+
-            """</div> """
-            )%field_details
+        img_element = """
+            <div class="small-12 columns" title="%(tooltip)s">
+              <div class="row view-value-row">
+                <div class="view-label small-12 medium-2 columns">
+                  <span>test_image_field label</span>
+                </div>
+                <div class="view-value small-12 medium-10 columns">
+                  <a href="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg" target="_blank">
+                    <img src="%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg"
+                         alt="Image at '%(basepath)s/c/%(coll_id)s/d/%(type_id)s/%(entity_id)s/%(field_id)s.jpg'" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            """%field_details
         self.assertContains(r, img_element, html=True)
         return
 

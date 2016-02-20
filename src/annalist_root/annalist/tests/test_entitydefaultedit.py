@@ -152,9 +152,15 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "Collection testcoll")
-        field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="testtype", entity_id="00000001",
+            tooltip1=r.context['fields'][0]['field_help'],
+            tooltip2=r.context['fields'][1]['field_help'],
+            tooltip3=r.context['fields'][2]['field_help'],
+            tooltip4=r.context['fields'][3]['field_help'],
+            )
         formrow1 = """
-              <div class="small-12 medium-6 columns">
+              <div class="small-12 medium-6 columns" title="%(tooltip1)s">
                 <div class="row view-value-row">
                   <div class="%(label_classes)s">
                       <span>Id</span>
@@ -168,7 +174,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               </div>
             """%field_vals(width=6)
         formrow2 = ("""
-              <div class="small-12 medium-6 columns">
+              <div class="small-12 medium-6 columns" title="%(tooltip2)s">
                 <div class="row view-value-row">
                   <div class="%(label_classes)s">
                       <span>Type</span>
@@ -186,7 +192,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             """)%field_vals(width=6)
         formrow3 = """
               <!-- editable text field -->
-              <div class="small-12 columns">
+              <div class="small-12 columns" title="%(tooltip3)s">
                 <div class="row view-value-row">
                   <div class="%(label_classes)s">
                       <span>Label</span>
@@ -200,7 +206,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               </div>
             """%field_vals(width=12)
         formrow4 = """
-              <div class="small-12 columns">
+              <div class="small-12 columns" title="%(tooltip4)s">
                 <div class="row view-value-row">
                   <div class="%(label_classes)s">
                       <span>Comment</span>

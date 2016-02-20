@@ -296,9 +296,16 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>'_user' data in collection 'testcoll'</h3>")
-        field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="00000001")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_user", entity_id="00000001",
+            tooltip1=r.context['fields'][0]['field_help'],
+            tooltip2=r.context['fields'][1]['field_help'],
+            tooltip3=r.context['fields'][2]['field_help'],
+            tooltip4=r.context['fields'][3]['field_help'],
+            tooltip5=r.context['fields'][4]['field_help']
+            )
         formrow1 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip1)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>User Id</span>
@@ -312,7 +319,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow2 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip2)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>User name</span>
@@ -326,7 +333,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow3 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip3)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>Description</span>
@@ -342,7 +349,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow4 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip4)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>URI</span>
@@ -356,7 +363,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow5 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip5)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>Permissions</span>
@@ -405,9 +412,12 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="testuser")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_user", entity_id="testuser",
+            tooltip=r.context['fields'][4]['field_help']
+            )
         formrow5 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>Permissions</span>
@@ -421,6 +431,9 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         # log.info(r.content)
+        # log.info
+        # for i in range(len(r.context['fields'])):
+        #     log.info("Field %d: %r"%(i, r.context['fields'][i]))
         self.assertContains(r, formrow5, html=True)
         return
 
@@ -435,9 +448,12 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="baduserperms")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_user", entity_id="baduserperms",
+            tooltip=r.context['fields'][4]['field_help']
+            )
         formrow5 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>Permissions</span>

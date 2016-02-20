@@ -62,14 +62,14 @@ label_wrapper_template = ( "<!-- label_wrapper_template -->"+
 
 # Wrap bare value (e.g. column value)
 value_wrapper_template = ( # "<!-- value_wrapper_template -->"+
-    """<div class="view-value {{field.field_placement.field}}" title="{{field.field_help}}">\n"""+
+    """<div class="view-value {{field.field_placement.field}}"{{field.field_tooltip|safe}}>\n"""+
     """  {% include value_renderer %}\n"""+
     """</div>"""
     )
 
 # Wrap value and include label
 label_value_wrapper_template = ( # "<!-- label_value_wrapper_template -->"+
-    """<div class="{{field.field_placement.field}}" title="{{field.field_help}}">\n"""+
+    """<div class="{{field.field_placement.field}}"{{field.field_tooltip|safe}}>\n"""+
     """  <div class="row view-value-row">\n"""+
     """    <div class="view-label {{field.field_placement.label}}">\n"""+
     """      <span>{{field.field_label}}</span>\n"""+
@@ -90,7 +90,7 @@ col_head_wrapper_template = ( # "<!-- col_head_wrapper_template -->"+
 
 # Wrap value with column value styling; include label on small displays only
 col_label_value_wrapper_template = ( # "<!-- col_label_value_wrapper_template -->"+
-    """<div class="{{field.field_placement.field}}" title="{{field.field_help}}">\n"""+
+    """<div class="{{field.field_placement.field}}"{{field.field_tooltip|safe}}>\n"""+
     """  <div class="row show-for-small-only">\n"""+
     """    <div class="view-label small-12 columns">\n"""+
     """      <span>{{field.field_label}}</span>\n"""+

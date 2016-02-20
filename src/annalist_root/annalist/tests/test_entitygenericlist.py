@@ -159,6 +159,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
         #@@ cont = ""
+        tooltip1 = r.context['fields'][0]['field_help']
+        tooltip2 = r.context['fields'][1]['field_help']
+        tooltip3 = r.context['fields'][2]['field_help']
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -167,19 +170,26 @@ class EntityGenericListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row view-listrow">
-                  <div class="view-value small-3 columns">
+                  <div class="view-value small-3 columns" title="%(tooltip1)s">
                     <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
                   </div>
-                  <div class="view-value small-2 columns">
+                  <div class="view-value small-2 columns" title="%(tooltip2)s">
                     <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">RecordType testcoll/testtype</a>
                   </div>
-                  <div class="view-value small-7 columns">
+                  <div class="view-value small-7 columns" title="%(tooltip3)s">
                     <span>Entity testcoll/testtype/entity1</span>
                   </div>
                 </div>
               </div>
             </div>
-            """%({'base': TestBasePath, 'cont': cont})
+            """%(
+                { 'base':     TestBasePath
+                , 'cont':     cont
+                , 'tooltip1': tooltip1
+                , 'tooltip2': tooltip2
+                , 'tooltip3': tooltip3
+                }
+            )
         # log.info(r.content)
         # log.info(r.context["fields"])
         # log.info(r.context["List_rows"])
@@ -347,83 +357,6 @@ class EntityGenericListViewTest(AnnalistTestCase):
         list_title = "Field definitions - Collection testcoll"
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
         self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
-        cont = uri_params({"continuation_url": u})
-        rowdata1 = """
-            <div class="tbody row select-row">
-              <div class="small-1 columns">
-                <input type="checkbox" class="select-box right" name="entity_select"
-                       value="_field/Coll_comment" />
-              </div>
-              <div class="small-11 columns">
-                <div class="view-listrow row">
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/_field/Coll_comment/%(cont)s">Coll_comment</a>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Markdown/%(cont)s">Markdown rich text</a>
-                  </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
-                    <span>annal:Richtext</span>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <span>Collection metadata</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            """%({'base': TestBasePath, 'cont': cont})
-        rowdata2 = """
-            <div class="tbody row select-row">
-              <div class="small-1 columns">
-                <input type="checkbox" class="select-box right" name="entity_select"
-                       value="_field/Coll_parent" />
-              </div>
-              <div class="small-11 columns">
-                <div class="view-listrow row">
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/_field/Coll_parent/%(cont)s">Coll_parent</a>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Enum_choice/%(cont)s">Entity choice</a>
-                  </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
-                    <span>annal:Slug</span>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <span>Parent</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            """%({'base': TestBasePath, 'cont': cont})
-        rowdata3 = """
-            <div class="tbody row select-row">
-              <div class="small-1 columns">
-                <input type="checkbox" class="select-box right" name="entity_select"
-                       value="_field/Coll_software_version" />
-              </div>
-              <div class="small-11 columns">
-                <div class="view-listrow row">
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/_field/Coll_software_version/%(cont)s">Coll_software_version</a>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Showtext/%(cont)s">Display text</a>
-                  </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
-                    <span>annal:Text</span>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <span>S/W version</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            """%({'base': TestBasePath, 'cont': cont})
-        # log.info(r.content)
-        self.assertContains(r, rowdata1, html=True)
-        self.assertContains(r, rowdata2, html=True)
-        self.assertContains(r, rowdata3, html=True)
         # Test context
         self.assertEqual(r.context['title'],            list_title)
         self.assertEqual(r.context['heading'],          list_label)
@@ -536,7 +469,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
         self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
         curi = continuation_params_url(u)
-        cont = uri_params({"continuation_url": curi})
+        field_params = (
+            { 'base':     TestBasePath
+            , 'cont':     uri_params({"continuation_url": curi})
+            , 'tooltip1': r.context['fields'][0]['field_help']
+            , 'tooltip2': r.context['fields'][1]['field_help']
+            , 'tooltip3': r.context['fields'][2]['field_help']
+            , 'tooltip4': r.context['fields'][3]['field_help']
+            })
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -545,24 +485,24 @@ class EntityGenericListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="view-listrow row">
-                  <div class="view-value small-4 medium-3 columns">
+                  <div class="view-value small-4 medium-3 columns" title="%(tooltip1)s">
                     <a href="%(base)s/c/testcoll/d/_field/Coll_comment/%(cont)s">Coll_comment</a>
                   </div>
-                  <div class="view-value small-4 medium-3 columns">
+                  <div class="view-value small-4 medium-3 columns" title="%(tooltip2)s">
                     <a href="%(base)s/c/testcoll/d/Enum_render_type/Markdown/%(cont)s">
                       Markdown rich text
                     </a>
                   </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up" title="%(tooltip3)s">
                     <span>annal:Richtext</span>
                   </div>
-                  <div class="view-value small-4 medium-3 columns">
+                  <div class="view-value small-4 medium-3 columns" title="%(tooltip4)s">
                     <span>Collection metadata</span>
                   </div>
                 </div>
               </div>
             </div>
-            """%({'base': TestBasePath, 'cont': cont})
+            """%field_params
         rowdata2 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -571,22 +511,22 @@ class EntityGenericListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="view-listrow row">
-                  <div class="view-value small-4 medium-3 columns">
+                  <div class="view-value small-4 medium-3 columns" title="%(tooltip1)s">
                     <a href="%(base)s/c/testcoll/d/_field/Coll_parent/%(cont)s">Coll_parent</a>
                   </div>
-                  <div class="view-value small-4 medium-3 columns">
+                  <div class="view-value small-4 medium-3 columns" title="%(tooltip2)s">
                     <a href="%(base)s/c/testcoll/d/Enum_render_type/Enum_choice/%(cont)s">Entity choice</a>
                   </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up" title="%(tooltip3)s">
                     <span>annal:Slug</span>
                   </div>
-                  <div class="view-value small-4 medium-3 columns">
+                  <div class="view-value small-4 medium-3 columns" title="%(tooltip4)s">
                     <span>Parent</span>
                   </div>
                 </div>
               </div>
             </div>
-            """%({'base': TestBasePath, 'cont': cont})
+            """%field_params
         rowdata3 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -595,22 +535,22 @@ class EntityGenericListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="view-listrow row">
-                  <div class="view-value small-4 medium-3 columns">
+                  <div class="view-value small-4 medium-3 columns" title="%(tooltip1)s">
                     <a href="%(base)s/c/testcoll/d/_field/Coll_software_version/%(cont)s">Coll_software_version</a>
                   </div>
-                  <div class="view-value small-4 medium-3 columns">
+                  <div class="view-value small-4 medium-3 columns" title="%(tooltip2)s">
                     <a href="%(base)s/c/testcoll/d/Enum_render_type/Showtext/%(cont)s">Display text</a>
                   </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up" title="%(tooltip3)s">
                     <span>annal:Text</span>
                   </div>
-                  <div class="view-value small-4 medium-3 columns">
+                  <div class="view-value small-4 medium-3 columns" title="%(tooltip4)s">
                     <span>S/W version</span>
                   </div>
                 </div>
               </div>
             </div>
-            """%({'base': TestBasePath, 'cont': cont})
+            """%field_params
         # log.info("*** r.content: "+r.content) #@@
         self.assertContains(r, rowdata1, html=True)
         self.assertContains(r, rowdata2, html=True)
@@ -640,87 +580,6 @@ class EntityGenericListViewTest(AnnalistTestCase):
         list_title = "Field definitions - Collection testcoll"
         self.assertContains(r, "<title>%s</title>"%list_title, html=True)
         self.assertContains(r, '<h2 class="page-heading">%s</h2>'%list_label, html=True)
-        cont = uri_params({"continuation_url": u})
-        rowdata1 = """
-            <div class="tbody row select-row">
-              <div class="small-1 columns">
-                <input type="checkbox" class="select-box right" name="entity_select"
-                       value="_field/Coll_comment" />
-              </div>
-              <div class="small-11 columns">
-                <div class="view-listrow row">
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/_field/Coll_comment/%(cont)s">Coll_comment</a>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Markdown/%(cont)s">
-                      Markdown rich text
-                    </a>
-                  </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
-                    <span>annal:Richtext</span>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <span>Collection metadata</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            """%({'base': TestBasePath, 'cont': cont})
-        rowdata2 = """
-            <div class="tbody row select-row">
-              <div class="small-1 columns">
-                <input type="checkbox" class="select-box right" name="entity_select"
-                       value="_field/Coll_parent" />
-              </div>
-              <div class="small-11 columns">
-                <div class="view-listrow row">
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/_field/Coll_parent/%(cont)s">Coll_parent</a>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Enum_choice/%(cont)s">Entity choice</a>
-                  </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
-                    <span>annal:Slug</span>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <span>Parent</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            """%({'base': TestBasePath, 'cont': cont})
-        rowdata3 = """
-            <div class="tbody row select-row">
-              <div class="small-1 columns">
-                <input type="checkbox" class="select-box right" name="entity_select"
-                       value="_field/Coll_software_version" />
-              </div>
-              <div class="small-11 columns">
-                <div class="view-listrow row">
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/_field/Coll_software_version/%(cont)s">Coll_software_version</a>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Showtext/%(cont)s">Display text</a>
-                  </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up">
-                    <span>annal:Text</span>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <span>S/W version</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            """%({'base': TestBasePath, 'cont': cont})
-
-        # log.info(r.content)
-        # If this test fails, check ordering of URI parameters
-        self.assertContains(r, rowdata1, html=True)
-        self.assertContains(r, rowdata2, html=True)
-        self.assertContains(r, rowdata3, html=True)
         # Test context
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")

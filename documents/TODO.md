@@ -54,7 +54,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Converted pixels to REMs - maybe this will be slightly more consistent
 - [ ] Use field comment text as tooltip on forms, to tell user how a field value is used
     - [x] Update renderer logic to include tool tips based on field help text
-    - [ ] Update test cases to avoid help-text sensitivity
+    - [x] Update test cases to avoid help-text sensitivity
     - [ ] Update field help text to match
 - [ ] Add title attributes to all buttons - used as tooltip
 

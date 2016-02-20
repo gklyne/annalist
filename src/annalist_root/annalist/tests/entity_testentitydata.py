@@ -823,6 +823,7 @@ def layout_classes(width=12):
     elif width == 12:
         class_dict = (
             { 'group_label_classes':    "group-label small-12 medium-2 columns"
+            , 'group_placeholder_classes':  "group-placeholder small-12 medium-10 columns"
             , 'group_space_classes':    "small-12 medium-2 columns hide-for-small-only"
             , 'group_row_head_classes': "small-12 medium-10 columns hide-for-small-only"
             , 'group_row_body_classes': "small-12 medium-10 columns"

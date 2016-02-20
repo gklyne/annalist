@@ -347,10 +347,17 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>'_list' data in collection 'testcoll'</h3>")
         field_vals = default_fields(
             coll_id="testcoll", type_id="_list", entity_id="00000001",
-            default_comment=r.context['fields'][3]['field_value']
+            default_comment=r.context['fields'][3]['field_value'],
+            tooltip1a=r.context['fields'][0]['field_help'],
+            tooltip1b=r.context['fields'][1]['field_help'],
+            tooltip2=r.context['fields'][2]['field_help'],
+            tooltip3=r.context['fields'][3]['field_help'],
+            tooltip4=r.context['fields'][4]['field_help'],
+            tooltip5=r.context['fields'][5]['field_help'],
+            tooltip6=r.context['fields'][6]['field_help'],
             )
         formrow1a = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Id</span>
@@ -364,7 +371,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow1b = ("""
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip1b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>List display type</span>
@@ -381,7 +388,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """)%field_vals(width=6)
         formrow2 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip2)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Label</span>
@@ -395,7 +402,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow3 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip3)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Help</span>
@@ -411,7 +418,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow4 = ("""
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip4)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Record type</span>
@@ -430,7 +437,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """)%field_vals(width=6)
         formrow5 = ("""
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip5)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>View</span>
@@ -456,7 +463,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             "etc.)"
             )
         formrow6 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip6)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Selector</span>

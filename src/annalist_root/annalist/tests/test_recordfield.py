@@ -486,9 +486,28 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>'_field' data in collection 'testcoll'</h3>")
-        field_vals = default_fields(coll_id="testcoll", type_id="_field", entity_id="00000001")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_field", entity_id="00000001",
+            tooltip1a=r.context['fields'][0]['field_help'],
+            tooltip1b=r.context['fields'][1]['field_help'],
+            tooltip2a=r.context['fields'][2]['field_help'],
+            tooltip2b=r.context['fields'][3]['field_help'],
+            tooltip3=r.context['fields'][4]['field_help'],
+            tooltip4=r.context['fields'][5]['field_help'],
+            tooltip5a=r.context['fields'][6]['field_help'],
+            tooltip5b=r.context['fields'][7]['field_help'],
+            tooltip6a=r.context['fields'][8]['field_help'],
+            tooltip6b=r.context['fields'][9]['field_help'],
+            tooltip7=r.context['fields'][10]['field_help'],
+            tooltip8=r.context['fields'][11]['field_help'],
+            tooltip9a=r.context['fields'][12]['field_help'],
+            tooltip10a=r.context['fields'][14]['field_help'],
+            tooltip10b=r.context['fields'][15]['field_help'],
+            tooltip11=r.context['fields'][16]['field_help'],
+            tooltip12=r.context['fields'][17]['field_help'],
+            )
         formrow1col1 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Id</span>
@@ -500,8 +519,25 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow1col2 = """
-            <div class="small-12 medium-6 columns">
+        formrow1col2 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip1b)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Field render type</span>
+                </div>
+                <div class="%(input_classes)s">
+                """+
+                  render_choice_options(
+                    "Field_render",
+                    get_site_field_types_sorted(),
+                    "Enum_render_type/Text")+
+                """
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow2col1 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip2a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Field value type</span>
@@ -514,8 +550,25 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow2 = """
-            <div class="small-12 columns">
+        formrow2col2 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip2b)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Value mode</span>
+                </div>
+                <div class="%(input_classes)s">
+                """+
+                  render_choice_options(
+                    "Field_value_mode",
+                    get_site_value_modes_sorted(),
+                    "Enum_value_mode/Value_direct")+
+                """
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow3 = """
+            <div class="small-12 columns" title="%(tooltip3)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Label</span>
@@ -528,8 +581,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow3 = """
-            <div class="small-12 columns">
+        formrow4 = """
+            <div class="small-12 columns" title="%(tooltip4)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                     <span>Help</span>
@@ -543,8 +596,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow4col1 = """
-            <div class="small-12 medium-6 columns">
+        formrow5col1 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip5a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Property</span>
@@ -557,8 +610,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         # log.info("placement_option_value_dict %r"%(get_placement_option_value_dict(),))
-        formrow4col2 = ("""
-            <div class="small-12 medium-6 columns">
+        formrow5col2 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip5b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Position/size</span>
@@ -577,42 +630,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow5col1 = ("""
-            <div class="small-12 medium-6 columns">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Field render type</span>
-                </div>
-                <div class="%(input_classes)s">
-                """+
-                  render_choice_options(
-                    "Field_render",
-                    get_site_field_types_sorted(),
-                    "Enum_render_type/Text")+
-                """
-                </div>
-              </div>
-            </div>
-            """)%field_vals(width=6)
-        formrow5col2 = ("""
-            <div class="small-12 medium-6 columns">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Value mode</span>
-                </div>
-                <div class="%(input_classes)s">
-                """+
-                  render_choice_options(
-                    "Field_value_mode",
-                    get_site_value_modes_sorted(),
-                    "Enum_value_mode/Value_direct")+
-                """
-                </div>
-              </div>
-            </div>
-            """)%field_vals(width=6)
         formrow6col1 = ("""
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip6a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Refer to type</span>
@@ -631,7 +650,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """)%field_vals(width=6)
         formrow6col2 = ("""
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip6b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Refer to field</span>
@@ -644,7 +663,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """)%field_vals(width=6)
         formrow7 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip7)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Placeholder</span>
@@ -657,7 +676,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow8 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip8)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Default</span>
@@ -671,7 +690,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow9col1 = ("""
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip9a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Field group</span>
@@ -689,7 +708,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """)%field_vals(width=6)
         formrow10col1 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip10a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Add fields label</span>
@@ -703,7 +722,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow10col2 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip10b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Delete fields label</span>
@@ -717,7 +736,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow11 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip11)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Entity type</span>
@@ -731,7 +750,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow12 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip12)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Value restriction</span>
@@ -746,18 +765,19 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         # log.info(r.content)   #@@
         self.assertContains(r, formrow1col1, html=True)     # Id
-        self.assertContains(r, formrow1col2, html=True)     # Value type
-        self.assertContains(r, formrow2, html=True)         # Label
-        self.assertContains(r, formrow3, html=True)         # Comment/help
-        self.assertContains(r, formrow4col1, html=True)     # Property URI
-        self.assertContains(r, formrow4col2, html=True)     # Placement
-        self.assertContains(r, formrow5col1, html=True)     # Render type
-        self.assertContains(r, formrow5col2, html=True)     # Value mode
+        self.assertContains(r, formrow1col2, html=True)     # Render type
+        self.assertContains(r, formrow2col1, html=True)     # Value type
+        self.assertContains(r, formrow2col2, html=True)     # Value mode
+        self.assertContains(r, formrow3, html=True)         # Label
+        self.assertContains(r, formrow4, html=True)         # Comment/help
+        self.assertContains(r, formrow5col1, html=True)     # Property URI
+        self.assertContains(r, formrow5col2, html=True)     # Placement
         self.assertContains(r, formrow6col1, html=True)     # Ref type (enum)
         self.assertContains(r, formrow6col2, html=True)     # Ref field
         self.assertContains(r, formrow7, html=True)         # Placeholder
         self.assertContains(r, formrow8, html=True)         # Default
         self.assertContains(r, formrow9col1, html=True)     # Field group
+                                                            # Spacing
         self.assertContains(r, formrow10col1, html=True)    # Add field label
         self.assertContains(r, formrow10col2, html=True)    # Delete field label
         self.assertContains(r, formrow11, html=True)        # Entity type
